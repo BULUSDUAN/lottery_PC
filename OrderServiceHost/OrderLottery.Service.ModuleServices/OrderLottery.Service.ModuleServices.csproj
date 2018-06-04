@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MessagePack" Version="1.7.3.4" />
+    <PackageReference Include="protobuf-net" Version="2.3.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\CommonLib\EntityModel\EntityModel.csproj" />
+    <ProjectReference Include="..\..\CommonLib\Lottery.kg.ORM.Helper\Lottery.Kg.ORM.Helper.csproj" />
+    <ProjectReference Include="..\OrderLottery.Service.IModuleServices\OrderLottery.Service.IModuleServices.csproj" />
+    <ProjectReference Include="..\OrderLottery.Service.Model\OrderLottery.Service.Model.csproj" />
+    <ProjectReference Include="..\OrderLottery.Service.ModuleBaseServices\OrderLottery.Service.ModuleBaseServices.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="KaSon.FrameWork.ORM">
+      <HintPath>..\..\FramWorkDLL\KaSon.FrameWork.ORM.dll</HintPath>
+    </Reference>
+    <Reference Include="KaSon.FrameWork.Services">
+      <HintPath>..\..\FramWorkDLL\KaSon.FrameWork.Services.dll</HintPath>
+    </Reference>
+    <Reference Include="Kason.Sg.Core.Caching">
+      <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.Caching.dll</HintPath>
+    </Reference>
+    <Reference Include="Kason.Sg.Core.CPlatform">
+      <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.CPlatform.dll</HintPath>
+    </Reference>
+    <Reference Include="Kason.Sg.Core.ProxyGenerator">
+      <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.ProxyGenerator.dll</HintPath>
+    </Reference>
+    <Reference Include="Kason.Sg.Core.System">
+      <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.System.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

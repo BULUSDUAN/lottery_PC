@@ -1,0 +1,25 @@
+ApiGateway--Api项目结构
+
+Lottery.ApiGateway --Api 项目
+
+Lottery.Api.Controllers   --控制中心
+
+--HomeController.cs      --home 控制器
+
+----GetServiceByRouter  --demo 调用服务demo
+
+----JsonEx                          --json 返回json 结果
+
+
+KaSon.FrameWork.Helper  公共方法库
+
+
+MicoServiceHost--服务项目结构
+
+Lottery.Service项目 
+
+Lottery.Service.IModuleServices     --服务接口
+
+Lottery.Service.ModuleServices      --服务接口实现
+----UserService.cs  
+----Test1，Test2，Test3，Test4    数据操作demo                        

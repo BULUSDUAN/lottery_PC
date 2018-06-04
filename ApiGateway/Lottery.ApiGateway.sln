@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2000
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lottery.Api.Controllers", "Lottery.Api.Controllers\Lottery.Api.Controllers.csproj", "{5F97B949-044F-4778-BECD-B56D66E968E8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lottery.Base.Controllers", "Lottery.base.Controllers\Lottery.Base.Controllers.csproj", "{DEF79870-7D25-4E26-8DDE-9CEA9BA7817C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lottery.ServiceMg.Controllers", "Lottery.ServiceMg.Controllers\Lottery.ServiceMg.Controllers.csproj", "{8F8B19F5-2EDE-43A7-8A5A-56E65D70EE7E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lottery.ApiGateway.Model", "Lottery.ApiGateway.Model\Lottery.ApiGateway.Model.csproj", "{0C3C07AB-951F-46FA-B97A-6D78C65D8A8D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lottery.ApiGateway", "Lottery.ApiGateway\Lottery.ApiGateway\Lottery.ApiGateway.csproj", "{A5DCA5C4-21AF-4D13-8AD7-CF7D2C3948FD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KaSon.FrameWork.Helper", "..\CommonLib\KaSon.FrameWork.Helper\KaSon.FrameWork.Helper.csproj", "{56661DEA-320D-4842-8724-F432A596EED8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntityModel", "..\CommonLib\EntityModel\EntityModel.csproj", "{B618BA99-A071-4359-A6DE-96AABF5EAA8D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5F97B949-044F-4778-BECD-B56D66E968E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F97B949-044F-4778-BECD-B56D66E968E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F97B949-044F-4778-BECD-B56D66E968E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F97B949-044F-4778-BECD-B56D66E968E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEF79870-7D25-4E26-8DDE-9CEA9BA7817C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEF79870-7D25-4E26-8DDE-9CEA9BA7817C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEF79870-7D25-4E26-8DDE-9CEA9BA7817C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEF79870-7D25-4E26-8DDE-9CEA9BA7817C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F8B19F5-2EDE-43A7-8A5A-56E65D70EE7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F8B19F5-2EDE-43A7-8A5A-56E65D70EE7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F8B19F5-2EDE-43A7-8A5A-56E65D70EE7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F8B19F5-2EDE-43A7-8A5A-56E65D70EE7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C3C07AB-951F-46FA-B97A-6D78C65D8A8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C3C07AB-951F-46FA-B97A-6D78C65D8A8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C3C07AB-951F-46FA-B97A-6D78C65D8A8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C3C07AB-951F-46FA-B97A-6D78C65D8A8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5DCA5C4-21AF-4D13-8AD7-CF7D2C3948FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5DCA5C4-21AF-4D13-8AD7-CF7D2C3948FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5DCA5C4-21AF-4D13-8AD7-CF7D2C3948FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5DCA5C4-21AF-4D13-8AD7-CF7D2C3948FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56661DEA-320D-4842-8724-F432A596EED8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56661DEA-320D-4842-8724-F432A596EED8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56661DEA-320D-4842-8724-F432A596EED8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56661DEA-320D-4842-8724-F432A596EED8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B618BA99-A071-4359-A6DE-96AABF5EAA8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B618BA99-A071-4359-A6DE-96AABF5EAA8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B618BA99-A071-4359-A6DE-96AABF5EAA8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B618BA99-A071-4359-A6DE-96AABF5EAA8D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {09385D0A-E86E-4CF5-BD58-B186C62B2D45}
+	EndGlobalSection
+EndGlobal
