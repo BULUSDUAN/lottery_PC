@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 用户战绩
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("C_User_Beedings",Type = EntityType.Table)]
     public class C_User_Beedings
@@ -18,119 +18,119 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 用户编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("UserId")]
             public string UserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 彩种代码
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("GameCode")]
             public string GameCode{ get; set; }
-            //// <summary>
+            /// <summary>
             // 玩法
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("GameType")]
             public string GameType{ get; set; }
-            //// <summary>
+            /// <summary>
             // 金星个数
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("GoldStarCount")]
-            public int? GoldStarCount{ get; set; }
-            //// <summary>
+            public int GoldStarCount{ get; set; }
+            /// <summary>
             // 金钻个数
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("GoldDiamondsCount")]
-            public int? GoldDiamondsCount{ get; set; }
-            //// <summary>
+            public int GoldDiamondsCount{ get; set; }
+            /// <summary>
             // 金杯个数
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("GoldCupCount")]
-            public int? GoldCupCount{ get; set; }
-            //// <summary>
+            public int GoldCupCount{ get; set; }
+            /// <summary>
             // 金冠个数
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("GoldCrownCount")]
-            public int? GoldCrownCount{ get; set; }
-            //// <summary>
+            public int GoldCrownCount{ get; set; }
+            /// <summary>
             // 银星个数
-            ////</summary>
+            ///</summary>
             [ProtoMember(9)]
             [Field("SilverStarCount")]
-            public int? SilverStarCount{ get; set; }
-            //// <summary>
+            public int SilverStarCount{ get; set; }
+            /// <summary>
             // 银钻个数
-            ////</summary>
+            ///</summary>
             [ProtoMember(10)]
             [Field("SilverDiamondsCount")]
-            public int? SilverDiamondsCount{ get; set; }
-            //// <summary>
+            public int SilverDiamondsCount{ get; set; }
+            /// <summary>
             // 银杯个数
-            ////</summary>
+            ///</summary>
             [ProtoMember(11)]
             [Field("SilverCupCount")]
-            public int? SilverCupCount{ get; set; }
-            //// <summary>
+            public int SilverCupCount{ get; set; }
+            /// <summary>
             // 银冠个数
-            ////</summary>
+            ///</summary>
             [ProtoMember(12)]
             [Field("SilverCrownCount")]
-            public int? SilverCrownCount{ get; set; }
-            //// <summary>
+            public int SilverCrownCount{ get; set; }
+            /// <summary>
             // 被订制跟单人数
-            ////</summary>
+            ///</summary>
             [ProtoMember(13)]
             [Field("BeFollowerUserCount")]
-            public int? BeFollowerUserCount{ get; set; }
-            //// <summary>
+            public int BeFollowerUserCount{ get; set; }
+            /// <summary>
             // 已被跟单总金额
-            ////</summary>
+            ///</summary>
             [ProtoMember(14)]
             [Field("BeFollowedTotalMoney")]
-            public decimal? BeFollowedTotalMoney{ get; set; }
-            //// <summary>
+            public decimal BeFollowedTotalMoney{ get; set; }
+            /// <summary>
             // 总订单数
-            ////</summary>
+            ///</summary>
             [ProtoMember(15)]
             [Field("TotalOrderCount")]
-            public int? TotalOrderCount{ get; set; }
-            //// <summary>
+            public int TotalOrderCount{ get; set; }
+            /// <summary>
             // 总投注金额
-            ////</summary>
+            ///</summary>
             [ProtoMember(16)]
             [Field("TotalBetMoney")]
-            public decimal? TotalBetMoney{ get; set; }
-            //// <summary>
+            public decimal TotalBetMoney{ get; set; }
+            /// <summary>
             // 总中奖次数
-            ////</summary>
+            ///</summary>
             [ProtoMember(17)]
             [Field("TotalBonusTimes")]
-            public int? TotalBonusTimes{ get; set; }
-            //// <summary>
+            public int TotalBonusTimes{ get; set; }
+            /// <summary>
             // 总中奖金额
-            ////</summary>
+            ///</summary>
             [ProtoMember(18)]
             [Field("TotalBonusMoney")]
-            public decimal? TotalBonusMoney{ get; set; }
-            //// <summary>
+            public decimal TotalBonusMoney{ get; set; }
+            /// <summary>
             // 战绩更新时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(19)]
             [Field("UpdateTime")]
-            public DateTime? UpdateTime{ get; set; }
+            public DateTime UpdateTime{ get; set; }
     }
 }

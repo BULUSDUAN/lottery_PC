@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 用户中奖概率
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("C_User_BonusPercent",Type = EntityType.Table)]
     public class C_User_BonusPercent
@@ -18,59 +18,59 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 用户编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("UserId")]
             public string UserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 彩种代码
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("GameCode")]
             public string GameCode{ get; set; }
-            //// <summary>
+            /// <summary>
             // 玩法
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("GameType")]
             public string GameType{ get; set; }
-            //// <summary>
+            /// <summary>
             // 总订单数
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("TotalOrderCount")]
-            public int? TotalOrderCount{ get; set; }
-            //// <summary>
+            public int TotalOrderCount{ get; set; }
+            /// <summary>
             // 中奖订单数
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("BonusOrderCount")]
-            public int? BonusOrderCount{ get; set; }
-            //// <summary>
+            public int BonusOrderCount{ get; set; }
+            /// <summary>
             // 中奖率
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("BonusPercent")]
-            public decimal? BonusPercent{ get; set; }
-            //// <summary>
+            public decimal BonusPercent{ get; set; }
+            /// <summary>
             // 当前日期
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("CurrentDate")]
             public string CurrentDate{ get; set; }
-            //// <summary>
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(9)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

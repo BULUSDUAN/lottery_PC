@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("P_Agent_ReturnPoint",Type = EntityType.Table)]
     public class P_Agent_ReturnPoint
@@ -18,47 +18,47 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("ID", IsIdenty = true, IsPrimaryKey = true)]
             public int ID{ get; set; }
-            //// <summary>
+            /// <summary>
             // 设置的人
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("AgentIdFrom")]
             public string AgentIdFrom{ get; set; }
-            //// <summary>
+            /// <summary>
             // 被设置的人
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("AgentIdTo")]
             public string AgentIdTo{ get; set; }
-            //// <summary>
+            /// <summary>
             // 设置等级
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("SetLevel")]
-            public int? SetLevel{ get; set; }
-            //// <summary>
+            public int SetLevel{ get; set; }
+            /// <summary>
             // 彩种
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("GameCode")]
             public string GameCode{ get; set; }
-            //// <summary>
+            /// <summary>
             // 玩法
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("GameType")]
             public string GameType{ get; set; }
-            //// <summary>
+            /// <summary>
             // 返点
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("ReturnPoint")]
-            public decimal? ReturnPoint{ get; set; }
+            public decimal ReturnPoint{ get; set; }
     }
 }

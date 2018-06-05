@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 合买红人表
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("C_TogetherHotUser",Type = EntityType.Table)]
     public class C_TogetherHotUser
@@ -18,29 +18,29 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 用户ID
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("UserId")]
             public string UserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 近期本周中奖
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("WeeksWinMoney")]
-            public decimal? WeeksWinMoney{ get; set; }
-            //// <summary>
+            public decimal WeeksWinMoney{ get; set; }
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

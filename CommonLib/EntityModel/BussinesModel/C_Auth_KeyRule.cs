@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 用户编号规则
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("C_Auth_KeyRule",Type = EntityType.Table)]
     public class C_Auth_KeyRule
@@ -18,15 +18,15 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 规则Key
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("RuleKey", IsIdenty = false, IsPrimaryKey = true)]
             public string RuleKey{ get; set; }
-            //// <summary>
+            /// <summary>
             // 规则Value
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("RuleValue")]
             public string RuleValue{ get; set; }

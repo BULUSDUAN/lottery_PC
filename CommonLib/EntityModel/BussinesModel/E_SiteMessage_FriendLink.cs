@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 友情链接,热点链接
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("E_SiteMessage_FriendLink",Type = EntityType.Table)]
     public class E_SiteMessage_FriendLink
@@ -18,41 +18,41 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 友情链接排序
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("IndexLink")]
-            public int? IndexLink{ get; set; }
-            //// <summary>
+            public int IndexLink{ get; set; }
+            /// <summary>
             // 网站名称
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("InnerText")]
             public string InnerText{ get; set; }
-            //// <summary>
+            /// <summary>
             // 链接地址
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("LinkUrl")]
             public string LinkUrl{ get; set; }
-            //// <summary>
+            /// <summary>
             // 是否是友情链接
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("Isfriendship")]
-            public bool? Isfriendship{ get; set; }
-            //// <summary>
+            public bool Isfriendship{ get; set; }
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

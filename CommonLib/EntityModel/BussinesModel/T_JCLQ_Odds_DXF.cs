@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("T_JCLQ_Odds_DXF",Type = EntityType.Table)]
     public class T_JCLQ_Odds_DXF
@@ -18,41 +18,41 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 比赛Id
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("MatchId")]
             public string MatchId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 胜 平均赔率
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("DaOdds")]
-            public decimal? DaOdds{ get; set; }
-            //// <summary>
+            public decimal DaOdds{ get; set; }
+            /// <summary>
             // 负 平均赔率
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("XiaoOdds")]
-            public decimal? XiaoOdds{ get; set; }
-            //// <summary>
+            public decimal XiaoOdds{ get; set; }
+            /// <summary>
             // 预设总分
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("YSZF")]
-            public decimal? YSZF{ get; set; }
-            //// <summary>
+            public decimal YSZF{ get; set; }
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

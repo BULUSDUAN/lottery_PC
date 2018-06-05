@@ -227,7 +227,7 @@ namespace KaSon.FrameWork.Helper
         }
         public static string GetDomain()
         {
-            return "";
+            return ConfigHelper.ConfigInfo["Domain"].ToString();
         }
         public static string GetFillMoneyAgentType(FillMoneyAgentType type)
         {

@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 传统足球14场赛事信息
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("C_SJB_Match",Type = EntityType.Table)]
     public class C_SJB_Match
@@ -18,57 +18,57 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 比赛编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("MatchId")]
             public int MatchId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 期号
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("IssuseNumber")]
             public string IssuseNumber{ get; set; }
-            //// <summary>
+            /// <summary>
             // 球队
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("Team")]
             public string Team{ get; set; }
-            //// <summary>
+            /// <summary>
             // 世界杯类型
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("GameType")]
             public string GameType{ get; set; }
-            //// <summary>
+            /// <summary>
             // 状态
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("BetState")]
             public string BetState{ get; set; }
-            //// <summary>
+            /// <summary>
             // 奖金
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("BonusMoney")]
             public decimal BonusMoney{ get; set; }
-            //// <summary>
+            /// <summary>
             // 支持率
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("SupportRate")]
             public decimal SupportRate{ get; set; }
-            //// <summary>
+            /// <summary>
             // 概率
-            ////</summary>
+            ///</summary>
             [ProtoMember(9)]
             [Field("Probadbility")]
             public decimal Probadbility{ get; set; }

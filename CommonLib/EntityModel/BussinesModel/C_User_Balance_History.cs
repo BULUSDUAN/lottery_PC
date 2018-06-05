@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 用户余额历史
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("C_User_Balance_History",Type = EntityType.Table)]
     public class C_User_Balance_History
@@ -18,77 +18,77 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 保存时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("SaveDateTime")]
             public string SaveDateTime{ get; set; }
-            //// <summary>
+            /// <summary>
             // 用户编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("UserId")]
             public string UserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 充值账户余额
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("FillMoneyBalance")]
-            public decimal? FillMoneyBalance{ get; set; }
-            //// <summary>
+            public decimal FillMoneyBalance{ get; set; }
+            /// <summary>
             // 奖金账户，中奖后返到此账户，可提现
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("BonusBalance")]
-            public decimal? BonusBalance{ get; set; }
-            //// <summary>
+            public decimal BonusBalance{ get; set; }
+            /// <summary>
             // 佣金账户，为代理商计算佣金时，转到此账户
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("CommissionBalance")]
-            public decimal? CommissionBalance{ get; set; }
-            //// <summary>
+            public decimal CommissionBalance{ get; set; }
+            /// <summary>
             // 名家余额
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("ExpertsBalance")]
-            public decimal? ExpertsBalance{ get; set; }
-            //// <summary>
+            public decimal ExpertsBalance{ get; set; }
+            /// <summary>
             // 冻结账户，提现、追号、异常手工冻结
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("FreezeBalance")]
-            public decimal? FreezeBalance{ get; set; }
-            //// <summary>
+            public decimal FreezeBalance{ get; set; }
+            /// <summary>
             // 红包余额
-            ////</summary>
+            ///</summary>
             [ProtoMember(9)]
             [Field("RedBagBalance")]
-            public decimal? RedBagBalance{ get; set; }
-            //// <summary>
+            public decimal RedBagBalance{ get; set; }
+            /// <summary>
             // 成长值
-            ////</summary>
+            ///</summary>
             [ProtoMember(10)]
             [Field("UserGrowth")]
-            public int? UserGrowth{ get; set; }
-            //// <summary>
+            public int UserGrowth{ get; set; }
+            /// <summary>
             // 当前豆豆值
-            ////</summary>
+            ///</summary>
             [ProtoMember(11)]
             [Field("CurrentDouDou")]
-            public int? CurrentDouDou{ get; set; }
-            //// <summary>
+            public int CurrentDouDou{ get; set; }
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(12)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

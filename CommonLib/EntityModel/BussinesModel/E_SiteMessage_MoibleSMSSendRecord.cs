@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 手机短信发送记录
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("E_SiteMessage_MoibleSMSSendRecord",Type = EntityType.Table)]
     public class E_SiteMessage_MoibleSMSSendRecord
@@ -18,41 +18,41 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 用户编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("UserId")]
             public string UserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 手机号码
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("Mobile")]
             public string Mobile{ get; set; }
-            //// <summary>
+            /// <summary>
             // 短信内容
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("SMSContent")]
             public string SMSContent{ get; set; }
-            //// <summary>
+            /// <summary>
             // 发送状态
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("SendStatus")]
             public string SendStatus{ get; set; }
-            //// <summary>
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

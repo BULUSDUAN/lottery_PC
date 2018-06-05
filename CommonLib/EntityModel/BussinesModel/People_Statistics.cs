@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("People_Statistics",Type = EntityType.Table)]
     public class People_Statistics
@@ -18,23 +18,23 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("ID", IsIdenty = true, IsPrimaryKey = true)]
             public int ID{ get; set; }
-            //// <summary>
+            /// <summary>
             // 
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("Counts")]
-            public int? Counts{ get; set; }
-            //// <summary>
+            public int Counts{ get; set; }
+            /// <summary>
             // 
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("LastUpdateTime")]
-            public DateTime? LastUpdateTime{ get; set; }
+            public DateTime LastUpdateTime{ get; set; }
     }
 }

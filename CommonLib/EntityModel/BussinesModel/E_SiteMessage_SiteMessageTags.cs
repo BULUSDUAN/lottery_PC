@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 站内信息标签
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("E_SiteMessage_SiteMessageTags",Type = EntityType.Table)]
     public class E_SiteMessage_SiteMessageTags
@@ -18,29 +18,29 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 标签KEY
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("TagKey")]
             public string TagKey{ get; set; }
-            //// <summary>
+            /// <summary>
             // 标签名称
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("TagName")]
             public string TagName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

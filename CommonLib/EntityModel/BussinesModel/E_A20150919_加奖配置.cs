@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("E_A20150919_加奖配置",Type = EntityType.Table)]
     public class E_A20150919_加奖配置
@@ -18,59 +18,59 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 订单标识
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("OrderIndex")]
-            public int? OrderIndex{ get; set; }
-            //// <summary>
+            public int OrderIndex{ get; set; }
+            /// <summary>
             // 彩种代码
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("GameCode")]
             public string GameCode{ get; set; }
-            //// <summary>
+            /// <summary>
             // 玩法
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("GameType")]
             public string GameType{ get; set; }
-            //// <summary>
+            /// <summary>
             // 串关方式
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("PlayType")]
             public string PlayType{ get; set; }
-            //// <summary>
+            /// <summary>
             // 加奖金额百分比
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("AddBonusMoneyPercent")]
-            public decimal? AddBonusMoneyPercent{ get; set; }
-            //// <summary>
+            public decimal AddBonusMoneyPercent{ get; set; }
+            /// <summary>
             // 最大加奖金额
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("MaxAddBonusMoney")]
-            public decimal? MaxAddBonusMoney{ get; set; }
-            //// <summary>
+            public decimal MaxAddBonusMoney{ get; set; }
+            /// <summary>
             // 加奖方式
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("AddMoneyWay")]
             public string AddMoneyWay{ get; set; }
-            //// <summary>
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(9)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

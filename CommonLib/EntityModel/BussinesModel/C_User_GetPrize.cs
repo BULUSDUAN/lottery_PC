@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 用户获取奖品
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("C_User_GetPrize",Type = EntityType.Table)]
     public class C_User_GetPrize
@@ -18,53 +18,53 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 用户编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("UserId")]
             public string UserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 订单金额
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("OrderMoney")]
-            public decimal? OrderMoney{ get; set; }
-            //// <summary>
+            public decimal OrderMoney{ get; set; }
+            /// <summary>
             // 奖品类型[10:IPHONE5s；20：QQ3；30：送2元；40：送5元；50：送10元；60：送58元；70：送588元；80：送2888元]
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("PrizeType")]
             public string PrizeType{ get; set; }
-            //// <summary>
+            /// <summary>
             // 积分
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("PayInegral")]
-            public int? PayInegral{ get; set; }
-            //// <summary>
+            public int PayInegral{ get; set; }
+            /// <summary>
             // 付款金额
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("GiveMoney")]
-            public decimal? GiveMoney{ get; set; }
-            //// <summary>
+            public decimal GiveMoney{ get; set; }
+            /// <summary>
             // 备注
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("Summary")]
             public string Summary{ get; set; }
-            //// <summary>
+            /// <summary>
             // 奖品类型[10:IPHONE5s；20：QQ3；30：送2元；40：送5元；50：送10元；60：送58元；70：送588元；80：送2888元
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

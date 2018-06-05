@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("E_A20130808_实名手机认证送3元",Type = EntityType.Table)]
     public class E_A20130808_实名手机认证送3元
@@ -18,41 +18,41 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 用户金额
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("UserId")]
             public string UserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 真实姓名
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("RealName")]
             public string RealName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 手机
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("Mobile")]
             public string Mobile{ get; set; }
-            //// <summary>
+            /// <summary>
             // 赠送金额
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("GiveMoney")]
-            public decimal? GiveMoney{ get; set; }
-            //// <summary>
+            public decimal GiveMoney{ get; set; }
+            /// <summary>
             // 更新时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("UpdateTime")]
-            public DateTime? UpdateTime{ get; set; }
+            public DateTime UpdateTime{ get; set; }
     }
 }

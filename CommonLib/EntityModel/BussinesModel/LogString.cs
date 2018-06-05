@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("LogString",Type = EntityType.Table)]
     public class LogString
@@ -18,15 +18,15 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("content")]
             public string content{ get; set; }

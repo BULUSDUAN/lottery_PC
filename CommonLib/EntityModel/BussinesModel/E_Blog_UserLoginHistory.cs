@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 用户登陆历史
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("E_Blog_UserLoginHistory",Type = EntityType.Table)]
     public class E_Blog_UserLoginHistory
@@ -18,41 +18,41 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 用户Id
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("UserId")]
             public string UserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 登陆来至那个通道
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("LoginFrom")]
             public string LoginFrom{ get; set; }
-            //// <summary>
+            /// <summary>
             // IP
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("LoginIp")]
             public string LoginIp{ get; set; }
-            //// <summary>
+            /// <summary>
             // 地址
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("IpDisplayName")]
             public string IpDisplayName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("LoginTime")]
-            public DateTime? LoginTime{ get; set; }
+            public DateTime LoginTime{ get; set; }
     }
 }

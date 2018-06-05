@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using EntityModel;
+using EntityModel.Enum;
 
 namespace OrderLottery.Service.ModuleServices
 {
@@ -66,11 +67,11 @@ namespace OrderLottery.Service.ModuleServices
                         select new BJDCMatchResultInfo
                         {
                             BF_Result = r.BF_Result == null ? "" : r.BF_Result,
-                            BF_SP = r.BF_SP == null ? 0 : r.BF_SP.Value,
+                            BF_SP = r.BF_SP == null ? 0 : r.BF_SP,
                             BQC_Result = r.BQC_Result == null ? "" : r.BQC_Result,
-                            BQC_SP = r.BQC_SP == null ? 0 : r.BQC_SP.Value,
-                            CreateTime = r.CreateTime.Value,
-                            FlatOdds = m.FlatOdds == null ? 0 : m.FlatOdds.Value,
+                            BQC_SP = r.BQC_SP == null ? 0 : r.BQC_SP,
+                            CreateTime = r.CreateTime,
+                            FlatOdds = m.FlatOdds == null ? 0 : m.FlatOdds,
                             GuestFull_Result = r.GuestFull_Result == null ? "" : r.GuestFull_Result,
                             GuestHalf_Result = r.GuestHalf_Result == null ? "" : r.GuestHalf_Result,
                             GuestTeamName = m.GuestTeamName,
@@ -79,20 +80,20 @@ namespace OrderLottery.Service.ModuleServices
                             HomeTeamName = m.HomeTeamName,
                             Id = r.Id,
                             IssuseNumber = r.IssuseNumber,
-                            LetBall = m.LetBall.Value,
-                            LoseOdds = m.LoseOdds.Value,
+                            LetBall = m.LetBall,
+                            LoseOdds = m.LoseOdds,
                             MatchColor = m.MatchColor,
                             MatchName = m.MatchName,
-                            MatchOrderId = r.MatchOrderId.Value,
-                            MatchStartTime = m.MatchStartTime.Value,
+                            MatchOrderId = r.MatchOrderId,
+                            MatchStartTime = m.MatchStartTime,
                             MatchState = r.MatchState,
                             SPF_Result = r.SPF_Result == null ? "" : r.SPF_Result,
-                            SPF_SP = r.SPF_SP.Value,
+                            SPF_SP = r.SPF_SP,
                             SXDS_Result = r.SXDS_Result == null ? "" : r.SXDS_Result,
-                            SXDS_SP = r.SXDS_SP.Value,
-                            WinOdds = m.WinOdds.Value,
+                            SXDS_SP = r.SXDS_SP,
+                            WinOdds = m.WinOdds,
                             ZJQ_Result = r.ZJQ_Result == null ? "" : r.ZJQ_Result,
-                            ZJQ_SP = r.ZJQ_SP.Value
+                            ZJQ_SP = r.ZJQ_SP
                         };
             if (query != null && query.Count() > 0)
             {
@@ -112,7 +113,88 @@ namespace OrderLottery.Service.ModuleServices
         /// <returns></returns>
         public UserFundDetailCollection QueryMyFundDetailList(QueryUserFundDetailParam Model)
         {
+            UserAuthentication Auth = new UserAuthentication();
+            var userId = Auth.ValidateUserAuthentication(Model.userToken);
+            var v = ConfigHelper.ConfigInfo["QueryUserFundDetailFromCache"].ToString();
+            if (!string.IsNullOrEmpty(v))
+            {
+                if (bool.Parse(v))
+                {
+                    var path = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "CacheData", "FundDetail", userId);
+                    if (!System.IO.Directory.Exists(path))
+                        System.IO.Directory.CreateDirectory(path);
 
+                    var list = new List<FundDetailInfo>();
+                    var accountArray = Model.accountTypeList.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries).Select(p => int.Parse(p)).ToArray();
+                    while (Model.fromDate < Model.toDate)
+                    {
+                        try
+                        {
+                            //从缓存中读取指定日期的数据
+                            var dateStr = Model.fromDate.ToString("yyyyMMdd");
+                            if (dateStr == DateTime.Today.ToString("yyyyMMdd"))
+                            {
+                                //当天的查数据库
+                                var todayList = from f in DB.CreateQuery<C_Fund_Detail>()
+                                                            where f.UserId == userId
+                                                            && (f.CreateTime >= DateTime.Today && f.CreateTime < DateTime.Today.AddDays(1))
+                                                            && (accountArray.Length == 0 || accountArray.Contains((int)f.AccountType))
+                                                            select new FundDetailInfo
+                                                            {
+                                                                AccountType =(AccountType)f.AccountType,
+                                                                AfterBalance = f.AfterBalance,
+                                                                BeforeBalance = f.BeforeBalance,
+                                                                Category = f.Category,
+                                                                CreateTime = f.CreateTime,
+                                                                Id = f.Id,
+                                                                KeyLine = f.KeyLine,
+                                                                OperatorId = f.OperatorId,
+                                                                OrderId = f.OrderId,
+                                                                PayMoney = f.PayMoney,
+                                                                PayType = (PayType)f.PayType,
+                                                                Summary = f.Summary,
+                                                                UserId = f.UserId,
+                                                            };
+                                list.AddRange(todayList);
+                            }
+                            else
+                            {
+                                var filePath = System.IO.Path.Combine(path, string.Format("{0}.json", dateStr));
+                                if (System.IO.File.Exists(filePath))
+                                {
+                                    //有缓存文件
+                                    var content = System.IO.File.ReadAllText(filePath, Encoding.UTF8);
+                                    if (!string.IsNullOrEmpty(content))
+                                    {
+                                        //文件内容不为空
+                                        var currentList = JsonHelper.Deserialize<List<FundDetailInfo>>(content);
+                                        var query = from l in currentList
+                                                    where (Model.keyLine == string.Empty || l.KeyLine == Model.keyLine)
+                                                    && (accountArray.Length == 0 || accountArray.Contains((int)l.AccountType))
+                                                    //&& (categoryArray.Length == 0 || categoryArray.Contains(l.Category))
+                                                    select l;
+                                        list.AddRange(query.ToList());
+                                    }
+                                }
+                            }
+                        }
+                        catch (Exception)
+                        {
+                        }
+                        Model.fromDate = Model.fromDate.AddDays(1);
+                    }
+
+                    var payInList = list.Where(p => p.PayType == PayType.Payin).ToList();
+                    var payOutList = list.Where(p => p.PayType == PayType.Payout).ToList();
+                    var collection = new UserFundDetailCollection();
+                    collection.TotalPayinCount = payInList.Count;
+                    collection.TotalPayinMoney = payInList.Count <= 0 ? 0 : payInList.Sum(p => p.PayMoney);
+                    collection.TotalPayoutCount = payOutList.Count;
+                    collection.TotalPayoutMoney = payOutList.Count <= 0 ? 0 : payOutList.Sum(p => p.PayMoney);
+                    collection.FundDetailList = list.OrderByDescending(p => p.CreateTime).Skip(Model.pageIndex * Model.pageSize).Take(Model.pageSize).ToList();
+                    return collection;
+                }
+            }
             return new UserFundDetailCollection();
         }
         public FillMoneyQueryInfo QueryFillMoneyList()

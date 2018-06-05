@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 站内信息场景
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("E_SiteMessage_SiteMessageScene",Type = EntityType.Table)]
     public class E_SiteMessage_SiteMessageScene
@@ -18,53 +18,53 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 场景Key
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("SceneKey")]
             public string SceneKey{ get; set; }
-            //// <summary>
+            /// <summary>
             // 场景名称
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("SceneName")]
             public string SceneName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 信息类别
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("MsgCategory")]
-            public int? MsgCategory{ get; set; }
-            //// <summary>
+            public int MsgCategory{ get; set; }
+            /// <summary>
             // 消息模板标题
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("MsgTemplateTitle")]
             public string MsgTemplateTitle{ get; set; }
-            //// <summary>
+            /// <summary>
             // 消息模板内容
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("MsgTemplateContent")]
             public string MsgTemplateContent{ get; set; }
-            //// <summary>
+            /// <summary>
             // 消息模板支持的参数(程序主动代入的参数)
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("MsgTemplateParams")]
             public string MsgTemplateParams{ get; set; }
-            //// <summary>
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

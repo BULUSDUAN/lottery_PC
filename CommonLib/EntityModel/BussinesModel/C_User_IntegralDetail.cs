@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 用户积分明细
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("C_User_IntegralDetail",Type = EntityType.Table)]
     public class C_User_IntegralDetail
@@ -18,53 +18,53 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 积分明细编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("IntegralDetailId", IsIdenty = true, IsPrimaryKey = true)]
             public int IntegralDetailId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 用户编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("UserId")]
             public string UserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 订单编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("OrderId")]
             public string OrderId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 备注
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("Summary")]
             public string Summary{ get; set; }
-            //// <summary>
+            /// <summary>
             // 积分
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("PayIntegral")]
-            public int? PayIntegral{ get; set; }
-            //// <summary>
+            public int PayIntegral{ get; set; }
+            /// <summary>
             // 旧积分
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("BeforeIntegral")]
-            public int? BeforeIntegral{ get; set; }
-            //// <summary>
+            public int BeforeIntegral{ get; set; }
+            /// <summary>
             // 新积分
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("AfterIntegral")]
-            public int? AfterIntegral{ get; set; }
-            //// <summary>
+            public int AfterIntegral{ get; set; }
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

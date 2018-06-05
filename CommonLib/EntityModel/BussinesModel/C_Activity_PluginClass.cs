@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 插件类
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("C_Activity_PluginClass",Type = EntityType.Table)]
     public class C_Activity_PluginClass
@@ -18,53 +18,53 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 类名
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("ClassName")]
             public string ClassName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 接口名
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("InterfaceName")]
             public string InterfaceName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 组件文件名
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("AssemblyFileName")]
             public string AssemblyFileName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 是否启用
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("IsEnable")]
-            public bool? IsEnable{ get; set; }
-            //// <summary>
+            public bool IsEnable{ get; set; }
+            /// <summary>
             // 排序索引
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("OrderIndex")]
-            public int? OrderIndex{ get; set; }
-            //// <summary>
+            public int OrderIndex{ get; set; }
+            /// <summary>
             // 开始时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("StartTime")]
-            public DateTime? StartTime{ get; set; }
-            //// <summary>
+            public DateTime StartTime{ get; set; }
+            /// <summary>
             // 结束时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("EndTime")]
-            public DateTime? EndTime{ get; set; }
+            public DateTime EndTime{ get; set; }
     }
 }

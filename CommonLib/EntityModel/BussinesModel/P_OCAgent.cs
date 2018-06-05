@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 澳彩代理
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("P_OCAgent",Type = EntityType.Table)]
     public class P_OCAgent
@@ -18,59 +18,59 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 用户编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("UserId", IsIdenty = false, IsPrimaryKey = true)]
             public string UserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 代理类型
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("OCAgentCategory")]
-            public int? OCAgentCategory{ get; set; }
-            //// <summary>
+            public int OCAgentCategory{ get; set; }
+            /// <summary>
             // 上级用户编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("ParentUserId")]
             public string ParentUserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 店面编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("StoreId")]
             public string StoreId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 父节点路径
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("ParentPath")]
             public string ParentPath{ get; set; }
-            //// <summary>
+            /// <summary>
             // 自定义域名
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("CustomerDomain")]
             public string CustomerDomain{ get; set; }
-            //// <summary>
+            /// <summary>
             // CPS模式
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("CPSMode")]
-            public int? CPSMode{ get; set; }
-            //// <summary>
+            public int CPSMode{ get; set; }
+            /// <summary>
             // 渠道名称
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("ChannelName")]
             public string ChannelName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 生成时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(9)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

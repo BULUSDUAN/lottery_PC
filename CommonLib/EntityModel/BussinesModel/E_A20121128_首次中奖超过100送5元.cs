@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("E_A20121128_首次中奖超过100送5元",Type = EntityType.Table)]
     public class E_A20121128_首次中奖超过100送5元
@@ -18,53 +18,53 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 用户编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("UserId")]
             public string UserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 彩种代码
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("GameCode")]
             public string GameCode{ get; set; }
-            //// <summary>
+            /// <summary>
             // 玩法
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("GameType")]
             public string GameType{ get; set; }
-            //// <summary>
+            /// <summary>
             // 期号
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("IssuseNumber")]
             public string IssuseNumber{ get; set; }
-            //// <summary>
+            /// <summary>
             // 方案编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("SchemeId")]
             public string SchemeId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 赠送金额
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("GiveMoney")]
-            public decimal? GiveMoney{ get; set; }
-            //// <summary>
+            public decimal GiveMoney{ get; set; }
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("C_Index_Match",Type = EntityType.Table)]
     public class C_Index_Match
@@ -18,35 +18,35 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键Id
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 比赛编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("MatchId")]
             public string MatchId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 比赛名字
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("MatchName")]
             public string MatchName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 队伍图片路径
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("ImgPath")]
             public string ImgPath{ get; set; }
-            //// <summary>
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

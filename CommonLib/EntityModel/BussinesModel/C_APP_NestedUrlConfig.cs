@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 配置APP嵌套地址
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("C_APP_NestedUrlConfig",Type = EntityType.Table)]
     public class C_APP_NestedUrlConfig
@@ -18,47 +18,47 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // Key值
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("ConfigKey")]
             public string ConfigKey{ get; set; }
-            //// <summary>
+            /// <summary>
             // 嵌套地址
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("Url")]
             public string Url{ get; set; }
-            //// <summary>
+            /// <summary>
             // 备注
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("Remarks")]
             public string Remarks{ get; set; }
-            //// <summary>
+            /// <summary>
             // 类型
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("UrlType")]
-            public int? UrlType{ get; set; }
-            //// <summary>
+            public int UrlType{ get; set; }
+            /// <summary>
             // 是否启用
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("IsEnable")]
-            public bool? IsEnable{ get; set; }
-            //// <summary>
+            public bool IsEnable{ get; set; }
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

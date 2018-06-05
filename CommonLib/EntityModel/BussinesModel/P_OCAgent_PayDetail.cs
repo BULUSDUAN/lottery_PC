@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 代理返点明细
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("P_OCAgent_PayDetail",Type = EntityType.Table)]
     public class P_OCAgent_PayDetail
@@ -18,89 +18,89 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 订单号
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("SchemeId")]
             public string SchemeId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 订单用户（投注订单的用户）
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("OrderUser")]
             public string OrderUser{ get; set; }
-            //// <summary>
+            /// <summary>
             // 收入用户编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("PayInUserId")]
             public string PayInUserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 方案类型
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("SchemeType")]
-            public int? SchemeType{ get; set; }
-            //// <summary>
+            public int SchemeType{ get; set; }
+            /// <summary>
             // 彩种
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("GameCode")]
             public string GameCode{ get; set; }
-            //// <summary>
+            /// <summary>
             // 玩法
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("GameType")]
             public string GameType{ get; set; }
-            //// <summary>
+            /// <summary>
             // 返点
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("Rebate")]
-            public decimal? Rebate{ get; set; }
-            //// <summary>
+            public decimal Rebate{ get; set; }
+            /// <summary>
             // 订单总金额  或 订单盈利金额
-            ////</summary>
+            ///</summary>
             [ProtoMember(9)]
             [Field("OrderTotalMoney")]
-            public decimal? OrderTotalMoney{ get; set; }
-            //// <summary>
+            public decimal OrderTotalMoney{ get; set; }
+            /// <summary>
             // 返利金额
-            ////</summary>
+            ///</summary>
             [ProtoMember(10)]
             [Field("PayMoney")]
-            public decimal? PayMoney{ get; set; }
-            //// <summary>
+            public decimal PayMoney{ get; set; }
+            /// <summary>
             // CPS模式
-            ////</summary>
+            ///</summary>
             [ProtoMember(11)]
             [Field("CPSMode")]
-            public int? CPSMode{ get; set; }
-            //// <summary>
+            public int CPSMode{ get; set; }
+            /// <summary>
             // 处理人（用于提现返点，结算分红）
-            ////</summary>
+            ///</summary>
             [ProtoMember(12)]
             [Field("HandlPeople")]
             public string HandlPeople{ get; set; }
-            //// <summary>
+            /// <summary>
             // 备注
-            ////</summary>
+            ///</summary>
             [ProtoMember(13)]
             [Field("Remark")]
             public string Remark{ get; set; }
-            //// <summary>
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(14)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

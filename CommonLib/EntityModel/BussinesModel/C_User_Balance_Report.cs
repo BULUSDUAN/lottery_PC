@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 用户余额报表
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("C_User_Balance_Report",Type = EntityType.Table)]
     public class C_User_Balance_Report
@@ -18,71 +18,71 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 保存时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("SaveDateTime")]
             public string SaveDateTime{ get; set; }
-            //// <summary>
+            /// <summary>
             // 总充值余额
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("TotalFillMoneyBalance")]
-            public decimal? TotalFillMoneyBalance{ get; set; }
-            //// <summary>
+            public decimal TotalFillMoneyBalance{ get; set; }
+            /// <summary>
             // 总奖金余额
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("TotalBonusBalance")]
-            public decimal? TotalBonusBalance{ get; set; }
-            //// <summary>
+            public decimal TotalBonusBalance{ get; set; }
+            /// <summary>
             // 总佣金余额
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("TotalCommissionBalance")]
-            public decimal? TotalCommissionBalance{ get; set; }
-            //// <summary>
+            public decimal TotalCommissionBalance{ get; set; }
+            /// <summary>
             // 总名家余额
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("TotalExpertsBalance")]
-            public decimal? TotalExpertsBalance{ get; set; }
-            //// <summary>
+            public decimal TotalExpertsBalance{ get; set; }
+            /// <summary>
             // 总冻结余额
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("TotalFreezeBalance")]
-            public decimal? TotalFreezeBalance{ get; set; }
-            //// <summary>
+            public decimal TotalFreezeBalance{ get; set; }
+            /// <summary>
             // 总红包金额
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("TotalRedBagBalance")]
-            public decimal? TotalRedBagBalance{ get; set; }
-            //// <summary>
+            public decimal TotalRedBagBalance{ get; set; }
+            /// <summary>
             // 总成长值
-            ////</summary>
+            ///</summary>
             [ProtoMember(9)]
             [Field("TotalUserGrowth")]
-            public int? TotalUserGrowth{ get; set; }
-            //// <summary>
+            public int TotalUserGrowth{ get; set; }
+            /// <summary>
             // 总豆豆数量
-            ////</summary>
+            ///</summary>
             [ProtoMember(10)]
             [Field("TotalDouDou")]
-            public int? TotalDouDou{ get; set; }
-            //// <summary>
+            public int TotalDouDou{ get; set; }
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(11)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

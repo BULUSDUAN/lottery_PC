@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // yqid普通用户推广
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("E_Blog_UserSpread",Type = EntityType.Table)]
     public class E_Blog_UserSpread
@@ -18,77 +18,77 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 用户编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("UserId")]
             public string UserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 用户姓名
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("userName")]
             public string userName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 代理商编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("AgentId")]
             public string AgentId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("CrateTime")]
-            public DateTime? CrateTime{ get; set; }
-            //// <summary>
+            public DateTime CrateTime{ get; set; }
+            /// <summary>
             // 传统足球
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("CTZQ")]
-            public decimal? CTZQ{ get; set; }
-            //// <summary>
+            public decimal CTZQ{ get; set; }
+            /// <summary>
             // 北京单场
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("BJDC")]
-            public decimal? BJDC{ get; set; }
-            //// <summary>
+            public decimal BJDC{ get; set; }
+            /// <summary>
             // 竞彩足球
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("JCZQ")]
-            public decimal? JCZQ{ get; set; }
-            //// <summary>
+            public decimal JCZQ{ get; set; }
+            /// <summary>
             // 竞彩篮球
-            ////</summary>
+            ///</summary>
             [ProtoMember(9)]
             [Field("JCLQ")]
-            public decimal? JCLQ{ get; set; }
-            //// <summary>
+            public decimal JCLQ{ get; set; }
+            /// <summary>
             // SZC
-            ////</summary>
+            ///</summary>
             [ProtoMember(10)]
             [Field("SZC")]
-            public decimal? SZC{ get; set; }
-            //// <summary>
+            public decimal SZC{ get; set; }
+            /// <summary>
             // GPC
-            ////</summary>
+            ///</summary>
             [ProtoMember(11)]
             [Field("GPC")]
-            public decimal? GPC{ get; set; }
-            //// <summary>
+            public decimal GPC{ get; set; }
+            /// <summary>
             // 更新时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(12)]
             [Field("UpdateTime")]
-            public DateTime? UpdateTime{ get; set; }
+            public DateTime UpdateTime{ get; set; }
     }
 }

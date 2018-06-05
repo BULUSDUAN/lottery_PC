@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("E_SiteMessage_UserIdea_List",Type = EntityType.Table)]
     public class E_SiteMessage_UserIdea_List
@@ -18,111 +18,111 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 描述
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("Description")]
             public string Description{ get; set; }
-            //// <summary>
+            /// <summary>
             // 分类
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("Category")]
             public string Category{ get; set; }
-            //// <summary>
+            /// <summary>
             // 状态
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("Status")]
             public string Status{ get; set; }
-            //// <summary>
+            /// <summary>
             // 是否匿名用户
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("IsAnonymous")]
-            public bool? IsAnonymous{ get; set; }
-            //// <summary>
+            public bool IsAnonymous{ get; set; }
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
-            //// <summary>
+            public DateTime CreateTime{ get; set; }
+            /// <summary>
             // 创建者编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("CreateUserId")]
             public string CreateUserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 创建者显示名称
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("CreateUserDisplayName")]
             public string CreateUserDisplayName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 创建者手机
-            ////</summary>
+            ///</summary>
             [ProtoMember(9)]
             [Field("CreateUserMoibile")]
             public string CreateUserMoibile{ get; set; }
-            //// <summary>
+            /// <summary>
             // 更新时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(10)]
             [Field("UpdateTime")]
-            public DateTime? UpdateTime{ get; set; }
-            //// <summary>
+            public DateTime UpdateTime{ get; set; }
+            /// <summary>
             // 更新者编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(11)]
             [Field("UpdateUserId")]
             public string UpdateUserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 更新者显示名称
-            ////</summary>
+            ///</summary>
             [ProtoMember(12)]
             [Field("UpdateUserDisplayName")]
             public string UpdateUserDisplayName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 页面打开速度
-            ////</summary>
+            ///</summary>
             [ProtoMember(13)]
             [Field("PageOpenSpeed")]
-            public decimal? PageOpenSpeed{ get; set; }
-            //// <summary>
+            public decimal PageOpenSpeed{ get; set; }
+            /// <summary>
             // 界面设计美观
-            ////</summary>
+            ///</summary>
             [ProtoMember(14)]
             [Field("InterfaceBeautiful")]
-            public decimal? InterfaceBeautiful{ get; set; }
-            //// <summary>
+            public decimal InterfaceBeautiful{ get; set; }
+            /// <summary>
             // 界面设计美观
-            ////</summary>
+            ///</summary>
             [ProtoMember(15)]
             [Field("ComposingReasonable")]
-            public decimal? ComposingReasonable{ get; set; }
-            //// <summary>
+            public decimal ComposingReasonable{ get; set; }
+            /// <summary>
             // 操作过程合理
-            ////</summary>
+            ///</summary>
             [ProtoMember(16)]
             [Field("OperationReasonable")]
-            public decimal? OperationReasonable{ get; set; }
-            //// <summary>
+            public decimal OperationReasonable{ get; set; }
+            /// <summary>
             // 内容传达清晰
-            ////</summary>
+            ///</summary>
             [ProtoMember(17)]
             [Field("ContentConveyDistinct")]
-            public decimal? ContentConveyDistinct{ get; set; }
-            //// <summary>
+            public decimal ContentConveyDistinct{ get; set; }
+            /// <summary>
             // 管理回复
-            ////</summary>
+            ///</summary>
             [ProtoMember(18)]
             [Field("ManageReply")]
             public string ManageReply{ get; set; }

@@ -465,206 +465,205 @@ namespace Lottery.Api.Controllers
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<LotteryServiceResponse> QueryAccountDetial([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
-        {
-            try
-            {
-               
-                Dictionary<string, object> param = new Dictionary<string, object>();
+        //public async Task<LotteryServiceResponse> QueryAccountDetial([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        //{
+        //    try
+        //    {               
+        //        Dictionary<string, object> param = new Dictionary<string, object>();
 
-                var p = WebHelper.Decode(entity.Param);
-                if (string.IsNullOrEmpty(p.userToken))
-                    throw new ArgumentException("您还未登陆");
+        //        var p = WebHelper.Decode(entity.Param);
+        //        if (string.IsNullOrEmpty(p.userToken))
+        //            throw new ArgumentException("您还未登陆");
 
-                param.Add("viewType",p.ViewType);
-                param.Add("userToken",p.UserToken);
-                DateTime startTime = p.StartTime == null ? DateTime.Now : Convert.ToDateTime(p.StartTime);
-                int days = p.Days;
-                startTime = startTime.AddDays(-days).Date;
-                param.Add("startTime", startTime);
-                param.Add("endTime",p.EndTime == null ? DateTime.Now : Convert.ToDateTime(p.EndTime));
-                param.Add("pageIndex", p.PageIndex ?? 0);
-                param.Add("pageSize", p.PageSize ?? 1);
-                //endTime = endTime.AddDays(1);
+        //        param.Add("viewType",p.ViewType);
+        //        param.Add("userToken",p.UserToken);
+        //        DateTime startTime = p.StartTime == null ? DateTime.Now : Convert.ToDateTime(p.StartTime);
+        //        int days = p.Days;
+        //        startTime = startTime.AddDays(-days).Date;
+        //        param.Add("startTime", startTime);
+        //        param.Add("endTime",p.EndTime == null ? DateTime.Now : Convert.ToDateTime(p.EndTime));
+        //        param.Add("pageIndex", p.PageIndex ?? 0);
+        //        param.Add("pageSize", p.PageSize ?? 1);
+        //        //endTime = endTime.AddDays(1);
                
-                var list = new List<object>();
-                if (p.viewType.ToUpper() == "ZHMX")
-                {
-                    string accountType = p.AccoountType;
-                    if (string.IsNullOrEmpty(accountType))
-                        accountType = string.Empty;
-                    var FundDetails = await _serviceProxyProvider.Invoke<UserFundDetailCollection>(param, "api/Order/QueryMyFundDetailList");
-                    if (FundDetails != null && FundDetails.FundDetailList.Count > 0)
-                    {
-                        foreach (var item in FundDetails.FundDetailList)
-                        {
-                            var StrAccountType = ConvertHelper.GetAccountType((int)item.AccountType);
-                            list.Add(new
-                            {
-                                Id = item.Id,
-                                UserId = item.UserId,
-                                AccountType = item.AccountType,
-                                StrAccountType = StrAccountType,
-                                AfterBalance = item.AfterBalance,
-                                BeforeBalance = item.BeforeBalance,
-                                Category = item.Category + (StrAccountType == "充值" ? "" : "|" + ConvertHelper.GetAccountType((int)item.AccountType)),
-                                KeyLine = item.KeyLine,
-                                OperatorId = item.OperatorId,
-                                OrderId = item.OrderId,
-                                PayMoney = item.PayMoney,
-                                PayType = item.PayType,
-                                Summary = item.Summary,
-                                CreateTime =ConvertHelper.ConvertDateTimeInt(item.CreateTime),
-                                TotalPayinCount = FundDetails.TotalPayinCount,
-                                TotalPayinMoney = FundDetails.TotalPayinMoney,
-                                TotalPayoutCount = FundDetails.TotalPayinMoney,
-                                TotalPayoutMoney = FundDetails.TotalPayoutMoney,
-                                SchemeAddress = ConvertHelper.GetDomain() + "/user/scheme/" + item.OrderId,
-                            });
-                        }
-                    }
-                }
-                else if (p.viewType.ToUpper() == "CZJL")
-                {
-                    param.Add("statusList", "1");
-                    var FillMoneyCollection = await _serviceProxyProvider.Invoke<FillMoneyQueryInfoCollection>(param, "api/Order/QueryFillMoneyList");
-                    if (FillMoneyCollection != null && FillMoneyCollection.FillMoneyList.Count > 0)
-                    {
-                        foreach (var item in FillMoneyCollection.FillMoneyList)
-                        {
-                            list.Add(new
-                            {
-                                FillMoneyAgentType = item.FillMoneyAgent,
-                                StrFillMoneyAgentType = ConvertHelper.GetFillMoneyAgentType(item.FillMoneyAgent),
-                                OrderId = item.OrderId,
-                                RequestTime = ConvertHelper.ConvertDateTimeInt(item.RequestTime),
-                                ResponseTime = ConvertHelper.ConvertDateTimeInt(item.ResponseTime.Value),
-                                FillMoneyStatus = item.Status,
-                                StrFillMoneyStatus = ConvertHelper.GetFillMoneyStatus(item.Status),
-                                RequestMoney = item.RequestMoney,
-                                TotalCount = FillMoneyCollection.TotalCount,
-                                TotalRequestMoney = FillMoneyCollection.TotalRequestMoney,
-                                TotalResponseMoney = FillMoneyCollection.TotalResponseMoney,
-                            });
-                        }
-                    }
-                }
-                else if (p.viewType.ToUpper() == "GCJL")
-                {
-                    //OrderQueryType orderType = (OrderQueryType)p.OrderType;
-                    var result = WCFClients.GameQueryClient.QueryMyBettingOrderList(null, "", startTime, endTime, pageIndex, pageSize, userToken);
-                    if (result != null && result.OrderList != null)
-                    {
-                        foreach (var item in result.OrderList)
-                        {
-                            list.Add(new
-                            {
-                                BuyTime =ConvertHelper.ConvertDateTimeInt(item.BuyTime),
-                                BuyMoney = item.BuyMoney,
-                                SchemeBettingCategory = item.SchemeBettingCategory,
-                                StrSchemeBettingCategory = ConvertHelper.GetSchemeBettingCategory(item.SchemeBettingCategory),
-                                SchemeId = item.SchemeId,
-                                TotalCount = result.TotalCount,
-                                TotalBuyMoney = result.TotalBuyMoney,
-                                TotalBonusMoney = result.TotalBonusMoney,
-                            });
-                        }
-                    }
-                }
-                else if (p.viewType.ToUpper() == "ZJJL")
-                {
-                    var result = WCFClients.GameQueryClient.QueryMyFundDetailList(startTime, endTime, "10", "奖金", pageIndex, pageSize, userToken);
-                    if (result != null && result.FundDetailList != null)
-                    {
-                        foreach (var item in result.FundDetailList)
-                        {
-                            list.Add(new
-                            {
-                                Id = item.Id,
-                                UserId = item.UserId,
-                                AccountType = item.AccountType,
-                                AfterBalance = item.AfterBalance,
-                                BeforeBalance = item.BeforeBalance,
-                                Category = item.Category,
-                                KeyLine = item.KeyLine,
-                                OperatorId = item.OperatorId,
-                                OrderId = item.OrderId,
-                                PayMoney = item.PayMoney,
-                                PayType = item.PayType,
-                                Summary = item.Summary,
-                                CreateTime =ConvertHelper.ConvertDateTimeInt(item.CreateTime),
-                                TotalPayinCount = result.TotalPayinCount,
-                                TotalPayinMoney = result.TotalPayinMoney,
-                                TotalPayoutCount = result.TotalPayoutCount,
-                                TotalPayoutMoney = result.TotalPayoutMoney,
-                            });
-                        }
-                    }
-                }
-                else if (p.viewType.ToUpper() == "TKJL")
-                {
-                    var result = WCFClients.GameFundClient.QueryMyWithdrawList(WithdrawStatus.Success, startTime, endTime, pageIndex, pageSize, userToken);
-                    if (result != null && result.WithdrawList != null)
-                    {
-                        foreach (var item in result.WithdrawList)
-                        {
-                            list.Add(new
-                            {
-                                BankCardNumber = item.BankCardNumber,
-                                BankCode = item.BankCode,
-                                BankName = item.BankName,
-                                BankSubName = item.BankSubName,
-                                CityName = item.CityName,
-                                OrderId = item.OrderId,
-                                ProvinceName = item.ProvinceName,
-                                RequestMoney = item.RequestMoney,
-                                RequestTime =ConvertHelper.ConvertDateTimeInt(item.RequestTime),
-                                ResponseTime = ConvertHelper.ConvertDateTimeInt(item.ResponseTime.Value),
-                                ResponseMoney = item.ResponseMoney,
-                                WithdrawAgent = item.WithdrawAgent,
-                                StrWithdrawAgent = ConvertHelper.WithdrawAgentTypeName(item.WithdrawAgent),
-                                Status = item.Status,
-                                StrStatus = ConvertHelper.GetWithdrawStatus(item.Status),
-                                ResponseMessage = item.ResponseMessage,
-                                RequesterDisplayName = item.RequesterDisplayName,
-                                RequesterUserKey = item.RequesterUserKey,
-                                TotalMoney = result.TotalMoney,
-                                TotalRefusedMoney = result.TotalRefusedMoney,
-                                TotalResponseMoney = result.TotalResponseMoney,
-                                TotalWinMoney = result.TotalWinMoney,
-                            });
-                        }
-                    }
-                }
-                return new LotteryServiceResponse
-                {
-                    Code = ResponseCode.成功,
-                    Message = "查询账户明细成功",
-                    MsgId = entity.MsgId,
-                    Value = list,
-                };
-            }
-            catch (ArgumentException ex)
-            {
-                return new LotteryServiceResponse
-                {
-                    Code = ResponseCode.失败,
-                    Message = "业务参数错误",
-                    MsgId = entity.MsgId,
-                    Value = ex.Message,
-                };
-            }
-            catch (Exception ex)
-            {
-                return new LotteryServiceResponse
-                {
-                    Code = ResponseCode.失败,
-                    Message = "查询账户明细出错",
-                    MsgId = entity.MsgId,
-                    Value = ex.Message,
-                };
-            }
-        }
+        //        var list = new List<object>();
+        //        if (p.viewType.ToUpper() == "ZHMX")
+        //        {
+        //            string accountType = p.AccoountType;
+        //            if (string.IsNullOrEmpty(accountType))
+        //                accountType = string.Empty;
+        //            var FundDetails = await _serviceProxyProvider.Invoke<UserFundDetailCollection>(param, "api/Order/QueryMyFundDetailList");
+        //            if (FundDetails != null && FundDetails.FundDetailList.Count > 0)
+        //            {
+        //                foreach (var item in FundDetails.FundDetailList)
+        //                {
+        //                    var StrAccountType = ConvertHelper.GetAccountType((int)item.AccountType);
+        //                    list.Add(new
+        //                    {
+        //                        Id = item.Id,
+        //                        UserId = item.UserId,
+        //                        AccountType = item.AccountType,
+        //                        StrAccountType = StrAccountType,
+        //                        AfterBalance = item.AfterBalance,
+        //                        BeforeBalance = item.BeforeBalance,
+        //                        Category = item.Category + (StrAccountType == "充值" ? "" : "|" + ConvertHelper.GetAccountType((int)item.AccountType)),
+        //                        KeyLine = item.KeyLine,
+        //                        OperatorId = item.OperatorId,
+        //                        OrderId = item.OrderId,
+        //                        PayMoney = item.PayMoney,
+        //                        PayType = item.PayType,
+        //                        Summary = item.Summary,
+        //                        CreateTime =ConvertHelper.ConvertDateTimeInt(item.CreateTime),
+        //                        TotalPayinCount = FundDetails.TotalPayinCount,
+        //                        TotalPayinMoney = FundDetails.TotalPayinMoney,
+        //                        TotalPayoutCount = FundDetails.TotalPayinMoney,
+        //                        TotalPayoutMoney = FundDetails.TotalPayoutMoney,
+        //                        SchemeAddress = ConvertHelper.GetDomain() + "/user/scheme/" + item.OrderId,
+        //                    });
+        //                }
+        //            }
+        //        }
+        //        else if (p.viewType.ToUpper() == "CZJL")
+        //        {
+        //            param.Add("statusList", "1");
+        //            var FillMoneyCollection = await _serviceProxyProvider.Invoke<FillMoneyQueryInfoCollection>(param, "api/Order/QueryFillMoneyList");
+        //            if (FillMoneyCollection != null && FillMoneyCollection.FillMoneyList.Count > 0)
+        //            {
+        //                foreach (var item in FillMoneyCollection.FillMoneyList)
+        //                {
+        //                    list.Add(new
+        //                    {
+        //                        FillMoneyAgentType = item.FillMoneyAgent,
+        //                        StrFillMoneyAgentType = ConvertHelper.GetFillMoneyAgentType(item.FillMoneyAgent),
+        //                        OrderId = item.OrderId,
+        //                        RequestTime = ConvertHelper.ConvertDateTimeInt(item.RequestTime),
+        //                        ResponseTime = ConvertHelper.ConvertDateTimeInt(item.ResponseTime.Value),
+        //                        FillMoneyStatus = item.Status,
+        //                        StrFillMoneyStatus = ConvertHelper.GetFillMoneyStatus(item.Status),
+        //                        RequestMoney = item.RequestMoney,
+        //                        TotalCount = FillMoneyCollection.TotalCount,
+        //                        TotalRequestMoney = FillMoneyCollection.TotalRequestMoney,
+        //                        TotalResponseMoney = FillMoneyCollection.TotalResponseMoney,
+        //                    });
+        //                }
+        //            }
+        //        }
+        //        else if (p.viewType.ToUpper() == "GCJL")
+        //        {
+        //            //OrderQueryType orderType = (OrderQueryType)p.OrderType;
+        //            var result = WCFClients.GameQueryClient.QueryMyBettingOrderList(null, "", startTime, endTime, pageIndex, pageSize, userToken);
+        //            if (result != null && result.OrderList != null)
+        //            {
+        //                foreach (var item in result.OrderList)
+        //                {
+        //                    list.Add(new
+        //                    {
+        //                        BuyTime =ConvertHelper.ConvertDateTimeInt(item.BuyTime),
+        //                        BuyMoney = item.BuyMoney,
+        //                        SchemeBettingCategory = item.SchemeBettingCategory,
+        //                        StrSchemeBettingCategory = ConvertHelper.GetSchemeBettingCategory(item.SchemeBettingCategory),
+        //                        SchemeId = item.SchemeId,
+        //                        TotalCount = result.TotalCount,
+        //                        TotalBuyMoney = result.TotalBuyMoney,
+        //                        TotalBonusMoney = result.TotalBonusMoney,
+        //                    });
+        //                }
+        //            }
+        //        }
+        //        else if (p.viewType.ToUpper() == "ZJJL")
+        //        {
+        //            var result = WCFClients.GameQueryClient.QueryMyFundDetailList(startTime, endTime, "10", "奖金", pageIndex, pageSize, userToken);
+        //            if (result != null && result.FundDetailList != null)
+        //            {
+        //                foreach (var item in result.FundDetailList)
+        //                {
+        //                    list.Add(new
+        //                    {
+        //                        Id = item.Id,
+        //                        UserId = item.UserId,
+        //                        AccountType = item.AccountType,
+        //                        AfterBalance = item.AfterBalance,
+        //                        BeforeBalance = item.BeforeBalance,
+        //                        Category = item.Category,
+        //                        KeyLine = item.KeyLine,
+        //                        OperatorId = item.OperatorId,
+        //                        OrderId = item.OrderId,
+        //                        PayMoney = item.PayMoney,
+        //                        PayType = item.PayType,
+        //                        Summary = item.Summary,
+        //                        CreateTime =ConvertHelper.ConvertDateTimeInt(item.CreateTime),
+        //                        TotalPayinCount = result.TotalPayinCount,
+        //                        TotalPayinMoney = result.TotalPayinMoney,
+        //                        TotalPayoutCount = result.TotalPayoutCount,
+        //                        TotalPayoutMoney = result.TotalPayoutMoney,
+        //                    });
+        //                }
+        //            }
+        //        }
+        //        else if (p.viewType.ToUpper() == "TKJL")
+        //        {
+        //            var result = WCFClients.GameFundClient.QueryMyWithdrawList(WithdrawStatus.Success, startTime, endTime, pageIndex, pageSize, userToken);
+        //            if (result != null && result.WithdrawList != null)
+        //            {
+        //                foreach (var item in result.WithdrawList)
+        //                {
+        //                    list.Add(new
+        //                    {
+        //                        BankCardNumber = item.BankCardNumber,
+        //                        BankCode = item.BankCode,
+        //                        BankName = item.BankName,
+        //                        BankSubName = item.BankSubName,
+        //                        CityName = item.CityName,
+        //                        OrderId = item.OrderId,
+        //                        ProvinceName = item.ProvinceName,
+        //                        RequestMoney = item.RequestMoney,
+        //                        RequestTime =ConvertHelper.ConvertDateTimeInt(item.RequestTime),
+        //                        ResponseTime = ConvertHelper.ConvertDateTimeInt(item.ResponseTime.Value),
+        //                        ResponseMoney = item.ResponseMoney,
+        //                        WithdrawAgent = item.WithdrawAgent,
+        //                        StrWithdrawAgent = ConvertHelper.WithdrawAgentTypeName(item.WithdrawAgent),
+        //                        Status = item.Status,
+        //                        StrStatus = ConvertHelper.GetWithdrawStatus(item.Status),
+        //                        ResponseMessage = item.ResponseMessage,
+        //                        RequesterDisplayName = item.RequesterDisplayName,
+        //                        RequesterUserKey = item.RequesterUserKey,
+        //                        TotalMoney = result.TotalMoney,
+        //                        TotalRefusedMoney = result.TotalRefusedMoney,
+        //                        TotalResponseMoney = result.TotalResponseMoney,
+        //                        TotalWinMoney = result.TotalWinMoney,
+        //                    });
+        //                }
+        //            }
+        //        }
+        //        return new LotteryServiceResponse
+        //        {
+        //            Code = ResponseCode.成功,
+        //            Message = "查询账户明细成功",
+        //            MsgId = entity.MsgId,
+        //            Value = list,
+        //        };
+        //    }
+        //    catch (ArgumentException ex)
+        //    {
+        //        return new LotteryServiceResponse
+        //        {
+        //            Code = ResponseCode.失败,
+        //            Message = "业务参数错误",
+        //            MsgId = entity.MsgId,
+        //            Value = ex.Message,
+        //        };
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new LotteryServiceResponse
+        //        {
+        //            Code = ResponseCode.失败,
+        //            Message = "查询账户明细出错",
+        //            MsgId = entity.MsgId,
+        //            Value = ex.Message,
+        //        };
+        //    }
+        //}
 
     }
 }

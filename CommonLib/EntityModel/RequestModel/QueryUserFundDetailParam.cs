@@ -11,5 +11,6 @@ namespace EntityModel.RequestModel
         public string accountTypeList { get; set; }
         public string categoryList { get; set; }
         public string userToken { get; set; }
+        public string keyLine { get; set; }
     }
 }

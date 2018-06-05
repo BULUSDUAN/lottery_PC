@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("E_Report_UserRegister_ByType",Type = EntityType.Table)]
     public class E_Report_UserRegister_ByType
@@ -18,41 +18,41 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = false, IsPrimaryKey = true)]
             public string Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("DateOrTime")]
             public string DateOrTime{ get; set; }
-            //// <summary>
+            /// <summary>
             // 
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("DateType")]
             public string DateType{ get; set; }
-            //// <summary>
+            /// <summary>
             // 
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("RegType")]
             public string RegType{ get; set; }
-            //// <summary>
+            /// <summary>
             // 
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("UserCount")]
-            public int? UserCount{ get; set; }
-            //// <summary>
+            public int UserCount{ get; set; }
+            /// <summary>
             // 
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("UpdateTime")]
-            public DateTime? UpdateTime{ get; set; }
+            public DateTime UpdateTime{ get; set; }
     }
 }

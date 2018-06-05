@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("C_User_SiteService",Type = EntityType.Table)]
     public class C_User_SiteService
@@ -18,59 +18,59 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键Id
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 用户编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("UserId")]
             public string UserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 服务类型
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("ServiceType")]
-            public int? ServiceType{ get; set; }
-            //// <summary>
+            public int ServiceType{ get; set; }
+            /// <summary>
             // 扩展字段1
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("ExtendedOne")]
             public string ExtendedOne{ get; set; }
-            //// <summary>
+            /// <summary>
             // 扩展字段2
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("ExtendedTwo")]
-            public decimal? ExtendedTwo{ get; set; }
-            //// <summary>
+            public decimal ExtendedTwo{ get; set; }
+            /// <summary>
             // 备注
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("Remarks")]
             public string Remarks{ get; set; }
-            //// <summary>
+            /// <summary>
             // 是否启用
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("IsEnable")]
-            public bool? IsEnable{ get; set; }
-            //// <summary>
+            public bool IsEnable{ get; set; }
+            /// <summary>
             // 修改时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("UpdateTime")]
-            public DateTime? UpdateTime{ get; set; }
-            //// <summary>
+            public DateTime UpdateTime{ get; set; }
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(9)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

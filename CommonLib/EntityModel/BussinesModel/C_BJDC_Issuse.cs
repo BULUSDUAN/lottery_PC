@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("C_BJDC_Issuse",Type = EntityType.Table)]
     public class C_BJDC_Issuse
@@ -18,29 +18,29 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 期号
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("IssuseNumber")]
             public string IssuseNumber{ get; set; }
-            //// <summary>
+            /// <summary>
             // 本地最小结束时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("MinLocalStopTime")]
-            public DateTime? MinLocalStopTime{ get; set; }
-            //// <summary>
+            public DateTime MinLocalStopTime{ get; set; }
+            /// <summary>
             // 最小开始时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("MinMatchStartTime")]
-            public DateTime? MinMatchStartTime{ get; set; }
+            public DateTime MinMatchStartTime{ get; set; }
     }
 }

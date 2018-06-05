@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 分析推荐
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("E_Experter_AnalyzeScheme",Type = EntityType.Table)]
     public class E_Experter_AnalyzeScheme
@@ -18,71 +18,71 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 分析推荐编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("AnalyzeId", IsIdenty = false, IsPrimaryKey = true)]
             public string AnalyzeId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 专家编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("UserId")]
             public string UserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 文章标题
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("Title")]
             public string Title{ get; set; }
-            //// <summary>
+            /// <summary>
             // 来源
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("Source")]
             public string Source{ get; set; }
-            //// <summary>
+            /// <summary>
             // 内容
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("Content")]
             public string Content{ get; set; }
-            //// <summary>
+            /// <summary>
             // 分析价格
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("Price")]
-            public decimal? Price{ get; set; }
-            //// <summary>
+            public decimal Price{ get; set; }
+            /// <summary>
             // 售出次数
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("SellCount")]
-            public int? SellCount{ get; set; }
-            //// <summary>
+            public int SellCount{ get; set; }
+            /// <summary>
             // 处理类别
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("DealWithType")]
-            public int? DealWithType{ get; set; }
-            //// <summary>
+            public int DealWithType{ get; set; }
+            /// <summary>
             // 处理意见
-            ////</summary>
+            ///</summary>
             [ProtoMember(9)]
             [Field("DisposeOpinion")]
             public string DisposeOpinion{ get; set; }
-            //// <summary>
+            /// <summary>
             // 购买时间戳
-            ////</summary>
+            ///</summary>
             [ProtoMember(10)]
             [Field("CurrentTime")]
             public string CurrentTime{ get; set; }
-            //// <summary>
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(11)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

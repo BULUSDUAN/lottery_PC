@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 用户数据统计
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("E_Blog_DataReport",Type = EntityType.Table)]
     public class E_Blog_DataReport
@@ -18,47 +18,47 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 用户编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("UserId")]
             public string UserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 发起合买次数
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("CreateSchemeCount")]
-            public int? CreateSchemeCount{ get; set; }
-            //// <summary>
+            public int CreateSchemeCount{ get; set; }
+            /// <summary>
             // 参与合买次数
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("JoinSchemeCount")]
-            public int? JoinSchemeCount{ get; set; }
-            //// <summary>
+            public int JoinSchemeCount{ get; set; }
+            /// <summary>
             // 总中奖次数
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("TotalBonusCount")]
-            public int? TotalBonusCount{ get; set; }
-            //// <summary>
+            public int TotalBonusCount{ get; set; }
+            /// <summary>
             // 总中奖金额
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("TotalBonusMoney")]
-            public decimal? TotalBonusMoney{ get; set; }
-            //// <summary>
+            public decimal TotalBonusMoney{ get; set; }
+            /// <summary>
             // 更新时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("UpdateTime")]
-            public DateTime? UpdateTime{ get; set; }
+            public DateTime UpdateTime{ get; set; }
     }
 }

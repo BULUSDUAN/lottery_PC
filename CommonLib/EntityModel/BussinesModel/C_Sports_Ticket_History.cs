@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 体彩票据历史
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("C_Sports_Ticket_History",Type = EntityType.Table)]
     public class C_Sports_Ticket_History
@@ -18,191 +18,191 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 方案编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("SchemeId")]
             public string SchemeId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 彩票号
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("TicketId")]
             public string TicketId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 彩种代码
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("GameCode")]
             public string GameCode{ get; set; }
-            //// <summary>
+            /// <summary>
             // 玩法
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("GameType")]
             public string GameType{ get; set; }
-            //// <summary>
+            /// <summary>
             // 串关方式
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("PlayType")]
             public string PlayType{ get; set; }
-            //// <summary>
+            /// <summary>
             // 比赛编号列表
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("MatchIdList")]
             public string MatchIdList{ get; set; }
-            //// <summary>
+            /// <summary>
             // 期号
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("IssuseNumber")]
             public string IssuseNumber{ get; set; }
-            //// <summary>
+            /// <summary>
             // 注数
-            ////</summary>
+            ///</summary>
             [ProtoMember(9)]
             [Field("BetUnits")]
-            public int? BetUnits{ get; set; }
-            //// <summary>
+            public int BetUnits{ get; set; }
+            /// <summary>
             // 倍数
-            ////</summary>
+            ///</summary>
             [ProtoMember(10)]
             [Field("Amount")]
-            public int? Amount{ get; set; }
-            //// <summary>
+            public int Amount{ get; set; }
+            /// <summary>
             // 票金额
-            ////</summary>
+            ///</summary>
             [ProtoMember(11)]
             [Field("BetMoney")]
-            public decimal? BetMoney{ get; set; }
-            //// <summary>
+            public decimal BetMoney{ get; set; }
+            /// <summary>
             // 票内容
-            ////</summary>
+            ///</summary>
             [ProtoMember(12)]
             [Field("BetContent")]
             public string BetContent{ get; set; }
-            //// <summary>
+            /// <summary>
             // 赔率
-            ////</summary>
+            ///</summary>
             [ProtoMember(13)]
             [Field("LocOdds")]
             public string LocOdds{ get; set; }
-            //// <summary>
+            /// <summary>
             // 出票状态
-            ////</summary>
+            ///</summary>
             [ProtoMember(14)]
             [Field("TicketStatus")]
-            public int? TicketStatus{ get; set; }
-            //// <summary>
+            public int TicketStatus{ get; set; }
+            /// <summary>
             // 出票记录
-            ////</summary>
+            ///</summary>
             [ProtoMember(15)]
             [Field("TicketLog")]
             public string TicketLog{ get; set; }
-            //// <summary>
+            /// <summary>
             // 合买伙伴编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(16)]
             [Field("PartnerId")]
             public string PartnerId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 彩票平台序号
-            ////</summary>
+            ///</summary>
             [ProtoMember(17)]
             [Field("Palmid")]
             public string Palmid{ get; set; }
-            //// <summary>
+            /// <summary>
             // 票号1
-            ////</summary>
+            ///</summary>
             [ProtoMember(18)]
             [Field("PrintNumber1")]
             public string PrintNumber1{ get; set; }
-            //// <summary>
+            /// <summary>
             // 票号2
-            ////</summary>
+            ///</summary>
             [ProtoMember(19)]
             [Field("PrintNumber2")]
             public string PrintNumber2{ get; set; }
-            //// <summary>
+            /// <summary>
             // 票号3
-            ////</summary>
+            ///</summary>
             [ProtoMember(20)]
             [Field("PrintNumber3")]
             public string PrintNumber3{ get; set; }
-            //// <summary>
+            /// <summary>
             // 条形码
-            ////</summary>
+            ///</summary>
             [ProtoMember(21)]
             [Field("BarCode")]
             public string BarCode{ get; set; }
-            //// <summary>
+            /// <summary>
             // 打印赔率信息
-            ////</summary>
+            ///</summary>
             [ProtoMember(22)]
             [Field("PrintOdd")]
             public string PrintOdd{ get; set; }
-            //// <summary>
+            /// <summary>
             // 打印没有赔率信息
-            ////</summary>
+            ///</summary>
             [ProtoMember(23)]
             [Field("PrintUnOdd")]
             public string PrintUnOdd{ get; set; }
-            //// <summary>
+            /// <summary>
             // 状态
-            ////</summary>
+            ///</summary>
             [ProtoMember(24)]
             [Field("BonusStatus")]
-            public int? BonusStatus{ get; set; }
-            //// <summary>
+            public int BonusStatus{ get; set; }
+            /// <summary>
             // 税前奖金
-            ////</summary>
+            ///</summary>
             [ProtoMember(25)]
             [Field("PreTaxBonusMoney")]
-            public decimal? PreTaxBonusMoney{ get; set; }
-            //// <summary>
+            public decimal PreTaxBonusMoney{ get; set; }
+            /// <summary>
             // 税后奖金
-            ////</summary>
+            ///</summary>
             [ProtoMember(26)]
             [Field("AfterTaxBonusMoney")]
-            public decimal? AfterTaxBonusMoney{ get; set; }
-            //// <summary>
+            public decimal AfterTaxBonusMoney{ get; set; }
+            /// <summary>
             // 打印时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(27)]
             [Field("PrintDateTime")]
-            public DateTime? PrintDateTime{ get; set; }
-            //// <summary>
+            public DateTime PrintDateTime{ get; set; }
+            /// <summary>
             // 出票接口
-            ////</summary>
+            ///</summary>
             [ProtoMember(28)]
             [Field("Gateway")]
             public string Gateway{ get; set; }
-            //// <summary>
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(29)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
-            //// <summary>
+            public DateTime CreateTime{ get; set; }
+            /// <summary>
             // 是否追加
-            ////</summary>
+            ///</summary>
             [ProtoMember(30)]
             [Field("IsAppend")]
-            public bool? IsAppend{ get; set; }
-            //// <summary>
+            public bool IsAppend{ get; set; }
+            /// <summary>
             // 中奖时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(31)]
             [Field("PrizeDateTime")]
-            public DateTime? PrizeDateTime{ get; set; }
+            public DateTime PrizeDateTime{ get; set; }
     }
 }

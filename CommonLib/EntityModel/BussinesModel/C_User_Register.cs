@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 注册信息
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("C_User_Register",Type = EntityType.Table)]
     public class C_User_Register
@@ -18,107 +18,107 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 用户编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("UserId", IsIdenty = false, IsPrimaryKey = true)]
             public string UserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // VIP等级
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("VipLevel")]
-            public int? VipLevel{ get; set; }
-            //// <summary>
+            public int VipLevel{ get; set; }
+            /// <summary>
             // 显示名称
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("DisplayName")]
             public string DisplayName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 用户名称来源
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("ComeFrom")]
             public string ComeFrom{ get; set; }
-            //// <summary>
+            /// <summary>
             // 注册IP
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("RegisterIp")]
             public string RegisterIp{ get; set; }
-            //// <summary>
+            /// <summary>
             // 注册引用页面
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("ReferrerUrl")]
             public string ReferrerUrl{ get; set; }
-            //// <summary>
+            /// <summary>
             // 注册引用
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("Referrer")]
             public string Referrer{ get; set; }
-            //// <summary>
+            /// <summary>
             // 注册类型
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("RegType")]
             public string RegType{ get; set; }
-            //// <summary>
+            /// <summary>
             // 是否充值
-            ////</summary>
+            ///</summary>
             [ProtoMember(9)]
             [Field("IsFillMoney")]
-            public bool? IsFillMoney{ get; set; }
-            //// <summary>
+            public bool IsFillMoney{ get; set; }
+            /// <summary>
             // 是否启用
-            ////</summary>
+            ///</summary>
             [ProtoMember(10)]
             [Field("IsEnable")]
-            public bool? IsEnable{ get; set; }
-            //// <summary>
+            public bool IsEnable{ get; set; }
+            /// <summary>
             // 是否代理商
-            ////</summary>
+            ///</summary>
             [ProtoMember(11)]
             [Field("IsAgent")]
-            public bool? IsAgent{ get; set; }
-            //// <summary>
+            public bool IsAgent{ get; set; }
+            /// <summary>
             // 隐藏用户名数
-            ////</summary>
+            ///</summary>
             [ProtoMember(12)]
             [Field("HideDisplayNameCount")]
-            public int? HideDisplayNameCount{ get; set; }
-            //// <summary>
+            public int HideDisplayNameCount{ get; set; }
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(13)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
-            //// <summary>
+            public DateTime CreateTime{ get; set; }
+            /// <summary>
             // 代理商编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(14)]
             [Field("AgentId")]
             public string AgentId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 是否同意报告
-            ////</summary>
+            ///</summary>
             [ProtoMember(15)]
             [Field("IsIgnoreReport")]
-            public bool? IsIgnoreReport{ get; set; }
-            //// <summary>
+            public bool IsIgnoreReport{ get; set; }
+            /// <summary>
             // 父级路径
-            ////</summary>
+            ///</summary>
             [ProtoMember(16)]
             [Field("ParentPath")]
             public string ParentPath{ get; set; }
-            //// <summary>
+            /// <summary>
             // 用户类别:0:网站普通用户；1：内部员工用户；
-            ////</summary>
+            ///</summary>
             [ProtoMember(17)]
             [Field("UserType")]
-            public int? UserType{ get; set; }
+            public int UserType{ get; set; }
     }
 }

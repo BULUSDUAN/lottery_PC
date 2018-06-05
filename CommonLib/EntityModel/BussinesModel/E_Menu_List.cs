@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("E_Menu_List",Type = EntityType.Table)]
     public class E_Menu_List
@@ -18,53 +18,53 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 菜单编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("MenuId", IsIdenty = false, IsPrimaryKey = true)]
             public string MenuId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 名称
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("DisplayName")]
             public string DisplayName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 备注
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("Description")]
             public string Description{ get; set; }
-            //// <summary>
+            /// <summary>
             // 父菜单编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("ParentMenuId")]
             public string ParentMenuId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 方法编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("FunctionId")]
             public string FunctionId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 路径
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("Url")]
             public string Url{ get; set; }
-            //// <summary>
+            /// <summary>
             // 菜单类型
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("MenuType")]
-            public int? MenuType{ get; set; }
-            //// <summary>
+            public int MenuType{ get; set; }
+            /// <summary>
             // 是否启用
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("IsEnable")]
-            public bool? IsEnable{ get; set; }
+            public bool IsEnable{ get; set; }
     }
 }

@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 用户获奖记录
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("E_Blog_ProfileBonusLevel",Type = EntityType.Table)]
     public class E_Blog_ProfileBonusLevel
@@ -18,83 +18,83 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 用户编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("UserId")]
             public string UserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 最高中奖等级
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("MaxLevelValue")]
-            public int? MaxLevelValue{ get; set; }
-            //// <summary>
+            public int MaxLevelValue{ get; set; }
+            /// <summary>
             // 最高中奖中文
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("MaxLevelName")]
             public string MaxLevelName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 中奖一百元次数
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("WinOneHundredCount")]
-            public int? WinOneHundredCount{ get; set; }
-            //// <summary>
+            public int WinOneHundredCount{ get; set; }
+            /// <summary>
             // 中一千元次数
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("WinOneThousandCount")]
-            public int? WinOneThousandCount{ get; set; }
-            //// <summary>
+            public int WinOneThousandCount{ get; set; }
+            /// <summary>
             // 中一万元次数
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("WinTenThousandCount")]
-            public int? WinTenThousandCount{ get; set; }
-            //// <summary>
+            public int WinTenThousandCount{ get; set; }
+            /// <summary>
             // 中十万元次数
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("WinOneHundredThousandCount")]
-            public int? WinOneHundredThousandCount{ get; set; }
-            //// <summary>
+            public int WinOneHundredThousandCount{ get; set; }
+            /// <summary>
             // 中百万元次数
-            ////</summary>
+            ///</summary>
             [ProtoMember(9)]
             [Field("WinOneMillionCount")]
-            public int? WinOneMillionCount{ get; set; }
-            //// <summary>
+            public int WinOneMillionCount{ get; set; }
+            /// <summary>
             // 中一千万次数
-            ////</summary>
+            ///</summary>
             [ProtoMember(10)]
             [Field("WinTenMillionCount")]
-            public int? WinTenMillionCount{ get; set; }
-            //// <summary>
+            public int WinTenMillionCount{ get; set; }
+            /// <summary>
             // 中一亿元次数
-            ////</summary>
+            ///</summary>
             [ProtoMember(11)]
             [Field("WinHundredMillionCount")]
-            public int? WinHundredMillionCount{ get; set; }
-            //// <summary>
+            public int WinHundredMillionCount{ get; set; }
+            /// <summary>
             // 总中奖金额
-            ////</summary>
+            ///</summary>
             [ProtoMember(12)]
             [Field("TotalBonusMoney")]
-            public decimal? TotalBonusMoney{ get; set; }
-            //// <summary>
+            public decimal TotalBonusMoney{ get; set; }
+            /// <summary>
             // 更新时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(13)]
             [Field("UpdateTime")]
-            public DateTime? UpdateTime{ get; set; }
+            public DateTime UpdateTime{ get; set; }
     }
 }

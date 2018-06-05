@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("E_SMSSendLog_List",Type = EntityType.Table)]
     public class E_SMSSendLog_List
@@ -18,41 +18,41 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 线索
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("KeyLine")]
             public string KeyLine{ get; set; }
-            //// <summary>
+            /// <summary>
             // 用户编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("UserId")]
             public string UserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 手机号
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("Mobile")]
             public string Mobile{ get; set; }
-            //// <summary>
+            /// <summary>
             // 内容
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("Content")]
             public string Content{ get; set; }
-            //// <summary>
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

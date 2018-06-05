@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 站内信息模板
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("E_SiteMessage_SiteMessageTemplate",Type = EntityType.Table)]
     public class E_SiteMessage_SiteMessageTemplate
@@ -18,35 +18,35 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 模板标题
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("MsgTitle")]
             public string MsgTitle{ get; set; }
-            //// <summary>
+            /// <summary>
             // 模板内容
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("MsgContent")]
             public string MsgContent{ get; set; }
-            //// <summary>
+            /// <summary>
             // 模板参数,参数间以|分隔
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("MsgParams")]
             public string MsgParams{ get; set; }
-            //// <summary>
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

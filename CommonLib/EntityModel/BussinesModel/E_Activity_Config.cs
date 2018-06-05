@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("E_Activity_Config",Type = EntityType.Table)]
     public class E_Activity_Config
@@ -18,35 +18,35 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 配置KEY
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("ConfigKey")]
             public string ConfigKey{ get; set; }
-            //// <summary>
+            /// <summary>
             // 配置名称
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("ConfigName")]
             public string ConfigName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 配置值
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("ConfigValue")]
             public string ConfigValue{ get; set; }
-            //// <summary>
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

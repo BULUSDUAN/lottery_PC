@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // APP配置
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("C_App_Config",Type = EntityType.Table)]
     public class C_App_Config
@@ -18,57 +18,57 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 代理商编码
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("AppAgentId", IsIdenty = false, IsPrimaryKey = true)]
             public string AppAgentId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 代理商名称
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("AgentName")]
             public string AgentName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 配置名称
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("ConfigName")]
             public string ConfigName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 版本号
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("ConfigVersion")]
             public string ConfigVersion{ get; set; }
-            //// <summary>
+            /// <summary>
             // 升级内容
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("ConfigUpdateContent")]
             public string ConfigUpdateContent{ get; set; }
-            //// <summary>
+            /// <summary>
             // 升级地址
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("ConfigDownloadUrl")]
             public string ConfigDownloadUrl{ get; set; }
-            //// <summary>
+            /// <summary>
             // 升级编码
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("ConfigCode")]
             public string ConfigCode{ get; set; }
-            //// <summary>
+            /// <summary>
             // 是否自动升级
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("IsForcedUpgrade")]
-            public bool? IsForcedUpgrade{ get; set; }
-            //// <summary>
+            public bool IsForcedUpgrade{ get; set; }
+            /// <summary>
             // 扩展字段
-            ////</summary>
+            ///</summary>
             [ProtoMember(9)]
             [Field("ConfigExtended")]
             public string ConfigExtended{ get; set; }

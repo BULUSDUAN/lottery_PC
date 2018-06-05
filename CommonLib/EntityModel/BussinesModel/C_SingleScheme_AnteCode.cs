@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 单场方案投注号码
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("C_SingleScheme_AnteCode",Type = EntityType.Table)]
     public class C_SingleScheme_AnteCode
@@ -18,77 +18,77 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 方案编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("SchemeId")]
             public string SchemeId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 彩种代码
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("GameCode")]
             public string GameCode{ get; set; }
-            //// <summary>
+            /// <summary>
             // 玩法
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("GameType")]
             public string GameType{ get; set; }
-            //// <summary>
+            /// <summary>
             // 串关方式
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("PlayType")]
             public string PlayType{ get; set; }
-            //// <summary>
+            /// <summary>
             // 期号
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("IssuseNumber")]
             public string IssuseNumber{ get; set; }
-            //// <summary>
+            /// <summary>
             // 号码完整文件路径
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("AnteCodeFullFileName")]
             public string AnteCodeFullFileName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 允许投注的号，如胜平负 只能投 3 1 0
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("AllowCodes")]
             public string AllowCodes{ get; set; }
-            //// <summary>
+            /// <summary>
             // 选择的场次编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(9)]
             [Field("SelectMatchId")]
             public string SelectMatchId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 是否包括场次编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(10)]
             [Field("ContainsMatchId")]
-            public bool? ContainsMatchId{ get; set; }
-            //// <summary>
+            public bool ContainsMatchId{ get; set; }
+            /// <summary>
             // 是否文件流
-            ////</summary>
+            ///</summary>
             [ProtoMember(11)]
             [Field("FileBuffer")]
             public byte[] FileBuffer{ get; set; }
-            //// <summary>
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(12)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }
