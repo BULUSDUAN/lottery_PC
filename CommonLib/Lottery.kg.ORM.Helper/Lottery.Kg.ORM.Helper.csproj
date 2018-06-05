@@ -30,6 +30,9 @@
     <None Update="MyServer_SQL.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="RedisConfig\redisSettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="SQLServer_SQL.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
