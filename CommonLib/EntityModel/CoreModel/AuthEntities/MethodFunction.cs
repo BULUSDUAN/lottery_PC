@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace EntityModel.CoreModel.AuthEntities
+namespace EntityModel.CoreModel
 {
     /// <summary>
     /// 函数要求的权限信息
