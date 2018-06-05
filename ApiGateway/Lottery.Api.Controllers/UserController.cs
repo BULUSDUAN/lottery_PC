@@ -1,4 +1,8 @@
-﻿using Kason.Sg.Core.ProxyGenerator;
+﻿using EntityModel;
+using EntityModel.CoreModel;
+using EntityModel.RequestModel;
+using Kason.Sg.Core.ProxyGenerator;
+using KaSon.FrameWork.Helper.Net;
 using Lottery.ApiGateway.Model.Enum;
 using Lottery.ApiGateway.Model.HelpModel;
 using Lottery.Base.Controllers;
@@ -17,24 +21,34 @@ namespace Lottery.Api.Controllers
         /// <summary>
         /// 登录
         /// </summary>
-        //public async Task<IActionResult> QueryBonusList([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
-        //{
-        //    try
-        //    {
-        //        var p = WebHelper.Decode(entity.Param);
-        //        string loginName = p.LoginName;
-        //        string password = p.Password;
-        //        if (string.IsNullOrEmpty(loginName))
-        //            throw new Exception("登录名不能为空");
-        //        if (string.IsNullOrEmpty(password))
-        //            throw new Exception("密码不能为空");
-        //    }
-        //    catch (ArgumentException ex)
-        //    {
-        //        return Json(new LotteryServiceResponse { Code = ResponseCode.失败, Message = "查询中奖列表失败", MsgId = entity.MsgId, Value = null });
+        public async Task<IActionResult> UserLogin([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                //var p = WebHelper.Decode(entity.Param);
+                string loginName = "15033333333";
+                string password = "123456";
+                if (string.IsNullOrEmpty(loginName))
+                    throw new Exception("登录名不能为空");
+                if (string.IsNullOrEmpty(password))
+                    throw new Exception("密码不能为空");
+                //param.Add("model", new QueryUserParam());
+                param["loginName"] = loginName;
+                param.Add("password", password);
+                //param.Add("IPAddress", "");
 
-        //    }
-          
-        //}
+                var UserImformation = await _serviceProxyProvider.Invoke<object>(param, "api/user/User_Login");
+               
+
+            }
+            catch (ArgumentException ex)
+            {
+                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = "查询中奖列表失败", MsgId = entity.MsgId, Value = null });
+
+            }
+            return null;
+
+        }
     }
 }

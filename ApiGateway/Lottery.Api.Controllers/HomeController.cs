@@ -68,7 +68,7 @@ namespace Lottery.Api.Controllers
         /// <param name="address"></param>
         /// <param name="queryParam"></param>
         /// <returns></returns>
-        public async Task<IActionResult> GetServiceByRouter([FromServices]IServiceProxyProvider _serviceProxyProvider, string address= "api/user/GetLoginUserList")
+        public async Task<IActionResult> GetServiceByRouter([FromServices]IServiceProxyProvider _serviceProxyProvider, string address= "api/user/User_Login")
         {
             Dictionary<string, object> model = new Dictionary<string, object>();
             model["userName"] = "userName";
