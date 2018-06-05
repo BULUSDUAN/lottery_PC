@@ -1,8 +1,9 @@
-﻿using System;
+﻿using EntityModel.Enum;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace EntityModel.CoreModel.AuthEntities
+namespace EntityModel.CoreModel
 {
     /// <summary>
     /// 访问控制项

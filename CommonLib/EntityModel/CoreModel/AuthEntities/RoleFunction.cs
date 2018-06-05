@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace EntityModel.CoreModel.AuthEntities
-{
+namespace EntityModel.CoreModel
+{ 
     public class RoleFunction : AccessControlItem
     {
         public virtual int IId { get; set; }

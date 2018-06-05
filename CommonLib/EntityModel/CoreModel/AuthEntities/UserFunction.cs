@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace EntityModel.CoreModel.AuthEntities
+namespace EntityModel.CoreModel
 {
     public class UserFunction : AccessControlItem
     {

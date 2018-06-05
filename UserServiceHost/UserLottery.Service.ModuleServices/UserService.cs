@@ -88,13 +88,15 @@ namespace UserLottery.Service.ModuleServices
             //throw new Exception("错误！");
 
             //测试容错
-           // Thread.Sleep(200000);
+            // Thread.Sleep(200000);
 
             //var T1 = TTest1();
             //var T21 = Test21();
             //var T2 = Test2();
             //var T3 = Test3();
-
+            LoginHelper loginHelper = new LoginHelper();
+            //查询用户明
+            var list = loginHelper.QueryUserName();
             return Task.FromResult(1);
         }
 
