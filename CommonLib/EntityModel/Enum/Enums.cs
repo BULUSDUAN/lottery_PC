@@ -362,4 +362,38 @@ namespace EntityModel.Enum
         Success = 3,
         Refused = 4
     }
+
+    /// <summary>
+    /// 使用状态
+    /// </summary>
+    public enum EnableStatus
+    {
+        /// <summary>
+        /// 可用的
+        /// </summary>
+        Enable = 0,
+        /// <summary>
+        /// 禁用的
+        /// </summary>
+        Disable = 1,
+        /// <summary>
+        /// 未知的
+        /// </summary>
+        Unknown = 9,
+    }
+
+    /// <summary>
+    /// 系统角色类型
+    /// </summary>
+    public enum RoleType
+    {
+        /// <summary>
+        /// 前台页面角色
+        /// </summary>
+        WebRole = 1,
+        /// <summary>
+        /// 后台管理角色
+        /// </summary>
+        BackgroundRole = 2,
+    }
 }
