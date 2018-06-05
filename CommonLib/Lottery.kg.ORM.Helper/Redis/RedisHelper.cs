@@ -5,8 +5,12 @@ using System.Text;
 using System.Configuration;
 using StackExchange.Redis;
 using System.Net;
+using System.IO;
+using KaSon.FrameWork.Helper;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
-namespace Common.Lottery.Redis
+namespace Lottery.Kg.ORM.Helper
 {
 
     /// <summary>
@@ -14,6 +18,13 @@ namespace Common.Lottery.Redis
     /// </summary>
     public static class RedisHelper
     {
+
+        static JObject RdConfigInfo;
+        static RedisHelper() {
+           string path = Path.Combine(Directory.GetCurrentDirectory(), @"RedisConfig\redisSettings.json");
+           string jsonText = FileHelper.txtReader(path);
+            RdConfigInfo = (JObject)JsonConvert.DeserializeObject(jsonText);
+        }
         /// <summary>
         /// 是否启用Redis
         /// </summary>
@@ -23,7 +34,8 @@ namespace Common.Lottery.Redis
             {
                 try
                 {
-                    return bool.Parse(ConfigurationManager.AppSettings["EnableRedis"]);
+                   // var c =;
+                    return bool.Parse(RdConfigInfo["EnableRedis"].ToString());
                 }
                 catch (Exception)
                 {
@@ -41,7 +53,7 @@ namespace Common.Lottery.Redis
             {
                 try
                 {
-                    return ConfigurationManager.AppSettings["RedisHost"];
+                    return RdConfigInfo["RedisHost"].ToString();
                 }
                 catch (Exception ex)
                 {
@@ -59,7 +71,7 @@ namespace Common.Lottery.Redis
             {
                 try
                 {
-                    return int.Parse(ConfigurationManager.AppSettings["RedisPost"]);
+                    return int.Parse(RdConfigInfo["RedisPost"].ToString());
                 }
                 catch (Exception ex)
                 {
@@ -77,7 +89,7 @@ namespace Common.Lottery.Redis
             {
                 try
                 {
-                    return ConfigurationManager.AppSettings["RedisPassword"];
+                    return RdConfigInfo["RedisPassword"].ToString();
                 }
                 catch (Exception ex)
                 {
@@ -87,7 +99,7 @@ namespace Common.Lottery.Redis
         }
 
         private static ConnectionMultiplexer _instance;
-        private static string _redisConectStr = ConfigurationManager.AppSettings["RedisConnect"];
+        private static string _redisConectStr = RdConfigInfo["RedisConnect"].ToString();
         private static readonly object redisLock = new object();
         /// <summary>
         /// Redis实例

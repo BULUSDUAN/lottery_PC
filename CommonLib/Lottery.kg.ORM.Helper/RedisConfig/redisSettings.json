@@ -1,0 +1,9 @@
+{
+  "EnableRedis": true,
+  "RedisHost": "0.0.0.1",
+  "RedisPost": 623,
+  "RedisPassword": "RedisPassword",
+  "RedisConnect": "RedisConnect",
+  "Port": "5672"
+}
+
