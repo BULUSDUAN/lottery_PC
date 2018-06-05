@@ -1,10 +1,11 @@
-﻿using System;
+﻿using EntityModel.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 
-namespace GameBiz.Core
+namespace EntityModel.CoreModel
 {
     
     public class GameInfo
