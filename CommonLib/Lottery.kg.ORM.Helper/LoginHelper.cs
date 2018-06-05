@@ -29,7 +29,7 @@ namespace Lottery.Kg.ORM.Helper
         /// </summary>
         public List<User> QueryUserName() {
 
-          var list=  DB.CreateQuery<table_test>().ToList();
+          //var list=  DB.CreateQuery<table_test>().ToList();
             return new List<User>();
         }
         /// <summary>
