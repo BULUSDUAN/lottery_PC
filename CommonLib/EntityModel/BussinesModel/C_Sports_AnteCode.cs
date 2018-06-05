@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("C_Sports_AnteCode",Type = EntityType.Table)]
     public class C_Sports_AnteCode
@@ -18,77 +18,77 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 方案编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("SchemeId")]
             public string SchemeId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 彩种代码
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("GameCode")]
             public string GameCode{ get; set; }
-            //// <summary>
+            /// <summary>
             // 玩法
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("GameType")]
             public string GameType{ get; set; }
-            //// <summary>
+            /// <summary>
             // 串关方式
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("PlayType")]
             public string PlayType{ get; set; }
-            //// <summary>
+            /// <summary>
             // 期号
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("IssuseNumber")]
             public string IssuseNumber{ get; set; }
-            //// <summary>
+            /// <summary>
             // 比赛编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("MatchId")]
             public string MatchId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 投注号
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("AnteCode")]
             public string AnteCode{ get; set; }
-            //// <summary>
+            /// <summary>
             // 是否包单
-            ////</summary>
+            ///</summary>
             [ProtoMember(9)]
             [Field("IsDan")]
-            public bool? IsDan{ get; set; }
-            //// <summary>
+            public bool IsDan{ get; set; }
+            /// <summary>
             // 赔率
-            ////</summary>
+            ///</summary>
             [ProtoMember(10)]
             [Field("Odds")]
             public string Odds{ get; set; }
-            //// <summary>
+            /// <summary>
             // 状态
-            ////</summary>
+            ///</summary>
             [ProtoMember(11)]
             [Field("BonusStatus")]
-            public int? BonusStatus{ get; set; }
-            //// <summary>
+            public int BonusStatus{ get; set; }
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(12)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

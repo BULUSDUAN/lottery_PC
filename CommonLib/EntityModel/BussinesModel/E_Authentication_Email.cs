@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("E_Authentication_Email",Type = EntityType.Table)]
     public class E_Authentication_Email
@@ -18,51 +18,51 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 用户编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("UserId", IsIdenty = false, IsPrimaryKey = true)]
             public string UserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 是否设置邮箱
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("IsSettedEmail")]
-            public bool? IsSettedEmail{ get; set; }
-            //// <summary>
+            public bool IsSettedEmail{ get; set; }
+            /// <summary>
             // 认证来源
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("AuthFrom")]
             public string AuthFrom{ get; set; }
-            //// <summary>
+            /// <summary>
             // 邮箱
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("Email")]
             public string Email{ get; set; }
-            //// <summary>
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
-            //// <summary>
+            public DateTime CreateTime{ get; set; }
+            /// <summary>
             // 创建自
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("CreateBy")]
             public string CreateBy{ get; set; }
-            //// <summary>
+            /// <summary>
             // 更新时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("UpdateTime")]
-            public DateTime? UpdateTime{ get; set; }
-            //// <summary>
+            public DateTime UpdateTime{ get; set; }
+            /// <summary>
             // 更新自
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("UpdateBy")]
             public string UpdateBy{ get; set; }

@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 彩票最新中奖
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("E_LotteryNewBonus",Type = EntityType.Table)]
     public class E_LotteryNewBonus
@@ -18,83 +18,83 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 方案号
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("SchemeId")]
             public string SchemeId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 彩种代码
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("GameCode")]
             public string GameCode{ get; set; }
-            //// <summary>
+            /// <summary>
             // 玩法
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("GameType")]
             public string GameType{ get; set; }
-            //// <summary>
+            /// <summary>
             // 串关方式
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("PlayType")]
             public string PlayType{ get; set; }
-            //// <summary>
+            /// <summary>
             // 期号
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("IssuseNumber")]
             public string IssuseNumber{ get; set; }
-            //// <summary>
+            /// <summary>
             // 用户名称
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("UserDisplayName")]
             public string UserDisplayName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 隐藏用户个数
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("HideUserDisplayNameCount")]
-            public int? HideUserDisplayNameCount{ get; set; }
-            //// <summary>
+            public int HideUserDisplayNameCount{ get; set; }
+            /// <summary>
             // 倍数
-            ////</summary>
+            ///</summary>
             [ProtoMember(9)]
             [Field("Amount")]
-            public int? Amount{ get; set; }
-            //// <summary>
+            public int Amount{ get; set; }
+            /// <summary>
             // 总金额
-            ////</summary>
+            ///</summary>
             [ProtoMember(10)]
             [Field("TotalMoney")]
-            public decimal? TotalMoney{ get; set; }
-            //// <summary>
+            public decimal TotalMoney{ get; set; }
+            /// <summary>
             // 税前奖金
-            ////</summary>
+            ///</summary>
             [ProtoMember(11)]
             [Field("PreTaxBonusMoney")]
-            public decimal? PreTaxBonusMoney{ get; set; }
-            //// <summary>
+            public decimal PreTaxBonusMoney{ get; set; }
+            /// <summary>
             // 税后奖金
-            ////</summary>
+            ///</summary>
             [ProtoMember(12)]
             [Field("AfterTaxBonusMoney")]
-            public decimal? AfterTaxBonusMoney{ get; set; }
-            //// <summary>
+            public decimal AfterTaxBonusMoney{ get; set; }
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(13)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

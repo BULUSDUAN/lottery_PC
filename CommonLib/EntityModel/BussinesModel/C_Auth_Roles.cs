@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("C_Auth_Roles",Type = EntityType.Table)]
     public class C_Auth_Roles
@@ -18,41 +18,41 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("RoleId", IsIdenty = false, IsPrimaryKey = true)]
             public string RoleId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("RoleName")]
             public string RoleName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("ParentRoleId")]
             public string ParentRoleId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("RoleType")]
-            public int? RoleType{ get; set; }
-            //// <summary>
+            public int RoleType{ get; set; }
+            /// <summary>
             // 
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("IsInner")]
-            public bool? IsInner{ get; set; }
-            //// <summary>
+            public bool IsInner{ get; set; }
+            /// <summary>
             // 
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("IsAdmin")]
-            public bool? IsAdmin{ get; set; }
+            public bool IsAdmin{ get; set; }
     }
 }

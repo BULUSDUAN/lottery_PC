@@ -104,6 +104,9 @@
     <None Update="Config\log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Config\ConfigSettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="HostSettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

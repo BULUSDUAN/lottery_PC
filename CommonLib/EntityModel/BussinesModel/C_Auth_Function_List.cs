@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 功能权限
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("C_Auth_Function_List",Type = EntityType.Table)]
     public class C_Auth_Function_List
@@ -18,39 +18,39 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 权限编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("FunctionId", IsIdenty = false, IsPrimaryKey = true)]
             public string FunctionId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 是否前台的基础功能
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("IsWebBasic")]
-            public bool? IsWebBasic{ get; set; }
-            //// <summary>
+            public bool IsWebBasic{ get; set; }
+            /// <summary>
             // 是否后台的基础功能
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("IsBackBasic")]
-            public bool? IsBackBasic{ get; set; }
-            //// <summary>
+            public bool IsBackBasic{ get; set; }
+            /// <summary>
             // 显示名称
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("DisplayName")]
             public string DisplayName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 上级节点Id
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("ParentId")]
             public string ParentId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 节点路径
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("ParentPath")]
             public string ParentPath{ get; set; }

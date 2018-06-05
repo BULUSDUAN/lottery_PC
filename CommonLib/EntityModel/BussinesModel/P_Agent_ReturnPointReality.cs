@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("P_Agent_ReturnPointReality",Type = EntityType.Table)]
     public class P_Agent_ReturnPointReality
@@ -18,53 +18,53 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // ID
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("ID", IsIdenty = true, IsPrimaryKey = true)]
             public int ID{ get; set; }
-            //// <summary>
+            /// <summary>
             // 用户ID
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("UserId")]
             public string UserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 彩种
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("GameCode")]
             public string GameCode{ get; set; }
-            //// <summary>
+            /// <summary>
             // 玩法
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("GameType")]
             public string GameType{ get; set; }
-            //// <summary>
+            /// <summary>
             // 我的返点
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("MyPoint")]
-            public decimal? MyPoint{ get; set; }
-            //// <summary>
+            public decimal MyPoint{ get; set; }
+            /// <summary>
             // 下级的返点
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("LowerPoint")]
-            public decimal? LowerPoint{ get; set; }
-            //// <summary>
+            public decimal LowerPoint{ get; set; }
+            /// <summary>
             // 下级的修改时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("LowerUpTime")]
-            public DateTime? LowerUpTime{ get; set; }
-            //// <summary>
+            public DateTime LowerUpTime{ get; set; }
+            /// <summary>
             // 我的修改时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("MyUpTime")]
-            public DateTime? MyUpTime{ get; set; }
+            public DateTime MyUpTime{ get; set; }
     }
 }

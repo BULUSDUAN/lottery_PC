@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("C_FinanceSettings",Type = EntityType.Table)]
     public class C_FinanceSettings
@@ -18,53 +18,53 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键ID，自增长
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("FinanceId", IsIdenty = true, IsPrimaryKey = true)]
             public int FinanceId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 财务人员
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("UserId")]
             public string UserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 操作级别 101：初级；102：高级
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("OperateRank")]
             public string OperateRank{ get; set; }
-            //// <summary>
+            /// <summary>
             // 10：提现;20充值
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("OperateType")]
             public string OperateType{ get; set; }
-            //// <summary>
+            /// <summary>
             // 最小金额
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("MinMoney")]
-            public decimal? MinMoney{ get; set; }
-            //// <summary>
+            public decimal MinMoney{ get; set; }
+            /// <summary>
             // 最大金额
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("MaxMoney")]
-            public decimal? MaxMoney{ get; set; }
-            //// <summary>
+            public decimal MaxMoney{ get; set; }
+            /// <summary>
             // 创建人员Id
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("OperatorId")]
             public string OperatorId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

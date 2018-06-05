@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("C_JCLQ_Match",Type = EntityType.Table)]
     public class C_JCLQ_Match
@@ -18,123 +18,123 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 比赛Id
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("MatchId", IsIdenty = false, IsPrimaryKey = true)]
             public string MatchId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 比赛编号名称
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("MatchIdName")]
             public string MatchIdName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 比赛日期
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("MatchData")]
             public string MatchData{ get; set; }
-            //// <summary>
+            /// <summary>
             // 比赛编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("MatchNumber")]
             public string MatchNumber{ get; set; }
-            //// <summary>
+            /// <summary>
             // 数据中心Id
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("Mid")]
-            public int? Mid{ get; set; }
-            //// <summary>
+            public int Mid{ get; set; }
+            /// <summary>
             // 联赛Id
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("LeagueId")]
-            public int? LeagueId{ get; set; }
-            //// <summary>
+            public int LeagueId{ get; set; }
+            /// <summary>
             // 联赛名称
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("LeagueName")]
             public string LeagueName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 联赛颜色
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("LeagueColor")]
             public string LeagueColor{ get; set; }
-            //// <summary>
+            /// <summary>
             // 主队编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(9)]
             [Field("HomeTeamId")]
-            public int? HomeTeamId{ get; set; }
-            //// <summary>
+            public int HomeTeamId{ get; set; }
+            /// <summary>
             // 主队名称
-            ////</summary>
+            ///</summary>
             [ProtoMember(10)]
             [Field("HomeTeamName")]
             public string HomeTeamName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 客队编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(11)]
             [Field("GuestTeamId")]
-            public int? GuestTeamId{ get; set; }
-            //// <summary>
+            public int GuestTeamId{ get; set; }
+            /// <summary>
             // 客队名称
-            ////</summary>
+            ///</summary>
             [ProtoMember(12)]
             [Field("GuestTeamName")]
             public string GuestTeamName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 状态
-            ////</summary>
+            ///</summary>
             [ProtoMember(13)]
             [Field("MatchState")]
-            public int? MatchState{ get; set; }
-            //// <summary>
+            public int MatchState{ get; set; }
+            /// <summary>
             // 平均欧指 - 胜
-            ////</summary>
+            ///</summary>
             [ProtoMember(14)]
             [Field("AverageWin")]
-            public decimal? AverageWin{ get; set; }
-            //// <summary>
+            public decimal AverageWin{ get; set; }
+            /// <summary>
             // 平均欧指 - 负
-            ////</summary>
+            ///</summary>
             [ProtoMember(15)]
             [Field("AverageLose")]
-            public decimal? AverageLose{ get; set; }
-            //// <summary>
+            public decimal AverageLose{ get; set; }
+            /// <summary>
             // 比赛开始时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(16)]
             [Field("StartDateTime")]
-            public DateTime? StartDateTime{ get; set; }
-            //// <summary>
+            public DateTime StartDateTime{ get; set; }
+            /// <summary>
             // 单式停止投注时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(17)]
             [Field("DSStopBettingTime")]
-            public DateTime? DSStopBettingTime{ get; set; }
-            //// <summary>
+            public DateTime DSStopBettingTime{ get; set; }
+            /// <summary>
             // 复式停止投注时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(18)]
             [Field("FSStopBettingTime")]
-            public DateTime? FSStopBettingTime{ get; set; }
-            //// <summary>
+            public DateTime FSStopBettingTime{ get; set; }
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(19)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
-            //// <summary>
+            public DateTime CreateTime{ get; set; }
+            /// <summary>
             // 限玩法列表
-            ////</summary>
+            ///</summary>
             [ProtoMember(20)]
             [Field("PrivilegesType")]
             public string PrivilegesType{ get; set; }

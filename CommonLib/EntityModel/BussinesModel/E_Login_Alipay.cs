@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("E_Login_Alipay",Type = EntityType.Table)]
     public class E_Login_Alipay
@@ -18,41 +18,41 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 用户编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("UserId", IsIdenty = false, IsPrimaryKey = true)]
             public string UserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 用户注册信息编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("RegisterId")]
             public string RegisterId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 用户状态
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("UserStatus")]
             public string UserStatus{ get; set; }
-            //// <summary>
+            /// <summary>
             // 用户编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("LoginName")]
             public string LoginName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 开放编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("OpenId")]
             public string OpenId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 用户资金冻结明细
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("C_User_Balance_FreezeList",Type = EntityType.Table)]
     public class C_User_Balance_FreezeList
@@ -18,47 +18,47 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 用户编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("UserId")]
             public string UserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 订单编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("OrderId")]
             public string OrderId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 冻结金额
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("FreezeMoney")]
-            public decimal? FreezeMoney{ get; set; }
-            //// <summary>
+            public decimal FreezeMoney{ get; set; }
+            /// <summary>
             // 类型
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("Category")]
             public string Category{ get; set; }
-            //// <summary>
+            /// <summary>
             // 描述
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("Description")]
             public string Description{ get; set; }
-            //// <summary>
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

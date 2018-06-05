@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("E_SendMsg_HistoryRecord",Type = EntityType.Table)]
     public class E_SendMsg_HistoryRecord
@@ -18,35 +18,35 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 消息主键Id
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("MsgId", IsIdenty = true, IsPrimaryKey = true)]
             public int MsgId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 手机号码
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("PhoneNumber")]
             public string PhoneNumber{ get; set; }
-            //// <summary>
+            /// <summary>
             // IP地址
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("IP")]
             public string IP{ get; set; }
-            //// <summary>
+            /// <summary>
             // 消息内容
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("MsgType")]
-            public int? MsgType{ get; set; }
-            //// <summary>
+            public int MsgType{ get; set; }
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

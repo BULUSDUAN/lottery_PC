@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 活动价配置
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("C_Activity_PrizeConfig",Type = EntityType.Table)]
     public class C_Activity_PrizeConfig
@@ -18,41 +18,41 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 活动编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("ActivityId", IsIdenty = true, IsPrimaryKey = true)]
             public int ActivityId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 活动标题
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("ActivityTitle")]
             public string ActivityTitle{ get; set; }
-            //// <summary>
+            /// <summary>
             // 活动内容
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("ActivityContent")]
             public string ActivityContent{ get; set; }
-            //// <summary>
+            /// <summary>
             // 是否启用
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("IsEnabled")]
-            public bool? IsEnabled{ get; set; }
-            //// <summary>
+            public bool IsEnabled{ get; set; }
+            /// <summary>
             // 创建编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("CreatorId")]
             public string CreatorId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

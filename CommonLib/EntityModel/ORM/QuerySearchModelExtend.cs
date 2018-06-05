@@ -1,5 +1,6 @@
-﻿using KaSon.FrameWork.Helper;
+﻿
 using KaSon.FrameWork.Services.ORM;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,16 +24,12 @@ namespace EntityModel.ORM
             if (model.Filters != null)
             {
 
-                var objj = JsonHelper.Deserialize(model.Filters, typeof(List<WhereField>));
-
-
+                var objj = JsonConvert.DeserializeObject(model.Filters, typeof(List<WhereField>));
                 result.WhereFields = objj == null ? new List<WhereField>() : (List<WhereField>)objj;
             }
             if (model.Sorts != null)
             {
-
-
-                var obj = JsonHelper.Deserialize(model.Sorts, typeof(List<SortField>));
+                var obj = JsonConvert.DeserializeObject(model.Sorts, typeof(List<SortField>));
                 result.SortFields = obj == null ? new List<SortField>() : (List<SortField>)obj;
             }
 

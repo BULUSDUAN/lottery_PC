@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 内容关键字
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("E_SiteMessage_KeywordOfArticle",Type = EntityType.Table)]
     public class E_SiteMessage_KeywordOfArticle
@@ -18,29 +18,29 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 关键字
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("KeyWords")]
             public string KeyWords{ get; set; }
-            //// <summary>
+            /// <summary>
             // 链接
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("Link")]
             public string Link{ get; set; }
-            //// <summary>
+            /// <summary>
             // 是否启用
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("IsEnable")]
-            public bool? IsEnable{ get; set; }
+            public bool IsEnable{ get; set; }
     }
 }

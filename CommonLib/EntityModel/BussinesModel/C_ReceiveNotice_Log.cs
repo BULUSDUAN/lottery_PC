@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("C_ReceiveNotice_Log",Type = EntityType.Table)]
     public class C_ReceiveNotice_Log
@@ -18,59 +18,59 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 通知编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("ReceiveNoticeId", IsIdenty = true, IsPrimaryKey = true)]
             public int ReceiveNoticeId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 代理商编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("AgentId")]
             public string AgentId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 通知类型
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("NoticeType")]
             public int NoticeType{ get; set; }
-            //// <summary>
+            /// <summary>
             // 通知根URL
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("ReceiveUrlRoot")]
             public string ReceiveUrlRoot{ get; set; }
-            //// <summary>
+            /// <summary>
             // 通知数据字符串
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("ReceiveDataString")]
             public string ReceiveDataString{ get; set; }
-            //// <summary>
+            /// <summary>
             // 签名
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("Sign")]
             public string Sign{ get; set; }
-            //// <summary>
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("CreateTime")]
             public DateTime CreateTime{ get; set; }
-            //// <summary>
+            /// <summary>
             // 备注
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("Remark")]
             public string Remark{ get; set; }
-            //// <summary>
+            /// <summary>
             // 发送时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(9)]
             [Field("SendTimes")]
-            public int? SendTimes{ get; set; }
+            public int SendTimes{ get; set; }
     }
 }

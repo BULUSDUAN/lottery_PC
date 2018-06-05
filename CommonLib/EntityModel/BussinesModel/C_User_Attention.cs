@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 用户关注
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("C_User_Attention",Type = EntityType.Table)]
     public class C_User_Attention
@@ -18,29 +18,29 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 被关注人编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("BeAttentionUserId")]
             public string BeAttentionUserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 关注人编号(粉丝)
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("FollowerUserId")]
             public string FollowerUserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("E_A20150919_充值送红包记录",Type = EntityType.Table)]
     public class E_A20150919_充值送红包记录
@@ -18,47 +18,47 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 用户编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("UserId")]
             public string UserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 订单编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("OrderId")]
             public string OrderId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 赠送月份
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("GiveMonth")]
             public string GiveMonth{ get; set; }
-            //// <summary>
+            /// <summary>
             // 充值金额
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("FillMoney")]
-            public decimal? FillMoney{ get; set; }
-            //// <summary>
+            public decimal FillMoney{ get; set; }
+            /// <summary>
             // 赠送金额
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("GiveMoney")]
-            public decimal? GiveMoney{ get; set; }
-            //// <summary>
+            public decimal GiveMoney{ get; set; }
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

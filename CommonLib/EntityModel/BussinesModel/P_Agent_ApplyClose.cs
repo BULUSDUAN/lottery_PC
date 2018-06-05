@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("P_Agent_ApplyClose",Type = EntityType.Table)]
     public class P_Agent_ApplyClose
@@ -18,41 +18,41 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("ID", IsIdenty = true, IsPrimaryKey = true)]
             public int ID{ get; set; }
-            //// <summary>
+            /// <summary>
             // 
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("ApplyId")]
             public string ApplyId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("GameCode")]
             public string GameCode{ get; set; }
-            //// <summary>
+            /// <summary>
             // 
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("GameType")]
             public string GameType{ get; set; }
-            //// <summary>
+            /// <summary>
             // 
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("Sale")]
-            public decimal? Sale{ get; set; }
-            //// <summary>
+            public decimal Sale{ get; set; }
+            /// <summary>
             // 
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("Commission")]
-            public decimal? Commission{ get; set; }
+            public decimal Commission{ get; set; }
     }
 }

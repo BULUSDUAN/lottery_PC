@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("C_BankCard",Type = EntityType.Table)]
     public class C_BankCard
@@ -18,71 +18,71 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // id
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("BId", IsIdenty = true, IsPrimaryKey = true)]
             public int BId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 用户ID
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("UserId")]
             public string UserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 用户真实姓名
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("RealName")]
             public string RealName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 省份名称
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("ProvinceName")]
             public string ProvinceName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 城市名称
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("CityName")]
             public string CityName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 银行名称
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("BankName")]
             public string BankName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 开户支行名称
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("BankSubName")]
             public string BankSubName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 银行编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("BankCode")]
             public string BankCode{ get; set; }
-            //// <summary>
+            /// <summary>
             // 银行卡卡号
-            ////</summary>
+            ///</summary>
             [ProtoMember(9)]
             [Field("BankCardNumber")]
             public string BankCardNumber{ get; set; }
-            //// <summary>
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(10)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
-            //// <summary>
+            public DateTime CreateTime{ get; set; }
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(11)]
             [Field("UpdateTime")]
-            public DateTime? UpdateTime{ get; set; }
+            public DateTime UpdateTime{ get; set; }
     }
 }

@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("E_A20141203_GiveLottery",Type = EntityType.Table)]
     public class E_A20141203_GiveLottery
@@ -18,35 +18,35 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 方案编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("SchemeId", IsIdenty = false, IsPrimaryKey = true)]
             public string SchemeId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 用户编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("UserId")]
             public string UserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 投注号码
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("AnteCode")]
             public string AnteCode{ get; set; }
-            //// <summary>
+            /// <summary>
             // 活动类型
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("ActivityType")]
-            public int? ActivityType{ get; set; }
-            //// <summary>
+            public int ActivityType{ get; set; }
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

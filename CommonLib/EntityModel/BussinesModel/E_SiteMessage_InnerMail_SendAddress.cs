@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 站内信发送地址
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("E_SiteMessage_InnerMail_SendAddress",Type = EntityType.Table)]
     public class E_SiteMessage_InnerMail_SendAddress
@@ -18,27 +18,27 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("LId", IsIdenty = true, IsPrimaryKey = true)]
             public int LId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 站内信编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("MailId")]
             public string MailId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 站内信接收者类型
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("ReceiverType")]
-            public int? ReceiverType{ get; set; }
-            //// <summary>
+            public int ReceiverType{ get; set; }
+            /// <summary>
             // 接收者编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("ReceiverId")]
             public string ReceiverId{ get; set; }

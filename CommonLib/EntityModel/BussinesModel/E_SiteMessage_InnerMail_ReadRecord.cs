@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 站内信阅读
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("E_SiteMessage_InnerMail_ReadRecord",Type = EntityType.Table)]
     public class E_SiteMessage_InnerMail_ReadRecord
@@ -18,35 +18,35 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("LId", IsIdenty = true, IsPrimaryKey = true)]
             public int LId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 站内信编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("MailId")]
             public string MailId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 接收者编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("ReceiverId")]
             public string ReceiverId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 站内信处理类型
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("HandleType")]
-            public int? HandleType{ get; set; }
-            //// <summary>
+            public int HandleType{ get; set; }
+            /// <summary>
             // 更新时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("UpdateTime")]
-            public DateTime? UpdateTime{ get; set; }
+            public DateTime UpdateTime{ get; set; }
     }
 }

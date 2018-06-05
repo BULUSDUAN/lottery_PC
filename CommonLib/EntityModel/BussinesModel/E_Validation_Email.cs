@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("E_Validation_Email",Type = EntityType.Table)]
     public class E_Validation_Email
@@ -18,47 +18,47 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 邮箱号码
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("Email")]
             public string Email{ get; set; }
-            //// <summary>
+            /// <summary>
             // 类型
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("Category")]
             public string Category{ get; set; }
-            //// <summary>
+            /// <summary>
             // 验证码
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("ValidateCode")]
             public string ValidateCode{ get; set; }
-            //// <summary>
+            /// <summary>
             // 发送时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("SendTimes")]
-            public int? SendTimes{ get; set; }
-            //// <summary>
+            public int SendTimes{ get; set; }
+            /// <summary>
             // 重试时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("RetryTimes")]
-            public int? RetryTimes{ get; set; }
-            //// <summary>
+            public int RetryTimes{ get; set; }
+            /// <summary>
             // 更新时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("UpdateTime")]
-            public DateTime? UpdateTime{ get; set; }
+            public DateTime UpdateTime{ get; set; }
     }
 }

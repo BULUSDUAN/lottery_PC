@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // fxid分享推广
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("E_Blog_UserShareSpread",Type = EntityType.Table)]
     public class E_Blog_UserShareSpread
@@ -18,53 +18,53 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id")]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 用户编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("UserId")]
             public string UserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 代理商编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("AgentId")]
             public string AgentId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 是否领取注册(要求绑定银行卡)红包
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("isGiveRegisterRedBag")]
-            public bool? isGiveRegisterRedBag{ get; set; }
-            //// <summary>
+            public bool isGiveRegisterRedBag{ get; set; }
+            /// <summary>
             // 是否领取首次购彩红包
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("isGiveLotteryRedBag")]
-            public bool? isGiveLotteryRedBag{ get; set; }
-            //// <summary>
+            public bool isGiveLotteryRedBag{ get; set; }
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
-            //// <summary>
+            public DateTime CreateTime{ get; set; }
+            /// <summary>
             // 更新时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("UpdateTime")]
-            public DateTime? UpdateTime{ get; set; }
-            //// <summary>
+            public DateTime UpdateTime{ get; set; }
+            /// <summary>
             // 赠送红包金额
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("giveRedBagMoney")]
-            public decimal? giveRedBagMoney{ get; set; }
+            public decimal giveRedBagMoney{ get; set; }
     }
 }

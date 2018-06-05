@@ -13,5 +13,9 @@ namespace OrderLottery.Service.IModuleServices
     {
         [Service(Date = "2018-06-04", Director = "Debug", Name = "中奖查询")]
         BonusOrderInfoCollection QueryBonusInfoList(QueryBonusInfoListParam Model);
+        [Service(Date = "2018-06-05", Director = "Debug", Name = "北京单场查询开奖结果")]
+        BJDCMatchResultInfo_Collection QueryBJDC_MatchResultCollection(string issuseNumber, int pageIndex, int pageSize);
+        [Service(Date = "2018-06-05", Director = "Debug", Name = "查询我的资金明细")]
+        UserFundDetailCollection QueryMyFundDetailList(QueryUserFundDetailParam Model);
     }
 }

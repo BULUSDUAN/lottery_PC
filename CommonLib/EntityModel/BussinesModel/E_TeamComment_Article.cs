@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 球队点评
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("E_TeamComment_Article",Type = EntityType.Table)]
     public class E_TeamComment_Article
@@ -18,83 +18,83 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 主键
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("ID", IsIdenty = true, IsPrimaryKey = true)]
             public int ID{ get; set; }
-            //// <summary>
+            /// <summary>
             // 用户编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("UserId")]
             public string UserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 彩种编码
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("GameCode")]
             public string GameCode{ get; set; }
-            //// <summary>
+            /// <summary>
             // 期号
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("MatchDate")]
             public string MatchDate{ get; set; }
-            //// <summary>
+            /// <summary>
             // 场次信息
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("OrderNumber")]
             public string OrderNumber{ get; set; }
-            //// <summary>
+            /// <summary>
             // 联赛名称
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("LeagueName")]
             public string LeagueName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 主队信息
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("HomeTeamName")]
             public string HomeTeamName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 客队信息
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("GuestTeamName")]
             public string GuestTeamName{ get; set; }
-            //// <summary>
+            /// <summary>
             // 比赛时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(9)]
             [Field("MatchTime")]
-            public DateTime? MatchTime{ get; set; }
-            //// <summary>
+            public DateTime MatchTime{ get; set; }
+            /// <summary>
             // 用户的发布文章
-            ////</summary>
+            ///</summary>
             [ProtoMember(10)]
             [Field("ArticleContent")]
             public string ArticleContent{ get; set; }
-            //// <summary>
+            /// <summary>
             // 被用户支持
-            ////</summary>
+            ///</summary>
             [ProtoMember(11)]
             [Field("ByTop")]
-            public int? ByTop{ get; set; }
-            //// <summary>
+            public int ByTop{ get; set; }
+            /// <summary>
             // 被用户鄙视
-            ////</summary>
+            ///</summary>
             [ProtoMember(12)]
             [Field("ByTrample")]
-            public int? ByTrample{ get; set; }
-            //// <summary>
+            public int ByTrample{ get; set; }
+            /// <summary>
             // 发布时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(13)]
             [Field("PublishTime")]
-            public DateTime? PublishTime{ get; set; }
+            public DateTime PublishTime{ get; set; }
     }
 }

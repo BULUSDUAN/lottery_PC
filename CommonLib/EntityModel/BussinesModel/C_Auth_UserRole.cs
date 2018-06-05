@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("C_Auth_UserRole",Type = EntityType.Table)]
     public class C_Auth_UserRole
@@ -18,15 +18,15 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("UserId")]
             public string UserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("RoleId")]
             public string RoleId{ get; set; }

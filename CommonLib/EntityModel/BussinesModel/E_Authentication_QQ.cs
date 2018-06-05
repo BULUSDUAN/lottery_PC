@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("E_Authentication_QQ",Type = EntityType.Table)]
     public class E_Authentication_QQ
@@ -18,29 +18,29 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 用户编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("UserId", IsIdenty = false, IsPrimaryKey = true)]
             public string UserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // QQ号码
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("QQ")]
             public string QQ{ get; set; }
-            //// <summary>
+            /// <summary>
             // 更新时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("UpdateTime")]
-            public DateTime? UpdateTime{ get; set; }
-            //// <summary>
+            public DateTime UpdateTime{ get; set; }
+            /// <summary>
             // 创建时间
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

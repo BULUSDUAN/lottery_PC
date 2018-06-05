@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 namespace EntityModel
 {
-    //// <summary>
+    /// <summary>
     // 资金明细
-    ////</summary>
+    ///</summary>
     [ProtoContract]
     [Entity("C_Fund_Detail",Type = EntityType.Table)]
     public class C_Fund_Detail
@@ -18,87 +18,87 @@ namespace EntityModel
         {
         
         }
-            //// <summary>
+            /// <summary>
             // 自增编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
-            //// <summary>
+            /// <summary>
             // 线索编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(2)]
             [Field("KeyLine")]
             public string KeyLine{ get; set; }
-            //// <summary>
+            /// <summary>
             // 内部订单号
-            ////</summary>
+            ///</summary>
             [ProtoMember(3)]
             [Field("OrderId")]
             public string OrderId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 用户Id
-            ////</summary>
+            ///</summary>
             [ProtoMember(4)]
             [Field("UserId")]
             public string UserId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 收支类型
-            ////</summary>
+            ///</summary>
             [ProtoMember(5)]
             [Field("PayType")]
             public int PayType{ get; set; }
-            //// <summary>
+            /// <summary>
             // 账户类型
-            ////</summary>
+            ///</summary>
             [ProtoMember(6)]
             [Field("AccountType")]
             public int AccountType{ get; set; }
-            //// <summary>
+            /// <summary>
             // 分类编号
-            ////</summary>
+            ///</summary>
             [ProtoMember(7)]
             [Field("Category")]
             public string Category{ get; set; }
-            //// <summary>
+            /// <summary>
             // 描述
-            ////</summary>
+            ///</summary>
             [ProtoMember(8)]
             [Field("Summary")]
             public string Summary{ get; set; }
-            //// <summary>
+            /// <summary>
             // 收入金额
-            ////</summary>
+            ///</summary>
             [ProtoMember(9)]
             [Field("PayMoney")]
-            public decimal? PayMoney{ get; set; }
-            //// <summary>
+            public decimal PayMoney{ get; set; }
+            /// <summary>
             // 交易前余额
-            ////</summary>
+            ///</summary>
             [ProtoMember(10)]
             [Field("BeforeBalance")]
-            public decimal? BeforeBalance{ get; set; }
-            //// <summary>
+            public decimal BeforeBalance{ get; set; }
+            /// <summary>
             // 交易后余额
-            ////</summary>
+            ///</summary>
             [ProtoMember(11)]
             [Field("AfterBalance")]
-            public decimal? AfterBalance{ get; set; }
-            //// <summary>
+            public decimal AfterBalance{ get; set; }
+            /// <summary>
             // 创建日期
-            ////</summary>
+            ///</summary>
             [ProtoMember(12)]
             [Field("OperatorId")]
             public string OperatorId{ get; set; }
-            //// <summary>
+            /// <summary>
             // 代理商
-            ////</summary>
+            ///</summary>
             [ProtoMember(13)]
             [Field("CreateTime")]
             public DateTime CreateTime{ get; set; }
-            //// <summary>
+            /// <summary>
             // 操作员Id
-            ////</summary>
+            ///</summary>
             [ProtoMember(14)]
             [Field("AgentId")]
             public string AgentId{ get; set; }
