@@ -11,7 +11,7 @@ namespace Lottery.Kg.ORM.Helper
     public class DBbase
     {
 
-        private static readonly string  _DBType= "MySql";
+        private static readonly string  _DBType= "SqlServer";
 
         IList<SQLModel> sqlmodel = null;
         private static string jsonText = "";
@@ -30,8 +30,8 @@ namespace Lottery.Kg.ORM.Helper
                 path = Path.Combine(Directory.GetCurrentDirectory(), @"SQL_JSON\MyServer_SQL.json");
                 jsonText = FileHelper.txtReader(path );
             }
-            // JObject jo = (JObject)JsonConvert.DeserializeObject(jsonText);
-            sqlModule =(SQLModule)  JsonHelper.Deserialize<SQLModule>(jsonText);
+            // JObject jo = (JObject)JsonConvert.DeserializeObject(jsonText);'System.Data.SqlClient
+            sqlModule = (SQLModule)  JsonHelper.Deserialize<SQLModule>(jsonText);
 
 
 

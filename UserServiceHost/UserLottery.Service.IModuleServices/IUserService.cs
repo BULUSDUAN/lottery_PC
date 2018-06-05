@@ -39,6 +39,8 @@ namespace UserLottery.Service.IModuleServices
         [Service(Date = "2018-5-15", Director = "kason", Name = "获取用户列表")]
         Task<List<User>> GetUserList(string userName);
         //GetUserListBy
-    
+
+        [Service(Date = "2018-6-04", Director = "renjun", Name = "获取用户列表")]
+        Task<List<E_Login_Local>> GetLoginUserList(string userName);
     }
 }

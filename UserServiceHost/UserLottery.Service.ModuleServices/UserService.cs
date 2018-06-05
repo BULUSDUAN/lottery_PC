@@ -71,12 +71,12 @@ namespace UserLottery.Service.ModuleServices
             log.Log("标签", new Exception("错误"));
         }
 
-        private void SQLTest()
+        public void SQLTest()
         {
 
             LoginHelper loginHelper = new LoginHelper();
             //查询用户明
-            loginHelper.QueryUserName();
+            loginHelper.QueryloginUserName();
             //或者
 
         }
@@ -115,6 +115,30 @@ namespace UserLottery.Service.ModuleServices
             foreach (var item in list)
             {
                 Console.WriteLine(item.Name);
+            }
+
+            //  var list = new List<User>();
+
+            return Task.FromResult(list);
+        }
+
+        public Task<List<E_Login_Local>> GetLoginUserList(string userName)
+        {
+            //var xid = RpcContext.GetContext().GetAttachment("xid");
+
+            //throw new Exception("错误！");
+
+            //  var T1 = TTest2();
+            //var T21 = Test21();
+            //var T2 = Test2();
+            //var T3 = Test3();
+            LoginHelper loginHelper = new LoginHelper();
+            //查询用户明
+            var list = loginHelper.QueryloginUserName();
+
+            foreach (var item in list)
+            {
+                Console.WriteLine(item.LoginName);
             }
 
             //  var list = new List<User>();

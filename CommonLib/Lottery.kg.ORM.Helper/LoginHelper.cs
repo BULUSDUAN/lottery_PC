@@ -32,6 +32,17 @@ namespace Lottery.Kg.ORM.Helper
           var list=  DB.CreateQuery<User>().ToList();
             return list;
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public List<E_Login_Local> QueryloginUserName()
+        {
+
+            var list = DB.CreateQuery<E_Login_Local>().ToList();
+            return list;
+        }
+
         private Task<int> TTest1()
         {
 

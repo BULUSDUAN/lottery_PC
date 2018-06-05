@@ -67,7 +67,7 @@ namespace Lottery.Api.Controllers
         /// <param name="address"></param>
         /// <param name="queryParam"></param>
         /// <returns></returns>
-        public async Task<IActionResult> GetServiceByRouter([FromServices]IServiceProxyProvider _serviceProxyProvider, string address= "api/User/GetUserId")
+        public async Task<IActionResult> GetServiceByRouter([FromServices]IServiceProxyProvider _serviceProxyProvider, string address= "api/User/GetLoginUserList")
         {
             Dictionary<string, object> model = new Dictionary<string, object>();
             model["userName"] = "userName";
@@ -76,7 +76,7 @@ namespace Lottery.Api.Controllers
            // {
                 var result = await _serviceProxyProvider.Invoke<object>(model, address);
            // }
-            var edt = DateTime.Now;
+           var edt = DateTime.Now;
             //var list = await serviceDiscoveryProvider.GetServiceDescriptorAsync(address, queryParam);
             //var result = ServiceResult<IEnumerable<ServiceDescriptor>>.Create(true, list);
             return Json(new { result= result, s =sdt.ToString("HH:mm:ss ffff"),e=edt.ToString("HH:mm:ss ffff") });
