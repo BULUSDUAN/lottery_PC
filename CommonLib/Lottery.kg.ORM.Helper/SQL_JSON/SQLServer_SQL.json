@@ -1,20 +1,12 @@
 ﻿{
   "UserSystemModule": [
     {
-      "Key": "LoginSQL",
-      "Desc": "功能描述:登陆",
-      "ParamDesc": "@p:id 整数类型，大于0，",
-      "Director": "kason，作者",
-      "SQL": "select * from test_user where id=@p",
-      "Make": "备注"
-    },
-    {
-      "Key": "RegSQL",
-      "Desc": "功能描述:注册",
-      "ParamDesc": "@p:id 整数类型，大于0，",
-      "Director": "kason，作者",
-      "SQL": "select * from test_user where id=@p",
-      "Make": "备注"
+      "Key": "P_Order_QueryBonusOrderList",
+      "Desc": "中奖查询",
+      "ParamDesc": "@userId:userId,@gameCode:gameCode,@gameType:gameType,@issuseNumber:issuseNumber,@completeData:completeData,@key:key,@pageIndex:pageIndex,@pageSize:pageSize,@totalCount:totalCount",
+      "Director": "Debug",
+      "SQL": "SET NOCOUNT ON; select @TotalCount=0； SELECT * FROM ( SELECT ROW_NUMBER() OVER(ORDER BY ComplateDateTime DESC) AS [RowNumber],[SchemeId],[GameCode],[GameType],[PlayType],[SchemeType],[IssuseNumber],[Amount],[BetCount],[TotalMatchCount],[TotalMoney],[TicketStatus],[ProgressStatus] ,[BonusStatus],[PreTaxBonusMoney],[AfterTaxBonusMoney],ISNULL([IsVirtualOrder],1) [IsVirtualOrder],O.[CreateTime],[BonusCount],BonusCountDescription,BonusCountDisplayName,[ComplateDateTime],[ComplateDate],[IsPrizeMoney],O.[AgentId] ,O.[UserId],R.DisplayName,R.IsAgent,R.HideDisplayNameCount FROM [C_Sports_Order_Complate] O LEFT OUTER JOIN C_User_Register R ON R.UserId=O.UserId WHERE [BonusStatus]=20 AND AfterTaxBonusMoney>2000 AND IsVirtualOrder=0 AND (@UserId='' OR O.[UserId]=@UserId) AND (@GameCode='' OR [GameCode]=@GameCode) --AND (@GameType='' OR [GameType]=@GameType) --AND (@IssuseNumber='' OR [IssuseNumber]=@IssuseNumber) --AND (@CompleteData='' OR [ComplateDate]=@CompleteData) --AND (@Key_UID_UName_SchemeId='' OR O.[UserId]=@Key_UID_UName_SchemeId OR [SchemeId]=@Key_UID_UName_SchemeId OR R.DisplayName=@Key_UID_UName_SchemeId) ) T WHERE [RowNumber] > @PageIndex * @PageSize AND [RowNumber] <= (@PageIndex + 1) * @PageSize",
+      "Remark": "备注"
     }
   ]
 }

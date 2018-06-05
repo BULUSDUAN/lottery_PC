@@ -14,6 +14,7 @@ using Kason.Sg.Core.ProxyGenerator;
 using Kason.Sg.Core.ProxyGenerator.Utilitys;
 using Kason.Sg.Core.ApiGateWay.ServiceDiscovery;
 using Kason.Sg.Core.CPlatform.Utilities;
+using Lottery.ApiGateway.Model.HelpModel;
 //using Lottery.Service.IModuleServices;
 
 namespace Lottery.Api.Controllers

@@ -9,6 +9,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\CommonLib\EntityModel\EntityModel.csproj" />
+    <ProjectReference Include="..\Lottery.ApiGateway.Model\Lottery.ApiGateway.Model.csproj" />
     <ProjectReference Include="..\Lottery.base.Controllers\Lottery.Base.Controllers.csproj" />
  
   </ItemGroup>
