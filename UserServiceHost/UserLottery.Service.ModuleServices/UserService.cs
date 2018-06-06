@@ -30,9 +30,10 @@ using System.Threading;
 using UserLottery.Service.ModuleBaseServices;
 using Lottery.Kg.ORM.Helper;
 using UserLottery.Service.IModuleServices;
-using EntityModel.CoreModel;
 using EntityModel.RequestModel;
 using Lottery.Kg.ORM.Helper.UserHelper;
+using EntityModel.Enum;
+using EntityModel.CoreModel;
 
 namespace UserLottery.Service.ModuleServices
 {
@@ -73,25 +74,27 @@ namespace UserLottery.Service.ModuleServices
             log.Log("调试信息");
             log.Log("标签", new Exception("错误"));
         }
-
-        public Task<string> User_Login(string loginName,string password)
+        E_Login_Local loginEntity = new E_Login_Local();
+        public Task<string> User_Login(string loginName, string password,string addr)
         {
             //QueryUserParam model = new QueryUserParam();
+            string IPAddress = addr;
             var loginBiz = new LocalLoginBusiness();
-            E_Login_Local loginEntity = new E_Login_Local();
-            //if (model.IPAddress == "Client")//移动端登录时，密码已经MD5
-            //    loginEntity = loginBiz.LoginAPP(model.loginName, model.password);
-            //else
+          
+            if (IPAddress == "Client")//移动端登录时，密码已经MD5
+                loginEntity = loginBiz.LoginAPP(loginName,password);
+            else
                 loginEntity = loginBiz.Login(loginName, password);
             if (loginEntity == null)
             {
-               
+                return Task.FromResult("登录名(手机号)或密码错误");
             }
-            //var authBiz = new GameBizAuthBusiness();
-            //if (!IsRoleType(loginEntity.User, RoleType.WebRole))
-            //{
 
-            //}
+            ////var authBiz = new GameBizAuthBusiness();
+            if (!IsRoleType(loginEntity.User, RoleType.WebRole))
+            {
+
+            }
             //if (!loginEntity.Register.IsEnable)
             //{
 
@@ -127,6 +130,18 @@ namespace UserLottery.Service.ModuleServices
             //    IsUserType = loginEntity.Register.UserType == 1 ? true : false
             //};
             return Task.FromResult("");
+        }
+
+        public bool IsRoleType(C_Auth_Users user, RoleType roleType)
+        {
+            foreach (var role in user.RoleList)
+            {
+                if (role.RoleType == roleType)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public Task<int> GetUserId(string userName)

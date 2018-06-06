@@ -33,18 +33,18 @@ namespace Lottery.Api.Controllers
                     throw new Exception("登录名不能为空");
                 if (string.IsNullOrEmpty(password))
                     throw new Exception("密码不能为空");
-                //param.Add("model", new QueryUserParam());
+                //param.Add("model", new QueryUserParam());IPAddress
                 param["loginName"] = loginName;
-                param.Add("password", password);
-                //param.Add("IPAddress", "");
-
-                var UserImformation = await _serviceProxyProvider.Invoke<object>(param, "api/user/User_Login");
+                param["password"]=password;
+                param["IPAddress"] = password;
+                string key = "UserLottery.Service.IModuleServices.IUserService.User_Login_loginName_password_IPAddress";
+                var UserImformation = await _serviceProxyProvider.Invoke<object>(param, "api/user/user_login");
                
 
             }
             catch (ArgumentException ex)
             {
-                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = "查询中奖列表失败", MsgId = entity.MsgId, Value = null });
+                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = "登录失败", MsgId = entity.MsgId, Value = null });
 
             }
             return null;

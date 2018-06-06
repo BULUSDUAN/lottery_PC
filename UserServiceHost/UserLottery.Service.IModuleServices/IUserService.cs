@@ -41,8 +41,8 @@ namespace UserLottery.Service.IModuleServices
         Task<List<User>> GetUserList(string userName);
         //GetUserListBy
 
-        [Service(Date = "2018-6-04", Director = "renjun", Name = "登录")]
-        Task<string> User_Login(string loginName, string password);
+        [Service(Date = "2018-6-06", Director = "renjun", Name = "登录")]
+        Task<string> User_Login(string loginName, string password,string IPAddress);
 
 
 
