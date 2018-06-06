@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using EntityModel.RequestModel;
 
 namespace UserLottery.Service.IModuleServices
 {
@@ -40,7 +41,10 @@ namespace UserLottery.Service.IModuleServices
         Task<List<User>> GetUserList(string userName);
         //GetUserListBy
 
-        [Service(Date = "2018-6-04", Director = "renjun", Name = "获取用户列表")]
-        Task<List<E_Login_Local>> GetLoginUserList(string userName);
+        [Service(Date = "2018-6-06", Director = "renjun", Name = "登录")]
+        Task<string> User_Login(string loginName, string password,string IPAddress);
+
+
+
     }
 }

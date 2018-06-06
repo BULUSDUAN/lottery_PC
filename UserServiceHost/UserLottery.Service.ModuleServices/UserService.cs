@@ -30,6 +30,10 @@ using System.Threading;
 using UserLottery.Service.ModuleBaseServices;
 using Lottery.Kg.ORM.Helper;
 using UserLottery.Service.IModuleServices;
+using EntityModel.RequestModel;
+using Lottery.Kg.ORM.Helper.UserHelper;
+using EntityModel.Enum;
+using EntityModel.CoreModel;
 
 namespace UserLottery.Service.ModuleServices
 {
@@ -70,15 +74,74 @@ namespace UserLottery.Service.ModuleServices
             log.Log("调试信息");
             log.Log("标签", new Exception("错误"));
         }
-
-        public void SQLTest()
+        E_Login_Local loginEntity = new E_Login_Local();
+        public Task<string> User_Login(string loginName, string password,string addr)
         {
+            //QueryUserParam model = new QueryUserParam();
+            string IPAddress = addr;
+            var loginBiz = new LocalLoginBusiness();
+          
+            if (IPAddress == "Client")//移动端登录时，密码已经MD5
+                loginEntity = loginBiz.LoginAPP(loginName,password);
+            else
+                loginEntity = loginBiz.Login(loginName, password);
+            if (loginEntity == null)
+            {
+                return Task.FromResult("登录名(手机号)或密码错误");
+            }
 
-            LoginHelper loginHelper = new LoginHelper();
-            //查询用户明
-            loginHelper.QueryloginUserName();
-            //或者
+            ////var authBiz = new GameBizAuthBusiness();
+            if (!IsRoleType(loginEntity.User, RoleType.WebRole))
+            {
 
+            }
+            //if (!loginEntity.Register.IsEnable)
+            //{
+
+            //}
+            //var userToken = authBiz.GetUserToken(loginEntity.User.UserId);
+            //var blogManager = new BlogManager();
+            //var blogEntity = blogManager.QueryBlog_ProfileBonusLevel(loginEntity.User.UserId);
+
+            ////清理用户绑定数据缓存
+            ////ClearUserBindInfoCache(loginEntity.UserId);
+
+            ////! 执行扩展功能代码 - 提交事务前
+            //BusinessHelper.ExecPlugin<IUser_AfterLogin>(new object[] { loginEntity.UserId, "LOCAL", loginIp, DateTime.Now });
+            ////刷新用户在Redis中的余额
+            //BusinessHelper.RefreshRedisUserBalance(loginEntity.UserId);
+            //return new LoginInfo
+            //{
+            //    IsSuccess = true,
+            //    Message = "登录成功",
+            //    CreateTime = loginEntity.CreateTime,
+            //    LoginFrom = "LOCAL",
+            //    RegType = loginEntity.Register.RegType,
+            //    Referrer = loginEntity.Register.Referrer,
+            //    UserId = loginEntity.User.UserId,
+            //    VipLevel = loginEntity.Register.VipLevel,
+            //    LoginName = loginEntity.LoginName,
+            //    DisplayName = loginEntity.Register.DisplayName,
+            //    UserToken = userToken,
+            //    AgentId = loginEntity.Register.AgentId,
+            //    IsAgent = loginEntity.Register.IsAgent,
+            //    HideDisplayNameCount = loginEntity.Register.HideDisplayNameCount,
+            //    MaxLevelName = string.IsNullOrEmpty(blogEntity.MaxLevelName) ? "" : blogEntity.MaxLevelName,
+            //    IsUserType = loginEntity.Register.UserType == 1 ? true : false
+            //};
+            return Task.FromResult("");
+        }
+
+        public bool IsRoleType(C_Auth_Users user, RoleType roleType)
+        {
+            foreach (var role in user.RoleList)
+            {
+                if (role.RoleType == roleType)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public Task<int> GetUserId(string userName)
@@ -164,6 +227,9 @@ namespace UserLottery.Service.ModuleServices
             // Publish(evt);
             await Task.CompletedTask;
         }
+
+       
+
 
 
         #endregion Implementation of IUserService

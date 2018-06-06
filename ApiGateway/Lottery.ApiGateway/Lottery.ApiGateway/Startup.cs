@@ -29,7 +29,8 @@ using System.Linq;
 //using ZookeeperConfigInfo = Kason.Sg.Core.Zookeeper.Configurations.ConfigInfo;
 
 using ApiGateWayConfig = Kason.Sg.Core.ApiGateWay.AppConfig;
-
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.AspNetCore.Http;
 
 namespace Lottery.ApiGateway
 {
@@ -78,6 +79,7 @@ namespace Lottery.ApiGateway
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             RegisterController(services);
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             return RegisterAutofac(services);
         }
         private IServiceProvider RegisterAutofac(IServiceCollection services)
@@ -115,7 +117,7 @@ namespace Lottery.ApiGateway
 
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
         {
             loggerFactory.AddConsole();
 
@@ -145,6 +147,9 @@ namespace Lottery.ApiGateway
             //myProvider.Mappings.Add(".tpl", "text/plain");
             //app.UseStaticFiles(new StaticFileOptions() { ContentTypeProvider = myProvider });
             //app.UseStaticFiles();
+
+            KaSon.FrameWork.Helper.Net.MyHttpContext.ServiceProvider = svp;
+
             app.UseMvc(routes =>
             {
 

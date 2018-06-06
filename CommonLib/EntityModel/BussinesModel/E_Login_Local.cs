@@ -54,5 +54,7 @@ namespace EntityModel
             [ProtoMember(6)]
             [Field("mobile")]
             public string mobile{ get; set; }
+
+        public C_Auth_Users User { get; set; }
     }
 }

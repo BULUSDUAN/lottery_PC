@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Kason.Sg.Core.Caching.Configurations;
 using Kason.Sg.Core.CPlatform.Utilities;
 using Kason.Sg.Core.EventBusKafka.Configurations;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.AspNetCore.Http;
 
 namespace OrderLottery.Service.Host
 {
@@ -19,6 +21,9 @@ namespace OrderLottery.Service.Host
         public IContainer ConfigureServices(ContainerBuilder builder)
         {
             var services = new ServiceCollection();
+
+           
+
             ConfigureLogging(services);
             builder.Populate(services);
             ServiceLocator.Current = builder.Build();
