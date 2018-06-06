@@ -116,6 +116,7 @@ namespace OrderLottery.Service.ModuleServices
             UserAuthentication Auth = new UserAuthentication();
             var userId = Auth.ValidateUserAuthentication(Model.userToken);
             var v = ConfigHelper.ConfigInfo["QueryUserFundDetailFromCache"].ToString();
+            var collection = new UserFundDetailCollection();
             if (!string.IsNullOrEmpty(v))
             {
                 if (bool.Parse(v))
@@ -124,7 +125,7 @@ namespace OrderLottery.Service.ModuleServices
                     if (!System.IO.Directory.Exists(path))
                         System.IO.Directory.CreateDirectory(path);
 
-                    var list = new List<FundDetailInfo>();
+                    var list = new List<C_Fund_Detail>();
                     var accountArray = Model.accountTypeList.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries).Select(p => int.Parse(p)).ToArray();
                     while (Model.fromDate < Model.toDate)
                     {
@@ -139,9 +140,9 @@ namespace OrderLottery.Service.ModuleServices
                                                             where f.UserId == userId
                                                             && (f.CreateTime >= DateTime.Today && f.CreateTime < DateTime.Today.AddDays(1))
                                                             && (accountArray.Length == 0 || accountArray.Contains((int)f.AccountType))
-                                                            select new FundDetailInfo
+                                                            select new C_Fund_Detail
                                                             {
-                                                                AccountType =(AccountType)f.AccountType,
+                                                                AccountType =(int)f.AccountType,
                                                                 AfterBalance = f.AfterBalance,
                                                                 BeforeBalance = f.BeforeBalance,
                                                                 Category = f.Category,
@@ -151,7 +152,7 @@ namespace OrderLottery.Service.ModuleServices
                                                                 OperatorId = f.OperatorId,
                                                                 OrderId = f.OrderId,
                                                                 PayMoney = f.PayMoney,
-                                                                PayType = (PayType)f.PayType,
+                                                                PayType = (int)f.PayType,
                                                                 Summary = f.Summary,
                                                                 UserId = f.UserId,
                                                             };
@@ -167,13 +168,13 @@ namespace OrderLottery.Service.ModuleServices
                                     if (!string.IsNullOrEmpty(content))
                                     {
                                         //文件内容不为空
-                                        var currentList = JsonHelper.Deserialize<List<FundDetailInfo>>(content);
-                                        var query = from l in currentList
+                                        var currentList = JsonHelper.Deserialize<List<C_Fund_Detail>>(content);
+                                        var querylist = from l in currentList
                                                     where (Model.keyLine == string.Empty || l.KeyLine == Model.keyLine)
                                                     && (accountArray.Length == 0 || accountArray.Contains((int)l.AccountType))
                                                     //&& (categoryArray.Length == 0 || categoryArray.Contains(l.Category))
                                                     select l;
-                                        list.AddRange(query.ToList());
+                                        list.AddRange(querylist.ToList());
                                     }
                                 }
                             }
@@ -184,9 +185,8 @@ namespace OrderLottery.Service.ModuleServices
                         Model.fromDate = Model.fromDate.AddDays(1);
                     }
 
-                    var payInList = list.Where(p => p.PayType == PayType.Payin).ToList();
-                    var payOutList = list.Where(p => p.PayType == PayType.Payout).ToList();
-                    var collection = new UserFundDetailCollection();
+                    var payInList = list.Where(p => p.PayType == (int)PayType.Payin).ToList();
+                    var payOutList = list.Where(p => p.PayType == (int)PayType.Payout).ToList();
                     collection.TotalPayinCount = payInList.Count;
                     collection.TotalPayinMoney = payInList.Count <= 0 ? 0 : payInList.Sum(p => p.PayMoney);
                     collection.TotalPayoutCount = payOutList.Count;
@@ -195,11 +195,68 @@ namespace OrderLottery.Service.ModuleServices
                     return collection;
                 }
             }
-            return new UserFundDetailCollection();
+            return QueryUserFundDetail(Model, userId);
         }
-        public FillMoneyQueryInfo QueryFillMoneyList()
+        public FillMoneyQueryInfo QueryFillMoneyList(QueryFillMoneyListParam Model)
         {
+            UserAuthentication Auth = new UserAuthentication();
+            var userId = Auth.ValidateUserAuthentication(Model.userToken);
             return new FillMoneyQueryInfo();
+        }
+        public UserFundDetailCollection QueryUserFundDetail(QueryUserFundDetailParam Model, string userId)
+        {
+            var collection = new UserFundDetailCollection();
+            userId = string.IsNullOrEmpty(userId) ? string.Empty : userId;
+            Model.keyLine = string.IsNullOrEmpty(Model.keyLine) ? string.Empty : Model.keyLine;
+            Model.accountTypeList = string.IsNullOrEmpty(Model.accountTypeList) ? string.Empty : Model.accountTypeList;
+            Model.categoryList = string.IsNullOrEmpty(Model.categoryList) ? string.Empty : Model.categoryList;
+            Model.toDate = Model.toDate.AddDays(1).Date;
+            Model.pageIndex = Model.pageIndex < 0 ? 0 : Model.pageIndex;
+            if (Model.pageSize < 10000)
+                Model.pageSize = Model.pageSize > Model.MaxPageSize ? Model.MaxPageSize : Model.pageSize;
+
+           int totalPayinCount = 0;
+           decimal totalPayinMoney = 0M;
+           int totalPayoutCount = 0;
+           decimal totalPayoutMoney = 0M;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return new UserFundDetailCollection();
+            }
+
+            // 通过数据库存储过程进行查询
+            Dictionary<string, object> outputs = new Dictionary<string, object>();
+
+            //查询账户类型 和 类别
+            //var AccountTyleList = Model.accountTypeList.Split('|');
+            //查询资金明细
+            string AccountDetail_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_AccountDetail").SQL;
+            var AccountDetail_query = DB.CreateSQLQuery(AccountDetail_sql).SetString("@UserId", userId)
+                .SetString("@StartTime", Model.fromDate.ToString())
+                .SetString("@EndTime", Model.toDate.ToString())
+                .SetInt("@PageIndex", Model.pageIndex)
+                .SetInt("@PageSize", Model.pageSize).List<C_Fund_Detail>();
+            //收入条数和金额
+            string IncomeAndMoney_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_IncomeAndMoney").SQL;
+            var IncomeAndMoney_query = DB.CreateSQLQuery(IncomeAndMoney_sql)
+                .SetString("@UserId", userId)
+                .SetString("@StartTime", Model.fromDate.ToString())
+                .SetString("@EndTime", Model.toDate.ToString()).First<PayTypeDetail>();
+            //支出条数和金额
+            string OutAndMoney_sql= SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_OutAndMoney").SQL;
+            var OutAndMoney_query=DB.CreateSQLQuery(OutAndMoney_sql)
+                 .SetString("@UserId", userId)
+                .SetString("@StartTime", Model.fromDate.ToString())
+                .SetString("@EndTime", Model.toDate.ToString()).First<PayTypeDetail>();
+
+            //整合数据
+            collection.FundDetailList = AccountDetail_query;
+            totalPayinCount = IncomeAndMoney_query.PayCount;
+            totalPayinMoney = IncomeAndMoney_query.TotalPayMoney;
+            totalPayoutCount = OutAndMoney_query.PayCount;
+            totalPayoutMoney = OutAndMoney_query.TotalPayMoney;            
+            return collection;
         }
     }
 }

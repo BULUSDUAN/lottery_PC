@@ -5,8 +5,32 @@
       "Desc": "中奖查询",
       "ParamDesc": "@userId:userId,@gameCode:gameCode,@gameType:gameType,@issuseNumber:issuseNumber,@completeData:completeData,@key:key,@pageIndex:pageIndex,@pageSize:pageSize,@totalCount:totalCount",
       "Director": "Debug",
-      "SQL": "SET NOCOUNT ON; select @TotalCount=0； SELECT * FROM ( SELECT ROW_NUMBER() OVER(ORDER BY ComplateDateTime DESC) AS [RowNumber],[SchemeId],[GameCode],[GameType],[PlayType],[SchemeType],[IssuseNumber],[Amount],[BetCount],[TotalMatchCount],[TotalMoney],[TicketStatus],[ProgressStatus] ,[BonusStatus],[PreTaxBonusMoney],[AfterTaxBonusMoney],ISNULL([IsVirtualOrder],1) [IsVirtualOrder],O.[CreateTime],[BonusCount],BonusCountDescription,BonusCountDisplayName,[ComplateDateTime],[ComplateDate],[IsPrizeMoney],O.[AgentId] ,O.[UserId],R.DisplayName,R.IsAgent,R.HideDisplayNameCount FROM [C_Sports_Order_Complate] O LEFT OUTER JOIN C_User_Register R ON R.UserId=O.UserId WHERE [BonusStatus]=20 AND AfterTaxBonusMoney>2000 AND IsVirtualOrder=0 AND (@UserId='' OR O.[UserId]=@UserId) AND (@GameCode='' OR [GameCode]=@GameCode) --AND (@GameType='' OR [GameType]=@GameType) --AND (@IssuseNumber='' OR [IssuseNumber]=@IssuseNumber) --AND (@CompleteData='' OR [ComplateDate]=@CompleteData) --AND (@Key_UID_UName_SchemeId='' OR O.[UserId]=@Key_UID_UName_SchemeId OR [SchemeId]=@Key_UID_UName_SchemeId OR R.DisplayName=@Key_UID_UName_SchemeId) ) T WHERE [RowNumber] > @PageIndex * @PageSize AND [RowNumber] <= (@PageIndex + 1) * @PageSize",
+      "SQL": "SET NOCOUNT ON; select @TotalCount=0 SELECT * FROM ( SELECT ROW_NUMBER() OVER(ORDER BY ComplateDateTime DESC) AS [RowNumber],[SchemeId],[GameCode],[GameType],[PlayType],[SchemeType],[IssuseNumber],[Amount],[BetCount],[TotalMatchCount],[TotalMoney],[TicketStatus],[ProgressStatus] ,[BonusStatus],[PreTaxBonusMoney],[AfterTaxBonusMoney],ISNULL([IsVirtualOrder],1) [IsVirtualOrder],O.[CreateTime],[BonusCount],BonusCountDescription,BonusCountDisplayName,[ComplateDateTime],[ComplateDate],[IsPrizeMoney],O.[AgentId] ,O.[UserId],R.DisplayName,R.IsAgent,R.HideDisplayNameCount FROM [C_Sports_Order_Complate] O LEFT OUTER JOIN C_User_Register R ON R.UserId=O.UserId WHERE [BonusStatus]=20 AND AfterTaxBonusMoney>2000 AND IsVirtualOrder=0 AND (@UserId='' OR O.[UserId]=@UserId) AND (@GameCode='' OR [GameCode]=@GameCode) ) T WHERE [RowNumber] > @PageIndex * @PageSize AND [RowNumber] <= (@PageIndex + 1) * @PageSize",
       "Remark": "备注"
+    },
+    {
+      "Key": "Debug_AccountDetail",
+      "Desc": "资金明细",
+      "ParamDesc": "@UserId:userId,@StartTime:fromDate,@EndTime:toDate,@PageIndex:pageIndex,@PageSize:pageSize",
+      "Director": "Debug",
+      "SQL": "SELECT * FROM (SELECT ROW_NUMBER() OVER(ORDER BY f.id DESC)ROWINDEX,f.id,f.UserId,f.AccountType,f.Category,f.KeyLine,f.OperatorId,f.PayType,f.Summary,f.OrderId,f.BeforeBalance,f.PayMoney,f.AfterBalance,f.CreateTime FROM C_Fund_Detail f WHERE f.UserId=@UserId) and (f.CreateTime>=@StartTime and f.CreateTime<@EndTime) ) T  WHERE RowIndex > @PageIndex * @PageSize AND RowIndex <= (@PageIndex + 1) * @PageSize",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_IncomeAndMoney",
+      "Desc": "收入/支出条数和金额",
+      "ParamDesc": "@UserId:userId,@StartTime:fromDate,@EndTime:toDate",
+      "Director": "Debug",
+      "SQL": "select count(1) PayCount, isnull(sum(f.PayMoney),0)TotalPayMoney from C_Fund_Detail f where f.UserId=@UserId and (f.CreateTime>=@StartTime and f.CreateTime<@EndTime) and f.PayType=20",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_OutAndMoney",
+      "Desc": "收入/支出条数和金额",
+      "ParamDesc": "@UserId:userId,@StartTime:fromDate,@EndTime:toDate",
+      "Director": "Debug",
+      "SQL": "select count(1) PayCount, isnull(sum(f.PayMoney),0)TotalPayMoney from C_Fund_Detail f where f.UserId=@UserId and (f.CreateTime>=@StartTime and f.CreateTime<@EndTime) and f.PayType=10",
+      "Remark": ""
     }
   ]
 }
