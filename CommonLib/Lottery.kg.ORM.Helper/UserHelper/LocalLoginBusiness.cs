@@ -47,10 +47,15 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
         public E_Login_Local UserLogin(string loginName, string password)
         {
           
-            var LoginUser= DB.CreateQuery<E_Login_Local>().Where(p => (p.LoginName == loginName || p.mobile == loginName) && p.Password == password).FirstOrDefault();
-            if (LoginUser != null) 
-            LoginUser.User=DB.CreateQuery<C_Auth_Users>().Where(p => p.UserId==LoginUser.UserId).FirstOrDefault();
-            return LoginUser;
+            var LoginUser= DB.CreateQuery<E_Login_Local>();
+
+            string lName = loginName;
+            var pp = LoginUser.Where(p=>(p.LoginName== lName || p.mobile== lName) && p.Password== password).SingleOrDefault();
+
+
+            //if (LoginUser != null) 
+            //LoginUser.User=DB.CreateQuery<C_Auth_Users>().Where(p => p.UserId==LoginUser.UserId).FirstOrDefault();
+            return pp;
             //return Session.CreateCriteria<LoginLocal>()
             //    .Add(Restrictions.Eq("LoginName", loginName))
             //    .Add(Restrictions.Eq("Password", password))

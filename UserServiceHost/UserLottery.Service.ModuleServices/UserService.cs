@@ -74,15 +74,15 @@ namespace UserLottery.Service.ModuleServices
             log.Log("标签", new Exception("错误"));
         }
 
-        public Task<string> User_Login(QueryUserParam model)
+        public Task<string> User_Login(string loginName,string password)
         {
             //QueryUserParam model = new QueryUserParam();
             var loginBiz = new LocalLoginBusiness();
             E_Login_Local loginEntity = new E_Login_Local();
-            if (model.IPAddress == "Client")//移动端登录时，密码已经MD5
-                loginEntity = loginBiz.LoginAPP(model.loginName, model.password);
-            else
-                loginEntity = loginBiz.Login(model.loginName, model.password);
+            //if (model.IPAddress == "Client")//移动端登录时，密码已经MD5
+            //    loginEntity = loginBiz.LoginAPP(model.loginName, model.password);
+            //else
+                loginEntity = loginBiz.Login(loginName, password);
             if (loginEntity == null)
             {
                

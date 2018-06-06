@@ -42,7 +42,7 @@ namespace UserLottery.Service.IModuleServices
         //GetUserListBy
 
         [Service(Date = "2018-6-04", Director = "renjun", Name = "登录")]
-        Task<string> User_Login(QueryUserParam model);
+        Task<string> User_Login(string loginName, string password);
 
 
 
