@@ -10,6 +10,7 @@ using EntityModel.ORM;
 using KaSon.FrameWork.Helper;
 using KaSon.FrameWork.Services.Enum;
 using EntityModel.CoreModel;
+using System.Linq.Expressions;
 
 namespace Lottery.Kg.ORM.Helper.UserHelper
 {
@@ -47,7 +48,7 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
         public E_Login_Local UserLogin(string loginName, string password)
         {
           
-            var LoginUser= DB.CreateQuery<E_Login_Local>();
+            var LoginUser= DB.CreateQuery<E_Login_Local>().ToList();
 
         
             var LoginUsers = LoginUser.Where(p=>(p.LoginName== loginName || p.mobile== loginName) && p.Password== password).FirstOrDefault();
@@ -133,19 +134,24 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
         //    }
         //}
 
-        //public bool? CheckIsSame2BalancePassword(string userId, string newPassword)
-        //{
-        //    using (var balanceManager = new UserBalanceManager())
-        //    {
-        //        var balance = balanceManager.QueryUserBalance(userId);
-        //        if (balance == null)
-        //        {
-        //            return null;
-        //        }
-        //        return balance.Password.Equals(Encipherment.MD5(newPassword));
-        //    }
+        public bool? CheckIsSame2BalancePassword(string userId, string newPassword)
+        {
 
-        //}
+            var balance = QueryUserBalance(userId);
+            if (balance == null)
+            {
+                return null;
+            }
+            return balance.Password.Equals(Encipherment.MD5(newPassword));
+        }
+
+        public C_User_Balance QueryUserBalance(string userId)
+        {
+          
+            return DB.CreateQuery< C_User_Balance > ().FirstOrDefault(p => p.UserId == userId);
+        }
+
+
 
         //public bool? CheckIsSame2LoginPassword(string userId, string newPassword)
         //{
@@ -159,30 +165,29 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
         //        return user.Password.ToUpper().Equals(Encipherment.MD5(string.Format("{0}{1}", newPassword, _gbKey)).ToUpper());
         //    }
         //}
-        //public void ChangePassword(string userId, string oldPassword, string newPassword)
-        //{
-        //    oldPassword = Encipherment.MD5(string.Format("{0}{1}", oldPassword, _gbKey)).ToUpper();
-        //    newPassword = Encipherment.MD5(string.Format("{0}{1}", newPassword, _gbKey)).ToUpper();
-        //    using (var biz = new GameBiz.Business.GameBizBusinessManagement())
-        //    {
-        //        biz.BeginTran();
-        //        using (var loginManager = new LoginLocalManager())
-        //        {
-        //            var user = loginManager.GetLoginByUserId(userId);
-        //            if (user == null)
-        //            {
-        //                throw new AuthException("用户不是本地注册用户，不允许修改密码。请确定是否是通过支付宝或QQ帐号进行登录，如有疑问，请联系客服。");
-        //            }
-        //            if (user.Password.ToUpper() != oldPassword)
-        //            {
-        //                throw new AuthException("旧密码输入错误");
-        //            }
-        //            user.Password = newPassword;
-        //            loginManager.UpdateLogin(user);
-        //        }
-        //        biz.CommitTran();
-        //    }
-        //}
+        public Task<string> ChangePassword(string userId, string oldPassword, string newPassword)
+        {
+              oldPassword = Encipherment.MD5(string.Format("{0}{1}", oldPassword, _gbKey)).ToUpper();
+              newPassword = Encipherment.MD5(string.Format("{0}{1}", newPassword, _gbKey)).ToUpper();
+          
+                    DB.Begin();
+
+                    var user= DB.CreateQuery<E_Login_Local>().Where(p =>p.UserId== userId).FirstOrDefault();
+                    if (user == null)
+                    {
+                      return Task.FromResult("用户不是本地注册用户，不允许修改密码。请确定是否是通过支付宝或QQ帐号进行登录，如有疑问，请联系客服。");
+                    }
+                   if (user.Password.ToUpper() != oldPassword)
+                    { 
+                       return Task.FromResult("旧密码输入错误。");
+                    }
+                   user.Password = newPassword;
+                 DB.GetDal<E_Login_Local>().Update(user);
+              
+                DB.Commit();
+            return Task.FromResult("修改密码成功");
+        }
+        
         //public string ChangePassword(string userId)
         //{
         //    var r = new Random(DateTime.Now.Millisecond);
