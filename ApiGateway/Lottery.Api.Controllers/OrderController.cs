@@ -1,4 +1,5 @@
 ﻿using EntityModel.CoreModel;
+using EntityModel.Enum;
 using EntityModel.RequestModel;
 using Kason.Sg.Core.ProxyGenerator;
 using KaSon.FrameWork.Helper;
@@ -492,6 +493,8 @@ namespace Lottery.Api.Controllers
                     string accountType = p.AccoountType;
                     if (string.IsNullOrEmpty(accountType))
                         accountType = string.Empty;
+                    param.Add("accountType", accountType);
+                    param.Add("categoryList", "");
                     var FundDetails = await _serviceProxyProvider.Invoke<UserFundDetailCollection>(param, "api/Order/QueryMyFundDetailList");
                     if (FundDetails != null && FundDetails.FundDetailList.Count > 0)
                     {
@@ -551,7 +554,7 @@ namespace Lottery.Api.Controllers
                 else if (p.viewType.ToUpper() == "GCJL")
                 {
                     //OrderQueryType orderType = (OrderQueryType)p.OrderType;
-                    var result = await _serviceProxyProvider.Invoke<>QueryMyBettingOrderList(null, "", startTime, endTime, pageIndex, pageSize, userToken);
+                    var result = await _serviceProxyProvider.Invoke<MyBettingOrderInfoCollection>(param, "api/Order/QueryMyBettingOrderList");
                     if (result != null && result.OrderList != null)
                     {
                         foreach (var item in result.OrderList)
@@ -572,7 +575,9 @@ namespace Lottery.Api.Controllers
                 }
                 else if (p.viewType.ToUpper() == "ZJJL")
                 {
-                    var result = WCFClients.GameQueryClient.QueryMyFundDetailList(startTime, endTime, "10", "奖金", pageIndex, pageSize, userToken);
+                    param.Add("accountType", "10");
+                    param.Add("categoryList", "奖金");
+                    var result =await _serviceProxyProvider.Invoke<UserFundDetailCollection>(param, "api/Order/QueryMyFundDetailList");
                     if (result != null && result.FundDetailList != null)
                     {
                         foreach (var item in result.FundDetailList)
@@ -602,7 +607,8 @@ namespace Lottery.Api.Controllers
                 }
                 else if (p.viewType.ToUpper() == "TKJL")
                 {
-                    var result = WCFClients.GameFundClient.QueryMyWithdrawList(WithdrawStatus.Success, startTime, endTime, pageIndex, pageSize, userToken);
+                    param.Add("WithdrawStatus", WithdrawStatus.Success);
+                    var result = await _serviceProxyProvider.Invoke<Withdraw_QueryInfoCollection>(param, "api/Order/QueryMyWithdrawList");
                     if (result != null && result.WithdrawList != null)
                     {
                         foreach (var item in result.WithdrawList)

@@ -31,6 +31,46 @@
       "Director": "Debug",
       "SQL": "select count(1) PayCount, isnull(sum(f.PayMoney),0)TotalPayMoney from C_Fund_Detail f where f.UserId=@UserId and (f.CreateTime>=@StartTime and f.CreateTime<@EndTime) and f.PayType=10",
       "Remark": ""
+    },
+    {
+      "key": "Debug_TotalRequestMoney",
+      "Desc": "充值记录金额",
+      "ParamDesc": "@UserId:userId,@AgentList:agentTypeList,@StatusList:statusList,@SourceList:sourceList,@StartTime:startTime,@EndTime:endTime,@OrderId:OrderId",
+      "Director": "Debug",
+      "SQL": "SELECT TotalCount=COUNT(1),TotalRequestMoney=SUM(RequestMoney) FROM C_FillMoney WHERE UserId=@UserId AND (@AgentList=N'' OR FillMoneyAgent IN ({0})) AND (@StatusList=N'' OR [Status] IN ({1})) AND (@SourceList=N'' OR SchemeSource IN ({2})) And (RequestTime>=@StartTime AND RequestTime < @EndTime) And (@OrderId='' or (OrderId=@OrderId or OuterFlowId=@OrderId))",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_TotalResponseMoney",
+      "Desc": "充值记录金额",
+      "ParamDesc": "@UserId:userId,@AgentList:agentTypeList,@SourceList:sourceList,@StartTime:startTime,@EndTime:endTime,@OrderId:OrderId",
+      "Director": "Debug",
+      "SQL": "SELECT TotalResponseMoney=SUM(ResponseMoney) FROM C_FillMoney WHERE  UserId=@UserId AND (@AgentList=N'' OR FillMoneyAgent IN ({0})) AND [Status]=1 AND (@SourceList=N'' OR SchemeSource IN (1)) ANd (RequestTime>=@StartTime AND RequestTime < @EndTime) and (@OrderId='' or (OrderId=@OrderId or OuterFlowId=@OrderId))",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_FillMoneyPage",
+      "Desc": "充值记录分页",
+      "ParamDesc": "@UserId:userId,@AgentList:agentTypeList,@SourceList:sourceList,@StartTime:startTime,@EndTime:endTime,@OrderId:OrderId",
+      "Director": "Debug",
+      "SQL": "SELECT * FROM( SELECT ROW_NUMBER()OVER(ORDER BY RequestTime DESC) RowIndex,T.*,R.ComeFrom,R.VipLevel,DisplayName,R.HideDisplayNameCount FROM C_FillMoney T LEFT OUTER JOIN C_User_Register R ON T.UserId=R.UserId WHERE T.UserId=@UserId) AND (@AgentList=N'' OR FillMoneyAgent IN ({0})) AND (@StatusList=N'' OR [Status] IN ({1})) AND (@SourceList=N'' OR SchemeSource IN ({2})) ANd (RequestTime>=@StartTime AND RequestTime < @EndTime)  and (@OrderId='' or (OrderId=@OrderId or OuterFlowId=@OrderId)) ) T WHERE RowIndex > @PageIndex * @PageSize AND RowIndex <= (@PageIndex + 1) * @PageSize",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_MyBettingOrder",
+      "Desc": "我的投注记录",
+      "ParamDesc": "@UserId:userId,@BonusStatus:bonusStatus,@GameCode:gameCode,@FromDate:startTime,@ToDate:endTime",
+      "Director": "Debug",
+      "SQL": "SELECT TotalCount=COUNT(1), TotalBuyMoney=SUM(o.CurrentBettingMoney), TotalBonusMoney=SUM(o.AfterTaxBonusMoney) FROM [C_OrderDetail] o WHERE o.SchemeType in (1,7) and o.UserId=@UserId AND (@BonusStatus=-1 OR BonusStatus=@BonusStatus) AND (@GameCode=N'' OR GameCode=@GameCode) AND (@FromDate=N'' OR o.CreateTime>=@FromDate) AND (@ToDate=N'' OR o.CreateTime<@ToDate)",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_MyBettingOrderPage",
+      "Desc": "我的投注记录",
+      "ParamDesc": "@UserId:userId,@BonusStatus:bonusStatus,@GameCode:gameCode,@FromDate:startTime,@ToDate:endTime,@PageIndex:,@PageSize:,",
+      "Director": "Debug",
+      "SQL": "SELECT * FROM ( SELECT ROW_NUMBER() OVER(ORDER BY  o.CreateTime DESC, StartIssuseNumber) AS [RowNumber], o.SchemeId,o.UserId,r.VipLevel,r.DisplayName CreatorDisplayName,r.HideDisplayNameCount, o.UserId as JoinUserId,'1' as JoinSucess, GameCode,GameTypeName,SchemeType,SchemeSource,SchemeBettingCategory, o.CreateTime as BuyTime, o.CurrentBettingMoney BuyMoney, TotalMoney,ProgressStatus,TicketStatus ,TotalIssuseCount,StartIssuseNumber IssuseNumber,BonusStatus,IsVirtualOrder, o.PreTaxBonusMoney as PreTaxBonusMoney, o.AfterTaxBonusMoney as AfterTaxBonusMoney, StopAfterBonus,o.AddMoney as AddMoney, o.RedBagMoney RedBagMoney, o.RedBagAwardsMoney RedBagAwardsMoney, o.BonusAwardsMoney BonusAwardsMoney FROM [C_OrderDetail] o LEFT OUTER JOIN C_User_Register r ON r.UserId=o.UserId WHERE o.SchemeType in (1,7) and o.UserId=@UserId AND (@BonusStatus=-1 OR BonusStatus=@BonusStatus) AND (@GameCode=N'' OR GameCode=@GameCode) AND (@FromDate=N'' OR o.CreateTime>=@FromDate) AND (@ToDate=N'' OR o.CreateTime<@ToDate) ) T WHERE [RowNumber] > @PageIndex * @PageSize AND [RowNumber] <= (@PageIndex + 1) * @PageSize",
+      "Remark": ""
     }
   ]
 }

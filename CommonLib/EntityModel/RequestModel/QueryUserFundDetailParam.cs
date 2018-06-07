@@ -4,8 +4,12 @@ using System.Text;
 
 namespace EntityModel.RequestModel
 {
-   public class QueryUserFundDetailParam:Page
+    public class QueryUserFundDetailParam : Page
     {
+        public QueryUserFundDetailParam()
+        {
+            this.keyLine = string.Empty;
+        }
         public DateTime fromDate { get; set; }
         public DateTime toDate { get; set; }
         public string accountTypeList { get; set; }

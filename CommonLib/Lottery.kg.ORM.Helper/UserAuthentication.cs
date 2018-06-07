@@ -17,6 +17,7 @@ namespace Lottery.Kg.ORM.Helper
         {
             if (_allMethodFunctionList == null || _allMethodFunctionList.Count == 0)
             {                
+
                 _allMethodFunctionList = DB.CreateQuery<C_Auth_MethodFunction_List>().ToList();
             }
 

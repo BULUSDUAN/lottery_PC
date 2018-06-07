@@ -22,6 +22,7 @@ namespace OrderLottery.Service.ModuleServices
         {
             log = new Log4Log();
         }
+
         /// <summary>
         /// 中奖查询
         /// </summary>
@@ -51,6 +52,7 @@ namespace OrderLottery.Service.ModuleServices
                 return null;                
             }            
         }
+
         /// <summary>
         /// 北京单场查询开奖结果
         /// </summary>
@@ -106,6 +108,7 @@ namespace OrderLottery.Service.ModuleServices
                 return new BJDCMatchResultInfo_Collection();
             }            
         }
+
         /// <summary>
         /// 查询我的资金明细
         /// </summary>
@@ -197,12 +200,12 @@ namespace OrderLottery.Service.ModuleServices
             }
             return QueryUserFundDetail(Model, userId);
         }
-        public FillMoneyQueryInfo QueryFillMoneyList(QueryFillMoneyListParam Model)
-        {
-            UserAuthentication Auth = new UserAuthentication();
-            var userId = Auth.ValidateUserAuthentication(Model.userToken);
-            return new FillMoneyQueryInfo();
-        }
+        /// <summary>
+        /// 查询我的资金明细
+        /// </summary>
+        /// <param name="Model"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public UserFundDetailCollection QueryUserFundDetail(QueryUserFundDetailParam Model, string userId)
         {
             var collection = new UserFundDetailCollection();
@@ -215,18 +218,15 @@ namespace OrderLottery.Service.ModuleServices
             if (Model.pageSize < 10000)
                 Model.pageSize = Model.pageSize > Model.MaxPageSize ? Model.MaxPageSize : Model.pageSize;
 
-           int totalPayinCount = 0;
-           decimal totalPayinMoney = 0M;
-           int totalPayoutCount = 0;
-           decimal totalPayoutMoney = 0M;
+            int totalPayinCount = 0;
+            decimal totalPayinMoney = 0M;
+            int totalPayoutCount = 0;
+            decimal totalPayoutMoney = 0M;
 
             if (string.IsNullOrEmpty(userId))
             {
                 return new UserFundDetailCollection();
             }
-
-            // 通过数据库存储过程进行查询
-            Dictionary<string, object> outputs = new Dictionary<string, object>();
 
             //查询账户类型 和 类别
             //var AccountTyleList = Model.accountTypeList.Split('|');
@@ -244,8 +244,8 @@ namespace OrderLottery.Service.ModuleServices
                 .SetString("@StartTime", Model.fromDate.ToString())
                 .SetString("@EndTime", Model.toDate.ToString()).First<PayTypeDetail>();
             //支出条数和金额
-            string OutAndMoney_sql= SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_OutAndMoney").SQL;
-            var OutAndMoney_query=DB.CreateSQLQuery(OutAndMoney_sql)
+            string OutAndMoney_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_OutAndMoney").SQL;
+            var OutAndMoney_query = DB.CreateSQLQuery(OutAndMoney_sql)
                  .SetString("@UserId", userId)
                 .SetString("@StartTime", Model.fromDate.ToString())
                 .SetString("@EndTime", Model.toDate.ToString()).First<PayTypeDetail>();
@@ -255,8 +255,161 @@ namespace OrderLottery.Service.ModuleServices
             totalPayinCount = IncomeAndMoney_query.PayCount;
             totalPayinMoney = IncomeAndMoney_query.TotalPayMoney;
             totalPayoutCount = OutAndMoney_query.PayCount;
-            totalPayoutMoney = OutAndMoney_query.TotalPayMoney;            
+            totalPayoutMoney = OutAndMoney_query.TotalPayMoney;
             return collection;
+        }
+        /// <summary>
+        /// 查询我的充值提现
+        /// </summary>
+        /// <param name="Model"></param>
+        /// <returns></returns>
+        public FillMoneyQueryInfoCollection QueryFillMoneyList(QueryFillMoneyListParam Model)
+        {
+            UserAuthentication Auth = new UserAuthentication();
+            var userId = Auth.ValidateUserAuthentication(Model.userToken);
+
+            var Collection = new FillMoneyQueryInfoCollection();
+            Model.pageIndex = Model.pageIndex < 0 ? 0 : Model.pageIndex;
+            if (Model.pageSize == -1)
+                Model.pageSize = int.MaxValue;
+            else
+                Model.pageSize = Model.pageSize > Model.MaxPageSize ? Model.MaxPageSize : Model.pageSize;
+
+            var agentTypeList = string.Format("{0}", string.Join(',', Model.agentTypeList.Split('|', StringSplitOptions.RemoveEmptyEntries))).ToString();
+            var statusList = string.Format("{0}", string.Join(',', Model.statusList.Split('|', StringSplitOptions.RemoveEmptyEntries))).ToString();
+            var sourceList = string.Format("{0}", string.Join(',', Model.sourceList.Split('|', StringSplitOptions.RemoveEmptyEntries))).ToString();
+            string sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_TotalRequestMoney").SQL;           
+            sql = string.Format(sql, agentTypeList, statusList, sourceList);
+            Collection = DB.CreateSQLQuery(sql)
+                .SetString("@UserId", userId)
+                .SetString("@AgentList", agentTypeList)
+                .SetString("@StatusList", statusList)
+                .SetString("@SourceList", sourceList)
+                .SetString("@StartTime", Model.startTime.ToString("yyyy-MM-dd"))
+                .SetString("@EndTime", Model.endTime.AddDays(1).ToString("yyyy-MM-dd"))
+                .SetString("@OrderId", Model.OrderId).First<FillMoneyQueryInfoCollection>();
+
+            string TotalResponseMoney_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_TotalResponseMoney").SQL;
+            TotalResponseMoney_sql = string.Format(TotalResponseMoney_sql, agentTypeList, sourceList);
+            Collection = DB.CreateSQLQuery(TotalResponseMoney_sql)
+                .SetString("@UserId", userId)
+                .SetString("@AgentList", agentTypeList)
+                .SetString("@SourceList", sourceList)
+                .SetString("@StartTime", Model.startTime.ToString("yyyy-MM-dd"))
+                .SetString("@EndTime", Model.endTime.AddDays(1).ToString("yyyy-MM-dd"))
+                .SetString("@OrderId", Model.OrderId).First<FillMoneyQueryInfoCollection>();
+
+            string FillMoneyPage_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_FillMoneyPage").SQL;
+            FillMoneyPage_sql = string.Format(FillMoneyPage_sql, agentTypeList, statusList, sourceList);
+            Collection.FillMoneyList = DB.CreateSQLQuery(FillMoneyPage_sql)
+                .SetString("@UserId", userId)
+                .SetString("@AgentList", agentTypeList)
+                .SetString("@SourceList", sourceList)
+                .SetString("@StartTime", Model.startTime.ToString("yyyy-MM-dd"))
+                .SetString("@EndTime", Model.endTime.AddDays(1).ToString("yyyy-MM-dd"))
+                .SetString("@OrderId", Model.OrderId)
+                .SetInt("@PageIndex", Model.pageIndex)
+                .SetInt("@PageSize", Model.pageSize).List<FillMoneyQueryInfo>();
+            return Collection;
+        }
+        /// <summary>
+        /// 查询我的投注记录
+        /// </summary>
+        /// <param name="Model"></param>
+        /// <returns></returns>
+        public MyBettingOrderInfoCollection QueryMyBettingOrderList(QueryMyBettingOrderParam Model)
+        {
+            UserAuthentication Auth = new UserAuthentication();
+            var userId = Auth.ValidateUserAuthentication(Model.userToken);
+            Model.pageIndex = Model.pageIndex < 0 ? 0 : Model.pageIndex;
+            Model.pageSize = Model.pageSize > Model.MaxPageSize ? Model.MaxPageSize : Model.pageSize;
+
+            var Collection = new MyBettingOrderInfoCollection();
+            string Count_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_MyBettingOrder").SQL;
+            Collection = DB.CreateSQLQuery(Count_sql)
+                .SetString("@userId", userId)
+                .SetInt("@BonusStatus", (int)Model.bonusStatus)
+                .SetString("@GameCode", Model.gameCode)
+                .SetString("@FromDate", Model.startTime.Value.ToString("yyyy-MM-dd") ?? "")
+                .SetString("@ToDate", Model.endTime.Value.ToString("yyyy-MM-dd") ?? "").First<MyBettingOrderInfoCollection>();
+
+            string MyBettingOrdePage_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_MyBettingOrderPage").SQL;
+            Collection.OrderList = DB.CreateSQLQuery(MyBettingOrdePage_sql)
+                .SetString("@userId", userId)
+                .SetInt("@BonusStatus", (int)Model.bonusStatus)
+                .SetString("@GameCode", Model.gameCode)
+                .SetString("@FromDate", Model.startTime.Value.ToString("yyyy-MM-dd") ?? "")
+                .SetString("@ToDate", Model.endTime.Value.ToString("yyyy-MM-dd") ?? "")
+                .SetInt("@PageIndex", Model.pageIndex)
+                .SetInt("@PageSize", Model.pageSize).List<MyBettingOrderInfo>();
+            return Collection;
+
+        }
+        public Withdraw_QueryInfoCollection QueryMyWithdrawList(QueryMyWithdrawParam Model)
+        {
+            UserAuthentication Auth = new UserAuthentication();
+            var userId = Auth.ValidateUserAuthentication(Model.userToken);
+            var statusList = new List<int>();
+            if (Model.status.HasValue) statusList.Add((int)Model.status.Value);
+            var Collection = new Withdraw_QueryInfoCollection();
+            Model.endTime = Model.endTime.AddDays(1).Date;
+            Model.pageIndex = Model.pageIndex < 0 ? 0 : Model.pageIndex;
+            Model.pageSize = Model.pageSize > Model.MaxPageSize ? Model.MaxPageSize : Model.pageSize;
+
+            string orderId = string.Empty;
+            decimal minMoney = -1;
+            decimal maxMoney = -1;
+            WithdrawAgentType? agent=null;
+            int sortType = -1;
+            var query = from r in DB.CreateQuery<C_Withdraw>()
+                        join u in DB.CreateQuery<C_User_Register>() on r.UserId equals u.UserId
+                        where (userId == string.Empty || r.UserId == userId)
+                        && r.RequestTime >=Model.startTime && r.RequestTime < Model.endTime
+                        && (Model.status == null || r.Status == (int)Model.status)
+                        && (orderId == string.Empty || r.BankCode == orderId)
+                        && (agent == null || r.WithdrawAgent == (int)agent)
+                        && (minMoney == -1 || r.RequestMoney >= minMoney)
+                        && (maxMoney == -1 || r.RequestMoney <= maxMoney)
+                        select new Withdraw_QueryInfo
+                        {
+                            BankCardNumber = r.BankCardNumber,
+                            BankCode = r.BankCode,
+                            BankName = r.BankName,
+                            BankSubName = r.BankSubName,
+                            CityName = r.CityName,
+                            OrderId = r.OrderId,
+                            ProvinceName = r.ProvinceName,
+                            RequestMoney = r.RequestMoney,
+                            RequestTime = r.RequestTime,
+                            ResponseTime = r.ResponseTime,
+                            ResponseMoney = r.ResponseMoney,
+                            WithdrawAgent = (WithdrawAgentType)r.WithdrawAgent,
+                            Status = (WithdrawStatus)r.Status,
+                            ResponseMessage = r.ResponseMessage,
+                            RequesterDisplayName = u.DisplayName,
+                            RequesterUserKey = u.UserId,
+                        };
+            Collection.WinCount = query.Where(p => p.Status == WithdrawStatus.Success).Count();
+            Collection.RefusedCount = query.Where(p => p.Status == WithdrawStatus.Refused).Count();
+
+            Collection.TotalWinMoney = Collection.WinCount == 0 ? 0M : query.Where(p => p.Status == WithdrawStatus.Success).Sum(p => p.RequestMoney);
+            Collection.TotalRefusedMoney = Collection.RefusedCount == 0 ? 0M : query.Where(p => p.Status == WithdrawStatus.Refused).Sum(p => p.RequestMoney);
+            Collection.TotalCount = query.Count();
+            Collection.TotalMoney = query.Count() == 0 ? 0M : query.Sum(p => p.RequestMoney);
+            Collection.TotalResponseMoney = Collection.WinCount == 0 ? 0M : query.Where(p => p.ResponseMoney.HasValue == true).Sum(p => p.ResponseMoney.Value);
+
+            if (sortType == -1)
+                query = query.OrderBy(p => p.RequestTime);
+            if (sortType == 0)
+                query = query.OrderBy(p => p.RequestMoney);
+            if (sortType == 1)
+                query = query.OrderByDescending(p => p.RequestMoney);
+
+            if (Model.pageSize == -1)
+            { Collection.WithdrawList = query.ToList(); return Collection; }
+
+            Collection.WithdrawList=query.Skip(Model.pageIndex * Model.pageSize).Take(Model.pageSize).ToList();
+            return Collection;
         }
     }
 }
