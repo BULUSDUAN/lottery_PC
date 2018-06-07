@@ -22,8 +22,10 @@ namespace OrderLottery.Service.IModuleServices
 
         [Service(Date = "2018-06-06", Director = "Debug", Name = "查询我的充值记录")]
         FillMoneyQueryInfoCollection QueryFillMoneyList(QueryFillMoneyListParam Model);
+
         [Service(Date = "2018-06-07", Director = "Debug", Name = "查询我的投注记录")]
         MyBettingOrderInfoCollection QueryMyBettingOrderList(QueryMyBettingOrderParam Model);
+
         [Service(Date = "2018-06-07", Director = "Debug", Name = "查询提款记录")]
         Withdraw_QueryInfoCollection QueryMyWithdrawList(QueryMyWithdrawParam Model);
     }
