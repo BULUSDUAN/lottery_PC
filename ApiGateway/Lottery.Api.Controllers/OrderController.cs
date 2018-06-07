@@ -670,6 +670,98 @@ namespace Lottery.Api.Controllers
                 };
             }
         }
+        /// <summary>
+        /// 根据中奖状态查询投注记录_133
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name=""></param>
+        /// <returns></returns>
+        public async Task<LotteryServiceResponse> QueryOrderListByBonusState([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            var p = WebHelper.Decode(entity.Param);
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            param.Add("userId",p.UserId);
+            param.Add("state",p.BonusStatus);
+            //int schemeType = p.SchemeType;
+            param.Add("days",p.ViewDay);
+            param.Add("startTime",DateTime.Now.AddDays(-p.ViewDay));
+            param.Add("endTime",DateTime.Now);
+            param.Add("pageIndex",p.PageIndex);
+            param.Add("pageSize",p.PageSize);
+            param.Add("userToken",p.UserToken);
+            int orderQueryType = p.OrderQueryType;
+            if (string.IsNullOrEmpty(p.UserId) || string.IsNullOrEmpty(p.UserToken))
+                throw new ArgumentException("您还未登陆，请登陆后查询");
 
+            var list = new List<object>();
+            if (orderQueryType == 1)
+            {               
+                //代购
+                var orderList = await _serviceProxyProvider.Invoke<MyBettingOrderInfoCollection>(param, "api/Order/QueryMyBettingOrderList");
+                if (orderList != null && orderList.OrderList != null)
+                {
+                    foreach (var item in orderList.OrderList)
+                    {
+                        list.Add(new
+                        {
+                            SchemeId = item.SchemeId,
+                            GameCode = item.GameCode,
+                            GameName = ConvertHelper.GameName(item.GameCode, item.GameType),
+                            GameTypeName = item.GameTypeName,
+                            CreatorDisplayName = item.CreatorDisplayName,
+                            IssuseNumber = item.IssuseNumber,
+                            CurrentBettingMoney = item.BuyMoney,
+                            BetTime = ConvertHelper.ConvertDateTimeInt(item.BetTime),
+                            SchemeType = item.SchemeType,
+                            TicketStatus = item.TicketStatus,
+                            ProgressStatus = item.ProgressStatus,
+                            PreTaxBonusMoney = item.PreTaxBonusMoney,
+                            AfterTaxBonusMoney = item.AfterTaxBonusMoney,
+                            BonusStatus = item.BonusStatus,
+                            AddMoney = item.AddMoney,
+                            StrBonusStatus = ConvertHelper.BonusStatusName(item.BonusStatus),
+                            StrOrderStateName = ConvertHelper.GetOrderStatusName(item.SchemeType, item.ProgressStatus, item.TicketStatus, item.BonusStatus, true, true, false),
+                            TotalMoney = item.TotalMoney,
+                            CreateTime = ConvertHelper.ConvertDateTimeInt(item.BuyTime)
+                        });
+                    }
+                }
+            }
+            if (orderQueryType == 2)
+            {
+                //发起的合买
+                var createList = await _serviceProxyProvider.Invoke<TogetherOrderInfoCollection>(param, "api/Order/QueryCreateTogetherOrderListByUserId");
+                foreach (var item in createList.OrderList)
+                {
+                    list.Add(new
+                    {
+                        SchemeId = item.SchemeId,
+                        GameCode = item.GameCode,
+                        GameName = ConvertHelper.GameName(item.GameCode, item.GameType),
+                        GameTypeName = item.GameTypeName,
+                        CreatorDisplayName = item.CreatorDisplayName,
+                        IssuseNumber = item.IssuseNumber,
+                        CurrentBettingMoney = item.TotalMoney,
+                        BetTime = ConvertHelper.ConvertDateTimeInt(item.CreateTime),
+                        SchemeType = item.SchemeType,
+                        TicketStatus = item.TicketStatus,
+                        ProgressStatus = item.ProgressStatus,
+                        PreTaxBonusMoney = item.PreTaxBonusMoney,
+                        AfterTaxBonusMoney = item.AfterTaxBonusMoney,
+                        BonusStatus = item.BonusStatus,
+                        AddMoney = item.AddMoney,
+                        StrBonusStatus = ConvertHelper.BonusStatusName(item.BonusStatus),
+                        StrOrderStateName = ConvertHelper.GetOrderStatusName(item.SchemeType, item.ProgressStatus, item.TicketStatus, item.BonusStatus, true, true, false),
+                        TotalMoney = item.TotalMoney,
+                        CreateTime = ConvertHelper.ConvertDateTimeInt(item.CreateTime)
+                    });
+                }
+            }
+            if (orderQueryType == 3)
+            {
+                return null;
+            }
+            return null;
+        }
     }
 }

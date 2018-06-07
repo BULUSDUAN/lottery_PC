@@ -345,6 +345,11 @@ namespace OrderLottery.Service.ModuleServices
             return Collection;
 
         }
+        /// <summary>
+        /// 查询提现记录
+        /// </summary>
+        /// <param name="Model"></param>
+        /// <returns></returns>
         public Withdraw_QueryInfoCollection QueryMyWithdrawList(QueryMyWithdrawParam Model)
         {
             UserAuthentication Auth = new UserAuthentication();
@@ -410,6 +415,34 @@ namespace OrderLottery.Service.ModuleServices
 
             Collection.WithdrawList=query.Skip(Model.pageIndex * Model.pageSize).Take(Model.pageSize).ToList();
             return Collection;
+        }
+        /// <summary>
+        /// 查询指定用户创建的合买订单列表
+        /// </summary>
+        /// <param name="Model"></param>
+        /// <returns></returns>
+        public TogetherOrderInfoCollection QueryCreateTogetherOrderListByUserId(QueryCreateTogetherOrderParam Model)
+        {
+            Model.pageIndex = Model.pageIndex < 0 ? 0 : Model.pageIndex;
+            Model.pageSize = Model.pageSize > Model.MaxPageSize ? Model.MaxPageSize : Model.pageSize;
+            var collection = new TogetherOrderInfoCollection();
+            string sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_QueryCreateTogetherOrderCount").SQL;
+             collection = DB.CreateSQLQuery(sql)
+                .SetString("@UserId", Model.userId)
+                .SetString("@DateFrom", Model.startTime.ToString("yyyy-MM-dd"))
+                .SetString("@DateTo", Model.endTime.ToString("yyyy-MM-dd"))
+                .SetString("@GameCode", Model.gameCode).First<TogetherOrderInfoCollection>();
+
+            string Page_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_QueryCreateTogetherOrderPage").SQL;
+            collection.OrderList = DB.CreateSQLQuery(Page_sql)
+                .SetString("@UserId", Model.userId)
+                .SetString("@DateFrom", Model.startTime.ToString("yyyy-MM-dd"))
+                .SetString("@DateTo", Model.endTime.ToString("yyyy-MM-dd"))
+                .SetString("@GameCode", Model.gameCode)
+                .SetInt("@PageIndex",Model.pageIndex)
+                .SetInt("@PageSize",Model.pageSize)
+                .List<TogetherOrderInfo>();
+            return collection;
         }
     }
 }

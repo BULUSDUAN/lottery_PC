@@ -362,5 +362,158 @@ namespace KaSon.FrameWork.Helper
             }
             return "";
         }
+        /// <summary>
+        /// 根据彩种编码（玩法类型）获取彩种（玩法）名称
+        /// </summary>
+        /// <param name="gamecode">彩种编码</param>
+        /// <param name="type">玩法编码，可为空</param>
+        /// <returns>彩种（玩法）名称</returns>
+        public static string GameName(string gamecode, string type = "")
+        {
+            if (string.IsNullOrEmpty(gamecode))
+            {
+                return "";
+            }
+            type = string.IsNullOrEmpty(type) ? gamecode : type;
+            //根据彩种编号获取彩种名称
+            switch (gamecode.ToLower())
+            {
+                case "cqssc": return "时时彩";
+                case "jxssc": return "新时时彩";
+                case "sd11x5": return "老11选5";
+                case "gd11x5": return "新11选5";
+                case "jx11x5": return "11选5";
+                case "pl3": return "排列三";
+                case "fc3d": return "福彩3D";
+                case "ssq": return "双色球";
+                case "qxc": return "七星彩";
+                case "qlc": return "七乐彩";
+                case "dlt": return "大乐透";
+                case "sdqyh": return "群英会";
+                case "gdklsf": return "快乐十分";
+                case "gxklsf": return "广西快乐十分";
+                case "jsks": return "江苏快3";
+                case "sjb":
+                    switch (type.ToLower())
+                    {
+                        case "gj": return "世界杯冠军";
+                        case "gyj": return "世界杯冠亚军";
+                        default: return "世界杯";
+                    }
+                case "ozb":
+                    switch (type.ToLower())
+                    {
+                        case "gj": return "欧洲杯冠军";
+                        case "gyj": return "欧洲杯冠亚军";
+                        default: return "欧洲杯";
+                    }
+                case "jczq":
+                    switch (type.ToLower())
+                    {
+                        case "spf": return "竞彩让球胜平负";
+                        case "brqspf": return "竞彩胜平负";
+                        case "bf": return "竞彩比分";
+                        case "zjq": return "竞彩总进球数";
+                        case "bqc": return "竞彩半全场";
+                        case "hh": return "足球混合过关";
+                        default: return "竞彩足球";
+                    }
+                case "jclq":
+                    switch (type.ToLower())
+                    {
+                        case "sf": return "篮球胜负";
+                        case "rfsf": return "篮球让分胜负";
+                        case "sfc": return "篮球胜分差";
+                        case "dxf": return "篮球大小分";
+                        case "hh": return "篮球混合过关";
+                        default: return "竞彩篮球";
+                    }
+                case "ctzq":
+                    switch (type.ToLower())
+                    {
+                        case "t14c": return "14场胜负";
+                        case "tr9": return "任9场";
+                        case "t6bqc": return "6场半全";
+                        case "t4cjq": return "4场进球";
+                        default: return "传统足球";
+                    }
+                case "bjdc":
+                    switch (type.ToLower())
+                    {
+                        case "sxds": return "单场上下单双";
+                        case "spf": return "单场胜平负";
+                        case "zjq": return "单场总进球";
+                        case "bf": return "单场比分";
+                        case "bqc": return "单场半全场";
+                        default: return "北京单场";
+                    }
+                default: return gamecode;
+            }
+        }
+        /// <summary>
+        /// 转换中奖显示名称
+        /// </summary>
+        /// <param name="bonusStatus">中奖状态</param>
+        /// <returns>中奖显示名称</returns>
+        public static string BonusStatusName(BonusStatus bonusStatus)
+        {
+            switch (bonusStatus)
+            {
+                case BonusStatus.Awarding: return "开奖中";
+                case BonusStatus.Error: return "错误";
+                case BonusStatus.Lose: return "未中奖";
+                case BonusStatus.Waitting: return "未开奖";
+                case BonusStatus.Win: return "已中奖";
+                default: return string.Empty;
+            }
+        }
+        /// <summary>
+        /// 转换订单显示状态
+        /// </summary>
+        /// <param name="progressStatus">方案状态</param>
+        /// <param name="ticketStatus">出票状态</param>
+        /// <returns>显示状态</returns>
+        public static string GetOrderStatusName(SchemeType schemeType, ProgressStatus progressStatus, TicketStatus ticketStatus = TicketStatus.Ticketed, BonusStatus bonusStatus = BonusStatus.Waitting, bool isPrizeMoney = false, bool isMine = true, bool isViturl = false)
+        {
+            if (schemeType == SchemeType.SaveScheme && isViturl && progressStatus == ProgressStatus.Waitting) return "待购买";  //如果是保存订单则表示为待购买
+            if (isViturl) return "已撤单";  //如果是虚拟订单，则该订单为已撤单
+
+            switch (progressStatus)
+            {
+                case ProgressStatus.Waitting: return "待开始";
+                case ProgressStatus.AutoStop: return "自动停止";
+                case ProgressStatus.Aborted: return "撤单";
+                case ProgressStatus.Running:
+                case ProgressStatus.Complate:
+                    switch (ticketStatus)
+                    {
+                        case TicketStatus.Waitting: return "待投注";
+                        case TicketStatus.Ticketing: return "投注中";
+                        case TicketStatus.Ticketed:
+                            if (progressStatus == ProgressStatus.Complate)
+                            {
+                                switch (bonusStatus)
+                                {
+                                    case BonusStatus.Waitting: return "未开奖";
+                                    case BonusStatus.Awarding: return "开奖中";
+                                    case BonusStatus.Error: return "开奖错误";
+                                    case BonusStatus.Lose: return "未中奖";
+                                    case BonusStatus.Win: return isPrizeMoney ? "已派奖" : "已中奖";
+                                    default: return "已完成";
+                                }
+                            }
+                            else
+                            {
+                                return (schemeType == SchemeType.TogetherBetting && !isMine ? "已跟单" : "已出票");
+                            }
+                        case TicketStatus.PrintTicket: return "已打票";
+                        case TicketStatus.Skipped: return "被跳过";
+                        case TicketStatus.Error: return "出票失败";
+                        case TicketStatus.Abort: return "撤单";
+                        default: return "待投注";
+                    }
+                default: return "待开始";
+            }
+        }
     }
 }

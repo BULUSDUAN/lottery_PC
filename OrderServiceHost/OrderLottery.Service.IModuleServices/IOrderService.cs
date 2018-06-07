@@ -28,5 +28,7 @@ namespace OrderLottery.Service.IModuleServices
 
         [Service(Date = "2018-06-07", Director = "Debug", Name = "查询提款记录")]
         Withdraw_QueryInfoCollection QueryMyWithdrawList(QueryMyWithdrawParam Model);
+        [Service(Date = "2018-06-07", Director = "Debug", Name = "查询指定用户创建的合买订单列表")]
+        TogetherOrderInfoCollection QueryCreateTogetherOrderListByUserId(QueryCreateTogetherOrderParam Model);
     }
 }

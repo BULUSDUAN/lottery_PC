@@ -67,9 +67,25 @@
     {
       "key": "Debug_MyBettingOrderPage",
       "Desc": "我的投注记录",
-      "ParamDesc": "@UserId:userId,@BonusStatus:bonusStatus,@GameCode:gameCode,@FromDate:startTime,@ToDate:endTime,@PageIndex:,@PageSize:,",
+      "ParamDesc": "@UserId:userId,@BonusStatus:bonusStatus,@GameCode:gameCode,@FromDate:startTime,@ToDate:endTime,@PageIndex:pageIndex,@PageSize:pageSize",
       "Director": "Debug",
       "SQL": "SELECT * FROM ( SELECT ROW_NUMBER() OVER(ORDER BY  o.CreateTime DESC, StartIssuseNumber) AS [RowNumber], o.SchemeId,o.UserId,r.VipLevel,r.DisplayName CreatorDisplayName,r.HideDisplayNameCount, o.UserId as JoinUserId,'1' as JoinSucess, GameCode,GameTypeName,SchemeType,SchemeSource,SchemeBettingCategory, o.CreateTime as BuyTime, o.CurrentBettingMoney BuyMoney, TotalMoney,ProgressStatus,TicketStatus ,TotalIssuseCount,StartIssuseNumber IssuseNumber,BonusStatus,IsVirtualOrder, o.PreTaxBonusMoney as PreTaxBonusMoney, o.AfterTaxBonusMoney as AfterTaxBonusMoney, StopAfterBonus,o.AddMoney as AddMoney, o.RedBagMoney RedBagMoney, o.RedBagAwardsMoney RedBagAwardsMoney, o.BonusAwardsMoney BonusAwardsMoney FROM [C_OrderDetail] o LEFT OUTER JOIN C_User_Register r ON r.UserId=o.UserId WHERE o.SchemeType in (1,7) and o.UserId=@UserId AND (@BonusStatus=-1 OR BonusStatus=@BonusStatus) AND (@GameCode=N'' OR GameCode=@GameCode) AND (@FromDate=N'' OR o.CreateTime>=@FromDate) AND (@ToDate=N'' OR o.CreateTime<@ToDate) ) T WHERE [RowNumber] > @PageIndex * @PageSize AND [RowNumber] <= (@PageIndex + 1) * @PageSize",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_QueryCreateTogetherOrderCount",
+      "Desc": "我的投注记录",
+      "ParamDesc": "@UserId:userId,@DateFrom:startTime,@DateTo:endTime,@GameCode:gameCode",
+      "Director": "Debug",
+      "SQL": "SELECT TotalCount=COUNT(1), TotalBuyMoney=0, TotalOrderMoney=0 FROM C_Sports_Together O WHERE O.CreateUserId=@UserId AND O.CreateTime BETWEEN @DateFrom AND @DateTo and (@GameCode='' or o.GameCode=@GameCode)",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_QueryCreateTogetherOrderPage",
+      "Desc": "查询指定用户创建的合买订单列表",
+      "ParamDesc": "@UserId:userId,@DateFrom:startTime,@DateTo:endTime,@GameCode:gameCode,@PageIndex:pageIndex,@PageSize:pageSize",
+      "Director": "Debug",
+      "SQL": "SELECT * FROM( SELECT ROW_NUMBER()OVER(ORDER BY O.CreateTime DESC) RowIndex,O.SchemeId,O.SchemeType,O.UserId,O.GameCode, T.GameType,O.GameTypeName,O.StartIssuseNumber,O.TotalMoney,O.ProgressStatus,O.AddMoney, O.TicketStatus,O.BonusStatus,O.IsVirtualOrder,O.PreTaxBonusMoney,O.AfterTaxBonusMoney,O.CreateTime ,T.ProgressStatus TogetherSchemeProgress,T.Progress,ISNULL(C.IsPrizeMoney,0) IsPrizeMoney FROM C_Sports_Together T INNER JOIN C_OrderDetail O ON O.SchemeId=T.SchemeId LEFT OUTER JOIN C_Sports_Order_Complate C ON C.SchemeId=T.SchemeId LEFT OUTER JOIN C_User_Register R ON O.UserId=R.UserId WHERE T.CreateUserId=@UserId AND T.CreateTime BETWEEN @DateFrom AND @DateTo and (@GameCode='' or o.GameCode=@GameCode) and (@BonusStatus=-1 or o.BonusStatus=@BonusStatus) ) T WHERE RowIndex > @PageIndex * @PageSize AND RowIndex <= (@PageIndex + 1) * @PageSize",
       "Remark": ""
     }
   ]
