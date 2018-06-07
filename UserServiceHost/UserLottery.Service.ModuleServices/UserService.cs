@@ -75,11 +75,12 @@ namespace UserLottery.Service.ModuleServices
             log.Log("调试信息");
             log.Log("标签", new Exception("错误"));
         }
-        E_Login_Local loginEntity = new E_Login_Local();
-        public Task<string> User_Login(string loginName, string password,string addr)
+        LoginLocal loginEntity = new LoginLocal();
+        private BusinessHelper businessHelper;
+        public Task<string> User_Login(string loginName, string password,string loginIp)
         {
             //QueryUserParam model = new QueryUserParam();
-            string IPAddress = addr;
+            string IPAddress = loginIp;
             var loginBiz = new LocalLoginBusiness();
           
             if (IPAddress == "Client")//移动端登录时，密码已经MD5
@@ -94,20 +95,23 @@ namespace UserLottery.Service.ModuleServices
             ////var authBiz = new GameBizAuthBusiness();
             if (!IsRoleType(loginEntity.User, RoleType.WebRole))
             {
-
+                return Task.FromResult("此帐号角色不允许在此登录");
             }
-            //if (!loginEntity.Register.IsEnable)
-            //{
+            if (!loginEntity.Register.IsEnable)
+            {
+                return Task.FromResult("用户未激活");
+            }
 
-            //}
-            //var userToken = authBiz.GetUserToken(loginEntity.User.UserId);
-            //var blogManager = new BlogManager();
-            //var blogEntity = blogManager.QueryBlog_ProfileBonusLevel(loginEntity.User.UserId);
+            var authBiz = new GameBizAuthBusiness();
+            var userToken = authBiz.GetUserToken(loginEntity.User.UserId);
+            
+             var blogEntity = loginBiz.QueryBlog_ProfileBonusLevel(loginEntity.User.UserId);
 
             ////清理用户绑定数据缓存
             ////ClearUserBindInfoCache(loginEntity.UserId);
 
-            ////! 执行扩展功能代码 - 提交事务前
+
+            //! 执行扩展功能代码 - 提交事务前
             //BusinessHelper.ExecPlugin<IUser_AfterLogin>(new object[] { loginEntity.UserId, "LOCAL", loginIp, DateTime.Now });
             ////刷新用户在Redis中的余额
             //BusinessHelper.RefreshRedisUserBalance(loginEntity.UserId);
@@ -133,7 +137,7 @@ namespace UserLottery.Service.ModuleServices
             return Task.FromResult("");
         }
 
-        public bool IsRoleType(C_Auth_Users user, RoleType roleType)
+        public bool IsRoleType(SystemUser user, RoleType roleType)
         {
             foreach (var role in user.RoleList)
             {
@@ -176,7 +180,7 @@ namespace UserLottery.Service.ModuleServices
         public Task<CommonActionResult> ChangeMyPassword(string oldPassword, string newPassword, string userToken)
         {
             // 验证用户身份及权限
-            var userId= "12530";
+            var userId= userAuthentication.ValidateUserAuthentication(userToken);
             var loginBiz = new LocalLoginBusiness();
             loginBiz.ChangePassword(userId, oldPassword, newPassword);
 

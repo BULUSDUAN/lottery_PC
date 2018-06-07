@@ -11,54 +11,89 @@ using KaSon.FrameWork.Helper;
 using KaSon.FrameWork.Services.Enum;
 using EntityModel.CoreModel;
 using System.Linq.Expressions;
+using log4net.Plugin;
 
 namespace Lottery.Kg.ORM.Helper.UserHelper
 {
-    public class LocalLoginBusiness:DBbase
+    public class LocalLoginBusiness : DBbase
     {
         //改版密码增加的关键字
         private string _gbKey = "Q56GtyNkop97H334TtyturfgErvvv98a";
-        public E_Login_Local Login(string loginName, string password)
+        public LoginLocal Login(string loginName, string password)
         {
             password = MD5Helper.MD5(string.Format("{0}{1}", password, _gbKey)).ToUpper();
 
-            E_Login_Local loginInfo = null;
-           
-                loginInfo = UserLogin(loginName, password);
-               
-           
+            LoginLocal loginInfo = null;
+
+            loginInfo = UserLogin(loginName, password);
+
+
             return loginInfo;
         }
-        public E_Login_Local LoginAPP(string loginName, string password)
+        public LoginLocal LoginAPP(string loginName, string password)
         {
             //password = Encipherment.MD5(password);
 
-            E_Login_Local loginInfo = null;
-          
-                loginInfo = UserLogin(loginName, password);
-                if (loginInfo != null && loginInfo.User != null)
-                {
-                    //NHibernate.NHibernateUtil.Initialize(loginInfo.User.RoleList);
-                    //NHibernate.NHibernateUtil.Initialize(loginInfo.Register);
-                }
-          
+            LoginLocal loginInfo = null;
+
+            loginInfo = UserLogin(loginName, password);
+            if (loginInfo != null && loginInfo.User != null)
+            {
+                //NHibernate.NHibernateUtil.Initialize(loginInfo.User.RoleList);
+                //NHibernate.NHibernateUtil.Initialize(loginInfo.Register);
+            }
+
             return loginInfo;
         }
 
-        public E_Login_Local UserLogin(string loginName, string password)
+        public LoginLocal UserLogin(string loginName, string password)
         {
-          
-            var LoginUser= DB.CreateQuery<E_Login_Local>().ToList();
 
-        
-            var LoginUsers = LoginUser.Where(p=>(p.LoginName== loginName || p.mobile== loginName) && p.Password== password).FirstOrDefault();
+            var LoginUser = DB.CreateQuery<E_Login_Local>();
+            var LoginUsers = LoginUser.Where(p => (p.LoginName == loginName || p.mobile == loginName) && p.Password == password).Select(p => new LoginLocal()
+            {
+                CreateTime = p.CreateTime,
+                LoginName = p.LoginName,
+                mobile = p.mobile,
+                Password = p.Password,
+                UserId = p.UserId
+            }).FirstOrDefault();
 
             if (LoginUser != null)
-            { 
-                LoginUsers.User = DB.CreateQuery<C_Auth_Users>().Where(p => p.UserId == LoginUsers.UserId).FirstOrDefault();
+            {
+                LoginUsers.User = DB.CreateQuery<C_Auth_Users>().Where(p => p.UserId == LoginUsers.UserId).Select(p=>new SystemUser()
+                {
+                     CreateTime=p.CreateTime,
+                     AgentId=p.AgentId,
+                     RegFrom=p.RegFrom,
+                     UserId=p.UserId
+                }).FirstOrDefault();
+
                 if (LoginUsers.User != null)
                 {
-                    //LoginUsers.User.RoleList= DB.CreateQuery<C_Auth_UserRole>().Where(p => p.UserId == LoginUsers.UserId).ToList();
+                    var uQueryRoles = DB.CreateQuery<C_Auth_Roles>().Select(p=>new SystemRole(){
+                         RoleId=p.RoleId,
+                        RoleName=p.RoleName,
+                        IsInner=p.IsInner,
+                        IsAdmin=p.IsAdmin,
+                       
+                    });
+                    var uQueryUserRole = DB.CreateQuery<C_Auth_UserRole>();
+                    LoginUsers.User.RoleList = (from b in uQueryRoles
+                                                join c in uQueryUserRole
+                                                on b.RoleId equals c.RoleId
+                                                where c.UserId == LoginUsers.UserId
+                                                select b).ToList();
+
+                    var register = DB.CreateQuery<C_User_Register>().Where(p => p.UserId == LoginUsers.UserId).Select(p=>new UserRegister() {
+
+                        AgentId=p.AgentId, ComeFrom=p.ComeFrom, CreateTime=p.CreateTime, DisplayName=p.DisplayName, HideDisplayNameCount=p.HideDisplayNameCount,
+                        IsAgent=p.IsAgent, IsEnable=p.IsEnable,  IsFillMoney=p.IsFillMoney, IsIgnoreReport=p.IsIgnoreReport, ParentPath=p.ParentPath, Referrer=p.Referrer,
+                        ReferrerUrl=p.ReferrerUrl, RegisterIp=p.RegisterIp, RegType=p.RegType, UserId=p.UserId, UserType=p.UserType, VipLevel=p.VipLevel
+                    }).FirstOrDefault();
+
+                    LoginUsers.Register.IsEnable = register.IsEnable;
+
                 }
             }
 
@@ -68,6 +103,16 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
             //    .Add(Restrictions.Eq("Password", password))
             //    .UniqueResult<LoginLocal>();
         }
+        public E_Blog_ProfileBonusLevel QueryBlog_ProfileBonusLevel(string userId)
+        {
+
+            return DB.CreateQuery<E_Blog_ProfileBonusLevel>().Where(p => p.UserId == userId).FirstOrDefault();
+        }
+
+
+      
+        
+
 
         //public LoginLocal GetLocalLoginByUserId(string userId)
         //{
@@ -147,8 +192,8 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
 
         public C_User_Balance QueryUserBalance(string userId)
         {
-          
-            return DB.CreateQuery< C_User_Balance > ().FirstOrDefault(p => p.UserId == userId);
+
+            return DB.CreateQuery<C_User_Balance>().FirstOrDefault(p => p.UserId == userId);
         }
 
 
@@ -167,27 +212,27 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
         //}
         public Task<string> ChangePassword(string userId, string oldPassword, string newPassword)
         {
-              oldPassword = Encipherment.MD5(string.Format("{0}{1}", oldPassword, _gbKey)).ToUpper();
-              newPassword = Encipherment.MD5(string.Format("{0}{1}", newPassword, _gbKey)).ToUpper();
-          
-                    DB.Begin();
+            oldPassword = Encipherment.MD5(string.Format("{0}{1}", oldPassword, _gbKey)).ToUpper();
+            newPassword = Encipherment.MD5(string.Format("{0}{1}", newPassword, _gbKey)).ToUpper();
 
-                    var user= DB.CreateQuery<E_Login_Local>().Where(p =>p.UserId== userId).FirstOrDefault();
-                    if (user == null)
-                    {
-                      return Task.FromResult("用户不是本地注册用户，不允许修改密码。请确定是否是通过支付宝或QQ帐号进行登录，如有疑问，请联系客服。");
-                    }
-                   if (user.Password.ToUpper() != oldPassword)
-                    { 
-                       return Task.FromResult("旧密码输入错误。");
-                    }
-                   user.Password = newPassword;
-                 DB.GetDal<E_Login_Local>().Update(user);
-              
-                DB.Commit();
+            DB.Begin();
+
+            var user = DB.CreateQuery<E_Login_Local>().Where(p => p.UserId == userId).FirstOrDefault();
+            if (user == null)
+            {
+                return Task.FromResult("用户不是本地注册用户，不允许修改密码。请确定是否是通过支付宝或QQ帐号进行登录，如有疑问，请联系客服。");
+            }
+            if (user.Password.ToUpper() != oldPassword)
+            {
+                return Task.FromResult("旧密码输入错误。");
+            }
+            user.Password = newPassword;
+            DB.GetDal<E_Login_Local>().Update(user);
+
+            DB.Commit();
             return Task.FromResult("修改密码成功");
         }
-        
+
         //public string ChangePassword(string userId)
         //{
         //    var r = new Random(DateTime.Now.Millisecond);

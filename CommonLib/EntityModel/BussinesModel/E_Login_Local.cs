@@ -55,6 +55,6 @@ namespace EntityModel
             [Field("mobile")]
             public string mobile{ get; set; }
 
-        public C_Auth_Users User { get; set; }
+
     }
 }

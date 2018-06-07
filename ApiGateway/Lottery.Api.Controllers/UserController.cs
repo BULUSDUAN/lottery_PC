@@ -76,7 +76,7 @@ namespace Lottery.Api.Controllers
                 param["oldPassword"] = oldPassword;
                 param["newPassword"] = newPassword;
                 param["userToken"] = userToken;
-                var chkPwd = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/CheckIsSame2BalancePassword");
+                //var chkPwd = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/CheckIsSame2BalancePassword");
 
                 var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/ChangeMyPassword");
 

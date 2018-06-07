@@ -50,15 +50,5 @@ namespace EntityModel
             [Field("AgentId")]
             public string AgentId{ get; set; }
 
-        /// <summary>
-        /// 所属角色（可多种）
-        /// </summary>
-        public virtual IList<SystemRole> RoleList { get; set; }
-        /// <summary>
-        /// 用户包含功能列表
-        /// </summary>
-        public virtual IList<UserFunction> FunctionList { get; set; }
-
-
     }
 }
