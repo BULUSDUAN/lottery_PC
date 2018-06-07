@@ -1,4 +1,5 @@
 ﻿using EntityModel;
+using EntityModel.Communication;
 using EntityModel.CoreModel;
 using EntityModel.RequestModel;
 using Kason.Sg.Core.ProxyGenerator;
@@ -37,7 +38,7 @@ namespace Lottery.Api.Controllers
                 param["loginName"] = loginName;
                 param["password"]=password;
                 param["IPAddress"] = password;
-                string key = "UserLottery.Service.IModuleServices.IUserService.User_Login_loginName_password_IPAddress";
+           
                 var UserImformation = await _serviceProxyProvider.Invoke<object>(param, "api/user/user_login");
                
 
@@ -50,5 +51,58 @@ namespace Lottery.Api.Controllers
             return null;
 
         }
+
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> UpdateLoginPassword([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+               string oldPassword = "123456";
+               string newPassword = "123456789";
+               string userToken = "12121";
+               string userId = "13015";
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                if (string.IsNullOrEmpty(oldPassword))
+                    throw new Exception("旧密码不能为空");
+                if (string.IsNullOrEmpty(newPassword))
+                    throw new Exception("新密码不能为空");
+                if (string.IsNullOrEmpty(userToken))
+                    throw new Exception("Token不能为空");
+                param["oldPassword"] = oldPassword;
+                param["newPassword"] = newPassword;
+                param["userToken"] = userToken;
+                var chkPwd = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/CheckIsSame2BalancePassword");
+
+                var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/ChangeMyPassword");
+
+                if (!result.IsSuccess) {
+                    throw new Exception(result.Message);
+                }
+                return JsonEx(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = result.Message,
+                    MsgId = entity.MsgId,
+                    Value = null,
+                });
+
+            }
+            catch (ArgumentException ex)
+            {
+                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = ex.Message, MsgId = entity.MsgId, Value = null });
+
+            }
+            catch (Exception ex)
+            {
+                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = ex.Message, MsgId = entity.MsgId, Value = null });
+
+            }
+        }
+
     }
 }

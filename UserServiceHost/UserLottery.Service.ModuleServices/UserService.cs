@@ -34,6 +34,7 @@ using EntityModel.RequestModel;
 using Lottery.Kg.ORM.Helper.UserHelper;
 using EntityModel.Enum;
 using EntityModel.CoreModel;
+using EntityModel.Communication;
 
 namespace UserLottery.Service.ModuleServices
 {
@@ -143,6 +144,47 @@ namespace UserLottery.Service.ModuleServices
             }
             return false;
         }
+
+        /// <summary>
+        /// 检查是否和资金密码一至
+        /// </summary>
+        /// <param name="newPassword">新密码</param>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public CommonActionResult CheckIsSame2BalancePassword(string newPassword, string userId)
+        {
+            var loginBiz = new LocalLoginBusiness();
+            var result = loginBiz.CheckIsSame2BalancePassword(userId, newPassword);
+            var flag = "N";
+            if (result.HasValue)
+            {
+                flag = result.Value ? "T" : "F";
+            }
+            return new CommonActionResult(true, "查询成功") { ReturnValue = flag };
+        }
+
+
+
+        private UserAuthentication userAuthentication;
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <param name="oldPassword">旧密码</param>
+        /// <param name="newPassword">新密码</param>
+        /// <param name="userToken">用户Token</param>
+        /// <returns></returns>
+        public Task<CommonActionResult> ChangeMyPassword(string oldPassword, string newPassword, string userToken)
+        {
+            // 验证用户身份及权限
+            var userId= "12530";
+            var loginBiz = new LocalLoginBusiness();
+            loginBiz.ChangePassword(userId, oldPassword, newPassword);
+
+            return Task.FromResult(new CommonActionResult(true, "修改密码成功"));
+
+        }
+
+
 
         public Task<int> GetUserId(string userName)
         {
