@@ -49,7 +49,8 @@ namespace UserLottery.Service.IModuleServices
         [Service(Date = "2018-6-06", Director = "renjun", Name = "修改密码")]
         Task<CommonActionResult> ChangeMyPassword(string oldPassword, string newPassword, string userToken);
 
-
+        [Service(Date = "2018-6-08", Director = "renjun", Name = "token登录")]
+        Task<LoginInfo> LoginByUserToken(string userToken);
 
     }
 }

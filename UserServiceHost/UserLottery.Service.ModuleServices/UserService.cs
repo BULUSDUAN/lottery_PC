@@ -137,6 +137,86 @@ namespace UserLottery.Service.ModuleServices
            
         }
 
+        /// <summary>
+        /// 使用token登录
+        /// </summary>
+        public Task<LoginInfo> LoginByUserToken(string userToken)
+        {
+            // 验证用户身份及权限
+            var userId = userAuthentication.ValidateUserAuthentication(userToken);
+
+            var loginBiz = new LocalLoginBusiness();
+            var reg = loginBiz.GetRegisterById(userId);
+            if (reg == null)
+            {
+                return Task.FromResult(new LoginInfo { IsSuccess = false, Message = "不存在该用户", LoginFrom = "LOCAL", });
+            }
+            string loginFrom = reg.ComeFrom;
+            string loginName = "";
+            switch (loginFrom.ToLower())
+            {
+                case "local":
+                case "index":
+                case "app":
+                case "ios":
+                case "touch":
+
+
+                    var loginEntity = GetLocalLoginByUserId(userId);
+                    if (loginEntity == null)
+                    {
+                        return Task.FromResult(new LoginInfo { IsSuccess = false, Message = "不存在该用户", LoginFrom = loginFrom, });
+                    }
+                    loginName = loginEntity.LoginName;
+                    break;
+                case "alipay":
+
+                    var alipayEntity = loginBiz.GetAlipayByUserId(userId);
+                    if (alipayEntity == null)
+                    {
+                        return Task.FromResult(new LoginInfo { IsSuccess = false, Message = "不存在该用户", LoginFrom = loginFrom, });
+                    }
+                    loginName = alipayEntity.LoginName;
+                    break;
+                case "qq":
+
+                    var qqEntity = loginBiz.GetQQByUserId(userId);
+                    if (qqEntity == null)
+                    {
+                        return Task.FromResult(new LoginInfo { IsSuccess = false, Message = "不存在该用户", LoginFrom = loginFrom, });
+                    }
+                    loginName = qqEntity.LoginName;
+                    break;
+                default:
+                    throw new ArgumentException("登录不支持的注册类型 - " + loginFrom);
+            }
+
+            //! 执行扩展功能代码 - 提交事务前
+            //BusinessHelper.ExecPlugin<IUser_AfterLogin>(new object[] { userId, loginFrom, "", DateTime.Now });
+
+
+            //刷新用户在Redis中的余额
+            //BusinessHelper.RefreshRedisUserBalance(userId);
+
+            return Task.FromResult(new LoginInfo
+            {
+                IsSuccess = true,
+                Message = "登录成功",
+                CreateTime = reg.CreateTime,
+                LoginFrom = "Alipay",
+                RegType = reg.RegType,
+                Referrer = reg.Referrer,
+                UserId = reg.UserId,
+                VipLevel = reg.VipLevel,
+                LoginName = loginName,
+                DisplayName = reg.DisplayName,
+                UserToken = userToken,
+                AgentId = reg.AgentId,
+                IsAgent = reg.IsAgent,
+                HideDisplayNameCount = reg.HideDisplayNameCount,
+            });
+        }
+
         public bool IsRoleType(SystemUser user, RoleType roleType)
         {
             foreach (var role in user.RoleList)
