@@ -48,19 +48,29 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
             return loginInfo;
         }
 
+        private UserAuthentication userAuthentication = new UserAuthentication();
+
+     
+
+        /// <summary>
+        /// 用户名(手机)密码登录
+        /// </summary>
+        /// <param name="loginName"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         public LoginLocal UserLogin(string loginName, string password)
         {
 
             var LoginUser = DB.CreateQuery<E_Login_Local>();
-            var LoginUsers = LoginUser.Where(p => (p.LoginName == loginName || p.mobile == loginName) && p.Password == password).Select(p => new LoginLocal()
+
+            var LoginUsers = LoginUser.Where(p => (p.LoginName == loginName || p.mobile == loginName) && p.Password == password).ToList().Select(p => new LoginLocal
             {
                 CreateTime = p.CreateTime,
                 LoginName = p.LoginName,
                 mobile = p.mobile,
                 Password = p.Password,
                 UserId = p.UserId,
-                Register = null,
-                 User=null
+
             }).FirstOrDefault();
 
             if (LoginUser != null)
@@ -107,6 +117,8 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
             //    .Add(Restrictions.Eq("Password", password))
             //    .UniqueResult<LoginLocal>();
         }
+
+
         public E_Blog_ProfileBonusLevel QueryBlog_ProfileBonusLevel(string userId)
         {
 
@@ -114,7 +126,118 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
         }
 
         /// <summary>
-        /// 查询用户
+        /// 使用token登录
+        /// </summary>
+        public LoginInfo LoginByUserToken(string userToken)
+        {
+            // 验证用户身份及权限
+            var userId = userAuthentication.ValidateUserAuthentication(userToken);
+
+
+            var reg = GetRegisterById(userId);
+            if (reg == null)
+            {
+                return new LoginInfo { IsSuccess = false, Message = "不存在该用户", LoginFrom = "LOCAL", };
+            }
+            string loginFrom = reg.ComeFrom;
+            string loginName = "";
+            switch (loginFrom.ToLower())
+            {
+                case "local":
+                case "index":
+                case "app":
+                case "ios":
+                case "touch":
+
+
+                    var loginEntity = GetLocalLoginByUserId(userId);
+                    if (loginEntity == null)
+                    {
+                        return new LoginInfo { IsSuccess = false, Message = "不存在该用户", LoginFrom = loginFrom, };
+                    }
+                    loginName = loginEntity.LoginName;
+                    break;
+                case "alipay":
+
+                    var alipayEntity = GetAlipayByUserId(userId);
+                    if (alipayEntity == null)
+                    {
+                        return new LoginInfo { IsSuccess = false, Message = "不存在该用户", LoginFrom = loginFrom, };
+                    }
+                    loginName = alipayEntity.LoginName;
+                    break;
+                case "qq":
+
+                    var qqEntity = GetQQByUserId(userId);
+                    if (qqEntity == null)
+                    {
+                        return new LoginInfo { IsSuccess = false, Message = "不存在该用户", LoginFrom = loginFrom, };
+                    }
+                    loginName = qqEntity.LoginName;
+                    break;
+                default:
+                    throw new ArgumentException("登录不支持的注册类型 - " + loginFrom);
+            }
+
+            //! 执行扩展功能代码 - 提交事务前
+            //BusinessHelper.ExecPlugin<IUser_AfterLogin>(new object[] { userId, loginFrom, "", DateTime.Now });
+
+
+            //刷新用户在Redis中的余额
+            //BusinessHelper.RefreshRedisUserBalance(userId);
+
+            return new LoginInfo
+            {
+                IsSuccess = true,
+                Message = "登录成功",
+                CreateTime = reg.CreateTime,
+                LoginFrom = "Alipay",
+                RegType = reg.RegType,
+                Referrer = reg.Referrer,
+                UserId = reg.UserId,
+                VipLevel = reg.VipLevel,
+                LoginName = loginName,
+                DisplayName = reg.DisplayName,
+                UserToken = userToken,
+                AgentId = reg.AgentId,
+                IsAgent = reg.IsAgent,
+                HideDisplayNameCount = reg.HideDisplayNameCount,
+            };
+        }
+
+        /// <summary>
+        /// 查询QQ用户
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public E_Login_QQ GetQQByUserId(string userId)
+        {
+            return DB.CreateQuery<E_Login_QQ>().Where(p => p.UserId == userId).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// 查询阿里用户
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public E_Login_Alipay GetAlipayByUserId(string userId)
+        {
+            return DB.CreateQuery<E_Login_Alipay>().Where(p => p.UserId == userId).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// 查询注册用户
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public C_User_Register GetRegisterById(string userId)
+        {
+            return DB.CreateQuery<C_User_Register>().Where(p => p.UserId == userId).FirstOrDefault();
+        }
+       
+
+        /// <summary>
+        /// 查询本地用户
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
@@ -122,6 +245,9 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
         {
             return DB.CreateQuery<E_Login_Local>().Where(p => p.UserId == userId).FirstOrDefault();
         }
+
+
+
 
         /// <summary>
         /// 手机黑名单

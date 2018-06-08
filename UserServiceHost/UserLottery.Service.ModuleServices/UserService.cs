@@ -167,6 +167,7 @@ namespace UserLottery.Service.ModuleServices
             return new CommonActionResult(true, "查询成功") { ReturnValue = flag };
         }
 
+  
         #region 修改密码
 
         private UserAuthentication userAuthentication = new UserAuthentication();
