@@ -19,6 +19,7 @@ using System.Text;
 using System.Threading.Tasks;
 using EntityModel.RequestModel;
 using EntityModel.Communication;
+using EntityModel.CoreModel;
 
 namespace UserLottery.Service.IModuleServices
 {
@@ -43,7 +44,7 @@ namespace UserLottery.Service.IModuleServices
         //GetUserListBy
 
         [Service(Date = "2018-6-06", Director = "renjun", Name = "登录")]
-        Task<string> User_Login(string loginName, string password,string IPAddress);
+        Task<LoginInfo> User_Login(string loginName, string password,string IPAddress);
 
         [Service(Date = "2018-6-06", Director = "renjun", Name = "修改密码")]
         Task<CommonActionResult> ChangeMyPassword(string oldPassword, string newPassword, string userToken);

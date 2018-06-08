@@ -77,7 +77,7 @@ namespace UserLottery.Service.ModuleServices
         }
         LoginLocal loginEntity = new LoginLocal();
         private BusinessHelper businessHelper;
-        public Task<string> User_Login(string loginName, string password,string loginIp)
+        public Task<LoginInfo> User_Login(string loginName, string password,string loginIp)
         {
             //QueryUserParam model = new QueryUserParam();
             string IPAddress = loginIp;
@@ -89,17 +89,17 @@ namespace UserLottery.Service.ModuleServices
                 loginEntity = loginBiz.Login(loginName, password);
             if (loginEntity == null)
             {
-                return Task.FromResult("登录名(手机号)或密码错误");
+                return Task.FromResult(new LoginInfo { IsSuccess = false, Message = "登录名(手机号)或密码错误", LoginFrom = "LOCAL", });
             }
 
             ////var authBiz = new GameBizAuthBusiness();
             if (!IsRoleType(loginEntity.User, RoleType.WebRole))
             {
-                return Task.FromResult("此帐号角色不允许在此登录");
+                return Task.FromResult(new LoginInfo { IsSuccess = false, Message = "此帐号角色不允许在此登录", LoginFrom = "LOCAL", });
             }
             if (!loginEntity.Register.IsEnable)
             {
-                return Task.FromResult("用户未激活");
+                return Task.FromResult(new LoginInfo { IsSuccess = false, Message = "用户未激活", LoginFrom = "LOCAL", UserId = loginEntity.UserId });
             }
 
             var authBiz = new GameBizAuthBusiness();
@@ -115,26 +115,26 @@ namespace UserLottery.Service.ModuleServices
             //BusinessHelper.ExecPlugin<IUser_AfterLogin>(new object[] { loginEntity.UserId, "LOCAL", loginIp, DateTime.Now });
             ////刷新用户在Redis中的余额
             //BusinessHelper.RefreshRedisUserBalance(loginEntity.UserId);
-            //return new LoginInfo
-            //{
-            //    IsSuccess = true,
-            //    Message = "登录成功",
-            //    CreateTime = loginEntity.CreateTime,
-            //    LoginFrom = "LOCAL",
-            //    RegType = loginEntity.Register.RegType,
-            //    Referrer = loginEntity.Register.Referrer,
-            //    UserId = loginEntity.User.UserId,
-            //    VipLevel = loginEntity.Register.VipLevel,
-            //    LoginName = loginEntity.LoginName,
-            //    DisplayName = loginEntity.Register.DisplayName,
-            //    UserToken = userToken,
-            //    AgentId = loginEntity.Register.AgentId,
-            //    IsAgent = loginEntity.Register.IsAgent,
-            //    HideDisplayNameCount = loginEntity.Register.HideDisplayNameCount,
-            //    MaxLevelName = string.IsNullOrEmpty(blogEntity.MaxLevelName) ? "" : blogEntity.MaxLevelName,
-            //    IsUserType = loginEntity.Register.UserType == 1 ? true : false
-            //};
-            return Task.FromResult("");
+            return Task.FromResult(new LoginInfo
+            {
+                IsSuccess = true,
+                Message = "登录成功",
+                CreateTime = loginEntity.CreateTime,
+                LoginFrom = "LOCAL",
+                RegType = loginEntity.Register.RegType,
+                Referrer = loginEntity.Register.Referrer,
+                UserId = loginEntity.User.UserId,
+                VipLevel = loginEntity.Register.VipLevel,
+                LoginName = loginEntity.LoginName,
+                DisplayName = loginEntity.Register.DisplayName,
+                UserToken = userToken,
+                AgentId = loginEntity.Register.AgentId,
+                IsAgent = loginEntity.Register.IsAgent,
+                HideDisplayNameCount = loginEntity.Register.HideDisplayNameCount,
+                MaxLevelName = string.IsNullOrEmpty(blogEntity.MaxLevelName) ? "" : blogEntity.MaxLevelName,
+                IsUserType = loginEntity.Register.UserType == 1 ? true : false
+            });
+           
         }
 
         public bool IsRoleType(SystemUser user, RoleType roleType)
@@ -167,9 +167,9 @@ namespace UserLottery.Service.ModuleServices
             return new CommonActionResult(true, "查询成功") { ReturnValue = flag };
         }
 
+        #region 修改密码
 
-
-        private UserAuthentication userAuthentication;
+        private UserAuthentication userAuthentication = new UserAuthentication();
         /// <summary>
         /// 修改密码
         /// </summary>
@@ -188,7 +188,125 @@ namespace UserLottery.Service.ModuleServices
 
         }
 
+        #endregion
 
+        /// <summary>
+        /// 根据UserId查询用户信息
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public LoginInfo GetLocalLoginByUserId(string userId)
+        {
+            try
+            {
+                var loginBiz = new LocalLoginBusiness();
+                var local = loginBiz.GetLocalLoginByUserId(userId);
+                if (local == null)
+                    return new LoginInfo();
+                return new LoginInfo
+                {
+                    CreateTime = local.CreateTime,               
+                    UserId = local.UserId,                
+                    LoginName = local.LoginName,
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 手机黑名单
+        /// </summary>
+        private static C_Core_Config _coreConfigList = new C_Core_Config();
+        public C_Core_Config QueryCoreConfigByKey(string key)
+        {
+          
+            var loginBiz = new LocalLoginBusiness();        
+                _coreConfigList = loginBiz.BanRegistrMobile(key);
+
+            if (_coreConfigList == null)
+                throw new Exception(string.Format("找不到配置项：{0}", key));
+            return _coreConfigList;
+        }
+
+        /// <summary>
+        /// 手机认证，重发验证码或更换号码
+        /// </summary>
+        public CommonActionResult RepeatRequestMobile(string userId, string mobile, string createUserId)
+        {
+            try
+            {
+                var validateCode = GetRandomMobileValidateCode();
+                RepeatRequestMobile2(userId, mobile, createUserId);
+
+                //var biz = new ValidationMobileBusiness();
+                //validateCode = biz.SendValidationCode(mobile, "MobileAuthentication", validateCode, GetDelay(30), GetMaxTimes(3));
+                return new CommonActionResult(true, "已成功提交手机认证申请，请等待") { ReturnValue = validateCode };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        private string GetRandomMobileValidateCode()
+        {
+            var validateCode = "8888";
+            //if (!UsefullHelper.IsInTest)
+            //{
+                // 生成随机密码
+                Random random = new Random(DateTime.Now.Millisecond * DateTime.Now.Second);
+                validateCode = random.Next(100, 999999).ToString().PadLeft(6, '0');
+                //return RndNum(6);
+            //}
+            return validateCode;
+        }
+
+
+        /// <summary>
+        /// 手机认证，重发验证码或更换号码
+        /// </summary>
+        public void RepeatRequestMobile2(string userId, string mobile, string createUserId)
+        {
+                var manager = new LocalLoginBusiness();
+            
+                if (string.IsNullOrEmpty(userId))
+                    throw new Exception("未查询到用户编号");
+                else if (string.IsNullOrEmpty(mobile))
+                    throw new Exception("手机号码不能为空");
+                //var entity = manager.GetUserMobile(userId);
+                var other = manager.GetMobileInfoByMobile(mobile);
+                if (other != null && other.IsSettedMobile && other.UserId != userId)
+                {
+                    throw new ArgumentException(string.Format("此手机号【{0}】已被其他用户认证。", mobile));
+                }
+                //var entity = manager.GetUserMobile(userId);
+                //if (other != null)
+                //{
+                //    other.IsSettedMobile = false;
+                //    other.UpdateBy = createUserId;
+                //    other.RequestTimes++;
+                //    entity.Mobile = mobile;
+                //    manager.UpdateUserMobile(entity);
+                //}
+                //else
+                //{
+                //    entity = new UserMobile
+                //    {
+                //        UserId = userId,
+                //        User = manager.LoadUser(userId),
+                //        AuthFrom = "LOCAL",
+                //        Mobile = mobile,
+                //        IsSettedMobile = false,
+                //        CreateBy = createUserId,
+                //        UpdateBy = createUserId,
+                //    };
+                //    manager.AddUserMobile(entity);
+                //}
+            
+        }
 
         public Task<int> GetUserId(string userName)
         {

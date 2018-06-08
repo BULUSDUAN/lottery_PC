@@ -12,6 +12,8 @@ using KaSon.FrameWork.Services.Enum;
 using EntityModel.CoreModel;
 using System.Linq.Expressions;
 using log4net.Plugin;
+using EntityModel.Communication;
+using EntityModel.CoreModel.AuthEntities;
 
 namespace Lottery.Kg.ORM.Helper.UserHelper
 {
@@ -56,7 +58,9 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
                 LoginName = p.LoginName,
                 mobile = p.mobile,
                 Password = p.Password,
-                UserId = p.UserId
+                UserId = p.UserId,
+                Register = null,
+                 User=null
             }).FirstOrDefault();
 
             if (LoginUser != null)
@@ -109,15 +113,57 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
             return DB.CreateQuery<E_Blog_ProfileBonusLevel>().Where(p => p.UserId == userId).FirstOrDefault();
         }
 
+        /// <summary>
+        /// 查询用户
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public E_Login_Local GetLocalLoginByUserId(string userId)
+        {
+            return DB.CreateQuery<E_Login_Local>().Where(p => p.UserId == userId).FirstOrDefault();
+        }
 
-      
-        
+        /// <summary>
+        /// 手机黑名单
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public C_Core_Config BanRegistrMobile(string key)
+        {
+            return DB.CreateQuery<C_Core_Config>().Where(p => p.ConfigKey == key).FirstOrDefault();
+        }
 
+        /// <summary>
+        /// 查询手机号码
+        /// </summary>
+        /// <param name="mobile"></param>
+        /// <returns></returns>
+        public UserMobile GetMobileInfoByMobile(string mobile)
+        {
+            var query = DB.CreateQuery<E_Authentication_Mobile>().Where(s => s.Mobile == mobile).Select(p=>new UserMobile {
+                 AuthFrom=p.AuthFrom,
+                  CreateBy=p.CreateBy,
+                   CreateTime=p.CreateTime,
+                     IsSettedMobile=p.IsSettedMobile,
+                      Mobile=p.Mobile,
+                        //UpdateBy=p.
+            });
 
-        //public LoginLocal GetLocalLoginByUserId(string userId)
-        //{
-        //    return new LoginLocalManager().GetLocalLoginByUserId(userId);
-        //}
+            if (query != null && query.Count() > 0)
+            {
+                var resutl = query.FirstOrDefault(s => s.IsSettedMobile == true);
+                if (resutl != null)
+                    return resutl;
+                else
+                {
+                    resutl = query.FirstOrDefault(s => s.IsSettedMobile == false);
+                    if (resutl != null)
+                        return resutl;
+                }
+            }
+            return null;
+        }
+
         //public void Register(LoginLocal loginEntity, string userId)
         //{
         //    if (loginEntity.Password == null)

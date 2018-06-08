@@ -44,5 +44,7 @@ namespace Lottery.Base.Controllers
         {
             log.Log(msg);
         }
+
+      
     }
 }
