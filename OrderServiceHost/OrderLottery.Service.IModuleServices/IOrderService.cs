@@ -30,5 +30,9 @@ namespace OrderLottery.Service.IModuleServices
         Withdraw_QueryInfoCollection QueryMyWithdrawList(QueryMyWithdrawParam Model);
         [Service(Date = "2018-06-07", Director = "Debug", Name = "查询指定用户创建的合买订单列表")]
         TogetherOrderInfoCollection QueryCreateTogetherOrderListByUserId(QueryCreateTogetherOrderParam Model);
+        [Service(Date = "2018-06-08", Director = "Debug", Name = "查询指定用户参与的合买订单列表")]
+        TogetherOrderInfoCollection QueryJoinTogetherOrderListByUserId(QueryCreateTogetherOrderParam Model);
+        [Service(Date = "2018-06-08", Director = "Debug", Name = "从Redis查询出合买订单数据")]
+        Sports_TogetherSchemeQueryInfoCollection QuerySportsTogetherListFromRedis(QuerySportsTogetherListFromRedisParam Model);
     }
 }
