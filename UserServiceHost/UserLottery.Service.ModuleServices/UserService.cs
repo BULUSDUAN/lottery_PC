@@ -35,6 +35,7 @@ using Lottery.Kg.ORM.Helper.UserHelper;
 using EntityModel.Enum;
 using EntityModel.CoreModel;
 using EntityModel.Communication;
+using Newtonsoft.Json;
 
 namespace UserLottery.Service.ModuleServices
 {
@@ -75,6 +76,7 @@ namespace UserLottery.Service.ModuleServices
             log.Log("调试信息");
             log.Log("标签", new Exception("错误"));
         }
+        private UserAuthentication userAuthentication = new UserAuthentication();
         LoginLocal loginEntity = new LoginLocal();
         private BusinessHelper businessHelper;
         public Task<LoginInfo> User_Login(string loginName, string password,string loginIp)
@@ -247,10 +249,143 @@ namespace UserLottery.Service.ModuleServices
             return new CommonActionResult(true, "查询成功") { ReturnValue = flag };
         }
 
-  
+        /// <summary>
+        /// 查询用户绑定数据
+        /// </summary>
+        /// <param name="userId">用户ID</param>
+        /// <returns></returns>
+        public Task<UserBindInfos> QueryUserBindInfos(string userId) {
+
+            //尝试从缓存中读取数据
+            var info = LoadUserBindInfoFromCache(userId);
+            if (info != null)
+                return Task.FromResult(info);
+            //从数据库读取数据
+            info = new LocalLoginBusiness().QueryUserBindInfos(userId);
+            if (info == null)
+                return Task.FromResult(new UserBindInfos());
+
+            //添加缓存到文件
+            SaveUserBindInfoCache(userId, info);
+
+            return Task.FromResult(info);
+        }
+
+        /// <summary>
+        /// 读取缓存的用户绑定数据
+        /// </summary>
+        private UserBindInfos LoadUserBindInfoFromCache(string userId)
+        {
+            try
+            {
+                var fullKey = string.Format("{0}_{1}", RedisKeys.Key_UserBind, userId);
+                var db = RedisHelper.DB_UserBindData;
+                var exist = db.KeyExistsAsync(fullKey).Result;
+                if (!exist)
+                    return null;
+                var v = db.StringGetAsync(fullKey).Result;
+                if (!v.HasValue)
+                    return null;
+                var info = JsonHelper.Deserialize<UserBindInfos>(v);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                //Common.Log.LogWriterGetter.GetLogWriter().Write("QueryUserBindInfos_Read", userId, ex);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 保存用户绑定数据的缓存
+        /// </summary>
+        private void SaveUserBindInfoCache(string userId, UserBindInfos info)
+        {
+
+            try
+            {
+                var content = JsonHelper.Serialize<UserBindInfos>(info);
+                var fullKey = string.Format("{0}_{1}", RedisKeys.Key_UserBind, userId);
+                var db = RedisHelper.DB_UserBindData;
+                db.StringSetAsync(fullKey, content, TimeSpan.FromDays(1));
+            }
+            catch (Exception ex)
+            {
+                //Common.Log.LogWriterGetter.GetLogWriter().Write("QueryUserBindInfos_Write", userId, ex);
+            }
+        }
+
+
+        /// <summary>
+        /// 查询我的余额
+        /// </summary>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public Task<UserBalanceInfo> QueryMyBalance(string userToken)
+        {
+            // 验证用户身份及权限
+            var userId = userAuthentication.ValidateUserAuthentication(userToken);
+            if (userId == "admin")
+                return null;
+            try
+            {
+                var loginBiz = new LocalLoginBusiness();
+                var entity = loginBiz.QueryUserBalance(userId);
+                //return new FundBusiness().QueryUserBalance(userId);
+                return Task.FromResult(entity);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询我的余额出错 - " + ex.Message, ex);
+            }
+        }
+
+
+        /// <summary>
+        /// 查询银行卡信息
+        /// </summary>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public Task<C_BankCard> QueryBankCard(string userToken)
+        {
+            // 验证用户身份及权限
+            var userId = userAuthentication.ValidateUserAuthentication(userToken);
+
+            try
+            {
+                var loginBiz = new LocalLoginBusiness();
+                return Task.FromResult(loginBiz.BankCardById(userId));
+            }
+            catch (LogicException)
+            {
+                return Task.FromResult(new C_BankCard { });
+            }
+            catch (Exception ex)
+            {
+                throw new LogicException(ex.Message, ex);
+            }
+        }
+        
+
+        /// <summary>
+        /// 获取我的未读站内信条数
+        /// </summary>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public Task<int> GetMyUnreadInnerMailCount(string userToken)
+        {
+            var loginBiz = new LocalLoginBusiness();
+            // 验证用户身份及权限
+            var userId = userAuthentication.ValidateUserAuthentication(userToken);
+
+         
+            return Task.FromResult(loginBiz.GetUnreadMailCountByUser(userId));
+        }
+
+
         #region 修改密码
 
-        private UserAuthentication userAuthentication = new UserAuthentication();
+
         /// <summary>
         /// 修改密码
         /// </summary>
@@ -304,7 +439,7 @@ namespace UserLottery.Service.ModuleServices
         public C_Core_Config QueryCoreConfigByKey(string key)
         {
           
-            var loginBiz = new LocalLoginBusiness();        
+            var loginBiz = new MobileAuthenticationBusiness();        
                 _coreConfigList = loginBiz.BanRegistrMobile(key);
 
             if (_coreConfigList == null)
@@ -332,6 +467,10 @@ namespace UserLottery.Service.ModuleServices
             }
         }
 
+        /// <summary>
+        /// 生成随机验证码
+        /// </summary>
+        /// <returns></returns>
         private string GetRandomMobileValidateCode()
         {
             var validateCode = "8888";
@@ -351,7 +490,7 @@ namespace UserLottery.Service.ModuleServices
         /// </summary>
         public void RepeatRequestMobile2(string userId, string mobile, string createUserId)
         {
-                var manager = new LocalLoginBusiness();
+                var manager = new MobileAuthenticationBusiness();
             
                 if (string.IsNullOrEmpty(userId))
                     throw new Exception("未查询到用户编号");
@@ -363,30 +502,30 @@ namespace UserLottery.Service.ModuleServices
                 {
                     throw new ArgumentException(string.Format("此手机号【{0}】已被其他用户认证。", mobile));
                 }
-                //var entity = manager.GetUserMobile(userId);
-                //if (other != null)
-                //{
-                //    other.IsSettedMobile = false;
-                //    other.UpdateBy = createUserId;
-                //    other.RequestTimes++;
-                //    entity.Mobile = mobile;
-                //    manager.UpdateUserMobile(entity);
-                //}
-                //else
-                //{
-                //    entity = new UserMobile
-                //    {
-                //        UserId = userId,
-                //        User = manager.LoadUser(userId),
-                //        AuthFrom = "LOCAL",
-                //        Mobile = mobile,
-                //        IsSettedMobile = false,
-                //        CreateBy = createUserId,
-                //        UpdateBy = createUserId,
-                //    };
-                //    manager.AddUserMobile(entity);
-                //}
-            
+            var entity = manager.GetUserMobile(userId);
+            if (entity != null)
+            {
+                entity.IsSettedMobile = false;
+                entity.UpdateBy = createUserId;
+                //entity.RequestTimes++;
+                entity.Mobile = mobile;
+                //manager.UpdateUserMobile(entity);
+            }
+            //else
+            //{
+            //    entity = new UserMobile
+            //    {
+            //        UserId = userId,
+            //        User = manager.LoadUser(userId),
+            //        AuthFrom = "LOCAL",
+            //        Mobile = mobile,
+            //        IsSettedMobile = false,
+            //        CreateBy = createUserId,
+            //        UpdateBy = createUserId,
+            //    };
+            //    manager.AddUserMobile(entity);
+            //}
+
         }
 
         public Task<int> GetUserId(string userName)

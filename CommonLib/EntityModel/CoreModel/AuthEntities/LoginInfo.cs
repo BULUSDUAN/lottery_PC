@@ -59,5 +59,61 @@ namespace EntityModel.CoreModel
         /// </summary>
         public bool IsUserType { get; set; }
     }
+
+    /// <summary>
+    /// 用户绑定的数据
+    /// </summary>
+    public class UserBindInfos
+    {
+        public string UserId { get; set; }
+        public int VipLevel { get; set; }
+        public string DisplayName { get; set; }
+        public string ComeFrom { get; set; }
+        public bool IsFillMoney { get; set; }
+        public bool IsEnable { get; set; }
+        public bool IsAgent { get; set; }
+        public int HideDisplayNameCount { get; set; }
+
+        public string BankCardRealName { get; set; }
+        public string ProvinceName { get; set; }
+        public string CityName { get; set; }
+        public string BankName { get; set; }
+        public string BankSubName { get; set; }
+        public string BankCardNumber { get; set; }
+
+        public string Email { get; set; }
+        public bool IsSettedMobile { get; set; }
+        public string Mobile { get; set; }
+        public string RealName { get; set; }
+        public string CardType { get; set; }
+        public string IdCardNumber { get; set; }
+        public string QQ { get; set; }
+        public string AlipayAccount { get; set; }
+
+        //public string LastLoginFrom { get; set; }
+        //public string LastLoginIp { get; set; }
+        //public string LastLoginIpName { get; set; }
+        //public string LastLoginTime { get; set; }
+
+        public int RebateCount { get; set; }
+
+        public int MaxLevelValue { get; set; }
+        public string MaxLevelName { get; set; }
+        public int WinOneHundredCount { get; set; }
+        public int WinOneThousandCount { get; set; }
+        public int WinTenThousandCount { get; set; }
+        public int WinOneHundredThousandCount { get; set; }
+        public int WinOneMillionCount { get; set; }
+        public int WinTenMillionCount { get; set; }
+        public int WinHundredMillionCount { get; set; }
+        public decimal TotalBonusMoney { get; set; }
+
+        public DateTime LoadDateTime { get; set; }
+        /// <summary>
+        /// 是否内部用户
+        /// </summary>
+        public int IsUserType { get; set; }
+
+    }
 }
 

@@ -52,5 +52,17 @@ namespace UserLottery.Service.IModuleServices
         [Service(Date = "2018-6-08", Director = "renjun", Name = "token登录")]
         Task<LoginInfo> LoginByUserToken(string userToken);
 
+
+        [Service(Date = "2018-6-12", Director = "renjun", Name = "绑定信息")]
+        Task<UserBindInfos> QueryUserBindInfos(string UserId);
+
+        [Service(Date = "2018-6-12", Director = "renjun", Name = "查询余额信息")]
+        Task<UserBalanceInfo> QueryMyBalance(string userToken);
+
+        [Service(Date = "2018-6-12", Director = "renjun", Name = "查询银行卡信息")]
+        Task<C_BankCard> QueryBankCard(string userToken);
+
+        [Service(Date = "2018-6-12", Director = "renjun", Name = "获取用户站内信数量")]
+        Task<int> GetMyUnreadInnerMailCount(string userToken);
     }
 }
