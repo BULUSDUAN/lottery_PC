@@ -1355,4 +1355,18 @@ namespace EntityModel.Enum
         /// </summary>
         PayBonus = 1,
     }
+    /// <summary>
+    /// 传统足球场次状态
+    /// </summary>
+    public enum CTZQMatchState
+    {
+        Waiting = 0,
+        Running = 10,
+        Finished = 20,
+    }
+    public enum BJDCMatchState
+    {
+        Sales = 0,
+        Stop = 1,
+    }
 } 
