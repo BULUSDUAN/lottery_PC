@@ -78,7 +78,7 @@ namespace UserLottery.Service.ModuleServices
         }
         private UserAuthentication userAuthentication = new UserAuthentication();
         LoginLocal loginEntity = new LoginLocal();
-        private BusinessHelper businessHelper;
+        //private BusinessHelper businessHelper;
         public Task<LoginInfo> User_Login(string loginName, string password,string loginIp)
         {
             //QueryUserParam model = new QueryUserParam();
