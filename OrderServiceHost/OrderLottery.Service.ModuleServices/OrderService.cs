@@ -16,7 +16,7 @@ using Lottery.Kg.ORM.Helper.OrderQuery;
 namespace OrderLottery.Service.ModuleServices
 {
     [ModuleName("Order")]
-    public class OrderService:DBbase, IOrderService
+    public class OrderService : DBbase, IOrderService
     {
         IKgLog log = null;
         readonly OrderQuery _order = null;
@@ -32,8 +32,8 @@ namespace OrderLottery.Service.ModuleServices
         /// <param name="Model">请求实体</param>
         /// <returns></returns>
         public BonusOrderInfoCollection QueryBonusInfoList(QueryBonusInfoListParam Model)
-        {                   
-           return _order.QueryBonusInfoList(Model);
+        {
+            return _order.QueryBonusInfoList(Model);
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace OrderLottery.Service.ModuleServices
         /// <returns></returns>
         public BJDCMatchResultInfo_Collection QueryBJDC_MatchResultCollection(string issuseNumber, int pageIndex, int pageSize)
         {
-           return _order.QueryBJDC_MatchResultCollection( issuseNumber,  pageIndex,  pageSize);
+            return _order.QueryBJDC_MatchResultCollection(issuseNumber, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -112,9 +112,65 @@ namespace OrderLottery.Service.ModuleServices
         {
             return _order.QueryJoinTogetherOrderListByUserId(Model);
         }
+        /// <summary>
+        /// 从Redis查询出合买订单数据
+        /// </summary>
+        /// <param name="Model"></param>
+        /// <returns></returns>
         public Sports_TogetherSchemeQueryInfoCollection QuerySportsTogetherListFromRedis(QuerySportsTogetherListFromRedisParam Model)
         {
             return _order.QuerySportsTogetherListFromRedis(Model);
-        }       
+        }
+        /// <summary>
+        /// 按keyline查询追号列表
+        /// </summary>
+        /// <param name="keyLine"></param>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public BettingOrderInfoCollection QueryBettingOrderListByChaseKeyLine(string keyLine, string userToken)
+        {
+            return _order.QueryBettingOrderListByChaseKeyLine(keyLine, userToken);
+        }
+        /// <summary>
+        /// 查询指定订单的投注号码列表
+        /// </summary>
+        /// <param name="schemeId"></param>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public BettingAnteCodeInfoCollection QueryAnteCodeListBySchemeId(string schemeId, string userToken)
+        {
+            return _order.QueryAnteCodeListBySchemeId(schemeId, userToken);
+        }
+        /// <summary>
+        /// 查询足彩合买明细
+        /// </summary>
+        /// <param name="schemeId"></param>
+        /// <returns></returns>
+        public Sports_TogetherSchemeQueryInfo QuerySportsTogetherDetail(string schemeId)
+        {
+            return _order.QuerySportsTogetherDetail(schemeId);
+        }
+        /// <summary>
+        /// 用户是否已经参与了合买
+        /// </summary>
+        /// <param name="schemeId"></param>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public bool IsUserJoinSportsTogether(string schemeId, string userToken)
+        {
+            return _order.IsUserJoinSportsTogether(schemeId, userToken);
+        }
+        public Sports_AnteCodeQueryInfoCollection QuerySportsOrderAnteCodeList(string schemeId)
+        {
+            return _order.QuerySportsOrderAnteCodeList(schemeId);
+        }
+        public Issuse_QueryInfo QueryIssuseInfo(string gameCode, string gameType, string issuseNumber)
+        {
+            return _order.QueryIssuseInfo(gameCode, gameType, issuseNumber);
+        }
+        public Sports_SchemeQueryInfo QuerySportsSchemeInfo(string schemeId)
+        {
+            return _order.QuerySportsSchemeInfo(schemeId);
+        }
     }
 }

@@ -510,7 +510,773 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
             cache.List = query.Skip(Model.pageIndex * Model.pageSize).Take(Model.pageSize).ToList();
             return cache;          
         }
+        /// <summary>
+        /// 按keyline查询追号列表
+        /// </summary>
+        /// <param name="keyLine"></param>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public BettingOrderInfoCollection QueryBettingOrderListByChaseKeyLine(string keyLine, string userToken)
+        {
+            try
+            {
+                var collection = new BettingOrderInfoCollection();
+                string sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_QueryOrderListByChaseKeyLine").SQL;
+                collection.OrderList = DB.CreateSQLQuery(sql).List<BettingOrderInfo>();
+                if (collection != null && collection.OrderList != null && collection.OrderList.Count > 0)
+                {
+                    collection.TotalCount = collection.OrderList.Count;
+                    collection.TotalOrderMoney = collection.OrderList.Sum(o => o.TotalMoney);
+                    collection.TotalBuyMoney = collection.OrderList.Sum(o => o.CurrentBettingMoney);
+                    collection.TotalPreTaxBonusMoney = collection.OrderList.Sum(o => o.PreTaxBonusMoney);
+                    collection.TotalAfterTaxBonusMoney = collection.OrderList.Sum(o => o.AfterTaxBonusMoney);
+                    collection.TotalAddMoney = collection.OrderList.Sum(o => o.AddMoney);
+                    collection.TotalUserCount = 1;
+                }
+                return collection;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询追号列表失败 - " + ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 查询指定订单的投注号码列表
+        /// </summary>
+        /// <param name="schemeId"></param>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public BettingAnteCodeInfoCollection QueryAnteCodeListBySchemeId(string schemeId, string userToken)
+        {
+            string sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_QueryAnteCodeListBySchemeId").SQL;
+            var collection = new BettingAnteCodeInfoCollection();
+            collection.AnteCodeList = DB.CreateSQLQuery(sql).List<BettingAnteCodeInfo>();
+            return collection;
+        }
+        /// <summary>
+        /// 查询足彩合买明细
+        /// </summary>
+        /// <param name="schemeId"></param>
+        /// <returns></returns>
+        public Sports_TogetherSchemeQueryInfo QuerySportsTogetherDetail(string schemeId)
+        {
+            var orderDetail = DB.CreateQuery<C_OrderDetail>().Where(x => x.SchemeId == schemeId).FirstOrDefault();
+            if (orderDetail == null)
+                throw new Exception(string.Format("没有查询到方案{0}的orderDetail信息", schemeId));
+         
+            var info = (orderDetail.ProgressStatus == (int)ProgressStatus.Complate
+              || orderDetail.ProgressStatus == (int)ProgressStatus.Aborted
+              || orderDetail.ProgressStatus == (int)ProgressStatus.AutoStop) ? QueryComplateSportsTogetherDetail(schemeId) :QueryRunningSportsTogetherDetail(schemeId);
+            if (info == null)
+                throw new Exception(string.Format("没有查询到方案{0}的信息", schemeId));
+            return info;
+        }
+        public Sports_TogetherSchemeQueryInfo QueryComplateSportsTogetherDetail(string schemeId)
+        {
+            var query = from t in DB.CreateQuery<C_Sports_Together>()
+                        join u in DB.CreateQuery<UserRegister>() on t.CreateUserId equals u.UserId
+                        join r in DB.CreateQuery<C_Sports_Order_Complate>() on t.SchemeId equals r.SchemeId
+                        join b in DB.CreateQuery<C_User_Beedings>() on t.CreateUserId equals b.UserId
+                        where t.SchemeId == schemeId && t.GameCode == b.GameCode && t.GameType == b.GameType
+                        select new Sports_TogetherSchemeQueryInfo
+                        {
+                            BonusDeduct = t.BonusDeduct,
+                            CreateUserId = t.CreateUserId,
+                            CreaterDisplayName = u.DisplayName,
+                            CreaterHideDisplayNameCount = u.HideDisplayNameCount,
+                            Description = t.Description,
+                            GameDisplayName = KaSon.FrameWork.Helper.ConvertHelper.FormatGameCode(t.GameCode),
+                            GameTypeDisplayName = KaSon.FrameWork.Helper.ConvertHelper.FormatGameType(t.GameCode, t.GameType),
+                            Guarantees = t.Guarantees,
+                            PlayType = t.PlayType,
+                            Price = t.Price,
+                            SchemeDeduct = t.SchemeDeduct,
+                            SchemeSource = (SchemeSource)t.SchemeSource,
+                            Security = (TogetherSchemeSecurity)t.Security,
+                            StopTime = t.StopTime,
+                            Subscription = t.Subscription,
+                            Title = t.Title,
+                            TotalCount = t.TotalCount,
+                            TotalMoney = t.TotalMoney,
+                            SchemeId = t.SchemeId,
+                            JoinPwd = t.JoinPwd,
+                            Progress = t.Progress,
+                            ProgressStatus = (TogetherSchemeProgress)t.ProgressStatus,
+                            SystemGuarantees = t.SystemGuarantees,
+                            GameCode = t.GameCode,
+                            GameType = t.GameType,
+                            SoldCount = t.SoldCount,
+                            TotalMatchCount = t.TotalMatchCount,
+                            Amount = r.Amount,
+                            BetCount = r.BetCount,
+                            PreTaxBonusMoney = r.PreTaxBonusMoney,
+                            AfterTaxBonusMoney = r.AfterTaxBonusMoney,
+                            BonusStatus = (BonusStatus)r.BonusStatus,
+                            BonusCount = r.BonusCount,
+                            CreateTime = t.CreateTime,
+                            IsPrizeMoney = r.IsPrizeMoney,
+                            TicketStatus = (TicketStatus)r.TicketStatus,
+                            IssuseNumber = r.IssuseNumber,
+                            AddMoney = r.AddMoney,
+                            AddMoneyDescription = r.AddMoneyDescription,
+                            IsVirtualOrder = r.IsVirtualOrder,
+                            HitMatchCount = r.HitMatchCount,
+                            SchemeBettingCategory = (SchemeBettingCategory)r.SchemeBettingCategory,
+                            JoinUserCount = t.JoinUserCount,
+                            Attach = r.Attach,
+                            MinBonusMoney = r.MinBonusMoney,
+                            MaxBonusMoney = r.MaxBonusMoney,
+                            ExtensionOne = r.ExtensionOne,
+                            GoldCrownCount = b.GoldCrownCount,
+                            GoldCupCount = b.GoldCupCount,
+                            GoldDiamondsCount = b.GoldDiamondsCount,
+                            GoldStarCount = b.GoldStarCount,
+                            SilverCrownCount = b.SilverCrownCount,
+                            SilverCupCount = b.SilverCupCount,
+                            SilverDiamondsCount = b.SilverDiamondsCount,
+                            SilverStarCount = b.SilverStarCount,
+                            IsAppend = r.IsAppend == null ? false : r.IsAppend,
+                            TicketTime = r.TicketTime,
+                        };
+            var info = query.FirstOrDefault();
+            if (info != null && info.GameCode != "JCZQ" && info.GameCode != "JCLQ" && info.GameCode != "BJDC")
+            {
+                var key = info.GameCode == "CTZQ" ? string.Format("{0}|{1}|{2}", info.GameCode, info.GameType, info.IssuseNumber) : string.Format("{0}|{1}", info.GameCode, info.IssuseNumber);
+                var gameIssuse = DB.CreateQuery<C_Game_Issuse>().FirstOrDefault(g => g.GameCode_IssuseNumber == key);
+                if (gameIssuse != null)
+                    info.WinNumber = gameIssuse.WinNumber;
+            }
+            return info;
+        }
+        public Sports_TogetherSchemeQueryInfo QueryRunningSportsTogetherDetail(string schemeId)
+        {
+            var query = from t in DB.CreateQuery<C_Sports_Together>()
+                        join u in DB.CreateQuery<UserRegister>() on t.CreateUserId equals u.UserId
+                        join r in DB.CreateQuery<C_Sports_Order_Running>() on t.SchemeId equals r.SchemeId
+                        join b in DB.CreateQuery<C_User_Beedings>() on t.CreateUserId equals b.UserId
+                        where t.SchemeId == schemeId && t.GameCode == b.GameCode && t.GameType == b.GameType
+                        select new Sports_TogetherSchemeQueryInfo
+                        {
+                            BonusDeduct = t.BonusDeduct,
+                            CreateUserId = t.CreateUserId,
+                            CreaterDisplayName = u.DisplayName,
+                            CreaterHideDisplayNameCount = u.HideDisplayNameCount,
+                            Description = t.Description,
+                            GameDisplayName = KaSon.FrameWork.Helper.ConvertHelper.FormatGameCode(t.GameCode),
+                            GameTypeDisplayName = KaSon.FrameWork.Helper.ConvertHelper.FormatGameType(t.GameCode, t.GameType),
+                            Guarantees = t.Guarantees,
+                            PlayType = t.PlayType,
+                            Price = t.Price,
+                            SchemeDeduct = t.SchemeDeduct,
+                            SchemeSource = (SchemeSource)t.SchemeSource,
+                            Security = (TogetherSchemeSecurity)t.Security,
+                            StopTime = t.StopTime,
+                            Subscription = t.Subscription,
+                            Title = t.Title,
+                            TotalCount = t.TotalCount,
+                            TotalMoney = t.TotalMoney,
+                            SchemeId = t.SchemeId,
+                            JoinPwd = t.JoinPwd,
+                            Progress = t.Progress,
+                            ProgressStatus = (TogetherSchemeProgress)t.ProgressStatus,
+                            SystemGuarantees = t.SystemGuarantees,
+                            GameCode = t.GameCode,
+                            GameType = t.GameType,
+                            SoldCount = t.SoldCount,
+                            TotalMatchCount = t.TotalMatchCount,
+                            Amount = r.Amount,
+                            BetCount = r.BetCount,
+                            PreTaxBonusMoney = r.PreTaxBonusMoney,
+                            AfterTaxBonusMoney = r.AfterTaxBonusMoney,
+                            WinNumber = string.Empty,
+                            BonusStatus = (BonusStatus)r.BonusStatus,
+                            BonusCount = 0,
+                            CreateTime = t.CreateTime,
+                            IsPrizeMoney = false,
+                            TicketStatus = (TicketStatus)r.TicketStatus,
+                            IssuseNumber = r.IssuseNumber,
+                            AddMoney = 0M,
+                            AddMoneyDescription = string.Empty,
+                            IsVirtualOrder = r.IsVirtualOrder,
+                            HitMatchCount = r.HitMatchCount,
+                            SchemeBettingCategory = (SchemeBettingCategory)r.SchemeBettingCategory,
+                            JoinUserCount = t.JoinUserCount,
+                            Attach = r.Attach,
+                            MinBonusMoney = r.MinBonusMoney,
+                            MaxBonusMoney = r.MaxBonusMoney,
+                            ExtensionOne = r.ExtensionOne,
+                            GoldCrownCount = b.GoldCrownCount,
+                            GoldCupCount = b.GoldCupCount,
+                            GoldDiamondsCount = b.GoldDiamondsCount,
+                            GoldStarCount = b.GoldStarCount,
+                            SilverCrownCount = b.SilverCrownCount,
+                            SilverCupCount = b.SilverCupCount,
+                            SilverDiamondsCount = b.SilverDiamondsCount,
+                            SilverStarCount = b.SilverStarCount,
+                            IsAppend = r.IsAppend == null ? false : r.IsAppend,
+                            TicketTime = r.TicketTime,
 
+                        };
+            var info = query.FirstOrDefault();
+            if (info != null && info.GameCode != "JCZQ" && info.GameCode != "JCLQ" && info.GameCode != "BJDC")
+            {
+                var key = info.GameCode == "CTZQ" ? string.Format("{0}|{1}|{2}", info.GameCode, info.GameType, info.IssuseNumber) : string.Format("{0}|{1}", info.GameCode, info.IssuseNumber);
+                var gameIssuse = DB.CreateQuery<C_Game_Issuse>().FirstOrDefault(g => g.GameCode_IssuseNumber == key);
+                if (gameIssuse != null)
+                    info.WinNumber = gameIssuse.WinNumber;
+            }
+            return info;
+        }
+        public Sports_TogetherJoinInfoCollection QuerySportsTogetherJoinList(string schemeId, int pageIndex, int pageSize,int MaxPageSize)
+        {
+            var result = new Sports_TogetherJoinInfoCollection();
+            var totalCount = 0;
+            pageSize = pageSize > MaxPageSize ? MaxPageSize : pageSize;
+            var query = (from j in DB.CreateQuery<C_Sports_TogetherJoin>()
+                        join u in DB.CreateQuery<UserRegister>() on j.JoinUserId equals u.UserId
+                        where j.SchemeId == schemeId && j.JoinSucess == true
+                        orderby j.JoinType ascending
+                        select new Sports_TogetherJoinInfo
+                        {
+                            BuyCount = j.BuyCount,
+                            RealBuyCount = j.RealBuyCount,
+                            IsSucess = j.JoinSucess,
+                            JoinDateTime = j.CreateTime,
+                            JoinType = (TogetherJoinType)j.JoinType,
+                            Price = j.Price,
+                            UserDisplayName = u.DisplayName,
+                            HideDisplayNameCount = u.HideDisplayNameCount,
+                            UserId = u.UserId,
+                            JoinId = j.Id,
+                            SchemeId = j.SchemeId,
+                            BonusMoney = j.PreTaxBonusMoney,
+                        }).ToList();
+            totalCount = query.Count();
+            if (pageIndex == -1 && pageSize == -1)
+            {
+                result.List = query.ToList();
+                return result;
+            }              
+            var list=query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+            result.TotalCount = totalCount;
+            result.List.AddRange(list);
+            return result;
+        }
+        public bool IsUserJoinSportsTogether(string schemeId, string userToken)
+        {
+            UserAuthentication Auth = new UserAuthentication();
+            var userId = Auth.ValidateUserAuthentication(userToken);
+            int flag=DB.CreateQuery<C_Sports_TogetherJoin>().Count(p => p.SchemeId == schemeId && p.JoinUserId == userId && p.JoinSucess);
+            return flag > 0; 
+        }
+        public Sports_AnteCodeQueryInfoCollection QuerySportsOrderAnteCodeList(string schemeId)
+        {
+            var result = new Sports_AnteCodeQueryInfoCollection();
+            var codeList = QuerySportsAnteCodeBySchemeId(schemeId);
+            var issuseList = new List<C_Game_Issuse>();
+            foreach (var item in codeList)
+            {
+                if (item.GameCode == "BJDC")
+                {
+                    #region BJDC
 
+                    var match = QueryBJDC_Match(string.Format("{0}|{1}", item.IssuseNumber, item.MatchId));
+                    var matchResult = QueryBJDC_MatchResult(string.Format("{0}|{1}", item.IssuseNumber, item.MatchId));
+                    //matchResult.MatchState
+                    var halfResult = string.Empty;
+                    var fullResult = string.Empty;
+                    var caiguo = string.Empty;
+                    var matchResultSp = 0M;
+                    var matchState = string.Empty;
+                    if (matchResult != null)
+                    {
+                        halfResult = string.Format("{0}:{1}", matchResult.HomeHalf_Result, matchResult.GuestHalf_Result);
+                        fullResult = string.Format("{0}:{1}", matchResult.HomeFull_Result, matchResult.GuestFull_Result);
+                        matchState = matchResult.MatchState;
+                        switch (item.GameType)
+                        {
+                            case "SPF":
+                                caiguo = matchResult.SPF_Result;
+                                matchResultSp = matchResult.SPF_SP;
+                                break;
+                            case "ZJQ":
+                                caiguo = matchResult.ZJQ_Result;
+                                matchResultSp = matchResult.ZJQ_SP;
+                                break;
+                            case "SXDS":
+                                caiguo = matchResult.SXDS_Result;
+                                matchResultSp = matchResult.SXDS_SP;
+                                break;
+                            case "BF":
+                                caiguo = matchResult.BF_Result;
+                                matchResultSp = matchResult.BF_SP;
+                                break;
+                            case "BQC":
+                                caiguo = matchResult.BQC_Result;
+                                matchResultSp = matchResult.BQC_SP;
+                                break;
+                        }
+                    }
+                    result.List.Add(new Sports_AnteCodeQueryInfo
+                    {
+                        AnteCode = item.AnteCode,
+                        IssuseNumber = match.IssuseNumber,
+                        LeagueId = string.Empty,
+                        LeagueName = match.MatchName,
+                        LeagueColor = match.MatchColor,
+                        MatchId = item.MatchId,
+                        MatchIdName = string.Empty,
+                        HomeTeamId = string.Empty,
+                        HomeTeamName = match.HomeTeamName,
+                        GuestTeamId = string.Empty,
+                        GuestTeamName = match.GuestTeamName,
+                        IsDan = item.IsDan,
+                        StartTime = match.MatchStartTime,
+                        HalfResult = halfResult,
+                        FullResult = fullResult,
+                        MatchResult = caiguo,
+                        MatchResultSp = matchResultSp,
+                        CurrentSp = item.Odds,
+                        LetBall = match.LetBall,
+                        BonusStatus = (BonusStatus)item.BonusStatus,
+                        GameType = item.GameType,
+                        MatchState = matchState,
+                        WinNumber = string.Empty,
+                    });
+
+                    #endregion
+                    continue;
+                }
+                if (item.GameCode == "JCZQ")
+                {
+                    #region JCZQ
+
+                    var match = QueryJCZQ_Match(item.MatchId);
+                    var matchResult = QueryJCZQ_MatchResult(item.MatchId);
+                    //matchResult .MatchState
+                    var halfResult = string.Empty;
+                    var fullResult = string.Empty;
+                    var caiguo = string.Empty;
+                    var matchResultSp = 0M;
+                    var matchState = string.Empty;
+                    if (matchResult != null)
+                    {
+                        halfResult = string.Format("{0}:{1}", matchResult.HalfHomeTeamScore, matchResult.HalfGuestTeamScore);
+                        fullResult = string.Format("{0}:{1}", matchResult.FullHomeTeamScore, matchResult.FullGuestTeamScore);
+                        matchState = matchResult.MatchState;
+                        switch (item.GameType.ToUpper())
+                        {
+                            case "SPF":
+                                caiguo = matchResult.SPF_Result;
+                                matchResultSp = matchResult.SPF_SP;
+                                break;
+                            case "BRQSPF":
+                                caiguo = matchResult.BRQSPF_Result;
+                                matchResultSp = matchResult.BRQSPF_SP;
+                                break;
+                            case "ZJQ":
+                                caiguo = matchResult.ZJQ_Result;
+                                matchResultSp = matchResult.ZJQ_SP;
+                                break;
+                            case "BF":
+                                caiguo = matchResult.BF_Result;
+                                matchResultSp = matchResult.BF_SP;
+                                break;
+                            case "BQC":
+                                caiguo = matchResult.BQC_Result;
+                                matchResultSp = matchResult.BQC_SP;
+                                break;
+                        }
+                    }
+                    result.List.Add(new Sports_AnteCodeQueryInfo
+                    {
+                        AnteCode = item.AnteCode,
+                        IssuseNumber = string.Empty,
+                        LeagueId = match.LeagueId.ToString(),
+                        LeagueName = match.LeagueName,
+                        LeagueColor = match.LeagueColor,
+                        MatchId = match.MatchId,
+                        MatchIdName = match.MatchIdName,
+                        HomeTeamId = match.HomeTeamId.ToString(),
+                        HomeTeamName = match.HomeTeamName,
+                        GuestTeamId = match.GuestTeamId.ToString(),
+                        GuestTeamName = match.GuestTeamName,
+                        IsDan = item.IsDan,
+                        StartTime = match.StartDateTime,
+                        HalfResult = halfResult,
+                        FullResult = fullResult,
+                        MatchResult = caiguo,
+                        MatchResultSp = matchResultSp,
+                        CurrentSp = item.Odds,
+                        LetBall = match.LetBall,
+                        BonusStatus = (BonusStatus)item.BonusStatus,
+                        GameType = item.GameType,
+                        MatchState = matchState,
+                        //XmlHeader = string.Empty,
+                    });
+
+                    #endregion
+                    continue;
+                }
+                if (item.GameCode == "JCLQ")
+                {
+                    #region JCLQ
+
+                    var match =QueryJCLQ_Match(item.MatchId);
+                    var matchResult = QueryJCLQ_MatchResult(item.MatchId);
+                    var halfResult = string.Empty;
+                    var fullResult = string.Empty;
+                    var caiguo = string.Empty;
+                    var matchResultSp = 0M;
+                    var matchState = string.Empty;
+                    if (matchResult != null)
+                    {
+                        //halfResult = string.Format("{0}:{1}", matchResult.HomeScore, matchResult.GuestHalf_Result);
+                        fullResult = string.Format("{0}:{1}", matchResult.HomeScore, matchResult.GuestScore);
+                        matchState = matchResult.MatchState;
+                        switch (item.GameType.ToUpper())
+                        {
+                            case "SF":
+                                caiguo = matchResult.SF_Result;
+                                matchResultSp = matchResult.SF_SP;
+                                break;
+                            case "RFSF":
+                                caiguo = matchResult.RFSF_Result;
+                                matchResultSp = matchResult.RFSF_SP;
+                                break;
+                            case "SFC":
+                                caiguo = matchResult.SFC_Result;
+                                matchResultSp = matchResult.SFC_SP;
+                                break;
+                            case "DXF":
+                                caiguo = matchResult.DXF_Result;
+                                matchResultSp = matchResult.DXF_SP;
+                                break;
+                        }
+                    }
+                    result.List.Add(new Sports_AnteCodeQueryInfo
+                    {
+                        AnteCode = item.AnteCode,
+                        IssuseNumber = string.Empty,
+                        LeagueId = match.LeagueId.ToString(),
+                        LeagueName = match.LeagueName,
+                        LeagueColor = match.LeagueColor,
+                        MatchId = match.MatchId,
+                        MatchIdName = match.MatchIdName,
+                        HomeTeamId = string.Empty,
+                        HomeTeamName = match.HomeTeamName,
+                        GuestTeamId = string.Empty,
+                        GuestTeamName = match.GuestTeamName,
+                        IsDan = item.IsDan,
+                        StartTime = match.StartDateTime,
+                        HalfResult = halfResult,
+                        FullResult = fullResult,
+                        MatchResult = caiguo,
+                        MatchResultSp = matchResultSp,
+                        CurrentSp = item.Odds,
+                        BonusStatus = (BonusStatus)item.BonusStatus,
+                        GameType = item.GameType,
+                        MatchState = matchState,
+                        WinNumber = string.Empty,
+                    });
+
+                    #endregion
+                    continue;
+                }
+                if (item.GameCode == "CTZQ")
+                {
+                    #region CTZQ
+
+                    result.List.Add(new Sports_AnteCodeQueryInfo
+                    {
+                        AnteCode = item.AnteCode,
+                        IssuseNumber = item.IssuseNumber,
+                        LeagueId = string.Empty,
+                        LeagueName = string.Empty,
+                        LeagueColor = string.Empty,
+                        MatchId = string.Empty,
+                        MatchIdName = string.Empty,
+                        HomeTeamId = string.Empty,
+                        HomeTeamName = string.Empty,
+                        GuestTeamId = string.Empty,
+                        GuestTeamName = string.Empty,
+                        IsDan = item.IsDan,
+                        StartTime = DateTime.Now,
+                        HalfResult = string.Empty,
+                        FullResult = string.Empty,
+                        MatchResult = string.Empty,
+                        MatchResultSp = 0M,
+                        CurrentSp = item.Odds,
+                        BonusStatus = (BonusStatus)item.BonusStatus,
+                        GameType = item.GameType,
+                        WinNumber = string.Empty,
+                    });
+
+                    #endregion
+                    continue;
+                }
+                if (item.GameCode == "JCSJBGJ" || item.GameCode == "JCYJ")
+                {
+                    var match = GetSJBMatch(item.GameCode, int.Parse(item.AnteCode));
+                    result.List.Add(new Sports_AnteCodeQueryInfo
+                    {
+                        AnteCode = item.AnteCode,
+                        IssuseNumber = string.Empty,
+                        HomeTeamId = string.Empty,
+                        HomeTeamName = match.Team,
+                        GuestTeamId = string.Empty,
+                        GuestTeamName = match.Team,
+                        IsDan = item.IsDan,
+                        CurrentSp = item.Odds,
+                        BonusStatus = (BonusStatus)item.BonusStatus,
+                        GameType = item.GameType,
+                        StartTime = DateTime.Now,
+                    });
+                    continue;
+                }
+
+                var c = issuseList.FirstOrDefault(p => p.GameCode == item.GameCode && p.IssuseNumber == item.IssuseNumber);
+                if (c == null)
+                {
+                    c = QueryGameIssuse(item.GameCode, item.IssuseNumber);
+                    issuseList.Add(c);
+                }
+                result.List.Add(new Sports_AnteCodeQueryInfo
+                {
+                    AnteCode = item.AnteCode,
+                    IssuseNumber = item.IssuseNumber,
+                    BonusStatus = (BonusStatus)item.BonusStatus,
+                    CurrentSp = item.Odds,
+                    IsDan = item.IsDan,
+                    GameType = item.GameType,
+                    WinNumber = c == null ? string.Empty : string.IsNullOrEmpty(c.WinNumber) ? string.Empty : c.WinNumber,
+                    StartTime = DateTime.Now,
+                });
+            }
+            return result;
+        }
+        public List<C_Sports_AnteCode> QuerySportsAnteCodeBySchemeId(string schemeId)
+        {
+            var list = (from a in DB.CreateQuery<C_Sports_AnteCode>()
+                        where a.SchemeId == schemeId
+                        select a
+                       ).ToList();
+            if (list == null || list.Count <= 0)
+                list = (from a in DB.CreateQuery<C_Sports_AnteCode_History>()
+                        where a.SchemeId == schemeId
+                        select new C_Sports_AnteCode
+                        {
+                            AnteCode = a.AnteCode,
+                            BonusStatus = a.BonusStatus,
+                            CreateTime = a.CreateTime,
+                            GameCode = a.GameCode,
+                            GameType = a.GameType,
+                            Id = a.Id,
+                            IsDan = a.IsDan,
+                            IssuseNumber = a.IssuseNumber,
+                            MatchId = a.MatchId,
+                            Odds = a.Odds,
+                            PlayType = a.PlayType,
+                            SchemeId = a.SchemeId,
+
+                        }).ToList();
+            return list;
+        }
+        public C_BJDC_Match QueryBJDC_Match(string id)
+        {           
+            return DB.CreateQuery<C_BJDC_Match>().FirstOrDefault(p => p.Id == id);
+        }
+        public C_BJDC_MatchResult QueryBJDC_MatchResult(string id)
+        {          
+            return DB.CreateQuery<C_BJDC_MatchResult>().FirstOrDefault(p => p.Id == id);
+        }
+        public C_JCZQ_Match QueryJCZQ_Match(string matchId)
+        {            
+            return DB.CreateQuery<C_JCZQ_Match>().FirstOrDefault(p => p.MatchId == matchId);
+        }
+        public C_JCZQ_MatchResult QueryJCZQ_MatchResult(string matchId)
+        {
+            return DB.CreateQuery<C_JCZQ_MatchResult>().FirstOrDefault(p => p.MatchId == matchId);
+        }
+        public C_JCLQ_Match QueryJCLQ_Match(string matchId)
+        {
+            return DB.CreateQuery<C_JCLQ_Match>().FirstOrDefault(p => p.MatchId == matchId);
+        }
+        public C_JCLQ_MatchResult QueryJCLQ_MatchResult(string matchId)
+        {
+            return DB.CreateQuery<C_JCLQ_MatchResult>().FirstOrDefault(p => p.MatchId == matchId);
+        }
+        public C_SJB_Match GetSJBMatch(string gameType, int matchId)
+        {
+            return DB.CreateQuery<C_SJB_Match>().FirstOrDefault(p => p.GameType == gameType && p.MatchId == matchId);
+        }
+        public C_Game_Issuse QueryGameIssuse(string gameCode, string issuseNumber)
+        {
+            return DB.CreateQuery<C_Game_Issuse>().FirstOrDefault(p => p.GameCode == gameCode && p.IssuseNumber == issuseNumber);
+        }
+
+        public Issuse_QueryInfo QueryIssuseInfo(string gameCode, string gameType, string issuseNumber)
+        {           
+            var issuse = (from g in DB.CreateQuery<C_Game_Issuse>()
+                        where g.GameCode == gameCode
+                        && g.IssuseNumber == issuseNumber
+                        && (gameType == string.Empty || g.GameType == gameType)
+                        select g).FirstOrDefault();
+            if (issuse == null) return new Issuse_QueryInfo { Status = IssuseStatus.OnSale };
+            return new Issuse_QueryInfo
+            {
+                CreateTime = issuse.CreateTime,
+                GameCode_IssuseNumber = issuse.GameCode_IssuseNumber,
+                Game = new GameInfo
+                {
+                    //DisplayName = issuse.Game.DisplayName,
+                    GameCode = issuse.GameCode
+                },
+                GatewayStopTime = issuse.GatewayStopTime,
+                IssuseNumber = issuse.IssuseNumber,
+                LocalStopTime = issuse.LocalStopTime,
+                OfficialStopTime = issuse.OfficialStopTime,
+                StartTime = issuse.StartTime,
+                Status = (IssuseStatus)issuse.Status,
+                WinNumber = issuse.WinNumber,
+            };
+        }
+        public Sports_SchemeQueryInfo QuerySportsSchemeInfo(string schemeId)
+        {
+            var orderDetail = DB.CreateQuery<C_OrderDetail>().FirstOrDefault(o => o.SchemeId == schemeId);
+            if (orderDetail == null) return null;
+            var info = (orderDetail.ProgressStatus == (int)ProgressStatus.Complate
+                || orderDetail.ProgressStatus == (int)ProgressStatus.Aborted
+                || orderDetail.ProgressStatus == (int)ProgressStatus.AutoStop) ? QuerySports_Order_ComplateInfo(schemeId) : QuerySports_Order_RunningInfo(schemeId);
+            if (info == null)
+                throw new Exception(string.Format("没有查询到方案{0}的信息", schemeId));
+            return info;
+        }
+        public Sports_SchemeQueryInfo QuerySports_Order_ComplateInfo(string schemeId)
+        {          
+            var query = from r in DB.CreateQuery<C_Sports_Order_Complate>()
+                        join u in DB.CreateQuery<UserRegister>() on r.UserId equals u.UserId
+                        where r.SchemeId == schemeId
+                        select new Sports_SchemeQueryInfo
+                        {
+                            UserId = u.UserId,
+                            UserDisplayName = u.DisplayName,
+                            HideDisplayNameCount = u.HideDisplayNameCount,
+                            GameDisplayName = KaSon.FrameWork.Helper.ConvertHelper.FormatGameCode(r.GameCode),
+                            GameCode = r.GameCode,
+                            Amount = r.Amount,
+                            BonusStatus = (BonusStatus)r.BonusStatus,
+                            CreateTime = r.CreateTime,
+                            GameType = r.GameType,
+                            GameTypeDisplayName = KaSon.FrameWork.Helper.ConvertHelper.FormatGameType(r.GameCode, r.GameType),
+                            IssuseNumber = r.IssuseNumber,
+                            PlayType = r.PlayType,
+                            ProgressStatus = (ProgressStatus)r.ProgressStatus,
+                            SchemeId = r.SchemeId,
+                            SchemeType = (SchemeType)r.SchemeType,
+                            TicketId = r.TicketId,
+                            TicketLog = r.TicketLog,
+                            TicketStatus = (TicketStatus)r.TicketStatus,
+                            TotalMatchCount = r.TotalMatchCount,
+                            TotalMoney = r.TotalMoney,
+                            BetCount = r.BetCount,
+                            PreTaxBonusMoney = r.PreTaxBonusMoney,
+                            AfterTaxBonusMoney = r.AfterTaxBonusMoney,
+                            BonusCount = r.BonusCount,
+                            IsPrizeMoney = r.IsPrizeMoney,
+                            Security = (TogetherSchemeSecurity)r.Security,
+                            IsVirtualOrder = r.IsVirtualOrder,
+                            StopTime = r.StopTime,
+                            HitMatchCount = r.HitMatchCount,
+                            AddMoney = r.AddMoney,
+                            AddMoneyDescription = r.AddMoneyDescription,
+                            SchemeBettingCategory = (SchemeBettingCategory)r.SchemeBettingCategory,
+                            TicketProgress = r.TicketProgress,
+                            DistributionWay = (AddMoneyDistributionWay)r.DistributionWay,
+                            Attach = r.Attach,
+                            MaxBonusMoney = r.MaxBonusMoney,
+                            MinBonusMoney = r.MinBonusMoney,
+                            ExtensionOne = r.ExtensionOne,
+                            IsAppend = r.IsAppend == null ? false : r.IsAppend,
+                            ComplateDateTime = r.ComplateDateTime,
+                            BetTime = r.BetTime,
+                            SchemeSource = (SchemeSource)r.SchemeSource,
+                            RedBagMoney = r.RedBagMoney,
+                            TicketTime = r.TicketTime,
+                            RedBagAwardsMoney = r.AddMoneyDescription == "70" ? r.AddMoney : 0,
+                            BonusAwardsMoney = r.AddMoneyDescription == "10" ? r.AddMoney : 0,
+                        };
+            var info = query.FirstOrDefault();
+            if (info != null && info.GameCode != "JCZQ" && info.GameCode != "JCLQ" && info.GameCode != "BJDC")
+            {
+                var key = info.GameCode == "CTZQ" ? string.Format("{0}|{1}|{2}", info.GameCode, info.GameType, info.IssuseNumber) : string.Format("{0}|{1}", info.GameCode, info.IssuseNumber);
+                var gameIssuse = DB.CreateQuery<C_Game_Issuse>().FirstOrDefault(g => g.GameCode_IssuseNumber == key);
+                if (gameIssuse != null)
+                    info.WinNumber = gameIssuse.WinNumber;
+            }
+            return info;
+        }
+        public Sports_SchemeQueryInfo QuerySports_Order_RunningInfo(string schemeId)
+        {
+            var query = from r in DB.CreateQuery<C_Sports_Order_Running>()
+                        join u in DB.CreateQuery<UserRegister>() on r.UserId equals u.UserId
+                        where r.SchemeId == schemeId
+                        select new Sports_SchemeQueryInfo
+                        {
+                            UserId = u.UserId,
+                            UserDisplayName = u.DisplayName,
+                            HideDisplayNameCount = u.HideDisplayNameCount,
+                            GameCode = r.GameCode,
+                            Amount = r.Amount,
+                            BonusStatus = (BonusStatus)r.BonusStatus,
+                            CreateTime = r.CreateTime,
+                            GameType = r.GameType,
+                            IssuseNumber = r.IssuseNumber,
+                            PlayType = r.PlayType,
+                            ProgressStatus = (ProgressStatus)r.ProgressStatus,
+                            SchemeId = r.SchemeId,
+                            SchemeType = (SchemeType)r.SchemeType,
+                            TicketId = r.TicketId,
+                            TicketLog = r.TicketLog,
+                            TicketStatus = (TicketStatus)r.TicketStatus,
+                            TotalMatchCount = r.TotalMatchCount,
+                            TotalMoney = r.TotalMoney,
+                            BetCount = r.BetCount,
+                            GameDisplayName = KaSon.FrameWork.Helper.ConvertHelper.FormatGameCode(r.GameCode),
+                            GameTypeDisplayName = KaSon.FrameWork.Helper.ConvertHelper.FormatGameType(r.GameCode, r.GameType),
+                            AfterTaxBonusMoney = 0M,
+                            PreTaxBonusMoney = 0M,
+                            BonusCount = 0,
+                            WinNumber = string.Empty,
+                            IsPrizeMoney = false,
+                            Security = (TogetherSchemeSecurity)r.Security,
+                            IsVirtualOrder = r.IsVirtualOrder,
+                            StopTime = r.StopTime,
+                            HitMatchCount = r.HitMatchCount,
+                            AddMoney = 0M,
+                            AddMoneyDescription = string.Empty,
+                            SchemeBettingCategory = (SchemeBettingCategory)r.SchemeBettingCategory,
+                            TicketProgress = r.TicketProgress,
+                            DistributionWay = AddMoneyDistributionWay.Average,
+                            Attach = r.Attach,
+                            MaxBonusMoney = r.MaxBonusMoney,
+                            MinBonusMoney = r.MinBonusMoney,
+                            ExtensionOne = r.ExtensionOne,
+                            IsAppend = r.IsAppend == null ? false : r.IsAppend,
+                            BetTime = r.BetTime,
+                            SchemeSource = (SchemeSource)r.SchemeSource,
+                            TicketTime = r.TicketTime,
+                            RedBagMoney = r.RedBagMoney,
+                        };
+            var info = query.FirstOrDefault();
+            if (info != null && info.GameCode != "JCZQ" && info.GameCode != "JCLQ" && info.GameCode != "BJDC")
+            {
+                var key = info.GameCode == "CTZQ" ? string.Format("{0}|{1}|{2}", info.GameCode, info.GameType, info.IssuseNumber) : string.Format("{0}|{1}", info.GameCode, info.IssuseNumber);
+                var gameIssuse = DB.CreateQuery<C_Game_Issuse>().FirstOrDefault(g => g.GameCode_IssuseNumber == key);
+                if (gameIssuse != null)
+                    info.WinNumber = gameIssuse.WinNumber;
+            }
+            return info;
+        }
     }
 }

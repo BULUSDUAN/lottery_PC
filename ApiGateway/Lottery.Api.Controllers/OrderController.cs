@@ -3,6 +3,7 @@ using EntityModel.Enum;
 using EntityModel.RequestModel;
 using Kason.Sg.Core.ProxyGenerator;
 using KaSon.FrameWork.Helper;
+using KaSon.FrameWork.Helper.分析器工厂;
 using Lottery.ApiGateway.Model.Enum;
 using Lottery.ApiGateway.Model.HelpModel;
 using Lottery.Base.Controllers;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
@@ -809,7 +811,12 @@ namespace Lottery.Api.Controllers
             }
             
         }
-
+        /// <summary>
+        /// 查询合买跟单_137
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         public async Task<LotteryServiceResponse> QuerySportsTogetherList([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
@@ -929,6 +936,597 @@ namespace Lottery.Api.Controllers
                     Value = ex.Message,
                 };
             }
+        }
+        /// <summary>
+        /// 查询中奖榜单_138
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+
+        public async Task<LotteryServiceResponse> QueryRankReport([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                var type = p.type;
+                var time = p.time;
+                var BeginTime = DateTime.Now.AddDays(-time);
+                var EndTime = DateTime.Now.AddDays(1);
+                var gameCode = p.GameCode;
+                var gameType = p.GameType;
+                var pageIndex = p.PageIndex;
+                var pageSize = p.PageSize;
+                List<object> list = new List<object>();
+                if (type == "ljzj")
+                {
+                    //RankReportCollection_TotalBonus_Sport result = WCFClients.GameQueryClient.QueryRankReport_TotalBonus_Sport(BeginTime, EndTime, gameCode, gameType, pageIndex, pageSize);
+                    //从jsonData查询数据
+                    RankReportCollection_TotalBonus_Sport result = new RankReportCollection_TotalBonus_Sport();
+                    var url = "/jsonData/bonus/" + type + "_" + gameCode + "" + (string.IsNullOrEmpty(gameType) ? string.Empty : "_" + gameType) + "/" + time + "_bonus.json";
+                    var jsonData = GetJsonData(url);
+                    if (!string.IsNullOrEmpty(jsonData))
+                    {
+                        result = JsonHelper.Deserialize<RankReportCollection_TotalBonus_Sport>(jsonData);
+                        if (result != null && result.RankInfoList.Count > 0)
+                            result.RankInfoList = result.RankInfoList.Skip((int)pageIndex * (int)pageSize).Take((int)pageSize).ToList(); /*result.RankInfoList.AsParallel().Skip(pageIndex * pageSize).Take(pageSize).ToList();*/
+                        else result = new RankReportCollection_TotalBonus_Sport();
+                    }
+                    if (result != null && result.RankInfoList != null && result.RankInfoList.Count > 0)
+                    {
+                        foreach (var item in result.RankInfoList)
+                        {
+                            list.Add(new
+                            {
+                                BonusMoney = item.BonusMoney,
+                                TotalOrderCount = item.TotalOrderCount,
+                                TotalOrderMoney = item.TotalOrderMoney,
+                                ProfitMoney = item.ProfitMoney,
+                                UserId = item.UserId,
+                                UserDisplayName = item.UserDisplayName,
+                                UserHideDisplayNameCount = item.UserHideDisplayNameCount
+                            });
+                        }
+                    }
+                }
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询中奖榜单成功",
+                    MsgId = entity.MsgId,
+                    Value = list,
+                };
+            }
+            catch (ArgumentException ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "业务参数错误",
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "查询中奖榜单失败",
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+        }
+        /// <summary>
+        /// 新接口_查询订单详情_144
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<LotteryServiceResponse> QueryNewOrderDetailBySchemeId([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                string userToken = p.UserToken;
+                if (string.IsNullOrEmpty(userToken))
+                    throw new ArgumentException("您还未登录！");
+                string schemeId = p.SchemeId;
+                if (string.IsNullOrEmpty(schemeId))
+                    throw new ArgumentException("订单号不能为空！");
+
+                if (schemeId.StartsWith("CHASE"))
+                {
+                    return await QueryCHASEOrderDetail(_serviceProxyProvider, entity, schemeId, userToken);
+                }
+                else if (schemeId.StartsWith("TSM"))
+                {
+                    return await QueryTMSOrderDetail(_serviceProxyProvider, entity, schemeId, userToken);
+                }
+                else
+                {
+                    return await QueryGeneralOrderDetail(_serviceProxyProvider, entity, schemeId, userToken);
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "业务参数错误",
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "查询订单详情失败",
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+
+        }
+        /// <summary>
+        /// 查看追号订单详情
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <param name="schemeId"></param>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public async Task<LotteryServiceResponse> QueryCHASEOrderDetail([FromServices]IServiceProxyProvider _serviceProxyProvider,LotteryServiceRequest entity, string schemeId, string userToken)
+        {
+            Dictionary<string, object> param = new Dictionary<string, object>
+            {
+                { "schemeId", schemeId },
+                { "userToken", userToken }
+            };
+            var schemeInfo =await _serviceProxyProvider.Invoke<BettingOrderInfoCollection>(param, "api/Order/QueryBettingOrderListByChaseKeyLine");
+            if (schemeInfo.OrderList.Count == 0)
+                throw new Exception("追号方案不包括投注期信息");
+            var firstIssuse = schemeInfo.OrderList[0];
+            var userInfo =await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
+
+            var status = schemeInfo.OrderList.Min(t => t.ProgressStatus);
+            var codeList = new List<object>();
+            if (firstIssuse.Security == TogetherSchemeSecurity.Public
+                || (firstIssuse.Security == TogetherSchemeSecurity.CompletePublic && status != ProgressStatus.Running && status != ProgressStatus.Waitting) || (firstIssuse.UserId == userInfo.UserId))
+            {
+                param.Clear();
+                param.Add("SchemeId", firstIssuse.SchemeId);
+                param.Add("userToken", userToken);
+                var anteCodeList =await _serviceProxyProvider.Invoke<BettingAnteCodeInfoCollection>(param, "api/Order/QueryAnteCodeListBySchemeId");
+                foreach (var code in anteCodeList.AnteCodeList)
+                {
+                    var betCount = AnalyzerFactory.GetAntecodeAnalyzer(code.GameCode, code.GameType).AnalyzeAnteCode(code.AnteCode);
+                    codeList.Add(new
+                    {
+                        IssuseNumber = code.IssuseNumber,
+                        GameTypeName = code.GameTypeName,
+                        GameType = code.GameType,
+                        GameName = code.GameName,
+                        GameCode = code.GameCode,
+                        AnteCode = code.AnteCode,
+                        SchemeId = code.SchemeId,
+                        BetCount = betCount,
+                        CurrBetMoney = betCount * 2,
+                    });
+                }
+            }
+            var issuseList = new List<object>();
+            foreach (var item in schemeInfo.OrderList)
+            {
+                issuseList.Add(new
+                {
+                    WinNumber = item.WinNumber,
+                    IssuseNumber = item.IssuseNumber,
+                    BettingMoney = item.CurrentBettingMoney,
+                    Amount = item.Amount,
+                    AddMoney = item.AddMoney,
+                    AfterTaxBonusMoney = item.AfterTaxBonusMoney,
+                    BonusStatus = item.BonusStatus,
+                    TicketStatus = item.TicketStatus,
+                    ProgressStatus = item.ProgressStatus,
+                    IsVirtualOrder = item.IsVirtualOrder,
+                    SchemeType = item.SchemeType,
+                    SchemeId = item.SchemeId,
+                });
+            }
+            var result = new
+            {
+                ChaseId = schemeId,
+                CurrSchemeId = firstIssuse.SchemeId,
+                GameCode = firstIssuse.GameCode,
+                GameDisplayName = firstIssuse.GameName,
+                GameTypeDisplayName = firstIssuse.GameTypeName,
+                UserId = firstIssuse.UserId,
+                UserDisplayName = firstIssuse.CreatorDisplayName,
+                HideDisplayNameCount = firstIssuse.HideDisplayNameCount,
+                CreateTime = ConvertHelper.ConvertDateTimeInt(firstIssuse.CreateTime),
+                TotalMoney = schemeInfo.TotalOrderMoney,
+                TotalBuyMoney = schemeInfo.TotalBuyMoney,
+                BonusMoney = schemeInfo.TotalAfterTaxBonusMoney,
+                ChaseCount = schemeInfo.OrderList.Count,
+                Security = firstIssuse.Security,
+                SchemeSource = firstIssuse.SchemeSource,
+                CurrIssuseBonusMoney = firstIssuse.AfterTaxBonusMoney,
+                CurrIssuseBonusStatus = firstIssuse.BonusStatus,
+                SchemeBettingCategory = (int)firstIssuse.SchemeBettingCategory,
+                CodeList = codeList,
+                IssuseList = issuseList,
+                SchemeType = firstIssuse.SchemeType,
+                IsVirtualOrder = firstIssuse.IsVirtualOrder,
+                StopAfterBonus = firstIssuse.StopAfterBonus,
+            };
+
+            return new LotteryServiceResponse
+            {
+                Code = ResponseCode.成功,
+                Message = "查询订单明细成功",
+                MsgId = entity.MsgId,
+                Value = result,
+            };
+        }
+        /// <summary>
+        /// 查看合买订单详情
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <param name="schemeId"></param>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public async Task<LotteryServiceResponse> QueryTMSOrderDetail([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity, string schemeId, string userToken)
+        {
+            Dictionary<string, object> param = new Dictionary<string, object>
+            {
+                {"schemeId",schemeId },{"userToken",userToken },{ "PageIndex",0},{ "PageSize",100},{"MaxPageSize",200 }
+            };            
+            var schemeInfo =await _serviceProxyProvider.Invoke<Sports_TogetherSchemeQueryInfo>(param, "'api/Order/QuerySportsTogetherDetail");
+            var userInfo =await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
+            var join = await _serviceProxyProvider.Invoke<Sports_TogetherJoinInfoCollection>(param, "api/Order/QuerySportsTogetherJoinList");
+
+            var joinList = new List<object>();
+            foreach (var item in join.List)
+            {
+                joinList.Add(new
+                {
+                    UserId = item.UserId,
+                    UserDisplayName =ConvertHelper.HideUserName(item.UserDisplayName, item.HideDisplayNameCount),
+                    HideDisplayNameCount = item.HideDisplayNameCount,
+                    SchemeId = item.SchemeId,
+                    RealBuyCount = item.RealBuyCount,
+                    Price = item.Price,
+                    JoinType = ConvertHelper.FomartJoinType(item.JoinType),
+                    JoinId = item.JoinId,
+                    JoinDateTime = ConvertHelper.ConvertDateTimeInt(item.JoinDateTime),
+                    IsSucess = item.IsSucess,
+                    BuyCount = item.BuyCount,
+                    BonusMoney = item.BonusMoney,
+                });
+            }
+
+            var codeList = new List<object>();
+            if (schemeInfo.Security == TogetherSchemeSecurity.Public
+               || (schemeInfo.Security == TogetherSchemeSecurity.CompletePublic && schemeInfo.StopTime <= DateTime.Now)
+               || schemeInfo.CreateUserId == userInfo.UserId
+                || (schemeInfo.Security == TogetherSchemeSecurity.JoinPublic && await _serviceProxyProvider.Invoke<bool>(param, "api/Order/IsUserJoinSportsTogether")))
+            {
+                var anteCodeList = await _serviceProxyProvider.Invoke<Sports_AnteCodeQueryInfoCollection>(param, "api/Order/QuerySportsOrderAnteCodeList");
+                //codeList = GetCodeList(anteCodeList);
+                codeList =await GetCodeList_GSAPP(_serviceProxyProvider,anteCodeList, schemeInfo.GameCode, schemeInfo.Amount);
+
+            }
+
+            var result = new
+            {
+                SchemeId = schemeInfo.SchemeId,
+                GameCode = schemeInfo.GameCode,
+                GameDisplayName = schemeInfo.GameDisplayName,
+                GameType = schemeInfo.GameType,
+                GameTypeDisplayName = schemeInfo.GameTypeDisplayName,
+                UserId = schemeInfo.CreateUserId,
+                UserDisplayName = schemeInfo.CreaterDisplayName,
+                HideDisplayNameCount = schemeInfo.CreaterHideDisplayNameCount,
+                MatchCount = schemeInfo.TotalMatchCount,
+                PlayType = schemeInfo.PlayType,
+                TotalMoney = schemeInfo.TotalMoney,
+                TotalCount = schemeInfo.TotalCount,
+                SoldCount = schemeInfo.SoldCount,
+                StopTime =ConvertHelper.ConvertDateTimeInt(schemeInfo.StopTime),
+                Price = schemeInfo.Price,
+                Progress = schemeInfo.Progress,
+                JoinPwd = schemeInfo.JoinPwd,
+                BetCount = schemeInfo.BetCount,
+                Amount = schemeInfo.Amount,
+                BonusDeduct = schemeInfo.BonusDeduct,
+                IssuseNumber = schemeInfo.IssuseNumber,
+                SchemeDeduct = schemeInfo.SchemeDeduct,
+                Subscription = schemeInfo.Subscription,
+                Guarantees = schemeInfo.Guarantees,
+                WinNumber = schemeInfo.WinNumber,
+                CreateTime = ConvertHelper.ConvertDateTimeInt(schemeInfo.CreateTime),
+                HitMatchCount = schemeInfo.HitMatchCount,
+                BonusCount = schemeInfo.BonusCount,
+                BonusMoney = schemeInfo.AfterTaxBonusMoney,
+                AddMoney = schemeInfo.AddMoney,
+                AddMoneyDescription = schemeInfo.AddMoneyDescription,
+                TicketStatus = schemeInfo.TicketStatus,
+                TogetherProgressStatus = schemeInfo.ProgressStatus,
+                BonusStatus = schemeInfo.BonusStatus,
+                Security = schemeInfo.Security,
+                SchemeSource = schemeInfo.SchemeSource,
+                SchemeBettingCategory = (int)schemeInfo.SchemeBettingCategory,
+                IsPrizeMoney = schemeInfo.IsPrizeMoney,
+                Title = schemeInfo.Title,
+                Description = schemeInfo.Description,
+                CodeList = codeList,
+                JoinList = joinList,
+                ServiceTime = ConvertHelper.ConvertDateTimeInt(DateTime.Now),
+            };
+
+            return new LotteryServiceResponse
+            {
+                Code = ResponseCode.成功,
+                Message = "查询订单明细成功",
+                MsgId = entity.MsgId,
+                Value = result,
+            };
+        }
+        /// <summary>
+        /// 查询普通订单详情
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <param name="schemeId"></param>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public async Task<LotteryServiceResponse> QueryGeneralOrderDetail([FromServices]IServiceProxyProvider _serviceProxyProvider,LotteryServiceRequest entity, string schemeId, string userToken)
+        {
+            Dictionary<string, object> param = new Dictionary<string, object>
+            {
+                {"schemeId",schemeId },{"userToken",userToken }
+            };
+            var schemeInfo =await _serviceProxyProvider.Invoke<Sports_SchemeQueryInfo>(param, "api/Order/QuerySportsSchemeInfo");
+            var userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
+
+
+            var codeList = new List<object>();
+            if (schemeInfo.Security == TogetherSchemeSecurity.Public
+               || (schemeInfo.Security == TogetherSchemeSecurity.CompletePublic && schemeInfo.StopTime <= DateTime.Now)
+               || schemeInfo.UserId == userInfo.UserId)
+            {
+                if (schemeInfo.Security != TogetherSchemeSecurity.FirstMatchStopPublic)
+                {
+                    var anteCodeList =await _serviceProxyProvider.Invoke<Sports_AnteCodeQueryInfoCollection>(param, "api/Order/QuerySportsOrderAnteCodeList");
+                    codeList =await GetCodeList_GSAPP(_serviceProxyProvider,anteCodeList, schemeInfo.GameCode, schemeInfo.Amount);
+                }
+                else if ((schemeInfo.Security == TogetherSchemeSecurity.FirstMatchStopPublic && schemeInfo.StopTime <= DateTime.Now))
+                {
+                    var anteCodeList =await _serviceProxyProvider.Invoke<Sports_AnteCodeQueryInfoCollection>(param, "api/Order/QuerySportsOrderAnteCodeList");
+                    codeList =await GetCodeList_GSAPP(_serviceProxyProvider,anteCodeList, schemeInfo.GameCode, schemeInfo.Amount);
+                }
+            }
+            string[] array_GameCode = new string[] { "JCZQ", "JCLQ", "CTZQ", "BJDC" };
+            string winNumber = string.Empty;
+            if (!array_GameCode.Contains(schemeInfo.GameCode))
+            {
+                Dictionary<string, object> Issuse_param = new Dictionary<string, object>()
+                {
+                    {"gameCode",schemeInfo.GameCode },{"gameType",string.Empty },{"issuseNumber",schemeInfo.IssuseNumber }
+                };
+                var IssuseInfo =await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(Issuse_param, "api/Order/QueryIssuseInfo");
+                if (IssuseInfo != null)
+                    winNumber = IssuseInfo.WinNumber;
+            }
+            //if (schemeInfo.GameCode.ToUpper() == "SJB")
+            //{
+
+            //}
+            var result = new
+            {
+                SchemeId = schemeInfo.SchemeId,
+                GameCode = schemeInfo.GameCode,
+                GameDisplayName = schemeInfo.GameDisplayName,
+                GameType = schemeInfo.GameType,
+                GameTypeDisplayName = schemeInfo.GameTypeDisplayName,
+                UserId = schemeInfo.UserId,
+                UserDisplayName = schemeInfo.UserDisplayName,
+                HideDisplayNameCount = schemeInfo.HideDisplayNameCount,
+                MatchCount = schemeInfo.TotalMatchCount,
+                PlayType = schemeInfo.PlayType,
+                CreateTime = ConvertHelper.ConvertDateTimeInt(schemeInfo.CreateTime),
+                TotalMoney = schemeInfo.TotalMoney,
+                BonusMoney = schemeInfo.AfterTaxBonusMoney,
+                AddMoney = schemeInfo.AddMoney,
+                AddMoneyDescription = schemeInfo.AddMoneyDescription,
+                TicketStatus = (int)schemeInfo.TicketStatus,
+                ProgressStatus = (int)schemeInfo.ProgressStatus,
+                BonusStatus = (int)schemeInfo.BonusStatus,
+                Amount = schemeInfo.Amount,
+                BetCount = schemeInfo.BetCount,
+                SchemeSource = schemeInfo.SchemeSource,
+                IssuseNumber = schemeInfo.IssuseNumber,
+                WinNumber = winNumber,
+                Security = schemeInfo.Security,
+                Attach = schemeInfo.Attach,
+                SchemeBettingCategory = (int)schemeInfo.SchemeBettingCategory,
+                AfterTaxBonusMoney = schemeInfo.AfterTaxBonusMoney,
+                IsPrizeMoney = schemeInfo.IsPrizeMoney,
+                SchemeType = schemeInfo.SchemeType,
+                IsVirtualOrder = schemeInfo.IsVirtualOrder,
+                CodeList = codeList,
+            };
+            return new LotteryServiceResponse
+            {
+                Code = ResponseCode.成功,
+                Message = "查询订单详情成功",
+                MsgId = entity.MsgId,
+                Value = result,
+            };
+        }
+        private async Task<List<object>> GetCodeList_GSAPP([FromServices]IServiceProxyProvider _serviceProxyProvider, Sports_AnteCodeQueryInfoCollection code, string gameCode, int amount)
+        {
+            var issuseNumber = code.List.Count > 0 ? code.List[0].IssuseNumber : string.Empty;
+            var codeList = new List<object>();
+            foreach (var item in code.List)
+            {
+                string[] array_GameCode = new string[] { "JCZQ", "JCLQ", "CTZQ", "BJDC" };
+                var betCount = 0;
+                if (gameCode.ToUpper() == "CTZQ")
+                {
+                    var result = Json_CTZQ.GetMatchListToOrderDetail(item.IssuseNumber, item.GameType, item.AnteCode);
+                    if (result != null)
+                    {
+                        foreach (var _item in result)
+                        {
+                            codeList.Add(new
+                            {
+                                AnteCode = _item.AnteCode,
+                                BonusStatus = (int)item.BonusStatus,
+                                CurrentSp = item.CurrentSp,
+                                FullResult = _item.FullResult,
+                                GameType = item.GameType,
+                                GuestTeamId = _item.GuestTeamId,
+                                GuestTeamName = _item.GuestTeamName.Replace("nbsp;", ""),
+                                HalfResult = _item.HalfResult,
+                                HomeTeamId = _item.HomeTeamId,
+                                HomeTeamName = _item.HomeTeamName,
+                                IsDan = _item.IsDan,
+                                IssuseNumber = _item.IssuseNumber,
+                                LeagueColor = _item.LeagueColor,
+                                LeagueName = _item.LeagueName,
+                                LetBall = _item.LetBall,
+                                MatchId = _item.MatchId,
+                                MatchIdName = _item.MatchIdName,
+                                MatchResult = _item.MatchResult,
+                                MatchResultSp = item.MatchResultSp,
+                                MatchState = _item.MatchState,
+                                StartTime = _item.StartTime,
+                                Amount = amount,
+                                BetCount = betCount,
+                                OrderNumber = _item.OrderNumber,
+                                Detail_RF = AnalyticalCurrentSp(item.CurrentSp, "RF"),
+                                Detail_YSZF = AnalyticalCurrentSp(item.CurrentSp, "YSZF"),
+                            });
+                        }
+                    }
+                }
+                if (gameCode.ToUpper() == "SJB")
+                {
+                    Dictionary<string,object> param = new Dictionary<string, object>
+                    {
+                        {"gameCode",gameCode },{"gameType","" },{"issuseNumber",issuseNumber }
+                    };
+                    var issuseInfo =await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Order/QueryIssuseInfo");
+                    if (!array_GameCode.Contains(gameCode))
+                    {
+                        var analyzer = AnalyzerFactory.GetAntecodeAnalyzer(gameCode, item.GameType);
+                        betCount = analyzer.AnalyzeAnteCode(item.AnteCode);
+                    }
+
+                    codeList.Add(new
+                    {
+                        AnteCode = item.AnteCode,
+                        BonusStatus = (int)item.BonusStatus,
+                        CurrentSp = Json_JCZQ.GetAnteCode(item.GameType, item.AnteCode, item.CurrentSp),
+                        FullResult = item.FullResult,
+                        GameType = item.GameType,
+                        GuestTeamId = item.GuestTeamId,
+                        GuestTeamName = item.GuestTeamName,
+                        HalfResult = item.HalfResult,
+                        HomeTeamId = item.HomeTeamId,
+                        HomeTeamName = item.HomeTeamName,
+                        IsDan = item.IsDan,
+                        IssuseNumber = item.IssuseNumber,
+                        LeagueColor = item.LeagueColor,
+                        //LeagueId = item.LeagueId,
+                        LeagueName = item.LeagueName,
+                        LetBall = item.LetBall,
+                        MatchId = item.MatchId,
+                        MatchIdName = item.MatchIdName,
+                        MatchResult = issuseInfo == null ? string.Empty : issuseInfo.WinNumber,
+                        MatchResultSp = item.MatchResultSp,
+                        MatchState = item.MatchState,
+                        StartTime = ConvertHelper.ConvertDateTimeInt(Convert.ToDateTime(item.StartTime)),
+                        Amount = amount,
+                        BetCount = betCount,
+                        Detail_RF = AnalyticalCurrentSp(item.CurrentSp, "RF"),
+                        Detail_YSZF = AnalyticalCurrentSp(item.CurrentSp, "YSZF"),
+                    });
+                }
+                else
+                {
+                    Dictionary<string, object> param = new Dictionary<string, object>
+                    {
+                        {"gameCode",gameCode },{"gameType","" },{"issuseNumber",issuseNumber }
+                    };
+                    //数字彩
+                    var issuseInfo = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Order/QueryIssuseInfo");
+                    if (!array_GameCode.Contains(gameCode))
+                    {
+                        var analyzer = AnalyzerFactory.GetAntecodeAnalyzer(gameCode, item.GameType);
+                        betCount = analyzer.AnalyzeAnteCode(item.AnteCode);
+                    }
+
+                    codeList.Add(new
+                    {
+                        AnteCode = item.AnteCode,
+                        BonusStatus = (int)item.BonusStatus,
+                        CurrentSp = item.CurrentSp,
+                        FullResult = item.FullResult,
+                        GameType = item.GameType,
+                        GuestTeamId = item.GuestTeamId,
+                        GuestTeamName = item.GuestTeamName,
+                        HalfResult = item.HalfResult,
+                        HomeTeamId = item.HomeTeamId,
+                        HomeTeamName = item.HomeTeamName,
+                        IsDan = item.IsDan,
+                        IssuseNumber = item.IssuseNumber,
+                        LeagueColor = item.LeagueColor,
+                        //LeagueId = item.LeagueId,
+                        LeagueName = item.LeagueName,
+                        LetBall = item.LetBall,
+                        MatchId = item.MatchId,
+                        MatchIdName = item.MatchIdName,
+                        MatchResult = issuseInfo == null ? string.Empty : issuseInfo.WinNumber,
+                        MatchResultSp = item.MatchResultSp,
+                        MatchState = item.MatchState,
+                        StartTime = ConvertHelper.ConvertDateTimeInt(Convert.ToDateTime(item.StartTime)),
+                        Amount = amount,
+                        BetCount = betCount,
+                        Detail_RF = AnalyticalCurrentSp(item.CurrentSp, "RF"),
+                        Detail_YSZF = AnalyticalCurrentSp(item.CurrentSp, "YSZF"),
+                    });
+                }
+            }
+            return codeList;
+        }
+        private string AnalyticalCurrentSp(string currentSp, string code)
+        {
+            if (string.IsNullOrEmpty(currentSp) || string.IsNullOrEmpty(code))
+                return string.Empty;
+            var array = currentSp.Split(',');
+            if (array != null && array.Length > 0)
+            {
+                foreach (var item in array)
+                {
+                    if (!string.IsNullOrEmpty(item))
+                    {
+                        var tempArr = item.Split('|');
+                        if (tempArr != null && tempArr.Length > 1)
+                        {
+                            if (code.ToUpper() == tempArr[0].ToUpper())
+                                return (tempArr[1]);
+                        }
+                    }
+                }
+            }
+            return string.Empty;
         }
     }
 }

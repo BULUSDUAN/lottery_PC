@@ -9,7 +9,7 @@ using System.Text;
 namespace OrderLottery.Service.IModuleServices
 {
     [ServiceBundle("Order/{Service}")]
-   public interface IOrderService: IServiceKey
+   public interface IOrderService
     {
         [Service(Date = "2018-06-04", Director = "Debug", Name = "中奖查询")]
         BonusOrderInfoCollection QueryBonusInfoList(QueryBonusInfoListParam Model);
@@ -34,5 +34,20 @@ namespace OrderLottery.Service.IModuleServices
         TogetherOrderInfoCollection QueryJoinTogetherOrderListByUserId(QueryCreateTogetherOrderParam Model);
         [Service(Date = "2018-06-08", Director = "Debug", Name = "从Redis查询出合买订单数据")]
         Sports_TogetherSchemeQueryInfoCollection QuerySportsTogetherListFromRedis(QuerySportsTogetherListFromRedisParam Model);
+        [Service(Date = "2018-06-11", Director = "Debug", Name = "按keyline查询追号列表")]
+        BettingOrderInfoCollection QueryBettingOrderListByChaseKeyLine(string keyLine, string userToken);
+        [Service(Date = "2018-06-11", Director = "Debug", Name = "查询指定订单的投注号码列表")]
+        BettingAnteCodeInfoCollection QueryAnteCodeListBySchemeId(string schemeId, string userToken);
+        [Service(Date = "2018-06-11", Director = "Debug", Name = "查询足彩合买明细")]
+        Sports_TogetherSchemeQueryInfo QuerySportsTogetherDetail(string schemeId);
+        [Service(Date = "2018-06-12", Director = "Debug", Name = "查询用户是否已经参与了合买")]
+        bool IsUserJoinSportsTogether(string schemeId, string userToken);
+        [Service(Date = "2018-06-12", Director = "Debug", Name = "查询投注号码信息")]
+        Sports_AnteCodeQueryInfoCollection QuerySportsOrderAnteCodeList(string schemeId);
+        [Service(Date = "2018-06-12", Director = "Debug", Name = "查询奖期")]
+        Issuse_QueryInfo QueryIssuseInfo(string gameCode, string gameType, string issuseNumber);
+        [Service(Date = "2018-06-12", Director = "Debug", Name = "查询足彩方案信息")]
+        Sports_SchemeQueryInfo QuerySportsSchemeInfo(string schemeId);
+
     }
 }

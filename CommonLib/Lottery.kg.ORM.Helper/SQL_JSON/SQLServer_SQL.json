@@ -103,6 +103,22 @@
       "Director": "Debug",
       "SQL": "SELECT * FROM( SELECT ROW_NUMBER()OVER(ORDER BY ISNULL(S.CreateTime,O.CreateTime) DESC) RowIndex,O.SchemeId,O.SchemeType,O.UserId,O.GameCode,T.GameType,O.GameTypeName,O.StartIssuseNumber,O.TotalMoney,O.ProgressStatus,O.TicketStatus,O.BonusStatus,O.IsVirtualOrder,O.PreTaxBonusMoney,O.AfterTaxBonusMoney,O.AddMoney ,T.ProgressStatus TogetherSchemeProgress,T.Progress,ISNULL(C.IsPrizeMoney,0) IsPrizeMoney,S.BuyMoney JoinMoney,ISNULL(S.CreateTime,O.CreateTime) CreateTime ,R.VipLevel,DisplayName,R.HideDisplayNameCount FROM ( SELECT J.SchemeId,JoinUserId UserId,CONVERT(MONEY, SUM(RealBuyCount)) BuyMoney,MIN(CreateTime) CreateTime FROM C_Sports_TogetherJoin J WHERE JoinUserId=@UserId AND (CreateTime BETWEEN @DateFrom AND @DateTo) AND JoinSucess=1 AND J.JoinType IN (2,3) GROUP BY J.SchemeId,JoinUserId ) S INNER JOIN C_OrderDetail O ON S.SchemeId=O.SchemeId INNER JOIN C_Sports_Together T ON S.SchemeId=T.SchemeId LEFT OUTER JOIN C_Sports_Order_Complate C ON S.SchemeId=C.SchemeId LEFT OUTER JOIN C_User_Register R ON O.UserId=R.UserId where (@GameCode='' or O.GameCode=@GameCode) and (@BonusStatus=-1 or o.BonusStatus=@BonusStatus) ) T WHERE RowIndex > @PageIndex * @PageSize AND RowIndex <= (@PageIndex + 1) * @PageSize",
       "Remark": ""
+    },
+    {
+      "key": "Debug_QueryOrderListByChaseKeyLine",
+      "Desc": "按keyline查询追号列表",
+      "ParamDesc": "@KeyLine:KeyLine",
+      "Director": "Debug",
+      "SQL": "SELECT o.*,i.WinNumber,ISNULL(complate.Amount,running.Amount) Amount,r.VipLevel,r.DisplayName CreatorDisplayName,r.HideDisplayNameCount,g.DisplayName GameName FROM C_Lottery_Scheme c INNER JOIN C_OrderDetail o ON c.SchemeId=o.SchemeId LEFT OUTER JOIN C_User_Register r ON r.UserId=o.UserId LEFT OUTER JOIN C_Lottery_Game g on o.GameCode=g.GameCode LEFT OUTER JOIN C_Sports_Order_Complate complate on complate.SchemeId=o.SchemeId LEFT OUTER JOIN C_Sports_Order_Running running on running.SchemeId=o.SchemeId LEFT OUTER JOIN C_Game_Issuse i on i.GameCode=o.GameCode AND i.IssuseNumber=o.StartIssuseNumber WHERE c.KeyLine=@KeyLine ORDER BY o.StartIssuseNumber",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_QueryAnteCodeListBySchemeId",
+      "Desc": "查询指定订单的投注号码列表",
+      "ParamDesc": "@SchemeId:SchemeId",
+      "Director": "Debug",
+      "SQL": "SELECT c.*,g.DisplayName GameName,T.DisplayName GameTypeName FROM C_Sports_AnteCode c LEFT OUTER JOIN C_Lottery_Game g on g.GameCode=c.GameCode LEFT OUTER JOIN C_Lottery_GameType t on t.GameCode=c.GameCode AND t.GameType=c.GameType WHERE c.SchemeId=@SchemeId ORDER BY c.IssuseNumber",
+      "Remark": ""
     }
 
   ]
