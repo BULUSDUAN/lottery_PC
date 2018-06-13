@@ -14,6 +14,7 @@ using System.Linq.Expressions;
 using log4net.Plugin;
 using EntityModel.Communication;
 using EntityModel.CoreModel.AuthEntities;
+using EntityModel.Enum;
 
 namespace Lottery.Kg.ORM.Helper.UserHelper
 {
@@ -50,8 +51,9 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
 
         private UserAuthentication userAuthentication = new UserAuthentication();
 
-     
 
+       public static  SystemUser systemUser = new SystemUser();
+        public static SystemRole systemRole = new SystemRole();
         /// <summary>
         /// 用户名(手机)密码登录
         /// </summary>
@@ -62,7 +64,7 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
         {
 
             var LoginUser = DB.CreateQuery<E_Login_Local>();
-
+            
             var LoginUsers = LoginUser.Where(p => (p.LoginName == loginName || p.mobile == loginName) && p.Password == password).ToList().Select(p => new LoginLocal
             {
                 CreateTime = p.CreateTime,
@@ -75,22 +77,22 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
 
             if (LoginUser != null)
             {
-                LoginUsers.User = DB.CreateQuery<C_Auth_Users>().Where(p => p.UserId == LoginUsers.UserId).Select(p=>new SystemUser()
+                LoginUsers.User = DB.CreateQuery<C_Auth_Users>().Where(p => p.UserId == LoginUsers.UserId).ToList().Select(p=>new SystemUser()
                 {
                      CreateTime=p.CreateTime,
                      AgentId=p.AgentId,
                      RegFrom=p.RegFrom,
-                     UserId=p.UserId
+                     UserId=p.UserId,
                 }).FirstOrDefault();
 
                 if (LoginUsers.User != null)
                 {
-                    var uQueryRoles = DB.CreateQuery<C_Auth_Roles>().Select(p=>new SystemRole(){
+                    var uQueryRoles = DB.CreateQuery<C_Auth_Roles>().ToList().Select(p=>new SystemRole(){
                          RoleId=p.RoleId,
                         RoleName=p.RoleName,
                         IsInner=p.IsInner,
                         IsAdmin=p.IsAdmin,
-                       
+                        RoleType=(RoleType)p.RoleType,
                     });
                     var uQueryUserRole = DB.CreateQuery<C_Auth_UserRole>();
                     LoginUsers.User.RoleList = (from b in uQueryRoles
@@ -99,14 +101,86 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
                                                 where c.UserId == LoginUsers.UserId
                                                 select b).ToList();
 
-                    var register = DB.CreateQuery<C_User_Register>().Where(p => p.UserId == LoginUsers.UserId).Select(p=>new UserRegister() {
+                    systemUser.RoleList = LoginUsers.User.RoleList;
+
+                    var C_Auth_RoleFunction_query = DB.CreateQuery<C_Auth_RoleFunction>();
+                    var C_Auth_UserRole_query = DB.CreateQuery<C_Auth_UserRole>();
+                    var C_Auth_Function_List = DB.CreateQuery<C_Auth_Function_List>();
+                    //systemRole.FunctionList
+                    var RoleFunctionList = (from b in C_Auth_RoleFunction_query
+                                               join d in C_Auth_UserRole_query
+                                              
+                                               on b.RoleId equals d.RoleId
+                                               where d.UserId == LoginUsers.UserId
+                                               select b
+                                             ).ToList().Select(p=>new RoleFunction() {  
+                                                  FunctionId=p.FunctionId,
+                                                   IId=p.IId,
+                                                    Mode=p.Mode,
+                                                    
+                                             }).ToList();
+
+                        if (RoleFunctionList != null && RoleFunctionList.Count() != 0) {
+
+                           var Ids = RoleFunctionList.Select(p => p.FunctionId).ToList();
+                            var Auth_Function_Lists = DB.CreateQuery<C_Auth_Function_List>().Where(p => Ids.Contains(p.FunctionId)).ToList().Select(p=>new Function(){
+                                 DisplayName=p.DisplayName,
+                                 FunctionId=p.FunctionId,
+                                 IsBackBasic=p.IsBackBasic,
+                                 IsWebBasic=p.IsWebBasic,
+                                 ParentId=p.ParentId,
+                                 ParentPath=p.ParentPath,
+                        }).ToList();
+                        systemRole.FunctionList = RoleFunctionList;
+                        
+                    }
+
+                    var C_Auth_UserFunction_query = DB.CreateQuery<C_Auth_UserFunction>();
+                    var C_Auth_UserRole = DB.CreateQuery<C_Auth_UserRole>();
+                    var C_Auth_UserFunction_List = DB.CreateQuery<C_Auth_Function_List>();
+                    //systemRole.FunctionList
+                    var UserFunctionList = (from b in C_Auth_UserFunction_query
+                                            join d in C_Auth_UserRole
+
+                                            on b.UserId equals d.UserId
+                                            where d.UserId == LoginUsers.UserId
+                                            select b
+                                             ).ToList().Select(p => new UserFunction()
+                                             {
+                                                 FunctionId = p.FunctionId,
+                                                 IId = p.IId,
+                                                 Mode = p.Mode,
+
+                                             }).ToList();
+                    systemUser.FunctionList = UserFunctionList;
+                    if (UserFunctionList != null && UserFunctionList.Count() != 0)
+                    {
+
+                        var Ids = RoleFunctionList.Select(p => p.FunctionId).ToList();
+                        var Auth_Function_Lists = DB.CreateQuery<C_Auth_Function_List>().Where(p => Ids.Contains(p.FunctionId)).ToList().Select(p => new Function()
+                        {
+                            DisplayName = p.DisplayName,
+                            FunctionId = p.FunctionId,
+                            IsBackBasic = p.IsBackBasic,
+                            IsWebBasic = p.IsWebBasic,
+                            ParentId = p.ParentId,
+                            ParentPath = p.ParentPath,
+                        }).ToList();
+                        systemUser.FunctionList = UserFunctionList;
+
+                    }
+
+
+                    LoginUsers.Register = DB.CreateQuery<C_User_Register>().Where(p => p.UserId == LoginUsers.UserId).ToList().Select(p=>new UserRegister() {
 
                         AgentId=p.AgentId, ComeFrom=p.ComeFrom, CreateTime=p.CreateTime, DisplayName=p.DisplayName, HideDisplayNameCount=p.HideDisplayNameCount,
                         IsAgent=p.IsAgent, IsEnable=p.IsEnable,  IsFillMoney=p.IsFillMoney, IsIgnoreReport=p.IsIgnoreReport, ParentPath=p.ParentPath, Referrer=p.Referrer,
                         ReferrerUrl=p.ReferrerUrl, RegisterIp=p.RegisterIp, RegType=p.RegType, UserId=p.UserId, UserType=p.UserType, VipLevel=p.VipLevel
                     }).FirstOrDefault();
 
-                    LoginUsers.Register.IsEnable = register.IsEnable;
+                   
+
+                    LoginUsers.Register.IsEnable = LoginUsers.Register.IsEnable;
 
                 }
             }
@@ -168,49 +242,58 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
             return DB.CreateQuery<E_Login_Local>().Where(p => p.UserId == userId).FirstOrDefault();
         }
 
-
-
-
-        /// <summary>
-        /// 手机黑名单
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        public C_Core_Config BanRegistrMobile(string key)
+        public UserBalanceInfo QueryUserBalance(string userId)
         {
-            return DB.CreateQuery<C_Core_Config>().Where(p => p.ConfigKey == key).FirstOrDefault();
-        }
-
-        /// <summary>
-        /// 查询手机号码
-        /// </summary>
-        /// <param name="mobile"></param>
-        /// <returns></returns>
-        public UserMobile GetMobileInfoByMobile(string mobile)
-        {
-            var query = DB.CreateQuery<E_Authentication_Mobile>().Where(s => s.Mobile == mobile).Select(p=>new UserMobile {
-                 AuthFrom=p.AuthFrom,
-                  CreateBy=p.CreateBy,
-                   CreateTime=p.CreateTime,
-                     IsSettedMobile=p.IsSettedMobile,
-                      Mobile=p.Mobile,
-                        //UpdateBy=p.
-            });
-
-            if (query != null && query.Count() > 0)
-            {
-                var resutl = query.FirstOrDefault(s => s.IsSettedMobile == true);
-                if (resutl != null)
-                    return resutl;
-                else
+           
+                var balance = QueryUserBalanceInfo(userId);
+                if (balance == null)
                 {
-                    resutl = query.FirstOrDefault(s => s.IsSettedMobile == false);
-                    if (resutl != null)
-                        return resutl;
+                    throw new ArgumentException("用户账户不存在");
                 }
-            }
-            return null;
+                return new UserBalanceInfo
+                {
+                    UserId = balance.UserId,
+                    FillMoneyBalance = balance.FillMoneyBalance,
+                    BonusBalance = balance.BonusBalance,
+                    CommissionBalance = balance.CommissionBalance,
+                    FreezeBalance = balance.FreezeBalance,
+                    ExpertsBalance = balance.ExpertsBalance,
+                    RedBagBalance = balance.RedBagBalance,
+                    IsSetPwd = balance.IsSetPwd,
+                    NeedPwdPlace = balance.NeedPwdPlace,
+                    CurrentDouDou = balance.CurrentDouDou,
+                    UserGrowth = balance.UserGrowth,
+                    CPSBalance = balance.CPSBalance,
+                    BalancePwd = balance.Password,
+                };
+            
         }
+
+        public C_User_Balance QueryUserBalanceInfo(string userId)
+        {
+           
+            return DB.CreateQuery<C_User_Balance>().FirstOrDefault(p => p.UserId == userId);
+      
+        }
+
+        /// <summary>
+        /// 查询银行卡信息
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public C_BankCard BankCardById(string userId) {
+
+            return DB.CreateQuery<C_BankCard>().FirstOrDefault(p => p.UserId == userId);
+        }
+
+        public  int GetUnreadMailCountByUser(string userId) {
+
+            var query = DB.CreateQuery<E_SiteMessage_InnerMail_List_new>().Where(s => s.HandleType == 0 && (s.ReceiverId == userId || s.ReceiverId == "U:" + userId));
+            if (query != null) return query.Count();
+            return 0;
+        }
+
+
 
         //public void Register(LoginLocal loginEntity, string userId)
         //{
@@ -276,7 +359,7 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
         public bool? CheckIsSame2BalancePassword(string userId, string newPassword)
         {
 
-            var balance = QueryUserBalance(userId);
+            var balance = SelectUserBalance(userId);
             if (balance == null)
             {
                 return null;
@@ -284,7 +367,7 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
             return balance.Password.Equals(Encipherment.MD5(newPassword));
         }
 
-        public C_User_Balance QueryUserBalance(string userId)
+        public C_User_Balance SelectUserBalance(string userId)
         {
 
             return DB.CreateQuery<C_User_Balance>().FirstOrDefault(p => p.UserId == userId);
@@ -768,33 +851,79 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
         //    };
         //}
 
-        //public UserBindInfos QueryUserBindInfos(string userId)
-        //{
-        //    var user = new UserBalanceManager().QueryUserRegister(userId);
-        //    if (user == null || user.IsEnable == false)
-        //        return new UserBindInfos();
+            /// <summary>
+            /// 查询用户绑定信息
+            /// </summary>
+            /// <param name="userId">用户ID</param>
+            /// <returns></returns>
+        public UserBindInfos QueryUserBindInfos(string userId)
+        {
+            var user = GetRegisterById(userId);
+            if (user == null || user.IsEnable == false)
+                return new UserBindInfos();
 
-        //    var info = new LoginLocalManager().QueryUserBindInfos(userId);
+            var info = QueryUserBinds(userId);
 
-        //    return info;
-        //}
-        //public void BatchSetInnerUser(string userIds)
-        //{
-        //    if (string.IsNullOrEmpty(userIds))
-        //        throw new Exception("用户编号不能为空");
-        //    var arrUserIds = userIds.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-        //    using (var biz = new GameBizAuthBusinessManagement())
-        //    {
-        //        var manager = new UserBalanceManager();
-        //        biz.BeginTran();
-        //        foreach (var item in arrUserIds)
-        //        {
-        //            var entity = manager.LoadUserRegister(item);
-        //            entity.UserType = 1;
-        //            manager.UpdateUserRegister(entity);
-        //        }
-        //        biz.CommitTran();
-        //    }
-        //}
-    }
+            return info;
+        }
+
+        public UserBindInfos QueryUserBinds(string userId)
+        {
+            var sql = string.Format(@"select r.UserId,r.VipLevel,r.DisplayName,r.ComeFrom,r.IsFillMoney,r.IsEnable,r.IsAgent,r.HideDisplayNameCount,
+                                            b.RealName BankCardRealName,b.ProvinceName,b.CityName,b.BankName,b.BankSubName,b.BankCardNumber,
+                                            e.Email,m.Mobile,n.RealName,n.CardType,n.IdCardNumber,
+                                            --h.LoginFrom LastLoginFrom,h.LoginIp LastLoginIp,h.IpDisplayName LastLoginIpName,h.LoginTime LastLoginTime,
+                                            a.c RebateCount,
+                                            p.MaxLevelValue,p.MaxLevelName,p.WinOneHundredCount,p.WinOneThousandCount,p.WinTenThousandCount,p.WinOneHundredThousandCount,p.WinOneMillionCount,p.WinTenMillionCount,p.WinHundredMillionCount,p.TotalBonusMoney,q.QQ,al.AlipayAccount
+                                            ,m.IsSettedMobile,r.userType
+
+                                            from C_User_Register r
+                                            left join C_BankCard b on r.userid=b.userid
+                                            left join E_Authentication_Email e on r.userid=e.userid
+                                            left join E_Authentication_Mobile m on r.userid=m.userid
+                                            left join E_Authentication_RealName n on r.userid=n.userid
+                                            left join E_Authentication_QQ q on r.userid=q.userid
+                                            left join E_Authentication_Alipay al on r.userid=al.userid
+                                           
+                                            --left join (SELECT top 1 UserId,LoginFrom,LoginIp,IpDisplayName,LoginTime
+                                   --                FROM [E_Blog_UserLoginHistory]
+                                   --                where userid='{0}'
+                                   --                order by LoginTime desc) as h on r.userid=h.userid
+
+                                            left join (SELECT UserId, count(1) c
+                                                   FROM  [P_OCAgent_Rebate]
+                                                where UserId='{0}'
+                                                   group by UserId)as a on r.userid=a.userid
+                                            left join [E_Blog_ProfileBonusLevel] p on r.userid=p.userid
+                                            where r.userid='{0}' ", userId);
+
+            var array = DB.CreateSQLQuery(sql).List<UserBindInfos>().FirstOrDefault();
+
+            if (array != null)
+            {
+                array.LoadDateTime = DateTime.Now;
+            }
+                //没有去解决一个用户 由于不明原因绑定了多个卡 此处根据前台后台当前逻辑 都是默认读取第一条数据 所以读取完了第一条直接break 
+                // 这样redis中就会保存用户和后台显示一样的卡号
+                return array;
+        }
+            //public void BatchSetInnerUser(string userIds)
+            //{
+            //    if (string.IsNullOrEmpty(userIds))
+            //        throw new Exception("用户编号不能为空");
+            //    var arrUserIds = userIds.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+            //    using (var biz = new GameBizAuthBusinessManagement())
+            //    {
+            //        var manager = new UserBalanceManager();
+            //        biz.BeginTran();
+            //        foreach (var item in arrUserIds)
+            //        {
+            //            var entity = manager.LoadUserRegister(item);
+            //            entity.UserType = 1;
+            //            manager.UpdateUserRegister(entity);
+            //        }
+            //        biz.CommitTran();
+            //    }
+            //}
+        }
 }

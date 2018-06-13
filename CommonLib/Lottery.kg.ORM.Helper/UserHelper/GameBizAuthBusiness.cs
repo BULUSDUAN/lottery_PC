@@ -20,7 +20,7 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
         public string GetUserToken(string userId)
         {
            
-                var login = DB.CreateQuery<C_Auth_Users>().Where(p => p.UserId == userId).Select(p => new SystemUser()
+                var login = DB.CreateQuery<C_Auth_Users>().Where(p => p.UserId == userId).ToList().Select(p => new SystemUser()
                 {
                     CreateTime = p.CreateTime,
                     AgentId = p.AgentId,
@@ -360,13 +360,15 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
         //        biz.CommitTran();
         //    }
         //}
+       
         private void CheckUser(SystemUser user, string userId)
         {
             if (user == null)
             {
                 throw new LogicException("登录名\"" + userId + "\"不存在");
             }
-            if (user.RoleList.Count == 0)
+           
+            if (LocalLoginBusiness.systemUser.RoleList.Count==0)
             {
                 throw new AuthException("系统配置错误，未配置角色信息");
             }
@@ -374,7 +376,7 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
         private string GetLoginUserToken(SystemUser user)
         {
             IList<AccessControlItem> acl = new List<AccessControlItem>();
-            foreach (var role in user.RoleList)
+            foreach (var role in LocalLoginBusiness.systemUser.RoleList)
             {
                 if (role.RoleType == RoleType.BackgroundRole && role.IsAdmin)
                 {
@@ -382,6 +384,7 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
                 }
                 MergeRoleAccessControlList(ref acl, role);
             }
+            user.FunctionList=LocalLoginBusiness.systemUser.FunctionList;
             acl = MergeAccessControlList<AccessControlItem, UserFunction>(acl, user.FunctionList);
             return GetUserToken(user.UserId, acl);
         }
@@ -391,6 +394,7 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
             {
                 MergeRoleAccessControlList(ref acl, role.ParentRole);
             }
+            role.FunctionList = LocalLoginBusiness.systemRole.FunctionList;
             acl = MergeAccessControlList<AccessControlItem, RoleFunction>(acl, role.FunctionList);
         }
         ///// <summary>

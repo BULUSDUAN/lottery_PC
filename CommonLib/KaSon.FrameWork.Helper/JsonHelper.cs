@@ -4,7 +4,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Json;
+using System.Text;
 
 namespace KaSon.FrameWork.Helper
 {
@@ -35,6 +38,45 @@ namespace KaSon.FrameWork.Helper
         {
             return WrapObject(JsonConvert.DeserializeObject(value));
         }
+
+        /// <summary>
+        /// JSON序列化
+        /// </summary>
+        public static string Serialize<T>(T t)
+        {
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(T));
+            using (MemoryStream ms = new MemoryStream())
+            {
+                ser.WriteObject(ms, t);
+                string jsonString = Encoding.UTF8.GetString(ms.ToArray());
+                ms.Close();
+                return jsonString;
+            }
+        }
+
+        ///// <summary>
+        ///// JSON反序列化
+        ///// </summary>
+        //public static T Deserialize<T>(string jsonString)
+        //{
+        //    DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(T));
+        //    using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(jsonString)))
+        //    {
+        //        T obj = (T)ser.ReadObject(ms);
+        //        return obj;
+        //    }
+        //}
+
+
+
+
+        //Sustem.Web.Helper
+        public static class WebHelper
+        {
+            public static dynamic Decode(string value)
+            {
+                return WrapObject(JsonConvert.DeserializeObject(value));
+            }
 
         public static dynamic WrapObject(object value)
         {
