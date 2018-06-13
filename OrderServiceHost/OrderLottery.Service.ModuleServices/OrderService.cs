@@ -172,5 +172,35 @@ namespace OrderLottery.Service.ModuleServices
         {
             return _order.QuerySportsSchemeInfo(schemeId);
         }
+        /// <summary>
+        /// 查询我的定制  或 定制我的
+        /// </summary>
+        /// <param name="Model"></param>
+        /// <returns></returns>
+        public TogetherFollowerRuleQueryInfoCollection QueryUserFollowRule(QueryUserFollowRuleParam Model)
+        {
+            return _order.QueryUserFollowRule(Model);
+        }
+        /// <summary>
+        ///  查询跟单信息
+        /// </summary>
+        /// <param name="createrUserId"></param>
+        /// <param name="followerUserId"></param>
+        /// <param name="gameCode"></param>
+        /// <param name="gameType"></param>
+        /// <returns></returns>
+        public TogetherFollowerRuleQueryInfo QueryTogetherFollowerRuleInfo(string createrUserId, string followerUserId, string gameCode, string gameType)
+        {
+            return _order.QueryTogetherFollowerRuleInfo(createrUserId, followerUserId, gameCode, gameType);
+        }
+        /// <summary>
+        /// 查询今日宝单
+        /// </summary>
+        /// <param name="Model"></param>
+        /// <returns></returns>
+        public TotalSingleTreasure_Collection QueryTodayBDFXList(QueryTodayBDFXList Model)
+        {
+            return _order.QueryTodayBDFXList(Model);
+        }
     }
 }

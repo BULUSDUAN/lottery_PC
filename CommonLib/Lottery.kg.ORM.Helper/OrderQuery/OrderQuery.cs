@@ -1278,5 +1278,254 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
             }
             return info;
         }
+        /// <summary>
+        /// 查询我的定制  或 定制我的
+        /// </summary>
+        /// <param name="Model"></param>
+        /// <returns></returns>
+        public TogetherFollowerRuleQueryInfoCollection QueryUserFollowRule(QueryUserFollowRuleParam Model)
+        {
+            UserAuthentication Auth = new UserAuthentication();
+            Model.userId = Auth.ValidateUserAuthentication(Model.userToken);
+            var collection = new TogetherFollowerRuleQueryInfoCollection();
+            Model.pageIndex = Model.pageIndex < 0 ? 0 : Model.pageIndex;
+            Model.pageSize = Model.pageSize > Model.MaxPageSize ? Model.MaxPageSize : Model.pageSize;
+
+            var query = Model.byFollower ? (from f in DB.CreateQuery<C_Together_FollowerRule>()
+                                      join u in DB.CreateQuery<UserRegister>() on f.CreaterUserId equals u.UserId
+                                      where (Model.gameCode == string.Empty || f.GameCode == Model.gameCode)
+                                      && (Model.gameType == string.Empty || f.GameType == Model.gameType)
+                                      && (Model.userId == string.Empty || f.FollowerUserId == Model.userId)
+                                      select new TogetherFollowerRuleQueryInfo
+                                      {
+                                          RuleId = f.Id,
+                                          BonusMoney = f.TotalBonusMoney,
+                                          BuyMoney = f.TotalBetMoney,
+                                          CancelNoBonusSchemeCount = f.CancelNoBonusSchemeCount,
+                                          CancelWhenSurplusNotMatch = f.CancelWhenSurplusNotMatch,
+                                          CreaterUserId = f.CreaterUserId,
+                                          CreateTime = f.CreateTime,
+                                          FollowerCount = f.FollowerCount,
+                                          FollowerIndex = f.FollowerIndex,
+                                          FollowerPercent = f.FollowerPercent,
+                                          FollowerUserId = f.FollowerUserId,
+                                          GameCode = f.GameCode,
+                                          GameType = f.GameType,
+                                          IsEnable = f.IsEnable,
+                                          MaxSchemeMoney = f.MaxSchemeMoney,
+                                          MinSchemeMoney = f.MinSchemeMoney,
+                                          SchemeCount = f.SchemeCount,
+                                          StopFollowerMinBalance = f.StopFollowerMinBalance,
+                                          UserId = u.UserId,
+                                          UserDisplayName = u.DisplayName,
+                                          HideDisplayNameCount = u.HideDisplayNameCount,
+                                      }) :
+                                    (from f in DB.CreateQuery<C_Together_FollowerRule>()
+                                     join u in DB.CreateQuery<UserRegister>() on f.FollowerUserId equals u.UserId
+                                     where (Model.gameCode == string.Empty || f.GameCode == Model.gameCode)
+                                     && (Model.gameType == string.Empty || f.GameType == Model.gameType)
+                                     && (Model.userId == string.Empty || f.CreaterUserId == Model.userId)
+                                     orderby f.FollowerIndex ascending
+                                     select new TogetherFollowerRuleQueryInfo
+                                     {
+                                         RuleId = f.Id,
+                                         BonusMoney = f.TotalBonusMoney,
+                                         BuyMoney = f.TotalBetMoney,
+                                         CancelNoBonusSchemeCount = f.CancelNoBonusSchemeCount,
+                                         CancelWhenSurplusNotMatch = f.CancelWhenSurplusNotMatch,
+                                         CreaterUserId = f.CreaterUserId,
+                                         CreateTime = f.CreateTime,
+                                         FollowerCount = f.FollowerCount,
+                                         FollowerIndex = f.FollowerIndex,
+                                         FollowerPercent = f.FollowerPercent,
+                                         FollowerUserId = f.FollowerUserId,
+                                         GameCode = f.GameCode,
+                                         GameType = f.GameType,
+                                         IsEnable = f.IsEnable,
+                                         MaxSchemeMoney = f.MaxSchemeMoney,
+                                         MinSchemeMoney = f.MinSchemeMoney,
+                                         SchemeCount = f.SchemeCount,
+                                         StopFollowerMinBalance = f.StopFollowerMinBalance,
+                                         UserId = u.UserId,
+                                         UserDisplayName = u.DisplayName,
+                                         HideDisplayNameCount = u.HideDisplayNameCount,
+                                     });
+            collection.TotalCount= query.Count();
+            collection.List= query.Skip(Model.pageIndex * Model.pageSize).Take(Model.pageSize).ToList();
+            return collection;
+        }
+        /// <summary>
+        ///  查询跟单信息
+        /// </summary>
+        /// <param name="createrUserId"></param>
+        /// <param name="followerUserId"></param>
+        /// <param name="gameCode"></param>
+        /// <param name="gameType"></param>
+        /// <returns></returns>
+        public TogetherFollowerRuleQueryInfo QueryTogetherFollowerRuleInfo(string createrUserId, string followerUserId, string gameCode, string gameType)
+        {
+            var query = from t in DB.CreateQuery<C_Together_FollowerRule>()
+                        join u in DB.CreateQuery<UserRegister>() on t.CreaterUserId equals u.UserId
+                        where t.CreaterUserId == createrUserId && t.FollowerUserId == followerUserId && t.GameCode == gameCode && t.GameType == gameType
+                        select new TogetherFollowerRuleQueryInfo
+                        {
+                            CancelNoBonusSchemeCount = t.CancelNoBonusSchemeCount,
+                            CancelWhenSurplusNotMatch = t.CancelWhenSurplusNotMatch,
+                            CreaterUserId = t.CreaterUserId,
+                            FollowerCount = t.FollowerCount,
+                            FollowerPercent = t.FollowerPercent,
+                            FollowerUserId = t.FollowerUserId,
+                            GameCode = t.GameCode,
+                            GameType = t.GameType,
+                            IsEnable = t.IsEnable,
+                            MaxSchemeMoney = t.MaxSchemeMoney,
+                            MinSchemeMoney = t.MinSchemeMoney,
+                            SchemeCount = t.SchemeCount,
+                            StopFollowerMinBalance = t.StopFollowerMinBalance,
+                            UserDisplayName = u.DisplayName,
+                            HideDisplayNameCount = u.HideDisplayNameCount,
+                            RuleId = t.Id,
+                        };
+            if (query != null) return query.FirstOrDefault();
+            return new TogetherFollowerRuleQueryInfo();
+        }
+        public TotalSingleTreasure_Collection QueryTodayBDFXList(QueryTodayBDFXList Model)
+        {
+
+                string orderBy = "bdfxcreatetime";
+                string desc = "desc";
+                if (!string.IsNullOrEmpty(Model.strOrderBy))
+                {
+                    var array = Model.strOrderBy.ToLower().Split('|');
+                    if (array != null && array.Length > 1)
+                    {
+                        orderBy = array[0].ToString();
+                        desc = array[1].ToString();
+                    }
+                }
+            Model.startTime = Model.startTime.Date;
+            Model.endTime = Model.endTime.AddDays(1).Date;
+                var bdfxList = QueryTodayBDFXList_manage(Model,desc,orderBy);
+                if (!string.IsNullOrEmpty(Model.currentUserId) && bdfxList != null && bdfxList.TotalCount > 0)
+                {
+                    var userIdList = QueryBeConcernedUserIdList(Model.currentUserId);
+                    var singleTraList = bdfxList.TotalSingleTreasureList.Where(s => userIdList.ToArray().Contains(s.UserId)).ToList();
+                    bdfxList.TotalSingleTreasureList = singleTraList.Skip(Model.pageIndex * Model.pageSize).Take(Model.pageSize).ToList();
+                    bdfxList.TotalCount = singleTraList.Count;
+                    return bdfxList;
+                }
+                bdfxList.TotalSingleTreasureList = bdfxList.TotalSingleTreasureList.Skip(Model.pageIndex * Model.pageSize).Take(Model.pageSize).ToList();
+                return bdfxList;
+            
+        }
+        public TotalSingleTreasure_Collection QueryTodayBDFXList_manage(QueryTodayBDFXList Model,string desc,string orderBy)
+        {            
+            TotalSingleTreasure_Collection collection = new TotalSingleTreasure_Collection();
+            collection.TotalCount = 0;
+
+            //计算上周时间
+            var currTime = DateTime.Now;
+            int day = Convert.ToInt32(currTime.DayOfWeek) - 1;
+            if (currTime.DayOfWeek != 0)
+                currTime = currTime.AddDays(-day);
+            else
+                currTime = currTime.AddDays(-6);
+            var sTime = currTime.AddDays(-7).Date;
+            var eTime = currTime.Date;
+            using (DB)
+            {
+                string tempTable_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_TempOrderRunning_Complate_table").SQL;
+                DB.CreateSQLQuery(tempTable_sql);
+                if (Model.isMyBD == "1")
+                {
+                    string CountSql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_MyBDCount").SQL;
+                    collection = DB.CreateSQLQuery(CountSql)
+                        .SetString("@GameCode", Model.gameCode)
+                        .SetString("@UserName", Model.userName)
+                        .SetString("@UserId", Model.userId).First<TotalSingleTreasure_Collection>();
+                    string pageSql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_MyBDPage").SQL;
+                    collection.TotalSingleTreasureList =DB.CreateSQLQuery(pageSql)
+                        .SetString("@Desc", desc)
+                        .SetString("@OrderBy", orderBy)
+                        .SetString("@GameCode", Model.gameCode)
+                        .SetString("@UserName", Model.userName)
+                        .SetString("@UserId", Model.userId)
+                        .SetString("@LastweekStartTime", Model.startTime.ToString())
+                        .SetString("@LastweekEndTime", Model.endTime.ToString())
+                        .List<TotalSingleTreasureInfo>();
+
+                }
+                else
+                {
+                    string CountSql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_NotMyBDCount").SQL;
+                    collection = DB.CreateSQLQuery(CountSql)
+                        .SetString("@GameCode", Model.gameCode)
+                        .SetString("@UserName", Model.userName)
+                        .SetString("@UserId", Model.userId).First<TotalSingleTreasure_Collection>();
+                    string pageSql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_NotMyBDPage").SQL;
+                    collection.TotalSingleTreasureList = DB.CreateSQLQuery(pageSql)
+                        .SetString("@Desc", desc)
+                        .SetString("@OrderBy", orderBy)
+                        .SetString("@GameCode", Model.gameCode)
+                        .SetString("@UserName", Model.userName)
+                        .SetString("@UserId", Model.userId)
+                        .SetString("@LastweekStartTime", Model.startTime.ToString())
+                        .SetString("@LastweekEndTime", Model.endTime.ToString())
+                        .List<TotalSingleTreasureInfo>();
+                }
+            }                          
+            if (collection.TotalCount > 0)
+            {               
+                var arrSchemeId = from o in collection.TotalSingleTreasureList select o.SchemeId;
+                var anteCodeList = QueryAnteCodeList(arrSchemeId.ToArray());
+                collection.AnteCodeList.AddRange(anteCodeList);
+            }
+            return collection;
+        }
+        public List<AnteCodeInfo> QueryAnteCodeList(string[] arrSchemeId)
+        {
+            var query = from a in DB.CreateQuery<C_Sports_AnteCode>()
+                        where arrSchemeId.Contains(a.SchemeId)
+                        select new AnteCodeInfo
+                        {
+                            AnteCode = a.AnteCode,
+                            GameType = a.GameType,
+                            GameCode = a.GameCode,
+                            IsDan = a.IsDan,
+                            IssuseNumber = a.IssuseNumber,
+                            MatchId = a.MatchId,
+                            PlayType = a.PlayType,
+                            SchemeId = a.SchemeId,
+                        };
+            if (query != null && query.Count() > 0)
+                return query.ToList();
+            return new List<AnteCodeInfo>();
+        }
+        public List<string> QueryBeConcernedUserIdList(string concernedUserId)
+        {
+            return (from o in DB.CreateQuery<C_SingleTreasure_Attention>().Where(s => s.ConcernedUserId == concernedUserId) select o.BeConcernedUserId).ToList();
+        }
+        public string QueryYesterdayNR(DateTime startTime, DateTime endTime, int count)
+        {
+            startTime = startTime.Date.AddDays(-1);
+            endTime = endTime.Date;
+            string strSql = "select top " + count + " t.UserId,t.DisplayName from(select (case SUM(t.CurrentBetMoney) when 0 then 0 else ((SUM(t.CurrBonusMoney)-SUM(t.CurrentBetMoney))/SUM(t.CurrentBetMoney)) end) CurrProfitRate,u.UserId,u.DisplayName from C_TotalSingleTreasure t inner join C_User_Register u on t.UserId=u.UserId where  t.CreateTime>=:StartTime and t.CreateTime<:EndTime and t.IsBonus=1 group by u.UserId,u.DisplayName	)t where  t.CurrProfitRate>=0 order by t.CurrProfitRate desc";
+            var query = DB.CreateSQLQuery(strSql)
+                .SetString("StartTime", startTime.ToString())
+                .SetString("EndTime", endTime.ToString())
+                .List<QueryYesterdayNRModel>();
+                
+            string str = string.Empty;
+            if (query != null && query.Count > 0)
+            {
+                foreach (var item in query)
+                {
+                    str += item.UserId + "|" + item.DisplayName + "%";
+                }
+            }
+            if (!string.IsNullOrEmpty(str))
+                str = str.TrimEnd('%');
+            return str;
+        }
     }
 }

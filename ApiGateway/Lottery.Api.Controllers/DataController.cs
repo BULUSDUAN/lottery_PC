@@ -28,7 +28,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = JsonHelper.WebHelper.Decode(entity.Param);
+                var p = WebHelper.Decode(entity.Param);
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 //var param = System.Web.Helpers.Json.Decode(entity.Param);
                 param.Add("gameCode", p.GameCode);
@@ -373,7 +373,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = JsonHelper.WebHelper.Decode(entity.Param);
+                var p =WebHelper.Decode(entity.Param);
                 var gameCode = p.GameCode;
                 string gameType = p.GameType;
                 var issuseNumber = p.IssuseNumber;
@@ -851,7 +851,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = JsonHelper.WebHelper.Decode(entity.Param);
+                var p =WebHelper.Decode(entity.Param);
                 //var param = System.Web.Helpers.Json.Decode(entity.Param);
                 string id = p.ArticleId;
                 if (string.IsNullOrEmpty(id))
@@ -925,7 +925,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = JsonHelper.WebHelper.Decode(entity.Param);
+                var p =WebHelper.Decode(entity.Param);
                 //热点彩讯  FocusCMS
                 //赛事点评 Match_Comment
                 //彩票资讯 Lottery_GameCode
@@ -1098,7 +1098,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = JsonHelper.WebHelper.Decode(entity.Param);
+                var p = WebHelper.Decode(entity.Param);
                 int pageIndex = p.PageIndex;
                 int pageSize = p.PageSize;
                 string userToken = await GuestUserToken(_serviceProxyProvider);
@@ -1171,7 +1171,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = JsonHelper.WebHelper.Decode(entity.Param);
+                var p = WebHelper.Decode(entity.Param);
                 string Id = p.BulletinId;
                 if (string.IsNullOrEmpty(Id))
                     throw new ArgumentException("公告编号不能为空");
@@ -1246,7 +1246,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = JsonHelper.WebHelper.Decode(entity.Param); 
+                var p = WebHelper.Decode(entity.Param); 
                 string key = p.ConfigKey; 
                 if (string.IsNullOrEmpty(key))
                     throw new AggregateException("传入参数错误");
@@ -1307,7 +1307,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = JsonHelper.WebHelper.Decode(entity.Param);
+                var p =WebHelper.Decode(entity.Param);
                 string appAgentId = p.AppAgentId;
                 if (string.IsNullOrEmpty(appAgentId))
                     appAgentId = "100000";//公司APP特定编号
@@ -1489,7 +1489,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = JsonHelper.WebHelper.Decode(entity.Param);
+                var p = WebHelper.Decode(entity.Param);
                 int innerstatus = p.InnerStatus;
                 string UserToken = p.UserToken;
                 string userId = p.UserId;
@@ -1597,7 +1597,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = JsonHelper.WebHelper.Decode(entity.Param);
+                var p = WebHelper.Decode(entity.Param);
                 string mailId = p.MailId;
                 string userToken = p.UserToken;
                 if (string.IsNullOrEmpty(userToken))
@@ -1736,7 +1736,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = JsonHelper.WebHelper.Decode(entity.Param);
+                var p =WebHelper.Decode(entity.Param);
                 //热点彩讯  FocusCMS
                 //赛事点评 Match_Comment
                 //彩票资讯 Lottery_GameCode
@@ -1967,7 +1967,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = JsonHelper.WebHelper.Decode(entity.Param);
+                var p = WebHelper.Decode(entity.Param);
                 var GameType = p.GameType;
                 if (string.IsNullOrEmpty(GameType))
                     throw new Exception("传入游戏类型不能为空");

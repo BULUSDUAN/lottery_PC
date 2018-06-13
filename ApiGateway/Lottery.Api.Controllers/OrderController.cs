@@ -94,17 +94,20 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                
-                Dictionary<string, object> param = new Dictionary<string, object>();
+
+
                 var p = WebHelper.Decode(entity.Param);
                 if (string.IsNullOrEmpty(p.GameCode))
                     throw new Exception("彩种不能为空");
                 //param.userToken = p.UserToken;
-                param.Add("gameCode", p.GameCode.ToUpper());
-                param.Add("gameType", p.GameType.ToUpper());
-                param.Add("pageIndex", p.PageIndex);
-                param.Add("pageSize", p.PageSize);
-                param.Add("key",p.KeyWord);
+                string GameCode = p.GameCode.ToUpper();
+                string gameType = p.GameType.ToUpper();
+                int pageIndex = p.PageIndex;
+                int pageSize = p.PageSize;
+                string key = p.KeyWord;
+                Dictionary<string, object> param = new Dictionary<string, object> {
+                { "gameCode", GameCode },{"gameType", gameType },{ "pageIndex", pageIndex},{ "pageSize", pageSize},{ "key", key}
+                };
                 var list = new List<object>();
                 var _issuseNumber = string.Empty;
                 var _completeData = string.Empty;
@@ -209,17 +212,21 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                Dictionary<string, object> param = new Dictionary<string, object>();
+                
                 var p = WebHelper.Decode(entity.Param);
-                if (string.IsNullOrEmpty(p.gameCode))
-                    throw new Exception("传入彩种不能为空");
-                param.Add("gameCode", p.GameCode);
-                param.Add("issuseNumber", p.IssuseNumber);
-                param.Add("gameType", p.GameType);
+                string gameCode = p.GameCode;
+                string issuseNumber = p.IssuseNumber;
+                string gameType = p.GameType;
+                int pageIndex= p.PageIndex == null ? 0 : Convert.ToInt32(p.PageIndex);
+                int pageSize= p.PageSize == null ? 0 : Convert.ToInt32(p.PageSize);
+                Dictionary<string, object> param = new Dictionary<string, object>
+                {
+                 { "gameCode", gameCode },{ "issuseNumber", issuseNumber },{ "gameType",gameType },{ "pageIndex", pageIndex },{ "pageSize",pageSize }
+                };
                 DateTime startTime = string.IsNullOrEmpty(p.StartTime) ? DateTime.Now : Convert.ToDateTime(p.StartTime);
-                DateTime endTime = string.IsNullOrEmpty(p.EndTime) ? DateTime.Now : Convert.ToDateTime(p.EndTime);
-                param.Add("pageIndex", p.PageIndex == null ? 0 : Convert.ToInt32(p.PageIndex));
-                param.Add("pageSize", p.PageSize == null ? 0 : Convert.ToInt32(p.PageSize));
+                DateTime endTime = string.IsNullOrEmpty(p.EndTime) ? DateTime.Now : Convert.ToDateTime(p.EndTime);                
+                if (string.IsNullOrEmpty(gameCode))
+                    throw new Exception("传入彩种不能为空");
                 var list = new List<object>();
                 if (p.gameCode.ToUpper() == "JCZQ")
                 {
@@ -227,7 +234,7 @@ namespace Lottery.Api.Controllers
                     var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "jsonData");
                     if (!Directory.Exists(path))
                         Directory.CreateDirectory(path);
-                    var jczqFileFullName = Path.Combine(path, string.Format("lottery_open_numbers_list_{0}_{1}.json", p.gameCode, endTime.ToString("yyyyMMdd")));
+                    var jczqFileFullName = Path.Combine(path, string.Format("lottery_open_numbers_list_{0}_{1}.json", gameCode, endTime.ToString("yyyyMMdd")));
                     var result = new JCZQMatchResult_Collection();
                     if (System.IO.File.Exists(jczqFileFullName))
                     {
@@ -290,7 +297,7 @@ namespace Lottery.Api.Controllers
                     var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "jsonData");
                     if (!Directory.Exists(path))
                         Directory.CreateDirectory(path);
-                    var jczqFileFullName = Path.Combine(path, string.Format("lottery_open_numbers_list_{0}_{1}.json", p.gameCode, endTime.ToString("yyyyMMdd")));
+                    var jczqFileFullName = Path.Combine(path, string.Format("lottery_open_numbers_list_{0}_{1}.json", gameCode, endTime.ToString("yyyyMMdd")));
                     var result = new JCLQMatchResult_Collection();
                     if (System.IO.File.Exists(jczqFileFullName))
                     {
@@ -472,21 +479,23 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                Dictionary<string, object> param = new Dictionary<string, object>();
+                
 
                 var p = WebHelper.Decode(entity.Param);
-                if (string.IsNullOrEmpty(p.userToken))
-                    throw new ArgumentException("您还未登陆");
-
-                param.Add("viewType", p.ViewType);
-                param.Add("userToken", p.UserToken);
+                string viewType = p.ViewType;
+                string userToken = p.UserToken;
                 DateTime startTime = p.StartTime == null ? DateTime.Now : Convert.ToDateTime(p.StartTime);
+                DateTime endTime = p.EndTime == null ? DateTime.Now : Convert.ToDateTime(p.EndTime);
                 int days = p.Days;
                 startTime = startTime.AddDays(-days).Date;
-                param.Add("startTime", startTime);
-                param.Add("endTime", p.EndTime == null ? DateTime.Now : Convert.ToDateTime(p.EndTime));
-                param.Add("pageIndex", p.PageIndex ?? 0);
-                param.Add("pageSize", p.PageSize ?? 1);
+                int PageIndex = p.PageIndex??0;
+                int pageSize = p.PageSize ?? 1;
+                Dictionary<string, object> param = new Dictionary<string, object>
+                {
+                    { "viewType", viewType },{ "userToken", userToken },{ "startTime", startTime },{ "endTime", endTime },{ "pageIndex", PageIndex },{ "pageSize", pageSize }
+                };
+                if (string.IsNullOrEmpty(userToken))
+                    throw new ArgumentException("您还未登陆");
                 //endTime = endTime.AddDays(1);
 
                 var list = new List<object>();
@@ -683,18 +692,22 @@ namespace Lottery.Api.Controllers
             try
             {
                 var p = WebHelper.Decode(entity.Param);
-                Dictionary<string, object> param = new Dictionary<string, object>();
-                param.Add("userId", p.UserId);
-                param.Add("state", p.BonusStatus == -1 ? null : (BonusStatus?)p.BonusStatus);
+                string userId = p.UserId;
+                int state = p.BonusStatus;
                 //int schemeType = p.SchemeType;
-                param.Add("days", p.ViewDay);
-                param.Add("startTime", DateTime.Now.AddDays(-p.ViewDay));
-                param.Add("endTime", DateTime.Now);
-                param.Add("pageIndex", p.PageIndex);
-                param.Add("pageSize", p.PageSize);
-                param.Add("userToken", p.UserToken);
+                int days = p.ViewDay;
+                DateTime startTime = DateTime.Now.AddDays(-days);
+                DateTime endTime = DateTime.Now;
+                int pageIndex = p.PageIndex;
+                int pageSize = p.PageSize;
+                string userToken = p.UserToken;
                 int orderQueryType = p.OrderQueryType;
-                if (string.IsNullOrEmpty(p.UserId) || string.IsNullOrEmpty(p.UserToken))
+                Dictionary<string, object> param = new Dictionary<string, object>
+                {
+                    { "userId", userId },{ "state", (BonusStatus?)state },{ "days", days },{ "startTime", startTime },{ "endTime", endTime },
+                    { "pageIndex", pageIndex },{ "pageSize", pageSize },{ "userToken", userToken }
+                };
+                if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userToken))
                     throw new ArgumentException("您还未登陆，请登陆后查询");
 
                 var list = new List<object>();
@@ -822,19 +835,28 @@ namespace Lottery.Api.Controllers
             try
             {
                 var p = WebHelper.Decode(entity.Param);
-                Dictionary<string, object> param = new Dictionary<string, object>();
-                param.Add("gameCode",p.GameCode);
-                param.Add("gameType",p.GameType);
-                param.Add("pageIndex",p.Pageindex);
-                param.Add("PageSize",p.PageSize);
-                param.Add("orderBy",p.orderBy);
-                param.Add("sortType",p.sortType);
-                param.Add("userToken",p.UserToken);
-
-                string userId = string.Empty;
-                if (!string.IsNullOrEmpty(p.userToken))
+                var gameCode = p.GameCode;
+                var gameType = p.GameType;
+                var pageNo = p.Pageindex;
+                var PageSize = p.PageSize;
+                var orderBy = p.orderBy;
+                var sortType = p.sortType;
+                string userToken = p.UserToken;
+                Dictionary<string, object> param = new Dictionary<string, object>
                 {
-                    param.Add("userToken", p.userToken);
+                    { "gameCode", gameCode },{ "key", "" },
+                    { "gameType", gameType }, { "issuseNumber", "" },
+                    { "pageIndex", pageNo }, { "TogetherSchemeSecurity", null },
+                    { "PageSize", PageSize }, { "betCategory", null },
+                    { "orderBy", orderBy }, { "TogetherSchemeProgress", null },
+                    { "sortType", sortType },{ "minMoney", -1 },
+                    { "maxMoney", -1 },{ "minProgress", -1 },
+                    { "maxProgress", -1 }
+                };
+                string userId = string.Empty;
+                if (!string.IsNullOrEmpty(userToken))
+                {
+                    param.Add("userToken", userToken);
                     var userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
 
 
@@ -842,21 +864,13 @@ namespace Lottery.Api.Controllers
                         userId = userInfo.UserId;
                 }
 
-                if (p.orderBy == "Progress")
-                    p.orderBy = "ManYuan desc, Progress " + p.sortType + ",TotalMoney DESC,ISTOP DESC";
-                else if (p.orderBy == "TotalMoney")
-                    p.orderBy = "ManYuan desc,TotalMoney " + p.sortType + ", Progress DESC,ISTOP DESC";
+                if (orderBy == "Progress")
+                    orderBy = "ManYuan desc, Progress " + sortType + ",TotalMoney DESC,ISTOP DESC";
+                else if (orderBy == "TotalMoney")
+                    orderBy = "ManYuan desc,TotalMoney " + sortType + ", Progress DESC,ISTOP DESC";
 
                 var list = new List<object>();
-                param.Add("key", "");
-                param.Add("issuseNumber", "");
-                param.Add("TogetherSchemeSecurity", null);
-                param.Add("betCategory",null);
-                param.Add("TogetherSchemeProgress", null);
-                param.Add("minMoney", -1);
-                param.Add("maxMoney", -1);
-                param.Add("minProgress", -1);
-                param.Add("maxProgress", -1);
+                
                 //Sports_TogetherSchemeQueryInfoCollection result1 = WCFClients.GameQueryClient.QueryJoinTogetherOrderListByUserId(userId, null, gameCode, ViewBag.Begin, ViewBag.End, pageNo, PageSize);
                 Sports_TogetherSchemeQueryInfoCollection result = await _serviceProxyProvider.Invoke<Sports_TogetherSchemeQueryInfoCollection>(param, "api/Order/QuerySportsTogetherListFromRedis");
                 if (result != null && result.List.Count > 0)
@@ -1527,6 +1541,270 @@ namespace Lottery.Api.Controllers
                 }
             }
             return string.Empty;
+        }
+        /// <summary>
+        /// 查询定制跟单列表_150
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<LotteryServiceResponse> QueryAutofollowList([FromServices]IServiceProxyProvider _serviceProxyProvider,LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                string gameCode = p.GameCode;
+                string gameType = p.GameType;
+                int pageIndex = p.PageIndex;
+                int pageSize = p.PageSize;
+                string userToken = p.UserToken;
+                if (string.IsNullOrEmpty(userToken))
+                    throw new Exception("您还未登录，请登录！");
+                Dictionary<string, object> param = new Dictionary<string, object>()
+                {
+                    {"gameCode",gameCode },{"gameType",gameType },{"pageIndex",pageIndex },{"pageSize",pageSize },{"userToken",userToken }
+                };
+                var followList =await _serviceProxyProvider.Invoke<TogetherFollowerRuleQueryInfoCollection>(param, "api/Order/QueryUserFollowRule");
+                var list = new List<object>();
+                if (followList != null && followList.TotalCount > 0)
+                {
+                    foreach (var item in followList.List)
+                    {
+                        list.Add(new
+                        {
+                            RuleId = item.RuleId,
+                            BonusMoney = item.BonusMoney,
+                            BuyMoney = item.BuyMoney,
+                            CancelNoBonusSchemeCount = item.CancelNoBonusSchemeCount,
+                            CancelWhenSurplusNotMatch = item.CancelWhenSurplusNotMatch,
+                            CreaterUserId = item.CreaterUserId,
+                            CreateTime = item.CreateTime,
+                            FollowerCount = item.FollowerCount,
+                            FollowerIndex = item.FollowerIndex,
+                            FollowerPercent = item.FollowerPercent,
+                            FollowerUserId = item.FollowerUserId,
+                            GameCode = item.GameCode,
+                            GameType = item.GameType,
+                            IsEnable = item.IsEnable,
+                            MaxSchemeMoney = item.MaxSchemeMoney,
+                            MinSchemeMoney = item.MinSchemeMoney,
+                            SchemeCount = item.SchemeCount,
+                            StopFollowerMinBalance = item.StopFollowerMinBalance,
+                            UserId = item.UserId,
+                            UserDisplayName = item.UserDisplayName,
+                            HideDisplayNameCount = item.HideDisplayNameCount,
+                        });
+                    }
+                }
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询定制跟单列表成功",
+                    MsgId = entity.MsgId,
+                    Value = list,
+                };
+            }
+            catch (ArgumentException ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+        }
+        /// <summary>
+        /// 查询跟单信息_152
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<LotteryServiceResponse> QueryTogetherFollowerRule([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                string userToken = p.UserToken;
+                string createUserId = p.CreateUserId;
+                string followerUserId = p.FollowerUserId;
+                string gameCode = p.GameCode;
+                string gameType = p.GameType;
+                if (string.IsNullOrEmpty(userToken))
+                    throw new Exception("您还未登录，请登录！");
+                Dictionary<string, object> param = new Dictionary<string, object>() {
+                    {"createrUserId",createUserId },{"followerUserId", followerUserId},{"gameCode",gameCode },{ "gameType",gameType}
+                };
+                var result =await _serviceProxyProvider.Invoke<TogetherFollowerRuleQueryInfo>(param, "api/Order/QueryTogetherFollowerRuleInfo");
+                var list = new List<object>();
+                if (result != null && !string.IsNullOrEmpty(result.CreaterUserId))
+                {
+                    list.Add(new
+                    {
+                        CancelNoBonusSchemeCount = result.CancelNoBonusSchemeCount,
+                        CancelWhenSurplusNotMatch = result.CancelWhenSurplusNotMatch,
+                        CreaterUserId = result.CreaterUserId,
+                        FollowerCount = result.FollowerCount,
+                        FollowerPercent = result.FollowerPercent,
+                        FollowerUserId = result.FollowerUserId,
+                        GameCode = result.GameCode,
+                        GameType = result.GameType,
+                        IsEnable = result.IsEnable,
+                        MaxSchemeMoney = result.MaxSchemeMoney,
+                        MinSchemeMoney = result.MinSchemeMoney,
+                        SchemeCount = result.SchemeCount,
+                        StopFollowerMinBalance = result.StopFollowerMinBalance,
+                        UserDisplayName = result.UserDisplayName,
+                        HideDisplayNameCount = result.HideDisplayNameCount,
+                        RuleId = result.RuleId,
+                    });
+                }
+                if (list != null && list.Count > 0)
+                {
+                    return new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.成功,
+                        Message = "查询跟单信息成功",
+                        MsgId = entity.MsgId,
+                        Value = list,
+                    };
+                }
+                else
+                {
+                    return new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.失败,
+                        Message = "未查询到跟单信息",
+                        MsgId = entity.MsgId,
+                        Value = list,
+                    };
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+        }
+        /// <summary>
+        /// 查询今日宝单_153
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<LotteryServiceResponse> QueryTodayBDFXList([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                string userName = p.UserName;
+                string strOrderBy = p.StrOrderBy;
+                string currUserId = p.CurrentUserId;
+                int pageIndex = p.PageIndex;
+                int pageSize = p.PageSize;
+                Dictionary<string, object> param = new Dictionary<string, object>()
+                {
+                    {"userId","" },{"userName",userName },{"gameCode","" },{"orderBy",strOrderBy },
+                    { "desc",currUserId },{"startTime",DateTime.Now },{ "endTime",DateTime.Now},
+                    { "isMyBD",string.Empty},{"pageIndex",pageIndex },{"pageSize",pageSize }
+                };
+                var todayBDList =await _serviceProxyProvider.Invoke<TotalSingleTreasure_Collection>(param, "api/Order/QueryTodayBDFXList");
+                Dictionary<string, object> paranNR = new Dictionary<string, object>()
+                {
+                    { "startTime",DateTime.Now},{"endTime",DateTime.Now },{"count",3 }
+                };
+                var dayNR = await _serviceProxyProvider.Invoke<string>(paranNR, "api/Order/QueryYesterdayNR");
+                List<object> list = new List<object>();
+                if (todayBDList != null && todayBDList.TotalCount > 0)
+                {
+                    foreach (var item in todayBDList.TotalSingleTreasureList)
+                    {
+                        var currAnCodeList = todayBDList.AnteCodeList.Where(s => s.SchemeId == item.SchemeId).ToList();
+                        list.Add(new
+                        {
+                            AnteCodeList = currAnCodeList,
+                            AfterTaxBonusMoney = item.AfterTaxBonusMoney,
+                            BDFXCreateTime = item.BDFXCreateTime,
+                            BetCount = item.BetCount,
+                            Commission = item.Commission,
+                            CurrentBetMoney = item.CurrentBetMoney,
+                            CurrProfitRate = item.CurrProfitRate,
+                            ExpectedBonusMoney = item.ExpectedBonusMoney,
+                            ExpectedReturnRate = item.ExpectedReturnRate,
+                            FirstMatchStopTime =ConvertHelper.ConvertDateTimeInt(item.FirstMatchStopTime),
+                            GameCode = item.GameCode,
+                            GameType = item.GameType,
+                            IsComplate = item.IsComplate,
+                            IssuseNumber = item.IssuseNumber,
+                            LastMatchStopTime = ConvertHelper.ConvertDateTimeInt(item.LastMatchStopTime),
+                            LastweekProfitRate = item.LastweekProfitRate,
+                            ProfitRate = item.ProfitRate,
+                            SchemeId = item.SchemeId,
+                            Security = item.Security,
+                            SingleTreasureDeclaration = item.SingleTreasureDeclaration,
+                            TotalBonusMoney = item.TotalBonusMoney,
+                            TotalBuyCount = item.TotalBuyCount,
+                            TotalBuyMoney = item.TotalBuyMoney,
+                            TotalMatchCount = item.TotalMatchCount,
+                            UserId = item.UserId,
+                            UserName = item.UserName,
+                            StrNR = dayNR,
+                        });
+                    }
+                }
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询今日宝单成功",
+                    MsgId = entity.MsgId,
+                    Value = list,
+                };
+            }
+            catch (ArgumentException ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
         }
     }
 }

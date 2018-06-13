@@ -12,9 +12,9 @@ namespace KaSon.FrameWork.Helper
         /// </summary>
         /// <param name=”time”></param>
         /// <returns></returns>
-        public static int ConvertDateTimeInt(System.DateTime time)
+        public static int ConvertDateTimeInt(DateTime time)
         {
-            System.DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new System.DateTime(1970, 1, 1));
+            DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
             return (int)(time - startTime).TotalSeconds;
         }
         /// <summary>
@@ -37,7 +37,6 @@ namespace KaSon.FrameWork.Helper
 
         private static Dictionary<string, string> GetAnteCodeDic(string[] array1, string[] array2)
         {
-
             Dictionary<string, string> dicAnteCode = new Dictionary<string, string>();
             for (int i = 0; i < array1.Length; i++)
             {

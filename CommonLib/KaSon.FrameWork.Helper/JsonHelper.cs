@@ -27,43 +27,38 @@ namespace KaSon.FrameWork.Helper
         {
             return JsonConvert.SerializeObject(data, JavaScriptConverters);
         }
-
-
-
-
-
-
-
-
-        //Sustem.Web.Helper
-        public static class WebHelper
+    }
+    //System.Web.Helper
+    public static class WebHelper
+    {
+        public static dynamic Decode(string value)
         {
-            public static dynamic Decode(string value)
-            {
-                return WrapObject(JsonConvert.DeserializeObject(value));
-            }
+            return WrapObject(JsonConvert.DeserializeObject(value));
+        }
 
-            public static dynamic WrapObject(object value)
+        public static dynamic WrapObject(object value)
+        {
+            IDictionary<string, object> dictionary = value as IDictionary<string, object>;
+            if (dictionary != null)
             {
-                IDictionary<string, object> dictionary = value as IDictionary<string, object>;
-                if (dictionary != null)
-                {
-                    return new DynamicJsonObject(dictionary);
-                }
-                object[] array = value as object[];
-                if (array != null)
-                {
-                    return new DynamicJsonArray(array);
-                }
-                return value;
+                return new DynamicJsonObject(dictionary);
             }
+            object[] array = value as object[];
+            if (array != null)
+            {
+                return new DynamicJsonArray(array);
+            }
+            return value;
         }
         private class DynamicJsonObject : DynamicObject
         {
             private readonly IDictionary<string, object> _values;
             public DynamicJsonObject(IDictionary<string, object> values)
             {
-                _values = ((IEnumerable<KeyValuePair<string, object>>)values).ToDictionary((Func<KeyValuePair<string, object>, string>)((KeyValuePair<string, object> p) => p.Key), (Func<KeyValuePair<string, object>, object>)((KeyValuePair<string, object> p) => WebHelper.WrapObject(p.Value)), (IEqualityComparer<string>)StringComparer.OrdinalIgnoreCase);
+                _values = ((IEnumerable<KeyValuePair<string, object>>)values)
+                    .ToDictionary((Func<KeyValuePair<string, object>, string>)((KeyValuePair<string, object> p) => p.Key),
+                    (Func<KeyValuePair<string, object>, object>)((KeyValuePair<string, object> p) => WebHelper.WrapObject(p.Value)), 
+                    (IEqualityComparer<string>)StringComparer.OrdinalIgnoreCase);
             }
         }
         private class DynamicJsonArray : DynamicObject
@@ -71,12 +66,9 @@ namespace KaSon.FrameWork.Helper
             private readonly object[] _arrayValues;
             public DynamicJsonArray(object[] arrayValues)
             {
-                _arrayValues = ((IEnumerable<object>)arrayValues).Select((Func<object, object>)WebHelper.WrapObject).ToArray();
+                _arrayValues = ((IEnumerable<object>)arrayValues).Select((Func<object, object>)WrapObject).ToArray();
             }
         }
-       
-
-
-    }
+    } 
 }
 
