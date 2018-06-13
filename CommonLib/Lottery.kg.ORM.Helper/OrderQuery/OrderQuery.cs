@@ -1,4 +1,5 @@
 ﻿using EntityModel;
+using EntityModel.Communication;
 using EntityModel.CoreModel;
 using EntityModel.Enum;
 using EntityModel.RequestModel;
@@ -10,7 +11,7 @@ using System.Linq;
 using System.Text;
 namespace Lottery.Kg.ORM.Helper.OrderQuery
 {
-   public class OrderQuery:DBbase
+    public class OrderQuery : DBbase
     {
         /// <summary>
         /// 中奖查询
@@ -508,7 +509,7 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
                         select s;
             cache.TotalCount = query.Count();
             cache.List = query.Skip(Model.pageIndex * Model.pageSize).Take(Model.pageSize).ToList();
-            return cache;          
+            return cache;
         }
         /// <summary>
         /// 按keyline查询追号列表
@@ -563,10 +564,10 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
             var orderDetail = DB.CreateQuery<C_OrderDetail>().Where(x => x.SchemeId == schemeId).FirstOrDefault();
             if (orderDetail == null)
                 throw new Exception(string.Format("没有查询到方案{0}的orderDetail信息", schemeId));
-         
+
             var info = (orderDetail.ProgressStatus == (int)ProgressStatus.Complate
               || orderDetail.ProgressStatus == (int)ProgressStatus.Aborted
-              || orderDetail.ProgressStatus == (int)ProgressStatus.AutoStop) ? QueryComplateSportsTogetherDetail(schemeId) :QueryRunningSportsTogetherDetail(schemeId);
+              || orderDetail.ProgressStatus == (int)ProgressStatus.AutoStop) ? QueryComplateSportsTogetherDetail(schemeId) : QueryRunningSportsTogetherDetail(schemeId);
             if (info == null)
                 throw new Exception(string.Format("没有查询到方案{0}的信息", schemeId));
             return info;
@@ -727,37 +728,37 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
             }
             return info;
         }
-        public Sports_TogetherJoinInfoCollection QuerySportsTogetherJoinList(string schemeId, int pageIndex, int pageSize,int MaxPageSize)
+        public Sports_TogetherJoinInfoCollection QuerySportsTogetherJoinList(string schemeId, int pageIndex, int pageSize, int MaxPageSize)
         {
             var result = new Sports_TogetherJoinInfoCollection();
             var totalCount = 0;
             pageSize = pageSize > MaxPageSize ? MaxPageSize : pageSize;
             var query = (from j in DB.CreateQuery<C_Sports_TogetherJoin>()
-                        join u in DB.CreateQuery<UserRegister>() on j.JoinUserId equals u.UserId
-                        where j.SchemeId == schemeId && j.JoinSucess == true
-                        orderby j.JoinType ascending
-                        select new Sports_TogetherJoinInfo
-                        {
-                            BuyCount = j.BuyCount,
-                            RealBuyCount = j.RealBuyCount,
-                            IsSucess = j.JoinSucess,
-                            JoinDateTime = j.CreateTime,
-                            JoinType = (TogetherJoinType)j.JoinType,
-                            Price = j.Price,
-                            UserDisplayName = u.DisplayName,
-                            HideDisplayNameCount = u.HideDisplayNameCount,
-                            UserId = u.UserId,
-                            JoinId = j.Id,
-                            SchemeId = j.SchemeId,
-                            BonusMoney = j.PreTaxBonusMoney,
-                        }).ToList();
+                         join u in DB.CreateQuery<UserRegister>() on j.JoinUserId equals u.UserId
+                         where j.SchemeId == schemeId && j.JoinSucess == true
+                         orderby j.JoinType ascending
+                         select new Sports_TogetherJoinInfo
+                         {
+                             BuyCount = j.BuyCount,
+                             RealBuyCount = j.RealBuyCount,
+                             IsSucess = j.JoinSucess,
+                             JoinDateTime = j.CreateTime,
+                             JoinType = (TogetherJoinType)j.JoinType,
+                             Price = j.Price,
+                             UserDisplayName = u.DisplayName,
+                             HideDisplayNameCount = u.HideDisplayNameCount,
+                             UserId = u.UserId,
+                             JoinId = j.Id,
+                             SchemeId = j.SchemeId,
+                             BonusMoney = j.PreTaxBonusMoney,
+                         }).ToList();
             totalCount = query.Count();
             if (pageIndex == -1 && pageSize == -1)
             {
                 result.List = query.ToList();
                 return result;
-            }              
-            var list=query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+            }
+            var list = query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
             result.TotalCount = totalCount;
             result.List.AddRange(list);
             return result;
@@ -766,8 +767,8 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
         {
             UserAuthentication Auth = new UserAuthentication();
             var userId = Auth.ValidateUserAuthentication(userToken);
-            int flag=DB.CreateQuery<C_Sports_TogetherJoin>().Count(p => p.SchemeId == schemeId && p.JoinUserId == userId && p.JoinSucess);
-            return flag > 0; 
+            int flag = DB.CreateQuery<C_Sports_TogetherJoin>().Count(p => p.SchemeId == schemeId && p.JoinUserId == userId && p.JoinSucess);
+            return flag > 0;
         }
         public Sports_AnteCodeQueryInfoCollection QuerySportsOrderAnteCodeList(string schemeId)
         {
@@ -922,7 +923,7 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
                 {
                     #region JCLQ
 
-                    var match =QueryJCLQ_Match(item.MatchId);
+                    var match = QueryJCLQ_Match(item.MatchId);
                     var matchResult = QueryJCLQ_MatchResult(item.MatchId);
                     var halfResult = string.Empty;
                     var fullResult = string.Empty;
@@ -1083,15 +1084,15 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
             return list;
         }
         public C_BJDC_Match QueryBJDC_Match(string id)
-        {           
+        {
             return DB.CreateQuery<C_BJDC_Match>().FirstOrDefault(p => p.Id == id);
         }
         public C_BJDC_MatchResult QueryBJDC_MatchResult(string id)
-        {          
+        {
             return DB.CreateQuery<C_BJDC_MatchResult>().FirstOrDefault(p => p.Id == id);
         }
         public C_JCZQ_Match QueryJCZQ_Match(string matchId)
-        {            
+        {
             return DB.CreateQuery<C_JCZQ_Match>().FirstOrDefault(p => p.MatchId == matchId);
         }
         public C_JCZQ_MatchResult QueryJCZQ_MatchResult(string matchId)
@@ -1116,12 +1117,12 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
         }
 
         public Issuse_QueryInfo QueryIssuseInfo(string gameCode, string gameType, string issuseNumber)
-        {           
+        {
             var issuse = (from g in DB.CreateQuery<C_Game_Issuse>()
-                        where g.GameCode == gameCode
-                        && g.IssuseNumber == issuseNumber
-                        && (gameType == string.Empty || g.GameType == gameType)
-                        select g).FirstOrDefault();
+                          where g.GameCode == gameCode
+                          && g.IssuseNumber == issuseNumber
+                          && (gameType == string.Empty || g.GameType == gameType)
+                          select g).FirstOrDefault();
             if (issuse == null) return new Issuse_QueryInfo { Status = IssuseStatus.OnSale };
             return new Issuse_QueryInfo
             {
@@ -1153,7 +1154,7 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
             return info;
         }
         public Sports_SchemeQueryInfo QuerySports_Order_ComplateInfo(string schemeId)
-        {          
+        {
             var query = from r in DB.CreateQuery<C_Sports_Order_Complate>()
                         join u in DB.CreateQuery<UserRegister>() on r.UserId equals u.UserId
                         where r.SchemeId == schemeId
@@ -1292,34 +1293,34 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
             Model.pageSize = Model.pageSize > Model.MaxPageSize ? Model.MaxPageSize : Model.pageSize;
 
             var query = Model.byFollower ? (from f in DB.CreateQuery<C_Together_FollowerRule>()
-                                      join u in DB.CreateQuery<UserRegister>() on f.CreaterUserId equals u.UserId
-                                      where (Model.gameCode == string.Empty || f.GameCode == Model.gameCode)
-                                      && (Model.gameType == string.Empty || f.GameType == Model.gameType)
-                                      && (Model.userId == string.Empty || f.FollowerUserId == Model.userId)
-                                      select new TogetherFollowerRuleQueryInfo
-                                      {
-                                          RuleId = f.Id,
-                                          BonusMoney = f.TotalBonusMoney,
-                                          BuyMoney = f.TotalBetMoney,
-                                          CancelNoBonusSchemeCount = f.CancelNoBonusSchemeCount,
-                                          CancelWhenSurplusNotMatch = f.CancelWhenSurplusNotMatch,
-                                          CreaterUserId = f.CreaterUserId,
-                                          CreateTime = f.CreateTime,
-                                          FollowerCount = f.FollowerCount,
-                                          FollowerIndex = f.FollowerIndex,
-                                          FollowerPercent = f.FollowerPercent,
-                                          FollowerUserId = f.FollowerUserId,
-                                          GameCode = f.GameCode,
-                                          GameType = f.GameType,
-                                          IsEnable = f.IsEnable,
-                                          MaxSchemeMoney = f.MaxSchemeMoney,
-                                          MinSchemeMoney = f.MinSchemeMoney,
-                                          SchemeCount = f.SchemeCount,
-                                          StopFollowerMinBalance = f.StopFollowerMinBalance,
-                                          UserId = u.UserId,
-                                          UserDisplayName = u.DisplayName,
-                                          HideDisplayNameCount = u.HideDisplayNameCount,
-                                      }) :
+                                            join u in DB.CreateQuery<UserRegister>() on f.CreaterUserId equals u.UserId
+                                            where (Model.gameCode == string.Empty || f.GameCode == Model.gameCode)
+                                            && (Model.gameType == string.Empty || f.GameType == Model.gameType)
+                                            && (Model.userId == string.Empty || f.FollowerUserId == Model.userId)
+                                            select new TogetherFollowerRuleQueryInfo
+                                            {
+                                                RuleId = f.Id,
+                                                BonusMoney = f.TotalBonusMoney,
+                                                BuyMoney = f.TotalBetMoney,
+                                                CancelNoBonusSchemeCount = f.CancelNoBonusSchemeCount,
+                                                CancelWhenSurplusNotMatch = f.CancelWhenSurplusNotMatch,
+                                                CreaterUserId = f.CreaterUserId,
+                                                CreateTime = f.CreateTime,
+                                                FollowerCount = f.FollowerCount,
+                                                FollowerIndex = f.FollowerIndex,
+                                                FollowerPercent = f.FollowerPercent,
+                                                FollowerUserId = f.FollowerUserId,
+                                                GameCode = f.GameCode,
+                                                GameType = f.GameType,
+                                                IsEnable = f.IsEnable,
+                                                MaxSchemeMoney = f.MaxSchemeMoney,
+                                                MinSchemeMoney = f.MinSchemeMoney,
+                                                SchemeCount = f.SchemeCount,
+                                                StopFollowerMinBalance = f.StopFollowerMinBalance,
+                                                UserId = u.UserId,
+                                                UserDisplayName = u.DisplayName,
+                                                HideDisplayNameCount = u.HideDisplayNameCount,
+                                            }) :
                                     (from f in DB.CreateQuery<C_Together_FollowerRule>()
                                      join u in DB.CreateQuery<UserRegister>() on f.FollowerUserId equals u.UserId
                                      where (Model.gameCode == string.Empty || f.GameCode == Model.gameCode)
@@ -1350,8 +1351,8 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
                                          UserDisplayName = u.DisplayName,
                                          HideDisplayNameCount = u.HideDisplayNameCount,
                                      });
-            collection.TotalCount= query.Count();
-            collection.List= query.Skip(Model.pageIndex * Model.pageSize).Take(Model.pageSize).ToList();
+            collection.TotalCount = query.Count();
+            collection.List = query.Skip(Model.pageIndex * Model.pageSize).Take(Model.pageSize).ToList();
             return collection;
         }
         /// <summary>
@@ -1392,34 +1393,34 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
         public TotalSingleTreasure_Collection QueryTodayBDFXList(QueryTodayBDFXList Model)
         {
 
-                string orderBy = "bdfxcreatetime";
-                string desc = "desc";
-                if (!string.IsNullOrEmpty(Model.strOrderBy))
+            string orderBy = "bdfxcreatetime";
+            string desc = "desc";
+            if (!string.IsNullOrEmpty(Model.strOrderBy))
+            {
+                var array = Model.strOrderBy.ToLower().Split('|');
+                if (array != null && array.Length > 1)
                 {
-                    var array = Model.strOrderBy.ToLower().Split('|');
-                    if (array != null && array.Length > 1)
-                    {
-                        orderBy = array[0].ToString();
-                        desc = array[1].ToString();
-                    }
+                    orderBy = array[0].ToString();
+                    desc = array[1].ToString();
                 }
+            }
             Model.startTime = Model.startTime.Date;
             Model.endTime = Model.endTime.AddDays(1).Date;
-                var bdfxList = QueryTodayBDFXList_manage(Model,desc,orderBy);
-                if (!string.IsNullOrEmpty(Model.currentUserId) && bdfxList != null && bdfxList.TotalCount > 0)
-                {
-                    var userIdList = QueryBeConcernedUserIdList(Model.currentUserId);
-                    var singleTraList = bdfxList.TotalSingleTreasureList.Where(s => userIdList.ToArray().Contains(s.UserId)).ToList();
-                    bdfxList.TotalSingleTreasureList = singleTraList.Skip(Model.pageIndex * Model.pageSize).Take(Model.pageSize).ToList();
-                    bdfxList.TotalCount = singleTraList.Count;
-                    return bdfxList;
-                }
-                bdfxList.TotalSingleTreasureList = bdfxList.TotalSingleTreasureList.Skip(Model.pageIndex * Model.pageSize).Take(Model.pageSize).ToList();
+            var bdfxList = QueryTodayBDFXList_manage(Model, desc, orderBy);
+            if (!string.IsNullOrEmpty(Model.currentUserId) && bdfxList != null && bdfxList.TotalCount > 0)
+            {
+                var userIdList = QueryBeConcernedUserIdList(Model.currentUserId);
+                var singleTraList = bdfxList.TotalSingleTreasureList.Where(s => userIdList.ToArray().Contains(s.UserId)).ToList();
+                bdfxList.TotalSingleTreasureList = singleTraList.Skip(Model.pageIndex * Model.pageSize).Take(Model.pageSize).ToList();
+                bdfxList.TotalCount = singleTraList.Count;
                 return bdfxList;
-            
+            }
+            bdfxList.TotalSingleTreasureList = bdfxList.TotalSingleTreasureList.Skip(Model.pageIndex * Model.pageSize).Take(Model.pageSize).ToList();
+            return bdfxList;
+
         }
-        public TotalSingleTreasure_Collection QueryTodayBDFXList_manage(QueryTodayBDFXList Model,string desc,string orderBy)
-        {            
+        public TotalSingleTreasure_Collection QueryTodayBDFXList_manage(QueryTodayBDFXList Model, string desc, string orderBy)
+        {
             TotalSingleTreasure_Collection collection = new TotalSingleTreasure_Collection();
             collection.TotalCount = 0;
 
@@ -1444,7 +1445,7 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
                         .SetString("@UserName", Model.userName)
                         .SetString("@UserId", Model.userId).First<TotalSingleTreasure_Collection>();
                     string pageSql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_MyBDPage").SQL;
-                    collection.TotalSingleTreasureList =DB.CreateSQLQuery(pageSql)
+                    collection.TotalSingleTreasureList = DB.CreateSQLQuery(pageSql)
                         .SetString("@Desc", desc)
                         .SetString("@OrderBy", orderBy)
                         .SetString("@GameCode", Model.gameCode)
@@ -1473,9 +1474,9 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
                         .SetString("@LastweekEndTime", Model.endTime.ToString())
                         .List<TotalSingleTreasureInfo>();
                 }
-            }                          
+            }
             if (collection.TotalCount > 0)
-            {               
+            {
                 var arrSchemeId = from o in collection.TotalSingleTreasureList select o.SchemeId;
                 var anteCodeList = QueryAnteCodeList(arrSchemeId.ToArray());
                 collection.AnteCodeList.AddRange(anteCodeList);
@@ -1521,7 +1522,7 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
                 .SetString("StartTime", startTime.ToString())
                 .SetString("EndTime", endTime.ToString())
                 .List<QueryYesterdayNRModel>();
-                
+
             string str = string.Empty;
             if (query != null && query.Count > 0)
             {
@@ -1568,7 +1569,7 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
                                             .SetString("StrIsBonus", strIsBonus)
                                             .SetInt("_bonusStatus", _bonusStatus)
                                             .SetString("CurrentTime", currentTime).First<TotalSingleTreasure_Collection>();
-                
+
                 string PageSql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_QueryBDFXAutherHomePageCount").SQL;
                 collection.TotalSingleTreasureList = DB.CreateSQLQuery(PageSql)
                                             .SetString("UserId", userId)
@@ -1579,13 +1580,348 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
                                             .SetInt("PageSize", pageSize)
                                             .List<TotalSingleTreasureInfo>();
                 if (collection.TotalCount > 0)
-                {                    
+                {
                     var arrSchemeId = from o in collection.TotalSingleTreasureList select o.SchemeId;
                     var anteCodeList = this.QueryAnteCodeList(arrSchemeId.ToArray());
                     collection.AnteCodeList.AddRange(anteCodeList);
                 }
                 return collection;
-            }                
+            }
+        }
+        /// <summary>
+        /// 查询关注(关注总数、被关注总数、晒单总数等)
+        /// </summary>
+        public ConcernedInfo QueryConcernedByUserId(string bdfxUserId, string currUserId, string startTime, string endTime)
+        {
+
+            var sTime = new DateTime();
+            var eTime = new DateTime();
+            if (!string.IsNullOrEmpty(startTime) && !string.IsNullOrEmpty(endTime))
+            {
+                startTime = startTime.Replace('.', '-');
+                endTime = endTime.Replace('.', '-');
+                sTime = Convert.ToDateTime(DateTime.Now.Year + "-" + startTime).Date;
+                eTime = Convert.ToDateTime(DateTime.Now.Year + "-" + endTime).AddDays(1).Date;
+            }
+            else if (string.IsNullOrEmpty(startTime) && string.IsNullOrEmpty(endTime))
+            {
+                var currTime = DateTime.Now;
+                int day = Convert.ToInt32(currTime.DayOfWeek) - 1;
+                if (currTime.DayOfWeek != 0)
+                    currTime = currTime.AddDays(-day);
+                else
+                    currTime = currTime.AddDays(-6);
+                sTime = currTime.AddDays(-7).Date;
+                eTime = currTime.Date;
+            }
+            return QueryConcernedByUserId_low(bdfxUserId, currUserId, sTime, eTime);
+        }
+        public ConcernedInfo QueryConcernedByUserId_low(string bdfxUserId, string currUserId, DateTime startTime, DateTime endTime)
+        {
+            ConcernedInfo info = new ConcernedInfo();
+            //查询关注信息
+            string strSql = "select u.UserId,u.DisplayName,isnull(att.BeConcernedUserCount,0)BeConcernedUserCount,isnull(att.ConcernedUserCount,0)ConcernedUserCount,isnull(att.SingleTreasureCount,0)SingleTreasureCount from C_User_Register u left join C_SingleTreasure_AttentionSummary att on u.UserId=att.UserId  where u.UserId=@BDFXUserId";
+            info = DB.CreateSQLQuery(strSql)
+                            .SetString("@BDFXUserId", bdfxUserId).First<ConcernedInfo>();
+            //查询是否已关注
+            strSql = "select count(1) GZ from C_SingleTreasure_Attention at where at.BeConcernedUserId=@BDFXUserId and at.ConcernedUserId=@CurrUserId";
+            info.IsGZ = DB.CreateSQLQuery(strSql)
+                         .SetString("@BDFXUserId", bdfxUserId)
+                         .SetString("@CurrUserId", currUserId)
+                         .First<bool>();
+            #region 暂时屏蔽
+            ////查询近段时间盈利率
+            //var endTime = DateTime.Now.Date;
+            //var startTime = endTime.AddDays(-7);
+            //strSql = "select tab.rowNumber,isnull(tab.currDay,'')CurrDay,isnull(tab.ProfitRate,0)ProfitRate from(select ROW_NUMBER() over(order by CONVERT(varchar(10),CreateTime,120)) rowNumber, CONVERT(varchar(10),CreateTime,120) currDay,t.ProfitRate from C_TotalSingleTreasure t where CONVERT(varchar(10),CreateTime,120)>=:StartTime and CONVERT(varchar(10),CreateTime,120) <:EndTime and UserId=:BDFXUserId group by CONVERT(varchar(10),CreateTime,120),t.ProfitRate ) tab";
+            //query = Session.CreateSQLQuery(strSql)
+            //             .SetDateTime("StartTime", startTime)
+            //             .SetDateTime("EndTime", endTime)
+            //             .SetString("BDFXUserId", bdfxUserId)
+            //             .List();
+            //if (query != null && query.Count > 0)
+            //{
+            //    foreach (var item in query)
+            //    {
+            //        var array = item as object[];
+            //        NearTimeProfitRateInfo nInfo = new NearTimeProfitRateInfo();
+            //        nInfo.RowNumber = Convert.ToInt32(array[0]);
+            //        nInfo.CurrDate = Convert.ToString(array[1]);
+            //        nInfo.ProfitRate = Convert.ToDecimal(array[2]);
+            //        info.NearTimeProfitRateCollection.NearTimeProfitRateList.Add(nInfo);
+            //    }
+            //}
+
+            ////查询上周排行,根据当前时间，计算出上个星期的时间段
+            //var currTime = DateTime.Now;
+            //int day = Convert.ToInt32(currTime.DayOfWeek) - 1;
+            //if (currTime.DayOfWeek != 0)
+            //    currTime = currTime.AddDays(-day);
+            //else
+            //    currTime = currTime.AddDays(-6);
+            //startTime = currTime.AddDays(-7).Date;
+            //endTime = currTime.Date;
+            //strSql = "select tt.rownumber from (select ROW_NUMBER() over(order by sum(ProfitRate) desc) rownumber,UserId from C_TotalSingleTreasure t where CreateTime>=:StartTime and CreateTime<:EndTime group by UserId)tt where UserId=:BDFXUserId";
+            //query = Session.CreateSQLQuery(strSql)
+            //             .SetDateTime("StartTime", startTime)
+            //             .SetDateTime("EndTime", endTime)
+            //             .SetString("BDFXUserId", bdfxUserId)
+            //             .List();
+            //if (query != null && query.Count > 0)
+            //    info.RankNumber = Convert.ToInt32(query[0]); 
+            #endregion
+            //查询近段时间盈利率
+            var nInfo = QueryNearTimeProfitRate(bdfxUserId);
+            info.NearTimeProfitRateCollection = new NearTimeProfitRate_Collection();
+            info.NearTimeProfitRateCollection.NearTimeProfitRateList.AddRange(nInfo);
+            //查询上周排行,根据当前时间，计算出上个星期的时间段
+            info.RankNumber = QueryRankNumber(bdfxUserId);
+            return info;
+        }
+        public List<NearTimeProfitRateInfo> QueryNearTimeProfitRate(string bdfxUserId)
+        {
+            //查询近段时间盈利率
+            List<NearTimeProfitRateInfo> ListInfo = new List<NearTimeProfitRateInfo>();
+            var endTime = DateTime.Now.Date.AddDays(1);
+            var startTime = endTime.AddDays(-7);
+            //20151008
+            //var strSql = "select tab.rowNumber,isnull(tab.currDay,'')CurrDay,isnull(tab.CurrProfitRate,0)CurrProfitRate from(select ROW_NUMBER() over(order by CONVERT(varchar(10),CreateTime,120)) rowNumber, CONVERT(varchar(10),CreateTime,120) currDay,(case t.IsBonus when 0 then 0 when 1 then((SUM(t.CurrBonusMoney)-SUM(t.CurrentBetMoney))/SUM(t.CurrentBetMoney)) else 0 end) CurrProfitRate from C_TotalSingleTreasure t where CONVERT(varchar(10),CreateTime,120)>=:StartTime and CONVERT(varchar(10),CreateTime,120) <:EndTime and UserId=:BDFXUserId group by CONVERT(varchar(10),CreateTime,120) ,t.UserId,t.IsBonus) tab";
+            var strSql = "select tab.rowNumber,isnull(tab.currDay,'')CurrDay,isnull(tab.CurrProfitRate,0)CurrProfitRate from ( select ROW_NUMBER() over(order by CONVERT(varchar(10),CreateTime,120)) rowNumber, CONVERT(varchar(10),CreateTime,120) currDay, (SUM(t.CurrBonusMoney)-SUM(t.CurrentBetMoney))/SUM(t.CurrentBetMoney) CurrProfitRate  from C_TotalSingleTreasure t where CONVERT(varchar(10),CreateTime,120)>=@StartTime and CONVERT(varchar(10),CreateTime,120) <@EndTime and UserId=@BDFXUserId and IsBonus=1 group by CONVERT(varchar(10),CreateTime,120) ,t.UserId ) tab";
+            var query = DB.CreateSQLQuery(strSql)
+                           .SetString("StartTime", startTime.ToString())
+                           .SetString("EndTime", endTime.ToString())
+                           .SetString("BDFXUserId", bdfxUserId)
+                           .List<NearTimeProfitRateInfo>();
+            if (ListInfo == null || !ListInfo.Any())
+            {
+                for (int i = 1; i <= 7; i++)
+                {
+                    NearTimeProfitRateInfo nInfo = new NearTimeProfitRateInfo();
+                    nInfo.RowNumber = i;
+                    nInfo.CurrDate = string.Empty;
+                    nInfo.CurrProfitRate = 0;
+                    ListInfo.Add(nInfo);
+                }
+            }
+            return ListInfo;
+        }
+        public int QueryRankNumber(string bdfxUserId)
+        {
+            //查询上周排行,根据当前时间，计算出上个星期的时间段
+
+            //计算上周时间
+            var currTime = DateTime.Now;
+            int day = Convert.ToInt32(currTime.DayOfWeek) - 1;
+            if (currTime.DayOfWeek != 0)
+                currTime = currTime.AddDays(-day);
+            else
+                currTime = currTime.AddDays(-6);
+            var sTime = currTime.AddDays(-7).Date;
+            var eTime = currTime.Date;
+
+            var strSql = "select tt.LastweekRank from (select ROW_NUMBER() over(order by sum(CurrProfitRate) desc) LastweekRank,lastTab.UserId from (select (case SUM(t.CurrentBetMoney) when 0 then 0 else ((SUM(t.CurrBonusMoney)-SUM(t.CurrentBetMoney))/SUM(t.CurrentBetMoney)) end) CurrProfitRate,UserId from C_TotalSingleTreasure t where CreateTime>=@StartTime and CreateTime<@EndTime and t.IsBonus=1 group by UserId	)	lastTab group by UserId		)tt where tt.UserId=@BDFXUserId";
+            var query = DB.CreateSQLQuery(strSql)
+                          .SetString("StartTime", sTime.ToString())
+                          .SetString("EndTime", eTime.ToString())
+                          .SetString("BDFXUserId", bdfxUserId)
+                          .First<int>();
+            return query;
+        }
+        /// <summary>
+        /// 关注
+        /// </summary>
+        /// <param name="currUserId"></param>
+        /// <param name="bgzUserId"></param>
+        public CommonActionResult BDFXAttention(string currUserId, string bgzUserId)
+        {
+            CommonActionResult result = new CommonActionResult();
+            try
+            {               
+                DB.Begin();
+                #region 关注
+                if (string.IsNullOrEmpty(currUserId))
+                    throw new Exception("关注人编号不能为空");
+                else if (string.IsNullOrEmpty(bgzUserId))
+                    throw new Exception("被关注人编号不能为空");
+                var singleTreasureAttention = QuerySingleTreasureAttentionByUserId(bgzUserId, currUserId);
+                if (singleTreasureAttention != null && !string.IsNullOrEmpty(singleTreasureAttention.ConcernedUserId))
+                    throw new Exception("您已经关注了他");
+                if (currUserId == bgzUserId)
+                    throw new Exception("不能关注自己");
+                singleTreasureAttention = new C_SingleTreasure_Attention();
+                singleTreasureAttention.BeConcernedUserId = bgzUserId;
+                singleTreasureAttention.ConcernedUserId = currUserId;
+                singleTreasureAttention.CreateTime = DateTime.Now;
+                AddSingleTreasureAttention(singleTreasureAttention);
+                //修改被关注者信息
+                var BGZSummary = QuerySingleTreasureAttentionSummaryByUserId(bgzUserId);
+                if (BGZSummary != null && !string.IsNullOrEmpty(BGZSummary.UserId))
+                {
+                    BGZSummary.BeConcernedUserCount += 1;
+                    BGZSummary.UpdateTime = DateTime.Now;
+                    UpdateSingleTreasureAttentionSummary(BGZSummary);
+                }
+                else
+                {
+                    BGZSummary = new C_SingleTreasure_AttentionSummary();
+                    BGZSummary.BeConcernedUserCount = 1;
+                    BGZSummary.ConcernedUserCount = 0;
+                    BGZSummary.SingleTreasureCount = 0;
+                    BGZSummary.UpdateTime = DateTime.Now;
+                    BGZSummary.UserId = bgzUserId;
+                    AddSingleTreasureAttentionSummary(BGZSummary);
+                }
+                //修改关注者信息
+                var GZSummary = QuerySingleTreasureAttentionSummaryByUserId(currUserId);
+                if (GZSummary != null && !string.IsNullOrEmpty(GZSummary.UserId))
+                {
+                    GZSummary.ConcernedUserCount += 1;
+                    GZSummary.UpdateTime = DateTime.Now;
+                    UpdateSingleTreasureAttentionSummary(GZSummary);
+                }
+                else
+                {
+                    GZSummary = new C_SingleTreasure_AttentionSummary();
+                    GZSummary.BeConcernedUserCount = 0;
+                    GZSummary.ConcernedUserCount = 1;
+                    GZSummary.SingleTreasureCount = 0;
+                    GZSummary.UpdateTime = DateTime.Now;
+                    GZSummary.UserId = currUserId;
+                    AddSingleTreasureAttentionSummary(GZSummary);
+                }
+                #endregion
+                DB.Commit();
+                result.IsSuccess = true;
+                result.Message = "关注成功";
+                result.ReturnValue = "1";
+                return result;
+            }
+            catch (Exception)
+            {
+                DB.Rollback();
+                result.IsSuccess = false;
+                result.Message = "关注失败";
+                result.ReturnValue = "0";
+                return result;
+            }
+        }
+        /// <summary>
+        /// 取消关注
+        /// </summary>
+        /// <param name="currUserId"></param>
+        /// <param name="bgzUserId"></param>
+        public CommonActionResult BDFXCancelAttention(string currUserId, string bgzUserId)
+        {
+            CommonActionResult result = new CommonActionResult();
+            try
+            {
+                #region 取消关注
+                DB.Begin();
+                var singleTreasureAttention = QuerySingleTreasureAttentionByUserId(bgzUserId, currUserId);
+                if (singleTreasureAttention == null || string.IsNullOrEmpty(singleTreasureAttention.ConcernedUserId))
+                    throw new Exception("您还未关注他");
+                DeleteSingleTreasureAttention(singleTreasureAttention);
+                //修改被关注者信息
+                var BGZSummary = QuerySingleTreasureAttentionSummaryByUserId(bgzUserId);
+                if (BGZSummary != null && !string.IsNullOrEmpty(BGZSummary.UserId))
+                {
+                    BGZSummary.BeConcernedUserCount -= 1;
+                    BGZSummary.UpdateTime = DateTime.Now;
+                    UpdateSingleTreasureAttentionSummary(BGZSummary);
+                }
+
+                //修改关注者信息
+                var GZSummary = QuerySingleTreasureAttentionSummaryByUserId(currUserId);
+                if (GZSummary != null && !string.IsNullOrEmpty(GZSummary.UserId))
+                {
+                    GZSummary.ConcernedUserCount -= 1;
+                    GZSummary.UpdateTime = DateTime.Now;
+                    UpdateSingleTreasureAttentionSummary(GZSummary);
+                }
+                DB.Commit();
+                #endregion
+                result.IsSuccess = true;
+                result.Message = "关注成功";
+                result.ReturnValue = "1";
+                return result;
+            }
+            catch (Exception)
+            {
+                DB.Rollback();
+                result.IsSuccess = false;
+                result.Message = "关注失败";
+                result.ReturnValue = "0";
+                return result;
+            }                        
+        }
+        
+        public C_SingleTreasure_Attention QuerySingleTreasureAttentionByUserId(string beConcernedUserId, string concernedUserId)
+        {           
+            return DB.CreateQuery<C_SingleTreasure_Attention>().FirstOrDefault(s => s.BeConcernedUserId == beConcernedUserId && s.ConcernedUserId == concernedUserId);
+        }
+        public void AddSingleTreasureAttention(C_SingleTreasure_Attention entity)
+        {
+            DB.GetDal<C_SingleTreasure_Attention>().Add(entity);
+        }
+        public C_SingleTreasure_AttentionSummary QuerySingleTreasureAttentionSummaryByUserId(string userId)
+        {
+            return DB.CreateQuery<C_SingleTreasure_AttentionSummary>().FirstOrDefault(s => s.UserId == userId);
+        }
+        public void UpdateSingleTreasureAttentionSummary(C_SingleTreasure_AttentionSummary entity)
+        {
+            DB.GetDal<C_SingleTreasure_AttentionSummary>().Update(entity);
+        }
+        public void AddSingleTreasureAttentionSummary(C_SingleTreasure_AttentionSummary entity)
+        {
+            DB.GetDal<C_SingleTreasure_AttentionSummary>().Add(entity);
+        }
+        public void DeleteSingleTreasureAttention(C_SingleTreasure_Attention entity)
+        {
+            DB.GetDal<C_SingleTreasure_Attention>().Delete(entity);
+        }
+        /// <summary>
+        /// 查询高手排行/我的关注
+        /// </summary>
+        public BDFXGSRank_Collection QueryGSRankList(string startTime, string endTime, string currUserId, string isMyGZ)
+        {
+            startTime = startTime.Replace('.', '-');
+            endTime = endTime.Replace('.', '-');
+            var sTime = Convert.ToDateTime(DateTime.Now.Year + "-" + startTime).Date;
+            var eTime = Convert.ToDateTime(DateTime.Now.Year + "-" + endTime).AddDays(1).Date;
+            if (!string.IsNullOrEmpty(isMyGZ))
+                isMyGZ = isMyGZ.ToLower();
+            return QueryGSRankList(sTime, eTime, currUserId, isMyGZ);
+        }
+        public BDFXGSRank_Collection QueryGSRankList(DateTime startTime, DateTime endTime, string currUserId, string isMyGZ)
+        {            
+            var sTime = startTime.AddDays(-7).Date;
+            var eTime = startTime.Date;
+            BDFXGSRank_Collection collection = new BDFXGSRank_Collection();
+            string sql = string.Empty;
+            if (!string.IsNullOrEmpty(isMyGZ) && isMyGZ == "true")
+            {
+                sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_QueryMyFollow").SQL;
+                collection.RankList= DB.CreateSQLQuery(sql)
+                    .SetString("@StartTime", startTime.ToString())
+                    .SetString("@EndTime", endTime.ToString())
+                    .SetString("@CurrUserId", currUserId)
+                    .SetString("@LastweekStartTime", sTime.ToString())
+                    .SetString("@LastweekEndTime", eTime.ToString())
+                    .List<BDFXGSRankInfo>();
+            }
+            else
+            {
+                sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_QueryGSRankList").SQL;
+                collection.RankList = DB.CreateSQLQuery(sql)
+                    .SetString("@StartTime", startTime.ToString())
+                    .SetString("@EndTime", endTime.ToString())
+                    .SetString("@CurrUserId", currUserId)
+                    .SetString("IsMyGZ", isMyGZ)
+                    .SetString("@LastweekStartTime", sTime.ToString())
+                    .SetString("@LastweekEndTime", eTime.ToString())
+                    .List<BDFXGSRankInfo>();
+            }           
+            return collection;
         }
     }
 }

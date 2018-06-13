@@ -1,4 +1,5 @@
-﻿using EntityModel.CoreModel;
+﻿using EntityModel.Communication;
+using EntityModel.CoreModel;
 using EntityModel.Enum;
 using EntityModel.RequestModel;
 using Kason.Sg.Core.ProxyGenerator;
@@ -1880,6 +1881,297 @@ namespace Lottery.Api.Controllers
                 {
                     Code = ResponseCode.成功,
                     Message = "查询宝单作者主页成功",
+                    MsgId = entity.MsgId,
+                    Value = list,
+                };
+            }
+            catch (ArgumentException ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+        }
+        /// <summary>
+        /// 查询关注(关注总数、被关注总数、晒单总数等)_155
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<LotteryServiceResponse> QueryConcernedByUserId([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                string userId = p.UserId;
+                string bdfxUserId = p.BDFXUserId;
+                Dictionary<string, object> param = new Dictionary<string, object>()
+                {
+                    { "bdfxUserId", bdfxUserId },{"currUserId",string.IsNullOrEmpty(userId) ? "" : userId },{"startTime","" },{"endTime","" }
+                };
+                var result =await _serviceProxyProvider.Invoke<ConcernedInfo>(param, "api/Order/QueryConcernedByUserId");
+                List<object> list = new List<object>();
+                if (result != null)
+                {
+                    list.Add(new
+                    {
+                        BeConcernedUserCount = result.BeConcernedUserCount,
+                        ConcernedUserCount = result.ConcernedUserCount,
+                        IsGZ = result.IsGZ,
+                        NearTimeProfitRateCollection = result.NearTimeProfitRateCollection,
+                        RankNumber = result.RankNumber,
+                        SingleTreasureCount = result.SingleTreasureCount,
+                        UserId = result.UserId,
+                        UserName = result.UserName,
+                    });
+                }
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询成功",
+                    MsgId = entity.MsgId,
+                    Value = list,
+                };
+            }
+            catch (ArgumentException ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+        }
+        /// <summary>
+        /// 宝单分享_关注和取消关注_156
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<LotteryServiceResponse> BDFXAttentionAndCancel([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                string gzType = p.GZType;//1:关注；0:取消关注
+                string userToken = p.UserToken;
+                string currentUserId = p.CurrentUserId;
+                string bgzUserId = p.BGZUserId;
+                if (string.IsNullOrEmpty(userToken))
+                    throw new Exception("您还未登录,请先登录!");
+                else if (string.IsNullOrEmpty(gzType))
+                    throw new Exception("关注类型错误");
+                else if (string.IsNullOrEmpty(currentUserId))
+                    throw new Exception("用户编号不能为空！");
+                else if (string.IsNullOrEmpty(bgzUserId))
+                    throw new Exception("被关注用户编号不能为空！");
+                Dictionary<string, object> param = new Dictionary<string, object>()
+                {
+                    { "currentUserId",currentUserId},{"bgzUserId",bgzUserId }
+                };
+                if (gzType == "1")//关注
+                {
+                    var result =await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Order/BDFXAttention");
+                    return new LotteryServiceResponse
+                    {
+                        Code = result.IsSuccess ? ResponseCode.成功 : ResponseCode.失败,
+                        Message = result.Message,
+                        MsgId = entity.MsgId,
+                        Value = result.Message,
+                    };
+                }
+                else if (gzType == "0")//取消关注
+                {
+                    var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Order/BDFXCancelAttention");
+                    return new LotteryServiceResponse
+                    {
+                        Code = result.IsSuccess ? ResponseCode.成功 : ResponseCode.失败,
+                        Message = result.Message,
+                        MsgId = entity.MsgId,
+                        Value = result.Message,
+                    };
+                }
+                throw new Exception("传入关注类型错误");
+            }
+            catch (ArgumentException ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+        }
+        /// <summary>
+        /// 宝单分享_高手排行_157
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<LotteryServiceResponse> QueryGSRankList([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                string startWeek = p.StartWeek;
+                string endWeek = p.EndWeek;
+                string currentUserId = p.CurrentUserId;
+                string myGZ = p.MYGZ;//是否为我的关注；"传值为true:查询我的关注,传值为空，查询高手排行"
+                Dictionary<string, object> param = new Dictionary<string, object>()
+                {
+                    {"startTime",startWeek },{"endTime",endWeek },{"currUserId",currentUserId },{"isMyGZ",myGZ }
+                };
+                var result =await _serviceProxyProvider.Invoke<BDFXGSRank_Collection>(param, "api/Order/QueryGSRankList");
+                List<object> list = new List<object>();
+                if (result != null)
+                {
+                    foreach (var item in result.RankList)
+                    {
+                        list.Add(new
+                        {
+                            BeConcernedUserCount = item.BeConcernedUserCount,
+                            IsGZ = item.IsGZ,
+                            CurrProfitRate = item.CurrProfitRate,
+                            RankNumber = item.RankNumber,
+                            SchemeId = item.SchemeId,
+                            SingleTreasureCount = item.SingleTreasureCount,
+                            UserId = item.UserId,
+                            UserName = item.UserName,
+                            LastweekRank = item.LastweekRank,
+                        });
+                    }
+                }
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询成功",
+                    MsgId = entity.MsgId,
+                    Value = list,
+                };
+            }
+            catch (ArgumentException ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+        }
+        /// <summary>
+        /// 查询我的宝单_158
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<LotteryServiceResponse> QueryMyBDFXList([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                string currUserId = p.CurrentUserId;
+                int pageIndex = p.PageIndex;
+                int pageSize = p.PageSize;
+                if (string.IsNullOrEmpty(currUserId))
+                    throw new Exception("您还未登录，请先登录。");
+                Dictionary<string, object> param = new Dictionary<string, object>()
+                {
+                    {"UserId",currUserId },{ "userName","" },{"gameCode","" },
+                    { "strOrderBy","" },{"currentUserId","" },{"startTime",DateTime.Parse("2015-06-06") },
+                    { "endTime",DateTime.Now},{"isMyBD","1" },{"pageIndex",pageIndex },{"pageSize",pageSize } 
+                };
+                var myBDFXList =await _serviceProxyProvider.Invoke<TotalSingleTreasure_Collection>(param, "api/Order/QueryTodayBDFXList");
+                List<object> list = new List<object>();
+                if (myBDFXList != null && myBDFXList.TotalCount > 0)
+                {
+                    foreach (var item in myBDFXList.TotalSingleTreasureList)
+                    {
+                        var currAnteCodeList = myBDFXList.AnteCodeList.Where(s => s.SchemeId == item.SchemeId).ToList();
+                        list.Add(new
+                        {
+                            AnteCodeList = currAnteCodeList,
+                            AfterTaxBonusMoney = item.AfterTaxBonusMoney,
+                            BDFXCreateTime = item.BDFXCreateTime,
+                            BetCount = item.BetCount,
+                            Commission = item.Commission,
+                            CurrentBetMoney = item.CurrentBetMoney,
+                            CurrProfitRate = item.CurrProfitRate,
+                            ExpectedBonusMoney = item.ExpectedBonusMoney,
+                            ExpectedReturnRate = item.ExpectedReturnRate,
+                            FirstMatchStopTime =ConvertHelper.ConvertDateTimeInt(item.FirstMatchStopTime),
+                            GameCode = item.GameCode,
+                            GameType = item.GameType,
+                            IsComplate = item.IsComplate,
+                            IssuseNumber = item.IssuseNumber,
+                            LastMatchStopTime = ConvertHelper.ConvertDateTimeInt(item.LastMatchStopTime),
+                            LastweekProfitRate = item.LastweekProfitRate,
+                            ProfitRate = item.ProfitRate,
+                            SchemeId = item.SchemeId,
+                            Security = item.Security,
+                            SingleTreasureDeclaration = item.SingleTreasureDeclaration,
+                            TotalBonusMoney = item.TotalBonusMoney,
+                            TotalBuyCount = item.TotalBuyCount,
+                            TotalBuyMoney = item.TotalBuyMoney,
+                            TotalMatchCount = item.TotalMatchCount,
+                            UserId = item.UserId,
+                            UserName = item.UserName,
+                        });
+                    }
+                }
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询我的关注成功",
                     MsgId = entity.MsgId,
                     Value = list,
                 };

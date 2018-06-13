@@ -12,6 +12,7 @@ using System.Linq;
 using EntityModel;
 using EntityModel.Enum;
 using Lottery.Kg.ORM.Helper.OrderQuery;
+using EntityModel.Communication;
 
 namespace OrderLottery.Service.ModuleServices
 {
@@ -225,6 +226,48 @@ namespace OrderLottery.Service.ModuleServices
         public TotalSingleTreasure_Collection QueryBDFXAutherHomePage(string userId, string strIsBonus, string currentTime, int pageIndex, int pageSize)
         {
             return _order.QueryBDFXAutherHomePage(userId,strIsBonus,currentTime,pageIndex,pageSize);
+        }
+        /// <summary>
+        /// 查询关注(关注总数、被关注总数、晒单总数等)
+        /// </summary>
+        /// <param name="bdfxUserId"></param>
+        /// <param name="currUserId"></param>
+        /// <param name="startTime"></param>
+        /// <param name="endTime"></param>
+        /// <returns></returns>
+        public ConcernedInfo QueryConcernedByUserId(string bdfxUserId, string currUserId, string startTime, string endTime)
+        {
+            return _order.QueryConcernedByUserId(bdfxUserId, currUserId, startTime, endTime);
+        }
+        /// <summary>
+        /// 关注
+        /// </summary>
+        /// <param name="currUserId"></param>
+        /// <param name="bgzUserId"></param>
+        public CommonActionResult BDFXAttention(string currUserId, string bgzUserId)
+        {
+          return  _order.BDFXAttention(currUserId,bgzUserId);
+        }
+        /// <summary>
+        /// 取消关注
+        /// </summary>
+        /// <param name="currUserId"></param>
+        /// <param name="bgzUserId"></param>
+        public CommonActionResult BDFXCancelAttention(string currUserId, string bgzUserId)
+        {
+          return  _order.BDFXCancelAttention(currUserId, bgzUserId);
+        }
+        /// <summary>
+        /// 查询高手排行/我的关注
+        /// </summary>
+        /// <param name="startTime"></param>
+        /// <param name="endTime"></param>
+        /// <param name="currUserId"></param>
+        /// <param name="isMyGZ"></param>
+        /// <returns></returns>
+        public BDFXGSRank_Collection QueryGSRankList(string startTime, string endTime, string currUserId, string isMyGZ)
+        {
+            return _order.QueryGSRankList(startTime, endTime, currUserId, isMyGZ);
         }
     }
 }

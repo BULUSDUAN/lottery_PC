@@ -1,4 +1,5 @@
-﻿using EntityModel.CoreModel;
+﻿using EntityModel.Communication;
+using EntityModel.CoreModel;
 using EntityModel.RequestModel;
 using Kason.Sg.Core.CPlatform.Ioc;
 using Kason.Sg.Core.CPlatform.Runtime.Server.Implementation.ServiceDiscovery.Attributes;
@@ -68,5 +69,13 @@ namespace OrderLottery.Service.IModuleServices
         string QueryYesterdayNR(DateTime startTime, DateTime endTime, int count);
         [Service(Date = "2018-06-13", Director = "Debug", Name = "查询宝单作者主页")]
         TotalSingleTreasure_Collection QueryBDFXAutherHomePage(string userId, string strIsBonus, string currentTime, int pageIndex, int pageSize);
+        [Service(Date = "2018-06-13", Director = "Debug", Name = "查询关注(关注总数、被关注总数、晒单总数等)")]
+        ConcernedInfo QueryConcernedByUserId(string bdfxUserId, string currUserId, string startTime, string endTime);
+        [Service(Date = "2018-06-13", Director = "Debug", Name = "关注")]
+        CommonActionResult BDFXAttention(string currUserId, string bgzUserId);
+        [Service(Date = "2018-06-13", Director = "Debug", Name = "取消关注")]
+        CommonActionResult BDFXCancelAttention(string currUserId, string bgzUserId);
+        [Service(Date = "2018-06-13", Director = "Debug", Name = "查询高手排行/我的关注")]
+        BDFXGSRank_Collection QueryGSRankList(string startTime, string endTime, string currUserId, string isMyGZ);
     }
 }
