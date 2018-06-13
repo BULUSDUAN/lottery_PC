@@ -36,6 +36,7 @@ using EntityModel.Enum;
 using EntityModel.CoreModel;
 using EntityModel.Communication;
 using Newtonsoft.Json;
+using System.Text.RegularExpressions;
 
 namespace UserLottery.Service.ModuleServices
 {
@@ -55,15 +56,7 @@ namespace UserLottery.Service.ModuleServices
             log = new Log4Log();
 
         }
-        //public void PublicInfo(IntegrationEvent evt)
-        //{
-        //    Publish(evt);
-        //}
-
-        //Task IIntegrationEventHandler<EventModel>.Handle(EventModel @event)
-        //{
-        //    throw new NotImplementedException();
-        //}
+       
 
         // log demo
         /// <summary>
@@ -528,93 +521,179 @@ namespace UserLottery.Service.ModuleServices
 
         }
 
-        public Task<int> GetUserId(string userName)
+        /// <summary>
+        /// 验证手机
+        /// </summary>
+        /// <param name="validateCode">验证码</param>
+        /// <param name="mobile">手机号</param>
+        /// <param name="source"></param>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        public Task<CommonActionResult> RegisterResponseMobile(string validateCode, string mobile, SchemeSource source, RegisterInfo_Local info)
         {
-            //var xid = RpcContext.GetContext().GetAttachment("xid");
+            try
+            {
+                if (string.IsNullOrEmpty(validateCode))
+                    throw new Exception("验证码不能为空");
+                var isCheckValidateCode = false;
+                var authenticationBiz = new MobileAuthenticationBusiness();
+                #region "20180522新增:用户名注册修改为手机号注册后,存在老用户绑定了手机号后，可以继续用手机号注册一个新号"
+                if (authenticationBiz.IsMobileAuthenticated(mobile))
+                    throw new Exception("该手机号已经认证");
+                #endregion      
 
-            //throw new Exception("错误！");
+                isCheckValidateCode = authenticationBiz.CheckValidationCode(mobile, "MobileAuthentication", validateCode, GetMaxTimes(3));
 
-            //测试容错
-            // Thread.Sleep(200000);
+                if (!isCheckValidateCode)
+                {
+                    throw new Exception("验证码输入不正确。");
+                }
+                info.Referrer = "mobile_regist";
+                var userResult = RegisterLoacal(info);
 
-            //var T1 = TTest1();
-            //var T21 = Test21();
-            //var T2 = Test2();
-            //var T3 = Test3();
-            LoginHelper loginHelper = new LoginHelper();
-            //查询用户明
-            var list = loginHelper.QueryUserName();
-            return Task.FromResult(1);
+                return Task.FromResult(new CommonActionResult(true, "恭喜您注册成功！"));
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(new CommonActionResult(false, ex.Message));
+            }
         }
 
-        public Task<List<User>> GetUserList(string userName)
+
+        private int GetMaxTimes(int time)
         {
-            //var xid = RpcContext.GetContext().GetAttachment("xid");
+            //if (UsefullHelper.IsInTest)
+            //{
+          return time;
+            //}
+            //return time;
+        }
+        DBbase dBbase = new DBbase();
 
-            //throw new Exception("错误！");
-
-            //  var T1 = TTest2();
-            //var T21 = Test21();
-            //var T2 = Test2();
-            //var T3 = Test3();
-            LoginHelper loginHelper = new LoginHelper();
-            //查询用户明
-            var list = loginHelper.QueryUserName();
-
-            foreach (var item in list)
+        /// <summary>
+        /// 本地 注册账号
+        /// </summary>
+        public CommonActionResult RegisterLoacal(RegisterInfo_Local regInfo)
+        {
+            
+            if (string.IsNullOrEmpty(ConfigHelper.ConfigInfo["PageRegisterDefaultRole"].ToString()))
             {
-                Console.WriteLine(item.Name);
+                throw new ArgumentNullException("未配置前台注册用户默认角色的参数 - PageRegisterDefaultRole");
+            }
+            if (string.IsNullOrEmpty(regInfo.LoginName))
+                throw new Exception("登录名不能为空");
+            else if (Regex.IsMatch(regInfo.LoginName, "[ ]+"))
+                throw new Exception("登录名不能包含空格");
+            if (regInfo != null && !string.IsNullOrEmpty(regInfo.AgentId))
+            {
+
+                var userEntity2 = new LocalLoginBusiness();
+               var userEntity3=  userEntity2.QueryUserRegisterByUserId(regInfo.AgentId);
+                if (userEntity3 == null || !userEntity3.IsAgent)
+                {
+                    regInfo.AgentId = string.Empty;
+                }
             }
 
-            //  var list = new List<User>();
+            var roleIds = ConfigHelper.ConfigInfo["PageRegisterDefaultRole"].ToString().Split(',');
 
-            return Task.FromResult(list);
-        }
+            regInfo.LoginName = regInfo.LoginName.Trim();
+            //if (!Common.Utilities.UsefullHelper.IsInTest)
+            //{
+            //    if (string.IsNullOrEmpty(regInfo.LoginName))
+            //        throw new ArgumentException("登录名称不能为空");
+            //    var b = System.Text.RegularExpressions.Regex.IsMatch(regInfo.LoginName, @"[^a-zA-Z0-9\u4e00-\u9fa5\s]");
+            //    if (b)
+            //        throw new ArgumentException("登录名称不能为特殊符号");
 
-        public Task<List<E_Login_Local>> GetLoginUserList(string userName)
-        {
-            //var xid = RpcContext.GetContext().GetAttachment("xid");
+            //    byte[] myByte = System.Text.Encoding.Default.GetBytes(regInfo.LoginName);
+            //    if (myByte.Length < 4 || regInfo.LoginName.Length > 20)
+            //        throw new ArgumentException("登录名长度必须在4位到20位之间");
+            //}
+     
+                 string userId;
 
-            //throw new Exception("错误！");
+                dBbase.DB.Begin();
 
-            //  var T1 = TTest2();
-            //var T21 = Test21();
-            //var T2 = Test2();
-            //var T3 = Test3();
-            LoginHelper loginHelper = new LoginHelper();
-            //查询用户明
-            var list = loginHelper.QueryloginUserName();
+                #region 注册权限控制帐号
 
-            foreach (var item in list)
+                var authBiz = new GameBizAuthBusiness();
+                var regBiz = new RegisterBusiness();
+                var userEntity = new SystemUser
+                {
+                    RegFrom = string.IsNullOrEmpty(regInfo.ComeFrom) ? "LOCAL" : regInfo.ComeFrom,
+                    AgentId = regInfo.AgentId,
+                };
+               regBiz.RegisterUser(userEntity, roleIds);
+                userId = userEntity.UserId;
+
+                #endregion
+
+                #region 注册核心系统显示帐号
+
+                var userRegInfo = new UserRegInfo
+                {
+                    DisplayName = regInfo.LoginName,
+                    ComeFrom = string.IsNullOrEmpty(regInfo.ComeFrom) ? "LOCAL" : regInfo.ComeFrom,
+                    Referrer = regInfo.Referrer,
+                    ReferrerUrl = regInfo.ReferrerUrl,
+                    RegisterIp = regInfo.RegisterIp,
+                    RegType = regInfo.RegType,
+                    AgentId = regInfo.AgentId,
+                };
+
+                regBiz.RegisterUser(userEntity, userRegInfo);
+
+                #endregion
+
+                #region 注册本地登录帐号
+
+                var loginBiz = new LocalLoginBusiness();
+                var loginEntity = new LoginLocal
+                {
+                    LoginName = regInfo.LoginName,
+                    Password = regInfo.Password,
+                    mobile = regInfo.Mobile
+                };
+                //loginBiz.Register(loginEntity, userEntity.UserId);
+
+                //#endregion
+
+                //#region 如果是通过代理链接注册，则设置用户返点 屏蔽：范
+
+                //if (!string.IsNullOrEmpty(regInfo.AgentId))
+                //{
+                //    SetUserRebate(userId, regInfo.AgentId);
+                //}
+
+                //#endregion
+
+                //#region 初始化用户战绩数据和中奖概率数据
+
+                //InitUserBeedingAndBounsPercent(userId);
+
+                //#endregion
+
+                //#region 初始化其它数据
+
+                //InitBlog_ProfileBonusLevel(userId);
+                //InitUserAttentionSummary(userId);
+
+              #endregion
+
+               dBbase.DB.Commit();
+            
+            //! 执行扩展功能代码 - 提交事务后
+            //BusinessHelper.ExecPlugin<IRegister_AfterTranCommit>(new object[] { regInfo.ComeFrom, userId });
+
+            return new CommonActionResult
             {
-                Console.WriteLine(item.LoginName);
-            }
+                IsSuccess = true,
+                Message = "注册成功",
+                ReturnValue = userId,
+            };
 
-            //  var list = new List<User>();
-
-            return Task.FromResult(list);
         }
-
-        //获取用户
-        public Task<UserModel> GetUser(UserModel user)
-        {
-            return Task.FromResult(new UserModel
-            {
-                Name = "fanly",
-                Age = 18
-            });
-        }
-
-
-        public async Task PublishThroughEventBusAsync(IntegrationEvent evt)
-        {
-            // Publish(evt);
-            await Task.CompletedTask;
-        }
-
-       
-
-
 
         #endregion Implementation of IUserService
     }

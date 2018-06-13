@@ -315,7 +315,7 @@ namespace Lottery.Api.Controllers
                 userInfo.Password = p.password;
 
                 param["validateCode"] = p.validateCode;
-                param["schemeSource"] = p.schemeSource;
+                param["schemeSource"] = schemeSource;
                 param["mobile"] = p.mobile;               
                 param["userInfo"] = userInfo;
 

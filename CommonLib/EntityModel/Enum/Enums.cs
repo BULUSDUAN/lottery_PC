@@ -1369,4 +1369,107 @@ namespace EntityModel.Enum
         Sales = 0,
         Stop = 1,
     }
+
+    /// <summary>
+    /// 任务类别
+    /// </summary>
+    public enum TaskCategory
+    {
+        /// <summary>
+        /// 实名认证
+        /// </summary>
+        RealName = 10,
+        /// <summary>
+        /// 手机绑定
+        /// </summary>
+        MobilBinding = 20,
+        /// <summary>
+        /// 银行卡绑定
+        /// </summary>
+        BankCar = 30,
+        /// <summary>
+        /// 邮箱绑定
+        /// </summary>
+        EmailBinding = 40,
+        /// <summary>
+        /// 设置资金密码
+        /// </summary>
+        SetBalancePassword = 50,
+        /// <summary>
+        /// 每日购彩≥50元
+        /// </summary>
+        EverDayBuyLottery = 60,
+        /// <summary>
+        /// 首次充值
+        /// </summary>
+        FistTopUp = 70,
+        /// <summary>
+        /// 首次购彩
+        /// </summary>
+        FistBuyLottery = 80,
+        /// <summary>
+        /// 第一次累计消费10元
+        /// </summary>
+        FistConsumptionTenYuan = 90,
+        /// <summary>
+        /// 首次购买竞彩二串一（竞彩篮球、竞彩足球）
+        /// </summary>
+        FistJingcaiP2_1 = 100,
+        /// <summary>
+        /// 购买混投2串1
+        /// </summary>
+        FistHHP2_1 = 110,
+        /// <summary>
+        /// 购买竞彩2串1满5次(每日一次)
+        /// </summary>
+        JingcaiP2_1Totle5 = 120,
+        /// <summary>
+        /// 奖金优化投注满5次
+        /// </summary>
+        BonusBuyLotteryTotle5 = 130,
+        /// <summary>
+        /// 竞彩首次中奖
+        /// </summary>
+        JingcaiFistWin = 140,
+        /// <summary>
+        /// 首次追号投注
+        /// </summary>
+        FistZhuihaoBuy = 150,
+        /// <summary>
+        /// 首次参与合买
+        /// </summary>
+        FistHeMai = 160,
+        /// <summary>
+        /// 首次关注彩友
+        /// </summary>
+        FistFocusOnFriend = 170,
+        /// <summary>
+        /// 首次使用奖金优化
+        /// </summary>
+        BonusOptimize = 180,
+        /// <summary>
+        /// 在线过滤
+        /// </summary>
+        OnlineFilter = 190,
+        /// <summary>
+        /// 特别中奖奖励(奖金优化)
+        /// </summary>
+        SpecialWinReward = 200,
+        /// <summary>
+        /// 每日登录
+        /// </summary>
+        EveryDayLogin = 210,
+        /// <summary>
+        /// 中奖100次
+        /// </summary>
+        Win100Count = 220,
+        /// <summary>
+        /// 竞彩2串1中奖100次
+        /// </summary>
+        JCWin100Count = 230,
+        /// <summary>
+        /// 用户总中奖金额1000以上
+        /// </summary>
+        Win1000Yuan = 240,
+    }
 } 

@@ -269,6 +269,11 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
             
         }
 
+        /// <summary>
+        /// 查询用户余额
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public C_User_Balance QueryUserBalanceInfo(string userId)
         {
            
@@ -719,19 +724,19 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
         //        throw new Exception("用户不存在");
         //    return ReferrerUrl;
         //}
-        ///// <summary>
-        ///// 指定代理注册的用户  路径
-        ///// </summary>
-        ///// <param name="userid"></param>
-        ///// <returns></returns>
-        //public UserRegister QueryUserRegisterByUserId(string userid)
-        //{
-        //    var referUrl = new UserBalanceManager();
-        //    var user = referUrl.QueryUserRegister(userid);
-        //    if (user == null)
-        //        new UserRegister();
-        //    return user;
-        //}
+        /// <summary>
+        /// 指定代理注册的用户  路径
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <returns></returns>
+        public C_User_Register QueryUserRegisterByUserId(string userid)
+        {
+           
+            var user = GetRegisterById(userid);
+            if (user == null)
+                new C_User_Register();
+            return user;
+        }
 
         ///// <summary>
         ///// 启用用户
@@ -851,11 +856,11 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
         //    };
         //}
 
-            /// <summary>
-            /// 查询用户绑定信息
-            /// </summary>
-            /// <param name="userId">用户ID</param>
-            /// <returns></returns>
+        /// <summary>
+        /// 查询用户绑定信息
+        /// </summary>
+        /// <param name="userId">用户ID</param>
+        /// <returns></returns>
         public UserBindInfos QueryUserBindInfos(string userId)
         {
             var user = GetRegisterById(userId);
