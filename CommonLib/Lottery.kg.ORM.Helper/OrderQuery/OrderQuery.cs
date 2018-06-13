@@ -1505,6 +1505,13 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
         {
             return (from o in DB.CreateQuery<C_SingleTreasure_Attention>().Where(s => s.ConcernedUserId == concernedUserId) select o.BeConcernedUserId).ToList();
         }
+        /// <summary>
+        /// 查询昨日牛人
+        /// </summary>
+        /// <param name="startTime"></param>
+        /// <param name="endTime"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public string QueryYesterdayNR(DateTime startTime, DateTime endTime, int count)
         {
             startTime = startTime.Date.AddDays(-1);
@@ -1526,6 +1533,59 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
             if (!string.IsNullOrEmpty(str))
                 str = str.TrimEnd('%');
             return str;
+        }
+        /// <summary>
+        /// 查询宝单作者主页
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="strIsBonus"></param>
+        /// <param name="currentTime"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public TotalSingleTreasure_Collection QueryBDFXAutherHomePage(string userId, string strIsBonus, string currentTime, int pageIndex, int pageSize)
+        {
+            using (DB)
+            {
+                TotalSingleTreasure_Collection collection = new TotalSingleTreasure_Collection
+                {
+                    TotalCount = 0
+                };
+                int _bonusStatus = 0;
+                if (!string.IsNullOrEmpty(strIsBonus) && strIsBonus == "1")
+                {
+                    _bonusStatus = 20;
+                }
+                else if (!string.IsNullOrEmpty(strIsBonus) && strIsBonus == "0")
+                {
+                    _bonusStatus = 30;
+                }
+                string tablesql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_TempTableComplate").SQL;
+                DB.CreateSQLQuery(tablesql);
+                string sqlCount = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_QueryBDFXAutherHomePageCount").SQL;
+                collection = DB.CreateSQLQuery(sqlCount)
+                                            .SetString("UserId", userId)
+                                            .SetString("StrIsBonus", strIsBonus)
+                                            .SetInt("_bonusStatus", _bonusStatus)
+                                            .SetString("CurrentTime", currentTime).First<TotalSingleTreasure_Collection>();
+                
+                string PageSql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_QueryBDFXAutherHomePageCount").SQL;
+                collection.TotalSingleTreasureList = DB.CreateSQLQuery(PageSql)
+                                            .SetString("UserId", userId)
+                                            .SetString("StrIsBonus", strIsBonus)
+                                            .SetInt("_bonusStatus", _bonusStatus)
+                                            .SetString("CurrentTime", currentTime)
+                                            .SetInt("PageIndex", pageIndex)
+                                            .SetInt("PageSize", pageSize)
+                                            .List<TotalSingleTreasureInfo>();
+                if (collection.TotalCount > 0)
+                {                    
+                    var arrSchemeId = from o in collection.TotalSingleTreasureList select o.SchemeId;
+                    var anteCodeList = this.QueryAnteCodeList(arrSchemeId.ToArray());
+                    collection.AnteCodeList.AddRange(anteCodeList);
+                }
+                return collection;
+            }                
         }
     }
 }

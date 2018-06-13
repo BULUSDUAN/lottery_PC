@@ -64,5 +64,9 @@ namespace OrderLottery.Service.IModuleServices
         TogetherFollowerRuleQueryInfo QueryTogetherFollowerRuleInfo(string createrUserId, string followerUserId, string gameCode, string gameType);
         [Service(Date = "2018-06-12", Director = "Debug", Name = "查询今日宝单")]
         TotalSingleTreasure_Collection QueryTodayBDFXList(QueryTodayBDFXList Model);
+        [Service(Date = "2018-06-13", Director = "Debug", Name = "查询昨日牛人")]
+        string QueryYesterdayNR(DateTime startTime, DateTime endTime, int count);
+        [Service(Date = "2018-06-13", Director = "Debug", Name = "查询宝单作者主页")]
+        TotalSingleTreasure_Collection QueryBDFXAutherHomePage(string userId, string strIsBonus, string currentTime, int pageIndex, int pageSize);
     }
 }

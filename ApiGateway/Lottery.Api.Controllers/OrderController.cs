@@ -1806,5 +1806,104 @@ namespace Lottery.Api.Controllers
                 };
             }
         }
+        /// <summary>
+        /// 查询宝单作者首页_154
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<LotteryServiceResponse> QueryBDFXAutherHomePage([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                string userId = p.UserId;
+                string strAward = p.StrAward;//-1:查询可购买；1：查询中奖；0：查询未中奖；当为空时，查询全部
+                int pageIndex = p.PageIndex;
+                int pageSize = p.PageSize;
+                if (string.IsNullOrEmpty(userId))
+                    throw new Exception("您还未登录，请先登录。");
+                var result = new TotalSingleTreasure_Collection();
+                Dictionary<string, object> param = new Dictionary<string, object>()
+                {
+                    { "userId",userId},{"pageIndex",pageIndex },{"pageSize",pageSize }
+                };
+                if (!string.IsNullOrEmpty(strAward) && strAward == "-1")
+                {
+                    param.Add("strIsBonus", "");
+                    param.Add("currentTime", DateTime.Now.ToString());
+                    result = await _serviceProxyProvider.Invoke<TotalSingleTreasure_Collection>(param, "api/Order/QueryBDFXAutherHomePage");
+                }
+                else
+                {
+                    param.Add("strIsBonus", strAward);
+                    param.Add("currentTime", "");
+                    result = await _serviceProxyProvider.Invoke<TotalSingleTreasure_Collection>(param, "api/Order/QueryBDFXAutherHomePage");
+                }
+                List<object> list = new List<object>();
+                if (result != null && result.TotalCount > 0)
+                {
+                    foreach (var item in result.TotalSingleTreasureList)
+                    {
+                        var currAnCodeList = result.AnteCodeList.Where(s => s.SchemeId == item.SchemeId).ToList();
+                        list.Add(new
+                        {
+                            AnteCodeList = currAnCodeList,
+                            UserId = item.UserId,
+                            UserName = item.UserName,
+                            SingleTreasureDeclaration = item.SingleTreasureDeclaration,
+                            GameCode = item.GameCode,
+                            GameType = item.GameType,
+                            IssuseNumber = item.IssuseNumber,
+                            ExpectedReturnRate = item.ExpectedReturnRate,
+                            Commission = item.Commission,
+                            Security = item.Security,
+                            TotalBuyCount = item.TotalBuyCount,
+                            TotalBuyMoney = item.TotalBuyMoney,
+                            AfterTaxBonusMoney = item.AfterTaxBonusMoney,
+                            FirstMatchStopTime = ConvertHelper.ConvertDateTimeInt(item.FirstMatchStopTime),
+                            LastMatchStopTime = ConvertHelper.ConvertDateTimeInt(item.LastMatchStopTime),
+                            ProfitRate = item.ProfitRate,
+                            SchemeId = item.SchemeId,
+                            TotalBonusMoney = item.TotalBuyMoney,
+                            ExpectedBonusMoney = item.ExpectedBonusMoney,
+                            BetCount = item.BetCount,
+                            TotalMatchCount = item.TotalMatchCount,
+                            IsComplate = item.IsComplate,
+                            CurrentBetMoney = item.CurrentBetMoney,
+                            CurrProfitRate = item.CurrProfitRate,
+                            TotalCount = result.TotalCount,
+                        });
+                    }
+                }
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询宝单作者主页成功",
+                    MsgId = entity.MsgId,
+                    Value = list,
+                };
+            }
+            catch (ArgumentException ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+        }
     }
 }

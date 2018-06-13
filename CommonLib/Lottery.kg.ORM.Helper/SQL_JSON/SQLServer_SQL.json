@@ -159,6 +159,30 @@
       "Director": "Debug",
       "SQL": "select *,_Table.LastweekProfitRate from (select ROW_NUMBER() over(order by case @Desc when 'desc' then case @OrderBy when 'expectedreturnrate' then t.ExpectedReturnRate when 'totalbuymoney' then t.TotalBuyMoney when 'totalbuycount' then t.TotalBuyCount  when 'bdfxcreatetime' then t.CreateTime end end desc, case @Desc when 'asc' then case @OrderBy when 'expectedreturnrate' then t.ExpectedReturnRate when 'totalbuymoney' then t.TotalBuyMoney when 'totalbuycount' then t.TotalBuyCount when 'bdfxcreatetime' then t.CreateTime end end asc ) rowNumber,isnull(u.UserId,'')UserId,isnull(u.DisplayName,'') as UserName,isnull(t.SingleTreasureDeclaration,'')SingleTreasureDeclaration,isnull(o.GameCode,'')GameCode,isnull(o.GameType,'')GameType,isnull(o.IssuseNumber,'')IssuseNumber,isnull(t.ExpectedReturnRate,0)ExpectedReturnRate,isnull(t.Commission,0)Commission,isnull(t.Security,0)Security,isnull(t.TotalBuyCount,0)TotalBuyCount,isnull(t.TotalBuyMoney,0)TotalBuyMoney,isnull(o.AfterTaxBonusMoney,0)AfterTaxBonusMoney,t.FirstMatchStopTime,t.LastMatchStopTime,isnull(t.ProfitRate,0)ProfitRate,isnull(t.SchemeId,'')SchemeId,ISNULL(t.TotalBonusMoney,0)TotalBonusMoney,ISNULL(t.ExpectedBonusMoney,0) ExpectedBonusMoney,ISNULL(o.BetCount,0)BetCount,isnull(o.TotalMatchCount,0)TotalMatchCount,t.IsComplate,isnull(t.CurrentBetMoney,0)CurrentBetMoney,(case when t.CurrentBetMoney>0 then (o.AfterTaxBonusMoney-t.CurrentBetMoney)/t.CurrentBetMoney else 0 end)CDProfitRate,t.CreateTime as BDFXCreateTime,t.CurrProfitRate from @Table_OrderRunning_Complate o inner join C_TotalSingleTreasure t on o.SchemeId=t.SchemeId inner join C_User_Register u on o.UserId=u.UserId where (@GameCode='' or o.GameCode=@GameCode) and (@UserName='' or u.DisplayName=@UserName) and (@UserId='' or u.UserId=@UserId) and (t.FirstMatchStopTime>GETDATE()) ) tab left join ( select tt.LastweekProfitRate,tt.UserId from (select (case SUM(CurrentBetMoney) when 0 then 0 else (SUM(CurrBonusMoney)-SUM(CurrentBetMoney))/SUM(CurrentBetMoney) end) LastweekProfitRate,UserId from C_TotalSingleTreasure t where CreateTime>=''+@LastweekStartTime+'' and CreateTime<''+@LastweekEndTime+'' and t.IsBonus=1 group by UserId)tt) _Table on tab.UserId=_Table.UserId",
       "Remark": ""
+    },
+    {
+      "key": "Debug_TempTableComplate",
+      "Desc": "Temp_Table_OrderRunning_Complate",
+      "ParamDesc": "",
+      "Director": "",
+      "SQL": "declare @Table_OrderRunning_Complate table ( SchemeId nvarchar(50), UserId nvarchar(50), GameCode nvarchar(50), GameType nvarchar(50), PlayType nvarchar(50), SchemeType nvarchar(50), IssuseNumber nvarchar(50), TotalMoney money, Amount int, BetCount int, TicketStatus int, ProgressStatus int, BonusStatus int, AfterTaxBonusMoney money, CanChase bit, TotalMatchCount int ); insert into @Table_OrderRunning_Complate select * from ( select ISNULL(c.SchemeId,'') SchemeId,ISNULL(c.UserId,'') UserId,ISNULL(c.GameCode,'') GameCode,ISNULL(c.GameType,'') GameType,ISNULL(c.PlayType,'') PlayType,c.SchemeType,ISNULL(c.IssuseNumber,'') IssuseNumber,ISNULL(c.TotalMoney,0) TotalMoney,ISNULL(c.Amount,0) Amount,ISNULL(c.BetCount,0) BetCount,c.TicketStatus,c.ProgressStatus,c.BonusStatus,ISNULL(c.AfterTaxBonusMoney,0) AfterTaxBonusMoney,c.CanChase,c.TotalMatchCount from C_Sports_Order_Complate c where SchemeType=6 union select ISNULL(r.SchemeId,'') SchemeId,ISNULL(r.UserId,'') UserId,ISNULL(r.GameCode,'') GameCode,ISNULL(r.GameType,'') GameType,ISNULL(r.PlayType,'') PlayType,r.SchemeType,ISNULL(r.IssuseNumber,'') IssuseNumber,ISNULL(r.TotalMoney,0) TotalMoney,ISNULL(r.Amount,0) Amount,ISNULL(r.BetCount,0) BetCount,r.TicketStatus,r.ProgressStatus,r.BonusStatus,ISNULL(r.AfterTaxBonusMoney,0),r.CanChase,r.TotalMatchCount from C_Sports_Order_Running r where SchemeType=6 ) as t ",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_QueryBDFXAutherHomePageCount",
+      "Desc": "查询昨日牛人统计",
+      "ParamDesc": "@UserId:UserId,@StrIsBonus:StrIsBonus,@_bonusStatus:_bonusStatus,@CurrentTime:CurrentTime",
+      "Director": "Debug",
+      "SQL": "select TotalCount=COUNT(1),AllTotalBuyCount=SUM(t.TotalBuyCount),AllTotalBonusMoney=SUM(t.TotalBonusMoney) from @Table_OrderRunning_Complate o inner join C_TotalSingleTreasure t on o.SchemeId=t.SchemeId inner join C_User_Register u on o.UserId=u.UserId where(@UserId='' or u.UserId=@UserId) and (@StrIsBonus='' or o.BonusStatus=@_bonusStatus ) and (@CurrentTime='' or t.FirstMatchStopTime>@CurrentTime)",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_QueryBDFXAutherHomePageCount",
+      "Desc": "查询昨日牛人分页",
+      "ParamDesc": "@UserId:UserId,@StrIsBonus:StrIsBonus,@_bonusStatus:_bonusStatus,@CurrentTime:CurrentTime,@PageIndex:PageIndex,@PageSize:PageSize",
+      "Director": "Debug",
+      "SQL": "select * from (select ROW_NUMBER() over(order by t.CreateTime desc,t.CurrProfitRate desc) rowNumber,isnull(u.UserId,'')UserId,isnull(u.DisplayName,'') as UserName,isnull(t.SingleTreasureDeclaration,'')SingleTreasureDeclaration,isnull(o.GameCode,'')GameCode,isnull(o.GameType,'')GameType,isnull(o.IssuseNumber,'')IssuseNumber,isnull(t.ExpectedReturnRate,0)ExpectedReturnRate,isnull(t.Commission,0)Commission,isnull(t.Security,0)Security,isnull(t.TotalBuyCount,0)TotalBuyCount,isnull(t.TotalBuyMoney,0)TotalBuyMoney,isnull(o.AfterTaxBonusMoney,0)AfterTaxBonusMoney,t.FirstMatchStopTime,t.LastMatchStopTime,isnull(t.ProfitRate,0)ProfitRate,isnull(t.SchemeId,'')SchemeId,ISNULL(t.TotalBonusMoney,0)TotalBonusMoney,ISNULL(t.ExpectedBonusMoney,0) ExpectedBonusMoney,ISNULL(o.BetCount,0)BetCount,isnull(o.TotalMatchCount,0)TotalMatchCount,t.IsComplate,isnull(t.CurrentBetMoney,0)CurrentBetMoney,t.CurrProfitRate,t.CreateTime from @Table_OrderRunning_Complate o inner join C_TotalSingleTreasure t on o.SchemeId=t.SchemeId inner join C_User_Register u on o.UserId=u.UserId where (@UserId='' or u.UserId=@UserId) and (@StrIsBonus='' or o.BonusStatus=@_bonusStatus) and (@CurrentTime='' or t.FirstMatchStopTime>@CurrentTime) ) tab where rowNumber>@PageIndex*@PageSize and rowNumber<=(@PageIndex+1)*@PageSize ",
+      "Remark": ""
     }
 
   ]

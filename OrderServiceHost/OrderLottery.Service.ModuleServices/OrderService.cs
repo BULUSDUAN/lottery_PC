@@ -202,5 +202,29 @@ namespace OrderLottery.Service.ModuleServices
         {
             return _order.QueryTodayBDFXList(Model);
         }
+        /// <summary>
+        /// 查询昨日牛人
+        /// </summary>
+        /// <param name="startTime"></param>
+        /// <param name="endTime"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public string QueryYesterdayNR(DateTime startTime, DateTime endTime, int count)
+        {
+            return _order.QueryYesterdayNR(startTime, endTime, count);
+        }
+        /// <summary>
+        /// 查询宝单作者主页
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="strIsBonus"></param>
+        /// <param name="currentTime"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public TotalSingleTreasure_Collection QueryBDFXAutherHomePage(string userId, string strIsBonus, string currentTime, int pageIndex, int pageSize)
+        {
+            return _order.QueryBDFXAutherHomePage(userId,strIsBonus,currentTime,pageIndex,pageSize);
+        }
     }
 }
