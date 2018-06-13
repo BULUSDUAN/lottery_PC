@@ -30,15 +30,6 @@ namespace KaSon.FrameWork.Helper
         {
             return JsonConvert.SerializeObject(data, JavaScriptConverters);
         }
-    }
-    //System.Web.Helper
-    public static class WebHelper
-    {
-        public static dynamic Decode(string value)
-        {
-            return WrapObject(JsonConvert.DeserializeObject(value));
-        }
-
         /// <summary>
         /// JSON序列化
         /// </summary>
@@ -53,30 +44,15 @@ namespace KaSon.FrameWork.Helper
                 return jsonString;
             }
         }
+    }
 
-        ///// <summary>
-        ///// JSON反序列化
-        ///// </summary>
-        //public static T Deserialize<T>(string jsonString)
-        //{
-        //    DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(T));
-        //    using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(jsonString)))
-        //    {
-        //        T obj = (T)ser.ReadObject(ms);
-        //        return obj;
-        //    }
-        //}
-
-
-
-
-        //Sustem.Web.Helper
-        public static class WebHelper
+    //Sustem.Web.Helper
+    public static class WebHelper
+    {
+        public static dynamic Decode(string value)
         {
-            public static dynamic Decode(string value)
-            {
-                return WrapObject(JsonConvert.DeserializeObject(value));
-            }
+            return WrapObject(JsonConvert.DeserializeObject(value));
+        }
 
         public static dynamic WrapObject(object value)
         {
@@ -99,7 +75,7 @@ namespace KaSon.FrameWork.Helper
             {
                 _values = ((IEnumerable<KeyValuePair<string, object>>)values)
                     .ToDictionary((Func<KeyValuePair<string, object>, string>)((KeyValuePair<string, object> p) => p.Key),
-                    (Func<KeyValuePair<string, object>, object>)((KeyValuePair<string, object> p) => WebHelper.WrapObject(p.Value)), 
+                    (Func<KeyValuePair<string, object>, object>)((KeyValuePair<string, object> p) => WebHelper.WrapObject(p.Value)),
                     (IEqualityComparer<string>)StringComparer.OrdinalIgnoreCase);
             }
         }
@@ -111,6 +87,8 @@ namespace KaSon.FrameWork.Helper
                 _arrayValues = ((IEnumerable<object>)arrayValues).Select((Func<object, object>)WrapObject).ToArray();
             }
         }
-    } 
+    }
+
+
 }
 
