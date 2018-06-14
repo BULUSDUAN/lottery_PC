@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using EntityModel.RequestModel;
 using EntityModel.Communication;
 using EntityModel.CoreModel;
+using EntityModel.Enum;
 
 namespace UserLottery.Service.IModuleServices
 {
@@ -48,8 +49,8 @@ namespace UserLottery.Service.IModuleServices
         [Service(Date = "2018-6-12", Director = "renjun", Name = "获取用户站内信数量")]
         Task<int> GetMyUnreadInnerMailCount(string userToken);
 
-        //[Service(Date = "2018-6-13", Director = "renjun", Name = "获取用户站内信数量")]
-        //Task<string> RegisterResponseMobile(string userId, string mobile, int delaySeconds, string delayDescription);
+        [Service(Date = "2018-6-14", Director = "renjun", Name = "注册")]
+        Task<CommonActionResult> RegisterResponseMobile(string validateCode, string mobile, SchemeSource source, RegisterInfo_Local info);
 
     }
 }

@@ -130,5 +130,78 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
             return isSuccess;
         }
 
+
+        //public string RegisterResponseMobile(string userId, string mobile, int delaySeconds, string delayDescription)
+        //{
+           
+        //        DB.Begin();
+
+        //        var gv = new TaskListManager();
+        //        var old = gv.QueryTaskListByCategory(userId, TaskCategory.MobilBinding);
+        //        if (old == null)
+        //        {
+        //            //增加成长值 
+        //            var orderId = Guid.NewGuid().ToString("N");
+        //            BusinessHelper.Payin_UserGrowth("绑定手机号", orderId, userId, 100, "完成手机号绑定可获得100点成长值");
+        //            gv.AddUserTaskRecord(new UserTaskRecord
+        //            {
+        //                CreateTime = DateTime.Now,
+        //                CurrentTime = DateTime.Now.ToString("yyyyMMdd"),
+        //                OrderId = orderId,
+        //                TaskCategory = TaskCategory.MobilBinding,
+        //                TaskName = "绑定手机号",
+        //                UserId = userId,
+        //            });
+        //            gv.AddTaskList(new TaskList
+        //            {
+        //                UserId = userId,
+        //                OrderId = orderId,
+        //                Content = "完成手机号绑定可获得100点成长值",
+        //                ValueGrowth = 100,
+        //                IsGive = true,
+        //                VipLevel = 0,
+        //                CurrentTime = DateTime.Now.ToString("yyyyMMdd"),
+        //                TaskCategory = TaskCategory.MobilBinding,
+        //                TaskName = "绑定手机号",
+        //                CreateTime = DateTime.Now,
+        //            });
+        //        }
+
+        //        using (var manager = new UserMobileManager())
+        //        {
+        //            var entity = manager.GetUserMobile(userId);
+        //            if (entity != null)
+        //            {
+        //                if (entity.IsSettedMobile)
+        //                    throw new ArgumentException(string.Format("已于【{0:yyyy-MM-dd HH:mm:ss}】进行过手机认证。", entity.UpdateTime));
+        //                var span = DateTime.Now - entity.UpdateTime.AddSeconds(delaySeconds);
+        //                if (span.TotalSeconds > 0)
+        //                    throw new ArgumentException(string.Format("提交认证手机必须在请求认证后【{0}】内完成。", delayDescription));
+        //                entity.IsSettedMobile = true;
+        //                manager.UpdateUserMobile(entity);
+        //            }
+        //            else
+        //            {
+        //                entity = new UserMobile
+        //                {
+        //                    UserId = userId,
+        //                    User = manager.LoadUser(userId),
+        //                    AuthFrom = "LOCAL",
+        //                    Mobile = mobile,
+        //                    IsSettedMobile = true,
+        //                    CreateBy = userId,
+        //                    UpdateBy = userId,
+        //                };
+        //                manager.AddUserMobile(entity);
+        //            }
+
+        //            mobile = entity.Mobile;
+        //        }
+        //    DB.Commit();
+
+
+        //    return mobile;
+        //}
+
     }
 }

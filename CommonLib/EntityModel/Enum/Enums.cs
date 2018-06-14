@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProtoBuf;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -319,6 +320,7 @@ namespace EntityModel.Enum
     /// <summary>
     /// 方案来源
     /// </summary>
+  
     public enum SchemeSource
     {
         Web = 0,

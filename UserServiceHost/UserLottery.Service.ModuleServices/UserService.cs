@@ -533,6 +533,7 @@ namespace UserLottery.Service.ModuleServices
         {
             try
             {
+                
                 if (string.IsNullOrEmpty(validateCode))
                     throw new Exception("验证码不能为空");
                 var isCheckValidateCode = false;
@@ -549,8 +550,17 @@ namespace UserLottery.Service.ModuleServices
                     throw new Exception("验证码输入不正确。");
                 }
                 info.Referrer = "mobile_regist";
+                //注册
                 var userResult = RegisterLoacal(info);
+                if (userResult == null || string.IsNullOrEmpty(userResult.ReturnValue))
+                    throw new Exception("注册失败,请重新注册");
+                string mobileNumber;
+                //mobileNumber = authenticationBiz.RegisterResponseMobile(userResult.ReturnValue, mobile, 1800, "半个小时");
 
+                #region 还没做
+                //! 执行扩展功能代码 - 提交事务后
+                //BusinessHelper.ExecPlugin<IResponseAuthentication_AfterTranCommit>(new object[] { userResult.ReturnValue, "Mobile", mobileNumber, source });
+                #endregion
                 return Task.FromResult(new CommonActionResult(true, "恭喜您注册成功！"));
             }
             catch (Exception ex)
@@ -655,33 +665,33 @@ namespace UserLottery.Service.ModuleServices
                     Password = regInfo.Password,
                     mobile = regInfo.Mobile
                 };
-                //loginBiz.Register(loginEntity, userEntity.UserId);
+                loginBiz.Register(loginEntity, userEntity.UserId);
 
-                //#endregion
+            #endregion
 
-                //#region 如果是通过代理链接注册，则设置用户返点 屏蔽：范
+            #region 如果是通过代理链接注册，则设置用户返点 屏蔽：范  
 
-                //if (!string.IsNullOrEmpty(regInfo.AgentId))
-                //{
-                //    SetUserRebate(userId, regInfo.AgentId);
-                //}
+            //if (!string.IsNullOrEmpty(regInfo.AgentId))
+            //{
+            //    loginBiz.SetUserRebate(userId, regInfo.AgentId);
+            //}
 
-                //#endregion
+            #endregion
 
-                //#region 初始化用户战绩数据和中奖概率数据
+            #region 初始化用户战绩数据和中奖概率数据
 
-                //InitUserBeedingAndBounsPercent(userId);
+            InitUserBeedingAndBounsPercent(userId);
 
-                //#endregion
+            #endregion
 
-                //#region 初始化其它数据
+            #region 初始化其它数据
 
-                //InitBlog_ProfileBonusLevel(userId);
-                //InitUserAttentionSummary(userId);
+            InitBlog_ProfileBonusLevel(userId);
+            InitUserAttentionSummary(userId);
 
-              #endregion
+            #endregion
 
-               dBbase.DB.Commit();
+            dBbase.DB.Commit();
             
             //! 执行扩展功能代码 - 提交事务后
             //BusinessHelper.ExecPlugin<IRegister_AfterTranCommit>(new object[] { regInfo.ComeFrom, userId });
@@ -694,7 +704,140 @@ namespace UserLottery.Service.ModuleServices
             };
 
         }
+        private void InitUserBeedingAndBounsPercent(string userId)
+        {
+            var sportsManager = new Sports_Manager();
 
+            var allGameCodeArray = new string[] { "CTZQ", "BJDC", "JCZQ", "JCLQ", "SSQ", "DLT", "FC3D", "PL3", "CQSSC", "JX11X5" };
+            var lotteryGameCodeArray = new string[] { "SSQ", "DLT", "FC3D", "PL3", "CQSSC", "JX11X5" };
+            foreach (var item in allGameCodeArray)
+            {
+                if (lotteryGameCodeArray.Contains(item))
+                {
+                    //数字彩
+                    AddUserBeedingAndBonusPercent(sportsManager,userId, item, string.Empty);
+                }
+                else
+                {
+                    //足彩
+                    var gameTypeArray = GetGameTypeArray(item);
+                    foreach (var t in gameTypeArray)
+                    {
+                        AddUserBeedingAndBonusPercent(sportsManager,userId, item, t);
+                    }
+
+                }
+            }
+        }
+
+        private void AddUserBeedingAndBonusPercent(Sports_Manager sportsManager, string userId, string gameCode, string gameType)
+        {
+            var beeding = sportsManager.QueryUserBeedings(userId, gameCode, gameType);
+            if (beeding == null)
+            {
+                var UserBeedings=new C_User_Beedings
+                {
+                    UserId = userId,
+                    UpdateTime = DateTime.Now,
+                    GameCode = gameCode,
+                    GameType = gameType,
+                    BeFollowedTotalMoney = 0M,
+                    BeFollowerUserCount = 0,
+                    GoldCrownCount = 0,
+                    GoldCupCount = 0,
+                    GoldDiamondsCount = 0,
+                    GoldStarCount = 0,
+                    SilverCrownCount = 0,
+                    SilverCupCount = 0,
+                    SilverDiamondsCount = 0,
+                    SilverStarCount = 0,
+                    TotalBonusMoney = 0M,
+                    TotalBonusTimes = 0,
+                };
+                sportsManager.AddUserBeedings(UserBeedings);
+
+            }
+            var bonusPercent = sportsManager.QueryUserBonusPercent(userId, gameCode, gameType);
+            if (bonusPercent == null)
+            {
+                var UserBonusPercent= new C_User_BonusPercent
+                {
+                    BonusPercent = 0M,
+                    CreateTime = DateTime.Now,
+                    CurrentDate = DateTime.Now.ToString("yyyyMM"),
+                    GameCode = gameCode,
+                    GameType = gameType,
+                    UserId = userId,
+                    BonusOrderCount = 0,
+                    TotalOrderCount = 0,
+                };
+                sportsManager.AddUserBonusPercent(UserBonusPercent);
+
+            }
+        }
+
+        private string[] GetGameTypeArray(string gameCode)
+        {
+            switch (gameCode)
+            {
+                case "CTZQ":
+                    return new string[] { "T14C", "TR9", "T6BQC", "T4CJQ" };
+                case "BJDC":
+                    return new string[] { "SPF", "ZJQ", "SXDS", "BF", "BQC" };
+                case "JCZQ":
+                    return new string[] { "SPF", "BRQSPF", "BF", "ZJQ", "BQC", "HH" };
+                case "JCLQ":
+                    return new string[] { "SF", "RFSF", "SFC", "DXF", "HH" };
+            }
+            return new string[] { };
+        }
+
+
+        private void InitBlog_ProfileBonusLevel(string userId)
+        {
+            var manager = new BlogManager();
+            var BlogProfileBonusLevel= new E_Blog_ProfileBonusLevel
+            {
+                UserId = userId,
+                MaxLevelName = "幸运彩民",
+                MaxLevelValue = 0,
+                TotalBonusMoney = 0,
+                UpdateTime = DateTime.Now,
+                WinHundredMillionCount = 0,
+                WinOneHundredCount = 0,
+                WinOneHundredThousandCount = 0,
+                WinOneMillionCount = 0,
+                WinOneThousandCount = 0,
+                WinTenMillionCount = 0,
+                WinTenThousandCount = 0,
+            };
+            manager.AddBlog_ProfileBonusLevel(BlogProfileBonusLevel);
+
+            var BlogDataReport=new E_Blog_DataReport
+            {
+                CreateSchemeCount = 0,
+                JoinSchemeCount = 0,
+                TotalBonusCount = 0,
+                TotalBonusMoney = 0,
+                UpdateTime = DateTime.Now,
+                UserId = userId,
+            };
+            manager.AddBlogDataReport(BlogDataReport);
+
+        }
+
+        private void InitUserAttentionSummary(string userId)
+        {
+            var sportsManager = new Sports_Manager();
+            var UserAttentionSummary= new C_User_Attention_Summary
+            {
+                UserId = userId,
+                UpdateTime = DateTime.Now,
+                BeAttentionUserCount = 0,
+                FollowerUserCount = 0,
+            };
+            sportsManager.AddUserAttentionSummary(UserAttentionSummary);
+        }
         #endregion Implementation of IUserService
     }
 }

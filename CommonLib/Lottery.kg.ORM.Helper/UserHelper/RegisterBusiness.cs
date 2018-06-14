@@ -24,7 +24,7 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
 
             var lastKey = DB.CreateQuery<C_Auth_KeyRule>().Where(p=>p.RuleKey== "MAXKEY").FirstOrDefault();
             IList<string> skipList;
-            user.UserId = BeautyNumberHelper.GetNextCommonNumber(lastKey.ToString(), out skipList);
+            user.UserId = BeautyNumberHelper.GetNextCommonNumber(lastKey.RuleValue, out skipList);
 
             var roleList = GetRoleListByIds(roleIds);
             if (roleList.Count != roleIds.Length)
@@ -36,7 +36,7 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
             UpdateLastUserKey(user.UserId, skipList.Count);
             if (skipList.Count > 0)
             {
-                AddSkipBeautyKey(skipList.ToArray(), lastKey.ToString(), user.UserId);
+                AddSkipBeautyKey(skipList.ToArray(), lastKey.RuleValue, user.UserId);
             }
 
             DB.Commit();

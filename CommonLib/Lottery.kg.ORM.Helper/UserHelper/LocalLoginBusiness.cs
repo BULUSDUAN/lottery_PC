@@ -15,6 +15,7 @@ using log4net.Plugin;
 using EntityModel.Communication;
 using EntityModel.CoreModel.AuthEntities;
 using EntityModel.Enum;
+using EntityModel.Cryptography;
 
 namespace Lottery.Kg.ORM.Helper.UserHelper
 {
@@ -300,31 +301,62 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
 
 
 
-        //public void Register(LoginLocal loginEntity, string userId)
-        //{
-        //    if (loginEntity.Password == null)
-        //    {
-        //        loginEntity.Password = C_DefaultPassword;
-        //    }
-        //    loginEntity.Password = Encipherment.MD5(string.Format("{0}{1}", loginEntity.Password, _gbKey)).ToUpper();
+        public void Register(LoginLocal loginEntity, string userId)
+        {
+            if (loginEntity.Password == null)
+            {
+                loginEntity.Password = C_DefaultPassword;
+            }
+            loginEntity.Password = Encipherment.MD5(string.Format("{0}{1}", loginEntity.Password, _gbKey)).ToUpper();
 
-        //    using (var biz = new GameBiz.Business.GameBizBusinessManagement())
+
+            DB.Begin();
+
+            var tmp = DB.CreateQuery<E_Login_Local>().Where(p => (p.LoginName == loginEntity.LoginName || p.mobile == loginEntity.LoginName)).FirstOrDefault();
+            if (tmp != null)
+            {
+                throw new AuthException("登录名已经存在 - " + loginEntity.LoginName);
+            }
+            //loginEntity.User = loginManager.LoadUser(userId);
+            var Register = GetRegisterById(userId);
+            var register = new E_Login_Local
+            {
+                LoginName = loginEntity.LoginName,
+                UserId = userId,
+                CreateTime = DateTime.Now,
+                mobile = loginEntity.mobile,
+                Password = loginEntity.Password,
+                RegisterId = Register.UserId,
+
+
+            };
+            DB.GetDal<E_Login_Local>().Add(register);
+            DB.Commit();
+
+        }
+
+        //public void SetUserRebate(string userId, string agentId)
+        //{
+        //    try
         //    {
-        //        biz.BeginTran();
-        //        using (var loginManager = new LoginLocalManager())
+                
+        //        var parentRebateList = DB.CreateQuery<P_OCAgent_Rebate>().Where(p => p.UserId == agentId).OrderByDescending(p => p.CreateTime).ToList();
+        //        var rebateList = new List<string>();
+        //        foreach (var item in parentRebateList)
         //        {
-        //            var tmp = loginManager.GetLoginByName(loginEntity.LoginName);
-        //            if (tmp != null)
-        //            {
-        //                throw new AuthException("登录名已经存在 - " + loginEntity.LoginName);
-        //            }
-        //            loginEntity.User = loginManager.LoadUser(userId);
-        //            loginEntity.Register = loginManager.LoadRegister(userId);
-        //            loginManager.Register(loginEntity);
+        //            rebateList.Add(string.Format("{0}:{1}:{2}:{3}", item.GameCode, item.GameType, item.SubUserRebate, item.RebateType));
         //        }
-        //        biz.CommitTran();
+        //        var setString = string.Join("|", rebateList.ToArray());
+        //        new OCAgentBusiness().UpdateOCAgentRebate(agentId, userId, setString);
+        //        new OCAgentBusiness().EditOCAgentRebate(agentId, userId, setString);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        //var writer = Common.Log.LogWriterGetter.GetLogWriter();
+        //        //writer.Write("SetUserRebate", "SetUserRebate_设置返点", Common.Log.LogType.Error, "设置返点异常", ex.ToString());
         //    }
         //}
+
         //public int GetTodayRegisterCount(DateTime date, string ip)
         //{
         //    using (var loginManager = new LoginLocalManager())
@@ -444,7 +476,7 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
         //    }
         //    return string.Format("{0}|{1}", password, password_balance);
         //}
-        //private const string C_DefaultPassword = "123456";
+        private const string C_DefaultPassword = "123456";
         //public void ResetUserPassword(string userId)
         //{
         //    var newPassword = Encipherment.MD5(string.Format("{0}{1}", C_DefaultPassword, _gbKey)).ToUpper();
