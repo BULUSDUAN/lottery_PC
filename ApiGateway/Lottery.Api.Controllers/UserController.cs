@@ -294,13 +294,13 @@ namespace Lottery.Api.Controllers
             {
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 var p = WebHelper.Decode(entity.Param);
-            
+
                 if (string.IsNullOrEmpty(p.password))
                     throw new Exception("密码不能为空！");
                 if (string.IsNullOrEmpty(p.validateCode))
                     throw new Exception("验证码不能为空！");
                 if (!ValidateHelper.IsMobile(p.mobile))
-                    throw new ArgumentException("手机号码不能为空！");           
+                    throw new ArgumentException("手机号码不能为空！");
                 string cfrom = "";
                 string pid = p.pid;
                 SchemeSource schemeSource = SchemeSource.Web;
@@ -310,18 +310,25 @@ namespace Lottery.Api.Controllers
                 }
 
                 var userInfo = new RegisterInfo_Local();
-                userInfo.RegisterIp = IpManager.IPAddress;
-                userInfo.LoginName = p.mobile;
-                userInfo.Password = p.password;
+                //userInfo.RegisterIp = IpManager.IPAddress;
+                userInfo.RegisterIp = "127.0.0.1";
+                userInfo.LoginName = "15011111111";
+                userInfo.Password = "123456";
 
-                param["validateCode"] = p.validateCode;
-                param["schemeSource"] = p.schemeSource;
-                param["mobile"] = p.mobile;               
-                param["userInfo"] = userInfo;
+                param["validateCode"] = "659235";
+                param["mobile"] = "15011111111";
+                param["source"] =(int) schemeSource;
+                  
+                param["info"] = userInfo;
 
                 if (!string.IsNullOrEmpty(pid))
                     userInfo.AgentId = pid;
-                var loginInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/RegisterResponseMobile");
+                var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/RegisterResponseMobile");
+                if (result.Message.Contains("手机认证成功")) {
+
+                    result.Message = "注册成功";
+                    var loginInfo=
+                }
 
             }
 
