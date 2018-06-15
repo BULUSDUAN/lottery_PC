@@ -59,6 +59,21 @@ namespace Lottery.Kg.ORM.Helper
             }
 
         }
+        private DbProvider lottertdataDB = null;
+        public DbProvider LottertDataDB
+        {
+            get
+            {
+                if (lottertdataDB == null)
+                {
+                    lottertdataDB = new DbProvider();
+                    //// db.Init("Default");
+                    lottertdataDB.Init("ECP_LottertData");
+                }
+                return lottertdataDB;
+            }
+
+        }
         /// <summary>
         /// SQL 语言模块
         /// </summary>

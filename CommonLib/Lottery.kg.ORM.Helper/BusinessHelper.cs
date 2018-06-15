@@ -79,5 +79,6 @@ namespace Lottery.Kg.ORM.Helper
 
             return DB.CreateQuery<C_Activity_PluginClass>().Where(p => p.IsEnable == isEnable).OrderBy(p => p.OrderIndex).ToList();
         }
+        public const int MaxPageSize = 200;
     }
 }

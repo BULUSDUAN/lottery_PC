@@ -12,6 +12,18 @@
       <Other>115556353</Other>
     </smstemplate>
   </OrmConfigInfo>
+  <OrmConfigInfo>
+    <DbKey>ECP_LottertData</DbKey>
+    <ConnectionString>Data Source=10.0.3.6;Initial Catalog=ECP_LottertData;User ID=sa;Password=x123456789;Connection Timeout=10;</ConnectionString>
+    <Provider>SqlServer</Provider>
+    <CommandTimeout>300</CommandTimeout>
+    <FactoryType>KaSon.ORM.Factory.SQLServerFactory</FactoryType>
+    <smstemplate>
+      <Reg>115541377</Reg>
+      <ForGet>115541377</ForGet>
+      <Other>115556353</Other>
+    </smstemplate>
+  </OrmConfigInfo>
 
 <OrmConfigInfo>
 	<DbKey>MySql.Default</DbKey>
