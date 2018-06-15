@@ -4,6 +4,8 @@ using EntityModel.CoreModel;
 using EntityModel.Enum;
 using EntityModel.RequestModel;
 using KaSon.FrameWork.Helper;
+using Lottery.Kg.ORM.Helper.WinNumber;
+using Lottery.Kg.ORM.Helper.WinNumber.ModelCollection;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
@@ -547,7 +549,7 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
         /// <param name="schemeId"></param>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public BettingAnteCodeInfoCollection QueryAnteCodeListBySchemeId(string schemeId, string userToken)
+        public BettingAnteCodeInfoCollection QueryAnteCodeListBySchemeId(string schemeId)
         {
             string sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_QueryAnteCodeListBySchemeId").SQL;
             var collection = new BettingAnteCodeInfoCollection();
@@ -728,11 +730,11 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
             }
             return info;
         }
-        public Sports_TogetherJoinInfoCollection QuerySportsTogetherJoinList(string schemeId, int pageIndex, int pageSize, int MaxPageSize)
+        public Sports_TogetherJoinInfoCollection QuerySportsTogetherJoinList(string schemeId, int pageIndex, int pageSize,string UserToken)
         {
             var result = new Sports_TogetherJoinInfoCollection();
             var totalCount = 0;
-            pageSize = pageSize > MaxPageSize ? MaxPageSize : pageSize;
+            pageSize = pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : pageSize;
             var query = (from j in DB.CreateQuery<C_Sports_TogetherJoin>()
                          join u in DB.CreateQuery<UserRegister>() on j.JoinUserId equals u.UserId
                          where j.SchemeId == schemeId && j.JoinSucess == true
@@ -1922,6 +1924,364 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
                     .List<BDFXGSRankInfo>();
             }           
             return collection;
+        }
+        /// <summary>
+        /// 查询宝单详情
+        /// </summary>
+        /// <param name="schemeId"></param>
+        /// <returns></returns>
+        public BDFXOrderDetailInfo QueryBDFXOrderDetailBySchemeId(string schemeId)
+        {
+            var orderDetailInfo = QueryBDFXOrderDetailBySchemeId(schemeId);
+            if (orderDetailInfo != null && !string.IsNullOrEmpty(orderDetailInfo.SchemeId))
+            {
+                orderDetailInfo.AnteCodeCollection = new Sports_AnteCodeQueryInfoCollection();
+                orderDetailInfo.AnteCodeList = new List<AnteCodeInfo>();
+                orderDetailInfo.NearTimeProfitRateCollection = new NearTimeProfitRate_Collection();
+                var anteCodeCollection = QuerySportsOrderAnteCodeList(schemeId);
+                if (anteCodeCollection != null)
+                    orderDetailInfo.AnteCodeCollection = anteCodeCollection;
+                var nearTimeProfitInfo = QueryNearTimeProfitRate(orderDetailInfo.UserId);
+                if (nearTimeProfitInfo != null)
+                    orderDetailInfo.NearTimeProfitRateCollection.NearTimeProfitRateList.AddRange(nearTimeProfitInfo);
+
+                var currTime = DateTime.Now;
+                int day = Convert.ToInt32(currTime.DayOfWeek) - 1;
+                if (currTime.DayOfWeek != 0)
+                    currTime = currTime.AddDays(-day);
+                else
+                    currTime = currTime.AddDays(-6);
+                var startTime = currTime.AddDays(-7).Date;
+                var endTime = currTime.Date;
+                var rankNumber =QueryRankNumber(orderDetailInfo.UserId);
+                orderDetailInfo.RankNumber = rankNumber;
+                var anteCodeList = QueryAnteCodeListBySchemeId_manage(schemeId);
+                if (anteCodeList != null && anteCodeList.Count > 0)
+                    orderDetailInfo.AnteCodeList = anteCodeList.ToList();
+            }
+
+            return orderDetailInfo;
+        }
+        public List<AnteCodeInfo> QueryAnteCodeListBySchemeId_manage(string schemeId)
+        {
+            var query = from a in DB.CreateQuery<C_Sports_AnteCode>()
+                        where a.SchemeId == schemeId
+                        select new AnteCodeInfo
+                        {
+                            AnteCode = a.AnteCode,
+                            GameType = a.GameType,
+                            GameCode = a.GameCode,
+                            IsDan = a.IsDan,
+                            IssuseNumber = a.IssuseNumber,
+                            MatchId = a.MatchId,
+                            PlayType = a.PlayType,
+                            SchemeId = a.SchemeId,
+                        };
+            if (query != null && query.Count() > 0)
+                return query.ToList();
+            return new List<AnteCodeInfo>();
+        }
+
+        public BettingOrderInfoCollection QueryMyChaseOrderList(string gameCode, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string userToken)
+        {
+            var userId = new UserAuthentication().ValidateUserAuthentication(userToken);
+            pageIndex = pageIndex < 0 ? 0 : pageIndex;
+            pageSize = pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : pageSize;
+            var collection = new BettingOrderInfoCollection();
+            string Countsql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_QueryMyChaseOrderListCount").SQL;
+            collection.TotalCount = DB.CreateSQLQuery(Countsql)
+                .SetString("@GameCode", gameCode)
+                .SetString("@UserId", userId)
+                .SetString("@FromDate", startTime.ToString("yyyy-MM-dd"))
+                .SetString("@ToDate", endTime.AddDays(1).ToString("yyyy-MM-dd")).First<int>();
+
+            string PageSql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_QueryMyChaseOrderListPage").SQL;
+            collection.OrderList = DB.CreateSQLQuery(PageSql)
+                 .SetString("@GameCode", gameCode)
+                .SetString("@UserId", userId)
+                .SetString("@FromDate", startTime.ToString("yyyy-MM-dd"))
+                .SetString("@ToDate", endTime.AddDays(1).ToString("yyyy-MM-dd"))
+                .SetInt("@PageIndex", pageIndex)
+                .SetInt("@PageSize", pageSize).List<BettingOrderInfo>();
+           
+            return collection;
+        }
+        public MyOrderListInfoCollection QueryMyOrderListInfo(QueryMyOrderListInfoParam Model)
+        {
+            var UserId = new UserAuthentication().ValidateUserAuthentication(Model.userToken);
+            Model.pageIndex = Model.pageIndex < 0 ? 0 : Model.pageIndex;
+            Model.pageSize = Model.pageSize > Model.MaxPageSize ? Model.MaxPageSize : Model.pageSize;
+            var collection = new MyOrderListInfoCollection();
+            var query = from d in DB.CreateQuery<C_OrderDetail>()
+                        where d.UserId == UserId
+                        && (Model.gameCode == string.Empty || d.GameCode == Model.gameCode)
+                        && (Model.bonusStatus == null || d.BonusStatus == (int)Model.bonusStatus)
+                        && (Model.schemeType == null || d.SchemeType == (int)Model.schemeType)
+                        && (d.CreateTime >= Model.startTime && d.CreateTime < Model.endTime)
+                        select new MyOrderListInfo
+                        {
+                            AddMoney = d.AddMoney,
+                            Amount = d.Amount,
+                            AfterTaxBonusMoney = d.AfterTaxBonusMoney,
+                            BetTime = d.CreateTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                            BonusAwardsMoney = d.BonusAwardsMoney,
+                            BonusStatus = (BonusStatus)d.BonusStatus,
+                            GameCode = d.GameCode,
+                            GameType = d.GameType,
+                            GameTypeName = d.GameTypeName,
+                            IssuseNumber = d.CurrentIssuseNumber,
+                            PreTaxBonusMoney = d.PreTaxBonusMoney,
+                            ProgressStatus = (ProgressStatus)d.ProgressStatus,
+                            RedBagAwardsMoney = d.RedBagAwardsMoney,
+                            SchemeBettingCategory = (SchemeBettingCategory)d.SchemeBettingCategory,
+                            SchemeId = d.SchemeId,
+                            SchemeSource = (SchemeSource)d.SchemeSource,
+                            SchemeType = (SchemeType)d.SchemeType,
+                            TicketStatus = (TicketStatus)d.TicketStatus,
+                            TotalMoney = d.TotalMoney,
+                        };
+            collection.List = query.Skip(Model.pageIndex * Model.pageSize).Take(Model.pageSize).ToList();
+            return collection;
+        }
+
+        public MyOrderListInfo QueryMyOrderDetailInfo(string schemeId)
+        {
+            var query = from d in DB.CreateQuery<C_OrderDetail>()
+                        where d.SchemeId == schemeId
+                        select new MyOrderListInfo
+                        {
+                            AddMoney = d.AddMoney,
+                            Amount = d.Amount,
+                            AfterTaxBonusMoney = d.AfterTaxBonusMoney,
+                            BetTime = d.CreateTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                            BonusAwardsMoney = d.BonusAwardsMoney,
+                            BonusStatus = (BonusStatus)d.BonusStatus,
+                            GameCode = d.GameCode,
+                            GameType = d.GameType,
+                            GameTypeName = d.GameTypeName,
+                            IssuseNumber = d.CurrentIssuseNumber,
+                            PreTaxBonusMoney = d.PreTaxBonusMoney,
+                            ProgressStatus = (ProgressStatus)d.ProgressStatus,
+                            RedBagAwardsMoney = d.RedBagAwardsMoney,
+                            SchemeBettingCategory = (SchemeBettingCategory)d.SchemeBettingCategory,
+                            SchemeId = d.SchemeId,
+                            SchemeSource = (SchemeSource)d.SchemeSource,
+                            SchemeType = (SchemeType)d.SchemeType,
+                            TicketStatus = (TicketStatus)d.TicketStatus,
+                            TotalMoney = d.TotalMoney,
+                            StopAfterBonus = d.StopAfterBonus,
+                        };
+            return query.FirstOrDefault();
+        }
+        public List<LotteryNewBonusInfo> QueryLotteryNewBonusInfoList(int count)
+        {
+            var query = from b in DB.CreateQuery<E_LotteryNewBonus>()
+                        orderby b.CreateTime descending
+                        select new LotteryNewBonusInfo
+                        {
+                            AfterTaxBonusMoney = b.AfterTaxBonusMoney,
+                            Amount = b.Amount,
+                            CreateTime = b.CreateTime,
+                            GameCode = b.GameCode,
+                            GameType = b.GameType,
+                            HideUserDisplayNameCount = b.HideUserDisplayNameCount,
+                            IssuseNumber = b.IssuseNumber,
+                            PlayType = b.PlayType,
+                            PreTaxBonusMoney = b.PreTaxBonusMoney,
+                            SchemeId = b.SchemeId,
+                            TotalMoney = b.TotalMoney,
+                            UserDisplayName = b.UserDisplayName,
+                        };
+            return query.Take(count).ToList();
+        }
+
+        /// <summary>
+        /// 查询开奖号码
+        /// </summary>
+        /// <param name="gameType">仅传统足球需要传玩法</param>
+        /// <returns></returns>
+        public GameWinNumber_InfoCollection QueryGameWinNumber(string gameCode, int pageIndex, int pageSize)
+        {
+            try
+            {
+                switch (gameCode.ToUpper())
+                {
+                    case "CQ11X5":
+                        return new LotteryDataBusiness_CQ11X5().QueryCQ11X5_GameWinNumber(pageIndex, pageSize);
+                    case "CQKLSF":
+                        return new LotteryDataBusiness_CQKLSF().QueryCQKLSF_GameWinNumber(pageIndex, pageSize);
+                    case "CQSSC":
+                        return new LotteryDataBusiness_CQSSC().QueryCQSSC_GameWinNumber(pageIndex, pageSize);
+                    case "DF6J1":
+                        return new LotteryDataBusiness_DF6_1().QueryDF6_1_GameWinNumber(pageIndex, pageSize);
+                    case "DLT":
+                        return new LotteryDataBusiness_DLT().QueryDLT_GameWinNumber(pageIndex, pageSize);
+                    case "FC3D":
+                        return new LotteryDataBusiness_FC3D().QueryFC3D_GameWinNumber(pageIndex, pageSize);
+                    case "GD11X5":
+                        return new LotteryDataBusiness_GD11X5().QueryGD11X5_GameWinNumber(pageIndex, pageSize);
+                    case "GDKLSF":
+                        return new LotteryDataBusiness_GDKLSF().QueryGDKLSF_GameWinNumber(pageIndex, pageSize);
+                    case "HBK3":
+                        return new LotteryDataBusiness_HBK3().QueryHBK3_GameWinNumber(pageIndex, pageSize);
+                    case "HC1":
+                        return new LotteryDataBusiness_HC1().QueryHC1_GameWinNumber(pageIndex, pageSize);
+                    case "HD15X5":
+                        return new LotteryDataBusiness_HD15X5().QueryHD15X5_GameWinNumber(pageIndex, pageSize);
+                    case "HNKLSF":
+                        return new LotteryDataBusiness_HNKLSF().QueryHNKLSF_GameWinNumber(pageIndex, pageSize);
+                    case "JLK3":
+                        return new LotteryDataBusiness_JLK3().QueryJLK3_GameWinNumber(pageIndex, pageSize);
+                    case "JSKS":
+                        return new LotteryDataBusiness_JSK3().QueryJSK3_GameWinNumber(pageIndex, pageSize);
+                    case "JX11X5":
+                        return new LotteryDataBusiness_JX11X5().QueryJX11X5_GameWinNumber(pageIndex, pageSize);
+                    case "JXSSC":
+                        return new LotteryDataBusiness_JXSSC().QueryJXSSC_GameWinNumber(pageIndex, pageSize);
+                    case "LN11X5":
+                        return new LotteryDataBusiness_LN11X5().QueryLN11X5_GameWinNumber(pageIndex, pageSize);
+                    case "PL3":
+                        return new LotteryDataBusiness_PL3().QueryPL3_GameWinNumber(pageIndex, pageSize);
+                    case "PL5":
+                        return new LotteryDataBusiness_PL5().QueryPL5_GameWinNumber(pageIndex, pageSize);
+                    case "QLC":
+                        return new LotteryDataBusiness_QLC().QueryQLC_GameWinNumber(pageIndex, pageSize);
+                    case "QXC":
+                        return new LotteryDataBusiness_QXC().QueryQXC_GameWinNumber(pageIndex, pageSize);
+                    case "SDQYH":
+                        return new LotteryDataBusiness_SDQYH().QuerySDQYH_GameWinNumber(pageIndex, pageSize);
+                    case "SSQ":
+                        return new LotteryDataBusiness_SSQ().QuerySSQ_GameWinNumber(pageIndex, pageSize);
+                    case "SD11X5":
+                        return new LotteryDataBusiness_YDJ11().QueryYDJ11_GameWinNumber(pageIndex, pageSize);
+                    case "SDKLPK3":
+                        return new LotteryDataBusiness_SDKLPK3().QuerySDKLPK3_GameWinNumber(pageIndex, pageSize);
+                    case "CTZQ_T14C":
+                    case "CTZQ_TR9":
+                    case "CTZQ_T6BQC":
+                    case "CTZQ_T4CJQ":
+                        return new LotteryDataBusiness_CTZQ(gameCode).QueryCTZQ_GameWinNumber(pageIndex, pageSize);
+                    default:
+                        break;
+                }
+                throw new Exception("没有匹配的彩种: " + gameCode);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询号码数据 - " + ex.Message, ex);
+            }
+        }
+        public GameWinNumber_InfoCollection QueryGameWinNumberByDate(DateTime startTime, DateTime endTime, string gameCode, int pageIndex, int pageSize)
+        {
+            try
+            {
+                switch (gameCode.ToUpper())
+                {
+                    case "CQSSC":
+                        return new LotteryDataBusiness_CQSSC().QueryCQSSC_GameWinNumber(startTime, endTime, pageIndex, pageSize);
+                    case "JX11X5":
+                        return new LotteryDataBusiness_JX11X5().QueryJX11X5_GameWinNumber(startTime, endTime, pageIndex, pageSize);
+                    case "DLT":
+                        return new LotteryDataBusiness_DLT().QueryDLT_GameWinNumber(startTime, endTime, pageIndex, pageSize);
+                    case "SSQ":
+                        return new LotteryDataBusiness_SSQ().QuerySSQ_GameWinNumber(startTime, endTime, pageIndex, pageSize);
+                    case "FC3D":
+                        return new LotteryDataBusiness_FC3D().QueryFC3D_GameWinNumber(startTime, endTime, pageIndex, pageSize);
+                    case "PL3":
+                        return new LotteryDataBusiness_PL3().QueryPL3_GameWinNumber(startTime, endTime, pageIndex, pageSize);
+                    case "SD11X5":
+                        return new LotteryDataBusiness_YDJ11().QueryYDJ11_GameWinNumber(startTime, endTime, pageIndex, pageSize);
+                    case "GD11X5":
+                        return new LotteryDataBusiness_GD11X5().QueryGD11X5_GameWinNumber(startTime, endTime, pageIndex, pageSize);
+                    case "GDKLSF":
+                        return new LotteryDataBusiness_GDKLSF().QueryGDKLSF_GameWinNumber(startTime, endTime, pageIndex, pageSize);
+                    case "JSKS":
+                        return new LotteryDataBusiness_JSK3().QueryJSK3_GameWinNumber(startTime, endTime, pageIndex, pageSize);
+                    case "SDKLPK3":
+                        return new LotteryDataBusiness_SDKLPK3().QuerySDKLPK3_GameWinNumber(startTime, endTime, pageIndex, pageSize);
+                    case "CTZQ_T14C":
+                    case "CTZQ_TR9":
+                    case "CTZQ_T6BQC":
+                    case "CTZQ_T4CJQ":
+                        return new LotteryDataBusiness_CTZQ(gameCode).QueryCTZQ_GameWinNumber(startTime, endTime, pageIndex, pageSize);
+
+
+                    default:
+                        break;
+                }
+                throw new Exception("没有匹配的彩种: " + gameCode);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询号码数据 - " + ex.Message, ex);
+            }
+        }
+
+        public GameWinNumber_InfoCollection QueryGameWinNumberByDateDesc(DateTime startTime, DateTime endTime, string gameCode, int pageIndex, int pageSize)
+        {
+            try
+            {
+                switch (gameCode.ToUpper())
+                {
+                    case "CQSSC":
+                        return new LotteryDataBusiness_CQSSC().QueryCQSSC_GameWinNumberDesc(startTime, endTime, pageIndex, pageSize);
+                    case "JX11X5":
+                        return new LotteryDataBusiness_JX11X5().QueryJX11X5_GameWinNumberDesc(startTime, endTime, pageIndex, pageSize);
+                    case "DLT":
+                        return new LotteryDataBusiness_DLT().QueryDLT_GameWinNumber(startTime, endTime, pageIndex, pageSize);
+                    case "SSQ":
+                        return new LotteryDataBusiness_SSQ().QuerySSQ_GameWinNumber(startTime, endTime, pageIndex, pageSize);
+                    case "FC3D":
+                        return new LotteryDataBusiness_FC3D().QueryFC3D_GameWinNumber(startTime, endTime, pageIndex, pageSize);
+                    case "PL3":
+                        return new LotteryDataBusiness_PL3().QueryPL3_GameWinNumber(startTime, endTime, pageIndex, pageSize);
+                    case "SD11X5":
+                        return new LotteryDataBusiness_YDJ11().QueryYDJ11_GameWinNumberDesc(startTime, endTime, pageIndex, pageSize);
+                    case "GD11X5":
+                        return new LotteryDataBusiness_GD11X5().QueryGD11X5_GameWinNumberDesc(startTime, endTime, pageIndex, pageSize);
+                    case "GDKLSF":
+                        return new LotteryDataBusiness_GDKLSF().QueryGDKLSF_GameWinNumberDesc(startTime, endTime, pageIndex, pageSize);
+                    case "JSKS":
+                        return new LotteryDataBusiness_JSK3().QueryJSK3_GameWinNumberDesc(startTime, endTime, pageIndex, pageSize);
+                    case "SDKLPK3":
+                        return new LotteryDataBusiness_SDKLPK3().QuerySDKLPK3_GameWinNumberDesc(startTime, endTime, pageIndex, pageSize);
+                    case "CTZQ_T14C":
+                    case "CTZQ_TR9":
+                    case "CTZQ_T6BQC":
+                    case "CTZQ_T4CJQ":
+                        return new LotteryDataBusiness_CTZQ(gameCode).QueryCTZQ_GameWinNumber(startTime, endTime, pageIndex, pageSize);
+                    default:
+                        break;
+                }
+                throw new Exception("没有匹配的彩种: " + gameCode);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询号码数据 - " + ex.Message, ex);
+            }
+        }
+        public GameWinNumber_InfoCollection QueryAllGameNewWinNumber(string gameString)
+        {
+            //gameString:SSQ|DLT|FC3D
+            var collection = new GameWinNumber_InfoCollection();
+            var array = gameString.Split('|');
+            foreach (var item in array)
+            {
+                var list = QueryGameWinNumber(item, 0, 1);
+                collection.List.AddRange(list.List);
+            }
+            return collection;
+        }
+
+        public GameWinNumber_Info QueryNewWinNumber(string gameCode)
+        {
+            var list = QueryGameWinNumber(gameCode, 0, 1);
+            if (list.List.Count == 0) return new GameWinNumber_Info();
+            return list.List[0];
+        }
+        public KJGameIssuse QueryKJGameIssuse(string gameCode, string issuseNumber)
+        {
+            return DB.CreateQuery<KJGameIssuse>().FirstOrDefault(p => p.GameCode == gameCode && p.IssuseNumber == issuseNumber);
         }
     }
 }

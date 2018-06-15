@@ -1,0 +1,44 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+ 
+using Lottery.Kg.ORM.Helper.WinNumber.Model;
+
+namespace Lottery.Kg.ORM.Helper.WinNumber.Manage
+{
+    public class GD11X5_012LZZSManager : DBbase
+    {
+        public void AddGD11X5_012LZZS(GD11X5_012LZZS entity)
+        {
+            LottertDataDB.GetDal<GD11X5_012LZZS>().Add(entity);
+        }
+
+        /// <summary>
+        /// 查询基本走势（遗漏）最新一条数据
+        /// </summary>
+        public GD11X5_012LZZS QueryLastGD11X5_012LZZS()
+        {
+             
+            return LottertDataDB.CreateQuery<GD11X5_012LZZS>().OrderByDescending(p => p.CreateTime).FirstOrDefault();
+        }
+
+        public List<GD11X5_012LZZS> QueryGD11X5_012LZZS(int index)
+        {
+             
+            var query = from s in LottertDataDB.CreateQuery<GD11X5_012LZZS>()
+                        orderby s.IssuseNumber descending
+                        select s;
+            return query.Take(index).ToList();
+        }
+
+        /// <summary>
+        /// 查询GD11X5_012LZZS本期是否生成
+        /// </summary>
+        public int QueryGD11X5_012LZZSIssuseNumber(string issuseNumber)
+        {
+             
+            return LottertDataDB.CreateQuery<GD11X5_012LZZS>().Count(p => p.IssuseNumber == issuseNumber);
+        }
+    }
+}
