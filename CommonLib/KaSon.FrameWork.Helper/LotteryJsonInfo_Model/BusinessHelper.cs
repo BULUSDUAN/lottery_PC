@@ -13,6 +13,21 @@ namespace KaSon.FrameWork.Helper
     public class BusinessHelper
     {
         string ResUrl = string.Empty;
+
+        /// <summary>
+        /// 奖期数据文件
+        /// </summary>
+        public static string IssuseFile(string type, string issuseId)
+        {
+            if (type.StartsWith("CTZQ"))
+            {
+                var strs = type.Split('_');
+                var gameCode = strs[0];
+                //var gameType = strs[1];
+                return string.Format("/matchdata/{0}/{1}/{2}_BonusLevel.json?_={3}", gameCode, issuseId, type, DateTime.Now.ToString("yyyyMMddHHmmss"));
+            }
+            return string.Format("/matchdata/{0}/{0}_{1}.json?_={2}", type, issuseId, DateTime.Now.ToString("yyyyMMddHHmmss"));
+        }
         public BusinessHelper()
         {
             //http://res.iqucai.com/matchdata/jczq/match_list.json?_=1425952243703
@@ -616,6 +631,69 @@ namespace KaSon.FrameWork.Helper
                     return "世界杯冠亚军";
             }
             return gameType;
+        }
+        /// <summary>
+        /// 传统足球详情
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="issuseId"></param>
+        /// <returns></returns>
+        public static List<Web_CTZQ_BonusPoolInfo> GetPoolInfo_CTZQ(string type, string issuseId)
+        {
+            BusinessHelper bizHelper = new BusinessHelper();
+            var poolInfo = bizHelper.GetCTZQBonusPool(IssuseFile(type, issuseId));
+            return poolInfo;
+        }
+        /// <summary>
+        /// 数字彩详情
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="issuseId"></param>
+        /// <returns></returns>
+        public static Web_SZC_BonusPoolInfo GetPoolInfo(string type, string issuseId)
+        {
+            BusinessHelper bizHelper = new BusinessHelper();
+            var poolInfo = bizHelper.GetSZCBonusPool(IssuseFile(type, issuseId));
+            return poolInfo;
+        }
+        public static string GetResult(int homeTeamScore, int guestTeamScore)
+        {
+            string flag = "[{0},{1},{2}-{3}]";
+            if (homeTeamScore == guestTeamScore)
+            {
+                flag = string.Format(flag, "平", "2", homeTeamScore, guestTeamScore);
+            }
+            else if (homeTeamScore > guestTeamScore)
+            {
+                flag = string.Format(flag, "胜", "3", homeTeamScore, guestTeamScore);
+            }
+            else
+            {
+                flag = string.Format(flag, "负", "1", homeTeamScore, guestTeamScore);
+            }
+            return flag;
+        }
+        public static string AnalyticalCurrentSp(string currentSp, string code)
+        {
+            if (string.IsNullOrEmpty(currentSp) || string.IsNullOrEmpty(code))
+                return string.Empty;
+            var array = currentSp.Split(',');
+            if (array != null && array.Length > 0)
+            {
+                foreach (var item in array)
+                {
+                    if (!string.IsNullOrEmpty(item))
+                    {
+                        var tempArr = item.Split('|');
+                        if (tempArr != null && tempArr.Length > 1)
+                        {
+                            if (code.ToUpper() == tempArr[0].ToUpper())
+                                return (tempArr[1]);
+                        }
+                    }
+                }
+            }
+            return string.Empty;
         }
     }
 }

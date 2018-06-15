@@ -995,5 +995,100 @@ namespace KaSon.FrameWork.Helper
             }
             return string.Empty;
         }
+        //获取对应彩种的最大期数
+        public static int MaxIssuseCount(string gameCode)
+        {
+            switch (gameCode.ToUpper())
+            {
+                case "CQSSC":
+                    return 120;
+                case "JXSSC":
+                    return 84;
+                case "JX11X5":
+                    return 84;
+                case "SD11X5":
+                    return 78;
+                case "GD11X5":
+                    return 84;
+                case "FC3D":
+                case "PL3":
+                case "PL5":
+                    return 358;
+                case "SDQYH":
+                    return 40;
+                case "GDKLSF":
+                    return 84;
+                case "GXKLSF":
+                    return 50;
+                case "SSQ":
+                case "DLT":
+                    return 156;
+                case "JSKS":
+                    return 82;
+                case "CTZQ":
+                    return 50;
+                default:
+                    return 0;
+            }
+        }
+        /// <summary>
+        /// 游戏名字
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static string GetGameName(string name, string gametype)
+        {
+            //JX11X5|CQSSC|SSQ|DLT|FC3D|PL3|CTZQ_T14C|CTZQ_T6BQC|CTZQ_T4CJQ
+            name = name.ToUpper() == "CTZQ" ? gametype : name;
+            switch (name.ToUpper())
+            {
+                case "JX11X5":
+                    return "江西11选5";
+                case "CQSSC":
+                    return "重庆时时彩";
+                case "SSQ":
+                    return "双色球";
+                case "DLT":
+                    return "大乐透";
+                case "FC3D":
+                    return "福彩3D";
+                case "PL3":
+                    return "排列3";
+                case "T14C":
+                    return "胜负彩";
+                case "T6BQC":
+                    return "半全场";
+                case "T4CJQ":
+                    return "进球彩";
+                case "TR9":
+                    return "任选九";
+                case "CTZQ":
+                    return "传统足球";
+                default:
+                    return "";
+            }
+        }
+        public static string Getnums(Web_SZC_BonusPoolInfo model)
+        {
+            if (model == null || model.GradeList == null)
+                return "";
+            string msg = string.Empty;
+            foreach (var item in model.GradeList)
+            {
+                msg += item.BonusCount + ",";
+            }
+            return msg.TrimEnd(',');
+        }
+        public static string Getgrades(Web_SZC_BonusPoolInfo model)
+        {
+            if (model == null || model.GradeList == null)
+                return "";
+            string msg = string.Empty;
+            foreach (var item in model.GradeList)
+            {
+                msg += item.BonusMoney.ToString("###,##0.00") + ",";
+            }
+            return msg.TrimEnd(',');
+        }
     }
 }

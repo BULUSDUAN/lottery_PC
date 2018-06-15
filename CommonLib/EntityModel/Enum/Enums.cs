@@ -1474,4 +1474,42 @@ namespace EntityModel.Enum
         /// </summary>
         Win1000Yuan = 240,
     }
+    /// <summary>
+    /// 新闻类别
+    /// </summary>
+    public enum NewsCategory
+    {
+        /// <summary>
+        /// 高频彩
+        /// </summary>
+        GPC = 1,
+        /// <summary>
+        /// 福彩
+        /// </summary>
+        FC = 2,
+        /// <summary>
+        /// 体彩
+        /// </summary>
+        TC = 3,
+        /// <summary>
+        /// 地方彩
+        /// </summary>
+        DFC = 4,
+        /// <summary>
+        /// 焦点资讯
+        /// </summary>
+        JDZX = 5,
+        /// <summary>
+        /// 热点资讯
+        /// </summary>
+        RDZX = 6,
+        /// <summary>
+        /// all
+        /// </summary>
+        All = 7,
+        /// <summary>
+        /// 高频彩技巧
+        /// </summary>
+        GPCJQ = 8,
+    }
 } 

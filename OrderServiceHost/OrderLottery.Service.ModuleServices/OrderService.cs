@@ -138,9 +138,9 @@ namespace OrderLottery.Service.ModuleServices
         /// <param name="schemeId"></param>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public BettingAnteCodeInfoCollection QueryAnteCodeListBySchemeId(string schemeId, string userToken)
+        public BettingAnteCodeInfoCollection QueryAnteCodeListBySchemeId(string schemeId)
         {
-            return _order.QueryAnteCodeListBySchemeId(schemeId, userToken);
+            return _order.QueryAnteCodeListBySchemeId(schemeId);
         }
         /// <summary>
         /// 查询足彩合买明细
@@ -268,6 +268,46 @@ namespace OrderLottery.Service.ModuleServices
         public BDFXGSRank_Collection QueryGSRankList(string startTime, string endTime, string currUserId, string isMyGZ)
         {
             return _order.QueryGSRankList(startTime, endTime, currUserId, isMyGZ);
+        }
+        public BDFXOrderDetailInfo QueryBDFXOrderDetailBySchemeId(string schemeId)
+        {
+            return _order.QueryBDFXOrderDetailBySchemeId(schemeId);
+        }
+        public BettingOrderInfoCollection QueryMyChaseOrderList(string gameCode, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string userToken)
+        {
+            return _order.QueryMyChaseOrderList(gameCode, startTime, endTime, pageIndex, pageSize, userToken);
+        }
+        public MyOrderListInfoCollection QueryMyOrderListInfo(QueryMyOrderListInfoParam Model)
+        {
+            return _order.QueryMyOrderListInfo(Model);
+        }
+        public MyOrderListInfo QueryMyOrderDetailInfo(string schemeId)
+        {
+            return _order.QueryMyOrderDetailInfo(schemeId);
+        }
+        public List<LotteryNewBonusInfo> QueryLotteryNewBonusInfoList(int count)
+        {
+            return _order.QueryLotteryNewBonusInfoList(count);
+        }
+        public GameWinNumber_InfoCollection QueryGameWinNumberByDate(DateTime startTime, DateTime endTime, string gameCode, int pageIndex, int pageSize)
+        {
+            return _order.QueryGameWinNumberByDate(startTime, endTime, gameCode, pageIndex, pageSize);
+        }
+        public GameWinNumber_InfoCollection QueryGameWinNumberByDateDesc(DateTime startTime, DateTime endTime, string gameCode, int pageIndex, int pageSize)
+        {
+            return _order.QueryGameWinNumberByDateDesc(startTime, endTime, gameCode, pageIndex, pageSize);
+        }
+        public List<LotteryIssuse_QueryInfo> QueryAllGameCurrentIssuse(bool byOfficial)
+        {
+            return _order.QueryAllGameCurrentIssuse(byOfficial);
+        }
+        public BJDCIssuseInfo QueryBJDCCurrentIssuseInfo()
+        {
+            return _order.QueryBJDCCurrentIssuseInfo();
+        }
+        public CTZQMatchInfo_Collection QueryCTZQMatchListByIssuseNumber(string gameType, string issuseNumber, string userToken)
+        {
+            return _order.QueryCTZQMatchListByIssuseNumber(gameType, issuseNumber, userToken);
         }
     }
 }

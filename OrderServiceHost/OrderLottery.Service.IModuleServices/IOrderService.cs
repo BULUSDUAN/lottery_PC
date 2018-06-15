@@ -1,5 +1,6 @@
 ﻿using EntityModel.Communication;
 using EntityModel.CoreModel;
+using EntityModel.Enum;
 using EntityModel.RequestModel;
 using Kason.Sg.Core.CPlatform.Ioc;
 using Kason.Sg.Core.CPlatform.Runtime.Server.Implementation.ServiceDiscovery.Attributes;
@@ -43,7 +44,7 @@ namespace OrderLottery.Service.IModuleServices
         BettingOrderInfoCollection QueryBettingOrderListByChaseKeyLine(string keyLine, string userToken);
 
         [Service(Date = "2018-06-11", Director = "Debug", Name = "查询指定订单的投注号码列表")]
-        BettingAnteCodeInfoCollection QueryAnteCodeListBySchemeId(string schemeId, string userToken);
+        BettingAnteCodeInfoCollection QueryAnteCodeListBySchemeId(string schemeId );
 
         [Service(Date = "2018-06-11", Director = "Debug", Name = "查询足彩合买明细")]
         Sports_TogetherSchemeQueryInfo QuerySportsTogetherDetail(string schemeId);
@@ -77,5 +78,25 @@ namespace OrderLottery.Service.IModuleServices
         CommonActionResult BDFXCancelAttention(string currUserId, string bgzUserId);
         [Service(Date = "2018-06-13", Director = "Debug", Name = "查询高手排行/我的关注")]
         BDFXGSRank_Collection QueryGSRankList(string startTime, string endTime, string currUserId, string isMyGZ);
+        [Service(Date = "2018-06-14", Director = "Debug", Name = "查询宝单详情")]
+        BDFXOrderDetailInfo QueryBDFXOrderDetailBySchemeId(string schemeId);
+        [Service(Date = "2018-06-14", Director = "Debug", Name = "查询我的追号订单列表")]
+        BettingOrderInfoCollection QueryMyChaseOrderList(string gameCode, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string userToken);
+        [Service(Date = "2018-06-14", Director = "Debug", Name = "查询我的订单列表信息")]
+        MyOrderListInfoCollection QueryMyOrderListInfo(QueryMyOrderListInfoParam Model);
+        [Service(Date = "2018-06-14", Director = "Debug", Name = "查询我的订单详细信息")]
+        MyOrderListInfo QueryMyOrderDetailInfo(string schemeId);
+        [Service(Date = "2018-06-14", Director = "Debug", Name = "查询最新中奖")]
+        List<LotteryNewBonusInfo> QueryLotteryNewBonusInfoList(int count);
+        [Service(Date = "2018-06-15", Director = "Debug", Name = "查询开奖历史")]
+        GameWinNumber_InfoCollection QueryGameWinNumberByDate(DateTime startTime, DateTime endTime, string gameCode, int pageIndex, int pageSize);
+        [Service(Date = "2018-06-15", Director = "Debug", Name = "查询开奖历史倒序")]
+        GameWinNumber_InfoCollection QueryGameWinNumberByDateDesc(DateTime startTime, DateTime endTime, string gameCode, int pageIndex, int pageSize);
+        [Service(Date = "2018-06-15", Director = "Debug", Name = "查询奖期")]
+        List<LotteryIssuse_QueryInfo> QueryAllGameCurrentIssuse(bool byOfficial);
+        [Service(Date = "2018-06-15", Director = "Debug", Name = "查询北京单场信息")]
+        BJDCIssuseInfo QueryBJDCCurrentIssuseInfo();
+        [Service(Date = "2018-06-15", Director = "Debug", Name = "传统足球开奖比赛内容")]
+        CTZQMatchInfo_Collection QueryCTZQMatchListByIssuseNumber(string gameType, string issuseNumber, string userToken);
     }
 }
