@@ -22,5 +22,7 @@ namespace EntityModel
         /// 允许最大数
         /// </summary>
         public int MaxPageSize = 200;
+        public string OrderBy { get; set; }
+        public string SortBy { get; set; }
     }
 }

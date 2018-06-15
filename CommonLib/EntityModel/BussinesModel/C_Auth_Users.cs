@@ -1,4 +1,5 @@
-﻿using KaSon.FrameWork.Services.Attribute;
+﻿using EntityModel.CoreModel;
+using KaSon.FrameWork.Services.Attribute;
 using KaSon.FrameWork.Services.Enum;
 using ProtoBuf;
 using System;
@@ -48,5 +49,6 @@ namespace EntityModel
             [ProtoMember(5)]
             [Field("AgentId")]
             public string AgentId{ get; set; }
+
     }
 }

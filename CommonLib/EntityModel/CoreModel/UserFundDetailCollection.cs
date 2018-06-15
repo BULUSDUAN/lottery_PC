@@ -12,7 +12,7 @@ namespace EntityModel.CoreModel
         public int TotalPayoutCount { get; set; }
         public decimal TotalPayoutMoney { get; set; }
         public decimal TotalBalanceMoney { get; set; }
-        public IList<FundDetailInfo> FundDetailList { get; set; }
+        public IList<C_Fund_Detail> FundDetailList { get; set; }
     }
     public class FundDetailInfo
     {

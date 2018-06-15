@@ -54,5 +54,9 @@ namespace EntityModel
             [ProtoMember(6)]
             [Field("IsAdmin")]
             public bool IsAdmin{ get; set; }
+
+            public virtual C_Auth_Roles ParentRole { get; set; }
+
+    
     }
 }

@@ -13,10 +13,11 @@ namespace Lottery.Kg.ORM.Helper
         /// <summary>
         /// 验证用户是否具有该方法的权限
         /// </summary>
-        public string ValidateUserAuthentication(string userToken)
+        public  string ValidateUserAuthentication(string userToken)
         {
             if (_allMethodFunctionList == null || _allMethodFunctionList.Count == 0)
             {                
+
                 _allMethodFunctionList = DB.CreateQuery<C_Auth_MethodFunction_List>().ToList();
             }
 

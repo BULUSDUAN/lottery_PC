@@ -9,7 +9,6 @@ namespace EntityModel.CoreModel
         public GameWinNumber_InfoCollection(){ }
 
         public List<GameWinNumber_Info> List { get; set; }
-        public int TotalCount { get; set; }
     }
     public class GameWinNumber_Info
     {
