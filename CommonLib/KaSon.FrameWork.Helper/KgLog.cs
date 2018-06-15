@@ -12,10 +12,10 @@ namespace KaSon.FrameWork.Helper
 
         static KgLog()
         {
-            string path = Directory.GetCurrentDirectory() + "KgLog.xml";
+            string path = Path.Combine(Directory.GetCurrentDirectory(), @"KgLog.xml");
             if (!File.Exists(path))
             {
-                path = Path.Combine(Directory.GetCurrentDirectory(), @"config\KgLog.xml");
+                path = Path.Combine(Directory.GetCurrentDirectory(), @"Config\KgLog.xml");
             }
             var list = xmlHelper.SerializerList<LogConfigInfo>(path);
             if (list.Count > 0)

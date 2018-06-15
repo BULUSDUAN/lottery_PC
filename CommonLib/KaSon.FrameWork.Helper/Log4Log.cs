@@ -19,7 +19,13 @@ namespace KaSon.FrameWork.Helper
             //NETCoreRepository NETStandardRepository
             repository = LogManager.CreateRepository("NETCoreRepository");
             //  log4net.Config.XmlConfigurator.Configure(new FileInfo("log4net_ORMHelper.config"));
-            var fileinfo = new FileInfo("log4net_ORMHelper.config");
+           
+            string path = Path.Combine(Directory.GetCurrentDirectory(), @"log4net.xml");
+            if (!File.Exists(path))
+            {
+                path = Path.Combine(Directory.GetCurrentDirectory(), @"Config\log4net.xml");
+            }
+            var fileinfo = new FileInfo(path);
             XmlConfigurator.Configure(repository, fileinfo);
 
             log4net.Config.BasicConfigurator.Configure(repository);
