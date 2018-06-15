@@ -555,7 +555,7 @@ namespace UserLottery.Service.ModuleServices
                 if (userResult == null || string.IsNullOrEmpty(userResult.ReturnValue))
                     throw new Exception("注册失败,请重新注册");
                 string mobileNumber;
-                //mobileNumber = authenticationBiz.RegisterResponseMobile(userResult.ReturnValue, mobile, 1800, "半个小时");
+                mobileNumber = authenticationBiz.RegisterResponseMobile(userResult.ReturnValue, mobile, 1800, "半个小时");
 
                 #region 还没做
                 //! 执行扩展功能代码 - 提交事务后
@@ -671,10 +671,10 @@ namespace UserLottery.Service.ModuleServices
 
             #region 如果是通过代理链接注册，则设置用户返点 屏蔽：范  
 
-            //if (!string.IsNullOrEmpty(regInfo.AgentId))
-            //{
-            //    loginBiz.SetUserRebate(userId, regInfo.AgentId);
-            //}
+            if (!string.IsNullOrEmpty(regInfo.AgentId))
+            {
+                SetUserRebate(userId, regInfo.AgentId);
+            }
 
             #endregion
 
@@ -837,6 +837,29 @@ namespace UserLottery.Service.ModuleServices
                 FollowerUserCount = 0,
             };
             sportsManager.AddUserAttentionSummary(UserAttentionSummary);
+        }
+
+        private void SetUserRebate(string userId, string agentId)
+        {
+            try
+            {
+                var agentManager = new OCAgentManager();
+                var parentRebateList = agentManager.QueryOCAgentRebateList(agentId);
+                var rebateList = new List<string>();
+                foreach (var item in parentRebateList)
+                {
+                    rebateList.Add(string.Format("{0}:{1}:{2}:{3}", item.GameCode, item.GameType, item.SubUserRebate, item.RebateType));
+                }
+                var setString = string.Join("|", rebateList.ToArray());
+                //new OCAgentBusiness().UpdateOCAgentRebate(agentId, userId, setString);
+                
+                //new OCAgentBusiness().EditOCAgentRebate(agentId, userId, setString);
+            }
+            catch (Exception ex)
+            {
+                //var writer = Common.Log.LogWriterGetter.GetLogWriter();
+                //writer.Write("SetUserRebate", "SetUserRebate_设置返点", Common.Log.LogType.Error, "设置返点异常", ex.ToString());
+            }
         }
         #endregion Implementation of IUserService
     }

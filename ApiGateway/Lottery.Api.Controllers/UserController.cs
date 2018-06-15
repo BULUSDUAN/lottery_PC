@@ -8,6 +8,7 @@ using KaSon.FrameWork.Helper.Net;
 using Lottery.ApiGateway.Model.Enum;
 using Lottery.ApiGateway.Model.HelpModel;
 using Lottery.Base.Controllers;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -283,12 +284,12 @@ namespace Lottery.Api.Controllers
 
 
         /// <summary>
-        /// 适应web版本注册
+        /// 适应web版本注册 211
         /// </summary>
         /// <param name="_serviceProxyProvider"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<IActionResult> RegisterWeb([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        public async Task<LotteryServiceResponse> RegisterWeb([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
             {
@@ -317,32 +318,175 @@ namespace Lottery.Api.Controllers
 
                 param["validateCode"] = "659235";
                 param["mobile"] = "15011111111";
-                param["source"] =(int) schemeSource;
-                  
+                param["source"] = (int)schemeSource;
+
                 param["info"] = userInfo;
 
                 if (!string.IsNullOrEmpty(pid))
                     userInfo.AgentId = pid;
                 var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/RegisterResponseMobile");
-                if (result.Message.Contains("手机认证成功")) {
+                if (result.Message.Contains("手机认证成功") || result.Message.Contains("恭喜您注册成功"))
+                {
 
                     result.Message = "注册成功";
-                    var loginInfo=
+                    Dictionary<string, object> loginparam = new Dictionary<string, object>();
+                    loginparam["loginName"] = userInfo.LoginName;
+                    loginparam["password"] = userInfo.Password;
+                    loginparam["IPAddress"] = userInfo.Password;
+                    var loginInfo = await _serviceProxyProvider.Invoke<LoginInfo>(loginparam, "api/user/user_login");
+                    if (loginInfo.IsSuccess)
+                    {
+                        Dictionary<string, object> balanceParam = new Dictionary<string, object>();
+                        balanceParam["userToken"] = loginInfo.UserToken;
+                        var balance = await _serviceProxyProvider.Invoke<UserBalanceInfo>(balanceParam, "api/user/QueryMyBalance");
+                        Dictionary<string, object> bindParam = new Dictionary<string, object>();
+                        bindParam["UserId"] = loginInfo.UserId;
+                        var bindInfo = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
+                        var unReadCount = await _serviceProxyProvider.Invoke<int>(balanceParam, "api/user/GetMyUnreadInnerMailCount");
+                        var bankInfo = await _serviceProxyProvider.Invoke<C_BankCard>(balanceParam, "api/user/QueryBankCard");
+                        if (bankInfo == null) bankInfo = new C_BankCard();
+                        return new LotteryServiceResponse
+                        {
+                            Code = ResponseCode.成功,
+                            Message = "注册成功",
+                            MsgId = entity.MsgId,
+                            Value = new
+                            {
+                                UserToken = loginInfo.UserToken,
+                                DisplayName = loginInfo.DisplayName,
+                                LoginName = loginInfo.LoginName,
+                                UserId = loginInfo.UserId,
+                                VipLevel = loginInfo.VipLevel,
+                                CommissionBalance = balance.CommissionBalance,
+                                //CommissionBalance = 0,
+                                ExpertsBalance = balance.ExpertsBalance,
+                                BonusBalance = balance.BonusBalance,
+                                FreezeBalance = balance.FreezeBalance,
+                                FillMoneyBalance = balance.FillMoneyBalance,
+                                Mobile = string.IsNullOrEmpty(bindInfo.Mobile) ? string.Empty : bindInfo.Mobile, //mobile == null ? string.Empty : mobile.Mobile,
+                                RealName = string.IsNullOrEmpty(bindInfo.RealName) ? string.Empty : bindInfo.RealName, // realName == null ? string.Empty : realName.RealName,
+                                IdCardNumber = string.IsNullOrEmpty(bindInfo.IdCardNumber) ? string.Empty : bindInfo.IdCardNumber, // realName == null ? string.Empty : realName.IdCardNumber,
+                                IsSetBalancePwd = balance.IsSetPwd,
+                                NeedBalancePwdPlace = string.IsNullOrEmpty(balance.NeedPwdPlace) ? string.Empty : balance.NeedPwdPlace,
+                                IsBingBankCard = !string.IsNullOrEmpty(bindInfo.IdCardNumber), // bankInfo == null ? false : !string.IsNullOrEmpty(bankInfo.UserId),
+                                UserGrowth = balance.UserGrowth,
+                                RedBagBalance = balance.RedBagBalance,
+                                NeedGrowth = GrowthStatus(balance.UserGrowth),
+                                IsBetHM = true,
+                                UnReadMailCount = unReadCount,
+                                HideDisplayNameCount = loginInfo.HideDisplayNameCount,
+
+                                #region 新字段
+                                BankCardNumber = bankInfo.BankCardNumber,
+                                BankName = bankInfo.BankName,
+                                BankSubName = bankInfo.BankSubName,
+                                #endregion
+                            }
+                        };
+                    }
+                    else
+                    {
+                        return new LotteryServiceResponse
+                        {
+                            Code = ResponseCode.失败,
+                            Message = "注册成功,登陆失败",
+                            MsgId = entity.MsgId,
+                            Value = "注册成功,登陆失败"
+                        };
+                    }
                 }
-
-            }
-
-            catch (ArgumentException ex)
-            {
-                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = ex.Message, MsgId = entity.MsgId, Value = null });
-
+             
+                 return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = string.IsNullOrEmpty(result.Message) ? result.Message : result.Message.Replace("验证码输入不正确", "手机验证码输入不正确"),
+                    MsgId = entity.MsgId,
+                    Value = string.IsNullOrEmpty(result.Message) ? result.Message : result.Message.Replace("验证码输入不正确", "手机验证码输入不正确"),
+                };
             }
             catch (Exception ex)
             {
-                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = ex.Message, MsgId = entity.MsgId, Value = null });
-
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
             }
-            return null;
+        }
+
+
+        /// <summary>
+        /// 发送手机短信 212
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<LotteryServiceResponse> RegisterSendmsg([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                string verifyCode = p.verifyCode;
+                if (string.IsNullOrEmpty(verifyCode))
+                    throw new Exception("图形验证码不能为空");
+                if (!VerifyCode(verifyCode))
+                    throw new Exception("图形验证码错误或已过期");
+                string mobile = p.mobile;
+                if (string.IsNullOrEmpty(mobile))
+                    throw new Exception("手机号码不能为空");
+                if (!ValidateHelper.IsMobile(mobile))
+                    throw new Exception("手机号码格式错误");
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["mobile"] = mobile;
+                var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/RegisterRequestMobile");               
+                //return Json(new { status = result.IsSuccess, message = result.Message }, JsonRequestBehavior.AllowGet);
+                return new LotteryServiceResponse
+                {
+                    Code = result.IsSuccess ? ResponseCode.成功 : ResponseCode.失败,
+                    Message = result.Message,
+                    MsgId = entity.MsgId,
+                    Value = "",
+                };
+            }
+            catch (Exception ex)
+            {
+                //return Json(new { status = false, message = exp.Message }, JsonRequestBehavior.AllowGet);
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+        }
+
+        /// <summary>
+        /// 内部校验验证码是否正确
+        /// </summary>
+        /// <param name="verifycode"></param>
+        /// <returns></returns>
+        private bool VerifyCode(string verifycode)
+        {
+            try
+            {
+                
+                if (string.IsNullOrEmpty(verifycode) || HttpContext.Session.GetString("VerifyCode") == null)
+                {
+                    return false;
+                }
+                if (verifycode.ToLower() == HttpContext.Session.GetString("VerifyCode").ToString().ToLower())
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
