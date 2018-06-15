@@ -327,7 +327,7 @@ namespace Lottery.Api.Controllers
                 if (result.Message.Contains("手机认证成功")) {
 
                     result.Message = "注册成功";
-                    var loginInfo=
+                    //var loginInfo=
                 }
 
             }

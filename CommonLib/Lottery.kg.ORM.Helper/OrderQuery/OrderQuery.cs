@@ -2283,5 +2283,69 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
         {
             return DB.CreateQuery<KJGameIssuse>().FirstOrDefault(p => p.GameCode == gameCode && p.IssuseNumber == issuseNumber);
         }
+        public List<LotteryIssuse_QueryInfo> QueryAllGameCurrentIssuse(bool byOfficial)
+        {           
+            var list = new List<LotteryIssuse_QueryInfo>();
+            var sql = string.Format(@"select g.GameCode,g.IssuseNumber,g.LocalStopTime,g.OfficialStopTime, convert(int, c.ConfigValue)ConfigValue
+                        from (
+                        SELECT GameCode,min(IssuseNumber)IssuseNumber,min(OfficialStopTime)OfficialStopTime,min(LocalStopTime)LocalStopTime
+                          FROM [C_Game_Issuse]
+                          where gamecode in ('ssq','dlt','fc3d','pl3','cqssc','jx11x5')
+                          and {0}>getdate()
+                          group by gamecode
+                          ) as g
+                          left join [C_Core_Config] c on 'Site.GameDelay.'+g.GameCode=c.configkey", byOfficial ? "OfficialStopTime" : "LocalStopTime");
+
+            var array = DB.CreateSQLQuery(sql).List<LotteryIssuse_QueryInfo>();
+            if (array == null)
+                return list;
+            var schemeIdList = new List<string>();
+            return list;
+        }
+        public BJDCIssuseInfo QueryBJDCCurrentIssuseInfo()
+        {
+            var query = from b in DB.CreateQuery<C_BJDC_Issuse>()
+                        where b.MinLocalStopTime >= DateTime.Now
+                        orderby b.MinLocalStopTime ascending
+                        select new BJDCIssuseInfo
+                        {
+                            IssuseNumber = b.IssuseNumber,
+                            MinLocalStopTime = b.MinLocalStopTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                            MinMatchStartTime = b.MinMatchStartTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                        };
+            return query.FirstOrDefault();
+        }
+        public CTZQMatchInfo_Collection QueryCTZQMatchListByIssuseNumber(string gameType, string issuseNumber, string userToken)
+        {
+            var collection = new CTZQMatchInfo_Collection();
+            //var UserId = new UserAuthentication().ValidateUserAuthentication(userToken);
+            collection.ListInfo = (from s in DB.CreateQuery<C_CTZQ_Match>()
+                        where s.GameType == gameType && s.IssuseNumber == issuseNumber
+                        select new CTZQMatchInfo
+                        {
+                            GameCode = s.GameCode,
+                            GameType = s.GameType,
+                            GuestTeamHalfScore = s.GuestTeamHalfScore,
+                            GuestTeamId = s.GuestTeamId,
+                            GuestTeamName = s.GuestTeamName,
+                            GuestTeamScore = s.GuestTeamScore,
+                            GuestTeamStanding = s.GuestTeamStanding.ToString(),
+                            HomeTeamHalfScore = s.HomeTeamHalfScore,
+                            HomeTeamId = s.HomeTeamId,
+                            HomeTeamName = s.HomeTeamName,
+                            HomeTeamScore = s.HomeTeamScore,
+                            HomeTeamStanding = s.HomeTeamStanding.ToString(),
+                            Id = s.Id,
+                            IssuseNumber = s.IssuseNumber,
+                            MatchId = s.MatchId,
+                            MatchName = s.MatchName,
+                            MatchResult = s.MatchResult == null ? "" : s.MatchResult,
+                            MatchStartTime = s.MatchStartTime,
+                            Mid = s.Mid,
+                            OrderNumber = s.OrderNumber,
+                            UpdateTime = s.UpdateTime,
+                        }).ToList();
+            return collection;
+        }
     }
 }

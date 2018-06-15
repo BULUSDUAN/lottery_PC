@@ -289,5 +289,25 @@ namespace OrderLottery.Service.ModuleServices
         {
             return _order.QueryLotteryNewBonusInfoList(count);
         }
+        public GameWinNumber_InfoCollection QueryGameWinNumberByDate(DateTime startTime, DateTime endTime, string gameCode, int pageIndex, int pageSize)
+        {
+            return _order.QueryGameWinNumberByDate(startTime, endTime, gameCode, pageIndex, pageSize);
+        }
+        public GameWinNumber_InfoCollection QueryGameWinNumberByDateDesc(DateTime startTime, DateTime endTime, string gameCode, int pageIndex, int pageSize)
+        {
+            return _order.QueryGameWinNumberByDateDesc(startTime, endTime, gameCode, pageIndex, pageSize);
+        }
+        public List<LotteryIssuse_QueryInfo> QueryAllGameCurrentIssuse(bool byOfficial)
+        {
+            return _order.QueryAllGameCurrentIssuse(byOfficial);
+        }
+        public BJDCIssuseInfo QueryBJDCCurrentIssuseInfo()
+        {
+            return _order.QueryBJDCCurrentIssuseInfo();
+        }
+        public CTZQMatchInfo_Collection QueryCTZQMatchListByIssuseNumber(string gameType, string issuseNumber, string userToken)
+        {
+            return _order.QueryCTZQMatchListByIssuseNumber(gameType, issuseNumber, userToken);
+        }
     }
 }

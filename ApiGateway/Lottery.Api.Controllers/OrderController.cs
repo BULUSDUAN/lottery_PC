@@ -1384,7 +1384,7 @@ namespace Lottery.Api.Controllers
                 Value = result,
             };
         }
-        private async Task<List<object>> GetCodeList_GSAPP([FromServices]IServiceProxyProvider _serviceProxyProvider, Sports_AnteCodeQueryInfoCollection code, string gameCode, int amount)
+        public async Task<List<object>> GetCodeList_GSAPP([FromServices]IServiceProxyProvider _serviceProxyProvider, Sports_AnteCodeQueryInfoCollection code, string gameCode, int amount)
         {
             var issuseNumber = code.List.Count > 0 ? code.List[0].IssuseNumber : string.Empty;
             var codeList = new List<object>();
@@ -1425,8 +1425,8 @@ namespace Lottery.Api.Controllers
                                 Amount = amount,
                                 BetCount = betCount,
                                 OrderNumber = _item.OrderNumber,
-                                Detail_RF = AnalyticalCurrentSp(item.CurrentSp, "RF"),
-                                Detail_YSZF = AnalyticalCurrentSp(item.CurrentSp, "YSZF"),
+                                Detail_RF = BusinessHelper.AnalyticalCurrentSp(item.CurrentSp, "RF"),
+                                Detail_YSZF = BusinessHelper.AnalyticalCurrentSp(item.CurrentSp, "YSZF"),
                             });
                         }
                     }
@@ -1470,8 +1470,8 @@ namespace Lottery.Api.Controllers
                         StartTime = ConvertHelper.ConvertDateTimeInt(Convert.ToDateTime(item.StartTime)),
                         Amount = amount,
                         BetCount = betCount,
-                        Detail_RF = AnalyticalCurrentSp(item.CurrentSp, "RF"),
-                        Detail_YSZF = AnalyticalCurrentSp(item.CurrentSp, "YSZF"),
+                        Detail_RF = BusinessHelper.AnalyticalCurrentSp(item.CurrentSp, "RF"),
+                        Detail_YSZF = BusinessHelper.AnalyticalCurrentSp(item.CurrentSp, "YSZF"),
                     });
                 }
                 else
@@ -1514,35 +1514,14 @@ namespace Lottery.Api.Controllers
                         StartTime = ConvertHelper.ConvertDateTimeInt(Convert.ToDateTime(item.StartTime)),
                         Amount = amount,
                         BetCount = betCount,
-                        Detail_RF = AnalyticalCurrentSp(item.CurrentSp, "RF"),
-                        Detail_YSZF = AnalyticalCurrentSp(item.CurrentSp, "YSZF"),
+                        Detail_RF =BusinessHelper.AnalyticalCurrentSp(item.CurrentSp, "RF"),
+                        Detail_YSZF = BusinessHelper.AnalyticalCurrentSp(item.CurrentSp, "YSZF"),
                     });
                 }
             }
             return codeList;
         }
-        private string AnalyticalCurrentSp(string currentSp, string code)
-        {
-            if (string.IsNullOrEmpty(currentSp) || string.IsNullOrEmpty(code))
-                return string.Empty;
-            var array = currentSp.Split(',');
-            if (array != null && array.Length > 0)
-            {
-                foreach (var item in array)
-                {
-                    if (!string.IsNullOrEmpty(item))
-                    {
-                        var tempArr = item.Split('|');
-                        if (tempArr != null && tempArr.Length > 1)
-                        {
-                            if (code.ToUpper() == tempArr[0].ToUpper())
-                                return (tempArr[1]);
-                        }
-                    }
-                }
-            }
-            return string.Empty;
-        }
+        
         /// <summary>
         /// 查询定制跟单列表_150
         /// </summary>
@@ -2571,7 +2550,7 @@ namespace Lottery.Api.Controllers
             }
         }
         /// <summary>
-        /// 开奖记录
+        /// 开奖记录_220
         /// </summary>
         /// <param name="_serviceProxyProvider"></param>
         /// <param name="entity"></param>
@@ -2585,7 +2564,7 @@ namespace Lottery.Api.Controllers
                 string term = p.PageIndex;
                 int page = 0;
                 int.TryParse(term, out page);
-                var list = JSON_kaiJiang.GetHistory(type, page);
+                var list = GetHistory(_serviceProxyProvider,type, page);
                 return new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
@@ -2608,16 +2587,21 @@ namespace Lottery.Api.Controllers
         /// <summary>
         /// 查询开奖历史
         /// </summary>
-        public static List<KaiJiangHistory> GetHistory(string gameCode, int page)
+        public async static Task<List<KaiJiangHistory>> GetHistory([FromServices]IServiceProxyProvider _serviceProxyProvider, string gameCode, int page)
         {
             gameCode = gameCode.ToUpper();
             var startTime = DateTime.Now.AddYears(-1);
             var endTime = DateTime.Now;
             List<KaiJiangHistory> list = new List<KaiJiangHistory>();
             string[] arr = { "T14C", "TR9", "T6BQC", "T4CJQ" };
+            Dictionary<string, object> param = new Dictionary<string, object>()
+            {
+                {"startTime",startTime },{"endTime", endTime},{"pageIndex",page },{"pageSize",ConvertHelper.MaxIssuseCount("CTZQ") }
+            };
             if (arr.Count(a => a == gameCode) == 1)
             {
-                var numberHistoryList = WCFClients.ChartClient.QueryGameWinNumberByDate(startTime, endTime, string.Format("{0}_{1}", "CTZQ", gameCode), page, MaxIssuseCount("CTZQ"));
+                param.Add("gameCode", string.Format("{0}_{1}", "CTZQ", gameCode));
+                var numberHistoryList =await _serviceProxyProvider.Invoke<GameWinNumber_InfoCollection>(param, "api/Order/QueryGameWinNumberByDate");
                 foreach (var item in numberHistoryList.List)
                 {
                     list.Add(new KaiJiangHistory()
@@ -2633,7 +2617,8 @@ namespace Lottery.Api.Controllers
             }
             else
             {
-                var numberHistoryList = WCFClients.ChartClient.QueryGameWinNumberByDateDesc(startTime, endTime, gameCode, page, MaxIssuseCount("CTZQ"));
+                param.Add("gameCode", gameCode);
+                var numberHistoryList = await _serviceProxyProvider.Invoke<GameWinNumber_InfoCollection>(param, "api/Order/QueryGameWinNumberByDateDesc");
                 foreach (var item in numberHistoryList.List)
                 {
                     list.Add(new KaiJiangHistory()
@@ -2642,12 +2627,229 @@ namespace Lottery.Api.Controllers
                         time = item.CreateTime.ToString("yyyy-MM-dd"),
                         prizepool = "",
                         term = item.IssuseNumber,
-                        type = GetGameName(item.GameCode, item.GameType),
+                        type = ConvertHelper.GetGameName(item.GameCode, item.GameType),
                         sale = ""
                     });
                 }
             }
             return list;
         }
+        /// <summary>
+        /// 数字彩与传统足球最新开奖记录_221
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<LotteryServiceResponse> RecordHistory_Normal([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var infos =await GetKaiJiang(_serviceProxyProvider);
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "获取开奖记录成功",
+                    MsgId = entity.MsgId,
+                    Value = infos,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+        }
+        public async static Task<List<KaiJiang>> GetKaiJiang([FromServices]IServiceProxyProvider _serviceProxyProvider)
+        {
+            Dictionary<string, object> param = new Dictionary<string, object>()
+            {
+                { "gameString","JX11X5|CQSSC|SSQ|DLT|FC3D|PL3|CTZQ_T14C|CTZQ_T6BQC|CTZQ_T4CJQ|CTZQ_TR9"}
+            };
+            var entitys =await _serviceProxyProvider.Invoke<GameWinNumber_InfoCollection>(param, "api/Order/QueryAllGameNewWinNumber");
+            List<KaiJiang> list = new List<KaiJiang>();
+            foreach (var item in entitys.List)
+            {
+                var poolInfo = BusinessHelper.GetPoolInfo(item.GameCode, item.IssuseNumber);
+                list.Add(new KaiJiang()
+                {
+                    result = item.WinNumber,
+                    prizepool = poolInfo != null ? poolInfo.TotalPrizePoolMoney.ToString("###,##0.00") : "",
+                    nums = ConvertHelper.Getnums(poolInfo),
+                    name = item.GameCode.ToUpper() == "CTZQ" ? item.GameType : item.GameCode,
+                    termNo = item.IssuseNumber,
+                    ver = "1",
+                    grades = ConvertHelper.Getgrades(poolInfo),
+                    date = item.CreateTime.ToString("yyyy-MM-dd"),
+                    type = ConvertHelper.GetGameName(item.GameCode, item.GameType),
+                    sale = poolInfo != null ? poolInfo.TotalSellMoney.ToString("###,##0.00") : ""
+                });
+            }
+
+            list[list.Count - 1].name = "tr9";
+            list[list.Count - 1].type = "任选9";
+
+            return list;
+        }
+        /// <summary>
+        /// 开奖详情_222
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async static Task<LotteryServiceResponse> RecordDetail([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                string type = p.GameCode;
+                string term = p.IssuseNumber;
+                Dictionary<string, object> param = new Dictionary<string, object>()
+                {
+
+                };
+                var obj = GetKaiJingInfo(_serviceProxyProvider, "Web", type, term);
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "获取开奖详情成功",
+                    MsgId = entity.MsgId,
+                    Value = obj,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+
+        }
+        public async static Task<PrizelevelInfo> GetKaiJingInfo([FromServices]IServiceProxyProvider _serviceProxyProvider, string version, string type, string term)
+        {
+            type = type.ToUpper();
+            //"JX11X5|CQSSC|SSQ|DLT|FC3D|PL3|CTZQ_T14C|CTZQ_T6BQC|CTZQ_T4CJQ|CTZQ_TR9"
+            Dictionary<string, object> param = new Dictionary<string, object>()
+            {
+                {"byOfficial",true }
+            };
+            var entity = await _serviceProxyProvider.Invoke<List<LotteryIssuse_QueryInfo>>(param, "api/Order/QueryAllGameCurrentIssuse");
+            var entitys = entity as List<LotteryIssuse_QueryInfo>;
+            var bjdcentity = await _serviceProxyProvider.Invoke<BJDCIssuseInfo>(null, "api/Order/QueryBJDCCurrentIssuseInfo");//北单
+            PrizelevelInfo info = new PrizelevelInfo();
+            info.prizeLevel = new List<Prizelevel>();
+            var gameCode = type;
+            if (type.StartsWith("CTZQ"))
+            {
+                var strs = type.Split('_');
+                gameCode = strs[0];
+                //var gameType = strs[1];
+                var poolInfo =BusinessHelper.GetPoolInfo_CTZQ(type.ToUpper(), term);
+                foreach (var item in poolInfo)
+                {
+                    info.prizeLevel.Add(new Prizelevel()
+                    {
+                        betnum = item.BonusCount.ToString(),
+                        prize = item.BonusMoney.ToString("###,##0.00"),
+                        name = item.BonusLevelDisplayName
+                    });
+                }
+            }
+            else
+            {
+                var poolInfo = BusinessHelper.GetPoolInfo(type.ToUpper(), term);
+                if (poolInfo.GradeList != null)
+                {
+                    foreach (var item in poolInfo.GradeList)
+                    {
+                        info.prizeLevel.Add(new Prizelevel()
+                        {
+                            betnum = item.BonusCount.ToString(),
+                            prize = item.BonusMoney.ToString("###,##0.00"),
+                            name = item.GradeName
+                        });
+                    }
+                }
+            }
+            var model = entitys.Find(a => a.GameCode == gameCode);
+            info.stopSendPrizeTime = model != null ? model.LocalStopTime.ToString() : DateTime.Now.ToString();
+
+            return info;
+        }
+        /// <summary>
+        /// 传统足球开奖比赛内容
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<LotteryServiceResponse> RecordOpenMatch([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                var type = p.GameType;
+                var term = p.IssuseNumber;
+                var list =await GetphoneOpenMatch(_serviceProxyProvider, "web", type, term);
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "获取开奖比赛数据成功",
+                    MsgId = entity.MsgId,
+                    Value = list,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+        }
+        /// <summary>
+        /// 3.4对阵详情：是在传统足球开奖详情页内请求
+        /// </summary>
+        public async static Task<List<KaiJiangOpenMatch>> GetphoneOpenMatch([FromServices]IServiceProxyProvider _serviceProxyProvider, string version, string type, string term)
+        {
+            Dictionary<string, object> param = new Dictionary<string, object>()
+            {
+                { "gameType",type},{ "issuseNumber",term},{"userToken","" }
+            };
+            List<KaiJiangOpenMatch> list = new List<KaiJiangOpenMatch>();
+            var match = await _serviceProxyProvider.Invoke<CTZQMatchInfo_Collection>(param, "api/Order/QueryCTZQMatchListByIssuseNumber");
+            if (match == null || match.ListInfo == null)
+                return list;
+            int i = 1;
+            foreach (var item in match.ListInfo)
+            {
+                list.Add(new KaiJiangOpenMatch()
+                {
+                    result = BusinessHelper.GetResult(item.HomeTeamScore, item.GuestTeamScore),
+                    match_point = -1,
+                    whole_score = item.HomeTeamScore + ":" + item.GuestTeamScore,
+                    match_name = item.MatchName,
+                    away_team = item.GuestTeamName.Replace("\u0026nbsp;", "").Replace("&nbsp;", ""),
+                    match_state = "已完成",
+                    home_team = item.HomeTeamName.Replace("\u0026nbsp;", "").Replace("&nbsp;", ""),
+                    half_score = item.HomeTeamHalfScore + ":" + item.GuestTeamHalfScore,
+                    bout_index = (i++).ToString(),
+                    match_time = ""
+                });
+            }
+            return list;
+        }
+
     }
 }

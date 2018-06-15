@@ -88,5 +88,15 @@ namespace OrderLottery.Service.IModuleServices
         MyOrderListInfo QueryMyOrderDetailInfo(string schemeId);
         [Service(Date = "2018-06-14", Director = "Debug", Name = "查询最新中奖")]
         List<LotteryNewBonusInfo> QueryLotteryNewBonusInfoList(int count);
+        [Service(Date = "2018-06-15", Director = "Debug", Name = "查询开奖历史")]
+        GameWinNumber_InfoCollection QueryGameWinNumberByDate(DateTime startTime, DateTime endTime, string gameCode, int pageIndex, int pageSize);
+        [Service(Date = "2018-06-15", Director = "Debug", Name = "查询开奖历史倒序")]
+        GameWinNumber_InfoCollection QueryGameWinNumberByDateDesc(DateTime startTime, DateTime endTime, string gameCode, int pageIndex, int pageSize);
+        [Service(Date = "2018-06-15", Director = "Debug", Name = "查询奖期")]
+        List<LotteryIssuse_QueryInfo> QueryAllGameCurrentIssuse(bool byOfficial);
+        [Service(Date = "2018-06-15", Director = "Debug", Name = "查询北京单场信息")]
+        BJDCIssuseInfo QueryBJDCCurrentIssuseInfo();
+        [Service(Date = "2018-06-15", Director = "Debug", Name = "传统足球开奖比赛内容")]
+        CTZQMatchInfo_Collection QueryCTZQMatchListByIssuseNumber(string gameType, string issuseNumber, string userToken);
     }
 }
