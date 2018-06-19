@@ -220,7 +220,7 @@ namespace Lottery.Kg.ORM.Helper
         public const string FundCategory_CPSRequestWithdraw = "CPS申请提取返点";
 
         #endregion
-        #region
+        #region 分页常量
         public const int MaxPageSize = 200;
         #endregion
         /// <summary>
