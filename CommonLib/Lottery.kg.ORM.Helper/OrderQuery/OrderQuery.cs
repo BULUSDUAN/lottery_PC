@@ -89,7 +89,7 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
                             ZJQ_Result = r.ZJQ_Result == null ? "" : r.ZJQ_Result,
                             ZJQ_SP = r.ZJQ_SP
                         };
-            if (query != null && query.Count() > 0)
+            if (query != null)
             {
                 BJDCMatchResultInfo_Collection list = new BJDCMatchResultInfo_Collection();
                 list.ListInfo = query.Skip(pageIndex * pageSize).Take(pageSize).ToList();

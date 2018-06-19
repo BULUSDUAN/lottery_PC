@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 namespace OrderLottery.Service.ModuleServices
 {
     [ModuleName("Order")]
-    public class OrderService : DBbase, IOrderService
+    public class OrderService :KgBaseService, IOrderService
     {
         IKgLog log = null;
         readonly OrderQuery _order = null;

@@ -214,22 +214,25 @@ namespace Lottery.Api.Controllers
             try
             {
                 
-                var p = WebHelper.Decode(entity.Param);
+                var p = WebHelper.Decode(entity.Param); 
                 string gameCode = p.GameCode;
                 string issuseNumber = p.IssuseNumber;
                 string gameType = p.GameType;
                 int pageIndex= p.PageIndex == null ? 0 : Convert.ToInt32(p.PageIndex);
                 int pageSize= p.PageSize == null ? 0 : Convert.ToInt32(p.PageSize);
-                Dictionary<string, object> param = new Dictionary<string, object>
-                {
-                 { "gameCode", gameCode },{ "issuseNumber", issuseNumber },{ "gameType",gameType },{ "pageIndex", pageIndex },{ "pageSize",pageSize }
-                };
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["issuseNumber"] = issuseNumber;
+                param["pageIndex"] = pageIndex;
+                param["pageSize"] = pageSize;
+                //{
+                //{ "issuseNumber", issuseNumber },{ "pageIndex", pageIndex },{ "pageSize",pageSize }
+                //};
                 DateTime startTime = string.IsNullOrEmpty(p.StartTime) ? DateTime.Now : Convert.ToDateTime(p.StartTime);
                 DateTime endTime = string.IsNullOrEmpty(p.EndTime) ? DateTime.Now : Convert.ToDateTime(p.EndTime);                
                 if (string.IsNullOrEmpty(gameCode))
                     throw new Exception("传入彩种不能为空");
                 var list = new List<object>();
-                if (p.gameCode.ToUpper() == "JCZQ")
+                if (gameCode.ToUpper() == "JCZQ")
                 {
                     //读取json
                     var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "jsonData");
@@ -292,7 +295,7 @@ namespace Lottery.Api.Controllers
                         }
                     }
                 }
-                else if (p.gameCode.ToUpper() == "JCLQ")
+                else if (gameCode.ToUpper() == "JCLQ")
                 {
                     //读取json
                     var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "jsonData");
@@ -345,9 +348,9 @@ namespace Lottery.Api.Controllers
                         }
                     }
                 }
-                else if (p.gameCode.ToUpper() == "BJDC")
+                else if (gameCode.ToUpper() == "BJDC")
                 {
-                    if (string.IsNullOrEmpty(p.issuseNumber))
+                    if (string.IsNullOrEmpty(issuseNumber))
                         throw new Exception("传入期号不能为空");
                     var result = await _serviceProxyProvider.Invoke<BJDCMatchResultInfo_Collection>(param, "api/Order/QueryBJDC_MatchResultCollection");
                     if (result != null && result.ListInfo.Count > 0)
@@ -393,11 +396,11 @@ namespace Lottery.Api.Controllers
                         }
                     }
                 }
-                else if (p.gameCode.ToUpper() == "CTZQ")
+                else if (gameCode.ToUpper() == "CTZQ")
                 {
-                    if (string.IsNullOrEmpty(p.gameType))
+                    if (string.IsNullOrEmpty(gameType))
                         throw new Exception("玩法不能为空");
-                    else if (string.IsNullOrEmpty(p.issuseNumber))
+                    else if (string.IsNullOrEmpty(issuseNumber))
                         throw new Exception("期号不能为空");
 
                     var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "jsonData");

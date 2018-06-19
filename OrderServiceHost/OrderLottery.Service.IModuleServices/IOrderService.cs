@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace OrderLottery.Service.IModuleServices
 {
     [ServiceBundle("api/{Service}")]
-   public interface IOrderService
+   public interface IOrderService:IServiceKey
     {
         [Service(Date = "2018-06-04", Director = "Debug", Name = "中奖查询")]
         Task<BonusOrderInfoCollection> QueryBonusInfoList(QueryBonusInfoListParam Model);
