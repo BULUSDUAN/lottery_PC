@@ -97,15 +97,15 @@ namespace Lottery.Api.Controllers
             {
 
 
-                var p = WebHelper.Decode(entity.Param);
-                if (string.IsNullOrEmpty(p.GameCode))
-                    throw new Exception("彩种不能为空");
+                var p = JsonHelper.Decode(entity.Param);             
                 //param.userToken = p.UserToken;
-                string GameCode = p.GameCode.ToUpper();
-                string gameType = p.GameType.ToUpper();
+                string GameCode = p.GameCode.ToString().ToUpper();
+                string gameType = p.GameType.ToString().ToUpper();
                 int pageIndex = p.PageIndex;
                 int pageSize = p.PageSize;
                 string key = p.KeyWord;
+                if (string.IsNullOrEmpty(GameCode))
+                    throw new Exception("彩种不能为空");
                 Dictionary<string, object> param = new Dictionary<string, object> {
                 { "gameCode", GameCode },{"gameType", gameType },{ "pageIndex", pageIndex},{ "pageSize", pageSize},{ "key", key}
                 };
