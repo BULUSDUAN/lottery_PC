@@ -538,12 +538,13 @@ namespace UserLottery.Service.ModuleServices
                     throw new Exception("验证码不能为空");
                 var isCheckValidateCode = false;
                 var authenticationBiz = new MobileAuthenticationBusiness();
+                var ValidationMobile = new ValidationMobileBusiness();
                 #region "20180522新增:用户名注册修改为手机号注册后,存在老用户绑定了手机号后，可以继续用手机号注册一个新号"
                 if (authenticationBiz.IsMobileAuthenticated(mobile))
                     throw new Exception("该手机号已经认证");
                 #endregion      
 
-                isCheckValidateCode = authenticationBiz.CheckValidationCode(mobile, "MobileAuthentication", validateCode, GetMaxTimes(3));
+                isCheckValidateCode = ValidationMobile.CheckValidationCode(mobile, "MobileAuthentication", validateCode, GetMaxTimes(3));
 
                 if (!isCheckValidateCode)
                 {
@@ -860,6 +861,57 @@ namespace UserLottery.Service.ModuleServices
                 //var writer = Common.Log.LogWriterGetter.GetLogWriter();
                 //writer.Write("SetUserRebate", "SetUserRebate_设置返点", Common.Log.LogType.Error, "设置返点异常", ex.ToString());
             }
+        }
+
+        /// <summary>
+        /// 注册验证手机 
+        /// </summary>
+        /// <param name="mobile"></param>
+        /// <returns></returns>
+        public CommonActionResult RegisterRequestMobile(string mobile)
+        {
+
+            try
+            {
+                var validateCode = GetRandomMobileValidateCode();
+
+                dBbase.DB.Begin();
+
+                var authenticationBiz = new MobileAuthenticationBusiness();
+                authenticationBiz.RegisterRequestMobile(mobile);
+
+                var biz = new ValidationMobileBusiness();
+                validateCode = biz.SendValidationCode(mobile, "MobileAuthentication", validateCode, GetDelay(60), GetMaxTimes(3));
+
+                dBbase.DB.Commit();
+
+
+
+                #region 发送站内消息：手机短信或站内信
+
+               
+                var pList = new List<string>();
+                pList.Add(string.Format("{0}={1}", "[ValidNumber]", validateCode));
+                //发送短信
+                new SiteMessageControllBusiness().DoSendSiteMessage("", mobile, "ON_User_Bind_Mobile_Before", pList.ToArray());
+
+                #endregion
+
+                return new CommonActionResult(true, "已成功提交手机认证申请，请等待。") { ReturnValue = validateCode };
+            }
+            catch (Exception ex)
+            {
+                dBbase.DB.Rollback();
+                return new CommonActionResult(false, ex.Message);
+            }
+        }
+        private int GetDelay(int delay)
+        {
+            //if (UsefullHelper.IsInTest)
+            //{
+            //    return 0;
+            //}
+            return delay;
         }
         #endregion Implementation of IUserService
     }
