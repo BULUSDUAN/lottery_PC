@@ -27,5 +27,24 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
         {
             DB.GetDal<E_Authentication_Mobile>().Add(entity);
         }
+
+
+        public E_Authentication_Mobile GetMobileInfoByMobile(string mobile)
+        {
+            var query = DB.CreateQuery<E_Authentication_Mobile>().Where(s => s.Mobile == mobile);
+            if (query != null && query.Count() > 0)
+            {
+                var resutl = query.FirstOrDefault(s => s.IsSettedMobile == true);
+                if (resutl != null)
+                    return resutl;
+                else
+                {
+                    resutl = query.FirstOrDefault(s => s.IsSettedMobile == false);
+                    if (resutl != null)
+                        return resutl;
+                }
+            }
+            return null;
+        }
     }
 }

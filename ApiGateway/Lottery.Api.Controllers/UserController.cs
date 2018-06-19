@@ -441,7 +441,7 @@ namespace Lottery.Api.Controllers
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param["mobile"] = mobile;
                 var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/RegisterRequestMobile");               
-                //return Json(new { status = result.IsSuccess, message = result.Message }, JsonRequestBehavior.AllowGet);
+              
                 return new LotteryServiceResponse
                 {
                     Code = result.IsSuccess ? ResponseCode.成功 : ResponseCode.失败,
