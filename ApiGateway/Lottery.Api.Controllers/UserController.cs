@@ -224,7 +224,7 @@ namespace Lottery.Api.Controllers
         }
 
         /// <summary>
-        /// 请求手机认证(018)
+        /// 请求手机认证(108)
         /// </summary>
         /// <param name="_serviceProxyProvider"></param>
         /// <param name="entity"></param>
@@ -282,14 +282,68 @@ namespace Lottery.Api.Controllers
             return null;
         }
 
-
         /// <summary>
-        /// 适应web版本注册 211
+        /// 回复手机认证 109
         /// </summary>
         /// <param name="_serviceProxyProvider"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<LotteryServiceResponse> RegisterWeb([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        public async Task<LotteryServiceResponse> ResponseMobileValidate([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                string mobileCode = p.MobileCode;
+                string userToken = p.UserToken;
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                if (string.IsNullOrEmpty(mobileCode))
+                    throw new Exception("手机验证码不能为空");
+                if (string.IsNullOrEmpty(userToken))
+                    throw new Exception("userToken不能为空");
+                param["mobileCode"] = mobileCode;
+                param["source"] = (int)SchemeSource.Web;
+                param["userToken"] = userToken;
+                var result = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/ResponseAuthenticationMobile");
+                if (!result.IsSuccess)
+                    throw new Exception(result.Message);
+
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = result.Message,
+                    MsgId = entity.MsgId,
+                    Value = result.Message,
+                };
+            }
+            catch (ArgumentException ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+        }
+
+            /// <summary>
+            /// 适应web版本注册 211
+            /// </summary>
+            /// <param name="_serviceProxyProvider"></param>
+            /// <param name="entity"></param>
+            /// <returns></returns>
+            public async Task<LotteryServiceResponse> RegisterWeb([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
             {
@@ -464,7 +518,7 @@ namespace Lottery.Api.Controllers
         }
 
         /// <summary>
-        /// 内部校验验证码是否正确
+        /// 内部校验验证码是否正确 
         /// </summary>
         /// <param name="verifycode"></param>
         /// <returns></returns>
@@ -488,5 +542,68 @@ namespace Lottery.Api.Controllers
                 return false;
             }
         }
-    }
+
+        /// <summary>
+        /// 手机号是否可注册 224
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<LotteryServiceResponse> PhoneIsRegister([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                Dictionary<string, object> Keyparam = new Dictionary<string, object>();
+                var p = WebHelper.Decode(entity.Param);
+                string mobile = p.mobile;
+                Keyparam["key"] = "BanRegistrMobile";
+
+                var banRegistrMobile = await _serviceProxyProvider.Invoke<C_Core_Config>(Keyparam, "api/user/QueryCoreConfigByKey");
+                if (banRegistrMobile.ConfigValue.Contains(mobile))
+                {
+                    return new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.成功,
+                        Message = "因检测到该号码在黑名单中，无法注册用户，请联系在线客服。",
+                        MsgId = entity.MsgId,
+                        Value = "因检测到该号码在黑名单中，无法注册用户，请联系在线客服。",
+                    };
+                }
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["mobile"] = mobile;
+                var flag = await _serviceProxyProvider.Invoke<bool>(param, "api/user/HasMobile");
+          
+                var result = new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "手机号可用",
+                    MsgId = entity.MsgId,
+                    Value = "手机号可用",
+                };
+                if (flag)
+                {
+                    result.Message = "手机号已被注册";
+                    result.Value = "手机号已被注册";
+                    return result;
+                }
+                else
+                {
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+        }
+
+
+
+        }
 }
