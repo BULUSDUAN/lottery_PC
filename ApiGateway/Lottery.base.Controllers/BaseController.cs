@@ -64,5 +64,35 @@ namespace Lottery.Base.Controllers
             }
         }
 
+
+        //#region "20171108增加配置（禁止注册的手机号码）"
+        ///// <summary>
+        ///// 禁止注册的号码
+        ///// </summary>
+        //public string BanRegistrMobile
+        //{
+        //    get
+        //    {
+        //        string defalutValue = "";
+        //        try
+        //        {
+        //            var v = WCFClients.GameClient.QueryCoreConfigByKey("BanRegistrMobile").ConfigValue;
+        //            if (string.IsNullOrEmpty(v))
+        //            {
+        //                return defalutValue;
+        //            }
+        //            else
+        //            {
+        //                return v;
+        //            }
+        //        }
+        //        catch (Exception)
+        //        {
+        //            return defalutValue;
+        //        }
+        //    }
+        //}
+        //#endregion
+
     }
 }

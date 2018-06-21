@@ -868,7 +868,7 @@ namespace UserLottery.Service.ModuleServices
         /// </summary>
         /// <param name="mobile"></param>
         /// <returns></returns>
-        public CommonActionResult RegisterRequestMobile(string mobile)
+        public Task<CommonActionResult> RegisterRequestMobile(string mobile)
         {
 
             try
@@ -884,12 +884,7 @@ namespace UserLottery.Service.ModuleServices
                 validateCode = biz.SendValidationCode(mobile, "MobileAuthentication", validateCode, GetDelay(60), GetMaxTimes(3));
 
                 dBbase.DB.Commit();
-
-
-
                 #region 发送站内消息：手机短信或站内信
-
-               
                 var pList = new List<string>();
                 pList.Add(string.Format("{0}={1}", "[ValidNumber]", validateCode));
                 //发送短信
@@ -897,12 +892,12 @@ namespace UserLottery.Service.ModuleServices
 
                 #endregion
 
-                return new CommonActionResult(true, "已成功提交手机认证申请，请等待。") { ReturnValue = validateCode };
+                return Task.FromResult(new CommonActionResult(true, "已成功提交手机认证申请，请等待。") { ReturnValue = validateCode });
             }
             catch (Exception ex)
             {
-                dBbase.DB.Rollback();
-                return new CommonActionResult(false, ex.Message);
+               
+                return Task.FromResult(new CommonActionResult(false, ex.Message));
             }
         }
         private int GetDelay(int delay)
@@ -913,6 +908,19 @@ namespace UserLottery.Service.ModuleServices
             //}
             return delay;
         }
+
+        #region 判断手机号是否已被注册
+        public Task<bool> HasMobile(string mobile)
+        {
+
+            var validateCode = GetRandomMobileValidateCode();
+            var authenticationBiz = new MobileAuthenticationBusiness();
+            var flag = authenticationBiz.HasMobile(mobile);
+            return Task.FromResult(flag);
+        }
+        #endregion
+
+
         #endregion Implementation of IUserService
     }
 }

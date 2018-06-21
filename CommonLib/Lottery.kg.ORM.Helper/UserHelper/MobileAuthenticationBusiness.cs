@@ -178,5 +178,22 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
              
             
         }
+
+        #region 手机号是否已注册
+        /// <summary>
+        /// 手机号是否已注册
+        /// </summary>
+        /// <param name="mobile"></param>
+        /// <returns></returns>
+        public bool HasMobile(string mobile)
+        {
+            var manager = new UserMobileManager();
+            {
+                var model = manager.GetMobileInfoByMobile(mobile);
+                if (model == null) return false;
+                return true;
+            }
+        }
+        #endregion
     }
 }
