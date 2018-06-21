@@ -44,6 +44,12 @@ namespace KaSon.FrameWork.Helper
                 return jsonString;
             }
         }
+
+        public static dynamic Decode(string data)
+        {           
+            return JsonConvert.DeserializeObject<dynamic>(data);
+        }
+        
     }
 
     //Sustem.Web.Helper

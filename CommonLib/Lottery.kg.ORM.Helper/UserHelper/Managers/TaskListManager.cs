@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Lottery.Kg.ORM.Helper
+namespace Lottery.Kg.ORM.Helper.UserHelper
 {
-    class Class1
+   public class TaskListManager:DBbase
     {
+
     }
 }

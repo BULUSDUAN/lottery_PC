@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0"?>
 <ArrayOfOrmConfigInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <OrmConfigInfo>
-    <DbKey>Default</DbKey>
+    <DbKey>SqlServer.Default</DbKey>
     <ConnectionString>Data Source=10.0.3.6;Initial Catalog=ECP_Core;User ID=sa;Password=x123456789;Connection Timeout=10;</ConnectionString>
     <Provider>SqlServer</Provider>
     <CommandTimeout>300</CommandTimeout>

@@ -1,5 +1,6 @@
 ﻿using EntityModel;
 using EntityModel.CoreModel.AuthEntities;
+using EntityModel.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -85,123 +86,114 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
         }
         #endregion
 
-        public bool CheckValidationCode(string mobile, string category, string validateCode, int maxRetryTime)
+      
+
+
+        public string RegisterResponseMobile(string userId, string mobile, int delaySeconds, string delayDescription)
         {
-                   bool isSuccess;
 
-                    DB.Begin();
+            DB.Begin();
 
-                    //查询是否发送过验证码
-                   var validation = DB.CreateQuery<E_Validation_Mobile>().Where(p => p.Mobile == mobile && p.Category == category).FirstOrDefault();
-                    if (validation == null)
-                    {
-                        throw new Exception("尚未发送验证码");
-                    }
+            var gv = new TaskListManager();
 
-                    //新增发送短信的记录
-                    var MobileValidationLog=new E_Validation_Mobile_Log
-                    {
-                        CreateTime = DateTime.Now,
-                        DB_ValidateCode = validation.ValidateCode,
-                        Mobile = mobile,
-                        User_ValidateCode = validateCode,
-                    };
-                     DB.GetDal<E_Validation_Mobile_Log>().Add(MobileValidationLog);
+            var old = DB.CreateQuery<E_TaskList>().FirstOrDefault(p => p.UserId == userId && p.TaskCategory == (int)TaskCategory.MobilBinding);
 
-                    if (validation.RetryTimes >= maxRetryTime)
-                    {
-                        throw new Exception(string.Format("重试次数超出最大限制次数【{0}】次，请尝试重新发送验证码。", maxRetryTime));
-                    }
-                    if (validation.ValidateCode == validateCode)
-                    {
-                     DB.GetDal<E_Validation_Mobile>().Delete(validation);
-                        isSuccess = true;
-                    }
-                    else
-                    {
-                        validation.RetryTimes++;
-                        validation.UpdateTime = DateTime.Now;
-                        DB.GetDal<E_Validation_Mobile>().Update(validation);
-                        isSuccess = false;
-                    }
-                
-            DB.Commit();
+            if (old == null)
+            {
+                //增加成长值 
+                var orderId = Guid.NewGuid().ToString("N");
+                BusinessHelper businessHelper = new BusinessHelper();
+                businessHelper.Payin_UserGrowth("绑定手机号", orderId, userId, 100, "完成手机号绑定可获得100点成长值");
+                var UserTaskRecord=new E_UserTaskRecord
+                {
+                    CreateTime = DateTime.Now,
+                    CurrentTime = DateTime.Now.ToString("yyyyMMdd"),
+                    OrderId = orderId,
+                    TaskCategory = (int)TaskCategory.MobilBinding,
+                    TaskName = "绑定手机号",
+                    UserId = userId,
+                };
+                DB.GetDal<E_UserTaskRecord>().Add(UserTaskRecord);
+
+                var TaskList=new E_TaskList
+                {
+                    UserId = userId,
+                    OrderId = orderId,
+                    Content = "完成手机号绑定可获得100点成长值",
+                    ValueGrowth = 100,
+                    IsGive = true,
+                    VipLevel = 0,
+                    CurrentTime = DateTime.Now.ToString("yyyyMMdd"),
+                    TaskCategory = (int)TaskCategory.MobilBinding,
+                    TaskName = "绑定手机号",
+                    CreateTime = DateTime.Now,
+                };
+                DB.GetDal<E_TaskList>().Add(TaskList);
+            }
+
+                var manager = new UserMobileManager();           
+                var entity = manager.GetUserMobile(userId);
+                if (entity != null)
+                {
+                    if (entity.IsSettedMobile)
+                        throw new ArgumentException(string.Format("已于【{0:yyyy-MM-dd HH:mm:ss}】进行过手机认证。", entity.UpdateTime));
+                    var span = DateTime.Now - entity.UpdateTime.AddSeconds(delaySeconds);
+                    if (span.TotalSeconds > 0)
+                        throw new ArgumentException(string.Format("提交认证手机必须在请求认证后【{0}】内完成。", delayDescription));
+                    entity.IsSettedMobile = true;
+                    manager.UpdateUserMobile(entity);
+                }
+                else
+                {
+                entity = new E_Authentication_Mobile
+                {
+                    UserId = userId,
+                    CreateTime = DateTime.Now,
+                    UpdateTime = DateTime.Now,
+                    AuthFrom = "LOCAL",
+                    Mobile = mobile,
+                    IsSettedMobile = true,
+                    CreateBy = userId,
+                    UpdateBy = userId,
+                };
+                    manager.AddUserMobile(entity);
+                }
+
+                mobile = entity.Mobile;
             
-            return isSuccess;
+               DB.Commit();
+
+
+            return mobile;
         }
 
 
-        //public string RegisterResponseMobile(string userId, string mobile, int delaySeconds, string delayDescription)
-        //{
+        public void RegisterRequestMobile(string mobile)
+        {
+                 var manager = new UserMobileManager();
            
-        //        DB.Begin();
+                var other = manager.GetMobileInfoByMobile(mobile);
+                if (other != null && other.IsSettedMobile)
+                    throw new ArgumentException(string.Format("此手机号【{0}】已被其他用户注册。", mobile));
+             
+            
+        }
 
-        //        var gv = new TaskListManager();
-        //        var old = gv.QueryTaskListByCategory(userId, TaskCategory.MobilBinding);
-        //        if (old == null)
-        //        {
-        //            //增加成长值 
-        //            var orderId = Guid.NewGuid().ToString("N");
-        //            BusinessHelper.Payin_UserGrowth("绑定手机号", orderId, userId, 100, "完成手机号绑定可获得100点成长值");
-        //            gv.AddUserTaskRecord(new UserTaskRecord
-        //            {
-        //                CreateTime = DateTime.Now,
-        //                CurrentTime = DateTime.Now.ToString("yyyyMMdd"),
-        //                OrderId = orderId,
-        //                TaskCategory = TaskCategory.MobilBinding,
-        //                TaskName = "绑定手机号",
-        //                UserId = userId,
-        //            });
-        //            gv.AddTaskList(new TaskList
-        //            {
-        //                UserId = userId,
-        //                OrderId = orderId,
-        //                Content = "完成手机号绑定可获得100点成长值",
-        //                ValueGrowth = 100,
-        //                IsGive = true,
-        //                VipLevel = 0,
-        //                CurrentTime = DateTime.Now.ToString("yyyyMMdd"),
-        //                TaskCategory = TaskCategory.MobilBinding,
-        //                TaskName = "绑定手机号",
-        //                CreateTime = DateTime.Now,
-        //            });
-        //        }
-
-        //        using (var manager = new UserMobileManager())
-        //        {
-        //            var entity = manager.GetUserMobile(userId);
-        //            if (entity != null)
-        //            {
-        //                if (entity.IsSettedMobile)
-        //                    throw new ArgumentException(string.Format("已于【{0:yyyy-MM-dd HH:mm:ss}】进行过手机认证。", entity.UpdateTime));
-        //                var span = DateTime.Now - entity.UpdateTime.AddSeconds(delaySeconds);
-        //                if (span.TotalSeconds > 0)
-        //                    throw new ArgumentException(string.Format("提交认证手机必须在请求认证后【{0}】内完成。", delayDescription));
-        //                entity.IsSettedMobile = true;
-        //                manager.UpdateUserMobile(entity);
-        //            }
-        //            else
-        //            {
-        //                entity = new UserMobile
-        //                {
-        //                    UserId = userId,
-        //                    User = manager.LoadUser(userId),
-        //                    AuthFrom = "LOCAL",
-        //                    Mobile = mobile,
-        //                    IsSettedMobile = true,
-        //                    CreateBy = userId,
-        //                    UpdateBy = userId,
-        //                };
-        //                manager.AddUserMobile(entity);
-        //            }
-
-        //            mobile = entity.Mobile;
-        //        }
-        //    DB.Commit();
-
-
-        //    return mobile;
-        //}
-
+        #region 手机号是否已注册
+        /// <summary>
+        /// 手机号是否已注册
+        /// </summary>
+        /// <param name="mobile"></param>
+        /// <returns></returns>
+        public bool HasMobile(string mobile)
+        {
+            var manager = new UserMobileManager();
+            {
+                var model = manager.GetMobileInfoByMobile(mobile);
+                if (model == null) return false;
+                return true;
+            }
+        }
+        #endregion
     }
 }

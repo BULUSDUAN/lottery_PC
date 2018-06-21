@@ -4,6 +4,7 @@ using System.Text;
 
 namespace EntityModel.CoreModel
 {
+    
    public class CTZQMatch_PoolInfo_Collection : Page
     {
         public CTZQMatch_PoolInfo_Collection() { }
