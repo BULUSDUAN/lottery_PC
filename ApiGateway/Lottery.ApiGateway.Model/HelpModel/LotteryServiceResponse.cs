@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Lottery.ApiGateway.Model.Enum;
+﻿using System.Text;
 using KaSon.FrameWork.Helper;
+using EntityModel.Enum;
+
 namespace Lottery.ApiGateway.Model.HelpModel
 {
-   public class LotteryServiceResponse
+    public class LotteryServiceResponse
     {
         /// <summary>
         /// 消息序号（与传入时一样）

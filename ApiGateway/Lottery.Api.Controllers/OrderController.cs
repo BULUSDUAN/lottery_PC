@@ -1,11 +1,9 @@
 ﻿using EntityModel.Communication;
 using EntityModel.CoreModel;
 using EntityModel.Enum;
-using EntityModel.RequestModel;
 using Kason.Sg.Core.ProxyGenerator;
 using KaSon.FrameWork.Helper;
 using KaSon.FrameWork.Helper.分析器工厂;
-using Lottery.ApiGateway.Model.Enum;
 using Lottery.ApiGateway.Model.HelpModel;
 using Lottery.Base.Controllers;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +13,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 using static KaSon.FrameWork.Helper.JsonHelper;
 
 namespace Lottery.Api.Controllers

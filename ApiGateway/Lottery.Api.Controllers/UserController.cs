@@ -1,20 +1,16 @@
 ﻿using EntityModel;
 using EntityModel.Communication;
 using EntityModel.CoreModel;
-using EntityModel.RequestModel;
+using EntityModel.Enum;
 using Kason.Sg.Core.ProxyGenerator;
 using KaSon.FrameWork.Helper;
-using KaSon.FrameWork.Helper.Net;
-using Lottery.ApiGateway.Model.Enum;
 using Lottery.ApiGateway.Model.HelpModel;
 using Lottery.Base.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using static KaSon.FrameWork.Helper.JsonHelper;
 
 namespace Lottery.Api.Controllers
 {
