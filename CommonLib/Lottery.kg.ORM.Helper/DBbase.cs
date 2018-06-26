@@ -37,6 +37,7 @@ namespace Lottery.Kg.ORM.Helper
         }
 
         private DbProvider db = null;
+        private static DbProvider sdb = null;
         public DbProvider DB
         {
             get
@@ -56,6 +57,32 @@ namespace Lottery.Kg.ORM.Helper
 
                 }
                 return db;
+            }
+
+        }
+        /// <summary>
+        /// 静态DB
+        /// </summary>
+        public static DbProvider SDB
+        {
+            get
+            {
+                if (sdb == null)
+                {
+                    sdb = new DbProvider();
+                    //// db.Init("Default");
+                    if (_DBType == "MySql")
+                    {
+                        sdb.Init("MySql.Default");
+                    }
+                    else
+                    {
+                        sdb.Init("SqlServer.Default");
+                    }
+
+
+                }
+                return sdb;
             }
 
         }

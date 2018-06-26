@@ -100,7 +100,11 @@ namespace EntityModel.Enum
         /// </summary>
         Complate = 90,
     }
-
+    public enum ResponseCode
+    {
+        成功 = 101,
+        失败 = 201,
+    }
     /// <summary>
     /// 中奖状态
     /// </summary>

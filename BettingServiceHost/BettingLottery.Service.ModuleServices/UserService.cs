@@ -33,113 +33,113 @@ using BettingLottery.Service.IModuleServices;
 
 namespace BettingLottery.Service.ModuleServices
 {
-    [ModuleName("User")]
-    public class UserService : KgBaseService, IUserService
-    {
-        #region Implementation of IUserService
-        // private readonly UserRepository _repository;
-        //public UserService(UserRepository repository)
-        //{
-        //    this._repository = repository;
-        //}
-        IKgLog log = null;
-        public UserService()
-        {
+    //[ModuleName("User")]
+    //public class UserService : KgBaseService, IUserService
+    //{
+    //    #region Implementation of IUserService
+    //    // private readonly UserRepository _repository;
+    //    //public UserService(UserRepository repository)
+    //    //{
+    //    //    this._repository = repository;
+    //    //}
+    //    IKgLog log = null;
+    //    public UserService()
+    //    {
 
-            log = new Log4Log();
+    //        log = new Log4Log();
 
-        }
-        //public void PublicInfo(IntegrationEvent evt)
-        //{
-        //    Publish(evt);
-        //}
+    //    }
+    //    //public void PublicInfo(IntegrationEvent evt)
+    //    //{
+    //    //    Publish(evt);
+    //    //}
 
-        //Task IIntegrationEventHandler<EventModel>.Handle(EventModel @event)
-        //{
-        //    throw new NotImplementedException();
-        //}
+    //    //Task IIntegrationEventHandler<EventModel>.Handle(EventModel @event)
+    //    //{
+    //    //    throw new NotImplementedException();
+    //    //}
 
-        // log demo
-        /// <summary>
-        /// 日志使用 demo
-        /// </summary>
-        private void LogTest()
-        {
+    //    // log demo
+    //    /// <summary>
+    //    /// 日志使用 demo
+    //    /// </summary>
+    //    private void LogTest()
+    //    {
 
-            // 异常日志
-            log.Log("调试信息");
-            log.Log("标签", new Exception("错误"));
-        }
+    //        // 异常日志
+    //        log.Log("调试信息");
+    //        log.Log("标签", new Exception("错误"));
+    //    }
 
-        private void SQLTest()
-        {
+    //    private void SQLTest()
+    //    {
 
-            LoginHelper loginHelper = new LoginHelper();
-            //查询用户明
-            loginHelper.QueryUserName();
-            //或者
+    //        LoginHelper loginHelper = new LoginHelper();
+    //        //查询用户明
+    //        loginHelper.QueryUserName();
+    //        //或者
 
-        }
+    //    }
 
-        public Task<int> GetUserId(string userName)
-        {
-            //var xid = RpcContext.GetContext().GetAttachment("xid");
+    //    public Task<int> GetUserId(string userName)
+    //    {
+    //        //var xid = RpcContext.GetContext().GetAttachment("xid");
 
-            //throw new Exception("错误！");
+    //        //throw new Exception("错误！");
 
-            //测试容错
-           // Thread.Sleep(200000);
+    //        //测试容错
+    //       // Thread.Sleep(200000);
 
-            //var T1 = TTest1();
-            //var T21 = Test21();
-            //var T2 = Test2();
-            //var T3 = Test3();
+    //        //var T1 = TTest1();
+    //        //var T21 = Test21();
+    //        //var T2 = Test2();
+    //        //var T3 = Test3();
 
-            return Task.FromResult(1);
-        }
+    //        return Task.FromResult(1);
+    //    }
 
-        public Task<List<User>> GetUserList(string userName)
-        {
-            //var xid = RpcContext.GetContext().GetAttachment("xid");
+    //    public Task<List<User>> GetUserList(string userName)
+    //    {
+    //        //var xid = RpcContext.GetContext().GetAttachment("xid");
 
-            //throw new Exception("错误！");
+    //        //throw new Exception("错误！");
 
-            //  var T1 = TTest2();
-            //var T21 = Test21();
-            //var T2 = Test2();
-            //var T3 = Test3();
-            LoginHelper loginHelper = new LoginHelper();
-            //查询用户明
-            var list = loginHelper.QueryUserName();
+    //        //  var T1 = TTest2();
+    //        //var T21 = Test21();
+    //        //var T2 = Test2();
+    //        //var T3 = Test3();
+    //        LoginHelper loginHelper = new LoginHelper();
+    //        //查询用户明
+    //        var list = loginHelper.QueryUserName();
 
-            foreach (var item in list)
-            {
-                Console.WriteLine(item.Name);
-            }
+    //        foreach (var item in list)
+    //        {
+    //            Console.WriteLine(item.Name);
+    //        }
 
-            //  var list = new List<User>();
+    //        //  var list = new List<User>();
 
-            return Task.FromResult(list);
-        }
+    //        return Task.FromResult(list);
+    //    }
 
-        //获取用户
-        public Task<UserModel> GetUser(UserModel user)
-        {
-            return Task.FromResult(new UserModel
-            {
-                Name = "fanly",
-                Age = 18
-            });
-        }
-
-
-        public async Task PublishThroughEventBusAsync(IntegrationEvent evt)
-        {
-            // Publish(evt);
-            await Task.CompletedTask;
-        }
+    //    //获取用户
+    //    public Task<UserModel> GetUser(UserModel user)
+    //    {
+    //        return Task.FromResult(new UserModel
+    //        {
+    //            Name = "fanly",
+    //            Age = 18
+    //        });
+    //    }
 
 
-        #endregion Implementation of IUserService
-    }
+    //    public async Task PublishThroughEventBusAsync(IntegrationEvent evt)
+    //    {
+    //        // Publish(evt);
+    //        await Task.CompletedTask;
+    //    }
+
+
+    //    #endregion Implementation of IUserService
+    //}
 }
