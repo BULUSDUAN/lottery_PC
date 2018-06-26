@@ -58,41 +58,44 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
                         join m in DB.CreateQuery<C_BJDC_Match>() on r.Id equals m.Id
                         where r.IssuseNumber == issuseNumber
                         orderby r.Id descending
-                        select new BJDCMatchResultInfo
-                        {
-                            BF_Result = r.BF_Result == null ? "" : r.BF_Result,
-                            BF_SP = r.BF_SP == null ? 0 : r.BF_SP,
-                            BQC_Result = r.BQC_Result == null ? "" : r.BQC_Result,
-                            BQC_SP = r.BQC_SP == null ? 0 : r.BQC_SP,
-                            CreateTime = r.CreateTime,
-                            FlatOdds = m.FlatOdds == null ? 0 : m.FlatOdds,
-                            GuestFull_Result = r.GuestFull_Result == null ? "" : r.GuestFull_Result,
-                            GuestHalf_Result = r.GuestHalf_Result == null ? "" : r.GuestHalf_Result,
-                            GuestTeamName = m.GuestTeamName,
-                            HomeFull_Result = r.HomeFull_Result == null ? "" : r.HomeFull_Result,
-                            HomeHalf_Result = r.HomeHalf_Result == null ? "" : r.HomeHalf_Result,
-                            HomeTeamName = m.HomeTeamName,
-                            Id = r.Id,
-                            IssuseNumber = r.IssuseNumber,
-                            LetBall = m.LetBall,
-                            LoseOdds = m.LoseOdds,
-                            MatchColor = m.MatchColor,
-                            MatchName = m.MatchName,
-                            MatchOrderId = r.MatchOrderId,
-                            MatchStartTime = m.MatchStartTime,
-                            MatchState = r.MatchState,
-                            SPF_Result = r.SPF_Result == null ? "" : r.SPF_Result,
-                            SPF_SP = r.SPF_SP,
-                            SXDS_Result = r.SXDS_Result == null ? "" : r.SXDS_Result,
-                            SXDS_SP = r.SXDS_SP,
-                            WinOdds = m.WinOdds,
-                            ZJQ_Result = r.ZJQ_Result == null ? "" : r.ZJQ_Result,
-                            ZJQ_SP = r.ZJQ_SP
-                        };
+                        //select r
+                        select new { r, m };
+            var queryResult = query.ToList().Select(b => new BJDCMatchResultInfo
+            {
+                BF_Result = b.r.BF_Result == null ? "" : b.r.BF_Result,
+                BF_SP = b.r.BF_SP == null ? 0 : b.r.BF_SP,
+                BQC_Result = b.r.BQC_Result == null ? "" : b.r.BQC_Result,
+                BQC_SP = b.r.BQC_SP == null ? 0 : b.r.BQC_SP,
+                CreateTime = b.r.CreateTime,
+                FlatOdds = b.m.FlatOdds == null ? 0 : b.m.FlatOdds,
+                GuestFull_Result = b.r.GuestFull_Result == null ? "" : b.r.GuestFull_Result,
+                GuestHalf_Result = b.r.GuestHalf_Result == null ? "" : b.r.GuestHalf_Result,
+                GuestTeamName = b.m.GuestTeamName,
+                HomeFull_Result = b.r.HomeFull_Result == null ? "" : b.r.HomeFull_Result,
+                HomeHalf_Result = b.r.HomeHalf_Result == null ? "" : b.r.HomeHalf_Result,
+                HomeTeamName = b.m.HomeTeamName,
+                Id = b.r.Id,
+                IssuseNumber = b.r.IssuseNumber,
+                LetBall = b.m.LetBall,
+                LoseOdds = b.m.LoseOdds,
+                MatchColor = b.m.MatchColor,
+                MatchName = b.m.MatchName,
+                MatchOrderId = b.r.MatchOrderId,
+                MatchStartTime = b.m.MatchStartTime,
+                MatchState = b.r.MatchState,
+                SPF_Result = b.r.SPF_Result == null ? "" : b.r.SPF_Result,
+                SPF_SP = b.r.SPF_SP,
+                SXDS_Result = b.r.SXDS_Result == null ? "" : b.r.SXDS_Result,
+                SXDS_SP = b.r.SXDS_SP,
+                WinOdds = b.m.WinOdds,
+                ZJQ_Result = b.r.ZJQ_Result == null ? "" : b.r.ZJQ_Result,
+                ZJQ_SP = b.r.ZJQ_SP
+            });
+
             if (query != null)
             {
                 BJDCMatchResultInfo_Collection list = new BJDCMatchResultInfo_Collection();
-                list.ListInfo = query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+                list.ListInfo = queryResult.Skip(pageIndex * pageSize).Take(pageSize).ToList();
                 return list;
             }
             else
@@ -134,10 +137,10 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
                                 var todayList = from f in DB.CreateQuery<C_Fund_Detail>()
                                                 where f.UserId == userId
                                                 && (f.CreateTime >= DateTime.Today && f.CreateTime < DateTime.Today.AddDays(1))
-                                                && (accountArray.Length == 0 || accountArray.Contains((int)f.AccountType))
+                                                && (accountArray.Length == 0 || accountArray.Contains(f.AccountType))
                                                 select new C_Fund_Detail
                                                 {
-                                                    AccountType = (int)f.AccountType,
+                                                    AccountType = f.AccountType,
                                                     AfterBalance = f.AfterBalance,
                                                     BeforeBalance = f.BeforeBalance,
                                                     Category = f.Category,
@@ -147,7 +150,7 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
                                                     OperatorId = f.OperatorId,
                                                     OrderId = f.OrderId,
                                                     PayMoney = f.PayMoney,
-                                                    PayType = (int)f.PayType,
+                                                    PayType = f.PayType,
                                                     Summary = f.Summary,
                                                     UserId = f.UserId,
                                                 };
@@ -166,7 +169,7 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
                                         var currentList = JsonHelper.Deserialize<List<C_Fund_Detail>>(content);
                                         var querylist = from l in currentList
                                                         where (Model.keyLine == string.Empty || l.KeyLine == Model.keyLine)
-                                                        && (accountArray.Length == 0 || accountArray.Contains((int)l.AccountType))
+                                                        && (accountArray.Length == 0 || accountArray.Contains(l.AccountType))
                                                         //&& (categoryArray.Length == 0 || categoryArray.Contains(l.Category))
                                                         select l;
                                         list.AddRange(querylist.ToList());
@@ -356,56 +359,58 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
             string orderId = string.Empty;
             decimal minMoney = -1;
             decimal maxMoney = -1;
-            WithdrawAgentType? agent = null;
+            //WithdrawAgentType? agent = null;
+            int? agent = null;
             int sortType = -1;
             var query = from r in DB.CreateQuery<C_Withdraw>()
                         join u in DB.CreateQuery<C_User_Register>() on r.UserId equals u.UserId
                         where (userId == string.Empty || r.UserId == userId)
                         && r.RequestTime >= Model.startTime && r.RequestTime < Model.endTime
-                        && (Model.status == null || r.Status == (int)Model.status)
+                        && (Model.status == null || r.Status == Model.status)
                         && (orderId == string.Empty || r.BankCode == orderId)
-                        && (agent == null || r.WithdrawAgent == (int)agent)
+                        && (agent == null || r.WithdrawAgent == agent)
                         && (minMoney == -1 || r.RequestMoney >= minMoney)
                         && (maxMoney == -1 || r.RequestMoney <= maxMoney)
-                        select new Withdraw_QueryInfo
+                        select new { r, u };
+                var queryResult= query.ToList().Select(b=>new Withdraw_QueryInfo
                         {
-                            BankCardNumber = r.BankCardNumber,
-                            BankCode = r.BankCode,
-                            BankName = r.BankName,
-                            BankSubName = r.BankSubName,
-                            CityName = r.CityName,
-                            OrderId = r.OrderId,
-                            ProvinceName = r.ProvinceName,
-                            RequestMoney = r.RequestMoney,
-                            RequestTime = r.RequestTime,
-                            ResponseTime = r.ResponseTime,
-                            ResponseMoney = r.ResponseMoney,
-                            WithdrawAgent = (WithdrawAgentType)r.WithdrawAgent,
-                            Status = (WithdrawStatus)r.Status,
-                            ResponseMessage = r.ResponseMessage,
-                            RequesterDisplayName = u.DisplayName,
-                            RequesterUserKey = u.UserId,
-                        };
-            Collection.WinCount = query.Where(p => p.Status == WithdrawStatus.Success).Count();
-            Collection.RefusedCount = query.Where(p => p.Status == WithdrawStatus.Refused).Count();
+                            BankCardNumber = b.r.BankCardNumber,
+                            BankCode = b.r.BankCode,
+                            BankName = b.r.BankName,
+                            BankSubName = b.r.BankSubName,
+                            CityName = b.r.CityName,
+                            OrderId = b.r.OrderId,
+                            ProvinceName = b.r.ProvinceName,
+                            RequestMoney = b.r.RequestMoney,
+                            RequestTime = b.r.RequestTime,
+                            ResponseTime = b.r.ResponseTime,
+                            ResponseMoney = b.r.ResponseMoney,
+                            WithdrawAgent = b.r.WithdrawAgent,
+                            Status = b.r.Status,
+                            ResponseMessage = b.r.ResponseMessage,
+                            RequesterDisplayName = b.u.DisplayName,
+                            RequesterUserKey = b.u.UserId,
+                        });
+            Collection.WinCount = queryResult.Where(p => p.Status == (int)WithdrawStatus.Success).Count();
+            Collection.RefusedCount = queryResult.Where(p => p.Status == (int)WithdrawStatus.Refused).Count();
 
-            Collection.TotalWinMoney = Collection.WinCount == 0 ? 0M : query.Where(p => p.Status == WithdrawStatus.Success).Sum(p => p.RequestMoney);
-            Collection.TotalRefusedMoney = Collection.RefusedCount == 0 ? 0M : query.Where(p => p.Status == WithdrawStatus.Refused).Sum(p => p.RequestMoney);
+            Collection.TotalWinMoney = Collection.WinCount == 0 ? 0M : queryResult.Where(p => p.Status == (int)WithdrawStatus.Success).Sum(p => p.RequestMoney);
+            Collection.TotalRefusedMoney = Collection.RefusedCount == 0 ? 0M : queryResult.Where(p => p.Status == (int)WithdrawStatus.Refused).Sum(p => p.RequestMoney);
             Collection.TotalCount = query.Count();
-            Collection.TotalMoney = query.Count() == 0 ? 0M : query.Sum(p => p.RequestMoney);
-            Collection.TotalResponseMoney = Collection.WinCount == 0 ? 0M : query.Where(p => p.ResponseMoney.HasValue == true).Sum(p => p.ResponseMoney.Value);
+            Collection.TotalMoney = query.Count() == 0 ? 0M : queryResult.Sum(p => p.RequestMoney);
+            Collection.TotalResponseMoney = Collection.WinCount == 0 ? 0M : queryResult.Where(p => p.ResponseMoney.HasValue == true).Sum(p => p.ResponseMoney.Value);
 
             if (sortType == -1)
-                query = query.OrderBy(p => p.RequestTime);
+                queryResult = queryResult.OrderBy(p => p.RequestTime);
             if (sortType == 0)
-                query = query.OrderBy(p => p.RequestMoney);
+                queryResult = queryResult.OrderBy(p => p.RequestMoney);
             if (sortType == 1)
-                query = query.OrderByDescending(p => p.RequestMoney);
+                queryResult = queryResult.OrderByDescending(p => p.RequestMoney);
 
             if (Model.pageSize == -1)
-            { Collection.WithdrawList = query.ToList(); return Collection; }
+            { Collection.WithdrawList = queryResult.ToList(); return Collection; }
 
-            Collection.WithdrawList = query.Skip(Model.pageIndex * Model.pageSize).Take(Model.pageSize).ToList();
+            Collection.WithdrawList = queryResult.Skip(Model.pageIndex * Model.pageSize).Take(Model.pageSize).ToList();
             return Collection;
         }
         /// <summary>
@@ -581,67 +586,68 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
                         join r in DB.CreateQuery<C_Sports_Order_Complate>() on t.SchemeId equals r.SchemeId
                         join b in DB.CreateQuery<C_User_Beedings>() on t.CreateUserId equals b.UserId
                         where t.SchemeId == schemeId && t.GameCode == b.GameCode && t.GameType == b.GameType
-                        select new Sports_TogetherSchemeQueryInfo
-                        {
-                            BonusDeduct = t.BonusDeduct,
-                            CreateUserId = t.CreateUserId,
-                            CreaterDisplayName = u.DisplayName,
-                            CreaterHideDisplayNameCount = u.HideDisplayNameCount,
-                            Description = t.Description,
-                            GameDisplayName = KaSon.FrameWork.Helper.ConvertHelper.FormatGameCode(t.GameCode),
-                            GameTypeDisplayName = KaSon.FrameWork.Helper.ConvertHelper.FormatGameType(t.GameCode, t.GameType),
-                            Guarantees = t.Guarantees,
-                            PlayType = t.PlayType,
-                            Price = t.Price,
-                            SchemeDeduct = t.SchemeDeduct,
-                            SchemeSource = (SchemeSource)t.SchemeSource,
-                            Security = (TogetherSchemeSecurity)t.Security,
-                            StopTime = t.StopTime,
-                            Subscription = t.Subscription,
-                            Title = t.Title,
-                            TotalCount = t.TotalCount,
-                            TotalMoney = t.TotalMoney,
-                            SchemeId = t.SchemeId,
-                            JoinPwd = t.JoinPwd,
-                            Progress = t.Progress,
-                            ProgressStatus = (TogetherSchemeProgress)t.ProgressStatus,
-                            SystemGuarantees = t.SystemGuarantees,
-                            GameCode = t.GameCode,
-                            GameType = t.GameType,
-                            SoldCount = t.SoldCount,
-                            TotalMatchCount = t.TotalMatchCount,
-                            Amount = r.Amount,
-                            BetCount = r.BetCount,
-                            PreTaxBonusMoney = r.PreTaxBonusMoney,
-                            AfterTaxBonusMoney = r.AfterTaxBonusMoney,
-                            BonusStatus = (BonusStatus)r.BonusStatus,
-                            BonusCount = r.BonusCount,
-                            CreateTime = t.CreateTime,
-                            IsPrizeMoney = r.IsPrizeMoney,
-                            TicketStatus = (TicketStatus)r.TicketStatus,
-                            IssuseNumber = r.IssuseNumber,
-                            AddMoney = r.AddMoney,
-                            AddMoneyDescription = r.AddMoneyDescription,
-                            IsVirtualOrder = r.IsVirtualOrder,
-                            HitMatchCount = r.HitMatchCount,
-                            SchemeBettingCategory = (SchemeBettingCategory)r.SchemeBettingCategory,
-                            JoinUserCount = t.JoinUserCount,
-                            Attach = r.Attach,
-                            MinBonusMoney = r.MinBonusMoney,
-                            MaxBonusMoney = r.MaxBonusMoney,
-                            ExtensionOne = r.ExtensionOne,
-                            GoldCrownCount = b.GoldCrownCount,
-                            GoldCupCount = b.GoldCupCount,
-                            GoldDiamondsCount = b.GoldDiamondsCount,
-                            GoldStarCount = b.GoldStarCount,
-                            SilverCrownCount = b.SilverCrownCount,
-                            SilverCupCount = b.SilverCupCount,
-                            SilverDiamondsCount = b.SilverDiamondsCount,
-                            SilverStarCount = b.SilverStarCount,
-                            IsAppend = r.IsAppend == null ? false : r.IsAppend,
-                            TicketTime = r.TicketTime,
-                        };
-            var info = query.FirstOrDefault();
+                        select new { t, u, r, b };
+            var queryResult = query.ToList().Select(z => new Sports_TogetherSchemeQueryInfo
+            {
+                BonusDeduct = z.t.BonusDeduct,
+                CreateUserId = z.t.CreateUserId,
+                CreaterDisplayName = z.u.DisplayName,
+                CreaterHideDisplayNameCount = z.u.HideDisplayNameCount,
+                Description = z.t.Description,
+                GameDisplayName = KaSon.FrameWork.Helper.ConvertHelper.FormatGameCode(z.t.GameCode),
+                GameTypeDisplayName = KaSon.FrameWork.Helper.ConvertHelper.FormatGameType(z.t.GameCode, z.t.GameType),
+                Guarantees = z.t.Guarantees,
+                PlayType = z.t.PlayType,
+                Price = z.t.Price,
+                SchemeDeduct = z.t.SchemeDeduct,
+                SchemeSource = (SchemeSource)z.t.SchemeSource,
+                Security = (TogetherSchemeSecurity)z.t.Security,
+                StopTime = z.t.StopTime,
+                Subscription = z.t.Subscription,
+                Title = z.t.Title,
+                TotalCount = z.t.TotalCount,
+                TotalMoney = z.t.TotalMoney,
+                SchemeId = z.t.SchemeId,
+                JoinPwd = z.t.JoinPwd,
+                Progress = z.t.Progress,
+                ProgressStatus = (TogetherSchemeProgress)z.t.ProgressStatus,
+                SystemGuarantees = z.t.SystemGuarantees,
+                GameCode = z.t.GameCode,
+                GameType = z.t.GameType,
+                SoldCount = z.t.SoldCount,
+                TotalMatchCount = z.t.TotalMatchCount,
+                Amount = z.r.Amount,
+                BetCount = z.r.BetCount,
+                PreTaxBonusMoney = z.r.PreTaxBonusMoney,
+                AfterTaxBonusMoney = z.r.AfterTaxBonusMoney,
+                BonusStatus = (BonusStatus)z.r.BonusStatus,
+                BonusCount = z.r.BonusCount,
+                CreateTime = z.t.CreateTime,
+                IsPrizeMoney = z.r.IsPrizeMoney,
+                TicketStatus = (TicketStatus)z.r.TicketStatus,
+                IssuseNumber = z.r.IssuseNumber,
+                AddMoney = z.r.AddMoney,
+                AddMoneyDescription = z.r.AddMoneyDescription,
+                IsVirtualOrder = z.r.IsVirtualOrder,
+                HitMatchCount = z.r.HitMatchCount,
+                SchemeBettingCategory = (SchemeBettingCategory)z.r.SchemeBettingCategory,
+                JoinUserCount = z.t.JoinUserCount,
+                Attach = z.r.Attach,
+                MinBonusMoney = z.r.MinBonusMoney,
+                MaxBonusMoney = z.r.MaxBonusMoney,
+                ExtensionOne = z.r.ExtensionOne,
+                GoldCrownCount = z.b.GoldCrownCount,
+                GoldCupCount = z.b.GoldCupCount,
+                GoldDiamondsCount = z.b.GoldDiamondsCount,
+                GoldStarCount = z.b.GoldStarCount,
+                SilverCrownCount = z.b.SilverCrownCount,
+                SilverCupCount = z.b.SilverCupCount,
+                SilverDiamondsCount = z.b.SilverDiamondsCount,
+                SilverStarCount = z.b.SilverStarCount,
+                IsAppend = z.r.IsAppend == null ? false : z.r.IsAppend,
+                TicketTime = z.r.TicketTime,
+            });
+            var info = queryResult.FirstOrDefault();
             if (info != null && info.GameCode != "JCZQ" && info.GameCode != "JCLQ" && info.GameCode != "BJDC")
             {
                 var key = info.GameCode == "CTZQ" ? string.Format("{0}|{1}|{2}", info.GameCode, info.GameType, info.IssuseNumber) : string.Format("{0}|{1}", info.GameCode, info.IssuseNumber);
@@ -658,69 +664,70 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
                         join r in DB.CreateQuery<C_Sports_Order_Running>() on t.SchemeId equals r.SchemeId
                         join b in DB.CreateQuery<C_User_Beedings>() on t.CreateUserId equals b.UserId
                         where t.SchemeId == schemeId && t.GameCode == b.GameCode && t.GameType == b.GameType
-                        select new Sports_TogetherSchemeQueryInfo
+                        select new { t, u, r, b };
+                     var queryResult=query.ToList().Select(z=> new Sports_TogetherSchemeQueryInfo
                         {
-                            BonusDeduct = t.BonusDeduct,
-                            CreateUserId = t.CreateUserId,
-                            CreaterDisplayName = u.DisplayName,
-                            CreaterHideDisplayNameCount = u.HideDisplayNameCount,
-                            Description = t.Description,
-                            GameDisplayName = KaSon.FrameWork.Helper.ConvertHelper.FormatGameCode(t.GameCode),
-                            GameTypeDisplayName = KaSon.FrameWork.Helper.ConvertHelper.FormatGameType(t.GameCode, t.GameType),
-                            Guarantees = t.Guarantees,
-                            PlayType = t.PlayType,
-                            Price = t.Price,
-                            SchemeDeduct = t.SchemeDeduct,
-                            SchemeSource = (SchemeSource)t.SchemeSource,
-                            Security = (TogetherSchemeSecurity)t.Security,
-                            StopTime = t.StopTime,
-                            Subscription = t.Subscription,
-                            Title = t.Title,
-                            TotalCount = t.TotalCount,
-                            TotalMoney = t.TotalMoney,
-                            SchemeId = t.SchemeId,
-                            JoinPwd = t.JoinPwd,
-                            Progress = t.Progress,
-                            ProgressStatus = (TogetherSchemeProgress)t.ProgressStatus,
-                            SystemGuarantees = t.SystemGuarantees,
-                            GameCode = t.GameCode,
-                            GameType = t.GameType,
-                            SoldCount = t.SoldCount,
-                            TotalMatchCount = t.TotalMatchCount,
-                            Amount = r.Amount,
-                            BetCount = r.BetCount,
-                            PreTaxBonusMoney = r.PreTaxBonusMoney,
-                            AfterTaxBonusMoney = r.AfterTaxBonusMoney,
+                            BonusDeduct = z.t.BonusDeduct,
+                            CreateUserId = z.t.CreateUserId,
+                            CreaterDisplayName = z.u.DisplayName,
+                            CreaterHideDisplayNameCount = z.u.HideDisplayNameCount,
+                            Description = z.t.Description,
+                            GameDisplayName = KaSon.FrameWork.Helper.ConvertHelper.FormatGameCode(z.t.GameCode),
+                            GameTypeDisplayName = KaSon.FrameWork.Helper.ConvertHelper.FormatGameType(z.t.GameCode, z.t.GameType),
+                            Guarantees = z.t.Guarantees,
+                            PlayType = z.t.PlayType,
+                            Price = z.t.Price,
+                            SchemeDeduct = z.t.SchemeDeduct,
+                            SchemeSource = (SchemeSource)z.t.SchemeSource,
+                            Security = (TogetherSchemeSecurity)z.t.Security,
+                            StopTime = z.t.StopTime,
+                            Subscription = z.t.Subscription,
+                            Title = z.t.Title,
+                            TotalCount = z.t.TotalCount,
+                            TotalMoney = z.t.TotalMoney,
+                            SchemeId = z.t.SchemeId,
+                            JoinPwd = z.t.JoinPwd,
+                            Progress = z.t.Progress,
+                            ProgressStatus = (TogetherSchemeProgress)z.t.ProgressStatus,
+                            SystemGuarantees = z.t.SystemGuarantees,
+                            GameCode = z.t.GameCode,
+                            GameType = z.t.GameType,
+                            SoldCount = z.t.SoldCount,
+                            TotalMatchCount = z.t.TotalMatchCount,
+                            Amount = z.r.Amount,
+                            BetCount = z.r.BetCount,
+                            PreTaxBonusMoney = z.r.PreTaxBonusMoney,
+                            AfterTaxBonusMoney = z.r.AfterTaxBonusMoney,
                             WinNumber = string.Empty,
-                            BonusStatus = (BonusStatus)r.BonusStatus,
+                            BonusStatus = (BonusStatus)z.r.BonusStatus,
                             BonusCount = 0,
-                            CreateTime = t.CreateTime,
+                            CreateTime = z.t.CreateTime,
                             IsPrizeMoney = false,
-                            TicketStatus = (TicketStatus)r.TicketStatus,
-                            IssuseNumber = r.IssuseNumber,
+                            TicketStatus = (TicketStatus)z.r.TicketStatus,
+                            IssuseNumber = z.r.IssuseNumber,
                             AddMoney = 0M,
                             AddMoneyDescription = string.Empty,
-                            IsVirtualOrder = r.IsVirtualOrder,
-                            HitMatchCount = r.HitMatchCount,
-                            SchemeBettingCategory = (SchemeBettingCategory)r.SchemeBettingCategory,
-                            JoinUserCount = t.JoinUserCount,
-                            Attach = r.Attach,
-                            MinBonusMoney = r.MinBonusMoney,
-                            MaxBonusMoney = r.MaxBonusMoney,
-                            ExtensionOne = r.ExtensionOne,
-                            GoldCrownCount = b.GoldCrownCount,
-                            GoldCupCount = b.GoldCupCount,
-                            GoldDiamondsCount = b.GoldDiamondsCount,
-                            GoldStarCount = b.GoldStarCount,
-                            SilverCrownCount = b.SilverCrownCount,
-                            SilverCupCount = b.SilverCupCount,
-                            SilverDiamondsCount = b.SilverDiamondsCount,
-                            SilverStarCount = b.SilverStarCount,
-                            IsAppend = r.IsAppend == null ? false : r.IsAppend,
-                            TicketTime = r.TicketTime,
+                            IsVirtualOrder = z.r.IsVirtualOrder,
+                            HitMatchCount = z.r.HitMatchCount,
+                            SchemeBettingCategory = (SchemeBettingCategory)z.r.SchemeBettingCategory,
+                            JoinUserCount = z.t.JoinUserCount,
+                            Attach = z.r.Attach,
+                            MinBonusMoney = z.r.MinBonusMoney,
+                            MaxBonusMoney = z.r.MaxBonusMoney,
+                            ExtensionOne = z.r.ExtensionOne,
+                            GoldCrownCount = z.b.GoldCrownCount,
+                            GoldCupCount = z.b.GoldCupCount,
+                            GoldDiamondsCount = z.b.GoldDiamondsCount,
+                            GoldStarCount = z.b.GoldStarCount,
+                            SilverCrownCount = z.b.SilverCrownCount,
+                            SilverCupCount = z.b.SilverCupCount,
+                            SilverDiamondsCount = z.b.SilverDiamondsCount,
+                            SilverStarCount = z.b.SilverStarCount,
+                            IsAppend = z.r.IsAppend == null ? false : z.r.IsAppend,
+                            TicketTime = z.r.TicketTime,
 
-                        };
-            var info = query.FirstOrDefault();
+                        });
+            var info = queryResult.FirstOrDefault();
             if (info != null && info.GameCode != "JCZQ" && info.GameCode != "JCLQ" && info.GameCode != "BJDC")
             {
                 var key = info.GameCode == "CTZQ" ? string.Format("{0}|{1}|{2}", info.GameCode, info.GameType, info.IssuseNumber) : string.Format("{0}|{1}", info.GameCode, info.IssuseNumber);
@@ -739,28 +746,29 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
                          join u in DB.CreateQuery<UserRegister>() on j.JoinUserId equals u.UserId
                          where j.SchemeId == schemeId && j.JoinSucess == true
                          orderby j.JoinType ascending
-                         select new Sports_TogetherJoinInfo
+                         select new { j, u });
+                 var queryResult=query.ToList().Select(b=> new Sports_TogetherJoinInfo
                          {
-                             BuyCount = j.BuyCount,
-                             RealBuyCount = j.RealBuyCount,
-                             IsSucess = j.JoinSucess,
-                             JoinDateTime = j.CreateTime,
-                             JoinType = (TogetherJoinType)j.JoinType,
-                             Price = j.Price,
-                             UserDisplayName = u.DisplayName,
-                             HideDisplayNameCount = u.HideDisplayNameCount,
-                             UserId = u.UserId,
-                             JoinId = j.Id,
-                             SchemeId = j.SchemeId,
-                             BonusMoney = j.PreTaxBonusMoney,
+                             BuyCount = b.j.BuyCount,
+                             RealBuyCount = b.j.RealBuyCount,
+                             IsSucess = b.j.JoinSucess,
+                             JoinDateTime = b.j.CreateTime,
+                             JoinType = (TogetherJoinType)b.j.JoinType,
+                             Price = b.j.Price,
+                             UserDisplayName = b.u.DisplayName,
+                             HideDisplayNameCount = b.u.HideDisplayNameCount,
+                             UserId = b.u.UserId,
+                             JoinId = b.j.Id,
+                             SchemeId = b.j.SchemeId,
+                             BonusMoney = b.j.PreTaxBonusMoney,
                          }).ToList();
-            totalCount = query.Count();
+            totalCount = queryResult.Count();
             if (pageIndex == -1 && pageSize == -1)
             {
-                result.List = query.ToList();
+                result.List = queryResult.ToList();
                 return result;
             }
-            var list = query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+            var list = queryResult.Skip(pageIndex * pageSize).Take(pageSize).ToList();
             result.TotalCount = totalCount;
             result.List.AddRange(list);
             return result;
@@ -1160,56 +1168,57 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
             var query = from r in DB.CreateQuery<C_Sports_Order_Complate>()
                         join u in DB.CreateQuery<UserRegister>() on r.UserId equals u.UserId
                         where r.SchemeId == schemeId
-                        select new Sports_SchemeQueryInfo
-                        {
-                            UserId = u.UserId,
-                            UserDisplayName = u.DisplayName,
-                            HideDisplayNameCount = u.HideDisplayNameCount,
-                            GameDisplayName = KaSon.FrameWork.Helper.ConvertHelper.FormatGameCode(r.GameCode),
-                            GameCode = r.GameCode,
-                            Amount = r.Amount,
-                            BonusStatus = (BonusStatus)r.BonusStatus,
-                            CreateTime = r.CreateTime,
-                            GameType = r.GameType,
-                            GameTypeDisplayName = KaSon.FrameWork.Helper.ConvertHelper.FormatGameType(r.GameCode, r.GameType),
-                            IssuseNumber = r.IssuseNumber,
-                            PlayType = r.PlayType,
-                            ProgressStatus = (ProgressStatus)r.ProgressStatus,
-                            SchemeId = r.SchemeId,
-                            SchemeType = (SchemeType)r.SchemeType,
-                            TicketId = r.TicketId,
-                            TicketLog = r.TicketLog,
-                            TicketStatus = (TicketStatus)r.TicketStatus,
-                            TotalMatchCount = r.TotalMatchCount,
-                            TotalMoney = r.TotalMoney,
-                            BetCount = r.BetCount,
-                            PreTaxBonusMoney = r.PreTaxBonusMoney,
-                            AfterTaxBonusMoney = r.AfterTaxBonusMoney,
-                            BonusCount = r.BonusCount,
-                            IsPrizeMoney = r.IsPrizeMoney,
-                            Security = (TogetherSchemeSecurity)r.Security,
-                            IsVirtualOrder = r.IsVirtualOrder,
-                            StopTime = r.StopTime,
-                            HitMatchCount = r.HitMatchCount,
-                            AddMoney = r.AddMoney,
-                            AddMoneyDescription = r.AddMoneyDescription,
-                            SchemeBettingCategory = (SchemeBettingCategory)r.SchemeBettingCategory,
-                            TicketProgress = r.TicketProgress,
-                            DistributionWay = (AddMoneyDistributionWay)r.DistributionWay,
-                            Attach = r.Attach,
-                            MaxBonusMoney = r.MaxBonusMoney,
-                            MinBonusMoney = r.MinBonusMoney,
-                            ExtensionOne = r.ExtensionOne,
-                            IsAppend = r.IsAppend == null ? false : r.IsAppend,
-                            ComplateDateTime = r.ComplateDateTime,
-                            BetTime = r.BetTime,
-                            SchemeSource = (SchemeSource)r.SchemeSource,
-                            RedBagMoney = r.RedBagMoney,
-                            TicketTime = r.TicketTime,
-                            RedBagAwardsMoney = r.AddMoneyDescription == "70" ? r.AddMoney : 0,
-                            BonusAwardsMoney = r.AddMoneyDescription == "10" ? r.AddMoney : 0,
-                        };
-            var info = query.FirstOrDefault();
+                        select new { r, u };
+            var queryResult = query.ToList().Select(b => new Sports_SchemeQueryInfo
+            {
+                UserId = b.u.UserId,
+                UserDisplayName = b.u.DisplayName,
+                HideDisplayNameCount = b.u.HideDisplayNameCount,
+                GameDisplayName = KaSon.FrameWork.Helper.ConvertHelper.FormatGameCode(b.r.GameCode),
+                GameCode = b.r.GameCode,
+                Amount = b.r.Amount,
+                BonusStatus = (BonusStatus)b.r.BonusStatus,
+                CreateTime = b.r.CreateTime,
+                GameType = b.r.GameType,
+                GameTypeDisplayName = KaSon.FrameWork.Helper.ConvertHelper.FormatGameType(b.r.GameCode, b.r.GameType),
+                IssuseNumber = b.r.IssuseNumber,
+                PlayType = b.r.PlayType,
+                ProgressStatus = (ProgressStatus)b.r.ProgressStatus,
+                SchemeId = b.r.SchemeId,
+                SchemeType = (SchemeType)b.r.SchemeType,
+                TicketId = b.r.TicketId,
+                TicketLog = b.r.TicketLog,
+                TicketStatus = (TicketStatus)b.r.TicketStatus,
+                TotalMatchCount = b.r.TotalMatchCount,
+                TotalMoney = b.r.TotalMoney,
+                BetCount = b.r.BetCount,
+                PreTaxBonusMoney = b.r.PreTaxBonusMoney,
+                AfterTaxBonusMoney = b.r.AfterTaxBonusMoney,
+                BonusCount = b.r.BonusCount,
+                IsPrizeMoney = b.r.IsPrizeMoney,
+                Security = (TogetherSchemeSecurity)b.r.Security,
+                IsVirtualOrder = b.r.IsVirtualOrder,
+                StopTime = b.r.StopTime,
+                HitMatchCount = b.r.HitMatchCount,
+                AddMoney = b.r.AddMoney,
+                AddMoneyDescription = b.r.AddMoneyDescription,
+                SchemeBettingCategory = (SchemeBettingCategory)b.r.SchemeBettingCategory,
+                TicketProgress = b.r.TicketProgress,
+                DistributionWay = (AddMoneyDistributionWay)b.r.DistributionWay,
+                Attach = b.r.Attach,
+                MaxBonusMoney = b.r.MaxBonusMoney,
+                MinBonusMoney = b.r.MinBonusMoney,
+                ExtensionOne = b.r.ExtensionOne,
+                IsAppend = b.r.IsAppend == null ? false : b.r.IsAppend,
+                ComplateDateTime = b.r.ComplateDateTime,
+                BetTime = b.r.BetTime,
+                SchemeSource = (SchemeSource)b.r.SchemeSource,
+                RedBagMoney = b.r.RedBagMoney,
+                TicketTime = b.r.TicketTime,
+                RedBagAwardsMoney = b.r.AddMoneyDescription == "70" ? b.r.AddMoney : 0,
+                BonusAwardsMoney = b.r.AddMoneyDescription == "10" ? b.r.AddMoney : 0,
+            });
+            var info = queryResult.FirstOrDefault();
             if (info != null && info.GameCode != "JCZQ" && info.GameCode != "JCLQ" && info.GameCode != "BJDC")
             {
                 var key = info.GameCode == "CTZQ" ? string.Format("{0}|{1}|{2}", info.GameCode, info.GameType, info.IssuseNumber) : string.Format("{0}|{1}", info.GameCode, info.IssuseNumber);
@@ -1224,54 +1233,55 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
             var query = from r in DB.CreateQuery<C_Sports_Order_Running>()
                         join u in DB.CreateQuery<UserRegister>() on r.UserId equals u.UserId
                         where r.SchemeId == schemeId
-                        select new Sports_SchemeQueryInfo
-                        {
-                            UserId = u.UserId,
-                            UserDisplayName = u.DisplayName,
-                            HideDisplayNameCount = u.HideDisplayNameCount,
-                            GameCode = r.GameCode,
-                            Amount = r.Amount,
-                            BonusStatus = (BonusStatus)r.BonusStatus,
-                            CreateTime = r.CreateTime,
-                            GameType = r.GameType,
-                            IssuseNumber = r.IssuseNumber,
-                            PlayType = r.PlayType,
-                            ProgressStatus = (ProgressStatus)r.ProgressStatus,
-                            SchemeId = r.SchemeId,
-                            SchemeType = (SchemeType)r.SchemeType,
-                            TicketId = r.TicketId,
-                            TicketLog = r.TicketLog,
-                            TicketStatus = (TicketStatus)r.TicketStatus,
-                            TotalMatchCount = r.TotalMatchCount,
-                            TotalMoney = r.TotalMoney,
-                            BetCount = r.BetCount,
-                            GameDisplayName = KaSon.FrameWork.Helper.ConvertHelper.FormatGameCode(r.GameCode),
-                            GameTypeDisplayName = KaSon.FrameWork.Helper.ConvertHelper.FormatGameType(r.GameCode, r.GameType),
-                            AfterTaxBonusMoney = 0M,
-                            PreTaxBonusMoney = 0M,
-                            BonusCount = 0,
-                            WinNumber = string.Empty,
-                            IsPrizeMoney = false,
-                            Security = (TogetherSchemeSecurity)r.Security,
-                            IsVirtualOrder = r.IsVirtualOrder,
-                            StopTime = r.StopTime,
-                            HitMatchCount = r.HitMatchCount,
-                            AddMoney = 0M,
-                            AddMoneyDescription = string.Empty,
-                            SchemeBettingCategory = (SchemeBettingCategory)r.SchemeBettingCategory,
-                            TicketProgress = r.TicketProgress,
-                            DistributionWay = AddMoneyDistributionWay.Average,
-                            Attach = r.Attach,
-                            MaxBonusMoney = r.MaxBonusMoney,
-                            MinBonusMoney = r.MinBonusMoney,
-                            ExtensionOne = r.ExtensionOne,
-                            IsAppend = r.IsAppend == null ? false : r.IsAppend,
-                            BetTime = r.BetTime,
-                            SchemeSource = (SchemeSource)r.SchemeSource,
-                            TicketTime = r.TicketTime,
-                            RedBagMoney = r.RedBagMoney,
-                        };
-            var info = query.FirstOrDefault();
+                        select new { r, u };
+            var queryResult = query.ToList().Select(b => new Sports_SchemeQueryInfo
+            {
+                UserId = b.u.UserId,
+                UserDisplayName = b.u.DisplayName,
+                HideDisplayNameCount = b.u.HideDisplayNameCount,
+                GameCode = b.r.GameCode,
+                Amount = b.r.Amount,
+                BonusStatus = (BonusStatus)b.r.BonusStatus,
+                CreateTime = b.r.CreateTime,
+                GameType = b.r.GameType,
+                IssuseNumber = b.r.IssuseNumber,
+                PlayType = b.r.PlayType,
+                ProgressStatus = (ProgressStatus)b.r.ProgressStatus,
+                SchemeId = b.r.SchemeId,
+                SchemeType = (SchemeType)b.r.SchemeType,
+                TicketId = b.r.TicketId,
+                TicketLog = b.r.TicketLog,
+                TicketStatus = (TicketStatus)b.r.TicketStatus,
+                TotalMatchCount = b.r.TotalMatchCount,
+                TotalMoney = b.r.TotalMoney,
+                BetCount = b.r.BetCount,
+                GameDisplayName = KaSon.FrameWork.Helper.ConvertHelper.FormatGameCode(b.r.GameCode),
+                GameTypeDisplayName = KaSon.FrameWork.Helper.ConvertHelper.FormatGameType(b.r.GameCode, b.r.GameType),
+                AfterTaxBonusMoney = 0M,
+                PreTaxBonusMoney = 0M,
+                BonusCount = 0,
+                WinNumber = string.Empty,
+                IsPrizeMoney = false,
+                Security = (TogetherSchemeSecurity)b.r.Security,
+                IsVirtualOrder = b.r.IsVirtualOrder,
+                StopTime = b.r.StopTime,
+                HitMatchCount = b.r.HitMatchCount,
+                AddMoney = 0M,
+                AddMoneyDescription = string.Empty,
+                SchemeBettingCategory = (SchemeBettingCategory)b.r.SchemeBettingCategory,
+                TicketProgress = b.r.TicketProgress,
+                DistributionWay = AddMoneyDistributionWay.Average,
+                Attach = b.r.Attach,
+                MaxBonusMoney = b.r.MaxBonusMoney,
+                MinBonusMoney = b.r.MinBonusMoney,
+                ExtensionOne = b.r.ExtensionOne,
+                IsAppend = b.r.IsAppend == null ? false : b.r.IsAppend,
+                BetTime = b.r.BetTime,
+                SchemeSource = (SchemeSource)b.r.SchemeSource,
+                TicketTime = b.r.TicketTime,
+                RedBagMoney = b.r.RedBagMoney,
+            }); 
+            var info = queryResult.FirstOrDefault();
             if (info != null && info.GameCode != "JCZQ" && info.GameCode != "JCLQ" && info.GameCode != "BJDC")
             {
                 var key = info.GameCode == "CTZQ" ? string.Format("{0}|{1}|{2}", info.GameCode, info.GameType, info.IssuseNumber) : string.Format("{0}|{1}", info.GameCode, info.IssuseNumber);
@@ -1293,68 +1303,137 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
             var collection = new TogetherFollowerRuleQueryInfoCollection();
             Model.pageIndex = Model.pageIndex < 0 ? 0 : Model.pageIndex;
             Model.pageSize = Model.pageSize > Model.MaxPageSize ? Model.MaxPageSize : Model.pageSize;
-
-            var query = Model.byFollower ? (from f in DB.CreateQuery<C_Together_FollowerRule>()
-                                            join u in DB.CreateQuery<UserRegister>() on f.CreaterUserId equals u.UserId
-                                            where (Model.gameCode == string.Empty || f.GameCode == Model.gameCode)
-                                            && (Model.gameType == string.Empty || f.GameType == Model.gameType)
-                                            && (Model.userId == string.Empty || f.FollowerUserId == Model.userId)
-                                            select new TogetherFollowerRuleQueryInfo
-                                            {
-                                                RuleId = f.Id,
-                                                BonusMoney = f.TotalBonusMoney,
-                                                BuyMoney = f.TotalBetMoney,
-                                                CancelNoBonusSchemeCount = f.CancelNoBonusSchemeCount,
-                                                CancelWhenSurplusNotMatch = f.CancelWhenSurplusNotMatch,
-                                                CreaterUserId = f.CreaterUserId,
-                                                CreateTime = f.CreateTime,
-                                                FollowerCount = f.FollowerCount,
-                                                FollowerIndex = f.FollowerIndex,
-                                                FollowerPercent = f.FollowerPercent,
-                                                FollowerUserId = f.FollowerUserId,
-                                                GameCode = f.GameCode,
-                                                GameType = f.GameType,
-                                                IsEnable = f.IsEnable,
-                                                MaxSchemeMoney = f.MaxSchemeMoney,
-                                                MinSchemeMoney = f.MinSchemeMoney,
-                                                SchemeCount = f.SchemeCount,
-                                                StopFollowerMinBalance = f.StopFollowerMinBalance,
-                                                UserId = u.UserId,
-                                                UserDisplayName = u.DisplayName,
-                                                HideDisplayNameCount = u.HideDisplayNameCount,
-                                            }) :
-                                    (from f in DB.CreateQuery<C_Together_FollowerRule>()
-                                     join u in DB.CreateQuery<UserRegister>() on f.FollowerUserId equals u.UserId
-                                     where (Model.gameCode == string.Empty || f.GameCode == Model.gameCode)
-                                     && (Model.gameType == string.Empty || f.GameType == Model.gameType)
-                                     && (Model.userId == string.Empty || f.CreaterUserId == Model.userId)
-                                     orderby f.FollowerIndex ascending
-                                     select new TogetherFollowerRuleQueryInfo
-                                     {
-                                         RuleId = f.Id,
-                                         BonusMoney = f.TotalBonusMoney,
-                                         BuyMoney = f.TotalBetMoney,
-                                         CancelNoBonusSchemeCount = f.CancelNoBonusSchemeCount,
-                                         CancelWhenSurplusNotMatch = f.CancelWhenSurplusNotMatch,
-                                         CreaterUserId = f.CreaterUserId,
-                                         CreateTime = f.CreateTime,
-                                         FollowerCount = f.FollowerCount,
-                                         FollowerIndex = f.FollowerIndex,
-                                         FollowerPercent = f.FollowerPercent,
-                                         FollowerUserId = f.FollowerUserId,
-                                         GameCode = f.GameCode,
-                                         GameType = f.GameType,
-                                         IsEnable = f.IsEnable,
-                                         MaxSchemeMoney = f.MaxSchemeMoney,
-                                         MinSchemeMoney = f.MinSchemeMoney,
-                                         SchemeCount = f.SchemeCount,
-                                         StopFollowerMinBalance = f.StopFollowerMinBalance,
-                                         UserId = u.UserId,
-                                         UserDisplayName = u.DisplayName,
-                                         HideDisplayNameCount = u.HideDisplayNameCount,
-                                     });
-            collection.TotalCount = query.Count();
-            collection.List = query.Skip(Model.pageIndex * Model.pageSize).Take(Model.pageSize).ToList();
+            var queryResult = new List<TogetherFollowerRuleQueryInfo>();
+            if (Model.byFollower)
+            {
+                var query = (from f in DB.CreateQuery<C_Together_FollowerRule>()
+                             join u in DB.CreateQuery<UserRegister>() on f.CreaterUserId equals u.UserId
+                             where (Model.gameCode == string.Empty || f.GameCode == Model.gameCode)
+                             && (Model.gameType == string.Empty || f.GameType == Model.gameType)
+                             && (Model.userId == string.Empty || f.FollowerUserId == Model.userId)
+                             select new { f, u });
+                queryResult.AddRange(query.ToList().Select(b => new TogetherFollowerRuleQueryInfo
+                {
+                    RuleId = b.f.Id,
+                    BonusMoney = b.f.TotalBonusMoney,
+                    BuyMoney = b.f.TotalBetMoney,
+                    CancelNoBonusSchemeCount = b.f.CancelNoBonusSchemeCount,
+                    CancelWhenSurplusNotMatch = b.f.CancelWhenSurplusNotMatch,
+                    CreaterUserId = b.f.CreaterUserId,
+                    CreateTime = b.f.CreateTime,
+                    FollowerCount = b.f.FollowerCount,
+                    FollowerIndex = b.f.FollowerIndex,
+                    FollowerPercent = b.f.FollowerPercent,
+                    FollowerUserId = b.f.FollowerUserId,
+                    GameCode = b.f.GameCode,
+                    GameType = b.f.GameType,
+                    IsEnable = b.f.IsEnable,
+                    MaxSchemeMoney = b.f.MaxSchemeMoney,
+                    MinSchemeMoney = b.f.MinSchemeMoney,
+                    SchemeCount = b.f.SchemeCount,
+                    StopFollowerMinBalance = b.f.StopFollowerMinBalance,
+                    UserId = b.u.UserId,
+                    UserDisplayName = b.u.DisplayName,
+                    HideDisplayNameCount = b.u.HideDisplayNameCount,
+                }));
+            }
+            else
+            {
+                var query = (from f in DB.CreateQuery<C_Together_FollowerRule>()
+                             join u in DB.CreateQuery<UserRegister>() on f.FollowerUserId equals u.UserId
+                             where (Model.gameCode == string.Empty || f.GameCode == Model.gameCode)
+                             && (Model.gameType == string.Empty || f.GameType == Model.gameType)
+                             && (Model.userId == string.Empty || f.CreaterUserId == Model.userId)
+                             orderby f.FollowerIndex ascending
+                             select new { f, u });
+                queryResult.AddRange(query.ToList().Select(b => new TogetherFollowerRuleQueryInfo
+                {
+                    RuleId = b.f.Id,
+                    BonusMoney = b.f.TotalBonusMoney,
+                    BuyMoney = b.f.TotalBetMoney,
+                    CancelNoBonusSchemeCount = b.f.CancelNoBonusSchemeCount,
+                    CancelWhenSurplusNotMatch = b.f.CancelWhenSurplusNotMatch,
+                    CreaterUserId = b.f.CreaterUserId,
+                    CreateTime = b.f.CreateTime,
+                    FollowerCount = b.f.FollowerCount,
+                    FollowerIndex = b.f.FollowerIndex,
+                    FollowerPercent = b.f.FollowerPercent,
+                    FollowerUserId = b.f.FollowerUserId,
+                    GameCode = b.f.GameCode,
+                    GameType = b.f.GameType,
+                    IsEnable = b.f.IsEnable,
+                    MaxSchemeMoney = b.f.MaxSchemeMoney,
+                    MinSchemeMoney = b.f.MinSchemeMoney,
+                    SchemeCount = b.f.SchemeCount,
+                    StopFollowerMinBalance = b.f.StopFollowerMinBalance,
+                    UserId = b.u.UserId,
+                    UserDisplayName = b.u.DisplayName,
+                    HideDisplayNameCount = b.u.HideDisplayNameCount,
+                }));
+            }
+            #region
+            //var query = Model.byFollower ? (from f in DB.CreateQuery<C_Together_FollowerRule>()
+            //                                join u in DB.CreateQuery<UserRegister>() on f.CreaterUserId equals u.UserId
+            //                                where (Model.gameCode == string.Empty || f.GameCode == Model.gameCode)
+            //                                && (Model.gameType == string.Empty || f.GameType == Model.gameType)
+            //                                && (Model.userId == string.Empty || f.FollowerUserId == Model.userId)
+            //                                select new TogetherFollowerRuleQueryInfo
+            //                                {
+            //                                    RuleId = f.Id,
+            //                                    BonusMoney = f.TotalBonusMoney,
+            //                                    BuyMoney = f.TotalBetMoney,
+            //                                    CancelNoBonusSchemeCount = f.CancelNoBonusSchemeCount,
+            //                                    CancelWhenSurplusNotMatch = f.CancelWhenSurplusNotMatch,
+            //                                    CreaterUserId = f.CreaterUserId,
+            //                                    CreateTime = f.CreateTime,
+            //                                    FollowerCount = f.FollowerCount,
+            //                                    FollowerIndex = f.FollowerIndex,
+            //                                    FollowerPercent = f.FollowerPercent,
+            //                                    FollowerUserId = f.FollowerUserId,
+            //                                    GameCode = f.GameCode,
+            //                                    GameType = f.GameType,
+            //                                    IsEnable = f.IsEnable,
+            //                                    MaxSchemeMoney = f.MaxSchemeMoney,
+            //                                    MinSchemeMoney = f.MinSchemeMoney,
+            //                                    SchemeCount = f.SchemeCount,
+            //                                    StopFollowerMinBalance = f.StopFollowerMinBalance,
+            //                                    UserId = u.UserId,
+            //                                    UserDisplayName = u.DisplayName,
+            //                                    HideDisplayNameCount = u.HideDisplayNameCount,
+            //                                }) :
+            //                        (from f in DB.CreateQuery<C_Together_FollowerRule>()
+            //                         join u in DB.CreateQuery<UserRegister>() on f.FollowerUserId equals u.UserId
+            //                         where (Model.gameCode == string.Empty || f.GameCode == Model.gameCode)
+            //                         && (Model.gameType == string.Empty || f.GameType == Model.gameType)
+            //                         && (Model.userId == string.Empty || f.CreaterUserId == Model.userId)
+            //                         orderby f.FollowerIndex ascending
+            //                         select new TogetherFollowerRuleQueryInfo
+            //                         {
+            //                             RuleId = f.Id,
+            //                             BonusMoney = f.TotalBonusMoney,
+            //                             BuyMoney = f.TotalBetMoney,
+            //                             CancelNoBonusSchemeCount = f.CancelNoBonusSchemeCount,
+            //                             CancelWhenSurplusNotMatch = f.CancelWhenSurplusNotMatch,
+            //                             CreaterUserId = f.CreaterUserId,
+            //                             CreateTime = f.CreateTime,
+            //                             FollowerCount = f.FollowerCount,
+            //                             FollowerIndex = f.FollowerIndex,
+            //                             FollowerPercent = f.FollowerPercent,
+            //                             FollowerUserId = f.FollowerUserId,
+            //                             GameCode = f.GameCode,
+            //                             GameType = f.GameType,
+            //                             IsEnable = f.IsEnable,
+            //                             MaxSchemeMoney = f.MaxSchemeMoney,
+            //                             MinSchemeMoney = f.MinSchemeMoney,
+            //                             SchemeCount = f.SchemeCount,
+            //                             StopFollowerMinBalance = f.StopFollowerMinBalance,
+            //                             UserId = u.UserId,
+            //                             UserDisplayName = u.DisplayName,
+            //                             HideDisplayNameCount = u.HideDisplayNameCount,
+            //                         });
+            #endregion
+            collection.TotalCount = queryResult.Count();
+            collection.List = queryResult.Skip(Model.pageIndex * Model.pageSize).Take(Model.pageSize).ToList();
             return collection;
         }
         /// <summary>
@@ -1370,26 +1449,27 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
             var query = from t in DB.CreateQuery<C_Together_FollowerRule>()
                         join u in DB.CreateQuery<UserRegister>() on t.CreaterUserId equals u.UserId
                         where t.CreaterUserId == createrUserId && t.FollowerUserId == followerUserId && t.GameCode == gameCode && t.GameType == gameType
-                        select new TogetherFollowerRuleQueryInfo
-                        {
-                            CancelNoBonusSchemeCount = t.CancelNoBonusSchemeCount,
-                            CancelWhenSurplusNotMatch = t.CancelWhenSurplusNotMatch,
-                            CreaterUserId = t.CreaterUserId,
-                            FollowerCount = t.FollowerCount,
-                            FollowerPercent = t.FollowerPercent,
-                            FollowerUserId = t.FollowerUserId,
-                            GameCode = t.GameCode,
-                            GameType = t.GameType,
-                            IsEnable = t.IsEnable,
-                            MaxSchemeMoney = t.MaxSchemeMoney,
-                            MinSchemeMoney = t.MinSchemeMoney,
-                            SchemeCount = t.SchemeCount,
-                            StopFollowerMinBalance = t.StopFollowerMinBalance,
-                            UserDisplayName = u.DisplayName,
-                            HideDisplayNameCount = u.HideDisplayNameCount,
-                            RuleId = t.Id,
-                        };
-            if (query != null) return query.FirstOrDefault();
+                        select new { t, u };
+            var queryResult = query.ToList().Select(b => new TogetherFollowerRuleQueryInfo
+            {
+                CancelNoBonusSchemeCount = b.t.CancelNoBonusSchemeCount,
+                CancelWhenSurplusNotMatch = b.t.CancelWhenSurplusNotMatch,
+                CreaterUserId = b.t.CreaterUserId,
+                FollowerCount = b.t.FollowerCount,
+                FollowerPercent = b.t.FollowerPercent,
+                FollowerUserId = b.t.FollowerUserId,
+                GameCode = b.t.GameCode,
+                GameType = b.t.GameType,
+                IsEnable = b.t.IsEnable,
+                MaxSchemeMoney = b.t.MaxSchemeMoney,
+                MinSchemeMoney = b.t.MinSchemeMoney,
+                SchemeCount = b.t.SchemeCount,
+                StopFollowerMinBalance = b.t.StopFollowerMinBalance,
+                UserDisplayName = b.u.DisplayName,
+                HideDisplayNameCount = b.u.HideDisplayNameCount,
+                RuleId = b.t.Id,
+            });
+            if (query != null) return queryResult.FirstOrDefault();
             return new TogetherFollowerRuleQueryInfo();
         }
         public TotalSingleTreasure_Collection QueryTodayBDFXList(QueryTodayBDFXList Model)
@@ -1843,7 +1923,7 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
                 DB.Commit();
                 #endregion
                 result.IsSuccess = true;
-                result.Message = "关注成功";
+                result.Message = "取消关注成功";
                 result.ReturnValue = "1";
                 return result;
             }
@@ -1851,7 +1931,7 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
             {
                 DB.Rollback();
                 result.IsSuccess = false;
-                result.Message = "关注失败";
+                result.Message = "取消关注失败";
                 result.ReturnValue = "0";
                 return result;
             }                        
@@ -1966,19 +2046,20 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
         {
             var query = from a in DB.CreateQuery<C_Sports_AnteCode>()
                         where a.SchemeId == schemeId
-                        select new AnteCodeInfo
-                        {
-                            AnteCode = a.AnteCode,
-                            GameType = a.GameType,
-                            GameCode = a.GameCode,
-                            IsDan = a.IsDan,
-                            IssuseNumber = a.IssuseNumber,
-                            MatchId = a.MatchId,
-                            PlayType = a.PlayType,
-                            SchemeId = a.SchemeId,
-                        };
+                        select new { a };
+            var queryResult = query.ToList().Select(b => new AnteCodeInfo
+            {
+                AnteCode = b.a.AnteCode,
+                GameType = b.a.GameType,
+                GameCode = b.a.GameCode,
+                IsDan = b.a.IsDan,
+                IssuseNumber = b.a.IssuseNumber,
+                MatchId = b.a.MatchId,
+                PlayType = b.a.PlayType,
+                SchemeId = b.a.SchemeId,
+            });
             if (query != null && query.Count() > 0)
-                return query.ToList();
+                return queryResult.ToList();
             return new List<AnteCodeInfo>();
         }
 
@@ -2018,29 +2099,30 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
                         && (Model.bonusStatus == null || d.BonusStatus == (int)Model.bonusStatus)
                         && (Model.schemeType == null || d.SchemeType == (int)Model.schemeType)
                         && (d.CreateTime >= Model.startTime && d.CreateTime < Model.endTime)
-                        select new MyOrderListInfo
-                        {
-                            AddMoney = d.AddMoney,
-                            Amount = d.Amount,
-                            AfterTaxBonusMoney = d.AfterTaxBonusMoney,
-                            BetTime = d.CreateTime.ToString("yyyy-MM-dd HH:mm:ss"),
-                            BonusAwardsMoney = d.BonusAwardsMoney,
-                            BonusStatus = (BonusStatus)d.BonusStatus,
-                            GameCode = d.GameCode,
-                            GameType = d.GameType,
-                            GameTypeName = d.GameTypeName,
-                            IssuseNumber = d.CurrentIssuseNumber,
-                            PreTaxBonusMoney = d.PreTaxBonusMoney,
-                            ProgressStatus = (ProgressStatus)d.ProgressStatus,
-                            RedBagAwardsMoney = d.RedBagAwardsMoney,
-                            SchemeBettingCategory = (SchemeBettingCategory)d.SchemeBettingCategory,
-                            SchemeId = d.SchemeId,
-                            SchemeSource = (SchemeSource)d.SchemeSource,
-                            SchemeType = (SchemeType)d.SchemeType,
-                            TicketStatus = (TicketStatus)d.TicketStatus,
-                            TotalMoney = d.TotalMoney,
-                        };
-            collection.List = query.Skip(Model.pageIndex * Model.pageSize).Take(Model.pageSize).ToList();
+                        select new { d };
+            var queryResult = query.ToList().Select(b => new MyOrderListInfo
+            {
+                AddMoney = b.d.AddMoney,
+                Amount = b.d.Amount,
+                AfterTaxBonusMoney = b.d.AfterTaxBonusMoney,
+                BetTime = b.d.CreateTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                BonusAwardsMoney = b.d.BonusAwardsMoney,
+                BonusStatus = (BonusStatus)b.d.BonusStatus,
+                GameCode = b.d.GameCode,
+                GameType = b.d.GameType,
+                GameTypeName = b.d.GameTypeName,
+                IssuseNumber = b.d.CurrentIssuseNumber,
+                PreTaxBonusMoney = b.d.PreTaxBonusMoney,
+                ProgressStatus = (ProgressStatus)b.d.ProgressStatus,
+                RedBagAwardsMoney = b.d.RedBagAwardsMoney,
+                SchemeBettingCategory = (SchemeBettingCategory)b.d.SchemeBettingCategory,
+                SchemeId = b.d.SchemeId,
+                SchemeSource = (SchemeSource)b.d.SchemeSource,
+                SchemeType = (SchemeType)b.d.SchemeType,
+                TicketStatus = (TicketStatus)b.d.TicketStatus,
+                TotalMoney = b.d.TotalMoney,
+            });
+            collection.List = queryResult.Skip(Model.pageIndex * Model.pageSize).Take(Model.pageSize).ToList();
             return collection;
         }
 
@@ -2048,51 +2130,53 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
         {
             var query = from d in DB.CreateQuery<C_OrderDetail>()
                         where d.SchemeId == schemeId
-                        select new MyOrderListInfo
-                        {
-                            AddMoney = d.AddMoney,
-                            Amount = d.Amount,
-                            AfterTaxBonusMoney = d.AfterTaxBonusMoney,
-                            BetTime = d.CreateTime.ToString("yyyy-MM-dd HH:mm:ss"),
-                            BonusAwardsMoney = d.BonusAwardsMoney,
-                            BonusStatus = (BonusStatus)d.BonusStatus,
-                            GameCode = d.GameCode,
-                            GameType = d.GameType,
-                            GameTypeName = d.GameTypeName,
-                            IssuseNumber = d.CurrentIssuseNumber,
-                            PreTaxBonusMoney = d.PreTaxBonusMoney,
-                            ProgressStatus = (ProgressStatus)d.ProgressStatus,
-                            RedBagAwardsMoney = d.RedBagAwardsMoney,
-                            SchemeBettingCategory = (SchemeBettingCategory)d.SchemeBettingCategory,
-                            SchemeId = d.SchemeId,
-                            SchemeSource = (SchemeSource)d.SchemeSource,
-                            SchemeType = (SchemeType)d.SchemeType,
-                            TicketStatus = (TicketStatus)d.TicketStatus,
-                            TotalMoney = d.TotalMoney,
-                            StopAfterBonus = d.StopAfterBonus,
-                        };
-            return query.FirstOrDefault();
+                        select new { d };
+            var queryResult = query.ToList().Select(b => new MyOrderListInfo
+            {
+                AddMoney = b.d.AddMoney,
+                Amount = b.d.Amount,
+                AfterTaxBonusMoney = b.d.AfterTaxBonusMoney,
+                BetTime = b.d.CreateTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                BonusAwardsMoney = b.d.BonusAwardsMoney,
+                BonusStatus = (BonusStatus)b.d.BonusStatus,
+                GameCode = b.d.GameCode,
+                GameType = b.d.GameType,
+                GameTypeName = b.d.GameTypeName,
+                IssuseNumber = b.d.CurrentIssuseNumber,
+                PreTaxBonusMoney = b.d.PreTaxBonusMoney,
+                ProgressStatus = (ProgressStatus)b.d.ProgressStatus,
+                RedBagAwardsMoney = b.d.RedBagAwardsMoney,
+                SchemeBettingCategory = (SchemeBettingCategory)b.d.SchemeBettingCategory,
+                SchemeId = b.d.SchemeId,
+                SchemeSource = (SchemeSource)b.d.SchemeSource,
+                SchemeType = (SchemeType)b.d.SchemeType,
+                TicketStatus = (TicketStatus)b.d.TicketStatus,
+                TotalMoney = b.d.TotalMoney,
+                StopAfterBonus = b.d.StopAfterBonus,
+            });
+            return queryResult.FirstOrDefault();
         }
         public List<LotteryNewBonusInfo> QueryLotteryNewBonusInfoList(int count)
         {
             var query = from b in DB.CreateQuery<E_LotteryNewBonus>()
                         orderby b.CreateTime descending
-                        select new LotteryNewBonusInfo
+                        select new { b };
+               var queryResult=query.ToList().Select(z=> new LotteryNewBonusInfo
                         {
-                            AfterTaxBonusMoney = b.AfterTaxBonusMoney,
-                            Amount = b.Amount,
-                            CreateTime = b.CreateTime,
-                            GameCode = b.GameCode,
-                            GameType = b.GameType,
-                            HideUserDisplayNameCount = b.HideUserDisplayNameCount,
-                            IssuseNumber = b.IssuseNumber,
-                            PlayType = b.PlayType,
-                            PreTaxBonusMoney = b.PreTaxBonusMoney,
-                            SchemeId = b.SchemeId,
-                            TotalMoney = b.TotalMoney,
-                            UserDisplayName = b.UserDisplayName,
-                        };
-            return query.Take(count).ToList();
+                            AfterTaxBonusMoney = z.b.AfterTaxBonusMoney,
+                            Amount = z.b.Amount,
+                            CreateTime = z.b.CreateTime,
+                            GameCode = z.b.GameCode,
+                            GameType = z.b.GameType,
+                            HideUserDisplayNameCount = z.b.HideUserDisplayNameCount,
+                            IssuseNumber = z.b.IssuseNumber,
+                            PlayType = z.b.PlayType,
+                            PreTaxBonusMoney = z.b.PreTaxBonusMoney,
+                            SchemeId = z.b.SchemeId,
+                            TotalMoney = z.b.TotalMoney,
+                            UserDisplayName = z.b.UserDisplayName,
+                        });
+            return queryResult.Take(count).ToList();
         }
 
         /// <summary>
@@ -2307,44 +2391,46 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
             var query = from b in DB.CreateQuery<C_BJDC_Issuse>()
                         where b.MinLocalStopTime >= DateTime.Now
                         orderby b.MinLocalStopTime ascending
-                        select new BJDCIssuseInfo
-                        {
-                            IssuseNumber = b.IssuseNumber,
-                            MinLocalStopTime = b.MinLocalStopTime.ToString("yyyy-MM-dd HH:mm:ss"),
-                            MinMatchStartTime = b.MinMatchStartTime.ToString("yyyy-MM-dd HH:mm:ss"),
-                        };
-            return query.FirstOrDefault();
+                        select new { b };
+            var queryResult = query.ToList().Select(z => new BJDCIssuseInfo
+            {
+                IssuseNumber = z.b.IssuseNumber,
+                MinLocalStopTime = z.b.MinLocalStopTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                MinMatchStartTime = z.b.MinMatchStartTime.ToString("yyyy-MM-dd HH:mm:ss"),
+            });
+            return queryResult.FirstOrDefault();
         }
         public CTZQMatchInfo_Collection QueryCTZQMatchListByIssuseNumber(string gameType, string issuseNumber, string userToken)
         {
             var collection = new CTZQMatchInfo_Collection();
             //var UserId = new UserAuthentication().ValidateUserAuthentication(userToken);
-            collection.ListInfo = (from s in DB.CreateQuery<C_CTZQ_Match>()
-                        where s.GameType == gameType && s.IssuseNumber == issuseNumber
-                        select new CTZQMatchInfo
-                        {
-                            GameCode = s.GameCode,
-                            GameType = s.GameType,
-                            GuestTeamHalfScore = s.GuestTeamHalfScore,
-                            GuestTeamId = s.GuestTeamId,
-                            GuestTeamName = s.GuestTeamName,
-                            GuestTeamScore = s.GuestTeamScore,
-                            GuestTeamStanding = s.GuestTeamStanding.ToString(),
-                            HomeTeamHalfScore = s.HomeTeamHalfScore,
-                            HomeTeamId = s.HomeTeamId,
-                            HomeTeamName = s.HomeTeamName,
-                            HomeTeamScore = s.HomeTeamScore,
-                            HomeTeamStanding = s.HomeTeamStanding.ToString(),
-                            Id = s.Id,
-                            IssuseNumber = s.IssuseNumber,
-                            MatchId = s.MatchId,
-                            MatchName = s.MatchName,
-                            MatchResult = s.MatchResult == null ? "" : s.MatchResult,
-                            MatchStartTime = s.MatchStartTime,
-                            Mid = s.Mid,
-                            OrderNumber = s.OrderNumber,
-                            UpdateTime = s.UpdateTime,
-                        }).ToList();
+            var query = (from s in DB.CreateQuery<C_CTZQ_Match>()
+                         where s.GameType == gameType && s.IssuseNumber == issuseNumber
+                         select new { s });
+            collection.ListInfo = query.ToList().Select(b => new CTZQMatchInfo
+            {
+                GameCode = b.s.GameCode,
+                GameType = b.s.GameType,
+                GuestTeamHalfScore = b.s.GuestTeamHalfScore,
+                GuestTeamId = b.s.GuestTeamId,
+                GuestTeamName = b.s.GuestTeamName,
+                GuestTeamScore = b.s.GuestTeamScore,
+                GuestTeamStanding = b.s.GuestTeamStanding.ToString(),
+                HomeTeamHalfScore = b.s.HomeTeamHalfScore,
+                HomeTeamId = b.s.HomeTeamId,
+                HomeTeamName = b.s.HomeTeamName,
+                HomeTeamScore = b.s.HomeTeamScore,
+                HomeTeamStanding = b.s.HomeTeamStanding.ToString(),
+                Id = b.s.Id,
+                IssuseNumber = b.s.IssuseNumber,
+                MatchId = b.s.MatchId,
+                MatchName = b.s.MatchName,
+                MatchResult = b.s.MatchResult == null ? "" : b.s.MatchResult,
+                MatchStartTime = b.s.MatchStartTime,
+                Mid = b.s.Mid,
+                OrderNumber = b.s.OrderNumber,
+                UpdateTime = b.s.UpdateTime,
+            }).ToList();
             return collection;
         }
     }

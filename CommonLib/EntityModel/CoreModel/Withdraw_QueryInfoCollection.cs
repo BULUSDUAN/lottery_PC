@@ -58,7 +58,7 @@ namespace EntityModel.CoreModel
         /// <summary>
         /// 提现类别
         /// </summary>
-        public WithdrawAgentType WithdrawAgent { get; set; }
+        public int WithdrawAgent { get; set; }
         /// <summary>
         /// 省份名称
         /// </summary>
@@ -94,7 +94,7 @@ namespace EntityModel.CoreModel
         /// <summary>
         /// 提款状态
         /// </summary>
-        public WithdrawStatus Status { get; set; }
+        public int Status { get; set; }
         /// <summary>
         /// 响应金额。即已提款金额
         /// </summary>
