@@ -6,11 +6,51 @@ using System.Linq;
 using EntityModel.Enum;
 using System.Linq.Expressions;
 using Lottery.Kg.ORM.Helper.UserHelper;
+using EntityModel.Domain.Entities;
 
 namespace Lottery.Kg.ORM.Helper
 {
     public class BusinessHelper:DBbase
     {
+
+        #region 普通投注
+        /// <summary>
+        /// 检查彩种是否开启
+        /// </summary>
+        public static void CheckGameEnable(string gameCode)
+        {
+            var game = QueryLotteryGame(gameCode);
+            if (game == null)
+                throw new Exception(string.Format("错误的彩种编码：{0}", gameCode));
+            if (game.EnableStatus != EnableStatus.Enable)
+                throw new Exception(string.Format("{0} 暂停销售", game.DisplayName));
+        }
+        public static void CheckGameCodeAndType(string gameCode, string gameType)
+        {
+            if (gameCode.ToUpper() == "BJDC")
+            {
+                if (new string[] { "ZJQ", "SXDS", "BQC", "BF" }.Contains(gameType.ToUpper()))
+                    throw new Exception("该玩法暂停销售");
+            }
+        }
+        /// <summary>
+        /// 所有彩种
+        /// </summary>
+        private static List<LotteryGame> _cacheAllGameList = new List<LotteryGame>();
+        /// <summary>
+        /// 查询彩种
+        /// </summary>
+        public static LotteryGame QueryLotteryGame(string gameCode)
+        {
+            if (_cacheAllGameList == null || _cacheAllGameList.Count <= 0)
+            {
+                //var manager = new LotteryGameManager();
+               var p= SDB.CreateQuery<LotteryGame>().ToList();
+                _cacheAllGameList.AddRange(p);
+            }
+            return _cacheAllGameList.FirstOrDefault(p => p.GameCode == gameCode);
+        }
+        #endregion
         #region 资金明细分类
 
         /// <summary>

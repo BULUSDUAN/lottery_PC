@@ -24,8 +24,7 @@
       <Other>115556353</Other>
     </smstemplate>
   </OrmConfigInfo>
-
-<OrmConfigInfo>
+  <OrmConfigInfo>
 	<DbKey>MySql.Default</DbKey>
 	<ConnectionString>server=10.0.3.27;user=root;database=testdb;port=3306;password=a123456;SSL Mode=none</ConnectionString>
 	<Provider>MySql</Provider>

@@ -1,11 +1,9 @@
 ﻿using EntityModel.Communication;
 using EntityModel.CoreModel;
 using EntityModel.Enum;
-using EntityModel.RequestModel;
 using Kason.Sg.Core.ProxyGenerator;
 using KaSon.FrameWork.Helper;
 using KaSon.FrameWork.Helper.分析器工厂;
-using Lottery.ApiGateway.Model.Enum;
 using Lottery.ApiGateway.Model.HelpModel;
 using Lottery.Base.Controllers;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +13,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 using static KaSon.FrameWork.Helper.JsonHelper;
 
 namespace Lottery.Api.Controllers
@@ -33,12 +30,13 @@ namespace Lottery.Api.Controllers
             try
             {
                 //读取json数据
-                var param = WebHelper.Decode(entity.Param);
+                var param = JsonHelper.Decode(entity.Param);
+                string gamecode = param.GameCode;
                 //读取json文件
                 var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "jsonData");
                 if (!Directory.Exists(path))
                     Directory.CreateDirectory(path);
-                var fileFullName = Path.Combine(path, string.Format("lottery_open_numbers_list_{0}.json", param.GameCode));
+                var fileFullName = Path.Combine(path, string.Format("lottery_open_numbers_list_{0}.json", gamecode));
                 var data = new GameWinNumber_InfoCollection();
                 if (System.IO.File.Exists(fileFullName))
                 {
@@ -50,15 +48,18 @@ namespace Lottery.Api.Controllers
                 }
 
                 var list = new List<object>();
-                foreach (var item in data.List)
+                if (data != null && data.List!=null&&data.List.Count>0)
                 {
-                    list.Add(new
+                    foreach (var item in data.List)
                     {
-                        item.IssuseNumber,
-                        item.WinNumber,
-                        CreateTime = ConvertHelper.ConvertDateTimeInt(item.CreateTime),
-                    });
-                }
+                        list.Add(new
+                        {
+                            item.IssuseNumber,
+                            item.WinNumber,
+                            CreateTime = ConvertHelper.ConvertDateTimeInt(item.CreateTime),
+                        });
+                    }
+                }                
                 return new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
@@ -99,15 +100,15 @@ namespace Lottery.Api.Controllers
 
                 var p = JsonHelper.Decode(entity.Param);             
                 //param.userToken = p.UserToken;
-                string GameCode = p.GameCode.ToString().ToUpper();
-                string gameType = p.GameType.ToString().ToUpper();
+                string GameCode = p.GameCode;
+                string gameType = p.GameType;
                 int pageIndex = p.PageIndex;
                 int pageSize = p.PageSize;
                 string key = p.KeyWord;
                 if (string.IsNullOrEmpty(GameCode))
                     throw new Exception("彩种不能为空");
                 Dictionary<string, object> param = new Dictionary<string, object> {
-                { "gameCode", GameCode },{"gameType", gameType },{ "pageIndex", pageIndex},{ "pageSize", pageSize},{ "key", key}
+                { "gameCode", GameCode.ToUpper() },{"gameType", gameType.ToUpper() },{ "pageIndex", pageIndex},{ "pageSize", pageSize},{ "key", key}
                 };
                 var list = new List<object>();
                 var _issuseNumber = string.Empty;
@@ -163,17 +164,20 @@ namespace Lottery.Api.Controllers
                 }
 
                 var list = new List<object>();
-                foreach (var item in data.List)
+                if (data != null && data.List != null && data.List.Any())
                 {
-                    list.Add(new
+                    foreach (var item in data.List)
                     {
-                        item.Id,
-                        item.WinNumber,
-                        item.IssuseNumber,
-                        item.GameType,
-                        item.GameCode,
-                        CreateTime = ConvertHelper.ConvertDateTimeInt(item.CreateTime),
-                    });
+                        list.Add(new
+                        {
+                            item.Id,
+                            item.WinNumber,
+                            item.IssuseNumber,
+                            item.GameType,
+                            item.GameCode,
+                            CreateTime = ConvertHelper.ConvertDateTimeInt(item.CreateTime),
+                        });
+                    }
                 }
                 return new LotteryServiceResponse
                 {
@@ -214,21 +218,22 @@ namespace Lottery.Api.Controllers
             try
             {
                 
-                var p = WebHelper.Decode(entity.Param); 
+                var p = JsonHelper.Decode(entity.Param); 
                 string gameCode = p.GameCode;
                 string issuseNumber = p.IssuseNumber;
                 string gameType = p.GameType;
                 int pageIndex= p.PageIndex == null ? 0 : Convert.ToInt32(p.PageIndex);
                 int pageSize= p.PageSize == null ? 0 : Convert.ToInt32(p.PageSize);
-                Dictionary<string, object> param = new Dictionary<string, object>();
-                param["issuseNumber"] = issuseNumber;
-                param["pageIndex"] = pageIndex;
-                param["pageSize"] = pageSize;
-                //{
-                //{ "issuseNumber", issuseNumber },{ "pageIndex", pageIndex },{ "pageSize",pageSize }
-                //};
-                DateTime startTime = string.IsNullOrEmpty(p.StartTime) ? DateTime.Now : Convert.ToDateTime(p.StartTime);
-                DateTime endTime = string.IsNullOrEmpty(p.EndTime) ? DateTime.Now : Convert.ToDateTime(p.EndTime);                
+                Dictionary<string, object> param = new Dictionary<string, object>()
+                {
+                    { "issuseNumber", issuseNumber },{ "pageIndex", pageIndex },{ "pageSize",pageSize }
+                };
+                string starttime = p.StartTime;
+                bool Boolstarttime = string.IsNullOrEmpty(starttime);
+                DateTime startTime = Boolstarttime ? DateTime.Now : Convert.ToDateTime(p.StartTime);
+                string endtime = p.EndTime;
+                bool boolendtime = string.IsNullOrEmpty(endtime);
+                DateTime endTime = boolendtime ? DateTime.Now : Convert.ToDateTime(p.EndTime);                
                 if (string.IsNullOrEmpty(gameCode))
                     throw new Exception("传入彩种不能为空");
                 var list = new List<object>();
@@ -485,11 +490,15 @@ namespace Lottery.Api.Controllers
             {
                 
 
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 string viewType = p.ViewType;
                 string userToken = p.UserToken;
-                DateTime startTime = p.StartTime == null ? DateTime.Now : Convert.ToDateTime(p.StartTime);
-                DateTime endTime = p.EndTime == null ? DateTime.Now : Convert.ToDateTime(p.EndTime);
+                string starttime = p.StartTime;
+                bool Boolstarttime = string.IsNullOrEmpty(starttime);
+                string endtime = p.EndTime;
+                bool Boolendtime = string.IsNullOrEmpty(starttime);
+                DateTime startTime = Boolstarttime ? DateTime.Now : Convert.ToDateTime(p.StartTime);
+                DateTime endTime = Boolendtime ? DateTime.Now : Convert.ToDateTime(p.EndTime);
                 int days = p.Days;
                 startTime = startTime.AddDays(-days).Date;
                 int PageIndex = p.PageIndex??0;
@@ -503,7 +512,7 @@ namespace Lottery.Api.Controllers
                 //endTime = endTime.AddDays(1);
 
                 var list = new List<object>();
-                if (p.viewType.ToUpper() == "ZHMX")
+                if (viewType.ToUpper() == "ZHMX")
                 {
                     string accountType = p.AccoountType;
                     if (string.IsNullOrEmpty(accountType))
@@ -541,7 +550,7 @@ namespace Lottery.Api.Controllers
                         }
                     }
                 }
-                else if (p.viewType.ToUpper() == "CZJL")
+                else if (viewType.ToUpper() == "CZJL")
                 {
                     param.Add("statusList", "1");
                     var FillMoneyCollection = await _serviceProxyProvider.Invoke<FillMoneyQueryInfoCollection>(param, "api/Order/QueryFillMoneyList");
@@ -566,7 +575,7 @@ namespace Lottery.Api.Controllers
                         }
                     }
                 }
-                else if (p.viewType.ToUpper() == "GCJL")
+                else if (viewType.ToUpper() == "GCJL")
                 {
                     //OrderQueryType orderType = (OrderQueryType)p.OrderType;
                     var result = await _serviceProxyProvider.Invoke<MyBettingOrderInfoCollection>(param, "api/Order/QueryMyBettingOrderList");
@@ -588,7 +597,7 @@ namespace Lottery.Api.Controllers
                         }
                     }
                 }
-                else if (p.viewType.ToUpper() == "ZJJL")
+                else if (viewType.ToUpper() == "ZJJL")
                 {
                     param.Add("accountType", "10");
                     param.Add("categoryList", "奖金");
@@ -620,9 +629,9 @@ namespace Lottery.Api.Controllers
                         }
                     }
                 }
-                else if (p.viewType.ToUpper() == "TKJL")
+                else if (viewType.ToUpper() == "TKJL")
                 {
-                    param.Add("WithdrawStatus", WithdrawStatus.Success);
+                    param.Add("WithdrawStatus", (int)WithdrawStatus.Success);
                     var result = await _serviceProxyProvider.Invoke<Withdraw_QueryInfoCollection>(param, "api/Order/QueryMyWithdrawList");
                     if (result != null && result.WithdrawList != null)
                     {
@@ -642,9 +651,9 @@ namespace Lottery.Api.Controllers
                                 ResponseTime = ConvertHelper.ConvertDateTimeInt(item.ResponseTime.Value),
                                 ResponseMoney = item.ResponseMoney,
                                 WithdrawAgent = item.WithdrawAgent,
-                                StrWithdrawAgent = ConvertHelper.WithdrawAgentTypeName(item.WithdrawAgent),
+                                StrWithdrawAgent = ConvertHelper.WithdrawAgentTypeName((WithdrawAgentType)item.WithdrawAgent),
                                 Status = item.Status,
-                                StrStatus = ConvertHelper.GetWithdrawStatus(item.Status),
+                                StrStatus = ConvertHelper.GetWithdrawStatus((WithdrawStatus)item.Status),
                                 ResponseMessage = item.ResponseMessage,
                                 RequesterDisplayName = item.RequesterDisplayName,
                                 RequesterUserKey = item.RequesterUserKey,
@@ -695,7 +704,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 string userId = p.UserId;
                 int state = p.BonusStatus;
                 //int schemeType = p.SchemeType;
@@ -838,7 +847,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 var gameCode = p.GameCode;
                 var gameType = p.GameType;
                 var pageNo = p.Pageindex;
@@ -966,7 +975,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 var type = p.type;
                 var time = p.time;
                 var BeginTime = DateTime.Now.AddDays(-time);
@@ -1046,7 +1055,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 string userToken = p.UserToken;
                 if (string.IsNullOrEmpty(userToken))
                     throw new ArgumentException("您还未登录！");
@@ -1535,7 +1544,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 string gameCode = p.GameCode;
                 string gameType = p.GameType;
                 int pageIndex = p.PageIndex;
@@ -1618,7 +1627,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 string userToken = p.UserToken;
                 string createUserId = p.CreateUserId;
                 string followerUserId = p.FollowerUserId;
@@ -1704,7 +1713,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 string userName = p.UserName;
                 string strOrderBy = p.StrOrderBy;
                 string currUserId = p.CurrentUserId;
@@ -1799,7 +1808,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 string userId = p.UserId;
                 string strAward = p.StrAward;//-1:查询可购买；1：查询中奖；0：查询未中奖；当为空时，查询全部
                 int pageIndex = p.PageIndex;
@@ -1898,7 +1907,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 string userId = p.UserId;
                 string bdfxUserId = p.BDFXUserId;
                 Dictionary<string, object> param = new Dictionary<string, object>()
@@ -1960,7 +1969,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 string gzType = p.GZType;//1:关注；0:取消关注
                 string userToken = p.UserToken;
                 string currentUserId = p.CurrentUserId;
@@ -2032,7 +2041,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 string startWeek = p.StartWeek;
                 string endWeek = p.EndWeek;
                 string currentUserId = p.CurrentUserId;
@@ -2100,7 +2109,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 string currUserId = p.CurrentUserId;
                 int pageIndex = p.PageIndex;
                 int pageSize = p.PageSize;
@@ -2189,7 +2198,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p =WebHelper.Decode(entity.Param);
+                var p =JsonHelper.Decode(entity.Param);
                 string schemeId = p.SchemeId;
                 if (string.IsNullOrEmpty(schemeId))
                     throw new Exception("订单号不能为空");
@@ -2275,7 +2284,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 string userToken = p.UserToken;
                 if (string.IsNullOrEmpty(userToken))
                     throw new ArgumentException("您还未登录！");
@@ -2356,7 +2365,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 string userToken = p.UserToken;
                 if (string.IsNullOrEmpty(userToken))
                     throw new ArgumentException("您还未登录！");
@@ -2562,7 +2571,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p =WebHelper.Decode(entity.Param);
+                var p =JsonHelper.Decode(entity.Param);
                 string type = p.GameCode;
                 string term = p.PageIndex;
                 int page = 0;
@@ -2709,7 +2718,7 @@ namespace Lottery.Api.Controllers
 
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 string type = p.GameCode;
                 string term = p.IssuseNumber;
                 Dictionary<string, object> param = new Dictionary<string, object>()
@@ -2798,7 +2807,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 var type = p.GameType;
                 var term = p.IssuseNumber;
                 var list =await GetphoneOpenMatch(_serviceProxyProvider, "web", type, term);

@@ -1,5 +1,4 @@
 ﻿using KaSon.FrameWork.ORM.Provider;
-
 using Kason.Sg.Core.Caching;
 using Kason.Sg.Core.CPlatform;
 using Kason.Sg.Core.CPlatform.EventBus.Events;
