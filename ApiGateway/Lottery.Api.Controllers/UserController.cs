@@ -300,10 +300,10 @@ namespace Lottery.Api.Controllers
                     throw new Exception("手机验证码不能为空");
                 if (string.IsNullOrEmpty(userToken))
                     throw new Exception("userToken不能为空");
-                param["mobileCode"] = mobileCode;
+                param["validateCode"] = mobileCode;
                 param["source"] = (int)SchemeSource.Web;
                 param["userToken"] = userToken;
-                var result = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/ResponseAuthenticationMobile");
+                var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/ResponseAuthenticationMobile");
                 if (!result.IsSuccess)
                     throw new Exception(result.Message);
 
@@ -604,6 +604,71 @@ namespace Lottery.Api.Controllers
         }
 
 
+        /// <summary>
+        /// 找回密码
+        /// </summary>
+        /// <returns></returns>
+        //public LotteryServiceResponse ForgetPwd(LotteryServiceRequest entity)
+        //{
+        //    try
+        //    {
+        //        var p = WebHelper.Decode(entity.Param);
+        //        string mobile = p.mobile;
+        //        string validateCode = p.validateCode;
+        //        if (string.IsNullOrEmpty(mobile))
+        //            throw new Exception("手机号码不能为空");
+        //        if (!ValidateHelper.IsMobile(mobile))
+        //            throw new Exception("手机号码格式错误");
+        //        if (string.IsNullOrEmpty(validateCode))
+        //            throw new Exception("验证码不能为空");
 
-        }
+        //        var flag = WCFClients.ExternalClient.CheckValidateCodeByForgetPWD(mobile, validateCode);
+        //        if (!flag)
+        //            throw new Exception("验证码错误或已过期");
+        //        string userId = WCFClients.ExternalClient.GetUserIdByLoginName(mobile);
+        //        if (string.IsNullOrEmpty(userId))
+        //            throw new Exception("手机号错误，该手机号未注册");
+        //        string userToken = WCFClients.ExternalClient.GetGuestToken().ReturnValue;
+        //        var isAuthMobile = WCFClients.ExternalClient.CheckIsAuthenticatedUserMobile(userId, userToken);
+        //        PreconditionAssert.IsTrue(isAuthMobile, "用户未认证手机，无法使用手机找回密码。");
+        //        var mobileinfo = WCFClients.ExternalClient.GetUserMobileInfo(userId, userToken);
+        //        PreconditionAssert.IsTrue(mobileinfo.Mobile == mobile, "认证手机不匹配，无法找回密码。");
+        //        var result = WCFClients.ExternalClient.FindPassword(userId);
+        //        string code = result.ReturnValue;
+        //        #region 发送站内消息：手机短信或站内信
+        //        if (!string.IsNullOrEmpty(code))
+        //        {
+        //            var pwdArray = code.Split('|');
+        //            if (pwdArray.Length == 2)
+        //            {
+        //                var pList = new List<string>();
+        //                pList.Add(string.Format("{0}={1}", "[UserName]", mobile));
+        //                pList.Add(string.Format("{0}={1}", "[UserPassword]", pwdArray[0]));
+        //                pList.Add(string.Format("{0}={1}", "[UserPassword_2]", pwdArray[1]));
+        //                发送短信
+        //                WCFClients.GameQueryClient.DoSendSiteMessage("", mobile, "ON_User_Find_Password", string.Join("|", pList.ToArray()));
+        //            }
+        //        }
+        //        #endregion
+        //        return new LotteryServiceResponse
+        //        {
+        //            Code = ResponseCode.成功,
+        //            Message = "新密码已经发送手机",
+        //            MsgId = entity.MsgId,
+        //            Value = "新密码已经发送手机"
+        //        };
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new LotteryServiceResponse
+        //        {
+        //            Code = ResponseCode.失败,
+        //            Message = ex.Message,
+        //            MsgId = entity.MsgId,
+        //            Value = ex.Message,
+        //        };
+        //    }
+        //}
+
+    }
 }

@@ -86,7 +86,39 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
         }
         #endregion
 
-      
+        public string ResponseAuthenticationMobile(string userId, int delaySeconds, string delayDescription)
+        {
+            string mobile;
+
+            DB.Begin();
+
+            TaskList(userId);
+
+            var manager = new UserMobileManager();
+            var entity = manager.GetUserMobile(userId);
+            if (entity == null)
+            {
+                throw new ArgumentException("尚未请求手机认证");
+            }
+            if (entity.IsSettedMobile)
+            {
+                throw new ArgumentException(string.Format("已于【{0:yyyy-MM-dd HH:mm:ss}】进行过手机认证。", entity.UpdateTime));
+            }
+            var span = DateTime.Now - entity.UpdateTime.AddSeconds(delaySeconds);
+            if (span.TotalSeconds > 0)
+            {
+                throw new ArgumentException(string.Format("提交认证手机必须在请求认证后【{0}】内完成。", delayDescription));
+            }
+            entity.IsSettedMobile = true;
+
+            manager.UpdateUserMobile(entity);
+
+            mobile = entity.Mobile;
+
+            DB.Commit();
+
+            return mobile;
+        }
 
 
         public string RegisterResponseMobile(string userId, string mobile, int delaySeconds, string delayDescription)
@@ -94,17 +126,56 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
 
             DB.Begin();
 
+            TaskList(userId);
+
+            var manager = new UserMobileManager();
+            var entity = manager.GetUserMobile(userId);
+            if (entity != null)
+            {
+                if (entity.IsSettedMobile)
+                    throw new ArgumentException(string.Format("已于【{0:yyyy-MM-dd HH:mm:ss}】进行过手机认证。", entity.UpdateTime));
+                var span = DateTime.Now - entity.UpdateTime.AddSeconds(delaySeconds);
+                if (span.TotalSeconds > 0)
+                    throw new ArgumentException(string.Format("提交认证手机必须在请求认证后【{0}】内完成。", delayDescription));
+                entity.IsSettedMobile = true;
+                manager.UpdateUserMobile(entity);
+            }
+            else
+            {
+                entity = new E_Authentication_Mobile
+                {
+                    UserId = userId,
+                    CreateTime = DateTime.Now,
+                    UpdateTime = DateTime.Now,
+                    AuthFrom = "LOCAL",
+                    Mobile = mobile,
+                    IsSettedMobile = true,
+                    CreateBy = userId,
+                    UpdateBy = userId,
+                };
+                manager.AddUserMobile(entity);
+            }
+
+            mobile = entity.Mobile;
+
+            DB.Commit();
+
+
+            return mobile;
+        }
+
+        public void TaskList(string userId)
+        {
+
             var gv = new TaskListManager();
-
             var old = DB.CreateQuery<E_TaskList>().FirstOrDefault(p => p.UserId == userId && p.TaskCategory == (int)TaskCategory.MobilBinding);
-
             if (old == null)
             {
                 //增加成长值 
                 var orderId = Guid.NewGuid().ToString("N");
                 BusinessHelper businessHelper = new BusinessHelper();
                 businessHelper.Payin_UserGrowth("绑定手机号", orderId, userId, 100, "完成手机号绑定可获得100点成长值");
-                var UserTaskRecord=new E_UserTaskRecord
+                var UserTaskRecord = new E_UserTaskRecord
                 {
                     CreateTime = DateTime.Now,
                     CurrentTime = DateTime.Now.ToString("yyyyMMdd"),
@@ -115,7 +186,7 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
                 };
                 DB.GetDal<E_UserTaskRecord>().Add(UserTaskRecord);
 
-                var TaskList=new E_TaskList
+                var TaskList = new E_TaskList
                 {
                     UserId = userId,
                     OrderId = orderId,
@@ -130,43 +201,7 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
                 };
                 DB.GetDal<E_TaskList>().Add(TaskList);
             }
-
-                var manager = new UserMobileManager();           
-                var entity = manager.GetUserMobile(userId);
-                if (entity != null)
-                {
-                    if (entity.IsSettedMobile)
-                        throw new ArgumentException(string.Format("已于【{0:yyyy-MM-dd HH:mm:ss}】进行过手机认证。", entity.UpdateTime));
-                    var span = DateTime.Now - entity.UpdateTime.AddSeconds(delaySeconds);
-                    if (span.TotalSeconds > 0)
-                        throw new ArgumentException(string.Format("提交认证手机必须在请求认证后【{0}】内完成。", delayDescription));
-                    entity.IsSettedMobile = true;
-                    manager.UpdateUserMobile(entity);
-                }
-                else
-                {
-                entity = new E_Authentication_Mobile
-                {
-                    UserId = userId,
-                    CreateTime = DateTime.Now,
-                    UpdateTime = DateTime.Now,
-                    AuthFrom = "LOCAL",
-                    Mobile = mobile,
-                    IsSettedMobile = true,
-                    CreateBy = userId,
-                    UpdateBy = userId,
-                };
-                    manager.AddUserMobile(entity);
-                }
-
-                mobile = entity.Mobile;
-            
-               DB.Commit();
-
-
-            return mobile;
         }
-
 
         public void RegisterRequestMobile(string mobile)
         {

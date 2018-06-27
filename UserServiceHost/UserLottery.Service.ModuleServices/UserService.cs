@@ -308,6 +308,21 @@ namespace UserLottery.Service.ModuleServices
             }
         }
 
+        /// <summary>
+        /// 清理用户绑定数据缓存
+        /// </summary>
+        private void ClearUserBindInfoCache(string userId)
+        {
+            try
+            {
+                var fullKey = string.Format("{0}_{1}", RedisKeys.Key_UserBind, userId);
+                var db = RedisHelper.DB_UserBindData;
+                db.KeyDeleteAsync(fullKey);
+            }
+            catch (Exception)
+            {
+            }
+        }
 
         /// <summary>
         /// 查询我的余额
@@ -426,10 +441,10 @@ namespace UserLottery.Service.ModuleServices
         }
 
         /// <summary>
-        /// 手机黑名单
+        /// 配置项
         /// </summary>
         private static C_Core_Config _coreConfigList = new C_Core_Config();
-        public C_Core_Config QueryCoreConfigByKey(string key)
+        public Task<C_Core_Config> QueryCoreConfigByKey(string key)
         {
           
             var loginBiz = new MobileAuthenticationBusiness();        
@@ -437,7 +452,7 @@ namespace UserLottery.Service.ModuleServices
 
             if (_coreConfigList == null)
                 throw new Exception(string.Format("找不到配置项：{0}", key));
-            return _coreConfigList;
+            return Task.FromResult(_coreConfigList);
         }
 
         /// <summary>
@@ -521,6 +536,69 @@ namespace UserLottery.Service.ModuleServices
 
         }
 
+        #region 回复手机验证
+        /// <summary>
+        /// 回复手机认证 
+        /// </summary>
+        /// <param name="validateCode"></param>
+        /// <param name="source"></param>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public Task<CommonActionResult> ResponseAuthenticationMobile(string validateCode, SchemeSource source, string userToken)
+        {
+            // 验证用户身份及权限
+            var userId = userAuthentication.ValidateUserAuthentication(userToken);
+
+            try
+            {
+                if (string.IsNullOrEmpty(validateCode))
+                    throw new Exception("验证码不能为空");
+                var isCheckValidateCode = false;
+
+                var authenticationBiz = new MobileAuthenticationBusiness();
+                var mobile = authenticationBiz.GetUserMobile(userId);
+                if (mobile == null)
+                {
+                    throw new ArgumentException("尚未请求手机认证");
+                }
+
+                var mobileBiz = new ValidationMobileBusiness();
+                isCheckValidateCode = mobileBiz.CheckValidationCode(mobile.Mobile, "MobileAuthentication", validateCode, GetMaxTimes(3));
+
+                if (!isCheckValidateCode)
+                {
+                    throw new Exception("验证码输入不正确。");
+                }
+                string mobileNumber;
+                mobileNumber = authenticationBiz.ResponseAuthenticationMobile(userId, 1800, "半个小时");
+                //清理用户绑定数据缓存
+                ClearUserBindInfoCache(userId);
+
+                #region 发送站内消息：手机短信或站内信
+
+                var userBusiness = new LocalLoginBusiness();
+                var user = userBusiness.GetRegisterById(userId);
+                var pList = new List<string>();
+                pList.Add(string.Format("{0}={1}", "[UserName]", user.DisplayName));
+                pList.Add(string.Format("{0}={1}", "[MobileNumber]", mobile.Mobile));
+                //发送短信
+                new SiteMessageControllBusiness().DoSendSiteMessage(user.UserId, "", "ON_User_Bind_Mobile", pList.ToArray());
+
+                #endregion
+
+                #region 还没做
+                //! 执行扩展功能代码 - 提交事务后
+                //BusinessHelper.ExecPlugin<IResponseAuthentication_AfterTranCommit>(new object[] { userId, "Mobile", mobileNumber, source });
+                #endregion
+                return Task.FromResult(new CommonActionResult(true, "手机认证成功。"));
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(new CommonActionResult(false, ex.Message));
+            }
+        }
+
+        #endregion
         /// <summary>
         /// 验证手机
         /// </summary>

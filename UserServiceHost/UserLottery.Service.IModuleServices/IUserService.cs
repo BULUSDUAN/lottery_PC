@@ -58,5 +58,11 @@ namespace UserLottery.Service.IModuleServices
         [Service(Date = "2018-6-19", Director = "renjun", Name = "手机号是否可注册")]
         Task<bool> HasMobile(string mobile);
 
+        [Service(Date = "2018-6-20", Director = "renjun", Name = "配置项")]
+        Task<C_Core_Config> QueryCoreConfigByKey(string key);
+
+        [Service(Date = "2018-6-20", Director = "renjun", Name = "回复手机认证")]
+        Task<CommonActionResult> ResponseAuthenticationMobile(string validateCode, SchemeSource source, string userToken);
+
     }
 }
