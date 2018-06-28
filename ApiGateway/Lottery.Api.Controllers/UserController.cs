@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Lottery.Api.Controllers
@@ -601,70 +602,385 @@ namespace Lottery.Api.Controllers
 
 
         /// <summary>
-        /// 找回密码
+        /// 找回密码 215
         /// </summary>
         /// <returns></returns>
-        //public LotteryServiceResponse ForgetPwd(LotteryServiceRequest entity)
-        //{
-        //    try
-        //    {
-        //        var p = WebHelper.Decode(entity.Param);
-        //        string mobile = p.mobile;
-        //        string validateCode = p.validateCode;
-        //        if (string.IsNullOrEmpty(mobile))
-        //            throw new Exception("手机号码不能为空");
-        //        if (!ValidateHelper.IsMobile(mobile))
-        //            throw new Exception("手机号码格式错误");
-        //        if (string.IsNullOrEmpty(validateCode))
-        //            throw new Exception("验证码不能为空");
+        public async Task<LotteryServiceResponse> ForgetPwd([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                string mobile = p.mobile;
+                string validateCode = p.validateCode;
+                if (string.IsNullOrEmpty(mobile))
+                    throw new Exception("手机号码不能为空");
+                if (!ValidateHelper.IsMobile(mobile))
+                    throw new Exception("手机号码格式错误");
+                if (string.IsNullOrEmpty(validateCode))
+                    throw new Exception("验证码不能为空");
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["mobile"] = mobile;
+                param["validateCode"] = validateCode;
 
-        //        var flag = WCFClients.ExternalClient.CheckValidateCodeByForgetPWD(mobile, validateCode);
-        //        if (!flag)
-        //            throw new Exception("验证码错误或已过期");
-        //        string userId = WCFClients.ExternalClient.GetUserIdByLoginName(mobile);
-        //        if (string.IsNullOrEmpty(userId))
-        //            throw new Exception("手机号错误，该手机号未注册");
-        //        string userToken = WCFClients.ExternalClient.GetGuestToken().ReturnValue;
-        //        var isAuthMobile = WCFClients.ExternalClient.CheckIsAuthenticatedUserMobile(userId, userToken);
-        //        PreconditionAssert.IsTrue(isAuthMobile, "用户未认证手机，无法使用手机找回密码。");
-        //        var mobileinfo = WCFClients.ExternalClient.GetUserMobileInfo(userId, userToken);
-        //        PreconditionAssert.IsTrue(mobileinfo.Mobile == mobile, "认证手机不匹配，无法找回密码。");
-        //        var result = WCFClients.ExternalClient.FindPassword(userId);
-        //        string code = result.ReturnValue;
-        //        #region 发送站内消息：手机短信或站内信
-        //        if (!string.IsNullOrEmpty(code))
-        //        {
-        //            var pwdArray = code.Split('|');
-        //            if (pwdArray.Length == 2)
-        //            {
-        //                var pList = new List<string>();
-        //                pList.Add(string.Format("{0}={1}", "[UserName]", mobile));
-        //                pList.Add(string.Format("{0}={1}", "[UserPassword]", pwdArray[0]));
-        //                pList.Add(string.Format("{0}={1}", "[UserPassword_2]", pwdArray[1]));
-        //                发送短信
-        //                WCFClients.GameQueryClient.DoSendSiteMessage("", mobile, "ON_User_Find_Password", string.Join("|", pList.ToArray()));
-        //            }
-        //        }
-        //        #endregion
-        //        return new LotteryServiceResponse
-        //        {
-        //            Code = ResponseCode.成功,
-        //            Message = "新密码已经发送手机",
-        //            MsgId = entity.MsgId,
-        //            Value = "新密码已经发送手机"
-        //        };
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return new LotteryServiceResponse
-        //        {
-        //            Code = ResponseCode.失败,
-        //            Message = ex.Message,
-        //            MsgId = entity.MsgId,
-        //            Value = ex.Message,
-        //        };
-        //    }
-        //}
+                var flag = await _serviceProxyProvider.Invoke<bool>(param, "api/user/CheckValidateCodeByForgetPWD");
+                if (!flag)
+                    throw new Exception("验证码错误或已过期");
+
+                string userId = await _serviceProxyProvider.Invoke<string>(param, "api/user/GetUserIdByLoginName");
+                if (string.IsNullOrEmpty(userId))
+                    throw new Exception("手机号错误，该手机号未注册");
+
+                //string userToken = WCFClients.ExternalClient.GetGuestToken().ReturnValue;
+                //var isAuthMobile = WCFClients.ExternalClient.CheckIsAuthenticatedUserMobile(userId, userToken);
+                //PreconditionAssert.IsTrue(isAuthMobile, "用户未认证手机，无法使用手机找回密码。");
+                //var mobileinfo = WCFClients.ExternalClient.GetUserMobileInfo(userId, userToken);
+                //PreconditionAssert.IsTrue(mobileinfo.Mobile == mobile, "认证手机不匹配，无法找回密码。");
+                Dictionary<string, object> paramUsid = new Dictionary<string, object>();
+                paramUsid["userId"] = userId;
+                var result = await _serviceProxyProvider.Invoke<CommonActionResult>(paramUsid, "api/user/FindPassword");
+
+                string code = result.ReturnValue;
+                #region 发送站内消息：手机短信或站内信
+                if (!string.IsNullOrEmpty(code))
+                {
+                    var pwdArray = code.Split('|');
+                    if (pwdArray.Length == 2)
+                    {
+                        var pList = new List<string>();
+                        pList.Add(string.Format("{0}={1}", "[UserName]", mobile));
+                        pList.Add(string.Format("{0}={1}", "[UserPassword]", pwdArray[0]));
+                        pList.Add(string.Format("{0}={1}", "[UserPassword_2]", pwdArray[1]));
+
+                        Dictionary<string, object> paramMessage = new Dictionary<string, object>();
+
+                        paramMessage["userId"] = userId;
+                        paramMessage["mobile"] = mobile;
+                        paramMessage["sceneKey"] = "ON_User_Find_Password";
+                        paramMessage["msgTemplateParams"] = string.Join("|", pList.ToArray());
+                        //发送短信
+                        var resultMessage = await _serviceProxyProvider.Invoke<CommonActionResult>(paramMessage, "api/user/DoSendSiteMessage");
+                    }
+                }
+                #endregion
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "新密码已经发送手机",
+                    MsgId = entity.MsgId,
+                    Value = "新密码已经发送手机"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+        }
+
+
+        /// <summary>
+        /// 忘记密码时发送验证码 214
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<LotteryServiceResponse> ForgetPwd_VerifyCode([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                string mobile = p.mobile;
+                if (string.IsNullOrEmpty(mobile))
+                    throw new Exception("手机号码不能为空");
+                if (!ValidateHelper.IsMobile(mobile))
+                    throw new Exception("手机号码格式错误");
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["mobile"] = mobile;
+                var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/SendValidateCodeToUserMobileByForgetPWD");
+                if (result.IsSuccess)
+                {
+                    return new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.成功,
+                        Message = "验证码发送成功",
+                        MsgId = entity.MsgId,
+                        Value = "验证码发送成功"
+                    };
+                }
+                else
+                {
+                    return new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.失败,
+                        Message = result.Message,
+                        MsgId = entity.MsgId,
+                        Value = result.Message
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+        }
+
+
+        #region 资金密码  161、162
+
+        public async Task<LotteryServiceResponse> SetBalancePwd([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                
+                 var p = WebHelper.Decode(entity.Param);
+                string oldPwd = p.OldPwd;
+                string newPwd = p.NewPwd;
+                bool isSet = Convert.ToBoolean(p.IsSet);
+                string userToken = p.UserToken;
+                if (string.IsNullOrEmpty(userToken))
+                    throw new Exception("您还未登录，请登录！");
+                else if (string.IsNullOrEmpty(newPwd))
+                    throw new Exception("资金密码不能为空！");
+                if (isSet)
+                {
+                    if (!Regex.IsMatch(newPwd, "^\\d{6}$"))
+                    {
+                        throw new Exception("新资金密码只能使用0-9的6位数字！");
+                    }
+
+                    Dictionary<string, object> param = new Dictionary<string, object>();
+
+                    param["newPwd"] = newPwd;
+                    param["userToken"] = userToken;
+                    var checkRes = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/CheckIsSame2LoginPassword");
+
+                    PreconditionAssert.IsTrue(checkRes.IsSuccess && checkRes.ReturnValue != "T", "资金密码不能与登录密码相同");
+                }
+
+                Dictionary<string, object> paramPwd = new Dictionary<string, object>();
+                paramPwd["Pwd"] = isSet ? oldPwd : newPwd;
+                paramPwd["isSet"] = isSet;
+                paramPwd["newPwd"] = newPwd;
+                paramPwd["userToken"] = userToken;
+
+                var result = await _serviceProxyProvider.Invoke<CommonActionResult>(paramPwd, "api/user/SetBalancePassword");
+                return new LotteryServiceResponse
+                {
+                    Code = result.IsSuccess ? ResponseCode.成功 : ResponseCode.失败,
+                    Message = result.IsSuccess ? "设置资金密码成功" : "设置资金密码失败",
+                    MsgId = entity.MsgId,
+                    Value = result.IsSuccess ? "设置资金密码成功" : "设置资金密码失败",
+                };
+            }
+            catch (ArgumentException ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+        }
+
+
+        /// <summary>
+        /// 设置资金密码服务 162
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<LotteryServiceResponse> SetBalancePwd_Place([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param); 
+                string strPlace = p.StrPlace;
+                string pwd = p.Pwd;
+                string userToken = p.UserToken;
+                if (string.IsNullOrEmpty(userToken))
+                    throw new Exception("您还未登录，请登录！");
+                else if (string.IsNullOrEmpty(pwd))
+                    throw new Exception("资金密码不能为空");
+
+                Dictionary<string, object> paramPwd = new Dictionary<string, object>();
+                paramPwd["pwd"] = pwd;
+                paramPwd["strPlace"] = strPlace;
+                paramPwd["userToken"] = userToken;
+
+                var result = await _serviceProxyProvider.Invoke<CommonActionResult>(paramPwd, "api/user/SetBalancePasswordNeedPlace");
+                return new LotteryServiceResponse
+                {
+                    Code = result.IsSuccess ? ResponseCode.成功 : ResponseCode.失败,
+                    Message = result.IsSuccess ? "设置资金密码服务成功" : "设置资金密码服务失败",
+                    MsgId = entity.MsgId,
+                    Value = result.IsSuccess ? "设置资金密码服务成功" : "设置资金密码服务失败",
+                };
+            }
+            catch (ArgumentException ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+        }
+
+        #endregion
+
+        #region "20180315 查询yqid的所有会员 有效会员 红包 "
+        /// <summary>
+        /// 返回结果格式以|分隔  满足条件的有效会员|推广注册总会员数|领取红包总额
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<LotteryServiceResponse> QueryYqidRegisterByAgentId([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                string userToken = p.UserToken;
+                if (string.IsNullOrEmpty(userToken))
+                    throw new Exception("您还未登录，请登录！");
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["userToken"] = userToken;
+                var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/QueryYqidRegisterByAgentIdToApp");
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "返回结果成功!",
+                    MsgId = entity.MsgId,
+                    Value = result,
+                };
+            }
+            catch (ArgumentException ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+        }
+        #endregion
+
+
+        #region 实名认证
+
+
+        /// <summary>
+        /// 实名认证
+        /// </summary>
+        public async Task<LotteryServiceResponse> RequestRealNameValidate([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                //if (entity.SourceCode == SchemeSource.Iphone)
+                //    throw new Exception("您好！目前苹果客户端暂停实名认证。");
+                var p = WebHelper.Decode(entity.Param);
+                string idCardNumber = p.IdCardNumber;
+                string realName = p.RealName;
+                string userToken = p.UserToken;
+
+                if (string.IsNullOrEmpty(idCardNumber))
+                    throw new Exception("证件号码不能为空");
+                if (string.IsNullOrEmpty(realName))
+                    throw new Exception("真实姓名不能为空");
+                if (string.IsNullOrEmpty(userToken))
+                    throw new Exception("userToken不能为空");
+                var userRealName = new UserRealNameInfo {
+                    IdCardNumber = idCardNumber,
+                    RealName = realName,                   
+                };
+
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["IdCardNumber"] = idCardNumber;
+                param["RealName"] = realName;
+                param["source"] = (int)SchemeSource.Web;
+                param["userToken"] = userToken;
+
+
+                var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/AuthenticateMyRealName");
+
+                if (!result.IsSuccess)
+                    throw new Exception(result.Message);
+
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = result.Message,
+                    MsgId = entity.MsgId,
+                    Value = result.Message,
+                };
+            }
+            catch (ArgumentException ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "业务参数错误",
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "服务器内部错误，请联系接口提供商",
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+        }
+
+        #endregion
 
     }
 }

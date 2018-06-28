@@ -64,5 +64,28 @@ namespace UserLottery.Service.IModuleServices
         [Service(Date = "2018-6-20", Director = "renjun", Name = "回复手机认证")]
         Task<CommonActionResult> ResponseAuthenticationMobile(string validateCode, SchemeSource source, string userToken);
 
+        [Service(Date = "2018-6-27", Director = "renjun", Name = "判断找回密码验证码是否正确")]
+        Task<bool> CheckValidateCodeByForgetPWD(string mobile, string validateCode);
+
+        [Service(Date = "2018-6-27", Director = "renjun", Name = "根据用户名查询用户ID")]
+        Task<string> GetUserIdByLoginName(string loginName);
+
+        [Service(Date = "2018-6-27", Director = "renjun", Name = "找回密码")]
+        Task<CommonActionResult> FindPassword(string userId);
+
+        [Service(Date = "2018-6-27", Director = "renjun", Name = "某场景触发的发送站内消息")]
+        Task<CommonActionResult> DoSendSiteMessage(string userId, string mobile, string sceneKey, string msgTemplateParams);
+
+        [Service(Date = "2018-6-28", Director = "renjun", Name = "找回密码发送验证码")]
+        Task<CommonActionResult> SendValidateCodeToUserMobileByForgetPWD(string mobile);
+
+        [Service(Date = "2018-6-28", Director = "renjun", Name = " 检查是否和登录密码一至")]
+        Task<CommonActionResult> CheckIsSame2LoginPassword(string newPassword, string userToken);
+
+        [Service(Date = "2018-6-28", Director = "renjun", Name = " 设置资金密码")]
+        Task<CommonActionResult> SetBalancePassword(string oldPassword, bool isSetPwd, string newPassword, string userToken);
+
+        [Service(Date = "2018-6-28", Director = "renjun", Name = " 设置资金密码类型")]
+        Task<CommonActionResult> SetBalancePasswordNeedPlace(string password, string placeList, string userToken);
     }
 }

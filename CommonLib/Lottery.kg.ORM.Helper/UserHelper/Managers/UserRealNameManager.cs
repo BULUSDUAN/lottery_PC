@@ -1,0 +1,41 @@
+﻿using EntityModel;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Lottery.Kg.ORM.Helper.UserHelper
+{
+   public class UserRealNameManager:DBbase
+    {
+        public E_Authentication_RealName GetRealNameInfoByName(string realName, string cardNumber)
+        {
+            var query = DB.CreateQuery<E_Authentication_RealName>().Where(s => s.RealName == realName && s.IdCardNumber == cardNumber);
+            if (query != null && query.Count() > 0)
+            {
+                var resutl = query.FirstOrDefault(s => s.IsSettedRealName == true);
+                if (resutl != null)
+                    return resutl;
+                else
+                {
+                    resutl = query.FirstOrDefault(s => s.IsSettedRealName == false);
+                    if (resutl != null)
+                        return resutl;
+                }
+            }
+            return null;
+        }
+
+        public E_Authentication_RealName QueryUserRealName(string idCard)
+        {
+           
+            return DB.CreateQuery<E_Authentication_RealName>().FirstOrDefault(p => p.IdCardNumber == idCard && p.IsSettedRealName == true);
+        }
+
+        public void UpdateUserRealName(E_Authentication_RealName realName)
+        {
+            realName.UpdateTime = DateTime.Now;
+            DB.GetDal<E_Authentication_RealName>().Update(realName);
+        }
+    }
+}

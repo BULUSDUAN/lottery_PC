@@ -998,6 +998,286 @@ namespace UserLottery.Service.ModuleServices
         #endregion
 
 
+        #region 判断找回密码验证码是否正确
+        public Task<bool> CheckValidateCodeByForgetPWD(string mobile, string validateCode)
+        {
+                var flag = false;
+                dBbase.DB.Begin();
+                var biz = new ValidationMobileBusiness();
+                flag = biz.CheckValidationCode(mobile, "SendValidateCodeToUserMobileByForgetPWD", validateCode, GetMaxTimes(5));
+                dBbase.DB.Commit();
+                return Task.FromResult(flag);
+        }
+        #endregion
+
+        /// <summary>
+        /// 根据登录名查询用户Id
+        /// </summary>
+        /// <param name="loginName"></param>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public Task<string> GetUserIdByLoginName(string loginName)
+        {
+            var loginBiz = new LocalLoginBusiness();
+            var user = loginBiz.GetUserByLoginName(loginName);
+            return Task.FromResult(user.UserId);
+        }
+
+        /// <summary>
+        /// 找回密码
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public Task<CommonActionResult> FindPassword(string userId)
+        {
+            var loginBiz = new LocalLoginBusiness();
+            var pwd = loginBiz.ChangePassword(userId);
+            return Task.FromResult(new CommonActionResult(true, "修改密码成功") { ReturnValue = pwd });
+        }
+
+
+        /// <summary>
+        /// 某场景触发的发送站内消息
+        /// </summary>
+        public Task<CommonActionResult> DoSendSiteMessage(string userId, string mobile, string sceneKey, string msgTemplateParams)
+        {
+            try
+            {
+                var siteBiz = new SiteMessageControllBusiness();
+                siteBiz.DoSendSiteMessage(userId, mobile, sceneKey, msgTemplateParams.Split('|'));
+                return Task.FromResult(new CommonActionResult(true, "发送完成"));
+
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(new CommonActionResult(false, ex.Message));
+            }
+        }
+
+
+        #region 找回密码发送验证码
+        /// <summary>
+        /// 找回密码发送验证码
+        /// </summary>
+        /// <param name="mobile"></param>
+        /// <returns></returns>
+        public Task<CommonActionResult> SendValidateCodeToUserMobileByForgetPWD(string mobile)
+        {
+
+            var validateCode = GetRandomMobileValidateCode();
+            var authenticationBiz = new MobileAuthenticationBusiness();
+            var flag = authenticationBiz.HasMobile(mobile);
+            if (flag) //如果手机号已注册则发送
+            {
+                
+                    dBbase.DB.Begin();
+                    var biz = new ValidationMobileBusiness();
+                    //SendValidateCodeToUserMobileByForgetPWD
+                    validateCode = biz.SendValidationCode(mobile, "SendValidateCodeToUserMobileByForgetPWD", validateCode, GetDelay(30), GetMaxTimes(3));
+                    dBbase.DB.Commit();
+                
+                var pList = new List<string>();
+                pList.Add(string.Format("{0}={1}", "[ValidNumber]", validateCode));
+                //发送短信
+                new SiteMessageControllBusiness().DoSendSiteMessage("", mobile, "ON_User_Bind_Mobile_Before", pList.ToArray());
+                return Task.FromResult(new CommonActionResult
+                {
+                    IsSuccess = true,
+                    ReturnValue = validateCode,
+                });
+            }
+            else
+            {
+                return Task.FromResult(new CommonActionResult
+                {
+                    IsSuccess = false,
+                    ReturnValue = "",
+                    Message = "该手机号未注册"
+                });
+            }
+        }
+        #endregion
+
+
+        /// <summary>
+        /// 检查是否和登录密码一至
+        /// </summary>
+        /// <param name="newPassword"></param>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public Task<CommonActionResult> CheckIsSame2LoginPassword(string newPassword, string userToken)
+        {
+            // 验证用户身份及权限
+            var userId = userAuthentication.ValidateUserAuthentication(userToken);
+
+            var loginBiz = new LocalLoginBusiness();
+            var result = loginBiz.CheckIsSame2LoginPassword(userId, newPassword);
+            var flag = "N";
+            if (result.HasValue)
+            {
+                flag = result.Value ? "T" : "F";
+            }
+            return Task.FromResult(new CommonActionResult(true, "查询成功") { ReturnValue = flag });
+        }
+
+        /// <summary>
+        /// 设置资金密码
+        /// </summary>
+        /// <param name="oldPassword"></param>
+        /// <param name="isSetPwd"></param>
+        /// <param name="newPassword"></param>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public Task<CommonActionResult> SetBalancePassword(string oldPassword, bool isSetPwd, string newPassword, string userToken)
+        {
+            // 验证用户身份及权限
+            var userId = userAuthentication.ValidateUserAuthentication(userToken);
+            try
+            {
+                var biz = new FundBusiness();
+                biz.SetBalancePassword(userId, oldPassword, isSetPwd, newPassword);
+                #region 还没做
+                //BusinessHelper.ExecPlugin<IBalancePassword>(new object[] { userId, oldPassword, isSetPwd, newPassword });
+                #endregion
+                return Task.FromResult(new CommonActionResult { IsSuccess = true, Message = "操作资金密码完成" });
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("操作资金密码出错 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 设置资金密码类型
+        /// </summary>
+        /// <param name="password"></param>
+        /// <param name="placeList"></param>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public Task<CommonActionResult> SetBalancePasswordNeedPlace(string password, string placeList, string userToken)
+        {
+            // 验证用户身份及权限
+            var userId = userAuthentication.ValidateUserAuthentication(userToken);
+
+            var innerList = new string[] {
+                "Bet"               // 投注
+                , "Withdraw"        // 提现
+                , "Transfer"        // 转账
+                , "Red"             // 送红包
+                , "CancelWithdraw"  // 取消提现
+                , "CancelChase"     // 取消追号
+                ,"BuyExperter"      //购买名家分析
+                ,"ExchangeDouDou"   //豆豆兑换
+            };
+            if (placeList != "ALL")
+            {
+                var list = placeList.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                if (list.Length > 0)
+                {
+                    foreach (var item in placeList.Split('|'))
+                    {
+                        if (!innerList.Contains(item))
+                        {
+                            throw new Exception("不支持设置资金密码类型 - " + item);
+                        }
+                    }
+                }
+            }
+            try
+            {
+                var biz = new FundBusiness();
+                biz.SetBalancePasswordNeedPlace(userId, password, placeList);
+                return Task.FromResult(new CommonActionResult { IsSuccess = true, Message = "操作完成" });
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("设置资金密码类型出错 - " + ex.Message, ex);
+            }
+        }
+
+
+
+        /// <summary>
+        /// 查询某个yqid下面的 能满足领红包条件的用户个数
+        /// </summary>
+        /// <param name="AgentId">普通用户代理 邀请注册的会员</param>
+        /// <returns></returns>
+        //public string QueryYqidRegisterByAgentId(string AgentId)
+        //{
+        //    try
+        //    {
+        //        return new SqlQueryBusiness().QueryYqidRegisterByAgentId(AgentId);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception("查询某个yqid下面的能满足领红包条件的用户个数出错 - " + ex.Message, ex);
+        //    }
+        //}
+        /// <summary>
+        /// QueryYqidRegisterByAgentId方法的手机接口
+        /// </summary>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        //public string QueryYqidRegisterByAgentIdToApp(string userToken)
+        //{
+        //    // 验证用户身份及权限
+        //    var userId = userAuthentication.ValidateUserAuthentication(userToken);
+        //    return QueryYqidRegisterByAgentId(userId);
+        //}
+
+        /// <summary>
+        /// 用户实名认证
+        /// </summary>
+        /// <param name="realNameInfo"></param>
+        /// <param name="source"></param>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        //public CommonActionResult AuthenticateMyRealName(string IdCardNumber,string RealName, SchemeSource source, string userToken)
+        //{
+        //    // 验证用户身份及权限
+        //    var userId = userAuthentication.ValidateUserAuthentication(userToken);
+
+        //    var biz = new RealNameAuthenticationBusiness();
+        //    Lottery.Kg.ORM.Helper.BusinessHelper.CheckUserRealName(IdCardNumber);
+        //    var realName = biz.GetAuthenticatedRealName(userId);
+        //    if (realName != null)
+        //    {
+        //        if (realName.IsSettedRealName)
+        //        {
+        //            throw new ArgumentException("此用户已进行过实名认证，不能重复认证");
+        //        }
+        //        biz.UpdateAuthenticationRealName("LOCAL", userId, RealName, "0", IdCardNumber, userId);
+        //    }
+        //    else
+        //    {
+        //        biz.AddAuthenticationRealName("LOCAL", userId, RealName, "0", IdCardNumber, userId, true);
+        //    }
+
+        //    #region 发送站内消息：手机短信或站内信
+
+        //    var userManager = new UserBalanceManager();
+        //    var user = userManager.QueryUserRegister(userId);
+        //    var pList = new List<string>();
+        //    pList.Add(string.Format("{0}={1}", "[UserName]", user.DisplayName));
+        //    pList.Add(string.Format("{0}={1}", "[UserRealityName]", RealName));
+        //    pList.Add(string.Format("{0}={1}", "[IdCard]", IdCardNumber));
+        //    //发送短信
+        //    new SiteMessageControllBusiness().DoSendSiteMessage(user.UserId, "", "ON_User_Bind_RealName", pList.ToArray());
+
+        //    #endregion
+
+        //    //清理用户绑定数据缓存
+        //    ClearUserBindInfoCache(userId);
+
+        //    #region 还没做
+        //    //! 执行扩展功能代码 - 提交事务后
+        //    //BusinessHelper.ExecPlugin<IResponseAuthentication_AfterTranCommit>(new object[] { userId, "RealName", realNameInfo.RealName + "|" + realNameInfo.CardType + "|" + realNameInfo.IdCardNumber, source });
+        //    #endregion
+
+        //    return new CommonActionResult(true, "实名认证成功。");
+        //}
+
         #endregion Implementation of IUserService
     }
 }

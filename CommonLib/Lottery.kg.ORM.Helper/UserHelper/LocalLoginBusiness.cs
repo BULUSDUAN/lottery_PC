@@ -243,6 +243,18 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
             return DB.CreateQuery<E_Login_Local>().Where(p => p.UserId == userId).FirstOrDefault();
         }
 
+        /// <summary>
+        /// 根据用户名电话号码查询用户
+        /// </summary>
+        /// <param name="loginName"></param>
+        /// <returns></returns>
+        public E_Login_Local GetLoginByName(string loginName)
+        {
+            return DB.CreateQuery<E_Login_Local>().Where(p => (p.LoginName == loginName || p.mobile == loginName)).FirstOrDefault();
+        }
+
+
+
         public UserBalanceInfo QueryUserBalance(string userId)
         {
            
@@ -339,7 +351,7 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
         //{
         //    try
         //    {
-                
+
         //        var parentRebateList = DB.CreateQuery<P_OCAgent_Rebate>().Where(p => p.UserId == agentId).OrderByDescending(p => p.CreateTime).ToList();
         //        var rebateList = new List<string>();
         //        foreach (var item in parentRebateList)
@@ -364,18 +376,17 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
         //        return loginManager.GetTodayRegisterCount(date, ip);
         //    }
         //}
-        //public LoginLocal GetUserByLoginName(string loginName)
-        //{
-        //    using (var loginManager = new LoginLocalManager())
-        //    {
-        //        var user = loginManager.GetLoginByName(loginName);
-        //        if (user == null)
-        //        {
-        //            throw new AuthException("用户不存在或不是本地注册用户。请确定是否是通过支付宝或QQ帐号进行登录，如有疑问，请联系客服。");
-        //        }
-        //        return user;
-        //    }
-        //}
+        public E_Login_Local GetUserByLoginName(string loginName)
+        {
+           
+                var user = GetLoginByName(loginName);
+                if (user == null)
+                {
+                    throw new AuthException("用户不存在或不是本地注册用户。请确定是否是通过支付宝或QQ帐号进行登录，如有疑问，请联系客服。");
+                }
+                return user;
+            
+        }
         //public string GetLoginNameIsExsite(string loginName)
         //{
 
@@ -412,18 +423,17 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
 
 
 
-        //public bool? CheckIsSame2LoginPassword(string userId, string newPassword)
-        //{
-        //    using (var loginManager = new LoginLocalManager())
-        //    {
-        //        var user = loginManager.GetLoginByUserId(userId);
-        //        if (user == null)
-        //        {
-        //            return null;
-        //        }
-        //        return user.Password.ToUpper().Equals(Encipherment.MD5(string.Format("{0}{1}", newPassword, _gbKey)).ToUpper());
-        //    }
-        //}
+        public bool? CheckIsSame2LoginPassword(string userId, string newPassword)
+        {
+           
+                var user = GetLocalLoginByUserId(userId);
+                if (user == null)
+                {
+                    return null;
+                }
+                return user.Password.ToUpper().Equals(Encipherment.MD5(string.Format("{0}{1}", newPassword, _gbKey)).ToUpper());
+            
+        }
         public Task<string> ChangePassword(string userId, string oldPassword, string newPassword)
         {
             oldPassword = Encipherment.MD5(string.Format("{0}{1}", oldPassword, _gbKey)).ToUpper();
@@ -447,35 +457,33 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
             return Task.FromResult("修改密码成功");
         }
 
-        //public string ChangePassword(string userId)
-        //{
-        //    var r = new Random(DateTime.Now.Millisecond);
-        //    var password = r.Next(100000, 999999).ToString();
-        //    var encodePassword = Encipherment.MD5(string.Format("{0}{1}", password, _gbKey)).ToUpper();
-        //    var password_balance = r.Next(100000, 999999).ToString();
-        //    var encodePassword_balance = Encipherment.MD5(string.Format("{0}{1}", password_balance, _gbKey)).ToUpper();
-        //    using (var biz = new GameBiz.Business.GameBizBusinessManagement())
-        //    {
-        //        biz.BeginTran();
+        public string ChangePassword(string userId)
+        {
+            var r = new Random(DateTime.Now.Millisecond);
+            var password = r.Next(100000, 999999).ToString();
+            var encodePassword = Encipherment.MD5(string.Format("{0}{1}", password, _gbKey)).ToUpper();
+            var password_balance = r.Next(100000, 999999).ToString();
+            var encodePassword_balance = Encipherment.MD5(string.Format("{0}{1}", password_balance, _gbKey)).ToUpper();
 
-        //        var loginManager = new LoginLocalManager();
-        //        var user = loginManager.GetLoginByUserId(userId);
-        //        if (user == null)
-        //        {
-        //            throw new AuthException("用户不存在或不是本地注册用户，不能修改密码。请确定是否是通过支付宝或QQ帐号进行登录，如有疑问，请联系客服。");
-        //        }
-        //        user.Password = encodePassword;
-        //        loginManager.UpdateLogin(user);
+                DB.Begin();
+               
+                var user = GetLocalLoginByUserId(userId);
+                if (user == null)
+                {
+                    throw new AuthException("用户不存在或不是本地注册用户，不能修改密码。请确定是否是通过支付宝或QQ帐号进行登录，如有疑问，请联系客服。");
+                }
+                user.Password = encodePassword;
 
-        //        var balanceManage = new UserBalanceManager();
-        //        var b = balanceManage.QueryUserBalance(userId);
-        //        b.Password = encodePassword_balance;
-        //        balanceManage.UpdateUserBalance(b);
+                DB.GetDal<E_Login_Local>().Update(user);
 
-        //        biz.CommitTran();
-        //    }
-        //    return string.Format("{0}|{1}", password, password_balance);
-        //}
+                var balanceManage = new UserBalanceManager();
+                var b = balanceManage.QueryUserBalance(userId);
+                b.Password = encodePassword_balance;
+                balanceManage.UpdateUserBalance(b);
+                DB.Commit();
+            
+            return string.Format("{0}|{1}", password, password_balance);
+        }
         private const string C_DefaultPassword = "123456";
         //public void ResetUserPassword(string userId)
         //{
