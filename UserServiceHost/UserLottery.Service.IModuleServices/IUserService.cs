@@ -87,5 +87,8 @@ namespace UserLottery.Service.IModuleServices
 
         [Service(Date = "2018-6-28", Director = "renjun", Name = " 设置资金密码类型")]
         Task<CommonActionResult> SetBalancePasswordNeedPlace(string password, string placeList, string userToken);
+
+        [Service(Date = "2018-6-29", Director = "renjun", Name = "实名认证")]
+        Task<CommonActionResult> AuthenticateMyRealName(string IdCardNumber, string RealName, SchemeSource source, string userToken);
     }
 }

@@ -1233,50 +1233,50 @@ namespace UserLottery.Service.ModuleServices
         /// <param name="source"></param>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        //public CommonActionResult AuthenticateMyRealName(string IdCardNumber,string RealName, SchemeSource source, string userToken)
-        //{
-        //    // 验证用户身份及权限
-        //    var userId = userAuthentication.ValidateUserAuthentication(userToken);
+        public Task<CommonActionResult> AuthenticateMyRealName(string IdCardNumber, string RealName, SchemeSource source, string userToken)
+        {
+            // 验证用户身份及权限
+            var userId = userAuthentication.ValidateUserAuthentication(userToken);
 
-        //    var biz = new RealNameAuthenticationBusiness();
-        //    Lottery.Kg.ORM.Helper.BusinessHelper.CheckUserRealName(IdCardNumber);
-        //    var realName = biz.GetAuthenticatedRealName(userId);
-        //    if (realName != null)
-        //    {
-        //        if (realName.IsSettedRealName)
-        //        {
-        //            throw new ArgumentException("此用户已进行过实名认证，不能重复认证");
-        //        }
-        //        biz.UpdateAuthenticationRealName("LOCAL", userId, RealName, "0", IdCardNumber, userId);
-        //    }
-        //    else
-        //    {
-        //        biz.AddAuthenticationRealName("LOCAL", userId, RealName, "0", IdCardNumber, userId, true);
-        //    }
+            var biz = new RealNameAuthenticationBusiness();
+            Lottery.Kg.ORM.Helper.BusinessHelper.CheckUserRealName(IdCardNumber);
+            var realName = biz.GetAuthenticatedRealName(userId);
+            if (realName != null)
+            {
+                if (realName.IsSettedRealName)
+                {
+                    throw new ArgumentException("此用户已进行过实名认证，不能重复认证");
+                }
+                biz.UpdateAuthenticationRealName("LOCAL", userId, RealName, "0", IdCardNumber, userId);
+            }
+            else
+            {
+                biz.AddAuthenticationRealName("LOCAL", userId, RealName, "0", IdCardNumber, userId, true);
+            }
 
-        //    #region 发送站内消息：手机短信或站内信
+            #region 发送站内消息：手机短信或站内信
 
-        //    var userManager = new UserBalanceManager();
-        //    var user = userManager.QueryUserRegister(userId);
-        //    var pList = new List<string>();
-        //    pList.Add(string.Format("{0}={1}", "[UserName]", user.DisplayName));
-        //    pList.Add(string.Format("{0}={1}", "[UserRealityName]", RealName));
-        //    pList.Add(string.Format("{0}={1}", "[IdCard]", IdCardNumber));
-        //    //发送短信
-        //    new SiteMessageControllBusiness().DoSendSiteMessage(user.UserId, "", "ON_User_Bind_RealName", pList.ToArray());
+            var userManager = new UserBalanceManager();
+            var user = userManager.QueryUserRegister(userId);
+            var pList = new List<string>();
+            pList.Add(string.Format("{0}={1}", "[UserName]", user.DisplayName));
+            pList.Add(string.Format("{0}={1}", "[UserRealityName]", RealName));
+            pList.Add(string.Format("{0}={1}", "[IdCard]", IdCardNumber));
+            //发送短信
+            new SiteMessageControllBusiness().DoSendSiteMessage(user.UserId, "", "ON_User_Bind_RealName", pList.ToArray());
 
-        //    #endregion
+            #endregion
 
-        //    //清理用户绑定数据缓存
-        //    ClearUserBindInfoCache(userId);
+            //清理用户绑定数据缓存
+            ClearUserBindInfoCache(userId);
 
-        //    #region 还没做
-        //    //! 执行扩展功能代码 - 提交事务后
-        //    //BusinessHelper.ExecPlugin<IResponseAuthentication_AfterTranCommit>(new object[] { userId, "RealName", realNameInfo.RealName + "|" + realNameInfo.CardType + "|" + realNameInfo.IdCardNumber, source });
-        //    #endregion
+            #region 还没做
+            //! 执行扩展功能代码 - 提交事务后
+            //BusinessHelper.ExecPlugin<IResponseAuthentication_AfterTranCommit>(new object[] { userId, "RealName", realNameInfo.RealName + "|" + realNameInfo.CardType + "|" + realNameInfo.IdCardNumber, source });
+            #endregion
 
-        //    return new CommonActionResult(true, "实名认证成功。");
-        //}
+            return Task.FromResult(new CommonActionResult(true, "实名认证成功。"));
+        }
 
         #endregion Implementation of IUserService
     }

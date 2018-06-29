@@ -37,5 +37,12 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
             realName.UpdateTime = DateTime.Now;
             DB.GetDal<E_Authentication_RealName>().Update(realName);
         }
+
+        public void AddUserRealName(E_Authentication_RealName realName)
+        {
+            realName.CreateTime = DateTime.Now;
+            realName.UpdateTime = DateTime.Now;
+            DB.GetDal<E_Authentication_RealName>().Add(realName);
+        }
     }
 }

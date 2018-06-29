@@ -45,5 +45,17 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
             }
 
         }
+
+        public C_User_Register QueryUserRegister(string userId)
+        {
+            
+            return DB.CreateQuery<C_User_Register>().FirstOrDefault(u => u.UserId == userId);
+        }
+
+        public void UpdateUserRegister(C_User_Register user)
+        {
+            DB.GetDal<C_User_Register>().Update(user);
+        }
+
     }
 }
