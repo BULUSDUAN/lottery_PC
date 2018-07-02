@@ -911,8 +911,6 @@ namespace Lottery.Api.Controllers
 
 
         #region 实名认证
-
-
         /// <summary>
         /// 实名认证
         /// </summary>
@@ -982,5 +980,366 @@ namespace Lottery.Api.Controllers
 
         #endregion
 
+
+        #region 绑定银行卡
+        /// <summary>
+        /// 绑定银行卡
+        /// </summary>
+        public async Task<LotteryServiceResponse> BindBank([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                string userToken = p.UserToken;
+                string bankCode = p.BankCode;
+                string subBankName = p.SubBankName;
+                string cardnumber = p.CardNumber;
+                string province = p.Province;
+                string city = p.City;
+                string bankrealName = p.RealName;
+                if (string.IsNullOrEmpty(bankCode))
+                    throw new Exception("银行编码不能为空");
+                //if (string.IsNullOrEmpty(subBankName))
+                //    throw new Exception("银行名字不能为空");
+                if (string.IsNullOrEmpty(cardnumber))
+                    throw new Exception("银行卡号不能为空");
+                if (string.IsNullOrEmpty(province))
+                    throw new Exception("省会不能为空");
+                if (string.IsNullOrEmpty(city))
+                    throw new Exception("城市不能为空");
+                if (string.IsNullOrEmpty(userToken))
+                    throw new Exception("userToken不能为空");
+                if (string.IsNullOrEmpty(bankrealName))
+                    throw new Exception("开户名不能为空");
+            
+                var bankDic = GetBankDic();
+                if (!bankDic.ContainsKey(bankCode))
+                    throw new ArgumentException(string.Format("银行编码：{0}不可用", bankCode));
+
+                #region "20171108增加配置（禁止注册的银行卡号码）"
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["key"] = "BanRegistrBankCard";
+            
+                var banRegistrBankCard = await _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/user/QueryCoreConfigByKey");
+                if (banRegistrBankCard.ConfigValue.Contains(cardnumber))
+                {
+                    throw new ArgumentException("因检测到该银行卡号码在黑名单中，无法绑定，请联系在线客服。");
+                }
+                #endregion
+                Dictionary<string, object> paramCard = new Dictionary<string, object>();
+                paramCard["BankCode"] = bankCode;
+                paramCard["BankName"] = bankDic[bankCode];
+                paramCard["BankSubName"] = subBankName;
+                paramCard["BankCardNumber"] = cardnumber;
+                paramCard["ProvinceName"] = province;
+                paramCard["CityName"] = city;
+                paramCard["RealName"] = bankrealName;
+                paramCard["userToken"] = userToken;
+
+
+                var result = await _serviceProxyProvider.Invoke<CommonActionResult>(paramCard, "api/user/AddBankCard");
+                if (!result.IsSuccess)
+                    throw new Exception(result.Message);
+
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "恭喜您已领取随机现金，请查收！",
+                    MsgId = entity.MsgId,
+                    Value = result.Message,
+                };
+            }
+            catch (ArgumentException ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+        }
+
+        #endregion
+        #region 银行信息
+        private Dictionary<string, string> GetBankDic()
+        {
+            var dic = new Dictionary<string, string>();
+            dic.Add("CMB", "招商银行");
+            dic.Add("ICBC", "中国工商银行");
+            dic.Add("CCB", "中国建设银行");
+            dic.Add("BOC", "中国银行");
+            dic.Add("COMM", "中国交通银行");
+            dic.Add("CITIC", "中信银行");
+            dic.Add("CIB", "兴业银行");
+            dic.Add("CEBBANK", "中国光大银行");
+            dic.Add("CMBC", "中国民生银行");
+            dic.Add("ABC", "中国农业银行");
+            //dic.Add("SPAB", "平安银行");
+            dic.Add("GDB", "广东发展银行");
+            dic.Add("SDB", "深圳发展银行");
+            dic.Add("BJB", "北京银行");
+            dic.Add("SPDB", "上海浦东发展银行");
+            dic.Add("SHB", "上海银行");
+            //dic.Add("NBBANK", "宁波银行");
+            //dic.Add("WZCB", "温州银行");
+            dic.Add("CQCB", "重庆银行");
+            return dic;
+        }
+        #endregion
+
+
+
+        public async Task<LotteryServiceResponse> QueryUserBalanceByUserToken([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                string userId = p.UserId;
+                var userToken = p.UserToken;
+                var loginName = p.LoginName;
+                if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userToken) || string.IsNullOrEmpty(userToken))
+                    throw new ArgumentException("传入参数信息有误！");
+
+                //if (!CanDoLoadUserInfo(loginName))
+                //    throw new Exception("刷新频繁，请稍后再试");
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["userId"] = userId;
+                var loginInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/GetLocalLoginByUserId");
+                if (loginInfo == null)
+                    throw new ArgumentException("未查询到当前用户信息！");
+                var isBetHM = true;
+                Dictionary<string, object> bindParam = new Dictionary<string, object>();
+                bindParam["UserId"] = userId;
+                var bindInfo = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
+                //var mobile = WCFClients.ExternalClient.GetMyMobileInfo(userToken);
+                //var realName = WCFClients.ExternalClient.GetMyRealNameInfo(userToken);
+                Dictionary<string, object> balanceParam = new Dictionary<string, object>();
+                balanceParam["userToken"] = userToken;
+                var balance = await _serviceProxyProvider.Invoke<UserBalanceInfo>(balanceParam, "api/user/QueryMyBalance");
+
+                var bankInfo = await _serviceProxyProvider.Invoke<C_BankCard>(balanceParam, "api/user/QueryBankCard");
+                if (bankInfo == null) bankInfo = new C_BankCard();
+                //var InnerMailUnReadList = WCFClients.GameQueryClient.QueryUnReadInnerMailListByReceiver(loginInfo.UserId, 0, 1000000, InnerMailHandleType.UnRead);
+
+                var unReadCount = await _serviceProxyProvider.Invoke<int>(balanceParam, "api/user/GetMyUnreadInnerMailCount");
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询用户信息成功",
+                    MsgId = entity.MsgId,
+                    Value = new
+                    {
+                        UserToken = userToken,
+                        DisplayName = loginInfo.DisplayName,
+                        LoginName = loginName,
+                        UserId = loginInfo.UserId,
+                        VipLevel = loginInfo.VipLevel,
+                        BonusBalance = balance.BonusBalance,
+                        CommissionBalance = balance.CommissionBalance,
+                        //CommissionBalance = 0,
+                        ExpertsBalance = balance.ExpertsBalance,
+                        RedBagBalance = balance.RedBagBalance,
+                        FillMoneyBalance = balance.FillMoneyBalance,
+                        FreezeBalance = balance.FreezeBalance,
+                        Mobile = bindInfo.Mobile,
+                        RealName = string.IsNullOrEmpty(bindInfo.RealName) ? "" : bindInfo.RealName,
+                        IdCardNumber = string.IsNullOrEmpty(bindInfo.IdCardNumber) ? "" : bindInfo.IdCardNumber,
+                        IsSetBalancePwd = balance.IsSetPwd,
+                        NeedBalancePwdPlace = string.IsNullOrEmpty(balance.NeedPwdPlace) ? string.Empty : balance.NeedPwdPlace,
+                        IsBingBankCard = !string.IsNullOrEmpty(bindInfo.BankCardNumber),
+                        UserGrowth = balance.UserGrowth,
+                        NeedGrowth = GrowthStatus(balance.UserGrowth),
+                        IsBetHM = isBetHM,
+                        UnReadMailCount = unReadCount,//InnerMailUnReadList == null ? 0 : InnerMailUnReadList.TotalCount,
+                        HideDisplayNameCount = loginInfo.HideDisplayNameCount,
+
+                        #region 新字段
+                        BankCardNumber = string.IsNullOrEmpty(bankInfo.BankCardNumber) ? "" : bankInfo.BankCardNumber,
+                        BankName = string.IsNullOrEmpty(bankInfo.BankName) ? "" : bankInfo.BankName,
+                        BankSubName = string.IsNullOrEmpty(bankInfo.BankSubName) ? "" : bankInfo.BankSubName,
+                        #endregion
+                    },
+                };
+            }
+            catch (ArgumentException ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "业务参数错误",
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "服务器内部错误，请联系接口提供商",
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+        }
+
+        /// <summary>
+        /// 验证是否可以提现 204
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<LotteryServiceResponse> CehckDraw([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                //读取json数据
+                var p = WebHelper.Decode(entity.Param);
+                string token = p.token;
+                string client = p.client;
+                if (string.IsNullOrEmpty(token))
+                    throw new ArgumentException("token不能为空");
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["token"] = token;
+
+
+                if ((DateTime.Now.Hour < 8 || (DateTime.Now.Hour == 8 && DateTime.Now.Minute < 50))
+                    && (DateTime.Now.Hour > 1 || (DateTime.Now.Hour == 1 && DateTime.Now.Minute > 10)))
+                {
+                    throw new ArgumentException("提现时间早上9点到凌晨1点，请您明天9点再来，感谢配合");
+                }
+
+                var userinfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/LoginByUserToken");
+           
+                if (userinfo.IsSuccess)
+                {
+                    Dictionary<string, object> bindParam = new Dictionary<string, object>();
+                    var info = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
+                    if (info == null)
+                        throw new ArgumentException("未找到用户信息");
+                    if (string.IsNullOrEmpty(info.RealName))
+                        throw new ArgumentException("请先实名认证");
+                    if (string.IsNullOrEmpty(info.BankCardNumber))
+                        throw new ArgumentException("请先绑定银行卡");
+
+                    var cashMoney= await _serviceProxyProvider.Invoke<UserBalanceInfo>(param, "api/user/QueryMyBalance");
+                    return new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.成功,
+                        Message = "可以提现",
+                        MsgId = entity.MsgId,
+                        Value = new
+                        {
+                            RealName = info.RealName,
+                            BankName = info.BankName,
+                            BankCardNumber = info.BankCardNumber,
+                            TotalCashMoney = cashMoney.GetTotalCashMoney()
+                        }
+                    };
+
+                }
+                else
+                {
+                    throw new Exception(userinfo.Message);
+                }
+            }
+            catch (Exception exp)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "服务器内部错误，请联系接口提供商",
+                    MsgId = entity.MsgId,
+                    Value = exp.Message,
+                };
+            }
+        }
+
+
+        /// <summary>
+        /// 提款确认 205
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<LotteryServiceResponse> VerifyDraw([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                //读取json数据
+                var p = WebHelper.Decode(entity.Param);
+                string token = p.token;
+                string client = p.client;
+                string money = p.money;
+                if (string.IsNullOrEmpty(token))
+                    throw new ArgumentException("token不能为空");
+                if (string.IsNullOrEmpty(money))
+                    throw new ArgumentException("提款金额不能为空");
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["token"] = token;
+                var userinfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/LoginByUserToken");
+                if (userinfo.IsSuccess)
+                {
+                    Dictionary<string, object> bindParam = new Dictionary<string, object>();
+                    var info = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
+                    if (info == null)
+                        throw new ArgumentException("未找到用户信息");
+                    if (string.IsNullOrEmpty(info.RealName))
+                        throw new ArgumentException("请先实名认证");
+                    if (string.IsNullOrEmpty(info.BankCardNumber))
+                        throw new ArgumentException("请先绑定银行卡");
+
+                    Dictionary<string, object> paramRequestWithdraw = new Dictionary<string, object>();
+                    paramRequestWithdraw["userId"] = info.UserId;
+                    paramRequestWithdraw["requestMoney"] = decimal.Parse(money);
+                    var RequestWithdraw_1 = await _serviceProxyProvider.Invoke<CheckWithdrawResult>(paramRequestWithdraw, "api/user/RequestWithdraw_Step1");
+                    var cashMoney = await _serviceProxyProvider.Invoke<UserBalanceInfo>(param, "api/user/QueryMyBalance");
+
+                    return new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.成功,
+                        Message = "可以提现",
+                        MsgId = entity.MsgId,
+                        Value = new
+                        {
+                            RealName = info.RealName,
+                            BankName = info.BankName,
+                            BankCardNumber = info.BankCardNumber,
+                            TotalCashMoney = cashMoney.GetTotalCashMoney(),
+                            Money = money,
+                            ResponseMoney = RequestWithdraw_1.ResponseMoney,
+                            Commission = RequestWithdraw_1.RequestMoney - RequestWithdraw_1.ResponseMoney,
+                            IsNeedPwd = cashMoney.CheckIsNeedPassword("Withdraw")
+                        }
+                    };
+
+                }
+                else
+                {
+                    throw new Exception(userinfo.Message);
+                }
+            }
+            catch (Exception exp)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "服务器内部错误，请联系接口提供商",
+                    MsgId = entity.MsgId,
+                    Value = exp.Message,
+                };
+            }
+        }
     }
 }

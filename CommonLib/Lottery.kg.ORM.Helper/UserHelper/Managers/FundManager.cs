@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace Lottery.Kg.ORM.Helper.UserHelper
 {
@@ -25,6 +26,15 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
         {
 
             DB.GetDal<C_Fund_Detail>().Add(FundDetail);
+        }
+
+        public int QueryTodayWithdrawTimes(string userId)
+        {
+          
+            var query = from d in DB.CreateQuery<C_Withdraw>()
+                        where d.UserId == userId && d.RequestTime >= DateTime.Now.Date && d.RequestTime < DateTime.Now.AddDays(1).Date
+                        select d;
+            return query.Count();
         }
     }
 }

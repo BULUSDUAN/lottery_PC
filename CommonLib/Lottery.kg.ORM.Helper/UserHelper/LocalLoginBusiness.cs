@@ -278,6 +278,7 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
                     UserGrowth = balance.UserGrowth,
                     CPSBalance = balance.CPSBalance,
                     BalancePwd = balance.Password,
+
                 };
             
         }

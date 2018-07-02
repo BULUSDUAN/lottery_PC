@@ -36,6 +36,8 @@ namespace UserLottery.Service.IModuleServices
         [Service(Date = "2018-6-08", Director = "renjun", Name = "token登录")]
         Task<LoginInfo> LoginByUserToken(string userToken);
 
+        [Service(Date = "2018-6-29", Director = "renjun", Name = "根据UserId查询用户信息")]
+        Task<LoginInfo> GetLocalLoginByUserId(string userId);
 
         [Service(Date = "2018-6-12", Director = "renjun", Name = "绑定信息")]
         Task<UserBindInfos> QueryUserBindInfos(string UserId);
@@ -90,5 +92,11 @@ namespace UserLottery.Service.IModuleServices
 
         [Service(Date = "2018-6-29", Director = "renjun", Name = "实名认证")]
         Task<CommonActionResult> AuthenticateMyRealName(string IdCardNumber, string RealName, SchemeSource source, string userToken);
+
+        [Service(Date = "2018-6-29", Director = "renjun", Name = "增加银行卡信息")]
+        Task<CommonActionResult> AddBankCard(C_BankCard bankCard, string userToken);
+
+        [Service(Date = "2018-7-02", Director = "renjun", Name = "提款确认")]
+        Task<CheckWithdrawResult> RequestWithdraw_Step1(string userId, decimal requestMoney);
     }
 }

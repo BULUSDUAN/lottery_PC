@@ -30,5 +30,22 @@ namespace Lottery.Kg.ORM.Helper
                 throw new Exception(string.Format("找不到配置项：{0}", key));
             return config.ConfigValue;
         }
+
+        /// <summary>
+        /// 清理用户绑定数据缓存
+        /// </summary>
+        public void ClearUserBindInfoCache(string userId)
+        {
+            try
+            {
+                var fullKey = string.Format("{0}_{1}", RedisKeys.Key_UserBind, userId);
+                var db = RedisHelper.DB_UserBindData;
+                db.KeyDeleteAsync(fullKey);
+            }
+            catch (Exception)
+            {
+            }
+           
+        }
     }
 }
