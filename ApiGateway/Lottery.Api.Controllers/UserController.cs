@@ -1341,5 +1341,88 @@ namespace Lottery.Api.Controllers
                 };
             }
         }
+
+
+        public async Task<LotteryServiceResponse> Fetchsubmit([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                //读取json数据
+                var p = WebHelper.Decode(entity.Param);
+                string token = p.token;
+                string client = p.client;
+                string money = p.money;
+                string balancepwd = p.balancepwd;
+                decimal RequestMoney = 0;
+                if (string.IsNullOrEmpty(token))
+                    throw new ArgumentException("token不能为空");
+                if (string.IsNullOrEmpty(money))
+                    throw new ArgumentException("提款金额不能为空");
+                decimal.TryParse(money, out RequestMoney);
+                PreconditionAssert.IsTrue(RequestMoney >= 10, "提款金额不能小于10元");
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["token"] = token;
+                var userinfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/LoginByUserToken");
+                if (userinfo.IsSuccess)
+                {
+                    Dictionary<string, object> bindParam = new Dictionary<string, object>();
+                    var info = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
+                    if (info == null)
+                        throw new ArgumentException("未找到用户信息");
+                    if (string.IsNullOrEmpty(info.RealName))
+                        throw new ArgumentException("请先实名认证");
+                    if (string.IsNullOrEmpty(info.BankCardNumber))
+                        throw new ArgumentException("请先绑定银行卡");
+
+                    Withdraw_RequestInfo withdrawinfo = new Withdraw_RequestInfo();
+                    ViewBag.FetchAccount = info.BankCardNumber;
+                    withdrawinfo.BankCardNumber = info.BankCardNumber;
+                    //withdrawinfo.BankCode = "";
+                    withdrawinfo.BankName = info.BankName;
+                    withdrawinfo.BankSubName = info.BankSubName;
+                    withdrawinfo.CityName = info.CityName;
+                    withdrawinfo.ProvinceName = info.ProvinceName;
+                    withdrawinfo.RequestMoney = RequestMoney;
+                    withdrawinfo.WithdrawAgent = WithdrawAgentType.BankCard;
+                    withdrawinfo.userRealName = info.RealName;
+
+                    Dictionary<string, object> Withdraw_Param = new Dictionary<string, object>();
+                    Withdraw_Param["BankCardNumber"] = info.BankCardNumber;
+                    Withdraw_Param["BankName"] = info.BankName;
+                    Withdraw_Param["BankSubName"] = info.BankSubName;
+                    Withdraw_Param["CityName"] = info.CityName;
+                    Withdraw_Param["ProvinceName"] = info.ProvinceName;
+                    Withdraw_Param["RequestMoney"] = RequestMoney;
+                    Withdraw_Param["WithdrawAgent"] = WithdrawAgentType.BankCard;
+                    Withdraw_Param["userRealName"] = info.RealName;
+                    Withdraw_Param["UserId"] = info.UserId;
+                    Withdraw_Param["balancepwd"] = balancepwd;
+
+                    var RequestWithdraw_Step2 = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/RequestWithdraw_Step2");
+
+                    return new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.成功,
+                        Message = "提款成功",
+                        MsgId = entity.MsgId
+                    };
+
+                }
+                else
+                {
+                    throw new Exception(userinfo.Message);
+                }
+            }
+            catch (Exception exp)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "服务器内部错误，请联系接口提供商",
+                    MsgId = entity.MsgId,
+                    Value = exp.Message,
+                };
+            }
+        }
     }
 }

@@ -1342,6 +1342,30 @@ namespace UserLottery.Service.ModuleServices
             }
         }
 
+        /// <summary>
+        /// 提款成功
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="userId"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public Task<CommonActionResult> RequestWithdraw_Step2(Withdraw_RequestInfo info, string userId, string password)
+        {
+            try
+            {
+                new FundBusiness().RequestWithdraw_Step2(info, userId, password);
+                return Task.FromResult(new CommonActionResult
+                {
+                    IsSuccess = true,
+                    Message = "申请提现成功",
+                });
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("申请提现出错 - " + ex.Message, ex);
+            }
+        }
+
         #endregion Implementation of IUserService
     }
 }

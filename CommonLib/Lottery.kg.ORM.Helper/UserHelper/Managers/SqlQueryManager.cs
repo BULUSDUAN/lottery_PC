@@ -1,10 +1,11 @@
 ﻿using EntityModel;
+using EntityModel.CoreModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Lottery.Kg.ORM.Helper.UserHelper.Managers
+namespace Lottery.Kg.ORM.Helper.UserHelper
 {
    public class SqlQueryManager:DBbase
     {
@@ -44,6 +45,17 @@ namespace Lottery.Kg.ORM.Helper.UserHelper.Managers
             //    }
             //}
             return str;
+        }
+
+        public Withdraw_QueryInfo GetWithdrawById(string orderId)
+        {
+         
+            // 通过数据库存储过程进行查询
+            var result = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "rj_Fund_QueryWithdrawById").SQL;
+           var withdraw_Info = DB.CreateSQLQuery(result).SetString("OrderId", orderId)
+                .First<Withdraw_QueryInfo>();
+
+            return withdraw_Info;
         }
     }
 }

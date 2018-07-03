@@ -98,5 +98,8 @@ namespace UserLottery.Service.IModuleServices
 
         [Service(Date = "2018-7-02", Director = "renjun", Name = "提款确认")]
         Task<CheckWithdrawResult> RequestWithdraw_Step1(string userId, decimal requestMoney);
+
+        [Service(Date = "2018-7-03", Director = "renjun", Name = "提款成功")]
+        Task<CommonActionResult> RequestWithdraw_Step2(Withdraw_RequestInfo info, string userId, string password);
     }
 }

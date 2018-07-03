@@ -73,6 +73,7 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
                 entity.UpdateTime = DateTime.Now;
                 manager.UpdateBankCard(entity);
                 DB.Commit();
+               
             }
 
 

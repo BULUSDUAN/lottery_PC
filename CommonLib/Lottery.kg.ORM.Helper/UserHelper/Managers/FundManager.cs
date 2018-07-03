@@ -28,6 +28,11 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
             DB.GetDal<C_Fund_Detail>().Add(FundDetail);
         }
 
+        public void AddWithdraw(C_Withdraw entity)
+        {
+            DB.GetDal<C_Withdraw>().Add(entity);
+        }
+
         public int QueryTodayWithdrawTimes(string userId)
         {
           
