@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="DataQuery\LotteryGameManager.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="StackExchange.Redis" Version="1.2.6" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EntityModel\EntityModel.csproj" />
+    <ProjectReference Include="..\KaSon.FrameWork.Helper\KaSon.FrameWork.Helper.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="KaSon.FrameWork.ORM">
+      <HintPath>..\..\FramWorkDLL\KaSon.FrameWork.ORM.dll</HintPath>
+    </Reference>
+    <Reference Include="KaSon.FrameWork.Services">
+      <HintPath>..\..\FramWorkDLL\KaSon.FrameWork.Services.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="MyServerXML.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="MyServer_SQL.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="RedisConfig\redisSettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SQLServer_SQL.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

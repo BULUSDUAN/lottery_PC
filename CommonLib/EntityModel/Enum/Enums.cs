@@ -1396,6 +1396,41 @@ namespace EntityModel.Enum
         Stop = 1,
     }
 
+<<<<<<< HEAD
+    #region Extension项目的枚举
+    /// <summary>
+    /// 投票类别
+    /// </summary>
+    public enum VoteCategory
+    {
+        /// <summary>
+        /// 球队斗志
+        /// </summary>
+        TheTeamMorale = 0,
+        /// <summary>
+        /// 赛前状态
+        /// </summary>
+        PreCompetitionState = 1,
+        /// <summary>
+        /// 对阵往绩
+        /// </summary>
+        AgainstTheTrack = 2,
+        /// <summary>
+        /// 主客战绩
+        /// </summary>
+        TeamRecord = 3,
+        /// <summary>
+        /// 欧赔取向
+        /// </summary>
+        EuropeanCompensate = 4,
+        /// <summary>
+        /// 亚赔取向
+        /// </summary>
+        Asia = 5,
+    }
+
+=======
+>>>>>>> 77f9da3f72619db400865d437806eabbbff34413
     /// <summary>
     /// 任务类别
     /// </summary>
@@ -1498,6 +1533,217 @@ namespace EntityModel.Enum
         /// </summary>
         Win1000Yuan = 240,
     }
+<<<<<<< HEAD
+
+    /// <summary>
+    /// 名家类别
+    /// </summary>
+    public enum CelebrityType
+    {
+        /// <summary>
+        /// 后台名家
+        /// </summary>
+        AdminUser = 10,
+        /// <summary>
+        /// 网站名家
+        /// </summary>
+        CaibbUser = 20,
+    }
+
+    /// <summary>
+    /// 票样申请状态
+    /// </summary>
+    public enum ApplyState
+    {
+        /// <summary>
+        /// 申请中
+        /// </summary>
+        Pending = 0,
+        /// <summary>
+        /// 派送中
+        /// </summary>
+        Sending = 1,
+        /// <summary>
+        /// 派送完成
+        /// </summary>
+        SendCarryout = 2,
+        /// <summary>
+        /// 已拒绝
+        /// </summary>
+        Refusal = 3,
+        /// <summary>
+        /// 已取消
+        /// </summary>
+        Canceled = 4,
+    }
+
+    #region 新赢家平台
+
+    /// <summary>
+    /// 模型类别
+    /// </summary>
+    public enum ModelType
+    {
+        /// <summary>
+        /// 模型_自选模型
+        /// </summary>
+        OptionalModel = 10,
+    }
+    /// <summary>
+    /// 模型每期方案_每期方案状态
+    /// </summary>
+    public enum ModelProgressStatus
+    {
+        /// <summary>
+        /// 认购中
+        /// </summary>
+        ModelBuy = 10,
+        /// <summary>
+        /// 未开奖
+        /// </summary>
+        NotLottery = 40,
+        /// <summary>
+        /// 未中奖
+        /// </summary>
+        NoBonus = 20,
+        /// <summary>
+        /// 已中奖
+        /// </summary>
+        Winning = 30,
+
+    }
+    /// <summary>
+    /// 追号计划_追号计划状态
+    /// </summary>
+    public enum SchemeProgressStatus
+    {
+        /// <summary>
+        /// 执行中
+        /// </summary>
+        ModelRunning = 10,
+        /// <summary>
+        /// 已停止
+        /// </summary>
+        ModelStop = 20,
+    }
+    /// <summary>
+    /// 追号计划_支付状态
+    /// </summary>
+    public enum PayStatus
+    {
+        /// <summary>
+        /// 已支付
+        /// </summary>
+        SuccessPay = 10,
+        /// <summary>
+        /// 未支付
+        /// </summary>
+        WaitingPay = 20,
+        /// <summary>
+        /// 支付失败
+        /// </summary>
+        FailPay = 30,
+    }
+    public enum ModelSecurity
+    {
+        /// <summary>
+        /// 公开
+        /// </summary>
+        Public = 10,
+        /// <summary>
+        /// 截止后公开
+        /// </summary>
+        CompletePublic = 20,
+    }
+    public enum RiskType
+    {
+        /// <summary>
+        /// 适中
+        /// </summary>
+        Moderate = 10,
+        /// <summary>
+        /// 低风险
+        /// </summary>
+        Low = 20,
+    }
+    /// <summary>
+    /// 投注类型
+    /// </summary>
+    public enum BettingType
+    {
+        /// <summary>
+        /// 先行赔付
+        /// </summary>
+        FirstPayment = 10,
+        /// <summary>
+        /// 盈利计划
+        /// </summary>
+        Profit = 20,
+    }
+    /// <summary>
+    /// 投注模式
+    /// 主要包括盈利计划里面：推荐计划：（低风险、适中）；高级设置：（低风险翻倍、固定翻倍、固定盈利率）
+    /// </summary>
+    public enum ProfitBettingCategory
+    {
+        /// <summary>
+        /// 低风险
+        /// </summary>
+        DiFX = 10,
+        /// <summary>
+        /// 适中
+        /// </summary>
+        ShiZ = 20,
+        /// <summary>
+        /// 低风险翻倍
+        /// </summary>
+        DiFengXianFB = 30,
+        /// <summary>
+        /// 固定翻倍
+        /// </summary>
+        GuDingFB = 40,
+        /// <summary>
+        /// 固定盈利率
+        /// </summary>
+        GuDingYLL = 50,
+    }
+    /// <summary>
+    /// 购买类型
+    /// </summary>
+    public enum BuyPayType
+    {
+        /// <summary>
+        /// 分期支付
+        /// </summary>
+        Staging = 10,
+        /// <summary>
+        /// 全额支付
+        /// </summary>
+        AllMoney = 20,
+    }
+    /// <summary>
+    /// 菜单类型
+    /// </summary>
+    public enum MenuType
+    {
+        /// <summary>
+        /// 所有站点都显示
+        /// </summary>
+        All = 1,
+        /// <summary>
+        /// caibb网站管理后台菜单
+        /// </summary>
+        Web_Menu = 10,
+        /// <summary>
+        /// 代理商管理后台菜单
+        /// </summary>
+        Agent_Menu = 20,
+    }
+
+    #endregion
+    #endregion
+}
+=======
     /// <summary>
     /// 新闻类别
     /// </summary>
@@ -1574,3 +1820,4 @@ namespace EntityModel.Enum
         CIB = 15
     }
 } 
+>>>>>>> 77f9da3f72619db400865d437806eabbbff34413

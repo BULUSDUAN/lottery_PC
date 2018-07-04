@@ -6,6 +6,11 @@ using System.Configuration;
 
 
 
+<<<<<<< HEAD:CommonLib/Lottery.kg.ORM.Helper/Redis/WebRedisHelper.cs
+using EntityModel.CoreModel;
+using KaSon.FrameWork.Helper;
+=======
+>>>>>>> 77f9da3f72619db400865d437806eabbbff34413:CommonLib/KaSon.FrameWork.Common/Redis/WebRedisHelper.cs
 
 
 
@@ -22,34 +27,34 @@ namespace KaSon.FrameWork.Common.Redis
         //            return QueryNextIssuseListByKey(key);
         //        }
 
-        //        /// <summary>
-        //        /// 按本地结束时间查询未来期的奖期
-        //        /// </summary>
-        //        public static List<LotteryIssuse_QueryInfo> QueryNextIssuseListByLocalStopTime(string gameCode)
-        //        {
-        //            string key = string.Format("{0}_ByLocalStopTime_{1}", RedisKeys.Key_NextIssuse_List, gameCode);
-        //            return QueryNextIssuseListByKey(key);
-        //        }
+        /// <summary>
+        /// 按本地结束时间查询未来期的奖期
+        /// </summary>
+        public static List<LotteryIssuse_QueryInfo> QueryNextIssuseListByLocalStopTime(string gameCode)
+        {
+            string key = string.Format("{0}_ByLocalStopTime_{1}", RedisKeys.Key_NextIssuse_List, gameCode);
+            return QueryNextIssuseListByKey(key);
+        }
 
-        //        private static List<LotteryIssuse_QueryInfo> QueryNextIssuseListByKey(string key)
-        //        {
-        //            var list = new List<LotteryIssuse_QueryInfo>();
-        //            var db = RedisHelper.DB_CoreCacheData;
-        //            var jsonList = db.ListRangeAsync(key).Result;
-        //            foreach (var json in jsonList)
-        //            {
-        //                if (!json.HasValue) continue;
-        //                try
-        //                {
-        //                    var issuse = JsonSerializer.Deserialize<LotteryIssuse_QueryInfo>(json);
-        //                    list.Add(issuse);
-        //                }
-        //                catch (Exception)
-        //                {
-        //                }
-        //            }
-        //            return list;
-        //        }
+        private static List<LotteryIssuse_QueryInfo> QueryNextIssuseListByKey(string key)
+        {
+            var list = new List<LotteryIssuse_QueryInfo>();
+            var db = RedisHelper.DB_CoreCacheData;
+            var jsonList = db.ListRangeAsync(key).Result;
+            foreach (var json in jsonList)
+            {
+                if (!json.HasValue) continue;
+                try
+                {
+                    var issuse = JsonHelper.Deserialize<LotteryIssuse_QueryInfo>(json);
+                    list.Add(issuse);
+                }
+                catch (Exception)
+                {
+                }
+            }
+            return list;
+        }
 
         //        /// <summary>
         //        /// 从Redis中查询系统配置

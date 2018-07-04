@@ -85,6 +85,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="ConfigSettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="cacheSettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
