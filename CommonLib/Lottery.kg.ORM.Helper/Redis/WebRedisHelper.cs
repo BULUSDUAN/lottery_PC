@@ -8,6 +8,7 @@ using EntityModel.Enum;
 
 
 using EntityModel.CoreModel;
+using KaSon.FrameWork.Helper;
 
 namespace Lottery.Kg.ORM.Helper
 {
@@ -22,34 +23,34 @@ namespace Lottery.Kg.ORM.Helper
         //            return QueryNextIssuseListByKey(key);
         //        }
 
-        //        /// <summary>
-        //        /// 按本地结束时间查询未来期的奖期
-        //        /// </summary>
-        //        public static List<LotteryIssuse_QueryInfo> QueryNextIssuseListByLocalStopTime(string gameCode)
-        //        {
-        //            string key = string.Format("{0}_ByLocalStopTime_{1}", RedisKeys.Key_NextIssuse_List, gameCode);
-        //            return QueryNextIssuseListByKey(key);
-        //        }
+        /// <summary>
+        /// 按本地结束时间查询未来期的奖期
+        /// </summary>
+        public static List<LotteryIssuse_QueryInfo> QueryNextIssuseListByLocalStopTime(string gameCode)
+        {
+            string key = string.Format("{0}_ByLocalStopTime_{1}", RedisKeys.Key_NextIssuse_List, gameCode);
+            return QueryNextIssuseListByKey(key);
+        }
 
-        //        private static List<LotteryIssuse_QueryInfo> QueryNextIssuseListByKey(string key)
-        //        {
-        //            var list = new List<LotteryIssuse_QueryInfo>();
-        //            var db = RedisHelper.DB_CoreCacheData;
-        //            var jsonList = db.ListRangeAsync(key).Result;
-        //            foreach (var json in jsonList)
-        //            {
-        //                if (!json.HasValue) continue;
-        //                try
-        //                {
-        //                    var issuse = JsonSerializer.Deserialize<LotteryIssuse_QueryInfo>(json);
-        //                    list.Add(issuse);
-        //                }
-        //                catch (Exception)
-        //                {
-        //                }
-        //            }
-        //            return list;
-        //        }
+        private static List<LotteryIssuse_QueryInfo> QueryNextIssuseListByKey(string key)
+        {
+            var list = new List<LotteryIssuse_QueryInfo>();
+            var db = RedisHelper.DB_CoreCacheData;
+            var jsonList = db.ListRangeAsync(key).Result;
+            foreach (var json in jsonList)
+            {
+                if (!json.HasValue) continue;
+                try
+                {
+                    var issuse = JsonHelper.Deserialize<LotteryIssuse_QueryInfo>(json);
+                    list.Add(issuse);
+                }
+                catch (Exception)
+                {
+                }
+            }
+            return list;
+        }
 
         //        /// <summary>
         //        /// 从Redis中查询系统配置

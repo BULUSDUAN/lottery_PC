@@ -14,12 +14,27 @@ using System.Threading.Tasks;
 using static KaSon.FrameWork.Helper.JsonHelper;
 using System.Linq;
 using EntityModel.Communication;
+using System.IO;
 
 namespace Lottery.Api.Controllers
 {
     [Area("Data")]
     public class DataController : BaseController
     {
+        /// <summary>
+        /// 获取C_Core_Config表中配置文件信息
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public async Task<CoreConfigInfo> QueryCurrentIssuseInfo([FromServices]IServiceProxyProvider _serviceProxyProvider,string key)
+        {
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            param.Add("key", key);
+            var config = await _serviceProxyProvider.Invoke<CoreConfigInfo>(param, "api/Data/QueryCoreConfigByKey");
+            return config;
+        }
+
         #region 查询彩种奖期信息(101)
         /// <summary>
         /// 查询彩种奖期信息_101
@@ -28,16 +43,17 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = JsonHelper.WebHelper.Decode(entity.Param);
+                var p = WebHelper.Decode(entity.Param);
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 //var param = System.Web.Helpers.Json.Decode(entity.Param);
                 param.Add("gameCode", p.GameCode);
                 var gameIssuseInfo = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Data/QueryCurrentIssuseInfo");
                 //var gameIssuseInfo = WCFClients.GameIssuseClient.QueryCurrentIssuseInfo(param.GameCode);
-                param.Clear();
-                param.Add("key", "Site.GameDelay." + p.GameCode.ToUpper());
-                var config = await _serviceProxyProvider.Invoke<CoreConfigInfo>(param, "api/Data/QueryCoreConfigByKey");
+                //param.Clear();
+                //param.Add("key", "Site.GameDelay." + p.GameCode.ToUpper());
+                //var config = await _serviceProxyProvider.Invoke<CoreConfigInfo>(param, "api/Data/QueryCoreConfigByKey");
                 //var config = WCFClients.GameClient.QueryCoreConfigByKey("Site.GameDelay." + param.GameCode.ToUpper()).ConfigValue;
+                var config = await QueryCurrentIssuseInfo(_serviceProxyProvider, "Site.GameDelay." + p.GameCode.ToUpper());
                 var DelayTime = config.ConfigValue;
                 if (gameIssuseInfo != null && DelayTime != null)
                 {
@@ -373,7 +389,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = JsonHelper.WebHelper.Decode(entity.Param);
+                var p = WebHelper.Decode(entity.Param);
                 var gameCode = p.GameCode;
                 string gameType = p.GameType;
                 var issuseNumber = p.IssuseNumber;
@@ -851,7 +867,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = JsonHelper.WebHelper.Decode(entity.Param);
+                var p = WebHelper.Decode(entity.Param);
                 //var param = System.Web.Helpers.Json.Decode(entity.Param);
                 string id = p.ArticleId;
                 if (string.IsNullOrEmpty(id))
@@ -925,7 +941,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = JsonHelper.WebHelper.Decode(entity.Param);
+                var p = WebHelper.Decode(entity.Param);
                 //热点彩讯  FocusCMS
                 //赛事点评 Match_Comment
                 //彩票资讯 Lottery_GameCode
@@ -1098,7 +1114,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = JsonHelper.WebHelper.Decode(entity.Param);
+                var p = WebHelper.Decode(entity.Param);
                 int pageIndex = p.PageIndex;
                 int pageSize = p.PageSize;
                 string userToken = await GuestUserToken(_serviceProxyProvider);
@@ -1171,7 +1187,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = JsonHelper.WebHelper.Decode(entity.Param);
+                var p = WebHelper.Decode(entity.Param);
                 string Id = p.BulletinId;
                 if (string.IsNullOrEmpty(Id))
                     throw new ArgumentException("公告编号不能为空");
@@ -1223,6 +1239,80 @@ namespace Lottery.Api.Controllers
         }
         #endregion
 
+        #region 提交建议(126)
+        /// <summary>
+        /// 提交建议_126
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> SubmitSuggestions([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                var suggestion = p.Content;
+                if (string.IsNullOrEmpty(suggestion))
+                    throw new Exception("意见内容不能为空");
+                else if (string.IsNullOrEmpty(p.UserId) || string.IsNullOrEmpty(p.UserName))
+                    throw new Exception("请登录后再提交意见");
+                string createUserName = p.UserName;
+                string userId = p.UserId;
+                string mobile = p.Mobile;
+                string PageOpenSpeed = p.PageOpenSpeed;
+                string InterfaceBeautiful = p.InterfaceBeautiful;
+                string ComposingReasonable = p.ComposingReasonable;
+                string OperationReasonable = p.OperationReasonable;
+                string ContentConveyDistinct = p.ContentConveyDistinct;
+
+                UserIdeaInfo_Add ideaInfo = new UserIdeaInfo_Add()
+                {
+                    Description = suggestion,
+                    Category = "APP建议",
+                    IsAnonymous = false,
+                    CreateUserId = userId,
+                    CreateUserDisplayName = createUserName,
+                    CreateUserMoibile = mobile,
+                    PageOpenSpeed = decimal.Parse(PageOpenSpeed),
+                    InterfaceBeautiful = decimal.Parse(InterfaceBeautiful),
+                    ComposingReasonable = decimal.Parse(ComposingReasonable),
+                    OperationReasonable = decimal.Parse(OperationReasonable),
+                    ContentConveyDistinct = decimal.Parse(ContentConveyDistinct),
+                };
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param.Add("userIdea", ideaInfo);
+                var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Data/SubmitUserIdea");
+                //var result = WCFClients.ExternalClient.SubmitUserIdea(ideaInfo);
+                return Json(new LotteryServiceResponse
+                {
+                    Code = result.IsSuccess ? ResponseCode.成功 : ResponseCode.失败,
+                    Message = result.IsSuccess ? "提交意见成功" : "提交意见失败",
+                    MsgId = entity.MsgId,
+                    Value = result.Message,
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "业务参数错误",
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "提交意见失败",
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                });
+            }
+        }
+        #endregion
+
         #region 匿名用户Token值
         /// <summary>
         /// 匿名用户Token值
@@ -1246,7 +1336,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = JsonHelper.WebHelper.Decode(entity.Param); 
+                var p = WebHelper.Decode(entity.Param); 
                 string key = p.ConfigKey; 
                 if (string.IsNullOrEmpty(key))
                     throw new AggregateException("传入参数错误");
@@ -1307,7 +1397,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = JsonHelper.WebHelper.Decode(entity.Param);
+                var p = WebHelper.Decode(entity.Param);
                 string appAgentId = p.AppAgentId;
                 if (string.IsNullOrEmpty(appAgentId))
                     appAgentId = "100000";//公司APP特定编号
@@ -1489,7 +1579,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = JsonHelper.WebHelper.Decode(entity.Param);
+                var p = WebHelper.Decode(entity.Param);
                 int innerstatus = p.InnerStatus;
                 string UserToken = p.UserToken;
                 string userId = p.UserId;
@@ -1597,7 +1687,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = JsonHelper.WebHelper.Decode(entity.Param);
+                var p = WebHelper.Decode(entity.Param);
                 string mailId = p.MailId;
                 string userToken = p.UserToken;
                 if (string.IsNullOrEmpty(userToken))
@@ -1736,7 +1826,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = JsonHelper.WebHelper.Decode(entity.Param);
+                var p = WebHelper.Decode(entity.Param);
                 //热点彩讯  FocusCMS
                 //赛事点评 Match_Comment
                 //彩票资讯 Lottery_GameCode
@@ -1967,7 +2057,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = JsonHelper.WebHelper.Decode(entity.Param);
+                var p = WebHelper.Decode(entity.Param);
                 var GameType = p.GameType;
                 if (string.IsNullOrEmpty(GameType))
                     throw new Exception("传入游戏类型不能为空");
@@ -2081,51 +2171,592 @@ namespace Lottery.Api.Controllers
         #endregion
 
         #region 获取用户分享信息(225)
-        ///// <summary>
-        ///// 获取用户分享信息
-        ///// </summary>
-        ///// <param name="entity"></param>
-        ///// <returns></returns>
-        //public async Task<IActionResult> QueryShareSpreadUsers([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
-        //{
-        //    try
-        //    {
-        //        var p = JsonHelper.WebHelper.Decode(entity.Param);
-        //        string UserId = p.UserId;
-        //        if (string.IsNullOrEmpty(UserId))
-        //            throw new ArgumentException("UserId不能为空");
-        //        var resultmodel = await _serviceProxyProvider.Invoke<string>(null, "api/Data/QueryShareSpreadUsers");
-        //        var resultmodel = WCFClients.ExternalClient.QueryShareSpreadUsers(UserId, DateTime.Now, DateTime.Now, 0, 15);
-        //        var result = new LotteryServiceResponse
-        //        {
-        //            Code = ResponseCode.成功,
-        //            Message = "获取用户分享数据成功",
-        //            MsgId = entity.MsgId,
-        //            Value = resultmodel,
-        //        };
-        //        return result;
-        //    }
-        //    catch (ArgumentException ex)
-        //    {
-        //        return Json(new LotteryServiceResponse
-        //        {
-        //            Code = ResponseCode.失败,
-        //            Message = "业务参数错误",
-        //            MsgId = entity.MsgId,
-        //            Value = ex.Message,
-        //        });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Json(new LotteryServiceResponse
-        //        {
-        //            Code = ResponseCode.失败,
-        //            Message = "服务器内部错误，请联系接口提供商",
-        //            MsgId = entity.MsgId,
-        //            Value = "",
-        //        });
-        //    }
-        //} 
+        /// <summary>
+        /// 获取用户分享信息_225
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> QueryShareSpreadUsers([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                string UserId = p.UserId;
+                if (string.IsNullOrEmpty(UserId))
+                    throw new ArgumentException("UserId不能为空");
+                
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param.Add("agentId", UserId);
+                param.Add("startTime", DateTime.Now);
+                param.Add("endTime", DateTime.Now);
+                param.Add("pageIndex", 0);
+                param.Add("pageSize", 15);
+                var resultmodel = await _serviceProxyProvider.Invoke<ShareSpreadCollection>(param, "api/Data/QueryShareSpreadUsers");
+                //var resultmodel = WCFClients.ExternalClient.QueryShareSpreadUsers(UserId, DateTime.Now, DateTime.Now, 0, 15);
+                var result = new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "获取用户分享数据成功",
+                    MsgId = entity.MsgId,
+                    Value = resultmodel,
+                };
+                return Json(result);
+            }
+            catch (ArgumentException ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "业务参数错误",
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "服务器内部错误，请联系接口提供商",
+                    MsgId = entity.MsgId,
+                    Value = "",
+                });
+            }
+        }
+        #endregion
+
+        #region 查询活动列表(127)
+        /// <summary>
+        /// 查询活动列表_127
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> QueryActivInfoList([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                int pageIndex = p.PageIndex;
+                int pageSize = p.PageSize;
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param.Add("pageIndex", pageIndex);
+                param.Add("pageSize", pageSize);
+                var resultList = await _serviceProxyProvider.Invoke<ActivityListInfoCollection>(param, "api/Data/QueryActivInfoList");
+                //var resultList = WCFClients.ExternalClient.QueryActivInfoList(pageIndex, pageSize);
+                if (resultList != null && resultList.List.Count > 0)
+                {
+                    var list = new List<object>();
+                    foreach (var item in resultList.List)
+                    {
+                        list.Add(new
+                        {
+                            ActivityIndex = item.ActivityIndex,
+                            ImageUrl = item.ImageUrl,
+                            IsShow = item.IsShow,
+                            ActiveName = item.ActiveName,
+                            LinkUrl = BusinessHelper.GetDomain() + item.LinkUrl,
+                            Title = item.Title,
+                            Summary = item.Summary,
+                            BeginTime = ConvertHelper.ConvertDateTimeInt(item.BeginTime),
+                            EndTime = ConvertHelper.ConvertDateTimeInt(item.EndTime),
+                            CreateTime = ConvertHelper.ConvertDateTimeInt(item.CreateTime)
+                        });
+                    }
+                    return Json(new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.成功,
+                        Message = "查询活动列表成功",
+                        MsgId = entity.MsgId,
+                        Value = list,
+                    });
+                }
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询活动列表成功",
+                    MsgId = entity.MsgId,
+                    Value = string.Empty,
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "业务参数错误",
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "查询活动列表失败",
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                });
+            }
+        }
+
+        #endregion
+
+        #region 竞彩最新期号(130)
+        /// <summary>
+        /// 查询最新期号
+        /// </summary>
+        public async Task<IActionResult> QueryJingCaiIssuse([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                int count = p.ReturnCount;
+                if (count <= 0)
+                    count = 10;
+                string gameCode = p.GameCode;
+                string gameType = p.GameType;
+                var list = new List<object>();
+                if (gameCode.ToUpper() == "BJDC")
+                {
+                    var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "jsonData");
+                    if (!Directory.Exists(path))
+                        Directory.CreateDirectory(path);
+                    var jsonData = string.Empty;
+                    var bjdcIssuseFileName = Path.Combine(path, string.Format("lottery_lastIssuse_{0}.json", gameCode));
+                    if (System.IO.File.Exists(bjdcIssuseFileName))
+                    {
+                        jsonData = System.IO.File.ReadAllText(bjdcIssuseFileName, Encoding.UTF8);
+                    }
+                    foreach (var item in jsonData.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        list.Add(new
+                        {
+                            IssuseNumber = item,
+                        });
+                    }
+                }
+                else if (gameCode.ToUpper() == "CTZQ")
+                {
+                    var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "jsonData");
+                    if (!Directory.Exists(path))
+                        Directory.CreateDirectory(path);
+                    var jsonData = string.Empty;
+                    var ctzqIssuseFileName = Path.Combine(path, string.Format("lottery_lastIssuse_{0}.json", gameType));
+                    if (System.IO.File.Exists(ctzqIssuseFileName))
+                    {
+                        jsonData = System.IO.File.ReadAllText(ctzqIssuseFileName, Encoding.UTF8);
+                    }
+                    foreach (var item in jsonData.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        list.Add(new
+                        {
+                            IssuseNumber = item,
+                        });
+                    }
+                }
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询最新期号成功",
+                    MsgId = entity.MsgId,
+                    Value = list,
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "业务参数错误",
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "查询最新奖期失败",
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                });
+            }
+        }
+        #endregion
+
+        #region 获取投注内容中文名称(131)
+
+        public async Task<IActionResult> GetAnteCodeDisplayName(LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                string gameType = p.GameType;
+                string gameCode = p.GameCode;
+                string anteCode = p.AnteCode;
+                string letBall = p.LetBall;
+                string strName = string.Empty;
+                switch (gameCode.ToUpper())
+                {
+                    case "JCLQ":
+                        strName = ANTECODES_JCLQ(gameType, anteCode);
+                        break;
+                    case "JCZQ":
+                        strName = ANTECODES_JCZQ(gameType, anteCode, Convert.ToInt32(letBall));
+                        break;
+                    case "BJDC":
+                        strName = ANTECODES_BJDC(gameType, anteCode);
+                        break;
+                    case "CTZQ":
+                        strName = ANTECODES_CTZQ(gameType, anteCode);
+                        break;
+                }
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "获取投注内容显示名成功",
+                    MsgId = entity.MsgId,
+                    Value = strName,
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "业务参数错误",
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "获取投注内容显示名成功",
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                });
+            }
+        }
+
+        #endregion
+
+        #region 查询比赛数据列表(135)
+
+        public async Task<IActionResult> QueryMatchDataList([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                //string userToken = p.UserToken;
+                string gameCode = p.GameCode.ToUpper();
+                string gameType = p.GameType.ToUpper();
+                string issuseNumber = p.IssuseNumber.ToUpper();
+                string newVerType = p.NewVerType;
+
+                if (string.IsNullOrEmpty(gameCode))
+                    throw new Exception("彩种不能为空");
+                if (string.IsNullOrEmpty(gameType))
+                    throw new Exception("玩法不能为空");
+                if ((gameCode == "CTZQ" || gameCode == "BJDC") && string.IsNullOrEmpty(issuseNumber))
+                    throw new Exception("期号不能为空");
+
+                var matchDataList = new List<object>();
+                switch (gameCode)
+                {
+                    case "CTZQ":
+                        //var cur = await _serviceProxyProvider.Invoke<ActivityListInfoCollection>(param, "api/Data/QueryActivInfoList");
+                        //var cur = WCFClients.GameIssuseClient.QueryCurretNewIssuseInfo(gameCode, gameType);
+                        var issuse = Json_CTZQ.IssuseList(gameType);
+                        var theissuse = issuse.FirstOrDefault(c => c.IssuseNumber == issuseNumber);
+                        if (theissuse != null)
+                        {
+                            var now = DateTime.Now;
+                            if (Convert.ToDateTime(theissuse.StartTime) > now) break;
+                            matchDataList.AddRange(Json_CTZQ.MatchList_WEB(issuseNumber, gameType));
+                        }
+                        break;
+                    case "BJDC":
+                        matchDataList.AddRange(Json_BJDC.MatchList_WEB(issuseNumber, gameType));
+                        break;
+                    case "JCZQ":
+                        if (gameType.ToLower() == "hhdg")
+                            matchDataList.AddRange(Json_JCZQ.GetJCZQHHDGList());
+                        else
+                            matchDataList.AddRange(Json_JCZQ.MatchList_WEB(gameType, newVerType));
+                        break;
+                    case "JCLQ":
+                        if (gameType.ToLower() == "hhdg")
+                            matchDataList.AddRange(Json_JCLQ.GetJCLQHHDGList());
+                        else
+                            matchDataList.AddRange(Json_JCLQ.MatchList_WEB(gameType));
+                        break;
+                    default:
+                        throw new ArgumentException(string.Format("传入彩种{0}没有队伍信息", gameCode));
+                }
+
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询队伍信息成功",
+                    MsgId = entity.MsgId,
+                    Value = matchDataList,
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "业务参数错误",
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "查询比赛数据失败",
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                });
+            }
+        }
+
+
+        #endregion
+
+        #region 查询最新期号(136)
+        /// <summary>
+        /// 查询最新期号_136
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> QueryCurrenIssuse([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                string id = p.GameCode;
+                string type = p.GameType;
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param.Add("gameCode", id);
+                param.Add("gameType", type);
+                Issuse_QueryInfo cur = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Data/QueryCurretNewIssuseInfo");
+                //Issuse_QueryInfo cur = WCFClients.GameIssuseClient.QueryCurretNewIssuseInfo(id, type);
+                var list = new List<object>();
+                BusinessHelper bizHelper = new BusinessHelper();
+                List<CtzqIssuesWeb> issuse = Json_CTZQ.IssuseList(type);
+                var theissuse = issuse.FirstOrDefault(c => c.IssuseNumber == cur.IssuseNumber);
+                DateTime? startDate = null;
+                if (theissuse != null)
+                {
+                    startDate = Convert.ToDateTime(theissuse.StartTime);
+                }
+
+                list.Add(new { issuse = cur.IssuseNumber, stoptime = bizHelper.ConvertDateTimeInt(cur.LocalStopTime).ToString(), servertime = bizHelper.ConvertDateTimeInt(DateTime.Now).ToString(), starttime = bizHelper.ConvertDateTimeInt(startDate != null ? startDate.Value : cur.StartTime).ToString() });
+
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询最新期号成功",
+                    MsgId = entity.MsgId,
+                    Value = list,
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "业务参数错误",
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "查询最新期号失败",
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                });
+            }
+        }
+        #endregion
+
+        #region 竞彩编码解析
+
+        private static Dictionary<string, string> GetAnteCodeDic(string[] array1, string[] array2)
+        {
+
+            Dictionary<string, string> dicAnteCode = new Dictionary<string, string>();
+            for (int i = 0; i < array1.Length; i++)
+            {
+                for (int j = i; j < array2.Length; j++)
+                {
+                    dicAnteCode.Add(array1[i], array2[j]);
+                    break;
+                }
+            }
+            return dicAnteCode;
+        }
+        /// <summary>
+        /// 北单投注编码及显示码
+        /// </summary>
+        /// <param name="type">玩法类型</param>
+        /// <param name="isCode">是否投注编码</param>
+        /// <returns>返回投注编码或显示码</returns>
+        public static string ANTECODES_BJDC(string type, string code, bool isCode = false)
+        {
+            if (string.IsNullOrEmpty(code) || string.IsNullOrEmpty(type))
+                return string.Empty;
+            try
+            {
+                switch (type)
+                {
+                    case "spf":
+                        return GetAnteCodeDic("3,1,0".Split(','), "胜,平,负".Split(','))[code];
+                    //return isCode ? "3,1,0" : "胜,平,负";
+                    case "zjq":
+                        return GetAnteCodeDic("0,1,2,3,4,5,6,7".Split(','), "0,1,2,3,4,5,6,7+".Split(','))[code];
+                    //return isCode ? "0,1,2,3,4,5,6,7" : "0,1,2,3,4,5,6,7+";
+                    case "sxds":
+                        return GetAnteCodeDic("SD,SS,XD,XS".Split(','), "上单,上双,下单,下双".Split(','))[code];
+                    //return isCode ? "SD,SS,XD,XS" : "上单,上双,下单,下双";
+                    case "bf":
+                        return GetAnteCodeDic("00,01,02,03,10,11,12,13,20,21,22,23,30,31,32,33,40,41,42,04,14,24,X0,XX,0X".Split(','), "0:0,0:1,0:2,0:3,1:0,1:1,1:2,1:3,2:0,2:1,2:2,2:3,3:0,3:1,3:2,3:3,4:0,4:1,4:2,0:4,1:4,2:4,胜其他,平其他,负其他".Split(','))[code];
+
+                    //return isCode ? "00,01,02,03,10,11,12,13,20,21,22,23,30,31,32,33,40,41,42,04,14,24,X0,XX,0X" : "0:0,0:1,0:2,0:3,1:0,1:1,1:2,1:3,2:0,2:1,2:2,2:3,3:0,3:1,3:2,3:3,4:0,4:1,4:2,0:4,1:4,2:4,胜其他,平其他,负其他";
+                    case "bqc":
+                        return GetAnteCodeDic("33,31,30,13,11,10,03,01,00".Split(','), "胜胜,胜平,胜负,平胜,平平,平负,负胜,负平,负负".Split(','))[code];
+                    //return isCode ? "33,31,30,13,11,10,03,01,00" : "胜胜,胜平,胜负,平胜,平平,平负,负胜,负平,负负";
+                    default:
+                        return GetAnteCodeDic("3,1,0".Split(','), "胜,平,负".Split(','))[code];
+                        //return isCode ? "3,1,0" : "胜,平,负";
+                }
+            }
+            catch
+            { return string.Empty; }
+        }
+
+        /// <summary>
+        /// 竞彩足球投注编码及显示码
+        /// </summary>
+        /// <param name="type">玩法类型</param>
+        /// <param name="isCode">是否投注编码</param>
+        /// <returns>返回投注编码或显示码</returns>
+        public static string ANTECODES_JCZQ(string type, string code, int letball = 0, bool isCode = false)
+        {
+            if (string.IsNullOrEmpty(code) || string.IsNullOrEmpty(type))
+                return string.Empty;
+            try
+            {
+                switch (type)
+                {
+                    case "spf":
+                        //return isCode ? "3,1,0" : "胜,平,负";
+                        if (letball == 0)
+                            return GetAnteCodeDic("3,1,0".Split(','), "胜,平,负".Split(','))[code];
+                        else
+                            return GetAnteCodeDic("3,1,0".Split(','), "让球胜,让球平,让球负".Split(','))[code];
+                    //return isCode ? "3,1,0" : "胜,平,负,让球胜,让球平,让球负";
+                    case "bqcspf":
+                        return GetAnteCodeDic("3,1,0".Split(','), "胜,平,负".Split(','))[code];
+                    //return isCode ? "3,1,0" : "胜,平,负";
+                    case "zjq":
+                        return GetAnteCodeDic("0,1,2,3,4,5,6,7".Split(','), "0,1,2,3,4,5,6,7+".Split(','))[code];
+                    //return isCode ? "0,1,2,3,4,5,6,7" : "0,1,2,3,4,5,6,7+";
+                    case "bf":
+                        return GetAnteCodeDic("00,01,02,03,10,11,12,13,20,21,22,23,30,31,32,33,40,41,42,04,14,24,50,51,52,05,15,25,X0,XX,0X".Split(','), "0:0,0:1,0:2,0:3,1:0,1:1,1:2,1:3,2:0,2:1,2:2,2:3,3:0,3:1,3:2,3:3,4:0,4:1,4:2,0:4,1:4,2:4,5:0,5:1,5:2,0:5,1:5,2:5,胜其他,平其他,负其他".Split(','))[code];
+                    //return isCode ? "00,01,02,03,10,11,12,13,20,21,22,23,30,31,32,33,40,41,42,04,14,24,50,51,52,05,15,25,X0,XX,0X" : "0:0,0:1,0:2,0:3,1:0,1:1,1:2,1:3,2:0,2:1,2:2,2:3,3:0,3:1,3:2,3:3,4:0,4:1,4:2,0:4,1:4,2:4,5:0,5:1,5:2,0:5,1:5,2:5,胜其他,平其他,负其他";
+                    case "bqc":
+                        return GetAnteCodeDic("33,31,30,13,11,10,03,01,00".Split(','), "胜胜,胜平,胜负,平胜,平平,平负,负胜,负平,负负".Split(','))[code];
+                    //return isCode ? "33,31,30,13,11,10,03,01,00" : "胜胜,胜平,胜负,平胜,平平,平负,负胜,负平,负负";
+                    case "hh":
+                        return GetAnteCodeDic("3,1,0,00,01,02,03,10,11,12,13,20,21,22,23,30,31,32,33,40,41,42,04,14,24,50,51,52,05,15,25,X0,XX,0X,0,1,2,3,4,5,6,7,33,31,30,13,11,10,03,01,00,3,1,0".Split(','), "让球胜,让球平,让球负,0:0,0:1,0:2,0:3,1:0,1:1,1:2,1:3,2:0,2:1,2:2,2:3,3:0,3:1,3:2,3:3,4:0,4:1,4:2,0:4,1:4,2:4,5:0,5:1,5:2,0:5,1:5,2:5,胜其他,平其他,负其他,0,1,2,3,4,5,6,7+,胜胜,胜平,胜负,平胜,平平,平负,负胜,负平,负负,胜,平,负".Split(','))[code];
+                    //return isCode ? "3,1,0,00,01,02,03,10,11,12,13,20,21,22,23,30,31,32,33,40,41,42,04,14,24,50,51,52,05,15,25,X0,XX,0X,0,1,2,3,4,5,6,7,33,31,30,13,11,10,03,01,00,3,1,0" : "让球胜,让球平,让球负,0:0,0:1,0:2,0:3,1:0,1:1,1:2,1:3,2:0,2:1,2:2,2:3,3:0,3:1,3:2,3:3,4:0,4:1,4:2,0:4,1:4,2:4,5:0,5:1,5:2,0:5,1:5,2:5,胜其他,平其他,负其他,0,1,2,3,4,5,6,7+,胜胜,胜平,胜负,平胜,平平,平负,负胜,负平,负负,胜,平,负";
+                    default:
+                        return GetAnteCodeDic("3,1,0".Split(','), "胜,平,负".Split(','))[code];
+                        //return isCode ? "3,1,0" : "胜,平,负";
+                }
+            }
+            catch { return string.Empty; }
+        }
+
+        /// <summary>
+        /// 竞彩篮球投注编码及显示码
+        /// </summary>
+        /// <param name="type">玩法类型</param>
+        /// <param name="isCode">是否投注编码</param>
+        /// <returns>返回投注编码或显示码</returns>
+        public static string ANTECODES_JCLQ(string type, string code, bool isCode = false)
+        {
+            if (string.IsNullOrEmpty(code) || string.IsNullOrEmpty(type))
+                return string.Empty;
+            try
+            {
+                switch (type)
+                {
+                    case "sf":
+                    case "rfsf":
+                        return GetAnteCodeDic("3,0".Split(','), "主胜,客胜".Split(','))[code];
+                    //return isCode ? "3,0" : "主胜,客胜";
+                    case "sfc":
+                        return GetAnteCodeDic("01,02,03,04,05,06,11,12,13,14,15,16".Split(','), "胜1-5分,胜6-10分,胜11-15分,胜16-20分,胜21-25分,胜26分以上,负1-5分,负6-10分,负11-15分,负16-20分,负21-25分,负26分以上".Split(','))[code];
+                    //return isCode ? "01,02,03,04,05,06,11,12,13,14,15,16" : "胜1-5分,胜6-10分,胜11-15分,胜16-20分,胜21-25分,胜26分以上,负1-5分,负6-10分,负11-15分,负16-20分,负21-25分,负26分以上";
+                    case "dxf":
+                        return GetAnteCodeDic("3,0".Split(','), "大,小".Split(','))[code];
+                    //return isCode ? "3,0" : "大,小";
+                    case "hh":
+                        return GetAnteCodeDic("3,0,3,0,01,02,03,04,05,06,11,12,13,14,15,16,3,0".Split(','), "主胜,客胜,主胜,客胜,胜1-5分,胜6-10分,胜11-15分,胜16-20分,胜21-25分,胜26分以上,负1-5分,负6-10分,负11-15分,负16-20分,负21-25分,负26分以上,大,小".Split(','))[code];
+                    //return isCode ? "3,0,3,0,01,02,03,04,05,06,11,12,13,14,15,16,3,0" : "主胜,客胜,主胜,客胜,胜1-5分,胜6-10分,胜11-15分,胜16-20分,胜21-25分,胜26分以上,负1-5分,负6-10分,负11-15分,负16-20分,负21-25分,负26分以上,大,小";
+                    default:
+                        return GetAnteCodeDic("3,0".Split(','), "主胜,客胜".Split(','))[code];
+                        //return isCode ? "3,0" : "主胜,客胜";
+                }
+            }
+            catch { return string.Empty; }
+        }
+
+        /// <summary>
+        /// 传统足球投注编码及显示码
+        /// </summary>
+        /// <param name="type">玩法类型</param>
+        /// <param name="isCode">是否投注编码</param>
+        /// <returns>返回投注编码或显示码</returns>
+        public static string ANTECODES_CTZQ(string type, string code, bool isCode = false)
+        {
+            if (string.IsNullOrEmpty(code) || string.IsNullOrEmpty(type))
+                return string.Empty;
+            try
+            {
+                switch (type)
+                {
+                    case "t6bqc":
+                    case "tr9":
+                    case "t14c":
+                        return GetAnteCodeDic("3,1,0".Split(','), "胜,平,负".Split(','))[code];
+                    //return isCode ? "3,1,0" : "胜,平,负";
+                    case "t4cjq":
+                        return GetAnteCodeDic("0,1,2,3".Split(','), "0,1,2,3+".Split(','))[code];
+                    //return isCode ? "0,1,2,3" : "0,1,2,3+";
+                    default:
+                        return GetAnteCodeDic("3,1,0".Split(','), "胜,平,负".Split(','))[code];
+                        //return isCode ? "3,1,0" : "胜,平,负";
+                }
+            }
+            catch { return string.Empty; }
+        }
+
         #endregion
     }
 }

@@ -12,5 +12,10 @@ namespace Lottery.Kg.ORM.Helper
         /// </summary>
       public IList<SQLModel> UserSystemModule { get; set; }
 
+        /// <summary>
+        /// 配置及其他模块  
+        /// </summary>
+        public IList<SQLModel> DataModule { get; set; }
+
     }
 }
