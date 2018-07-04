@@ -24,18 +24,23 @@ using UserLottery.Service.Model;
 using KaSon.FrameWork.Services.ORM;
 using KaSon.FrameWork.Services.Enum;
 using EntityModel.ORM;
-using KaSon.FrameWork.Helper;
+
 using System.Threading;
 using UserLottery.Service.ModuleBaseServices;
-using Lottery.Kg.ORM.Helper;
+
 using UserLottery.Service.IModuleServices;
 using EntityModel.RequestModel;
-using Lottery.Kg.ORM.Helper.UserHelper;
+
 using EntityModel.Enum;
 using EntityModel.CoreModel;
 using EntityModel.Communication;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
+using KaSon.FrameWork.Common;
+using KaSon.FrameWork.ORM.Helper;
+using KaSon.FrameWork.ORM.Helper.UserHelper;
+using KaSon.FrameWork.Common.Redis;
+using EntityModel.ExceptionExtend;
 
 namespace UserLottery.Service.ModuleServices
 {
@@ -1246,7 +1251,7 @@ namespace UserLottery.Service.ModuleServices
             var userId = userAuthentication.ValidateUserAuthentication(userToken);
 
             var biz = new RealNameAuthenticationBusiness();
-            Lottery.Kg.ORM.Helper.BusinessHelper.CheckUserRealName(IdCardNumber);
+            BusinessHelper.CheckUserRealName(IdCardNumber);
             var realName = biz.GetAuthenticatedRealName(userId);
             if (realName != null)
             {
