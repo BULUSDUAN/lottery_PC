@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Lottery.Kg.ORM.Helper.WinNumber.Model;
-namespace Lottery.Kg.ORM.Helper.WinNumber.Manage
+using EntityModel;
+namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
 {
     public class CQKLSF_DXZSManager : DBbase
     {

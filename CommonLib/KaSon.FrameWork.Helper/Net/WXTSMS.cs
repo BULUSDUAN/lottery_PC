@@ -1,10 +1,11 @@
 ﻿using Common.Net.SMS;
+using KaSon.FrameWork.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 
-namespace KaSon.FrameWork.Helper.Net
+namespace KaSon.FrameWork.Entity.Helper.Net
 {
     /// <summary>
     /// 无限通(大汉三通)

@@ -8,7 +8,7 @@ using System.IO;
 using System.Drawing;
 using System.DrawingCore;
 
-namespace KaSon.FrameWork.Helper.Net
+namespace KaSon.FrameWork.Entity.Helper.Net
 {
     /// <summary>
     /// 请求网络接口方式

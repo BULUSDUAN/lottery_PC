@@ -7,10 +7,10 @@
 //using System.Threading;
 //using KaSon.FrameWork.Services.ORM;
 //using EntityModel.ORM;
-//using KaSon.FrameWork.Helper;
+//using KaSon.FrameWork.Common;
 //using KaSon.FrameWork.Services.Enum;
 
-//namespace Lottery.Kg.ORM.Helper
+//namespace KaSon.FrameWork.ORM.Helper
 //{
 //  public  class LoginHelper:DBbase
 //    {

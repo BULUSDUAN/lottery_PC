@@ -3,15 +3,16 @@ using EntityModel.Communication;
 using EntityModel.CoreModel;
 using EntityModel.Enum;
 using EntityModel.RequestModel;
-using KaSon.FrameWork.Helper;
-using Lottery.Kg.ORM.Helper.WinNumber;
-using Lottery.Kg.ORM.Helper.WinNumber.ModelCollection;
+using KaSon.FrameWork.Common;
+using KaSon.FrameWork.Common.Redis;
+using KaSon.FrameWork.ORM.Helper.WinNumber;
+using KaSon.FrameWork.ORM.Helper.WinNumber.ModelCollection;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-namespace Lottery.Kg.ORM.Helper.OrderQuery
+namespace KaSon.FrameWork.ORM.Helper.OrderQuery
 {
     public class OrderQuery : DBbase
     {
@@ -183,12 +184,12 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
                         Model.fromDate = Model.fromDate.AddDays(1);
                     }
 
-                    var payInList = list.Where(p => p.PayType == (int)PayType.Payin).ToList();
-                    var payOutList = list.Where(p => p.PayType == (int)PayType.Payout).ToList();
-                    collection.TotalPayinCount = payInList.Count;
-                    collection.TotalPayinMoney = payInList.Count <= 0 ? 0 : payInList.Sum(p => p.PayMoney);
-                    collection.TotalPayoutCount = payOutList.Count;
-                    collection.TotalPayoutMoney = payOutList.Count <= 0 ? 0 : payOutList.Sum(p => p.PayMoney);
+                    var payInList = list.Where(p => p.PayType == (int)EntityModel.Enum.PayType.Payin).ToList();
+                    var payOutList = list.Where(p => p.PayType == (int)EntityModel.Enum.PayType.Payout).ToList();
+                    collection.TotalPayinCount = payInList.Count();
+                    collection.TotalPayinMoney = payInList.Count() <= 0 ? 0 : payInList.Sum(p => p.PayMoney);
+                    collection.TotalPayoutCount = payOutList.Count();
+                    collection.TotalPayoutMoney = payOutList.Count() <= 0 ? 0 : payOutList.Sum(p => p.PayMoney);
                     collection.FundDetailList = list.OrderByDescending(p => p.CreateTime).Skip(Model.pageIndex * Model.pageSize).Take(Model.pageSize).ToList();
                     return collection;
                 }
@@ -594,8 +595,8 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
                 CreaterDisplayName = z.u.DisplayName,
                 CreaterHideDisplayNameCount = z.u.HideDisplayNameCount,
                 Description = z.t.Description,
-                GameDisplayName = KaSon.FrameWork.Helper.ConvertHelper.FormatGameCode(z.t.GameCode),
-                GameTypeDisplayName = KaSon.FrameWork.Helper.ConvertHelper.FormatGameType(z.t.GameCode, z.t.GameType),
+                GameDisplayName = ConvertHelper.FormatGameCode(z.t.GameCode),
+                GameTypeDisplayName = ConvertHelper.FormatGameType(z.t.GameCode, z.t.GameType),
                 Guarantees = z.t.Guarantees,
                 PlayType = z.t.PlayType,
                 Price = z.t.Price,
@@ -672,8 +673,8 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
                             CreaterDisplayName = z.u.DisplayName,
                             CreaterHideDisplayNameCount = z.u.HideDisplayNameCount,
                             Description = z.t.Description,
-                            GameDisplayName = KaSon.FrameWork.Helper.ConvertHelper.FormatGameCode(z.t.GameCode),
-                            GameTypeDisplayName = KaSon.FrameWork.Helper.ConvertHelper.FormatGameType(z.t.GameCode, z.t.GameType),
+                            GameDisplayName = ConvertHelper.FormatGameCode(z.t.GameCode),
+                            GameTypeDisplayName = ConvertHelper.FormatGameType(z.t.GameCode, z.t.GameType),
                             Guarantees = z.t.Guarantees,
                             PlayType = z.t.PlayType,
                             Price = z.t.Price,
@@ -1174,13 +1175,13 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
                 UserId = b.u.UserId,
                 UserDisplayName = b.u.DisplayName,
                 HideDisplayNameCount = b.u.HideDisplayNameCount,
-                GameDisplayName = KaSon.FrameWork.Helper.ConvertHelper.FormatGameCode(b.r.GameCode),
+                GameDisplayName =ConvertHelper.FormatGameCode(b.r.GameCode),
                 GameCode = b.r.GameCode,
                 Amount = b.r.Amount,
                 BonusStatus = (BonusStatus)b.r.BonusStatus,
                 CreateTime = b.r.CreateTime,
                 GameType = b.r.GameType,
-                GameTypeDisplayName = KaSon.FrameWork.Helper.ConvertHelper.FormatGameType(b.r.GameCode, b.r.GameType),
+                GameTypeDisplayName =ConvertHelper.FormatGameType(b.r.GameCode, b.r.GameType),
                 IssuseNumber = b.r.IssuseNumber,
                 PlayType = b.r.PlayType,
                 ProgressStatus = (ProgressStatus)b.r.ProgressStatus,
@@ -1255,8 +1256,8 @@ namespace Lottery.Kg.ORM.Helper.OrderQuery
                 TotalMatchCount = b.r.TotalMatchCount,
                 TotalMoney = b.r.TotalMoney,
                 BetCount = b.r.BetCount,
-                GameDisplayName = KaSon.FrameWork.Helper.ConvertHelper.FormatGameCode(b.r.GameCode),
-                GameTypeDisplayName = KaSon.FrameWork.Helper.ConvertHelper.FormatGameType(b.r.GameCode, b.r.GameType),
+                GameDisplayName =ConvertHelper.FormatGameCode(b.r.GameCode),
+                GameTypeDisplayName = ConvertHelper.FormatGameType(b.r.GameCode, b.r.GameType),
                 AfterTaxBonusMoney = 0M,
                 PreTaxBonusMoney = 0M,
                 BonusCount = 0,

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EntityModel.CoreModel;
-using KaSon.FrameWork.Helper;
-using KaSon.FrameWork.Helper.分析器工厂;
-using Lottery.Kg.ORM.Helper.WinNumber.Manage;
-using Lottery.Kg.ORM.Helper.WinNumber.Model;
-using Lottery.Kg.ORM.Helper.WinNumber.ModelCollection;
-namespace Lottery.Kg.ORM.Helper.WinNumber
+using KaSon.FrameWork.Common;
+
+using KaSon.FrameWork.ORM.Helper.WinNumber.Manage;
+using EntityModel;
+using KaSon.FrameWork.ORM.Helper.WinNumber.ModelCollection;
+namespace KaSon.FrameWork.ORM.Helper.WinNumber
 {
     public class LotteryDataBusiness_HBK3 : LotteryDataBusiness, ILotteryDataBusiness
     {
@@ -26,7 +26,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
             if (string.IsNullOrEmpty(winNumber)) return;
 
             var msg = string.Empty;
-            AnalyzerFactory.GetWinNumberAnalyzer(this.CurrentGameCode).CheckWinNumber(winNumber, out msg);
+            AnalyzerFactory.AnalyzerFactory.GetWinNumberAnalyzer(this.CurrentGameCode).CheckWinNumber(winNumber, out msg);
             if (!string.IsNullOrEmpty(msg))
                 throw new Exception(msg);
 
@@ -66,7 +66,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<HBK3_JBZS_Info>();
                 var entityList = new HBK3_Manager().QueryHBK3_JBZS_Info(length);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<HBK3_JBZS>, HBK3_JBZS, List<HBK3_JBZS_Info>, HBK3_JBZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<HBK3_JBZS>, HBK3_JBZS, List<HBK3_JBZS_Info>, HBK3_JBZS_Info>(entityList, ref infoList,
                     () => { return new HBK3_JBZS_Info(); });
                 return infoList;
             });
@@ -85,7 +85,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<HBK3_HZ_Info>();
                 var entityList = new HBK3_Manager().QueryHBK3_HZ_Info(length);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<HBK3_HZ>, HBK3_HZ, List<HBK3_HZ_Info>, HBK3_HZ_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<HBK3_HZ>, HBK3_HZ, List<HBK3_HZ_Info>, HBK3_HZ_Info>(entityList, ref infoList,
                     () => { return new HBK3_HZ_Info(); });
                 return infoList;
             });
@@ -104,7 +104,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<HBK3_XT_Info>();
                 var entityList = new HBK3_Manager().QueryHBK3_XT_Info(length);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<HBK3_XT>, HBK3_XT, List<HBK3_XT_Info>, HBK3_XT_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<HBK3_XT>, HBK3_XT, List<HBK3_XT_Info>, HBK3_XT_Info>(entityList, ref infoList,
                     () => { return new HBK3_XT_Info(); });
                 return infoList;
             });
@@ -123,7 +123,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<HBK3_ZH_Info>();
                 var entityList = new HBK3_Manager().QueryHBK3_ZH_Info(length);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<HBK3_ZH>, HBK3_ZH, List<HBK3_ZH_Info>, HBK3_ZH_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<HBK3_ZH>, HBK3_ZH, List<HBK3_ZH_Info>, HBK3_ZH_Info>(entityList, ref infoList,
                     () => { return new HBK3_ZH_Info(); });
                 return infoList;
             });
@@ -142,7 +142,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<HBK3_ZHZS_Info>();
                 var entityList = new HBK3_Manager().QueryHBK3_ZHZS_Info(length);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<HBK3_ZHZS>, HBK3_ZHZS, List<HBK3_ZHZS_Info>, HBK3_ZHZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<HBK3_ZHZS>, HBK3_ZHZS, List<HBK3_ZHZS_Info>, HBK3_ZHZS_Info>(entityList, ref infoList,
                     () => { return new HBK3_ZHZS_Info(); });
                 return infoList;
             });
@@ -640,7 +640,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
             var infoList = new List<GameWinNumber_Info>();
             var entityList = new HBK3_GameWinNumberManager().QueryHBK3_GameWinNumber(pageIndex, pageSize, out totalCount);
 
-            ObjectConvert.ConvertEntityListToInfoList<List<HBK3_GameWinNumber>, HBK3_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
+           ObjectConvert.ConvertEntityListToInfoList<List<HBK3_GameWinNumber>, HBK3_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
                 () => { return new GameWinNumber_Info(); },
                 (entity, info) =>
                 {
@@ -659,7 +659,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
             //    var infoList = new List<GameWinNumber_Info>();
             //    var entityList = new HBK3_GameWinNumberManager().QueryHBK3_GameWinNumber(pageIndex, pageSize, out totalCount);
 
-            //    ObjectConvert.ConvertEntityListToInfoList<List<HBK3_GameWinNumber>, HBK3_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
+            //   ObjectConvert.ConvertEntityListToInfoList<List<HBK3_GameWinNumber>, HBK3_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
             //        () => { return new GameWinNumber_Info(); },
             //        (entity, info) =>
             //        {
@@ -678,7 +678,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
             var entity = manager.QueryWinNumber(issuseNumber);
             if (entity == null) return new GameWinNumber_Info();
             var info = new GameWinNumber_Info();
-            ObjectConvert.ConverEntityToInfo<HBK3_GameWinNumber, GameWinNumber_Info>(entity, ref info);
+           ObjectConvert.ConverEntityToInfo<HBK3_GameWinNumber, GameWinNumber_Info>(entity, ref info);
             return info;
         }
     }

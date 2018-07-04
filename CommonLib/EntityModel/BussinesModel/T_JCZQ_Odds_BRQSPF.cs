@@ -1,4 +1,5 @@
-﻿using KaSon.FrameWork.Services.Attribute;
+﻿using EntityModel.Ticket;
+using KaSon.FrameWork.Services.Attribute;
 using KaSon.FrameWork.Services.Enum;
 using ProtoBuf;
 using System;
@@ -12,7 +13,7 @@ namespace EntityModel
     ///</summary>
     [ProtoContract]
     [Entity("T_JCZQ_Odds_BRQSPF",Type = EntityType.Table)]
-    public class T_JCZQ_Odds_BRQSPF
+    public class T_JCZQ_Odds_BRQSPF : JingCai_Odds
     { 
         public T_JCZQ_Odds_BRQSPF()
         {
@@ -54,5 +55,40 @@ namespace EntityModel
             [ProtoMember(6)]
             [Field("CreateTime")]
             public DateTime CreateTime{ get; set; }
+
+        public override decimal GetOdds(string result)
+        {
+            switch (result)
+            {
+                case "3":
+                    return WinOdds;
+                case "1":
+                    return FlatOdds;
+                case "0":
+                    return LoseOdds;
+                default:
+                    throw new ArgumentException("获取不让球胜负平赔率不支持的结果数据 - " + result);
+            }
+        }
+        public override bool CheckIsValidate()
+        {
+            return true;
+        }
+        public override void SetOdds(I_JingCai_Odds odds)
+        {
+            WinOdds = odds.GetOdds("3");
+            FlatOdds = odds.GetOdds("1");
+            LoseOdds = odds.GetOdds("0");
+        }
+        public override bool Equals(I_JingCai_Odds odds)
+        {
+            return WinOdds.Equals(odds.GetOdds("3"))
+                && FlatOdds.Equals(odds.GetOdds("1"))
+                && LoseOdds.Equals(odds.GetOdds("0"));
+        }
+        public override string GetOddsString()
+        {
+            return "3|" + WinOdds.ToString("F2") + ",1|" + FlatOdds.ToString("F2") + ",0|" + LoseOdds.ToString("F2");
+        }
     }
 }

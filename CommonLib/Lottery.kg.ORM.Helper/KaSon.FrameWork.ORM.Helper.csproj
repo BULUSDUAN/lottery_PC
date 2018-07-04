@@ -1,0 +1,68 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="ExceptionExtend\**" />
+    <Compile Remove="WinNumber\Model\**" />
+    <EmbeddedResource Remove="ExceptionExtend\**" />
+    <EmbeddedResource Remove="WinNumber\Model\**" />
+    <None Remove="ExceptionExtend\**" />
+    <None Remove="WinNumber\Model\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="AnalyzerFactory\Interface\IAntecodeAnalyzable.cs" />
+    <Compile Remove="AnalyzerFactory\Interface\IAntecodeAnalyzable_Sport.cs" />
+    <Compile Remove="AnalyzerFactory\Interface\IOrderAnalyzable.cs" />
+    <Compile Remove="AnalyzerFactory\Interface\IWinNumberAnalyzable.cs" />
+    <Compile Remove="LotteryJsonInfo_Operate\Json_BJDC.cs" />
+    <Compile Remove="LotteryJsonInfo_Operate\Json_CTZQ.cs" />
+    <Compile Remove="LotteryJsonInfo_Operate\Json_JCLQ.cs" />
+    <Compile Remove="LotteryJsonInfo_Operate\Json_JCZQ.cs" />
+    <Compile Remove="LotteryJsonInfo_Operate\JSON_kaiJiang.cs" />
+    <Compile Remove="LotteryJsonInfo_Operate\UpgradeInfo.cs" />
+    <Compile Remove="Ticket\TicketGatewayAdmin.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="StackExchange.Redis" Version="1.2.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EntityModel\EntityModel.csproj" />
+    <ProjectReference Include="..\KaSon.FrameWork.Common\KaSon.FrameWork.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="KaSon.FrameWork.ORM">
+      <HintPath>..\..\FramWorkDLL\KaSon.FrameWork.ORM.dll</HintPath>
+    </Reference>
+    <Reference Include="KaSon.FrameWork.Services">
+      <HintPath>..\..\FramWorkDLL\KaSon.FrameWork.Services.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="MyServerXML.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="MyServer_SQL.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SQLServer_SQL.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="LotteryJsonInfo_Operate\" />
+    <Folder Include="Ticket\" />
+  </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
+
+</Project>

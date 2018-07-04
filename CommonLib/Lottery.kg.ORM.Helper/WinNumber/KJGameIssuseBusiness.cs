@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EntityModel.Enum;
-using KaSon.FrameWork.Helper;
-using Lottery.Kg.ORM.Helper.WinNumber.Manage;
-using Lottery.Kg.ORM.Helper.WinNumber.ModelCollection;
-namespace Lottery.Kg.ORM.Helper.WinNumber
+using KaSon.FrameWork.Common;
+using KaSon.FrameWork.ORM.Helper.WinNumber.Manage;
+using KaSon.FrameWork.ORM.Helper.WinNumber.ModelCollection;
+namespace KaSon.FrameWork.ORM.Helper.WinNumber
 {
     public class KJGameIssuseBusiness:DBbase
     {
@@ -44,7 +44,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
             var entity = new KJGameIssuseManager().QueryCurrentIssuseWithOffical(gameCode);
             if (entity == null) return null;
             var info = new KJIssuse_QueryInfo { Status = IssuseStatus.OnSale };
-            ObjectConvert.ConverEntityToInfo<KJGameIssuse, KJIssuse_QueryInfo>(entity, ref info);
+           ObjectConvert.ConverEntityToInfo<KJGameIssuse, KJIssuse_QueryInfo>(entity, ref info);
             var gameInfo = new KJGameInfo();
             gameInfo.GameCode = entity.GameCode;
             info.Game = gameInfo;

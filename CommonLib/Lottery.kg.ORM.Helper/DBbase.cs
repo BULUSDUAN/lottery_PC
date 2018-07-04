@@ -1,11 +1,13 @@
-﻿using KaSon.FrameWork.Helper;
+﻿
+
+using KaSon.FrameWork.Common;
 using KaSon.FrameWork.ORM.Provider;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
-namespace Lottery.Kg.ORM.Helper
+namespace KaSon.FrameWork.ORM.Helper
 {
     public class DBbase
     {
@@ -53,7 +55,7 @@ namespace Lottery.Kg.ORM.Helper
                     else {
                         db.Init("SqlServer.Default");
                     }
-                 
+                  
 
                 }
                 return db;

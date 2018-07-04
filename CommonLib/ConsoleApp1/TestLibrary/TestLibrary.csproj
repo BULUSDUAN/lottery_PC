@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Data.SqlClient" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ITestLibrary\ITestLibrary.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="KaSon.FrameWork.ORM">
+      <HintPath>..\..\..\FramWorkDLL\KaSon.FrameWork.ORM.dll</HintPath>
+    </Reference>
+    <Reference Include="KaSon.FrameWork.Services">
+      <HintPath>..\..\..\FramWorkDLL\KaSon.FrameWork.Services.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

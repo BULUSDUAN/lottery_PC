@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EntityModel.CoreModel;
-using KaSon.FrameWork.Helper;
-using KaSon.FrameWork.Helper.分析器工厂;
-using Lottery.Kg.ORM.Helper.WinNumber.Manage;
-using Lottery.Kg.ORM.Helper.WinNumber.Model;
-using Lottery.Kg.ORM.Helper.WinNumber.ModelCollection;
-namespace Lottery.Kg.ORM.Helper.WinNumber
+using KaSon.FrameWork.Common;
+
+using KaSon.FrameWork.ORM.Helper.WinNumber.Manage;
+using EntityModel;
+using KaSon.FrameWork.ORM.Helper.WinNumber.ModelCollection;
+namespace KaSon.FrameWork.ORM.Helper.WinNumber
 {
     public class LotteryDataBusiness_GDKLSF : LotteryDataBusiness, ILotteryDataBusiness
     {
@@ -71,7 +71,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<GDKLSF_JBZS_Info>();
                 var entityList = new GDKLSF_Manager().QueryGDKLSF_JBZS(length);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<GDKLSF_JBZS>, GDKLSF_JBZS, List<GDKLSF_JBZS_Info>, GDKLSF_JBZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<GDKLSF_JBZS>, GDKLSF_JBZS, List<GDKLSF_JBZS_Info>, GDKLSF_JBZS_Info>(entityList, ref infoList,
                     () => { return new GDKLSF_JBZS_Info(); });
                 return infoList;
             });
@@ -90,7 +90,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<GDKLSF_DW1_Info>();
                 var entityList = new GDKLSF_Manager().QueryGDKLSF_DW1(length);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<GDKLSF_DW1>, GDKLSF_DW1, List<GDKLSF_DW1_Info>, GDKLSF_DW1_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<GDKLSF_DW1>, GDKLSF_DW1, List<GDKLSF_DW1_Info>, GDKLSF_DW1_Info>(entityList, ref infoList,
                     () => { return new GDKLSF_DW1_Info(); });
                 return infoList;
             });
@@ -109,7 +109,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<GDKLSF_DW2_Info>();
                 var entityList = new GDKLSF_Manager().QueryGDKLSF_DW2(length);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<GDKLSF_DW2>, GDKLSF_DW2, List<GDKLSF_DW2_Info>, GDKLSF_DW2_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<GDKLSF_DW2>, GDKLSF_DW2, List<GDKLSF_DW2_Info>, GDKLSF_DW2_Info>(entityList, ref infoList,
                     () => { return new GDKLSF_DW2_Info(); });
                 return infoList;
             });
@@ -128,7 +128,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<GDKLSF_DW3_Info>();
                 var entityList = new GDKLSF_Manager().QueryGDKLSF_DW3(length);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<GDKLSF_DW3>, GDKLSF_DW3, List<GDKLSF_DW3_Info>, GDKLSF_DW3_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<GDKLSF_DW3>, GDKLSF_DW3, List<GDKLSF_DW3_Info>, GDKLSF_DW3_Info>(entityList, ref infoList,
                     () => { return new GDKLSF_DW3_Info(); });
                 return infoList;
             });
@@ -147,7 +147,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<GDKLSF_DX_Info>();
                 var entityList = new GDKLSF_Manager().QueryGDKLSF_DX(length);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<GDKLSF_DX>, GDKLSF_DX, List<GDKLSF_DX_Info>, GDKLSF_DX_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<GDKLSF_DX>, GDKLSF_DX, List<GDKLSF_DX_Info>, GDKLSF_DX_Info>(entityList, ref infoList,
                     () => { return new GDKLSF_DX_Info(); });
                 return infoList;
             });
@@ -166,7 +166,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<GDKLSF_JO_Info>();
                 var entityList = new GDKLSF_Manager().QueryGDKLSF_JO(length);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<GDKLSF_JO>, GDKLSF_JO, List<GDKLSF_JO_Info>, GDKLSF_JO_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<GDKLSF_JO>, GDKLSF_JO, List<GDKLSF_JO_Info>, GDKLSF_JO_Info>(entityList, ref infoList,
                     () => { return new GDKLSF_JO_Info(); });
                 return infoList;
             });
@@ -185,7 +185,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<GDKLSF_ZH_Info>();
                 var entityList = new GDKLSF_Manager().QueryGDKLSF_ZH(length);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<GDKLSF_ZH>, GDKLSF_ZH, List<GDKLSF_ZH_Info>, GDKLSF_ZH_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<GDKLSF_ZH>, GDKLSF_ZH, List<GDKLSF_ZH_Info>, GDKLSF_ZH_Info>(entityList, ref infoList,
                     () => { return new GDKLSF_ZH_Info(); });
                 return infoList;
             });
@@ -927,7 +927,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
             var infoList = new List<GameWinNumber_Info>();
             var entityList = new GDKLSF_GameWinNumberManager().QueryGDKLSF_GameWinNumber(pageIndex, pageSize, out totalCount);
 
-            ObjectConvert.ConvertEntityListToInfoList<List<GDKLSF_GameWinNumber>, GDKLSF_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
+           ObjectConvert.ConvertEntityListToInfoList<List<GDKLSF_GameWinNumber>, GDKLSF_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
                 () => { return new GameWinNumber_Info(); },
                 (entity, info) =>
                 {
@@ -946,7 +946,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
             //    var infoList = new List<GameWinNumber_Info>();
             //    var entityList = new GDKLSF_GameWinNumberManager().QueryGDKLSF_GameWinNumber(pageIndex, pageSize, out totalCount);
 
-            //    ObjectConvert.ConvertEntityListToInfoList<List<GDKLSF_GameWinNumber>, GDKLSF_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
+            //   ObjectConvert.ConvertEntityListToInfoList<List<GDKLSF_GameWinNumber>, GDKLSF_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
             //        () => { return new GameWinNumber_Info(); },
             //        (entity, info) =>
             //        {
@@ -967,7 +967,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
             var infoList = new List<GameWinNumber_Info>();
             var entityList = new GDKLSF_GameWinNumberManager().QueryGDKLSF_GameWinNumber(startTime, endTime, pageIndex, pageSize, out totalCount);
 
-            ObjectConvert.ConvertEntityListToInfoList<List<GDKLSF_GameWinNumber>, GDKLSF_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
+           ObjectConvert.ConvertEntityListToInfoList<List<GDKLSF_GameWinNumber>, GDKLSF_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
                 () => { return new GameWinNumber_Info(); },
                 (entity, info) =>
                 {
@@ -987,7 +987,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
             var infoList = new List<GameWinNumber_Info>();
             var entityList = new GDKLSF_GameWinNumberManager().QueryGDKLSF_GameWinNumberDesc(startTime, endTime, pageIndex, pageSize, out totalCount);
 
-            ObjectConvert.ConvertEntityListToInfoList<List<GDKLSF_GameWinNumber>, GDKLSF_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
+           ObjectConvert.ConvertEntityListToInfoList<List<GDKLSF_GameWinNumber>, GDKLSF_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
                 () => { return new GameWinNumber_Info(); },
                 (entity, info) =>
                 {
@@ -1006,7 +1006,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
             var entity = manager.QueryWinNumber(issuseNumber);
             if (entity == null) return new GameWinNumber_Info();
             var info = new GameWinNumber_Info();
-            ObjectConvert.ConverEntityToInfo<GDKLSF_GameWinNumber, GameWinNumber_Info>(entity, ref info);
+           ObjectConvert.ConverEntityToInfo<GDKLSF_GameWinNumber, GameWinNumber_Info>(entity, ref info);
             return info;
         }
     }

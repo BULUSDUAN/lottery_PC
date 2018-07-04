@@ -1,10 +1,11 @@
-﻿using KaSon.FrameWork.Helper.分析器工厂;
+﻿using EntityModel.AnalyzerFactory;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-namespace KaSon.FrameWork.Helper
+namespace KaSon.FrameWork.Common
 {
     /// <summary>
     /// 前置条件断言，辅助类

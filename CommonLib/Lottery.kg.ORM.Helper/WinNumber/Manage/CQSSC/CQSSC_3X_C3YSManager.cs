@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
  
-using Lottery.Kg.ORM.Helper.WinNumber.Model;
+using EntityModel;
 
-namespace Lottery.Kg.ORM.Helper.WinNumber.Manage
+namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
 {
     public class CQSSC_3X_C3YSManager : DBbase
     {

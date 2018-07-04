@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace Lottery.Kg.ORM.Helper
+namespace KaSon.FrameWork.ORM.Helper
 {
 
   

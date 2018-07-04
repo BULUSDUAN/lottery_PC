@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Lottery.Kg.ORM.Helper.WinNumber.Model
+namespace KaSon.FrameWork.ORM.Helper.WinNumber.Model
 {
     public class YDJ11_XTZS : ImportBase
     {

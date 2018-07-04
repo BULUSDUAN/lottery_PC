@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EntityModel.CoreModel;
-using KaSon.FrameWork.Helper;
-using Lottery.Kg.ORM.Helper.WinNumber.Manage;
-using Lottery.Kg.ORM.Helper.WinNumber.Model;
-using Lottery.Kg.ORM.Helper.WinNumber.ModelCollection;
+using KaSon.FrameWork.Common;
+using KaSon.FrameWork.ORM.Helper.WinNumber.Manage;
+using EntityModel;
+using KaSon.FrameWork.ORM.Helper.WinNumber.ModelCollection;
 
-namespace Lottery.Kg.ORM.Helper.WinNumber
+namespace KaSon.FrameWork.ORM.Helper.WinNumber
 {
     public class LotteryDataBusiness_DF6_1 : LotteryDataBusiness, ILotteryDataBusiness
     {
@@ -524,7 +524,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<DF6_1_DXZS_Info>();
                 var entityList = new DF6_1_DXZSManager().QueryDF6_1_DXZS(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<DF6_1_DXZS>, DF6_1_DXZS, List<DF6_1_DXZS_Info>, DF6_1_DXZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<DF6_1_DXZS>, DF6_1_DXZS, List<DF6_1_DXZS_Info>, DF6_1_DXZS_Info>(entityList, ref infoList,
                     () => { return new DF6_1_DXZS_Info(); },
                     (entity, info) =>
                     {
@@ -544,7 +544,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<DF6_1_HZZS_Info>();
                 var entityList = new DF6_1_HZZSManager().QueryDF6_1_HZZS(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<DF6_1_HZZS>, DF6_1_HZZS, List<DF6_1_HZZS_Info>, DF6_1_HZZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<DF6_1_HZZS>, DF6_1_HZZS, List<DF6_1_HZZS_Info>, DF6_1_HZZS_Info>(entityList, ref infoList,
                     () => { return new DF6_1_HZZS_Info(); },
                     (entity, info) =>
                     {
@@ -564,7 +564,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<DF6_1_JBZS_Info>();
                 var entityList = new DF6_1_JBZSManager().QueryDF6_1_JBZS(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<DF6_1_JBZS>, DF6_1_JBZS, List<DF6_1_JBZS_Info>, DF6_1_JBZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<DF6_1_JBZS>, DF6_1_JBZS, List<DF6_1_JBZS_Info>, DF6_1_JBZS_Info>(entityList, ref infoList,
                     () => { return new DF6_1_JBZS_Info(); },
                     (entity, info) =>
                     {
@@ -584,7 +584,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<DF6_1_JOZS_Info>();
                 var entityList = new DF6_1_JOZSManager().QueryDF6_1_JOZS(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<DF6_1_JOZS>, DF6_1_JOZS, List<DF6_1_JOZS_Info>, DF6_1_JOZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<DF6_1_JOZS>, DF6_1_JOZS, List<DF6_1_JOZS_Info>, DF6_1_JOZS_Info>(entityList, ref infoList,
                     () => { return new DF6_1_JOZS_Info(); },
                     (entity, info) =>
                     {
@@ -604,7 +604,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<DF6_1_KDZS_Info>();
                 var entityList = new DF6_1_KDZSManager().QueryDF6_1_KDZS(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<DF6_1_KDZS>, DF6_1_KDZS, List<DF6_1_KDZS_Info>, DF6_1_KDZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<DF6_1_KDZS>, DF6_1_KDZS, List<DF6_1_KDZS_Info>, DF6_1_KDZS_Info>(entityList, ref infoList,
                     () => { return new DF6_1_KDZS_Info(); },
                     (entity, info) =>
                     {
@@ -624,7 +624,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<DF6_1_ZHZS_Info>();
                 var entityList = new DF6_1_ZHZSManager().QueryDF6_1_ZHZS(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<DF6_1_ZHZS>, DF6_1_ZHZS, List<DF6_1_ZHZS_Info>, DF6_1_ZHZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<DF6_1_ZHZS>, DF6_1_ZHZS, List<DF6_1_ZHZS_Info>, DF6_1_ZHZS_Info>(entityList, ref infoList,
                     () => { return new DF6_1_ZHZS_Info(); },
                     (entity, info) =>
                     {
@@ -648,7 +648,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
             var infoList = new List<GameWinNumber_Info>();
             var entityList = new DF6_1_GameWinNumberManager().QueryDF6_1_GameWinNumber(pageIndex, pageSize, out totalCount);
 
-            ObjectConvert.ConvertEntityListToInfoList<List<DF6_1_GameWinNumber>, DF6_1_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
+           ObjectConvert.ConvertEntityListToInfoList<List<DF6_1_GameWinNumber>, DF6_1_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
                 () => { return new GameWinNumber_Info(); },
                 (entity, info) =>
                 {
@@ -667,7 +667,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
             //    var infoList = new List<GameWinNumber_Info>();
             //    var entityList = new DF6_1_GameWinNumberManager().QueryDF6_1_GameWinNumber(pageIndex, pageSize, out totalCount);
 
-            //    ObjectConvert.ConvertEntityListToInfoList<List<DF6_1_GameWinNumber>, DF6_1_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
+            //   ObjectConvert.ConvertEntityListToInfoList<List<DF6_1_GameWinNumber>, DF6_1_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
             //        () => { return new GameWinNumber_Info(); },
             //        (entity, info) =>
             //        {
@@ -686,7 +686,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
             var entity = manager.QueryWinNumber(issuseNumber);
             if (entity == null) return new GameWinNumber_Info();
             var info = new GameWinNumber_Info();
-            ObjectConvert.ConverEntityToInfo<DF6_1_GameWinNumber, GameWinNumber_Info>(entity, ref info);
+           ObjectConvert.ConverEntityToInfo<DF6_1_GameWinNumber, GameWinNumber_Info>(entity, ref info);
             return info;
         }
     }

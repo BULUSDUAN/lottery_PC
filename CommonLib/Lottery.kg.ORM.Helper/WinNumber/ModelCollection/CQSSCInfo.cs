@@ -1,10 +1,10 @@
-﻿using Lottery.Kg.ORM.Helper.WinNumber.ModelCollection;
+﻿using KaSon.FrameWork.ORM.Helper.WinNumber.ModelCollection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Lottery.Kg.ORM.Helper.WinNumber.ModelCollection
+namespace KaSon.FrameWork.ORM.Helper.WinNumber.ModelCollection
 {
     /// <summary>
     /// 重庆1星走势

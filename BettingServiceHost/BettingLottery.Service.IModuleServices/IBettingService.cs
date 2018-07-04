@@ -37,7 +37,7 @@ namespace BettingLottery.Service.IModuleServices
        // Task<UserModel> GetUser(UserModel user);
 
         [Service(Date = "2018-5-15", Director = "kason", Name = "获取用户列表")]
-        Task<List<User>> Betting(string userName);
+        Task<List<object>> Betting(string userName);
         //GetUserListBy
     
     }

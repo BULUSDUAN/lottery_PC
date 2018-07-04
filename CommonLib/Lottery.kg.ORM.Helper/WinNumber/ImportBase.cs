@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Lottery.Kg.ORM.Helper.WinNumber
+namespace KaSon.FrameWork.ORM.Helper.WinNumber
 {
     public class ImportBase
     {

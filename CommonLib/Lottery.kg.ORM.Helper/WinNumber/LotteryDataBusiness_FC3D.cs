@@ -1,15 +1,15 @@
 ﻿using EntityModel.CoreModel;
-using KaSon.FrameWork.Helper;
-using KaSon.FrameWork.Helper.分析器工厂;
-using Lottery.Kg.ORM.Helper.WinNumber.Manage;
-using Lottery.Kg.ORM.Helper.WinNumber.Model;
-using Lottery.Kg.ORM.Helper.WinNumber.ModelCollection;
+using KaSon.FrameWork.Common;
+
+using KaSon.FrameWork.ORM.Helper.WinNumber.Manage;
+using EntityModel;
+using KaSon.FrameWork.ORM.Helper.WinNumber.ModelCollection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Lottery.Kg.ORM.Helper.WinNumber
+namespace KaSon.FrameWork.ORM.Helper.WinNumber
 {
     /// <summary>
     /// 福彩3D
@@ -31,7 +31,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
             if (string.IsNullOrEmpty(winNumber)) return;
 
             var msg = string.Empty;
-            AnalyzerFactory.GetWinNumberAnalyzer(this.CurrentGameCode).CheckWinNumber(winNumber, out msg);
+            AnalyzerFactory.AnalyzerFactory.GetWinNumberAnalyzer(this.CurrentGameCode).CheckWinNumber(winNumber, out msg);
             if (!string.IsNullOrEmpty(msg))
                 throw new Exception(msg);
 
@@ -1493,7 +1493,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<FC3D_KuaDu_Z_Info>();
                 var entityList = new FC3D_KuaDu_ZManager().QueryFC3D_KuaDu_Z(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<FC3D_KuaDu_Z>, FC3D_KuaDu_Z, List<FC3D_KuaDu_Z_Info>, FC3D_KuaDu_Z_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<FC3D_KuaDu_Z>, FC3D_KuaDu_Z, List<FC3D_KuaDu_Z_Info>, FC3D_KuaDu_Z_Info>(entityList, ref infoList,
                     () => { return new FC3D_KuaDu_Z_Info(); },
                     (entity, info) =>
                     {
@@ -1517,7 +1517,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<FC3D_KuaDu_12_Info>();
                 var entityList = new FC3D_KuaDu_12Manager().QueryFC3D_KuaDu_12(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<FC3D_KuaDu_12>, FC3D_KuaDu_12, List<FC3D_KuaDu_12_Info>, FC3D_KuaDu_12_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<FC3D_KuaDu_12>, FC3D_KuaDu_12, List<FC3D_KuaDu_12_Info>, FC3D_KuaDu_12_Info>(entityList, ref infoList,
                     () => { return new FC3D_KuaDu_12_Info(); },
                     (entity, info) =>
                     {
@@ -1541,7 +1541,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<FC3D_KuaDu_23_Info>();
                 var entityList = new FC3D_KuaDu_23Manager().QueryFC3D_KuaDu_23(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<FC3D_KuaDu_23>, FC3D_KuaDu_23, List<FC3D_KuaDu_23_Info>, FC3D_KuaDu_23_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<FC3D_KuaDu_23>, FC3D_KuaDu_23, List<FC3D_KuaDu_23_Info>, FC3D_KuaDu_23_Info>(entityList, ref infoList,
                     () => { return new FC3D_KuaDu_23_Info(); },
                     (entity, info) =>
                     {
@@ -1565,7 +1565,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<FC3D_KuaDu_13_Info>();
                 var entityList = new FC3D_KuaDu_13Manager().QueryFC3D_KuaDu_13(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<FC3D_KuaDu_13>, FC3D_KuaDu_13, List<FC3D_KuaDu_13_Info>, FC3D_KuaDu_13_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<FC3D_KuaDu_13>, FC3D_KuaDu_13, List<FC3D_KuaDu_13_Info>, FC3D_KuaDu_13_Info>(entityList, ref infoList,
                     () => { return new FC3D_KuaDu_13_Info(); },
                     (entity, info) =>
                     {
@@ -1589,7 +1589,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<FC3D_HZZS_Info>();
                 var entityList = new FC3D_HZZSManager().QueryFC3D_HZZS(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<FC3D_HZZS>, FC3D_HZZS, List<FC3D_HZZS_Info>, FC3D_HZZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<FC3D_HZZS>, FC3D_HZZS, List<FC3D_HZZS_Info>, FC3D_HZZS_Info>(entityList, ref infoList,
                     () => { return new FC3D_HZZS_Info(); },
                     (entity, info) =>
                     {
@@ -1613,7 +1613,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<FC3D_HZTZ_Info>();
                 var entityList = new FC3D_HZTZManager().QueryFC3D_HZTZ(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<FC3D_HZTZ>, FC3D_HZTZ, List<FC3D_HZTZ_Info>, FC3D_HZTZ_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<FC3D_HZTZ>, FC3D_HZTZ, List<FC3D_HZTZ_Info>, FC3D_HZTZ_Info>(entityList, ref infoList,
                     () => { return new FC3D_HZTZ_Info(); },
                     (entity, info) =>
                     {
@@ -1637,7 +1637,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<FC3D_HZFB_Info>();
                 var entityList = new FC3D_HZFBManager().QueryFC3D_HZFB(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<FC3D_HZFB>, FC3D_HZFB, List<FC3D_HZFB_Info>, FC3D_HZFB_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<FC3D_HZFB>, FC3D_HZFB, List<FC3D_HZFB_Info>, FC3D_HZFB_Info>(entityList, ref infoList,
                     () => { return new FC3D_HZFB_Info(); },
                     (entity, info) =>
                     {
@@ -1661,7 +1661,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<FC3D_Chu33_Info>();
                 var entityList = new FC3D_Chu33Manager().QueryFC3D_Chu33(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<FC3D_Chu33>, FC3D_Chu33, List<FC3D_Chu33_Info>, FC3D_Chu33_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<FC3D_Chu33>, FC3D_Chu33, List<FC3D_Chu33_Info>, FC3D_Chu33_Info>(entityList, ref infoList,
                     () => { return new FC3D_Chu33_Info(); },
                     (entity, info) =>
                     {
@@ -1685,7 +1685,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<FC3D_Chu32_Info>();
                 var entityList = new FC3D_Chu32Manager().QueryFC3D_Chu32(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<FC3D_Chu32>, FC3D_Chu32, List<FC3D_Chu32_Info>, FC3D_Chu32_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<FC3D_Chu32>, FC3D_Chu32, List<FC3D_Chu32_Info>, FC3D_Chu32_Info>(entityList, ref infoList,
                     () => { return new FC3D_Chu32_Info(); },
                     (entity, info) =>
                     {
@@ -1709,7 +1709,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<FC3D_Chu31_Info>();
                 var entityList = new FC3D_Chu31Manager().QueryFC3D_Chu31(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<FC3D_Chu31>, FC3D_Chu31, List<FC3D_Chu31_Info>, FC3D_Chu31_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<FC3D_Chu31>, FC3D_Chu31, List<FC3D_Chu31_Info>, FC3D_Chu31_Info>(entityList, ref infoList,
                     () => { return new FC3D_Chu31_Info(); },
                     (entity, info) =>
                     {
@@ -1733,7 +1733,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<FC3D_ZHHM_Info>();
                 var entityList = new FC3D_ZHHMManager().QueryFC3D_ZHHM(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<FC3D_ZHHM>, FC3D_ZHHM, List<FC3D_ZHHM_Info>, FC3D_ZHHM_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<FC3D_ZHHM>, FC3D_ZHHM, List<FC3D_ZHHM_Info>, FC3D_ZHHM_Info>(entityList, ref infoList,
                     () => { return new FC3D_ZHHM_Info(); },
                     (entity, info) =>
                     {
@@ -1757,7 +1757,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<FC3D_ZHXT_Info>();
                 var entityList = new FC3D_ZHXTManager().QueryFC3D_ZHXT(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<FC3D_ZHXT>, FC3D_ZHXT, List<FC3D_ZHXT_Info>, FC3D_ZHXT_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<FC3D_ZHXT>, FC3D_ZHXT, List<FC3D_ZHXT_Info>, FC3D_ZHXT_Info>(entityList, ref infoList,
                     () => { return new FC3D_ZHXT_Info(); },
                     (entity, info) =>
                     {
@@ -1781,7 +1781,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<FC3D_JOHM_Info>();
                 var entityList = new FC3D_JOHMManager().QueryFC3D_JOHM(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<FC3D_JOHM>, FC3D_JOHM, List<FC3D_JOHM_Info>, FC3D_JOHM_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<FC3D_JOHM>, FC3D_JOHM, List<FC3D_JOHM_Info>, FC3D_JOHM_Info>(entityList, ref infoList,
                     () => { return new FC3D_JOHM_Info(); },
                     (entity, info) =>
                     {
@@ -1805,7 +1805,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<FC3D_JOXT_Info>();
                 var entityList = new FC3D_JOXTManager().QueryFC3D_JOXT(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<FC3D_JOXT>, FC3D_JOXT, List<FC3D_JOXT_Info>, FC3D_JOXT_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<FC3D_JOXT>, FC3D_JOXT, List<FC3D_JOXT_Info>, FC3D_JOXT_Info>(entityList, ref infoList,
                     () => { return new FC3D_JOXT_Info(); },
                     (entity, info) =>
                     {
@@ -1829,7 +1829,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<FC3D_DXHM_Info>();
                 var entityList = new FC3D_DXHMManager().QueryFC3D_DXHM(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<FC3D_DXHM>, FC3D_DXHM, List<FC3D_DXHM_Info>, FC3D_DXHM_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<FC3D_DXHM>, FC3D_DXHM, List<FC3D_DXHM_Info>, FC3D_DXHM_Info>(entityList, ref infoList,
                     () => { return new FC3D_DXHM_Info(); },
                     (entity, info) =>
                     {
@@ -1853,7 +1853,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<FC3D_DXXT_Info>();
                 var entityList = new FC3D_DXXTManager().QueryFC3D_DXXT(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<FC3D_DXXT>, FC3D_DXXT, List<FC3D_DXXT_Info>, FC3D_DXXT_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<FC3D_DXXT>, FC3D_DXXT, List<FC3D_DXXT_Info>, FC3D_DXXT_Info>(entityList, ref infoList,
                     () => { return new FC3D_DXXT_Info(); },
                     (entity, info) =>
                     {
@@ -1877,7 +1877,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<FC3D_ZuXuanZouSi_Info>();
                 var entityList = new FC3D_ZuXuanZouSiManager().QueryFC3D_ZuXuanZouSi(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<FC3D_ZuXuanZouSi>, FC3D_ZuXuanZouSi, List<FC3D_ZuXuanZouSi_Info>, FC3D_ZuXuanZouSi_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<FC3D_ZuXuanZouSi>, FC3D_ZuXuanZouSi, List<FC3D_ZuXuanZouSi_Info>, FC3D_ZuXuanZouSi_Info>(entityList, ref infoList,
                     () => { return new FC3D_ZuXuanZouSi_Info(); },
                     (entity, info) =>
                     {
@@ -1901,7 +1901,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<FC3D_ZhiXuanZouSi_Info>();
                 var entityList = new FC3D_ZhiXuanZouSiManager().QueryFC3D_ZhiXuanZouSi(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<FC3D_ZhiXuanZouSi>, FC3D_ZhiXuanZouSi, List<FC3D_ZhiXuanZouSi_Info>, FC3D_ZhiXuanZouSi_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<FC3D_ZhiXuanZouSi>, FC3D_ZhiXuanZouSi, List<FC3D_ZhiXuanZouSi_Info>, FC3D_ZhiXuanZouSi_Info>(entityList, ref infoList,
                     () => { return new FC3D_ZhiXuanZouSi_Info(); },
                     (entity, info) =>
                     {
@@ -1926,7 +1926,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
             var infoList = new List<GameWinNumber_Info>();
             var entityList = new FC3D_GameWinNumberManager().QueryFC3D_GameWinNumber(pageIndex, pageSize, out totalCount);
 
-            ObjectConvert.ConvertEntityListToInfoList<List<FC3D_GameWinNumber>, FC3D_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
+           ObjectConvert.ConvertEntityListToInfoList<List<FC3D_GameWinNumber>, FC3D_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
                 () => { return new GameWinNumber_Info(); },
                 (entity, info) =>
                 {
@@ -1945,7 +1945,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
             //    var infoList = new List<GameWinNumber_Info>();
             //    var entityList = new FC3D_GameWinNumberManager().QueryFC3D_GameWinNumber(pageIndex, pageSize, out totalCount);
 
-            //    ObjectConvert.ConvertEntityListToInfoList<List<FC3D_GameWinNumber>, FC3D_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
+            //   ObjectConvert.ConvertEntityListToInfoList<List<FC3D_GameWinNumber>, FC3D_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
             //        () => { return new GameWinNumber_Info(); },
             //        (entity, info) =>
             //        {
@@ -1964,7 +1964,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
             var infoList = new List<GameWinNumber_Info>();
             var entityList = new FC3D_GameWinNumberManager().QueryFC3D_GameWinNumber(startTime, endTime, pageIndex, pageSize, out totalCount);
 
-            ObjectConvert.ConvertEntityListToInfoList<List<FC3D_GameWinNumber>, FC3D_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
+           ObjectConvert.ConvertEntityListToInfoList<List<FC3D_GameWinNumber>, FC3D_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
                 () => { return new GameWinNumber_Info(); },
                 (entity, info) =>
                 {
@@ -1983,7 +1983,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
             //    var infoList = new List<GameWinNumber_Info>();
             //    var entityList = new FC3D_GameWinNumberManager().QueryFC3D_GameWinNumber(startTime, endTime, pageIndex, pageSize, out totalCount);
 
-            //    ObjectConvert.ConvertEntityListToInfoList<List<FC3D_GameWinNumber>, FC3D_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
+            //   ObjectConvert.ConvertEntityListToInfoList<List<FC3D_GameWinNumber>, FC3D_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
             //        () => { return new GameWinNumber_Info(); },
             //        (entity, info) =>
             //        {
@@ -2002,7 +2002,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
             var entity = manager.QueryWinNumber(issuseNumber);
             if (entity == null) return new GameWinNumber_Info();
             var info = new GameWinNumber_Info();
-            ObjectConvert.ConverEntityToInfo<FC3D_GameWinNumber, GameWinNumber_Info>(entity, ref info);
+           ObjectConvert.ConverEntityToInfo<FC3D_GameWinNumber, GameWinNumber_Info>(entity, ref info);
             return info;
         }
     }

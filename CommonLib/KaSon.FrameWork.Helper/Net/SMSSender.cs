@@ -5,7 +5,7 @@ using System.Text;
 using System.Xml;
 using Common.Net.SMS;
 using System.Text.RegularExpressions;
-using KaSon.FrameWork.Helper.Net;
+using KaSon.FrameWork.Entity.Helper.Net;
 
 namespace Common.Net.SMS
 {

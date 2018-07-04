@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EntityModel.CoreModel;
-using KaSon.FrameWork.Helper;
-using KaSon.FrameWork.Helper.分析器工厂;
-using Lottery.Kg.ORM.Helper.WinNumber.Manage;
-using Lottery.Kg.ORM.Helper.WinNumber.Model;
-using Lottery.Kg.ORM.Helper.WinNumber.ModelCollection;
-namespace Lottery.Kg.ORM.Helper.WinNumber
+using KaSon.FrameWork.Common;
+
+using KaSon.FrameWork.ORM.Helper.WinNumber.Manage;
+using EntityModel;
+using KaSon.FrameWork.ORM.Helper.WinNumber.ModelCollection;
+namespace KaSon.FrameWork.ORM.Helper.WinNumber
 {
     /// <summary>
     /// 山东快乐扑克3
@@ -26,7 +26,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
             if (string.IsNullOrEmpty(winNumber)) return;
 
             var msg = string.Empty;
-            AnalyzerFactory.GetWinNumberAnalyzer(this.CurrentGameCode).CheckWinNumber(winNumber, out msg);
+            AnalyzerFactory.AnalyzerFactory.GetWinNumberAnalyzer(this.CurrentGameCode).CheckWinNumber(winNumber, out msg);
             if (!string.IsNullOrEmpty(msg))
                 throw new Exception(msg);
 
@@ -74,7 +74,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<SDKLPK3_JBZS_Info>();
                 var entityList = new SDKLPK3_Manager().QuerySDKLPK3_JBZS_Info(length);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<SDKLPK3_JBZS>, SDKLPK3_JBZS, List<SDKLPK3_JBZS_Info>, SDKLPK3_JBZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<SDKLPK3_JBZS>, SDKLPK3_JBZS, List<SDKLPK3_JBZS_Info>, SDKLPK3_JBZS_Info>(entityList, ref infoList,
                     () => { return new SDKLPK3_JBZS_Info(); });
                 return infoList;
             });
@@ -93,7 +93,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<SDKLPK3_ZHXZS_Info>();
                 var entityList = new SDKLPK3_Manager().QuerySDKLPK3_ZHXZS_Info(length);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<SDKLPK3_ZHXZS>, SDKLPK3_ZHXZS, List<SDKLPK3_ZHXZS_Info>, SDKLPK3_ZHXZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<SDKLPK3_ZHXZS>, SDKLPK3_ZHXZS, List<SDKLPK3_ZHXZS_Info>, SDKLPK3_ZHXZS_Info>(entityList, ref infoList,
                     () => { return new SDKLPK3_ZHXZS_Info(); });
                 return infoList;
             });
@@ -112,7 +112,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<SDKLPK3_HSZS_Info>();
                 var entityList = new SDKLPK3_Manager().QuerySDKLPK3_HSZS_Info(length);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<SDKLPK3_HSZS>, SDKLPK3_HSZS, List<SDKLPK3_HSZS_Info>, SDKLPK3_HSZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<SDKLPK3_HSZS>, SDKLPK3_HSZS, List<SDKLPK3_HSZS_Info>, SDKLPK3_HSZS_Info>(entityList, ref infoList,
                     () => { return new SDKLPK3_HSZS_Info(); });
                 return infoList;
             });
@@ -131,7 +131,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<SDKLPK3_DXZS_Info>();
                 var entityList = new SDKLPK3_Manager().QuerySDKLPK3_DXZS_Info(length);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<SDKLPK3_DXZS>, SDKLPK3_DXZS, List<SDKLPK3_DXZS_Info>, SDKLPK3_DXZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<SDKLPK3_DXZS>, SDKLPK3_DXZS, List<SDKLPK3_DXZS_Info>, SDKLPK3_DXZS_Info>(entityList, ref infoList,
                     () => { return new SDKLPK3_DXZS_Info(); });
                 return infoList;
             });
@@ -150,7 +150,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<SDKLPK3_JOZS_Info>();
                 var entityList = new SDKLPK3_Manager().QuerySDKLPK3_JOZS_Info(length);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<SDKLPK3_JOZS>, SDKLPK3_JOZS, List<SDKLPK3_JOZS_Info>, SDKLPK3_JOZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<SDKLPK3_JOZS>, SDKLPK3_JOZS, List<SDKLPK3_JOZS_Info>, SDKLPK3_JOZS_Info>(entityList, ref infoList,
                     () => { return new SDKLPK3_JOZS_Info(); });
                 return infoList;
             });
@@ -169,7 +169,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<SDKLPK3_ZHZS_Info>();
                 var entityList = new SDKLPK3_Manager().QuerySDKLPK3_ZHZS_Info(length);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<SDKLPK3_ZHZS>, SDKLPK3_ZHZS, List<SDKLPK3_ZHZS_Info>, SDKLPK3_ZHZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<SDKLPK3_ZHZS>, SDKLPK3_ZHZS, List<SDKLPK3_ZHZS_Info>, SDKLPK3_ZHZS_Info>(entityList, ref infoList,
                     () => { return new SDKLPK3_ZHZS_Info(); });
                 return infoList;
             });
@@ -188,7 +188,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<SDKLPK3_C3YZS_Info>();
                 var entityList = new SDKLPK3_Manager().QuerySDKLPK3_C3YZS_Info(length);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<SDKLPK3_C3YZS>, SDKLPK3_C3YZS, List<SDKLPK3_C3YZS_Info>, SDKLPK3_C3YZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<SDKLPK3_C3YZS>, SDKLPK3_C3YZS, List<SDKLPK3_C3YZS_Info>, SDKLPK3_C3YZS_Info>(entityList, ref infoList,
                     () => { return new SDKLPK3_C3YZS_Info(); });
                 return infoList;
             });
@@ -207,7 +207,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<SDKLPK3_HZZS_Info>();
                 var entityList = new SDKLPK3_Manager().QuerySDKLPK3_HZZS_Info(length);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<SDKLPK3_HZZS>, SDKLPK3_HZZS, List<SDKLPK3_HZZS_Info>, SDKLPK3_HZZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<SDKLPK3_HZZS>, SDKLPK3_HZZS, List<SDKLPK3_HZZS_Info>, SDKLPK3_HZZS_Info>(entityList, ref infoList,
                     () => { return new SDKLPK3_HZZS_Info(); });
                 return infoList;
             });
@@ -226,7 +226,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<SDKLPK3_LXZS_Info>();
                 var entityList = new SDKLPK3_Manager().QuerySDKLPK3_LXZS_Info(length);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<SDKLPK3_LXZS>, SDKLPK3_LXZS, List<SDKLPK3_LXZS_Info>, SDKLPK3_LXZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<SDKLPK3_LXZS>, SDKLPK3_LXZS, List<SDKLPK3_LXZS_Info>, SDKLPK3_LXZS_Info>(entityList, ref infoList,
                     () => { return new SDKLPK3_LXZS_Info(); });
                 return infoList;
             });
@@ -800,7 +800,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
             var infoList = new List<GameWinNumber_Info>();
             var entityList = new SDKLPK3_GameWinNumberManager().QuerySDKLPK3_GameWinNumber(pageIndex, pageSize, out totalCount);
 
-            ObjectConvert.ConvertEntityListToInfoList<List<SDKLPK3_GameWinNumber>, SDKLPK3_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
+           ObjectConvert.ConvertEntityListToInfoList<List<SDKLPK3_GameWinNumber>, SDKLPK3_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
                 () => { return new GameWinNumber_Info(); },
                 (entity, info) =>
                 {
@@ -820,7 +820,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
             var infoList = new List<GameWinNumber_Info>();
             var entityList = new SDKLPK3_GameWinNumberManager().QuerySDKLPK3_GameWinNumber(startTime, endTime, pageIndex, pageSize, out totalCount);
 
-            ObjectConvert.ConvertEntityListToInfoList<List<SDKLPK3_GameWinNumber>, SDKLPK3_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
+           ObjectConvert.ConvertEntityListToInfoList<List<SDKLPK3_GameWinNumber>, SDKLPK3_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
                 () => { return new GameWinNumber_Info(); },
                 (entity, info) =>
                 {
@@ -839,7 +839,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
             var infoList = new List<GameWinNumber_Info>();
             var entityList = new SDKLPK3_GameWinNumberManager().QuerySDKLPK3_GameWinNumberDesc(startTime, endTime, pageIndex, pageSize, out totalCount);
 
-            ObjectConvert.ConvertEntityListToInfoList<List<SDKLPK3_GameWinNumber>, SDKLPK3_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
+           ObjectConvert.ConvertEntityListToInfoList<List<SDKLPK3_GameWinNumber>, SDKLPK3_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
                 () => { return new GameWinNumber_Info(); },
                 (entity, info) =>
                 {
@@ -857,7 +857,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
             var entity = manager.QueryWinNumber(issuseNumber);
             if (entity == null) return new GameWinNumber_Info();
             var info = new GameWinNumber_Info();
-            ObjectConvert.ConverEntityToInfo<SDKLPK3_GameWinNumber, GameWinNumber_Info>(entity, ref info);
+           ObjectConvert.ConverEntityToInfo<SDKLPK3_GameWinNumber, GameWinNumber_Info>(entity, ref info);
             return info;
         }
     }

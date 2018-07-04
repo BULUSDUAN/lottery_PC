@@ -1,9 +1,10 @@
-﻿using System;
+﻿using EntityModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Lottery.Kg.ORM.Helper.WinNumber.Model;
-namespace Lottery.Kg.ORM.Helper.WinNumber.Manage
+
+namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
 {
     public class CQ11X5_CHZSManager : DBbase
     {

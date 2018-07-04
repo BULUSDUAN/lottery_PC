@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Lottery.Kg.ORM.Helper
+namespace KaSon.FrameWork.ORM.Helper
 {
    public class CacheDataBusiness:DBbase
     {

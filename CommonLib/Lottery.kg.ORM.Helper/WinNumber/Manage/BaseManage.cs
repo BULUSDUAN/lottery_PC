@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 /// <summary>
 /// 没测试
 /// </summary>
-namespace Lottery.Kg.ORM.Helper.WinNumber.Manage
+namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
 {
    public class BaseManage<T>: DBbase where T :class,new() 
     {

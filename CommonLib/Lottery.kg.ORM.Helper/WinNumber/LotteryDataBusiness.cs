@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using EntityModel.CoreModel;
-using Lottery.Kg.ORM.Helper.WinNumber.Model;
-namespace Lottery.Kg.ORM.Helper.WinNumber
+
+namespace KaSon.FrameWork.ORM.Helper.WinNumber
 {
     public abstract class LotteryDataBusiness:DBbase
     {
-        public T CreateNewEntity<T>(Dictionary<string, object> specialProperty, Func<PropertyInfo, object> callBack) where T : ImportBase
+        public T CreateNewEntity<T>(Dictionary<string, object> specialProperty, Func<PropertyInfo, object> callBack) //where T : ImportBase
         {
             var entity = Activator.CreateInstance<T>();
             var currentType = typeof(T);
@@ -26,6 +26,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
 
             return entity;
         }
+       
 
         private static Dictionary<string, object> _cacheGameChart = new Dictionary<string, object>();
         public List<T> QueryGameChart<T>(string key, Func<List<T>> doQuery) where T : class

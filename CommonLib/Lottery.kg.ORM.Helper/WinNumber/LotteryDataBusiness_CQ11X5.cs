@@ -1,14 +1,15 @@
-﻿using Lottery.Kg.ORM.Helper.WinNumber.Model;
-using KaSon.FrameWork.Helper;
-using Lottery.Kg.ORM.Helper.WinNumber.Manage;
-using Lottery.Kg.ORM.Helper.WinNumber.ModelCollection;
+﻿
+using KaSon.FrameWork.Common;
+using KaSon.FrameWork.ORM.Helper.WinNumber.Manage;
+using KaSon.FrameWork.ORM.Helper.WinNumber.ModelCollection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EntityModel.CoreModel;
+using EntityModel;
 
-namespace Lottery.Kg.ORM.Helper.WinNumber
+namespace KaSon.FrameWork.ORM.Helper.WinNumber
 {
     public class LotteryDataBusiness_CQ11X5 : LotteryDataBusiness, ILotteryDataBusiness
     {
@@ -86,7 +87,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
             var exist = manager.QueryWinNumber(issuseNumber);
             if (exist != null) return;
 
-            manager.AddCQ11X5_GameWinNumber(new CQ11X5_GameWinNumber
+            manager.AddCQ11X5_GameWinNumber(new EntityModel.CQ11X5_GameWinNumber
             {
                 GameCode = this.CurrentGameCode,
                 IssuseNumber = issuseNumber,
@@ -699,7 +700,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
             dic.Add("Red_34567", (winRed.Contains("03") && winRed.Contains("04") && winRed.Contains("05") && winRed.Contains("06") && winRed.Contains("07")) ? 0 : (last == null ? 1 : last.Red_34567 + 1));
             dic.Add("Red_45678", (winRed.Contains("04") && winRed.Contains("05") && winRed.Contains("06") && winRed.Contains("07") && winRed.Contains("08")) ? 0 : (last == null ? 1 : last.Red_45678 + 1));
             dic.Add("Red_56789", (winRed.Contains("05") && winRed.Contains("06") && winRed.Contains("07") && winRed.Contains("08") && winRed.Contains("09")) ? 0 : (last == null ? 1 : last.Red_56789 + 1));
-            dic.Add("Red_678910", (winRed.Contains("06") && winRed.Contains("07") && winRed.Contains("08") && winRed.Contains("09") && winRed.Contains("10")) ? 0 : (last == null ? 1 : last.Red_678910 + 1));
+            dic.Add("Red_678910", (winRed.Contains("06") && winRed.Contains("07") && winRed.Contains("08") && winRed.Contains("09") && winRed.Contains("10")) ? 0 : (last == null ? 1 : last.Red_678911 + 1));
             dic.Add("Red_7891011", (winRed.Contains("07") && winRed.Contains("08") && winRed.Contains("09") && winRed.Contains("10") && winRed.Contains("11")) ? 0 : (last == null ? 1 : last.Red_7891011 + 1));
             var entity = this.CreateNewEntity<CQ11X5_DLZS>(dic, (p) =>
             {
@@ -1195,7 +1196,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<CQ11X5_012DWZS_Info>();
                 var entityList = new CQ11X5_012DWZSManager().QueryCQ11X5_012DWZS(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_012DWZS>, CQ11X5_012DWZS, List<CQ11X5_012DWZS_Info>, CQ11X5_012DWZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_012DWZS>, CQ11X5_012DWZS, List<CQ11X5_012DWZS_Info>, CQ11X5_012DWZS_Info>(entityList, ref infoList,
                     () => { return new CQ11X5_012DWZS_Info(); },
                     (entity, info) =>
                     {
@@ -1215,7 +1216,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<CQ11X5_012LZZS_Info>();
                 var entityList = new CQ11X5_012LZZSManager().QueryCQ11X5_012LZZS(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_012LZZS>, CQ11X5_012LZZS, List<CQ11X5_012LZZS_Info>, CQ11X5_012LZZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_012LZZS>, CQ11X5_012LZZS, List<CQ11X5_012LZZS_Info>, CQ11X5_012LZZS_Info>(entityList, ref infoList,
                     () => { return new CQ11X5_012LZZS_Info(); },
                     (entity, info) =>
                     {
@@ -1235,7 +1236,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<CQ11X5_2LZS_Info>();
                 var entityList = new CQ11X5_2LZSManager().QueryCQ11X5_2LZS(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_2LZS>, CQ11X5_2LZS, List<CQ11X5_2LZS_Info>, CQ11X5_2LZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_2LZS>, CQ11X5_2LZS, List<CQ11X5_2LZS_Info>, CQ11X5_2LZS_Info>(entityList, ref infoList,
                     () => { return new CQ11X5_2LZS_Info(); },
                     (entity, info) =>
                     {
@@ -1255,7 +1256,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<CQ11X5_CHZS_Info>();
                 var entityList = new CQ11X5_CHZSManager().QueryCQ11X5_CHZS(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_CHZS>, CQ11X5_CHZS, List<CQ11X5_CHZS_Info>, CQ11X5_CHZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_CHZS>, CQ11X5_CHZS, List<CQ11X5_CHZS_Info>, CQ11X5_CHZS_Info>(entityList, ref infoList,
                     () => { return new CQ11X5_CHZS_Info(); },
                     (entity, info) =>
                     {
@@ -1275,7 +1276,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<CQ11X5_DLZS_Info>();
                 var entityList = new CQ11X5_DLZSManager().QueryCQ11X5_DLZS(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_DLZS>, CQ11X5_DLZS, List<CQ11X5_DLZS_Info>, CQ11X5_DLZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_DLZS>, CQ11X5_DLZS, List<CQ11X5_DLZS_Info>, CQ11X5_DLZS_Info>(entityList, ref infoList,
                     () => { return new CQ11X5_DLZS_Info(); },
                     (entity, info) =>
                     {
@@ -1295,7 +1296,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<CQ11X5_GHZS_Info>();
                 var entityList = new CQ11X5_GHZSManager().QueryCQ11X5_GHZS(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_GHZS>, CQ11X5_GHZS, List<CQ11X5_GHZS_Info>, CQ11X5_GHZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_GHZS>, CQ11X5_GHZS, List<CQ11X5_GHZS_Info>, CQ11X5_GHZS_Info>(entityList, ref infoList,
                     () => { return new CQ11X5_GHZS_Info(); },
                     (entity, info) =>
                     {
@@ -1315,7 +1316,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<CQ11X5_HZZS_Info>();
                 var entityList = new CQ11X5_HZZSManager().QueryCQ11X5_HZZS(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_HZZS>, CQ11X5_HZZS, List<CQ11X5_HZZS_Info>, CQ11X5_HZZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_HZZS>, CQ11X5_HZZS, List<CQ11X5_HZZS_Info>, CQ11X5_HZZS_Info>(entityList, ref infoList,
                     () => { return new CQ11X5_HZZS_Info(); },
                     (entity, info) =>
                     {
@@ -1335,7 +1336,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<CQ11X5_JBZS_Info>();
                 var entityList = new CQ11X5_JBZSManager().QueryCQ11X5_JBZS(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_JBZS>, CQ11X5_JBZS, List<CQ11X5_JBZS_Info>, CQ11X5_JBZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_JBZS>, CQ11X5_JBZS, List<CQ11X5_JBZS_Info>, CQ11X5_JBZS_Info>(entityList, ref infoList,
                     () => { return new CQ11X5_JBZS_Info(); },
                     (entity, info) =>
                     {
@@ -1355,7 +1356,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<CQ11X5_KDZS_Info>();
                 var entityList = new CQ11X5_KDZSManager().QueryCQ11X5_KDZS(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_KDZS>, CQ11X5_KDZS, List<CQ11X5_KDZS_Info>, CQ11X5_KDZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_KDZS>, CQ11X5_KDZS, List<CQ11X5_KDZS_Info>, CQ11X5_KDZS_Info>(entityList, ref infoList,
                     () => { return new CQ11X5_KDZS_Info(); },
                     (entity, info) =>
                     {
@@ -1375,7 +1376,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<CQ11X5_Q1JBZS_Info>();
                 var entityList = new CQ11X5_Q1JBZSManager().QueryCQ11X5_Q1JBZS(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_Q1JBZS>, CQ11X5_Q1JBZS, List<CQ11X5_Q1JBZS_Info>, CQ11X5_Q1JBZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_Q1JBZS>, CQ11X5_Q1JBZS, List<CQ11X5_Q1JBZS_Info>, CQ11X5_Q1JBZS_Info>(entityList, ref infoList,
                     () => { return new CQ11X5_Q1JBZS_Info(); },
                     (entity, info) =>
                     {
@@ -1395,7 +1396,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<CQ11X5_Q1XTZS_Info>();
                 var entityList = new CQ11X5_Q1XTZSManager().QueryCQ11X5_Q1XTZS(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_Q1XTZS>, CQ11X5_Q1XTZS, List<CQ11X5_Q1XTZS_Info>, CQ11X5_Q1XTZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_Q1XTZS>, CQ11X5_Q1XTZS, List<CQ11X5_Q1XTZS_Info>, CQ11X5_Q1XTZS_Info>(entityList, ref infoList,
                     () => { return new CQ11X5_Q1XTZS_Info(); },
                     (entity, info) =>
                     {
@@ -1415,7 +1416,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<CQ11X5_Q2JBZS_Info>();
                 var entityList = new CQ11X5_Q2JBZSManager().QueryCQ11X5_Q2JBZS(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_Q2JBZS>, CQ11X5_Q2JBZS, List<CQ11X5_Q2JBZS_Info>, CQ11X5_Q2JBZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_Q2JBZS>, CQ11X5_Q2JBZS, List<CQ11X5_Q2JBZS_Info>, CQ11X5_Q2JBZS_Info>(entityList, ref infoList,
                     () => { return new CQ11X5_Q2JBZS_Info(); },
                     (entity, info) =>
                     {
@@ -1435,7 +1436,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<CQ11X5_Q2XTZS_Info>();
                 var entityList = new CQ11X5_Q2XTZSManager().QueryCQ11X5_Q2XTZS(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_Q2XTZS>, CQ11X5_Q2XTZS, List<CQ11X5_Q2XTZS_Info>, CQ11X5_Q2XTZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_Q2XTZS>, CQ11X5_Q2XTZS, List<CQ11X5_Q2XTZS_Info>, CQ11X5_Q2XTZS_Info>(entityList, ref infoList,
                     () => { return new CQ11X5_Q2XTZS_Info(); },
                     (entity, info) =>
                     {
@@ -1455,7 +1456,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<CQ11X5_Q3JBZS_Info>();
                 var entityList = new CQ11X5_Q3JBZSManager().QueryCQ11X5_Q3JBZS(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_Q3JBZS>, CQ11X5_Q3JBZS, List<CQ11X5_Q3JBZS_Info>, CQ11X5_Q3JBZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_Q3JBZS>, CQ11X5_Q3JBZS, List<CQ11X5_Q3JBZS_Info>, CQ11X5_Q3JBZS_Info>(entityList, ref infoList,
                     () => { return new CQ11X5_Q3JBZS_Info(); },
                     (entity, info) =>
                     {
@@ -1475,7 +1476,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<CQ11X5_Q3XTZS_Info>();
                 var entityList = new CQ11X5_Q3XTZSManager().QueryCQ11X5_Q3XTZS(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_Q3XTZS>, CQ11X5_Q3XTZS, List<CQ11X5_Q3XTZS_Info>, CQ11X5_Q3XTZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_Q3XTZS>, CQ11X5_Q3XTZS, List<CQ11X5_Q3XTZS_Info>, CQ11X5_Q3XTZS_Info>(entityList, ref infoList,
                     () => { return new CQ11X5_Q3XTZS_Info(); },
                     (entity, info) =>
                     {
@@ -1495,7 +1496,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
                 var infoList = new List<CQ11X5_XTZS_Info>();
                 var entityList = new CQ11X5_XTZSManager().QueryCQ11X5_XTZS(index);
 
-                ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_XTZS>, CQ11X5_XTZS, List<CQ11X5_XTZS_Info>, CQ11X5_XTZS_Info>(entityList, ref infoList,
+               ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_XTZS>, CQ11X5_XTZS, List<CQ11X5_XTZS_Info>, CQ11X5_XTZS_Info>(entityList, ref infoList,
                     () => { return new CQ11X5_XTZS_Info(); },
                     (entity, info) =>
                     {
@@ -1519,7 +1520,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
             var infoList = new List<GameWinNumber_Info>();
             var entityList = new CQ11X5_GameWinNumberManager().QueryCQ11X5_GameWinNumber(pageIndex, pageSize, out totalCount);
 
-            ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_GameWinNumber>, CQ11X5_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
+           ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_GameWinNumber>, CQ11X5_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
                 () => { return new GameWinNumber_Info(); },
                 (entity, info) =>
                 {
@@ -1538,7 +1539,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
             //    var infoList = new List<GameWinNumber_Info>();
             //    var entityList = new CQ11X5_GameWinNumberManager().QueryCQ11X5_GameWinNumber(pageIndex, pageSize, out totalCount);
 
-            //    ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_GameWinNumber>, CQ11X5_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
+            //   ObjectConvert.ConvertEntityListToInfoList<List<CQ11X5_GameWinNumber>, CQ11X5_GameWinNumber, List<GameWinNumber_Info>, GameWinNumber_Info>(entityList, ref infoList,
             //        () => { return new GameWinNumber_Info(); },
             //        (entity, info) =>
             //        {
@@ -1557,7 +1558,7 @@ namespace Lottery.Kg.ORM.Helper.WinNumber
             var entity = manager.QueryWinNumber(issuseNumber);
             if (entity == null) return new GameWinNumber_Info();
             var info = new GameWinNumber_Info();
-            ObjectConvert.ConverEntityToInfo<CQ11X5_GameWinNumber, GameWinNumber_Info>(entity, ref info);
+           ObjectConvert.ConverEntityToInfo<CQ11X5_GameWinNumber, GameWinNumber_Info>(entity, ref info);
             return info;
         }
 

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EntityModel;
-using KaSon.FrameWork.Helper;
+using KaSon.FrameWork.Common;
 
-namespace Lottery.Kg.ORM.Helper
+namespace KaSon.FrameWork.ORM.Helper
 {
    public class UserAuthentication:DBbase
     {

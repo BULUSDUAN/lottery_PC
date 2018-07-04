@@ -1,8 +1,10 @@
-﻿using EntityModel.Enum;
+﻿
+using EntityModel.Enum;
+using KaSon.FrameWork.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
-namespace KaSon.FrameWork.Helper
+namespace KaSon.FrameWork.Entity.Helper
 {
     public class ConvertHelper
     {
