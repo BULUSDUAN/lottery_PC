@@ -10,8 +10,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Lottery.Api.Controllers
 {
@@ -1342,7 +1345,12 @@ namespace Lottery.Api.Controllers
             }
         }
 
-
+        /// <summary>
+        /// 提款成功 206
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         public async Task<LotteryServiceResponse> Fetchsubmit([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
@@ -1424,5 +1432,197 @@ namespace Lottery.Api.Controllers
                 };
             }
         }
+
+       
+        //充值记录
+        public async Task<LotteryServiceResponse> Drawingsrecord([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                string token = p.token;
+                DateTime begin = DateTime.Parse(p.begin);
+                DateTime end = DateTime.Parse(p.end);
+                int pageNo = int.Parse(p.pageNo);
+                int PageSize = int.Parse(p.PageSize);
+                var status = string.IsNullOrEmpty(Request.Query["status"]) ? null : (WithdrawStatus?)int.Parse(p.Status);
+                //var withdrawList = WCFClients.GameFundClient.QueryMyWithdrawList(WithdrawStatus.Success, begin, end.AddDays(1), pageNo, PageSize, token);
+                //var withdrawList = WCFClients.GameFundClient.QueryMyWithdrawList(null, begin, end.AddDays(1), pageNo, PageSize, token);
+                if (begin < DateTime.Now.AddMonths(-1))
+                    begin = DateTime.Now.AddMonths(-1);
+
+                Dictionary<string, object> Param = new Dictionary<string, object>();
+                Param["status"] = status;
+                Param["startTime"] = begin;
+                Param["endTime"] = end.AddDays(1);
+                Param["pageIndex"] = pageNo;
+                Param["pageSize"] = PageSize;
+                Param["userToken"] = token;
+
+                var withdrawList = await _serviceProxyProvider.Invoke<Withdraw_QueryInfoCollection>(Param, "api/user/QueryMyWithdrawList");
+
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "获取成功",
+                    MsgId = entity.MsgId,
+                    Value = withdrawList.WithdrawList
+                };
+            }
+            catch (Exception exp)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "服务器内部错误，请联系接口提供商",
+                    MsgId = entity.MsgId,
+                    Value = exp.Message,
+                };
+            }
+        }
+
+        /// <summary>
+        /// 获取充值相关json列表返回前端
+        /// </summary>
+        /// <returns></returns>
+        public async Task<LotteryServiceResponse> RechargePlatform([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                string UserToken = p.UserToken;
+                if (!string.IsNullOrEmpty(UserToken))
+                {
+                    UserToken = UserToken.Replace("%2B", "+").Replace("%26", "&");
+                    Dictionary<string, object> param = new Dictionary<string, object>();
+                    param["token"] = UserToken;
+                    var lInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/LoginByUserToken");
+                    if (lInfo.IsSuccess)
+                    {
+                        Dictionary<string, object> param2 = new Dictionary<string, object>();
+                        param2.Add("key", "FillMoney_Enable_GateWay");
+                        var FillMoney_Enable_GateWay = await _serviceProxyProvider.Invoke<C_Core_Config>(param2, "api/user/QueryCoreConfigByKey");                    
+                        string[] gateWayArray = FillMoney_Enable_GateWay.ConfigValue.ToLower().Split('|');
+                        return new LotteryServiceResponse
+                        {
+                            Code = ResponseCode.成功,
+                            Message = "获取成功",
+                            MsgId = entity.MsgId,
+                            Value = LoadPayConfig("ios", gateWayArray),
+                        };
+                    }
+                    else
+                    {
+                        return new LotteryServiceResponse
+                        {
+                            Code = ResponseCode.失败,
+                            Message = "验证用户失败",
+                            MsgId = entity.MsgId,
+                            Value = "验证用户失败",
+                        };
+                    }
+                }
+                else
+                {
+                    return new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.失败,
+                        Message = "验证用户失败",
+                        MsgId = entity.MsgId,
+                        Value = "验证用户失败",
+                    };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                };
+            }
+        }
+
+
+        /// <summary>
+        /// 加载可用充值json列表
+        /// </summary>
+        /// <param name="os"></param>
+        /// <returns></returns>
+        private dynamic LoadPayConfig(string os, string[] gateWayArray)
+        {
+
+          
+            List<WebPayItem> list = new List<WebPayItem>();
+            var baselist = loadPayConfig();
+            foreach (WebPayItem item in baselist)
+            {
+                foreach (var getway in gateWayArray)
+                {
+                    if (getway.Split('=')[0] == item.gateway)
+                    {
+                        list.Add(buildPayUrl(item, os));
+                    }
+                }
+                //if (!gateWayArray.Contains(item.gateway.ToLower()))
+                //{
+                //    continue;
+                //}
+                //list.Add(buildPayUrl(item, os));
+            }
+            return new { pay = list, amount = new int[] { 100, 200, 500, 1000 } };
+        }
+        private static List<WebPayItem> loadPayConfig()
+        {
+            string file = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, @"config\pay.json");
+            using (StreamReader sr = new StreamReader(file, Encoding.UTF8))
+            {
+                return JsonHelper.Deserialize<List<WebPayItem>>(sr.ReadToEnd());
+            }
+        }
+
+        private WebPayItem buildPayUrl(WebPayItem item, string os)
+        {
+            if (string.IsNullOrEmpty(item.payType))
+            {
+                item.webViewUrl = item.actionUrl;
+                return item;
+            }
+            string url = ConfigHelper.ConfigInfo["MobileDomain"].ToString();
+            StringBuilder s = new StringBuilder(url);
+            s.Append("/App/mobile?");
+            s.Append("amount={amount}");
+            s.Append("&token={token}");
+            s.Append("&gateway=" + HttpUtility.UrlEncode(item.gateway));
+            if (item.bank != null && item.bank.Count > 0)
+            {
+                if (os == "ios")
+                {
+                    s.Append("&bank=${bank}");
+                }
+                else
+                {
+                    s.Append("&bank={bank}");
+                }
+
+            }
+            if (string.IsNullOrEmpty(item.openUrl))
+            {
+                item.webViewUrl = s.ToString();
+            }
+            else
+            {
+                s.Append("&os=" + HttpUtility.UrlEncode(os));
+                item.openUrl = s.ToString();
+            }
+            item.gateway = item.gateway;
+            item.actionUrl = null;
+            item.payType = item.payType;
+            return item;
+        }
+
     }
 }

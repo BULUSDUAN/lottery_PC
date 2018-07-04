@@ -393,5 +393,30 @@ namespace Lottery.Kg.ORM.Helper.UserHelper
             string ubkey = Encipherment.MD5(Encipherment.MD5(config) + wai.company_id + wai.bank_id + wai.company_order_num.Trim() + wai.amount + wai.card_num.Trim() + wai.card_name.Trim() + wai.company_user.Trim() + wai.issue_bank_name.Trim() + wai.issue_bank_address.Trim() + wai.memo);
             return ubkey;
         }
+
+        public Withdraw_QueryInfoCollection QueryWithdrawList(string userId, WithdrawAgentType? agent, WithdrawStatus? status, decimal minMoney, decimal maxMoney, DateTime startTime, DateTime endTime, int sortType, int pageIndex, int pageSize, string orderId = "")
+        {
+            var statusList = new List<int>();
+            if (status.HasValue) statusList.Add((int)status.Value);
+
+            var result = new Withdraw_QueryInfoCollection();
+            var totalCount = 0;
+            var totalMoney = 0M;
+            var totalResponseMoney = 0M;
+            var winCount = 0;
+            var refusedCount = 0;
+            var totalWinMoney = 0M;
+            var totalRefusedMoney = 0M;
+            result.WithdrawList = new SqlQueryManager().QueryWithdrawList(userId, agent, status, minMoney, maxMoney, startTime, endTime, sortType, pageIndex, pageSize, orderId,
+                out winCount, out refusedCount, out totalWinMoney, out totalRefusedMoney, out totalResponseMoney, out totalCount, out totalMoney);
+            result.TotalCount = totalCount;
+            result.TotalMoney = totalMoney;
+            result.WinCount = winCount;
+            result.RefusedCount = refusedCount;
+            result.TotalWinMoney = totalWinMoney;
+            result.TotalRefusedMoney = totalRefusedMoney;
+            result.TotalResponseMoney = totalResponseMoney;
+            return result;
+        }
     }
 }
