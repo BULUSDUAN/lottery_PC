@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EntityModel.CoreModel.BetingEntities;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -11,14 +12,14 @@ namespace EntityModel.CoreModel
 
     #region 投注订单
 
-    //public interface IBettingSport_AfterTranCommit : IPlugin
-    //{
-    //    void BettingSport_AfterTranCommit(string userId, Sports_BetingInfo bettingOrder, string schemeId);
-    //}
-    //public interface IBettingLottery_AfterTranCommit : IPlugin
-    //{
-    //    void BettingLottery_AfterTranCommit(string userId, LotteryBettingInfo bettingOrder, string schemeId, string keyLine);
-    //}
+    public interface IBettingSport_AfterTranCommit : IPlugin
+    {
+        void BettingSport_AfterTranCommit(string userId, Sports_BetingInfo bettingOrder, string schemeId);
+    }
+    public interface IBettingLottery_AfterTranCommit : IPlugin
+    {
+        void BettingLottery_AfterTranCommit(string userId, LotteryBettingInfo bettingOrder, string schemeId, string keyLine);
+    }
     /// <summary>
     /// 投注完成20150509 dj
     /// </summary>

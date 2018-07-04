@@ -1,9 +1,10 @@
-﻿using System;
+﻿using KaSon.FrameWork.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using KaSon.FrameWork.Helper.分析器工厂;
-namespace KaSon.FrameWork.Helper
+
+namespace KaSon.FrameWork.Entity.Helper
 {
     /// <summary>
     /// 对象转换器。用于领域层与服务层之间对象的转换

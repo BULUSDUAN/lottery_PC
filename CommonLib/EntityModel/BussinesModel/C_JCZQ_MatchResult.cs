@@ -132,5 +132,33 @@ namespace EntityModel
             [ProtoMember(19)]
             [Field("CreateTime")]
             public DateTime CreateTime{ get; set; }
+
+
+        //扩展方法
+        public virtual string GetMatchId(string gameCode)
+        {
+            return MatchId;
+        }
+        public virtual string GetFullMatchScore(string gameCode)
+        {
+            return FullHomeTeamScore + "" + FullGuestTeamScore;
+        }
+        public virtual string GetMatchResult(string gameCode, string gameType, decimal offset = -1)
+        {
+            switch (gameType)
+            {
+                case "SPF":
+                    return SPF_Result;
+                case "BRQSPF":
+                    return BRQSPF_Result;
+                case "ZJQ":
+                    return ZJQ_Result;
+                case "BF":
+                    return BF_Result;
+                case "BQC":
+                    return BQC_Result;
+            }
+            return string.Empty;
+        }
     }
 }

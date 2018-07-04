@@ -25,10 +25,10 @@ using BettingLottery.Service.Model;
 using KaSon.FrameWork.Services.ORM;
 using KaSon.FrameWork.Services.Enum;
 using EntityModel.ORM;
-using KaSon.FrameWork.Helper;
+
 using System.Threading;
 using BettingLottery.Service.ModuleBaseServices;
-using Lottery.Kg.ORM.Helper;
+
 using BettingLottery.Service.IModuleServices;
 
 namespace BettingLottery.Service.ModuleServices

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 
-namespace KaSon.FrameWork.Helper.Net
+namespace KaSon.FrameWork.Entity.Helper.Net
 {
     public class CFSMS : ISMSSend
     {

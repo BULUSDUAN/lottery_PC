@@ -25,14 +25,16 @@ using BettingLottery.Service.Model;
 using KaSon.FrameWork.Services.ORM;
 using KaSon.FrameWork.Services.Enum;
 using EntityModel.ORM;
-using KaSon.FrameWork.Helper;
+
 using System.Threading;
 using BettingLottery.Service.ModuleBaseServices;
-using Lottery.Kg.ORM.Helper;
+
 using BettingLottery.Service.IModuleServices;
 using EntityModel.Enum;
 using EntityModel.CoreModel.BetingEntities;
 using EntityModel.CoreModel;
+using KaSon.FrameWork.Common;
+using BettingLottery.Service.ModuleServices.SportsBettionCore;
 
 namespace BettingLottery.Service.ModuleServices
 {
@@ -183,7 +185,7 @@ namespace BettingLottery.Service.ModuleServices
                                     ActivityType = ActivityType.NoParticipate,
                                     IsRepeat = p.IsRepeat == null ? false : p.IsRepeat,
                                 };
-                                var result = WCFClients.GameClient.Sports_Betting(info, balancePassword, redBagMoney, userToken);
+                                var result =new GameBizSportsBettion().Sports_Betting(info, balancePassword, redBagMoney, userToken);
                                 //if (!result.IsSuccess)
                                 //    throw new Exception(result.Message);
                                 if (result.IsSuccess)
@@ -272,7 +274,9 @@ namespace BettingLottery.Service.ModuleServices
                         IsRepeat = p.IsRepeat == null ? false : p.IsRepeat,
                         CurrentBetTime = DateTime.Now
                     };
-                    var result = IsSaveOrder == "0" ? WCFClients.GameClient.Sports_Betting(info, balancePassword, redBagMoney, userToken) : WCFClients.GameClient.SaveOrderSportsBetting(info, userToken);
+                    var bettion = new GameBizSportsBettion();
+                   
+                    var result = IsSaveOrder == "0" ? bettion.Sports_Betting(info, balancePassword, redBagMoney, userToken): bettion.SaveOrderSportsBettingByResult(info, userToken);
                     if (!result.IsSuccess)
                         throw new Exception(result.Message);
                     returnValue = result.ReturnValue;

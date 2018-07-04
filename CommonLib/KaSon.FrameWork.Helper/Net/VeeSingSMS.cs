@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace KaSon.FrameWork.Helper.Net
+namespace KaSon.FrameWork.Entity.Helper.Net
 {
     /// <summary>
     /// 维信互动短信平台

@@ -5,7 +5,7 @@ using System.Text;
 using System.Web;
 using System.Xml;
 
-namespace KaSon.FrameWork.Helper.Net
+namespace KaSon.FrameWork.Entity.Helper.Net
 {
     public class BYSMS : ISMSSend
     {

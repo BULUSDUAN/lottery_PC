@@ -4,7 +4,27 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace EntityModel.Enum
-{  
+{
+
+    /// <summary>
+    /// 日志类型，日志按严重程度分成提示、警告和错误。
+    /// </summary>
+    [Serializable]
+    public enum LogType
+    {
+        /// <summary>
+        /// 提示
+        /// </summary>
+        Information = 0,
+        /// <summary>
+        /// 警告
+        /// </summary>
+        Warning = 1,
+        /// <summary>
+        /// 错误
+        /// </summary>
+        Error = 2
+    }
     /// <summary>
     /// 投注方案类别
     /// </summary>

@@ -132,5 +132,7 @@ namespace EntityModel
             [ProtoMember(19)]
             [Field("UpdateTime")]
             public DateTime UpdateTime{ get; set; }
+
+       
     }
 }
