@@ -24,18 +24,23 @@ using UserLottery.Service.Model;
 using KaSon.FrameWork.Services.ORM;
 using KaSon.FrameWork.Services.Enum;
 using EntityModel.ORM;
-using KaSon.FrameWork.Helper;
+
 using System.Threading;
 using UserLottery.Service.ModuleBaseServices;
-using Lottery.Kg.ORM.Helper;
+
 using UserLottery.Service.IModuleServices;
 using EntityModel.RequestModel;
-using Lottery.Kg.ORM.Helper.UserHelper;
+
 using EntityModel.Enum;
 using EntityModel.CoreModel;
 using EntityModel.Communication;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
+using KaSon.FrameWork.Common;
+using KaSon.FrameWork.ORM.Helper;
+using KaSon.FrameWork.ORM.Helper.UserHelper;
+using KaSon.FrameWork.Common.Redis;
+using EntityModel.ExceptionExtend;
 
 namespace UserLottery.Service.ModuleServices
 {
@@ -1210,28 +1215,28 @@ namespace UserLottery.Service.ModuleServices
         /// </summary>
         /// <param name="AgentId">普通用户代理 邀请注册的会员</param>
         /// <returns></returns>
-        //public string QueryYqidRegisterByAgentId(string AgentId)
-        //{
-        //    try
-        //    {
-        //        return new SqlQueryBusiness().QueryYqidRegisterByAgentId(AgentId);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception("查询某个yqid下面的能满足领红包条件的用户个数出错 - " + ex.Message, ex);
-        //    }
-        //}
+        public string QueryYqidRegisterByAgentId(string AgentId)
+        {
+            try
+            {
+                return new SqlQueryBusiness().QueryYqidRegisterByAgentId(AgentId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询某个yqid下面的能满足领红包条件的用户个数出错 - " + ex.Message, ex);
+            }
+        }
         /// <summary>
         /// QueryYqidRegisterByAgentId方法的手机接口
         /// </summary>
-        /// <param name="userToken"></param>
-        /// <returns></returns>
-        //public string QueryYqidRegisterByAgentIdToApp(string userToken)
-        //{
-        //    // 验证用户身份及权限
-        //    var userId = userAuthentication.ValidateUserAuthentication(userToken);
-        //    return QueryYqidRegisterByAgentId(userId);
-        //}
+        /// <param name = "userToken" ></ param >
+        /// < returns ></ returns >
+        public string QueryYqidRegisterByAgentIdToApp(string userToken)
+        {
+            // 验证用户身份及权限
+            var userId = userAuthentication.ValidateUserAuthentication(userToken);
+            return QueryYqidRegisterByAgentId(userId);
+        }
 
         /// <summary>
         /// 用户实名认证
@@ -1246,7 +1251,7 @@ namespace UserLottery.Service.ModuleServices
             var userId = userAuthentication.ValidateUserAuthentication(userToken);
 
             var biz = new RealNameAuthenticationBusiness();
-            Lottery.Kg.ORM.Helper.BusinessHelper.CheckUserRealName(IdCardNumber);
+            BusinessHelper.CheckUserRealName(IdCardNumber);
             var realName = biz.GetAuthenticatedRealName(userId);
             if (realName != null)
             {
@@ -1363,6 +1368,23 @@ namespace UserLottery.Service.ModuleServices
             catch (Exception ex)
             {
                 throw new Exception("申请提现出错 - " + ex.Message, ex);
+            }
+        }
+
+
+        public Task<Withdraw_QueryInfoCollection> QueryMyWithdrawList(WithdrawStatus? status, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string userToken)
+        {
+
+            // 验证用户身份及权限
+            var userId = userAuthentication.ValidateUserAuthentication(userToken);
+
+            try
+            {
+                return Task.FromResult(new FundBusiness().QueryWithdrawList(userId, null, status, -1, -1, startTime, endTime, -1, pageIndex, pageSize));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询我的提现记录列表 - " + ex.Message, ex);
             }
         }
 

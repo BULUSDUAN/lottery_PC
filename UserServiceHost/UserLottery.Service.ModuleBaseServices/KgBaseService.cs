@@ -15,7 +15,7 @@ using Kason.Sg.Core.ProxyGenerator;
 using Kason.Sg.Core.ProxyGenerator.Implementation;
 using Kason.Sg.Core.System.Intercept;
 using System.Threading.Tasks;
-using KaSon.FrameWork.Helper;
+using KaSon.FrameWork.Common;
 
 namespace UserLottery.Service.ModuleBaseServices
 {
