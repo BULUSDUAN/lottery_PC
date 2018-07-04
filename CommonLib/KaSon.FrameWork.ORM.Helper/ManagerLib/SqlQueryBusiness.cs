@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KaSon.FrameWork.ORM.Helper.UserHelper.Managers;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -11,12 +12,12 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
         /// </summary>
         /// <param name="AgentId">普通用户代理 邀请注册的会员</param>
         /// <returns></returns>
-        //public string QueryYqidRegisterByAgentId(string AgentId)
-        //{
-        //    using (var manager = new SqlQueryManager())
-        //    {
-        //        return manager.QueryYqidRegisterByAgentId(AgentId);
-        //    }
-        //}
+        public string QueryYqidRegisterByAgentId(string AgentId)
+        {
+            var manager = new SqlQueryManager();
+            
+             return manager.QueryYqidRegisterByAgentId(AgentId);
+            
+        }
     }
 }

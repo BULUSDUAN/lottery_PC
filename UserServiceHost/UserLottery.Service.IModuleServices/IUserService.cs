@@ -101,5 +101,8 @@ namespace UserLottery.Service.IModuleServices
 
         [Service(Date = "2018-7-03", Director = "renjun", Name = "提款成功")]
         Task<CommonActionResult> RequestWithdraw_Step2(Withdraw_RequestInfo info, string userId, string password);
+
+        [Service(Date = "2018-7-03", Director = "renjun", Name = "提现记录")]
+        Task<Withdraw_QueryInfoCollection> QueryMyWithdrawList(WithdrawStatus? status, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string userToken);
     }
 }

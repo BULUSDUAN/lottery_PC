@@ -1,0 +1,534 @@
+﻿[
+  {
+    "icon": "weixin.png",
+    "iconUrl": "http://res.wx.qq.com/a/wx_fed/weixin_portal/res/static/img/2vR--p6.png",
+    "desc": [
+      "暂只支持安卓手机（最新版本可用）"
+    ],
+    "title": "微信H5",
+    "gateway": "slf_weixin",
+    "payType": "slf_weixin|weixin",
+    "openUrl": null,
+    "webViewUrl": null,
+    "actionUrl": "http://pay1.szdrbkj.com/user/redirectpay",
+    "bank": []
+  },
+	{
+        "icon": "alipay.png",
+        "iconUrl": "https://img.alicdn.com/tps/TB17ghmIFXXXXXAXFXXXXXXXXXX.png",
+        "desc": [
+            "支付宝余额，银行卡支付"
+        ],
+        "title": "支付宝(扫码)",
+        "gateway": "slf_alipay",
+        "payType": "slf_alipay|alipay",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://pay1.szdrbkj.com/user/redirectpay",
+		"bank": []
+    },
+	{
+        "icon": "expresspay.png",
+        "iconUrl": "http://cn.unionpay.com/images/images2014/logo.png",
+        "desc": [
+            "无需网银,手续费,快速安全",
+            "输入卡号就能支付"
+        ],
+        "title": "快捷支付",
+        "gateway": "slf_express",
+        "payType": "slf_express|touch",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://pay1.szdrbkj.com/user/redirectpay",
+		"bank": []
+    },
+	{
+        "icon": "unionpay.png",
+        "iconUrl": "http://cn.unionpay.com/images/images2014/logo.png",
+        "desc": [
+            "网银支付"
+        ],
+        "title": "网银支付",
+        "gateway": "slf_bank",
+        "payType": "slf_bank|touch",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://pay1.szdrbkj.com/user/redirectpay",
+		"bank": []
+    },
+	{
+        "icon": "weixin.png",
+        "iconUrl": "http://res.wx.qq.com/a/wx_fed/weixin_portal/res/static/img/2vR--p6.png",
+        "desc": [
+            "仅限电脑网页使用"
+        ],
+        "title": "微信(扫码)",
+        "gateway": "hw_weixin",
+        "payType": "hw_weixin|weixin",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://pay1.szdrbkj.com/user/redirectpay",
+		"bank": []
+    },	
+	{
+        "icon": "expresspay.png",
+        "iconUrl": "http://cn.unionpay.com/images/images2014/logo.png",
+        "desc": [
+            "无需网银,手续费,快速安全",
+            "输入卡号就能支付"
+        ],
+        "title": "快捷支付",
+        "gateway": "hw_express",
+        "payType": "hw_express|touch",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://pay1.szdrbkj.com/user/redirectpay",
+		"bank": []
+    },
+	{
+        "icon": "alipay.png",
+        "iconUrl": "https://img.alicdn.com/tps/TB17ghmIFXXXXXAXFXXXXXXXXXX.png",
+        "desc": [
+            "需要提供用户名，转账截图"
+        ],
+        "title": "支付宝(转账)",
+        "gateway": "alipay",
+        "payType": null,
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://v88.live800.com/live800/chatClient/chatbox.jsp?companyID=938269&configID=8258&jid=9971775560",
+		"bank": []
+    },
+	{
+        "icon": "alipay.png",
+        "iconUrl": "https://img.alicdn.com/tps/TB17ghmIFXXXXXAXFXXXXXXXXXX.png",
+        "desc": [
+            "支付宝余额，银行卡支付"
+        ],
+        "title": "支付宝(扫码)",
+        "gateway": "hwalipay",
+        "payType": "hwalipay|Alipay",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://pay1.szdrbkj.com/user/redirectpay",
+		"bank": []
+    },
+	{
+        "icon": "weixin.png",
+        "iconUrl": "http://res.wx.qq.com/a/wx_fed/weixin_portal/res/static/img/2vR--p6.png",
+        "desc": [
+            "仅限电脑网页使用"
+        ],
+        "title": "微信转账",
+        "gateway": "hwweixin",
+        "payType": "hwweixin|weixin",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://pay1.szdrbkj.com/user/redirectpay",
+		"bank": []
+    },
+        {
+        "icon": "unionpay.png",
+        "iconUrl": "http://cn.unionpay.com/images/images2014/logo.png",
+        "desc": [
+            "网银支付"
+        ],
+        "title": "网银支付",
+        "gateway": "hw_bank",
+        "payType": "hw_bank|touch",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://pay1.szdrbkj.com/user/redirectpay",
+		"bank": []
+    },
+        {
+        "icon": "unionpay.png",
+        "iconUrl": "http://cn.unionpay.com/images/images2014/logo.png",
+        "desc": [
+            "网银支付"
+        ],
+        "title": "网银支付",
+        "gateway": "duodebao_bank",
+        "payType": "duodebao_bank|touch",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://pay1.szdrbkj.com/user/redirectpay",
+		"bank": []
+    },
+	{
+        "icon": "weixin.png",
+        "iconUrl": "http://res.wx.qq.com/a/wx_fed/weixin_portal/res/static/img/2vR--p6.png",
+        "desc": [
+            "仅限电脑网页使用"
+        ],
+        "title": "微信(扫码)",
+        "gateway": "duodebao_weixin",
+        "payType": "duodebao_weixin|weixin",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://pay1.szdrbkj.com/user/redirectpay",
+		"bank": []
+    },
+	{
+        "icon": "alipay.png",
+        "iconUrl": "https://img.alicdn.com/tps/TB17ghmIFXXXXXAXFXXXXXXXXXX.png",
+        "desc": [
+            "支付宝余额，银行卡支付"
+        ],
+        "title": "支付宝(扫码)",
+        "gateway": "ztalipay",
+        "payType": "ztalipay|alipay",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://pay1.szdrbkj.com/user/redirectpay",
+		"bank": []
+    },
+	{
+        "icon": "alipay.png",
+        "iconUrl": "https://img.alicdn.com/tps/TB17ghmIFXXXXXAXFXXXXXXXXXX.png",
+        "desc": [
+            "仅限电脑网页使用"
+        ],
+        "title": "支付宝(扫码)",
+        "gateway": "duodebao_alipay",
+        "payType": "duodebao_alipay|alipay",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://pay1.szdrbkj.com/user/redirectpay",
+		"bank": []
+    },
+	{
+        "icon": "weixin.png",
+        "iconUrl": "http://res.wx.qq.com/a/wx_fed/weixin_portal/res/static/img/2vR--p6.png",
+        "desc": [
+            "仅限电脑网页使用"
+        ],
+        "title": "微信转账",
+        "gateway": "ztpay",
+        "payType": "ztpay|weixin",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://m.baidu.com/member/WXRequestPay?type=ztweixin",
+		"bank": []
+    },
+        {
+        "icon": "unionpay.png",
+        "iconUrl": "http://cn.unionpay.com/images/images2014/logo.png",
+        "desc": [
+            "网银支付"
+        ],
+        "title": "网银支付",
+        "gateway": "txf_bank",
+        "payType": "txf_bank|touch",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://pay1.szdrbkj.com/user/redirectpay",
+"bank": [{"name":"中国工商银行","code":"1001"},{"name":"中国建设银行","code":"1004"},{"name":"中国农业银行","code":"1002"},{"name":"招商银行","code":"1012"},{"name":"交通银行","code":"1005"},{"name":"中国银行","code":"1003"},{"name":"上海浦发银行","code":"1014"},{"name":"中国光大银行","code":"1008"},{"name":"广发银行","code":"1017"},{"name":"中国民生银行","code":"1010"},{"name":"兴业银行","code":"1013"},{"name":"中信银行","code":"1007"},{"name":"平安银行","code":"1011"},{"name":"北京银行","code":"1016"},{"name":"上海银行","code":"1025"},{"name":"中国邮政储蓄银行","code":"1006"}]
+    },
+	{
+        "icon": "alipay.png",
+        "iconUrl": "https://img.alicdn.com/tps/TB17ghmIFXXXXXAXFXXXXXXXXXX.png",
+        "desc": [
+            "仅限电脑网页使用"
+        ],
+        "title": "支付宝(单笔限额1000)",
+        "gateway": "txf_alipay",
+        "payType": "txf_alipay|alipay",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://m.baidu.com/member/WXRequestPay?type=txfalipay",
+		"bank": []
+    },
+	{
+        "icon": "weixin.png",
+        "iconUrl": "http://res.wx.qq.com/a/wx_fed/weixin_portal/res/static/img/2vR--p6.png",
+        "desc": [
+            "仅限电脑网页使用"
+        ],
+        "title": "微信转账",
+        "gateway": "txf_weixin",
+        "payType": "txf_weixin|weixin",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://m.baidu.com/member/WXRequestPay?type=txfweixin",
+		"bank": []
+    }, {
+        "icon": "qq.png",
+        "iconUrl": "http://res.10.0.3.6/wancai.touch/images/icon/qq.png",
+        "desc": [
+            "仅限电脑网页使用"
+        ],
+        "title": "QQ扫码（单笔限额1000元）",
+        "gateway": "txf_qq",
+        "payType": "txf_qq|qq",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://m.baidu.com/member/WXRequestPay?type=txfqq",
+  "bank": []
+    },
+        {
+        "icon": "unionpay.png",
+        "iconUrl": "http://cn.unionpay.com/images/images2014/logo.png",
+        "desc": [
+            "网银支付"
+        ],
+        "title": "网银支付",
+        "gateway": "sfb_bank",
+        "payType": "sfb_bank|touch",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://pay1.szdrbkj.com/user/redirectpay",
+		"bank": []
+    },
+	{
+        "icon": "alipay.png",
+        "iconUrl": "https://img.alicdn.com/tps/TB17ghmIFXXXXXAXFXXXXXXXXXX.png",
+        "desc": [
+            "支付宝余额，银行卡支付"
+        ],
+        "title": "支付宝(扫码)",
+        "gateway": "sfb_alipay",
+        "payType": "sfb_alipay|alipay",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://m.baidu.com/member/WXRequestPay?type=sfb_alipay",
+		"bank": []
+    },
+	{
+        "icon": "weixin.png",
+        "iconUrl": "http://res.wx.qq.com/a/wx_fed/weixin_portal/res/static/img/2vR--p6.png",
+        "desc": [
+            "仅限电脑网页使用"
+        ],
+        "title": "微信转账",
+        "gateway": "sfb_weixin",
+        "payType": "sfb_weixin|weixin",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://m.baidu.com/member/WXRequestPay?type=sfb_weixin",
+		"bank": []
+    },
+	{
+        "icon": "qq.png",
+        "iconUrl": "http://res.10.0.3.6/wancai.touch/images/icon/qq.png",
+        "desc": [
+            "仅限电脑网页使用"
+        ],
+        "title": "QQ扫码",
+        "gateway": "sfb_qq",
+        "payType": "sfb_qq|qq",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://m.baidu.com/member/WXRequestPay?type=sfb_qq",
+		"bank": []
+    },
+        {
+        "icon": "unionpay.png",
+        "iconUrl": "http://cn.unionpay.com/images/images2014/logo.png",
+        "desc": [
+            "网银支付"
+        ],
+        "title": "网银支付",
+        "gateway": "haio_bank",
+        "payType": "haio_bank|touch",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://pay1.szdrbkj.com/user/redirectpay",
+		"bank": []
+    },
+	{
+        "icon": "alipay.png",
+        "iconUrl": "https://img.alicdn.com/tps/TB17ghmIFXXXXXAXFXXXXXXXXXX.png",
+        "desc": [
+            "支付宝余额，银行卡支付"
+        ],
+        "title": "支付宝(扫码)",
+        "gateway": "haio_alipay",
+        "payType": "haio_alipay|alipay",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://pay1.szdrbkj.com/user/redirectpay",
+		"bank": []
+    },
+	{
+        "icon": "weixin.png",
+        "iconUrl": "http://res.wx.qq.com/a/wx_fed/weixin_portal/res/static/img/2vR--p6.png",
+        "desc": [
+            "仅限电脑网页使用"
+        ],
+        "title": "微信转账",
+        "gateway": "haio_weixin",
+        "payType": "haio_weixin|weixin",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://pay1.szdrbkj.com/user/redirectpay",
+		"bank": []
+    },
+	{
+        "icon": "qq.png",
+        "iconUrl": "http://res.10.0.3.6/wancai.touch/images/icon/qq.png",
+        "desc": [
+            "仅限电脑网页使用"
+        ],
+        "title": "QQ扫码",
+        "gateway": "haio_qq",
+        "payType": "haio_qq|qqpay",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://pay1.szdrbkj.com/user/redirectpay",
+		"bank": []
+    },
+    {
+        "icon": "expresspay.png",
+        "iconUrl": "http://cn.unionpay.com/images/images2014/logo.png",
+        "desc": [
+            "无需网银,手续费,快速安全",
+            "输入卡号就能支付"
+        ],
+        "title": "快捷支付(额外赠送充值金额1%的红包)",
+        "gateway": "hfb_express",
+        "payType": "hfb_express|wap",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://pay1.szdrbkj.com/user/redirectpay",
+  "bank": []
+    },
+       {
+        "icon": "unionpay.png",
+        "iconUrl": "http://cn.unionpay.com/images/images2014/logo.png",
+        "desc": [
+            "网银支付"
+        ],
+        "title": "网银支付",
+        "gateway": "hfb_bank",
+        "payType": "hfb_bank|wap",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://pay1.szdrbkj.com/user/redirectpay",
+  "bank": [{"name":"中国工商银行","code":"01020000"},{"name":"中国建设银行","code":"01050000"},{"name":"中国农业银行","code":"01030000"},{"name":"招商银行","code":"03080000"},{"name":"交通银行","code":"03010000"},{"name":"中国银行","code":"01040000"},{"name":"上海浦发银行","code":"03100000"},{"name":"中国光大银行","code":"03030000"},{"name":"广发银行","code":"03060000"},{"name":"中国民生银行","code":"03050000"},{"name":"兴业银行","code":"03090000"},{"name":"中信银行","code":"03020000"},{"name":"平安银行","code":"04100000"},{"name":"北京银行","code":"04031000"},{"name":"上海银行","code":"04012900"},{"name":"中国邮政储蓄银行","code":"01000000"}]
+    },
+	 {
+        "icon": "unionpay.png",
+        "iconUrl": "http://cn.unionpay.com/images/images2014/logo.png",
+        "desc": [
+            "网银支付"
+        ],
+        "title": "网银支付",
+        "gateway": "af_bank",
+        "payType": "af_bank|touch",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://pay1.szdrbkj.com/user/redirectpay",
+		"bank": [{"name":"中国工商银行","code":"ICBC"},{"name":"中国建设银行","code":"CCB"},{"name":"中国农业银行","code":"ABC"},{"name":"招商银行","code":"CMB"},{"name":"交通银行","code":"BOCOM"},{"name":"中国银行","code":"BOC"},{"name":"上海浦发银行","code":"SPDB"},{"name":"中国光大银行","code":"CEB"},{"name":"广发银行","code":"GDB"},{"name":"中国民生银行","code":"CMBC"},{"name":"兴业银行","code":"CIB"},{"name":"中信银行","code":"CNCB"},{"name":"平安银行","code":"PAB"},{"name":"北京银行","code":"BCCB"},{"name":"上海银行","code":"BOS"},{"name":"中国邮政储蓄银行","code":"PSBC"},{"name":"华夏银行","code":"HXB"}]
+    },
+	{
+        "icon": "weixin.png",
+        "iconUrl": "http://res.wx.qq.com/a/wx_fed/weixin_portal/res/static/img/2vR--p6.png",
+        "desc": [
+            "无需手续费，单笔最高1000"
+        ],
+        "title": "微信转账",
+        "gateway": "af_weixin",
+        "payType": "af_weixin|weixin",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://m.baidu.com/member/WXRequestPay?type=af_weixin",
+		"bank": []
+    },
+	{
+        "icon": "alipay.png",
+        "iconUrl": "https://img.alicdn.com/tps/TB17ghmIFXXXXXAXFXXXXXXXXXX.png",
+        "desc": [
+            "支付宝余额，银行卡支付"
+        ],
+        "title": "支付宝(扫码)",
+        "gateway": "af_alipay",
+        "payType": "af_alipay|alipay",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://m.baidu.com/member/WXRequestPay?type=af_alipay",
+		"bank": []
+    },
+	{
+        "icon": "qq.png",
+        "iconUrl": "http://res.10.0.3.6/wancai.touch/images/icon/qq.png",
+        "desc": [
+            "无需手续费，单笔最高1000"
+        ],
+        "title": "QQ扫码",
+        "gateway": "af_qq",
+        "payType": "af_qq|touch",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://m.baidu.com/member/WXRequestPay?type=af_qq",
+		"bank": []
+    },
+        {
+        "icon": "unionpay.png",
+        "iconUrl": "http://cn.unionpay.com/images/images2014/logo.png",
+        "desc": [
+            "无需手续费，单笔最高5000"
+        ],
+        "title": "银联扫码",
+        "gateway": "af_upay",
+        "payType": "af_upay|touch",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://m.baidu.com/member/WXRequestPay?type=af_upay",
+		"bank": []
+    },
+	{
+        "icon": "weixin.png",
+        "iconUrl": "http://res.wx.qq.com/a/wx_fed/weixin_portal/res/static/img/2vR--p6.png",
+        "desc": [
+            "无需手续费，单笔最高1000"
+        ],
+        "title": "微信H5",
+        "gateway": "haoyi_H5wxWap",
+        "payType": "haoyi_H5wxWap|wxwap",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://pay1.szdrbkj.com/user/redirectpay",
+		"bank": []
+    },{
+        "icon": "alipay.png",
+        "iconUrl": "https://img.alicdn.com/tps/TB17ghmIFXXXXXAXFXXXXXXXXXX.png",
+        "desc": [
+            "支付宝余额，银行卡支付"
+        ],
+        "title": "支付宝H5",
+        "gateway": "shenfu_alipay",
+        "payType": "haoyi_H5alipayWap|zfbwap",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://pay1.szdrbkj.com/user/redirectpay",
+		"bank": []
+    },
+	{
+        "icon": "weixin.png",
+        "iconUrl": "http://res.wx.qq.com/a/wx_fed/weixin_portal/res/static/img/2vR--p6.png",
+        "desc": [
+            "需要提供用户名，转账截图"
+        ],
+        "title": "微信(转账)",
+        "gateway": "微信",
+        "payType": null,
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://v88.live800.com/live800/chatClient/chatbox.jsp?companyID=938269&configID=8258&jid=9971775560",
+		"bank": []
+    },{
+        "icon": "qq.png",
+        "iconUrl": "http://res.10.0.3.6/wancai.touch/images/icon/qq.png",
+        "desc": [
+            "QQ扫码"
+        ],
+        "title": "QQ扫码",
+        "gateway": "slf_qq",
+        "payType": "slf_qq|qq",
+        "openUrl": null,
+        "webViewUrl": null,
+        "actionUrl": "http://pay1.szdrbkj.com/user/redirectpay",
+  "bank": []
+    }
+]
