@@ -161,7 +161,7 @@ namespace UserLottery.Service.ModuleServices
                     {
                         return Task.FromResult(new LoginInfo { IsSuccess = false, Message = "不存在该用户", LoginFrom = loginFrom, });
                     }
-                    loginName = loginEntity.LoginName;
+                    loginName = loginEntity.Result.LoginName;
                     break;
                 case "alipay":
 
@@ -418,20 +418,27 @@ namespace UserLottery.Service.ModuleServices
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public LoginInfo GetLocalLoginByUserId(string userId)
+        public Task<LoginInfo> GetLocalLoginByUserId(string userId)
         {
             try
             {
                 var loginBiz = new LocalLoginBusiness();
                 var local = loginBiz.GetLocalLoginByUserId(userId);
                 if (local == null)
-                    return new LoginInfo();
-                return new LoginInfo
+                    return Task.FromResult(new LoginInfo());
+                return Task.FromResult(new LoginInfo
                 {
-                    CreateTime = local.CreateTime,               
-                    UserId = local.UserId,                
+                    CreateTime = local.CreateTime,
+                    RegType = local.Register.RegType,
+                    Referrer = local.Register.Referrer,
+                    UserId = local.User.UserId,
+                    VipLevel = local.Register.VipLevel,
                     LoginName = local.LoginName,
-                };
+                    DisplayName = local.Register.DisplayName,
+                    AgentId = local.Register.AgentId,
+                    IsAgent = local.Register.IsAgent,
+                    HideDisplayNameCount = local.Register.HideDisplayNameCount,
+                });
             }
             catch (Exception ex)
             {
@@ -1276,6 +1283,87 @@ namespace UserLottery.Service.ModuleServices
             #endregion
 
             return Task.FromResult(new CommonActionResult(true, "实名认证成功。"));
+        }
+
+        /// <summary>
+        /// 增加银行卡信息
+        /// </summary>
+        /// <param name="bankCard"></param>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public Task<CommonActionResult> AddBankCard(C_BankCard bankCard, string userToken)
+        {
+            // 验证用户身份及权限
+            var userId = userAuthentication.ValidateUserAuthentication(userToken);
+
+            try
+            {
+                var entity = new BankCardManager().BankCardByCode(bankCard.BankCardNumber);
+                if (entity != null)
+                {
+                    throw new Exception("该银行卡号已经被其他用户绑定，请选择其它银行卡号");
+                }
+                if (string.IsNullOrEmpty(bankCard.UserId) || bankCard.UserId == null || bankCard.UserId.Length == 0)
+                    bankCard.UserId = userId;
+
+                var bankcarduser = new BankCardManager().BankCardById(userId);
+                if (bankcarduser != null)
+                    throw new Exception("您已绑定了银行卡，请不要重复绑定！");
+                new BankCardBusiness().AddBankCard(bankCard);
+                new CacheDataBusiness().ClearUserBindInfoCache(userId);
+                //绑定银行卡之后实现接口
+                #region 还没做
+                //BusinessHelper.ExecPlugin<IAddBankCard>(new object[] { bankCard.UserId, bankCard.BankCardNumber, bankCard.BankCode, bankCard.BankName, bankCard.BankSubName, bankCard.CityName, bankCard.ProvinceName, bankCard.RealName });
+                #endregion
+                return Task.FromResult(new CommonActionResult(true, "添加银行卡信息成功"));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("添加银行卡信息出错 - " + ex.Message, ex);
+            }
+        }
+
+
+        /// <summary>
+        /// 提款确认  205
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="requestMoney"></param>
+        /// <returns></returns>
+        public Task<CheckWithdrawResult> RequestWithdraw_Step1(string userId, decimal requestMoney)
+        {
+            try
+            {
+                return Task.FromResult(new FundBusiness().RequestWithdraw_Step1(userId, requestMoney));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("申请提现出错 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 提款成功
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="userId"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public Task<CommonActionResult> RequestWithdraw_Step2(Withdraw_RequestInfo info, string userId, string password)
+        {
+            try
+            {
+                new FundBusiness().RequestWithdraw_Step2(info, userId, password);
+                return Task.FromResult(new CommonActionResult
+                {
+                    IsSuccess = true,
+                    Message = "申请提现成功",
+                });
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("申请提现出错 - " + ex.Message, ex);
+            }
         }
 
         #endregion Implementation of IUserService
