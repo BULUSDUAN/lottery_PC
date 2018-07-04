@@ -1,8 +1,6 @@
 ﻿using EntityModel.CoreModel;
 using EntityModel.RequestModel;
 using Kason.Sg.Core.CPlatform.Ioc;
-using KaSon.FrameWork.Helper;
-using Lottery.Kg.ORM.Helper;
 using OrderLottery.Service.IModuleServices;
 using OrderLottery.Service.ModuleBaseServices;
 using System;
@@ -11,9 +9,10 @@ using System.Text;
 using System.Linq;
 using EntityModel;
 using EntityModel.Enum;
-using Lottery.Kg.ORM.Helper.OrderQuery;
 using EntityModel.Communication;
 using System.Threading.Tasks;
+using KaSon.FrameWork.ORM.Helper.OrderQuery;
+using KaSon.FrameWork.Common;
 
 namespace OrderLottery.Service.ModuleServices
 {
@@ -25,7 +24,7 @@ namespace OrderLottery.Service.ModuleServices
         public OrderService()
         {
             _order = new OrderQuery();
-            log = new Log4Log();
+
         }
 
         /// <summary>

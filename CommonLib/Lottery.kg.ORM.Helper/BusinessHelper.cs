@@ -10,6 +10,7 @@ using EntityModel.Domain.Entities;
 
 using Newtonsoft.Json;
 using KaSon.FrameWork.ORM.Helper;
+using KaSon.FrameWork.ORM.Helper.UserHelper;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
