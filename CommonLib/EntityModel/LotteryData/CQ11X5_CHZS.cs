@@ -168,5 +168,8 @@ namespace EntityModel
             [ProtoMember(25)]
             [Field("CreateTime")]
             public DateTime CreateTime{ get; set; }
+
+
+           
     }
 }

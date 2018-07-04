@@ -6,7 +6,6 @@ namespace EntityModel.CoreModel
 {
     public class TogetherOrderInfoCollection:Page
     {
-        public int TotalCount { get; set; }
         public decimal TotalBuyMoney { get; set; }
         public decimal TotalOrderMoney { get; set; }
 

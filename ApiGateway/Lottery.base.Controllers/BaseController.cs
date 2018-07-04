@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using KaSon.FrameWork.Helper;
+using KaSon.FrameWork.Helper.Net;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -44,7 +46,53 @@ namespace Lottery.Base.Controllers
         {
             log.Log(msg);
         }
+        public static string GetJsonData(string url)
+        {
+            try
+            {
+                var domain = ConfigHelper.ConfigInfo["SelfDomain"] ?? "http://www.iqucai.com";
+                url = domain + url;
+                if (string.IsNullOrEmpty(url))
+                    return string.Empty;
+                var result = KaSon.FrameWork.Helper.PostManager.Get(url, Encoding.UTF8);
+                if (result == "404") return string.Empty;
+                return result;
+            }
+            catch
+            {
+                return string.Empty;
+            }
+        }
 
-      
+
+        //#region "20171108增加配置（禁止注册的手机号码）"
+        ///// <summary>
+        ///// 禁止注册的号码
+        ///// </summary>
+        //public string BanRegistrMobile
+        //{
+        //    get
+        //    {
+        //        string defalutValue = "";
+        //        try
+        //        {
+        //            var v = WCFClients.GameClient.QueryCoreConfigByKey("BanRegistrMobile").ConfigValue;
+        //            if (string.IsNullOrEmpty(v))
+        //            {
+        //                return defalutValue;
+        //            }
+        //            else
+        //            {
+        //                return v;
+        //            }
+        //        }
+        //        catch (Exception)
+        //        {
+        //            return defalutValue;
+        //        }
+        //    }
+        //}
+        //#endregion
+
     }
 }

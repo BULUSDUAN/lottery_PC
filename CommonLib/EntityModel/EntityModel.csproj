@@ -5,10 +5,32 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="XmlAnalyzer\**" />
+    <EmbeddedResource Remove="XmlAnalyzer\**" />
+    <None Remove="XmlAnalyzer\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="XmlAnalyzer\AgentHostMappingConfigAnalyzer.cs" />
+    <Compile Include="XmlAnalyzer\CacheDataInfo.cs" />
+    <Compile Include="XmlAnalyzer\ConnConfigAnalyzer.cs" />
+    <Compile Include="XmlAnalyzer\SensitiveAnalyzer.cs" />
+    <Compile Include="XmlAnalyzer\SettingConfigAnalyzer.cs" />
+    <Compile Include="XmlAnalyzer\XmlAnalyzeHelper.cs" />
+    <Compile Include="XmlAnalyzer\XmlMappingAttribute.cs" />
+    <Compile Include="XmlAnalyzer\XmlMappingObject.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MessagePack" Version="1.7.3.4" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="protobuf-net" Version="2.3.7" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\KaSon.FrameWork.Common\KaSon.FrameWork.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>

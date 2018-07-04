@@ -25,6 +25,10 @@
     <Reference Include="Kason.Sg.Core.ProxyGenerator">
       <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.ProxyGenerator.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp">
+      <HintPath>C:\Windows\Microsoft.NET\Framework\v4.0.30319\Microsoft.CSharp.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
   </ItemGroup>
 
 </Project>

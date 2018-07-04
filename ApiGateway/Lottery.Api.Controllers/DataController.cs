@@ -3,7 +3,6 @@ using EntityModel.CoreModel;
 using EntityModel.Enum;
 using Kason.Sg.Core.ProxyGenerator;
 using KaSon.FrameWork.Helper;
-using Lottery.ApiGateway.Model.Enum;
 using Lottery.ApiGateway.Model.HelpModel;
 using Lottery.Base.Controllers;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using static KaSon.FrameWork.Helper.JsonHelper;
 using System.Linq;
 using EntityModel.Communication;
 using System.IO;
@@ -389,7 +387,11 @@ namespace Lottery.Api.Controllers
         {
             try
             {
+<<<<<<< HEAD
                 var p = WebHelper.Decode(entity.Param);
+=======
+                var p =WebHelper.Decode(entity.Param);
+>>>>>>> 77f9da3f72619db400865d437806eabbbff34413
                 var gameCode = p.GameCode;
                 string gameType = p.GameType;
                 var issuseNumber = p.IssuseNumber;
@@ -867,7 +869,11 @@ namespace Lottery.Api.Controllers
         {
             try
             {
+<<<<<<< HEAD
                 var p = WebHelper.Decode(entity.Param);
+=======
+                var p =WebHelper.Decode(entity.Param);
+>>>>>>> 77f9da3f72619db400865d437806eabbbff34413
                 //var param = System.Web.Helpers.Json.Decode(entity.Param);
                 string id = p.ArticleId;
                 if (string.IsNullOrEmpty(id))
@@ -941,7 +947,11 @@ namespace Lottery.Api.Controllers
         {
             try
             {
+<<<<<<< HEAD
                 var p = WebHelper.Decode(entity.Param);
+=======
+                var p =WebHelper.Decode(entity.Param);
+>>>>>>> 77f9da3f72619db400865d437806eabbbff34413
                 //热点彩讯  FocusCMS
                 //赛事点评 Match_Comment
                 //彩票资讯 Lottery_GameCode
@@ -1397,7 +1407,11 @@ namespace Lottery.Api.Controllers
         {
             try
             {
+<<<<<<< HEAD
                 var p = WebHelper.Decode(entity.Param);
+=======
+                var p =WebHelper.Decode(entity.Param);
+>>>>>>> 77f9da3f72619db400865d437806eabbbff34413
                 string appAgentId = p.AppAgentId;
                 if (string.IsNullOrEmpty(appAgentId))
                     appAgentId = "100000";//公司APP特定编号
@@ -1826,7 +1840,11 @@ namespace Lottery.Api.Controllers
         {
             try
             {
+<<<<<<< HEAD
                 var p = WebHelper.Decode(entity.Param);
+=======
+                var p =WebHelper.Decode(entity.Param);
+>>>>>>> 77f9da3f72619db400865d437806eabbbff34413
                 //热点彩讯  FocusCMS
                 //赛事点评 Match_Comment
                 //彩票资讯 Lottery_GameCode

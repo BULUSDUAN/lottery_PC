@@ -12,11 +12,13 @@ using System.Linq;
 using EntityModel;
 using EntityModel.Enum;
 using Lottery.Kg.ORM.Helper.OrderQuery;
+using EntityModel.Communication;
+using System.Threading.Tasks;
 
 namespace OrderLottery.Service.ModuleServices
 {
     [ModuleName("Order")]
-    public class OrderService:DBbase, IOrderService
+    public class OrderService :KgBaseService, IOrderService
     {
         IKgLog log = null;
         readonly OrderQuery _order = null;
@@ -31,9 +33,9 @@ namespace OrderLottery.Service.ModuleServices
         /// </summary>
         /// <param name="Model">请求实体</param>
         /// <returns></returns>
-        public BonusOrderInfoCollection QueryBonusInfoList(QueryBonusInfoListParam Model)
-        {                   
-           return _order.QueryBonusInfoList(Model);
+        public Task<BonusOrderInfoCollection> QueryBonusInfoList(QueryBonusInfoListParam Model)
+        {
+            return Task.FromResult(_order.QueryBonusInfoList(Model));
         }
 
         /// <summary>
@@ -43,9 +45,9 @@ namespace OrderLottery.Service.ModuleServices
         /// <param name="pageIndex">页码</param>
         /// <param name="pageSize">页数</param>
         /// <returns></returns>
-        public BJDCMatchResultInfo_Collection QueryBJDC_MatchResultCollection(string issuseNumber, int pageIndex, int pageSize)
+        public Task<BJDCMatchResultInfo_Collection> QueryBJDC_MatchResultCollection(string issuseNumber, int pageIndex, int pageSize)
         {
-           return _order.QueryBJDC_MatchResultCollection( issuseNumber,  pageIndex,  pageSize);
+            return Task.FromResult(_order.QueryBJDC_MatchResultCollection(issuseNumber, pageIndex, pageSize));
         }
 
         /// <summary>
@@ -53,9 +55,9 @@ namespace OrderLottery.Service.ModuleServices
         /// </summary>
         /// <param name="Model"></param>
         /// <returns></returns>
-        public UserFundDetailCollection QueryMyFundDetailList(QueryUserFundDetailParam Model)
+        public Task<UserFundDetailCollection> QueryMyFundDetailList(QueryUserFundDetailParam Model)
         {
-            return _order.QueryMyFundDetailList(Model);
+            return Task.FromResult(_order.QueryMyFundDetailList(Model));
         }
         /// <summary>
         /// 查询我的资金明细
@@ -63,58 +65,250 @@ namespace OrderLottery.Service.ModuleServices
         /// <param name="Model"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public UserFundDetailCollection QueryUserFundDetail(QueryUserFundDetailParam Model, string userId)
+        public Task<UserFundDetailCollection> QueryUserFundDetail(QueryUserFundDetailParam Model, string userId)
         {
-            return _order.QueryUserFundDetail(Model, userId);
+            return Task.FromResult(_order.QueryUserFundDetail(Model, userId));
         }
         /// <summary>
         /// 查询我的充值提现
         /// </summary>
         /// <param name="Model"></param>
         /// <returns></returns>
-        public FillMoneyQueryInfoCollection QueryFillMoneyList(QueryFillMoneyListParam Model)
+        public Task<FillMoneyQueryInfoCollection> QueryFillMoneyList(QueryFillMoneyListParam Model)
         {
-            return _order.QueryFillMoneyList(Model);
+            return Task.FromResult(_order.QueryFillMoneyList(Model));
         }
         /// <summary>
         /// 查询我的投注记录
         /// </summary>
         /// <param name="Model"></param>
         /// <returns></returns>
-        public MyBettingOrderInfoCollection QueryMyBettingOrderList(QueryMyBettingOrderParam Model)
+        public Task<MyBettingOrderInfoCollection> QueryMyBettingOrderList(QueryMyBettingOrderParam Model)
         {
-            return _order.QueryMyBettingOrderList(Model);
+            return Task.FromResult(_order.QueryMyBettingOrderList(Model));
         }
         /// <summary>
         /// 查询提现记录
         /// </summary>
         /// <param name="Model"></param>
         /// <returns></returns>
-        public Withdraw_QueryInfoCollection QueryMyWithdrawList(QueryMyWithdrawParam Model)
+        public Task<Withdraw_QueryInfoCollection> QueryMyWithdrawList(QueryMyWithdrawParam Model)
         {
-            return _order.QueryMyWithdrawList(Model);
+            return Task.FromResult(_order.QueryMyWithdrawList(Model));
         }
         /// <summary>
         /// 查询指定用户创建的合买订单列表
         /// </summary>
         /// <param name="Model"></param>
         /// <returns></returns>
-        public TogetherOrderInfoCollection QueryCreateTogetherOrderListByUserId(QueryCreateTogetherOrderParam Model)
+        public Task<TogetherOrderInfoCollection> QueryCreateTogetherOrderListByUserId(QueryCreateTogetherOrderParam Model)
         {
-            return _order.QueryCreateTogetherOrderListByUserId(Model);
+            return Task.FromResult(_order.QueryCreateTogetherOrderListByUserId(Model));
         }
         /// <summary>
         /// 查询指定用户参与的合买订单
         /// </summary>
         /// <param name="Model"></param>
         /// <returns></returns>
-        public TogetherOrderInfoCollection QueryJoinTogetherOrderListByUserId(QueryCreateTogetherOrderParam Model)
+        public Task<TogetherOrderInfoCollection> QueryJoinTogetherOrderListByUserId(QueryCreateTogetherOrderParam Model)
         {
-            return _order.QueryJoinTogetherOrderListByUserId(Model);
+            return Task.FromResult(_order.QueryJoinTogetherOrderListByUserId(Model));
         }
-        public Sports_TogetherSchemeQueryInfoCollection QuerySportsTogetherListFromRedis(QuerySportsTogetherListFromRedisParam Model)
+        /// <summary>
+        /// 从Redis查询出合买订单数据
+        /// </summary>
+        /// <param name="Model"></param>
+        /// <returns></returns>
+        public Task<Sports_TogetherSchemeQueryInfoCollection> QuerySportsTogetherListFromRedis(QuerySportsTogetherListFromRedisParam Model)
         {
-            return _order.QuerySportsTogetherListFromRedis(Model);
-        }       
+            return Task.FromResult(_order.QuerySportsTogetherListFromRedis(Model));
+        }
+        /// <summary>
+        /// 按keyline查询追号列表
+        /// </summary>
+        /// <param name="keyLine"></param>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public Task<BettingOrderInfoCollection> QueryBettingOrderListByChaseKeyLine(string keyLine, string userToken)
+        {
+            return Task.FromResult(_order.QueryBettingOrderListByChaseKeyLine(keyLine, userToken));
+        }
+        /// <summary>
+        /// 查询指定订单的投注号码列表
+        /// </summary>
+        /// <param name="schemeId"></param>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public Task<BettingAnteCodeInfoCollection> QueryAnteCodeListBySchemeId(string schemeId)
+        {
+            return Task.FromResult(_order.QueryAnteCodeListBySchemeId(schemeId));
+        }
+        /// <summary>
+        /// 查询足彩合买明细
+        /// </summary>
+        /// <param name="schemeId"></param>
+        /// <returns></returns>
+        public Task<Sports_TogetherSchemeQueryInfo> QuerySportsTogetherDetail(string schemeId)
+        {
+            return Task.FromResult(_order.QuerySportsTogetherDetail(schemeId));
+        }
+        /// <summary>
+        /// 用户是否已经参与了合买
+        /// </summary>
+        /// <param name="schemeId"></param>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public Task<bool> IsUserJoinSportsTogether(string schemeId, string userToken)
+        {
+            return Task.FromResult(_order.IsUserJoinSportsTogether(schemeId, userToken));
+        }
+        public Task<Sports_AnteCodeQueryInfoCollection> QuerySportsOrderAnteCodeList(string schemeId)
+        {
+            return Task.FromResult(_order.QuerySportsOrderAnteCodeList(schemeId));
+        }
+        public Task<Issuse_QueryInfo> QueryIssuseInfo(string gameCode, string gameType, string issuseNumber)
+        {
+            return Task.FromResult(_order.QueryIssuseInfo(gameCode, gameType, issuseNumber));
+        }
+        public Task<Sports_SchemeQueryInfo> QuerySportsSchemeInfo(string schemeId)
+        {
+            return Task.FromResult(_order.QuerySportsSchemeInfo(schemeId));
+        }
+        /// <summary>
+        /// 查询我的定制  或 定制我的
+        /// </summary>
+        /// <param name="Model"></param>
+        /// <returns></returns>
+        public Task<TogetherFollowerRuleQueryInfoCollection> QueryUserFollowRule(QueryUserFollowRuleParam Model)
+        {
+            return Task.FromResult(_order.QueryUserFollowRule(Model));
+        }
+        /// <summary>
+        ///  查询跟单信息
+        /// </summary>
+        /// <param name="createrUserId"></param>
+        /// <param name="followerUserId"></param>
+        /// <param name="gameCode"></param>
+        /// <param name="gameType"></param>
+        /// <returns></returns>
+        public Task<TogetherFollowerRuleQueryInfo> QueryTogetherFollowerRuleInfo(string createrUserId, string followerUserId, string gameCode, string gameType)
+        {
+            return Task.FromResult(_order.QueryTogetherFollowerRuleInfo(createrUserId, followerUserId, gameCode, gameType));
+        }
+        /// <summary>
+        /// 查询今日宝单
+        /// </summary>
+        /// <param name="Model"></param>
+        /// <returns></returns>
+        public Task<TotalSingleTreasure_Collection> QueryTodayBDFXList(QueryTodayBDFXList Model)
+        {
+            return Task.FromResult(_order.QueryTodayBDFXList(Model));
+        }
+        /// <summary>
+        /// 查询昨日牛人
+        /// </summary>
+        /// <param name="startTime"></param>
+        /// <param name="endTime"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public Task<string> QueryYesterdayNR(DateTime startTime, DateTime endTime, int count)
+        {
+            return Task.FromResult(_order.QueryYesterdayNR(startTime, endTime, count));
+        }
+        /// <summary>
+        /// 查询宝单作者主页
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="strIsBonus"></param>
+        /// <param name="currentTime"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public Task<TotalSingleTreasure_Collection> QueryBDFXAutherHomePage(string userId, string strIsBonus, string currentTime, int pageIndex, int pageSize)
+        {
+            return Task.FromResult(_order.QueryBDFXAutherHomePage(userId,strIsBonus,currentTime,pageIndex,pageSize));
+        }
+        /// <summary>
+        /// 查询关注(关注总数、被关注总数、晒单总数等)
+        /// </summary>
+        /// <param name="bdfxUserId"></param>
+        /// <param name="currUserId"></param>
+        /// <param name="startTime"></param>
+        /// <param name="endTime"></param>
+        /// <returns></returns>
+        public Task<ConcernedInfo> QueryConcernedByUserId(string bdfxUserId, string currUserId, string startTime, string endTime)
+        {
+            return Task.FromResult(_order.QueryConcernedByUserId(bdfxUserId, currUserId, startTime, endTime));
+        }
+        /// <summary>
+        /// 关注
+        /// </summary>
+        /// <param name="currUserId"></param>
+        /// <param name="bgzUserId"></param>
+        public Task<CommonActionResult> BDFXAttention(string currUserId, string bgzUserId)
+        {
+          return Task.FromResult(_order.BDFXAttention(currUserId,bgzUserId));
+        }
+        /// <summary>
+        /// 取消关注
+        /// </summary>
+        /// <param name="currUserId"></param>
+        /// <param name="bgzUserId"></param>
+        public Task<CommonActionResult> BDFXCancelAttention(string currUserId, string bgzUserId)
+        {
+          return Task.FromResult(_order.BDFXCancelAttention(currUserId, bgzUserId));
+        }
+        /// <summary>
+        /// 查询高手排行/我的关注
+        /// </summary>
+        /// <param name="startTime"></param>
+        /// <param name="endTime"></param>
+        /// <param name="currUserId"></param>
+        /// <param name="isMyGZ"></param>
+        /// <returns></returns>
+        public Task<BDFXGSRank_Collection> QueryGSRankList(string startTime, string endTime, string currUserId, string isMyGZ)
+        {
+            return Task.FromResult(_order.QueryGSRankList(startTime, endTime, currUserId, isMyGZ));
+        }
+        public Task<BDFXOrderDetailInfo> QueryBDFXOrderDetailBySchemeId(string schemeId)
+        {
+            return Task.FromResult(_order.QueryBDFXOrderDetailBySchemeId(schemeId));
+        }
+        public Task<BettingOrderInfoCollection> QueryMyChaseOrderList(string gameCode, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string userToken)
+        {
+            return Task.FromResult(_order.QueryMyChaseOrderList(gameCode, startTime, endTime, pageIndex, pageSize, userToken));
+        }
+        public Task<MyOrderListInfoCollection> QueryMyOrderListInfo(QueryMyOrderListInfoParam Model)
+        {
+            return Task.FromResult(_order.QueryMyOrderListInfo(Model));
+        }
+        public Task<MyOrderListInfo> QueryMyOrderDetailInfo(string schemeId)
+        {
+            return Task.FromResult(_order.QueryMyOrderDetailInfo(schemeId));
+        }
+        public Task<List<LotteryNewBonusInfo>> QueryLotteryNewBonusInfoList(int count)
+        {
+            return Task.FromResult(_order.QueryLotteryNewBonusInfoList(count));
+        }
+        public Task<GameWinNumber_InfoCollection> QueryGameWinNumberByDate(DateTime startTime, DateTime endTime, string gameCode, int pageIndex, int pageSize)
+        {
+            return Task.FromResult(_order.QueryGameWinNumberByDate(startTime, endTime, gameCode, pageIndex, pageSize));
+        }
+        public Task<GameWinNumber_InfoCollection> QueryGameWinNumberByDateDesc(DateTime startTime, DateTime endTime, string gameCode, int pageIndex, int pageSize)
+        {
+            return Task.FromResult(_order.QueryGameWinNumberByDateDesc(startTime, endTime, gameCode, pageIndex, pageSize));
+        }
+        public Task<List<LotteryIssuse_QueryInfo>> QueryAllGameCurrentIssuse(bool byOfficial)
+        {
+            return Task.FromResult(_order.QueryAllGameCurrentIssuse(byOfficial));
+        }
+        public Task<BJDCIssuseInfo> QueryBJDCCurrentIssuseInfo()
+        {
+            return Task.FromResult(_order.QueryBJDCCurrentIssuseInfo());
+        }
+        public Task<CTZQMatchInfo_Collection> QueryCTZQMatchListByIssuseNumber(string gameType, string issuseNumber, string userToken)
+        {
+            return Task.FromResult(_order.QueryCTZQMatchListByIssuseNumber(gameType, issuseNumber, userToken));
+        }
     }
 }

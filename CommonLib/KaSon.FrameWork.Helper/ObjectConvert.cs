@@ -1,9 +1,18 @@
+<<<<<<< HEAD
 ﻿using System;
+=======
+﻿using KaSon.FrameWork.Common;
+using System;
+>>>>>>> 77f9da3f72619db400865d437806eabbbff34413
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+<<<<<<< HEAD
 namespace KaSon.FrameWork.Helper
+=======
+namespace KaSon.FrameWork.Entity.Helper
+>>>>>>> 77f9da3f72619db400865d437806eabbbff34413
 {
     /// <summary>
     /// 对象转换器。用于领域层与服务层之间对象的转换
@@ -28,6 +37,27 @@ namespace KaSon.FrameWork.Helper
             var typeEntity = typeof(TEntity);
             foreach (var prop in typeInfo.GetProperties())
             {
+<<<<<<< HEAD
+=======
+                // 如果定义了映射标签
+                if (prop.IsDefined(typeof(ConvertDeeplyMappingAttribute), false))
+                {
+                    var attr = prop.GetCustomAttributes(typeof(ConvertDeeplyMappingAttribute), false)[0] as ConvertDeeplyMappingAttribute;
+                    var mappings = attr.MappingName.Split('.');
+                    if (mappings.Length == 1)
+                    {
+                        var entityProp = typeEntity.GetProperty(mappings[0]);
+                        if (entityProp == null)
+                        {
+                            throw new Exception("未找到映射的属性" + mappings[0]);
+                        }
+                        var value = prop.GetValue(info, null);
+                        entityProp.SetValue(entity, value, null);
+                    }
+                }
+                else
+                {
+>>>>>>> 77f9da3f72619db400865d437806eabbbff34413
                     var entityProp = typeEntity.GetProperty(prop.Name);
                     if (entityProp != null)
                     {
@@ -48,6 +78,10 @@ namespace KaSon.FrameWork.Helper
                             }
                         }
                     }
+<<<<<<< HEAD
+=======
+                }
+>>>>>>> 77f9da3f72619db400865d437806eabbbff34413
             }
         }
         /// <summary>
@@ -68,6 +102,23 @@ namespace KaSon.FrameWork.Helper
             var typeEntity = typeof(TEntity);
             foreach (var prop in typeInfo.GetProperties())
             {
+<<<<<<< HEAD
+=======
+                // 如果定义了映射标签
+                if (prop.IsDefined(typeof(ConvertDeeplyMappingAttribute), false))
+                {
+                    var attr = prop.GetCustomAttributes(typeof(ConvertDeeplyMappingAttribute), false)[0] as ConvertDeeplyMappingAttribute;
+                    var mappings = attr.MappingName.Split('.');
+                    if (mappings.Length < 1)
+                    {
+                        throw new Exception("深度映射定义错误");
+                    }
+                    var value = GetDeeplyPropertyValue(typeEntity, entity, mappings);
+                    prop.SetValue(info, value, null);
+                }
+                else
+                {
+>>>>>>> 77f9da3f72619db400865d437806eabbbff34413
                     var entityProp = typeEntity.GetProperty(prop.Name);
                     if (entityProp != null)
                     {
@@ -85,6 +136,10 @@ namespace KaSon.FrameWork.Helper
                             }
                         }
                     }
+<<<<<<< HEAD
+=======
+                }
+>>>>>>> 77f9da3f72619db400865d437806eabbbff34413
             }
         }
         /// <summary>
@@ -164,4 +219,8 @@ namespace KaSon.FrameWork.Helper
             return GetDeeplyPropertyValue(prop.PropertyType, value, tmp);
         }
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 77f9da3f72619db400865d437806eabbbff34413

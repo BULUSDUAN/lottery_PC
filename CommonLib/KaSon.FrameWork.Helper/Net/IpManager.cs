@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace KaSon.FrameWork.Helper.Net
+namespace KaSon.FrameWork.Entity.Helper.Net
 {
     public static class IpManager
     {

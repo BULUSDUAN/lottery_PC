@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -5,6 +6,16 @@ using System.Text;
 using System.Collections;
 
 namespace KaSon.FrameWork.Helper
+=======
+﻿using EntityModel.AnalyzerFactory;
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Text;
+
+namespace KaSon.FrameWork.Common
+>>>>>>> 77f9da3f72619db400865d437806eabbbff34413
 {
     /// <summary>
     /// 前置条件断言，辅助类
@@ -20,7 +31,11 @@ namespace KaSon.FrameWork.Helper
         {
             if (value == null)
             {
+<<<<<<< HEAD
                 throw new Exception(message ?? "前置条件断言失败 - " + "要求不为null");
+=======
+                throw new PreconditionException(message ?? "前置条件断言失败 - " + "要求不为null");
+>>>>>>> 77f9da3f72619db400865d437806eabbbff34413
             }
             return value;
         }
@@ -33,7 +48,11 @@ namespace KaSon.FrameWork.Helper
         {
             if (string.IsNullOrWhiteSpace(value))
             {
+<<<<<<< HEAD
                 throw new Exception(message ?? "前置条件断言失败 - " + "要求不为空字符串");
+=======
+                throw new PreconditionException(message ?? "前置条件断言失败 - " + "要求不为空字符串");
+>>>>>>> 77f9da3f72619db400865d437806eabbbff34413
             }
             return value;
         }
@@ -46,7 +65,11 @@ namespace KaSon.FrameWork.Helper
         {
             if (!condition)
             {
+<<<<<<< HEAD
                 throw new Exception(message ?? "前置条件断言失败 - " + "要求为真");
+=======
+                throw new PreconditionException(message ?? "前置条件断言失败 - " + "要求为真");
+>>>>>>> 77f9da3f72619db400865d437806eabbbff34413
             }
             return condition;
         }
@@ -59,7 +82,11 @@ namespace KaSon.FrameWork.Helper
         {
             if (condition)
             {
+<<<<<<< HEAD
                 throw new Exception(message ?? "前置条件断言失败 - " + "要求为假");
+=======
+                throw new PreconditionException(message ?? "前置条件断言失败 - " + "要求为假");
+>>>>>>> 77f9da3f72619db400865d437806eabbbff34413
             }
             return condition;
         }
@@ -140,7 +167,11 @@ namespace KaSon.FrameWork.Helper
             }
             else
             {
+<<<<<<< HEAD
                 throw new Exception(message);
+=======
+                throw new PreconditionException(message);
+>>>>>>> 77f9da3f72619db400865d437806eabbbff34413
             }
 
         }

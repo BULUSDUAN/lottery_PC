@@ -1,0 +1,20 @@
+﻿{
+  "UserSystemModule": [
+    {
+      "Key": "LoginSQL",
+      "Desc": "功能描述:登陆",
+      "ParamDesc": "@p:id 整数类型，大于0，",
+      "Director": "kason，作者",
+      "SQL": "select * from test_user where id=@p",
+      "Make": "备注"
+    },
+    {
+      "Key": "RegSQL",
+      "Desc": "功能描述:注册",
+      "ParamDesc": "@p:id 整数类型，大于0，",
+      "Director": "kason，作者",
+      "SQL": "select * from test_user where id=@p",
+      "Make": "备注"
+    }
+  ]
+}

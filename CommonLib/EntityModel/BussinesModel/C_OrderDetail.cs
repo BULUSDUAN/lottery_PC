@@ -191,7 +191,7 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(29)]
             [Field("TicketTime")]
-            public DateTime TicketTime{ get; set; }
+            public DateTime? TicketTime{ get; set; }
             /// <summary>
             // 红包金额
             ///</summary>

@@ -1,8 +1,10 @@
-﻿using EntityModel.Enum;
+﻿
+using EntityModel.Enum;
+using KaSon.FrameWork.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
-namespace KaSon.FrameWork.Helper
+namespace KaSon.FrameWork.Entity.Helper
 {
     public class ConvertHelper
     {
@@ -12,9 +14,9 @@ namespace KaSon.FrameWork.Helper
         /// </summary>
         /// <param name=”time”></param>
         /// <returns></returns>
-        public static int ConvertDateTimeInt(System.DateTime time)
+        public static int ConvertDateTimeInt(DateTime time)
         {
-            System.DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new System.DateTime(1970, 1, 1));
+            DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
             return (int)(time - startTime).TotalSeconds;
         }
         /// <summary>
@@ -37,7 +39,6 @@ namespace KaSon.FrameWork.Helper
 
         private static Dictionary<string, string> GetAnteCodeDic(string[] array1, string[] array2)
         {
-
             Dictionary<string, string> dicAnteCode = new Dictionary<string, string>();
             for (int i = 0; i < array1.Length; i++)
             {
@@ -514,6 +515,582 @@ namespace KaSon.FrameWork.Helper
                     }
                 default: return "待开始";
             }
+        }
+        /// <summary>
+        /// 解析彩种为中文名称
+        /// </summary>
+        public static string FormatGameCode(string gameCode)
+        {
+            switch (gameCode)
+            {
+                case "BJDC":
+                    return "北京单场";
+                case "JCZQ":
+                    return "竞彩足球";
+                case "JCLQ":
+                    return "竞彩篮球";
+                case "CTZQ":
+                    return "传统足球";
+                case "SSQ":
+                    return "双色球";
+                case "DLT":
+                    return "大乐透";
+                case "FC3D":
+                    return "福彩3D";
+                case "PL3":
+                    return "排列3";
+                case "JCSJBGJ":
+                    return "世界杯冠军";
+                case "JCYJ":
+                    return "世界杯冠亚军";
+                case "CQSSC":
+                    return "重庆时时彩";
+                case "JX11X5":
+                    return "江西11选五";
+                case "SD11X5":
+                    return "山东11选5";
+                case "GD11X5":
+                    return "广东11选5";
+                case "GDKLSF":
+                    return "广东快乐十分";
+                case "JSKS":
+                    return "江苏快三";
+                case "SDKLPK3":
+                    return "山东快乐扑克3";
+
+            }
+            return gameCode;
+        }
+        /// <summary>
+        /// 解析玩法为中文名称
+        /// </summary>
+        public static string FormatGameType(string gameCode, string gameType)
+        {
+            var nameList = new List<string>();
+            var typeList = gameType.Split(',', '|');
+            foreach (var t in typeList)
+            {
+                nameList.Add(FormatGameType_Each(gameCode, t));
+            }
+            return string.Join(",", nameList.ToArray());
+        }
+        /// <summary>
+        /// 隐藏用户名
+        /// </summary>
+        /// <param name="userName">用户名</param>
+        /// <param name="showCount">显示长度</param>
+        /// <returns>已隐藏部分用户名</returns>
+        public static string HideUserName(string userName, int hideCount = 2)
+        {
+            if (string.IsNullOrEmpty(userName))
+            {
+                return "";
+            }
+            hideCount = hideCount > userName.Length ? userName.Length : hideCount;
+
+            var regex = new System.Text.RegularExpressions.Regex("^1\\d{10}$");
+            bool isMobile = regex.IsMatch(userName);
+            if (isMobile)
+                return EncodeMobile(userName);
+            return EncodeString(userName, userName.Length - hideCount, userName.Length, hideCount);
+        }
+        public static string FormatGameType_Each(string gameCode, string gameType)
+        {
+            switch (gameCode)
+            {
+                #region 足彩
+
+                case "BJDC":
+                    switch (gameType)
+                    {
+                        case "SPF":
+                            return "胜平负";
+                        case "ZJQ":
+                            return "总进球";
+                        case "SXDS":
+                            return "上下单双";
+                        case "BF":
+                            return "比分";
+                        case "BQC":
+                            return "半全场";
+                    }
+                    break;
+                case "JCZQ":
+                    switch (gameType)
+                    {
+                        case "SPF":
+                            return "让球胜平负";
+                        case "BRQSPF":
+                            return "胜平负";
+                        case "BF":
+                            return "比分";
+                        case "ZJQ":
+                            return "总进球";
+                        case "BQC":
+                            return "半全场";
+                        case "HH":
+                            return "混合过关";
+                    }
+                    break;
+                case "JCLQ":
+                    switch (gameType)
+                    {
+                        case "SF":
+                            return "胜负";
+                        case "RFSF":
+                            return "让分胜负";
+                        case "SFC":
+                            return "胜分差";
+                        case "DXF":
+                            return "大小分";
+                        case "HH":
+                            return "混合过关";
+                    }
+                    break;
+                case "CTZQ":
+                    switch (gameType)
+                    {
+                        case "T14C":
+                            return "14场胜负";
+                        case "TR9":
+                            return "胜负任9";
+                        case "T6BQC":
+                            return "6场半全场";
+                        case "T4CJQ":
+                            return "4场进球";
+                    }
+                    break;
+
+                #endregion
+
+                #region 重庆时时彩
+
+                case "CQSSC":
+                    switch (gameType)
+                    {
+                        case "1XDX":    // 一星单选
+                            return "一星单选";
+                        case "2XDX":    // 二星单选
+                            return "二星单选";
+                        case "3XDX":    // 三星直选
+                            return "三星直选";
+                        case "5XDX":    // 五星直选
+                            return "五星直选";
+                        case "5XTX":    // 五星通选
+                            return "五星通选";
+                        case "DXDS":    // 大小单双
+                            return "大小单双";
+                        case "2XHZ":    // 二星和值
+                            return "二星和值";
+                        case "3XHZ":    // 三星和值
+                            return "三星和值";
+                        case "ZX3DS":   // 组三单式
+                            return "组三单式";
+                        case "ZX3FS":   // 组三复式
+                            return "组三复式";
+                        case "ZX6":     // 组选六
+                            return "组选六";
+                        case "2XBAODAN":   // 二星组选包胆
+                            return "二星组选包胆";
+                        case "3XBAODAN":   // 三星组选包胆
+                            return "三星组选包胆";
+                        case "2XBAODIAN":   // 二星组选包点
+                            return "二星组选包点";
+                        case "3XBAODIAN":   // 三星组选包点
+                            return "三星组选包点";
+                        case "2XZXFS":   // 二星组选复式
+                            return "二星组选复式";
+                        case "2XZXFW":   // 二星组选分位
+                            return "二星组选分位";
+                        case "3XZXZH":   // 三星直选组合
+                            return "三星直选组合";
+                    }
+                    break;
+
+                #endregion
+
+                #region 江西时时彩
+
+                case "JXSSC":
+                    switch (gameType)
+                    {
+                        case "1XDX":    // 一星单选
+                            return "一星单选";
+                        case "2XDX":    // 二星单选
+                            return "二星单选";
+                        case "3XDX":    // 三星直选
+                            return "三星直选";
+                        case "4XDX":
+                            return "四星直选";
+                        case "5XDX":    // 五星直选
+                            return "五星直选";
+                        case "5XTX":    // 五星通选
+                            return "五星通选";
+                        case "DXDS":    // 大小单双
+                            return "大小单双";
+                        case "ZX3DS":   // 组三单式
+                            return "组三单式";
+                        case "ZX3FS":   // 组三复式
+                            return "组三复式";
+                        case "ZX6":     // 组选六
+                            return "组选六";
+                        case "2XHZ":    // 二星和值
+                            return "二星和值";
+                        case "2XBAODIAN":   // 二星组选包点
+                            return "二星组选包点";
+                        case "2XZX":   // 二星组选
+                            return "二星组选";
+                        case "RX1":   // 任选一
+                            return "任选一";
+                        case "RX2":   // 任选二
+                            return "任选二";
+                    }
+                    break;
+
+                #endregion
+
+                #region 山东十一选五、广东十一选五、江西十一选五
+
+                case "SD11X5":
+                case "GD11X5":
+                case "JX11X5":
+                    switch (gameType)
+                    {
+                        case "RX1":
+                            return "任选一";
+                        case "RX2":
+                            return "任选二";
+                        case "RX3":
+                            return "任选三";
+                        case "RX4":
+                            return "任选四";
+                        case "RX5":
+                            return "任选五";
+                        case "RX6":
+                            return "任选六";
+                        case "RX7":
+                            return "任选七";
+                        case "RX8":
+                            return "任选八";
+                        case "Q2ZHIX":
+                            return "前二直选";
+                        case "Q3ZHIX":
+                            return "前三直选";
+                        case "Q2ZUX":
+                            return "前二组选";
+                        case "Q3ZUX":
+                            return "前三组选";
+                    }
+                    break;
+
+                #endregion
+
+                #region 广东快乐十分
+
+                case "GDKLSF":
+                    switch (gameType)
+                    {
+                        case "RX2":
+                            return "任选二";
+                        case "RX3":
+                            return "任选三";
+                        case "RX4":
+                            return "任选四";
+                        case "RX5":
+                            return "任选五";
+                        case "X1HT":
+                            return "选一红投";
+                        case "X1ST":
+                            return "选一数投";
+                        case "X2LZHI":
+                            return "选二连直";
+                        case "X2LZU":
+                            return "选二连组";
+                        case "X3QZHI":
+                            return "选三连直";
+                        case "X3QZU":
+                            return "选三连组";
+                    }
+                    break;
+
+                #endregion
+
+                #region 江苏快三
+
+                case "JSKS":
+                    switch (gameType)
+                    {
+                        case "2BTH":
+                            return "二不同号";
+                        case "2BTHDT":
+                            return "二不同号单选";
+                        case "2THDX":
+                            return "二同号单选";
+                        case "2THFX":
+                            return "二同号复选";
+                        case "3BTH":
+                            return "三不同号";
+                        case "3BTHDT":
+                            return "三不同号单选";
+                        case "3LHTX":
+                            return "三连号通选";
+                        case "3THDX":
+                            return "三同号单选";
+                        case "3THTX":
+                            return "三同号通选";
+                        case "HZ":
+                            return "和值";
+                    }
+                    break;
+
+                #endregion
+
+                #region 山东快乐扑克3
+
+                case "SDKLPK3":
+                    switch (gameType)
+                    {
+                        case "BZ":
+                            return "豹子";
+                        case "DZ":
+                            return "对子";
+                        case "RX1":
+                            return "任选一";
+                        case "RX2":
+                            return "任选二";
+                        case "RX3":
+                            return "任选三";
+                        case "RX4":
+                            return "任选四";
+                        case "RX5":
+                            return "任选五";
+                        case "RX6":
+                            return "任选六";
+                        case "SZ":
+                            return "顺子";
+                        case "TH":
+                            return "同花";
+                        case "THS":
+                            return "同花顺";
+                    }
+                    break;
+
+                #endregion
+
+
+                #region 福彩3D、排列三
+
+                case "FC3D":
+                case "PL3":
+                    switch (gameType)
+                    {
+                        case "FS":
+                            return "复式";
+                        case "HZ":
+                            return "和值";
+                        case "ZX3DS":   // 组三单式
+                            return "组三单式";
+                        case "ZX3FS":   // 组三复式
+                            return "组三复式";
+                        case "ZX6":     // 组选六
+                            return "组选六";
+                    }
+                    break;
+
+                #endregion
+
+                #region 双色球
+
+                case "SSQ":
+                    switch (gameType)
+                    {
+                        case "DS":
+                            return "单式";
+                        case "FS":
+                            return "复式";
+                        case "DT":
+                            return "胆拖";
+                    }
+                    break;
+
+                #endregion
+
+                #region 大乐透
+
+                case "DLT":
+                    switch (gameType)
+                    {
+                        case "DS":
+                            return "单式";
+                        case "FS":
+                            return "复式";
+                        case "DT":
+                            return "胆拖";
+                        case "12X2DS":
+                            return "12生肖";
+                        case "12X2FS":
+                            return "12生肖";
+                    }
+                    break;
+
+
+                #endregion
+
+                case "JCSJBGJ":
+                    return "世界杯冠军";
+                case "JCYJ":
+                    return "世界杯冠亚军";
+            }
+            return gameType;
+        }
+        /// <summary>
+        /// 加密手机号，只显示前三位和后四位
+        /// </summary>
+        /// <param name="mobile">手机号码</param>
+        /// <returns>加密后的手机号码</returns>
+        public static string EncodeMobile(string mobile)
+        {
+            if (string.IsNullOrEmpty(mobile)) return string.Empty;
+            return EncodeString(mobile, 3, mobile.Length - 4);
+        }
+        /// <summary>
+        /// 加密字符串，隐藏指定位置用替换符代替
+        /// </summary>
+        /// <param name="objString">目标字符串</param>
+        /// <param name="startIndex">起始隐藏位置</param>
+        /// <param name="endIndex">结束隐藏位置</param>
+        /// <param name="perch">替换符位数，默认3位</param>
+        /// <param name="perchString">替换符号，默认*</param>
+        /// <returns></returns>
+        public static string EncodeString(string objString, int startIndex = 0, int endIndex = 0, int perch = 3, string perchString = "*")
+        {
+            if (endIndex > 0 && endIndex > startIndex && endIndex <= objString.Length)
+            {
+                var perchtmp = "";
+                for (int i = 0; i < perch; i++)
+                {
+                    perchtmp += perchString;
+                }
+                return objString.Substring(0, startIndex) + perchtmp + objString.Substring(endIndex);
+            }
+            else
+            {
+                return objString;
+            }
+        }
+        public static string FomartJoinType(TogetherJoinType t)
+        {
+            switch (t)
+            {
+                case TogetherJoinType.FollowerJoin:
+                    return "跟单";
+                case TogetherJoinType.Guarantees:
+                    return "保底";
+                case TogetherJoinType.Join:
+                    return "参与";
+                case TogetherJoinType.Subscription:
+                    return "认购";
+                case TogetherJoinType.SystemGuarantees:
+                    return "系统保底";
+                default:
+                    break;
+            }
+            return string.Empty;
+        }
+        //获取对应彩种的最大期数
+        public static int MaxIssuseCount(string gameCode)
+        {
+            switch (gameCode.ToUpper())
+            {
+                case "CQSSC":
+                    return 120;
+                case "JXSSC":
+                    return 84;
+                case "JX11X5":
+                    return 84;
+                case "SD11X5":
+                    return 78;
+                case "GD11X5":
+                    return 84;
+                case "FC3D":
+                case "PL3":
+                case "PL5":
+                    return 358;
+                case "SDQYH":
+                    return 40;
+                case "GDKLSF":
+                    return 84;
+                case "GXKLSF":
+                    return 50;
+                case "SSQ":
+                case "DLT":
+                    return 156;
+                case "JSKS":
+                    return 82;
+                case "CTZQ":
+                    return 50;
+                default:
+                    return 0;
+            }
+        }
+        /// <summary>
+        /// 游戏名字
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static string GetGameName(string name, string gametype)
+        {
+            //JX11X5|CQSSC|SSQ|DLT|FC3D|PL3|CTZQ_T14C|CTZQ_T6BQC|CTZQ_T4CJQ
+            name = name.ToUpper() == "CTZQ" ? gametype : name;
+            switch (name.ToUpper())
+            {
+                case "JX11X5":
+                    return "江西11选5";
+                case "CQSSC":
+                    return "重庆时时彩";
+                case "SSQ":
+                    return "双色球";
+                case "DLT":
+                    return "大乐透";
+                case "FC3D":
+                    return "福彩3D";
+                case "PL3":
+                    return "排列3";
+                case "T14C":
+                    return "胜负彩";
+                case "T6BQC":
+                    return "半全场";
+                case "T4CJQ":
+                    return "进球彩";
+                case "TR9":
+                    return "任选九";
+                case "CTZQ":
+                    return "传统足球";
+                default:
+                    return "";
+            }
+        }
+        public static string Getnums(Web_SZC_BonusPoolInfo model)
+        {
+            if (model == null || model.GradeList == null)
+                return "";
+            string msg = string.Empty;
+            foreach (var item in model.GradeList)
+            {
+                msg += item.BonusCount + ",";
+            }
+            return msg.TrimEnd(',');
+        }
+        public static string Getgrades(Web_SZC_BonusPoolInfo model)
+        {
+            if (model == null || model.GradeList == null)
+                return "";
+            string msg = string.Empty;
+            foreach (var item in model.GradeList)
+            {
+                msg += item.BonusMoney.ToString("###,##0.00") + ",";
+            }
+            return msg.TrimEnd(',');
         }
     }
 }

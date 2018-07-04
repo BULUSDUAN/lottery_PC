@@ -35,7 +35,7 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(3)]
             [Field("WithdrawAgent")]
-            public int WithdrawAgent{ get; set; }
+            public int WithdrawAgent { get; set; }
             /// <summary>
             // 提现类别
             ///</summary>
