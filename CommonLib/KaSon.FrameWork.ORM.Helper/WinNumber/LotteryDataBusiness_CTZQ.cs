@@ -6,6 +6,8 @@ using EntityModel.CoreModel;
 using KaSon.FrameWork.Common;
 using KaSon.FrameWork.ORM.Helper.WinNumber.Manage;
 using EntityModel;
+using KaSon.FrameWork.Common.Utilities;
+
 namespace KaSon.FrameWork.ORM.Helper.WinNumber
 {
     public class LotteryDataBusiness_CTZQ : LotteryDataBusiness, ILotteryDataBusiness

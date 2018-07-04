@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using KaSon.FrameWork.Common.Utilities;
 
 namespace KaSon.FrameWork.ORM.Helper.WinNumber
 {

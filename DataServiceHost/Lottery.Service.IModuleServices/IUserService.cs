@@ -25,20 +25,20 @@ namespace Lottery.Service.IModuleServices
     {
 
 
-        // [Authorization(AuthType = AuthorizationType.JWT)]
-        [Service(Date = "2018-5-15", Director = "kason", Name = "获取用户")]
-       // [Command(Strategy = StrategyType.Injection, ShuntStrategy = AddressSelectorMode.HashAlgorithm, ExecutionTimeoutInMilliseconds = 1500, BreakerRequestVolumeThreshold = 3, Injection = @"return 1;", RequestCacheEnabled = false)]
-        Task<int> GetUserId(string userName);
+       // // [Authorization(AuthType = AuthorizationType.JWT)]
+       // [Service(Date = "2018-5-15", Director = "kason", Name = "获取用户")]
+       //// [Command(Strategy = StrategyType.Injection, ShuntStrategy = AddressSelectorMode.HashAlgorithm, ExecutionTimeoutInMilliseconds = 1500, BreakerRequestVolumeThreshold = 3, Injection = @"return 1;", RequestCacheEnabled = false)]
+       // Task<int> GetUserId(string userName);
 
 
-        //[Authorization(AuthType = AuthorizationType.JWT)]
-        [Service(Date = "2018-5-15", Director = "kason", Name = "根据id查找用户是否存在")]
-        // [Command(Strategy = StrategyType.Injection, ShuntStrategy = AddressSelectorMode.HashAlgorithm, ExecutionTimeoutInMilliseconds = 1500, BreakerRequestVolumeThreshold = 3, Injection = @"return 1;", RequestCacheEnabled = false)]
-        Task<UserModel> GetUser(UserModel user);
+       // //[Authorization(AuthType = AuthorizationType.JWT)]
+       // [Service(Date = "2018-5-15", Director = "kason", Name = "根据id查找用户是否存在")]
+       // // [Command(Strategy = StrategyType.Injection, ShuntStrategy = AddressSelectorMode.HashAlgorithm, ExecutionTimeoutInMilliseconds = 1500, BreakerRequestVolumeThreshold = 3, Injection = @"return 1;", RequestCacheEnabled = false)]
+       // Task<UserModel> GetUser(UserModel user);
 
-        [Service(Date = "2018-5-15", Director = "kason", Name = "获取用户列表")]
-        Task<List<User>> GetUserList(string userName);
-        //GetUserListBy
+       // [Service(Date = "2018-5-15", Director = "kason", Name = "获取用户列表")]
+       // Task<List<User>> GetUserList(string userName);
+       // //GetUserListBy
     
     }
 }

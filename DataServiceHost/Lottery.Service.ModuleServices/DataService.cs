@@ -3,8 +3,9 @@ using EntityModel.Communication;
 using EntityModel.CoreModel;
 using EntityModel.Enum;
 using Kason.Sg.Core.CPlatform.Ioc;
-using KaSon.FrameWork.Helper;
-using Lottery.Kg.ORM.Helper;
+using KaSon.FrameWork.Common.Redis;
+using KaSon.FrameWork.Common.Utilities;
+using KaSon.FrameWork.ORM.Helper;
 using System;
 using System.Linq;
 

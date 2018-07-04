@@ -12,6 +12,7 @@ using KaSon.FrameWork.Common.Redis;
 using EntityModel;
 using StackExchange.Redis;
 using EntityModel.CoreModel;
+using EntityModel.Redis;
 
 namespace KaSon.FrameWork.ORM.Helper
 {

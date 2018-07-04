@@ -3,16 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Configuration;
-
-
-
-<<<<<<< HEAD:CommonLib/Lottery.kg.ORM.Helper/Redis/WebRedisHelper.cs
 using EntityModel.CoreModel;
-using KaSon.FrameWork.Helper;
-=======
->>>>>>> 77f9da3f72619db400865d437806eabbbff34413:CommonLib/KaSon.FrameWork.Common/Redis/WebRedisHelper.cs
-
-
+using EntityModel.Redis;
 
 namespace KaSon.FrameWork.Common.Redis
 {

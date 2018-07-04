@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using EntityModel.Enum;
 using KaSon.FrameWork.Common;
+using KaSon.FrameWork.Common.Utilities;
 using KaSon.FrameWork.ORM.Helper.WinNumber.Manage;
 using KaSon.FrameWork.ORM.Helper.WinNumber.ModelCollection;
 namespace KaSon.FrameWork.ORM.Helper.WinNumber

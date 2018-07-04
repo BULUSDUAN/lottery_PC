@@ -14,7 +14,6 @@ using Kason.Sg.Core.CPlatform.Transport.Implementation;
 using Kason.Sg.Core.ProxyGenerator;
 using Kason.Sg.Core.ProxyGenerator.Implementation;
 using Kason.Sg.Core.System.Intercept;
-
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -25,11 +24,10 @@ using Lottery.Service.Model;
 using KaSon.FrameWork.Services.ORM;
 using KaSon.FrameWork.Services.Enum;
 using EntityModel.ORM;
-using KaSon.FrameWork.Helper;
 using System.Threading;
 using Lottery.Service.ModuleBaseServices;
-using Lottery.Kg.ORM.Helper;
 using Lottery.Service.IModuleServices;
+using KaSon.FrameWork.Common;
 
 namespace Lottery.Service.ModuleServices
 {
@@ -71,15 +69,15 @@ namespace Lottery.Service.ModuleServices
             log.Log("标签", new Exception("错误"));
         }
 
-        private void SQLTest()
-        {
+        //private void SQLTest()
+        //{
 
-            LoginHelper loginHelper = new LoginHelper();
-            //查询用户明
-            loginHelper.QueryUserName();
-            //或者
+        //    LoginHelper loginHelper = new LoginHelper();
+        //    //查询用户明
+        //    loginHelper.QueryUserName();
+        //    //或者
 
-        }
+        //}
 
         public Task<int> GetUserId(string userName)
         {
@@ -98,29 +96,29 @@ namespace Lottery.Service.ModuleServices
             return Task.FromResult(1);
         }
 
-        public Task<List<User>> GetUserList(string userName)
-        {
-            //var xid = RpcContext.GetContext().GetAttachment("xid");
+        //public Task<List<User>> GetUserList(string userName)
+        //{
+        //    //var xid = RpcContext.GetContext().GetAttachment("xid");
 
-            //throw new Exception("错误！");
+        //    //throw new Exception("错误！");
 
-            //  var T1 = TTest2();
-            //var T21 = Test21();
-            //var T2 = Test2();
-            //var T3 = Test3();
-            LoginHelper loginHelper = new LoginHelper();
-            //查询用户明
-            var list = loginHelper.QueryUserName();
+        //    //  var T1 = TTest2();
+        //    //var T21 = Test21();
+        //    //var T2 = Test2();
+        //    //var T3 = Test3();
+        //    LoginHelper loginHelper = new LoginHelper();
+        //    //查询用户明
+        //    var list = loginHelper.QueryUserName();
 
-            foreach (var item in list)
-            {
-                Console.WriteLine(item.Name);
-            }
+        //    foreach (var item in list)
+        //    {
+        //        Console.WriteLine(item.Name);
+        //    }
 
-            //  var list = new List<User>();
+        //    //  var list = new List<User>();
 
-            return Task.FromResult(list);
-        }
+        //    return Task.FromResult(list);
+        //}
 
         //获取用户
         public Task<UserModel> GetUser(UserModel user)

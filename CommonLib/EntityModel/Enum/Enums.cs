@@ -1396,7 +1396,6 @@ namespace EntityModel.Enum
         Stop = 1,
     }
 
-<<<<<<< HEAD
     #region Extension项目的枚举
     /// <summary>
     /// 投票类别
@@ -1429,8 +1428,6 @@ namespace EntityModel.Enum
         Asia = 5,
     }
 
-=======
->>>>>>> 77f9da3f72619db400865d437806eabbbff34413
     /// <summary>
     /// 任务类别
     /// </summary>
@@ -1533,7 +1530,6 @@ namespace EntityModel.Enum
         /// </summary>
         Win1000Yuan = 240,
     }
-<<<<<<< HEAD
 
     /// <summary>
     /// 名家类别
@@ -1742,8 +1738,7 @@ namespace EntityModel.Enum
 
     #endregion
     #endregion
-}
-=======
+
     /// <summary>
     /// 新闻类别
     /// </summary>
@@ -1820,4 +1815,4 @@ namespace EntityModel.Enum
         CIB = 15
     }
 } 
->>>>>>> 77f9da3f72619db400865d437806eabbbff34413
+
