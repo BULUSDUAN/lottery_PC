@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Xml;
+using System.Xml.Linq;
 using System.Data.SqlClient;
 using KaSon.FrameWork.Common.Database;
 
-namespace EntityModel.XmlAnalyzer
+namespace KaSon.FrameWork.Common.Xml
 {
     /// <summary>
     /// 配置文件中，数据库连接配置分析器
