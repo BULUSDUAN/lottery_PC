@@ -40,6 +40,8 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             try
             {
+               
+
                 var db = RedisHelper.DB_UserBalance;
                 string key = string.Format("UserBalance_{0}", userId);
                 var fund = new LocalLoginBusiness();
@@ -817,7 +819,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public List<C_Activity_PluginClass> QueryPluginClass(bool isEnable)
         {
-           
+            
             return DB.CreateQuery<C_Activity_PluginClass>().Where(p => p.IsEnable == isEnable).OrderBy(p => p.OrderIndex).ToList();
         }
 

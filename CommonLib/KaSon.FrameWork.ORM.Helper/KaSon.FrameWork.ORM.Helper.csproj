@@ -21,7 +21,6 @@
     <Compile Remove="LotteryJsonInfo_Operate\Json_JCZQ.cs" />
     <Compile Remove="LotteryJsonInfo_Operate\JSON_kaiJiang.cs" />
     <Compile Remove="LotteryJsonInfo_Operate\UpgradeInfo.cs" />
-    <Compile Remove="Ticket\TicketGatewayAdmin.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -64,7 +63,6 @@
 
   <ItemGroup>
     <Folder Include="LotteryJsonInfo_Operate\" />
-    <Folder Include="Ticket\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
