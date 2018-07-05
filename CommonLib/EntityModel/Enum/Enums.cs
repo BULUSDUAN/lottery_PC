@@ -344,7 +344,7 @@ namespace EntityModel.Enum
     /// <summary>
     /// 方案来源
     /// </summary>
-  
+
     public enum SchemeSource
     {
         Web = 0,
@@ -1396,8 +1396,26 @@ namespace EntityModel.Enum
         Stop = 1,
     }
 
-    #region Extension项目的枚举    /// <summary>
-
+    /// <summary>
+    /// 使用状态
+    /// </summary>
+    public enum EnableStatus
+    {
+        /// <summary>
+        /// 可用的
+        /// </summary>
+        Enable = 0,
+        /// <summary>
+        /// 禁用的
+        /// </summary>
+        Disable = 1,
+        /// <summary>
+        /// 未知的
+        /// </summary>
+        Unknown = 9,
+    }
+    #region Extension项目的枚举    
+    /// <summary>
     /// <summary>    /// 任务类别
     /// </summary>
     public enum TaskCategory
@@ -1499,8 +1517,10 @@ namespace EntityModel.Enum
         /// </summary>
         Win1000Yuan = 240,
     }    /// <summary>
-}
-    /// <summary>    /// 新闻类别
+
+
+    /// <summary>    
+    /// /// 新闻类别
     /// </summary>
     public enum NewsCategory
     {
@@ -1574,4 +1594,5 @@ namespace EntityModel.Enum
         HXB = 14,
         CIB = 15
     }
-} 
+    #endregion
+}
