@@ -1360,7 +1360,8 @@ namespace Lottery.Api.Controllers
                         value = "true";
                         break;
                     default:
-                        value= await _serviceProxyProvider.Invoke<string>(param, "api/Data/QueryCoreConfigByKey");
+                        var config= await _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/Data/QueryCoreConfigByKey");
+                        value = config.ConfigValue;
                         //value = WCFClients.GameClient.QueryCoreConfigByKey(key).ConfigValue;
                         break;
                 }
@@ -1407,11 +1408,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-<<<<<<< HEAD
                 var p = WebHelper.Decode(entity.Param);
-=======
-                var p =WebHelper.Decode(entity.Param);
->>>>>>> 77f9da3f72619db400865d437806eabbbff34413
                 string appAgentId = p.AppAgentId;
                 if (string.IsNullOrEmpty(appAgentId))
                     appAgentId = "100000";//公司APP特定编号
