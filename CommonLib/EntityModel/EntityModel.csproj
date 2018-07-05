@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ConvertHelper.cs" />
     <Compile Remove="Xml\ConnConfigAnalyzer.cs" />
     <Compile Remove="Xml\SensitiveAnalyzer.cs" />
     <Compile Remove="Xml\SettingConfigAnalyzer.cs" />

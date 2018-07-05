@@ -1396,10 +1396,6 @@ namespace EntityModel.Enum
         Stop = 1,
     }
 
-    /// <summary>
-    /// 使用状态
-    /// </summary>
-  
     #region Extension项目的枚举    
     /// <summary>
     /// <summary>    /// 任务类别

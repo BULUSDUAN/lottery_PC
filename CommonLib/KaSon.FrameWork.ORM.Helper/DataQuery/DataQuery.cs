@@ -225,7 +225,7 @@ namespace KaSon.FrameWork.ORM.Helper
         }
         #endregion
 
-        #region LotteryGameManager
+        #region LotteryGameManager/BJDCMatchManager/CacheDataBusiness/UserIntegralManager
         public GameIssuse QueryCurrentNewIssuseInfo(string gameCode, string gameType)
         {
             var sql = SqlModule.DataModule.FirstOrDefault(x => x.Key == "Data_QueryCurrentNewIssuseInfo").SQL;
@@ -234,6 +234,57 @@ namespace KaSon.FrameWork.ORM.Helper
               .SetString("@GameType", gameType)
               .List<GameIssuse>().FirstOrDefault();
             return model;
+        }
+        /// <summary>
+        /// 北京单场场次信息
+        /// </summary>
+        /// <returns></returns>
+        public BJDCIssuseInfo QueryBJDCCurrentIssuseInfo()
+        {
+            var query = from b in DB.CreateQuery<C_BJDC_Issuse>()
+                        where b.MinLocalStopTime >= DateTime.Now
+                        orderby b.MinLocalStopTime ascending
+                        select b;
+
+            return query.ToList().Select(p => new BJDCIssuseInfo
+            {
+                IssuseNumber = p.IssuseNumber,
+                MinLocalStopTime = p.MinLocalStopTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                MinMatchStartTime = p.MinMatchStartTime.ToString("yyyy-MM-dd HH:mm:ss"),
+            }).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// 根据公告Id查询公告信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public BulletinInfo_Query QueryBulletinDetailById(long id)
+        {
+            var query = from b in DB.CreateQuery<E_SiteMessage_Bulletin_List>()
+                        join u_create in DB.CreateQuery<C_User_Register>() on b.CreateBy equals u_create.UserId
+                        join u_update in DB.CreateQuery<C_User_Register>() on b.CreateBy equals u_update.UserId
+                        where b.Id == id
+                        select new { b, u_create, u_update };
+                        
+            return query.ToList().Select(t => new BulletinInfo_Query
+            {
+                Id = t.b.Id,
+                Title = t.b.Title,
+                Content = t.b.Content,
+                Status = (EnableStatus)t.b.Status,
+                Priority = t.b.Priority,
+                IsPutTop = t.b.IsPutTop,
+                EffectiveFrom = t.b.EffectiveFrom,
+                EffectiveTo = t.b.EffectiveTo,
+                CreateTime = t.b.CreateTime,
+                CreateBy = t.b.CreateBy,
+                CreatorDisplayName = t.u_create.DisplayName,
+                UpdateTime = t.b.UpdateTime,
+                UpdateBy = t.b.UpdateBy,
+                UpdatorDisplayName = t.u_update.DisplayName,
+                BulletinAgent=(BulletinAgent)t.b.BulletinAgent
+            }).FirstOrDefault();
         }
         #endregion
     }

@@ -23,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\CommonLib\KaSon.FrameWork.ORM.Helper\KaSon.FrameWork.ORM.Helper.csproj" />
     <ProjectReference Include="..\UserLottery.Service.IModuleServices\UserLottery.Service.IModuleServices.csproj" />
     <ProjectReference Include="..\UserLottery.Service.Model\UserLottery.Service.Model.csproj" />
     <ProjectReference Include="..\UserLottery.Service.ModuleServices\UserLottery.Service.ModuleServices.csproj" />

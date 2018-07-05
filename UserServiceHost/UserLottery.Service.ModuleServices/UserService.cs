@@ -41,6 +41,8 @@ using KaSon.FrameWork.ORM.Helper;
 using KaSon.FrameWork.ORM.Helper.UserHelper;
 using KaSon.FrameWork.Common.Redis;
 using EntityModel.ExceptionExtend;
+using KaSon.FrameWork.Common.Sport;
+using EntityModel.Redis;
 
 namespace UserLottery.Service.ModuleServices
 {
@@ -1251,7 +1253,7 @@ namespace UserLottery.Service.ModuleServices
             var userId = userAuthentication.ValidateUserAuthentication(userToken);
 
             var biz = new RealNameAuthenticationBusiness();
-            BusinessHelper.CheckUserRealName(IdCardNumber);
+            BettingHelper.CheckUserRealName(IdCardNumber);
             var realName = biz.GetAuthenticatedRealName(userId);
             if (realName != null)
             {

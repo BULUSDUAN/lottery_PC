@@ -3,7 +3,10 @@ using EntityModel.CoreModel;
 using EntityModel.Enum;
 using EntityModel.LotteryJsonInfo;
 using Kason.Sg.Core.ProxyGenerator;
+using KaSon.FrameWork.Analyzer.AnalyzerFactory;
 using KaSon.FrameWork.Common;
+using KaSon.FrameWork.Common.Sport;
+using KaSon.FrameWork.Common.Utilities;
 using Lottery.ApiGateway.Model.HelpModel;
 using Lottery.Base.Controllers;
 using Microsoft.AspNetCore.Mvc;
@@ -2529,7 +2532,7 @@ namespace Lottery.Api.Controllers
                 {
                     var list = bonuslist.Select(p => new
                     {
-                        GameName = BusinessHelper.GameName(p.GameCode, p.GameType),
+                        GameName = ConvertHelper.GameName(p.GameCode, p.GameType),
                         CreateTime = p.CreateTime.ToString("yyyy-MM-dd HH:mm"),
                         UserDisplayName = p.UserDisplayName,
                         TotalMoney = p.TotalMoney
@@ -2686,7 +2689,7 @@ namespace Lottery.Api.Controllers
             List<KaiJiang> list = new List<KaiJiang>();
             foreach (var item in entitys.List)
             {
-                var poolInfo = BusinessHelper.GetPoolInfo(item.GameCode, item.IssuseNumber);
+                var poolInfo = BettingHelper.GetPoolInfo(item.GameCode, item.IssuseNumber);
                 list.Add(new KaiJiang()
                 {
                     result = item.WinNumber,
@@ -2765,7 +2768,7 @@ namespace Lottery.Api.Controllers
                 var strs = type.Split('_');
                 gameCode = strs[0];
                 //var gameType = strs[1];
-                var poolInfo =BusinessHelper.GetPoolInfo_CTZQ(type.ToUpper(), term);
+                var poolInfo = BettingHelper.GetPoolInfo_CTZQ(type.ToUpper(), term);
                 foreach (var item in poolInfo)
                 {
                     info.prizeLevel.Add(new Prizelevel()
@@ -2778,7 +2781,7 @@ namespace Lottery.Api.Controllers
             }
             else
             {
-                var poolInfo = BusinessHelper.GetPoolInfo(type.ToUpper(), term);
+                var poolInfo = BettingHelper.GetPoolInfo(type.ToUpper(), term);
                 if (poolInfo.GradeList != null)
                 {
                     foreach (var item in poolInfo.GradeList)
@@ -2848,7 +2851,7 @@ namespace Lottery.Api.Controllers
             {
                 list.Add(new KaiJiangOpenMatch()
                 {
-                    result = BusinessHelper.GetResult(item.HomeTeamScore, item.GuestTeamScore),
+                    result = BettingHelper.GetResult(item.HomeTeamScore, item.GuestTeamScore),
                     match_point = -1,
                     whole_score = item.HomeTeamScore + ":" + item.GuestTeamScore,
                     match_name = item.MatchName,

@@ -8,10 +8,7 @@ using KaSon.FrameWork.Common.Utilities;
 using KaSon.FrameWork.ORM.Helper.WinNumber.Manage;
 using EntityModel;
 using KaSon.FrameWork.ORM.Helper.WinNumber.ModelCollection;
-
 using KaSon.FrameWork.Analyzer.AnalyzerFactory;
-
-using KaSon.FrameWork.Common.Utilities;
 
 namespace KaSon.FrameWork.ORM.Helper.WinNumber
 {

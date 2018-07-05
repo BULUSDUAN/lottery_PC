@@ -1,4 +1,6 @@
-﻿using System;
+﻿using EntityModel.Enum;
+using KaSon.FrameWork.Common;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
