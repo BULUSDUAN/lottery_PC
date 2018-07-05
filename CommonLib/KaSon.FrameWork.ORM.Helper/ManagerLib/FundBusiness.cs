@@ -8,11 +8,40 @@ using EntityModel;
 using KaSon.FrameWork.ORM.Helper.UserHelper.Managers;
 using EntityModel.Enum;
 using EntityModel.ExceptionExtend;
+using KaSon.FrameWork.Common.Sport;
 
 namespace KaSon.FrameWork.ORM.Helper.UserHelper
 {
     public class FundBusiness : DBbase
     {
+        public UserBalanceInfo QueryUserBalance(string userId)
+        {
+
+            var manager = new UserBalanceManager();
+                var balance = manager.QueryUserBalance(userId);
+                if (balance == null)
+                {
+                    throw new ArgumentException("用户账户不存在");
+                }
+                return new UserBalanceInfo
+                {
+                    UserId = balance.UserId,
+                    FillMoneyBalance = balance.FillMoneyBalance,
+                    BonusBalance = balance.BonusBalance,
+                    CommissionBalance = balance.CommissionBalance,
+                    FreezeBalance = balance.FreezeBalance,
+                    ExpertsBalance = balance.ExpertsBalance,
+                    RedBagBalance = balance.RedBagBalance,
+                    IsSetPwd = balance.IsSetPwd,
+                    NeedPwdPlace = balance.NeedPwdPlace,
+                    CurrentDouDou = balance.CurrentDouDou,
+                    UserGrowth = balance.UserGrowth,
+                    CPSBalance = balance.CPSBalance,
+                    BalancePwd = balance.Password,
+                };
+            
+        }
+
         private string _gbKey = "Q56GtyNkop97H334TtyturfgErvvv98a";
         public void SetBalancePassword(string userId, string oldPassword, bool isSetPwd, string newPassword)
         {
@@ -136,7 +165,7 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
 
 
             var resonseMoney = 0M;
-            var orderId = BusinessHelper.GetWithdrawId();
+            var orderId = BettingHelper.GetWithdrawId();
             BusinessHelper businessHelper = new BusinessHelper();
             var category = businessHelper.Payout_To_Frozen_Withdraw(BusinessHelper.FundCategory_RequestWithdraw, userId, orderId, info.RequestMoney
                   , string.Format("申请提现：{0:N2}元", info.RequestMoney), "Withdraw", password, out resonseMoney);
