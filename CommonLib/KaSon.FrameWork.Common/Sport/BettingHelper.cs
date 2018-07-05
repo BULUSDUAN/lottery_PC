@@ -15,6 +15,14 @@ namespace KaSon.FrameWork.Common.Sport
 {
    public class  BettingHelper
     {
+        /// <summary>
+        /// 申请提现编号
+        /// </summary>
+        public static string GetWithdrawId()
+        {
+            string prefix = "MWD";
+            return prefix + UsefullHelper.UUID();
+        }
         public static string ConvertGameType(string gameCode, string gameType, string betType, int betCount)
         {
             switch (gameCode.ToLower())
