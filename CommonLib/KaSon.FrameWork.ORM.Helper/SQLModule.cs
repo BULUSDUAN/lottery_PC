@@ -15,8 +15,8 @@ namespace KaSon.FrameWork.ORM.Helper
         /// 投注系统
         /// </summary>
         public IList<SQLModel> BettiongModule { get; set; }
-
-        /// 
+        /// <summary>
+        /// 配置模块
         /// </summary>
         public IList<SQLModel> DataModule { get; set; }
     }

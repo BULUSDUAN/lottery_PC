@@ -9,10 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using KaSon.FrameWork.Common.Utilities;
-<<<<<<< HEAD
 using KaSon.FrameWork.Analyzer.AnalyzerFactory;
-=======
->>>>>>> a7171008b4bea1dab11582695738b3dd1fe77dcf
 
 namespace KaSon.FrameWork.ORM.Helper.WinNumber
 {

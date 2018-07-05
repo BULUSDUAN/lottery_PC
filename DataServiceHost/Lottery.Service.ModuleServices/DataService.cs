@@ -189,6 +189,89 @@ namespace Lottery.Service.ModuleServices
             {
                 throw new Exception("查询当前奖期出错", ex);
             }
+        }
+
+        /// <summary>
+        /// 查询北京单场最新期号
+        /// </summary>
+        /// <returns></returns>
+        public BJDCIssuseInfo QueryBJDCCurrentIssuseInfo()
+        {
+            try
+            {
+                return new DataQuery().QueryBJDCCurrentIssuseInfo();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        #endregion
+
+        #region 根据公告编号查询公告
+        /// <summary>
+        /// 根据公告编号查询公告
+        /// </summary>
+        /// <param name="bulletinId"></param>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public BulletinInfo_Query QueryDisplayBulletinDetailById(long bulletinId)
+        {
+            var info = new DataQuery().QueryBulletinDetailById(bulletinId);
+            if (info != null)
+            {
+                if (info.Status != EnableStatus.Enable)
+                {
+                    throw new Exception("指定公告已经禁用");
+                }
+                if (info.EffectiveFrom != null && info.EffectiveFrom > DateTime.Now)
+                {
+                    throw new Exception("指定公告尚未发布");
+                }
+                if (info.EffectiveTo != null && info.EffectiveTo.Value.AddDays(1) < DateTime.Now)
+                {
+                    throw new Exception(string.Format("指定公告已经于{0:yyyy-MM-dd}过期", info.EffectiveTo));
+                }
+            }
+            return info;
+        }
+        #endregion
+
+        #region 查找配置表中的配置信息
+        /// <summary>
+        /// 查找C_Core_Config表中的配置信息
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public C_Core_Config QueryCoreConfigByKey(string key)
+        {
+            try
+            {
+                return new CacheDataBusiness().QueryCoreConfigByKey(key);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询系统配置出错", ex);
+            }
+        }
+        #endregion
+
+        #region 根据代理商编码查询APP配置
+        /// <summary>
+        /// 根据代理商编码查询APP配置
+        /// </summary>
+        /// <returns></returns>
+        public APPConfigInfo QueryAppConfigByAgentId(string appAgentId)
+        {
+            try
+            {
+                //return new CacheDataBusiness().QueryAppConfigByAgentId(appAgentId);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
         } 
         #endregion
     }

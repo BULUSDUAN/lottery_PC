@@ -1350,7 +1350,8 @@ namespace Lottery.Api.Controllers
                         value = "true";
                         break;
                     default:
-                        value= await _serviceProxyProvider.Invoke<string>(param, "api/Data/QueryCoreConfigByKey");
+                        var config= await _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/Data/QueryCoreConfigByKey");
+                        value = config.ConfigValue;
                         //value = WCFClients.GameClient.QueryCoreConfigByKey(key).ConfigValue;
                         break;
                 }
