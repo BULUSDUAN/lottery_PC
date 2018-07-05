@@ -2,9 +2,9 @@
 using EntityModel.CoreModel.BetingEntities;
 using EntityModel.Domain.Entities;
 using EntityModel.ExceptionExtend;
-using EntityModel.LotteryJsonInfo;
 using EntityModel.GameBiz.Core;
 using EntityModel.Ticket;
+using EntityModel.LotteryJsonInfo;
 using KaSon.FrameWork.Common.GlobalConfigJson;
 using KaSon.FrameWork.Common.Utilities;
 using System;
