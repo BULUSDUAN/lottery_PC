@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using EntityModel.CoreModel;
 using KaSon.FrameWork.Common;
-
+using KaSon.FrameWork.Common.Utilities;
 using KaSon.FrameWork.ORM.Helper.WinNumber.Manage;
 using EntityModel;
 using KaSon.FrameWork.ORM.Helper.WinNumber.ModelCollection;
+using KaSon.FrameWork.Common.Utilities;
+
 namespace KaSon.FrameWork.ORM.Helper.WinNumber
 {
     public class LotteryDataBusiness_HNKLSF : LotteryDataBusiness, ILotteryDataBusiness

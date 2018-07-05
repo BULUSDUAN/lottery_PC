@@ -1,5 +1,6 @@
 ﻿using EntityModel;
 using EntityModel.CoreModel;
+using EntityModel.Redis;
 using KaSon.FrameWork.Common.Redis;
 using System;
 using System.Collections.Generic;

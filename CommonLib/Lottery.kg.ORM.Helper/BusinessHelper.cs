@@ -448,7 +448,6 @@ namespace KaSon.FrameWork.ORM.Helper
 
 
         private static List<C_Activity_PluginClass> _enablePluginClass = new List<C_Activity_PluginClass>();
-        public const int MaxPageSize = 200;
 
         public  void ExecPlugin<T>(object inputParam) where T : class, IPlugin
         {

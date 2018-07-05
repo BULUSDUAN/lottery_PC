@@ -35,6 +35,7 @@ using EntityModel.CoreModel.BetingEntities;
 using EntityModel.CoreModel;
 using KaSon.FrameWork.Common;
 using BettingLottery.Service.ModuleServices.SportsBettionCore;
+using KaSon.FrameWork.ORM.Helper.UserHelper;
 
 namespace BettingLottery.Service.ModuleServices
 {
@@ -142,14 +143,16 @@ namespace BettingLottery.Service.ModuleServices
                 {
                     if (array_gameType[1].ToLower() == "hhdg")//单关固定投注
                     {
-
-                        //var userBalance = WCFClients.GameFundClient.QueryMyBalance(userToken);
-                        //if (userBalance == null)
-                        //    throw new Exception("未查询到账户信息");
-                        //else if ((userBalance.BonusBalance + userBalance.ExpertsBalance + userBalance.FillMoneyBalance + userBalance.RedBagBalance) < totalMoney)
-                        //    throw new Exception("您好，目前账户余额不足！");
-                        //else if ((userBalance.BonusBalance + userBalance.CommissionBalance + userBalance.ExpertsBalance + userBalance.FillMoneyBalance + userBalance.RedBagBalance) < totalMoney)
-                        //    throw new Exception("您好，目前账户余额不足！");
+                        var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+                        var fund = new FundBusiness();
+                        var userBalance = fund.QueryUserBalance(userId);
+                       // var userBalance = new GameBizSportsBettion().QueryMyBalance(userToken);
+                        if (userBalance == null)
+                            throw new Exception("未查询到账户信息");
+                        else if ((userBalance.BonusBalance + userBalance.ExpertsBalance + userBalance.FillMoneyBalance + userBalance.RedBagBalance) < totalMoney)
+                            throw new Exception("您好，目前账户余额不足！");
+                        else if ((userBalance.BonusBalance + userBalance.CommissionBalance + userBalance.ExpertsBalance + userBalance.FillMoneyBalance + userBalance.RedBagBalance) < totalMoney)
+                            throw new Exception("您好，目前账户余额不足！");
                         try
                         {
                             foreach (var item in _code)

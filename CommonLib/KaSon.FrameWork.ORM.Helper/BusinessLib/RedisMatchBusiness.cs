@@ -7,11 +7,16 @@ using System.Linq;
 using EntityModel.CoreModel.BetingEntities;
 using EntityModel.Enum;
 using KaSon.FrameWork.Common;
-using EntityModel.XmlAnalyzer;
+
 using KaSon.FrameWork.Common.Redis;
 using EntityModel;
 using StackExchange.Redis;
 using EntityModel.CoreModel;
+<<<<<<< HEAD
+using KaSon.FrameWork.Common.Sport;
+=======
+using EntityModel.Redis;
+>>>>>>> a7171008b4bea1dab11582695738b3dd1fe77dcf
 
 namespace KaSon.FrameWork.ORM.Helper
 {
@@ -36,7 +41,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 var matchList = QueryBJDCMatch(matchIdArray);
                 if (matchList.Count != matchIdArray.Length)
                     throw new LogicException("所选比赛中有停止销售的比赛。");
-                CheckPrivilegesType_BJDC(gameCode, gameType, playType, issuseNumber, codeList, matchList);
+                BettingHelper.CheckPrivilegesType_BJDC(gameCode, gameType, playType, issuseNumber, codeList, matchList);
                 return matchList.Min(m => m.LocalStopTime);
             }
             if (gameCode == "JCZQ")
@@ -45,7 +50,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 var matchList = QueryJCZQMatch(matchIdArray);
                 if (matchList.Count != matchIdArray.Length)
                     throw new LogicException("所选比赛中有停止销售的比赛。");
-                CheckPrivilegesType_JCZQ(gameCode, gameType, playType, codeList, matchList);
+                BettingHelper.CheckPrivilegesType_JCZQ(gameCode, gameType, playType, codeList, matchList);
                 if (bettingCategory.HasValue && bettingCategory.Value == SchemeBettingCategory.SingleBetting)
                     return matchList.Min(m => m.DSStopBettingTime);
                 return matchList.Min(m => m.FSStopBettingTime);
@@ -56,7 +61,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 var matchList = QueryJCLQMatch(matchIdArray);
                 if (matchList.Count != matchIdArray.Length)
                     throw new LogicException("所选比赛中有停止销售的比赛。");
-                CheckPrivilegesType_JCLQ(gameCode, gameType, playType, codeList, matchList);
+                BettingHelper.CheckPrivilegesType_JCLQ(gameCode, gameType, playType, codeList, matchList);
                 if (bettingCategory.HasValue && bettingCategory.Value == SchemeBettingCategory.SingleBetting)
                     return matchList.Min(m => m.DSStopBettingTime);
                 return matchList.Min(m => m.FSStopBettingTime);
@@ -64,114 +69,7 @@ namespace KaSon.FrameWork.ORM.Helper
             throw new LogicException(string.Format("错误的彩种编码：{0}", gameCode));
         }
 
-        //验证 不支持的玩法
-        private static void CheckPrivilegesType_JCZQ(string gameCode, string gameType, string playType, Sports_AnteCodeInfoCollection codeList, List<Cache_JCZQ_MatchInfo> matchList)
-        {
-            //PrivilegesType
-            //用英文输入法的:【逗号】如’,’分开。
-            //竞彩足球：1:胜平负单关 2:比分单关 3:进球数单关 4:半全场单关 5:胜平负过关 6:比分过关 7:进球数过关 8:半全场过关9：不让球胜平负单关 0：不让球胜平负过关
-            foreach (var code in codeList)
-            {
-                var privileType = string.Empty;
-                var tempGameType = gameType != "HH" ? gameType : code.GameType;
-                switch (tempGameType.ToUpper())
-                {
-                    case "SPF":
-                        privileType = playType == "1_1" ? "1" : "5";
-                        break;
-                    case "BRQSPF":
-                        privileType = playType == "1_1" ? "9" : "0";
-                        break;
-                    case "BF":
-                        privileType = playType == "1_1" ? "2" : "6";
-                        break;
-                    case "ZJQ":
-                        privileType = playType == "1_1" ? "3" : "7";
-                        break;
-                    case "BQC":
-                        privileType = playType == "1_1" ? "4" : "8";
-                        break;
-                    default:
-                        break;
-                }
-                var temp = matchList.FirstOrDefault(p => p.MatchId == code.MatchId);
-                if (temp == null || string.IsNullOrEmpty(temp.PrivilegesType)) continue;
-                var privileArray = temp.PrivilegesType.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-                if (!string.IsNullOrEmpty(privileType) && privileArray.Contains(privileType))
-                    throw new LogicException(string.Format("{0} {1}玩法 暂不支持{2}投注", temp.MatchIdName, BusinessHelper.FormatGameType(gameCode, gameType), playType == "1_1" ? "单关" : "过关"));
-            }
-        }
-        private static void CheckPrivilegesType_JCLQ(string gameCode, string gameType, string playType, Sports_AnteCodeInfoCollection codeList, List<Cache_JCLQ_MatchInfo> matchList)
-        {
-            //PrivilegesType
-            //竞彩篮球：1:胜负单关 2:让分胜负单关 3:胜分差单关 4:大小分单关 5:胜负过关 6:让分胜负过关 7:胜分差过关 8:大小分过关
-            foreach (var code in codeList)
-            {
-                var privileType = string.Empty;
-                var tempGameType = gameType != "HH" ? gameType : code.GameType;
-                switch (tempGameType.ToUpper())
-                {
-                    case "SF":
-                        privileType = playType == "1_1" ? "1" : "5";
-                        break;
-                    case "RFSF":
-                        privileType = playType == "1_1" ? "2" : "6";
-                        break;
-                    case "SFC":
-                        privileType = playType == "1_1" ? "3" : "7";
-                        break;
-                    case "DXF":
-                        privileType = playType == "1_1" ? "4" : "8";
-                        break;
-                    default:
-                        break;
-                }
-                var temp = matchList.FirstOrDefault(p => p.MatchId == code.MatchId);
-                if (temp == null || string.IsNullOrEmpty(temp.PrivilegesType)) continue;
-                var privileArray = temp.PrivilegesType.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-                if (!string.IsNullOrEmpty(privileType) && privileArray.Contains(privileType))
-                    throw new Exception(string.Format("{0} {1}玩法 暂不支持{2}投注", temp.MatchIdName, BusinessHelper.FormatGameType(gameCode, gameType), playType == "1_1" ? "单关" : "过关"));
-            }
-        }
-        private static void CheckPrivilegesType_BJDC(string gameCode, string gameType, string playType, string issuseNumber, Sports_AnteCodeInfoCollection codeList, List<Cache_BJDC_MatchInfo> matchList)
-        {
-            //PrivilegesType
-            //竞彩篮球：1:胜负单关 2:让分胜负单关 3:胜分差单关 4:大小分单关 5:胜负过关 6:让分胜负过关 7:胜分差过关 8:大小分过关
-            foreach (var code in codeList)
-            {
-                var privileType = string.Empty;
-                var tempGameType = gameType != "HH" ? gameType : code.GameType;
-                switch (tempGameType.ToUpper())
-                {
-                    case "BF":
-                        privileType = "1";
-                        break;
-                    case "BQC":
-                        privileType = "2";
-                        break;
-                    case "SPF":
-                        privileType = "3";
-                        break;
-                    case "SXDS":
-                        privileType = "4";
-                        break;
-                    case "ZJQ":
-                        privileType = "5";
-                        break;
-                    case "SF":
-                        privileType = "6";
-                        break;
-                    default:
-                        break;
-                }
-                var temp = matchList.FirstOrDefault(p => p.Id == (issuseNumber + "|" + code.MatchId));
-                if (temp == null || string.IsNullOrEmpty(temp.PrivilegesType)) continue;
-                var privileArray = temp.PrivilegesType.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-                if (!string.IsNullOrEmpty(privileType) && privileArray.Contains(privileType))
-                    throw new Exception(string.Format("{0} {1}玩法 暂不支持{2}投注", temp.Id, BusinessHelper.FormatGameType(gameCode, gameType), playType == "1_1" ? "单关" : "过关"));
-            }
-        }
-
+     
         #endregion
 
 

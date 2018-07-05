@@ -5,7 +5,7 @@ using System.Text;
 using System.Linq;
 
 using EntityModel.ExceptionExtend;
-using EntityModel.XmlAnalyzer;
+using EntityModel.Xml;
 
 namespace EntityModel.CoreModel.BetingEntities
 {

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using EntityModel.CoreModel;
 using EntityModel;
+using KaSon.FrameWork.Common.Utilities;
 
 namespace KaSon.FrameWork.ORM.Helper.WinNumber
 {

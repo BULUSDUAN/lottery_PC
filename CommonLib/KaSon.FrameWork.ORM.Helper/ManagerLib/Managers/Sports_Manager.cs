@@ -1,5 +1,5 @@
 ﻿using EntityModel;
-using EntityModel.XmlAnalyzer;
+
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,6 +10,12 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
 {
     public class Sports_Manager:DBbase
     {
+        public T_SingleScheme_Order QuerySingleSchemeOrder(string schemeId)
+        {
+          //  Session.Clear();
+            return this.DB.CreateQuery<T_SingleScheme_Order>().Where(p => p.OrderId == schemeId).FirstOrDefault();
+        }
+
         public int QueryTicketCount(string schemeId)
         {
             //Session.Clear();
@@ -38,6 +44,10 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
             if (string.IsNullOrEmpty(sql)) return;
             //  Session.Clear();
             this.DB.CreateSQLQuery(sql);//.ExecuteUpdate();
+        }
+        public void AddSingleSchemeOrder(T_SingleScheme_Order entity)
+        {
+            DB.GetDal<T_SingleScheme_Order>().Add(entity);
         }
         public void UpdateSports_AnteCode(C_Sports_AnteCode entity)
         {

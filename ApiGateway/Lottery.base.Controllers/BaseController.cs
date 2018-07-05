@@ -4,8 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using KaSon.FrameWork.Helper;
-using KaSon.FrameWork.Helper.Net;
+using KaSon.FrameWork.Common;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -54,7 +53,7 @@ namespace Lottery.Base.Controllers
                 url = domain + url;
                 if (string.IsNullOrEmpty(url))
                     return string.Empty;
-                var result = KaSon.FrameWork.Helper.PostManager.Get(url, Encoding.UTF8);
+                var result = PostManager.Get(url, Encoding.UTF8);
                 if (result == "404") return string.Empty;
                 return result;
             }

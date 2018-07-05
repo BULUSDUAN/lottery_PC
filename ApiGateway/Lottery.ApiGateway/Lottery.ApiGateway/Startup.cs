@@ -31,6 +31,7 @@ using System.Linq;
 using ApiGateWayConfig = Kason.Sg.Core.ApiGateWay.AppConfig;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.AspNetCore.Http;
+using KaSon.FrameWork.Common.Net;
 
 namespace Lottery.ApiGateway
 {
@@ -148,7 +149,7 @@ namespace Lottery.ApiGateway
             //app.UseStaticFiles(new StaticFileOptions() { ContentTypeProvider = myProvider });
             //app.UseStaticFiles();
 
-            KaSon.FrameWork.Helper.Net.MyHttpContext.ServiceProvider = svp;
+            MyHttpContext.ServiceProvider = svp;
 
             app.UseMvc(routes =>
             {

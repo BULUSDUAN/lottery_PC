@@ -7,6 +7,7 @@ using System.Linq;
 using EntityModel.Enum;
 using EntityModel.CoreModel;
 using System.Linq;
+using KaSon.FrameWork.ORM.Helper;
 
 namespace Lottery.Kg.ORM.Helper
 {

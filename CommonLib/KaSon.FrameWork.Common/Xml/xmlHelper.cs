@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace KaSon.FrameWork.Common
+namespace KaSon.FrameWork.Common.Xml
 {
     public class xmlHelper
     {

@@ -17,81 +17,17 @@ using EntityModel.GameBiz.Core;
 using System.IO;
 using System.Data;
 using EntityModel.CoreModel;
-using KaSon.FrameWork.ORM.Helper.AnalyzerFactory;
+using KaSon.FrameWork.Common.Algorithms;
+using KaSon.FrameWork.Common.ExtensionFn;
+using KaSon.FrameWork.Common.Sport;
+using KaSon.FrameWork.ORM.Helper.Ticket;
 
 namespace KaSon.FrameWork.ORM.Helper.BusinessLib
 {
     public class Sports_Business: DBbase
     {
         private static Log4Log writerLog = new Log4Log();
-        private void CheckSportAnteCode(string gameCode, string gameType, string[] anteCode)
-        {
-            var allowCodeList = new string[] { };
-            switch (gameCode)
-            {
-                case "JCZQ":
-                    switch (gameType)
-                    {
-                        case "SPF":     // 胜平负
-                        case "BRQSPF": //不让球胜平负
-                            allowCodeList = "3,1,0".Split(',');
-                            break;
-                        case "ZJQ":     // 进球数
-                            allowCodeList = "0,1,2,3,4,5,6,7".Split(',');
-                            break;
-                        case "BF":      // 比分
-                            allowCodeList = "10,20,30,40,21,31,41,32,42,50,51,52,X0,00,11,22,33,XX,01,02,03,04,12,13,14,23,24,05,15,25,0X".Split(',');
-                            break;
-                        case "BQC":     // 半全场
-                            allowCodeList = "33,31,30,13,11,10,03,01,00".Split(',');
-                            break;
-                    }
-                    break;
-                case "JCLQ":
-                    switch (gameType)
-                    {
-                        case "SF":     // 胜负
-                        case "RFSF":     // 让分胜负
-                        case "DXF":     // 大小分
-                            allowCodeList = "3,0".Split(',');
-                            break;
-                        case "SFC":      // 胜分差
-                            allowCodeList = "01,02,03,04,05,06,11,12,13,14,15,16".Split(',');
-                            break;
-                    }
-                    break;
-                case "BJDC":
-                    switch (gameType)
-                    {
-                        case "SPF":     // 胜平负 
-                            allowCodeList = "3,1,0".Split(',');
-                            break;
-                        case "ZJQ":     // 进球数
-                            allowCodeList = "0,1,2,3,4,5,6,7".Split(',');
-                            break;
-                        case "SXDS":    // 上下单双。上单 3；上双 2；下单 1；下双 0；
-                            allowCodeList = "SD,SS,XD,XS".Split(',');
-                            break;
-                        case "BF":      // 比分
-                            allowCodeList = "10,20,30,40,21,31,41,32,42,X0,00,11,22,33,XX,01,02,03,04,12,13,14,23,24,0X".Split(',');
-                            break;
-                        case "BQC":     // 半全场
-                            allowCodeList = "33,31,30,13,11,10,03,01,00".Split(',');
-                            break;
-                        case "SF":
-                            allowCodeList = "3,0".Split(',');
-                            break;
-                    }
-                    break;
-                default:
-                    break;
-            }
-            foreach (var item in anteCode)
-            {
-                if (!allowCodeList.Contains(item))
-                    throw new Exception(string.Format("投注号码{0}为非法字符", item));
-            }
-        }
+      
         public int CheckBettingOrderMoney(Sports_AnteCodeInfoCollection codeList, string gameCode, string gameType, string playType, int amount, decimal schemeTotalMoney, DateTime stopTime, bool isAllow = false, string userId = "")
         {
             //验证投注号码
@@ -104,7 +40,7 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
                 var oneCodeArray = item.AnteCode.Split(',');
                 if (oneCodeArray.Distinct().Count() != oneCodeArray.Length)
                     throw new Exception(string.Format("投注号码{0}中包括重复的内容", item.AnteCode));
-                CheckSportAnteCode(gameCode, string.IsNullOrEmpty(item.GameType) ? gameType : item.GameType.ToUpper(), oneCodeArray);
+                BettingHelper.CheckSportAnteCode(gameCode, string.IsNullOrEmpty(item.GameType) ? gameType : item.GameType.ToUpper(), oneCodeArray);
             }
 
             var tmp = playType.Split('|');
@@ -208,115 +144,6 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
             return totalCount;
         }
 
-        private void CheckPrivilegesType_JCLQ(string gameCode, string gameType, string playType, Sports_AnteCodeInfoCollection codeList, List<C_JCLQ_Match> matchList)
-        {
-            //PrivilegesType
-            //竞彩篮球：1:胜负单关 2:让分胜负单关 3:胜分差单关 4:大小分单关 5:胜负过关 6:让分胜负过关 7:胜分差过关 8:大小分过关
-            foreach (var code in codeList)
-            {
-                var privileType = string.Empty;
-                var tempGameType = gameType != "HH" ? gameType : code.GameType;
-                switch (tempGameType.ToUpper())
-                {
-                    case "SF":
-                        privileType = playType == "1_1" ? "1" : "5";
-                        break;
-                    case "RFSF":
-                        privileType = playType == "1_1" ? "2" : "6";
-                        break;
-                    case "SFC":
-                        privileType = playType == "1_1" ? "3" : "7";
-                        break;
-                    case "DXF":
-                        privileType = playType == "1_1" ? "4" : "8";
-                        break;
-                    default:
-                        break;
-                }
-                var temp = matchList.FirstOrDefault(p => p.MatchId == code.MatchId);
-                if (temp == null || string.IsNullOrEmpty(temp.PrivilegesType)) continue;
-                var privileArray = temp.PrivilegesType.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-                if (!string.IsNullOrEmpty(privileType) && privileArray.Contains(privileType))
-                    throw new LogicException(string.Format("{0} {1}玩法 暂不支持{2}投注", temp.MatchIdName, BusinessHelper.FormatGameType(gameCode, gameType), playType == "1_1" ? "单关" : "过关"));
-            }
-        }
-
-        private void CheckPrivilegesType_JCZQ(string gameCode, string gameType, string playType, Sports_AnteCodeInfoCollection codeList, List<C_JCZQ_Match> matchList)
-        {
-            //PrivilegesType
-            //用英文输入法的:【逗号】如’,’分开。
-            //竞彩足球：1:胜平负单关 2:比分单关 3:进球数单关 4:半全场单关 5:胜平负过关 6:比分过关 7:进球数过关 8:半全场过关9：不让球胜平负单关 10：不让球胜平负过关
-            foreach (var code in codeList)
-            {
-                var privileType = string.Empty;
-                var tempGameType = gameType != "HH" ? gameType : code.GameType;
-                switch (tempGameType.ToUpper())
-                {
-                    case "SPF":
-                        privileType = playType == "1_1" ? "1" : "5";
-                        break;
-                    case "BRQSPF":
-                        privileType = playType == "1_1" ? "9" : "0";
-                        break;
-                    case "BF":
-                        privileType = playType == "1_1" ? "2" : "6";
-                        break;
-                    case "ZJQ":
-                        privileType = playType == "1_1" ? "3" : "7";
-                        break;
-                    case "BQC":
-                        privileType = playType == "1_1" ? "4" : "8";
-                        break;
-                    default:
-                        break;
-                }
-                var temp = matchList.FirstOrDefault(p => p.MatchId == code.MatchId);
-                if (temp == null || string.IsNullOrEmpty(temp.PrivilegesType)) continue;
-                var privileArray = temp.PrivilegesType.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-                if (!string.IsNullOrEmpty(privileType) && privileArray.Contains(privileType))
-                    throw new LogicException(string.Format("{0} {1}玩法 暂不支持{2}投注", temp.MatchIdName, BusinessHelper.FormatGameType(gameCode, gameType), playType == "1_1" ? "单关" : "过关"));
-            }
-        }
-
-        private void CheckPrivilegesType_BJDC(string gameCode, string gameType, string playType, string issuseNumber, Sports_AnteCodeInfoCollection codeList, List<C_BJDC_Match> matchList)
-        {
-            //PrivilegesType
-            //竞彩篮球：1:胜负单关 2:让分胜负单关 3:胜分差单关 4:大小分单关 5:胜负过关 6:让分胜负过关 7:胜分差过关 8:大小分过关
-            foreach (var code in codeList)
-            {
-                var privileType = string.Empty;
-                var tempGameType = gameType != "HH" ? gameType : code.GameType;
-                switch (tempGameType.ToUpper())
-                {
-                    case "BF":
-                        privileType = "1";
-                        break;
-                    case "BQC":
-                        privileType = "2";
-                        break;
-                    case "SPF":
-                        privileType = "3";
-                        break;
-                    case "SXDS":
-                        privileType = "4";
-                        break;
-                    case "ZJQ":
-                        privileType = "5";
-                        break;
-                    case "SF":
-                        privileType = "6";
-                        break;
-                    default:
-                        break;
-                }
-                var temp = matchList.FirstOrDefault(p => p.Id == (issuseNumber + "|" + code.MatchId));
-                if (temp == null || string.IsNullOrEmpty(temp.PrivilegesType)) continue;
-                var privileArray = temp.PrivilegesType.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-                if (!string.IsNullOrEmpty(privileType) && privileArray.Contains(privileType))
-                    throw new LogicException(string.Format("{0} {1}玩法 暂不支持{2}投注", temp.Id, BusinessHelper.FormatGameType(gameCode, gameType), playType == "1_1" ? "单关" : "过关"));
-            }
-        }
-
         public DateTime CheckGeneralBettingMatch(Sports_Manager sportsManager, string gameCode, string gameType, string playType, Sports_AnteCodeInfoCollection codeList, string issuseNumber, SchemeBettingCategory? bettingCategory = null)
         {
             if (gameCode == "BJDC")
@@ -329,7 +156,7 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
 
                     if (SFGGMatchList.Count != matchIdArray.Length)
                         throw new LogicException("所选比赛中有停止销售的比赛。");
-                    CheckPrivilegesType_BJDC(gameCode, gameType, playType, issuseNumber, codeList, matchList);
+                    BettingHelper.CheckPrivilegesType_BJDC(gameCode, gameType, playType, issuseNumber, codeList, matchList);
                     return SFGGMatchList.Min(m => m.BetStopTime);
                 }
                 else
@@ -337,7 +164,7 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
 
                     if (matchList.Count != matchIdArray.Length)
                         throw new LogicException("所选比赛中有停止销售的比赛。");
-                    CheckPrivilegesType_BJDC(gameCode, gameType, playType, issuseNumber, codeList, matchList);
+                    BettingHelper.CheckPrivilegesType_BJDC(gameCode, gameType, playType, issuseNumber, codeList, matchList);
                     return matchList.Min(m => m.LocalStopTime);
                 }
                 //if (matchList.Count != matchIdArray.Length && gameType != "HH")
@@ -355,7 +182,7 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
                 //if (matchResultList.Count > 0)
                 //    throw new ArgumentException(string.Format("所选比赛中包含结束的比赛：{0}", string.Join(",", matchResultList.Select(p => p.MatchId).ToArray())));
 
-                CheckPrivilegesType_JCZQ(gameCode, gameType, playType, codeList, matchList);
+                BettingHelper.CheckPrivilegesType_JCZQ(gameCode, gameType, playType, codeList, matchList);
 
                 //if (playType == "1_1")
                 if (bettingCategory != null && bettingCategory.Value == SchemeBettingCategory.SingleBetting)
@@ -374,7 +201,7 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
                 if (matchResultList.Count > 0)
                     throw new LogicException(string.Format("所选比赛中包含结束的比赛：{0}", string.Join(",", matchResultList.Select(p => p.MatchId).ToArray())));
 
-                CheckPrivilegesType_JCLQ(gameCode, gameType, playType, codeList, matchList);
+                BettingHelper.CheckPrivilegesType_JCLQ(gameCode, gameType, playType, codeList, matchList);
 
                 //if (playType == "1_1")
                 if (bettingCategory != null && bettingCategory.Value == SchemeBettingCategory.SingleBetting)
@@ -408,7 +235,7 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
             info.GameCode = info.GameCode.ToUpper();
             info.GameType = info.GameType.ToUpper();
             var gameCode = info.GameCode;
-            schemeId = BusinessHelper.GetSportsBettingSchemeId(gameCode);
+            schemeId = BettingHelper.GetSportsBettingSchemeId(gameCode);
             var sportsManager = new Sports_Manager();
             //验证比赛是否还可以投注
             var stopTime = CheckGeneralBettingMatch(sportsManager, gameCode, info.GameType, info.PlayType, info.AnteCodeList, info.IssuseNumber);
@@ -500,147 +327,6 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
             return schemeId;
         }
 
-        public string ConvertGameType(string gameCode, string gameType, string betType, int betCount)
-        {
-            switch (gameCode.ToLower())
-            {
-                case "ctzq":
-                    return betType;
-                //case "dlt":
-                //    return betCount > 1 ? "FS" : "DS";
-                //switch (gameType.ToLower())
-                //{
-                //    case "dt":
-                //        return "FS";
-                //    default:
-                //        return gameType;
-                //}
-                case "cqssc":
-                    switch (gameType.ToLower())
-                    {
-                        case "1xdx":
-                            return "ZQSSC_1X_DS";
-                        case "2xdx":
-                            return string.Format("ZQSSC_2X_{0}", betType == "DS" ? "DS" : "FS");
-                        case "3xdx":
-                            return string.Format("ZQSSC_3X_{0}", betType == "DS" ? "DS" : "FS");
-                        case "5xdx":
-                            return string.Format("ZQSSC_5X_{0}", betType == "DS" ? "DS" : "FS");
-                        case "2xzxfs":
-                            return string.Format("ZQSSC_2XZX{0}", betType == "DS" ? "_DS" : "ZH");
-                        case "2xhz":
-                            return "ZQSSC_2XHZ";
-                        case "2xzxfw":
-                            return "ZQSSC_2XZXFZ";
-                        case "2xbaodan":
-                            return "ZQSSC_2XZX_BD";
-                        case "3xzxzh":
-                            if (betCount == 6)
-                            {
-                                return string.Format("ZQSSC_3XZH");
-                            }
-                            else
-                            {
-                                return string.Format("ZQSSC_3XZH_FS");
-                            }
-                        case "3xbaodan":
-                            return "ZQSSC_3XZX_BD";
-                        case "3xhz":
-                            return "ZQSSC_3XHZ";
-                        case "zx3ds":
-                            return "ZQSSC_3XZ3_DS";
-                        case "zx3fs":
-                            return "ZQSSC_3XZ3_FS";
-                        case "3xzxhz":
-                            return "ZQSSC_3XZXHZ";
-                        case "5xtx":
-                            return "ZQSSC_5XTX";
-                        case "dxds":
-                            return "ZQSSC_DXDS";
-                        case "zx6":
-                            return string.Format("ZQSSC_3XZ6_{0}", betType == "DS" ? "DS" : "FS");
-                        default:
-                            return gameType;
-                    }
-                case "jx11x5":
-                    switch (gameType.ToLower())
-                    {
-                        case "rx1":
-                            return "11_RX1";
-                        case "rx2":
-                            return "11_RX2";
-                        case "rx3":
-                            return "11_RX3";
-                        case "rx4":
-                            return "11_RX4";
-                        case "rx5":
-                            return "11_RX5";
-                        case "rx6":
-                            return "11_RX6";
-                        case "rx7":
-                            return "11_RX7";
-                        case "rx8":
-                            return "11_RX8";
-                        case "q2zhix":
-                            return string.Format("11_ZXQ2_{0}", betType == "DS" ? "D" : "F");
-                        case "q3zhix":
-                            return string.Format("11_ZXQ3_{0}", betType == "DS" ? "D" : "F");
-                        case "q2zux":
-                            return "11_ZXQ2";
-                        case "q3zux":
-                            return "11_ZXQ3";
-                        default:
-                            return gameType;
-                    }
-                case "fc3d":
-                    switch (gameType.ToLower())
-                    {
-                        case "ds":
-                            return string.Format("ZX{0}", betType == "DS" ? "DS" : "FS"); ;
-                        case "fs":
-                            return string.Format("ZX{0}", betType == "DS" ? "DS" : "FS"); ;
-                        case "hz":
-                            return "ZXHZ";
-                        case "zx3ds":
-                            return "ZX_DS";
-                        case "zx3fs":
-                            return "Z3FS";
-                        case "zx6":
-                            return string.Format("Z{0}", betType == "DS" ? "X_DS" : "6FS"); ;
-
-                        default:
-                            return gameType;
-                    }
-                case "pl3":
-                    switch (gameType.ToLower())
-                    {
-                        case "ds":
-                            return string.Format("ZX{0}", betType == "DS" ? "DS" : "FS"); ;
-                        case "fs":
-                            return string.Format("ZX{0}", betType == "DS" ? "DS" : "FS"); ;
-                        case "hz":
-                            return "ZXHZ";
-                        case "zx3ds":
-                            return "ZX_DS";
-                        case "zx3fs":
-                            return "ZXZ3";
-                        case "zx6":
-                            if (betType == "DS")
-                            {
-                                return "ZX_DS";
-                            }
-                            else
-                            {
-                                return "ZXZ6";
-                            }
-                        default:
-                            return gameType;
-                    }
-                default:
-                    return gameType;
-            }
-        }
-
         public List<Antecode> FomartTR9AnteCodeList(GatewayAnteCode code)
         {
             var list = new List<Antecode>();
@@ -709,133 +395,10 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
 
             return list;
         }
-        private int GetMaxAntecodeCountEachTicket(string gameCode, string gameType)
-        {
-            switch (gameCode.ToLower())
-            {
-                case "ctzq":
-                    return 1;
-                case "ssq":
-                    switch (gameType.ToLower())
-                    {
-                        case "ds":
-                            return 5;
-                        default:
-                            return 1;
-                    }
-                case "dlt":
-                    switch (gameType.ToLower())
-                    {
-                        case "ds":
-                            return 5;
-                        default:
-                            return 1;
-                    }
-                default:
-                    return 1;
-            }
-        }
-        public int GetMaxTicketAmount(string gameCode)
-        {
-            switch (gameCode.ToLower())
-            {
-                case "ssq":
-                case "fc3d":
-                    return 50;
-                default:
-                    return 99;
-            }
-        }
-        private System.Data.DataTable GetNewTicketTable()
-        {
-            var ticketTable = new System.Data.DataTable("C_Sports_Ticket");
-            ticketTable.Columns.Add("Id", typeof(long));
-            ticketTable.Columns.Add("SchemeId", typeof(string));
-            ticketTable.Columns.Add("TicketId", typeof(string));
-            ticketTable.Columns.Add("GameCode", typeof(string));
-            ticketTable.Columns.Add("GameType", typeof(string));
-            ticketTable.Columns.Add("PlayType", typeof(string));
-            ticketTable.Columns.Add("MatchIdList", typeof(string));
-            ticketTable.Columns.Add("IssuseNumber", typeof(string));
-            ticketTable.Columns.Add("BetUnits", typeof(int));
-            ticketTable.Columns.Add("Amount", typeof(int));
-            ticketTable.Columns.Add("BetMoney", typeof(decimal));
-            ticketTable.Columns.Add("BetContent", typeof(string));
-            ticketTable.Columns.Add("LocOdds", typeof(string));
-            ticketTable.Columns.Add("TicketStatus", typeof(int));
-            ticketTable.Columns.Add("TicketLog", typeof(string));
-            ticketTable.Columns.Add("PartnerId", typeof(string));
-            ticketTable.Columns.Add("Palmid", typeof(string));
-            ticketTable.Columns.Add("PrintNumber1", typeof(string));
-            ticketTable.Columns.Add("PrintNumber2", typeof(string));
-            ticketTable.Columns.Add("PrintNumber3", typeof(string));
-            ticketTable.Columns.Add("BarCode", typeof(string));
-            ticketTable.Columns.Add("PrintOdd", typeof(string));
-            ticketTable.Columns.Add("PrintUnOdd", typeof(string));
-            ticketTable.Columns.Add("BonusStatus", typeof(int));
-            ticketTable.Columns.Add("PreTaxBonusMoney", typeof(decimal));
-            ticketTable.Columns.Add("AfterTaxBonusMoney", typeof(decimal));
-            ticketTable.Columns.Add("PrintDateTime", typeof(DateTime));
-            ticketTable.Columns.Add("Gateway", typeof(string));
-            ticketTable.Columns.Add("CreateTime", typeof(DateTime));
-            ticketTable.Columns.Add("IsAppend", typeof(bool));
-            ticketTable.PrimaryKey = new System.Data.DataColumn[] { ticketTable.Columns["Id"] };
-            return ticketTable;
-        }
-
-        private TicketCollection AnalyzeTickets(Order order)
-        {
-            // 将所有号码，按照玩法进行分组
-            var groupAntecodes = order.AntecodeList.GroupBy((item) => item.GameType);
-            var ticketList = new TicketCollection();
-            foreach (var group in groupAntecodes)
-            {
-                var gameType = group.Key;
-                // 获取玩法一张票最多可以携带的号码数量
-                var maxCount = GetMaxAntecodeCountEachTicket(order.GameCode, gameType);
-                // 解析此玩法所有号码，并返回多张票
-                var innerTicketList = GetTicketsByAntecodes(group.ToArray(), maxCount, GetMaxTicketAmount(order.GameCode), () => new Ticket() { GameType = gameType, Amount = order.Amount, });
-                ticketList.AddRange(innerTicketList);
-            }
-            return ticketList;
-        }
-        private IEnumerable<Ticket> GetTicketsByAntecodes(IEnumerable<Antecode> antecodeList, int maxCount, int maxAmount, Func<Ticket> createTicketHandler)
-        {
-            var ticketList = new List<Ticket>();
-            var tmpTicket = createTicketHandler();
-            var tmpAmount = tmpTicket.Amount;
-            while (tmpAmount > 0)
-            {
-                var currentAmount = maxAmount;
-                if (tmpAmount <= maxAmount)
-                {
-                    currentAmount = tmpAmount;
-                }
-                tmpAmount -= maxAmount;
-                tmpTicket.Amount = currentAmount;
-                foreach (var antecode in antecodeList)
-                {
-                    // 添加号码到票
-                    tmpTicket.AnteCodeList.Add(antecode);
-                    // 如果票包含的号码数量达到上限，则将票添加到列表，并重建票对象
-                    if (tmpTicket.AnteCodeList.Count >= maxCount)
-                    {
-                        ticketList.Add(tmpTicket);
-                        tmpTicket = createTicketHandler();
-                        tmpTicket.Amount = currentAmount;
-                    }
-                }
-                if (tmpTicket.AnteCodeList.Count > 0)
-                {
-                    ticketList.Add(tmpTicket);
-                    tmpTicket = createTicketHandler();
-                    tmpTicket.Amount = currentAmount;
-                }
-            }
-            return ticketList.ToArray();
-        }
-
-        public TicketCollection AnalyzeOrder(GatewayTicketOrder order)
+    
+   
+     
+       public TicketCollection AnalyzeOrder(GatewayTicketOrder order)
         {
             Order o = new Order()
             {
@@ -857,7 +420,7 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
                     });
                 }
             }
-            var ticketList = AnalyzeTickets(o);
+            var ticketList = BettingHelper. AnalyzeTickets(o);
             ticketList.AnalyzeOrder(order.GameCode, order.Price);
             if (ticketList.TotalMoney != order.TotalMoney)
             {
@@ -876,7 +439,7 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
                 var redisTicketList = new List<RedisTicketInfo>();
                 var gameType = string.Empty;
                 var ticketList = AnalyzeOrder(orderInfo);
-                var ticketTable = GetNewTicketTable();
+                var ticketTable = BettingHelper.GetNewTicketTable();
                 var index = 1;
                 var locOdds = string.Empty;
                 foreach (var ticket in ticketList)
@@ -915,7 +478,7 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
                     var info = new 
                     {
                         OrderId = orderInfo.OrderId + "|" + (index++).ToString("D3"),
-                        BetType = ConvertGameType(orderInfo.GameCode, ticket.GameType, betType, ticket.BetCount),
+                        BetType = BettingHelper.ConvertGameType(orderInfo.GameCode, ticket.GameType, betType, ticket.BetCount),
                         IssueNumber = orderInfo.IssuseNumber,
                         BetUnits = ticket.BetCount,
                         Multiple = ticket.Amount,
@@ -1171,8 +734,12 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
             info.GameCode = info.GameCode.ToUpper();
             info.GameType = info.GameType.ToUpper();
             if (string.IsNullOrEmpty(schemeId))
-                schemeId = BusinessHelper.GetSportsBettingSchemeId(info.GameCode);
-            var canTicket = BusinessHelper.CanRequestBet(info.GameCode);
+                schemeId = BettingHelper.GetSportsBettingSchemeId(info.GameCode);
+
+            //var key = string.Format("{0}_{1}", info.GameCode, "StopTicketing");
+            //string AppSetting = DBbase.GlobalConfig[key].ToString();
+            //if (BettingHelper.CanRequestBet(AppSetting, gameCode))
+            var canTicket = BettingHelper.CanRequestBet(info.GameCode);
             //开启事务
             using ( DB)
             {
@@ -1205,8 +772,8 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
 
 
                 // 消费资金
-                string msg = info.GameCode == "BJDC" ? string.Format("{0}第{1}期投注", BusinessHelper.FormatGameCode(info.GameCode), info.IssuseNumber)
-                                                    : string.Format("{0} 投注", BusinessHelper.FormatGameCode(info.GameCode));
+                string msg = info.GameCode == "BJDC" ? string.Format("{0}第{1}期投注", BettingHelper.FormatGameCode(info.GameCode), info.IssuseNumber)
+                                                    : string.Format("{0} 投注", BettingHelper.FormatGameCode(info.GameCode));
                 if (redBagMoney > 0M)
                 {
                     //var fundManager = new FundManager();
@@ -1261,7 +828,7 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
         public void RequestTicketByGateway_SingleScheme_New(GatewayTicketOrder_SingleScheme order)
         {
             List<string> codeList = new List<string>();
-           // var admin = new TicketGatewayAdmin();
+            var admin = new TicketGatewayAdmin();
             var matchIdList = new List<string>();
             var matchIdOddsList = new Dictionary<string, string>();
 
@@ -1276,21 +843,21 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
                     switch (order.GameCode.ToUpper())
                     {
                         case "BJDC":
-                           // codeList = admin.RequestTicket_BJDCSingleScheme(order, out matchIdList);
+                            codeList = admin.RequestTicket_BJDCSingleScheme(order, out matchIdList);
                             break;
                         case "JCZQ":
-                           // codeList = admin.RequestTicket_JCZQSingleScheme(order, out matchIdList);
+                            codeList = admin.RequestTicket_JCZQSingleScheme(order, out matchIdList);
                             break;
                         case "JCLQ":
-                            //codeList = admin.RequestTicket_JCLQSingleScheme(order, out matchIdList);
+                            codeList = admin.RequestTicket_JCLQSingleScheme(order, out matchIdList);
                             break;
                         case "CTZQ":
-                            //codeList = admin.RequestTicket_CTZQSingleScheme(order);
+                            codeList = admin.RequestTicket_CTZQSingleScheme(order);
                             break;
                         default:
                             throw new ArgumentException("请求出票不支持的订单彩种 - " + order.GameCode);
                     }
-                    throw new NotImplementedException("请求出票不支持的订单彩种 - " + order.GameCode);
+                    //throw new NotImplementedException("请求出票不支持的订单彩种 - " + order.GameCode);
                     if (order.GameCode.ToUpper() == "JCZQ" || order.GameCode.ToUpper() == "JCLQ")
                     {
                         foreach (var item in matchIdList)
@@ -1342,7 +909,7 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
             var oddDic = new Dictionary<string, string>();
             try
             {
-                var ticketTable = GetNewTicketTable();
+                var ticketTable = BettingHelper.GetNewTicketTable();
                 var dictionary = new Dictionary<string, int>();
                 foreach (var item in codeList)
                 {
@@ -1385,7 +952,7 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
                     #endregion
 
                     //最大倍数
-                    var maxAmount = GetMaxTicketAmount(order.GameCode);
+                    var maxAmount = BettingHelper.GetMaxTicketAmount(order.GameCode);
                     var tmpAmount = amount;
                     while (tmpAmount > 0)
                     {
@@ -1548,7 +1115,7 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
             var redisTicketList = new List<RedisTicketInfo>();
             var gameType = string.Empty;
             var ticketList = AnalyzeOrder(orderInfo);
-            var ticketTable = GetNewTicketTable();
+            var ticketTable = BettingHelper.GetNewTicketTable();
             var index = 1;
             var locOdds = string.Empty;
             foreach (var ticket in ticketList)
@@ -1587,7 +1154,7 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
                 var info = new 
                 {
                     OrderId = orderInfo.OrderId + "|" + (index++).ToString("D3"),
-                    BetType = ConvertGameType(orderInfo.GameCode, ticket.GameType, betType, ticket.BetCount),
+                    BetType = BettingHelper.ConvertGameType(orderInfo.GameCode, ticket.GameType, betType, ticket.BetCount),
                     IssueNumber = orderInfo.IssuseNumber,
                     BetUnits = ticket.BetCount,
                     Multiple = ticket.Amount,
@@ -1696,8 +1263,11 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
             if (order == null)
                 //return;
                 return string.Format("找不到订单{0}的订单数据", schemeId);
-
-            if (!BusinessHelper.CanRequestBet(order.GameCode))
+            //读取配置文件
+            //var key = string.Format("{0}_{1}", order.GameCode.ToUpper(), "StopTicketing");
+            //string AppSetting = DBbase.GlobalConfig[key].ToString();
+            if (BettingHelper.CanRequestBet(order.GameCode))
+               // if (!BusinessHelper.CanRequestBet(order.GameCode))
                 //return;
                 return string.Format("彩种{0}暂时不能出票", order.GameCode);
             var anteCodeList = sportsManager.QuerySportsAnteCodeBySchemeId(schemeId);
@@ -2023,7 +1593,7 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
                 CurrentBettingMoney = ticketStatus == TicketStatus.Ticketed ? totalMoney : 0M,
                 GameCode = gameCode,
                 GameType = gameType,
-                GameTypeName = BusinessHelper.FormatGameType(gameCode, gameType),
+                GameTypeName = BettingHelper.FormatGameType(gameCode, gameType),
                 PreTaxBonusMoney = 0M,
                 ProgressStatus = (int)progressStatus,
                 SchemeId = schemeId,
