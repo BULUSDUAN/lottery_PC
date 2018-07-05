@@ -46,5 +46,20 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
           //  this.Session.Clear();
             return this.DB.CreateSQLQuery(string.Format("select DISTINCT [UsePercent] from [E_A20150919_红包使用配置] where gamecode='{0}'", gameCode)).First<decimal>();
         }
+
+        public void AddWithdraw(C_Withdraw entity)
+        {
+            DB.GetDal<C_Withdraw>().Add(entity);
+        }
+
+        public int QueryTodayWithdrawTimes(string userId)
+        {
+
+            var query = from d in DB.CreateQuery<C_Withdraw>()
+                        where d.UserId == userId && d.RequestTime >= DateTime.Now.Date && d.RequestTime < DateTime.Now.AddDays(1).Date
+                        select d;
+            return query.Count();
+        }
+
     }
 }

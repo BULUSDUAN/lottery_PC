@@ -41,20 +41,6 @@ namespace KaSon.FrameWork.Common
         /// </summary>
         Unknown = 9,
     }
-    /// <summary>
-    /// 收支类型
-    /// </summary>
-    public enum PayType
-    {
-        /// <summary>
-        /// 支出
-        /// </summary>
-        Payout = 10,
-        /// <summary>
-        /// 收入
-        /// </summary>
-        Payin = 20,
-    }
     #region XML解析
 
     /// <summary>

@@ -1,19 +1,19 @@
 ﻿using EntityModel.Communication;
 using EntityModel.CoreModel;
 using EntityModel.Enum;
+using EntityModel.LotteryJsonInfo;
 using Kason.Sg.Core.ProxyGenerator;
-using KaSon.FrameWork.Helper;
-using KaSon.FrameWork.Helper.分析器工厂;
+using KaSon.FrameWork.Common;
 using Lottery.ApiGateway.Model.HelpModel;
 using Lottery.Base.Controllers;
 using Microsoft.AspNetCore.Mvc;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static KaSon.FrameWork.Helper.JsonHelper;
 
 namespace Lottery.Api.Controllers
 {
@@ -159,7 +159,7 @@ namespace Lottery.Api.Controllers
                     var jsonData = System.IO.File.ReadAllText(fileFullName, Encoding.UTF8);
                     if (!string.IsNullOrEmpty(jsonData.Trim()))
                     {
-                        data = Deserialize<GameWinNumber_InfoCollection>(jsonData);
+                        data = JsonHelper.Deserialize<GameWinNumber_InfoCollection>(jsonData);
                     }
                 }
 
@@ -250,7 +250,7 @@ namespace Lottery.Api.Controllers
                         var jsonData = System.IO.File.ReadAllText(jczqFileFullName, Encoding.UTF8);
                         if (!string.IsNullOrEmpty(jsonData.Trim()))
                         {
-                            result = Deserialize<JCZQMatchResult_Collection>(jsonData);
+                            result = JsonHelper.Deserialize<JCZQMatchResult_Collection>(jsonData);
                         }
                     }
 
@@ -313,7 +313,7 @@ namespace Lottery.Api.Controllers
                         var jsonData = System.IO.File.ReadAllText(jczqFileFullName, Encoding.UTF8);
                         if (!string.IsNullOrEmpty(jsonData.Trim()))
                         {
-                            result = Deserialize<JCLQMatchResult_Collection>(jsonData);
+                            result = JsonHelper.Deserialize<JCLQMatchResult_Collection>(jsonData);
                         }
                     }
                     //var result = WCFClients.GameIssuseClient.QueryJCLQMatchResult(startTime, endTime, pageIndex, pageSize);
@@ -418,7 +418,7 @@ namespace Lottery.Api.Controllers
                         var jsonData = System.IO.File.ReadAllText(ctzqFileFullName, Encoding.UTF8);
                         if (!string.IsNullOrEmpty(jsonData.Trim()))
                         {
-                            result = Deserialize<CTZQMatch_PoolInfo_Collection>(jsonData);
+                            result = JsonHelper.Deserialize<CTZQMatch_PoolInfo_Collection>(jsonData);
                         }
                     }
                     foreach (var item in result.ListInfo)
@@ -1437,8 +1437,8 @@ namespace Lottery.Api.Controllers
                                 Amount = amount,
                                 BetCount = betCount,
                                 OrderNumber = _item.OrderNumber,
-                                Detail_RF = BusinessHelper.AnalyticalCurrentSp(item.CurrentSp, "RF"),
-                                Detail_YSZF = BusinessHelper.AnalyticalCurrentSp(item.CurrentSp, "YSZF"),
+                                Detail_RF = AnalyticalCurrentSp(item.CurrentSp, "RF"),
+                                Detail_YSZF = AnalyticalCurrentSp(item.CurrentSp, "YSZF"),
                             });
                         }
                     }
@@ -1482,8 +1482,8 @@ namespace Lottery.Api.Controllers
                         StartTime = ConvertHelper.ConvertDateTimeInt(Convert.ToDateTime(item.StartTime)),
                         Amount = amount,
                         BetCount = betCount,
-                        Detail_RF = BusinessHelper.AnalyticalCurrentSp(item.CurrentSp, "RF"),
-                        Detail_YSZF = BusinessHelper.AnalyticalCurrentSp(item.CurrentSp, "YSZF"),
+                        Detail_RF = AnalyticalCurrentSp(item.CurrentSp, "RF"),
+                        Detail_YSZF = AnalyticalCurrentSp(item.CurrentSp, "YSZF"),
                     });
                 }
                 else
@@ -1526,8 +1526,8 @@ namespace Lottery.Api.Controllers
                         StartTime = ConvertHelper.ConvertDateTimeInt(Convert.ToDateTime(item.StartTime)),
                         Amount = amount,
                         BetCount = betCount,
-                        Detail_RF =BusinessHelper.AnalyticalCurrentSp(item.CurrentSp, "RF"),
-                        Detail_YSZF = BusinessHelper.AnalyticalCurrentSp(item.CurrentSp, "YSZF"),
+                        Detail_RF =AnalyticalCurrentSp(item.CurrentSp, "RF"),
+                        Detail_YSZF = AnalyticalCurrentSp(item.CurrentSp, "YSZF"),
                     });
                 }
             }
@@ -2862,6 +2862,27 @@ namespace Lottery.Api.Controllers
             }
             return list;
         }
-
+        private string AnalyticalCurrentSp(string currentSp, string code)
+        {
+            if (string.IsNullOrEmpty(currentSp) || string.IsNullOrEmpty(code))
+                return string.Empty; ;
+            var array = currentSp.Split(',');
+            if (array != null && array.Length > 0)
+            {
+                foreach (var item in array)
+                {
+                    if (!string.IsNullOrEmpty(item))
+                    {
+                        var tempArr = item.Split('|');
+                        if (tempArr != null && tempArr.Length > 1)
+                        {
+                            if (code.ToUpper() == tempArr[0].ToUpper())
+                                return (tempArr[1]);
+                        }
+                    }
+                }
+            }
+            return string.Empty;
+        }
     }
 }
