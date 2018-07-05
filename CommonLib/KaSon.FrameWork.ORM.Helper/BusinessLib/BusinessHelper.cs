@@ -18,7 +18,6 @@ using EntityModel.Interface;
 using KaSon.FrameWork.Common.Utilities;
 using KaSon.FrameWork.Common;
 using KaSon.FrameWork.Common.Redis;
-using KaSon.FrameWork.Analyzer.AnalyzerFactory;
 using KaSon.FrameWork.Common.Algorithms;
 using EntityModel.PayModel;
 using KaSon.FrameWork.Common.Sport;
@@ -43,7 +42,7 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                 var db = RedisHelper.DB_UserBalance;
                 string key = string.Format("UserBalance_{0}", userId);
-                var fund = new FundBusiness();
+                var fund = new LocalLoginBusiness();
                 var userBalance = fund.QueryUserBalance(userId);
                 var json = JsonHelper.Serialize(userBalance);
                 db.StringSetAsync(key, json, TimeSpan.FromSeconds(60 * 2));

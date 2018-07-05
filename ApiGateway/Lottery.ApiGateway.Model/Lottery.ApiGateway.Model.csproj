@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\CommonLib\EntityModel\EntityModel.csproj" />
+    <ProjectReference Include="..\..\CommonLib\KaSon.FrameWork.Common\KaSon.FrameWork.Common.csproj" />
   </ItemGroup>
 
 

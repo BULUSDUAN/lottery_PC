@@ -4,6 +4,7 @@ using EntityModel.LotteryJsonInfo;
 using KaSon.FrameWork.Common;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 namespace KaSon.FrameWork.Common.Utilities { 
     public class ConvertHelper
@@ -1091,6 +1092,13 @@ namespace KaSon.FrameWork.Common.Utilities {
                 msg += item.BonusMoney.ToString("###,##0.00") + ",";
             }
             return msg.TrimEnd(',');
+        }
+
+        public static DateTime ConvertStrToDateTime(string strTime)
+        {
+            IFormatProvider ifp = new CultureInfo("zh-CN", true);
+            var time = DateTime.ParseExact(strTime, "yyyyMMdd", ifp);
+            return time;
         }
     }
 }

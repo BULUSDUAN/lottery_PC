@@ -1,9 +1,9 @@
 ﻿
 using EntityModel.Enum;
 using EntityModel.LotteryJsonInfo;
-using KaSon.FrameWork.Common;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 namespace EntityModel.CoreModel
 {
@@ -1092,6 +1092,13 @@ namespace EntityModel.CoreModel
                 msg += item.BonusMoney.ToString("###,##0.00") + ",";
             }
             return msg.TrimEnd(',');
+        }
+
+        public static DateTime ConvertStrToDateTime(string strTime)
+        {
+            IFormatProvider ifp = new CultureInfo("zh-CN", true);
+            var time = DateTime.ParseExact(strTime, "yyyyMMdd", ifp);
+            return time;
         }
     }
 }

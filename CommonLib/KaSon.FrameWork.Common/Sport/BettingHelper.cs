@@ -2,6 +2,7 @@
 using EntityModel.CoreModel.BetingEntities;
 using EntityModel.Domain.Entities;
 using EntityModel.ExceptionExtend;
+using EntityModel.LotteryJsonInfo;
 using KaSon.FrameWork.Common.GlobalConfigJson;
 using KaSon.FrameWork.Common.Utilities;
 using System;
@@ -941,6 +942,162 @@ namespace KaSon.FrameWork.Common.Sport
                 }
             }
         }
+        static string ResUrl = string.Empty;
+        public BettingHelper()
+        {
+            //http://res.iqucai.com/matchdata/jczq/match_list.json?_=1425952243703
+            ResUrl = ConfigHelper.ConfigInfo["ResSiteUrl"].ToString() ?? "http://10.0.3.6/";
+            //ConfigurationManager.AppSettings["ResSiteUrl"] 
+        }
 
+        public List<T> GetMatchInfoList<T>(string filePath)
+        {
+            var result = ReadFileString(ResUrl + filePath);
+            if (result == null || string.IsNullOrEmpty(result))
+                return new List<T>();
+            return JsonHelper.Deserialize<List<T>>(result);
+        }
+
+        private static string ReadFileString(string fullUrl)
+        {
+            try
+            {
+                string strResult = PostManager.Get(fullUrl, Encoding.UTF8);
+                if (strResult == "404") return string.Empty;
+
+                if (!string.IsNullOrEmpty(strResult))
+                {
+                    if (strResult.ToLower().StartsWith("var"))
+                    {
+                        string[] strArray = strResult.Split('=');
+                        if (strArray != null && strArray.Length == 2)
+                        {
+                            if (strArray[1].ToString().Trim().EndsWith(";"))
+                            {
+                                return strArray[1].ToString().Trim().TrimEnd(';');
+                            }
+                            return strArray[1].ToString().Trim();
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return string.Empty;
+        }
+
+
+        /// <summary>
+        /// 获取星期
+        /// </summary>
+        /// <returns></returns>
+        public static string Week()
+        {
+            string[] weekdays = { "周日", "周一", "周二", "周三", "周四", "周五", "周六" };
+            string week = weekdays[Convert.ToInt32(DateTime.Now.DayOfWeek)];
+            return week;
+        }
+
+        public static string GetWeek(DateTime now)
+        {
+            string[] weekdays = { "周日", "周一", "周二", "周三", "周四", "周五", "周六" };
+            string week = weekdays[Convert.ToInt32(now.DayOfWeek)];
+            return week;
+        }
+
+        /// <summary>
+        /// 获取颜色
+        /// </summary>
+        /// <returns></returns>
+        public static string GetLeagueColor()
+        {
+            string[] colors = { "#385994", "#5b9999", "#67b9cb", "#ddab4a", "#ebeab4", "#5ea673", "#806362", "#a0a065", "#656598", "#562d81", "#484817", "#dd0000", "#577fb5", "#647897", "#396842" };
+            Random random = new Random();
+            int i = random.Next(0, 14);
+            return colors[i];
+        }
+
+        /// <summary>
+        /// 传统足球详情
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="issuseId"></param>
+        /// <returns></returns>
+        public static List<Web_CTZQ_BonusPoolInfo> GetPoolInfo_CTZQ(string type, string issuseId)
+        {
+            var poolInfo = GetCTZQBonusPool(IssuseFile(type, issuseId));
+            return poolInfo;
+        }
+
+        /// <summary>
+        /// 传统足球奖期详情
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static List<Web_CTZQ_BonusPoolInfo> GetCTZQBonusPool(string filePath)
+        {
+            var result = ReadFileString(ResUrl + filePath);
+            if (string.IsNullOrEmpty(result))
+                return new List<Web_CTZQ_BonusPoolInfo>();
+            return JsonHelper.Deserialize<List<Web_CTZQ_BonusPoolInfo>>(result);
+        }
+
+        #region 文件路径
+        /// <summary>
+        /// 奖期数据文件
+        /// </summary>
+        private static string IssuseFile(string type, string issuseId)
+        {
+            if (type.StartsWith("CTZQ"))
+            {
+                var strs = type.Split('_');
+                var gameCode = strs[0];
+                //var gameType = strs[1];
+                return string.Format("/matchdata/{0}/{1}/{2}_BonusLevel.json?_={3}", gameCode, issuseId, type, DateTime.Now.ToString("yyyyMMddHHmmss"));
+            }
+            return string.Format("/matchdata/{0}/{0}_{1}.json?_={2}", type, issuseId, DateTime.Now.ToString("yyyyMMddHHmmss"));
+        }
+        #endregion
+
+        #region 数字彩详情
+        /// <summary>
+        /// 数字彩详情
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="issuseId"></param>
+        /// <returns></returns>
+        public static Web_SZC_BonusPoolInfo GetPoolInfo(string type, string issuseId)
+        {
+            var poolInfo = GetSZCBonusPool(IssuseFile(type, issuseId));
+            return poolInfo;
+        }
+
+        public static Web_SZC_BonusPoolInfo GetSZCBonusPool(string filePath)
+        {
+            var result = ReadFileString(ResUrl + filePath);
+            if (string.IsNullOrEmpty(result))
+                return new Web_SZC_BonusPoolInfo();
+            return JsonHelper.Deserialize<Web_SZC_BonusPoolInfo>(result);
+        }
+        #endregion
+
+        public static string GetResult(int homeTeamScore, int guestTeamScore)
+        {
+            string flag = "[{0},{1},{2}-{3}]";
+            if (homeTeamScore == guestTeamScore)
+            {
+                flag = string.Format(flag, "平", "2", homeTeamScore, guestTeamScore);
+            }
+            else if (homeTeamScore > guestTeamScore)
+            {
+                flag = string.Format(flag, "胜", "3", homeTeamScore, guestTeamScore);
+            }
+            else
+            {
+                flag = string.Format(flag, "负", "1", homeTeamScore, guestTeamScore);
+            }
+            return flag;
+        }
     }
 }
