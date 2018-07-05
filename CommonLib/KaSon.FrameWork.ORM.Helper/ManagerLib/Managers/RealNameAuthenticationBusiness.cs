@@ -107,22 +107,28 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
         public void UpdateAuthenticationRealName(string authFrom, string userId, string realName, string cardType, string idCardNumber, string updateBy)
         {
 
-            DB.Begin();
-            var manager = new UserRealNameManager();
-            var entity = GetAuthenticatedRealName(userId);
-            var realNameInfo = manager.GetRealNameInfoByName(realName, idCardNumber);
-            if (entity == null)
-            {
-                throw new ArgumentException("此用户从未进行过实名认证");
-            }     
-            entity.AuthFrom = authFrom;
-            entity.RealName = realName;
-            entity.CardType = cardType;
-            entity.IdCardNumber = idCardNumber;
-            entity.UpdateBy = updateBy;
-            entity.IsSettedRealName = true;
-            manager.UpdateUserRealName(entity);
-            DB.Commit();
+            using (DB) {
+                DB.Begin();
+
+                var manager = new UserRealNameManager();
+                var entity = GetAuthenticatedRealName(userId);
+                var realNameInfo = manager.GetRealNameInfoByName(realName, idCardNumber);
+                if (entity == null)
+                {
+                    DB.Rollback();
+                    throw new ArgumentException("此用户从未进行过实名认证");
+
+                }
+                entity.AuthFrom = authFrom;
+                entity.RealName = realName;
+                entity.CardType = cardType;
+                entity.IdCardNumber = idCardNumber;
+                entity.UpdateBy = updateBy;
+                entity.IsSettedRealName = true;
+                manager.UpdateUserRealName(entity);
+                DB.Commit();
+            } 
+               
 
         }
     }

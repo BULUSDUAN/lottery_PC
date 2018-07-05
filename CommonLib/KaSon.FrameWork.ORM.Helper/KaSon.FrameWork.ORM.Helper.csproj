@@ -14,10 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="AnalyzerFactory\Interface\IAntecodeAnalyzable.cs" />
-    <Compile Remove="AnalyzerFactory\Interface\IAntecodeAnalyzable_Sport.cs" />
-    <Compile Remove="AnalyzerFactory\Interface\IOrderAnalyzable.cs" />
-    <Compile Remove="AnalyzerFactory\Interface\IWinNumberAnalyzable.cs" />
     <Compile Remove="BusinessHelper.cs" />
     <Compile Remove="LotteryJsonInfo_Operate\Json_BJDC.cs" />
     <Compile Remove="LotteryJsonInfo_Operate\Json_CTZQ.cs" />
@@ -35,6 +31,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EntityModel\EntityModel.csproj" />
+    <ProjectReference Include="..\KaSon.FrameWork.Analyzer\KaSon.FrameWork.Analyzer.csproj" />
     <ProjectReference Include="..\KaSon.FrameWork.Common\KaSon.FrameWork.Common.csproj" />
   </ItemGroup>
 
@@ -55,6 +52,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="SQLServer_SQL.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SQL_JSON\MyServer_SQL.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SQL_JSON\SQLServer_SQL.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
