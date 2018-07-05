@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <Compile Remove="BusinessHelper.cs" />
+    <Compile Remove="DataQuery\SqlQueryBusiness.cs" />
     <Compile Remove="LotteryJsonInfo_Operate\Json_BJDC.cs" />
     <Compile Remove="LotteryJsonInfo_Operate\Json_CTZQ.cs" />
     <Compile Remove="LotteryJsonInfo_Operate\Json_JCLQ.cs" />

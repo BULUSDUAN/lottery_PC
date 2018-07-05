@@ -1221,7 +1221,7 @@ namespace UserLottery.Service.ModuleServices
         {
             try
             {
-                return new KaSon.FrameWork.ORM.Helper.UserHelper.SqlQueryBusiness().QueryYqidRegisterByAgentId(AgentId);
+                return new SqlQueryBusiness().QueryYqidRegisterByAgentId(AgentId);
             }
             catch (Exception ex)
             {
