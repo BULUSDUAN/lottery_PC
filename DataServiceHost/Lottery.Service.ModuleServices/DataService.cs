@@ -265,7 +265,8 @@ namespace Lottery.Service.ModuleServices
         {
             try
             {
-                return new CacheDataBusiness().QueryAppConfigByAgentId(appAgentId);
+                //return new CacheDataBusiness().QueryAppConfigByAgentId(appAgentId);
+                return null;
             }
             catch (Exception ex)
             {

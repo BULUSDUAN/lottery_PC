@@ -21,6 +21,7 @@ using KaSon.FrameWork.Common.Redis;
 using KaSon.FrameWork.Common.Algorithms;
 using EntityModel.PayModel;
 using KaSon.FrameWork.Common.Sport;
+using KaSon.FrameWork.Analyzer.AnalyzerFactory;
 
 namespace KaSon.FrameWork.ORM.Helper
 {

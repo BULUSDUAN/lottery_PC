@@ -8,10 +8,7 @@ using KaSon.FrameWork.ORM.Helper.WinNumber.Manage;
 using EntityModel;
 using KaSon.FrameWork.ORM.Helper.WinNumber.ModelCollection;
 using KaSon.FrameWork.Common.Utilities;
-<<<<<<< HEAD
-=======
 
->>>>>>> a7171008b4bea1dab11582695738b3dd1fe77dcf
 namespace KaSon.FrameWork.ORM.Helper.WinNumber
 {
     public class LotteryDataBusiness_DF6_1 : LotteryDataBusiness, ILotteryDataBusiness
