@@ -190,18 +190,7 @@ namespace KaSon.FrameWork.Common
         //    return poolInfo;
         //}
 
-        ///// <summary>
-        ///// 传统足球详情
-        ///// </summary>
-        ///// <param name="type"></param>
-        ///// <param name="issuseId"></param>
-        ///// <returns></returns>
-        //private static List<Web_CTZQ_BonusPoolInfo> GetPoolInfo_CTZQ(string type, string issuseId)
-        //{
-        //    BettingHelper bizHelper = new BettingHelper();
-        //    var poolInfo = bizHelper.GetCTZQBonusPool(IssuseFile(type, issuseId));
-        //    return poolInfo;
-        //}
+     
 
         //private static string Getnums(Web_SZC_BonusPoolInfo model)
         //{
