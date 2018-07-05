@@ -1399,21 +1399,7 @@ namespace EntityModel.Enum
     /// <summary>
     /// 使用状态
     /// </summary>
-    public enum EnableStatus
-    {
-        /// <summary>
-        /// 可用的
-        /// </summary>
-        Enable = 0,
-        /// <summary>
-        /// 禁用的
-        /// </summary>
-        Disable = 1,
-        /// <summary>
-        /// 未知的
-        /// </summary>
-        Unknown = 9,
-    }
+  
     #region Extension项目的枚举    
     /// <summary>
     /// <summary>    /// 任务类别

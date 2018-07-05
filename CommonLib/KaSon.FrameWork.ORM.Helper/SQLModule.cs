@@ -12,15 +12,15 @@ namespace KaSon.FrameWork.ORM.Helper
         /// </summary>
       public IList<SQLModel> UserSystemModule { get; set; }
         /// <summary>
-<<<<<<< HEAD
+//<<<<<<< HEAD
         /// 投注系统
         /// </summary>
         public IList<SQLModel> BettiongModule { get; set; }
 
-=======
+        //=======
         /// 
         /// </summary>
         public IList<SQLModel> DataModule { get; set; }
->>>>>>> a7171008b4bea1dab11582695738b3dd1fe77dcf
+        //>>>>>>> a7171008b4bea1dab11582695738b3dd1fe77dcf
     }
 }
