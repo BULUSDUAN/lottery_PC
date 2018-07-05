@@ -101,7 +101,34 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
             //    return null;
             //}
             //return ORMHelper.ConvertDataRowToInfo<T>(dt.Rows[0]);
-            return DB.CreateSQLQuery("").First<T>();
+           // return DB.CreateSQLQuery("").First<T>();
+        }
+
+        public bool CheckAllMatchUpdatedOdds(string gameCode, string gameType, string[] matchId)
+        {
+            if (gameCode.ToUpper() == "BJDC")
+                return true;
+            if (matchId == null || matchId.Length == 0)
+            {
+                throw new ArgumentException("未传入任何比赛");
+            }
+            var sql = string.Empty;
+            switch (gameCode.ToUpper())
+            {
+                case "JCZQ":
+                    //[MatchId], MAX(Id)
+                    sql = string.Format("SELECT Count(Id)  FROM [T_JCZQ_Odds_{0}] WHERE [MatchId] IN (N'{1}') GROUP BY [MatchId]", gameType, string.Join("',N'", matchId));
+                    break;
+                case "JCLQ":
+                    sql = string.Format("SELECT Count(Id)  FROM [T_JCLQ_Odds_{0}] WHERE [MatchId] IN (N'{1}') GROUP BY [MatchId]", gameType, string.Join("',N'", matchId));
+                    break;
+                default:
+                    break;
+            }
+            var count= DB.CreateSQLQuery(sql).First<int>();
+            return count == matchId.Length;
+          //  var dt = this.Session.CreateSQLQuery(sql).List();
+           // return (dt.Count == matchId.Length);
         }
     }
 }
