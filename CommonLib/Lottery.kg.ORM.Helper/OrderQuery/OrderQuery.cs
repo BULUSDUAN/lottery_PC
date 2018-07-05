@@ -3,8 +3,6 @@ using EntityModel.Communication;
 using EntityModel.CoreModel;
 using EntityModel.Enum;
 using EntityModel.RequestModel;
-using KaSon.FrameWork.Common;
-using KaSon.FrameWork.Common.Redis;
 using KaSon.FrameWork.ORM.Helper.WinNumber;
 using KaSon.FrameWork.ORM.Helper.WinNumber.ModelCollection;
 using StackExchange.Redis;

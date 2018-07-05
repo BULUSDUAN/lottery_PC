@@ -15,9 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lottery.Service.ModuleBaseS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntityModel", "..\CommonLib\EntityModel\EntityModel.csproj", "{1EAC7E04-D9BD-4130-BBA2-1918C760DB8E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KaSon.FrameWork.Helper", "..\CommonLib\KaSon.FrameWork.Helper\KaSon.FrameWork.Helper.csproj", "{F1BAE9F3-E1BF-4182-9719-9FA19EB172ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KaSon.FrameWork.Common", "..\CommonLib\KaSon.FrameWork.Common\KaSon.FrameWork.Common.csproj", "{2EEDBA66-2DEC-4915-A4E6-0EEBAE53854C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lottery.Kg.ORM.Helper", "..\CommonLib\Lottery.kg.ORM.Helper\Lottery.Kg.ORM.Helper.csproj", "{5D53FE60-292D-47BF-8CF8-71EB0CC03BD6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KaSon.FrameWork.ORM.Helper", "..\CommonLib\KaSon.FrameWork.ORM.Helper\KaSon.FrameWork.ORM.Helper.csproj", "{167528CD-3561-450A-AFE6-E8D744B5CA5E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,14 +49,14 @@ Global
 		{1EAC7E04-D9BD-4130-BBA2-1918C760DB8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1EAC7E04-D9BD-4130-BBA2-1918C760DB8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1EAC7E04-D9BD-4130-BBA2-1918C760DB8E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F1BAE9F3-E1BF-4182-9719-9FA19EB172ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F1BAE9F3-E1BF-4182-9719-9FA19EB172ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F1BAE9F3-E1BF-4182-9719-9FA19EB172ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F1BAE9F3-E1BF-4182-9719-9FA19EB172ED}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5D53FE60-292D-47BF-8CF8-71EB0CC03BD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5D53FE60-292D-47BF-8CF8-71EB0CC03BD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5D53FE60-292D-47BF-8CF8-71EB0CC03BD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5D53FE60-292D-47BF-8CF8-71EB0CC03BD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EEDBA66-2DEC-4915-A4E6-0EEBAE53854C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EEDBA66-2DEC-4915-A4E6-0EEBAE53854C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EEDBA66-2DEC-4915-A4E6-0EEBAE53854C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EEDBA66-2DEC-4915-A4E6-0EEBAE53854C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{167528CD-3561-450A-AFE6-E8D744B5CA5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{167528CD-3561-450A-AFE6-E8D744B5CA5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{167528CD-3561-450A-AFE6-E8D744B5CA5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{167528CD-3561-450A-AFE6-E8D744B5CA5E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

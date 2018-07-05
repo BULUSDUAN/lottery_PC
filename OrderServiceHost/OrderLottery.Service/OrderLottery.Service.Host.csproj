@@ -17,14 +17,12 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.0.0" />
     <PackageReference Include="MySql.Data" Version="6.10.7" />
     <PackageReference Include="StackExchange.Redis" Version="1.2.6" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.4.3" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.4.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.5.0" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.5.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\CommonLib\KaSon.FrameWork.Helper\KaSon.FrameWork.Helper.csproj" />
     <ProjectReference Include="..\OrderLottery.Service.IModuleServices\OrderLottery.Service.IModuleServices.csproj" />
-    <ProjectReference Include="..\OrderLottery.Service.ModuleServices\OrderLottery.Service.ModuleServices.csproj" />
     <ProjectReference Include="..\OrderLottery.Service.Model\OrderLottery.Service.Model.csproj" />
   </ItemGroup>
 

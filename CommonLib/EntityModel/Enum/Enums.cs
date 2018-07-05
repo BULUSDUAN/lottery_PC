@@ -1396,8 +1396,9 @@ namespace EntityModel.Enum
         Stop = 1,
     }
 
-    /// <summary>
-    /// 任务类别
+    #region Extension项目的枚举    /// <summary>
+
+    /// <summary>    /// 任务类别
     /// </summary>
     public enum TaskCategory
     {
@@ -1497,9 +1498,9 @@ namespace EntityModel.Enum
         /// 用户总中奖金额1000以上
         /// </summary>
         Win1000Yuan = 240,
-    }
-    /// <summary>
-    /// 新闻类别
+    }    /// <summary>
+}
+    /// <summary>    /// 新闻类别
     /// </summary>
     public enum NewsCategory
     {

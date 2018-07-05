@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\CommonLib\EntityModel\EntityModel.csproj" />
-    <ProjectReference Include="..\..\CommonLib\Lottery.kg.ORM.Helper\Lottery.Kg.ORM.Helper.csproj" />
+    <ProjectReference Include="..\..\CommonLib\KaSon.FrameWork.ORM.Helper\KaSon.FrameWork.ORM.Helper.csproj" />
     <ProjectReference Include="..\OrderLottery.Service.IModuleServices\OrderLottery.Service.IModuleServices.csproj" />
     <ProjectReference Include="..\OrderLottery.Service.Model\OrderLottery.Service.Model.csproj" />
     <ProjectReference Include="..\OrderLottery.Service.ModuleBaseServices\OrderLottery.Service.ModuleBaseServices.csproj" />

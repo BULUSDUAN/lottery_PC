@@ -10,6 +10,7 @@ using EntityModel.Domain.Entities;
 
 using Newtonsoft.Json;
 using KaSon.FrameWork.ORM.Helper;
+using KaSon.FrameWork.ORM.Helper.UserHelper;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
@@ -447,7 +448,6 @@ namespace KaSon.FrameWork.ORM.Helper
 
 
         private static List<C_Activity_PluginClass> _enablePluginClass = new List<C_Activity_PluginClass>();
-
 
         public  void ExecPlugin<T>(object inputParam) where T : class, IPlugin
         {

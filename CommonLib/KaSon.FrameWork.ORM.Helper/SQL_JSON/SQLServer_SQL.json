@@ -305,5 +305,47 @@
     }
 
 
+  ],
+  "DataModule": [
+    {
+      "key": "Data_QueryArticleList",
+      "Desc": "查询文章列表",
+      "ParamDesc": "@Key:key,@GameCode:gameCode,@Category:category,@PageIndex:pageIndex,@PageSize:pageSize",
+      "Director": "lili",
+      "SQL": "SELECT [Id],[GameCode],[Title],[Category],[ShowIndex],[ReadCount],[CreateTime],[CreateUserKey],[CreateUserDisplayName], [UpdateTime],[UpdateUserKey],[UpdateUserDisplayName],[IsRedTitle],KeyWords,DescContent,StaticPath,PreStaticPath,NextStaticPath,Description FROM ( SELECT ROW_NUMBER() OVER(ORDER BY [ShowIndex] ASC, [CreateTime] DESC) AS [RowNumber],[Id],[GameCode],[Title],[Category], [ShowIndex],[ReadCount],[CreateTime],[CreateUserKey],[CreateUserDisplayName],[UpdateTime], [UpdateUserKey],[UpdateUserDisplayName],[IsRedTitle],KeyWords,DescContent,StaticPath,PreStaticPath,NextStaticPath,Description FROM [E_SiteMessage_Article_List] WHERE (@Key = '' OR [Title] LIKE @Key) AND (@GameCode = '' OR [GameCode] LIKE '%' + @GameCode) AND (@Category=N'' OR [Category] IN (SELECT a FROM F_Common_SplitString(@Category,'|'))) ) AS [T] WHERE [RowNumber] > @PageIndex * @PageSize AND [RowNumber] <= (@PageIndex + 1) * @PageSize",
+      "Remark": ""
+    },
+    {
+      "key": "Data_QueryArticleList_TotalCount",
+      "Desc": "查询文章列表_总条数",
+      "ParamDesc": "@Key:key,@GameCode:gameCode,@Category:category",
+      "Director": "lili",
+      "SQL": "SELECT @TotalCount = COUNT(1) FROM [E_SiteMessage_Article_List] WHERE (@Key = '' OR [Title] LIKE @Key) AND (@Category=N'' OR [Category] IN (SELECT a FROM F_Common_SplitString(@Category,'|'))) AND (@GameCode = '' OR [GameCode] LIKE '%' + @GameCode)",
+      "Remark": ""
+    },
+    {
+      "key": "Data_QueryBulletinList_Web",
+      "Desc": "用户查询公告列表",
+      "ParamDesc": "@BulletinAgent:bulletinAgent,@PageIndex:pageIndex,@PageSize:pageSize",
+      "Director": "lili",
+      "SQL": "SELECT [Id],[Title],[Status],[Priority],[IsPutTop],[EffectiveFrom],[EffectiveTo],[CreateTime] FROM ( SELECT ROW_NUMBER() OVER(ORDER BY [IsPutTop] DESC,[Priority],[CreateTime] DESC) AS [RowNumber],[Id],[Title],[Status],[Priority],[IsPutTop],[EffectiveFrom],[EffectiveTo],[CreateTime] FROM [E_SiteMessage_Bulletin_List] WHERE [Status] = 0 AND (BulletinAgent=@BulletinAgent) AND ([EffectiveFrom] IS NULL OR [EffectiveFrom] <= GETDATE()) AND ([EffectiveTo] IS NULL OR DATEADD(DAY,1,[EffectiveTo]) >= GETDATE()) ) AS [T] WHERE [RowNumber] > @PageIndex * @PageSize AND [RowNumber] <= (@PageIndex + 1) * @PageSize",
+      "Remark": ""
+    },
+    {
+      "key": "Data_QueryBulletinList_Web_Total",
+      "Desc": "用户查询公告列表_总条数",
+      "ParamDesc": "@BulletinAgent:bulletinAgent",
+      "Director": "lili",
+      "SQL": "SELECT @TotalCount = COUNT(1) FROM [E_SiteMessage_Bulletin_List] WHERE [Status] = 0 AND (BulletinAgent=@BulletinAgent) AND ([EffectiveFrom] IS NULL OR [EffectiveFrom] <= GETDATE()) AND ([EffectiveTo] IS NULL OR DATEADD(DAY,1,[EffectiveTo]) >= GETDATE())",
+      "Remark": ""
+    },
+    {
+      "key": "Data_QueryCurrentNewIssuseInfo",
+      "Desc": "用户查询查询最新期号",
+      "ParamDesc": "@GameCode:gameCode,@GameType:gameType",
+      "Director": "lili",
+      "SQL": "select i.* from C_Game_Issuse i inner join( select min(GameCode_IssuseNumber) as GameCode_IssuseNumber from C_Game_Issuse where GameCode=@GameCode and GameType=@GameType and Status=10 and OfficialStopTime > GETDATE() ) b on i.GameCode_IssuseNumber = b.GameCode_IssuseNumber",
+      "Remark": ""
+    }
   ]
 }

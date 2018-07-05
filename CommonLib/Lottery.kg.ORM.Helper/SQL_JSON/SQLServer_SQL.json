@@ -223,8 +223,77 @@
       "Director": "renjun",
       "SQL": "SET NOCOUNT ON;SELECT w.OrderId,u1.DisplayName as RequesterDisplayName,u1.UserId as RequesterUserKey,u1.ComeFrom as RequesterComeFrom,u2.DisplayName as ProcessorsDisplayName,u2.UserId as ProcessorsUserKey,w.WithdrawAgent,w.ProvinceName,w.CityName,w.BankCode,w.BankName,w.BankSubName,w.BankCardNumber,w.RequestMoney,w.RequestTime,w.Status,w.ResponseMoney,w.ResponseMessage,w.ResponseTime,real_1.RealName,mobile_1.Mobile FROM C_Withdraw w LEFT JOIN C_User_Register u1 on w.UserId = u1.UserId LEFT JOIN C_User_Register u2 on w.ResponseUserId = u2.UserId LEFT JOIN E_Authentication_RealName real_1 on u1.UserId = real_1.UserId LEFT JOIN E_Authentication_Mobile mobile_1 on u1.UserId = mobile_1.UserId where w.OrderId=@OrderId",
       "Remark": ""
+    },
+    {
+      "key": "P_Blog_TotalUserCount",
+      "Desc": "用户总数",
+      "ParamDesc": "@AgentId:AgentId,@UserId:UserId,@TotalUserCount:TotalUserCount,@UserCount:UserCount",
+      "Director": "renjun",
+      "SQL": "declare my_cursor cursor for select UserId from E_Blog_UserSpread where AgentId=@AgentId open my_cursor fetch next from my_cursor into @UserId while @@FETCH_STATUS=0 begin begin with smbk as(select r.UserId from C_User_Register r left join E_Authentication_RealName e on r.UserId=e.UserId left join C_BankCard b on b.UserId=r.UserId  where r.UserType=0 and r.IsEnable=1 and r.UserId<>'admin' and r.UserId=@UserId),cz as(select top 1 f.UserId from  C_FillMoney f where f.RequestMoney>10 and f.status =1 and f.UserId=@UserId) select @UserCount=COUNT(a.UserId) from smbk a,cz b where  a.UserId=b.UserId; end begin set @TotalUserCount=@TotalUserCount+@UserCount; end fetch next from my_cursor into  @UserId end close my_cursor deallocate my_cursor select @TotalUserCount;",
+      "Remark": ""
+    },
+    {
+      "key": "P_Blog_UserSpread",
+      "Desc": "所有的",
+      "ParamDesc": "@AgentId:AgentId",
+      "Director": "renjun",
+      "SQL": "select COUNT(UserId) from E_Blog_UserSpread where AgentId=@AgentId;",
+      "Remark": ""
+    },
+    {
+      "key": "P_Blog_RedBagMoney",
+      "Desc": "领取红包总额",
+      "ParamDesc": "@AgentId:AgentId",
+      "Director": "renjun",
+      "SQL": "select sum(RedBagMoney) from C_Fund_RedBagDetail where RedBagCategory=5 and UserId=@AgentId;",
+      "Remark": ""
     }
 
+<<<<<<< HEAD
+  ],
+  "DataModule": [
+    {
+      "key": "Data_QueryArticleList",
+      "Desc": "查询文章列表",
+      "ParamDesc": "@Key:key,@GameCode:gameCode,@Category:category,@PageIndex:pageIndex,@PageSize:pageSize",
+      "Director": "lili",
+      "SQL": "SELECT [Id],[GameCode],[Title],[Category],[ShowIndex],[ReadCount],[CreateTime],[CreateUserKey],[CreateUserDisplayName], [UpdateTime],[UpdateUserKey],[UpdateUserDisplayName],[IsRedTitle],KeyWords,DescContent,StaticPath,PreStaticPath,NextStaticPath,Description FROM ( SELECT ROW_NUMBER() OVER(ORDER BY [ShowIndex] ASC, [CreateTime] DESC) AS [RowNumber],[Id],[GameCode],[Title],[Category], [ShowIndex],[ReadCount],[CreateTime],[CreateUserKey],[CreateUserDisplayName],[UpdateTime], [UpdateUserKey],[UpdateUserDisplayName],[IsRedTitle],KeyWords,DescContent,StaticPath,PreStaticPath,NextStaticPath,Description FROM [E_SiteMessage_Article_List] WHERE (@Key = '' OR [Title] LIKE @Key) AND (@GameCode = '' OR [GameCode] LIKE '%' + @GameCode) AND (@Category=N'' OR [Category] IN (SELECT a FROM F_Common_SplitString(@Category,'|'))) ) AS [T] WHERE [RowNumber] > @PageIndex * @PageSize AND [RowNumber] <= (@PageIndex + 1) * @PageSize",
+      "Remark": ""
+    },
+    {
+      "key": "Data_QueryArticleList_TotalCount",
+      "Desc": "查询文章列表_总条数",
+      "ParamDesc": "@Key:key,@GameCode:gameCode,@Category:category",
+      "Director": "lili",
+      "SQL": "SELECT @TotalCount = COUNT(1) FROM [E_SiteMessage_Article_List] WHERE (@Key = '' OR [Title] LIKE @Key) AND (@Category=N'' OR [Category] IN (SELECT a FROM F_Common_SplitString(@Category,'|'))) AND (@GameCode = '' OR [GameCode] LIKE '%' + @GameCode)",
+      "Remark": ""
+    },
+    {
+      "key": "Data_QueryBulletinList_Web",
+      "Desc": "用户查询公告列表",
+      "ParamDesc": "@BulletinAgent:bulletinAgent,@PageIndex:pageIndex,@PageSize:pageSize",
+      "Director": "lili",
+      "SQL": "SELECT [Id],[Title],[Status],[Priority],[IsPutTop],[EffectiveFrom],[EffectiveTo],[CreateTime] FROM ( SELECT ROW_NUMBER() OVER(ORDER BY [IsPutTop] DESC,[Priority],[CreateTime] DESC) AS [RowNumber],[Id],[Title],[Status],[Priority],[IsPutTop],[EffectiveFrom],[EffectiveTo],[CreateTime] FROM [E_SiteMessage_Bulletin_List] WHERE [Status] = 0 AND (BulletinAgent=@BulletinAgent) AND ([EffectiveFrom] IS NULL OR [EffectiveFrom] <= GETDATE()) AND ([EffectiveTo] IS NULL OR DATEADD(DAY,1,[EffectiveTo]) >= GETDATE()) ) AS [T] WHERE [RowNumber] > @PageIndex * @PageSize AND [RowNumber] <= (@PageIndex + 1) * @PageSize",
+      "Remark": ""
+    },
+    {
+      "key": "Data_QueryBulletinList_Web_Total",
+      "Desc": "用户查询公告列表_总条数",
+      "ParamDesc": "@BulletinAgent:bulletinAgent",
+      "Director": "lili",
+      "SQL": "SELECT @TotalCount = COUNT(1) FROM [E_SiteMessage_Bulletin_List] WHERE [Status] = 0 AND (BulletinAgent=@BulletinAgent) AND ([EffectiveFrom] IS NULL OR [EffectiveFrom] <= GETDATE()) AND ([EffectiveTo] IS NULL OR DATEADD(DAY,1,[EffectiveTo]) >= GETDATE())",
+      "Remark": ""
+    },
+    {
+      "key": "Data_QueryCurrentNewIssuseInfo",
+      "Desc": "用户查询查询最新期号",
+      "ParamDesc": "@GameCode:gameCode,@GameType:gameType",
+      "Director": "lili",
+      "SQL": "select i.* from C_Game_Issuse i inner join( select min(GameCode_IssuseNumber) as GameCode_IssuseNumber from C_Game_Issuse where GameCode=@GameCode and GameType=@GameType and Status=10 and OfficialStopTime > GETDATE() ) b on i.GameCode_IssuseNumber = b.GameCode_IssuseNumber",
+      "Remark": ""
+    }
+=======
 
+>>>>>>> 77f9da3f72619db400865d437806eabbbff34413
   ]
 }

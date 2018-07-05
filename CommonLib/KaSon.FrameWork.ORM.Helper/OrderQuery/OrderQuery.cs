@@ -2,6 +2,7 @@
 using EntityModel.Communication;
 using EntityModel.CoreModel;
 using EntityModel.Enum;
+using EntityModel.Redis;
 using EntityModel.RequestModel;
 using KaSon.FrameWork.Common;
 using KaSon.FrameWork.Common.Redis;

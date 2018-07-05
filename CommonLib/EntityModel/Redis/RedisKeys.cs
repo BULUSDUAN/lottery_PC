@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace KaSon.FrameWork.Common.Redis
+namespace EntityModel.Redis
 {
     /// <summary>
     /// 所有Key值
