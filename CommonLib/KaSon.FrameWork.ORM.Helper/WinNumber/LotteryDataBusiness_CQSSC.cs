@@ -8,6 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using KaSon.FrameWork.Analyzer.AnalyzerFactory;
+using KaSon.FrameWork.Common.Utilities;
+
 namespace KaSon.FrameWork.ORM.Helper.WinNumber
 {
     public class LotteryDataBusiness_CQSSC : LotteryDataBusiness, ILotteryDataBusiness
@@ -27,7 +30,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
 
 
             var msg = string.Empty;
-            AnalyzerFactory.AnalyzerFactory.GetWinNumberAnalyzer(this.CurrentGameCode).CheckWinNumber(winNumber, out msg);
+            AnalyzerFactory.GetWinNumberAnalyzer(this.CurrentGameCode).CheckWinNumber(winNumber, out msg);
             if (!string.IsNullOrEmpty(msg))
                 throw new Exception(msg);
 

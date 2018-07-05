@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using EntityModel.CoreModel;
 using KaSon.FrameWork.Common;
-
+using KaSon.FrameWork.Common.Utilities;
 using KaSon.FrameWork.ORM.Helper.WinNumber.Manage;
 using EntityModel;
 using KaSon.FrameWork.ORM.Helper.WinNumber.ModelCollection;
+using KaSon.FrameWork.Analyzer.AnalyzerFactory;
+
 namespace KaSon.FrameWork.ORM.Helper.WinNumber
 {
     public class LotteryDataBusiness_DLT : LotteryDataBusiness, ILotteryDataBusiness
@@ -27,7 +29,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
 
 
             var msg = string.Empty;
-            AnalyzerFactory.AnalyzerFactory.GetWinNumberAnalyzer(this.CurrentGameCode).CheckWinNumber(winNumber, out msg);
+            AnalyzerFactory.GetWinNumberAnalyzer(this.CurrentGameCode).CheckWinNumber(winNumber, out msg);
             if (!string.IsNullOrEmpty(msg))
                 throw new Exception(msg);
 

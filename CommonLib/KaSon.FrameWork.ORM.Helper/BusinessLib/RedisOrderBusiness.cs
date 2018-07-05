@@ -7,7 +7,7 @@ using System.Linq;
 using EntityModel.CoreModel.BetingEntities;
 using EntityModel.Enum;
 using KaSon.FrameWork.Common;
-using EntityModel.XmlAnalyzer;
+
 using KaSon.FrameWork.Common.Redis;
 using EntityModel;
 using StackExchange.Redis;
@@ -17,6 +17,8 @@ using System.Threading;
 using EntityModel.Ticket;
 using KaSon.FrameWork.ORM.Helper.BusinessLib;
 using System.IO;
+using KaSon.FrameWork.Common.Sport;
+using KaSon.FrameWork.Common.GlobalConfigJson;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
@@ -63,7 +65,9 @@ namespace KaSon.FrameWork.ORM.Helper
         }
         public static void AddOrderToRedis(string gameCode, RedisWaitTicketOrder order)
         {
-            if (BusinessHelper.CanRequestBet(gameCode))
+            //读取配置文件
+           
+            if (BettingHelper.CanRequestBet(gameCode))
             {
                 //可以拆票
                 DoSplitOrderTicketWithThread(order);
@@ -243,8 +247,8 @@ namespace KaSon.FrameWork.ORM.Helper
                 try
                 {
                     //ConfigurationManager.AppSettings["Max_PrizeListCount"]
-
-                    string _Max_PrizeListCount = "10";
+                   
+                    string _Max_PrizeListCount = GbConfigHelper.GlobalConfig["Max_PrizeListCount"].ToString();
 
                     return int.Parse(_Max_PrizeListCount);
                 }
@@ -336,8 +340,8 @@ namespace KaSon.FrameWork.ORM.Helper
             try
             {
                 //    ConfigurationManager.AppSettings["WaitingOrderListCount"]
-
-                string WaitingOrderListCount = "0";
+             
+                string WaitingOrderListCount = GbConfigHelper.GlobalConfig["WaitingOrderListCount"].ToString();// DBbase.GlobalConfig["WaitingOrderListCount"].ToString();
 
                 var count = int.Parse(WaitingOrderListCount);
                 var db = RedisHelper.DB_NoTicket_Order;

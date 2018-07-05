@@ -1,4 +1,5 @@
 ﻿using KaSon.FrameWork.Common;
+using KaSon.FrameWork.Common.Xml;
 using System;
 using System.Collections.Generic;
 using System.IO;

@@ -11,6 +11,10 @@ namespace KaSon.FrameWork.ORM.Helper
         /// 用户系统模块  
         /// </summary>
       public IList<SQLModel> UserSystemModule { get; set; }
+        /// <summary>
+        /// 投注系统
+        /// </summary>
+        public IList<SQLModel> BettiongModule { get; set; }
 
     }
 }

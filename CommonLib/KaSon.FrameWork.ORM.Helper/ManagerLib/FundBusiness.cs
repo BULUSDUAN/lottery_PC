@@ -40,6 +40,11 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
 
         //    //return balance;
         //}
+        /// <summary>
+        /// 查询用户账户信息
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public UserBalanceInfo QueryUserBalance(string userId)
         {
             using (DB)

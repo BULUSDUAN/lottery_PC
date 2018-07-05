@@ -12,7 +12,8 @@ using System.Linq;
 using EntityModel.Enum;
 using EntityModel;
 using KaSon.FrameWork.Common.Algorithms;
-using KaSon.FrameWork.ORM.Helper.AnalyzerFactory;
+using KaSon.FrameWork.Common.Sport;
+using KaSon.FrameWork.Analyzer.AnalyzerFactory;
 
 namespace BettingLottery.Service.ModuleServices.SportsBettionCore
 {
@@ -30,29 +31,7 @@ namespace BettingLottery.Service.ModuleServices.SportsBettionCore
             if (status !=(int)EnableStatus.Enable)
                 throw new Exception("彩种暂时不能投注");
         }
-        private void CheckSchemeOrder(Sports_BetingInfo info)
-        {
-            if (info.AnteCodeList.Count == 0)
-                throw new ArgumentException("未选择任何比赛或者投注号码");
-            if (info.Amount <= 0)
-                throw new ArgumentException("订单倍数错误");
-            if (info.TotalMoney <= 0M)
-                throw new ArgumentException("订单金额错误");
-            if (info.GameType != null && info.GameType.ToUpper() != "HH")
-            {
-                if (info.AnteCodeList != null)
-                {
-                    foreach (var item in info.AnteCodeList)
-                    {
-                        if (item.GameType != null)
-                        {
-                            if (item.GameType.ToUpper() != info.GameType.ToUpper())
-                                throw new Exception("彩种玩法有误，应该是:" + BusinessHelper.FormatGameType(info.GameCode, info.GameType) + ",但实际是:" + BusinessHelper.FormatGameType(info.GameCode, item.GameType));
-                        }
-                    }
-                }
-            }
-        }
+   
         /// <summary>
         /// 保存用户未投注订单
         /// </summary>
@@ -62,7 +41,7 @@ namespace BettingLottery.Service.ModuleServices.SportsBettionCore
             info.GameCode = info.GameCode.ToUpper();
             info.GameType = info.GameType.ToUpper();
             var gameCode = info.GameCode;
-            schemeId = BusinessHelper.GetSportsBettingSchemeId(gameCode);
+            schemeId = BettingHelper.GetSportsBettingSchemeId(gameCode);
             var sportsManager = new Sports_Manager();
             //验证比赛是否还可以投注
             var stopTime = CheckGeneralBettingMatch(sportsManager, gameCode, info.GameType, info.PlayType, info.AnteCodeList, info.IssuseNumber);
@@ -182,10 +161,10 @@ namespace BettingLottery.Service.ModuleServices.SportsBettionCore
                 //    throw new LogicException("未实名认证用户不能购买彩票");
 
                 CheckDisableGame(info.GameCode, info.GameType);
-                BusinessHelper.CheckGameCodeAndType(info.GameCode, info.GameType);
+                BettingHelper.CheckGameCodeAndType(info.GameCode, info.GameType);
 
                 // 检查订单基本信息
-                CheckSchemeOrder(info);
+                BettingHelper.CheckSchemeOrder(info);
 
                 string schemeId = new Sports_Business().SaveOrderSportsBetting(info, userId);
 
@@ -208,117 +187,10 @@ namespace BettingLottery.Service.ModuleServices.SportsBettionCore
                 throw new Exception("保存订单异常，请重试 ", ex);
             }
         }
-        private void CheckPrivilegesType_JCLQ(string gameCode, string gameType, string playType, Sports_AnteCodeInfoCollection codeList, List<C_JCLQ_Match> matchList)
-        {
-            //PrivilegesType
-            //竞彩篮球：1:胜负单关 2:让分胜负单关 3:胜分差单关 4:大小分单关 5:胜负过关 6:让分胜负过关 7:胜分差过关 8:大小分过关
-            foreach (var code in codeList)
-            {
-                var privileType = string.Empty;
-                var tempGameType = gameType != "HH" ? gameType : code.GameType;
-                switch (tempGameType.ToUpper())
-                {
-                    case "SF":
-                        privileType = playType == "1_1" ? "1" : "5";
-                        break;
-                    case "RFSF":
-                        privileType = playType == "1_1" ? "2" : "6";
-                        break;
-                    case "SFC":
-                        privileType = playType == "1_1" ? "3" : "7";
-                        break;
-                    case "DXF":
-                        privileType = playType == "1_1" ? "4" : "8";
-                        break;
-                    default:
-                        break;
-                }
-                var temp = matchList.FirstOrDefault(p => p.MatchId == code.MatchId);
-                if (temp == null || string.IsNullOrEmpty(temp.PrivilegesType)) continue;
-                var privileArray = temp.PrivilegesType.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-                if (!string.IsNullOrEmpty(privileType) && privileArray.Contains(privileType))
-                    throw new LogicException(string.Format("{0} {1}玩法 暂不支持{2}投注", temp.MatchIdName, BusinessHelper.FormatGameType(gameCode, gameType), playType == "1_1" ? "单关" : "过关"));
-            }
-        }
+   
 
 
-        //验证 不支持的玩法
-        private void CheckPrivilegesType_JCZQ(string gameCode, string gameType, string playType, Sports_AnteCodeInfoCollection codeList, List<C_JCZQ_Match> matchList)
-        {
-            //PrivilegesType
-            //用英文输入法的:【逗号】如’,’分开。
-            //竞彩足球：1:胜平负单关 2:比分单关 3:进球数单关 4:半全场单关 5:胜平负过关 6:比分过关 7:进球数过关 8:半全场过关9：不让球胜平负单关 10：不让球胜平负过关
-            foreach (var code in codeList)
-            {
-                var privileType = string.Empty;
-                var tempGameType = gameType != "HH" ? gameType : code.GameType;
-                switch (tempGameType.ToUpper())
-                {
-                    case "SPF":
-                        privileType = playType == "1_1" ? "1" : "5";
-                        break;
-                    case "BRQSPF":
-                        privileType = playType == "1_1" ? "9" : "0";
-                        break;
-                    case "BF":
-                        privileType = playType == "1_1" ? "2" : "6";
-                        break;
-                    case "ZJQ":
-                        privileType = playType == "1_1" ? "3" : "7";
-                        break;
-                    case "BQC":
-                        privileType = playType == "1_1" ? "4" : "8";
-                        break;
-                    default:
-                        break;
-                }
-                var temp = matchList.FirstOrDefault(p => p.MatchId == code.MatchId);
-                if (temp == null || string.IsNullOrEmpty(temp.PrivilegesType)) continue;
-                var privileArray = temp.PrivilegesType.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-                if (!string.IsNullOrEmpty(privileType) && privileArray.Contains(privileType))
-                    throw new LogicException(string.Format("{0} {1}玩法 暂不支持{2}投注", temp.MatchIdName, BusinessHelper.FormatGameType(gameCode, gameType), playType == "1_1" ? "单关" : "过关"));
-            }
-        }
-
-        private void CheckPrivilegesType_BJDC(string gameCode, string gameType, string playType, string issuseNumber, Sports_AnteCodeInfoCollection codeList, List<C_BJDC_Match> matchList)
-        {
-            //PrivilegesType
-            //竞彩篮球：1:胜负单关 2:让分胜负单关 3:胜分差单关 4:大小分单关 5:胜负过关 6:让分胜负过关 7:胜分差过关 8:大小分过关
-            foreach (var code in codeList)
-            {
-                var privileType = string.Empty;
-                var tempGameType = gameType != "HH" ? gameType : code.GameType;
-                switch (tempGameType.ToUpper())
-                {
-                    case "BF":
-                        privileType = "1";
-                        break;
-                    case "BQC":
-                        privileType = "2";
-                        break;
-                    case "SPF":
-                        privileType = "3";
-                        break;
-                    case "SXDS":
-                        privileType = "4";
-                        break;
-                    case "ZJQ":
-                        privileType = "5";
-                        break;
-                    case "SF":
-                        privileType = "6";
-                        break;
-                    default:
-                        break;
-                }
-                var temp = matchList.FirstOrDefault(p => p.Id == (issuseNumber + "|" + code.MatchId));
-                if (temp == null || string.IsNullOrEmpty(temp.PrivilegesType)) continue;
-                var privileArray = temp.PrivilegesType.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-                if (!string.IsNullOrEmpty(privileType) && privileArray.Contains(privileType))
-                    throw new LogicException(string.Format("{0} {1}玩法 暂不支持{2}投注", temp.Id, BusinessHelper.FormatGameType(gameCode, gameType), playType == "1_1" ? "单关" : "过关"));
-            }
-        }
-
+     
         /// <summary>
         /// 竞彩足球缓存数据
         /// </summary>
@@ -330,7 +202,7 @@ namespace BettingLottery.Service.ModuleServices.SportsBettionCore
             {
                 //检查彩种是否暂停销售
                 KaSon.FrameWork.ORM.Helper.BusinessHelper.CheckGameEnable(info.GameCode.ToUpper());
-               BusinessHelper.CheckGameCodeAndType(info.GameCode, info.GameType);
+                BettingHelper.CheckGameCodeAndType(info.GameCode, info.GameType);
                 // 验证用户身份及权限
                 var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
 
@@ -386,7 +258,7 @@ namespace BettingLottery.Service.ModuleServices.SportsBettionCore
 
                     if (SFGGMatchList.Count != matchIdArray.Length)
                         throw new LogicException("所选比赛中有停止销售的比赛。");
-                    CheckPrivilegesType_BJDC(gameCode, gameType, playType, issuseNumber, codeList, matchList);
+                    BettingHelper. CheckPrivilegesType_BJDC(gameCode, gameType, playType, issuseNumber, codeList, matchList);
                     return SFGGMatchList.Min(m => m.BetStopTime);
                 }
                 else
@@ -394,7 +266,7 @@ namespace BettingLottery.Service.ModuleServices.SportsBettionCore
 
                     if (matchList.Count != matchIdArray.Length)
                         throw new LogicException("所选比赛中有停止销售的比赛。");
-                    CheckPrivilegesType_BJDC(gameCode, gameType, playType, issuseNumber, codeList, matchList);
+                    BettingHelper. CheckPrivilegesType_BJDC(gameCode, gameType, playType, issuseNumber, codeList, matchList);
                     return matchList.Min(m => m.LocalStopTime);
                 }
                 //if (matchList.Count != matchIdArray.Length && gameType != "HH")
@@ -412,7 +284,7 @@ namespace BettingLottery.Service.ModuleServices.SportsBettionCore
                 //if (matchResultList.Count > 0)
                 //    throw new ArgumentException(string.Format("所选比赛中包含结束的比赛：{0}", string.Join(",", matchResultList.Select(p => p.MatchId).ToArray())));
 
-                CheckPrivilegesType_JCZQ(gameCode, gameType, playType, codeList, matchList);
+                BettingHelper.CheckPrivilegesType_JCZQ(gameCode, gameType, playType, codeList, matchList);
 
                 //if (playType == "1_1")
                 if (bettingCategory != null && bettingCategory.Value == SchemeBettingCategory.SingleBetting)
@@ -431,7 +303,7 @@ namespace BettingLottery.Service.ModuleServices.SportsBettionCore
                 if (matchResultList.Count > 0)
                     throw new LogicException(string.Format("所选比赛中包含结束的比赛：{0}", string.Join(",", matchResultList.Select(p => p.MatchId).ToArray())));
 
-                CheckPrivilegesType_JCLQ(gameCode, gameType, playType, codeList, matchList);
+                BettingHelper.CheckPrivilegesType_JCLQ(gameCode, gameType, playType, codeList, matchList);
 
                 //if (playType == "1_1")
                 if (bettingCategory != null && bettingCategory.Value == SchemeBettingCategory.SingleBetting)
@@ -455,75 +327,7 @@ namespace BettingLottery.Service.ModuleServices.SportsBettionCore
                 throw new LogicException(string.Format("{0},{1}奖期{2}结束时间为{3}", gameCode, gameType, issuseNumber, currentIssuse.LocalStopTime.ToString("yyyy-MM-dd HH:mm")));
             return currentIssuse.LocalStopTime;
         }
-        private void CheckSportAnteCode(string gameCode, string gameType, string[] anteCode)
-        {
-            var allowCodeList = new string[] { };
-            switch (gameCode)
-            {
-                case "JCZQ":
-                    switch (gameType)
-                    {
-                        case "SPF":     // 胜平负
-                        case "BRQSPF": //不让球胜平负
-                            allowCodeList = "3,1,0".Split(',');
-                            break;
-                        case "ZJQ":     // 进球数
-                            allowCodeList = "0,1,2,3,4,5,6,7".Split(',');
-                            break;
-                        case "BF":      // 比分
-                            allowCodeList = "10,20,30,40,21,31,41,32,42,50,51,52,X0,00,11,22,33,XX,01,02,03,04,12,13,14,23,24,05,15,25,0X".Split(',');
-                            break;
-                        case "BQC":     // 半全场
-                            allowCodeList = "33,31,30,13,11,10,03,01,00".Split(',');
-                            break;
-                    }
-                    break;
-                case "JCLQ":
-                    switch (gameType)
-                    {
-                        case "SF":     // 胜负
-                        case "RFSF":     // 让分胜负
-                        case "DXF":     // 大小分
-                            allowCodeList = "3,0".Split(',');
-                            break;
-                        case "SFC":      // 胜分差
-                            allowCodeList = "01,02,03,04,05,06,11,12,13,14,15,16".Split(',');
-                            break;
-                    }
-                    break;
-                case "BJDC":
-                    switch (gameType)
-                    {
-                        case "SPF":     // 胜平负 
-                            allowCodeList = "3,1,0".Split(',');
-                            break;
-                        case "ZJQ":     // 进球数
-                            allowCodeList = "0,1,2,3,4,5,6,7".Split(',');
-                            break;
-                        case "SXDS":    // 上下单双。上单 3；上双 2；下单 1；下双 0；
-                            allowCodeList = "SD,SS,XD,XS".Split(',');
-                            break;
-                        case "BF":      // 比分
-                            allowCodeList = "10,20,30,40,21,31,41,32,42,X0,00,11,22,33,XX,01,02,03,04,12,13,14,23,24,0X".Split(',');
-                            break;
-                        case "BQC":     // 半全场
-                            allowCodeList = "33,31,30,13,11,10,03,01,00".Split(',');
-                            break;
-                        case "SF":
-                            allowCodeList = "3,0".Split(',');
-                            break;
-                    }
-                    break;
-                default:
-                    break;
-            }
-            foreach (var item in anteCode)
-            {
-                if (!allowCodeList.Contains(item))
-                    throw new Exception(string.Format("投注号码{0}为非法字符", item));
-            }
-        }
-
+    
         public int CheckBettingOrderMoney(Sports_AnteCodeInfoCollection codeList, string gameCode, string gameType, string playType, int amount, decimal schemeTotalMoney, DateTime stopTime, bool isAllow = false, string userId = "")
         {
             //验证投注号码
@@ -536,14 +340,14 @@ namespace BettingLottery.Service.ModuleServices.SportsBettionCore
                 var oneCodeArray = item.AnteCode.Split(',');
                 if (oneCodeArray.Distinct().Count() != oneCodeArray.Length)
                     throw new Exception(string.Format("投注号码{0}中包括重复的内容", item.AnteCode));
-                CheckSportAnteCode(gameCode, string.IsNullOrEmpty(item.GameType) ? gameType : item.GameType.ToUpper(), oneCodeArray);
+                BettingHelper.CheckSportAnteCode(gameCode, string.IsNullOrEmpty(item.GameType) ? gameType : item.GameType.ToUpper(), oneCodeArray);
             }
 
             var tmp = playType.Split('|');
             var totalMoney = 0M;
             var totalCount = 0;
 
-            var c = new KaSon.FrameWork.ORM.Helper.AnalyzerFactory.Combination();
+            var c = new Combination();
             foreach (var chuan in tmp)
             {
                 var chuanArray = chuan.Split('_');
@@ -581,7 +385,7 @@ namespace BettingLottery.Service.ModuleServices.SportsBettionCore
                 }
                 else
                 {
-                    var ac = new KaSon.FrameWork.ORM.Helper.AnalyzerFactory.ArrayCombination();
+                    var ac = new ArrayCombination();
                     var danList = codeList.Where(a => a.IsDan).ToList();
                     //var tuoList = codeList.Where(a => !a.IsDan).ToList();
                     var totalCodeList = new List<Sports_AnteCodeInfo[]>();
@@ -729,7 +533,7 @@ namespace BettingLottery.Service.ModuleServices.SportsBettionCore
                 CurrentBettingMoney = ticketStatus == TicketStatus.Ticketed ? totalMoney : 0M,
                 GameCode = gameCode,
                 GameType = gameType,
-                GameTypeName = BusinessHelper.FormatGameType(gameCode, gameType),
+                GameTypeName = BettingHelper.FormatGameType(gameCode, gameType),
                 PreTaxBonusMoney = 0M,
                 ProgressStatus = (int)progressStatus,
                 SchemeId = schemeId,

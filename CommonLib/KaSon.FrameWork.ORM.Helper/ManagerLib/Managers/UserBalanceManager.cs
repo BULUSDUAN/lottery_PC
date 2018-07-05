@@ -1,5 +1,6 @@
 ﻿using EntityModel;
 using EntityModel.Enum;
+using EntityModel.PayModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,7 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
         /// <summary>
         /// 支付到用户余额
         /// </summary>
-        public void PayToUserBalance(string userId, params BusinessHelper.PayDetail[] array)
+        public void PayToUserBalance(string userId, params PayDetail[] array)
         {
             if (array.Length <= 0)
                 return;

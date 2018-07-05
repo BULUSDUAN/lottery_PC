@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using KaSon.FrameWork.Common.Utilities;
+using KaSon.FrameWork.Analyzer.AnalyzerFactory;
 
 namespace KaSon.FrameWork.ORM.Helper.WinNumber
 {
@@ -31,7 +33,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             if (string.IsNullOrEmpty(winNumber)) return;
 
             var msg = string.Empty;
-            AnalyzerFactory.AnalyzerFactory.GetWinNumberAnalyzer(this.CurrentGameCode).CheckWinNumber(winNumber, out msg);
+            AnalyzerFactory.GetWinNumberAnalyzer(this.CurrentGameCode).CheckWinNumber(winNumber, out msg);
             if (!string.IsNullOrEmpty(msg))
                 throw new Exception(msg);
 
