@@ -28,6 +28,8 @@ namespace BettingLottery.Service.Host
         static void Main(string[] args)
         {
 
+
+
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             var host = new ServiceHostBuilder()
                 .RegisterServices(builder =>

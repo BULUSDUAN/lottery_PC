@@ -18,6 +18,7 @@
     <Compile Remove="AnalyzerFactory\Interface\IAntecodeAnalyzable_Sport.cs" />
     <Compile Remove="AnalyzerFactory\Interface\IOrderAnalyzable.cs" />
     <Compile Remove="AnalyzerFactory\Interface\IWinNumberAnalyzable.cs" />
+    <Compile Remove="BusinessHelper.cs" />
     <Compile Remove="LotteryJsonInfo_Operate\Json_BJDC.cs" />
     <Compile Remove="LotteryJsonInfo_Operate\Json_CTZQ.cs" />
     <Compile Remove="LotteryJsonInfo_Operate\Json_JCLQ.cs" />

@@ -8,7 +8,7 @@ using KaSon.FrameWork.Common;
 using KaSon.FrameWork.Common.Redis;
 using KaSon.FrameWork.ORM.Helper.WinNumber;
 using KaSon.FrameWork.ORM.Helper.WinNumber.ModelCollection;
-using StackExchange.Redis;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -478,7 +478,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             var redisKey_TogetherList = RedisKeys.Key_Core_Togegher_OrderList;
             //生成列表
             var list = new List<Sports_TogetherSchemeQueryInfo>();
-            var redisList = new List<RedisValue>(); //RedisHelper.QuerySportsTogetherListFromRedis(redisKey_TogetherList).Result;
+            var redisList = new List<StackExchange.Redis.RedisValue>(); //RedisHelper.QuerySportsTogetherListFromRedis(redisKey_TogetherList).Result;
             foreach (var item in redisList)
             {
                 try
@@ -596,8 +596,8 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                 CreaterDisplayName = z.u.DisplayName,
                 CreaterHideDisplayNameCount = z.u.HideDisplayNameCount,
                 Description = z.t.Description,
-                GameDisplayName = ConvertHelper.FormatGameCode(z.t.GameCode),
-                GameTypeDisplayName = ConvertHelper.FormatGameType(z.t.GameCode, z.t.GameType),
+                GameDisplayName = KaSon.FrameWork.Common.Utilities.ConvertHelper.FormatGameCode(z.t.GameCode),
+                GameTypeDisplayName = KaSon.FrameWork.Common.Utilities.ConvertHelper.FormatGameType(z.t.GameCode, z.t.GameType),
                 Guarantees = z.t.Guarantees,
                 PlayType = z.t.PlayType,
                 Price = z.t.Price,
@@ -674,8 +674,8 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                             CreaterDisplayName = z.u.DisplayName,
                             CreaterHideDisplayNameCount = z.u.HideDisplayNameCount,
                             Description = z.t.Description,
-                            GameDisplayName = ConvertHelper.FormatGameCode(z.t.GameCode),
-                            GameTypeDisplayName = ConvertHelper.FormatGameType(z.t.GameCode, z.t.GameType),
+                            GameDisplayName = KaSon.FrameWork.Common.Utilities.ConvertHelper.FormatGameCode(z.t.GameCode),
+                            GameTypeDisplayName = KaSon.FrameWork.Common.Utilities.ConvertHelper.FormatGameType(z.t.GameCode, z.t.GameType),
                             Guarantees = z.t.Guarantees,
                             PlayType = z.t.PlayType,
                             Price = z.t.Price,
@@ -1176,13 +1176,13 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                 UserId = b.u.UserId,
                 UserDisplayName = b.u.DisplayName,
                 HideDisplayNameCount = b.u.HideDisplayNameCount,
-                GameDisplayName =ConvertHelper.FormatGameCode(b.r.GameCode),
+                GameDisplayName = Common.Utilities.ConvertHelper.FormatGameCode(b.r.GameCode),
                 GameCode = b.r.GameCode,
                 Amount = b.r.Amount,
                 BonusStatus = (BonusStatus)b.r.BonusStatus,
                 CreateTime = b.r.CreateTime,
                 GameType = b.r.GameType,
-                GameTypeDisplayName =ConvertHelper.FormatGameType(b.r.GameCode, b.r.GameType),
+                GameTypeDisplayName =KaSon.FrameWork.Common.Utilities. ConvertHelper.FormatGameType(b.r.GameCode, b.r.GameType),
                 IssuseNumber = b.r.IssuseNumber,
                 PlayType = b.r.PlayType,
                 ProgressStatus = (ProgressStatus)b.r.ProgressStatus,
@@ -1257,8 +1257,8 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                 TotalMatchCount = b.r.TotalMatchCount,
                 TotalMoney = b.r.TotalMoney,
                 BetCount = b.r.BetCount,
-                GameDisplayName =ConvertHelper.FormatGameCode(b.r.GameCode),
-                GameTypeDisplayName = ConvertHelper.FormatGameType(b.r.GameCode, b.r.GameType),
+                GameDisplayName = KaSon.FrameWork.Common.Utilities.ConvertHelper.FormatGameCode(b.r.GameCode),
+                GameTypeDisplayName = KaSon.FrameWork.Common.Utilities.ConvertHelper.FormatGameType(b.r.GameCode, b.r.GameType),
                 AfterTaxBonusMoney = 0M,
                 PreTaxBonusMoney = 0M,
                 BonusCount = 0,

@@ -1,6 +1,6 @@
-﻿using System.Text;
-using KaSon.FrameWork.Helper;
-using EntityModel.Enum;
+﻿using EntityModel.Enum;
+using KaSon.FrameWork.Common;
+using System.Text;
 
 namespace Lottery.ApiGateway.Model.HelpModel
 {

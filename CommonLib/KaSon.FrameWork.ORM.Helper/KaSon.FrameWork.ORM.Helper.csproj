@@ -14,10 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="AnalyzerFactory\Interface\IAntecodeAnalyzable.cs" />
-    <Compile Remove="AnalyzerFactory\Interface\IAntecodeAnalyzable_Sport.cs" />
-    <Compile Remove="AnalyzerFactory\Interface\IOrderAnalyzable.cs" />
-    <Compile Remove="AnalyzerFactory\Interface\IWinNumberAnalyzable.cs" />
     <Compile Remove="BusinessHelper.cs" />
     <Compile Remove="LotteryJsonInfo_Operate\Json_BJDC.cs" />
     <Compile Remove="LotteryJsonInfo_Operate\Json_CTZQ.cs" />
@@ -25,7 +21,6 @@
     <Compile Remove="LotteryJsonInfo_Operate\Json_JCZQ.cs" />
     <Compile Remove="LotteryJsonInfo_Operate\JSON_kaiJiang.cs" />
     <Compile Remove="LotteryJsonInfo_Operate\UpgradeInfo.cs" />
-    <Compile Remove="Ticket\TicketGatewayAdmin.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,6 +30,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EntityModel\EntityModel.csproj" />
+    <ProjectReference Include="..\KaSon.FrameWork.Analyzer\KaSon.FrameWork.Analyzer.csproj" />
     <ProjectReference Include="..\KaSon.FrameWork.Common\KaSon.FrameWork.Common.csproj" />
   </ItemGroup>
 
@@ -57,11 +53,16 @@
     <None Update="SQLServer_SQL.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="SQL_JSON\MyServer_SQL.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SQL_JSON\SQLServer_SQL.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="LotteryJsonInfo_Operate\" />
-    <Folder Include="Ticket\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>

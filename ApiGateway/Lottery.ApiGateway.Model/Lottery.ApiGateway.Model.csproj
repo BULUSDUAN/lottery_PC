@@ -5,7 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\CommonLib\KaSon.FrameWork.Helper\KaSon.FrameWork.Helper.csproj" />
+    <ProjectReference Include="..\..\CommonLib\EntityModel\EntityModel.csproj" />
+    <ProjectReference Include="..\..\CommonLib\KaSon.FrameWork.Common\KaSon.FrameWork.Common.csproj" />
   </ItemGroup>
 
 

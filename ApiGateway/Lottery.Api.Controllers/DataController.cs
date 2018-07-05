@@ -2,7 +2,6 @@
 using EntityModel.CoreModel;
 using EntityModel.Enum;
 using Kason.Sg.Core.ProxyGenerator;
-using KaSon.FrameWork.Helper;
 using Lottery.ApiGateway.Model.HelpModel;
 using Lottery.Base.Controllers;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +12,9 @@ using System.Threading.Tasks;
 using System.Linq;
 using EntityModel.Communication;
 using System.IO;
+using KaSon.FrameWork.Common;
+using KaSon.FrameWork.Common.Utilities;
+using EntityModel.LotteryJsonInfo;
 
 namespace Lottery.Api.Controllers
 {
@@ -387,11 +389,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-<<<<<<< HEAD
                 var p = WebHelper.Decode(entity.Param);
-=======
-                var p =WebHelper.Decode(entity.Param);
->>>>>>> 77f9da3f72619db400865d437806eabbbff34413
                 var gameCode = p.GameCode;
                 string gameType = p.GameType;
                 var issuseNumber = p.IssuseNumber;
@@ -869,11 +867,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-<<<<<<< HEAD
                 var p = WebHelper.Decode(entity.Param);
-=======
-                var p =WebHelper.Decode(entity.Param);
->>>>>>> 77f9da3f72619db400865d437806eabbbff34413
                 //var param = System.Web.Helpers.Json.Decode(entity.Param);
                 string id = p.ArticleId;
                 if (string.IsNullOrEmpty(id))
@@ -947,11 +941,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-<<<<<<< HEAD
-                var p = WebHelper.Decode(entity.Param);
-=======
                 var p =WebHelper.Decode(entity.Param);
->>>>>>> 77f9da3f72619db400865d437806eabbbff34413
                 //热点彩讯  FocusCMS
                 //赛事点评 Match_Comment
                 //彩票资讯 Lottery_GameCode
@@ -1837,11 +1827,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-<<<<<<< HEAD
                 var p = WebHelper.Decode(entity.Param);
-=======
-                var p =WebHelper.Decode(entity.Param);
->>>>>>> 77f9da3f72619db400865d437806eabbbff34413
                 //热点彩讯  FocusCMS
                 //赛事点评 Match_Comment
                 //彩票资讯 Lottery_GameCode
@@ -2269,7 +2255,7 @@ namespace Lottery.Api.Controllers
                             ImageUrl = item.ImageUrl,
                             IsShow = item.IsShow,
                             ActiveName = item.ActiveName,
-                            LinkUrl = BusinessHelper.GetDomain() + item.LinkUrl,
+                            LinkUrl = ConvertHelper.GetDomain() + item.LinkUrl,
                             Title = item.Title,
                             Summary = item.Summary,
                             BeginTime = ConvertHelper.ConvertDateTimeInt(item.BeginTime),
@@ -2566,7 +2552,6 @@ namespace Lottery.Api.Controllers
                 Issuse_QueryInfo cur = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Data/QueryCurretNewIssuseInfo");
                 //Issuse_QueryInfo cur = WCFClients.GameIssuseClient.QueryCurretNewIssuseInfo(id, type);
                 var list = new List<object>();
-                BusinessHelper bizHelper = new BusinessHelper();
                 List<CtzqIssuesWeb> issuse = Json_CTZQ.IssuseList(type);
                 var theissuse = issuse.FirstOrDefault(c => c.IssuseNumber == cur.IssuseNumber);
                 DateTime? startDate = null;
@@ -2575,7 +2560,7 @@ namespace Lottery.Api.Controllers
                     startDate = Convert.ToDateTime(theissuse.StartTime);
                 }
 
-                list.Add(new { issuse = cur.IssuseNumber, stoptime = bizHelper.ConvertDateTimeInt(cur.LocalStopTime).ToString(), servertime = bizHelper.ConvertDateTimeInt(DateTime.Now).ToString(), starttime = bizHelper.ConvertDateTimeInt(startDate != null ? startDate.Value : cur.StartTime).ToString() });
+                list.Add(new { issuse = cur.IssuseNumber, stoptime = ConvertHelper.ConvertDateTimeInt(cur.LocalStopTime).ToString(), servertime = ConvertHelper.ConvertDateTimeInt(DateTime.Now).ToString(), starttime = ConvertHelper.ConvertDateTimeInt(startDate != null ? startDate.Value : cur.StartTime).ToString() });
 
                 return Json(new LotteryServiceResponse
                 {

@@ -1,11 +1,10 @@
-﻿using System;
+﻿using EntityModel.Enum;
+using KaSon.FrameWork.Common;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
-using EntityModel.Enum;
-//using Lottery.ApiGateway.Model.Enum;
-using KaSon.FrameWork.Helper;
 
 namespace Lottery.ApiGateway.Model.HelpModel
 {

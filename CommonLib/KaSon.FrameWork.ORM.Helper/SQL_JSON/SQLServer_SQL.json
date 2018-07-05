@@ -1,4 +1,83 @@
 ﻿{
+  "BettiongModule": [
+    {
+      "Key": "P_JCLQ_GetLastOddsByMatchId_SF",
+      "Desc": "查询竞彩篮球赔率",
+      "ParamDesc": "@MatchId",
+      "Director": "kason",
+      "SQL": "SELECT * FROM T_JCLQ_Odds_SF O INNER JOIN (SELECT MAX(Id) [MaxId] FROM T_JCLQ_Odds_SF WHERE [MatchId] = @MatchId ) T ON O.[Id]=T.[MaxId]",
+      "Remark": "备注"
+    },
+    {
+      "Key": "P_JCLQ_GetLastOddsByMatchId_RFSF",
+      "Desc": "查询竞彩篮球赔率",
+      "ParamDesc": "@MatchId",
+      "Director": "kason",
+      "SQL": "SELECT * FROM T_JCLQ_Odds_RFSF O INNER JOIN (SELECT MAX(Id) [MaxId] FROM T_JCLQ_Odds_RFSF WHERE [MatchId] = @MatchId ) T ON O.[Id]=T.[MaxId]",
+      "Remark": "备注"
+    },
+    {
+      "Key": "P_JCLQ_GetLastOddsByMatchId_SFC",
+      "Desc": "查询竞彩篮球赔率",
+      "ParamDesc": "@MatchId",
+      "Director": "kason",
+      "SQL": "SELECT * FROM T_JCLQ_Odds_SFC O INNER JOIN (SELECT MAX(Id) [MaxId] FROM T_JCLQ_Odds_SFC WHERE [MatchId] = @MatchId ) T ON O.[Id]=T.[MaxId]",
+      "Remark": "备注"
+    },
+    {
+      "Key": "P_JCLQ_GetLastOddsByMatchId_DXF",
+      "Desc": "查询竞彩篮球赔率",
+      "ParamDesc": "@MatchId",
+      "Director": "kason",
+      "SQL": "SELECT * FROM T_JCLQ_Odds_DXF O INNER JOIN (SELECT MAX(Id) [MaxId] FROM T_JCLQ_Odds_DXF WHERE [MatchId] = @MatchId ) T ON O.[Id]=T.[MaxId]",
+      "Remark": "备注"
+    },
+
+    {
+      "Key": "P_JCZQ_GetLastOddsByMatchId_SPF",
+      "Desc": "查询竞彩足球赔率",
+      "ParamDesc": "@MatchId",
+      "Director": "kason",
+      "SQL": "SELECT * FROM T_JCZQ_Odds_SPF O INNER JOIN (SELECT MAX(Id) [MaxId] FROM T_JCZQ_Odds_SPFWHERE [MatchId] = @MatchId) T ON O.[Id]=T.[MaxId]",
+      "Remark": "备注"
+    },
+    {
+      "Key": "P_JCZQ_GetLastOddsByMatchId_BRQSPF",
+      "Desc": "查询竞彩足球赔率",
+      "ParamDesc": "@MatchId",
+      "Director": "kason",
+      "SQL": " SELECT * FROM T_JCZQ_Odds_BRQSPF O INNER JOIN (SELECT MAX(Id) [MaxId] FROM T_JCZQ_Odds_BRQSPF WHERE [MatchId] = @MatchId) T ON O.[Id]=T.[MaxId]",
+
+      "Remark": "备注"
+    },
+    {
+      "Key": "P_JCZQ_GetLastOddsByMatchId_ZJQ",
+      "Desc": "查询竞彩足球赔率",
+      "ParamDesc": "@MatchId",
+      "Director": "kason",
+      "SQL": " SELECT * FROM T_JCZQ_Odds_ZJQ O INNER JOIN (SELECT MAX(Id) [MaxId] FROM T_JCZQ_Odds_ZJQ WHERE [MatchId] = @MatchId) T ON O.[Id]=T.[MaxId]",
+
+      "Remark": "备注"
+    },
+    {
+      "Key": "P_JCZQ_GetLastOddsByMatchId_BQC",
+      "Desc": "查询竞彩足球赔率",
+      "ParamDesc": "@MatchId",
+      "Director": "kason",
+      "SQL": " SELECT * FROM T_JCZQ_Odds_BQC O INNER JOIN (SELECT MAX(Id) [MaxId] FROM T_JCZQ_Odds_BQC WHERE [MatchId] = @MatchId) T ON O.[Id]=T.[MaxId]",
+
+      "Remark": "备注"
+    },
+    {
+      "Key": "P_JCZQ_GetLastOddsByMatchId_BF",
+      "Desc": "查询竞彩足球赔率",
+      "ParamDesc": "@MatchId",
+      "Director": "kason",
+      "SQL": " SELECT * FROM T_JCZQ_Odds_BF O INNER JOIN (SELECT MAX(Id) [MaxId] FROM T_JCZQ_Odds_BF WHERE [MatchId] = @MatchId) T ON O.[Id]=T.[MaxId]",
+
+      "Remark": "备注"
+    }
+  ],
   "UserSystemModule": [
     {
       "Key": "P_Order_QueryBonusOrderList",

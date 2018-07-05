@@ -18,6 +18,11 @@ namespace KaSon.FrameWork.ORM.Helper
         private static string jsonText = "";
 
         static SQLModule sqlModule = null;
+
+        /// <summary>
+        /// 全局配置信息
+        /// </summary>
+      // public static JObject GlobalConfig = new JObject();
         static DBbase() {
 
            string path = Directory.GetCurrentDirectory();
@@ -34,11 +39,13 @@ namespace KaSon.FrameWork.ORM.Helper
             // JObject jo = (JObject)JsonConvert.DeserializeObject(jsonText);'System.Data.SqlClient
             sqlModule = (SQLModule)  JsonHelper.Deserialize<SQLModule>(jsonText);
 
+            //path = Path.Combine(Directory.GetCurrentDirectory(), @"GlobalConfig\GlobalConfig.json");
+            //jsonText = FileHelper.txtReader(path);
 
-
+         //   GlobalConfig  = (JObject)JsonConvert.DeserializeObject(jsonText); //'System.Data.SqlClient
         }
 
-        private DbProvider db = null;
+        private static DbProvider db = null;
         private static DbProvider sdb = null;
         public DbProvider DB
         {
