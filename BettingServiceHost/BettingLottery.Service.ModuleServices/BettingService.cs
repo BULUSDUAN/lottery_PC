@@ -96,7 +96,7 @@ namespace BettingLottery.Service.ModuleServices
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public LotteryServiceResponse Betting(string Param, SchemeSource SourceCode, string MsgId)
+        public object Betting(string Param, SchemeSource SourceCode, string MsgId)
         {
 
            var p= JsonHelper.Decode(Param);
@@ -206,7 +206,7 @@ namespace BettingLottery.Service.ModuleServices
                         }
                         if (successCount <= 0)
                         {
-                            return new LotteryServiceResponse
+                            return new
                             {
                                 Code = ResponseCode.失败,
                                 Message = "投注失败",
@@ -217,13 +217,13 @@ namespace BettingLottery.Service.ModuleServices
                         }
                         else if (successCount > 0 && successCount != codeCount)
                         {
-                            return new LotteryServiceResponse
+                            return new 
                             {
                                 Code = ResponseCode.成功,
                                 Message = "您本次投注成功" + successCount + "笔，失败" + (codeCount - successCount) + "笔。",
                                 MsgId = MsgId,
                                 Value = "您本次投注成功" + successCount + "笔，失败" + (codeCount - successCount) + "笔。",
-                                //Value = returnValue.TrimEnd('~'),
+                                //Value = returnValue.TrimEnd('~'),  
                             };
                         }
                     }

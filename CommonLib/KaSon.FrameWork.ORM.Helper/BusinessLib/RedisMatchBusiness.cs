@@ -7,16 +7,12 @@ using System.Linq;
 using EntityModel.CoreModel.BetingEntities;
 using EntityModel.Enum;
 using KaSon.FrameWork.Common;
-
 using KaSon.FrameWork.Common.Redis;
 using EntityModel;
 using StackExchange.Redis;
 using EntityModel.CoreModel;
-<<<<<<< HEAD
 using KaSon.FrameWork.Common.Sport;
-=======
 using EntityModel.Redis;
->>>>>>> a7171008b4bea1dab11582695738b3dd1fe77dcf
 
 namespace KaSon.FrameWork.ORM.Helper
 {

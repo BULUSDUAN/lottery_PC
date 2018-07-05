@@ -293,7 +293,6 @@ namespace KaSon.FrameWork.ORM.Helper
             return prefix + UsefullHelper.UUID();
         }
 
-        #endregion
 
         /// <summary>
         /// 刷新Redis中用户余额
@@ -1356,7 +1355,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <summary>
         ///  用户支出，申请提现
         /// </summary>
-        public WithdrawCategory Payout_To_Frozen_Withdraw(string category, string userId, string orderId, decimal payoutMoney,
+        public WithdrawCategory Payout_To_Frozen_Withdraw1(string category, string userId, string orderId, decimal payoutMoney,
             string summary, string place, string password, out decimal responseMoney)
         {
             var requestMoney = payoutMoney;
