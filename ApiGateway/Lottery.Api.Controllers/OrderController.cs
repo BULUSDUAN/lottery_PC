@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 
 namespace Lottery.Api.Controllers
 {
-    [Area("Order")]
+    [Area("api")]
     public class OrderController : BaseController
     {
         /// <summary>
