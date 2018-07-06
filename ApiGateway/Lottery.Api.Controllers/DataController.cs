@@ -18,23 +18,13 @@ using EntityModel.LotteryJsonInfo;
 
 namespace Lottery.Api.Controllers
 {
-    [Area("Data")]
+    [Area("api")]
     public class DataController : BaseController
     {
-        /// <summary>
-        /// 获取C_Core_Config表中配置文件信息
-        /// </summary>
-        /// <param name="_serviceProxyProvider"></param>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        public async Task<CoreConfigInfo> QueryCurrentIssuseInfo([FromServices]IServiceProxyProvider _serviceProxyProvider,string key)
+        public IActionResult Index()
         {
-            Dictionary<string, object> param = new Dictionary<string, object>();
-            param.Add("key", key);
-            var config = await _serviceProxyProvider.Invoke<CoreConfigInfo>(param, "api/Data/QueryCoreConfigByKey");
-            return config;
+            return JsonEx(new { name = "12313" });
         }
-
         #region 查询彩种奖期信息(101)
         /// <summary>
         /// 查询彩种奖期信息_101
@@ -53,7 +43,11 @@ namespace Lottery.Api.Controllers
                 //param.Add("key", "Site.GameDelay." + p.GameCode.ToUpper());
                 //var config = await _serviceProxyProvider.Invoke<CoreConfigInfo>(param, "api/Data/QueryCoreConfigByKey");
                 //var config = WCFClients.GameClient.QueryCoreConfigByKey("Site.GameDelay." + param.GameCode.ToUpper()).ConfigValue;
-                var config = await QueryCurrentIssuseInfo(_serviceProxyProvider, "Site.GameDelay." + p.GameCode.ToUpper());
+                //var config = await QueryCurrentIssuseInfo(_serviceProxyProvider, "Site.GameDelay." + p.GameCode.ToUpper());
+                //Dictionary<string, object> param = new Dictionary<string, object>();
+                param.Clear();
+                param.Add("key", "Site.GameDelay." + p.GameCode.ToUpper());
+                var config = await _serviceProxyProvider.Invoke<CoreConfigInfo>(param, "api/Data/QueryCoreConfigByKey");
                 var DelayTime = config.ConfigValue;
                 if (gameIssuseInfo != null && DelayTime != null)
                 {
@@ -1611,7 +1605,7 @@ namespace Lottery.Api.Controllers
                 }
                 else
                 {
-                    var type = (InnerMailHandleType)(innerstatus);
+                    var type = innerstatus;
                     param.Add("handleType", type);
                     param.Add("userId", userId);
                     collection = await _serviceProxyProvider.Invoke<SiteMessageInnerMailListNew_Collection>(param, "api/Data/QueryUnReadInnerMailListByReceiver");
@@ -1994,7 +1988,11 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var Agreement = await _serviceProxyProvider.Invoke<string>(null, "api/Redis/Agreement_Config");
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param.Add("key", "Agreement_Config");
+                var config = await _serviceProxyProvider.Invoke<CoreConfigInfo>(param, "api/Data/QueryCoreConfigByKey");
+                var Agreement = config.ConfigValue;
+                //await _serviceProxyProvider.Invoke<string>(null, "api/Data/Agreement_Config");
                 //var Agreement = WebRedisHelper.Agreement_Config;
                 return Json(new LotteryServiceResponse
                 {
@@ -2026,13 +2024,16 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var Index = await _serviceProxyProvider.Invoke<string>(null, "api/Redis/Agreement_Config");
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param.Add("key", "Index_Config");
+                var config = await _serviceProxyProvider.Invoke<CoreConfigInfo>(param, "api/Data/QueryCoreConfigByKey");
+                //var Index = await _serviceProxyProvider.Invoke<string>(null, "api/Data/Agreement_Config");
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
                     Message = "获取成功",
                     MsgId = entity.MsgId,
-                    Value = Index
+                    Value = config.ConfigValue
                 });
             }
             catch (Exception ex)
@@ -2757,6 +2758,55 @@ namespace Lottery.Api.Controllers
             catch { return string.Empty; }
         }
 
+        #endregion
+
+        #region 查询北京单场最新期号(139)
+        public async Task<IActionResult> QueryBJDCIssuse([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var list = new List<object>();
+                var result= await _serviceProxyProvider.Invoke<BJDCIssuseInfo>(null, "api/Data/QueryBJDCCurrentIssuseInfo");
+                //var result = WCFClients.GameIssuseClient.QueryBJDCCurrentIssuseInfo();
+                if (result != null)
+                {
+                    list.Add(
+                        new
+                        {
+                            issuse = result.IssuseNumber,
+                            stoptime = ConvertHelper.ConvertDateTimeInt(DateTime.Parse(result.MinLocalStopTime)).ToString(),
+                            servertime = ConvertHelper.ConvertDateTimeInt(DateTime.Now).ToString()
+                        });
+                }
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询北京单场最新期号成功",
+                    MsgId = entity.MsgId,
+                    Value = list,
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "业务参数错误",
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "查询北京单场最新奖期失败",
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                });
+            }
+        }
         #endregion
     }
 }

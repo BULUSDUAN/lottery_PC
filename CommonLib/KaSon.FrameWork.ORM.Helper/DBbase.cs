@@ -104,7 +104,15 @@ namespace KaSon.FrameWork.ORM.Helper
                 {
                     lottertdataDB = new DbProvider();
                     //// db.Init("Default");
-                    lottertdataDB.Init("ECP_LottertData");
+                    //lottertdataDB.Init("ECP_LottertData");
+                    if (_DBType == "MySql")
+                    {
+                        lottertdataDB.Init("MySql.ECP_LottertData");
+                    }
+                    else
+                    {
+                        lottertdataDB.Init("SqlServer.ECP_LottertData");
+                    }
                 }
                 return lottertdataDB;
             }
