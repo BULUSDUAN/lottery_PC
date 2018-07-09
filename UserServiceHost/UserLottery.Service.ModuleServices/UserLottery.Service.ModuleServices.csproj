@@ -36,7 +36,9 @@
       <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.CPlatform.dll</HintPath>
     </Reference>
     <Reference Include="Kason.Sg.Core.Nlog">
+
       <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.Nlog.dll</HintPath>
+
     </Reference>
     <Reference Include="Kason.Sg.Core.ProxyGenerator">
       <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.ProxyGenerator.dll</HintPath>

@@ -45,7 +45,7 @@ namespace KaSon.FrameWork.ORM.Helper
          //   GlobalConfig  = (JObject)JsonConvert.DeserializeObject(jsonText); //'System.Data.SqlClient
         }
 
-        private static DbProvider db = null;
+        private DbProvider db = null;
         private static DbProvider sdb = null;
         public DbProvider DB
         {

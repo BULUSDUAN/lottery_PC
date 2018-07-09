@@ -318,7 +318,7 @@ namespace KaSon.FrameWork.ORM.Helper
         //待测试
         //kason
          public static void ExecPlugin<T>(object inputParam)
-                  where T : class
+                  where T : class 
         {
             if (_enablePluginClass == null || _enablePluginClass.Count == 0)
                 _enablePluginClass = new PluginClassManager().QueryPluginClass(true);

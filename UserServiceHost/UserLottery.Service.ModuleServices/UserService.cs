@@ -43,6 +43,7 @@ using KaSon.FrameWork.Common.Redis;
 using EntityModel.ExceptionExtend;
 using KaSon.FrameWork.Common.Sport;
 using EntityModel.Redis;
+using static KaSon.FrameWork.Common.PlugInCore.IPluginHandler;
 
 namespace UserLottery.Service.ModuleServices
 {
@@ -60,10 +61,8 @@ namespace UserLottery.Service.ModuleServices
         IKgLog log = null;
         public UserService(UserRepository repository) : base()
         {
-           
             this._repository = repository;
             log = new Log4Log();
-
         }
        
 
@@ -365,6 +364,7 @@ namespace UserLottery.Service.ModuleServices
         /// <returns></returns>
         public Task<C_BankCard> QueryBankCard(string userToken)
         {
+
             // 验证用户身份及权限
             var userId = userAuthentication.ValidateUserAuthentication(userToken);
 
@@ -654,7 +654,7 @@ namespace UserLottery.Service.ModuleServices
 
                 #region 还没做
                 //! 执行扩展功能代码 - 提交事务后
-                //BusinessHelper.ExecPlugin<IResponseAuthentication_AfterTranCommit>(new object[] { userResult.ReturnValue, "Mobile", mobileNumber, source });
+                BusinessHelper.ExecPlugin<IResponseAuthentication_AfterTranCommit>(new object[] { userResult.ReturnValue, "Mobile", mobileNumber, source });
                 #endregion
                 return Task.FromResult(new CommonActionResult(true, "恭喜您注册成功！"));
             }

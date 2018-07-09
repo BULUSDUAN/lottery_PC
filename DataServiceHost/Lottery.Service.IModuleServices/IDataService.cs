@@ -24,14 +24,19 @@ namespace Lottery.Service.IModuleServices
     [ServiceBundle("api/{Service}")]
     public interface IDataService: IServiceKey
     {
-        //[Authorization(AuthType = AuthorizationType.JWT)]
-        [Service(Date = "2018-06-05", Director = "lidi", Name = "根据key获取配置")]
-        // [Command(Strategy = StrategyType.Injection, ShuntStrategy = AddressSelectorMode.HashAlgorithm, ExecutionTimeoutInMilliseconds = 1500, BreakerRequestVolumeThreshold = 3, Injection = @"return 1;", RequestCacheEnabled = false)]
-        Task<CoreConfigInfo> QueryCoreConfigByKey(string key);
+        ////[Authorization(AuthType = AuthorizationType.JWT)]
+        //[Service(Date = "2018-06-05", Director = "lidi", Name = "根据key获取配置")]
+        //// [Command(Strategy = StrategyType.Injection, ShuntStrategy = AddressSelectorMode.HashAlgorithm, ExecutionTimeoutInMilliseconds = 1500, BreakerRequestVolumeThreshold = 3, Injection = @"return 1;", RequestCacheEnabled = false)]
+        //Task<CoreConfigInfo> QueryCoreConfigByKey(string key);
 
         [Service(Date = "2018-06-05", Director = "lidi", Name = "获取当前场次数据")]
         Task<Issuse_QueryInfo> QueryCurrentIssuseInfo(string gameCode);
         //GetUserListBy
-    
+
+        [Service(Date = "2018-06-05", Director = "lidi", Name = "查找C_Core_Config表中的配置信息")]
+        Task<C_Core_Config> QueryCoreConfigByKey(string key);
+
+        [Service(Date = "2018-06-05", Director = "lidi", Name = "从Redis中查询当前奖期")]
+        Task<LotteryIssuse_QueryInfo> QueryNextIssuseListByLocalStopTime(string gameCode);
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace KaSon.FrameWork.Common.Net
@@ -16,29 +17,19 @@ namespace KaSon.FrameWork.Common.Net
         private static IHttpContextAccessor _accessor;
 
         /// <summary>
-        /// 取得客户端真实IP。如果有代理则取第一个非内网地址
+        /// 获取客户Ip
         /// </summary>
-        public static string IPAddress
+        public static string GetClientUserIp(this HttpContext context)
         {
-            get
+
+            //String srcIp = HttpContext.Current.Request.Headers["Cdn-Src-Ip"];
+            var ip = context.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+            if (string.IsNullOrEmpty(ip))
             {
-                //String srcIp = HttpContext.Current.Request.Headers["Cdn-Src-Ip"];
-                String srcIp = MyHttpContext.Current.Request.Headers["HTTP_X_FORWARDED_FOR"];
-                if (srcIp == null)
-                {
-                    //回传IP地址
-                    srcIp = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
-                }
-                // srcIp = HttpContext.Current.Request.ServerVariables["HTTP_X_REAL_IP"];
-                else if (srcIp.Contains(","))
-                {
-                    srcIp = srcIp.Split(',')[0];
-                }
-                return srcIp;
-
-
-               
+                ip = context.Connection.RemoteIpAddress.ToString();
             }
+            return ip;
+
         }
     }
     }

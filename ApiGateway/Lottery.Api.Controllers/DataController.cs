@@ -33,10 +33,11 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 //var param = System.Web.Helpers.Json.Decode(entity.Param);
-                param.Add("gameCode", p.GameCode);
+                string gameCode = p.GameCode;
+                param.Add("gameCode", gameCode);
                 var gameIssuseInfo = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Data/QueryCurrentIssuseInfo");
                 //var gameIssuseInfo = WCFClients.GameIssuseClient.QueryCurrentIssuseInfo(param.GameCode);
                 //param.Clear();
@@ -46,10 +47,14 @@ namespace Lottery.Api.Controllers
                 //var config = await QueryCurrentIssuseInfo(_serviceProxyProvider, "Site.GameDelay." + p.GameCode.ToUpper());
                 //Dictionary<string, object> param = new Dictionary<string, object>();
                 param.Clear();
-                param.Add("key", "Site.GameDelay." + p.GameCode.ToUpper());
-                var config = await _serviceProxyProvider.Invoke<CoreConfigInfo>(param, "api/Data/QueryCoreConfigByKey");
-                var DelayTime = config.ConfigValue;
-                if (gameIssuseInfo != null && DelayTime != null)
+                param.Add("key", "Site.GameDelay." + gameCode.ToUpper());
+                var config = await _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/Data/QueryCoreConfigByKey");
+                string DelayTime = string.Empty;
+                if (config != null)
+                {
+                    DelayTime = config.ConfigValue;
+                }
+                if (gameIssuseInfo != null && !string.IsNullOrEmpty(DelayTime))
                 {
                     var list = new List<object>();
                     list.Add(new

@@ -1,4 +1,5 @@
 ﻿using EntityModel.Enum;
+using ProtoBuf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -87,48 +88,70 @@ namespace EntityModel.CoreModel
     {
     }
 
-
+    [ProtoContract]
+    [Serializable]
     public class Issuse_QueryInfo
     {
+
         /// <summary>
         /// 主键
         /// </summary>
+        /// 
+        [ProtoMember(1)]
         public string GameCode_IssuseNumber { get; set; }
         /// <summary>
         /// 游戏名称
         /// </summary>
+        /// 
+        [ProtoMember(2)]
         public GameInfo Game { get; set; }
         /// <summary>
         /// 期号
         /// </summary>
+        /// 
+        [ProtoMember(3)]
         public string IssuseNumber { get; set; }
         /// <summary>
         /// 开启时间
         /// </summary>
+        /// 
+        [ProtoMember(4)]
         public DateTime StartTime { get; set; }
         /// <summary>
         /// 本地截至投注时间
         /// </summary>
+        /// 
+        [ProtoMember(5)]
         public DateTime LocalStopTime { get; set; }
         /// <summary>
         /// 外部接口截至投注时间
         /// </summary>
+        /// 
+        [ProtoMember(6)]
         public DateTime GatewayStopTime { get; set; }
         /// <summary>
         /// 官方截至时间
         /// </summary>
+        /// 
+        [ProtoMember(7)]
         public DateTime OfficialStopTime { get; set; }
         /// <summary>
         /// 状态
         /// </summary>
+        /// 
+        [ProtoMember(8)]
         public IssuseStatus Status { get; set; }
         /// <summary>
         /// 中奖号码
         /// </summary>
+        /// 
+        [ProtoMember(9)]
         public string WinNumber { get; set; }
         /// <summary>
         /// 创建时间
         /// </summary>
+        /// 
+        [ProtoMember(10)]
         public DateTime CreateTime { get; set; }
     }
 

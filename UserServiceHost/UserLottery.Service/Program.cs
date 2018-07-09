@@ -66,8 +66,8 @@ namespace UserLottery.Service.Host
                 .UseServer(options =>
                 {
                   //  options.IpEndpoint = new IPEndPoint(IPAddress.Any, 98);  
-                    //options.Port = 98;
-                   // options.Ip = "127.0.0.1";
+                    options.Port = 98;
+                     options.Ip = "127.0.0.1";
                     options.Token = "True";
                     options.ExecutionTimeoutInMilliseconds = 30000;
                     options.MaxConcurrentRequests = 200;
