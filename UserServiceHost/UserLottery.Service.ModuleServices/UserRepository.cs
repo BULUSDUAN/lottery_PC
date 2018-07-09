@@ -11,10 +11,11 @@ namespace UserLottery.Service.ModuleServices
     {
         ILoggerFactory _LogFactory;
 
+        public NLogger UserNLog;
         public UserRepository(ILoggerFactory LogFactory) {
             _LogFactory = LogFactory;
-            NLogger nl = (NLogger)_LogFactory.CreateLogger("abc");
-
+            UserNLog = (NLogger)_LogFactory.CreateLogger("User");
+           // UserNLog = (NLogger)_LogFactory.CreateLogger("User");
         }
     }
 }

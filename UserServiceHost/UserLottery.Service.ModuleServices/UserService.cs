@@ -56,6 +56,7 @@ namespace UserLottery.Service.ModuleServices
         //    this._repository = repository;
         //}
         private readonly UserRepository _repository;
+        
         IKgLog log = null;
         public UserService(UserRepository repository) : base()
         {

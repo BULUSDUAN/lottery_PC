@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="MessagePack" Version="1.7.3.4" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.0" />
     <PackageReference Include="protobuf-net" Version="2.3.7" />
   </ItemGroup>
 
@@ -33,6 +34,9 @@
     </Reference>
     <Reference Include="Kason.Sg.Core.CPlatform">
       <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.CPlatform.dll</HintPath>
+    </Reference>
+    <Reference Include="Kason.Sg.Core.Nlog">
+      <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.Nlog.dll</HintPath>
     </Reference>
     <Reference Include="Kason.Sg.Core.ProxyGenerator">
       <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.ProxyGenerator.dll</HintPath>
