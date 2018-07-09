@@ -1776,7 +1776,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public CQSSC_1X_ZS_Info QueryCQSSCCurrNumberOmission_1XDX(string key, int index)
+        public CQSSC_1X_ZS QueryCQSSCCurrNumberOmission_1XDX(string key, int index)
         {
             var info = QueryOmissionData(key, () =>
             {
@@ -1784,15 +1784,17 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
                 CQSSC_1X_ZS_Info jbzsInfo = new CQSSC_1X_ZS_Info();
                 if (list != null && list.Count > 0)
                 {
-                   ObjectConvert.ConverEntityToInfo(list[0], ref jbzsInfo);
-                    return jbzsInfo;
+                    //ObjectConvert.ConverEntityToInfo(list[0], ref jbzsInfo);
+                    // return jbzsInfo;
+                    return list[0];
                 }
                 return null;
             });
-            var result = info == null ? null : info;
+            //var result = info == null ? null : info;
+            var result = info;
             if (result != null && !string.IsNullOrEmpty(result.IssuseNumber))
                 return result;
-            return new CQSSC_1X_ZS_Info();
+            return new CQSSC_1X_ZS();
         }
 
         /// <summary>
@@ -1801,23 +1803,25 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <param name="key"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public CQSSC_2X_ZXZS_Info QueryCQSSCCurrNumberOmission_2XZX(string key, int index)
+        public CQSSC_2X_ZXZS QueryCQSSCCurrNumberOmission_2XZX(string key, int index)
         {
             var info = QueryOmissionData(key, () =>
             {
                 var list = new CQSSC_2X_ZXZSManager().QueryCQSSC_2X_ZXZS(index);
-                CQSSC_2X_ZXZS_Info jbzsInfo = new CQSSC_2X_ZXZS_Info();
+                CQSSC_2X_ZXZS jbzsInfo = new CQSSC_2X_ZXZS();
                 if (list != null && list.Count > 0)
                 {
-                   ObjectConvert.ConverEntityToInfo(list[0], ref jbzsInfo);
-                    return jbzsInfo;
+                    //ObjectConvert.ConverEntityToInfo(list[0], ref jbzsInfo);
+                    // return jbzsInfo;
+                    return list[0];
                 }
                 return null;
             });
-            var result = info == null ? null : info;
+            //var result = info == null ? null : info;
+            var result = info;
             if (result != null && !string.IsNullOrEmpty(result.IssuseNumber))
                 return result;
-            return new CQSSC_2X_ZXZS_Info();
+            return new CQSSC_2X_ZXZS();
         }
         /// <summary>
         /// 查询重庆时时彩当前遗漏_三星直选
@@ -1825,23 +1829,24 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <param name="key"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public CQSSC_3X_ZXZS_Info QueryCQSSCCurrNumberOmission_3XZX(string key, int index)
+        public CQSSC_3X_ZXZS QueryCQSSCCurrNumberOmission_3XZX(string key, int index)
         {
             var info = QueryOmissionData(key, () =>
             {
                 var list = new CQSSC_3X_ZXZSManager().QueryCQSSC_3X_ZXZS(index);
-                CQSSC_3X_ZXZS_Info jbzsInfo = new CQSSC_3X_ZXZS_Info();
+                CQSSC_3X_ZXZS jbzsInfo = new CQSSC_3X_ZXZS();
                 if (list != null && list.Count > 0)
                 {
-                   ObjectConvert.ConverEntityToInfo(list[0], ref jbzsInfo);
-                    return jbzsInfo;
+                    //ObjectConvert.ConverEntityToInfo(list[0], ref jbzsInfo);
+                    // return jbzsInfo;
+                    return list[0];
                 }
                 return null;
             });
-            var result = info == null ? null : info;
+            var result = info;
             if (result != null && !string.IsNullOrEmpty(result.IssuseNumber))
                 return result;
-            return new CQSSC_3X_ZXZS_Info();
+            return new CQSSC_3X_ZXZS();
         }
         /// <summary>
         /// 查询重庆时时彩当前遗漏_二星组选
@@ -1849,23 +1854,24 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <param name="key"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public CQSSC_2X_ZuXZS_Info QueryCQSSCCurrNumberOmission_2XZuX(string key, int index)
+        public CQSSC_2X_ZuXZS QueryCQSSCCurrNumberOmission_2XZuX(string key, int index)
         {
             var info = QueryOmissionData(key, () =>
             {
                 var list = new CQSSC_2X_ZuXZSManager().QueryCQSSC_2X_ZuXZS(index);
-                CQSSC_2X_ZuXZS_Info jbzsInfo = new CQSSC_2X_ZuXZS_Info();
+                CQSSC_2X_ZuXZS jbzsInfo = new CQSSC_2X_ZuXZS();
                 if (list != null && list.Count > 0)
                 {
-                   ObjectConvert.ConverEntityToInfo(list[0], ref jbzsInfo);
-                    return jbzsInfo;
+                    //ObjectConvert.ConverEntityToInfo(list[0], ref jbzsInfo);
+                    // return jbzsInfo;
+                    return list[0];
                 }
                 return null;
             });
-            var result = info == null ? null : info;
+            var result = info;
             if (result != null && !string.IsNullOrEmpty(result.IssuseNumber))
                 return result;
-            return new CQSSC_2X_ZuXZS_Info();
+            return new CQSSC_2X_ZuXZS();
         }
         /// <summary>
         /// 查询重庆时时彩当前遗漏_组三，组六
@@ -1873,66 +1879,69 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <param name="key"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public CQSSC_3X_ZuXZS_Info QueryCQSSCCurrNumberOmission_ZX3_ZX6(string key, int index)
+        public CQSSC_3X_ZuXZS QueryCQSSCCurrNumberOmission_ZX3_ZX6(string key, int index)
         {
             var info = QueryOmissionData(key, () =>
             {
                 var list = new CQSSC_3X_ZuXZSManager().QueryCQSSC_3X_ZuXZS(index);
-                CQSSC_3X_ZuXZS_Info jbzsInfo = new CQSSC_3X_ZuXZS_Info();
+                CQSSC_3X_ZuXZS jbzsInfo = new CQSSC_3X_ZuXZS();
                 if (list != null && list.Count > 0)
                 {
-                   ObjectConvert.ConverEntityToInfo(list[0], ref jbzsInfo);
-                    return jbzsInfo;
+                    //ObjectConvert.ConverEntityToInfo(list[0], ref jbzsInfo);
+                    // return jbzsInfo;
+                    return list[0];
                 }
                 return null;
             });
-            var result = info == null ? null : info;
+            var result = info;
             if (result != null && !string.IsNullOrEmpty(result.IssuseNumber))
                 return result;
-            return new CQSSC_3X_ZuXZS_Info();
+            return new CQSSC_3X_ZuXZS();
         }
 
         /// <summary>
         /// 查询重庆时时彩当前遗漏_大小单双
         /// </summary>
-        public CQSSC_DXDS_Info QueryCQSSCCurrNumberOmission_DXDS(string key, int index)
+        public CQSSC_DXDS QueryCQSSCCurrNumberOmission_DXDS(string key, int index)
         {
             var info = QueryOmissionData(key, () =>
             {
                 var list = new CQSSC_DXDSManager().QueryCQSSC_DXDS(index);
-                CQSSC_DXDS_Info jbzsInfo = new CQSSC_DXDS_Info();
+                CQSSC_DXDS jbzsInfo = new CQSSC_DXDS();
                 if (list != null && list.Count > 0)
                 {
-                   ObjectConvert.ConverEntityToInfo(list[0], ref jbzsInfo);
-                    return jbzsInfo;
+                    //ObjectConvert.ConverEntityToInfo(list[0], ref jbzsInfo);
+                    // return jbzsInfo;
+                    return list[0];
                 }
                 return null;
             });
-            var result = info == null ? null : info;
+            var result = info;
             if (result != null && !string.IsNullOrEmpty(result.IssuseNumber))
                 return result;
-            return new CQSSC_DXDS_Info();
+            return new CQSSC_DXDS();
         }
         /// <summary>
         /// 查询重庆时时彩当前遗漏_五星基本走势
         /// </summary>
-        public CQSSC_5X_JBZS_Info QueryCQSSCCurrNumberOmission_5XJBZS(string key, int index)
+        public CQSSC_5X_JBZS QueryCQSSCCurrNumberOmission_5XJBZS(string key, int index)
         {
             var info = QueryOmissionData(key, () =>
             {
                 var list = new CQSSC_5X_JBZSManager().QueryCQSSC_5X_JBZS(index);
-                CQSSC_5X_JBZS_Info jbzsInfo = new CQSSC_5X_JBZS_Info();
+                CQSSC_5X_JBZS jbzsInfo = new CQSSC_5X_JBZS();
                 if (list != null && list.Count > 0)
                 {
-                   ObjectConvert.ConverEntityToInfo(list[0], ref jbzsInfo);
-                    return jbzsInfo;
+                    //ObjectConvert.ConverEntityToInfo(list[0], ref jbzsInfo);
+                    // return jbzsInfo;
+                    return list[0];
                 }
                 return null;
             });
-            var result = info == null ? null : info;
+            var result = info ;
             if (result != null && !string.IsNullOrEmpty(result.IssuseNumber))
                 return result;
-            return new CQSSC_5X_JBZS_Info();
+            return new CQSSC_5X_JBZS();
         }
 
         #endregion

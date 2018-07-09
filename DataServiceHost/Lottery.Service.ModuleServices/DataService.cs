@@ -6,7 +6,9 @@ using Kason.Sg.Core.CPlatform.Ioc;
 using KaSon.FrameWork.Common.Redis;
 using KaSon.FrameWork.Common.Utilities;
 using KaSon.FrameWork.ORM.Helper;
+using KaSon.FrameWork.ORM.Helper.WinNumber;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Lottery.Service.ModuleServices
@@ -265,8 +267,152 @@ namespace Lottery.Service.ModuleServices
         {
             try
             {
-                //return new CacheDataBusiness().QueryAppConfigByAgentId(appAgentId);
-                return null;
+                return new CacheDataBusiness().QueryAppConfigByAgentId(appAgentId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        #endregion
+
+        #region 根据UrlType查询所有APP嵌套配置
+        /// <summary>
+        /// 根据UrlType查询所有APP嵌套配置
+        /// </summary>
+        /// <returns></returns>
+        public NestedUrlConfig_Collection QueryNestedUrlConfigListByUrlType(int urlType)
+        {
+            try
+            {
+                return new CacheDataBusiness().QueryNestedUrlConfigListByUrlType(urlType);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        #endregion
+
+        #region 查询我的站内信
+        ///// <summary>
+        ///// 查询我的站内信
+        ///// </summary>
+        public SiteMessageInnerMailListNew_Collection QueryMyInnerMailList(int pageIndex, int pageSize, string userToken)
+        {
+            // 验证用户身份及权限
+            try
+            {
+                var userId = new UserAuthentication().ValidateUserAuthentication(userToken);
+                return new DataQuery().QueryInnerMailListByReceiver(userId, pageIndex, pageSize);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询已读和未读站内信
+        /// </summary>
+        public SiteMessageInnerMailListNew_Collection QueryUnReadInnerMailListByReceiver(string userId, int pageIndex, int pageSize, int handleType)
+        {
+            try
+            {
+                return new DataQuery().QueryUnReadInnerMailList_ByReceiverId(userId, pageIndex, pageSize, handleType);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        #endregion
+
+        #region 阅读站内信
+        /// <summary>
+        /// 阅读站内信
+        /// </summary>
+        public InnerMailInfo_Query ReadInnerMail(string innerMailId, string userToken)
+        {
+            // 验证用户身份及权限
+            try
+            {
+                var userId = new UserAuthentication().ValidateUserAuthentication(userToken);
+                var dataQuery = new DataQuery();
+                if (!dataQuery.IsMyInnerMail(innerMailId, userId))
+                {
+                    throw new SiteMessageException(string.Format("此站内信不属于指定用户。站内信：{0}；用户：{1}。", innerMailId, userId));
+                }
+                var info = dataQuery.QueryInnerMailDetailByIdAndRead(innerMailId, userId);
+                return info;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+            //using (var biz = new GameBiz.Business.GameBizBusinessManagement())
+            //{
+            //    biz.BeginTran();
+
+            //    var siteBiz = new SiteMessageControllBusiness();
+            //    if (!siteBiz.IsMyInnerMail(innerMailId, userId))
+            //    {
+            //        throw new SiteMessageException(string.Format("此站内信不属于指定用户。站内信：{0}；用户：{1}。", innerMailId, userId));
+            //    }
+            //    siteBiz.ReadInnerMail(innerMailId, userId);
+            //    var info = siteBiz.QueryInnerMailDetailById(innerMailId);
+
+            //    biz.CommitTran();
+
+            //    return info;
+            //}
+        }
+        #endregion
+
+        #region 查询红包使用规则
+        /// <summary>
+        /// 查询红包使用规则
+        /// </summary>
+        public string QueryRedBagUseConfig()
+        {
+            try
+            {
+                return new DataQuery().QueryRedBagUseConfig();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        #endregion
+
+        #region 查询文章列表_优化
+        private static Dictionary<string, ArticleInfo_QueryCollection> _articleCollection = new Dictionary<string, ArticleInfo_QueryCollection>();
+        /// <summary>
+        /// 查询文章列表
+        /// todo:后台权限
+        /// </summary>
+        public ArticleInfo_QueryCollection QueryArticleList_YouHua(string category, string gameCode, int pageIndex, int pageSize)
+        {
+            try
+            {
+                string cacheKey = string.Format("{0}_{1}_{2}_{3}", category, gameCode, pageIndex, pageSize);
+                var result = new ArticleInfo_QueryCollection();
+                if (_articleCollection != null && _articleCollection.Count > 0 && _articleCollection.ContainsKey(cacheKey))
+                {
+                    result = _articleCollection.FirstOrDefault(s => s.Key == cacheKey).Value;
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(category))
+                        throw new Exception("未查询到文章类别");
+                    var array = category.Split('|');
+                    var gameCodeArray = gameCode.Split('|');
+                    result = new DataQuery().QueryArticleList_YouHua(array, gameCodeArray, pageIndex, pageSize);
+                    if (!_articleCollection.ContainsKey(cacheKey))
+                        _articleCollection.Add(cacheKey, result);
+                }
+                return result;
             }
             catch (Exception ex)
             {
@@ -274,6 +420,167 @@ namespace Lottery.Service.ModuleServices
             }
         } 
         #endregion
+
+        #region 查询fxid活动下所有邀请
+        /// <summary>
+        /// 查询fxid活动下所有邀请
+        /// </summary>
+        public ShareSpreadCollection QueryShareSpreadUsers(string agentId, DateTime startTime, DateTime endTime, int pageIndex, int pageSize)
+        {
+            try
+            {
+                int userTotalCount = 0;
+                decimal RedBagMoneyTotal = 0M;
+                var shareList = new ShareSpreadCollection();
+                var result = new DataQuery().QueryBlog_UserShareSpreadList(agentId, pageIndex, pageSize, startTime, endTime, out userTotalCount, out RedBagMoneyTotal);
+                shareList.UserTotal = userTotalCount;
+                shareList.RedBagMoneyTotal = RedBagMoneyTotal;
+                if (result != null && result.Count > 0)
+                {
+                    foreach (var item in result)
+                    {
+                        shareList.ShareSpreadList.Add(new BlogUserShareSpread()
+                        {
+                            Id = item.Id,
+                            UserId = item.UserId,
+                            UserName = item.userName,
+                            AgentId = item.AgentId,
+                            isGiveLotteryRedBag = item.isGiveLotteryRedBag,
+                            isGiveRegisterRedBag = item.isGiveRegisterRedBag,
+                            giveRedBagMoney = item.giveRedBagMoney,
+                            CreateTime = item.CreateTime,
+                            UpdateTime = item.UpdateTime
+                        });
+                    }
+                }
+                return shareList;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        #endregion
+
+        #region 查询当前遗漏
+
+        /// <summary>
+        /// 查询一星单选遗漏
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public CQSSC_1X_ZS QueryCQSSCCurrNumberOmission_1XDX(string key, int index)
+        {
+            try
+            {
+                return new LotteryDataBusiness_CQSSC().QueryCQSSCCurrNumberOmission_1XDX(key, index);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 查询重庆时时彩当前遗漏_二星直选
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public CQSSC_2X_ZXZS QueryCQSSCCurrNumberOmission_2XZX(string key, int index)
+        {
+            try
+            {
+                return new LotteryDataBusiness_CQSSC().QueryCQSSCCurrNumberOmission_2XZX(key, index);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 查询重庆时时彩当前遗漏_三星直选
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public CQSSC_3X_ZXZS QueryCQSSCCurrNumberOmission_3XZX(string key, int index)
+        {
+            try
+            {
+                return new LotteryDataBusiness_CQSSC().QueryCQSSCCurrNumberOmission_3XZX(key, index);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 查询重庆时时彩当前遗漏_二星组选
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public CQSSC_2X_ZuXZS QueryCQSSCCurrNumberOmission_2XZuX(string key, int index)
+        {
+            try
+            {
+                return new LotteryDataBusiness_CQSSC().QueryCQSSCCurrNumberOmission_2XZuX(key, index);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 查询重庆时时彩当前遗漏_组三，组六
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public CQSSC_3X_ZuXZS QueryCQSSCCurrNumberOmission_ZX3_ZX6(string key, int index)
+        {
+            try
+            {
+                return new LotteryDataBusiness_CQSSC().QueryCQSSCCurrNumberOmission_ZX3_ZX6(key, index);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询重庆时时彩当前遗漏_大小单双
+        /// </summary>
+        public CQSSC_DXDS QueryCQSSCCurrNumberOmission_DXDS(string key, int index)
+        {
+            try
+            {
+                return new LotteryDataBusiness_CQSSC().QueryCQSSCCurrNumberOmission_DXDS(key, index);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 查询重庆时时彩当前遗漏_五星基本走势
+        /// </summary>
+        public CQSSC_5X_JBZS QueryCQSSCCurrNumberOmission_5XJBZS(string key, int index)
+        {
+            try
+            {
+                return new LotteryDataBusiness_CQSSC().QueryCQSSCCurrNumberOmission_5XJBZS(key, index);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        #endregion
+
     }
 
 
