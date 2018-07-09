@@ -4,6 +4,7 @@ using EntityModel.CoreModel;
 using EntityModel.Enum;
 using Kason.Sg.Core.ProxyGenerator;
 using KaSon.FrameWork.Common;
+using KaSon.FrameWork.Common.Net;
 using KaSon.FrameWork.Common.Utilities;
 using Lottery.ApiGateway.Model.HelpModel;
 using Lottery.Base.Controllers;
@@ -19,9 +20,14 @@ using System.Web;
 
 namespace Lottery.Api.Controllers
 {
-    [Area("User")]
+    [Area("api")]
     public class UserController : BaseController
     {
+        private IHttpContextAccessor _accessor;
+        public UserController(IHttpContextAccessor accessor)
+        {
+            _accessor = accessor;
+        }
         /// <summary>
         /// 登录(103)
         /// </summary>
@@ -350,12 +356,14 @@ namespace Lottery.Api.Controllers
             {
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 var p = WebHelper.Decode(entity.Param);
-
-                if (string.IsNullOrEmpty(p.password))
+                string password = p.password;
+                string validateCode = p.validateCode;
+                string mobile = p.mobile;
+                if (string.IsNullOrEmpty(password))
                     throw new Exception("密码不能为空！");
-                if (string.IsNullOrEmpty(p.validateCode))
+                if (string.IsNullOrEmpty(validateCode))
                     throw new Exception("验证码不能为空！");
-                if (!ValidateHelper.IsMobile(p.mobile))
+                if (!ValidateHelper.IsMobile(mobile))
                     throw new ArgumentException("手机号码不能为空！");
                 string cfrom = "";
                 string pid = p.pid;
@@ -364,22 +372,22 @@ namespace Lottery.Api.Controllers
                 {
                     schemeSource = SchemeSource.Iphone;
                 }
-
+              
                 var userInfo = new RegisterInfo_Local();
                 //userInfo.RegisterIp = IpManager.IPAddress;
-                userInfo.RegisterIp = "127.0.0.1";
-                userInfo.LoginName = "15011111111";
-                userInfo.Password = "123456";
+                userInfo.RegisterIp = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
+                userInfo.LoginName = mobile;
+                userInfo.Password = password;
 
-                param["validateCode"] = "659235";
-                param["mobile"] = "15011111111";
+                param["validateCode"] = validateCode;
+                param["mobile"] = mobile;
                 param["source"] = (int)schemeSource;
 
                 param["info"] = userInfo;
 
                 if (!string.IsNullOrEmpty(pid))
                     userInfo.AgentId = pid;
-                var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/RegisterResponseMobile");
+                var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/User/RegisterResponseMobile");
                 if (result.Message.Contains("手机认证成功") || result.Message.Contains("恭喜您注册成功"))
                 {
 
@@ -1223,7 +1231,7 @@ namespace Lottery.Api.Controllers
                 {
                     throw new ArgumentException("提现时间早上9点到凌晨1点，请您明天9点再来，感谢配合");
                 }
-
+                var cashMoney = await _serviceProxyProvider.Invoke<UserBalanceInfo>(param, "api/user/QueryMyBalance");
                 var userinfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/LoginByUserToken");
            
                 if (userinfo.IsSuccess)
@@ -1237,7 +1245,7 @@ namespace Lottery.Api.Controllers
                     if (string.IsNullOrEmpty(info.BankCardNumber))
                         throw new ArgumentException("请先绑定银行卡");
 
-                    var cashMoney= await _serviceProxyProvider.Invoke<UserBalanceInfo>(param, "api/user/QueryMyBalance");
+                  
                     return new LotteryServiceResponse
                     {
                         Code = ResponseCode.成功,

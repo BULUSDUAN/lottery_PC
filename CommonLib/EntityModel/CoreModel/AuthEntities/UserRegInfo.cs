@@ -1,4 +1,5 @@
 ﻿using EntityModel.Enum;
+using ProtoBuf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,14 +44,16 @@ namespace EntityModel.CoreModel
     /// <summary>
     /// 用户余额
     /// </summary>
+    [ProtoContract]
     [Serializable]
     public class UserBalanceInfo
     {
+        [ProtoMember(1)]
         /// <summary>
         /// 用户编号
         /// </summary>
         public string UserId { get; set; }
-
+        [ProtoMember(2)]
         /// <summary>
         /// 充值账户余额，充值充到此账户
         /// </summary>
@@ -58,44 +61,54 @@ namespace EntityModel.CoreModel
         /// <summary>
         /// 奖金账户，中奖后返到此账户，可提现
         /// </summary>
+         [ProtoMember(3)]
         public decimal BonusBalance { get; set; }
         /// <summary>
         /// 冻结账户，提现、追号、异常手工冻结
         /// </summary>
+        [ProtoMember(4)]
         public decimal FreezeBalance { get; set; }
         /// <summary>
         /// 佣金账户，为代理商计算佣金时，转到此账户
-        /// </summary>
+        /// </summary
+        [ProtoMember(5)]
         public decimal CommissionBalance { get; set; }
         /// <summary>
         /// 名家余额
         /// </summary>
+        [ProtoMember(6)]
         public decimal ExpertsBalance { get; set; }
         /// <summary>
         /// 红包余额
         /// </summary>
+        [ProtoMember(7)]
         public decimal RedBagBalance { get; set; }
         /// <summary>
         /// CPS余额
-        /// </summary>
+        /// </summary
+        [ProtoMember(8)]
         public decimal CPSBalance { get; set; }
 
 
         /// <summary>
         /// 成长值
         /// </summary>
+        [ProtoMember(9)]
         public int UserGrowth { get; set; }
         /// <summary>
         /// 当前豆豆值
         /// </summary>
+        [ProtoMember(10)]
         public int CurrentDouDou { get; set; }
 
-
+        [ProtoMember(11)]
         public bool IsSetPwd { get; set; }
         /// <summary>
         /// 需要输入资金密码的地方
         /// </summary>
+        [ProtoMember(12)]
         public string NeedPwdPlace { get; set; }
+        [ProtoMember(13)]
         public string BalancePwd { get; set; }
 
         /// <summary>
