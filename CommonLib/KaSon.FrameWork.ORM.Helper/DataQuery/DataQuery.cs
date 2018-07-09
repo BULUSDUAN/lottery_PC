@@ -214,7 +214,7 @@ namespace KaSon.FrameWork.ORM.Helper
                             CreateTime = a.CreateTime
                         };
             var totalCount = query.Count();
-            var list= query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+            var list = query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
             var returnModel = new ActivityListInfoCollection();
             if (list != null && list.Count > 0)
             {
@@ -266,7 +266,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         join u_update in DB.CreateQuery<C_User_Register>() on b.CreateBy equals u_update.UserId
                         where b.Id == id
                         select new { b, u_create, u_update };
-                        
+
             return query.ToList().Select(t => new BulletinInfo_Query
             {
                 Id = t.b.Id,
@@ -283,9 +283,244 @@ namespace KaSon.FrameWork.ORM.Helper
                 UpdateTime = t.b.UpdateTime,
                 UpdateBy = t.b.UpdateBy,
                 UpdatorDisplayName = t.u_update.DisplayName,
-                BulletinAgent=(BulletinAgent)t.b.BulletinAgent
+                BulletinAgent = (BulletinAgent)t.b.BulletinAgent
             }).FirstOrDefault();
         }
+
+
+        public List<APPConfigInfo> QueryAppConfigList()
+        {
+            return (from a in DB.CreateQuery<C_App_Config>()
+                    select a).ToList().Select(a => new APPConfigInfo
+                    {
+                        AppAgentId = string.IsNullOrEmpty(a.AppAgentId) ? string.Empty : a.AppAgentId,
+                        AgentName = string.IsNullOrEmpty(a.AgentName) ? string.Empty : a.AgentName,
+                        ConfigCode = string.IsNullOrEmpty(a.ConfigCode) ? string.Empty : a.ConfigCode,
+                        ConfigDownloadUrl = string.IsNullOrEmpty(a.ConfigDownloadUrl) ? string.Empty : a.ConfigDownloadUrl,
+                        ConfigExtended = string.IsNullOrEmpty(a.ConfigExtended) ? string.Empty : a.ConfigExtended,
+                        ConfigName = string.IsNullOrEmpty(a.ConfigName) ? string.Empty : a.ConfigName,
+                        ConfigUpdateContent = string.IsNullOrEmpty(a.ConfigUpdateContent) ? string.Empty : a.ConfigUpdateContent,
+                        IsForcedUpgrade = a.IsForcedUpgrade == null ? false : a.IsForcedUpgrade,
+                        ConfigVersion = string.IsNullOrEmpty(a.ConfigVersion) ? string.Empty : a.ConfigVersion
+                    }).ToList();
+        }
+
+        public C_App_Config QueryAppConfigByAgentId(string appAgentId)
+        {
+            return DB.CreateQuery<C_App_Config>().FirstOrDefault(p => p.AppAgentId == appAgentId);
+        }
         #endregion
+
+        public List<C_APP_NestedUrlConfig> QueryNestedUrlList()
+        {
+            return DB.CreateQuery<C_APP_NestedUrlConfig>().Where(s => s.IsEnable == true).ToList();
+        }
+
+        public SiteMessageInnerMailListNew_Collection QueryInnerMailListByReceiver(string userId, int pageIndex, int pageSize)
+        {
+            SiteMessageInnerMailListNew_Collection collection = new SiteMessageInnerMailListNew_Collection();
+            collection.TotalCount = 0;
+            //var query = from m in Session.Query<SiteMessageInnerMailListNew>()
+            //            where m.ReceiverId == "U:"+userId
+            //            select new SiteMessageInnerMailListNewInfo
+            //                {
+            //                    HandleType = m.HandleType,
+            //                    MailId = m.MailId,
+            //                    MsgContent = m.MsgContent,
+            //                    ReadTime = m.ReadTime,
+            //                    ReceiverId = m.ReceiverId,
+            //                    SenderId = m.SenderId,
+            //                    SendTime = m.SendTime,
+            //                    Title = m.Title,
+            //                };
+            var query = from m in DB.CreateQuery<E_SiteMessage_InnerMail_List_new>()
+                        where (m.ReceiverId == userId || m.ReceiverId == "U:" + userId)
+                        && m.HandleType != (int)InnerMailHandleType.Deleted
+                        select m;
+            if (query != null)
+            {
+                collection.TotalCount = query.Count();
+                collection.MailList = query.Skip(pageIndex * pageSize).Take(pageSize).ToList().Select(m => new SiteMessageInnerMailListNewInfo
+                {
+                    HandleType = (InnerMailHandleType)m.HandleType,
+                    MailId = m.MailId,
+                    MsgContent = m.MsgContent,
+                    ReadTime = m.ReadTime,
+                    ReceiverId = m.ReceiverId,
+                    SenderId = m.SenderId,
+                    SendTime = m.SendTime,
+                    Title = m.Title,
+                }).ToList();
+            }
+            return collection;
+        }
+
+        /// <summary>
+        /// 根据接收人查询邮件列表
+        /// </summary>
+        public SiteMessageInnerMailListNew_Collection QueryUnReadInnerMailList_ByReceiverId(string userId, int pageIndex, int pageSize, int handleType)
+        {
+            SiteMessageInnerMailListNew_Collection collection = new SiteMessageInnerMailListNew_Collection();
+            collection.TotalCount = 0;
+            var query = from m in DB.CreateQuery<E_SiteMessage_InnerMail_List_new>()
+                        where (m.ReceiverId == userId ||
+                        m.ReceiverId == "U:" + userId)
+                        && m.HandleType == handleType
+                        select m;
+            if (query != null)
+            {
+                collection.TotalCount = query.Count();
+                collection.MailList = query.Skip(pageIndex * pageSize).Take(pageSize).ToList().Select(m => new SiteMessageInnerMailListNewInfo
+                {
+                    HandleType = (InnerMailHandleType)m.HandleType,
+                    MailId = m.MailId,
+                    MsgContent = m.MsgContent,
+                    ReadTime = m.ReadTime,
+                    ReceiverId = m.ReceiverId,
+                    SenderId = m.SenderId,
+                    SendTime = m.SendTime,
+                    Title = m.Title,
+                }).ToList();
+            }
+            return collection;
+        }
+
+        #region 阅读站内信
+        public bool IsMyInnerMail(string innerMailId, string userId)
+        {
+            //var count = manager.GetMailContainsReceiverCount(innerMailId, userId);
+            var totalcount = 0;
+            var query = DB.CreateQuery<E_SiteMessage_InnerMail_List_new>().Where(s => s.MailId == innerMailId && (s.ReceiverId == userId || s.ReceiverId == "U:" + userId));
+            if (query != null) totalcount = query.Count();
+            return (totalcount > 0);
+        }
+
+
+        public InnerMailInfo_Query QueryInnerMailDetailByIdAndRead(string innerMailId,string userId)
+        {
+            //1.增加阅读数
+            ReadInnerMail(innerMailId, userId);
+            //2.返回数据
+            var mail = QuerySiteMessageInnerMailListNewByMailId(innerMailId);
+            var info = new InnerMailInfo_Query
+            {
+                MailId = mail.MailId,
+                Title = mail.Title,
+                Content = mail.MsgContent,
+                SenderId = mail.SenderId,
+                SendTime = mail.SendTime,
+            };
+            return info;
+        }
+
+
+        public E_SiteMessage_InnerMail_List_new QuerySiteMessageInnerMailListNewByMailId(string mailId)
+        {
+            return DB.CreateQuery<E_SiteMessage_InnerMail_List_new>().FirstOrDefault(s => s.MailId == mailId);
+        }
+
+        /// <summary>
+        /// 阅读站内信
+        /// </summary>
+        public void ReadInnerMail(string innerMailId, string userId)
+        {
+            var mail = QuerySiteMessageInnerMailListNewByMailId(innerMailId);
+            if (mail != null)
+            {
+                mail.ReadTime = DateTime.Now;
+                mail.HandleType = (int)InnerMailHandleType.Readed;
+                UpdateSiteMessageInnerMailListNew(mail);
+            }
+        }
+
+        public void UpdateSiteMessageInnerMailListNew(E_SiteMessage_InnerMail_List_new entity)
+        {
+            DB.GetDal<E_SiteMessage_InnerMail_List_new>().Update(entity);
+        }
+        #endregion
+
+        #region 红包可使用比率
+        public string QueryRedBagUseConfig()
+        {
+            var list= DB.CreateQuery<E_A20150919_红包使用配置>().ToList();
+            var query = from l in list
+                        select string.Format("{0}_{1}_{2}", l.Id, l.GameCode, l.UsePercent.ToString("N2"));
+            return string.Join("|", query.ToArray());
+        }
+        #endregion
+
+        public ArticleInfo_QueryCollection QueryArticleList_YouHua(string[] category, string[] gameCode, int pageIndex, int pageSize)
+        {
+            ArticleInfo_QueryCollection collection = new ArticleInfo_QueryCollection();
+            // 通过数据库存储过程进行查询
+            var query = from a in DB.CreateQuery<E_SiteMessage_Article_List>()
+                        where category.Contains(a.Category)
+                        && gameCode.Contains(a.GameCode)
+                        orderby a.CreateTime descending
+                        select a;
+
+            collection.TotalCount = query.Count();
+            collection.ArticleList = query.Skip(pageIndex * pageSize).Take(pageSize).ToList().Select(a=> new ArticleInfo_Query
+            {
+                Category = a.Category.Trim(),
+                CreateTime = a.CreateTime,
+                CreateUserDisplayName = a.CreateUserDisplayName,
+                CreateUserKey = a.CreateUserKey,
+                DescContent = a.DescContent,
+                Description = a.Description,
+                GameCode = a.GameCode,
+                Id = a.Id,
+                IsRedTitle = a.IsRedTitle,
+                KeyWords = a.KeyWords,
+                NextId = a.NextId,
+                NextTitle = a.NextTitle,
+                PreId = a.PreId,
+                PreTitle = a.PreTitle,
+                ReadCount = a.ReadCount,
+                ShowIndex = a.ShowIndex,
+                Title = a.Title,
+                UpdateTime = a.UpdateTime,
+                UpdateUserDisplayName = a.UpdateUserDisplayName,
+                UpdateUserKey = a.UpdateUserKey,
+                NextStaticPath = a.NextStaticPath,
+                PreStaticPath = a.PreStaticPath,
+                StaticPath = a.StaticPath,
+            }).ToList();
+
+            return collection;
+            //var list = manager.QueryArticleList_YouHua(array, gameCodeArray, pageIndex, pageSize);
+            //    return list;
+        }
+
+        /// <summary>
+        /// 查询fxid分享推广
+        /// </summary>
+        public List<Blog_UserShareSpread> QueryBlog_UserShareSpreadList(string userId, int pageIndex, int pageSize, DateTime begin, DateTime end, out int userTotalCount, out decimal RedBagMoneyTotal)
+        {
+            var query = from r in DB.CreateQuery<E_Blog_UserShareSpread>()
+                        join u in DB.CreateQuery<C_User_Register>() on r.UserId equals u.UserId
+                        where (r.AgentId == userId)
+                        select new { r,u};
+            if (query != null && query.Count() > 0)
+            {
+                userTotalCount = query.Count();//总人数
+                RedBagMoneyTotal = query.Sum(g => g.r.giveRedBagMoney);//总红包金额
+                return query.OrderByDescending(p => p.r.UpdateTime).Skip(pageIndex * pageSize).Take(pageSize).ToList().Select(p=> new Blog_UserShareSpread
+                {
+                    Id = p.r.Id,
+                    UserId = p.r.UserId,
+                    userName = p.u.DisplayName,
+                    AgentId = p.r.AgentId,
+                    isGiveLotteryRedBag = p.r.isGiveLotteryRedBag,
+                    isGiveRegisterRedBag = p.r.isGiveRegisterRedBag,
+                    giveRedBagMoney = p.r.giveRedBagMoney,
+                    CreateTime = p.r.CreateTime,
+                    UpdateTime = p.r.UpdateTime
+                }).ToList();
+            }
+            userTotalCount = 0;
+            RedBagMoneyTotal = 0;
+            return new List<Blog_UserShareSpread>();
+        }
     }
 }

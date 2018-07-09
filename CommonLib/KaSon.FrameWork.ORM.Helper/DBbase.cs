@@ -28,12 +28,12 @@ namespace KaSon.FrameWork.ORM.Helper
            string path = Directory.GetCurrentDirectory();
             if (_DBType == "MySql")
             {
-                path = Path.Combine(Directory.GetCurrentDirectory(), @"SQL_JSON\SQLServer_SQL.json");
+                path = Path.Combine(Directory.GetCurrentDirectory(), @"SQL_JSON\MyServer_SQL.json");
                 jsonText = FileHelper.txtReader(path);
                
             }
             else {
-                path = Path.Combine(Directory.GetCurrentDirectory(), @"SQL_JSON\MyServer_SQL.json");
+                path = Path.Combine(Directory.GetCurrentDirectory(), @"SQL_JSON\SQLServer_SQL.json");
                 jsonText = FileHelper.txtReader(path );
             }
             // JObject jo = (JObject)JsonConvert.DeserializeObject(jsonText);'System.Data.SqlClient
@@ -104,7 +104,15 @@ namespace KaSon.FrameWork.ORM.Helper
                 {
                     lottertdataDB = new DbProvider();
                     //// db.Init("Default");
-                    lottertdataDB.Init("ECP_LottertData");
+                    //lottertdataDB.Init("ECP_LottertData");
+                    if (_DBType == "MySql")
+                    {
+                        lottertdataDB.Init("MySql.ECP_LottertData");
+                    }
+                    else
+                    {
+                        lottertdataDB.Init("SqlServer.ECP_LottertData");
+                    }
                 }
                 return lottertdataDB;
             }

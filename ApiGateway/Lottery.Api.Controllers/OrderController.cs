@@ -2,6 +2,7 @@
 using EntityModel.CoreModel;
 using EntityModel.Enum;
 using EntityModel.LotteryJsonInfo;
+using EntityModel.RequestModel;
 using Kason.Sg.Core.ProxyGenerator;
 using KaSon.FrameWork.Analyzer.AnalyzerFactory;
 using KaSon.FrameWork.Common;
@@ -20,7 +21,7 @@ using System.Threading.Tasks;
 
 namespace Lottery.Api.Controllers
 {
-    [Area("Order")]
+    [Area("api")]
     public class OrderController : BaseController
     {
         /// <summary>
@@ -110,15 +111,14 @@ namespace Lottery.Api.Controllers
                 string key = p.KeyWord;
                 if (string.IsNullOrEmpty(GameCode))
                     throw new Exception("彩种不能为空");
-                Dictionary<string, object> param = new Dictionary<string, object> {
-                { "gameCode", GameCode.ToUpper() },{"gameType", gameType.ToUpper() },{ "pageIndex", pageIndex},{ "pageSize", pageSize},{ "key", key}
-                };
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["Model"] =new  QueryBonusInfoListParam();
                 var list = new List<object>();
                 var _issuseNumber = string.Empty;
                 var _completeData = string.Empty;
                 
                 var bonusList = await _serviceProxyProvider.Invoke<BonusOrderInfoCollection>(param, "api/Order/QueryBonusInfoList");
-                if (bonusList != null && bonusList.BonusOrderList.Count > 0)
+                 if (bonusList != null && bonusList.BonusOrderList.Count > 0)
                 {
                     foreach (var item in bonusList.BonusOrderList)
                     {
