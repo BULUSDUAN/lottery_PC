@@ -42,4 +42,8 @@
     <Folder Include="LotteryJsonInfo_Operate\" />
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy /r /y    $(ProjectDir)Redis\redisSettings.json $(SolutionDir)Lottery.Service\bin\Debug\netcoreapp2.0\RedisConfig" />
+  </Target>
+
 </Project>

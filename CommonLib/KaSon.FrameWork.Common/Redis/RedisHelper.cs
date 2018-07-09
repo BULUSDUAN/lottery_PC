@@ -23,7 +23,8 @@ namespace KaSon.FrameWork.Common.Redis
         static RedisHelper() {
            string path = Path.Combine(Directory.GetCurrentDirectory(), @"RedisConfig\redisSettings.json");
            string jsonText = FileHelper.txtReader(path);
-            RdConfigInfo = (JObject)JsonConvert.DeserializeObject(jsonText);
+           RdConfigInfo = (JObject)JsonConvert.DeserializeObject(jsonText);
+            _redisConectStr = RdConfigInfo["RedisConnect"].ToString();
         }
         /// <summary>
         /// 是否启用Redis
@@ -99,7 +100,7 @@ namespace KaSon.FrameWork.Common.Redis
         }
 
         private static ConnectionMultiplexer _instance;
-        private static string _redisConectStr = RdConfigInfo["RedisConnect"].ToString();
+        private static string _redisConectStr = "";// RdConfigInfo["RedisConnect"].ToString();
         private static readonly object redisLock = new object();
         /// <summary>
         /// Redis实例
