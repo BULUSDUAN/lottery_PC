@@ -132,7 +132,7 @@ namespace KaSon.FrameWork.Common.Redis
                     //}
                     return _instance;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     return null;
                 }
