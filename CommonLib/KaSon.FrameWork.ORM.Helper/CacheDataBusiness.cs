@@ -20,7 +20,7 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             if (_coreConfigList.Count == 0)
                 _coreConfigList = QueryAllCoreConfig();
-            var config = DB.CreateQuery<C_Core_Config>().FirstOrDefault(p => p.ConfigKey == key);
+            var config = _coreConfigList.Where(p => p.ConfigKey == key).FirstOrDefault();
             if (config == null)
                 throw new Exception(string.Format("找不到配置项：{0}", key));
             return config;
@@ -31,7 +31,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// </summary>
         public string QueryCoreConfigFromRedis(string key)
         {
-            var config = DB.CreateQuery<C_Core_Config>().FirstOrDefault(p => p.ConfigKey == key);
+            var config = DB.CreateQuery<C_Core_Config>().Where(p => p.ConfigKey == key).FirstOrDefault();
             if (config == null)
                 throw new Exception(string.Format("找不到配置项：{0}", key));
             return config.ConfigValue;
@@ -56,8 +56,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
         private List<C_Core_Config> QueryAllCoreConfig()
         {
-            return (from c in DB.CreateQuery<C_Core_Config>()
-                    select c).ToList();
+            return DB.CreateQuery<C_Core_Config>().ToList();
         }
 
         private static List<APPConfigInfo> _AppConfigList = new List<APPConfigInfo>();

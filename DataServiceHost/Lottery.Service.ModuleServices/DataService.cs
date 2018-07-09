@@ -3,28 +3,41 @@ using EntityModel.Communication;
 using EntityModel.CoreModel;
 using EntityModel.Enum;
 using Kason.Sg.Core.CPlatform.Ioc;
+using KaSon.FrameWork.Common;
 using KaSon.FrameWork.Common.Redis;
 using KaSon.FrameWork.Common.Utilities;
 using KaSon.FrameWork.ORM.Helper;
 using KaSon.FrameWork.ORM.Helper.WinNumber;
+using Lottery.Service.IModuleServices;
+using Lottery.Service.ModuleBaseServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Lottery.Service.ModuleServices
 {
     [ModuleName("Data")]
-    public class DataService
+    public class DataService : KgBaseService, IDataService
     {
+
+        private readonly DataRepository _repository;
+        IKgLog log = null;
+        public DataService(DataRepository repository) : base()
+        {
+            this._repository = repository;
+            log = new Log4Log();
+        }
+
         #region 获取当前奖期信息
         /// <summary>
         /// 获取当前奖期信息
         /// </summary>
-        public Issuse_QueryInfo QueryCurrentIssuseInfo(string gameCode)
+        public Task<Issuse_QueryInfo> QueryCurrentIssuseInfo(string gameCode)
         {
             try
             {
-                return GameCacheBusiness.GetCurrentIssuserInfo(gameCode);
+                return Task.FromResult(GameCacheBusiness.GetCurrentIssuserInfo(gameCode));
             }
             catch (Exception ex)
             {
@@ -38,12 +51,12 @@ namespace Lottery.Service.ModuleServices
         /// 从Redis中查询当前奖期
         /// ByLocalStopTime
         /// </summary>
-        public LotteryIssuse_QueryInfo QueryCurrentIssuseByLocalStopTime(string gameCode)
+        public Task<LotteryIssuse_QueryInfo> QueryNextIssuseListByLocalStopTime(string gameCode)
         {
             var list = WebRedisHelper.QueryNextIssuseListByLocalStopTime(gameCode);
             if (list == null || list.Count <= 0)
                 return null;
-            return list.Where(p => p.LocalStopTime > DateTime.Now).OrderBy(p => p.OfficialStopTime).FirstOrDefault();
+            return Task.FromResult(list.Where(p => p.LocalStopTime > DateTime.Now).OrderBy(p => p.OfficialStopTime).FirstOrDefault());
         }
         #endregion
 
@@ -245,11 +258,11 @@ namespace Lottery.Service.ModuleServices
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public C_Core_Config QueryCoreConfigByKey(string key)
+        public Task<C_Core_Config> QueryCoreConfigByKey(string key)
         {
             try
             {
-                return new CacheDataBusiness().QueryCoreConfigByKey(key);
+                return Task.FromResult(new CacheDataBusiness().QueryCoreConfigByKey(key));
             }
             catch (Exception ex)
             {
