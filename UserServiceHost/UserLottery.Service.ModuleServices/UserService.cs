@@ -43,6 +43,7 @@ using KaSon.FrameWork.Common.Redis;
 using EntityModel.ExceptionExtend;
 using KaSon.FrameWork.Common.Sport;
 using EntityModel.Redis;
+using static KaSon.FrameWork.Common.PlugInCore.IPluginHandler;
 
 namespace UserLottery.Service.ModuleServices
 {
@@ -59,10 +60,8 @@ namespace UserLottery.Service.ModuleServices
         IKgLog log = null;
         public UserService(UserRepository repository) : base()
         {
-           
             this._repository = repository;
             log = new Log4Log();
-
         }
        
 

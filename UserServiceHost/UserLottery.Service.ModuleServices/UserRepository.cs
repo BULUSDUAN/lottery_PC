@@ -13,7 +13,7 @@ namespace UserLottery.Service.ModuleServices
 
         public UserRepository(ILoggerFactory LogFactory) {
             _LogFactory = LogFactory;
-            NLogger nl = (NLogger)_LogFactory.CreateLogger("abc");
+            //NLogger nl = (NLogger)_LogFactory.CreateLogger("User");
 
         }
     }
