@@ -119,4 +119,8 @@
     </None>
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy /r /y    $(SolutionDir)..\CommonLib\KaSon.FrameWork.Common\Redis\redisSettings.json $(TargetDir)RedisConfig" />
+  </Target>
+
 </Project>
