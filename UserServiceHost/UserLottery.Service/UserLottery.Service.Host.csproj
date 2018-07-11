@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\CommonLib\KaSon.FrameWork.PlugIn\KaSon.FrameWork.PlugIn.csproj" />
     <ProjectReference Include="..\UserLottery.Service.IModuleServices\UserLottery.Service.IModuleServices.csproj" />
     <ProjectReference Include="..\UserLottery.Service.Model\UserLottery.Service.Model.csproj" />
     <ProjectReference Include="..\UserLottery.Service.ModuleServices\UserLottery.Service.ModuleServices.csproj" />
@@ -77,9 +78,6 @@
     <Reference Include="Kason.Sg.Core.System">
       <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.System.dll</HintPath>
     </Reference>
-    <Reference Include="System.Data.SqlClient">
-      <HintPath>bin\Debug\netcoreapp2.0\System.Data.SqlClient.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>
@@ -117,5 +115,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy /r /y    $(SolutionDir)..\CommonLib\KaSon.FrameWork.Common\Redis\redisSettings.json $(TargetDir)RedisConfig" />
+  </Target>
 
 </Project>

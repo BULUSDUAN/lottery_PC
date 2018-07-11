@@ -94,6 +94,7 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
                         IsInner=p.IsInner,
                         IsAdmin=p.IsAdmin,
                         RoleType=(RoleType)p.RoleType,
+                        
                     });
                     var uQueryUserRole = DB.CreateQuery<C_Auth_UserRole>();
                     LoginUsers.User.RoleList = (from b in uQueryRoles

@@ -100,8 +100,10 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = JsonHelper.Decode(entity.Param);
-                string userToken = p.UserToken;
+
+
+                var p = JsonHelper.Decode(entity.Param);             
+                //param.userToken = p.UserToken;
                 string GameCode = p.GameCode;
                 string gameType = p.GameType;
                 int pageIndex = p.PageIndex;
@@ -110,7 +112,7 @@ namespace Lottery.Api.Controllers
                 if (string.IsNullOrEmpty(GameCode))
                     throw new Exception("彩种不能为空");
                 Dictionary<string, object> param = new Dictionary<string, object>();
-                param["Model"] = new QueryBonusInfoListParam() { gameCode = GameCode, gameType = gameType, pageIndex = pageIndex, pageSize = pageSize,UserToken=userToken };
+                param["Model"] =new  QueryBonusInfoListParam();
                 var list = new List<object>();
                 var _issuseNumber = string.Empty;
                 var _completeData = string.Empty;
@@ -2721,7 +2723,11 @@ namespace Lottery.Api.Controllers
             {
                 var p = JsonHelper.Decode(entity.Param);
                 string type = p.GameCode;
-                string term = p.IssuseNumber;                
+                string term = p.IssuseNumber;
+                Dictionary<string, object> param = new Dictionary<string, object>()
+                {
+
+                };
                 var obj = GetKaiJingInfo(_serviceProxyProvider, "Web", type, term);
                 return new LotteryServiceResponse
                 {
