@@ -91,7 +91,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                 ZJQ_SP = b.r.ZJQ_SP
             });
 
-            if (query != null)
+            if (queryResult != null)
             {
                 BJDCMatchResultInfo_Collection list = new BJDCMatchResultInfo_Collection();
                 list.ListInfo = queryResult.Skip(pageIndex * pageSize).Take(pageSize).ToList();
