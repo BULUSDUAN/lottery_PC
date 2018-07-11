@@ -38,9 +38,9 @@ namespace Lottery.Api.Controllers
             try
             {
                 Dictionary<string, object> param = new Dictionary<string, object>();
-                //var p = WebHelper.Decode(entity.Param);
-                string loginName = "18588515737";
-                string password = "123456";
+                var p = WebHelper.Decode(entity.Param);
+                string loginName = p.LoginName;
+                string password = p.Password;
                 if (string.IsNullOrEmpty(loginName))
                     throw new Exception("登录名不能为空");
                 if (string.IsNullOrEmpty(password))
@@ -48,7 +48,7 @@ namespace Lottery.Api.Controllers
                 //param.Add("model", new QueryUserParam());IPAddress
                 param["loginName"] = loginName;
                 param["password"] = password;
-                param["IPAddress"] = password;
+                param["IPAddress"] = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
 
                 var loginInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/user_login");
                 if (loginInfo == null)

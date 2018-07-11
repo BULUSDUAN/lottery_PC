@@ -22,6 +22,7 @@ using KaSon.FrameWork.Common.Algorithms;
 using EntityModel.PayModel;
 using KaSon.FrameWork.Common.Sport;
 using KaSon.FrameWork.Analyzer.AnalyzerFactory;
+using EntityModel.CoreModel;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
@@ -318,7 +319,7 @@ namespace KaSon.FrameWork.ORM.Helper
         //待测试
         //kason
          public static void ExecPlugin<T>(object inputParam)
-                  where T : class 
+                  where T : class, IPlugin
         {
             if (_enablePluginClass == null || _enablePluginClass.Count == 0)
                 _enablePluginClass = new PluginClassManager().QueryPluginClass(true);
@@ -328,8 +329,9 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                 try
                 {
+                    if (typeof(T).FullName != plugin.InterfaceName) continue;
 
-                   
+
                     if (typeof(T).FullName != plugin.InterfaceName) continue;
 
                     if (plugin.StartTime !=null && plugin.StartTime > DateTime.Now) continue;//未开始
@@ -346,13 +348,14 @@ namespace KaSon.FrameWork.ORM.Helper
                         var arr = plugin.ClassName.Split('.');
                         classname = arr[arr.Length - 1];
                     }
-                    var type = AssemblyRefHelper.GetType(classname, snamespace);
+                    //var type = AssemblyRefHelper.GetType(classname, snamespace);
+                    var type = Type.GetType(fullName);
                     if (type == null)
                     {
                         throw new ArgumentNullException("类型在当前域中不存在，或对应组件未加载：" + fullName);
                     }
-
-                    object instance = Activator.CreateInstance(type); //创建实例
+                    var instance = Type.GetType(fullName).GetConstructor(Type.EmptyTypes).Invoke(new object[0]) as T;
+                    // object instance = Activator.CreateInstance(type); //创建实例
                     //var i = Type.GetType(fullName).GetConstructor(Type.EmptyTypes).Invoke(new object[0]) as T;
                     if (instance == null)
                     {
@@ -362,8 +365,9 @@ namespace KaSon.FrameWork.ORM.Helper
                     //{
                     try
                     {
-                        type.GetMethod("ExecPlugin").Invoke(instance, new object[] { inputParam });
-                       // i.ExecPlugin(typeof(T).Name, inputParam);
+                        //type.GetMethod("ExecPlugin").Invoke(instance, new object[] { inputParam });
+                        instance.ExecPlugin(typeof(T).Name, inputParam);
+                        // i.ExecPlugin(typeof(T).Name, inputParam);
                     }
                     catch (AggregateException ex)
                     {
@@ -1072,11 +1076,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
 
      
-        public interface IPlugin
-        {
-            object ExecPlugin(string type, object inputParam);
-        }
-
+    
 
         public List<C_Activity_PluginClass> QueryPluginClass(bool isEnable)
         {
