@@ -218,7 +218,6 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                
                 var p = JsonHelper.Decode(entity.Param); 
                 string gameCode = p.GameCode;
                 string issuseNumber = p.IssuseNumber;
@@ -489,8 +488,6 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                
-
                 var p = JsonHelper.Decode(entity.Param);
                 string viewType = p.ViewType;
                 string userToken = p.UserToken;
@@ -504,10 +501,8 @@ namespace Lottery.Api.Controllers
                 startTime = startTime.AddDays(-days).Date;
                 int PageIndex = p.PageIndex??0;
                 int pageSize = p.PageSize ?? 1;
-                Dictionary<string, object> param = new Dictionary<string, object>
-                {
-                    { "viewType", viewType },{ "userToken", userToken },{ "startTime", startTime },{ "endTime", endTime },{ "pageIndex", PageIndex },{ "pageSize", pageSize }
-                };
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                var Model = new QueryUserFundDetailParam() {viewtype=viewType, userToken=userToken, fromDate= startTime, toDate=endTime, pageIndex= PageIndex, pageSize=pageSize };
                 if (string.IsNullOrEmpty(userToken))
                     throw new ArgumentException("您还未登陆");
                 //endTime = endTime.AddDays(1);
@@ -518,8 +513,9 @@ namespace Lottery.Api.Controllers
                     string accountType = p.AccoountType;
                     if (string.IsNullOrEmpty(accountType))
                         accountType = string.Empty;
-                    param.Add("accountType", accountType);
-                    param.Add("categoryList", "");
+                    Model.accountType = accountType;
+                    Model.categoryList = "";
+                    param["Model"] = Model;
                     var FundDetails = await _serviceProxyProvider.Invoke<UserFundDetailCollection>(param, "api/Order/QueryMyFundDetailList");
                     if (FundDetails != null && FundDetails.FundDetailList.Count > 0)
                     {
@@ -553,7 +549,8 @@ namespace Lottery.Api.Controllers
                 }
                 else if (viewType.ToUpper() == "CZJL")
                 {
-                    param.Add("statusList", "1");
+                    Model.statusList = "1";
+                    param["Model"] = Model;
                     var FillMoneyCollection = await _serviceProxyProvider.Invoke<FillMoneyQueryInfoCollection>(param, "api/Order/QueryFillMoneyList");
                     if (FillMoneyCollection != null && FillMoneyCollection.FillMoneyList.Count > 0)
                     {
@@ -600,8 +597,9 @@ namespace Lottery.Api.Controllers
                 }
                 else if (viewType.ToUpper() == "ZJJL")
                 {
-                    param.Add("accountType", "10");
-                    param.Add("categoryList", "奖金");
+                    Model.accountType = "10";
+                    Model.categoryList = "奖金";
+                    param["Model"] = Model;
                     var result =await _serviceProxyProvider.Invoke<UserFundDetailCollection>(param, "api/Order/QueryMyFundDetailList");
                     if (result != null && result.FundDetailList != null)
                     {
@@ -632,7 +630,8 @@ namespace Lottery.Api.Controllers
                 }
                 else if (viewType.ToUpper() == "TKJL")
                 {
-                    param.Add("WithdrawStatus", (int)WithdrawStatus.Success);
+                    Model.WithdrawStatus = (int)WithdrawStatus.Success;
+                    param["Model"] = Model;
                     var result = await _serviceProxyProvider.Invoke<Withdraw_QueryInfoCollection>(param, "api/Order/QueryMyWithdrawList");
                     if (result != null && result.WithdrawList != null)
                     {

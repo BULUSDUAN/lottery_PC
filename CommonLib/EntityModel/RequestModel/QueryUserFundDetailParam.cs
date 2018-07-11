@@ -16,5 +16,11 @@ namespace EntityModel.RequestModel
         public string categoryList { get; set; }
         public string userToken { get; set; }
         public string keyLine { get; set; }
+        public string viewtype { get; set; }
+        public string accountType { get; set; }
+        public string statusList { get; set; }
+        public int WithdrawStatus { get; set; }
+
+
     }
 }
