@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <WarningLevel>0</WarningLevel>
   </PropertyGroup>
 
@@ -131,8 +131,5 @@
     <Folder Include="RedisConfig\" />
   </ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy /r /y    $(SolutionDir)..\CommonLib\KaSon.FrameWork.Common\Redis\redisSettings.json $(TargetDir)RedisConfig" />
-  </Target>
 
 </Project>
