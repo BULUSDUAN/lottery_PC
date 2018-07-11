@@ -20,7 +20,7 @@ namespace OrderLottery.Service.ModuleServices
     public class OrderService :KgBaseService, IOrderService
     {
         IKgLog log = null;
-        readonly OrderQuery _order = null;
+        private OrderQuery _order = null;
         public OrderService()
         {
             _order = new OrderQuery();

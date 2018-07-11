@@ -98,6 +98,7 @@ namespace Lottery.ApiGateway
             services.AddLogging();
             var builder = new ContainerBuilder();
             builder.Populate(services);
+
             builder.AddMicroService(option =>
             {
                 option.AddClient();
