@@ -100,7 +100,6 @@ namespace EntityModel.CoreModel
     }
 
     [ProtoContract]
-    [Serializable]
     public class Issuse_QueryInfo
     {
 

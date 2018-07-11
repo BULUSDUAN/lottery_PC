@@ -1225,7 +1225,7 @@ namespace KaSon.FrameWork.Common.Sport
         public BettingHelper()
         {
             //http://res.iqucai.com/matchdata/jczq/match_list.json?_=1425952243703
-            ResUrl = ConfigHelper.ConfigInfo["ResSiteUrl"].ToString() ?? "http://10.0.3.6/";
+            ResUrl = string.IsNullOrEmpty(ConfigHelper.ConfigInfo["ResSiteUrl"].ToString())? "http://10.0.3.6:888/": ConfigHelper.ConfigInfo["ResSiteUrl"].ToString();
             //ConfigurationManager.AppSettings["ResSiteUrl"] 
         }
 

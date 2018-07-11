@@ -229,7 +229,10 @@ namespace KaSon.FrameWork.Common.Utilities {
         }
         public static string GetDomain()
         {
-            return ConfigHelper.ConfigInfo["Domain"].ToString();
+            var domain = "";
+            if(ConfigHelper.ConfigInfo!=null&& ConfigHelper.ConfigInfo["Domain"]!=null)
+                domain= ConfigHelper.ConfigInfo["Domain"].ToString();
+            return domain;
         }
         public static string GetFillMoneyAgentType(FillMoneyAgentType type)
         {

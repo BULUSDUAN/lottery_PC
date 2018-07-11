@@ -114,7 +114,7 @@ namespace Lottery.Api.Controllers
                 var result = new List<object>();
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 //var param = System.Web.Helpers.Json.Decode(entity.Param);
-                
+
                 foreach (var gameCode in gameCodeArray)
                 {
                     param.Clear();
@@ -252,7 +252,7 @@ namespace Lottery.Api.Controllers
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param.Add("bannerType", (int)bannerType);
                 param.Add("returnRecord", 10);
-                
+
                 var bannerList = await _serviceProxyProvider.Invoke<SiteMessageBannerInfo_Collection>(param, "api/Data/QuerySitemessageBanngerList_Web");
                 if (bannerList != null && bannerList.ListInfo.Count > 0)
                 {
@@ -306,7 +306,7 @@ namespace Lottery.Api.Controllers
                     Value = "",
                 });
             }
-        } 
+        }
         #endregion
 
         #region 银行信息(116)
@@ -390,7 +390,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                if(entity.Param==null) throw new ArgumentException("请求参数错误！");
+                if (entity.Param == null) throw new ArgumentException("请求参数错误！");
                 var p = WebHelper.Decode(entity.Param);
                 string gameCode = p.GameCode;
                 string gameType = p.GameType;
@@ -595,33 +595,33 @@ namespace Lottery.Api.Controllers
 
         public async Task<LotteryServiceResponse> QueryCQSSCCurrNumberOmission_2XZuX([FromServices]IServiceProxyProvider _serviceProxyProvider, IDictionary<string, object> param)
         {
-                param.Add("index", 1);
-                var result = await _serviceProxyProvider.Invoke<CQSSC_2X_ZuXZS>(param, "api/Data/QueryCQSSCCurrNumberOmission_2XZuX");
-                //var result = WCFClients.ChartClient.QueryCQSSCCurrNumberOmission_2XZuX(gameCode + "_" + gameType + "_" + issuseNumber, 1);
-                if (result == null)
-                    throw new Exception("未查询到遗漏数据！");
-                var list = new List<object>();
-                list.Add(new
-                {
-                    IssuseNumber = result.IssuseNumber,
-                    WinNumber = result.WinNumber,
-                    Red_0 = result.Red_0,
-                    Red_1 = result.Red_1,
-                    Red_2 = result.Red_2,
-                    Red_3 = result.Red_3,
-                    Red_4 = result.Red_4,
-                    Red_5 = result.Red_5,
-                    Red_6 = result.Red_6,
-                    Red_7 = result.Red_7,
-                    Red_8 = result.Red_8,
-                    Red_9 = result.Red_9,
-                });
-                return new LotteryServiceResponse
-                {
-                    Code = ResponseCode.成功,
-                    Message = "查询当前遗漏成功！",
-                    Value = list,
-                };
+            param.Add("index", 1);
+            var result = await _serviceProxyProvider.Invoke<CQSSC_2X_ZuXZS>(param, "api/Data/QueryCQSSCCurrNumberOmission_2XZuX");
+            //var result = WCFClients.ChartClient.QueryCQSSCCurrNumberOmission_2XZuX(gameCode + "_" + gameType + "_" + issuseNumber, 1);
+            if (result == null)
+                throw new Exception("未查询到遗漏数据！");
+            var list = new List<object>();
+            list.Add(new
+            {
+                IssuseNumber = result.IssuseNumber,
+                WinNumber = result.WinNumber,
+                Red_0 = result.Red_0,
+                Red_1 = result.Red_1,
+                Red_2 = result.Red_2,
+                Red_3 = result.Red_3,
+                Red_4 = result.Red_4,
+                Red_5 = result.Red_5,
+                Red_6 = result.Red_6,
+                Red_7 = result.Red_7,
+                Red_8 = result.Red_8,
+                Red_9 = result.Red_9,
+            });
+            return new LotteryServiceResponse
+            {
+                Code = ResponseCode.成功,
+                Message = "查询当前遗漏成功！",
+                Value = list,
+            };
         }
 
         #endregion
@@ -630,33 +630,33 @@ namespace Lottery.Api.Controllers
 
         public async Task<LotteryServiceResponse> QueryCQSSCCurrNumberOmission_ZX3_ZX6([FromServices]IServiceProxyProvider _serviceProxyProvider, IDictionary<string, object> param)
         {
-                param.Add("index", 1);
-                var result = await _serviceProxyProvider.Invoke<CQSSC_3X_ZuXZS>(param, "api/Data/QueryCQSSCCurrNumberOmission_ZX3_ZX6");
-                //var result = WCFClients.ChartClient.QueryCQSSCCurrNumberOmission_ZX3_ZX6(gameCode + "_" + gameType + "_" + issuseNumber, 1);
-                if (result == null)
-                    throw new Exception("未查询到遗漏数据！");
-                var list = new List<object>();
-                list.Add(new
-                {
-                    IssuseNumber = result.IssuseNumber,
-                    WinNumber = result.WinNumber,
-                    Red_0 = result.Red_0,
-                    Red_1 = result.Red_1,
-                    Red_2 = result.Red_2,
-                    Red_3 = result.Red_3,
-                    Red_4 = result.Red_4,
-                    Red_5 = result.Red_5,
-                    Red_6 = result.Red_6,
-                    Red_7 = result.Red_7,
-                    Red_8 = result.Red_8,
-                    Red_9 = result.Red_9,
-                });
-                return new LotteryServiceResponse
-                {
-                    Code = ResponseCode.成功,
-                    Message = "查询当前遗漏成功！",
-                    Value = list,
-                };
+            param.Add("index", 1);
+            var result = await _serviceProxyProvider.Invoke<CQSSC_3X_ZuXZS>(param, "api/Data/QueryCQSSCCurrNumberOmission_ZX3_ZX6");
+            //var result = WCFClients.ChartClient.QueryCQSSCCurrNumberOmission_ZX3_ZX6(gameCode + "_" + gameType + "_" + issuseNumber, 1);
+            if (result == null)
+                throw new Exception("未查询到遗漏数据！");
+            var list = new List<object>();
+            list.Add(new
+            {
+                IssuseNumber = result.IssuseNumber,
+                WinNumber = result.WinNumber,
+                Red_0 = result.Red_0,
+                Red_1 = result.Red_1,
+                Red_2 = result.Red_2,
+                Red_3 = result.Red_3,
+                Red_4 = result.Red_4,
+                Red_5 = result.Red_5,
+                Red_6 = result.Red_6,
+                Red_7 = result.Red_7,
+                Red_8 = result.Red_8,
+                Red_9 = result.Red_9,
+            });
+            return new LotteryServiceResponse
+            {
+                Code = ResponseCode.成功,
+                Message = "查询当前遗漏成功！",
+                Value = list,
+            };
         }
 
         #endregion
@@ -665,48 +665,48 @@ namespace Lottery.Api.Controllers
 
         public async Task<LotteryServiceResponse> QueryCQSSCCurrNumberOmission_DXDS([FromServices]IServiceProxyProvider _serviceProxyProvider, IDictionary<string, object> param)
         {
-                param.Add("index", 1);
-                var result = await _serviceProxyProvider.Invoke<CQSSC_DXDS>(param, "api/Data/QueryCQSSCCurrNumberOmission_DXDS");
-                //var result = WCFClients.ChartClient.QueryCQSSCCurrNumberOmission_DXDS(gameCode + "_" + gameType + "_" + issuseNumber, 1);
-                if (result == null)
-                    throw new Exception("未查询到遗漏数据！");
-                var list = new List<object>();
-                list.Add(new
-                {
-                    IssuseNumber = result.IssuseNumber,
-                    WinNumber = result.WinNumber,
-                    D_Red_S = result.D_Red_S,
-                    Dan_Red_S = result.Dan_Red_S,
-                    X_Red_S = result.X_Red_S,
-                    S_Red_S = result.S_Red_S,
-                    D_Red_G = result.D_Red_G,
-                    X_Red_G = result.X_Red_G,
-                    Dan_Red_G = result.Dan_Red_G,
-                    S_Red_G = result.S_Red_G,
+            param.Add("index", 1);
+            var result = await _serviceProxyProvider.Invoke<CQSSC_DXDS>(param, "api/Data/QueryCQSSCCurrNumberOmission_DXDS");
+            //var result = WCFClients.ChartClient.QueryCQSSCCurrNumberOmission_DXDS(gameCode + "_" + gameType + "_" + issuseNumber, 1);
+            if (result == null)
+                throw new Exception("未查询到遗漏数据！");
+            var list = new List<object>();
+            list.Add(new
+            {
+                IssuseNumber = result.IssuseNumber,
+                WinNumber = result.WinNumber,
+                D_Red_S = result.D_Red_S,
+                Dan_Red_S = result.Dan_Red_S,
+                X_Red_S = result.X_Red_S,
+                S_Red_S = result.S_Red_S,
+                D_Red_G = result.D_Red_G,
+                X_Red_G = result.X_Red_G,
+                Dan_Red_G = result.Dan_Red_G,
+                S_Red_G = result.S_Red_G,
 
-                    DD = result.DD,
-                    DX = result.DX,
-                    DDan = result.DDan,
-                    DS = result.DS,
-                    XD = result.XD,
-                    XX = result.XX,
-                    XDan = result.XDan,
-                    XS = result.XS,
-                    DanD = result.DanD,
-                    DanX = result.DanX,
-                    DanDan = result.DanDan,
-                    DanS = result.DanS,
-                    SD = result.SD,
-                    SX = result.SX,
-                    SDan = result.SDan,
-                    SS = result.SS,
-                });
-                return new LotteryServiceResponse
-                {
-                    Code = ResponseCode.成功,
-                    Message = "查询当前遗漏成功！",
-                    Value = list,
-                };
+                DD = result.DD,
+                DX = result.DX,
+                DDan = result.DDan,
+                DS = result.DS,
+                XD = result.XD,
+                XX = result.XX,
+                XDan = result.XDan,
+                XS = result.XS,
+                DanD = result.DanD,
+                DanX = result.DanX,
+                DanDan = result.DanDan,
+                DanS = result.DanS,
+                SD = result.SD,
+                SX = result.SX,
+                SDan = result.SDan,
+                SS = result.SS,
+            });
+            return new LotteryServiceResponse
+            {
+                Code = ResponseCode.成功,
+                Message = "查询当前遗漏成功！",
+                Value = list,
+            };
         }
 
         #endregion
@@ -715,73 +715,73 @@ namespace Lottery.Api.Controllers
 
         public async Task<LotteryServiceResponse> QueryCQSSCCurrNumberOmission_5XJBZS([FromServices]IServiceProxyProvider _serviceProxyProvider, IDictionary<string, object> param)
         {
-                param.Add("index", 1);
-                var result = await _serviceProxyProvider.Invoke<CQSSC_5X_JBZS>(param, "api/Data/QueryCQSSCCurrNumberOmission_5XJBZS");
-                //var result = WCFClients.ChartClient.QueryCQSSCCurrNumberOmission_5XJBZS(gameCode + "_" + gameType + "_" + issuseNumber, 1);
-                if (result == null)
-                    throw new Exception("未查询到遗漏数据！");
-                var list = new List<object>();
-                list.Add(new
-                {
-                    IssuseNumber = result.IssuseNumber,
-                    WinNumber = result.WinNumber,
-                    Red_W0 = result.Red_W0,
-                    Red_W1 = result.Red_W1,
-                    Red_W2 = result.Red_W2,
-                    Red_W3 = result.Red_W3,
-                    Red_W4 = result.Red_W4,
-                    Red_W5 = result.Red_W5,
-                    Red_W6 = result.Red_W6,
-                    Red_W7 = result.Red_W7,
-                    Red_W8 = result.Red_W8,
-                    Red_W9 = result.Red_W9,
-                    Red_Q0 = result.Red_Q0,
-                    Red_Q1 = result.Red_Q1,
-                    Red_Q2 = result.Red_Q2,
-                    Red_Q3 = result.Red_Q3,
-                    Red_Q4 = result.Red_Q4,
-                    Red_Q5 = result.Red_Q5,
-                    Red_Q6 = result.Red_Q6,
-                    Red_Q7 = result.Red_Q7,
-                    Red_Q8 = result.Red_Q8,
-                    Red_Q9 = result.Red_Q9,
-                    Red_B0 = result.Red_B0,
-                    Red_B1 = result.Red_B1,
-                    Red_B2 = result.Red_B2,
-                    Red_B3 = result.Red_B3,
-                    Red_B4 = result.Red_B4,
-                    Red_B5 = result.Red_B5,
-                    Red_B6 = result.Red_B6,
-                    Red_B7 = result.Red_B7,
-                    Red_B8 = result.Red_B8,
-                    Red_B9 = result.Red_B9,
-                    Red_S0 = result.Red_S0,
-                    Red_S1 = result.Red_S1,
-                    Red_S2 = result.Red_S2,
-                    Red_S3 = result.Red_S3,
-                    Red_S4 = result.Red_S4,
-                    Red_S5 = result.Red_S5,
-                    Red_S6 = result.Red_S6,
-                    Red_S7 = result.Red_S7,
-                    Red_S8 = result.Red_S8,
-                    Red_S9 = result.Red_S9,
-                    Red_G0 = result.Red_G0,
-                    Red_G1 = result.Red_G1,
-                    Red_G2 = result.Red_G2,
-                    Red_G3 = result.Red_G3,
-                    Red_G4 = result.Red_G4,
-                    Red_G5 = result.Red_G5,
-                    Red_G6 = result.Red_G6,
-                    Red_G7 = result.Red_G7,
-                    Red_G8 = result.Red_G8,
-                    Red_G9 = result.Red_G9,
-                });
-                return new LotteryServiceResponse
-                {
-                    Code = ResponseCode.成功,
-                    Message = "查询当前遗漏成功！",
-                    Value = list,
-                };
+            param.Add("index", 1);
+            var result = await _serviceProxyProvider.Invoke<CQSSC_5X_JBZS>(param, "api/Data/QueryCQSSCCurrNumberOmission_5XJBZS");
+            //var result = WCFClients.ChartClient.QueryCQSSCCurrNumberOmission_5XJBZS(gameCode + "_" + gameType + "_" + issuseNumber, 1);
+            if (result == null)
+                throw new Exception("未查询到遗漏数据！");
+            var list = new List<object>();
+            list.Add(new
+            {
+                IssuseNumber = result.IssuseNumber,
+                WinNumber = result.WinNumber,
+                Red_W0 = result.Red_W0,
+                Red_W1 = result.Red_W1,
+                Red_W2 = result.Red_W2,
+                Red_W3 = result.Red_W3,
+                Red_W4 = result.Red_W4,
+                Red_W5 = result.Red_W5,
+                Red_W6 = result.Red_W6,
+                Red_W7 = result.Red_W7,
+                Red_W8 = result.Red_W8,
+                Red_W9 = result.Red_W9,
+                Red_Q0 = result.Red_Q0,
+                Red_Q1 = result.Red_Q1,
+                Red_Q2 = result.Red_Q2,
+                Red_Q3 = result.Red_Q3,
+                Red_Q4 = result.Red_Q4,
+                Red_Q5 = result.Red_Q5,
+                Red_Q6 = result.Red_Q6,
+                Red_Q7 = result.Red_Q7,
+                Red_Q8 = result.Red_Q8,
+                Red_Q9 = result.Red_Q9,
+                Red_B0 = result.Red_B0,
+                Red_B1 = result.Red_B1,
+                Red_B2 = result.Red_B2,
+                Red_B3 = result.Red_B3,
+                Red_B4 = result.Red_B4,
+                Red_B5 = result.Red_B5,
+                Red_B6 = result.Red_B6,
+                Red_B7 = result.Red_B7,
+                Red_B8 = result.Red_B8,
+                Red_B9 = result.Red_B9,
+                Red_S0 = result.Red_S0,
+                Red_S1 = result.Red_S1,
+                Red_S2 = result.Red_S2,
+                Red_S3 = result.Red_S3,
+                Red_S4 = result.Red_S4,
+                Red_S5 = result.Red_S5,
+                Red_S6 = result.Red_S6,
+                Red_S7 = result.Red_S7,
+                Red_S8 = result.Red_S8,
+                Red_S9 = result.Red_S9,
+                Red_G0 = result.Red_G0,
+                Red_G1 = result.Red_G1,
+                Red_G2 = result.Red_G2,
+                Red_G3 = result.Red_G3,
+                Red_G4 = result.Red_G4,
+                Red_G5 = result.Red_G5,
+                Red_G6 = result.Red_G6,
+                Red_G7 = result.Red_G7,
+                Red_G8 = result.Red_G8,
+                Red_G9 = result.Red_G9,
+            });
+            return new LotteryServiceResponse
+            {
+                Code = ResponseCode.成功,
+                Message = "查询当前遗漏成功！",
+                Value = list,
+            };
         }
 
         #endregion
@@ -943,7 +943,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p =WebHelper.Decode(entity.Param);
+                var p = WebHelper.Decode(entity.Param);
                 //热点彩讯  FocusCMS
                 //赛事点评 Match_Comment
                 //彩票资讯 Lottery_GameCode
@@ -1323,9 +1323,9 @@ namespace Lottery.Api.Controllers
         /// </summary>
         private async Task<string> GuestUserToken([FromServices]IServiceProxyProvider _serviceProxyProvider)
         {
-            var result= await _serviceProxyProvider.Invoke<CommonActionResult>(new Dictionary<string,object>(), "api/Data/GetGuestToken");
+            var result = await _serviceProxyProvider.Invoke<CommonActionResult>(new Dictionary<string, object>(), "api/Data/GetGuestToken");
             return result.ReturnValue;
-                //return WCFClients.ExternalClient.GetGuestToken().ReturnValue;
+            //return WCFClients.ExternalClient.GetGuestToken().ReturnValue;
         }
         #endregion
 
@@ -1340,8 +1340,8 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param); 
-                string key = p.ConfigKey; 
+                var p = WebHelper.Decode(entity.Param);
+                string key = p.ConfigKey;
                 if (string.IsNullOrEmpty(key))
                     throw new AggregateException("传入参数错误");
                 Dictionary<string, object> param = new Dictionary<string, object>();
@@ -1354,7 +1354,7 @@ namespace Lottery.Api.Controllers
                         value = "true";
                         break;
                     default:
-                        var config= await _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/Data/QueryCoreConfigByKey");
+                        var config = await _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/Data/QueryCoreConfigByKey");
                         value = config.ConfigValue;
                         //value = WCFClients.GameClient.QueryCoreConfigByKey(key).ConfigValue;
                         break;
@@ -1610,7 +1610,7 @@ namespace Lottery.Api.Controllers
                 if (innerstatus == 3)
                 {
                     param.Add("UserToken", UserToken);
-                    collection= await _serviceProxyProvider.Invoke<SiteMessageInnerMailListNew_Collection>(param, "api/Data/QueryMyInnerMailList");
+                    collection = await _serviceProxyProvider.Invoke<SiteMessageInnerMailListNew_Collection>(param, "api/Data/QueryMyInnerMailList");
                     //collection = WCFClients.GameQueryClient.QueryMyInnerMailList(pageIndex, pageSize, UserToken);
                 }
                 else
@@ -1702,7 +1702,7 @@ namespace Lottery.Api.Controllers
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param.Add("innerMailId", mailId);
                 param.Add("userToken", userToken);
-                var mailContent= await _serviceProxyProvider.Invoke<InnerMailInfo_Query>(param, "api/Data/ReadInnerMail");
+                var mailContent = await _serviceProxyProvider.Invoke<InnerMailInfo_Query>(param, "api/Data/ReadInnerMail");
                 //var mailContent = WCFClients.GameQueryClient.ReadInnerMail(mailId, userToken);
                 if (mailContent != null)
                 {
@@ -2196,7 +2196,7 @@ namespace Lottery.Api.Controllers
                 string UserId = p.UserId;
                 if (string.IsNullOrEmpty(UserId))
                     throw new ArgumentException("UserId不能为空");
-                
+
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param.Add("agentId", UserId);
                 param.Add("startTime", DateTime.Now);
@@ -2465,9 +2465,9 @@ namespace Lottery.Api.Controllers
             {
                 var p = WebHelper.Decode(entity.Param);
                 //string userToken = p.UserToken;
-                string gameCode = p.GameCode==null?null:((string)p.GameCode).ToUpper();
-                string gameType = p.GameType == null ? null : ((string)p.GameType.ToUpper());
-                string issuseNumber = p.IssuseNumber == null ? null : ((string)p.IssuseNumber.ToUpper());
+                string gameCode = p.GameCode == null ? null : ((string)p.GameCode).ToUpper();
+                string gameType = p.GameType == null ? null : ((string)p.GameType).ToUpper();
+                string issuseNumber = p.IssuseNumber == null ? null : ((string)p.IssuseNumber).ToUpper();
                 string newVerType = p.NewVerType;
 
                 if (string.IsNullOrEmpty(gameCode))
@@ -2555,8 +2555,8 @@ namespace Lottery.Api.Controllers
             try
             {
                 var p = WebHelper.Decode(entity.Param);
-                string id = p.GameCode;
-                string type = p.GameType;
+                string id = p.GameCode == null ? null : ((string)p.GameCode).ToUpper();
+                string type = p.GameType == null ? null : ((string)p.GameType).ToUpper();
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param.Add("gameCode", id);
                 param.Add("gameType", type);
@@ -2776,7 +2776,7 @@ namespace Lottery.Api.Controllers
             try
             {
                 var list = new List<object>();
-                var result= await _serviceProxyProvider.Invoke<BJDCIssuseInfo>(null, "api/Data/QueryBJDCCurrentIssuseInfo");
+                var result = await _serviceProxyProvider.Invoke<BJDCIssuseInfo>(null, "api/Data/QueryBJDCCurrentIssuseInfo");
                 //var result = WCFClients.GameIssuseClient.QueryBJDCCurrentIssuseInfo();
                 if (result != null)
                 {
