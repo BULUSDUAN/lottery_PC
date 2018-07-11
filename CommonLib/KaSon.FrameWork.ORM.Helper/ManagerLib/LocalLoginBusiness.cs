@@ -292,7 +292,7 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
         public C_User_Balance QueryUserBalanceInfo(string userId)
         {
            
-            return DB.CreateQuery<C_User_Balance>().FirstOrDefault(p => p.UserId == userId);
+            return DB.CreateQuery<C_User_Balance>().Where(p => p.UserId == userId).FirstOrDefault();
       
         }
 
@@ -303,7 +303,7 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
         /// <returns></returns>
         public C_BankCard BankCardById(string userId) {
 
-            return DB.CreateQuery<C_BankCard>().FirstOrDefault(p => p.UserId == userId);
+            return DB.CreateQuery<C_BankCard>().Where(p => p.UserId == userId).FirstOrDefault();
         }
 
         public  int GetUnreadMailCountByUser(string userId) {
@@ -420,7 +420,7 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
         public C_User_Balance SelectUserBalance(string userId)
         {
 
-            return DB.CreateQuery<C_User_Balance>().FirstOrDefault(p => p.UserId == userId);
+            return DB.CreateQuery<C_User_Balance>().Where(p => p.UserId == userId).FirstOrDefault();
         }
 
 

@@ -15,7 +15,7 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
         /// <returns></returns>
         public E_Authentication_Mobile GetUserMobile(string userId)
         {
-            return DB.CreateQuery<E_Authentication_Mobile>().FirstOrDefault(p => p.UserId == userId);
+            return DB.CreateQuery<E_Authentication_Mobile>().Where(p => p.UserId == userId).FirstOrDefault();
         }
 
         public void UpdateUserMobile(E_Authentication_Mobile entity)

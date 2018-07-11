@@ -437,7 +437,7 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
 
             var method = new System.Diagnostics.StackFrame(1).GetMethod();
             var currentFullName = string.Format("{0}.{1}", method.ReflectedType.FullName, method.Name);
-            var config = _allMethodFunctionList.FirstOrDefault(p => p.MethodFullName == currentFullName);
+            var config = _allMethodFunctionList.Where(p => p.MethodFullName == currentFullName).FirstOrDefault();
             if (config == null)
                 throw new Exception(string.Format("没有配置方法 {0} 的调用权限数据", currentFullName));
 

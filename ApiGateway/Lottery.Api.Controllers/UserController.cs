@@ -397,7 +397,7 @@ namespace Lottery.Api.Controllers
                     Dictionary<string, object> loginparam = new Dictionary<string, object>();
                     loginparam["loginName"] = userInfo.LoginName;
                     loginparam["password"] = userInfo.Password;
-                    loginparam["IPAddress"] = userInfo.Password;
+                    loginparam["IPAddress"] = userInfo.RegisterIp;
                     var loginInfo = await _serviceProxyProvider.Invoke<LoginInfo>(loginparam, "api/user/user_login");
                     if (loginInfo.IsSuccess)
                     {

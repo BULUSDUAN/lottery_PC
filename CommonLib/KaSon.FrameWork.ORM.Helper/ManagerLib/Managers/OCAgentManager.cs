@@ -52,7 +52,7 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
         public P_OCAgent_Rebate QueryOCAgentDefaultRebateByRebateType(string userId, string gameCode, string gameType, int rebateType)
         {
            
-            return DB.CreateQuery<P_OCAgent_Rebate>().OrderByDescending(p => p.CreateTime).FirstOrDefault(p => p.UserId == userId && p.GameCode == gameCode && p.GameType == gameType && p.RebateType == rebateType);
+            return DB.CreateQuery<P_OCAgent_Rebate>().OrderByDescending(p => p.CreateTime).Where(p => p.UserId == userId && p.GameCode == gameCode && p.GameType == gameType && p.RebateType == rebateType).FirstOrDefault();
         }
 
     }

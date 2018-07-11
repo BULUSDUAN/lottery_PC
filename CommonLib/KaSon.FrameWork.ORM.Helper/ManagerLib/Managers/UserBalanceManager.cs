@@ -76,12 +76,12 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
         public C_User_Balance QueryUserBalance(string userId)
         {
 
-            return DB.CreateQuery<C_User_Balance>().FirstOrDefault(p => p.UserId == userId);
+            return DB.CreateQuery<C_User_Balance>().Where(p => p.UserId == userId).FirstOrDefault();
 
         }
         public C_User_Register LoadUserRegister(string userId)
         {
-            return DB.CreateQuery<C_User_Register>().FirstOrDefault(p => p.UserId == userId);
+            return DB.CreateQuery<C_User_Register>().Where(p => p.UserId == userId).FirstOrDefault();
             //return this.LoadByKey<C_User_Register>(userId);
         }
         public void UpdateUserBalance(C_User_Balance entity)
@@ -112,7 +112,7 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
         public C_User_Register QueryUserRegister(string userId)
         {
             
-            return DB.CreateQuery<C_User_Register>().FirstOrDefault(u => u.UserId == userId);
+            return DB.CreateQuery<C_User_Register>().Where(p => p.UserId == userId).FirstOrDefault();
         }
 
         public void UpdateUserRegister(C_User_Register user)
