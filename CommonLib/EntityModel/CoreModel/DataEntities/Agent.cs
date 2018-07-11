@@ -1,4 +1,5 @@
 ﻿using EntityModel.Enum;
+using ProtoBuf;
 using System;
 using System.Collections.Generic;
 
@@ -571,23 +572,30 @@ namespace EntityModel.CoreModel
     // <summary>
     /// fxid 
     /// </summary>
+    /// 
+    [ProtoContract]
+    [Serializable]
     public class ShareSpreadCollection
     {
         public ShareSpreadCollection()
         {
             ShareSpreadList = new List<BlogUserShareSpread>();
         }
-
+        [ProtoMember(1)]
         public IList<BlogUserShareSpread> ShareSpreadList { get; set; }
 
         /// <summary>
         /// 总红包
         /// </summary>
+        /// 
+        [ProtoMember(2)]
         public decimal RedBagMoneyTotal { get; set; }
 
         /// <summary>
         /// 总人数
         /// </summary>
+        /// 
+        [ProtoMember(3)]
         public int UserTotal { get; set; }
     }
     /// <summary>

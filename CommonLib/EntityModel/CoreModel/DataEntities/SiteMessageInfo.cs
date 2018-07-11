@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Collections;
 using EntityModel.Enum;
+using ProtoBuf;
 
 namespace EntityModel.CoreModel
 {
@@ -56,39 +57,58 @@ namespace EntityModel.CoreModel
     /// <summary>
     /// 查询站内信的对象
     /// </summary>
+    /// 
+    [ProtoContract]
+    [Serializable]
     public class InnerMailInfo_Query
     {
         /// <summary>
         /// 邮件编号
         /// </summary>
+        /// 
+        [ProtoMember(1)]
         public string MailId { get; set; }
         /// <summary>
         /// 邮件标题
         /// </summary>
+        /// 
+        [ProtoMember(2)]
         public string Title { get; set; }
         /// <summary>
         /// 邮件内容
         /// </summary>
+        /// 
+        [ProtoMember(3)]
         public string Content { get; set; }
         /// <summary>
         /// 发送时间
         /// </summary>
+        /// 
+        [ProtoMember(4)]
         public DateTime SendTime { get; set; }
         /// <summary>
         /// 发送时间
         /// </summary>
+        /// 
+        [ProtoMember(5)]
         public DateTime ActionTime { get; set; }
         /// <summary>
         /// 发送人名称
         /// </summary>
+        /// 
+        [ProtoMember(6)]
         public string SenderId { get; set; }
         /// <summary>
         /// 更新时间
         /// </summary>
+        /// 
+        [ProtoMember(7)]
         public DateTime UpdateTime { get; set; }
         /// <summary>
         /// 处理类型
         /// </summary>
+        /// 
+        [ProtoMember(8)]
         public InnerMailHandleType HandleType { get; set; }
 
         internal void LoadArray(object[] dataArray)

@@ -67,11 +67,11 @@ namespace Lottery.Service.ModuleServices
         /// <param name="bannerType"></param>
         /// <param name="returnRecord"></param>
         /// <returns></returns>
-        public SiteMessageBannerInfo_Collection QuerySitemessageBanngerList_Web(BannerType bannerType, int returnRecord = 10)
+        public Task<SiteMessageBannerInfo_Collection> QuerySitemessageBanngerList_Web(int bannerType, int returnRecord = 10)
         {
             try
             {
-                return new DataQuery().QuerySitemessageBanngerList_Web(bannerType, returnRecord);
+                return Task.FromResult(new DataQuery().QuerySitemessageBanngerList_Web(bannerType, returnRecord));
             }
             catch (Exception ex)
             {
@@ -85,14 +85,14 @@ namespace Lottery.Service.ModuleServices
         /// 查询文章列表
         /// todo:后台权限
         /// </summary>
-        public ArticleInfo_QueryCollection QueryArticleList(string key, string gameCode, string category, int pageIndex, int pageSize, string userToken)
+        public Task<ArticleInfo_QueryCollection> QueryArticleList(string key, string gameCode, string category, int pageIndex, int pageSize, string userToken)
         {
             // 验证用户身份及权限
             try
             {
                 var userId = new UserAuthentication().ValidateUserAuthentication(userToken);
                 var model = new DataQuery().QueryArticleList(key, gameCode, category, pageIndex, pageSize);
-                return model;
+                return Task.FromResult(model);
             }
             catch (Exception ex)
             {
@@ -108,7 +108,7 @@ namespace Lottery.Service.ModuleServices
         /// <param name="articleId"></param>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public ArticleInfo_Query QueryArticleById_Web(string articleId)
+        public Task<ArticleInfo_Query> QueryArticleById_Web(string articleId)
         {
             try
             {
@@ -122,7 +122,7 @@ namespace Lottery.Service.ModuleServices
                 query.UpdateArticle(entity);
                 var info = new ArticleInfo_Query();
                 ObjectConvert.ConverEntityToInfo<E_SiteMessage_Article_List, ArticleInfo_Query>(entity, ref info);
-                return info;
+                return Task.FromResult(info);
             }
             catch (Exception ex)
             {
@@ -140,13 +140,13 @@ namespace Lottery.Service.ModuleServices
         /// <param name="pageSize"></param>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public BulletinInfo_Collection QueryDisplayBulletinCollection(BulletinAgent agent, int pageIndex, int pageSize, string userToken)
+        public Task<BulletinInfo_Collection> QueryDisplayBulletinCollection(int agent, int pageIndex, int pageSize, string userToken)
         {
             try
             {
                 // 验证用户身份及权限
                 var userId = new UserAuthentication().ValidateUserAuthentication(userToken);
-                return new DataQuery().QueryDisplayBulletins(agent, pageIndex, pageSize);
+                return Task.FromResult(new DataQuery().QueryDisplayBulletins(agent, pageIndex, pageSize));
             }
             catch (Exception ex)
             {
@@ -162,11 +162,11 @@ namespace Lottery.Service.ModuleServices
         /// <param name="userIdea"></param>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public CommonActionResult SubmitUserIdea(UserIdeaInfo_Add userIdea)
+        public Task<CommonActionResult> SubmitUserIdea(UserIdeaInfo_Add userIdea)
         {
             var query = new DataQuery();
             query.SubmitUserIdea(userIdea);
-            return new CommonActionResult(true, "提交建议成功");
+            return Task.FromResult(new CommonActionResult(true, "提交建议成功"));
         }
         #endregion
 
@@ -174,11 +174,11 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 查询活动列表查询
         /// </summary>
-        public ActivityListInfoCollection QueryActivInfoList(int pageIndex, int pageSize)
+        public Task<ActivityListInfoCollection> QueryActivInfoList(int pageIndex, int pageSize)
         {
             try
             {
-                return new DataQuery().QueryActivInfoList(pageIndex, pageSize);
+                return Task.FromResult(new DataQuery().QueryActivInfoList(pageIndex, pageSize));
             }
             catch (Exception ex)
             {
@@ -194,11 +194,11 @@ namespace Lottery.Service.ModuleServices
         /// <param name="gameCode"></param>
         /// <param name="gameType"></param>
         /// <returns></returns>
-        public Issuse_QueryInfo QueryCurretNewIssuseInfo(string gameCode, string gameType)
+        public Task<Issuse_QueryInfo> QueryCurretNewIssuseInfo(string gameCode, string gameType)
         {
             try
             {
-                return GameServiceCache.QueryCurretNewIssuseInfo(gameCode, gameType);
+                return Task.FromResult(GameServiceCache.QueryCurretNewIssuseInfo(gameCode, gameType));
             }
             catch (Exception ex)
             {
@@ -210,11 +210,11 @@ namespace Lottery.Service.ModuleServices
         /// 查询北京单场最新期号
         /// </summary>
         /// <returns></returns>
-        public BJDCIssuseInfo QueryBJDCCurrentIssuseInfo()
+        public Task<BJDCIssuseInfo> QueryBJDCCurrentIssuseInfo()
         {
             try
             {
-                return new DataQuery().QueryBJDCCurrentIssuseInfo();
+                return Task.FromResult(new DataQuery().QueryBJDCCurrentIssuseInfo());
             }
             catch (Exception ex)
             {
@@ -230,7 +230,7 @@ namespace Lottery.Service.ModuleServices
         /// <param name="bulletinId"></param>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public BulletinInfo_Query QueryDisplayBulletinDetailById(long bulletinId)
+        public Task<BulletinInfo_Query> QueryDisplayBulletinDetailById(long bulletinId)
         {
             var info = new DataQuery().QueryBulletinDetailById(bulletinId);
             if (info != null)
@@ -248,7 +248,7 @@ namespace Lottery.Service.ModuleServices
                     throw new Exception(string.Format("指定公告已经于{0:yyyy-MM-dd}过期", info.EffectiveTo));
                 }
             }
-            return info;
+            return Task.FromResult(info);
         }
         #endregion
 
@@ -276,11 +276,11 @@ namespace Lottery.Service.ModuleServices
         /// 根据代理商编码查询APP配置
         /// </summary>
         /// <returns></returns>
-        public APPConfigInfo QueryAppConfigByAgentId(string appAgentId)
+        public Task<APPConfigInfo> QueryAppConfigByAgentId(string appAgentId)
         {
             try
             {
-                return new CacheDataBusiness().QueryAppConfigByAgentId(appAgentId);
+                return Task.FromResult(new CacheDataBusiness().QueryAppConfigByAgentId(appAgentId));
             }
             catch (Exception ex)
             {
@@ -294,11 +294,11 @@ namespace Lottery.Service.ModuleServices
         /// 根据UrlType查询所有APP嵌套配置
         /// </summary>
         /// <returns></returns>
-        public NestedUrlConfig_Collection QueryNestedUrlConfigListByUrlType(int urlType)
+        public Task<NestedUrlConfig_Collection> QueryNestedUrlConfigListByUrlType(int urlType)
         {
             try
             {
-                return new CacheDataBusiness().QueryNestedUrlConfigListByUrlType(urlType);
+                return Task.FromResult(new CacheDataBusiness().QueryNestedUrlConfigListByUrlType(urlType));
             }
             catch (Exception ex)
             {
@@ -311,13 +311,13 @@ namespace Lottery.Service.ModuleServices
         ///// <summary>
         ///// 查询我的站内信
         ///// </summary>
-        public SiteMessageInnerMailListNew_Collection QueryMyInnerMailList(int pageIndex, int pageSize, string userToken)
+        public Task<SiteMessageInnerMailListNew_Collection> QueryMyInnerMailList(int pageIndex, int pageSize, string userToken)
         {
             // 验证用户身份及权限
             try
             {
                 var userId = new UserAuthentication().ValidateUserAuthentication(userToken);
-                return new DataQuery().QueryInnerMailListByReceiver(userId, pageIndex, pageSize);
+                return Task.FromResult(new DataQuery().QueryInnerMailListByReceiver(userId, pageIndex, pageSize));
             }
             catch (Exception ex)
             {
@@ -328,11 +328,11 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 查询已读和未读站内信
         /// </summary>
-        public SiteMessageInnerMailListNew_Collection QueryUnReadInnerMailListByReceiver(string userId, int pageIndex, int pageSize, int handleType)
+        public Task<SiteMessageInnerMailListNew_Collection> QueryUnReadInnerMailListByReceiver(string userId, int pageIndex, int pageSize, int handleType)
         {
             try
             {
-                return new DataQuery().QueryUnReadInnerMailList_ByReceiverId(userId, pageIndex, pageSize, handleType);
+                return Task.FromResult(new DataQuery().QueryUnReadInnerMailList_ByReceiverId(userId, pageIndex, pageSize, handleType));
             }
             catch (Exception ex)
             {
@@ -345,7 +345,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 阅读站内信
         /// </summary>
-        public InnerMailInfo_Query ReadInnerMail(string innerMailId, string userToken)
+        public Task<InnerMailInfo_Query> ReadInnerMail(string innerMailId, string userToken)
         {
             // 验证用户身份及权限
             try
@@ -357,7 +357,7 @@ namespace Lottery.Service.ModuleServices
                     throw new SiteMessageException(string.Format("此站内信不属于指定用户。站内信：{0}；用户：{1}。", innerMailId, userId));
                 }
                 var info = dataQuery.QueryInnerMailDetailByIdAndRead(innerMailId, userId);
-                return info;
+                return Task.FromResult(info);
             }
             catch (Exception ex)
             {
@@ -386,11 +386,11 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 查询红包使用规则
         /// </summary>
-        public string QueryRedBagUseConfig()
+        public Task<string> QueryRedBagUseConfig()
         {
             try
             {
-                return new DataQuery().QueryRedBagUseConfig();
+                return Task.FromResult(new DataQuery().QueryRedBagUseConfig());
             }
             catch (Exception ex)
             {
@@ -405,7 +405,7 @@ namespace Lottery.Service.ModuleServices
         /// 查询文章列表
         /// todo:后台权限
         /// </summary>
-        public ArticleInfo_QueryCollection QueryArticleList_YouHua(string category, string gameCode, int pageIndex, int pageSize)
+        public Task<ArticleInfo_QueryCollection> QueryArticleList_YouHua(string category, string gameCode, int pageIndex, int pageSize)
         {
             try
             {
@@ -425,7 +425,7 @@ namespace Lottery.Service.ModuleServices
                     if (!_articleCollection.ContainsKey(cacheKey))
                         _articleCollection.Add(cacheKey, result);
                 }
-                return result;
+                return Task.FromResult(result);
             }
             catch (Exception ex)
             {
@@ -438,7 +438,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 查询fxid活动下所有邀请
         /// </summary>
-        public ShareSpreadCollection QueryShareSpreadUsers(string agentId, DateTime startTime, DateTime endTime, int pageIndex, int pageSize)
+        public Task<ShareSpreadCollection> QueryShareSpreadUsers(string agentId, DateTime startTime, DateTime endTime, int pageIndex, int pageSize)
         {
             try
             {
@@ -466,7 +466,7 @@ namespace Lottery.Service.ModuleServices
                         });
                     }
                 }
-                return shareList;
+                return Task.FromResult(shareList);
             }
             catch (Exception ex)
             {
@@ -483,11 +483,11 @@ namespace Lottery.Service.ModuleServices
         /// <param name="key"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public CQSSC_1X_ZS QueryCQSSCCurrNumberOmission_1XDX(string key, int index)
+        public Task<CQSSC_1X_ZS> QueryCQSSCCurrNumberOmission_1XDX(string key, int index)
         {
             try
             {
-                return new LotteryDataBusiness_CQSSC().QueryCQSSCCurrNumberOmission_1XDX(key, index);
+                return Task.FromResult(new LotteryDataBusiness_CQSSC().QueryCQSSCCurrNumberOmission_1XDX(key, index));
             }
             catch (Exception ex)
             {
@@ -500,11 +500,11 @@ namespace Lottery.Service.ModuleServices
         /// <param name="key"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public CQSSC_2X_ZXZS QueryCQSSCCurrNumberOmission_2XZX(string key, int index)
+        public Task<CQSSC_2X_ZXZS> QueryCQSSCCurrNumberOmission_2XZX(string key, int index)
         {
             try
             {
-                return new LotteryDataBusiness_CQSSC().QueryCQSSCCurrNumberOmission_2XZX(key, index);
+                return Task.FromResult(new LotteryDataBusiness_CQSSC().QueryCQSSCCurrNumberOmission_2XZX(key, index));
             }
             catch (Exception ex)
             {
@@ -517,11 +517,11 @@ namespace Lottery.Service.ModuleServices
         /// <param name="key"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public CQSSC_3X_ZXZS QueryCQSSCCurrNumberOmission_3XZX(string key, int index)
+        public Task<CQSSC_3X_ZXZS> QueryCQSSCCurrNumberOmission_3XZX(string key, int index)
         {
             try
             {
-                return new LotteryDataBusiness_CQSSC().QueryCQSSCCurrNumberOmission_3XZX(key, index);
+                return Task.FromResult(new LotteryDataBusiness_CQSSC().QueryCQSSCCurrNumberOmission_3XZX(key, index));
             }
             catch (Exception ex)
             {
@@ -534,11 +534,11 @@ namespace Lottery.Service.ModuleServices
         /// <param name="key"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public CQSSC_2X_ZuXZS QueryCQSSCCurrNumberOmission_2XZuX(string key, int index)
+        public Task<CQSSC_2X_ZuXZS> QueryCQSSCCurrNumberOmission_2XZuX(string key, int index)
         {
             try
             {
-                return new LotteryDataBusiness_CQSSC().QueryCQSSCCurrNumberOmission_2XZuX(key, index);
+                return Task.FromResult(new LotteryDataBusiness_CQSSC().QueryCQSSCCurrNumberOmission_2XZuX(key, index));
             }
             catch (Exception ex)
             {
@@ -551,11 +551,11 @@ namespace Lottery.Service.ModuleServices
         /// <param name="key"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public CQSSC_3X_ZuXZS QueryCQSSCCurrNumberOmission_ZX3_ZX6(string key, int index)
+        public Task<CQSSC_3X_ZuXZS> QueryCQSSCCurrNumberOmission_ZX3_ZX6(string key, int index)
         {
             try
             {
-                return new LotteryDataBusiness_CQSSC().QueryCQSSCCurrNumberOmission_ZX3_ZX6(key, index);
+                return Task.FromResult(new LotteryDataBusiness_CQSSC().QueryCQSSCCurrNumberOmission_ZX3_ZX6(key, index));
             }
             catch (Exception ex)
             {
@@ -566,11 +566,11 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 查询重庆时时彩当前遗漏_大小单双
         /// </summary>
-        public CQSSC_DXDS QueryCQSSCCurrNumberOmission_DXDS(string key, int index)
+        public Task<CQSSC_DXDS> QueryCQSSCCurrNumberOmission_DXDS(string key, int index)
         {
             try
             {
-                return new LotteryDataBusiness_CQSSC().QueryCQSSCCurrNumberOmission_DXDS(key, index);
+                return Task.FromResult(new LotteryDataBusiness_CQSSC().QueryCQSSCCurrNumberOmission_DXDS(key, index));
             }
             catch (Exception ex)
             {
@@ -580,11 +580,11 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 查询重庆时时彩当前遗漏_五星基本走势
         /// </summary>
-        public CQSSC_5X_JBZS QueryCQSSCCurrNumberOmission_5XJBZS(string key, int index)
+        public Task<CQSSC_5X_JBZS> QueryCQSSCCurrNumberOmission_5XJBZS(string key, int index)
         {
             try
             {
-                return new LotteryDataBusiness_CQSSC().QueryCQSSCCurrNumberOmission_5XJBZS(key, index);
+                return Task.FromResult(new LotteryDataBusiness_CQSSC().QueryCQSSCCurrNumberOmission_5XJBZS(key, index));
             }
             catch (Exception ex)
             {
@@ -592,6 +592,16 @@ namespace Lottery.Service.ModuleServices
             }
         }
 
+        #endregion
+
+
+        #region 获取游客token
+        public Task<CommonActionResult> GetGuestToken()
+        {
+            var authBiz = new UserAuthentication();
+            var token = authBiz.GetGuestToken();
+            return Task.FromResult(new CommonActionResult(true, "获取匿名用户口令成功") { ReturnValue = token });
+        } 
         #endregion
 
     }

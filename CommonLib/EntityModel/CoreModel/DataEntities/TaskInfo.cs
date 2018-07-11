@@ -1,4 +1,5 @@
 ﻿using EntityModel.Enum;
+using ProtoBuf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -165,14 +166,17 @@ namespace EntityModel.CoreModel
         /// </summary>
         public DateTime CreateTime { get; set; }
     }
-    
+    [ProtoContract]
+    [Serializable]
     public class ActivityListInfoCollection
     {
         public ActivityListInfoCollection()
         {
             List = new List<ActivityListInfo>();
         }
+        [ProtoMember(1)]
         public List<ActivityListInfo> List { get; set; }
+        [ProtoMember(2)]
         public int TotalCount { get; set; }
     }
 

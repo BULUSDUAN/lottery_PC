@@ -250,7 +250,9 @@ namespace Lottery.Api.Controllers
                 //if (entity.SourceCode == SchemeSource.Iphone)
                 //    bannerType = BannerType.IOS;
                 Dictionary<string, object> param = new Dictionary<string, object>();
-                param.Add("bannerType", bannerType);
+                param.Add("bannerType", (int)bannerType);
+                param.Add("returnRecord", 10);
+                
                 var bannerList = await _serviceProxyProvider.Invoke<SiteMessageBannerInfo_Collection>(param, "api/Data/QuerySitemessageBanngerList_Web");
                 if (bannerList != null && bannerList.ListInfo.Count > 0)
                 {
@@ -388,10 +390,11 @@ namespace Lottery.Api.Controllers
         {
             try
             {
+                if(entity.Param==null) throw new ArgumentException("请求参数错误！");
                 var p = WebHelper.Decode(entity.Param);
-                var gameCode = p.GameCode;
+                string gameCode = p.GameCode;
                 string gameType = p.GameType;
-                var issuseNumber = p.IssuseNumber;
+                string issuseNumber = p.IssuseNumber;
                 if (string.IsNullOrEmpty(gameCode) || string.IsNullOrEmpty(gameType) || string.IsNullOrEmpty(issuseNumber))
                     throw new ArgumentException("请求参数错误！");
                 Dictionary<string, object> param = new Dictionary<string, object>();
@@ -1121,6 +1124,7 @@ namespace Lottery.Api.Controllers
                 param.Add("pageIndex", pageIndex);
                 param.Add("pageSize", pageSize);
                 param.Add("userToken", userToken);
+                param.Add("agent", (int)BulletinAgent.Local);
                 var noticeList = await _serviceProxyProvider.Invoke<BulletinInfo_Collection>(param, "api/Data/QueryDisplayBulletinCollection");
                 //var noticeList = WCFClients.ExternalClient.QueryDisplayBulletinCollection(BulletinAgent.Local, pageIndex, pageSize, userToken);
                 noticeList.BulletinList.OrderByDescending(a => a.IsPutTop).OrderByDescending(a => a.CreateTime).ToList();
@@ -1318,7 +1322,7 @@ namespace Lottery.Api.Controllers
         /// </summary>
         private async Task<string> GuestUserToken([FromServices]IServiceProxyProvider _serviceProxyProvider)
         {
-            var result= await _serviceProxyProvider.Invoke<CommonActionResult>(null, "api/Data/GetGuestToken");
+            var result= await _serviceProxyProvider.Invoke<CommonActionResult>(new Dictionary<string,object>(), "api/Data/GetGuestToken");
             return result.ReturnValue;
                 //return WCFClients.ExternalClient.GetGuestToken().ReturnValue;
         }
