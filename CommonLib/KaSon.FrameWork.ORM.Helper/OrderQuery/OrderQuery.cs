@@ -31,11 +31,11 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             {
                 var userid = Model.userId ?? "";
                 string sql = SqlModule.UserSystemModule.FirstOrDefault(p => p.Key == "P_Order_QueryBonusOrderList").SQL;
-              var query = DB.CreateSQLQuery(sql)
-                    .SetString("@UserId", userid)
-                    .SetString("@GameCode", Model.gameCode)
-                    .SetInt("@PageIndex", Model.pageIndex)
-                    .SetInt("@PageSize", Model.pageSize).List<BonusOrderInfo>().ToList();
+                var query = DB.CreateSQLQuery(sql)
+                      .SetString("@UserId", userid)
+                      .SetString("@GameCode", Model.gameCode)
+                      .SetInt("@PageIndex", Model.pageIndex)
+                      .SetInt("@PageSize", Model.pageSize).List<BonusOrderInfo>().ToList();
                 result.BonusOrderList = query;
                 return result;
             }
