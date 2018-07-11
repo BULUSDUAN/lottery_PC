@@ -96,7 +96,7 @@ namespace Lottery.Api.Controllers
         /// <summary>
         /// 查询中奖列表_113
         /// </summary>
-        public async Task<IActionResult> QueryBonusList([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        public async Task<IActionResult> QueryBonusList([FromServices]IServiceProxyProvider _serviceProxyProvider,LotteryServiceRequest entity)
         {
             try
             {
@@ -110,13 +110,13 @@ namespace Lottery.Api.Controllers
                 if (string.IsNullOrEmpty(GameCode))
                     throw new Exception("彩种不能为空");
                 Dictionary<string, object> param = new Dictionary<string, object>();
-                param["Model"] = new QueryBonusInfoListParam() { gameCode=GameCode,gameType=gameType,pageIndex=pageIndex,pageSize=pageSize,UserToken=userToken};
+                param["Model"] = new QueryBonusInfoListParam() { gameCode = GameCode, gameType = gameType, pageIndex = pageIndex, pageSize = pageSize,UserToken=userToken };
                 var list = new List<object>();
-                //var _issuseNumber = string.Empty;
-                //var _completeData = string.Empty;
-
+                var _issuseNumber = string.Empty;
+                var _completeData = string.Empty;
+                
                 var bonusList = await _serviceProxyProvider.Invoke<BonusOrderInfoCollection>(param, "api/Order/QueryBonusInfoList");
-                if (bonusList != null && bonusList.BonusOrderList.Count > 0)
+                 if (bonusList != null && bonusList.BonusOrderList.Count > 0)
                 {
                     foreach (var item in bonusList.BonusOrderList)
                     {
@@ -133,10 +133,10 @@ namespace Lottery.Api.Controllers
                         });
                     }
                 }
-                return Json(new LotteryServiceResponse { Code = ResponseCode.成功, Message = "查询中奖列表成功", MsgId = entity.MsgId, Value = list });
-            }
+                return Json(new LotteryServiceResponse { Code = ResponseCode.成功, Message = "查询中奖列表成功", MsgId = entity.MsgId, Value = list });                
+            }            
             catch (Exception ex)
-            {
+            {               
                 return Json(new LotteryServiceResponse { Code = ResponseCode.失败, Message = "查询中奖列表失败", MsgId = entity.MsgId, Value = null });
             }
         }
@@ -2721,11 +2721,7 @@ namespace Lottery.Api.Controllers
             {
                 var p = JsonHelper.Decode(entity.Param);
                 string type = p.GameCode;
-                string term = p.IssuseNumber;
-                Dictionary<string, object> param = new Dictionary<string, object>()
-                {
-
-                };
+                string term = p.IssuseNumber;                
                 var obj = GetKaiJingInfo(_serviceProxyProvider, "Web", type, term);
                 return new LotteryServiceResponse
                 {
