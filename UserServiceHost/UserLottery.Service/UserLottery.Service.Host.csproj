@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\CommonLib\KaSon.FrameWork.PlugIn\KaSon.FrameWork.PlugIn.csproj" />
     <ProjectReference Include="..\UserLottery.Service.IModuleServices\UserLottery.Service.IModuleServices.csproj" />
     <ProjectReference Include="..\UserLottery.Service.Model\UserLottery.Service.Model.csproj" />
     <ProjectReference Include="..\UserLottery.Service.ModuleServices\UserLottery.Service.ModuleServices.csproj" />
@@ -114,5 +115,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy /r /y    $(SolutionDir)..\CommonLib\KaSon.FrameWork.Common\Redis\redisSettings.json $(TargetDir)RedisConfig" />
+  </Target>
 
 </Project>

@@ -14,7 +14,7 @@ namespace UserLottery.Service.ModuleServices
         public NLogger UserNLog;
         public UserRepository(ILoggerFactory LogFactory) {
             _LogFactory = LogFactory;
-            UserNLog = (NLogger)_LogFactory.CreateLogger("User");
+           // UserNLog = (NLogger)_LogFactory.CreateLogger("User");
            // UserNLog = (NLogger)_LogFactory.CreateLogger("User");
         }
     }

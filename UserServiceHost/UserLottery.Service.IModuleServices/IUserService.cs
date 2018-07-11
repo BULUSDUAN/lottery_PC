@@ -27,8 +27,8 @@ namespace UserLottery.Service.IModuleServices
     [ServiceBundle("api/{Service}")]
     public interface IUserService: IServiceKey
     {
-        //[Service(Date = "2018-6-06", Director = "renjun", Name = "登录")]
-        //Task<LoginInfo> User_Login(string loginName, string password, string IPAddress);
+        [Service(Date = "2018-6-06", Director = "renjun", Name = "登录")]
+        Task<LoginInfo> User_Login(string loginName, string password, string IPAddress);
 
         //[Service(Date = "2018-6-06", Director = "renjun", Name = "修改密码")]
         //Task<CommonActionResult> ChangeMyPassword(string oldPassword, string newPassword, string userToken);
@@ -39,17 +39,17 @@ namespace UserLottery.Service.IModuleServices
         //[Service(Date = "2018-6-29", Director = "renjun", Name = "根据UserId查询用户信息")]
         //Task<LoginInfo> GetLocalLoginByUserId(string userId);
 
-        //[Service(Date = "2018-6-12", Director = "renjun", Name = "绑定信息")]
-        //Task<UserBindInfos> QueryUserBindInfos(string UserId);
+        [Service(Date = "2018-6-12", Director = "renjun", Name = "绑定信息")]
+        Task<UserBindInfos> QueryUserBindInfos(string UserId);
 
-        //[Service(Date = "2018-6-12", Director = "renjun", Name = "查询余额信息")]
-        //Task<UserBalanceInfo> QueryMyBalance(string userToken);
+        [Service(Date = "2018-6-12", Director = "renjun", Name = "查询余额信息")]
+        Task<UserBalanceInfo> QueryMyBalance(string userToken);
 
-        //[Service(Date = "2018-6-12", Director = "renjun", Name = "查询银行卡信息")]
-        //Task<C_BankCard> QueryBankCard(string userToken);
+        [Service(Date = "2018-6-12", Director = "renjun", Name = "查询银行卡信息")]
+        Task<C_BankCard> QueryBankCard(string userToken);
 
-        //[Service(Date = "2018-6-12", Director = "renjun", Name = "获取用户站内信数量")]
-        //Task<int> GetMyUnreadInnerMailCount(string userToken);
+        [Service(Date = "2018-6-12", Director = "renjun", Name = "获取用户站内信数量")]
+        Task<int> GetMyUnreadInnerMailCount(string userToken);
 
         [Service(Date = "2018-6-14", Director = "renjun", Name = "注册")]
         Task<CommonActionResult> RegisterResponseMobile(string validateCode, string mobile, SchemeSource source, RegisterInfo_Local info);

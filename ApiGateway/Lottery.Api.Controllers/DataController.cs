@@ -119,12 +119,12 @@ namespace Lottery.Api.Controllers
                 {
                     param.Clear();
                     param.Add("gameCode", gameCode);
-                    var gameInfo = await _serviceProxyProvider.Invoke<LotteryIssuse_QueryInfo>(param, "api/Data/QueryNextIssuseListByLocalStopTime");
+                    var list = await _serviceProxyProvider.Invoke<List<LotteryIssuse_QueryInfo>>(param, "api/Data/QueryNextIssuseListByLocalStopTime");
                     //var list = WebRedisHelper.QueryNextIssuseListByLocalStopTime(gameCode);
-                    //LotteryIssuse_QueryInfo gameInfo;
-                    //if (list == null || list.Count <= 0)
-                    //    gameInfo=null;
-                    //gameInfo= list.Where(p => p.LocalStopTime > DateTime.Now).OrderBy(p => p.OfficialStopTime).FirstOrDefault();
+                    LotteryIssuse_QueryInfo gameInfo;
+                    if (list == null || list.Count <= 0)
+                        gameInfo=null;
+                    gameInfo= list.Where(p => p.LocalStopTime > DateTime.Now).OrderBy(p => p.OfficialStopTime).FirstOrDefault();
                     if (gameInfo == null) continue;
                     result.Add(new
                     {
