@@ -336,7 +336,7 @@
       "Desc": "用户查询公告列表_总条数",
       "ParamDesc": "@BulletinAgent:bulletinAgent",
       "Director": "lili",
-      "SQL": "SELECT @TotalCount = COUNT(1) FROM [E_SiteMessage_Bulletin_List] WHERE [Status] = 0 AND (BulletinAgent=@BulletinAgent) AND ([EffectiveFrom] IS NULL OR [EffectiveFrom] <= GETDATE()) AND ([EffectiveTo] IS NULL OR DATEADD(DAY,1,[EffectiveTo]) >= GETDATE())",
+      "SQL": "SELECT COUNT(1) FROM [E_SiteMessage_Bulletin_List] WHERE [Status] = 0 AND (BulletinAgent=@BulletinAgent) AND ([EffectiveFrom] IS NULL OR [EffectiveFrom] <= GETDATE()) AND ([EffectiveTo] IS NULL OR DATEADD(DAY,1,[EffectiveTo]) >= GETDATE())",
       "Remark": ""
     },
     {
