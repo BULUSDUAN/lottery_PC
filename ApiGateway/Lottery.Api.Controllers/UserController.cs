@@ -6,12 +6,14 @@ using Kason.Sg.Core.ProxyGenerator;
 using KaSon.FrameWork.Common;
 using KaSon.FrameWork.Common.Net;
 using KaSon.FrameWork.Common.Utilities;
+using KaSon.FrameWork.Common.ValidateCodeHelper;
 using Lottery.ApiGateway.Model.HelpModel;
 using Lottery.Base.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.DrawingCore;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -551,6 +553,62 @@ namespace Lottery.Api.Controllers
                 return false;
             }
         }
+
+        #region 本地验证码相关
+        public async Task<IActionResult> CreateValidateCode()
+        {
+            var num = 0;
+            string randomText = SelectRandomNumber(5, out num);
+
+            HttpContext.Session.SetString("VerifyCode", num.ToString());
+            ValidateCodeGenerator vlimg = new ValidateCodeGenerator()
+            {
+                BackGroundColor = Color.FromKnownColor(KnownColor.LightGray),
+                RandomWord = randomText,
+                ImageHeight = 25,
+                ImageWidth = 100,
+                fontSize = 14,
+            };
+            var img = vlimg.OnPaint();
+            if (img == null)
+            {
+                return await Task.FromResult(Content("Error")); ;
+            }
+            return await Task.FromResult(File(img, "image/gif"));
+            //return vlimg;
+        }
+
+        //选择随机数字
+        private string SelectRandomNumber(int numberOfChars, out int num)
+        {
+            num = 0;
+            StringBuilder randomBuilder = new StringBuilder();
+            Random randomSeed = new Random();
+            char[] columns = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+            for (int incr = 0; incr < numberOfChars; incr++)
+            {
+                if (incr == 0 || incr == 2)
+                {
+                    var randomNum = columns[randomSeed.Next(10)].ToString();
+                    randomBuilder.Append(randomNum);//取26个字符里的任意一个
+                    num += int.Parse(randomNum);
+                }
+                if (incr == 1)
+                {
+                    randomBuilder.Append("+").ToString();
+                }
+                if (incr == 3)
+                {
+                    randomBuilder.Append("=").ToString();
+                }
+                if (incr == 4)
+                {
+                    randomBuilder.Append("?").ToString();
+                }
+            }
+            return randomBuilder.ToString();
+        }
+        #endregion
 
         /// <summary>
         /// 手机号是否可注册 224
