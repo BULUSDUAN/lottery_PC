@@ -34,7 +34,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             else {
                 path = Path.Combine(Directory.GetCurrentDirectory(), @"SQL_JSON\SQLServer_SQL.json");
-                jsonText = FileHelper.txtReader(path );
+                jsonText = FileHelper.txtReader(path);
             }
             // JObject jo = (JObject)JsonConvert.DeserializeObject(jsonText);'System.Data.SqlClient
             sqlModule = (SQLModule)  JsonHelper.Deserialize<SQLModule>(jsonText);

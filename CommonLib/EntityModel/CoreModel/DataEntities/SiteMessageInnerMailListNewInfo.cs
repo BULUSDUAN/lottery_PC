@@ -1,4 +1,5 @@
 ﻿using EntityModel.Enum;
+using ProtoBuf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,13 +52,17 @@ namespace EntityModel.CoreModel
         /// </summary>
         public DateTime? ReadTime { get; set; }
     }
+    [ProtoContract]
+    [Serializable]
     public class SiteMessageInnerMailListNew_Collection
     {
         public SiteMessageInnerMailListNew_Collection()
         {
             MailList = new List<SiteMessageInnerMailListNewInfo>();
         }
+        [ProtoMember(1)]
         public int TotalCount { get; set; }
+        [ProtoMember(2)]
         public List<SiteMessageInnerMailListNewInfo> MailList { get; set; }
     }
 }

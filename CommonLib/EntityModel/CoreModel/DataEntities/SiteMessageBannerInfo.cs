@@ -1,4 +1,5 @@
 ﻿using EntityModel.Enum;
+using ProtoBuf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,13 +19,19 @@ namespace EntityModel.CoreModel
         public DateTime CreateTime { get; set; }
     }
 
+    [ProtoContract]
+    [Serializable]
     public class SiteMessageBannerInfo_Collection
     {
         public SiteMessageBannerInfo_Collection()
         {
             ListInfo = new List<SiteMessageBannerInfo>();
         }
+
+        [ProtoMember(1)]
         public int TotalCount { get; set; }
+
+        [ProtoMember(2)]
         public List<SiteMessageBannerInfo> ListInfo { get; set; }
     }
 }

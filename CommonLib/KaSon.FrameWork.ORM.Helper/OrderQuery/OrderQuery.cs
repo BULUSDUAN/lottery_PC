@@ -29,14 +29,13 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             Model.pageSize = Model.pageSize > Model.MaxPageSize ? Model.MaxPageSize : Model.pageSize;
             try
             {
-                var userid = Model.userId ?? "";
                 string sql = SqlModule.UserSystemModule.FirstOrDefault(p => p.Key == "P_Order_QueryBonusOrderList").SQL;
-              var query = DB.CreateSQLQuery(sql)
-                    .SetString("@UserId", userid)
+                result.BonusOrderList = DB.CreateSQLQuery(sql)
+                    .SetString("@UserId", Model.userId??"")
                     .SetString("@GameCode", Model.gameCode)
                     .SetInt("@PageIndex", Model.pageIndex)
-                    .SetInt("@PageSize", Model.pageSize).List<BonusOrderInfo>().ToList();
-                result.BonusOrderList = query;
+                    .SetInt("@PageSize", Model.pageSize)
+                    .List<BonusOrderInfo>().ToList();
                 return result;
             }
             catch (Exception ex)

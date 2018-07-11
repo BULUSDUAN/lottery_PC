@@ -71,10 +71,10 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <param name="bannerType"></param>
         /// <param name="returnRecord"></param>
         /// <returns></returns>
-        public SiteMessageBannerInfo_Collection QuerySitemessageBanngerList_Web(BannerType bannerType, int returnRecord = 10)
+        public SiteMessageBannerInfo_Collection QuerySitemessageBanngerList_Web(int bannerType, int returnRecord = 10)
         {
             var query = from s in DB.CreateQuery<E_Sitemessage_Banner>()
-                        where s.BannerType == (int)bannerType && s.IsEnable == true
+                        where s.BannerType == bannerType && s.IsEnable == true
                         orderby s.BannerIndex ascending
                         select new SiteMessageBannerInfo
                         {
@@ -153,13 +153,13 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public BulletinInfo_Collection QueryDisplayBulletins(BulletinAgent agent, int pageIndex, int pageSize)
+        public BulletinInfo_Collection QueryDisplayBulletins(int agent, int pageIndex, int pageSize)
         {
             pageIndex = pageIndex < 0 ? 0 : pageIndex;
             pageSize = pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : pageSize;
             string QueryArticleList_sql = SqlModule.DataModule.FirstOrDefault(x => x.Key == "Data_QueryBulletinList_Web").SQL;
             var collection = DB.CreateSQLQuery(QueryArticleList_sql)
-              .SetInt("@BulletinAgent", (int)agent)
+              .SetInt("@BulletinAgent", agent)
               .SetInt("@PageIndex", pageIndex)
               .SetInt("@PageSize", pageSize).List<BulletinInfo_Query>().ToList();
 

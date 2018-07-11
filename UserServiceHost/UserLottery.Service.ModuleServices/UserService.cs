@@ -43,7 +43,6 @@ using KaSon.FrameWork.Common.Redis;
 using EntityModel.ExceptionExtend;
 using KaSon.FrameWork.Common.Sport;
 using EntityModel.Redis;
-using static KaSon.FrameWork.Common.PlugInCore.IPluginHandler;
 
 namespace UserLottery.Service.ModuleServices
 {
@@ -114,10 +113,10 @@ namespace UserLottery.Service.ModuleServices
             ////ClearUserBindInfoCache(loginEntity.UserId);
 
 
-            //! 执行扩展功能代码 - 提交事务前
+            //!执行扩展功能代码 - 提交事务前
             //BusinessHelper.ExecPlugin<IUser_AfterLogin>(new object[] { loginEntity.UserId, "LOCAL", loginIp, DateTime.Now });
-            ////刷新用户在Redis中的余额
-            //BusinessHelper.RefreshRedisUserBalance(loginEntity.UserId);
+            //刷新用户在Redis中的余额
+            BusinessHelper.RefreshRedisUserBalance(loginEntity.UserId);
             return Task.FromResult(new LoginInfo
             {
                 IsSuccess = true,
@@ -654,7 +653,7 @@ namespace UserLottery.Service.ModuleServices
 
                 #region 还没做
                 //! 执行扩展功能代码 - 提交事务后
-                BusinessHelper.ExecPlugin<IResponseAuthentication_AfterTranCommit>(new object[] { userResult.ReturnValue, "Mobile", mobileNumber, source });
+                //BusinessHelper.ExecPlugin<IResponseAuthentication_AfterTranCommit>(new object[] { userResult.ReturnValue, "Mobile", mobileNumber, source });
                 #endregion
                 return Task.FromResult(new CommonActionResult(true, "恭喜您注册成功！"));
             }
@@ -969,7 +968,7 @@ namespace UserLottery.Service.ModuleServices
             {
                 var validateCode = GetRandomMobileValidateCode();
 
-                dBbase.DB.Begin();
+              
 
                 var authenticationBiz = new MobileAuthenticationBusiness();
                 authenticationBiz.RegisterRequestMobile(mobile);
@@ -977,7 +976,6 @@ namespace UserLottery.Service.ModuleServices
                 var biz = new ValidationMobileBusiness();
                 validateCode = biz.SendValidationCode(mobile, "MobileAuthentication", validateCode, GetDelay(60), GetMaxTimes(3));
 
-                dBbase.DB.Commit();
                 #region 发送站内消息：手机短信或站内信
                 var pList = new List<string>();
                 pList.Add(string.Format("{0}={1}", "[ValidNumber]", validateCode));
