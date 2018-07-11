@@ -82,9 +82,9 @@
     {
       "Key": "P_Order_QueryBonusOrderList",
       "Desc": "中奖查询",
-      "ParamDesc": "@userId:userId,@gameCode:gameCode,@gameType:gameType,@issuseNumber:issuseNumber,@completeData:completeData,@key:key,@pageIndex:pageIndex,@pageSize:pageSize,@totalCount:totalCount",
+      "ParamDesc": "@UserId:UserId,@GameCode:gameCode,@PageIndex:pageIndex,@PageSize:pageSize",
       "Director": "Debug",
-      "SQL": "select @TotalCount=0 SELECT * FROM ( SELECT ROW_NUMBER() OVER(ORDER BY ComplateDateTime DESC) AS [RowNumber],[SchemeId],[GameCode],[GameType],[PlayType],[SchemeType],[IssuseNumber],[Amount],[BetCount],[TotalMatchCount],[TotalMoney],[TicketStatus],[ProgressStatus] ,[BonusStatus],[PreTaxBonusMoney],[AfterTaxBonusMoney],ISNULL([IsVirtualOrder],1) [IsVirtualOrder],O.[CreateTime],[BonusCount],BonusCountDescription,BonusCountDisplayName,[ComplateDateTime],[ComplateDate],[IsPrizeMoney],O.[AgentId] ,O.[UserId],R.DisplayName,R.IsAgent,R.HideDisplayNameCount FROM [C_Sports_Order_Complate] O LEFT OUTER JOIN C_User_Register R ON R.UserId=O.UserId WHERE [BonusStatus]=20 AND AfterTaxBonusMoney>2000 AND IsVirtualOrder=0 AND (@UserId='' OR O.[UserId]=@UserId) AND (@GameCode='' OR [GameCode]=@GameCode) ) T WHERE [RowNumber] > @PageIndex * @PageSize AND [RowNumber] <= (@PageIndex + 1) * @PageSize",
+      "SQL": "SELECT * FROM ( SELECT ROW_NUMBER() OVER(ORDER BY ComplateDateTime DESC) AS [RowNumber],[SchemeId],[GameCode],[GameType],[PlayType],[SchemeType],[IssuseNumber],[Amount],[BetCount],[TotalMatchCount],[TotalMoney],[TicketStatus],[ProgressStatus] ,[BonusStatus],[PreTaxBonusMoney],[AfterTaxBonusMoney],ISNULL([IsVirtualOrder],1) [IsVirtualOrder],O.[CreateTime],[BonusCount],BonusCountDescription,BonusCountDisplayName,[ComplateDateTime],[ComplateDate],[IsPrizeMoney],O.[AgentId] ,O.[UserId],R.DisplayName,R.IsAgent,R.HideDisplayNameCount FROM [C_Sports_Order_Complate] O LEFT OUTER JOIN C_User_Register R ON R.UserId=O.UserId WHERE [BonusStatus]=20 AND AfterTaxBonusMoney>2000 AND IsVirtualOrder=0 AND (@UserId='' OR O.[UserId]=@UserId) AND (@GameCode='' OR [GameCode]=@GameCode) ) T WHERE [RowNumber] > @PageIndex * @PageSize AND [RowNumber] <= (@PageIndex + 1) * @PageSize",
       "Remark": "备注"
     },
     {
