@@ -101,7 +101,7 @@ namespace Lottery.Api.Controllers
             try
             {
                 var p = JsonHelper.Decode(entity.Param);
-                //param.userToken = p.UserToken;
+                string userToken = p.UserToken;
                 string GameCode = p.GameCode;
                 string gameType = p.GameType;
                 int pageIndex = p.PageIndex;
@@ -110,10 +110,10 @@ namespace Lottery.Api.Controllers
                 if (string.IsNullOrEmpty(GameCode))
                     throw new Exception("彩种不能为空");
                 Dictionary<string, object> param = new Dictionary<string, object>();
-                param["Model"] = new QueryBonusInfoListParam();
+                param["Model"] = new QueryBonusInfoListParam() { gameCode=GameCode,gameType=gameType,pageIndex=pageIndex,pageSize=pageSize,UserToken=userToken};
                 var list = new List<object>();
-                var _issuseNumber = string.Empty;
-                var _completeData = string.Empty;
+                //var _issuseNumber = string.Empty;
+                //var _completeData = string.Empty;
 
                 var bonusList = await _serviceProxyProvider.Invoke<BonusOrderInfoCollection>(param, "api/Order/QueryBonusInfoList");
                 if (bonusList != null && bonusList.BonusOrderList.Count > 0)
