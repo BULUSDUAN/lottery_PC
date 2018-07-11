@@ -21,5 +21,7 @@ namespace EntityModel.RequestModel
         public int completeData { get; set; }
         [ProtoMember(6)]
         public string key { get; set; }
+        [ProtoMember(7)]
+        public string UserToken { get; set; }
     }
 }

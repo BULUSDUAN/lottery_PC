@@ -81,6 +81,7 @@ namespace Lottery.ApiGateway
         {
             RegisterController(services);
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSession();
             return RegisterAutofac(services);
         }
         private IServiceProvider RegisterAutofac(IServiceCollection services)
@@ -97,6 +98,7 @@ namespace Lottery.ApiGateway
             services.AddLogging();
             var builder = new ContainerBuilder();
             builder.Populate(services);
+
             builder.AddMicroService(option =>
             {
                 option.AddClient();
@@ -150,7 +152,7 @@ namespace Lottery.ApiGateway
             //app.UseStaticFiles();
 
             MyHttpContext.ServiceProvider = svp;
-
+            app.UseSession();
             app.UseMvc(routes =>
             {
 

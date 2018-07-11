@@ -58,28 +58,39 @@ namespace EntityModel.CoreModel
     {
     }
 
-
+    [ProtoContract]
+    [Serializable]
     public class LotteryIssuse_QueryInfo
     {
         /// <summary>
         /// 彩种编码
         /// </summary>
+        /// 
+        [ProtoMember(1)]
         public string GameCode { get; set; }
         /// <summary>
         /// 期号
         /// </summary>
+        /// 
+        [ProtoMember(2)]
         public string IssuseNumber { get; set; }
         /// <summary>
         /// 本地截至投注时间
         /// </summary>
+        /// 
+        [ProtoMember(3)]
         public DateTime LocalStopTime { get; set; }
         /// <summary>
         /// 官方截至时间
         /// </summary>
+        /// 
+        [ProtoMember(4)]
         public DateTime OfficialStopTime { get; set; }
         /// <summary>
         /// 提前结束秒数
         /// </summary>
+        /// 
+        [ProtoMember(5)]
         public int GameDelaySecond { get; set; }
     }
 
