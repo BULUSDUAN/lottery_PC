@@ -15,7 +15,7 @@ namespace KaSon.FrameWork.Common
       public  static JObject ConfigInfo;
         static ConfigHelper()
         {
-            string path = Path.Combine(Directory.GetCurrentDirectory(), @"Configs\ConfigSettings.json");
+            string path = Path.Combine(Directory.GetCurrentDirectory(), @"Config\ConfigSettings.json");
             string jsonText = FileHelper.txtReader(path);
             ConfigInfo = (JObject)JsonConvert.DeserializeObject(jsonText);
         }
