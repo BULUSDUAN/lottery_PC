@@ -78,9 +78,6 @@
     <Reference Include="Kason.Sg.Core.System">
       <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.System.dll</HintPath>
     </Reference>
-    <Reference Include="System.Data.SqlClient">
-      <HintPath>bin\Debug\netcoreapp2.0\System.Data.SqlClient.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>
