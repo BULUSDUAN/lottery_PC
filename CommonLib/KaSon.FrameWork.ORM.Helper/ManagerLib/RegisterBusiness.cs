@@ -194,7 +194,7 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
         public E_TaskList QueryTaskListByCategory(string userId, TaskCategory taskCategory)
         {
             
-            return DB.CreateQuery<E_TaskList>().FirstOrDefault(p => p.UserId == userId && p.TaskCategory == (int)taskCategory);
+            return DB.CreateQuery<E_TaskList>().Where(p => p.UserId == userId && p.TaskCategory == (int)taskCategory).FirstOrDefault();
         }
 
       

@@ -168,7 +168,7 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
         {
 
             var gv = new TaskListManager();
-            var old = DB.CreateQuery<E_TaskList>().FirstOrDefault(p => p.UserId == userId && p.TaskCategory == (int)TaskCategory.MobilBinding);
+            var old = DB.CreateQuery<E_TaskList>().Where(p => p.UserId == userId && p.TaskCategory == (int)TaskCategory.MobilBinding).FirstOrDefault();
             if (old == null)
             {
                 //增加成长值 
