@@ -13,12 +13,12 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
             var query = DB.CreateQuery<E_Authentication_RealName>().Where(s => s.RealName == realName && s.IdCardNumber == cardNumber);
             if (query != null && query.Count() > 0)
             {
-                var resutl = query.FirstOrDefault(s => s.IsSettedRealName == true);
+                var resutl = query.Where(s => s.IsSettedRealName == true).FirstOrDefault();
                 if (resutl != null)
                     return resutl;
                 else
                 {
-                    resutl = query.FirstOrDefault(s => s.IsSettedRealName == false);
+                    resutl = query.Where(s => s.IsSettedRealName == false).FirstOrDefault();
                     if (resutl != null)
                         return resutl;
                 }
@@ -29,7 +29,7 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
         public E_Authentication_RealName QueryUserRealName(string idCard)
         {
            
-            return DB.CreateQuery<E_Authentication_RealName>().FirstOrDefault(p => p.IdCardNumber == idCard && p.IsSettedRealName == true);
+            return DB.CreateQuery<E_Authentication_RealName>().Where(p => p.IdCardNumber == idCard && p.IsSettedRealName == true).FirstOrDefault();
         }
 
         public void UpdateUserRealName(E_Authentication_RealName realName)

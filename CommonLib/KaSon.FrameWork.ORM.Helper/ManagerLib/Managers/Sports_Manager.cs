@@ -187,7 +187,7 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
         public C_User_Beedings QueryUserBeedings(string userId, string gameCode, string gameType)
         {
             //Session.Clear();
-            return DB.CreateQuery<C_User_Beedings>().FirstOrDefault(p => p.UserId == userId && p.GameCode == gameCode && (string.Empty == gameType || p.GameType == gameType));
+            return DB.CreateQuery<C_User_Beedings>().Where(p => p.UserId == userId && p.GameCode == gameCode && (string.Empty == gameType || p.GameType == gameType)).FirstOrDefault();
         }
 
         /// <summary>
@@ -209,7 +209,7 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
         public C_User_BonusPercent QueryUserBonusPercent(string userId, string gameCode, string gameType)
         {
             //Session.Clear();
-            return DB.CreateQuery<C_User_BonusPercent>().FirstOrDefault(p => p.UserId == userId && p.GameCode == gameCode && (gameType == string.Empty || p.GameType == gameType));
+            return DB.CreateQuery<C_User_BonusPercent>().Where(p => p.UserId == userId && p.GameCode == gameCode && (gameType == string.Empty || p.GameType == gameType)).FirstOrDefault();
         }
 
         /// <summary>
@@ -234,7 +234,7 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
 
         public C_SingleScheme_AnteCode QuerySingleScheme_AnteCode(string schemeId)
         {
-            return this.DB.CreateQuery<C_SingleScheme_AnteCode>().FirstOrDefault(p => p.SchemeId == schemeId);
+            return this.DB.CreateQuery<C_SingleScheme_AnteCode>().Where(p => p.SchemeId == schemeId).FirstOrDefault();
         }
 
         public void UpdateSports_Order_Running(params C_Sports_Order_Running[] entity)

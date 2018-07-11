@@ -42,7 +42,7 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
                 if (rebateValue < 0M || rebateValue > 100M)
                     throw new Exception("返点必须大于0小于100");
 
-                var parent = parentRebateList.OrderByDescending(p => p.CreateTime).FirstOrDefault(p => p.GameCode == gameCode && p.GameType == gameType && p.RebateType == rebateType);
+                var parent = parentRebateList.OrderByDescending(p => p.CreateTime).Where(p => p.GameCode == gameCode && p.GameType == gameType && p.RebateType == rebateType).FirstOrDefault();
                 if (parent == null)
                     continue;
 
@@ -53,7 +53,7 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
                     throw new Exception(string.Format("用户自身保留的返点不能低于{0}%", keepRebate));
 
                 //查询用户返点数据
-                var rebate = userRebateList.OrderByDescending(p => p.CreateTime).FirstOrDefault(p => p.GameCode == gameCode && p.GameType == gameType && p.RebateType == rebateType);
+                var rebate = userRebateList.OrderByDescending(p => p.CreateTime).Where(p => p.GameCode == gameCode && p.GameType == gameType && p.RebateType == rebateType).FirstOrDefault();
                 if (rebate == null)
                 {
                     //user 为普通用户

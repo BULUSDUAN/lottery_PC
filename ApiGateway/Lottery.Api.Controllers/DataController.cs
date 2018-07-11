@@ -1253,13 +1253,14 @@ namespace Lottery.Api.Controllers
             try
             {
                 var p = WebHelper.Decode(entity.Param);
-                var suggestion = p.Content;
+                string suggestion = p.Content;
+                string UserId = p.UserId;
+                string UserName = p.UserName;
                 if (string.IsNullOrEmpty(suggestion))
                     throw new Exception("意见内容不能为空");
-                else if (string.IsNullOrEmpty(p.UserId) || string.IsNullOrEmpty(p.UserName))
+                else if (string.IsNullOrEmpty(UserId) || string.IsNullOrEmpty(UserName))
                     throw new Exception("请登录后再提交意见");
                 string createUserName = p.UserName;
-                string userId = p.UserId;
                 string mobile = p.Mobile;
                 string PageOpenSpeed = p.PageOpenSpeed;
                 string InterfaceBeautiful = p.InterfaceBeautiful;
@@ -1272,7 +1273,7 @@ namespace Lottery.Api.Controllers
                     Description = suggestion,
                     Category = "APP建议",
                     IsAnonymous = false,
-                    CreateUserId = userId,
+                    CreateUserId = UserId,
                     CreateUserDisplayName = createUserName,
                     CreateUserMoibile = mobile,
                     PageOpenSpeed = decimal.Parse(PageOpenSpeed),
@@ -2464,9 +2465,9 @@ namespace Lottery.Api.Controllers
             {
                 var p = WebHelper.Decode(entity.Param);
                 //string userToken = p.UserToken;
-                string gameCode = p.GameCode.ToUpper();
-                string gameType = p.GameType.ToUpper();
-                string issuseNumber = p.IssuseNumber.ToUpper();
+                string gameCode = p.GameCode==null?null:((string)p.GameCode).ToUpper();
+                string gameType = p.GameType == null ? null : ((string)p.GameType.ToUpper());
+                string issuseNumber = p.IssuseNumber == null ? null : ((string)p.IssuseNumber.ToUpper());
                 string newVerType = p.NewVerType;
 
                 if (string.IsNullOrEmpty(gameCode))

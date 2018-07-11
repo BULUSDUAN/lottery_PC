@@ -6,6 +6,7 @@ using Kason.Sg.Core.ProxyGenerator;
 using KaSon.FrameWork.Common;
 using KaSon.FrameWork.Common.Net;
 using KaSon.FrameWork.Common.Utilities;
+using KaSon.FrameWork.Common.ValidateCodeHelper;
 using Lottery.ApiGateway.Model.HelpModel;
 using Lottery.Base.Controllers;
 using Microsoft.AspNetCore.Http;
@@ -13,7 +14,6 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.DrawingCore;
-using System.DrawingCore.Imaging;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -397,7 +397,7 @@ namespace Lottery.Api.Controllers
                     Dictionary<string, object> loginparam = new Dictionary<string, object>();
                     loginparam["loginName"] = userInfo.LoginName;
                     loginparam["password"] = userInfo.Password;
-                    loginparam["IPAddress"] = userInfo.Password;
+                    loginparam["IPAddress"] = userInfo.RegisterIp;
                     var loginInfo = await _serviceProxyProvider.Invoke<LoginInfo>(loginparam, "api/user/user_login");
                     if (loginInfo.IsSuccess)
                     {
@@ -546,21 +546,20 @@ namespace Lottery.Api.Controllers
                 {
                     return true;
                 }
-                return true;
+                return false;
             }
-            catch (Exception ex)
+            catch
             {
                 return false;
             }
         }
-
 
         #region 本地验证码相关
         public async Task<IActionResult> CreateValidateCode()
         {
             var num = 0;
             string randomText = SelectRandomNumber(5, out num);
-           
+
             HttpContext.Session.SetString("VerifyCode", num.ToString());
             ValidateCodeGenerator vlimg = new ValidateCodeGenerator()
             {
@@ -570,7 +569,7 @@ namespace Lottery.Api.Controllers
                 ImageWidth = 100,
                 fontSize = 14,
             };
-            var img= vlimg.OnPaint();
+            var img = vlimg.OnPaint();
             if (img == null)
             {
                 return await Task.FromResult(Content("Error")); ;

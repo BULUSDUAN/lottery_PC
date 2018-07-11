@@ -1,14 +1,11 @@
-﻿/*---------------------------
-     验证码生成器        
-     2010-11-01          
----------------------------*/
-using System;
-using System.Text;
-using System.IO;
+﻿using System;
+using System.Collections.Generic;
 using System.DrawingCore;
 using System.DrawingCore.Imaging;
+using System.IO;
+using System.Text;
 
-namespace KaSon.FrameWork.Common
+namespace KaSon.FrameWork.Common.ValidateCodeHelper
 {
     public class ValidateCodeGenerator
     {
@@ -38,10 +35,10 @@ namespace KaSon.FrameWork.Common
         //    OnPaint(context);
         //}
 
-            public 
+        public
 
 
-        static string[] FontItems = new string[] { "tahoma", "Verdana", "Consolas", "Times New Roman" };
+    static string[] FontItems = new string[] { "tahoma", "Verdana", "Consolas", "Times New Roman" };
         static Brush[] BrushItems = new Brush[] { Brushes.OliveDrab, Brushes.ForestGreen, Brushes.DarkCyan, Brushes.LightSlateGray, Brushes.RoyalBlue, Brushes.SlateBlue, Brushes.DarkViolet, Brushes.MediumVioletRed, Brushes.IndianRed, Brushes.Firebrick, Brushes.Chocolate, Brushes.Peru };
         static Color[] ColorItems = new Color[] { Color.Green, Color.Blue, Color.Gray, Color.Red, Color.Black, Color.Orange, Color.OrangeRed, Color.Silver };
         private int _brushNameIndex;
@@ -170,9 +167,9 @@ namespace KaSon.FrameWork.Common
                     //oBitmap.Save(context.HttpContext.Response.OutputStream, ImageFormat.Gif);
                     //g.Dispose();
                     //oBitmap.Dispose();
-                   
+
                 }
-                
+
             }
             catch
             {
@@ -189,6 +186,6 @@ namespace KaSon.FrameWork.Common
             //        g.Dispose();
             //}
         }
-
     }
+
 }

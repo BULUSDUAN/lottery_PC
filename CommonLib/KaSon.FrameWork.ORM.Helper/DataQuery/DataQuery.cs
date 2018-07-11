@@ -159,16 +159,16 @@ namespace KaSon.FrameWork.ORM.Helper
             pageSize = pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : pageSize;
             string QueryArticleList_sql = SqlModule.DataModule.FirstOrDefault(x => x.Key == "Data_QueryBulletinList_Web").SQL;
             var collection = DB.CreateSQLQuery(QueryArticleList_sql)
-              .SetInt("@BulletinAgent", agent)
-              .SetInt("@PageIndex", pageIndex)
-              .SetInt("@PageSize", pageSize).List<BulletinInfo_Query>().ToList();
+              .SetInt("BulletinAgent", agent)
+              .SetInt("PageIndex", pageIndex)
+              .SetInt("PageSize", pageSize).List<BulletinInfo_Query>().ToList();
 
             var returnmodel = new BulletinInfo_Collection();
             returnmodel.BulletinList = collection;
 
             string QueryArticleList_Count_sql = SqlModule.DataModule.FirstOrDefault(x => x.Key == "Data_QueryBulletinList_Web_Total").SQL;
-            var totalCount = DB.CreateSQLQuery(QueryArticleList_sql)
-              .SetInt("@BulletinAgent", (int)agent).First<int>();
+            var totalCount = DB.CreateSQLQuery(QueryArticleList_Count_sql)
+              .SetInt("BulletinAgent", agent).First<int>();
             returnmodel.TotalCount = totalCount;
             return returnmodel;
             //string QueryArticleCount_sql = SqlModule.DataModule.FirstOrDefault(x => x.Key == "Data_QueryArticleList_TotalCount").SQL;
@@ -215,23 +215,22 @@ namespace KaSon.FrameWork.ORM.Helper
         /// </summary>
         public ActivityListInfoCollection QueryActivInfoList(int pageIndex, int pageSize)
         {
-            var query = from a in DB.CreateQuery<E_ActivityList>()
-                        orderby a.CreateTime descending
-                        select new ActivityListInfo
-                        {
-                            ActivityIndex = a.ActivityIndex,
-                            ImageUrl = a.ImageUrl,
-                            IsShow = a.IsShow,
-                            ActiveName = a.ActiveName,
-                            LinkUrl = a.LinkUrl,
-                            Title = a.Title,
-                            Summary = a.Summary,
-                            BeginTime = a.BeginTime,
-                            EndTime = a.EndTime,
-                            CreateTime = a.CreateTime
-                        };
-            var totalCount = query.Count();
-            var list = query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+            var query = DB.CreateQuery<E_ActivityList>().Where(p=>p.IsShow==true);
+            var totalCount = DB.CreateQuery<E_ActivityList>().Count();
+            
+            var list = query.OrderByDescending(p => p.CreateTime).Skip(pageIndex * pageSize).Take(pageSize).ToList().Select(a=> new ActivityListInfo
+            {
+                ActivityIndex = a.ActivityIndex,
+                ImageUrl = a.ImageUrl,
+                IsShow = a.IsShow,
+                ActiveName = a.ActiveName,
+                LinkUrl = a.LinkUrl,
+                Title = a.Title,
+                Summary = a.Summary,
+                BeginTime = a.BeginTime,
+                EndTime = a.EndTime,
+                CreateTime = a.CreateTime
+            }).ToList();
             var returnModel = new ActivityListInfoCollection();
             if (list != null && list.Count > 0)
             {
