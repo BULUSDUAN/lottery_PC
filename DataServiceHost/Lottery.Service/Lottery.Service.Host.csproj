@@ -86,6 +86,9 @@
     <Reference Include="Kason.Sg.Core.System">
       <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.System.dll</HintPath>
     </Reference>
+    <Reference Include="MessagePack">
+      <HintPath>..\..\FramWorkDLL\MessagePack.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
