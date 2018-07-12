@@ -28,11 +28,18 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
             user.UserId = BeautyNumberHelper.GetNextCommonNumber(lastKey.RuleValue, out skipList);
 
             var roleList = GetRoleListByIds(roleIds);
-            if (roleList.Count != roleIds.Length)
+            if (roleList==null)
             {
                 throw new AuthException("指定的角色可能不存在 - " + string.Join(",", roleIds));
             }
-            user.RoleList = roleList;
+            //user.RoleList = roleList;
+            var Auth_UserRole = new C_Auth_UserRole
+            {
+                UserId = user.UserId,
+                RoleId = roleList
+            };
+
+            DB.GetDal<C_Auth_UserRole>().Add(Auth_UserRole);
             //userManager.AddSystemUser(user);
             UpdateLastUserKey(user.UserId, skipList.Count);
             if (skipList.Count > 0)
@@ -44,15 +51,15 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
 
         }
 
-        public IList<SystemRole> GetRoleListByIds(string[] roleIds)
+        public string GetRoleListByIds(string[] roleIds)
         {
-            var list = new List<SystemRole>();
+            var list = "";
             foreach (var roleId in roleIds)
             {
                 var AR = DB.CreateQuery<C_Auth_Roles>().Where(p=>p.RoleId==roleId).ToList().Select(p=>new SystemRole {
                      RoleId=p.RoleId,
                 }) .FirstOrDefault();
-                list.Add(AR);
+                list=AR.RoleId;
             }
             return list;
         }
@@ -158,7 +165,8 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
                 AgentId = regInfo.AgentId,
                 CreateTime = DateTime.Now,
             };
-                     
+
+         
                DB.GetDal<C_User_Register>().Add(register);
                DB.GetDal<C_Auth_Users>().Add(AuthUser);
 
