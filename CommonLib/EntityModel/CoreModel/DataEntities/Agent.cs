@@ -574,7 +574,6 @@ namespace EntityModel.CoreModel
     /// </summary>
     /// 
     [ProtoContract]
-    [Serializable]
     public class ShareSpreadCollection
     {
         public ShareSpreadCollection()
@@ -601,16 +600,27 @@ namespace EntityModel.CoreModel
     /// <summary>
     /// fxid 
     /// </summary>
+    /// 
+    [ProtoContract]
     public class BlogUserShareSpread
     {
+        [ProtoMember(1)]
         public int Id { get; set; }
+        [ProtoMember(2)]
         public string UserId { get; set; }
+        [ProtoMember(3)]
         public string UserName { get; set; }
+        [ProtoMember(4)]
         public string AgentId { get; set; }
+        [ProtoMember(5)]
         public DateTime CreateTime { get; set; }
+        [ProtoMember(6)]
         public bool isGiveRegisterRedBag { get; set; }
+        [ProtoMember(7)]
         public bool isGiveLotteryRedBag { get; set; }
+        [ProtoMember(8)]
         public decimal giveRedBagMoney { get; set; }
+        [ProtoMember(9)]
         public DateTime UpdateTime { get; set; }
     }
 
