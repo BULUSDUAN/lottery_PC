@@ -187,7 +187,16 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
         public C_User_Beedings QueryUserBeedings(string userId, string gameCode, string gameType)
         {
             //Session.Clear();
-            return DB.CreateQuery<C_User_Beedings>().Where(p => p.UserId == userId && p.GameCode == gameCode && (string.Empty == gameType || p.GameType == gameType)).FirstOrDefault();
+            var query = DB.CreateQuery<C_User_Beedings>();
+            if (string.IsNullOrEmpty(gameType))
+            {
+                query = query.Where(p => p.UserId == userId && p.GameCode == gameCode);
+            }
+            else
+            {
+                query = query.Where(p => p.UserId == userId && p.GameCode == gameCode &&  p.GameType == gameType);
+            }
+            return query.FirstOrDefault();
         }
 
         /// <summary>
@@ -208,8 +217,16 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
         /// <returns></returns>
         public C_User_BonusPercent QueryUserBonusPercent(string userId, string gameCode, string gameType)
         {
-            //Session.Clear();
-            return DB.CreateQuery<C_User_BonusPercent>().Where(p => p.UserId == userId && p.GameCode == gameCode && (gameType == string.Empty || p.GameType == gameType)).FirstOrDefault();
+            var query = DB.CreateQuery<C_User_BonusPercent>();
+            if (string.IsNullOrEmpty(gameType))
+            {
+                query = query.Where(p => p.UserId == userId && p.GameCode == gameCode);
+            }
+            else
+            {
+                query = query.Where(p => p.UserId == userId && p.GameCode == gameCode && p.GameType == gameType);
+            }
+            return query.FirstOrDefault();
         }
 
         /// <summary>
