@@ -279,11 +279,11 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             var query = from b in DB.CreateQuery<E_SiteMessage_Bulletin_List>()
                         join u_create in DB.CreateQuery<C_User_Register>() on b.CreateBy equals u_create.UserId
-                        join u_update in DB.CreateQuery<C_User_Register>() on b.CreateBy equals u_update.UserId
+                        //join u_update in DB.CreateQuery<C_User_Register>() on b.UpdateBy equals u_update.UserId
                         where b.Id == id
-                        select new { b, u_create, u_update };
+                        select new { b, u_create };
 
-            return query.ToList().Select(t => new BulletinInfo_Query
+            var model= query.ToList().Select(t => new BulletinInfo_Query
             {
                 Id = t.b.Id,
                 Title = t.b.Title,
@@ -298,9 +298,18 @@ namespace KaSon.FrameWork.ORM.Helper
                 CreatorDisplayName = t.u_create.DisplayName,
                 UpdateTime = t.b.UpdateTime,
                 UpdateBy = t.b.UpdateBy,
-                UpdatorDisplayName = t.u_update.DisplayName,
+                //UpdatorDisplayName = t.u_update.DisplayName,
                 BulletinAgent = (BulletinAgent)t.b.BulletinAgent
             }).FirstOrDefault();
+            if (model != null && !string.IsNullOrEmpty(model.UpdateBy))
+            {
+                var updateuser = DB.CreateQuery<C_User_Register>().Where(p => p.UserId == model.UpdateBy).FirstOrDefault();
+                if (updateuser != null)
+                {
+                    model.UpdatorDisplayName = updateuser.DisplayName;
+                }
+            }
+            return model;
         }
 
 
@@ -425,6 +434,8 @@ namespace KaSon.FrameWork.ORM.Helper
                 Content = mail.MsgContent,
                 SenderId = mail.SenderId,
                 SendTime = mail.SendTime,
+                ActionTime = mail.SendTime,
+                UpdateTime = mail.SendTime
             };
             return info;
         }
@@ -472,11 +483,11 @@ namespace KaSon.FrameWork.ORM.Helper
             var query = from a in DB.CreateQuery<E_SiteMessage_Article_List>()
                         where category.Contains(a.Category)
                         && gameCode.Contains(a.GameCode)
-                        orderby a.CreateTime descending
+                        //orderby a.CreateTime descending
                         select a;
 
             collection.TotalCount = query.Count();
-            collection.ArticleList = query.Skip(pageIndex * pageSize).Take(pageSize).ToList().Select(a=> new ArticleInfo_Query
+            collection.ArticleList = query.OrderByDescending(p=>p.CreateTime).Skip(pageIndex * pageSize).Take(pageSize).ToList().Select(a=> new ArticleInfo_Query
             {
                 Category = a.Category.Trim(),
                 CreateTime = a.CreateTime,
@@ -513,10 +524,10 @@ namespace KaSon.FrameWork.ORM.Helper
         /// </summary>
         public List<Blog_UserShareSpread> QueryBlog_UserShareSpreadList(string userId, int pageIndex, int pageSize, DateTime begin, DateTime end, out int userTotalCount, out decimal RedBagMoneyTotal)
         {
-            var query = from r in DB.CreateQuery<E_Blog_UserShareSpread>()
+            var query = (from r in DB.CreateQuery<E_Blog_UserShareSpread>()
                         join u in DB.CreateQuery<C_User_Register>() on r.UserId equals u.UserId
                         where (r.AgentId == userId)
-                        select new { r,u};
+                        select new { r,u}).ToList();
             if (query != null && query.Count() > 0)
             {
                 userTotalCount = query.Count();//总人数

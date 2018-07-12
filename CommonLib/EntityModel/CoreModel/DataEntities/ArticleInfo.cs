@@ -54,7 +54,6 @@ namespace EntityModel.CoreModel
     /// </summary>
     /// 
     [ProtoContract]
-    [Serializable]
     public class ArticleInfo_Query
     {
         /// <summary>
@@ -166,7 +165,7 @@ namespace EntityModel.CoreModel
         [ProtoMember(18)]
         public string PreId { get; set; }
 
-        [ProtoMember(18)]
+        [ProtoMember(19)]
         public string PreTitle { get; set; }
 
         [ProtoMember(20)]
@@ -219,7 +218,6 @@ namespace EntityModel.CoreModel
     /// </summary>
     /// 
     [ProtoContract]
-    [Serializable]
     public class ArticleInfo_QueryCollection
     {
         public ArticleInfo_QueryCollection()

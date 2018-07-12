@@ -79,6 +79,9 @@
     <Content Update="Configs\cacheSettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Update="Configs\ConfigSettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Update="Configs\gatewaySettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
