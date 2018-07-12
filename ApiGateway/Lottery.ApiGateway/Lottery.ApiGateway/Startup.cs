@@ -45,10 +45,10 @@ namespace Lottery.ApiGateway
         {
             var builder = new ConfigurationBuilder()
               .SetBasePath(env.ContentRootPath)
-              .AddCacheFile("Configs/cacheSettings.json", optional: false)
-              .AddJsonFile("Configs/appsettings.json", optional: true, reloadOnChange: true)
-              .AddGatewayFile("Configs/gatewaySettings.json", optional: false)
-              .AddJsonFile($"Configs/appsettings.{env.EnvironmentName}.json", optional: true);
+              .AddCacheFile("Config/cacheSettings.json", optional: false)
+              .AddJsonFile("Config/appsettings.json", optional: true, reloadOnChange: true)
+              .AddGatewayFile("Config/gatewaySettings.json", optional: false)
+              .AddJsonFile($"Config/appsettings.{env.EnvironmentName}.json", optional: true);
             Configuration = builder.Build();
         }
         /// <summary>
