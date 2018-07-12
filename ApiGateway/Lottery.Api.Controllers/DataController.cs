@@ -391,7 +391,7 @@ namespace Lottery.Api.Controllers
             try
             {
                 if (entity.Param == null) throw new ArgumentException("请求参数错误！");
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 string gameCode = p.GameCode;
                 string gameType = p.GameType;
                 string issuseNumber = p.IssuseNumber;
@@ -869,7 +869,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 //var param = System.Web.Helpers.Json.Decode(entity.Param);
                 string id = p.ArticleId;
                 if (string.IsNullOrEmpty(id))
@@ -943,7 +943,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 //热点彩讯  FocusCMS
                 //赛事点评 Match_Comment
                 //彩票资讯 Lottery_GameCode
@@ -1116,7 +1116,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 int pageIndex = p.PageIndex;
                 int pageSize = p.PageSize;
                 string userToken = await GuestUserToken(_serviceProxyProvider);
@@ -1190,7 +1190,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 string Id = p.BulletinId;
                 if (string.IsNullOrEmpty(Id))
                     throw new ArgumentException("公告编号不能为空");
@@ -1252,7 +1252,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 string suggestion = p.Content;
                 string UserId = p.UserId;
                 string UserName = p.UserName;
@@ -1340,7 +1340,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 string key = p.ConfigKey;
                 if (string.IsNullOrEmpty(key))
                     throw new AggregateException("传入参数错误");
@@ -1398,11 +1398,11 @@ namespace Lottery.Api.Controllers
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        private async Task<IActionResult> QueryAPPConfig([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        public async Task<IActionResult> QueryAPPConfig([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 string appAgentId = p.AppAgentId;
                 if (string.IsNullOrEmpty(appAgentId))
                     appAgentId = "100000";//公司APP特定编号
@@ -1584,7 +1584,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 int innerstatus = p.InnerStatus;
                 string UserToken = p.UserToken;
                 string userId = p.UserId;
@@ -1609,7 +1609,7 @@ namespace Lottery.Api.Controllers
                 SiteMessageInnerMailListNew_Collection collection = new SiteMessageInnerMailListNew_Collection();
                 if (innerstatus == 3)
                 {
-                    param.Add("UserToken", UserToken);
+                    param.Add("userToken", UserToken);
                     collection = await _serviceProxyProvider.Invoke<SiteMessageInnerMailListNew_Collection>(param, "api/Data/QueryMyInnerMailList");
                     //collection = WCFClients.GameQueryClient.QueryMyInnerMailList(pageIndex, pageSize, UserToken);
                 }
@@ -1692,7 +1692,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 string mailId = p.MailId;
                 string userToken = p.UserToken;
                 if (string.IsNullOrEmpty(userToken))
@@ -1768,7 +1768,7 @@ namespace Lottery.Api.Controllers
             {
 
                 //var result = WCFClients.ActivityClient.QueryRedBagUseConfig();
-                var result = await _serviceProxyProvider.Invoke<string>(null, "api/Data/QueryRedBagUseConfig");
+                var result = await _serviceProxyProvider.Invoke<string>(new Dictionary<string,object>(), "api/Data/QueryRedBagUseConfig");
                 var list = new List<object>();
                 if (!string.IsNullOrEmpty(result))
                 {
@@ -1831,7 +1831,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 //热点彩讯  FocusCMS
                 //赛事点评 Match_Comment
                 //彩票资讯 Lottery_GameCode
@@ -1840,13 +1840,15 @@ namespace Lottery.Api.Controllers
                 int pageSize = p.PageSize;
                 var list = new List<object>();
                 Dictionary<string, object> param = new Dictionary<string, object>();
-                param.Add("pageIndex", pageIndex);
-                param.Add("pageSize", pageSize);
+                //param.Add("pageIndex", pageIndex);
+                //param.Add("pageSize", pageSize);
                 switch (category)
                 {
                     case "hot"://今日热点
                         param.Add("category", "Lottery_Hot");
                         param.Add("gameCode", "");
+                        param.Add("pageIndex", pageIndex);
+                        param.Add("pageSize", pageSize);
                         var hot = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_YouHua");
                         //var hot = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_Hot", "", pageIndex, pageSize);
                         foreach (var item in hot.ArticleList)
@@ -1864,6 +1866,8 @@ namespace Lottery.Api.Controllers
                     case "gpc"://高频彩
                         param.Add("category", "Lottery_GameCode");
                         param.Add("gameCode", "JX11X5|CQSSC|SD11X5|GD11X5|GDKLSF|JSKS|SDKLPK3");
+                        param.Add("pageIndex", pageIndex);
+                        param.Add("pageSize", pageSize);
                         var gpc = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_YouHua");
                         //var gpc = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_GameCode", "JX11X5|CQSSC|SD11X5|GD11X5|GDKLSF|JSKS|SDKLPK3", pageIndex, pageSize);
                         foreach (var item in gpc.ArticleList)
@@ -1881,6 +1885,8 @@ namespace Lottery.Api.Controllers
                     case "szc"://数字彩
                         param.Add("category", "Lottery_GameCode");
                         param.Add("gameCode", "SSQ|DLT|PL3|FC3D");
+                        param.Add("pageIndex", pageIndex);
+                        param.Add("pageSize", pageSize);
                         var scz = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_YouHua");
                         //var scz = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_GameCode", "SSQ|DLT|PL3|FC3D", pageIndex, pageSize);
                         foreach (var item in scz.ArticleList)
@@ -1898,6 +1904,8 @@ namespace Lottery.Api.Controllers
                     case "jjc"://竞技彩
                         param.Add("category", "Lottery_GameCode");
                         param.Add("gameCode", "JCZQ|JCLQ|BJDC");
+                        param.Add("pageIndex", pageIndex);
+                        param.Add("pageSize", pageSize);
                         var jjc = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_YouHua");
                         //var jjc = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_GameCode", "JCZQ|JCLQ|BJDC", pageIndex, pageSize);
                         foreach (var item in jjc.ArticleList)
@@ -1915,6 +1923,8 @@ namespace Lottery.Api.Controllers
                     case "FocusCMS"://焦点新闻
                         param.Add("category", "FocusCMS");
                         param.Add("gameCode", "");
+                        param.Add("pageIndex", pageIndex);
+                        param.Add("pageSize", pageSize);
                         var FocusCMS = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_YouHua");
                         //var FocusCMS = WCFClients.ExternalClient.QueryArticleList_YouHua("FocusCMS", "", pageIndex, pageSize);
                         foreach (var item in FocusCMS.ArticleList)
@@ -1932,6 +1942,8 @@ namespace Lottery.Api.Controllers
                     case "BonusCMS"://焦点新闻
                         param.Add("category", "BonusCMS");
                         param.Add("gameCode", "");
+                        param.Add("pageIndex", pageIndex);
+                        param.Add("pageSize", pageSize);
                         var BonusCMS = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_YouHua");
                         //var BonusCMS = WCFClients.ExternalClient.QueryArticleList_YouHua("BonusCMS", "", pageIndex, pageSize);
                         foreach (var item in BonusCMS.ArticleList)
@@ -2000,7 +2012,7 @@ namespace Lottery.Api.Controllers
             {
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param.Add("key", "Agreement_Config");
-                var config = await _serviceProxyProvider.Invoke<CoreConfigInfo>(param, "api/Data/QueryCoreConfigByKey");
+                var config = await _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/Data/QueryCoreConfigByKey");
                 var Agreement = config.ConfigValue;
                 //await _serviceProxyProvider.Invoke<string>(null, "api/Data/Agreement_Config");
                 //var Agreement = WebRedisHelper.Agreement_Config;
@@ -2036,7 +2048,7 @@ namespace Lottery.Api.Controllers
             {
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param.Add("key", "Index_Config");
-                var config = await _serviceProxyProvider.Invoke<CoreConfigInfo>(param, "api/Data/QueryCoreConfigByKey");
+                var config = await _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/Data/QueryCoreConfigByKey");
                 //var Index = await _serviceProxyProvider.Invoke<string>(null, "api/Data/Agreement_Config");
                 return Json(new LotteryServiceResponse
                 {
@@ -2069,8 +2081,8 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
-                var GameType = p.GameType;
+                var p = JsonHelper.Decode(entity.Param);
+                string GameType = p.GameType;
                 if (string.IsNullOrEmpty(GameType))
                     throw new Exception("传入游戏类型不能为空");
                 //string photourl = ConfigurationManager.AppSettings["ResourceSiteUrl_res"].ToString();
@@ -2192,7 +2204,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 string UserId = p.UserId;
                 if (string.IsNullOrEmpty(UserId))
                     throw new ArgumentException("UserId不能为空");
@@ -2247,7 +2259,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 int pageIndex = p.PageIndex;
                 int pageSize = p.PageSize;
                 Dictionary<string, object> param = new Dictionary<string, object>();
@@ -2322,7 +2334,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 int count = p.ReturnCount;
                 if (count <= 0)
                     count = 10;
@@ -2404,7 +2416,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 string gameType = p.GameType;
                 string gameCode = p.GameCode;
                 string anteCode = p.AnteCode;
@@ -2463,7 +2475,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 //string userToken = p.UserToken;
                 string gameCode = p.GameCode == null ? null : ((string)p.GameCode).ToUpper();
                 string gameType = p.GameType == null ? null : ((string)p.GameType).ToUpper();
@@ -2554,7 +2566,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = JsonHelper.Decode(entity.Param);
                 string id = p.GameCode == null ? null : ((string)p.GameCode).ToUpper();
                 string type = p.GameType == null ? null : ((string)p.GameType).ToUpper();
                 Dictionary<string, object> param = new Dictionary<string, object>();
@@ -2776,7 +2788,7 @@ namespace Lottery.Api.Controllers
             try
             {
                 var list = new List<object>();
-                var result = await _serviceProxyProvider.Invoke<BJDCIssuseInfo>(null, "api/Data/QueryBJDCCurrentIssuseInfo");
+                var result = await _serviceProxyProvider.Invoke<BJDCIssuseInfo>(new Dictionary<string,object>(), "api/Data/QueryBJDCCurrentIssuseInfo");
                 //var result = WCFClients.GameIssuseClient.QueryBJDCCurrentIssuseInfo();
                 if (result != null)
                 {

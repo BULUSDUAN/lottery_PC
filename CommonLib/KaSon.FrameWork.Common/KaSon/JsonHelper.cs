@@ -46,7 +46,8 @@ namespace KaSon.FrameWork.Common
         }
 
         public static dynamic Decode(string data)
-        {           
+        {
+            if (string.IsNullOrEmpty(data)) return null;
             return JsonConvert.DeserializeObject<dynamic>(data);
         }
         

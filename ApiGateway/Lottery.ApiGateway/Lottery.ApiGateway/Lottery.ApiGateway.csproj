@@ -73,13 +73,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Config\appsettings.json">
+    <Content Update="Configs\appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Update="Config\cacheSettings.json">
+    <Content Update="Configs\cacheSettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Update="Config\gatewaySettings.json">
+    <Content Update="Configs\ConfigSettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Configs\gatewaySettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Update="web.config">
