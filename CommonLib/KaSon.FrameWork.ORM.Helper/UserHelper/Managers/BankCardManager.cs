@@ -23,13 +23,13 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
         public C_BankCard BankCardById(string userId)
         {
            
-            return DB.CreateQuery<C_BankCard>().FirstOrDefault(p => p.UserId == userId);
+            return DB.CreateQuery<C_BankCard>().Where(p => p.UserId == userId).FirstOrDefault();
         }
 
         public C_BankCard BankCardByCode(string bankCardNumber)
         {
            
-            return DB.CreateQuery<C_BankCard>().FirstOrDefault(p => p.BankCardNumber == bankCardNumber);
+            return DB.CreateQuery<C_BankCard>().Where(p => p.BankCardNumber == bankCardNumber).FirstOrDefault();
         }
 
     }
