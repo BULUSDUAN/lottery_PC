@@ -96,6 +96,14 @@
       "Remark": ""
     },
     {
+      "Key": "Debug_AccountDetailNoUserID",
+      "Desc": "资金明细",
+      "ParamDesc": "@UserId:userId,@StartTime:fromDate,@EndTime:toDate,@PageIndex:pageIndex,@PageSize:pageSize",
+      "Director": "Debug",
+      "SQL": "SELECT * FROM( select ROW_NUMBER()OVER(ORDER BY f.id DESC) RowIndex, f.Id, f.UserId ,f.AccountType,f.Category,f.KeyLine,f.OperatorId,f.PayType,f.Summary,f.OrderId,f.BeforeBalance,f.PayMoney,f.AfterBalance,f.CreateTime from C_Fund_Detail f where @UserId='' and (f.CreateTime>=@StartTime and f.CreateTime<@EndTime) ) T WHERE RowIndex > @PageIndex * @PageSize AND RowIndex <= (@PageIndex + 1) * @PageSize",
+      "Remark": ""
+    },
+    {
       "key": "Debug_IncomeAndMoney",
       "Desc": "收入/支出条数和金额",
       "ParamDesc": "@UserId:userId,@StartTime:fromDate,@EndTime:toDate",

@@ -203,7 +203,6 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
         public UserFundDetailCollection QueryUserFundDetail(QueryUserFundDetailParam Model, string userId)
         {
             var collection = new UserFundDetailCollection();
-            userId = string.IsNullOrEmpty(userId) ? string.Empty : userId;
             Model.keyLine = string.IsNullOrEmpty(Model.keyLine) ? string.Empty : Model.keyLine;
             Model.accountTypeList = string.IsNullOrEmpty(Model.accountTypeList) ? string.Empty : Model.accountTypeList;
             Model.categoryList = string.IsNullOrEmpty(Model.categoryList) ? string.Empty : Model.categoryList;
@@ -217,15 +216,17 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             int totalPayoutCount = 0;
             decimal totalPayoutMoney = 0M;
 
-            if (string.IsNullOrEmpty(userId))
-            {
-                return new UserFundDetailCollection();
-            }
+
 
             //查询账户类型 和 类别
             //var AccountTyleList = Model.accountTypeList.Split('|');
             //查询资金明细
             string AccountDetail_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_AccountDetail").SQL;
+            if (string.IsNullOrEmpty(userId))
+            {
+                userId = "";
+                AccountDetail_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_AccountDetailNoUserID").SQL;
+            }          
             var AccountDetail_query = DB.CreateSQLQuery(AccountDetail_sql).SetString("@UserId", userId)
                 .SetString("@StartTime", Model.fromDate.ToString())
                 .SetString("@EndTime", Model.toDate.ToString())
