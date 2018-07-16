@@ -1308,9 +1308,9 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             {
                 var query = (from f in DB.CreateQuery<C_Together_FollowerRule>()
                              join u in DB.CreateQuery<UserRegister>() on f.CreaterUserId equals u.UserId
-                             where (Model.gameCode == string.Empty || f.GameCode == Model.gameCode)
-                             && (Model.gameType == string.Empty || f.GameType == Model.gameType)
-                             && (Model.userId == string.Empty || f.FollowerUserId == Model.userId)
+                             where (Model.gameCode == "" || f.GameCode == Model.gameCode)
+                             && (Model.gameType == "" || f.GameType == Model.gameType)
+                             && (Model.userId == "" || f.FollowerUserId == Model.userId)
                              select new { f, u });
                 queryResult.AddRange(query.ToList().Select(b => new TogetherFollowerRuleQueryInfo
                 {
