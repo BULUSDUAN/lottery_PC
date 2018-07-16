@@ -715,17 +715,16 @@ namespace Lottery.Api.Controllers
                 int pageSize = p.PageSize;
                 string userToken = p.UserToken;
                 int orderQueryType = p.OrderQueryType;
-                Dictionary<string, object> param = new Dictionary<string, object>
-                {
-                    { "userId", userId },{ "state", (BonusStatus?)state },{ "days", days },{ "startTime", startTime },{ "endTime", endTime },
-                    { "pageIndex", pageIndex },{ "pageSize", pageSize },{ "userToken", userToken }
-                };
+                string gamecode = p.GameCode;
+                Dictionary<string, object> param = new Dictionary<string, object>();
                 if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userToken))
                     throw new ArgumentException("您还未登陆，请登陆后查询");
 
                 var list = new List<object>();
                 if (orderQueryType == 1)
                 {
+                    var Model = new QueryMyBettingOrderParam() { userToken = userToken, bonusStatus = (BonusStatus)state, gameCode = gamecode, startTime = startTime, endTime = endTime, pageIndex = pageIndex, pageSize = pageSize };
+                    param["Model"] = Model;
                     //代购
                     var orderList = await _serviceProxyProvider.Invoke<MyBettingOrderInfoCollection>(param, "api/Order/QueryMyBettingOrderList");
                     if (orderList != null && orderList.OrderList != null)
@@ -759,6 +758,8 @@ namespace Lottery.Api.Controllers
                 }
                 if (orderQueryType == 2)
                 {
+                   var Model = new QueryCreateTogetherOrderParam() { userId = userId, startTime = startTime, endTime = endTime, gameCode = gamecode, pageIndex = pageIndex, pageSize = pageSize };
+                    param["Model"] = Model;
                     //发起的合买
                     var createList = await _serviceProxyProvider.Invoke<TogetherOrderInfoCollection>(param, "api/Order/QueryCreateTogetherOrderListByUserId");
                     foreach (var item in createList.OrderList)
@@ -789,6 +790,8 @@ namespace Lottery.Api.Controllers
                 }
                 if (orderQueryType == 3)
                 {
+                    var Model = new QueryCreateTogetherOrderParam() { pageIndex = pageIndex, pageSize = pageSize, gameCode = gamecode, userId = userId, startTime = startTime, endTime = endTime, bonus = (BonusStatus)state };
+                    param["Model"] = Model;
                     //参与的合买
                     var joinList = await _serviceProxyProvider.Invoke<TogetherOrderInfoCollection>(param, "api/Order/QueryJoinTogetherOrderListByUserId");
                     foreach (var item in joinList.OrderList)
@@ -855,17 +858,7 @@ namespace Lottery.Api.Controllers
                 var orderBy = p.orderBy;
                 var sortType = p.sortType;
                 string userToken = p.UserToken;
-                Dictionary<string, object> param = new Dictionary<string, object>
-                {
-                    { "gameCode", gameCode },{ "key", "" },
-                    { "gameType", gameType }, { "issuseNumber", "" },
-                    { "pageIndex", pageNo }, { "TogetherSchemeSecurity", null },
-                    { "PageSize", PageSize }, { "betCategory", null },
-                    { "orderBy", orderBy }, { "TogetherSchemeProgress", null },
-                    { "sortType", sortType },{ "minMoney", -1 },
-                    { "maxMoney", -1 },{ "minProgress", -1 },
-                    { "maxProgress", -1 }
-                };
+                Dictionary<string, object> param = new Dictionary<string, object>();
                 string userId = string.Empty;
                 if (!string.IsNullOrEmpty(userToken))
                 {
@@ -883,8 +876,9 @@ namespace Lottery.Api.Controllers
                     orderBy = "ManYuan desc,TotalMoney " + sortType + ", Progress DESC,ISTOP DESC";
 
                 var list = new List<object>();
-                
-                //Sports_TogetherSchemeQueryInfoCollection result1 = WCFClients.GameQueryClient.QueryJoinTogetherOrderListByUserId(userId, null, gameCode, ViewBag.Begin, ViewBag.End, pageNo, PageSize);
+                param.Clear();
+                var Model = new QuerySportsTogetherListFromRedisParam() { security= null, betCategory= null, progressState=null, gameCode= gameCode, gameType= gameType, issuseNumber="", minMoney=-1,maxMoney=-1, minProgress=-1, maxProgress=-1 };
+                param["Model"] = Model;
                 Sports_TogetherSchemeQueryInfoCollection result = await _serviceProxyProvider.Invoke<Sports_TogetherSchemeQueryInfoCollection>(param, "api/Order/QuerySportsTogetherListFromRedis");
                 if (result != null && result.List.Count > 0)
                 {
@@ -1550,12 +1544,12 @@ namespace Lottery.Api.Controllers
                 int pageIndex = p.PageIndex;
                 int pageSize = p.PageSize;
                 string userToken = p.UserToken;
+                string UserId = p.UserId;
                 if (string.IsNullOrEmpty(userToken))
                     throw new Exception("您还未登录，请登录！");
-                Dictionary<string, object> param = new Dictionary<string, object>()
-                {
-                    {"gameCode",gameCode },{"gameType",gameType },{"pageIndex",pageIndex },{"pageSize",pageSize },{"userToken",userToken }
-                };
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                var Model = new QueryUserFollowRuleParam() { userToken= userToken, pageIndex= pageIndex, pageSize= pageSize, gameCode= gameCode, gameType= gameType, userId= UserId };
+                param["Model"] = Model;
                 var followList =await _serviceProxyProvider.Invoke<TogetherFollowerRuleQueryInfoCollection>(param, "api/Order/QueryUserFollowRule");
                 var list = new List<object>();
                 if (followList != null && followList.TotalCount > 0)
@@ -1719,12 +1713,9 @@ namespace Lottery.Api.Controllers
                 string currUserId = p.CurrentUserId;
                 int pageIndex = p.PageIndex;
                 int pageSize = p.PageSize;
-                Dictionary<string, object> param = new Dictionary<string, object>()
-                {
-                    {"userId","" },{"userName",userName },{"gameCode","" },{"orderBy",strOrderBy },
-                    { "desc",currUserId },{"startTime",DateTime.Now },{ "endTime",DateTime.Now},
-                    { "isMyBD",string.Empty},{"pageIndex",pageIndex },{"pageSize",pageSize }
-                };
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                var Model = new QueryTodayBDFXList() { strOrderBy= strOrderBy, startTime= DateTime.Now, endTime= DateTime.Now, currentUserId= currUserId, pageIndex= pageIndex, pageSize= pageSize, };
+                param["Model"] = Model;
                 var todayBDList =await _serviceProxyProvider.Invoke<TotalSingleTreasure_Collection>(param, "api/Order/QueryTodayBDFXList");
                 Dictionary<string, object> paranNR = new Dictionary<string, object>()
                 {
@@ -2115,12 +2106,10 @@ namespace Lottery.Api.Controllers
                 int pageSize = p.PageSize;
                 if (string.IsNullOrEmpty(currUserId))
                     throw new Exception("您还未登录，请先登录。");
-                Dictionary<string, object> param = new Dictionary<string, object>()
-                {
-                    {"UserId",currUserId },{ "userName","" },{"gameCode","" },
-                    { "strOrderBy","" },{"currentUserId","" },{"startTime",DateTime.Parse("2015-06-06") },
-                    { "endTime",DateTime.Now},{"isMyBD","1" },{"pageIndex",pageIndex },{"pageSize",pageSize } 
-                };
+                Dictionary<string, object> param = new Dictionary<string, object>();
+               
+                var Model = new QueryTodayBDFXList() { strOrderBy = "", startTime= DateTime.Parse("2015-06-06"), endTime= DateTime.Now, currentUserId= currUserId, pageIndex= pageIndex, pageSize= pageSize };
+                param["Model"] = Model;
                 var myBDFXList =await _serviceProxyProvider.Invoke<TotalSingleTreasure_Collection>(param, "api/Order/QueryTodayBDFXList");
                 List<object> list = new List<object>();
                 if (myBDFXList != null && myBDFXList.TotalCount > 0)
@@ -2324,6 +2313,9 @@ namespace Lottery.Api.Controllers
                 }
                 else
                 {
+                    param.Clear();
+                    var Model = new QueryMyOrderListInfoParam() { userToken= userToken, pageIndex= pageIndex, pageSize= pageSize, gameCode= _gameCode, bonusStatus= bonusStatus, schemeType= schemeType, startTime= startTime, endTime= endTime };
+                    param["Model"] = Model;
                     var result =await _serviceProxyProvider.Invoke<MyOrderListInfoCollection>(param, "api/Order/QueryMyOrderListInfo");
                     return new LotteryServiceResponse
                     {
