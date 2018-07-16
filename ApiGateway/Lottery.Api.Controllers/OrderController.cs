@@ -579,7 +579,7 @@ namespace Lottery.Api.Controllers
                 }
                 else if (viewType.ToUpper() == "GCJL")
                 {
-                    //OrderQueryType orderType = (OrderQueryType)p.OrderType;
+                    var Model = new QueryMyBettingOrderParam() { userToken = userToken, startTime = startTime, endTime = endTime, pageIndex = PageIndex, pageSize = pageSize, bonusStatus = null, gameCode = "" };
                     var result = await _serviceProxyProvider.Invoke<MyBettingOrderInfoCollection>(param, "api/Order/QueryMyBettingOrderList");
                     if (result != null && result.OrderList != null)
                     {
@@ -601,8 +601,8 @@ namespace Lottery.Api.Controllers
                 }
                 else if (viewType.ToUpper() == "ZJJL")
                 {
-                    param.Add("accountType", "10");
-                    param.Add("categoryList", "奖金");
+                    var Model = new QueryUserFundDetailParam() { userToken = userToken, fromDate = startTime, toDate = endTime, pageIndex = PageIndex, pageSize = pageSize, categoryList = "奖金", accountTypeList = "10" };
+                    param["Model"] = Model;
                     var result =await _serviceProxyProvider.Invoke<UserFundDetailCollection>(param, "api/Order/QueryMyFundDetailList");
                     if (result != null && result.FundDetailList != null)
                     {
@@ -633,7 +633,8 @@ namespace Lottery.Api.Controllers
                 }
                 else if (viewType.ToUpper() == "TKJL")
                 {
-                    param.Add("WithdrawStatus", (int)WithdrawStatus.Success);
+                    var Model = new QueryMyWithdrawParam() { userToken = userToken, startTime = startTime, endTime = endTime, pageIndex = PageIndex, pageSize = pageSize, status = (int)WithdrawStatus.Success };
+                    param["Model"] = Model;
                     var result = await _serviceProxyProvider.Invoke<Withdraw_QueryInfoCollection>(param, "api/Order/QueryMyWithdrawList");
                     if (result != null && result.WithdrawList != null)
                     {
