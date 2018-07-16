@@ -237,7 +237,7 @@ namespace UserLottery.Service.ModuleServices
         /// <param name="newPassword">新密码</param>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public CommonActionResult CheckIsSame2BalancePassword(string newPassword, string userId)
+        public Task<CommonActionResult> CheckIsSame2BalancePassword(string newPassword, string userId)
         {
             var loginBiz = new LocalLoginBusiness();
             var result = loginBiz.CheckIsSame2BalancePassword(userId, newPassword);
@@ -246,7 +246,7 @@ namespace UserLottery.Service.ModuleServices
             {
                 flag = result.Value ? "T" : "F";
             }
-            return new CommonActionResult(true, "查询成功") { ReturnValue = flag };
+            return Task.FromResult(new CommonActionResult(true, "查询成功") { ReturnValue = flag });
         }
 
         /// <summary>
@@ -435,18 +435,19 @@ namespace UserLottery.Service.ModuleServices
                 var local = loginBiz.GetLocalLoginByUserId(userId);
                 if (local == null)
                     return Task.FromResult(new LoginInfo());
+                var register = loginBiz.GetRegisterById(local.UserId);
                 return Task.FromResult(new LoginInfo
                 {
                     CreateTime = local.CreateTime,
-                    RegType = local.Register.RegType,
-                    Referrer = local.Register.Referrer,
-                    UserId = local.User.UserId,
-                    VipLevel = local.Register.VipLevel,
+                    RegType = register.RegType,
+                    Referrer = register.Referrer,
+                    UserId = local.UserId,
+                    VipLevel = register.VipLevel,
                     LoginName = local.LoginName,
-                    DisplayName = local.Register.DisplayName,
-                    AgentId = local.Register.AgentId,
-                    IsAgent = local.Register.IsAgent,
-                    HideDisplayNameCount = local.Register.HideDisplayNameCount,
+                    DisplayName = register.DisplayName,
+                    AgentId = register.AgentId,
+                    IsAgent = register.IsAgent,
+                    HideDisplayNameCount = register.HideDisplayNameCount,
                 });
             }
             catch (Exception ex)
@@ -1016,11 +1017,9 @@ namespace UserLottery.Service.ModuleServices
         #region 判断找回密码验证码是否正确
         public Task<bool> CheckValidateCodeByForgetPWD(string mobile, string validateCode)
         {
-                var flag = false;
-                dBbase.DB.Begin();
+                var flag = false;         
                 var biz = new ValidationMobileBusiness();
-                flag = biz.CheckValidationCode(mobile, "SendValidateCodeToUserMobileByForgetPWD", validateCode, GetMaxTimes(5));
-                dBbase.DB.Commit();
+                flag = biz.CheckValidationCode(mobile, "SendValidateCodeToUserMobileByForgetPWD", validateCode, GetMaxTimes(5));            
                 return Task.FromResult(flag);
         }
         #endregion

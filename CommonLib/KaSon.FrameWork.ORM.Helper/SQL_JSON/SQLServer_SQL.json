@@ -114,25 +114,25 @@
     {
       "key": "Debug_TotalRequestMoney",
       "Desc": "充值记录金额",
-      "ParamDesc": "@UserId:userId,@AgentList:agentTypeList,@StatusList:statusList,@SourceList:sourceList,@StartTime:startTime,@EndTime:endTime,@OrderId:OrderId",
+      "ParamDesc": "@UserId:userId,@AgentList:AgentList,@SourceList:SourceList,@StatusList:StatusList,@StartTime:startTime,@EndTime:endTime,@OrderId:OrderId",
       "Director": "Debug",
-      "SQL": "SELECT TotalCount=COUNT(1),TotalRequestMoney=SUM(RequestMoney) FROM C_FillMoney WHERE UserId=@UserId AND (@AgentList=N'' OR FillMoneyAgent IN ({0})) AND (@StatusList=N'' OR [Status] IN ({1})) AND (@SourceList=N'' OR SchemeSource IN ({2})) And (RequestTime>=@StartTime AND RequestTime < @EndTime) And (@OrderId='' or (OrderId=@OrderId or OuterFlowId=@OrderId))",
+      "SQL": "SELECT TotalCount=COUNT(1),TotalRequestMoney=SUM(RequestMoney) FROM C_FillMoney WHERE (@UserId=N'' OR UserId=@UserId) AND (@AgentList=N'' OR FillMoneyAgent IN (SELECT a FROM F_Common_SplitString(@AgentList,'|'))) AND (@StatusList=N'' OR [Status] IN (SELECT a FROM F_Common_SplitString(@StatusList,'|'))) AND (@SourceList=N'' OR SchemeSource IN (SELECT a FROM F_Common_SplitString(@SourceList,'|'))) ANd (RequestTime>=@StartTime AND RequestTime < @EndTime) and (@OrderId='' or (OrderId=@OrderId or OuterFlowId=@OrderId))",
       "Remark": ""
     },
     {
       "key": "Debug_TotalResponseMoney",
       "Desc": "充值记录金额",
-      "ParamDesc": "@UserId:userId,@AgentList:agentTypeList,@SourceList:sourceList,@StartTime:startTime,@EndTime:endTime,@OrderId:OrderId",
+      "ParamDesc": "@UserId:userId,@AgentList:AgentList,@SourceList:SourceList,@StartTime:startTime,@EndTime:endTime,@OrderId:OrderId",
       "Director": "Debug",
-      "SQL": "SELECT TotalResponseMoney=SUM(ResponseMoney) FROM C_FillMoney WHERE  UserId=@UserId AND (@AgentList=N'' OR FillMoneyAgent IN ({0})) AND [Status]=1 AND (@SourceList=N'' OR SchemeSource IN (1)) ANd (RequestTime>=@StartTime AND RequestTime < @EndTime) and (@OrderId='' or (OrderId=@OrderId or OuterFlowId=@OrderId))",
+      "SQL": "SELECT TotalResponseMoney=SUM(ResponseMoney) FROM C_FillMoney WHERE (@UserId=N'' OR UserId=@UserId) AND (@AgentList=N'' OR FillMoneyAgent IN (SELECT a FROM F_Common_SplitString(@AgentList,'|'))) AND [Status]=1 AND (@SourceList=N'' OR SchemeSource IN (SELECT a FROM F_Common_SplitString(@SourceList,'|'))) ANd (RequestTime>=@StartTime AND RequestTime < @EndTime) and (@OrderId='' or (OrderId=@OrderId or OuterFlowId=@OrderId))",
       "Remark": ""
     },
     {
       "key": "Debug_FillMoneyPage",
       "Desc": "充值记录分页",
-      "ParamDesc": "@UserId:userId,@AgentList:agentTypeList,@SourceList:sourceList,@StartTime:startTime,@EndTime:endTime,@OrderId:OrderId",
+      "ParamDesc": "@UserId:userId,@AgentList:AgentList,@SourceList:SourceList,@StatusList:StatusList,@StartTime:startTime,@EndTime:endTime,@OrderId:OrderId",
       "Director": "Debug",
-      "SQL": "SELECT * FROM( SELECT ROW_NUMBER()OVER(ORDER BY RequestTime DESC) RowIndex,T.*,R.ComeFrom,R.VipLevel,DisplayName,R.HideDisplayNameCount FROM C_FillMoney T LEFT OUTER JOIN C_User_Register R ON T.UserId=R.UserId WHERE T.UserId=@UserId) AND (@AgentList=N'' OR FillMoneyAgent IN ({0})) AND (@StatusList=N'' OR [Status] IN ({1})) AND (@SourceList=N'' OR SchemeSource IN ({2})) ANd (RequestTime>=@StartTime AND RequestTime < @EndTime)  and (@OrderId='' or (OrderId=@OrderId or OuterFlowId=@OrderId)) ) T WHERE RowIndex > @PageIndex * @PageSize AND RowIndex <= (@PageIndex + 1) * @PageSize",
+      "SQL": "SELECT * FROM( SELECT ROW_NUMBER()OVER(ORDER BY RequestTime DESC) RowIndex,T.*,R.ComeFrom,R.VipLevel,DisplayName,R.HideDisplayNameCount FROM C_FillMoney T LEFT OUTER JOIN C_User_Register R ON T.UserId=R.UserId WHERE (@UserId=N'' OR T.UserId=@UserId) AND (@AgentList=N'' OR FillMoneyAgent IN (SELECT a FROM F_Common_SplitString(@AgentList,'|'))) AND (@StatusList=N'' OR [Status] IN (SELECT a FROM F_Common_SplitString(@StatusList,'|'))) AND (@SourceList=N'' OR SchemeSource IN (SELECT a FROM F_Common_SplitString(@SourceList,'|'))) ANd (RequestTime>=@StartTime AND RequestTime < @EndTime)  and (@OrderId='' or (OrderId=@OrderId or OuterFlowId=@OrderId)) ) T WHERE RowIndex > @PageIndex * @PageSize AND RowIndex <= (@PageIndex + 1) * @PageSize",
       "Remark": ""
     },
     {

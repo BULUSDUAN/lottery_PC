@@ -57,7 +57,7 @@ namespace OrderLottery.Service.Host
                         builder.Register(p => new CPlatformContainer(ServiceLocator.Current));
                     });
                 })
-                .SubscribeAt() 
+               .SubscribeAt() 
                // .UseLog4net(LogLevel.Error, "Configs/log4net.config")
                 .UseNLog(LogLevel.Error, "Config/NLog.config")
                 //.UseServer("127.0.0.1", 98)
