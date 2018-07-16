@@ -715,17 +715,15 @@ namespace Lottery.Api.Controllers
                 int pageSize = p.PageSize;
                 string userToken = p.UserToken;
                 int orderQueryType = p.OrderQueryType;
-                Dictionary<string, object> param = new Dictionary<string, object>
-                {
-                    { "userId", userId },{ "state", (BonusStatus?)state },{ "days", days },{ "startTime", startTime },{ "endTime", endTime },
-                    { "pageIndex", pageIndex },{ "pageSize", pageSize },{ "userToken", userToken }
-                };
+                string gamecode = p.GameCode;
+                Dictionary<string, object> param = new Dictionary<string, object>();
                 if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userToken))
                     throw new ArgumentException("您还未登陆，请登陆后查询");
 
                 var list = new List<object>();
                 if (orderQueryType == 1)
                 {
+                    param["Model"] = new QueryMyBettingOrderParam() { userToken = userToken, bonusStatus = (BonusStatus)state, gameCode = gamecode, startTime = startTime, endTime = endTime, pageIndex = pageIndex, pageSize = pageSize };
                     //代购
                     var orderList = await _serviceProxyProvider.Invoke<MyBettingOrderInfoCollection>(param, "api/Order/QueryMyBettingOrderList");
                     if (orderList != null && orderList.OrderList != null)
@@ -759,6 +757,7 @@ namespace Lottery.Api.Controllers
                 }
                 if (orderQueryType == 2)
                 {
+                    param["Model"] = new QueryCreateTogetherOrderParam() { userId = userId, startTime = startTime, endTime = endTime, gameCode = gamecode, pageIndex = pageIndex, pageSize = pageSize };
                     //发起的合买
                     var createList = await _serviceProxyProvider.Invoke<TogetherOrderInfoCollection>(param, "api/Order/QueryCreateTogetherOrderListByUserId");
                     foreach (var item in createList.OrderList)
