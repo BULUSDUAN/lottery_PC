@@ -76,7 +76,7 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
 
             }).FirstOrDefault();
 
-            if (LoginUser != null)
+            if (LoginUsers != null)
             {
                 LoginUsers.User = DB.CreateQuery<C_Auth_Users>().Where(p => p.UserId == LoginUsers.UserId).ToList().Select(p=>new SystemUser()
                 {
