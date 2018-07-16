@@ -504,22 +504,18 @@ namespace Lottery.Api.Controllers
                 startTime = startTime.AddDays(-days).Date;
                 int PageIndex = p.PageIndex??0;
                 int pageSize = p.PageSize ?? 1;
-                Dictionary<string, object> param = new Dictionary<string, object>
-                {
-                    { "viewType", viewType },{ "userToken", userToken },{ "startTime", startTime },{ "endTime", endTime },{ "pageIndex", PageIndex },{ "pageSize", pageSize }
-                };
                 if (string.IsNullOrEmpty(userToken))
                     throw new ArgumentException("您还未登陆");
                 //endTime = endTime.AddDays(1);
-
+                Dictionary<string, object> param = new Dictionary<string, object>();
                 var list = new List<object>();
                 if (viewType.ToUpper() == "ZHMX")
                 {
                     string accountType = p.AccoountType;
                     if (string.IsNullOrEmpty(accountType))
                         accountType = string.Empty;
-                    param.Add("accountType", accountType);
-                    param.Add("categoryList", "");
+                    var Model = new QueryUserFundDetailParam() { viewtype = viewType, userToken = userToken, fromDate = startTime, toDate = endTime, pageIndex = PageIndex, pageSize = pageSize, accountTypeList = accountType };
+                    param["Model"] = Model;
                     var FundDetails = await _serviceProxyProvider.Invoke<UserFundDetailCollection>(param, "api/Order/QueryMyFundDetailList");
                     if (FundDetails != null && FundDetails.FundDetailList.Count > 0)
                     {
