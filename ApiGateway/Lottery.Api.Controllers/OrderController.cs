@@ -580,6 +580,7 @@ namespace Lottery.Api.Controllers
                 else if (viewType.ToUpper() == "GCJL")
                 {
                     var Model = new QueryMyBettingOrderParam() { userToken = userToken, startTime = startTime, endTime = endTime, pageIndex = PageIndex, pageSize = pageSize, bonusStatus = null, gameCode = "" };
+                    param["Model"] = Model;
                     var result = await _serviceProxyProvider.Invoke<MyBettingOrderInfoCollection>(param, "api/Order/QueryMyBettingOrderList");
                     if (result != null && result.OrderList != null)
                     {
