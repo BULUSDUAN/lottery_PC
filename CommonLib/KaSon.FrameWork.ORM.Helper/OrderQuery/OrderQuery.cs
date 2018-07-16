@@ -361,7 +361,6 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             //WithdrawAgentType? agent = null;
             int? agent = null;
             int sortType = -1;
-
             var query = from r in DB.CreateQuery<C_Withdraw>()
                         join u in DB.CreateQuery<C_User_Register>() on r.UserId equals u.UserId
                         where (userId == "" || r.UserId == userId)
@@ -503,16 +502,16 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             var query = from s in list
                         where arrProg.Contains(Convert.ToInt32(s.ProgressStatus).ToString())
                           && (betC == -1 || Convert.ToInt32(s.SchemeBettingCategory) == betC)
-                          && (Model.issuseNumber == string.Empty || s.IssuseNumber == Model.issuseNumber)
+                          && (Model.issuseNumber == "" || s.IssuseNumber == Model.issuseNumber)
                           && (s.StopTime >= DateTime.Now)
-                          && (Model.gameCode == string.Empty || s.GameCode == Model.gameCode)
-                          && (Model.gameType == string.Empty || s.GameType == Model.gameType)
+                          && (Model.gameCode == "" || s.GameCode == Model.gameCode)
+                          && (Model.gameType == "" || s.GameType == Model.gameType)
                           && (Model.minMoney == -1 || s.TotalMoney >= Model.minMoney)
                           && (Model.maxMoney == -1 || s.TotalMoney <= Model.maxMoney)
                           && (Model.minProgress == -1 || s.Progress >= Model.minProgress)
                           && (Model.maxProgress == -1 || s.Progress <= Model.maxProgress)
                           && (seC == -1 || Convert.ToInt32(s.Security) == seC)
-                          && (Model.key == string.Empty || s.CreateUserId == Model.key || s.SchemeId == Model.key || s.CreaterDisplayName == Model.key)
+                          && (Model.key == "" || s.CreateUserId == Model.key || s.SchemeId == Model.key || s.CreaterDisplayName == Model.key)
                         select s;
             cache.TotalCount = query.Count();
             cache.List = query.Skip(Model.pageIndex * Model.pageSize).Take(Model.pageSize).ToList();
