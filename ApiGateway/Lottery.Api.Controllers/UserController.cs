@@ -188,21 +188,26 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                string oldPassword = "123456";
-                string newPassword = "123456789";
-                string userToken = "12121";
-                string userId = "13015";
+                var p = WebHelper.Decode(entity.Param);
+                string oldPassword = p.OldPassword;
+                string newPassword = p.NewPassword;
+                string userToken = p.UserToken;
+                string userId = p.UserId;
                 Dictionary<string, object> param = new Dictionary<string, object>();
+                Dictionary<string, object> paramCheck = new Dictionary<string, object>();
                 if (string.IsNullOrEmpty(oldPassword))
                     throw new Exception("旧密码不能为空");
                 if (string.IsNullOrEmpty(newPassword))
                     throw new Exception("新密码不能为空");
                 if (string.IsNullOrEmpty(userToken))
                     throw new Exception("Token不能为空");
+                paramCheck["newPassword"] = newPassword;
+                paramCheck["userId"] = userId;
+                
                 param["oldPassword"] = oldPassword;
                 param["newPassword"] = newPassword;
                 param["userToken"] = userToken;
-                var chkPwd = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/CheckIsSame2BalancePassword");
+                var chkPwd = await _serviceProxyProvider.Invoke<CommonActionResult>(paramCheck, "api/user/CheckIsSame2BalancePassword");
                 if (chkPwd.ReturnValue == "T" || chkPwd.ReturnValue == "N")
                     throw new Exception("登录密码不能和资金密码一样");
                 var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/ChangeMyPassword");
@@ -695,8 +700,9 @@ namespace Lottery.Api.Controllers
                 var flag = await _serviceProxyProvider.Invoke<bool>(param, "api/user/CheckValidateCodeByForgetPWD");
                 if (!flag)
                     throw new Exception("验证码错误或已过期");
-
-                string userId = await _serviceProxyProvider.Invoke<string>(param, "api/user/GetUserIdByLoginName");
+                Dictionary<string, object> paramLoginName = new Dictionary<string, object>();
+                paramLoginName["loginName"] = mobile;
+                string userId = await _serviceProxyProvider.Invoke<string>(paramLoginName, "api/user/GetUserIdByLoginName");
                 if (string.IsNullOrEmpty(userId))
                     throw new Exception("手机号错误，该手机号未注册");
 
@@ -1177,9 +1183,9 @@ namespace Lottery.Api.Controllers
             {
                 var p = WebHelper.Decode(entity.Param);
                 string userId = p.UserId;
-                var userToken = p.UserToken;
-                var loginName = p.LoginName;
-                if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userToken) || string.IsNullOrEmpty(userToken))
+                string userToken = p.UserToken;
+                string loginName = p.LoginName;
+                if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userToken) || string.IsNullOrEmpty(loginName))
                     throw new ArgumentException("传入参数信息有误！");
 
                 //if (!CanDoLoadUserInfo(loginName))
