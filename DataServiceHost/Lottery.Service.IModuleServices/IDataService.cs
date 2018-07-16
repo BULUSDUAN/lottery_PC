@@ -109,5 +109,8 @@ namespace Lottery.Service.IModuleServices
 
         [Service(Date = "2018-07-05", Director = "lidi", Name = "获取游客token")]
         Task<CommonActionResult> GetGuestToken();
+
+        [Service(Date = "2018-07-05", Director = "lidi", Name = "查询北京单场最新期号")]
+        Task<BJDCIssuseInfo> QueryBJDCCurrentIssuseInfo();
     }
 }

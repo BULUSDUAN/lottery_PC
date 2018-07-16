@@ -9,7 +9,6 @@ namespace EntityModel.Communication
     /// 操作结果
     /// </summary>
     [ProtoContract]
-    [Serializable]
     public class CommonActionResult
     {
         public CommonActionResult()

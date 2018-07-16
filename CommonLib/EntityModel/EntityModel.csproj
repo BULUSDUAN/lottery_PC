@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MessagePack" Version="1.7.3.4" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="protobuf-net" Version="2.3.7" />
@@ -23,6 +22,9 @@
   <ItemGroup>
     <Reference Include="KaSon.FrameWork.Services">
       <HintPath>..\..\FramWorkDLL\KaSon.FrameWork.Services.dll</HintPath>
+    </Reference>
+    <Reference Include="MessagePack">
+      <HintPath>..\..\FramWorkDLL\MessagePack.dll</HintPath>
     </Reference>
   </ItemGroup>
 
