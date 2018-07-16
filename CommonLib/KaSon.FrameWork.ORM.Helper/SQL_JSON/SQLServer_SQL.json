@@ -124,7 +124,7 @@
       "Desc": "充值记录金额",
       "ParamDesc": "@UserId:userId,@AgentList:AgentList,@SourceList:SourceList,@StartTime:startTime,@EndTime:endTime,@OrderId:OrderId",
       "Director": "Debug",
-      "SQL": "SELECT @TotalResponseMoney=SUM(ResponseMoney) FROM C_FillMoney WHERE (@UserId=N'' OR UserId=@UserId) AND (@AgentList=N'' OR FillMoneyAgent IN (SELECT a FROM F_Common_SplitString(@AgentList,'|'))) AND [Status]=1 AND (@SourceList=N'' OR SchemeSource IN (SELECT a FROM F_Common_SplitString(@SourceList,'|'))) ANd (RequestTime>=@StartTime AND RequestTime < @EndTime) and (@OrderId='' or (OrderId=@OrderId or OuterFlowId=@OrderId))",
+      "SQL": "SELECT TotalResponseMoney=SUM(ResponseMoney) FROM C_FillMoney WHERE (@UserId=N'' OR UserId=@UserId) AND (@AgentList=N'' OR FillMoneyAgent IN (SELECT a FROM F_Common_SplitString(@AgentList,'|'))) AND [Status]=1 AND (@SourceList=N'' OR SchemeSource IN (SELECT a FROM F_Common_SplitString(@SourceList,'|'))) ANd (RequestTime>=@StartTime AND RequestTime < @EndTime) and (@OrderId='' or (OrderId=@OrderId or OuterFlowId=@OrderId))",
       "Remark": ""
     },
     {
