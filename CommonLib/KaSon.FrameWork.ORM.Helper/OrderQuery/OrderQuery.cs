@@ -361,17 +361,40 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             //WithdrawAgentType? agent = null;
             int? agent = null;
             int sortType = -1;
+
             var query = from r in DB.CreateQuery<C_Withdraw>()
                         join u in DB.CreateQuery<C_User_Register>() on r.UserId equals u.UserId
-                        where (userId == string.Empty || r.UserId == userId)
-                        && r.RequestTime >= Model.startTime && r.RequestTime < Model.endTime
-                        && (Model.status == null || r.Status == Model.status)
-                        && (orderId == string.Empty || r.BankCode == orderId)
-                        && (agent == null || r.WithdrawAgent == agent)
-                        && (minMoney == -1 || r.RequestMoney >= minMoney)
-                        && (maxMoney == -1 || r.RequestMoney <= maxMoney)
                         select new { r, u };
-                var queryResult= query.ToList().Select(b=>new Withdraw_QueryInfo
+            //where (userId == string.Empty || r.UserId == userId)
+            //&& r.RequestTime >= Model.startTime && r.RequestTime < Model.endTime
+            //&& (Model.status == null || r.Status == Model.status)
+            //&& (orderId == string.Empty || r.BankCode == orderId)
+            //&& (agent == null || r.WithdrawAgent == agent)
+            //&& (minMoney == -1 || r.RequestMoney >= minMoney)
+            //&& (maxMoney == -1 || r.RequestMoney <= maxMoney)
+            //select new { r, u };
+            if (!string.IsNullOrEmpty(userId))
+            {
+                query = query.Where(p => p.r.UserId == userId);
+            }
+            query = query.Where(p => p.r.RequestTime >= Model.startTime && p.r.RequestTime < Model.endTime);
+            if (!Model.status.HasValue)
+            {
+                query = query.Where(p => p.r.Status == Model.status);
+            }
+            if (!agent.HasValue)
+            {
+                query = query.Where(p => p.r.WithdrawAgent == agent);
+            }
+            if (minMoney != -1)
+            {
+                query = query.Where(p => p.r.RequestMoney >= minMoney);
+            }
+            if (maxMoney != -1)
+            {
+                query = query.Where(p => p.r.RequestMoney <= maxMoney);
+            }
+            var queryResult= query.ToList().Select(b=>new Withdraw_QueryInfo
                         {
                             BankCardNumber = b.r.BankCardNumber,
                             BankCode = b.r.BankCode,
