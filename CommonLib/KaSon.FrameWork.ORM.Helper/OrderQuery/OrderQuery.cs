@@ -257,7 +257,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
         /// </summary>
         /// <param name="Model"></param>
         /// <returns></returns>
-        public FillMoneyQueryInfoCollection QueryFillMoneyList(QueryFillMoneyListParam Model)
+        public FillMoneyQueryInfoCollection QueryMyFillMoneyList(QueryFillMoneyListParam Model)
         {
             UserAuthentication Auth = new UserAuthentication();
             var userId = Auth.ValidateUserAuthentication(Model.userToken);
