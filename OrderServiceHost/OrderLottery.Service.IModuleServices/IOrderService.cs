@@ -24,7 +24,7 @@ namespace OrderLottery.Service.IModuleServices
         Task<UserFundDetailCollection> QueryMyFundDetailList(QueryUserFundDetailParam Model);
 
         [Service(Date = "2018-06-06", Director = "Debug", Name = "查询我的充值记录")]
-        Task<FillMoneyQueryInfoCollection> QueryFillMoneyList(QueryFillMoneyListParam Model);
+        Task<FillMoneyQueryInfoCollection> QueryMyFillMoneyList(QueryFillMoneyListParam Model);
 
         [Service(Date = "2018-06-07", Director = "Debug", Name = "查询我的投注记录")]
         Task<MyBettingOrderInfoCollection> QueryMyBettingOrderList(QueryMyBettingOrderParam Model);

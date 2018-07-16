@@ -73,9 +73,9 @@ namespace OrderLottery.Service.ModuleServices
         /// </summary>
         /// <param name="Model"></param>
         /// <returns></returns>
-        public Task<FillMoneyQueryInfoCollection> QueryFillMoneyList(QueryFillMoneyListParam Model)
+        public Task<FillMoneyQueryInfoCollection> QueryMyFillMoneyList(QueryFillMoneyListParam Model)
         {
-            return Task.FromResult(_order.QueryFillMoneyList(Model));
+            return Task.FromResult(_order.QueryMyFillMoneyList(Model));
         }
         /// <summary>
         /// 查询我的投注记录

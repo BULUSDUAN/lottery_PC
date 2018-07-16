@@ -550,7 +550,7 @@ namespace Lottery.Api.Controllers
                 {
                     var Model = new QueryFillMoneyListParam() {  userToken = userToken, startTime = startTime, endTime = endTime, pageIndex = PageIndex, pageSize = pageSize, statusList = "1" };
                     param["Model"] = Model;
-                    var FillMoneyCollection = await _serviceProxyProvider.Invoke<FillMoneyQueryInfoCollection>(param, "api/Order/QueryFillMoneyList");
+                    var FillMoneyCollection = await _serviceProxyProvider.Invoke<FillMoneyQueryInfoCollection>(param, "api/Order/QueryMyFillMoneyList");
                     if (FillMoneyCollection != null && FillMoneyCollection.FillMoneyList.Count > 0)
                     {
                         foreach (var item in FillMoneyCollection.FillMoneyList)
