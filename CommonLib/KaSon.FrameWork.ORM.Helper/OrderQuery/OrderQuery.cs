@@ -435,6 +435,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                 .SetString("@DateFrom", Model.startTime.ToString("yyyy-MM-dd"))
                 .SetString("@DateTo", Model.endTime.ToString("yyyy-MM-dd"))
                 .SetString("@GameCode", Model.gameCode)
+                .SetInt("@BonusStatus",(int)Model.bonus)
                 .SetInt("@PageIndex", Model.pageIndex)
                 .SetInt("@PageSize", Model.pageSize)
                 .List<TogetherOrderInfo>();
@@ -452,7 +453,10 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             var collection = new TogetherOrderInfoCollection();
             string sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_QueryJoinTogetherOrderCount").SQL;
             collection = DB.CreateSQLQuery(sql)
-               .SetString("@GameCode", Model.gameCode).First<TogetherOrderInfoCollection>();
+                .SetString("@UserId",Model.userId)
+               .SetString("@GameCode", Model.gameCode)
+               .SetString("@DateFrom", Model.startTime.ToString("yyyy-MM-dd"))
+               .SetString("@DateTo", Model.endTime.ToString("yyyy-MM-dd")).First<TogetherOrderInfoCollection>();
 
             string page_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_QueryJoinTogetherOrderPage").SQL;
             collection.OrderList = DB.CreateSQLQuery(page_sql)
@@ -1130,7 +1134,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             var issuse = (from g in DB.CreateQuery<C_Game_Issuse>()
                           where g.GameCode == gameCode
                           && g.IssuseNumber == issuseNumber
-                          && (gameType == string.Empty || g.GameType == gameType)
+                          && (gameType == "" || g.GameType == gameType)
                           select g).FirstOrDefault();
             if (issuse == null) return new Issuse_QueryInfo { Status = IssuseStatus.OnSale };
             return new Issuse_QueryInfo
@@ -1340,9 +1344,9 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             {
                 var query = (from f in DB.CreateQuery<C_Together_FollowerRule>()
                              join u in DB.CreateQuery<UserRegister>() on f.FollowerUserId equals u.UserId
-                             where (Model.gameCode == string.Empty || f.GameCode == Model.gameCode)
-                             && (Model.gameType == string.Empty || f.GameType == Model.gameType)
-                             && (Model.userId == string.Empty || f.CreaterUserId == Model.userId)
+                             where (Model.gameCode == "" || f.GameCode == Model.gameCode)
+                             && (Model.gameType == "" || f.GameType == Model.gameType)
+                             && (Model.userId == "" || f.CreaterUserId == Model.userId)
                              orderby f.FollowerIndex ascending
                              select new { f, u });
                 queryResult.AddRange(query.ToList().Select(b => new TogetherFollowerRuleQueryInfo

@@ -709,7 +709,7 @@ namespace Lottery.Api.Controllers
                 int state = p.BonusStatus;
                 //int schemeType = p.SchemeType;
                 int days = p.ViewDay;
-                DateTime startTime = DateTime.Now.AddDays(-days);
+                DateTime startTime =Convert.ToDateTime("2015-01-01 00:00:00");
                 DateTime endTime = DateTime.Now;
                 int pageIndex = p.PageIndex;
                 int pageSize = p.PageSize;
@@ -758,7 +758,7 @@ namespace Lottery.Api.Controllers
                 }
                 if (orderQueryType == 2)
                 {
-                   var Model = new QueryCreateTogetherOrderParam() { userId = userId, startTime = startTime, endTime = endTime, gameCode = gamecode, pageIndex = pageIndex, pageSize = pageSize };
+                   var Model = new QueryCreateTogetherOrderParam() { userId = userId, startTime = startTime, endTime = endTime, gameCode = gamecode, pageIndex = pageIndex, pageSize = pageSize,bonus=(BonusStatus)state };
                     param["Model"] = Model;
                     //发起的合买
                     var createList = await _serviceProxyProvider.Invoke<TogetherOrderInfoCollection>(param, "api/Order/QueryCreateTogetherOrderListByUserId");
