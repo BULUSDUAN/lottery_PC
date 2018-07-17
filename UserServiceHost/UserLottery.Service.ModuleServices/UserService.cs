@@ -111,10 +111,10 @@ namespace UserLottery.Service.ModuleServices
 
             ////清理用户绑定数据缓存
             ////ClearUserBindInfoCache(loginEntity.UserId);
-
+            
 
             //!执行扩展功能代码 - 提交事务前
-            //BusinessHelper.ExecPlugin<IUser_AfterLogin>(new object[] { loginEntity.UserId, "LOCAL", loginIp, DateTime.Now });
+            BusinessHelper.ExecPlugin<IUser_AfterLogin>(new object[] { loginEntity.UserId, "LOCAL", loginIp, DateTime.Now });
             //刷新用户在Redis中的余额
             BusinessHelper.RefreshRedisUserBalance(loginEntity.UserId);
             return Task.FromResult(new LoginInfo
@@ -194,7 +194,7 @@ namespace UserLottery.Service.ModuleServices
             }
 
             //! 执行扩展功能代码 - 提交事务前
-            //BusinessHelper.ExecPlugin<IUser_AfterLogin>(new object[] { userId, loginFrom, "", DateTime.Now });
+            BusinessHelper.ExecPlugin<IUser_AfterLogin>(new object[] { userId, loginFrom, "", DateTime.Now });
 
 
             //刷新用户在Redis中的余额
@@ -466,8 +466,8 @@ namespace UserLottery.Service.ModuleServices
             var loginBiz = new MobileAuthenticationBusiness();        
                 _coreConfigList = loginBiz.BanRegistrMobile(key);
 
-            if (_coreConfigList == null)
-                throw new Exception(string.Format("找不到配置项：{0}", key));
+            //if (_coreConfigList == null)
+            //    throw new Exception(string.Format("找不到配置项：{0}", key));
             return Task.FromResult(_coreConfigList);
         }
 
@@ -1286,7 +1286,7 @@ namespace UserLottery.Service.ModuleServices
 
             #region 还没做
             //! 执行扩展功能代码 - 提交事务后
-            //BusinessHelper.ExecPlugin<IResponseAuthentication_AfterTranCommit>(new object[] { userId, "RealName", realNameInfo.RealName + "|" + realNameInfo.CardType + "|" + realNameInfo.IdCardNumber, source });
+            BusinessHelper.ExecPlugin<IResponseAuthentication_AfterTranCommit>(new object[] { userId, "RealName", realNameInfo.RealName + "|" + realNameInfo.CardType + "|" + realNameInfo.IdCardNumber, source });
             #endregion
 
             return Task.FromResult(new CommonActionResult(true, "实名认证成功。"));
