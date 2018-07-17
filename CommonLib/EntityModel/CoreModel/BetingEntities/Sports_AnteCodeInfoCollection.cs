@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace EntityModel.CoreModel.BetingEntities
+namespace EntityModel.CoreModel
 {
    
 }

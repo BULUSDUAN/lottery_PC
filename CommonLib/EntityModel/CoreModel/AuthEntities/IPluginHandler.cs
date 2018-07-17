@@ -1,4 +1,4 @@
-﻿using EntityModel.CoreModel.BetingEntities;
+﻿using EntityModel.Enum;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -64,19 +64,19 @@ namespace EntityModel.CoreModel
     {
         void CreateTogether_AfterTranCommit(string userId, string schemeId, string gameCode, string gameType, string issuseNumber, decimal totalMoney, DateTime stopTime);
     }
-    //public interface IJoinTogether_AfterTranCommit : IPlugin
-    //{
-    //    void JoinTogether_AfterTranCommit(string userId, string schemeId, int buyCount, string gameCode, string gameType, string issuseNumber, decimal totalMoney, TogetherSchemeProgress progress);
-    //}
+    public interface IJoinTogether_AfterTranCommit : IPlugin
+    {
+        void JoinTogether_AfterTranCommit(string userId, string schemeId, int buyCount, string gameCode, string gameType, string issuseNumber, decimal totalMoney, TogetherSchemeProgress progress);
+    }
 
-    //#endregion
+    #endregion
 
-    //#region 定制跟单
+    #region 定制跟单
 
-    //public interface ITogetherFollow_AfterTranCommit : IPlugin
-    //{
-    //    void TogetherFollow_AfterTranCommit(TogetherFollowerRuleInfo info);
-    //}
+    public interface ITogetherFollow_AfterTranCommit : IPlugin
+    {
+        void TogetherFollow_AfterTranCommit(TogetherFollowerRuleInfo info);
+    }
     public interface IExistTogetherFollow_AfterTranCommit : IPlugin
     {
         void ExistTogetherFollow_AfterTranCommit(string creatorUserId, string followUserId, string gameCode, string gameType);
@@ -324,4 +324,5 @@ namespace EntityModel.CoreModel
     //}
 
     #endregion
+
 }

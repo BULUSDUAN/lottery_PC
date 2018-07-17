@@ -1,5 +1,5 @@
 ﻿using EntityModel;
-
+using EntityModel.Enum;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -276,6 +276,139 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
                         where matchIdArray.Contains(m.MatchId)
                         select m;
             return query.ToList();
+        }
+
+        public void AddSports_Order_Complate(C_Sports_Order_Complate entity)
+        {
+            DB.GetDal<C_Sports_Order_Complate>().Add(entity);
+        }
+
+        public void DeleteSports_Order_Running(C_Sports_Order_Running entity)
+        {
+            DB.GetDal<C_Sports_Order_Running>().Delete(entity);
+        }
+
+        public C_Sports_Together QuerySports_Together(string schemeId)
+        {
+            return DB.CreateQuery<C_Sports_Together>().Where(p => p.SchemeId == schemeId).FirstOrDefault();
+        }
+
+        public C_Sports_TogetherJoin QuerySports_TogetherJoin(string schemeId, int joinId)
+        {
+            return DB.CreateQuery<C_Sports_TogetherJoin>().Where(p => p.SchemeId == schemeId && p.Id == joinId).FirstOrDefault();
+        }
+        public C_Sports_TogetherJoin QuerySports_TogetherJoin(string schemeId, TogetherJoinType joinType)
+        {
+            return DB.CreateQuery<C_Sports_TogetherJoin>().Where(p => p.SchemeId == schemeId && p.JoinType == (int)joinType).FirstOrDefault();
+        }
+
+        public void UpdateSports_Together(C_Sports_Together entity)
+        {
+            DB.GetDal<C_Sports_Together>().Update(entity);
+        }
+        public void UpdateSports_TogetherJoin(C_Sports_TogetherJoin entity)
+        {
+            DB.GetDal<C_Sports_TogetherJoin>().Update(entity);
+        }
+
+        public void AddSports_AnteCode(C_Sports_AnteCode entity)
+        {
+            DB.GetDal<C_Sports_AnteCode>().Add(entity);
+        }
+
+        public void AddTemp_Together(C_Temp_Together entity)
+        {
+            DB.GetDal<C_Temp_Together>().Add(entity);
+        }
+
+        public void AddSports_TogetherJoin(C_Sports_TogetherJoin entity)
+        {
+            DB.GetDal<C_Sports_TogetherJoin>().Add(entity);
+        }
+
+        public List<C_Together_FollowerRule> QuerySportsTogetherFollowerList(string createrUserId, string gameCode, string gameType)
+        {
+            return (from r in DB.CreateQuery<C_Together_FollowerRule>() where r.CreaterUserId == createrUserId && r.GameCode == gameCode && r.GameType == gameType orderby r.FollowerIndex ascending select r).ToList();
+        }
+
+        public void AddTogetherFollowerRecord(C_Together_FollowerRecord entity)
+        {
+            DB.GetDal<C_Together_FollowerRecord>().Add(entity);
+        }
+
+        public void UpdateTogetherFollowerRule(C_Together_FollowerRule entity)
+        {
+            DB.GetDal<C_Together_FollowerRule>().Add(entity);
+        }
+
+        public void UpdateUserBeedings(params C_User_Beedings[] entity)
+        {
+            DB.GetDal<C_User_Beedings>().Update(entity);
+        }
+
+        public void AddSports_Together(C_Sports_Together entity)
+        {
+            DB.GetDal<C_Sports_Together>().Add(entity);
+        }
+
+        public C_Lottery_Scheme QueryLotteryScheme(string schemeId)
+        {
+            return DB.CreateQuery<C_Lottery_Scheme>().Where(p => p.SchemeId == schemeId).FirstOrDefault();
+        }
+
+        public List<C_Sports_TogetherJoin> QuerySports_TogetherSucessJoin(string schemeId)
+        {
+            return DB.CreateQuery<C_Sports_TogetherJoin>().Where(p => p.SchemeId == schemeId && p.JoinSucess == true).ToList();
+        }
+
+        public int QueryKeyLineCount(string keyLine)
+        {
+            return DB.CreateQuery<C_Lottery_Scheme>().Where(p => p.KeyLine == keyLine).Count();
+        }
+
+        public void AddLotteryScheme(C_Lottery_Scheme entity)
+        {
+            DB.GetDal<C_Lottery_Scheme>().Add(entity);
+        }
+
+        public List<C_Lottery_Scheme> QueryLotterySchemeByKeyLine(string keyLine)
+        {
+            return DB.CreateQuery<C_Lottery_Scheme>().Where(p => p.KeyLine == keyLine && p.IsComplate == false).OrderBy(p => p.OrderIndex).ToList();
+        }
+
+        public void AddUserSaveOrder(C_UserSaveOrder entity)
+        {
+            DB.GetDal<C_UserSaveOrder>().Add(entity);
+        }
+        public bool IsUserJoinTogether(string schemeId, string userId)
+        {
+            var count = DB.CreateQuery<C_Sports_TogetherJoin>().Where(p => p.SchemeId == schemeId && p.JoinUserId == userId && p.JoinSucess == true).Count();
+            return count > 0;
+        }
+
+        public C_Together_FollowerRule QueryTogetherFollowerRule(long Id)
+        {
+            return DB.CreateQuery<C_Together_FollowerRule>().Where(p => p.Id == Id).FirstOrDefault();
+        }
+
+        public C_Together_FollowerRule QueryTogetherFollowerRule(string createrUserId, string followerUserId, string gameCode, string gameType)
+        {
+            return DB.CreateQuery<C_Together_FollowerRule>().Where(p => p.CreaterUserId == createrUserId && p.FollowerUserId == followerUserId && p.GameCode == gameCode && p.GameType == gameType).FirstOrDefault();
+        }
+
+        public int QueryTogetherFollowerRuleCount(string createUserId, string gameCode, string gameType)
+        {
+            return DB.CreateQuery<C_Together_FollowerRule>().Where(p => p.CreaterUserId == createUserId && p.GameCode == gameCode && p.GameType == gameType).Count();
+        }
+
+        public void AddTogetherFollowerRule(C_Together_FollowerRule entity)
+        {
+            DB.GetDal<C_Together_FollowerRule>().Add(entity);
+        }
+
+        public void DeleteTogetherFollowerRule(C_Together_FollowerRule entity)
+        {
+            DB.GetDal<C_Together_FollowerRule>().Delete(entity);
         }
     }
 }

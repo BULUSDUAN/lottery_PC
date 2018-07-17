@@ -25,7 +25,6 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
         /// <param name="RedBagDetail"></param>
         public void AddFundDetail(C_Fund_Detail FundDetail)
         {
-
             DB.GetDal<C_Fund_Detail>().Add(FundDetail);
         }
         public C_Fund_Detail QueryUserClearChaseRecord(string orderId, string userId)
@@ -61,5 +60,9 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
             return query.Count();
         }
 
+        public List<C_Fund_Detail> QueryFundDetailList(string orderId, string userId)
+        {
+            return DB.CreateQuery<C_Fund_Detail>().Where(f => f.OrderId == orderId && f.UserId == userId).ToList();
+        }
     }
 }

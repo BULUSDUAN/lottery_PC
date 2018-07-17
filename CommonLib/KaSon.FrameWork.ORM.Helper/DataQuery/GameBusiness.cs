@@ -2,6 +2,7 @@
 using EntityModel.Enum;
 using GameBiz.Domain.Entities;
 using KaSon.FrameWork.Common.Utilities;
+using KaSon.FrameWork.ORM.Helper.UserHelper;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -50,17 +51,17 @@ namespace KaSon.FrameWork.ORM.Helper
         //    //清空缓存
         //    BusinessHelper.ReloadLotteryGame();
         //}
-        ///// <summary>
-        ///// 返回彩种状态
-        ///// </summary>
-        //public EnableStatus LotteryGameToStatus(string gameCode)
-        //{
-        //    var manager = new LotteryGameManager();
-        //    var entity = manager.QueryLotteryGame(gameCode);
-        //    if (entity == null)
-        //        throw new Exception("没有查到该彩种！");
-        //    return entity.EnableStatus;
-        //}
+        /// <summary>
+        /// 返回彩种状态
+        /// </summary>
+        public EnableStatus LotteryGameToStatus(string gameCode)
+        {
+            var manager = new LotteryGameManager();
+            var entity = manager.QueryLotteryGame(gameCode);
+            if (entity == null)
+                throw new Exception("没有查到该彩种！");
+            return (EnableStatus)entity.EnableStatus;
+        }
         //public void AddGame(GameInfo info)
         //{
         //    var manager = new LotteryGameManager();

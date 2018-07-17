@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
-using EntityModel.CoreModel.BetingEntities;
+//using EntityModel.CoreModel.BetingEntities;
 using EntityModel.Enum;
 using KaSon.FrameWork.Common;
 using KaSon.FrameWork.Common.Redis;

@@ -6,6 +6,11 @@
 
   <ItemGroup>
     <Compile Remove="ConvertHelper.cs" />
+    <Compile Remove="CoreModel\BetingEntities\RedisWaitTicket.cs" />
+    <Compile Remove="CoreModel\Sports_SchemeQueryInfo.cs" />
+    <Compile Remove="CoreModel\Sports_TogetherJoinInfoCollection.cs" />
+    <Compile Remove="CoreModel\Sports_TogetherSchemeQueryInfoCollection.cs" />
+    <Compile Remove="CoreModel\TogetherFollowerRuleQueryInfo.cs" />
     <Compile Remove="Xml\ConnConfigAnalyzer.cs" />
     <Compile Remove="Xml\SensitiveAnalyzer.cs" />
     <Compile Remove="Xml\SettingConfigAnalyzer.cs" />

@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="GlobalConfigJson\**" />
+    <EmbeddedResource Remove="GlobalConfigJson\**" />
+    <None Remove="GlobalConfigJson\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Xml\XmlMappingAttribute.cs" />
     <Compile Remove="Xml\XmlMappingObject.cs" />
   </ItemGroup>
@@ -28,9 +34,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Config\log4net.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="GlobalConfigJson\GlobalConfig.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Redis\redisSettings.json">

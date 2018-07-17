@@ -7,7 +7,7 @@ using System.Linq;
 using EntityModel.ExceptionExtend;
 using EntityModel.Xml;
 
-namespace EntityModel.CoreModel.BetingEntities
+namespace EntityModel.CoreModel
 {
     /// <summary>
     /// 普通投注对象
@@ -557,60 +557,60 @@ namespace EntityModel.CoreModel.BetingEntities
     /// 足彩投注号码查询对象
     /// </summary>
     
-    [XmlMapping("antecode", 0)]
-    public class Sports_AnteCodeQueryInfo : XmlMappingObject
-    {
-        [XmlMapping("LeagueId", 0, MappingType = MappingType.Attribute)]
-        public string LeagueId { get; set; }
-        [XmlMapping("LeagueName", 1, MappingType = MappingType.Attribute)]
-        public string LeagueName { get; set; }
-        [XmlMapping("LeagueColor", 2, MappingType = MappingType.Attribute)]
-        public string LeagueColor { get; set; }
-        [XmlMapping("StartTime", 3, MappingType = MappingType.Attribute)]
-        public DateTime StartTime { get; set; }
-        [XmlMapping("MatchId", 4, MappingType = MappingType.Attribute)]
-        public string MatchId { get; set; }
-        [XmlMapping("MatchIdName", 5, MappingType = MappingType.Attribute)]
-        public string MatchIdName { get; set; }
-        [XmlMapping("HomeTeamId", 6, MappingType = MappingType.Attribute)]
-        public string HomeTeamId { get; set; }
-        [XmlMapping("HomeTeamName", 7, MappingType = MappingType.Attribute)]
-        public string HomeTeamName { get; set; }
-        [XmlMapping("GuestTeamId", 8, MappingType = MappingType.Attribute)]
-        public string GuestTeamId { get; set; }
-        [XmlMapping("GuestTeamName", 9, MappingType = MappingType.Attribute)]
-        public string GuestTeamName { get; set; }
-        [XmlMapping("IssuseNumber", 10, MappingType = MappingType.Attribute)]
-        public string IssuseNumber { get; set; }
-        [XmlMapping("AnteCode", 11, MappingType = MappingType.Attribute)]
-        public string AnteCode { get; set; }
-        [XmlMapping("IsDan", 12, MappingType = MappingType.Attribute)]
-        public bool IsDan { get; set; }
-        [XmlMapping("LetBall", 13, MappingType = MappingType.Attribute)]
-        public int LetBall { get; set; }
-        [XmlMapping("CurrentSp", 14, MappingType = MappingType.Attribute)]
-        public string CurrentSp { get; set; }
-        [XmlMapping("HalfResult", 15, MappingType = MappingType.Attribute)]
-        public string HalfResult { get; set; }
-        [XmlMapping("FullResult", 16, MappingType = MappingType.Attribute)]
-        public string FullResult { get; set; }
-        [XmlMapping("MatchResult", 17, MappingType = MappingType.Attribute)]
-        public string MatchResult { get; set; }
-        [XmlMapping("MatchResultSp", 18, MappingType = MappingType.Attribute)]
-        public decimal MatchResultSp { get; set; }
-        [XmlMapping("BonusStatus", 19, MappingType = MappingType.Attribute)]
-        public BonusStatus BonusStatus { get; set; }
-        [XmlMapping("GameType", 20, MappingType = MappingType.Attribute)]
-        public string GameType { get; set; }
-        [XmlMapping("MatchState", 21, MappingType = MappingType.Attribute)]
-        public string MatchState { get; set; }
-        [XmlMapping("WinNumber", 22, MappingType = MappingType.Attribute)]
-        public string WinNumber { get; set; }
-    }
+    //[XmlMapping("antecode", 0)]
+    //public class Sports_AnteCodeQueryInfo : XmlMappingObject
+    //{
+    //    [XmlMapping("LeagueId", 0, MappingType = MappingType.Attribute)]
+    //    public string LeagueId { get; set; }
+    //    [XmlMapping("LeagueName", 1, MappingType = MappingType.Attribute)]
+    //    public string LeagueName { get; set; }
+    //    [XmlMapping("LeagueColor", 2, MappingType = MappingType.Attribute)]
+    //    public string LeagueColor { get; set; }
+    //    [XmlMapping("StartTime", 3, MappingType = MappingType.Attribute)]
+    //    public DateTime StartTime { get; set; }
+    //    [XmlMapping("MatchId", 4, MappingType = MappingType.Attribute)]
+    //    public string MatchId { get; set; }
+    //    [XmlMapping("MatchIdName", 5, MappingType = MappingType.Attribute)]
+    //    public string MatchIdName { get; set; }
+    //    [XmlMapping("HomeTeamId", 6, MappingType = MappingType.Attribute)]
+    //    public string HomeTeamId { get; set; }
+    //    [XmlMapping("HomeTeamName", 7, MappingType = MappingType.Attribute)]
+    //    public string HomeTeamName { get; set; }
+    //    [XmlMapping("GuestTeamId", 8, MappingType = MappingType.Attribute)]
+    //    public string GuestTeamId { get; set; }
+    //    [XmlMapping("GuestTeamName", 9, MappingType = MappingType.Attribute)]
+    //    public string GuestTeamName { get; set; }
+    //    [XmlMapping("IssuseNumber", 10, MappingType = MappingType.Attribute)]
+    //    public string IssuseNumber { get; set; }
+    //    [XmlMapping("AnteCode", 11, MappingType = MappingType.Attribute)]
+    //    public string AnteCode { get; set; }
+    //    [XmlMapping("IsDan", 12, MappingType = MappingType.Attribute)]
+    //    public bool IsDan { get; set; }
+    //    [XmlMapping("LetBall", 13, MappingType = MappingType.Attribute)]
+    //    public int LetBall { get; set; }
+    //    [XmlMapping("CurrentSp", 14, MappingType = MappingType.Attribute)]
+    //    public string CurrentSp { get; set; }
+    //    [XmlMapping("HalfResult", 15, MappingType = MappingType.Attribute)]
+    //    public string HalfResult { get; set; }
+    //    [XmlMapping("FullResult", 16, MappingType = MappingType.Attribute)]
+    //    public string FullResult { get; set; }
+    //    [XmlMapping("MatchResult", 17, MappingType = MappingType.Attribute)]
+    //    public string MatchResult { get; set; }
+    //    [XmlMapping("MatchResultSp", 18, MappingType = MappingType.Attribute)]
+    //    public decimal MatchResultSp { get; set; }
+    //    [XmlMapping("BonusStatus", 19, MappingType = MappingType.Attribute)]
+    //    public BonusStatus BonusStatus { get; set; }
+    //    [XmlMapping("GameType", 20, MappingType = MappingType.Attribute)]
+    //    public string GameType { get; set; }
+    //    [XmlMapping("MatchState", 21, MappingType = MappingType.Attribute)]
+    //    public string MatchState { get; set; }
+    //    [XmlMapping("WinNumber", 22, MappingType = MappingType.Attribute)]
+    //    public string WinNumber { get; set; }
+    //}
     
-    public class Sports_AnteCodeQueryInfoCollection : XmlMappingList<Sports_AnteCodeQueryInfo>
-    {
-    }
+    //public class Sports_AnteCodeQueryInfoCollection : XmlMappingList<Sports_AnteCodeQueryInfo>
+    //{
+    //}
 
     /// <summary>
     /// 合买 订制跟单 规则

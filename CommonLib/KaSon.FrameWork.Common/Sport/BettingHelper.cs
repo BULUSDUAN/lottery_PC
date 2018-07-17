@@ -1,16 +1,15 @@
 ﻿using EntityModel;
-using EntityModel.CoreModel.BetingEntities;
 using EntityModel.Domain.Entities;
 using EntityModel.ExceptionExtend;
 using EntityModel.GameBiz.Core;
 using EntityModel.Ticket;
 using EntityModel.LotteryJsonInfo;
-using KaSon.FrameWork.Common.GlobalConfigJson;
 using KaSon.FrameWork.Common.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using EntityModel.CoreModel;
 
 namespace KaSon.FrameWork.Common.Sport
 {
@@ -1027,7 +1026,7 @@ namespace KaSon.FrameWork.Common.Sport
             {
                 //
                 var key = string.Format("{0}_{1}", gameCode.ToUpper(), "StopTicketing");
-                string value = GbConfigHelper.GlobalConfig[key].ToString();// "";  // ConfigurationManager.AppSettings[key];
+                string value = ConfigHelper.ConfigInfo[key].ToString();// "";  // ConfigurationManager.AppSettings[key];
                // var key = string.Format("{0}_{1}", gameCode.ToUpper(), "StopTicketing");
                // string value = AppSettings; //DBbase.GlobalConfig[key].ToString();
                 if (!_stopTime.ContainsKey(key))
@@ -1377,6 +1376,105 @@ namespace KaSon.FrameWork.Common.Sport
                 flag = string.Format(flag, "负", "1", homeTeamScore, guestTeamScore);
             }
             return flag;
+        }
+
+        /// <summary>
+        /// 合买投注方案编号
+        /// </summary>
+        public static string GetTogetherBettingSchemeId()
+        {
+            string prefix = "TSM";
+            return prefix + UsefullHelper.UUID();
+        }
+
+        public static bool CheckAnteCode(string gameType, string anteCode)
+        {
+            if (string.IsNullOrEmpty(gameType))
+                return false;
+            switch (gameType.ToLower())
+            {
+                case "spf":
+                case "brqspf":
+                    if (!new string[] { "3", "1", "0" }.Contains(anteCode))
+                        return false;
+                    break;
+                case "zjq":
+                    if (!new string[] { "0", "1", "2", "3", "4", "5", "6", "7" }.Contains(anteCode))
+                        return false;
+                    break;
+                case "bqc":
+                    if (!new string[] { "33", "31", "30", "13", "11", "10", "03", "01", "00" }.Contains(anteCode))
+                        return false;
+                    break;
+                case "bf":
+                    if (!new string[] { "00", "01", "02", "03", "10", "11", "12", "13", "20", "21", "22", "23", "30", "31", "32", "33", "40", "41", "42", "04", "14", "24", "50", "51", "52", "05", "15", "25", "X0", "XX", "0X" }.Contains(anteCode))
+                        return false;
+                    break;
+                default:
+                    return false;
+            }
+            return true;
+        }
+
+        public static void CheckHHPlayType(string gameCode, string gameType, string playType, Sports_AnteCodeInfoCollection anteCodeList)
+        {
+            if (anteCodeList != null && anteCodeList.Count > 0)
+            {
+                if (gameCode.ToLower() == "jczq" || gameCode.ToLower() == "jclq")
+                {
+                    var bfCount = 0;
+                    var bqcCount = 0;
+                    var sfcCount = 0;
+                    var zjqCount = 0;
+                    foreach (var itemCode in anteCodeList)
+                    {
+                        if ((gameType.ToLower() == "hh" || gameType.ToLower() == "spf" || gameType.ToLower() == "zjq"))
+                        {
+                            if (gameCode.ToLower() == "jczq")
+                            {
+                                if (itemCode.GameType.ToLower() == "bf")
+                                {
+                                    bfCount++;
+                                }
+                                else if (itemCode.GameType.ToLower() == "bqc")
+                                {
+                                    bqcCount++;
+                                }
+                                else if (itemCode.GameType.ToLower() == "zjq")
+                                {
+                                    zjqCount++;
+                                }
+                            }
+                            else if (gameCode.ToLower() == "jclq")
+                            {
+                                if (itemCode.GameType.ToLower() == "sfc")
+                                    sfcCount++;
+                            }
+                        }
+                    }
+                    if (!string.IsNullOrEmpty(playType))
+                    {
+                        var tempMatchCount = playType.Split('|').Select(s => s.Split('_')[0]).Where(s => int.Parse(s) > 4).Count();
+                        if (bfCount > 0 || bqcCount > 0)
+                        {
+                            if (tempMatchCount > 0)
+                                throw new Exception("竞彩足球-包含比分或半全场玩法投注，串关方式最多不能超过四串!");
+                        }
+                        else if (sfcCount > 0)
+                        {
+                            if (tempMatchCount > 0)
+                                throw new Exception("竞彩篮球-包含胜分差玩法投注，串关方式最多不能超过四串!");
+                        }
+                        else if (zjqCount > 0)
+                        {
+                            var tempMatchCount_zjq = playType.Split('|').Select(s => s.Split('_')[0]).Where(s => int.Parse(s) > 6).Count();
+                            if (tempMatchCount_zjq > 0)
+                                throw new Exception("竞彩足球-包含总进球玩法的投注，串关方式最多不能超过六串!");
+                        }
+
+                    }
+                }
+            }
         }
     }
 }

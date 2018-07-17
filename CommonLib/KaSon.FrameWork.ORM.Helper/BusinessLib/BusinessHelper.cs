@@ -5,16 +5,9 @@ using System.Text;
 using System.Linq;
 using EntityModel.Enum;
 using System.Linq.Expressions;
-
 using EntityModel.Domain.Entities;
-
-
-using EntityModel.Communication;
-
-using EntityModel.CoreModel.BetingEntities;
 using EntityModel.ExceptionExtend;
 using KaSon.FrameWork.ORM.Helper.UserHelper;
-using EntityModel.Interface;
 using KaSon.FrameWork.Common.Utilities;
 using KaSon.FrameWork.Common;
 using KaSon.FrameWork.Common.Redis;
@@ -694,7 +687,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <summary>
         /// 验证投注号码 返回实际投注注数 by dzq
         /// </summary>
-        public static int CheckBetCode(string userId, string gameCode, string gameType, SchemeSource schemeSource, string playType, int amount, decimal schemeTotalMoney, EntityModel.CoreModel.BetingEntities.Sports_AnteCodeInfoCollection anteCodeList)
+        public static int CheckBetCode(string userId, string gameCode, string gameType, SchemeSource schemeSource, string playType, int amount, decimal schemeTotalMoney, Sports_AnteCodeInfoCollection anteCodeList)
         {
             if (anteCodeList == null || anteCodeList.Count <= 0)
                 throw new LogicException("投注内容不能为空");
@@ -1573,5 +1566,416 @@ namespace KaSon.FrameWork.ORM.Helper
             return payCategory;
         }
 
+
+        /// <summary>
+        /// 用户退款,用于用户支出后，因业务原因退款
+        /// 调用前提：必须有已支付过的订单，按订单支付的相应账号退还金额
+        /// </summary>
+        public static void Payback_To_Balance(string category, string userId, string orderId, decimal payBackMoney, string summary)
+        {
+            if (payBackMoney <= 0M)
+                throw new Exception("退款金额不能小于0.");
+            //查询帐户余额
+            var balanceManager = new UserBalanceManager();
+            var fundManager = new FundManager();
+            //资金密码判断
+            var userBalance = balanceManager.QueryUserBalance(userId);
+            if (userBalance == null) { throw new Exception("用户帐户不存在 - " + userId); }
+
+            var fundList = fundManager.QueryFundDetailList(orderId, userId);
+            if (fundList == null || fundList.Count == 0)
+                throw new Exception(string.Format("未查询到用户{0}的订单{1}的支付明细", userId, orderId));
+            //if (fundList.Sum(p => p.PayMoney) < payBackMoney)
+            //    throw new Exception("退款金额大于订单总支付金额");
+
+            //退款顺序：名家=>佣金=>奖金=>红包=>充值金额
+            #region 按顺序退款
+
+            var currentPayBack = 0M;
+            var payDetailList = new List<PayDetail>();
+            var expertFund = fundList.Where(p => p.AccountType == (int)AccountType.Experts).ToList();
+            if (expertFund != null && expertFund.Count > 0 && payBackMoney > 0M)
+            {
+                //名家金额参与支付，退款到名家金额
+                currentPayBack = payBackMoney >= expertFund.Sum(p => p.PayMoney) ? expertFund.Sum(p => p.PayMoney) : payBackMoney;
+                payBackMoney -= currentPayBack;
+                payDetailList.Add(new PayDetail
+                {
+                    AccountType = AccountType.Experts,
+                    PayMoney = currentPayBack,
+                    PayType = PayType.Payin,
+                });
+                fundManager.AddFundDetail(new C_Fund_Detail
+                {
+                    Category = category,
+                    CreateTime = DateTime.Now,
+                    KeyLine = orderId,
+                    OrderId = orderId,
+                    AccountType = (int)AccountType.Experts,
+                    PayMoney = currentPayBack,
+                    PayType = (int)PayType.Payin,
+                    Summary = summary,
+                    UserId = userId,
+                    BeforeBalance = userBalance.ExpertsBalance,
+                    AfterBalance = userBalance.ExpertsBalance + currentPayBack,
+                    OperatorId = userId,
+                });
+                //userBalance.ExpertsBalance += currentPayBack;
+            }
+
+            var commisionFund = fundList.Where(p => p.AccountType == (int)AccountType.Commission).ToList();
+            if (commisionFund != null && commisionFund.Count > 0 && payBackMoney > 0M)
+            {
+                //佣金金额参与支付，退款到佣金金额
+                currentPayBack = payBackMoney >= commisionFund.Sum(p => p.PayMoney) ? commisionFund.Sum(p => p.PayMoney) : payBackMoney;
+                payBackMoney -= currentPayBack;
+                payDetailList.Add(new PayDetail
+                {
+                    AccountType = AccountType.Commission,
+                    PayMoney = currentPayBack,
+                    PayType = PayType.Payin,
+                });
+                fundManager.AddFundDetail(new C_Fund_Detail
+                {
+                    Category = category,
+                    CreateTime = DateTime.Now,
+                    KeyLine = orderId,
+                    OrderId = orderId,
+                    AccountType = (int)AccountType.Commission,
+                    PayMoney = currentPayBack,
+                    PayType = (int)PayType.Payin,
+                    Summary = summary,
+                    UserId = userId,
+                    BeforeBalance = userBalance.CommissionBalance,
+                    AfterBalance = userBalance.CommissionBalance + currentPayBack,
+                    OperatorId = userId,
+                });
+                //userBalance.CommissionBalance += currentPayBack;
+            }
+
+            var bonusFund = fundList.Where(p => p.AccountType == (int)AccountType.Bonus).ToList();
+            if (bonusFund != null && bonusFund.Count > 0 && payBackMoney > 0M)
+            {
+                //奖金金额参与支付，退款到奖金金额
+                currentPayBack = payBackMoney >= bonusFund.Sum(p => p.PayMoney) ? bonusFund.Sum(p => p.PayMoney) : payBackMoney;
+                payBackMoney -= currentPayBack;
+                payDetailList.Add(new PayDetail
+                {
+                    AccountType = AccountType.Bonus,
+                    PayMoney = currentPayBack,
+                    PayType = PayType.Payin,
+                });
+                fundManager.AddFundDetail(new C_Fund_Detail
+                {
+                    Category = category,
+                    CreateTime = DateTime.Now,
+                    KeyLine = orderId,
+                    OrderId = orderId,
+                    AccountType = (int)AccountType.Bonus,
+                    PayMoney = currentPayBack,
+                    PayType = (int)PayType.Payin,
+                    Summary = summary,
+                    UserId = userId,
+                    BeforeBalance = userBalance.BonusBalance,
+                    AfterBalance = userBalance.BonusBalance + currentPayBack,
+                    OperatorId = userId,
+                });
+                //userBalance.BonusBalance += currentPayBack;
+            }
+
+            var redBagFund = fundList.Where(p => p.AccountType == (int)AccountType.RedBag).ToList();
+            if (redBagFund != null && redBagFund.Count > 0 && payBackMoney > 0M)
+            {
+                //红包金额参与支付，退款到红包金额
+                currentPayBack = payBackMoney >= redBagFund.Sum(p => p.PayMoney) ? redBagFund.Sum(p => p.PayMoney) : payBackMoney;
+                payBackMoney -= currentPayBack;
+                payDetailList.Add(new PayDetail
+                {
+                    AccountType = AccountType.RedBag,
+                    PayMoney = currentPayBack,
+                    PayType = PayType.Payin,
+                });
+                fundManager.AddFundDetail(new C_Fund_Detail
+                {
+                    Category = category,
+                    CreateTime = DateTime.Now,
+                    KeyLine = orderId,
+                    OrderId = orderId,
+                    AccountType = (int)AccountType.RedBag,
+                    PayMoney = currentPayBack,
+                    PayType = (int)PayType.Payin,
+                    Summary = summary,
+                    UserId = userId,
+                    BeforeBalance = userBalance.RedBagBalance,
+                    AfterBalance = userBalance.RedBagBalance + currentPayBack,
+                    OperatorId = userId,
+                });
+                //userBalance.RedBagBalance += currentPayBack;
+            }
+
+            var fillFund = fundList.Where(p => p.AccountType == (int)AccountType.FillMoney).ToList();
+            if (fillFund != null && fillFund.Count > 0 && payBackMoney > 0M)
+            {
+                //充值金额参与支付，退款到充值金额
+                currentPayBack = payBackMoney >= fillFund.Sum(p => p.PayMoney) ? fillFund.Sum(p => p.PayMoney) : payBackMoney;
+                payBackMoney -= currentPayBack;
+                payDetailList.Add(new PayDetail
+                {
+                    AccountType = AccountType.FillMoney,
+                    PayMoney = currentPayBack,
+                    PayType = PayType.Payin,
+                });
+                fundManager.AddFundDetail(new C_Fund_Detail
+                {
+                    Category = category,
+                    CreateTime = DateTime.Now,
+                    KeyLine = orderId,
+                    OrderId = orderId,
+                    AccountType = (int)AccountType.FillMoney,
+                    PayMoney = currentPayBack,
+                    PayType = (int)PayType.Payin,
+                    Summary = summary,
+                    UserId = userId,
+                    BeforeBalance = userBalance.FillMoneyBalance,
+                    AfterBalance = userBalance.FillMoneyBalance + currentPayBack,
+                    OperatorId = userId,
+                });
+                //userBalance.FillMoneyBalance += currentPayBack;
+            }
+            //if (payBackMoney > 0M)
+            //    throw new Exception("退款金额大于总支付金额");
+
+            #endregion
+
+            //balanceManager.UpdateUserBalance(userBalance);
+            balanceManager.PayToUserBalance(userId, payDetailList.ToArray());
+        }
+
+        /// <summary>
+        /// 追号订单的KeyLine
+        /// </summary>
+        public static string GetChaseLotterySchemeKeyLine(string gameCode)
+        {
+            while (true)
+            {
+                string prefix = "CHASE" + gameCode;
+                var keyLine = prefix + UsefullHelper.UUID();
+                var count = new Sports_Manager().QueryKeyLineCount(keyLine);
+                if (count > 0)
+                    continue;
+                return keyLine;
+            }
+        }
+
+        /// <summary>
+        /// 用户支出，金额转到冻结金额
+        /// 暂时只用于追号
+        /// </summary>
+        public static void Payout_To_Frozen(string category, string userId, string orderId, decimal payoutMoney, string summary, string place, string password)
+        {
+            if (payoutMoney <= 0M)
+                throw new LogicException("消费金额不能小于0.");
+            //查询帐户余额
+            var balanceManager = new UserBalanceManager();
+            var fundManager = new FundManager();
+            //资金密码判断
+            var userBalance = balanceManager.QueryUserBalance(userId);
+            if (userBalance == null) { throw new LogicException("用户帐户不存在 - " + userId); }
+            if (userBalance.IsSetPwd && !string.IsNullOrEmpty(userBalance.NeedPwdPlace))
+            {
+                if (userBalance.NeedPwdPlace == "ALL" || userBalance.NeedPwdPlace.Split('|', ',').Contains(place))
+                {
+                    password = Encipherment.MD5(string.Format("{0}{1}", password, _gbKey)).ToUpper();
+                    if (!userBalance.Password.ToUpper().Equals(password))
+                    {
+                        throw new LogicException("资金密码输入错误");
+                    }
+                }
+            }
+            var totalMoney = userBalance.FillMoneyBalance + userBalance.BonusBalance + userBalance.CommissionBalance + userBalance.ExpertsBalance + userBalance.RedBagBalance;
+            if (totalMoney < payoutMoney)
+                throw new LogicException(string.Format("用户总金额小于 {0:N2}元。", payoutMoney));
+
+            var payDetailList = new List<PayDetail>();
+            payDetailList.Add(new PayDetail
+            {
+                AccountType = AccountType.Freeze,
+                PayType = PayType.Payin,
+                PayMoney = payoutMoney,
+            });
+            //冻结资金明细
+            fundManager.AddFundDetail(new C_Fund_Detail
+            {
+                Category = category,
+                CreateTime = DateTime.Now,
+                KeyLine = orderId,
+                OrderId = orderId,
+                AccountType = (int)AccountType.Freeze,
+                PayMoney = payoutMoney,
+                PayType = (int)PayType.Payin,
+                Summary = summary,
+                UserId = userId,
+                BeforeBalance = userBalance.FreezeBalance,
+                AfterBalance = userBalance.FreezeBalance + payoutMoney,
+                OperatorId = userId,
+            });
+
+            //userBalance.FreezeBalance += payoutMoney;
+
+            #region 按顺序消费用户余额
+
+            var currentPayout = 0M;
+            if (userBalance.FillMoneyBalance > 0M && payoutMoney > 0M)
+            {
+                //充值金额参与支出
+                currentPayout = userBalance.FillMoneyBalance >= payoutMoney ? payoutMoney : userBalance.FillMoneyBalance;
+                payoutMoney -= currentPayout;
+                payDetailList.Add(new PayDetail
+                {
+                    AccountType = AccountType.FillMoney,
+                    PayMoney = currentPayout,
+                    PayType = PayType.Payout,
+                });
+                fundManager.AddFundDetail(new C_Fund_Detail
+                {
+                    Category = category,
+                    CreateTime = DateTime.Now,
+                    KeyLine = orderId,
+                    OrderId = orderId,
+                    AccountType = (int)AccountType.FillMoney,
+                    PayMoney = currentPayout,
+                    PayType = (int)PayType.Payout,
+                    Summary = summary,
+                    UserId = userId,
+                    BeforeBalance = userBalance.FillMoneyBalance,
+                    AfterBalance = userBalance.FillMoneyBalance - currentPayout,
+                    OperatorId = userId,
+                });
+                //userBalance.FillMoneyBalance -= currentPayout;
+            }
+            if (userBalance.BonusBalance > 0M && payoutMoney > 0M)
+            {
+                //奖金参与支付
+                currentPayout = userBalance.BonusBalance >= payoutMoney ? payoutMoney : userBalance.BonusBalance;
+                payoutMoney -= currentPayout;
+                payDetailList.Add(new PayDetail
+                {
+                    AccountType = AccountType.Bonus,
+                    PayMoney = currentPayout,
+                    PayType = PayType.Payout,
+                });
+                fundManager.AddFundDetail(new C_Fund_Detail
+                {
+                    Category = category,
+                    CreateTime = DateTime.Now,
+                    KeyLine = orderId,
+                    OrderId = orderId,
+                    AccountType = (int)AccountType.Bonus,
+                    PayMoney = currentPayout,
+                    PayType = (int)PayType.Payout,
+                    Summary = summary,
+                    UserId = userId,
+                    BeforeBalance = userBalance.BonusBalance,
+                    AfterBalance = userBalance.BonusBalance - currentPayout,
+                    OperatorId = userId,
+                });
+                //userBalance.BonusBalance -= currentPayout;
+            }
+            if (userBalance.CommissionBalance > 0M && payoutMoney > 0M)
+            {
+                //佣金参与支付
+                currentPayout = userBalance.CommissionBalance >= payoutMoney ? payoutMoney : userBalance.CommissionBalance;
+                payoutMoney -= currentPayout;
+                payDetailList.Add(new PayDetail
+                {
+                    AccountType = AccountType.Commission,
+                    PayMoney = currentPayout,
+                    PayType = PayType.Payout,
+                });
+                fundManager.AddFundDetail(new C_Fund_Detail
+                {
+                    Category = category,
+                    CreateTime = DateTime.Now,
+                    KeyLine = orderId,
+                    OrderId = orderId,
+                    AccountType = (int)AccountType.Commission,
+                    PayMoney = currentPayout,
+                    PayType = (int)PayType.Payout,
+                    Summary = summary,
+                    UserId = userId,
+                    BeforeBalance = userBalance.CommissionBalance,
+                    AfterBalance = userBalance.CommissionBalance - currentPayout,
+                    OperatorId = userId,
+                });
+                //userBalance.CommissionBalance -= currentPayout;
+            }
+            if (userBalance.ExpertsBalance > 0M && payoutMoney > 0M)
+            {
+                //名家参与支付
+                currentPayout = userBalance.ExpertsBalance >= payoutMoney ? payoutMoney : userBalance.ExpertsBalance;
+                payoutMoney -= currentPayout;
+                payDetailList.Add(new PayDetail
+                {
+                    AccountType = AccountType.Experts,
+                    PayMoney = currentPayout,
+                    PayType = PayType.Payout,
+                });
+                fundManager.AddFundDetail(new C_Fund_Detail
+                {
+                    Category = category,
+                    CreateTime = DateTime.Now,
+                    KeyLine = orderId,
+                    OrderId = orderId,
+                    AccountType = (int)AccountType.Experts,
+                    PayMoney = currentPayout,
+                    PayType = (int)PayType.Payout,
+                    Summary = summary,
+                    UserId = userId,
+                    BeforeBalance = userBalance.ExpertsBalance,
+                    AfterBalance = userBalance.ExpertsBalance - currentPayout,
+                    OperatorId = userId,
+                });
+                //userBalance.ExpertsBalance -= currentPayout;
+            }
+            if (payoutMoney > 0M)
+                throw new LogicException("用户余额不足");
+
+            #endregion
+
+            //balanceManager.UpdateUserBalance(userBalance);
+            balanceManager.PayToUserBalance(userId, payDetailList.ToArray());
+        }
+
+        public static void CheckDisableGame(string gameCode, string gameType)
+        {
+            var status = new GameBusiness().LotteryGameToStatus(gameCode);
+            if (status != EnableStatus.Enable)
+                throw new Exception("彩种暂时不能投注");
+        }
+
+        public static void CheckBalance(string userId, string password = "", string place = "")
+        {
+            var balanceManager = new UserBalanceManager();
+            var userBalance = balanceManager.QueryUserBalance(userId);
+            if (userBalance == null)
+                throw new Exception("未查询到您的账户信息");
+            else if ((userBalance.ExpertsBalance + userBalance.FillMoneyBalance + userBalance.BonusBalance + userBalance.CommissionBalance) <= 0)
+                throw new Exception("对不起！您当前的余额不足");
+            //资金密码判断
+            if (!string.IsNullOrEmpty(password))
+            {
+                if (userBalance.IsSetPwd && !string.IsNullOrEmpty(userBalance.NeedPwdPlace))
+                {
+                    if (userBalance.NeedPwdPlace == "ALL" || userBalance.NeedPwdPlace.Split('|', ',').Contains(place))
+                    {
+                        password = Encipherment.MD5(string.Format("{0}{1}", password, _gbKey)).ToUpper();
+                        if (!userBalance.Password.ToUpper().Equals(password))
+                        {
+                            throw new Exception("资金密码输入错误");
+                        }
+                    }
+                }
+            }
+        }
     }
 }
