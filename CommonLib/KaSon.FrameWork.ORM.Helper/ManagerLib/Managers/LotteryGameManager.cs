@@ -125,5 +125,52 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
                         select g;
             return query.FirstOrDefault();
         }
+
+        public IList<GameTypeInfo> QueryEnableGameTypes()
+        {
+            return (from g in DB.CreateQuery<C_Lottery_GameType>()
+                    join f in DB.CreateQuery<C_Lottery_Game>() on g.GameCode equals f.GameCode
+                    orderby g.GameType
+                    select new { g,f}
+                    ).ToList().Select(p=> new GameTypeInfo
+                    {
+                        Game = new GameInfo
+                        {
+                            GameCode = p.g.GameCode,
+                            DisplayName = p.f.DisplayName
+                        },
+                        GameType = p.g.GameType,
+                        DisplayName = p.g.DisplayName,
+                    }).ToList();
+        }
+
+        public C_Lottery_Game LoadGame(string gameCode)
+        {
+            //延时加载
+            return DB.CreateQuery<C_Lottery_Game>().Where(p=>p.GameCode==gameCode).FirstOrDefault();
+        }
+
+        public C_Game_Issuse QueryCurrentIssuse(string gameCode, string gameType = "")
+        {
+            var query =DB.CreateQuery<C_Game_Issuse>();
+            if (string.IsNullOrEmpty(gameType))
+            {
+                query = query.Where(p => p.GameCode == gameCode && p.Status == (int)IssuseStatus.OnSale
+                          && p.LocalStopTime > DateTime.Now);
+            }
+            else
+            {
+                query = query.Where(p => p.GameCode == gameCode && p.Status == (int)IssuseStatus.OnSale
+                         && p.LocalStopTime > DateTime.Now && p.GameType == gameType);
+            }
+            query = query.OrderByDescending(p => p.LocalStopTime);
+                //where i.GameCode == gameCode
+                //        && (string.IsNullOrEmpty(gameType) || i.GameType == gameType)
+                //        && i.Status == (int)IssuseStatus.OnSale
+                //        && i.LocalStopTime > DateTime.Now
+                //        orderby i.LocalStopTime ascending
+                //        select i;
+            return query.FirstOrDefault();
+        }
     }
 }

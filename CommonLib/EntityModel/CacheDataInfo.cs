@@ -1,14 +1,8 @@
 ﻿using EntityModel.CoreModel;
-using EntityModel.CoreModel.BetingEntities;
-using EntityModel.Enum;
-using EntityModel.Xml;
 using EntityModel.Interface;
 using EntityModel.LotteryJsonInfo;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 
 namespace EntityModel
 {

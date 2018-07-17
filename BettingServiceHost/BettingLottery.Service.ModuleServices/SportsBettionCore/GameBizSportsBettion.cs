@@ -1,6 +1,5 @@
 ﻿using EntityModel.Communication;
 using EntityModel.CoreModel;
-using EntityModel.CoreModel.BetingEntities;
 using EntityModel.ExceptionExtend;
 using KaSon.FrameWork.ORM.Helper;
 using KaSon.FrameWork.ORM.Helper.BusinessLib;
@@ -231,10 +230,10 @@ namespace BettingLottery.Service.ModuleServices.SportsBettionCore
                     Message = "足彩投注成功",
                 };
             }
-            catch (AggregateException ex)
-            {
-                throw new AggregateException(ex.Message);
-            }
+            //catch (AggregateException ex)
+            //{
+            //    throw new AggregateException(ex.Message);
+            //}
             catch (LogicException ex)
             {
                 throw ex;

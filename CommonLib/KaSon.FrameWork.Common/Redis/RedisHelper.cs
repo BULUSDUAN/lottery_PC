@@ -21,7 +21,7 @@ namespace KaSon.FrameWork.Common.Redis
 
         static JObject RdConfigInfo;
         static RedisHelper() {
-           string path = Path.Combine(Directory.GetCurrentDirectory(), @"RedisConfig\redisSettings.json");
+           string path = Path.Combine(Directory.GetCurrentDirectory(), @"Redis\redisSettings.json");
            string jsonText = FileHelper.txtReader(path);
            RdConfigInfo = (JObject)JsonConvert.DeserializeObject(jsonText);
             _redisConectStr = RdConfigInfo["RedisConnect"].ToString();

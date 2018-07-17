@@ -203,7 +203,6 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
         public UserFundDetailCollection QueryUserFundDetail(QueryUserFundDetailParam Model, string userId)
         {
             var collection = new UserFundDetailCollection();
-            userId = string.IsNullOrEmpty(userId) ? string.Empty : userId;
             Model.keyLine = string.IsNullOrEmpty(Model.keyLine) ? string.Empty : Model.keyLine;
             Model.accountTypeList = string.IsNullOrEmpty(Model.accountTypeList) ? string.Empty : Model.accountTypeList;
             Model.categoryList = string.IsNullOrEmpty(Model.categoryList) ? string.Empty : Model.categoryList;
@@ -217,15 +216,17 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             int totalPayoutCount = 0;
             decimal totalPayoutMoney = 0M;
 
-            if (string.IsNullOrEmpty(userId))
-            {
-                return new UserFundDetailCollection();
-            }
+
 
             //查询账户类型 和 类别
             //var AccountTyleList = Model.accountTypeList.Split('|');
             //查询资金明细
             string AccountDetail_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_AccountDetail").SQL;
+            if (string.IsNullOrEmpty(userId))
+            {
+                userId = "";
+                AccountDetail_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_AccountDetailNoUserID").SQL;
+            }          
             var AccountDetail_query = DB.CreateSQLQuery(AccountDetail_sql).SetString("@UserId", userId)
                 .SetString("@StartTime", Model.fromDate.ToString())
                 .SetString("@EndTime", Model.toDate.ToString())
@@ -302,6 +303,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                 .SetString("@StartTime", Model.startTime.ToString("yyyy-MM-dd"))
                 .SetString("@EndTime", Model.endTime.AddDays(1).ToString("yyyy-MM-dd"))
                 .SetString("@OrderId", Model.OrderId)
+                .SetString("@StatusList",Model.statusList)
                 .SetInt("@PageIndex", Model.pageIndex)
                 .SetInt("@PageSize", Model.pageSize).List<FillMoneyQueryInfo>();
             return Collection;
@@ -317,12 +319,16 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             var userId = Auth.ValidateUserAuthentication(Model.userToken);
             Model.pageIndex = Model.pageIndex < 0 ? 0 : Model.pageIndex;
             Model.pageSize = Model.pageSize > Model.MaxPageSize ? Model.MaxPageSize : Model.pageSize;
-
+            var state = -1;
+            if (Model.bonusStatus != null)
+            {
+                state = (int)Model.bonusStatus;
+            }
             var Collection = new MyBettingOrderInfoCollection();
             string Count_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_MyBettingOrder").SQL;
             Collection = DB.CreateSQLQuery(Count_sql)
                 .SetString("@userId", userId)
-                .SetInt("@BonusStatus", (int)Model.bonusStatus)
+                .SetInt("@BonusStatus", state)
                 .SetString("@GameCode", Model.gameCode)
                 .SetString("@FromDate", Model.startTime.Value.ToString("yyyy-MM-dd") ?? "")
                 .SetString("@ToDate", Model.endTime.Value.ToString("yyyy-MM-dd") ?? "").First<MyBettingOrderInfoCollection>();
@@ -330,7 +336,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             string MyBettingOrdePage_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_MyBettingOrderPage").SQL;
             Collection.OrderList = DB.CreateSQLQuery(MyBettingOrdePage_sql)
                 .SetString("@userId", userId)
-                .SetInt("@BonusStatus", (int)Model.bonusStatus)
+                .SetInt("@BonusStatus", state)
                 .SetString("@GameCode", Model.gameCode)
                 .SetString("@FromDate", Model.startTime.Value.ToString("yyyy-MM-dd") ?? "")
                 .SetString("@ToDate", Model.endTime.Value.ToString("yyyy-MM-dd") ?? "")
@@ -361,39 +367,16 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             //WithdrawAgentType? agent = null;
             int? agent = null;
             int sortType = -1;
-
             var query = from r in DB.CreateQuery<C_Withdraw>()
                         join u in DB.CreateQuery<C_User_Register>() on r.UserId equals u.UserId
-                        select new { r, u };
-            //where (userId == string.Empty || r.UserId == userId)
-            //&& r.RequestTime >= Model.startTime && r.RequestTime < Model.endTime
-            //&& (Model.status == null || r.Status == Model.status)
-            //&& (orderId == string.Empty || r.BankCode == orderId)
-            //&& (agent == null || r.WithdrawAgent == agent)
-            //&& (minMoney == -1 || r.RequestMoney >= minMoney)
-            //&& (maxMoney == -1 || r.RequestMoney <= maxMoney)
-            //select new { r, u };
-            if (!string.IsNullOrEmpty(userId))
-            {
-                query = query.Where(p => p.r.UserId == userId);
-            }
-            query = query.Where(p => p.r.RequestTime >= Model.startTime && p.r.RequestTime < Model.endTime);
-            if (!Model.status.HasValue)
-            {
-                query = query.Where(p => p.r.Status == Model.status);
-            }
-            if (!agent.HasValue)
-            {
-                query = query.Where(p => p.r.WithdrawAgent == agent);
-            }
-            if (minMoney != -1)
-            {
-                query = query.Where(p => p.r.RequestMoney >= minMoney);
-            }
-            if (maxMoney != -1)
-            {
-                query = query.Where(p => p.r.RequestMoney <= maxMoney);
-            }
+                        where (userId == "" || r.UserId == userId)
+                        && r.RequestTime >= Model.startTime && r.RequestTime < Model.endTime
+                        && (Model.status == null || r.Status == Model.status)
+                        && (orderId == "" || r.BankCode == orderId)
+                        && (agent == null || r.WithdrawAgent == agent)
+                        && (minMoney == -1 || r.RequestMoney >= minMoney)
+                        && (maxMoney == -1 || r.RequestMoney <= maxMoney)
+                        select new { r, u };            
             var queryResult= query.ToList().Select(b=>new Withdraw_QueryInfo
                         {
                             BankCardNumber = b.r.BankCardNumber,
@@ -418,8 +401,8 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
 
             Collection.TotalWinMoney = Collection.WinCount == 0 ? 0M : queryResult.Where(p => p.Status == (int)WithdrawStatus.Success).Sum(p => p.RequestMoney);
             Collection.TotalRefusedMoney = Collection.RefusedCount == 0 ? 0M : queryResult.Where(p => p.Status == (int)WithdrawStatus.Refused).Sum(p => p.RequestMoney);
-            Collection.TotalCount = query.Count();
-            Collection.TotalMoney = query.Count() == 0 ? 0M : queryResult.Sum(p => p.RequestMoney);
+            Collection.TotalCount = queryResult.Count();
+            Collection.TotalMoney = queryResult.Count() == 0 ? 0M : queryResult.Sum(p => p.RequestMoney);
             Collection.TotalResponseMoney = Collection.WinCount == 0 ? 0M : queryResult.Where(p => p.ResponseMoney.HasValue == true).Sum(p => p.ResponseMoney.Value);
 
             if (sortType == -1)
@@ -458,6 +441,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                 .SetString("@DateFrom", Model.startTime.ToString("yyyy-MM-dd"))
                 .SetString("@DateTo", Model.endTime.ToString("yyyy-MM-dd"))
                 .SetString("@GameCode", Model.gameCode)
+                .SetInt("@BonusStatus",(int)Model.bonus)
                 .SetInt("@PageIndex", Model.pageIndex)
                 .SetInt("@PageSize", Model.pageSize)
                 .List<TogetherOrderInfo>();
@@ -475,7 +459,10 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             var collection = new TogetherOrderInfoCollection();
             string sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_QueryJoinTogetherOrderCount").SQL;
             collection = DB.CreateSQLQuery(sql)
-               .SetString("@GameCode", Model.gameCode).First<TogetherOrderInfoCollection>();
+                .SetString("@UserId",Model.userId)
+               .SetString("@GameCode", Model.gameCode)
+               .SetString("@DateFrom", Model.startTime.ToString("yyyy-MM-dd"))
+               .SetString("@DateTo", Model.endTime.ToString("yyyy-MM-dd")).First<TogetherOrderInfoCollection>();
 
             string page_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_QueryJoinTogetherOrderPage").SQL;
             collection.OrderList = DB.CreateSQLQuery(page_sql)
@@ -525,16 +512,16 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             var query = from s in list
                         where arrProg.Contains(Convert.ToInt32(s.ProgressStatus).ToString())
                           && (betC == -1 || Convert.ToInt32(s.SchemeBettingCategory) == betC)
-                          && (Model.issuseNumber == string.Empty || s.IssuseNumber == Model.issuseNumber)
+                          && (Model.issuseNumber == "" || s.IssuseNumber == Model.issuseNumber)
                           && (s.StopTime >= DateTime.Now)
-                          && (Model.gameCode == string.Empty || s.GameCode == Model.gameCode)
-                          && (Model.gameType == string.Empty || s.GameType == Model.gameType)
+                          && (Model.gameCode == "" || s.GameCode == Model.gameCode)
+                          && (Model.gameType == "" || s.GameType == Model.gameType)
                           && (Model.minMoney == -1 || s.TotalMoney >= Model.minMoney)
                           && (Model.maxMoney == -1 || s.TotalMoney <= Model.maxMoney)
                           && (Model.minProgress == -1 || s.Progress >= Model.minProgress)
                           && (Model.maxProgress == -1 || s.Progress <= Model.maxProgress)
                           && (seC == -1 || Convert.ToInt32(s.Security) == seC)
-                          && (Model.key == string.Empty || s.CreateUserId == Model.key || s.SchemeId == Model.key || s.CreaterDisplayName == Model.key)
+                          && (Model.key == "" || s.CreateUserId == Model.key || s.SchemeId == Model.key || s.CreaterDisplayName == Model.key)
                         select s;
             cache.TotalCount = query.Count();
             cache.List = query.Skip(Model.pageIndex * Model.pageSize).Take(Model.pageSize).ToList();
@@ -1153,7 +1140,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             var issuse = (from g in DB.CreateQuery<C_Game_Issuse>()
                           where g.GameCode == gameCode
                           && g.IssuseNumber == issuseNumber
-                          && (gameType == string.Empty || g.GameType == gameType)
+                          && (gameType == "" || g.GameType == gameType)
                           select g).FirstOrDefault();
             if (issuse == null) return new Issuse_QueryInfo { Status = IssuseStatus.OnSale };
             return new Issuse_QueryInfo
@@ -1188,7 +1175,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
         public Sports_SchemeQueryInfo QuerySports_Order_ComplateInfo(string schemeId)
         {
             var query = from r in DB.CreateQuery<C_Sports_Order_Complate>()
-                        join u in DB.CreateQuery<UserRegister>() on r.UserId equals u.UserId
+                        join u in DB.CreateQuery<C_User_Register>() on r.UserId equals u.UserId
                         where r.SchemeId == schemeId
                         select new { r, u };
             var queryResult = query.ToList().Select(b => new Sports_SchemeQueryInfo
@@ -1330,9 +1317,9 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             {
                 var query = (from f in DB.CreateQuery<C_Together_FollowerRule>()
                              join u in DB.CreateQuery<UserRegister>() on f.CreaterUserId equals u.UserId
-                             where (Model.gameCode == string.Empty || f.GameCode == Model.gameCode)
-                             && (Model.gameType == string.Empty || f.GameType == Model.gameType)
-                             && (Model.userId == string.Empty || f.FollowerUserId == Model.userId)
+                             where (Model.gameCode == "" || f.GameCode == Model.gameCode)
+                             && (Model.gameType == "" || f.GameType == Model.gameType)
+                             && (Model.userId == "" || f.FollowerUserId == Model.userId)
                              select new { f, u });
                 queryResult.AddRange(query.ToList().Select(b => new TogetherFollowerRuleQueryInfo
                 {
@@ -1363,9 +1350,9 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             {
                 var query = (from f in DB.CreateQuery<C_Together_FollowerRule>()
                              join u in DB.CreateQuery<UserRegister>() on f.FollowerUserId equals u.UserId
-                             where (Model.gameCode == string.Empty || f.GameCode == Model.gameCode)
-                             && (Model.gameType == string.Empty || f.GameType == Model.gameType)
-                             && (Model.userId == string.Empty || f.CreaterUserId == Model.userId)
+                             where (Model.gameCode == "" || f.GameCode == Model.gameCode)
+                             && (Model.gameType == "" || f.GameType == Model.gameType)
+                             && (Model.userId == "" || f.CreaterUserId == Model.userId)
                              orderby f.FollowerIndex ascending
                              select new { f, u });
                 queryResult.AddRange(query.ToList().Select(b => new TogetherFollowerRuleQueryInfo

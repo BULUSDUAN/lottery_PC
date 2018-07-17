@@ -108,5 +108,12 @@ namespace EntityModel
             [ProtoMember(15)]
             [Field("AgentId")]
             public string AgentId{ get; set; }
+
+        public virtual decimal GetTotalEnableMoney()
+        {
+            //return this.FillMoneyBalance + this.BonusBalance + this.CommissionBalance + this.ExpertsBalance + this.RedBagBalance;
+            //return this.FillMoneyBalance + this.BonusBalance + this.ExpertsBalance + this.RedBagBalance;
+            return this.FillMoneyBalance + this.BonusBalance + this.CommissionBalance;
+        }
     }
 }
