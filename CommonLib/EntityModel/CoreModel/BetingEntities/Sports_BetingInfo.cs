@@ -229,12 +229,12 @@ namespace EntityModel.CoreModel
         /// 投注号
         /// </summary>
         [ProtoMember(8)]
-        public LotteryAnteCodeInfoCollection AnteCodeList { get; set; }
+        public List<LotteryAnteCodeInfo> AnteCodeList { get; set; }
         /// <summary>
         /// 投注期号
         /// </summary>
         [ProtoMember(9)]
-        public LotteryBettingIssuseInfoCollection IssuseNumberList { get; set; }
+        public List<LotteryBettingIssuseInfo> IssuseNumberList { get; set; }
         /// <summary>
         /// 中奖后停止
         /// </summary>
@@ -893,136 +893,196 @@ namespace EntityModel.CoreModel
     /// <summary>
     /// 合买查询对象
     /// </summary>
-    
+    [Serializable]
+    [ProtoContract]
     public class Sports_TogetherSchemeQueryInfo
     {
+        [ProtoMember(1)]
         public string SchemeId { get; set; }
         /// <summary>
         /// 方案来源
         /// </summary>
+        [ProtoMember(2)]
         public SchemeSource SchemeSource { get; set; }
+        [ProtoMember(3)]
         public bool IsTop { get; set; }
         /// <summary>
         /// 标题
         /// </summary>
+        [ProtoMember(4)]
         public string Title { get; set; }
         /// <summary>
         /// 描述
         /// </summary>
+        [ProtoMember(5)]
         public string Description { get; set; }
         /// <summary>
         /// 发起人编号
         /// </summary>
+        [ProtoMember(6)]
         public string CreateUserId { get; set; }
         /// <summary>
         /// 发起人名称
         /// </summary>
+        [ProtoMember(7)]
         public string CreaterDisplayName { get; set; }
+        [ProtoMember(8)]
         public int CreaterHideDisplayNameCount { get; set; }
         /// <summary>
         /// 参与密码
         /// </summary>
+        [ProtoMember(9)]
         public string JoinPwd { get; set; }
 
         /// <summary>
         /// 方案保密性
         /// </summary>
+        [ProtoMember(10)]
         public TogetherSchemeSecurity Security { get; set; }
         /// <summary>
         /// 总金额
         /// </summary>
+        [ProtoMember(11)]
         public decimal TotalMoney { get; set; }
         /// <summary>
         /// 总份数
         /// </summary>
+        [ProtoMember(12)]
         public int TotalCount { get; set; }
+        [ProtoMember(13)]
         public int SoldCount { get; set; }
+        [ProtoMember(14)]
         public int SurplusCount { get; set; }
+        [ProtoMember(15)]
         public int JoinUserCount { get; set; }
         /// <summary>
         /// 每份单价
         /// </summary>
+        [ProtoMember(16)]
         public decimal Price { get; set; }
         /// <summary>
         /// 中奖提成 0-10
         /// </summary>
+        [ProtoMember(17)]
         public int BonusDeduct { get; set; }
         /// <summary>
         /// 方案提成
         /// </summary>
+        [ProtoMember(18)]
         public decimal SchemeDeduct { get; set; }
         /// <summary>
         /// 发起人认购份数
         /// </summary>
+        [ProtoMember(19)]
         public int Subscription { get; set; }
         /// <summary>
         /// 发起人保底份数
         /// </summary>
+        [ProtoMember(20)]
         public int Guarantees { get; set; }
         /// <summary>
         /// 系统保底份数
         /// </summary>
+        [ProtoMember(21)]
         public int SystemGuarantees { get; set; }
         /// <summary>
         /// 进度面分比
         /// </summary>
+        [ProtoMember(22)]
         public decimal Progress { get; set; }
         /// <summary>
         /// 进度状态
         /// </summary>
+        [ProtoMember(23)]
         public TogetherSchemeProgress ProgressStatus { get; set; }
-
+        [ProtoMember(24)]
         public string GameCode { get; set; }
+        [ProtoMember(25)]
         public string GameType { get; set; }
+        [ProtoMember(26)]
         public string GameDisplayName { get; set; }
+        [ProtoMember(27)]
         public string GameTypeDisplayName { get; set; }
+        [ProtoMember(28)]
         public string PlayType { get; set; }
+        [ProtoMember(29)]
         public string IssuseNumber { get; set; }
+        [ProtoMember(30)]
         public int TotalMatchCount { get; set; }
+        [ProtoMember(31)]
         public int Amount { get; set; }
+        [ProtoMember(32)]
         public int BetCount { get; set; }
+        [ProtoMember(33)]
         public DateTime StopTime { get; set; }
-
+        [ProtoMember(34)]
         public decimal PreTaxBonusMoney { get; set; }
+        [ProtoMember(35)]
         public decimal AfterTaxBonusMoney { get; set; }
+        [ProtoMember(36)]
         public string WinNumber { get; set; }
+        [ProtoMember(37)]
         public int BonusCount { get; set; }
+        [ProtoMember(38)]
         public int HitMatchCount { get; set; }
-
+        [ProtoMember(39)]
         public TicketStatus TicketStatus { get; set; }
+        [ProtoMember(40)]
         public SchemeBettingCategory SchemeBettingCategory { get; set; }
+        [ProtoMember(41)]
         public DateTime CreateTime { get; set; }
+        [ProtoMember(42)]
         public BonusStatus BonusStatus { get; set; }
+        [ProtoMember(43)]
         public bool IsPrizeMoney { get; set; }
+        [ProtoMember(44)]
         public decimal AddMoney { get; set; }
+        [ProtoMember(45)]
         public string AddMoneyDescription { get; set; }
+        [ProtoMember(46)]
         public bool IsVirtualOrder { get; set; }
+        [ProtoMember(47)]
         public string Attach { get; set; }
+        [ProtoMember(48)]
         public decimal MinBonusMoney { get; set; }
+        [ProtoMember(49)]
         public decimal MaxBonusMoney { get; set; }
+        [ProtoMember(50)]
         public string ExtensionOne { get; set; }
-
+        [ProtoMember(51)]
         public int GoldCrownCount { get; set; }
+        [ProtoMember(52)]
         public int GoldCupCount { get; set; }
+        [ProtoMember(53)]
         public int GoldDiamondsCount { get; set; }
+        [ProtoMember(54)]
         public int GoldStarCount { get; set; }
+        [ProtoMember(55)]
         public int SilverCrownCount { get; set; }
+        [ProtoMember(56)]
         public int SilverCupCount { get; set; }
+        [ProtoMember(57)]
         public int SilverDiamondsCount { get; set; }
+        [ProtoMember(58)]
         public int SilverStarCount { get; set; }
+        [ProtoMember(59)]
         public bool IsAppend { get; set; }
+        [ProtoMember(60)]
         public DateTime? TicketTime { get; set; }
 
     }
 
-    
+    [Serializable]
+    [ProtoContract]
     public class Sports_TogetherSchemeQueryInfoCollection
     {
         public Sports_TogetherSchemeQueryInfoCollection()
         {
             List = new List<Sports_TogetherSchemeQueryInfo>();
         }
+        [ProtoMember(1)]
         public List<Sports_TogetherSchemeQueryInfo> List { get; set; }
+        [ProtoMember(2)]
         public int TotalCount { get; set; }
     }
 
