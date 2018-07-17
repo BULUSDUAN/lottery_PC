@@ -27,7 +27,7 @@ namespace KaSon.FrameWork.ORM.Helper
         private const string _gbKey = "Q56GtyNkop97H334TtyturfgErvvv98a";
         private static Log4Log writerLog = new Log4Log();
 
-        private static AssemblyRefHelper AssRef = new AssemblyRefHelper();
+        //private static AssemblyRefHelper AssRef = new AssemblyRefHelper();
 
         /// <summary>
         ///  用户支出，申请提现
@@ -687,7 +687,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <summary>
         /// 验证投注号码 返回实际投注注数 by dzq
         /// </summary>
-        public static int CheckBetCode(string userId, string gameCode, string gameType, SchemeSource schemeSource, string playType, int amount, decimal schemeTotalMoney, Sports_AnteCodeInfoCollection anteCodeList)
+        public static int CheckBetCode(string userId, string gameCode, string gameType, SchemeSource schemeSource, string playType, int amount, decimal schemeTotalMoney, List<Sports_AnteCodeInfo> anteCodeList)
         {
             if (anteCodeList == null || anteCodeList.Count <= 0)
                 throw new LogicException("投注内容不能为空");

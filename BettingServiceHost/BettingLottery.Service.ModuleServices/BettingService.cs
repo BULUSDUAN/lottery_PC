@@ -667,7 +667,7 @@ namespace BettingLottery.Service.ModuleServices
             {
                 var isSuceess = true;
                 //info,
-                var t = this.Sports_Betting( password, redBagMoney, userToken);
+                var t = this.Sports_Betting(info,password, redBagMoney, userToken);
                 isSuceess = t.Result.IsSuccess;
                 var schemeId = string.Empty;
                 var money = 0M;

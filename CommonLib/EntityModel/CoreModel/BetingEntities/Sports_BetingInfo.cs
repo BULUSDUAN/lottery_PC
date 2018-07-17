@@ -13,58 +13,80 @@ namespace EntityModel.CoreModel
     /// <summary>
     /// 普通投注对象
     /// </summary>
-    
+    [ProtoContract]
     public class Sports_BetingInfo
     {
         public Sports_BetingInfo()
         {
-            AnteCodeList = new Sports_AnteCodeInfoCollection();
+            AnteCodeList = new List<Sports_AnteCodeInfo>();
         }
+        [ProtoMember(1)]
         public string SchemeId { get; set; }
+        [ProtoMember(2)]
         public string GameCode { get; set; }
+        [ProtoMember(3)]
         public string GameType { get; set; }
+        [ProtoMember(4)]
         public string PlayType { get; set; }
+        [ProtoMember(5)]
         public string IssuseNumber { get; set; }
+        [ProtoMember(6)]
         public SchemeSource SchemeSource { get; set; }
+        [ProtoMember(7)]
         public TogetherSchemeSecurity Security { get; set; }
+        [ProtoMember(8)]
         public SchemeBettingCategory BettingCategory { get; set; }
+        [ProtoMember(9)]
         public int Amount { get; set; }
+        [ProtoMember(10)]
         public int TotalMatchCount { get; set; }
+        [ProtoMember(11)]
         public decimal TotalMoney { get; set; }
+        [ProtoMember(12)]
         public TogetherSchemeProgress SchemeProgress { get; set; }
+        [ProtoMember(13)]
         public int SoldCount { get; set; }
-        public Sports_AnteCodeInfoCollection AnteCodeList { get; set; }
+        [ProtoMember(14)]
+        public List<Sports_AnteCodeInfo> AnteCodeList { get; set; }
         /// <summary>
         /// 活动选择
         /// </summary>
+        [ProtoMember(15)]
         public ActivityType ActivityType { get; set; }
         /// <summary>
         /// 附加数据
         /// </summary>
+        [ProtoMember(16)]
         public string Attach { get; set; }
         /// <summary>
         /// 记录当前投注时间，用于判断频繁投注
         /// </summary>
+        [ProtoMember(17)]
         public DateTime CurrentBetTime { get; set; }
         /// <summary>
         /// 是否重复投注
         /// </summary>
+        [ProtoMember(18)]
         public bool IsRepeat { get; set; }
         /// <summary>
         /// 是否正在执行
         /// </summary>
+        [ProtoMember(19)]
         public bool IsSubmit { get; set; }
         /// <summary>
         /// 宝单分享宣言
         /// </summary>
+        [ProtoMember(20)]
         public string SingleTreasureDeclaration { get; set; }
         /// <summary>
         /// 宝单分享提成
         /// </summary>
+        [ProtoMember(21)]
         public decimal BDFXCommission { get; set; }
         /// <summary>
         /// 分享订单号
         /// </summary>
+        [ProtoMember(22)]
         public string BDFXSchemeId { get; set; }
         public override bool Equals(object obj)
         {
@@ -86,15 +108,22 @@ namespace EntityModel.CoreModel
     /// <summary>
     /// 投注号码
     /// </summary>
-    
+    [ProtoContract]
     public class Sports_AnteCodeInfo : Interface.ISportAnteCode
     {
+        [ProtoMember(1)]
         public string GameType { get; set; }
+        [ProtoMember(2)]
         public string PlayType { get; set; }
+        [ProtoMember(3)]
         public string AnteCode { get; set; }
+        [ProtoMember(4)]
         public bool IsDan { get; set; }
+        [ProtoMember(5)]
         public string Odds { get { return ""; } }
+        [ProtoMember(6)]
         public string MatchId { get; set; }
+        [ProtoMember(7)]
         public int Length { get { return AnteCode.Split(',', '|').Length; } }
 
         public string GetMatchResult(string gameCode, string gameType, string score)

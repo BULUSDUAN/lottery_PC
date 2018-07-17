@@ -7,7 +7,7 @@ using System.Text;
 
 namespace EntityModel.Domain.Entities
 {
-    [Entity("C_Auth_UserFunction", Type = EntityType.Table)]
+    [Entity("C_Lottery_Game", Type = EntityType.Table)]
     public class LotteryGame
     {
         [Field("GameCode")]

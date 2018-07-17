@@ -28,7 +28,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <summary>
         /// 检查投注比赛是否可投注，并返回最早结束的比赛时间
         /// </summary>
-        public static DateTime CheckGeneralBettingMatch(string gameCode, string gameType, string playType, Sports_AnteCodeInfoCollection codeList, string issuseNumber, SchemeBettingCategory? bettingCategory = null)
+        public static DateTime CheckGeneralBettingMatch(string gameCode, string gameType, string playType, List<Sports_AnteCodeInfo> codeList, string issuseNumber, SchemeBettingCategory? bettingCategory = null)
         {
             var sportsManager = new Sports_Manager();
             if (gameCode == "BJDC")

@@ -179,7 +179,7 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(27)]
             [Field("ComplateTime")]
-            public DateTime ComplateTime{ get; set; }
+            public DateTime? ComplateTime{ get; set; }
             /// <summary>
             // 是否追加投注
             ///</summary>

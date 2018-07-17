@@ -293,7 +293,7 @@ namespace KaSon.FrameWork.Common.Sport
         }
 
         //验证 不支持的玩法
-        public static void CheckPrivilegesType_JCZQ(string gameCode, string gameType, string playType, Sports_AnteCodeInfoCollection codeList, List<Cache_JCZQ_MatchInfo> matchList)
+        public static void CheckPrivilegesType_JCZQ(string gameCode, string gameType, string playType, List<Sports_AnteCodeInfo> codeList, List<Cache_JCZQ_MatchInfo> matchList)
         {
             //PrivilegesType
             //用英文输入法的:【逗号】如’,’分开。
@@ -329,7 +329,7 @@ namespace KaSon.FrameWork.Common.Sport
                     throw new LogicException(string.Format("{0} {1}玩法 暂不支持{2}投注", temp.MatchIdName, FormatGameType(gameCode, gameType), playType == "1_1" ? "单关" : "过关"));
             }
         }
-        public static void CheckPrivilegesType_JCLQ(string gameCode, string gameType, string playType, Sports_AnteCodeInfoCollection codeList, List<Cache_JCLQ_MatchInfo> matchList)
+        public static void CheckPrivilegesType_JCLQ(string gameCode, string gameType, string playType, List<Sports_AnteCodeInfo> codeList, List<Cache_JCLQ_MatchInfo> matchList)
         {
             //PrivilegesType
             //竞彩篮球：1:胜负单关 2:让分胜负单关 3:胜分差单关 4:大小分单关 5:胜负过关 6:让分胜负过关 7:胜分差过关 8:大小分过关
@@ -361,7 +361,7 @@ namespace KaSon.FrameWork.Common.Sport
                     throw new Exception(string.Format("{0} {1}玩法 暂不支持{2}投注", temp.MatchIdName, FormatGameType(gameCode, gameType), playType == "1_1" ? "单关" : "过关"));
             }
         }
-        public static void CheckPrivilegesType_BJDC(string gameCode, string gameType, string playType, string issuseNumber, Sports_AnteCodeInfoCollection codeList, List<Cache_BJDC_MatchInfo> matchList)
+        public static void CheckPrivilegesType_BJDC(string gameCode, string gameType, string playType, string issuseNumber, List<Sports_AnteCodeInfo> codeList, List<Cache_BJDC_MatchInfo> matchList)
         {
             //PrivilegesType
             //竞彩篮球：1:胜负单关 2:让分胜负单关 3:胜分差单关 4:大小分单关 5:胜负过关 6:让分胜负过关 7:胜分差过关 8:大小分过关
@@ -400,7 +400,7 @@ namespace KaSon.FrameWork.Common.Sport
             }
         }
 
-        public static void CheckPrivilegesType_JCLQ(string gameCode, string gameType, string playType, Sports_AnteCodeInfoCollection codeList, List<C_JCLQ_Match> matchList)
+        public static void CheckPrivilegesType_JCLQ(string gameCode, string gameType, string playType, List<Sports_AnteCodeInfo> codeList, List<C_JCLQ_Match> matchList)
         {
             //PrivilegesType
             //竞彩篮球：1:胜负单关 2:让分胜负单关 3:胜分差单关 4:大小分单关 5:胜负过关 6:让分胜负过关 7:胜分差过关 8:大小分过关
@@ -433,7 +433,7 @@ namespace KaSon.FrameWork.Common.Sport
             }
         }
 
-        public static void CheckPrivilegesType_JCZQ(string gameCode, string gameType, string playType, Sports_AnteCodeInfoCollection codeList, List<C_JCZQ_Match> matchList)
+        public static void CheckPrivilegesType_JCZQ(string gameCode, string gameType, string playType, List<Sports_AnteCodeInfo> codeList, List<C_JCZQ_Match> matchList)
         {
             //PrivilegesType
             //用英文输入法的:【逗号】如’,’分开。
@@ -470,7 +470,7 @@ namespace KaSon.FrameWork.Common.Sport
             }
         }
 
-        public static void CheckPrivilegesType_BJDC(string gameCode, string gameType, string playType, string issuseNumber, Sports_AnteCodeInfoCollection codeList, List<C_BJDC_Match> matchList)
+        public static void CheckPrivilegesType_BJDC(string gameCode, string gameType, string playType, string issuseNumber, List<Sports_AnteCodeInfo> codeList, List<C_BJDC_Match> matchList)
         {
             //PrivilegesType
             //竞彩篮球：1:胜负单关 2:让分胜负单关 3:胜分差单关 4:大小分单关 5:胜负过关 6:让分胜负过关 7:胜分差过关 8:大小分过关
@@ -1416,7 +1416,7 @@ namespace KaSon.FrameWork.Common.Sport
             return true;
         }
 
-        public static void CheckHHPlayType(string gameCode, string gameType, string playType, Sports_AnteCodeInfoCollection anteCodeList)
+        public static void CheckHHPlayType(string gameCode, string gameType, string playType, List<Sports_AnteCodeInfo> anteCodeList)
         {
             if (anteCodeList != null && anteCodeList.Count > 0)
             {
