@@ -1310,9 +1310,11 @@ namespace Lottery.Api.Controllers
         {
             Dictionary<string, object> param = new Dictionary<string, object>
             {
-                {"schemeId",schemeId },{"userToken",userToken }
+                {"schemeId",schemeId }
             };
             var schemeInfo =await _serviceProxyProvider.Invoke<Sports_SchemeQueryInfo>(param, "api/Order/QuerySportsSchemeInfo");
+            param.Clear();
+            param["userToken"] = userToken;
             var userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
 
 
