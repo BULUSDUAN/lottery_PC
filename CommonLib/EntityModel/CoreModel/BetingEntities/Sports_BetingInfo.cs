@@ -773,47 +773,70 @@ namespace EntityModel.CoreModel
     /// <summary>
     /// 合买 订制跟单规则查询对象
     /// </summary>
-    
+    [ProtoContract]
     public class TogetherFollowerRuleQueryInfo
     {
+        [ProtoMember(1)]
         public long RuleId { get; set; }
+        [ProtoMember(2)]
         public string UserId { get; set; }
+        [ProtoMember(3)]
         public string UserDisplayName { get; set; }
+        [ProtoMember(4)]
         public int HideDisplayNameCount { get; set; }
         /// <summary>
         /// 跟单投注金额
         /// </summary>
+        [ProtoMember(5)]
         public decimal BuyMoney { get; set; }
         /// <summary>
         /// 中奖金额
         /// </summary>
+        [ProtoMember(6)]
         public decimal BonusMoney { get; set; }
+        [ProtoMember(7)]
         public int FollowerIndex { get; set; }
+        [ProtoMember(8)]
         public DateTime CreateTime { get; set; }
+        [ProtoMember(9)]
         public bool IsEnable { get; set; }
+        [ProtoMember(10)]
         public string CreaterUserId { get; set; }
+        [ProtoMember(11)]
         public string FollowerUserId { get; set; }
+        [ProtoMember(12)]
         public string GameCode { get; set; }
+        [ProtoMember(13)]
         public string GameType { get; set; }
+        [ProtoMember(14)]
         public int SchemeCount { get; set; }
+        [ProtoMember(15)]
         public decimal MinSchemeMoney { get; set; }
+        [ProtoMember(16)]
         public decimal MaxSchemeMoney { get; set; }
+        [ProtoMember(17)]
         public int FollowerCount { get; set; }
+        [ProtoMember(18)]
         public decimal FollowerPercent { get; set; }
+        [ProtoMember(19)]
         public bool CancelWhenSurplusNotMatch { get; set; }
+        [ProtoMember(20)]
         public int CancelNoBonusSchemeCount { get; set; }
+        [ProtoMember(21)]
         public decimal StopFollowerMinBalance { get; set; }
     }
 
-    
+    [Serializable]
+    [ProtoContract]
     public class TogetherFollowerRuleQueryInfoCollection
     {
         public TogetherFollowerRuleQueryInfoCollection()
         {
             List = new List<TogetherFollowerRuleQueryInfo>();
         }
-
+        [ProtoMember(1)]
         public List<TogetherFollowerRuleQueryInfo> List { get; set; }
+        [ProtoMember(2)]
         public int TotalCount { get; set; }
     }
 
