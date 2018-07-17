@@ -557,12 +557,13 @@ namespace BettingLottery.Service.ModuleServices
 
         #region 北单、竞彩投注
 
-        public Task<CommonActionResult> Sports_Betting(Sports_BetingInfo info, string password, decimal redBagMoney, string userToken)
+        public Task<CommonActionResult> Sports_Betting(Sports_BetingInfo info , string password, decimal redBagMoney, string userToken)
         {
             try
             {
-                //检查彩种是否暂停销售
-                BusinessHelper.CheckGameEnable(info.GameCode.ToUpper());
+              //  Sports_BetingInfo info = new Sports_BetingInfo();
+                   //检查彩种是否暂停销售
+                   BusinessHelper.CheckGameEnable(info.GameCode.ToUpper());
                 BettingHelper.CheckGameCodeAndType(info.GameCode, info.GameType);
                 // 验证用户身份及权限
                 var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
@@ -665,7 +666,8 @@ namespace BettingLottery.Service.ModuleServices
             try
             {
                 var isSuceess = true;
-                var t = this.Sports_Betting(info, password, redBagMoney, userToken);
+                //info,
+                var t = this.Sports_Betting( password, redBagMoney, userToken);
                 isSuceess = t.Result.IsSuccess;
                 var schemeId = string.Empty;
                 var money = 0M;
@@ -812,6 +814,7 @@ namespace BettingLottery.Service.ModuleServices
         {
             // 验证用户身份及权限
             //检查彩种是否暂停销售
+            //LotteryBettingInfo info = new LotteryBettingInfo();
             BusinessHelper.CheckGameEnable(info.GameCode.ToUpper());
             var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try

@@ -42,12 +42,14 @@ namespace BettingLottery.Service.IModuleServices
         //Task<List<object>> Betting(string userName);
 
         [Service(Date = "2018-7-15", Director = "lidi", Name = "北单，竞彩投注")]
+        //
         Task<CommonActionResult> Sports_Betting(Sports_BetingInfo info, string password, decimal redBagMoney, string userToken);
 
         [Service(Date = "2018-7-15", Director = "lidi", Name = "足彩投注,用户保存的订单")]
         Task<CommonActionResult> SaveOrderSportsBetting(Sports_BetingInfo info, string userToken);
 
         [Service(Date = "2018-7-15", Director = "lidi", Name = "数字彩投注")]
+        //
         Task<CommonActionResult> LotteryBetting(LotteryBettingInfo info, string balancePassword, decimal redBagMoney, string userToken);
 
         [Service(Date = "2018-7-15", Director = "lidi", Name = "保存用户未购买订单")]

@@ -217,7 +217,8 @@ namespace Lottery.Api.Controllers
                         var saveparam= new Dictionary<string, object>();
                         saveparam.Add("info", info);
                         saveparam.Add("userToken", userToken);
-                        var result = IsSaveOrder == "0" ? await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/Sports_Betting"):
+                        CommonActionResult ca = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/Sports_Betting");
+                        var result = IsSaveOrder == "0" ? ca :
                             await _serviceProxyProvider.Invoke<CommonActionResult>(saveparam, "api/Betting/SaveOrderSportsBetting");
                         //var result = IsSaveOrder == "0" ? WCFClients.GameClient.Sports_Betting(info, balancePassword, redBagMoney, userToken) : WCFClients.GameClient.SaveOrderSportsBetting(info, userToken);
                         if (!result.IsSuccess)
@@ -230,7 +231,7 @@ namespace Lottery.Api.Controllers
                 else
                 {
                     //数字彩和传统足球
-                    var codeList = new LotteryAnteCodeInfoCollection();
+                    var codeList =new  List<LotteryAnteCodeInfo>(); //new LotteryAnteCodeInfoCollection();
                     var _codeList = JsonHelper.Decode(_code);
                     foreach (var item in _codeList)
                     {
@@ -242,7 +243,7 @@ namespace Lottery.Api.Controllers
                         });
                     }
 
-                    var issuseList = new LotteryBettingIssuseInfoCollection();
+                    var issuseList = new List<LotteryBettingIssuseInfo>();// new LotteryBettingIssuseInfoCollection();
                     var list = JsonHelper.Decode(_issuseList);
                     foreach (var item in list)
                     {
@@ -270,12 +271,13 @@ namespace Lottery.Api.Controllers
                     };
                     var param = new Dictionary<string, object>();
                     param.Add("info", info);
-                    param.Add("password", balancePassword);
+                    param.Add("balancePassword", balancePassword);
                     param.Add("redBagMoney", redBagMoney);
                     param.Add("userToken", userToken);
                     var saveparam = new Dictionary<string, object>();
                     saveparam.Add("info", info);
                     saveparam.Add("userToken", userToken);
+                    var c = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/LotteryBetting");
                     var result = IsSaveOrder == "0" ? await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/LotteryBetting") :
                            await _serviceProxyProvider.Invoke<CommonActionResult>(saveparam, "api/Betting/SaveOrderLotteryBetting");
                     //var result = IsSaveOrder == "0" ? WCFClients.GameClient.LotteryBetting(info, balancePassword, redBagMoney, userToken) : WCFClients.GameClient.SaveOrderLotteryBetting(info, userToken);

@@ -6,6 +6,7 @@ using System.Linq;
 
 using EntityModel.ExceptionExtend;
 using EntityModel.Xml;
+using ProtoBuf;
 
 namespace EntityModel.CoreModel
 {
@@ -109,23 +110,26 @@ namespace EntityModel.CoreModel
     /// <summary>
     /// 追号投注期号
     /// </summary>
-    
+    [ProtoContract]
     public class LotteryBettingIssuseInfo
     {
         /// <summary>
         /// 期号
         /// </summary>
+        [ProtoMember(1)]
         public string IssuseNumber { get; set; }
         /// <summary>
         /// 倍数
         /// </summary>
+        [ProtoMember(2)]
         public int Amount { get; set; }
         /// <summary>
         /// 当期总金额
         /// </summary>
+        [ProtoMember(3)]
         public decimal IssuseTotalMoney { get; set; }
     }
-    
+    [ProtoContract]
     public class LotteryBettingIssuseInfoCollection : List<LotteryBettingIssuseInfo>
     {
     }
@@ -133,20 +137,23 @@ namespace EntityModel.CoreModel
     /// <summary>
     /// 投注号码
     /// </summary>
-    
+    [ProtoContract]
     public class LotteryAnteCodeInfo
     {
         /// <summary>
         /// 玩法编码
         /// </summary>
+        [ProtoMember(1)]
         public string GameType { get; set; }
         /// <summary>
         /// 号码
         /// </summary>
+        [ProtoMember(2)]
         public string AnteCode { get; set; }
+        [ProtoMember(3)]
         public bool IsDan { get; set; }
     }
-    
+    [ProtoContract]
     public class LotteryAnteCodeInfoCollection : List<LotteryAnteCodeInfo>
     {
     }
@@ -154,7 +161,7 @@ namespace EntityModel.CoreModel
     /// <summary>
     /// 彩票投注对象
     /// </summary>
-    
+    [ProtoContract]
     public class LotteryBettingInfo
     {
         public LotteryBettingInfo()
@@ -162,58 +169,76 @@ namespace EntityModel.CoreModel
             AnteCodeList = new LotteryAnteCodeInfoCollection();
             IssuseNumberList = new LotteryBettingIssuseInfoCollection();
         }
+        [ProtoMember(1)]
         public string SchemeId { get; set; }
+        [ProtoMember(2)]
         public string UserId { get; set; }
+        [ProtoMember(3)]
         public string GameCode { get; set; }
         /// <summary>
         /// 方案来源
         /// </summary>
+        [ProtoMember(4)]
         public SchemeSource SchemeSource { get; set; }
+        [ProtoMember(5)]
         public TogetherSchemeSecurity Security { get; set; }
+        [ProtoMember(6)]
         public SchemeBettingCategory BettingCategory { get; set; }
         /// <summary>
         /// 投注总金额
         /// </summary>
+        [ProtoMember(7)]
         public decimal TotalMoney { get; set; }
         /// <summary>
         /// 投注号
         /// </summary>
-        public LotteryAnteCodeInfoCollection AnteCodeList { get; set; }
+        [ProtoMember(8)]
+        //LotteryAnteCodeInfoCollection
+        public  List<LotteryAnteCodeInfo>  AnteCodeList { get; set; }
         /// <summary>
         /// 投注期号
         /// </summary>
-        public LotteryBettingIssuseInfoCollection IssuseNumberList { get; set; }
+        [ProtoMember(9)]
+        //LotteryBettingIssuseInfoCollection
+        public List<LotteryBettingIssuseInfo>  IssuseNumberList { get; set; }
         /// <summary>
         /// 中奖后停止
         /// </summary>
+        [ProtoMember(10)]
         public bool StopAfterBonus { get; set; }
+        [ProtoMember(11)]
         public ActivityType ActivityType { get; set; }
         /// <summary>
         /// 是否追号投注
         /// </summary>
+       [ProtoMember(12)]
         public bool IsAppend { get; set; }
         /// <summary>
         /// 出票时间
         /// </summary>
+        [ProtoMember(13)]
         public DateTime? TicketTime { get; set; }
         /// <summary>
         /// 记录当前投注时间，用于判断频繁投注
         /// </summary>
+        [ProtoMember(14)]
         public DateTime CurrentBetTime { get; set; }
         /// <summary>
         /// 是否重复投注
         /// </summary>
+        [ProtoMember(15)]
         public bool IsRepeat { get; set; }
         /// <summary>
         ///是否正在执行 
         /// </summary>
+        [ProtoMember(16)]
         public bool IsSubmit { get; set; }
         /// <summary>
         /// 方案类别
         /// </summary>
         //public SchemeType SchemeType { get; set; }
 
-        public override bool Equals(object obj)
+        public  bool Equals(object obj)
         {
             var currObj = obj as LotteryBettingInfo;
             if (currObj == null)
