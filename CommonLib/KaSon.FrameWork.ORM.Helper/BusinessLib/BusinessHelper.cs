@@ -325,7 +325,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     if (typeof(T).FullName != plugin.InterfaceName) continue;
 
 
-                    if (typeof(T).FullName != plugin.InterfaceName) continue;
+                   
 
                     if (plugin.StartTime !=null && plugin.StartTime > DateTime.Now) continue;//未开始
                     if (plugin.EndTime != null && plugin.EndTime < DateTime.Now) continue;//已结束
