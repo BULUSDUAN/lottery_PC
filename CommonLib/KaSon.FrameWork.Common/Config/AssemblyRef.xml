@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ArrayOfPluginConfigInfo   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <PluginConfigInfo>
-    <DicPath>E:\GitLab9\Lottery_02\CommonLib\ConsoleApp1\TestLibrary\bin\Debug\netcoreapp2.1</DicPath>
+    <DicPath>E:\gongchengwl\new_surging\Lottery_02\UserServiceHost\UserLottery.Service\bin\Debug\netcoreapp2.0</DicPath>
 
   </PluginConfigInfo>
   

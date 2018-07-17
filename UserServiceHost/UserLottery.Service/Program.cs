@@ -38,11 +38,11 @@ namespace UserLottery.Service.Host
                         .AddRelateService()
                         .AddConfigurationWatch()
                         //option.UseZooKeeperManager(new ConfigInfo("127.0.0.1:2181"));
-                        .UseConsulManager(new ConfigInfo("10.0.3.27:8500", reloadOnChange:true))
+                        .UseConsulManager(new ConfigInfo("10.0.3.27:8500", reloadOnChange: true))
                         .UseDotNettyTransport()
                         .UseRabbitMQTransport()
                         .AddRabbitMQAdapt()
-                       //.AddCache()
+                        //.AddCache()
                         //.UseKafkaMQTransport(kafkaOption =>
                         //{
                         //    kafkaOption.Servers = "127.0.0.1";
@@ -57,26 +57,26 @@ namespace UserLottery.Service.Host
                         builder.Register(p => new CPlatformContainer(ServiceLocator.Current));
                     });
                 })
-                .SubscribeAt() 
-               // .UseLog4net(LogLevel.Error, "Config/log4net.config")
+                .SubscribeAt()
+                // .UseLog4net(LogLevel.Error, "Config/log4net.config")
                 .UseNLog(LogLevel.Error, "Config/NLog.config")
                 //.UseServer("127.0.0.1", 98)
                 //.UseServer("127.0.0.1", 98，“true”) //自动生成Token
                 //.UseServer("127.0.0.1", 98，“123456789”) //固定密码Token
                 .UseServer(options =>
                 {
-                  //  options.IpEndpoint = new IPEndPoint(IPAddress.Any, 98);  
+                    //  options.IpEndpoint = new IPEndPoint(IPAddress.Any, 98);  
                     options.Port = 98;
-                     options.Ip = "127.0.0.1";
+                    options.Ip = "127.0.0.1";
                     options.Token = "True";
                     options.ExecutionTimeoutInMilliseconds = 30000;
                     options.MaxConcurrentRequests = 200;
                 })
-               // .UseServiceCache()
+                // .UseServiceCache()
                 .Configure(build =>
                 build.AddEventBusFile("eventBusSettings.json", optional: false))
                 .Configure(build =>
-                build.AddCacheFile("cacheSettings.json", optional: false,reloadOnChange:true))
+                build.AddCacheFile("cacheSettings.json", optional: false, reloadOnChange: true))
                   .Configure(build =>
                 build.AddCPlatformFile("HostSettings.json", optional: false, reloadOnChange: true))
                 .UseProxy()
@@ -89,4 +89,6 @@ namespace UserLottery.Service.Host
             }
         }
     }
+
 }
+
