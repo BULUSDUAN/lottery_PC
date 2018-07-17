@@ -303,6 +303,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                 .SetString("@StartTime", Model.startTime.ToString("yyyy-MM-dd"))
                 .SetString("@EndTime", Model.endTime.AddDays(1).ToString("yyyy-MM-dd"))
                 .SetString("@OrderId", Model.OrderId)
+                .SetString("@StatusList",Model.statusList)
                 .SetInt("@PageIndex", Model.pageIndex)
                 .SetInt("@PageSize", Model.pageSize).List<FillMoneyQueryInfo>();
             return Collection;
@@ -318,12 +319,16 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             var userId = Auth.ValidateUserAuthentication(Model.userToken);
             Model.pageIndex = Model.pageIndex < 0 ? 0 : Model.pageIndex;
             Model.pageSize = Model.pageSize > Model.MaxPageSize ? Model.MaxPageSize : Model.pageSize;
-
+            var state = -1;
+            if (Model.bonusStatus != null)
+            {
+                state = (int)Model.bonusStatus;
+            }
             var Collection = new MyBettingOrderInfoCollection();
             string Count_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_MyBettingOrder").SQL;
             Collection = DB.CreateSQLQuery(Count_sql)
                 .SetString("@userId", userId)
-                .SetInt("@BonusStatus", (int)Model.bonusStatus)
+                .SetInt("@BonusStatus", state)
                 .SetString("@GameCode", Model.gameCode)
                 .SetString("@FromDate", Model.startTime.Value.ToString("yyyy-MM-dd") ?? "")
                 .SetString("@ToDate", Model.endTime.Value.ToString("yyyy-MM-dd") ?? "").First<MyBettingOrderInfoCollection>();
@@ -331,7 +336,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             string MyBettingOrdePage_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_MyBettingOrderPage").SQL;
             Collection.OrderList = DB.CreateSQLQuery(MyBettingOrdePage_sql)
                 .SetString("@userId", userId)
-                .SetInt("@BonusStatus", (int)Model.bonusStatus)
+                .SetInt("@BonusStatus", state)
                 .SetString("@GameCode", Model.gameCode)
                 .SetString("@FromDate", Model.startTime.Value.ToString("yyyy-MM-dd") ?? "")
                 .SetString("@ToDate", Model.endTime.Value.ToString("yyyy-MM-dd") ?? "")
@@ -1170,7 +1175,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
         public Sports_SchemeQueryInfo QuerySports_Order_ComplateInfo(string schemeId)
         {
             var query = from r in DB.CreateQuery<C_Sports_Order_Complate>()
-                        join u in DB.CreateQuery<UserRegister>() on r.UserId equals u.UserId
+                        join u in DB.CreateQuery<C_User_Register>() on r.UserId equals u.UserId
                         where r.SchemeId == schemeId
                         select new { r, u };
             var queryResult = query.ToList().Select(b => new Sports_SchemeQueryInfo
