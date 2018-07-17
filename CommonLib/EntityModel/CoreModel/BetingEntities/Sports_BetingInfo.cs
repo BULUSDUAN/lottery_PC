@@ -153,11 +153,12 @@ namespace EntityModel.CoreModel
         /// <summary>
         /// 倍数
         /// </summary>
+        [ProtoMember(2)]
         public int Amount { get; set; }
         /// <summary>
         /// 当期总金额
         /// </summary>
-        [ProtoMember(2)]
+        [ProtoMember(3)]
         public decimal IssuseTotalMoney { get; set; }
     }
     [Serializable]
@@ -271,7 +272,7 @@ namespace EntityModel.CoreModel
         /// </summary>
         //public SchemeType SchemeType { get; set; }
 
-        public override bool Equals(object obj)
+        public  bool Equals(object obj)
         {
             var currObj = obj as LotteryBettingInfo;
             if (currObj == null)
