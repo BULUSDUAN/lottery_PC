@@ -19,12 +19,10 @@ using EntityModel.CoreModel;
 using KaSon.FrameWork.Common.Algorithms;
 using KaSon.FrameWork.Common.ExtensionFn;
 using KaSon.FrameWork.Common.Sport;
-using KaSon.FrameWork.ORM.Helper.Ticket;
 using KaSon.FrameWork.Analyzer.AnalyzerFactory;
 using EntityModel.Communication;
-using GameBiz.Business.Domain.Managers;
 
-namespace KaSon.FrameWork.ORM.Helper.BusinessLib
+namespace KaSon.FrameWork.ORM.Helper
 {
     public class Sports_Business: DBbase
     {

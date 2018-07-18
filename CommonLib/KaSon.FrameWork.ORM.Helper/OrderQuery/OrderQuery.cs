@@ -13,7 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-namespace KaSon.FrameWork.ORM.Helper.OrderQuery
+namespace KaSon.FrameWork.ORM.Helper
 {
     public class OrderQuery : DBbase
     {
@@ -62,11 +62,11 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             var queryResult = query.ToList().Select(b => new BJDCMatchResultInfo
             {
                 BF_Result = b.r.BF_Result == null ? "" : b.r.BF_Result,
-                BF_SP = b.r.BF_SP == null ? 0 : b.r.BF_SP,
+                BF_SP = b.r.BF_SP == 0 ? 0 : b.r.BF_SP,
                 BQC_Result = b.r.BQC_Result == null ? "" : b.r.BQC_Result,
-                BQC_SP = b.r.BQC_SP == null ? 0 : b.r.BQC_SP,
+                BQC_SP = b.r.BQC_SP == 0 ? 0 : b.r.BQC_SP,
                 CreateTime = b.r.CreateTime,
-                FlatOdds = b.m.FlatOdds == null ? 0 : b.m.FlatOdds,
+                FlatOdds = b.m.FlatOdds == 0 ? 0 : b.m.FlatOdds,
                 GuestFull_Result = b.r.GuestFull_Result == null ? "" : b.r.GuestFull_Result,
                 GuestHalf_Result = b.r.GuestHalf_Result == null ? "" : b.r.GuestHalf_Result,
                 GuestTeamName = b.m.GuestTeamName,
@@ -653,7 +653,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                 SilverCupCount = z.b.SilverCupCount,
                 SilverDiamondsCount = z.b.SilverDiamondsCount,
                 SilverStarCount = z.b.SilverStarCount,
-                IsAppend = z.r.IsAppend == null ? false : z.r.IsAppend,
+                IsAppend = z.r.IsAppend == false ? false : z.r.IsAppend,
                 TicketTime = z.r.TicketTime,
             });
             var info = queryResult.FirstOrDefault();
@@ -732,7 +732,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                             SilverCupCount = z.b.SilverCupCount,
                             SilverDiamondsCount = z.b.SilverDiamondsCount,
                             SilverStarCount = z.b.SilverStarCount,
-                            IsAppend = z.r.IsAppend == null ? false : z.r.IsAppend,
+                            IsAppend = z.r.IsAppend == false ? false : z.r.IsAppend,
                             TicketTime = z.r.TicketTime,
 
                         });
@@ -1218,7 +1218,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                 MaxBonusMoney = b.r.MaxBonusMoney,
                 MinBonusMoney = b.r.MinBonusMoney,
                 ExtensionOne = b.r.ExtensionOne,
-                IsAppend = b.r.IsAppend == null ? false : b.r.IsAppend,
+                IsAppend = b.r.IsAppend == false ? false : b.r.IsAppend,
                 ComplateDateTime = b.r.ComplateDateTime,
                 BetTime = b.r.BetTime,
                 SchemeSource = (SchemeSource)b.r.SchemeSource,
@@ -1284,7 +1284,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                 MaxBonusMoney = b.r.MaxBonusMoney,
                 MinBonusMoney = b.r.MinBonusMoney,
                 ExtensionOne = b.r.ExtensionOne,
-                IsAppend = b.r.IsAppend == null ? false : b.r.IsAppend,
+                IsAppend = b.r.IsAppend == false ? false : b.r.IsAppend,
                 BetTime = b.r.BetTime,
                 SchemeSource = (SchemeSource)b.r.SchemeSource,
                 TicketTime = b.r.TicketTime,

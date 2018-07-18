@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
-namespace KaSon.FrameWork.ORM.Helper.UserHelper
+namespace KaSon.FrameWork.ORM.Helper
 {
     /// <summary>
     /// kason

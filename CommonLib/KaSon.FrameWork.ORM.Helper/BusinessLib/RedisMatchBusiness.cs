@@ -254,8 +254,8 @@ namespace KaSon.FrameWork.ORM.Helper
         public static void LoadJCLQMatchResult()
         {
             //查询sql中近三天的比赛结果
-            var manager = new JCLQMatchManager();
-            var resultList = manager.QueryJCLQMatchResultByDay(-5);
+            var manager = new JCLQMatchManager(); 
+             var resultList = manager.QueryJCLQMatchResultByDay(-5);
             //写入redis库
             var json = JsonHelper.Serialize<List<EntityModel.C_JCLQ_MatchResult>>(resultList);
             var db = RedisHelper.DB_Match;

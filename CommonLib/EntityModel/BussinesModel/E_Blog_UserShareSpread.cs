@@ -66,5 +66,14 @@ namespace EntityModel
             [ProtoMember(8)]
             [Field("giveRedBagMoney")]
             public decimal giveRedBagMoney{ get; set; }
+
+        /// <summary>
+        // 是否领取充值赠送红包
+        ///</summary>
+        [ProtoMember(9)]
+        [Field("isGiveRechargeRedBag")]
+        public bool isGiveRechargeRedBag { get; set; }
+        
+
     }
 }
