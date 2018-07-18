@@ -325,7 +325,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         ConfigExtended = string.IsNullOrEmpty(a.ConfigExtended) ? string.Empty : a.ConfigExtended,
                         ConfigName = string.IsNullOrEmpty(a.ConfigName) ? string.Empty : a.ConfigName,
                         ConfigUpdateContent = string.IsNullOrEmpty(a.ConfigUpdateContent) ? string.Empty : a.ConfigUpdateContent,
-                        IsForcedUpgrade = a.IsForcedUpgrade == null ? false : a.IsForcedUpgrade,
+                        IsForcedUpgrade = a.IsForcedUpgrade == false ? false : a.IsForcedUpgrade,
                         ConfigVersion = string.IsNullOrEmpty(a.ConfigVersion) ? string.Empty : a.ConfigVersion
                     }).ToList();
         }

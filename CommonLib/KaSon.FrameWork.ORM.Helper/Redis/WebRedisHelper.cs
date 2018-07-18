@@ -5,8 +5,10 @@ using System.Web;
 using System.Configuration;
 using EntityModel.CoreModel;
 using EntityModel.Redis;
+using KaSon.FrameWork.Common.Redis;
+using KaSon.FrameWork.Common;
 
-namespace KaSon.FrameWork.Common.Redis
+namespace KaSon.FrameWork.ORM.Helper
 {
     public class WebRedisHelper
     {

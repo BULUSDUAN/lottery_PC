@@ -58,7 +58,7 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
         /// </summary>
         /// <param name="UserId"></param>
         /// <returns></returns>
-        public E_Authentication_Mobile GetUserMobile(string UserId) {
+        public E_Authentication_Mobile GetAuthenticatedMobile(string UserId) {
 
             return DB.CreateQuery<E_Authentication_Mobile>().Where(p => p.UserId == UserId).FirstOrDefault();
         }

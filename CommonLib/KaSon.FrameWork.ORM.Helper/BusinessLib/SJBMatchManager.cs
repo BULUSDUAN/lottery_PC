@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace KaSon.FrameWork.ORM.Helper.BusinessLib
+namespace KaSon.FrameWork.ORM.Helper
 {
     public class SJBMatchManager :DBbase
     {

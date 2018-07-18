@@ -5,7 +5,7 @@ using System.Text;
 using System.Linq;
 using EntityModel.Enum;
 
-namespace KaSon.FrameWork.ORM.Helper.UserHelper
+namespace KaSon.FrameWork.ORM.Helper
 {
    public class FundManager:DBbase
     {
@@ -63,6 +63,12 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
         public List<C_Fund_Detail> QueryFundDetailList(string orderId, string userId)
         {
             return DB.CreateQuery<C_Fund_Detail>().Where(f => f.OrderId == orderId && f.UserId == userId).ToList();
+        }
+
+        public int QueryFillMoneyCount(string userId)
+        {
+         
+            return DB.CreateQuery<C_FillMoney>().Count(p => p.UserId == userId && p.Status == (int)FillMoneyStatus.Success);
         }
     }
 }
