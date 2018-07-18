@@ -1316,13 +1316,14 @@ namespace Lottery.Api.Controllers
             param.Clear();
             param["userToken"] = userToken;
             var userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
-
+            param.Clear();
 
             var codeList = new List<object>();
             if (schemeInfo.Security == TogetherSchemeSecurity.Public
                || (schemeInfo.Security == TogetherSchemeSecurity.CompletePublic && schemeInfo.StopTime <= DateTime.Now)
                || schemeInfo.UserId == userInfo.UserId)
             {
+                param["schemeId"] = schemeId;
                 if (schemeInfo.Security != TogetherSchemeSecurity.FirstMatchStopPublic)
                 {
                     var anteCodeList =await _serviceProxyProvider.Invoke<Sports_AnteCodeQueryInfoCollection>(param, "api/Order/QuerySportsOrderAnteCodeList");
@@ -1546,11 +1547,10 @@ namespace Lottery.Api.Controllers
                 int pageIndex = p.PageIndex;
                 int pageSize = p.PageSize;
                 string userToken = p.UserToken;
-                string UserId = p.UserId;
                 if (string.IsNullOrEmpty(userToken))
                     throw new Exception("您还未登录，请登录！");
                 Dictionary<string, object> param = new Dictionary<string, object>();
-                var Model = new QueryUserFollowRuleParam() { userToken= userToken, pageIndex= pageIndex, pageSize= pageSize, gameCode= gameCode, gameType= gameType, userId= UserId };
+                var Model = new QueryUserFollowRuleParam() { userToken= userToken, pageIndex= pageIndex, pageSize= pageSize, gameCode= gameCode, gameType= gameType, userId= "", byFollower=false };
                 param["Model"] = Model;
                 var followList =await _serviceProxyProvider.Invoke<TogetherFollowerRuleQueryInfoCollection>(param, "api/Order/QueryUserFollowRule");
                 var list = new List<object>();

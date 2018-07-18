@@ -1061,7 +1061,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     c = QueryGameIssuse(item.GameCode, item.IssuseNumber);
                     issuseList.Add(c);
                 }
-                result.List.Add(new Sports_AnteCodeQueryInfo
+                var Model = new Sports_AnteCodeQueryInfo
                 {
                     AnteCode = item.AnteCode,
                     IssuseNumber = item.IssuseNumber,
@@ -1071,7 +1071,8 @@ namespace KaSon.FrameWork.ORM.Helper
                     GameType = item.GameType,
                     WinNumber = c == null ? string.Empty : string.IsNullOrEmpty(c.WinNumber) ? string.Empty : c.WinNumber,
                     StartTime = DateTime.Now,
-                });
+                };
+                result.List.Add(Model);
             }
             return result;
         }
@@ -1316,7 +1317,7 @@ namespace KaSon.FrameWork.ORM.Helper
             if (Model.byFollower)
             {
                 var query = (from f in DB.CreateQuery<C_Together_FollowerRule>()
-                             join u in DB.CreateQuery<UserRegister>() on f.CreaterUserId equals u.UserId
+                             join u in DB.CreateQuery<C_User_Register>() on f.CreaterUserId equals u.UserId
                              where (Model.gameCode == "" || f.GameCode == Model.gameCode)
                              && (Model.gameType == "" || f.GameType == Model.gameType)
                              && (Model.userId == "" || f.FollowerUserId == Model.userId)
@@ -1349,7 +1350,7 @@ namespace KaSon.FrameWork.ORM.Helper
             else
             {
                 var query = (from f in DB.CreateQuery<C_Together_FollowerRule>()
-                             join u in DB.CreateQuery<UserRegister>() on f.FollowerUserId equals u.UserId
+                             join u in DB.CreateQuery<C_User_Register>() on f.FollowerUserId equals u.UserId
                              where (Model.gameCode == "" || f.GameCode == Model.gameCode)
                              && (Model.gameType == "" || f.GameType == Model.gameType)
                              && (Model.userId == "" || f.CreaterUserId == Model.userId)

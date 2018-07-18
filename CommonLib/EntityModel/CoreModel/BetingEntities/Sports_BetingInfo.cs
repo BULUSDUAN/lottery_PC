@@ -48,7 +48,7 @@ namespace EntityModel.CoreModel
         [ProtoMember(13)]
         public int SoldCount { get; set; }
         [ProtoMember(14)]
-        public Sports_AnteCodeInfoCollection AnteCodeList { get; set; }
+        public List<Sports_AnteCodeInfo> AnteCodeList { get; set; }
         /// <summary>
         /// 活动选择
         /// </summary>
@@ -272,7 +272,7 @@ namespace EntityModel.CoreModel
         /// </summary>
         //public SchemeType SchemeType { get; set; }
 
-        public  bool Equals(object obj)
+        public bool Equals(object obj)
         {
             var currObj = obj as LotteryBettingInfo;
             if (currObj == null)
@@ -458,7 +458,7 @@ namespace EntityModel.CoreModel
     [ProtoContract]
     public class Sports_SchemeQueryInfo : XmlMappingObject
     {
-       [ProtoMember(1)]
+        [ProtoMember(1)]
         public string UserId { get; set; }
         [ProtoMember(2)]
         public string UserDisplayName { get; set; }
@@ -528,7 +528,7 @@ namespace EntityModel.CoreModel
         public decimal TicketProgress { get; set; }
         [ProtoMember(35)]
         public AddMoneyDistributionWay DistributionWay { get; set; }
-        [ProtoMember(36 )]
+        [ProtoMember(36)]
         public string Attach { get; set; }
         [ProtoMember(37)]
         // [XmlMapping("MinBonusMoney", 34)]
@@ -567,7 +567,7 @@ namespace EntityModel.CoreModel
 
 
 
-    
+
     public class Sports_ComplateInfo
     {
         public Sports_ComplateInfo()
@@ -609,12 +609,12 @@ namespace EntityModel.CoreModel
         public Sports_ComplateInfoCollection SingleDetailList { set; get; }
 
     }
-    
+
     public class Sports_ComplateInfoCollection : List<Sports_ComplateInfoList>
     {
     }
 
-    
+
     public class Sports_ComplateInfoList
     {
         /// <summary>
@@ -640,7 +640,7 @@ namespace EntityModel.CoreModel
     }
 
 
-    
+
     public class Sports_SchemeQueryInfoCollection
     {
         public Sports_SchemeQueryInfoCollection()
@@ -654,7 +654,7 @@ namespace EntityModel.CoreModel
     /// <summary>
     /// 足彩投注号码查询对象
     /// </summary>
-    
+
     //[XmlMapping("antecode", 0)]
     //public class Sports_AnteCodeQueryInfo : XmlMappingObject
     //{
@@ -705,7 +705,7 @@ namespace EntityModel.CoreModel
     //    [XmlMapping("WinNumber", 22, MappingType = MappingType.Attribute)]
     //    public string WinNumber { get; set; }
     //}
-    
+
     //public class Sports_AnteCodeQueryInfoCollection : XmlMappingList<Sports_AnteCodeQueryInfo>
     //{
     //}
@@ -713,7 +713,7 @@ namespace EntityModel.CoreModel
     /// <summary>
     /// 合买 订制跟单 规则
     /// </summary>
-    
+
     public class TogetherFollowerRuleInfo
     {
         /// <summary>
@@ -773,54 +773,77 @@ namespace EntityModel.CoreModel
     /// <summary>
     /// 合买 订制跟单规则查询对象
     /// </summary>
-    
+    [ProtoContract]
     public class TogetherFollowerRuleQueryInfo
     {
+        [ProtoMember(1)]
         public long RuleId { get; set; }
+        [ProtoMember(2)]
         public string UserId { get; set; }
+        [ProtoMember(3)]
         public string UserDisplayName { get; set; }
+        [ProtoMember(4)]
         public int HideDisplayNameCount { get; set; }
         /// <summary>
         /// 跟单投注金额
         /// </summary>
+        [ProtoMember(5)]
         public decimal BuyMoney { get; set; }
         /// <summary>
         /// 中奖金额
         /// </summary>
+        [ProtoMember(6)]
         public decimal BonusMoney { get; set; }
+        [ProtoMember(7)]
         public int FollowerIndex { get; set; }
+        [ProtoMember(8)]
         public DateTime CreateTime { get; set; }
+        [ProtoMember(9)]
         public bool IsEnable { get; set; }
+        [ProtoMember(10)]
         public string CreaterUserId { get; set; }
+        [ProtoMember(11)]
         public string FollowerUserId { get; set; }
+        [ProtoMember(12)]
         public string GameCode { get; set; }
+        [ProtoMember(13)]
         public string GameType { get; set; }
+        [ProtoMember(14)]
         public int SchemeCount { get; set; }
+        [ProtoMember(15)]
         public decimal MinSchemeMoney { get; set; }
+        [ProtoMember(16)]
         public decimal MaxSchemeMoney { get; set; }
+        [ProtoMember(17)]
         public int FollowerCount { get; set; }
+        [ProtoMember(18)]
         public decimal FollowerPercent { get; set; }
+        [ProtoMember(19)]
         public bool CancelWhenSurplusNotMatch { get; set; }
+        [ProtoMember(20)]
         public int CancelNoBonusSchemeCount { get; set; }
+        [ProtoMember(21)]
         public decimal StopFollowerMinBalance { get; set; }
     }
 
-    
+    [Serializable]
+    [ProtoContract]
     public class TogetherFollowerRuleQueryInfoCollection
     {
         public TogetherFollowerRuleQueryInfoCollection()
         {
             List = new List<TogetherFollowerRuleQueryInfo>();
         }
-
+        [ProtoMember(1)]
         public List<TogetherFollowerRuleQueryInfo> List { get; set; }
+        [ProtoMember(2)]
         public int TotalCount { get; set; }
     }
 
     /// <summary>
     /// 定制跟单 跟我的对象
     /// </summary>
-    
+
     public class TogetherFollowMeInfo
     {
         public string CreaterUserId { get; set; }
@@ -843,7 +866,7 @@ namespace EntityModel.CoreModel
         /// </summary>
         public decimal TotalBonusMoney { get; set; }
     }
-    
+
     public class TogetherFollowMeInfoCollection
     {
         public TogetherFollowMeInfoCollection()
@@ -858,7 +881,7 @@ namespace EntityModel.CoreModel
     /// <summary>
     /// 订制跟单记录
     /// </summary>
-    
+
     public class TogetherFollowRecordInfo
     {
         public string SchemeId { get; set; }
@@ -878,7 +901,7 @@ namespace EntityModel.CoreModel
         public ProgressStatus ProgressStatus { get; set; }
     }
 
-    
+
     public class TogetherFollowRecordInfoCollection
     {
         public TogetherFollowRecordInfoCollection()
@@ -1089,7 +1112,7 @@ namespace EntityModel.CoreModel
     /// <summary>
     /// 合买参与用户信息
     /// </summary>
-    
+
     public class Sports_TogetherJoinInfo
     {
         public long JoinId { get; set; }
@@ -1106,7 +1129,7 @@ namespace EntityModel.CoreModel
         public DateTime JoinDateTime { get; set; }
     }
 
-    
+
     public class Sports_TogetherJoinInfoCollection
     {
         public Sports_TogetherJoinInfoCollection()
@@ -1121,7 +1144,7 @@ namespace EntityModel.CoreModel
     /// <summary>
     /// 单式上传投注
     /// </summary>
-    
+
     public class SingleSchemeInfo
     {
         public string SchemeId { get; set; }
@@ -1180,7 +1203,7 @@ namespace EntityModel.CoreModel
     /// <summary>
     /// 单式上传号码查询对象
     /// </summary>
-    
+
     public class SingleScheme_AnteCodeQueryInfo
     {
         public string SchemeId { get; set; }
@@ -1196,7 +1219,7 @@ namespace EntityModel.CoreModel
     /// <summary>
     /// 单式上传方案创建合买对象
     /// </summary>
-    
+
     public class SingleScheme_TogetherSchemeInfo : TogetherSchemeBase
     {
         public SingleScheme_TogetherSchemeInfo()
@@ -1207,7 +1230,7 @@ namespace EntityModel.CoreModel
         public SingleSchemeInfo BettingInfo { get; set; }
     }
 
-    
+
     public class UserCurrentOrderInfo
     {
         public string UserId { get; set; }
@@ -1224,7 +1247,7 @@ namespace EntityModel.CoreModel
         public decimal Progress { get; set; }
     }
 
-    
+
     public class UserCurrentOrderInfoCollection
     {
         public UserCurrentOrderInfoCollection()
@@ -1235,7 +1258,7 @@ namespace EntityModel.CoreModel
         public int TotalCount { get; set; }
     }
 
-    
+
     public class SaveOrder_LotteryBettingInfo
     {
         public string SchemeId { get; set; }
@@ -1261,12 +1284,12 @@ namespace EntityModel.CoreModel
         public DateTime CreateTime { get; set; }
     }
 
-    
+
     public class SaveOrder_LotteryBettingInfoCollection : List<SaveOrder_LotteryBettingInfo>
     {
     }
 
-    
+
     public class TestInfo
     {
         public string OrderId { get; set; }
@@ -1279,7 +1302,7 @@ namespace EntityModel.CoreModel
     /// <summary>
     /// 优化投注比赛
     /// </summary>
-    
+
     public class YouHuaMatchInfo
     {
         public string Sign { get; set; }
@@ -1287,7 +1310,7 @@ namespace EntityModel.CoreModel
         public string GameType { get; set; }
         public string BetContent { get; set; }
     }
-    
+
     public class YouHuaMatchInfoCollection : List<YouHuaMatchInfo>
     {
     }
@@ -1295,7 +1318,7 @@ namespace EntityModel.CoreModel
     /// <summary>
     /// 优化投注号码
     /// </summary>
-    
+
     public class YouHuaBetCodeInfo
     {
         public YouHuaBetCodeInfo()
@@ -1306,7 +1329,7 @@ namespace EntityModel.CoreModel
         public string PlayType { get; set; }
         public int Amount { get; set; }
     }
-    
+
     public class YouHuaBetCodeInfoCollection : List<YouHuaBetCodeInfo>
     {
     }
@@ -1314,7 +1337,7 @@ namespace EntityModel.CoreModel
     /// <summary>
     /// 奖金优化投注对象
     /// </summary>
-    
+
     public class YouHuaBetInfo
     {
         public YouHuaBetInfo()
@@ -1337,7 +1360,7 @@ namespace EntityModel.CoreModel
     /// <summary>
     /// 奖金优化合买
     /// </summary>
-    
+
     public class YouHua_TogetherSchemeInfo : TogetherSchemeBase
     {
         public YouHua_TogetherSchemeInfo()
@@ -1347,7 +1370,7 @@ namespace EntityModel.CoreModel
 
         public YouHuaBetInfo BettingInfo { get; set; }
     }
-    
+
     public class OrderSingleScheme
     {
         public string MatchId { get; set; }
@@ -1376,7 +1399,7 @@ namespace EntityModel.CoreModel
         public byte[] FileBuffer { get; set; }
         public bool ContainsMatchId { get; set; }
     }
-    
+
     public class OrderSingleSchemeCollection
     {
         public OrderSingleSchemeCollection()
@@ -1390,7 +1413,7 @@ namespace EntityModel.CoreModel
     /// <summary>
     /// 票派奖对象，新流程
     /// </summary>
-    
+
     public class TicketPrizeInfo
     {
         public long Id { get; set; }

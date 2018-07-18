@@ -28,7 +28,7 @@ namespace KaSon.FrameWork.ORM.Helper
     {
         private static Log4Log writerLog = new Log4Log();
       
-        public int CheckBettingOrderMoney(Sports_AnteCodeInfoCollection codeList, string gameCode, string gameType, string playType, int amount, decimal schemeTotalMoney, DateTime stopTime, bool isAllow = false, string userId = "")
+        public int CheckBettingOrderMoney(List<Sports_AnteCodeInfo> codeList, string gameCode, string gameType, string playType, int amount, decimal schemeTotalMoney, DateTime stopTime, bool isAllow = false, string userId = "")
         {
             //验证投注号码
             if (stopTime < DateTime.Now)
@@ -144,7 +144,7 @@ namespace KaSon.FrameWork.ORM.Helper
             return totalCount;
         }
 
-        public DateTime CheckGeneralBettingMatch(Sports_Manager sportsManager, string gameCode, string gameType, string playType, Sports_AnteCodeInfoCollection codeList, string issuseNumber, SchemeBettingCategory? bettingCategory = null)
+        public DateTime CheckGeneralBettingMatch(Sports_Manager sportsManager, string gameCode, string gameType, string playType, List<Sports_AnteCodeInfo> codeList, string issuseNumber, SchemeBettingCategory? bettingCategory = null)
         {
             if (gameCode == "BJDC")
             {
@@ -1588,7 +1588,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 AfterTaxBonusMoney = 0M,
                 AgentId = userAgent,
                 BonusStatus = (int)BonusStatus.Waitting,
-              //  ComplateTime = null,
+                ComplateTime = null,
                 CreateTime = createtime,
                 CurrentBettingMoney = ticketStatus == TicketStatus.Ticketed ? totalMoney : 0M,
                 GameCode = gameCode,
