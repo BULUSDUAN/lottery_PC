@@ -1764,7 +1764,11 @@ namespace KaSon.FrameWork.ORM.Helper
             #endregion
             //查询近段时间盈利率
             var nInfo = QueryNearTimeProfitRate(bdfxUserId);
-            info.NearTimeProfitRateList = nInfo;
+            NearTimeProfitRate_Collection Collection = new NearTimeProfitRate_Collection
+            {
+                NearTimeProfitRateList = nInfo
+            };
+            info.NearTimeProfitRateCollection = Collection;
             //查询上周排行,根据当前时间，计算出上个星期的时间段
             info.RankNumber = QueryRankNumber(bdfxUserId);
             return info;

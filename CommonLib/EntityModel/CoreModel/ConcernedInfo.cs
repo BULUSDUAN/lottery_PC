@@ -9,7 +9,7 @@ namespace EntityModel.CoreModel
     {
         public ConcernedInfo()
         {
-            NearTimeProfitRateList = new List<NearTimeProfitRateInfo>();
+            NearTimeProfitRateCollection = new NearTimeProfitRate_Collection();
         }
         [ProtoMember(1)]
         public string UserId { get; set; }
@@ -26,7 +26,7 @@ namespace EntityModel.CoreModel
         [ProtoMember(7)]
         public int RankNumber { get; set; }
         [ProtoMember(8)]
-        public List<NearTimeProfitRateInfo> NearTimeProfitRateList { get; set; }
+        public NearTimeProfitRate_Collection NearTimeProfitRateCollection { get; set; }
         [ProtoMember(9)]
         public string FileCreateTime { get; set; }
     }
