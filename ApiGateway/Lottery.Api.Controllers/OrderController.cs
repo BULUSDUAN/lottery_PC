@@ -1547,10 +1547,11 @@ namespace Lottery.Api.Controllers
                 int pageIndex = p.PageIndex;
                 int pageSize = p.PageSize;
                 string userToken = p.UserToken;
+                bool byFollower = p.byFollower;//true=查询我的定制,false=查询定制我的
                 if (string.IsNullOrEmpty(userToken))
                     throw new Exception("您还未登录，请登录！");
                 Dictionary<string, object> param = new Dictionary<string, object>();
-                var Model = new QueryUserFollowRuleParam() { userToken= userToken, pageIndex= pageIndex, pageSize= pageSize, gameCode= gameCode, gameType= gameType, userId= "", byFollower=false };
+                var Model = new QueryUserFollowRuleParam() { userToken= userToken, pageIndex= pageIndex, pageSize= pageSize, gameCode= gameCode, gameType= gameType,byFollower= byFollower };
                 param["Model"] = Model;
                 var followList =await _serviceProxyProvider.Invoke<TogetherFollowerRuleQueryInfoCollection>(param, "api/Order/QueryUserFollowRule");
                 var list = new List<object>();

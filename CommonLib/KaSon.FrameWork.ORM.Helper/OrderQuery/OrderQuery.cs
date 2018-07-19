@@ -1309,7 +1309,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
         public TogetherFollowerRuleQueryInfoCollection QueryUserFollowRule(QueryUserFollowRuleParam Model)
         {
             UserAuthentication Auth = new UserAuthentication();
-            Model.userId = Auth.ValidateUserAuthentication(Model.userToken);
+            var userId = Auth.ValidateUserAuthentication(Model.userToken);
             var collection = new TogetherFollowerRuleQueryInfoCollection();
             Model.pageIndex = Model.pageIndex < 0 ? 0 : Model.pageIndex;
             Model.pageSize = Model.pageSize > Model.MaxPageSize ? Model.MaxPageSize : Model.pageSize;
@@ -1320,7 +1320,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                              join u in DB.CreateQuery<C_User_Register>() on f.CreaterUserId equals u.UserId
                              where (Model.gameCode == "" || f.GameCode == Model.gameCode)
                              && (Model.gameType == "" || f.GameType == Model.gameType)
-                             && (Model.userId == "" || f.FollowerUserId == Model.userId)
+                             && (userId == "" || f.FollowerUserId == userId)
                              select new { f, u });
                 queryResult.AddRange(query.ToList().Select(b => new TogetherFollowerRuleQueryInfo
                 {
@@ -1353,7 +1353,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                              join u in DB.CreateQuery<C_User_Register>() on f.FollowerUserId equals u.UserId
                              where (Model.gameCode == "" || f.GameCode == Model.gameCode)
                              && (Model.gameType == "" || f.GameType == Model.gameType)
-                             && (Model.userId == "" || f.CreaterUserId == Model.userId)
+                             && (userId == "" || f.CreaterUserId == userId)
                              orderby f.FollowerIndex ascending
                              select new { f, u });
                 queryResult.AddRange(query.ToList().Select(b => new TogetherFollowerRuleQueryInfo
@@ -1457,7 +1457,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
         public TogetherFollowerRuleQueryInfo QueryTogetherFollowerRuleInfo(string createrUserId, string followerUserId, string gameCode, string gameType)
         {
             var query = from t in DB.CreateQuery<C_Together_FollowerRule>()
-                        join u in DB.CreateQuery<UserRegister>() on t.CreaterUserId equals u.UserId
+                        join u in DB.CreateQuery<C_User_Register>() on t.CreaterUserId equals u.UserId
                         where t.CreaterUserId == createrUserId && t.FollowerUserId == followerUserId && t.GameCode == gameCode && t.GameType == gameType
                         select new { t, u };
             var queryResult = query.ToList().Select(b => new TogetherFollowerRuleQueryInfo
@@ -1479,7 +1479,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                 HideDisplayNameCount = b.u.HideDisplayNameCount,
                 RuleId = b.t.Id,
             });
-            if (query != null) return queryResult.FirstOrDefault();
+            if (queryResult != null) return queryResult.FirstOrDefault();
             return new TogetherFollowerRuleQueryInfo();
         }
         public TotalSingleTreasure_Collection QueryTodayBDFXList(QueryTodayBDFXList Model)
