@@ -455,9 +455,9 @@ namespace Lottery.Api.Controllers
                 var p = JsonHelper.Decode(entity.Param);
                 string userToken = p.UserToken;
                 string balancePassword = p.BalancePassword;
-                string gameCode = p.GameCode.ToUpper();
-                string gameType = p.GameType.ToUpper();
-                string playType = p.PlayType.ToUpper();
+                string gameCode = p.GameCode==null?null: ((string)p.GameCode).ToUpper();
+                string gameType = p.GameType==null?null: ((string)p.GameType).ToUpper();
+                string playType = p.PlayType==null?null: ((string)p.PlayType).ToUpper();
                 string issuseNumber = p.IssuseNumber;
                 int amount = p.Amount;
                 decimal totalMoney = p.TotalMoney;
@@ -506,7 +506,7 @@ namespace Lottery.Api.Controllers
                     else
                     {
                         //足球和篮球
-                        var codeList = new Sports_AnteCodeInfoCollection();
+                        var codeList = new List<Sports_AnteCodeInfo>();
                         foreach (var item in _code)
                         {
                             var code = new Sports_AnteCodeInfo()
@@ -728,9 +728,9 @@ namespace Lottery.Api.Controllers
 
                 var p = JsonHelper.Decode(entity.Param);
                 string userToken = p.UserToken;
-                string gameCode = p.GameCode;
-                string playType = p.PlayType;
-                string gameType = p.GameType;
+                string gameCode = p.GameCode == null ? null : ((string)p.GameCode).ToUpper();
+                string gameType = p.GameType == null ? null : ((string)p.GameType).ToUpper();
+                string playType = p.PlayType == null ? null : ((string)p.PlayType).ToUpper();
                 string issuseNumber = p.IssuseNumber;
                 //string anteCode = p.AnteCode;
                 var _code = p.CodeList;
@@ -1202,7 +1202,8 @@ namespace Lottery.Api.Controllers
         /// </summary>
         public async Task<IActionResult> QueryTogetherHall([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
-            var db = RedisHelper.GetInstance(CacheRedisHost, CacheRedisPost, CacheRedisPassword).GetDatabase(8);
+            RedisHelper.Init();
+            var db = RedisHelper.GetInstance(RedisHelper.ServerHost, RedisHelper.ServerPort, RedisHelper.ServerPassword).GetDatabase(8);
             var redisKey_TogetherList = RedisKeys.Key_Core_Togegher_OrderList;
             //生成列表
             var list = new List<Sports_TogetherSchemeQueryInfo>();
@@ -1225,7 +1226,7 @@ namespace Lottery.Api.Controllers
                 var p = JsonHelper.Decode(entity.Param);
                 int pageIndex = p.PageIndex;
                 int PageSize = p.PageSize;
-                var key = p.Key;
+                string key = p.Key;
 
                 //查询列表
                 var strPro = "10|20|30";
@@ -1266,71 +1267,71 @@ namespace Lottery.Api.Controllers
                 });
             }
         }
-        private static string _cacheRedisHost = string.Empty;
-        /// <summary>
-        /// 缓存Redis的ip
-        /// </summary>
-        public static string CacheRedisHost
-        {
-            get
-            {
-                try
-                {
-                    if (!string.IsNullOrEmpty(_cacheRedisHost))
-                        return _cacheRedisHost;
-                    _cacheRedisHost = ConfigHelper.ConfigInfo["CacheRedisHost"].ToString();
-                    return _cacheRedisHost;
-                }
-                catch (Exception)
-                {
-                    return string.Empty;
-                }
-            }
-        }
+        //private static string _cacheRedisHost = string.Empty;
+        ///// <summary>
+        ///// 缓存Redis的ip
+        ///// </summary>
+        //public static string CacheRedisHost
+        //{
+        //    get
+        //    {
+        //        try
+        //        {
+        //            if (!string.IsNullOrEmpty(_cacheRedisHost))
+        //                return _cacheRedisHost;
+        //            _cacheRedisHost = ConfigHelper.ConfigInfo["CacheRedisHost"].ToString();
+        //            return _cacheRedisHost;
+        //        }
+        //        catch (Exception)
+        //        {
+        //            return string.Empty;
+        //        }
+        //    }
+        //}
 
-        private static int _cacheRedisPort = 0;
-        /// <summary>
-        /// 缓存Redis的端口
-        /// </summary>
-        public static int CacheRedisPost
-        {
-            get
-            {
-                try
-                {
-                    if (_cacheRedisPort > 0)
-                        return _cacheRedisPort;
-                    _cacheRedisPort = int.Parse(ConfigHelper.ConfigInfo["CacheRedisPost"].ToString());
-                    return _cacheRedisPort;
-                }
-                catch (Exception)
-                {
-                    return 6379;
-                }
-            }
-        }
+        //private static int _cacheRedisPort = 0;
+        ///// <summary>
+        ///// 缓存Redis的端口
+        ///// </summary>
+        //public static int CacheRedisPost
+        //{
+        //    get
+        //    {
+        //        try
+        //        {
+        //            if (_cacheRedisPort > 0)
+        //                return _cacheRedisPort;
+        //            _cacheRedisPort = int.Parse(ConfigHelper.ConfigInfo["CacheRedisPost"].ToString());
+        //            return _cacheRedisPort;
+        //        }
+        //        catch (Exception)
+        //        {
+        //            return 6379;
+        //        }
+        //    }
+        //}
 
-        private static string _cacheRedisPassword = string.Empty;
-        /// <summary>
-        /// 缓存Redis的密码
-        /// </summary>
-        public static string CacheRedisPassword
-        {
-            get
-            {
-                try
-                {
-                    if (!string.IsNullOrEmpty(_cacheRedisPassword))
-                        return _cacheRedisPassword;
-                    _cacheRedisPassword = ConfigHelper.ConfigInfo["CacheRedisPassword"].ToString();
-                    return _cacheRedisPassword;
-                }
-                catch (Exception)
-                {
-                    return "123456";
-                }
-            }
-        }
+        //private static string _cacheRedisPassword = string.Empty;
+        ///// <summary>
+        ///// 缓存Redis的密码
+        ///// </summary>
+        //public static string CacheRedisPassword
+        //{
+        //    get
+        //    {
+        //        try
+        //        {
+        //            if (!string.IsNullOrEmpty(_cacheRedisPassword))
+        //                return _cacheRedisPassword;
+        //            _cacheRedisPassword = ConfigHelper.ConfigInfo["CacheRedisPassword"].ToString();
+        //            return _cacheRedisPassword;
+        //        }
+        //        catch (Exception)
+        //        {
+        //            return "123456";
+        //        }
+        //    }
+        //}
         #endregion
     }
 }

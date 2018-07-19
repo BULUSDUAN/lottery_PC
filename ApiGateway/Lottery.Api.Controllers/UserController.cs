@@ -67,7 +67,7 @@ namespace Lottery.Api.Controllers
                 var bankInfo = await _serviceProxyProvider.Invoke<C_BankCard>(balanceParam, "api/user/QueryBankCard");
 
                 if (bankInfo == null) bankInfo = new C_BankCard();
-                ViewBag.ff = HttpContext.Session.GetString("loginInfo");
+          
                 var unReadCount = await _serviceProxyProvider.Invoke<int>(balanceParam, "api/user/GetMyUnreadInnerMailCount");
               
                
@@ -134,22 +134,7 @@ namespace Lottery.Api.Controllers
             }
 
         }
-        /// <summary>
-        /// 将byte数组转换成对象
-        /// </summary>
-        /// <param name="buff">被转换byte数组</param>
-        /// <returns>转换完成后的对象</returns>
-        public static object Bytes2Object(byte[] buff)
-        {
-            string json = System.Text.Encoding.UTF8.GetString(buff);
-            return JsonConvert.DeserializeObject<object>(json);
-        }
-        public static byte[] Object2Bytes(object obj)
-        {
-            string json = JsonConvert.SerializeObject(obj);
-            byte[] serializedResult = System.Text.Encoding.UTF8.GetBytes(json);
-            return serializedResult;
-        }
+       
         #region 还需要的成长值
 
         private decimal GrowthStatus(decimal UserGrowth)

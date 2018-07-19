@@ -7,7 +7,7 @@ using System.Data;
 using KaSon.FrameWork.ORM.Helper;
 using EntityModel;
 
-namespace GameBiz.Business.Domain.Managers
+namespace KaSon.FrameWork.ORM.Helper
 {
    public class TotalSingleTreasureManager : DBbase
     {

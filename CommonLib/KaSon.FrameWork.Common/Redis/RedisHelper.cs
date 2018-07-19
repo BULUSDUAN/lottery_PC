@@ -19,12 +19,20 @@ namespace KaSon.FrameWork.Common.Redis
     public static class RedisHelper
     {
 
-        static JObject RdConfigInfo;
+        static JObject RdConfigInfo=null;
         static RedisHelper() {
-           string path = Path.Combine(Directory.GetCurrentDirectory(), @"Redis\redisSettings.json");
-           string jsonText = FileHelper.txtReader(path);
-           RdConfigInfo = (JObject)JsonConvert.DeserializeObject(jsonText);
-            _redisConectStr = RdConfigInfo["RedisConnect"].ToString();
+            Init();
+        }
+
+        public static void Init() {
+            if (string.IsNullOrEmpty(_redisConectStr)|| RdConfigInfo==null)
+            {
+                string path = Path.Combine(Directory.GetCurrentDirectory(), @"Redis\redisSettings.json");
+                string jsonText = FileHelper.txtReader(path);
+                RdConfigInfo = (JObject)JsonConvert.DeserializeObject(jsonText);
+                _redisConectStr = RdConfigInfo["RedisConnect"].ToString();
+            }
+            
         }
         /// <summary>
         /// 是否启用Redis

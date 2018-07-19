@@ -5,15 +5,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="External\" />
-    <Folder Include="GameBiz\" />
-    <Folder Include="Activity\" />
+    <ProjectReference Include="E:\gongchengwl\new_surging\Lottery_02\CommonLib\EntityModel\EntityModel.csproj" />
+    <ProjectReference Include="E:\gongchengwl\new_surging\Lottery_02\CommonLib\KaSon.FrameWork.Common\KaSon.FrameWork.Common.csproj" />
+    <ProjectReference Include="E:\gongchengwl\new_surging\Lottery_02\CommonLib\KaSon.FrameWork.ORM.Helper\KaSon.FrameWork.ORM.Helper.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EntityModel\EntityModel.csproj" />
-    <ProjectReference Include="..\KaSon.FrameWork.Common\KaSon.FrameWork.Common.csproj" />
-    <ProjectReference Include="..\KaSon.FrameWork.ORM.Helper\KaSon.FrameWork.ORM.Helper.csproj" />
+    <Folder Include="GameBiz\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="KaSon.FrameWork.ORM">
+      <HintPath>..\..\FramWorkDLL\KaSon.FrameWork.ORM.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

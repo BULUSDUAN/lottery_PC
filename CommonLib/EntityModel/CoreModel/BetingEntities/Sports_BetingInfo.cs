@@ -395,7 +395,7 @@ namespace EntityModel.CoreModel
         /// <summary>
         /// 投注号
         /// </summary>
-        public Sports_AnteCodeInfoCollection AnteCodeList { get; set; }
+        public List<Sports_AnteCodeInfo> AnteCodeList { get; set; }
         [ProtoMember(11)]
         /// <summary>
         /// 投注期号

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace KaSon.FrameWork.ORM.Helper.Ticket
+namespace KaSon.FrameWork.ORM.Helper
 {
     /// <summary>
     /// BJDC

@@ -7,7 +7,7 @@ using EntityModel;
 using EntityModel.CoreModel;
 using KaSon.FrameWork.Common.SMS;
 
-namespace KaSon.FrameWork.ORM.Helper.UserHelper
+namespace KaSon.FrameWork.ORM.Helper
 {
     /// <summary>
     /// 消息、短信控制器
