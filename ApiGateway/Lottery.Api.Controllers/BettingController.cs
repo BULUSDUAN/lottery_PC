@@ -1226,7 +1226,7 @@ namespace Lottery.Api.Controllers
                 var p = JsonHelper.Decode(entity.Param);
                 int pageIndex = p.PageIndex;
                 int PageSize = p.PageSize;
-                var key = p.Key;
+                string key = p.Key;
 
                 //查询列表
                 var strPro = "10|20|30";

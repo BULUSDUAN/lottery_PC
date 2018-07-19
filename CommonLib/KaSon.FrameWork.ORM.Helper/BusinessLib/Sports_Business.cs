@@ -19,8 +19,8 @@ using EntityModel.CoreModel;
 using KaSon.FrameWork.Common.Algorithms;
 using KaSon.FrameWork.Common.ExtensionFn;
 using KaSon.FrameWork.Common.Sport;
-using KaSon.FrameWork.Analyzer.AnalyzerFactory;
 using EntityModel.Communication;
+using KaSon.FrameWork.Analyzer.AnalyzerFactory;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
