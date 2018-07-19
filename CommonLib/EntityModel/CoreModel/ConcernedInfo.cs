@@ -8,7 +8,9 @@ namespace EntityModel.CoreModel
    public class ConcernedInfo
     {
         public ConcernedInfo()
-        { }
+        {
+            NearTimeProfitRateCollection = new NearTimeProfitRate_Collection();
+        }
         [ProtoMember(1)]
         public string UserId { get; set; }
         [ProtoMember(2)]

@@ -1816,10 +1816,11 @@ namespace Lottery.Api.Controllers
                 if (!string.IsNullOrEmpty(strAward) && strAward == "-1")
                 {
                     currenttime = DateTime.Now.ToString();
+                    strAward = string.Empty;
                 }
                 Dictionary<string, object> param = new Dictionary<string, object>()
                 {
-                    { "userId",userId},{"pageIndex",pageIndex },{"pageSize",pageSize },{"strIsBonus", strAward},{"currentTime", currenttime}
+                    { "userId",userId},{"pageIndex",pageIndex },{"pageSize",pageSize },{"strIsBonus", strAward},{"currentTime", currenttime }
                 };
                 result = await _serviceProxyProvider.Invoke<TotalSingleTreasure_Collection>(param, "api/Order/QueryBDFXAutherHomePage");
                 List<object> list = new List<object>();
