@@ -1657,19 +1657,19 @@ namespace KaSon.FrameWork.ORM.Helper
                 DB.CreateSQLQuery(tablesql);
                 string sqlCount = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_QueryBDFXAutherHomePageCount").SQL;
                 collection = DB.CreateSQLQuery(sqlCount)
-                                            .SetString("UserId", userId)
-                                            .SetString("StrIsBonus", strIsBonus)
-                                            .SetInt("_bonusStatus", _bonusStatus)
-                                            .SetString("CurrentTime", currentTime).First<TotalSingleTreasure_Collection>();
+                                            .SetString("@UserId", userId)
+                                            .SetString("@StrIsBonus", strIsBonus)
+                                            .SetInt("@_bonusStatus", _bonusStatus)
+                                            .SetString("@CurrentTime", currentTime).First<TotalSingleTreasure_Collection>();
 
-                string PageSql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_QueryBDFXAutherHomePageCount").SQL;
+                string PageSql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_QueryBDFXAutherHomePage").SQL;
                 collection.TotalSingleTreasureList = DB.CreateSQLQuery(PageSql)
-                                            .SetString("UserId", userId)
-                                            .SetString("StrIsBonus", strIsBonus)
-                                            .SetInt("_bonusStatus", _bonusStatus)
-                                            .SetString("CurrentTime", currentTime)
-                                            .SetInt("PageIndex", pageIndex)
-                                            .SetInt("PageSize", pageSize)
+                                            .SetString("@UserId", userId)
+                                            .SetString("@StrIsBonus", strIsBonus)
+                                            .SetInt("@_bonusStatus", _bonusStatus)
+                                            .SetString("@CurrentTime", currentTime)
+                                            .SetInt("@PageIndex", pageIndex)
+                                            .SetInt("@PageSize", pageSize)
                                             .List<TotalSingleTreasureInfo>();
                 if (collection.TotalCount > 0)
                 {
@@ -1778,14 +1778,19 @@ namespace KaSon.FrameWork.ORM.Helper
             //查询近段时间盈利率
             List<NearTimeProfitRateInfo> ListInfo = new List<NearTimeProfitRateInfo>();
             var endTime = DateTime.Now.Date.AddDays(1);
-            var startTime = endTime.AddDays(-7);
-            //20151008
-            //var strSql = "select tab.rowNumber,isnull(tab.currDay,'')CurrDay,isnull(tab.CurrProfitRate,0)CurrProfitRate from(select ROW_NUMBER() over(order by CONVERT(varchar(10),CreateTime,120)) rowNumber, CONVERT(varchar(10),CreateTime,120) currDay,(case t.IsBonus when 0 then 0 when 1 then((SUM(t.CurrBonusMoney)-SUM(t.CurrentBetMoney))/SUM(t.CurrentBetMoney)) else 0 end) CurrProfitRate from C_TotalSingleTreasure t where CONVERT(varchar(10),CreateTime,120)>=:StartTime and CONVERT(varchar(10),CreateTime,120) <:EndTime and UserId=:BDFXUserId group by CONVERT(varchar(10),CreateTime,120) ,t.UserId,t.IsBonus) tab";
-            var strSql = "select tab.rowNumber,isnull(tab.currDay,'')CurrDay,isnull(tab.CurrProfitRate,0)CurrProfitRate from ( select ROW_NUMBER() over(order by CONVERT(varchar(10),CreateTime,120)) rowNumber, CONVERT(varchar(10),CreateTime,120) currDay, (SUM(t.CurrBonusMoney)-SUM(t.CurrentBetMoney))/SUM(t.CurrentBetMoney) CurrProfitRate  from C_TotalSingleTreasure t where CONVERT(varchar(10),CreateTime,120)>=@StartTime and CONVERT(varchar(10),CreateTime,120) <@EndTime and UserId=@BDFXUserId and IsBonus=1 group by CONVERT(varchar(10),CreateTime,120) ,t.UserId ) tab";
+            var startTime = endTime.AddDays(-7);           
+            var strSql = "select tab.rowNumber,isnull(tab.currDay,'')CurrDay," +
+                "isnull(tab.CurrProfitRate,0)CurrProfitRate from " +
+                "( select ROW_NUMBER() over(order by CONVERT(varchar(10),CreateTime,120)) rowNumber," +
+                " CONVERT(varchar(10),CreateTime,120) currDay, (SUM(t.CurrBonusMoney)-SUM(t.CurrentBetMoney))/SUM(t.CurrentBetMoney) CurrProfitRate  " +
+                "from C_TotalSingleTreasure t where CONVERT(varchar(10),CreateTime,120)>=@StartTime " +
+                "and CONVERT(varchar(10),CreateTime,120) < @EndTime " +
+                "and UserId=@BDFXUserId and IsBonus=1 " +
+                "group by CONVERT(varchar(10),CreateTime,120) ,t.UserId ) tab";
             var query = DB.CreateSQLQuery(strSql)
-                           .SetString("StartTime", startTime.ToString())
-                           .SetString("EndTime", endTime.ToString())
-                           .SetString("BDFXUserId", bdfxUserId)
+                           .SetString("@StartTime", startTime.ToString())
+                           .SetString("@EndTime", endTime.ToString())
+                           .SetString("@BDFXUserId", bdfxUserId)
                            .List<NearTimeProfitRateInfo>();
             if (ListInfo == null || !ListInfo.Any())
             {
@@ -1814,11 +1819,16 @@ namespace KaSon.FrameWork.ORM.Helper
             var sTime = currTime.AddDays(-7).Date;
             var eTime = currTime.Date;
 
-            var strSql = "select tt.LastweekRank from (select ROW_NUMBER() over(order by sum(CurrProfitRate) desc) LastweekRank,lastTab.UserId from (select (case SUM(t.CurrentBetMoney) when 0 then 0 else ((SUM(t.CurrBonusMoney)-SUM(t.CurrentBetMoney))/SUM(t.CurrentBetMoney)) end) CurrProfitRate,UserId from C_TotalSingleTreasure t where CreateTime>=@StartTime and CreateTime<@EndTime and t.IsBonus=1 group by UserId	)	lastTab group by UserId		)tt where tt.UserId=@BDFXUserId";
+            var strSql = "select tt.LastweekRank from (select ROW_NUMBER() over(order by sum(CurrProfitRate) desc) LastweekRank," +
+                "lastTab.UserId from (select (case SUM(t.CurrentBetMoney) " +
+                "when 0 then 0 " +
+                "else ((SUM(t.CurrBonusMoney)-SUM(t.CurrentBetMoney))/SUM(t.CurrentBetMoney)) end) CurrProfitRate,UserId " +
+                "from C_TotalSingleTreasure t " +
+                "where CreateTime>=@StartTime and CreateTime<@EndTime and t.IsBonus=1 group by UserId	) lastTab group by UserId )tt where tt.UserId=@BDFXUserId";
             var query = DB.CreateSQLQuery(strSql)
-                          .SetString("StartTime", sTime.ToString())
-                          .SetString("EndTime", eTime.ToString())
-                          .SetString("BDFXUserId", bdfxUserId)
+                          .SetString("@StartTime", sTime.ToString())
+                          .SetString("@EndTime", eTime.ToString())
+                          .SetString("@BDFXUserId", bdfxUserId)
                           .First<int>();
             return query;
         }
@@ -2011,7 +2021,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     .SetString("@StartTime", startTime.ToString())
                     .SetString("@EndTime", endTime.ToString())
                     .SetString("@CurrUserId", currUserId)
-                    .SetString("IsMyGZ", isMyGZ)
+                    .SetString("@IsMyGZ", isMyGZ)
                     .SetString("@LastweekStartTime", sTime.ToString())
                     .SetString("@LastweekEndTime", eTime.ToString())
                     .List<BDFXGSRankInfo>();
