@@ -99,5 +99,7 @@ namespace OrderLottery.Service.IModuleServices
         Task<BJDCIssuseInfo> QueryBJDCCurrentIssuseInfo();
         [Service(Date = "2018-06-15", Director = "Debug", Name = "传统足球开奖比赛内容")]
         Task<CTZQMatchInfo_Collection> QueryCTZQMatchListByIssuseNumber(string gameType, string issuseNumber, string userToken);
+        [Service(Date ="2018-06-15",Director ="Debug",Name ="查询所有猜中最新开奖号码")]
+        Task<GameWinNumber_InfoCollection> QueryAllGameNewWinNumber(string gameString);
     }
 }

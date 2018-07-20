@@ -226,7 +226,7 @@
     {
       "key": "Debug_MyBDPage",
       "Desc": "我的宝单分页",
-      "ParamDesc": "@Desc:Desc,@OrderBy:OrderBy,@GameCode=GameCode,@UserName:UserName,@UserId:UserId,@LastweekStartTime:LastweekStartTime,@LastweekEndTime:LastweekEndTime,@Table_OrderRunning_Complate:Table_OrderRunning_Complate",
+      "ParamDesc": "@Desc:Desc,@OrderBy:OrderBy,@GameCode=GameCode,@UserName:UserName,@UserId:UserId,@LastweekStartTime:LastweekStartTime,@LastweekEndTime:LastweekEndTime",
       "Director": "Debug",
       "SQL": "select *,_Table.LastweekProfitRate from (select ROW_NUMBER() over(order by case @Desc when 'desc' then case @OrderBy when 'expectedreturnrate' then t.ExpectedReturnRate when 'totalbuymoney' then t.TotalBuyMoney when 'totalbuycount' then t.TotalBuyCount  when 'bdfxcreatetime' then t.CreateTime end end desc, case @Desc when 'asc' then case @OrderBy when 'expectedreturnrate' then t.ExpectedReturnRate when 'totalbuymoney' then t.TotalBuyMoney when 'totalbuycount' then t.TotalBuyCount when 'bdfxcreatetime' then t.CreateTime end end asc ) rowNumber,isnull(u.UserId,'')UserId,isnull(u.DisplayName,'') as UserName,isnull(t.SingleTreasureDeclaration,'')SingleTreasureDeclaration,isnull(o.GameCode,'')GameCode,isnull(o.GameType,'')GameType,isnull(o.IssuseNumber,'')IssuseNumber,isnull(t.ExpectedReturnRate,0)ExpectedReturnRate,isnull(t.Commission,0)Commission,isnull(t.Security,0)Security,isnull(t.TotalBuyCount,0)TotalBuyCount,isnull(t.TotalBuyMoney,0)TotalBuyMoney,isnull(o.AfterTaxBonusMoney,0)AfterTaxBonusMoney,t.FirstMatchStopTime,t.LastMatchStopTime,isnull(t.ProfitRate,0)ProfitRate,isnull(t.SchemeId,'')SchemeId,ISNULL(t.TotalBonusMoney,0)TotalBonusMoney,ISNULL(t.ExpectedBonusMoney,0) ExpectedBonusMoney,ISNULL(o.BetCount,0)BetCount,isnull(o.TotalMatchCount,0)TotalMatchCount,t.IsComplate,isnull(t.CurrentBetMoney,0)CurrentBetMoney,(case when t.CurrentBetMoney>0 then (o.AfterTaxBonusMoney-t.CurrentBetMoney)/t.CurrentBetMoney else 0 end)CDProfitRate,t.CreateTime as BDFXCreateTime,t.CurrProfitRate from @Table_OrderRunning_Complate o inner join C_TotalSingleTreasure t on o.SchemeId=t.SchemeId inner join C_User_Register u on o.UserId=u.UserId where (@GameCode='' or o.GameCode=@GameCode) and (@UserName='' or u.DisplayName=@UserName) and (@UserId='' or u.UserId=@UserId) ) tab left join ( select tt.LastweekProfitRate,tt.UserId from (select (case SUM(CurrentBetMoney) when 0 then 0 else (SUM(CurrBonusMoney)-SUM(CurrentBetMoney))/SUM(CurrentBetMoney) end) LastweekProfitRate,UserId from C_TotalSingleTreasure t where CreateTime>=''+@LastweekStartTime+'' and CreateTime<''+@LastweekEndTime+'' and t.IsBonus=1 group by UserId)tt) _Table on tab.UserId=_Table.UserId",
       "Remark": ""
@@ -234,7 +234,7 @@
     {
       "key": "Debug_NotMyBDCount",
       "Desc": "宝单统计",
-      "ParamDesc": "@GameCode:GameCode,@UserName:UserName,@UserId:UserId,@Table_OrderRunning_Complate:Table_OrderRunning_Complate",
+      "ParamDesc": "@GameCode:GameCode,@UserName:UserName,@UserId:UserId",
       "Director": "Debug",
       "SQL": "select TotalCount=COUNT(1) from @Table_OrderRunning_Complate o inner join C_TotalSingleTreasure t on o.SchemeId=t.SchemeId inner join C_User_Register u on o.UserId=u.UserId where (@GameCode='' or o.GameCode=@GameCode) and (@UserName='' or u.DisplayName=@UserName) and (@UserId='' or u.UserId=@UserId) and t.FirstMatchStopTime>GETDATE()",
       "Remark": ""
