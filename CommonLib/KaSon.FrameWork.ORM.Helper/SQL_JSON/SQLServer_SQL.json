@@ -264,7 +264,7 @@
       "Remark": ""
     },
     {
-      "key": "Debug_QueryBDFXAutherHomePageCount",
+      "key": "Debug_QueryBDFXAutherHomePage",
       "Desc": "查询昨日牛人分页",
       "ParamDesc": "@UserId:UserId,@StrIsBonus:StrIsBonus,@_bonusStatus:_bonusStatus,@CurrentTime:CurrentTime,@PageIndex:PageIndex,@PageSize:PageSize",
       "Director": "Debug",
