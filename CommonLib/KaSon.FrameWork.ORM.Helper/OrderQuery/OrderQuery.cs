@@ -1527,16 +1527,18 @@ namespace KaSon.FrameWork.ORM.Helper
             var eTime = currTime.Date;
             using (DB)
             {
-                string tempTable_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_TempOrderRunning_Complate_table").SQL;
-                DB.CreateSQLQuery(tempTable_sql);
+                string tempTable_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_TempOrderRunning_Complate_table").SQL;                               
                 if (Model.isMyBD == "1")
                 {
+                  
                     string CountSql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_MyBDCount").SQL;
-                    collection = DB.CreateSQLQuery(CountSql)
+                    CountSql = tempTable_sql + CountSql;
+                  collection = DB.CreateSQLQuery(CountSql)
                         .SetString("@GameCode", Model.gameCode)
                         .SetString("@UserName", Model.userName)
                         .SetString("@UserId", Model.userId).First<TotalSingleTreasure_Collection>();
                     string pageSql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_MyBDPage").SQL;
+                    pageSql = tempTable_sql + pageSql;
                     collection.TotalSingleTreasureList = DB.CreateSQLQuery(pageSql)
                         .SetString("@Desc", desc)
                         .SetString("@OrderBy", orderBy)
@@ -1551,11 +1553,13 @@ namespace KaSon.FrameWork.ORM.Helper
                 else
                 {
                     string CountSql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_NotMyBDCount").SQL;
+                    CountSql = tempTable_sql + CountSql;
                     collection = DB.CreateSQLQuery(CountSql)
                         .SetString("@GameCode", Model.gameCode)
                         .SetString("@UserName", Model.userName)
                         .SetString("@UserId", Model.userId).First<TotalSingleTreasure_Collection>();
                     string pageSql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_NotMyBDPage").SQL;
+                    pageSql = tempTable_sql + pageSql;
                     collection.TotalSingleTreasureList = DB.CreateSQLQuery(pageSql)
                         .SetString("@Desc", desc)
                         .SetString("@OrderBy", orderBy)
@@ -1609,10 +1613,10 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             startTime = startTime.Date.AddDays(-1);
             endTime = endTime.Date;
-            string strSql = "select top " + count + " t.UserId,t.DisplayName from(select (case SUM(t.CurrentBetMoney) when 0 then 0 else ((SUM(t.CurrBonusMoney)-SUM(t.CurrentBetMoney))/SUM(t.CurrentBetMoney)) end) CurrProfitRate,u.UserId,u.DisplayName from C_TotalSingleTreasure t inner join C_User_Register u on t.UserId=u.UserId where  t.CreateTime>=:StartTime and t.CreateTime<:EndTime and t.IsBonus=1 group by u.UserId,u.DisplayName	)t where  t.CurrProfitRate>=0 order by t.CurrProfitRate desc";
+            string strSql = "select top " + count + " t.UserId,t.DisplayName from(select (case SUM(t.CurrentBetMoney) when 0 then 0 else ((SUM(t.CurrBonusMoney)-SUM(t.CurrentBetMoney))/SUM(t.CurrentBetMoney)) end) CurrProfitRate,u.UserId,u.DisplayName from C_TotalSingleTreasure t inner join C_User_Register u on t.UserId=u.UserId where  t.CreateTime>=@StartTime and t.CreateTime<@EndTime and t.IsBonus=1 group by u.UserId,u.DisplayName	)t where  t.CurrProfitRate>=0 order by t.CurrProfitRate desc";
             var query = DB.CreateSQLQuery(strSql)
-                .SetString("StartTime", startTime.ToString())
-                .SetString("EndTime", endTime.ToString())
+                .SetString("@StartTime", startTime.ToString())
+                .SetString("@EndTime", endTime.ToString())
                 .List<QueryYesterdayNRModel>();
 
             string str = string.Empty;
