@@ -652,10 +652,10 @@ namespace UserLottery.Service.ModuleServices
                 string mobileNumber;
                 mobileNumber = authenticationBiz.RegisterResponseMobile(userResult.ReturnValue, mobile, 1800, "半个小时");
 
-                #region 还没做
+               
                 //! 执行扩展功能代码 - 提交事务后
-                //BusinessHelper.ExecPlugin<IResponseAuthentication_AfterTranCommit>(new object[] { userResult.ReturnValue, "Mobile", mobileNumber, source });
-                #endregion
+                BusinessHelper.ExecPlugin<IResponseAuthentication_AfterTranCommit>(new object[] { userResult.ReturnValue, "Mobile", mobileNumber, source });
+              
                 return Task.FromResult(new CommonActionResult(true, "恭喜您注册成功！"));
             }
             catch (Exception ex)

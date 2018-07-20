@@ -70,5 +70,18 @@ namespace KaSon.FrameWork.ORM.Helper
          
             return DB.CreateQuery<C_FillMoney>().Count(p => p.UserId == userId && p.Status == (int)FillMoneyStatus.Success);
         }
+
+        /// <summary>
+        /// 查询用户投注金额
+        /// </summary>
+        public decimal QueryBetMoney(string userId)
+        {
+          
+           
+            var query = DB.CreateQuery<C_OrderDetail>().Where(s => s.UserId == userId).ToList();
+            if (query != null && query.Count() > 0)
+                return query.Sum(s => s.CurrentBettingMoney);
+            return 0M;
+        }
     }
 }

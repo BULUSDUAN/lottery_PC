@@ -435,5 +435,14 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             DB.GetDal<C_Sports_Order_Complate>().Update(entity);
         }
+
+        public decimal GetUserMaxBonusMoney(string userId)
+        {
+           
+            string strSql = "select isnull(max(AfterTaxBonusMoney),0) maxBonusMoney from C_Sports_Order_Complate where UserId=:UserId and BonusStatus=20 and IsVirtualOrder=0";
+            var maxBonusMoney = DB.CreateSQLQuery(strSql).SetString("UserId", userId).First<decimal>();
+
+            return maxBonusMoney;
+        }
     }
 }
