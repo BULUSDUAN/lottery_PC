@@ -526,7 +526,7 @@ namespace UserLottery.Service.ModuleServices
                 {
                     throw new ArgumentException(string.Format("此手机号【{0}】已被其他用户认证。", mobile));
                 }
-            var entity = manager.GetUserMobile(userId);
+            var entity = manager.GetAuthenticatedMobile(userId);
             if (entity != null)
             {
                 entity.IsSettedMobile = false;
@@ -572,7 +572,7 @@ namespace UserLottery.Service.ModuleServices
                 var isCheckValidateCode = false;
 
                 var authenticationBiz = new MobileAuthenticationBusiness();
-                var mobile = authenticationBiz.GetUserMobile(userId);
+                var mobile = authenticationBiz.GetAuthenticatedMobile(userId);
                 if (mobile == null)
                 {
                     throw new ArgumentException("尚未请求手机认证");
@@ -652,10 +652,10 @@ namespace UserLottery.Service.ModuleServices
                 string mobileNumber;
                 mobileNumber = authenticationBiz.RegisterResponseMobile(userResult.ReturnValue, mobile, 1800, "半个小时");
 
-                #region 还没做
+               
                 //! 执行扩展功能代码 - 提交事务后
-                //BusinessHelper.ExecPlugin<IResponseAuthentication_AfterTranCommit>(new object[] { userResult.ReturnValue, "Mobile", mobileNumber, source });
-                #endregion
+                BusinessHelper.ExecPlugin<IResponseAuthentication_AfterTranCommit>(new object[] { userResult.ReturnValue, "Mobile", mobileNumber, source });
+              
                 return Task.FromResult(new CommonActionResult(true, "恭喜您注册成功！"));
             }
             catch (Exception ex)
@@ -917,7 +917,7 @@ namespace UserLottery.Service.ModuleServices
                 UpdateTime = DateTime.Now,
                 UserId = userId,
             };
-            manager.AddBlogDataReport(BlogDataReport);
+            manager.AddBlog_DataReport(BlogDataReport);
 
         }
 
@@ -1286,7 +1286,7 @@ namespace UserLottery.Service.ModuleServices
 
             #region 还没做
             //! 执行扩展功能代码 - 提交事务后
-            BusinessHelper.ExecPlugin<IResponseAuthentication_AfterTranCommit>(new object[] { userId, "RealName", realNameInfo.RealName + "|" + realNameInfo.CardType + "|" + realNameInfo.IdCardNumber, source });
+            BusinessHelper.ExecPlugin<IResponseAuthentication_AfterTranCommit>(new object[] { userId, "RealName", RealName + "|" + IdCardNumber, source });
             #endregion
 
             return Task.FromResult(new CommonActionResult(true, "实名认证成功。"));

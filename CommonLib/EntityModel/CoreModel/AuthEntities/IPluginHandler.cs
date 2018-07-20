@@ -185,10 +185,10 @@ namespace EntityModel.CoreModel
     //{
     //    void CompleteFillMoney_BeforeTranCommit(string orderId, FillMoneyStatus status, FillMoneyAgentType agentType, decimal fillMoney, string userId);
     //}
-    //public interface ICompleteFillMoney_AfterTranCommit : IPlugin
-    //{
-    //    void CompleteFillMoney_AfterTranCommit(string orderId, FillMoneyStatus status, FillMoneyAgentType agentType, decimal fillMoney, string userId, int vipLevel);
-    //}
+    public interface ICompleteFillMoney_AfterTranCommit : IPlugin
+    {
+        void CompleteFillMoney_AfterTranCommit(string orderId, FillMoneyStatus status, FillMoneyAgentType agentType, decimal fillMoney, string userId, int vipLevel);
+    }
     //public interface ICompleteFillMoney_OnError : IPlugin
     //{
     //    void CompleteFillMoney_OnError(string orderId, FillMoneyStatus status, string userId, Exception ex);
@@ -271,12 +271,12 @@ namespace EntityModel.CoreModel
 
     #endregion
 
-    //#region 用户认证
-    //public interface IResponseAuthentication_AfterTranCommit : IPlugin
-    //{
-    //    void ResponseAuthentication_AfterTranCommit(string userId, string authenticationType, string authenticationInfo, SchemeSource source);
-    //}
-
+    #region 用户认证
+    public interface IResponseAuthentication_AfterTranCommit : IPlugin
+    {
+        void ResponseAuthentication_AfterTranCommit(string userId, string authenticationType, string authenticationInfo, SchemeSource source);
+    }
+    #endregion
     /// <summary>
     /// 绑定银行卡接口
     /// </summary>

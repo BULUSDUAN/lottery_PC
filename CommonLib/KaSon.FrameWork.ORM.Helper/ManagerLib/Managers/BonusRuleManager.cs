@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 
-namespace KaSon.FrameWork.ORM.Helper.UserHelper
-{
+namespace KaSon.FrameWork.ORM.Helper
+{ 
    public class BonusRuleManager : DBbase
     {
         public List<C_Bonus_Rule> QueryBonusRule(string gameCode, string gameType)

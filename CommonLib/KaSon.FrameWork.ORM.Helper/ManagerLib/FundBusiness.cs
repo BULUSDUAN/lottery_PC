@@ -5,12 +5,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using EntityModel;
-using KaSon.FrameWork.ORM.Helper.UserHelper.Managers;
 using EntityModel.Enum;
 using EntityModel.ExceptionExtend;
 using KaSon.FrameWork.Common.Sport;
 
-namespace KaSon.FrameWork.ORM.Helper.UserHelper
+namespace KaSon.FrameWork.ORM.Helper
 {
     public class FundBusiness : DBbase
     {

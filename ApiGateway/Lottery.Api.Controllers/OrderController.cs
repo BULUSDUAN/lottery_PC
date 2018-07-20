@@ -1547,10 +1547,11 @@ namespace Lottery.Api.Controllers
                 int pageIndex = p.PageIndex;
                 int pageSize = p.PageSize;
                 string userToken = p.UserToken;
+                bool byFollower = p.byFollower;//true=查询我的定制,false=查询定制我的
                 if (string.IsNullOrEmpty(userToken))
                     throw new Exception("您还未登录，请登录！");
                 Dictionary<string, object> param = new Dictionary<string, object>();
-                var Model = new QueryUserFollowRuleParam() { userToken= userToken, pageIndex= pageIndex, pageSize= pageSize, gameCode= gameCode, gameType= gameType, userId= "", byFollower=false };
+                var Model = new QueryUserFollowRuleParam() { userToken= userToken, pageIndex= pageIndex, pageSize= pageSize, gameCode= gameCode, gameType= gameType,byFollower= byFollower };
                 param["Model"] = Model;
                 var followList =await _serviceProxyProvider.Invoke<TogetherFollowerRuleQueryInfoCollection>(param, "api/Order/QueryUserFollowRule");
                 var list = new List<object>();
@@ -1715,8 +1716,10 @@ namespace Lottery.Api.Controllers
                 string currUserId = p.CurrentUserId;
                 int pageIndex = p.PageIndex;
                 int pageSize = p.PageSize;
+                string UserId = p.UserId;
+                string GameCode = p.gameCode;
                 Dictionary<string, object> param = new Dictionary<string, object>();
-                var Model = new QueryTodayBDFXList() { strOrderBy= strOrderBy, startTime= DateTime.Now, endTime= DateTime.Now, currentUserId= currUserId, pageIndex= pageIndex, pageSize= pageSize, };
+                var Model = new QueryTodayBDFXList() { gameCode= GameCode, userId= UserId, strOrderBy = strOrderBy, startTime= DateTime.Now, endTime= DateTime.Now, currentUserId= currUserId, pageIndex= pageIndex, pageSize= pageSize, };
                 param["Model"] = Model;
                 var todayBDList =await _serviceProxyProvider.Invoke<TotalSingleTreasure_Collection>(param, "api/Order/QueryTodayBDFXList");
                 Dictionary<string, object> paranNR = new Dictionary<string, object>()
@@ -1809,22 +1812,17 @@ namespace Lottery.Api.Controllers
                 if (string.IsNullOrEmpty(userId))
                     throw new Exception("您还未登录，请先登录。");
                 var result = new TotalSingleTreasure_Collection();
-                Dictionary<string, object> param = new Dictionary<string, object>()
-                {
-                    { "userId",userId},{"pageIndex",pageIndex },{"pageSize",pageSize }
-                };
+                string currenttime = string.Empty;
                 if (!string.IsNullOrEmpty(strAward) && strAward == "-1")
                 {
-                    param.Add("strIsBonus", "");
-                    param.Add("currentTime", DateTime.Now.ToString());
-                    result = await _serviceProxyProvider.Invoke<TotalSingleTreasure_Collection>(param, "api/Order/QueryBDFXAutherHomePage");
+                    currenttime = DateTime.Now.ToString();
+                    strAward = string.Empty;
                 }
-                else
+                Dictionary<string, object> param = new Dictionary<string, object>()
                 {
-                    param.Add("strIsBonus", strAward);
-                    param.Add("currentTime", "");
-                    result = await _serviceProxyProvider.Invoke<TotalSingleTreasure_Collection>(param, "api/Order/QueryBDFXAutherHomePage");
-                }
+                    { "userId",userId},{"pageIndex",pageIndex },{"pageSize",pageSize },{"strIsBonus", strAward},{"currentTime", currenttime }
+                };
+                result = await _serviceProxyProvider.Invoke<TotalSingleTreasure_Collection>(param, "api/Order/QueryBDFXAutherHomePage");
                 List<object> list = new List<object>();
                 if (result != null && result.TotalCount > 0)
                 {

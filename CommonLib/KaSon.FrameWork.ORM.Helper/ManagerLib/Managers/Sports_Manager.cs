@@ -6,7 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 
-namespace KaSon.FrameWork.ORM.Helper.UserHelper
+namespace KaSon.FrameWork.ORM.Helper
 {
     public class Sports_Manager:DBbase
     {
@@ -409,6 +409,40 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
         public void DeleteTogetherFollowerRule(C_Together_FollowerRule entity)
         {
             DB.GetDal<C_Together_FollowerRule>().Delete(entity);
+        }
+
+        public C_Sports_Order_Complate QuerySports_Order_Complate(string schemeId)
+        {
+         
+            return DB.CreateQuery<C_Sports_Order_Complate>().Where(p => p.SchemeId == schemeId).FirstOrDefault();
+        }
+
+        public List<C_Sports_Ticket> QueryTicketList(string gameCode, string issuse)
+        {
+           
+            return DB.CreateQuery<C_Sports_Ticket>().Where(p => p.GameCode == gameCode && p.IssuseNumber == issuse
+                        && p.BonusStatus == (int)BonusStatus.Waitting
+                        && p.TicketStatus == (int)TicketStatus.Ticketed).ToList();
+        }
+
+        public List<C_Sports_Ticket> QueryTicketList(string schemeId)
+        {
+          
+            return DB.CreateQuery<C_Sports_Ticket>().Where(p => p.SchemeId == schemeId).ToList();
+        }
+
+        public void UpdateSports_Order_Complate(params C_Sports_Order_Complate[] entity)
+        {
+            DB.GetDal<C_Sports_Order_Complate>().Update(entity);
+        }
+
+        public decimal GetUserMaxBonusMoney(string userId)
+        {
+           
+            string strSql = "select isnull(max(AfterTaxBonusMoney),0) maxBonusMoney from C_Sports_Order_Complate where UserId=:UserId and BonusStatus=20 and IsVirtualOrder=0";
+            var maxBonusMoney = DB.CreateSQLQuery(strSql).SetString("UserId", userId).First<decimal>();
+
+            return maxBonusMoney;
         }
     }
 }

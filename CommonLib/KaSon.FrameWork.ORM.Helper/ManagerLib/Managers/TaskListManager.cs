@@ -1,11 +1,12 @@
 ﻿using EntityModel;
+using EntityModel.CoreModel;
 using EntityModel.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace KaSon.FrameWork.ORM.Helper.UserHelper
+namespace KaSon.FrameWork.ORM.Helper
 {
    public class TaskListManager:DBbase
     {
@@ -136,79 +137,79 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
             /// <summary>
             /// 查询某成长值的赠送记录
             /// </summary>
-            //public List<TaskListInfo> QueryCompleteTaskList(string userId, DateTime starTime, DateTime endTime, int pageIndex, int pageSize, out int totalCount)
-            //{
-            //    Session.Clear();
-            //    var query = from r in this.Session.Query<TaskList>()
-            //                where (r.UserId == userId && r.IsGive == true)
-            //                && (r.CreateTime >= starTime && r.CreateTime < endTime)
-            //                orderby r.CreateTime descending
-            //                select new TaskListInfo
-            //                {
-            //                    UserId = r.UserId,
-            //                    OrderId = r.OrderId,
-            //                    TaskName = r.TaskName,
-            //                    Content = r.Content,
-            //                    TaskCategory = r.TaskCategory,
-            //                    ValueGrowth = r.ValueGrowth,
-            //                    CreateTime = r.CreateTime,
-            //                };
-            //    totalCount = query.Count();
-            //    return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
-            //}
+            public List<TaskListInfo> QueryCompleteTaskList(string userId, DateTime starTime, DateTime endTime, int pageIndex, int pageSize, out int totalCount)
+            {
+               
+                var query = from r in DB.CreateQuery<E_TaskList>()
+                            where (r.UserId == userId && r.IsGive == true)
+                            && (r.CreateTime >= starTime && r.CreateTime < endTime)
+                            orderby r.CreateTime descending
+                            select new TaskListInfo
+                            {
+                                UserId = r.UserId,
+                                OrderId = r.OrderId,
+                                TaskName = r.TaskName,
+                                Content = r.Content,
+                                TaskCategory = (TaskCategory)r.TaskCategory,
+                                ValueGrowth = r.ValueGrowth,
+                                CreateTime = r.CreateTime,
+                            };
+                totalCount = query.Count();
+                return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+            }
 
-            /// <summary>
-            /// 查询某成长值的赠送记录
-            /// </summary>
-            //public List<TaskListInfo> QueryCompleteTaskToUserList(string userId)
-            //{
-            //    Session.Clear();
-            //    var query = from r in this.Session.Query<TaskList>()
-            //                where (r.UserId == userId && r.IsGive == true)
-            //                && r.TaskCategory != TaskCategory.BonusBuyLotteryTotle5
-            //                && r.TaskCategory != TaskCategory.Win100Count
-            //                && r.TaskCategory != TaskCategory.JCWin100Count
-            //                && r.TaskCategory != TaskCategory.Win1000Yuan
-            //                && r.TaskCategory != TaskCategory.EverDayBuyLottery
-            //                && r.TaskCategory != TaskCategory.JingcaiP2_1Totle5
-            //                orderby r.CreateTime descending
-            //                select new TaskListInfo
-            //                {
-            //                    UserId = r.UserId,
-            //                    OrderId = r.OrderId,
-            //                    TaskName = r.TaskName,
-            //                    Content = r.Content,
-            //                    TaskCategory = r.TaskCategory,
-            //                    ValueGrowth = r.ValueGrowth,
-            //                    CreateTime = r.CreateTime,
-            //                };
-            //    return query.ToList();
-            //}
+        /// <summary>
+        /// 查询某成长值的赠送记录
+        /// </summary>
+        public List<TaskListInfo> QueryCompleteTaskToUserList(string userId)
+        {
+          
+            var query = from r in DB.CreateQuery<E_TaskList>()
+                        where (r.UserId == userId && r.IsGive == true)
+                        && r.TaskCategory != (int)TaskCategory.BonusBuyLotteryTotle5
+                        && r.TaskCategory != (int)TaskCategory.Win100Count
+                        && r.TaskCategory != (int)TaskCategory.JCWin100Count
+                        && r.TaskCategory != (int)TaskCategory.Win1000Yuan
+                        && r.TaskCategory != (int)TaskCategory.EverDayBuyLottery
+                        && r.TaskCategory != (int)TaskCategory.JingcaiP2_1Totle5
+                        orderby r.CreateTime descending
+                        select new TaskListInfo
+                        {
+                            UserId = r.UserId,
+                            OrderId = r.OrderId,
+                            TaskName = r.TaskName,
+                            Content = r.Content,
+                            TaskCategory = (TaskCategory)r.TaskCategory,
+                            ValueGrowth = r.ValueGrowth,
+                            CreateTime = r.CreateTime,
+                        };
+            return query.ToList();
+        }
 
-            /// <summary>
-            /// 查询某人成长值的累计型完成进度
-            /// </summary>
-            //public List<TaskHotCumulativeInfo> QueryTaskListProgress(string userId)
-            //{
-            //    Session.Clear();
-            //    var query = from r in this.Session.Query<TaskList>()
-            //                where (r.UserId == userId)
-            //                && (r.TaskCategory == TaskCategory.Win100Count || r.TaskCategory == TaskCategory.JCWin100Count || r.TaskCategory == TaskCategory.Win1000Yuan)
-            //                group r by new { TaskCategory = r.TaskCategory, TaskName = r.TaskName, WinMonery = r.ValueGrowth } into _r
-            //                select new TaskHotCumulativeInfo
-            //                {
-            //                    TaskCategory = _r.Key.TaskCategory,
-            //                    Count = _r.Count(),
-            //                    TaskName = _r.Key.TaskName,
-            //                    WinMonery = _r.Key.WinMonery,
-            //                };
-            //    return query.ToList();
-            //}
+        /// <summary>
+        /// 查询某人成长值的累计型完成进度
+        /// </summary>
+        public List<TaskHotCumulativeInfo> QueryTaskListProgress(string userId)
+        {
+          
+            var query = from r in DB.CreateQuery<E_TaskList>()
+                        where (r.UserId == userId)
+                        && (r.TaskCategory == (int)TaskCategory.Win100Count || r.TaskCategory == (int)TaskCategory.JCWin100Count || r.TaskCategory == (int)TaskCategory.Win1000Yuan)
+                        group r by new { TaskCategory = r.TaskCategory, TaskName = r.TaskName, WinMonery = r.ValueGrowth } into _r
+                        select new TaskHotCumulativeInfo
+                        {
+                            TaskCategory = (TaskCategory)_r.Key.TaskCategory,
+                            Count = _r.Count(),
+                            TaskName = _r.Key.TaskName,
+                            WinMonery = _r.Key.WinMonery,
+                        };
+            return query.ToList();
+        }
 
-            /// <summary>
-            /// 查询该任务是否今天完成
-            /// </summary>
-            public int QueryTaskUserToday(string userId, TaskCategory taskCategory)
+        /// <summary>
+        /// 查询该任务是否今天完成
+        /// </summary>
+        public int QueryTaskUserToday(string userId, TaskCategory taskCategory)
             {
                 
                 var query = from f in DB.CreateQuery<E_TaskList>()
@@ -216,32 +217,32 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
                             && f.CreateTime >= new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0)
                             select f;
                 return query.Count();
-            }
+        }
 
-            /// <summary>
-            /// 最新会员得到成长值动态
-            /// </summary>
-            //public List<TaskHotTodayInfo> QueryTaskHotTodayInfoList(int lenth)
-            //{
-            //    Session.Clear();
-            //    var query = from r in this.Session.Query<TaskList>()
-            //                join u in this.Session.Query<UserRegister>() on r.UserId equals u.UserId
-            //                where r.IsGive == true
-            //                orderby r.CreateTime descending
-            //                select new TaskHotTodayInfo
-            //                {
-            //                    DisplayName = u.DisplayName,
-            //                    UserId = r.UserId,
-            //                    TaskName = r.TaskName,
-            //                    ValueGrowth = r.ValueGrowth,
-            //                };
-            //    return query.Take(lenth).ToList();
-            //}
+        /// <summary>
+        /// 最新会员得到成长值动态
+        /// </summary>
+        public List<TaskHotTodayInfo> QueryTaskHotTodayInfoList(int lenth)
+        {
 
-            /// <summary>
-            /// 更新状态
-            /// </summary>
-            public void UpdateTaskList(E_TaskList entity)
+            var query = from r in DB.CreateQuery<E_TaskList>()
+                        join u in DB.CreateQuery<C_User_Register>() on r.UserId equals u.UserId
+                        where r.IsGive == true
+                        orderby r.CreateTime descending
+                        select new TaskHotTodayInfo
+                        {
+                            DisplayName = u.DisplayName,
+                            UserId = r.UserId,
+                            TaskName = r.TaskName,
+                            ValueGrowth = r.ValueGrowth,
+                        };
+            return query.Take(lenth).ToList();
+        }
+
+        /// <summary>
+        /// 更新状态
+        /// </summary>
+        public void UpdateTaskList(E_TaskList entity)
             {
             DB.GetDal<E_TaskList>().Update(entity);
         }

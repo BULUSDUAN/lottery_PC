@@ -13,7 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-namespace KaSon.FrameWork.ORM.Helper.OrderQuery
+namespace KaSon.FrameWork.ORM.Helper
 {
     public class OrderQuery : DBbase
     {
@@ -31,7 +31,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             {
                 string sql = SqlModule.UserSystemModule.FirstOrDefault(p => p.Key == "P_Order_QueryBonusOrderList").SQL;
                 result.BonusOrderList = DB.CreateSQLQuery(sql)
-                    .SetString("@UserId", Model.userId??"")
+                    .SetString("@UserId", Model.userId ?? "")
                     .SetString("@GameCode", Model.gameCode)
                     .SetInt("@PageIndex", Model.pageIndex)
                     .SetInt("@PageSize", Model.pageSize)
@@ -62,11 +62,11 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             var queryResult = query.ToList().Select(b => new BJDCMatchResultInfo
             {
                 BF_Result = b.r.BF_Result == null ? "" : b.r.BF_Result,
-                BF_SP = b.r.BF_SP == null ? 0 : b.r.BF_SP,
+                BF_SP = b.r.BF_SP == 0 ? 0 : b.r.BF_SP,
                 BQC_Result = b.r.BQC_Result == null ? "" : b.r.BQC_Result,
-                BQC_SP = b.r.BQC_SP == null ? 0 : b.r.BQC_SP,
+                BQC_SP = b.r.BQC_SP == 0 ? 0 : b.r.BQC_SP,
                 CreateTime = b.r.CreateTime,
-                FlatOdds = b.m.FlatOdds == null ? 0 : b.m.FlatOdds,
+                FlatOdds = b.m.FlatOdds == 0 ? 0 : b.m.FlatOdds,
                 GuestFull_Result = b.r.GuestFull_Result == null ? "" : b.r.GuestFull_Result,
                 GuestHalf_Result = b.r.GuestHalf_Result == null ? "" : b.r.GuestHalf_Result,
                 GuestTeamName = b.m.GuestTeamName,
@@ -226,7 +226,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             {
                 userId = "";
                 AccountDetail_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_AccountDetailNoUserID").SQL;
-            }          
+            }
             var AccountDetail_query = DB.CreateSQLQuery(AccountDetail_sql).SetString("@UserId", userId)
                 .SetString("@StartTime", Model.fromDate.ToString())
                 .SetString("@EndTime", Model.toDate.ToString())
@@ -270,9 +270,9 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             else
                 Model.pageSize = Model.pageSize > Model.MaxPageSize ? Model.MaxPageSize : Model.pageSize;
 
-            var agentTypeList = string.Format("{0}", string.Join(',', (Model.agentTypeList??"").Split('|', StringSplitOptions.RemoveEmptyEntries))).ToString();
-            var statusList = string.Format("{0}", string.Join(',', (Model.statusList??"").Split('|', StringSplitOptions.RemoveEmptyEntries))).ToString();
-            var sourceList = string.Format("{0}", string.Join(',', (Model.sourceList??"").Split('|', StringSplitOptions.RemoveEmptyEntries))).ToString();
+            var agentTypeList = string.Format("{0}", string.Join(',', (Model.agentTypeList ?? "").Split('|', StringSplitOptions.RemoveEmptyEntries))).ToString();
+            var statusList = string.Format("{0}", string.Join(',', (Model.statusList ?? "").Split('|', StringSplitOptions.RemoveEmptyEntries))).ToString();
+            var sourceList = string.Format("{0}", string.Join(',', (Model.sourceList ?? "").Split('|', StringSplitOptions.RemoveEmptyEntries))).ToString();
             string sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_TotalRequestMoney").SQL;
             sql = string.Format(sql, agentTypeList, statusList, sourceList);
             Collection = DB.CreateSQLQuery(sql)
@@ -303,7 +303,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                 .SetString("@StartTime", Model.startTime.ToString("yyyy-MM-dd"))
                 .SetString("@EndTime", Model.endTime.AddDays(1).ToString("yyyy-MM-dd"))
                 .SetString("@OrderId", Model.OrderId)
-                .SetString("@StatusList",Model.statusList)
+                .SetString("@StatusList", Model.statusList)
                 .SetInt("@PageIndex", Model.pageIndex)
                 .SetInt("@PageSize", Model.pageSize).List<FillMoneyQueryInfo>();
             return Collection;
@@ -376,26 +376,26 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                         && (agent == null || r.WithdrawAgent == agent)
                         && (minMoney == -1 || r.RequestMoney >= minMoney)
                         && (maxMoney == -1 || r.RequestMoney <= maxMoney)
-                        select new { r, u };            
-            var queryResult= query.ToList().Select(b=>new Withdraw_QueryInfo
-                        {
-                            BankCardNumber = b.r.BankCardNumber,
-                            BankCode = b.r.BankCode,
-                            BankName = b.r.BankName,
-                            BankSubName = b.r.BankSubName,
-                            CityName = b.r.CityName,
-                            OrderId = b.r.OrderId,
-                            ProvinceName = b.r.ProvinceName,
-                            RequestMoney = b.r.RequestMoney,
-                            RequestTime = b.r.RequestTime,
-                            ResponseTime = b.r.ResponseTime,
-                            ResponseMoney = b.r.ResponseMoney,
-                            WithdrawAgent = b.r.WithdrawAgent,
-                            Status = b.r.Status,
-                            ResponseMessage = b.r.ResponseMessage,
-                            RequesterDisplayName = b.u.DisplayName,
-                            RequesterUserKey = b.u.UserId,
-                        });
+                        select new { r, u };
+            var queryResult = query.ToList().Select(b => new Withdraw_QueryInfo
+            {
+                BankCardNumber = b.r.BankCardNumber,
+                BankCode = b.r.BankCode,
+                BankName = b.r.BankName,
+                BankSubName = b.r.BankSubName,
+                CityName = b.r.CityName,
+                OrderId = b.r.OrderId,
+                ProvinceName = b.r.ProvinceName,
+                RequestMoney = b.r.RequestMoney,
+                RequestTime = b.r.RequestTime,
+                ResponseTime = b.r.ResponseTime,
+                ResponseMoney = b.r.ResponseMoney,
+                WithdrawAgent = b.r.WithdrawAgent,
+                Status = b.r.Status,
+                ResponseMessage = b.r.ResponseMessage,
+                RequesterDisplayName = b.u.DisplayName,
+                RequesterUserKey = b.u.UserId,
+            });
             Collection.WinCount = queryResult.Where(p => p.Status == (int)WithdrawStatus.Success).Count();
             Collection.RefusedCount = queryResult.Where(p => p.Status == (int)WithdrawStatus.Refused).Count();
 
@@ -441,7 +441,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                 .SetString("@DateFrom", Model.startTime.ToString("yyyy-MM-dd"))
                 .SetString("@DateTo", Model.endTime.ToString("yyyy-MM-dd"))
                 .SetString("@GameCode", Model.gameCode)
-                .SetInt("@BonusStatus",(int)Model.bonus)
+                .SetInt("@BonusStatus", (int)Model.bonus)
                 .SetInt("@PageIndex", Model.pageIndex)
                 .SetInt("@PageSize", Model.pageSize)
                 .List<TogetherOrderInfo>();
@@ -459,7 +459,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             var collection = new TogetherOrderInfoCollection();
             string sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_QueryJoinTogetherOrderCount").SQL;
             collection = DB.CreateSQLQuery(sql)
-                .SetString("@UserId",Model.userId)
+                .SetString("@UserId", Model.userId)
                .SetString("@GameCode", Model.gameCode)
                .SetString("@DateFrom", Model.startTime.ToString("yyyy-MM-dd"))
                .SetString("@DateTo", Model.endTime.ToString("yyyy-MM-dd")).First<TogetherOrderInfoCollection>();
@@ -653,7 +653,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                 SilverCupCount = z.b.SilverCupCount,
                 SilverDiamondsCount = z.b.SilverDiamondsCount,
                 SilverStarCount = z.b.SilverStarCount,
-                IsAppend = z.r.IsAppend == null ? false : z.r.IsAppend,
+                IsAppend = z.r.IsAppend == false ? false : z.r.IsAppend,
                 TicketTime = z.r.TicketTime,
             });
             var info = queryResult.FirstOrDefault();
@@ -674,68 +674,68 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                         join b in DB.CreateQuery<C_User_Beedings>() on t.CreateUserId equals b.UserId
                         where t.SchemeId == schemeId && t.GameCode == b.GameCode && t.GameType == b.GameType
                         select new { t, u, r, b };
-                     var queryResult=query.ToList().Select(z=> new Sports_TogetherSchemeQueryInfo
-                        {
-                            BonusDeduct = z.t.BonusDeduct,
-                            CreateUserId = z.t.CreateUserId,
-                            CreaterDisplayName = z.u.DisplayName,
-                            CreaterHideDisplayNameCount = z.u.HideDisplayNameCount,
-                            Description = z.t.Description,
-                            GameDisplayName = KaSon.FrameWork.Common.Utilities.ConvertHelper.FormatGameCode(z.t.GameCode),
-                            GameTypeDisplayName = KaSon.FrameWork.Common.Utilities.ConvertHelper.FormatGameType(z.t.GameCode, z.t.GameType),
-                            Guarantees = z.t.Guarantees,
-                            PlayType = z.t.PlayType,
-                            Price = z.t.Price,
-                            SchemeDeduct = z.t.SchemeDeduct,
-                            SchemeSource = (SchemeSource)z.t.SchemeSource,
-                            Security = (TogetherSchemeSecurity)z.t.Security,
-                            StopTime = z.t.StopTime,
-                            Subscription = z.t.Subscription,
-                            Title = z.t.Title,
-                            TotalCount = z.t.TotalCount,
-                            TotalMoney = z.t.TotalMoney,
-                            SchemeId = z.t.SchemeId,
-                            JoinPwd = z.t.JoinPwd,
-                            Progress = z.t.Progress,
-                            ProgressStatus = (TogetherSchemeProgress)z.t.ProgressStatus,
-                            SystemGuarantees = z.t.SystemGuarantees,
-                            GameCode = z.t.GameCode,
-                            GameType = z.t.GameType,
-                            SoldCount = z.t.SoldCount,
-                            TotalMatchCount = z.t.TotalMatchCount,
-                            Amount = z.r.Amount,
-                            BetCount = z.r.BetCount,
-                            PreTaxBonusMoney = z.r.PreTaxBonusMoney,
-                            AfterTaxBonusMoney = z.r.AfterTaxBonusMoney,
-                            WinNumber = string.Empty,
-                            BonusStatus = (BonusStatus)z.r.BonusStatus,
-                            BonusCount = 0,
-                            CreateTime = z.t.CreateTime,
-                            IsPrizeMoney = false,
-                            TicketStatus = (TicketStatus)z.r.TicketStatus,
-                            IssuseNumber = z.r.IssuseNumber,
-                            AddMoney = 0M,
-                            AddMoneyDescription = string.Empty,
-                            IsVirtualOrder = z.r.IsVirtualOrder,
-                            HitMatchCount = z.r.HitMatchCount,
-                            SchemeBettingCategory = (SchemeBettingCategory)z.r.SchemeBettingCategory,
-                            JoinUserCount = z.t.JoinUserCount,
-                            Attach = z.r.Attach,
-                            MinBonusMoney = z.r.MinBonusMoney,
-                            MaxBonusMoney = z.r.MaxBonusMoney,
-                            ExtensionOne = z.r.ExtensionOne,
-                            GoldCrownCount = z.b.GoldCrownCount,
-                            GoldCupCount = z.b.GoldCupCount,
-                            GoldDiamondsCount = z.b.GoldDiamondsCount,
-                            GoldStarCount = z.b.GoldStarCount,
-                            SilverCrownCount = z.b.SilverCrownCount,
-                            SilverCupCount = z.b.SilverCupCount,
-                            SilverDiamondsCount = z.b.SilverDiamondsCount,
-                            SilverStarCount = z.b.SilverStarCount,
-                            IsAppend = z.r.IsAppend == null ? false : z.r.IsAppend,
-                            TicketTime = z.r.TicketTime,
+            var queryResult = query.ToList().Select(z => new Sports_TogetherSchemeQueryInfo
+            {
+                BonusDeduct = z.t.BonusDeduct,
+                CreateUserId = z.t.CreateUserId,
+                CreaterDisplayName = z.u.DisplayName,
+                CreaterHideDisplayNameCount = z.u.HideDisplayNameCount,
+                Description = z.t.Description,
+                GameDisplayName = KaSon.FrameWork.Common.Utilities.ConvertHelper.FormatGameCode(z.t.GameCode),
+                GameTypeDisplayName = KaSon.FrameWork.Common.Utilities.ConvertHelper.FormatGameType(z.t.GameCode, z.t.GameType),
+                Guarantees = z.t.Guarantees,
+                PlayType = z.t.PlayType,
+                Price = z.t.Price,
+                SchemeDeduct = z.t.SchemeDeduct,
+                SchemeSource = (SchemeSource)z.t.SchemeSource,
+                Security = (TogetherSchemeSecurity)z.t.Security,
+                StopTime = z.t.StopTime,
+                Subscription = z.t.Subscription,
+                Title = z.t.Title,
+                TotalCount = z.t.TotalCount,
+                TotalMoney = z.t.TotalMoney,
+                SchemeId = z.t.SchemeId,
+                JoinPwd = z.t.JoinPwd,
+                Progress = z.t.Progress,
+                ProgressStatus = (TogetherSchemeProgress)z.t.ProgressStatus,
+                SystemGuarantees = z.t.SystemGuarantees,
+                GameCode = z.t.GameCode,
+                GameType = z.t.GameType,
+                SoldCount = z.t.SoldCount,
+                TotalMatchCount = z.t.TotalMatchCount,
+                Amount = z.r.Amount,
+                BetCount = z.r.BetCount,
+                PreTaxBonusMoney = z.r.PreTaxBonusMoney,
+                AfterTaxBonusMoney = z.r.AfterTaxBonusMoney,
+                WinNumber = string.Empty,
+                BonusStatus = (BonusStatus)z.r.BonusStatus,
+                BonusCount = 0,
+                CreateTime = z.t.CreateTime,
+                IsPrizeMoney = false,
+                TicketStatus = (TicketStatus)z.r.TicketStatus,
+                IssuseNumber = z.r.IssuseNumber,
+                AddMoney = 0M,
+                AddMoneyDescription = string.Empty,
+                IsVirtualOrder = z.r.IsVirtualOrder,
+                HitMatchCount = z.r.HitMatchCount,
+                SchemeBettingCategory = (SchemeBettingCategory)z.r.SchemeBettingCategory,
+                JoinUserCount = z.t.JoinUserCount,
+                Attach = z.r.Attach,
+                MinBonusMoney = z.r.MinBonusMoney,
+                MaxBonusMoney = z.r.MaxBonusMoney,
+                ExtensionOne = z.r.ExtensionOne,
+                GoldCrownCount = z.b.GoldCrownCount,
+                GoldCupCount = z.b.GoldCupCount,
+                GoldDiamondsCount = z.b.GoldDiamondsCount,
+                GoldStarCount = z.b.GoldStarCount,
+                SilverCrownCount = z.b.SilverCrownCount,
+                SilverCupCount = z.b.SilverCupCount,
+                SilverDiamondsCount = z.b.SilverDiamondsCount,
+                SilverStarCount = z.b.SilverStarCount,
+                IsAppend = z.r.IsAppend == false ? false : z.r.IsAppend,
+                TicketTime = z.r.TicketTime,
 
-                        });
+            });
             var info = queryResult.FirstOrDefault();
             if (info != null && info.GameCode != "JCZQ" && info.GameCode != "JCLQ" && info.GameCode != "BJDC")
             {
@@ -746,7 +746,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             }
             return info;
         }
-        public Sports_TogetherJoinInfoCollection QuerySportsTogetherJoinList(string schemeId, int pageIndex, int pageSize,string UserToken)
+        public Sports_TogetherJoinInfoCollection QuerySportsTogetherJoinList(string schemeId, int pageIndex, int pageSize, string UserToken)
         {
             var result = new Sports_TogetherJoinInfoCollection();
             var totalCount = 0;
@@ -756,21 +756,21 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                          where j.SchemeId == schemeId && j.JoinSucess == true
                          orderby j.JoinType ascending
                          select new { j, u });
-                 var queryResult=query.ToList().Select(b=> new Sports_TogetherJoinInfo
-                         {
-                             BuyCount = b.j.BuyCount,
-                             RealBuyCount = b.j.RealBuyCount,
-                             IsSucess = b.j.JoinSucess,
-                             JoinDateTime = b.j.CreateTime,
-                             JoinType = (TogetherJoinType)b.j.JoinType,
-                             Price = b.j.Price,
-                             UserDisplayName = b.u.DisplayName,
-                             HideDisplayNameCount = b.u.HideDisplayNameCount,
-                             UserId = b.u.UserId,
-                             JoinId = b.j.Id,
-                             SchemeId = b.j.SchemeId,
-                             BonusMoney = b.j.PreTaxBonusMoney,
-                         }).ToList();
+            var queryResult = query.ToList().Select(b => new Sports_TogetherJoinInfo
+            {
+                BuyCount = b.j.BuyCount,
+                RealBuyCount = b.j.RealBuyCount,
+                IsSucess = b.j.JoinSucess,
+                JoinDateTime = b.j.CreateTime,
+                JoinType = (TogetherJoinType)b.j.JoinType,
+                Price = b.j.Price,
+                UserDisplayName = b.u.DisplayName,
+                HideDisplayNameCount = b.u.HideDisplayNameCount,
+                UserId = b.u.UserId,
+                JoinId = b.j.Id,
+                SchemeId = b.j.SchemeId,
+                BonusMoney = b.j.PreTaxBonusMoney,
+            }).ToList();
             totalCount = queryResult.Count();
             if (pageIndex == -1 && pageSize == -1)
             {
@@ -1190,7 +1190,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                 BonusStatus = (BonusStatus)b.r.BonusStatus,
                 CreateTime = b.r.CreateTime,
                 GameType = b.r.GameType,
-                GameTypeDisplayName =KaSon.FrameWork.Common.Utilities. ConvertHelper.FormatGameType(b.r.GameCode, b.r.GameType),
+                GameTypeDisplayName = KaSon.FrameWork.Common.Utilities.ConvertHelper.FormatGameType(b.r.GameCode, b.r.GameType),
                 IssuseNumber = b.r.IssuseNumber,
                 PlayType = b.r.PlayType,
                 ProgressStatus = (ProgressStatus)b.r.ProgressStatus,
@@ -1219,7 +1219,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                 MaxBonusMoney = b.r.MaxBonusMoney,
                 MinBonusMoney = b.r.MinBonusMoney,
                 ExtensionOne = b.r.ExtensionOne,
-                IsAppend = b.r.IsAppend == null ? false : b.r.IsAppend,
+                IsAppend = b.r.IsAppend == false ? false : b.r.IsAppend,
                 ComplateDateTime = b.r.ComplateDateTime,
                 BetTime = b.r.BetTime,
                 SchemeSource = (SchemeSource)b.r.SchemeSource,
@@ -1285,12 +1285,12 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                 MaxBonusMoney = b.r.MaxBonusMoney,
                 MinBonusMoney = b.r.MinBonusMoney,
                 ExtensionOne = b.r.ExtensionOne,
-                IsAppend = b.r.IsAppend == null ? false : b.r.IsAppend,
+                IsAppend = b.r.IsAppend == false ? false : b.r.IsAppend,
                 BetTime = b.r.BetTime,
                 SchemeSource = (SchemeSource)b.r.SchemeSource,
                 TicketTime = b.r.TicketTime,
                 RedBagMoney = b.r.RedBagMoney,
-            }); 
+            });
             var info = queryResult.FirstOrDefault();
             if (info != null && info.GameCode != "JCZQ" && info.GameCode != "JCLQ" && info.GameCode != "BJDC")
             {
@@ -1309,7 +1309,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
         public TogetherFollowerRuleQueryInfoCollection QueryUserFollowRule(QueryUserFollowRuleParam Model)
         {
             UserAuthentication Auth = new UserAuthentication();
-            Model.userId = Auth.ValidateUserAuthentication(Model.userToken);
+            var userId = Auth.ValidateUserAuthentication(Model.userToken);
             var collection = new TogetherFollowerRuleQueryInfoCollection();
             Model.pageIndex = Model.pageIndex < 0 ? 0 : Model.pageIndex;
             Model.pageSize = Model.pageSize > Model.MaxPageSize ? Model.MaxPageSize : Model.pageSize;
@@ -1320,7 +1320,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                              join u in DB.CreateQuery<C_User_Register>() on f.CreaterUserId equals u.UserId
                              where (Model.gameCode == "" || f.GameCode == Model.gameCode)
                              && (Model.gameType == "" || f.GameType == Model.gameType)
-                             && (Model.userId == "" || f.FollowerUserId == Model.userId)
+                             && (userId == "" || f.FollowerUserId == userId)
                              select new { f, u });
                 queryResult.AddRange(query.ToList().Select(b => new TogetherFollowerRuleQueryInfo
                 {
@@ -1353,7 +1353,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                              join u in DB.CreateQuery<C_User_Register>() on f.FollowerUserId equals u.UserId
                              where (Model.gameCode == "" || f.GameCode == Model.gameCode)
                              && (Model.gameType == "" || f.GameType == Model.gameType)
-                             && (Model.userId == "" || f.CreaterUserId == Model.userId)
+                             && (userId == "" || f.CreaterUserId == userId)
                              orderby f.FollowerIndex ascending
                              select new { f, u });
                 queryResult.AddRange(query.ToList().Select(b => new TogetherFollowerRuleQueryInfo
@@ -1457,7 +1457,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
         public TogetherFollowerRuleQueryInfo QueryTogetherFollowerRuleInfo(string createrUserId, string followerUserId, string gameCode, string gameType)
         {
             var query = from t in DB.CreateQuery<C_Together_FollowerRule>()
-                        join u in DB.CreateQuery<UserRegister>() on t.CreaterUserId equals u.UserId
+                        join u in DB.CreateQuery<C_User_Register>() on t.CreaterUserId equals u.UserId
                         where t.CreaterUserId == createrUserId && t.FollowerUserId == followerUserId && t.GameCode == gameCode && t.GameType == gameType
                         select new { t, u };
             var queryResult = query.ToList().Select(b => new TogetherFollowerRuleQueryInfo
@@ -1479,7 +1479,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                 HideDisplayNameCount = b.u.HideDisplayNameCount,
                 RuleId = b.t.Id,
             });
-            if (query != null) return queryResult.FirstOrDefault();
+            if (queryResult != null) return queryResult.FirstOrDefault();
             return new TogetherFollowerRuleQueryInfo();
         }
         public TotalSingleTreasure_Collection QueryTodayBDFXList(QueryTodayBDFXList Model)
@@ -1527,16 +1527,18 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             var eTime = currTime.Date;
             using (DB)
             {
-                string tempTable_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_TempOrderRunning_Complate_table").SQL;
-                DB.CreateSQLQuery(tempTable_sql);
+                string tempTable_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_TempOrderRunning_Complate_table").SQL;                               
                 if (Model.isMyBD == "1")
                 {
+                  
                     string CountSql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_MyBDCount").SQL;
-                    collection = DB.CreateSQLQuery(CountSql)
+                    CountSql = tempTable_sql + CountSql;
+                  collection = DB.CreateSQLQuery(CountSql)
                         .SetString("@GameCode", Model.gameCode)
                         .SetString("@UserName", Model.userName)
                         .SetString("@UserId", Model.userId).First<TotalSingleTreasure_Collection>();
                     string pageSql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_MyBDPage").SQL;
+                    pageSql = tempTable_sql + pageSql;
                     collection.TotalSingleTreasureList = DB.CreateSQLQuery(pageSql)
                         .SetString("@Desc", desc)
                         .SetString("@OrderBy", orderBy)
@@ -1551,11 +1553,13 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                 else
                 {
                     string CountSql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_NotMyBDCount").SQL;
+                    CountSql = tempTable_sql + CountSql;
                     collection = DB.CreateSQLQuery(CountSql)
                         .SetString("@GameCode", Model.gameCode)
                         .SetString("@UserName", Model.userName)
                         .SetString("@UserId", Model.userId).First<TotalSingleTreasure_Collection>();
                     string pageSql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_NotMyBDPage").SQL;
+                    pageSql = tempTable_sql + pageSql;
                     collection.TotalSingleTreasureList = DB.CreateSQLQuery(pageSql)
                         .SetString("@Desc", desc)
                         .SetString("@OrderBy", orderBy)
@@ -1609,10 +1613,10 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
         {
             startTime = startTime.Date.AddDays(-1);
             endTime = endTime.Date;
-            string strSql = "select top " + count + " t.UserId,t.DisplayName from(select (case SUM(t.CurrentBetMoney) when 0 then 0 else ((SUM(t.CurrBonusMoney)-SUM(t.CurrentBetMoney))/SUM(t.CurrentBetMoney)) end) CurrProfitRate,u.UserId,u.DisplayName from C_TotalSingleTreasure t inner join C_User_Register u on t.UserId=u.UserId where  t.CreateTime>=:StartTime and t.CreateTime<:EndTime and t.IsBonus=1 group by u.UserId,u.DisplayName	)t where  t.CurrProfitRate>=0 order by t.CurrProfitRate desc";
+            string strSql = "select top " + count + " t.UserId,t.DisplayName from(select (case SUM(t.CurrentBetMoney) when 0 then 0 else ((SUM(t.CurrBonusMoney)-SUM(t.CurrentBetMoney))/SUM(t.CurrentBetMoney)) end) CurrProfitRate,u.UserId,u.DisplayName from C_TotalSingleTreasure t inner join C_User_Register u on t.UserId=u.UserId where  t.CreateTime>=@StartTime and t.CreateTime<@EndTime and t.IsBonus=1 group by u.UserId,u.DisplayName	)t where  t.CurrProfitRate>=0 order by t.CurrProfitRate desc";
             var query = DB.CreateSQLQuery(strSql)
-                .SetString("StartTime", startTime.ToString())
-                .SetString("EndTime", endTime.ToString())
+                .SetString("@StartTime", startTime.ToString())
+                .SetString("@EndTime", endTime.ToString())
                 .List<QueryYesterdayNRModel>();
 
             string str = string.Empty;
@@ -1657,19 +1661,19 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                 DB.CreateSQLQuery(tablesql);
                 string sqlCount = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_QueryBDFXAutherHomePageCount").SQL;
                 collection = DB.CreateSQLQuery(sqlCount)
-                                            .SetString("UserId", userId)
-                                            .SetString("StrIsBonus", strIsBonus)
-                                            .SetInt("_bonusStatus", _bonusStatus)
-                                            .SetString("CurrentTime", currentTime).First<TotalSingleTreasure_Collection>();
+                                            .SetString("@UserId", userId)
+                                            .SetString("@StrIsBonus", strIsBonus)
+                                            .SetInt("@_bonusStatus", _bonusStatus)
+                                            .SetString("@CurrentTime", currentTime).First<TotalSingleTreasure_Collection>();
 
-                string PageSql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_QueryBDFXAutherHomePageCount").SQL;
+                string PageSql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_QueryBDFXAutherHomePage").SQL;
                 collection.TotalSingleTreasureList = DB.CreateSQLQuery(PageSql)
-                                            .SetString("UserId", userId)
-                                            .SetString("StrIsBonus", strIsBonus)
-                                            .SetInt("_bonusStatus", _bonusStatus)
-                                            .SetString("CurrentTime", currentTime)
-                                            .SetInt("PageIndex", pageIndex)
-                                            .SetInt("PageSize", pageSize)
+                                            .SetString("@UserId", userId)
+                                            .SetString("@StrIsBonus", strIsBonus)
+                                            .SetInt("@_bonusStatus", _bonusStatus)
+                                            .SetString("@CurrentTime", currentTime)
+                                            .SetInt("@PageIndex", pageIndex)
+                                            .SetInt("@PageSize", pageSize)
                                             .List<TotalSingleTreasureInfo>();
                 if (collection.TotalCount > 0)
                 {
@@ -1764,8 +1768,11 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             #endregion
             //查询近段时间盈利率
             var nInfo = QueryNearTimeProfitRate(bdfxUserId);
-            info.NearTimeProfitRateCollection = new NearTimeProfitRate_Collection();
-            info.NearTimeProfitRateCollection.NearTimeProfitRateList.AddRange(nInfo);
+            NearTimeProfitRate_Collection Collection = new NearTimeProfitRate_Collection
+            {
+                NearTimeProfitRateList = nInfo
+            };
+            info.NearTimeProfitRateCollection = Collection;
             //查询上周排行,根据当前时间，计算出上个星期的时间段
             info.RankNumber = QueryRankNumber(bdfxUserId);
             return info;
@@ -1776,13 +1783,18 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             List<NearTimeProfitRateInfo> ListInfo = new List<NearTimeProfitRateInfo>();
             var endTime = DateTime.Now.Date.AddDays(1);
             var startTime = endTime.AddDays(-7);
-            //20151008
-            //var strSql = "select tab.rowNumber,isnull(tab.currDay,'')CurrDay,isnull(tab.CurrProfitRate,0)CurrProfitRate from(select ROW_NUMBER() over(order by CONVERT(varchar(10),CreateTime,120)) rowNumber, CONVERT(varchar(10),CreateTime,120) currDay,(case t.IsBonus when 0 then 0 when 1 then((SUM(t.CurrBonusMoney)-SUM(t.CurrentBetMoney))/SUM(t.CurrentBetMoney)) else 0 end) CurrProfitRate from C_TotalSingleTreasure t where CONVERT(varchar(10),CreateTime,120)>=:StartTime and CONVERT(varchar(10),CreateTime,120) <:EndTime and UserId=:BDFXUserId group by CONVERT(varchar(10),CreateTime,120) ,t.UserId,t.IsBonus) tab";
-            var strSql = "select tab.rowNumber,isnull(tab.currDay,'')CurrDay,isnull(tab.CurrProfitRate,0)CurrProfitRate from ( select ROW_NUMBER() over(order by CONVERT(varchar(10),CreateTime,120)) rowNumber, CONVERT(varchar(10),CreateTime,120) currDay, (SUM(t.CurrBonusMoney)-SUM(t.CurrentBetMoney))/SUM(t.CurrentBetMoney) CurrProfitRate  from C_TotalSingleTreasure t where CONVERT(varchar(10),CreateTime,120)>=@StartTime and CONVERT(varchar(10),CreateTime,120) <@EndTime and UserId=@BDFXUserId and IsBonus=1 group by CONVERT(varchar(10),CreateTime,120) ,t.UserId ) tab";
+            var strSql = "select tab.rowNumber,isnull(tab.currDay,'')CurrDay," +
+                "isnull(tab.CurrProfitRate,0)CurrProfitRate from " +
+                "( select ROW_NUMBER() over(order by CONVERT(varchar(10),CreateTime,120)) rowNumber," +
+                " CONVERT(varchar(10),CreateTime,120) currDay, (SUM(t.CurrBonusMoney)-SUM(t.CurrentBetMoney))/SUM(t.CurrentBetMoney) CurrProfitRate  " +
+                "from C_TotalSingleTreasure t where CONVERT(varchar(10),CreateTime,120)>=@StartTime " +
+                "and CONVERT(varchar(10),CreateTime,120) < @EndTime " +
+                "and UserId=@BDFXUserId and IsBonus=1 " +
+                "group by CONVERT(varchar(10),CreateTime,120) ,t.UserId ) tab";
             var query = DB.CreateSQLQuery(strSql)
-                           .SetString("StartTime", startTime.ToString())
-                           .SetString("EndTime", endTime.ToString())
-                           .SetString("BDFXUserId", bdfxUserId)
+                           .SetString("@StartTime", startTime.ToString())
+                           .SetString("@EndTime", endTime.ToString())
+                           .SetString("@BDFXUserId", bdfxUserId)
                            .List<NearTimeProfitRateInfo>();
             if (ListInfo == null || !ListInfo.Any())
             {
@@ -1811,11 +1823,16 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             var sTime = currTime.AddDays(-7).Date;
             var eTime = currTime.Date;
 
-            var strSql = "select tt.LastweekRank from (select ROW_NUMBER() over(order by sum(CurrProfitRate) desc) LastweekRank,lastTab.UserId from (select (case SUM(t.CurrentBetMoney) when 0 then 0 else ((SUM(t.CurrBonusMoney)-SUM(t.CurrentBetMoney))/SUM(t.CurrentBetMoney)) end) CurrProfitRate,UserId from C_TotalSingleTreasure t where CreateTime>=@StartTime and CreateTime<@EndTime and t.IsBonus=1 group by UserId	)	lastTab group by UserId		)tt where tt.UserId=@BDFXUserId";
+            var strSql = "select tt.LastweekRank from (select ROW_NUMBER() over(order by sum(CurrProfitRate) desc) LastweekRank," +
+                "lastTab.UserId from (select (case SUM(t.CurrentBetMoney) " +
+                "when 0 then 0 " +
+                "else ((SUM(t.CurrBonusMoney)-SUM(t.CurrentBetMoney))/SUM(t.CurrentBetMoney)) end) CurrProfitRate,UserId " +
+                "from C_TotalSingleTreasure t " +
+                "where CreateTime>=@StartTime and CreateTime<@EndTime and t.IsBonus=1 group by UserId	) lastTab group by UserId )tt where tt.UserId=@BDFXUserId";
             var query = DB.CreateSQLQuery(strSql)
-                          .SetString("StartTime", sTime.ToString())
-                          .SetString("EndTime", eTime.ToString())
-                          .SetString("BDFXUserId", bdfxUserId)
+                          .SetString("@StartTime", sTime.ToString())
+                          .SetString("@EndTime", eTime.ToString())
+                          .SetString("@BDFXUserId", bdfxUserId)
                           .First<int>();
             return query;
         }
@@ -1828,7 +1845,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
         {
             CommonActionResult result = new CommonActionResult();
             try
-            {               
+            {
                 DB.Begin();
                 #region 关注
                 if (string.IsNullOrEmpty(currUserId))
@@ -1944,11 +1961,11 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                 result.Message = "取消关注失败";
                 result.ReturnValue = "0";
                 return result;
-            }                        
+            }
         }
-        
+
         public C_SingleTreasure_Attention QuerySingleTreasureAttentionByUserId(string beConcernedUserId, string concernedUserId)
-        {           
+        {
             return DB.CreateQuery<C_SingleTreasure_Attention>().FirstOrDefault(s => s.BeConcernedUserId == beConcernedUserId && s.ConcernedUserId == concernedUserId);
         }
         public void AddSingleTreasureAttention(C_SingleTreasure_Attention entity)
@@ -1971,6 +1988,92 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
         {
             DB.GetDal<C_SingleTreasure_Attention>().Delete(entity);
         }
+        public BDFXOrderDetailInfo QueryBDFXOrderDetailBySchemeId_Dal(string schemeId)
+        {
+            var orderRunning = DB.CreateQuery<C_Sports_Order_Running>().FirstOrDefault(s => s.SchemeId == schemeId);
+            if (orderRunning != null && !string.IsNullOrEmpty(orderRunning.SchemeId))
+            {
+                var query = from t in DB.CreateQuery<C_TotalSingleTreasure>()
+                            join o in DB.CreateQuery<C_Sports_Order_Running>() on t.SchemeId equals o.SchemeId
+                            join u in DB.CreateQuery<C_User_Register>() on t.UserId equals u.UserId
+                            where t.SchemeId == schemeId
+                            select new { t, o, u };
+                var result = query.ToList().Select(p => new BDFXOrderDetailInfo
+                {
+                    UserId = p.u.UserId,
+                    UserName = p.u.DisplayName,
+                    SingleTreasureDeclaration = p.t.SingleTreasureDeclaration,
+                    TotalBuyCount = p.t.TotalBuyCount,
+                    TotalBuyMoney = p.t.TotalBuyMoney,
+                    AfterTaxBonusMoney = p.o.AfterTaxBonusMoney,
+                    TotalBonusMoney = p.t.TotalBonusMoney,
+                    ProfitRate = p.t.ProfitRate,
+                    GameCode = p.o.GameCode,
+                    GameType = p.o.GameType,
+                    IssuseNumber = p.o.IssuseNumber,
+                    ExpectedReturnRate = p.t.ExpectedReturnRate,
+                    Security = (TogetherSchemeSecurity)p.t.Security,
+                    SchemeId = p.t.SchemeId,
+                    Amount = p.o.Amount,
+                    BetCount = p.o.BetCount,
+                    FirstMatchStopTime = p.t.FirstMatchStopTime,
+                    LastMatchStopTime = p.t.LastMatchStopTime,
+                    PlayType = p.o.PlayType,
+                    TotalMatchCount = p.o.TotalMatchCount,
+                    SchemeBettingCategory = (SchemeBettingCategory)p.o.SchemeBettingCategory,
+                    ExpectedBonusMoney = p.t.ExpectedBonusMoney,
+                    IsComplate = p.t.IsComplate,
+                    CurrentBetMoney = p.t.CurrentBetMoney,
+                    CurrProfitRate = p.t.CurrentBetMoney > 0 ? (p.o.AfterTaxBonusMoney - p.t.CurrentBetMoney) / p.t.CurrentBetMoney : 0,
+                    Commission = p.t.Commission,
+                    TicketStatus = (TicketStatus)p.o.TicketStatus,
+                });
+                if (result != null && result.Count() > 0)
+                    return result.FirstOrDefault();
+            }
+            else
+            {
+                var query = from t in DB.CreateQuery<C_TotalSingleTreasure>()
+                            join o in DB.CreateQuery<C_Sports_Order_Complate>() on t.SchemeId equals o.SchemeId
+                            join u in DB.CreateQuery<C_User_Register>() on t.UserId equals u.UserId
+                            where t.SchemeId == schemeId
+                            select new { t, o, u };
+                var result = query.ToList().Select(p => new BDFXOrderDetailInfo
+                {
+                    UserId = p.u.UserId,
+                    UserName = p.u.DisplayName,
+                    SingleTreasureDeclaration = p.t.SingleTreasureDeclaration,
+                    TotalBuyCount = p.t.TotalBuyCount,
+                    TotalBuyMoney = p.t.TotalBuyMoney,
+                    AfterTaxBonusMoney = p.o.AfterTaxBonusMoney,
+                    TotalBonusMoney = p.t.TotalBonusMoney,
+                    ProfitRate = p.t.ProfitRate,
+                    GameCode = p.o.GameCode,
+                    GameType = p.o.GameType,
+                    IssuseNumber = p.o.IssuseNumber,
+                    ExpectedReturnRate = p.t.ExpectedReturnRate,
+                    Security = (TogetherSchemeSecurity)p.t.Security,
+                    SchemeId = p.t.SchemeId,
+                    Amount = p.o.Amount,
+                    BetCount = p.o.BetCount,
+                    FirstMatchStopTime = p.t.FirstMatchStopTime,
+                    LastMatchStopTime = p.t.LastMatchStopTime,
+                    PlayType = p.o.PlayType,
+                    TotalMatchCount = p.o.TotalMatchCount,
+                    SchemeBettingCategory = (SchemeBettingCategory)p.o.SchemeBettingCategory,
+                    ExpectedBonusMoney = p.t.ExpectedBonusMoney,
+                    IsComplate = p.t.IsComplate,
+                    CurrentBetMoney = p.t.CurrentBetMoney,
+                    CurrProfitRate = p.t.CurrentBetMoney > 0 ? (p.o.AfterTaxBonusMoney - p.t.CurrentBetMoney) / p.t.CurrentBetMoney : 0,
+                    Commission = p.t.Commission,
+                    TicketStatus = (TicketStatus)p.o.TicketStatus,
+                });
+                if (result != null && result.Count() > 0)
+                    return result.FirstOrDefault();
+            }
+
+            return new BDFXOrderDetailInfo();
+        }
         /// <summary>
         /// 查询高手排行/我的关注
         /// </summary>
@@ -1985,7 +2088,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             return QueryGSRankList(sTime, eTime, currUserId, isMyGZ);
         }
         public BDFXGSRank_Collection QueryGSRankList(DateTime startTime, DateTime endTime, string currUserId, string isMyGZ)
-        {            
+        {
             var sTime = startTime.AddDays(-7).Date;
             var eTime = startTime.Date;
             BDFXGSRank_Collection collection = new BDFXGSRank_Collection();
@@ -1993,7 +2096,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             if (!string.IsNullOrEmpty(isMyGZ) && isMyGZ == "true")
             {
                 sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_QueryMyFollow").SQL;
-                collection.RankList= DB.CreateSQLQuery(sql)
+                collection.RankList = DB.CreateSQLQuery(sql)
                     .SetString("@StartTime", startTime.ToString())
                     .SetString("@EndTime", endTime.ToString())
                     .SetString("@CurrUserId", currUserId)
@@ -2008,11 +2111,11 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                     .SetString("@StartTime", startTime.ToString())
                     .SetString("@EndTime", endTime.ToString())
                     .SetString("@CurrUserId", currUserId)
-                    .SetString("IsMyGZ", isMyGZ)
+                    .SetString("@IsMyGZ", isMyGZ)
                     .SetString("@LastweekStartTime", sTime.ToString())
                     .SetString("@LastweekEndTime", eTime.ToString())
                     .List<BDFXGSRankInfo>();
-            }           
+            }
             return collection;
         }
         /// <summary>
@@ -2022,7 +2125,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
         /// <returns></returns>
         public BDFXOrderDetailInfo QueryBDFXOrderDetailBySchemeId(string schemeId)
         {
-            var orderDetailInfo = QueryBDFXOrderDetailBySchemeId(schemeId);
+            var orderDetailInfo = QueryBDFXOrderDetailBySchemeId_Dal(schemeId);
             if (orderDetailInfo != null && !string.IsNullOrEmpty(orderDetailInfo.SchemeId))
             {
                 orderDetailInfo.AnteCodeCollection = new Sports_AnteCodeQueryInfoCollection();
@@ -2043,7 +2146,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                     currTime = currTime.AddDays(-6);
                 var startTime = currTime.AddDays(-7).Date;
                 var endTime = currTime.Date;
-                var rankNumber =QueryRankNumber(orderDetailInfo.UserId);
+                var rankNumber = QueryRankNumber(orderDetailInfo.UserId);
                 orderDetailInfo.RankNumber = rankNumber;
                 var anteCodeList = QueryAnteCodeListBySchemeId_manage(schemeId);
                 if (anteCodeList != null && anteCodeList.Count > 0)
@@ -2094,7 +2197,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
                 .SetString("@ToDate", endTime.AddDays(1).ToString("yyyy-MM-dd"))
                 .SetInt("@PageIndex", pageIndex)
                 .SetInt("@PageSize", pageSize).List<BettingOrderInfo>();
-           
+
             return collection;
         }
         public MyOrderListInfoCollection QueryMyOrderListInfo(QueryMyOrderListInfoParam Model)
@@ -2171,21 +2274,21 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             var query = from b in DB.CreateQuery<E_LotteryNewBonus>()
                         orderby b.CreateTime descending
                         select new { b };
-               var queryResult=query.ToList().Select(z=> new LotteryNewBonusInfo
-                        {
-                            AfterTaxBonusMoney = z.b.AfterTaxBonusMoney,
-                            Amount = z.b.Amount,
-                            CreateTime = z.b.CreateTime,
-                            GameCode = z.b.GameCode,
-                            GameType = z.b.GameType,
-                            HideUserDisplayNameCount = z.b.HideUserDisplayNameCount,
-                            IssuseNumber = z.b.IssuseNumber,
-                            PlayType = z.b.PlayType,
-                            PreTaxBonusMoney = z.b.PreTaxBonusMoney,
-                            SchemeId = z.b.SchemeId,
-                            TotalMoney = z.b.TotalMoney,
-                            UserDisplayName = z.b.UserDisplayName,
-                        });
+            var queryResult = query.ToList().Select(z => new LotteryNewBonusInfo
+            {
+                AfterTaxBonusMoney = z.b.AfterTaxBonusMoney,
+                Amount = z.b.Amount,
+                CreateTime = z.b.CreateTime,
+                GameCode = z.b.GameCode,
+                GameType = z.b.GameType,
+                HideUserDisplayNameCount = z.b.HideUserDisplayNameCount,
+                IssuseNumber = z.b.IssuseNumber,
+                PlayType = z.b.PlayType,
+                PreTaxBonusMoney = z.b.PreTaxBonusMoney,
+                SchemeId = z.b.SchemeId,
+                TotalMoney = z.b.TotalMoney,
+                UserDisplayName = z.b.UserDisplayName,
+            });
             return queryResult.Take(count).ToList();
         }
 
@@ -2378,7 +2481,7 @@ namespace KaSon.FrameWork.ORM.Helper.OrderQuery
             return DB.CreateQuery<KJGameIssuse>().FirstOrDefault(p => p.GameCode == gameCode && p.IssuseNumber == issuseNumber);
         }
         public List<LotteryIssuse_QueryInfo> QueryAllGameCurrentIssuse(bool byOfficial)
-        {           
+        {
             var list = new List<LotteryIssuse_QueryInfo>();
             var sql = string.Format(@"select g.GameCode,g.IssuseNumber,g.LocalStopTime,g.OfficialStopTime, convert(int, c.ConfigValue)ConfigValue
                         from (

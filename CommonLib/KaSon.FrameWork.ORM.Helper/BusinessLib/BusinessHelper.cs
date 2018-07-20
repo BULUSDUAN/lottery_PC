@@ -1085,7 +1085,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// 收入 --添加用户成长值
         /// 返回用户vip等级
         /// </summary>
-        public int Payin_UserGrowth(string category, string orderId, string userId, int userGrowth, string summary)
+        public static int Payin_UserGrowth(string category, string orderId, string userId, int userGrowth, string summary)
         {
             if (userGrowth <= 0) return 0;
 
@@ -1105,7 +1105,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 Summary = summary,
                 AfterBalance = userBalance.UserGrowth + userGrowth,
             };
-            DB.GetDal<C_Fund_UserGrowthDetail>().Add(Fund_UserGrowthDetail);
+            SDB.GetDal<C_Fund_UserGrowthDetail>().Add(Fund_UserGrowthDetail);
 
             var payDetailList = new List<PayDetail>();
             payDetailList.Add(new PayDetail
@@ -1151,7 +1151,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 }
                 //修改vip等级
                 user.VipLevel = vipLevel;
-                DB.GetDal<C_User_Register>().Update(user);
+                SDB.GetDal<C_User_Register>().Update(user);
             }
 
             return user.VipLevel;
@@ -1187,7 +1187,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <summary>
         /// 支付到用户余额
         /// </summary>
-        public void PayToUserBalance(string userId, params PayDetail[] array)
+        public static void PayToUserBalance(string userId, params PayDetail[] array)
         {
             if (array.Length <= 0)
                 return;
@@ -1235,11 +1235,11 @@ namespace KaSon.FrameWork.ORM.Helper
 
             var sql = string.Format("update [C_User_Balance] set {0},[Version]+=1 where userid='{1};select 1'", string.Join(",", setList), userId);
             // DB.CreateSQLExc();
-            var result = DB.CreateSQLQuery(sql).First<int>();
+            var result = SDB.CreateSQLQuery(sql).First<int>();
             Console.WriteLine("result:" + result);
         }
 
-        private string GetOperFun(EntityModel.Enum.PayType p)
+        private static string GetOperFun(EntityModel.Enum.PayType p)
         {
             switch (p)
             {
@@ -1251,7 +1251,7 @@ namespace KaSon.FrameWork.ORM.Helper
             throw new Exception("PayType类型不正确");
         }
 
-        public  void Payin_To_Balance(AccountType accountType, string category, string userId, string orderId, decimal payMoney, string summary, RedBagCategory redBag = RedBagCategory.FillMoney, string operatorId = "")
+        public static void Payin_To_Balance(AccountType accountType, string category, string userId, string orderId, decimal payMoney, string summary, RedBagCategory redBag = RedBagCategory.FillMoney, string operatorId = "")
         {
             //if (accountType == AccountType.Freeze)
             //    throw new Exception("退款账户不能为冻结账户");

@@ -6,7 +6,7 @@ using System.Linq;
 using EntityModel.Enum;
 using EntityModel.CoreModel;
 
-namespace KaSon.FrameWork.ORM.Helper.UserHelper
+namespace KaSon.FrameWork.ORM.Helper
 {
     /// <summary>
     /// kason

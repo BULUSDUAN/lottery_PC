@@ -11,7 +11,7 @@ using EntityModel;
 using EntityModel.Enum;
 using EntityModel.Communication;
 using System.Threading.Tasks;
-using KaSon.FrameWork.ORM.Helper.OrderQuery;
+using KaSon.FrameWork.ORM.Helper;
 using KaSon.FrameWork.Common;
 
 namespace OrderLottery.Service.ModuleServices

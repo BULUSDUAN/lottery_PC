@@ -4,6 +4,7 @@ using EntityModel.Enum;
 using EntityModel.Redis;
 using KaSon.FrameWork.Common.Redis;
 using KaSon.FrameWork.Common.Utilities;
+using KaSon.FrameWork.ORM.Helper.UserHelper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -130,5 +131,75 @@ namespace KaSon.FrameWork.ORM.Helper
             if (_AllNestedUrlConfigList != null || _AllNestedUrlConfigList.Count <= 0)
                 _AllNestedUrlConfigList.Clear();
         }
+
+
+        #region 分享推广
+        ///// <summary>
+        ///// 分享推广 购彩 送红包
+        ///// </summary>
+        ///// <param name="userId"></param>
+        //public void FirstLotteryGiveRedBag(string userId)
+        //{
+        //    using (var biz = new GameBizBusinessManagement())
+        //    {
+        //        biz.BeginTran();
+        //        //分享推广 购彩 送红包
+        //        //购彩了 且是通过分享注册的用户 没有送红包 就执行分享推广活动
+        //        var entityBankCard = new BankCardManager().BankCardById(userId);
+        //        var entityShareSpread = new BlogManager().QueryBlog_UserShareSpread(userId);
+        //        if (entityBankCard != null && entityShareSpread != null && !entityShareSpread.isGiveLotteryRedBag)
+        //        {
+        //            //购彩了 没有给分享者送活动红包 就执行送红包 只送一次
+        //            var giveFillMoney = decimal.Parse(Activity.Business.ActivityCache.QueryActivityConfig("ActivityConfig.FirstLotteryGiveRedBagTofxid").ConfigValue);
+        //            if (giveFillMoney > 0)
+        //            {
+        //                BusinessHelper.Payin_To_Balance(AccountType.RedBag, BusinessHelper.FundCategory_Activity, entityShareSpread.AgentId, Guid.NewGuid().ToString("N"), giveFillMoney
+        //                                  , string.Format("{1}用户购彩了赠送红包给分享推广用户{0}元", giveFillMoney, userId), RedBagCategory.FxidRegister);
+
+        //                entityShareSpread.isGiveLotteryRedBag = true;
+        //                entityShareSpread.UpdateTime = DateTime.Now;
+        //                entityShareSpread.giveRedBagMoney = entityShareSpread.giveRedBagMoney + giveFillMoney;
+        //                new BlogManager().UpdateBlog_UserShareSpread(entityShareSpread);
+        //            }
+        //        }
+        //        biz.CommitTran();
+        //    }
+        //}
+
+        /// <summary>
+        /// 分享推广 购彩 送红包(满x元送z元红包)
+        /// </summary>
+        /// <param name="userId"></param>
+        public void FirstLotteryGiveRedBag(string userId, decimal totalMoney)
+        {
+          
+                DB.Begin();
+                //分享推广 购彩 送红包
+                //购彩了 且是通过分享注册的用户 没有送红包 就执行分享推广活动
+                //var entityBankCard = new BankCardManager().BankCardById(userId);
+                /*entityBankCard != null */
+                var entityShareSpread = new BlogManager().QueryBlog_UserShareSpread(userId);
+                
+                var satisfyFillMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.SatisfyLotteryGiveRedBagTofxid").ConfigValue);
+                if (entityShareSpread != null && !entityShareSpread.isGiveLotteryRedBag && totalMoney >= satisfyFillMoney)
+                {
+                    //购彩了 没有给分享者送活动红包 就执行送红包 只送一次
+                    var giveFillMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.FirstLotteryGiveRedBagTofxid").ConfigValue);
+                    if (giveFillMoney > 0)
+                    {
+                  
+                    BusinessHelper.Payin_To_Balance(AccountType.RedBag, BusinessHelper.FundCategory_Activity, entityShareSpread.AgentId, Guid.NewGuid().ToString("N"), giveFillMoney
+                                          , string.Format("{1}用户购彩超过{2}元，赠送红包给分享推广用户{0}元", giveFillMoney, userId, satisfyFillMoney), RedBagCategory.FxidRegister);
+
+                        entityShareSpread.isGiveLotteryRedBag = true;
+                        entityShareSpread.UpdateTime = DateTime.Now;
+                        entityShareSpread.giveRedBagMoney = entityShareSpread.giveRedBagMoney + giveFillMoney;
+                        new BlogManager().UpdateBlog_UserShareSpread(entityShareSpread);
+                    }
+                }
+                DB.Commit();
+            
+        }
+        #endregion
     }
 }

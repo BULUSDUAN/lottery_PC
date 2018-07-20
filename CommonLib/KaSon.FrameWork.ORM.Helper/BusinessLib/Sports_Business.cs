@@ -19,12 +19,10 @@ using EntityModel.CoreModel;
 using KaSon.FrameWork.Common.Algorithms;
 using KaSon.FrameWork.Common.ExtensionFn;
 using KaSon.FrameWork.Common.Sport;
-using KaSon.FrameWork.ORM.Helper.Ticket;
-using KaSon.FrameWork.Analyzer.AnalyzerFactory;
 using EntityModel.Communication;
-using GameBiz.Business.Domain.Managers;
+using KaSon.FrameWork.Analyzer.AnalyzerFactory;
 
-namespace KaSon.FrameWork.ORM.Helper.BusinessLib
+namespace KaSon.FrameWork.ORM.Helper
 {
     public class Sports_Business: DBbase
     {
@@ -743,9 +741,11 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
             //if (BettingHelper.CanRequestBet(AppSetting, gameCode))
             var canTicket = BettingHelper.CanRequestBet(info.GameCode);
             //开启事务
-            using ( DB)
+            DB.Begin();
+            try
             {
-                
+
+
                 runningOrder = AddRunningOrderAndOrderDetail(schemeId, info.BettingCategory, info.GameCode, info.GameType, info.PlayType, true,
                      info.IssuseNumber, info.Amount, totalCount, info.TotalMatchCount, info.TotalMoney, stopTime, info.SchemeSource, info.Security,
                      SchemeType.GeneralBetting, true, false, user.UserId, user.AgentId, info.CurrentBetTime, info.ActivityType, info.Attach, false, redBagMoney,
@@ -790,6 +790,12 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
 
                 DB.Commit();
             }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw ex;
+            }
+            //}
 
             watch.Stop();
             if (watch.Elapsed.TotalMilliseconds > 1000)
