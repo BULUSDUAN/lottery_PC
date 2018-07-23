@@ -59,10 +59,22 @@ namespace KaSon.FrameWork.ORM.Helper
                     {
                         db.Init("MySql.Default");
                     }
-                    else {
+                    else
+                    {
                         db.Init("SqlServer.Default");
                     }
-                  
+
+
+                }
+                else if (!db.HasDbKey()) {
+                    if (_DBType == "MySql")
+                    {
+                        db.Init("MySql.Default");
+                    }
+                    else
+                    {
+                        db.Init("SqlServer.Default");
+                    }
 
                 }
                 return db;
@@ -89,6 +101,18 @@ namespace KaSon.FrameWork.ORM.Helper
                         sdb.Init("SqlServer.Default");
                     }
 
+
+                }
+                else if (!sdb.HasDbKey())
+                {
+                    if (_DBType == "MySql")
+                    {
+                        sdb.Init("MySql.Default");
+                    }
+                    else
+                    {
+                        sdb.Init("SqlServer.Default");
+                    }
 
                 }
                 return sdb;

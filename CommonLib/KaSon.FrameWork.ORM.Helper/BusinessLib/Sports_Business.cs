@@ -246,82 +246,91 @@ namespace KaSon.FrameWork.ORM.Helper
             //开启事务
             using (DB)
             {
-                DB.Begin();
-                AddRunningOrderAndOrderDetail(schemeId, info.BettingCategory, info.GameCode, info.GameType, info.PlayType, true, info.IssuseNumber, info.Amount, betCount, info.TotalMatchCount, info.TotalMoney, stopTime,
-                    info.SchemeSource, info.Security, SchemeType.SaveScheme, false, true, user.UserId, user.AgentId, info.CurrentBetTime, info.ActivityType, info.Attach, false, 0M, ProgressStatus.Waitting, TicketStatus.Waitting);
-                foreach (var item in info.AnteCodeList)
+                try
                 {
-                    //sportsManager.AddSports_AnteCode(new Sports_AnteCode
+                    DB.Begin();
+                    AddRunningOrderAndOrderDetail(schemeId, info.BettingCategory, info.GameCode, info.GameType, info.PlayType, true, info.IssuseNumber, info.Amount, betCount, info.TotalMatchCount, info.TotalMoney, stopTime,
+                        info.SchemeSource, info.Security, SchemeType.SaveScheme, false, true, user.UserId, user.AgentId, info.CurrentBetTime, info.ActivityType, info.Attach, false, 0M, ProgressStatus.Waitting, TicketStatus.Waitting);
+                    foreach (var item in info.AnteCodeList)
+                    {
+                        //sportsManager.AddSports_AnteCode(new Sports_AnteCode
+                        //{
+                        //    SchemeId = schemeId,
+                        //    AnteCode = item.AnteCode,
+                        //    BonusStatus = BonusStatus.Waitting,
+                        //    CreateTime = DateTime.Now,
+                        //    GameCode = gameCode,
+                        //    GameType = string.IsNullOrEmpty(item.GameType) ? info.GameType.ToUpper() : item.GameType.ToUpper(),
+                        //    IsDan = item.IsDan,
+                        //    IssuseNumber = info.IssuseNumber,
+                        //    MatchId = item.MatchId,
+                        //    PlayType = info.PlayType,
+                        //    Odds = string.Empty,
+                        //});
+                        var entity = new C_Sports_AnteCode
+                        {
+                            SchemeId = schemeId,
+                            AnteCode = item.AnteCode,
+                            BonusStatus = (int)BonusStatus.Waitting,
+                            CreateTime = DateTime.Now,
+                            GameCode = gameCode,
+                            GameType = string.IsNullOrEmpty(item.GameType) ? info.GameType.ToUpper() : item.GameType.ToUpper(),
+                            IsDan = item.IsDan,
+                            IssuseNumber = info.IssuseNumber,
+                            MatchId = item.MatchId,
+                            PlayType = info.PlayType,
+                            Odds = string.Empty,
+                        };
+                        DB.GetDal<C_Sports_AnteCode>().Add(entity);
+
+                    }
+                    //用户的订单保存
+                    //sportsManager.AddUserSaveOrder(new UserSaveOrder
                     //{
                     //    SchemeId = schemeId,
-                    //    AnteCode = item.AnteCode,
-                    //    BonusStatus = BonusStatus.Waitting,
-                    //    CreateTime = DateTime.Now,
-                    //    GameCode = gameCode,
-                    //    GameType = string.IsNullOrEmpty(item.GameType) ? info.GameType.ToUpper() : item.GameType.ToUpper(),
-                    //    IsDan = item.IsDan,
-                    //    IssuseNumber = info.IssuseNumber,
-                    //    MatchId = item.MatchId,
+                    //    UserId = userId,
+                    //    GameCode = info.GameCode,
+                    //    GameType = info.GameType,
                     //    PlayType = info.PlayType,
-                    //    Odds = string.Empty,
+                    //    SchemeType = SchemeType.SaveScheme,
+                    //    SchemeSource = info.SchemeSource,
+                    //    SchemeBettingCategory = info.BettingCategory,
+                    //    ProgressStatus = ProgressStatus.Waitting,
+                    //    IssuseNumber = info.IssuseNumber,
+                    //    Amount = info.Amount,
+                    //    BetCount = betCount,
+                    //    TotalMoney = info.TotalMoney,
+                    //    StopTime = stopTime,
+                    //    CreateTime = DateTime.Now,
+                    //    StrStopTime = stopTime.AddMinutes(-5).ToString("yyyyMMddHHmm"),
                     //});
-                    var entity = new C_Sports_AnteCode
+                    var entity_U = new C_UserSaveOrder
                     {
                         SchemeId = schemeId,
-                        AnteCode = item.AnteCode,
-                        BonusStatus = (int)BonusStatus.Waitting,
-                        CreateTime = DateTime.Now,
-                        GameCode = gameCode,
-                        GameType = string.IsNullOrEmpty(item.GameType) ? info.GameType.ToUpper() : item.GameType.ToUpper(),
-                        IsDan = item.IsDan,
-                        IssuseNumber = info.IssuseNumber,
-                        MatchId = item.MatchId,
+                        UserId = userId,
+                        GameCode = info.GameCode,
+                        GameType = info.GameType,
                         PlayType = info.PlayType,
-                        Odds = string.Empty,
+                        SchemeType = (int)SchemeType.SaveScheme,
+                        SchemeSource = (int)info.SchemeSource,
+                        SchemeBettingCategory = (int)info.BettingCategory,
+                        ProgressStatus = (int)ProgressStatus.Waitting,
+                        IssuseNumber = info.IssuseNumber,
+                        Amount = info.Amount,
+                        BetCount = betCount,
+                        TotalMoney = info.TotalMoney,
+                        StopTime = stopTime,
+                        CreateTime = DateTime.Now,
+                        StrStopTime = stopTime.AddMinutes(-5).ToString("yyyyMMddHHmm"),
                     };
-                    DB.GetDal<C_Sports_AnteCode>().Add(entity);
-
+                    DB.Commit();
                 }
-                //用户的订单保存
-                //sportsManager.AddUserSaveOrder(new UserSaveOrder
-                //{
-                //    SchemeId = schemeId,
-                //    UserId = userId,
-                //    GameCode = info.GameCode,
-                //    GameType = info.GameType,
-                //    PlayType = info.PlayType,
-                //    SchemeType = SchemeType.SaveScheme,
-                //    SchemeSource = info.SchemeSource,
-                //    SchemeBettingCategory = info.BettingCategory,
-                //    ProgressStatus = ProgressStatus.Waitting,
-                //    IssuseNumber = info.IssuseNumber,
-                //    Amount = info.Amount,
-                //    BetCount = betCount,
-                //    TotalMoney = info.TotalMoney,
-                //    StopTime = stopTime,
-                //    CreateTime = DateTime.Now,
-                //    StrStopTime = stopTime.AddMinutes(-5).ToString("yyyyMMddHHmm"),
-                //});
-                var entity_U = new C_UserSaveOrder
+                catch (Exception ex)
                 {
-                    SchemeId = schemeId,
-                    UserId = userId,
-                    GameCode = info.GameCode,
-                    GameType = info.GameType,
-                    PlayType = info.PlayType,
-                    SchemeType = (int)SchemeType.SaveScheme,
-                    SchemeSource = (int)info.SchemeSource,
-                    SchemeBettingCategory = (int)info.BettingCategory,
-                    ProgressStatus = (int)ProgressStatus.Waitting,
-                    IssuseNumber = info.IssuseNumber,
-                    Amount = info.Amount,
-                    BetCount = betCount,
-                    TotalMoney = info.TotalMoney,
-                    StopTime = stopTime,
-                    CreateTime = DateTime.Now,
-                    StrStopTime = stopTime.AddMinutes(-5).ToString("yyyyMMddHHmm"),
-                };
-                DB.Commit();
+                    DB.Rollback();
+                    throw ex;
+                }
+               
                // biz.CommitTran();
             }
             return schemeId;
@@ -842,6 +851,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
             using (DB)
             {
+
                 DB.Begin();
 
                 #region 保存订单、票数据
@@ -873,6 +883,7 @@ namespace KaSon.FrameWork.ORM.Helper
                             matchIdOddsList.Add(string.Format("{0}_{1}", order.GameType.ToUpper(), item), GetOddsToMatchId_New(item, order.GameCode.ToUpper(), order.GameType.ToUpper()));
                         }
                     }
+                    DB.Commit();
                 }
                 catch (Exception EX)
                 {
@@ -883,7 +894,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
                 #endregion
 
-                DB.Commit();
+              
             }
 
             //拆票
@@ -4249,7 +4260,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             catch (Exception ex)
             {
-
+                DB.Rollback();
                 throw ex;
             }
             //}

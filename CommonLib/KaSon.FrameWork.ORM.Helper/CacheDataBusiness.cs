@@ -172,14 +172,16 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <param name="userId"></param>
         public void FirstLotteryGiveRedBag(string userId, decimal totalMoney)
         {
-          
+
+            try
+            {
                 DB.Begin();
                 //分享推广 购彩 送红包
                 //购彩了 且是通过分享注册的用户 没有送红包 就执行分享推广活动
                 //var entityBankCard = new BankCardManager().BankCardById(userId);
                 /*entityBankCard != null */
                 var entityShareSpread = new BlogManager().QueryBlog_UserShareSpread(userId);
-                
+
                 var satisfyFillMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.SatisfyLotteryGiveRedBagTofxid").ConfigValue);
                 if (entityShareSpread != null && !entityShareSpread.isGiveLotteryRedBag && totalMoney >= satisfyFillMoney)
                 {
@@ -187,9 +189,9 @@ namespace KaSon.FrameWork.ORM.Helper
                     var giveFillMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.FirstLotteryGiveRedBagTofxid").ConfigValue);
                     if (giveFillMoney > 0)
                     {
-                  
-                    BusinessHelper.Payin_To_Balance(AccountType.RedBag, BusinessHelper.FundCategory_Activity, entityShareSpread.AgentId, Guid.NewGuid().ToString("N"), giveFillMoney
-                                          , string.Format("{1}用户购彩超过{2}元，赠送红包给分享推广用户{0}元", giveFillMoney, userId, satisfyFillMoney), RedBagCategory.FxidRegister);
+
+                        BusinessHelper.Payin_To_Balance(AccountType.RedBag, BusinessHelper.FundCategory_Activity, entityShareSpread.AgentId, Guid.NewGuid().ToString("N"), giveFillMoney
+                                              , string.Format("{1}用户购彩超过{2}元，赠送红包给分享推广用户{0}元", giveFillMoney, userId, satisfyFillMoney), RedBagCategory.FxidRegister);
 
                         entityShareSpread.isGiveLotteryRedBag = true;
                         entityShareSpread.UpdateTime = DateTime.Now;
@@ -198,6 +200,12 @@ namespace KaSon.FrameWork.ORM.Helper
                     }
                 }
                 DB.Commit();
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw ex;
+            }
             
         }
         #endregion

@@ -592,10 +592,10 @@ namespace BettingLottery.Service.ModuleServices
                     Message = "足彩投注成功",
                 });
             }
-            //catch (AggregateException ex)
-            //{
-            //    throw new AggregateException(ex.Message);
-            //}
+            catch (AggregateException ex)
+            {
+                throw new AggregateException(ex.Message);
+            }
             //catch (Exception ex)
             //{
             //    throw ex;
@@ -682,10 +682,10 @@ namespace BettingLottery.Service.ModuleServices
                 }
                 return new CommonActionResult { IsSuccess = isSuceess, Message = "订单提交成功", ReturnValue = string.Format("{0}|{1}", schemeId, money) };
             }
-            //catch (AggregateException ex)
-            //{
-            //    throw new AggregateException(ex.Message);
-            //}
+            catch (AggregateException ex)
+            {
+                throw new AggregateException(ex.Message);
+            }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message, ex);
@@ -847,10 +847,10 @@ namespace BettingLottery.Service.ModuleServices
                     ReturnValue = keyLine + "|" + info.TotalMoney,
                 });
             }
-            //catch (AggregateException ex)
-            //{
-            //    throw new AggregateException(ex.Message);
-            //}
+            catch (AggregateException ex)
+            {
+                throw new AggregateException(ex.Message);
+            }
             //catch (LogicException ex)
             //{
             //    throw ex;
@@ -1111,10 +1111,10 @@ namespace BettingLottery.Service.ModuleServices
                     ReturnValue = schemeId + "|" + realTotalMoney,
                 });
             }
-            //catch (AggregateException ex)
-            //{
-            //    throw new AggregateException(ex.Message);
-            //}
+            catch (AggregateException ex)
+            {
+                throw new AggregateException(ex.Message);
+            }
             //catch (LogicException ex)
             //{
             //    throw ex;
@@ -1262,10 +1262,10 @@ namespace BettingLottery.Service.ModuleServices
                 //    Message = "足彩投注成功",
                 //};
             }
-            //catch (AggregateException ex)
-            //{
-            //    throw new AggregateException(ex.Message);
-            //}
+            catch (AggregateException ex)
+            {
+                throw new AggregateException(ex.Message);
+            }
             //catch (LogicException ex)
             //{
             //    throw ex;
@@ -1306,10 +1306,10 @@ namespace BettingLottery.Service.ModuleServices
                     ReturnValue = keyLine + "|" + info.TotalMoney,
                 });
             }
-            //catch (AggregateException ex)
-            //{
-            //    throw new AggregateException(ex.Message);
-            //}
+            catch (AggregateException ex)
+            {
+                throw new AggregateException(ex.Message);
+            }
             //catch (LogicException ex)
             //{
             //    throw ex;

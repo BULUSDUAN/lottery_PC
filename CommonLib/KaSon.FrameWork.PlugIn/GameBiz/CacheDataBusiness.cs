@@ -283,7 +283,9 @@ namespace KaSon.FrameWork.PlugIn.GameBiz
         #region 最新动态
         public void UpdateProfileDynamic(string userId, string schemeId, string gameCode, string issuseNumber, decimal totalMoney, string dynamicType)
         {
-          
+
+            try
+            {
                 DB.Begin();
 
                 var man = new Sports_Manager();
@@ -326,6 +328,12 @@ namespace KaSon.FrameWork.PlugIn.GameBiz
                 var manager = new BlogManager();
                 manager.AddBlog_Dynamic(entity);
                 DB.Commit();
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw ex;
+            }
             
         }
         public ProfileDynamicCollection QueryProfileDynamicCollection(string userId, int pageIndex, int pageSize)
@@ -702,7 +710,9 @@ namespace KaSon.FrameWork.PlugIn.GameBiz
         #region 最新中奖
         public void AddProfileLastBonus(string userId, string schemeId, string gameCode, string gameType, string issuseNumber, decimal bonusMoney, DateTime bonusTime)
         {
-           
+
+            try
+            {
                 DB.Begin();
                 var entity = new E_Blog_NewProfileLastBonus()
                 {
@@ -717,6 +727,12 @@ namespace KaSon.FrameWork.PlugIn.GameBiz
                 var manager = new BlogManager();
                 manager.AddBlog_NewProfileLastBonus(entity);
                 DB.Commit();
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw ex; 
+            }
             
         }
         public ProfileLastBonusCollection QueryProfileLastBonusCollection(string userId)
