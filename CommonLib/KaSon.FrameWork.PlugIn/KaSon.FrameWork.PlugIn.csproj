@@ -5,9 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="E:\gongchengwl\new_surging\Lottery_02\CommonLib\EntityModel\EntityModel.csproj" />
-    <ProjectReference Include="E:\gongchengwl\new_surging\Lottery_02\CommonLib\KaSon.FrameWork.Common\KaSon.FrameWork.Common.csproj" />
-    <ProjectReference Include="E:\gongchengwl\new_surging\Lottery_02\CommonLib\KaSon.FrameWork.ORM.Helper\KaSon.FrameWork.ORM.Helper.csproj" />
+    <ProjectReference Include="..\EntityModel\EntityModel.csproj" />
+    <ProjectReference Include="..\KaSon.FrameWork.Common\KaSon.FrameWork.Common.csproj" />
+    <ProjectReference Include="..\KaSon.FrameWork.ORM.Helper\KaSon.FrameWork.ORM.Helper.csproj" />
   </ItemGroup>
 
   <ItemGroup>
