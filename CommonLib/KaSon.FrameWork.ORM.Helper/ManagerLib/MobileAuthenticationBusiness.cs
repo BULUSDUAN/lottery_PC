@@ -90,32 +90,40 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
         {
             string mobile;
 
-            DB.Begin();
-
-            TaskList(userId);
-
-            var manager = new UserMobileManager();
-            var entity = manager.GetUserMobile(userId);
-            if (entity == null)
+            try
             {
-                throw new ArgumentException("尚未请求手机认证");
+                DB.Begin();
+
+                TaskList(userId);
+
+                var manager = new UserMobileManager();
+                var entity = manager.GetUserMobile(userId);
+                if (entity == null)
+                {
+                    throw new ArgumentException("尚未请求手机认证");
+                }
+                if (entity.IsSettedMobile)
+                {
+                    throw new ArgumentException(string.Format("已于【{0:yyyy-MM-dd HH:mm:ss}】进行过手机认证。", entity.UpdateTime));
+                }
+                var span = DateTime.Now - entity.UpdateTime.AddSeconds(delaySeconds);
+                if (span.TotalSeconds > 0)
+                {
+                    throw new ArgumentException(string.Format("提交认证手机必须在请求认证后【{0}】内完成。", delayDescription));
+                }
+                entity.IsSettedMobile = true;
+
+                manager.UpdateUserMobile(entity);
+
+                mobile = entity.Mobile;
+
+                DB.Commit();
             }
-            if (entity.IsSettedMobile)
+            catch (Exception ex)
             {
-                throw new ArgumentException(string.Format("已于【{0:yyyy-MM-dd HH:mm:ss}】进行过手机认证。", entity.UpdateTime));
+                DB.Rollback();
+                throw ex;
             }
-            var span = DateTime.Now - entity.UpdateTime.AddSeconds(delaySeconds);
-            if (span.TotalSeconds > 0)
-            {
-                throw new ArgumentException(string.Format("提交认证手机必须在请求认证后【{0}】内完成。", delayDescription));
-            }
-            entity.IsSettedMobile = true;
-
-            manager.UpdateUserMobile(entity);
-
-            mobile = entity.Mobile;
-
-            DB.Commit();
 
             return mobile;
         }
@@ -124,41 +132,49 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
         public string RegisterResponseMobile(string userId, string mobile, int delaySeconds, string delayDescription)
         {
 
-            DB.Begin();
-
-            TaskList(userId);
-
-            var manager = new UserMobileManager();
-            var entity = manager.GetUserMobile(userId);
-            if (entity != null)
+            try
             {
-                if (entity.IsSettedMobile)
-                    throw new ArgumentException(string.Format("已于【{0:yyyy-MM-dd HH:mm:ss}】进行过手机认证。", entity.UpdateTime));
-                var span = DateTime.Now - entity.UpdateTime.AddSeconds(delaySeconds);
-                if (span.TotalSeconds > 0)
-                    throw new ArgumentException(string.Format("提交认证手机必须在请求认证后【{0}】内完成。", delayDescription));
-                entity.IsSettedMobile = true;
-                manager.UpdateUserMobile(entity);
-            }
-            else
-            {
-                entity = new E_Authentication_Mobile
+                DB.Begin();
+
+                TaskList(userId);
+
+                var manager = new UserMobileManager();
+                var entity = manager.GetUserMobile(userId);
+                if (entity != null)
                 {
-                    UserId = userId,
-                    CreateTime = DateTime.Now,
-                    UpdateTime = DateTime.Now,
-                    AuthFrom = "LOCAL",
-                    Mobile = mobile,
-                    IsSettedMobile = true,
-                    CreateBy = userId,
-                    UpdateBy = userId,
-                };
-                manager.AddUserMobile(entity);
+                    if (entity.IsSettedMobile)
+                        throw new ArgumentException(string.Format("已于【{0:yyyy-MM-dd HH:mm:ss}】进行过手机认证。", entity.UpdateTime));
+                    var span = DateTime.Now - entity.UpdateTime.AddSeconds(delaySeconds);
+                    if (span.TotalSeconds > 0)
+                        throw new ArgumentException(string.Format("提交认证手机必须在请求认证后【{0}】内完成。", delayDescription));
+                    entity.IsSettedMobile = true;
+                    manager.UpdateUserMobile(entity);
+                }
+                else
+                {
+                    entity = new E_Authentication_Mobile
+                    {
+                        UserId = userId,
+                        CreateTime = DateTime.Now,
+                        UpdateTime = DateTime.Now,
+                        AuthFrom = "LOCAL",
+                        Mobile = mobile,
+                        IsSettedMobile = true,
+                        CreateBy = userId,
+                        UpdateBy = userId,
+                    };
+                    manager.AddUserMobile(entity);
+                }
+
+                mobile = entity.Mobile;
+
+                DB.Commit();
             }
-
-            mobile = entity.Mobile;
-
-            DB.Commit();
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw ex;
+            }
 
 
             return mobile;

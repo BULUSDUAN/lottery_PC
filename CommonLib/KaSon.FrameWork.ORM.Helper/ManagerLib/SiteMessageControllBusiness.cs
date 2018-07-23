@@ -129,24 +129,33 @@ namespace KaSon.FrameWork.ORM.Helper
             var manager = new InnerMailManager();
 
             DB.Begin();
-
-            foreach (var item in arrReceive)
+            try
             {
-                if (string.IsNullOrEmpty(item))
-                    continue;
-                var mail = new E_SiteMessage_InnerMail_List_new
+                foreach (var item in arrReceive)
                 {
-                    MailId = Guid.NewGuid().ToString(),
-                    SendTime = DateTime.Now,
-                    SenderId = createBy,
-                    HandleType = (int)InnerMailHandleType.UnRead,
-                    MsgContent = innerMail.Content,
-                    ReceiverId = item,
-                    Title = innerMail.Title,
-                };
-                manager.AddSiteMessageInnerMailListNew(mail);
+                    if (string.IsNullOrEmpty(item))
+                        continue;
+                    var mail = new E_SiteMessage_InnerMail_List_new
+                    {
+                        MailId = Guid.NewGuid().ToString(),
+                        SendTime = DateTime.Now,
+                        SenderId = createBy,
+                        HandleType = (int)InnerMailHandleType.UnRead,
+                        MsgContent = innerMail.Content,
+                        ReceiverId = item,
+                        Title = innerMail.Title,
+                    };
+                    manager.AddSiteMessageInnerMailListNew(mail);
+                }
+                DB.Commit();
             }
-            DB.Commit();
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw ex;
+            }
+          
+           
         }
     }
 }

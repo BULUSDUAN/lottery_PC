@@ -65,23 +65,32 @@ namespace KaSon.FrameWork.ORM.Helper
         {
 
             DB.Begin();
-            var manager = new BankCardManager();
-            var entity = manager.BankCardById(userId);
-            if (entity == null)
+            try
+            {
+                var manager = new BankCardManager();
+                var entity = manager.BankCardById(userId);
+                if (entity == null)
+                {
+                    DB.Rollback();
+                    throw new Exception("修改信息未被查询到");
+                }
+                entity.BankCardNumber = bankCard.BankCardNumber;
+                entity.BankCode = bankCard.BankCode;
+                entity.BankName = bankCard.BankName;
+                entity.BankSubName = bankCard.BankSubName;
+                entity.CityName = bankCard.CityName;
+                entity.ProvinceName = bankCard.ProvinceName;
+                entity.RealName = bankCard.RealName;
+                entity.UpdateTime = DateTime.Now;
+                manager.UpdateBankCard(entity);
+                DB.Commit();
+            }
+            catch (Exception ex)
             {
                 DB.Rollback();
-                throw new Exception("修改信息未被查询到");
+                throw ex;
             }
-            entity.BankCardNumber = bankCard.BankCardNumber;
-            entity.BankCode = bankCard.BankCode;
-            entity.BankName = bankCard.BankName;
-            entity.BankSubName = bankCard.BankSubName;
-            entity.CityName = bankCard.CityName;
-            entity.ProvinceName = bankCard.ProvinceName;
-            entity.RealName = bankCard.RealName;
-            entity.UpdateTime = DateTime.Now;
-            manager.UpdateBankCard(entity);
-            DB.Commit();
+          
 
         }
 
@@ -89,17 +98,25 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public void CancelBankCard(string userId)
         {
-
-            DB.Begin();
-            var manager = new BankCardManager();
-            var entity = manager.BankCardById(userId);
-            if (entity == null)
+            try
+            {
+                DB.Begin();
+                var manager = new BankCardManager();
+                var entity = manager.BankCardById(userId);
+                if (entity == null)
+                {
+                    DB.Rollback();
+                    throw new Exception("未查到信息");
+                }
+                manager.DeleteBankCard(entity);
+                DB.Commit();
+            }
+            catch (Exception ex)
             {
                 DB.Rollback();
-                throw new Exception("未查到信息");
+                throw ex;
             }
-            manager.DeleteBankCard(entity);
-            DB.Commit();
+          
 
         }
     }

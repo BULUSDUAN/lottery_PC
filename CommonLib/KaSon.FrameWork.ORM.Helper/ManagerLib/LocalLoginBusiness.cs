@@ -338,9 +338,10 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
             }
             loginEntity.Password = Encipherment.MD5(string.Format("{0}{1}", loginEntity.Password, _gbKey)).ToUpper();
 
+            DB.Begin();
             try
             {
-                DB.Begin();
+              
 
                 var tmp = DB.CreateQuery<E_Login_Local>().Where(p => (p.LoginName == loginEntity.LoginName || p.mobile == loginEntity.LoginName)).FirstOrDefault();
                 if (tmp != null)
@@ -463,23 +464,31 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
         {
             oldPassword = Encipherment.MD5(string.Format("{0}{1}", oldPassword, _gbKey)).ToUpper();
             newPassword = Encipherment.MD5(string.Format("{0}{1}", newPassword, _gbKey)).ToUpper();
-
-            DB.Begin();
-
-            var user = DB.CreateQuery<E_Login_Local>().Where(p => p.UserId == userId).FirstOrDefault();
-            if (user == null)
+            try
             {
-                return Task.FromResult("用户不是本地注册用户，不允许修改密码。请确定是否是通过支付宝或QQ帐号进行登录，如有疑问，请联系客服。");
-            }
-            if (user.Password.ToUpper() != oldPassword)
-            {
-                return Task.FromResult("旧密码输入错误。");
-            }
-            user.Password = newPassword;
-            DB.GetDal<E_Login_Local>().Update(user);
+                DB.Begin();
 
-            DB.Commit();
-            return Task.FromResult("修改密码成功");
+                var user = DB.CreateQuery<E_Login_Local>().Where(p => p.UserId == userId).FirstOrDefault();
+                if (user == null)
+                {
+                    return Task.FromResult("用户不是本地注册用户，不允许修改密码。请确定是否是通过支付宝或QQ帐号进行登录，如有疑问，请联系客服。");
+                }
+                if (user.Password.ToUpper() != oldPassword)
+                {
+                    return Task.FromResult("旧密码输入错误。");
+                }
+                user.Password = newPassword;
+                DB.GetDal<E_Login_Local>().Update(user);
+
+                DB.Commit();
+                return Task.FromResult("修改密码成功");
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw ex;
+            }
+         
         }
 
         public string ChangePassword(string userId)
@@ -489,9 +498,10 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
             var encodePassword = Encipherment.MD5(string.Format("{0}{1}", password, _gbKey)).ToUpper();
             var password_balance = r.Next(100000, 999999).ToString();
             var encodePassword_balance = Encipherment.MD5(string.Format("{0}{1}", password_balance, _gbKey)).ToUpper();
-
+            try
+            {
                 DB.Begin();
-               
+
                 var user = GetLocalLoginByUserId(userId);
                 if (user == null)
                 {
@@ -506,6 +516,13 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
                 b.Password = encodePassword_balance;
                 balanceManage.UpdateUserBalance(b);
                 DB.Commit();
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw ex;
+            }
+              
             
             return string.Format("{0}|{1}", password, password_balance);
         }
