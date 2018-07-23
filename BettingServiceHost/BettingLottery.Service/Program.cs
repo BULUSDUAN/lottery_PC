@@ -67,9 +67,9 @@ namespace BettingLottery.Service.Host
                 //.UseServer("127.0.0.1", 98，“123456789”) //固定密码Token
                 .UseServer(options =>
                 {
-                  //  options.IpEndpoint = new IPEndPoint(IPAddress.Any, 98);  
-                    //options.Port = 98;
-                   // options.Ip = "127.0.0.1";
+                    //  options.IpEndpoint = new IPEndPoint(IPAddress.Any, 98);  
+                    options.Port = 101;
+                    options.Ip = "127.0.0.1";
                     options.Token = "True";
                     options.ExecutionTimeoutInMilliseconds = 30000;
                     options.MaxConcurrentRequests = 200;
