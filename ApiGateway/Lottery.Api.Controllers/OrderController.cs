@@ -1717,9 +1717,10 @@ namespace Lottery.Api.Controllers
                 int pageIndex = p.PageIndex;
                 int pageSize = p.PageSize;
                 string UserId = p.UserId;
-                string GameCode = p.gameCode;
+                string GameCode = p.GameCode;
+                string isMyBD = p.isMyBD;
                 Dictionary<string, object> param = new Dictionary<string, object>();
-                var Model = new QueryTodayBDFXList() { gameCode= GameCode, userId= UserId, strOrderBy = strOrderBy, startTime= DateTime.Now, endTime= DateTime.Now, currentUserId= currUserId, pageIndex= pageIndex, pageSize= pageSize, };
+                var Model = new QueryTodayBDFXList() { isMyBD=isMyBD, userName = userName, gameCode = GameCode, userId= UserId, strOrderBy = strOrderBy, startTime= DateTime.Now, endTime= DateTime.Now, currentUserId= currUserId, pageIndex= pageIndex, pageSize= pageSize, };
                 param["Model"] = Model;
                 var todayBDList =await _serviceProxyProvider.Invoke<TotalSingleTreasure_Collection>(param, "api/Order/QueryTodayBDFXList");
                 Dictionary<string, object> paranNR = new Dictionary<string, object>()
@@ -2104,11 +2105,14 @@ namespace Lottery.Api.Controllers
                 string currUserId = p.CurrentUserId;
                 int pageIndex = p.PageIndex;
                 int pageSize = p.PageSize;
+                string GameCode = p.GameCode;
+                string userName = p.userName;
+                string isMyBD = p.isMyBD;
                 if (string.IsNullOrEmpty(currUserId))
                     throw new Exception("您还未登录，请先登录。");
                 Dictionary<string, object> param = new Dictionary<string, object>();
                
-                var Model = new QueryTodayBDFXList() { strOrderBy = "", startTime= DateTime.Parse("2015-06-06"), endTime= DateTime.Now, currentUserId= currUserId, pageIndex= pageIndex, pageSize= pageSize };
+                var Model = new QueryTodayBDFXList() { isMyBD=isMyBD, userName = userName, gameCode= GameCode, strOrderBy = "", startTime= DateTime.Parse("2015-06-06"), endTime= DateTime.Now, currentUserId= currUserId, pageIndex= pageIndex, pageSize= pageSize };
                 param["Model"] = Model;
                 var myBDFXList =await _serviceProxyProvider.Invoke<TotalSingleTreasure_Collection>(param, "api/Order/QueryTodayBDFXList");
                 List<object> list = new List<object>();
@@ -2713,7 +2717,7 @@ namespace Lottery.Api.Controllers
                 var p = JsonHelper.Decode(entity.Param);
                 string type = p.GameCode;
                 string term = p.IssuseNumber;                
-                var obj = GetKaiJingInfo(_serviceProxyProvider, "Web", type, term);
+                var obj =await GetKaiJingInfo(_serviceProxyProvider, "Web", type, term);
                 return new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,

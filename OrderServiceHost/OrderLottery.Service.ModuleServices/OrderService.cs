@@ -309,5 +309,9 @@ namespace OrderLottery.Service.ModuleServices
         {
             return Task.FromResult(_order.QueryCTZQMatchListByIssuseNumber(gameType, issuseNumber, userToken));
         }
+        public Task<GameWinNumber_InfoCollection> QueryAllGameNewWinNumber(string gameString)
+        {
+            return Task.FromResult(_order.QueryAllGameNewWinNumber(gameString));
+        }
     }
 }

@@ -32,24 +32,32 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public void AddBankCard(C_BankCard bankCard)
         {
-
-            DB.Begin();
-            var manager = new BankCardManager();
-            var entity = new C_BankCard()
+            try
             {
-                UserId = bankCard.UserId,
-                BankCardNumber = bankCard.BankCardNumber,
-                BankCode = bankCard.BankCode,
-                BankName = bankCard.BankName,
-                BankSubName = bankCard.BankSubName,
-                CityName = bankCard.CityName,
-                CreateTime = DateTime.Now,
-                ProvinceName = bankCard.ProvinceName,
-                RealName = bankCard.RealName,
-                UpdateTime = DateTime.Now
-            };
-            manager.AddBankCard(entity);
-            DB.Commit();
+                DB.Begin();
+                var manager = new BankCardManager();
+                var entity = new C_BankCard()
+                {
+                    UserId = bankCard.UserId,
+                    BankCardNumber = bankCard.BankCardNumber,
+                    BankCode = bankCard.BankCode,
+                    BankName = bankCard.BankName,
+                    BankSubName = bankCard.BankSubName,
+                    CityName = bankCard.CityName,
+                    CreateTime = DateTime.Now,
+                    ProvinceName = bankCard.ProvinceName,
+                    RealName = bankCard.RealName,
+                    UpdateTime = DateTime.Now
+                };
+                manager.AddBankCard(entity);
+                DB.Commit();
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw ex;
+            }
+        
 
         }
 
@@ -61,6 +69,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var entity = manager.BankCardById(userId);
             if (entity == null)
             {
+                DB.Rollback();
                 throw new Exception("修改信息未被查询到");
             }
             entity.BankCardNumber = bankCard.BankCardNumber;
@@ -86,6 +95,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var entity = manager.BankCardById(userId);
             if (entity == null)
             {
+                DB.Rollback();
                 throw new Exception("未查到信息");
             }
             manager.DeleteBankCard(entity);

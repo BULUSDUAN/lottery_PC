@@ -12,7 +12,7 @@ namespace KaSon.FrameWork.ORM.Helper
         {
            
             //var sql = string.Format("select [Mobile] from [E_Authentication_Mobile] where UserId='{0}'", userId);
-            return DB.CreateSQLQuery("select [Mobile] from [E_Authentication_Mobile] where UserId=:userId").SetString("userId", userId).First<string>();
+            return DB.CreateSQLQuery("select [Mobile] from [E_Authentication_Mobile] where UserId=@userId").SetString("userId", userId).First<string>();
         }
 
         public E_SiteMessage_SiteMessageScene QuerySiteMessageScene(string key)

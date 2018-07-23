@@ -2545,6 +2545,6 @@ namespace KaSon.FrameWork.ORM.Helper
                 UpdateTime = b.s.UpdateTime,
             }).ToList();
             return collection;
-        }
+        }        
     }
 }

@@ -338,29 +338,37 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
             }
             loginEntity.Password = Encipherment.MD5(string.Format("{0}{1}", loginEntity.Password, _gbKey)).ToUpper();
 
-
-            DB.Begin();
-
-            var tmp = DB.CreateQuery<E_Login_Local>().Where(p => (p.LoginName == loginEntity.LoginName || p.mobile == loginEntity.LoginName)).FirstOrDefault();
-            if (tmp != null)
+            try
             {
-                throw new AuthException("登录名已经存在 - " + loginEntity.LoginName);
+                DB.Begin();
+
+                var tmp = DB.CreateQuery<E_Login_Local>().Where(p => (p.LoginName == loginEntity.LoginName || p.mobile == loginEntity.LoginName)).FirstOrDefault();
+                if (tmp != null)
+                {
+                    throw new AuthException("登录名已经存在 - " + loginEntity.LoginName);
+                }
+                //loginEntity.User = loginManager.LoadUser(userId);
+                var Register = GetRegisterById(userId);
+                var register = new E_Login_Local
+                {
+                    LoginName = loginEntity.LoginName,
+                    UserId = userId,
+                    CreateTime = DateTime.Now,
+                    mobile = loginEntity.mobile,
+                    Password = loginEntity.Password,
+                    RegisterId = Register.UserId,
+
+
+                };
+                DB.GetDal<E_Login_Local>().Add(register);
+                DB.Commit();
             }
-            //loginEntity.User = loginManager.LoadUser(userId);
-            var Register = GetRegisterById(userId);
-            var register = new E_Login_Local
+            catch (Exception ex)
             {
-                LoginName = loginEntity.LoginName,
-                UserId = userId,
-                CreateTime = DateTime.Now,
-                mobile = loginEntity.mobile,
-                Password = loginEntity.Password,
-                RegisterId = Register.UserId,
-
-
-            };
-            DB.GetDal<E_Login_Local>().Add(register);
-            DB.Commit();
+                DB.Rollback();
+                throw ex;
+            }
+        
 
         }
 

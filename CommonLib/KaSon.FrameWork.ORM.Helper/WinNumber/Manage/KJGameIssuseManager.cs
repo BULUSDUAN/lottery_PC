@@ -68,7 +68,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
             string strSql = "delete from Common_Game_Issuse where @GameCode=gameCode and IssuseNumber in ('{0}')";
             strSql = string.Format(strSql,string.Join(',',issuseNumber));
             var result = LottertDataDB.CreateSQLQuery(strSql)
-                   .SetString("@gameCode", gameCode);                           
+                   .SetString("@gameCode", gameCode).Excute();                           
         }
     }
 }
