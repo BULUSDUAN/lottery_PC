@@ -652,10 +652,10 @@ namespace UserLottery.Service.ModuleServices
                 string mobileNumber;
                 mobileNumber = authenticationBiz.RegisterResponseMobile(userResult.ReturnValue, mobile, 1800, "半个小时");
 
-                #region 还没做
+               
                 //! 执行扩展功能代码 - 提交事务后
-                //BusinessHelper.ExecPlugin<IResponseAuthentication_AfterTranCommit>(new object[] { userResult.ReturnValue, "Mobile", mobileNumber, source });
-                #endregion
+                BusinessHelper.ExecPlugin<IResponseAuthentication_AfterTranCommit>(new object[] { userResult.ReturnValue, "Mobile", mobileNumber, source });
+              
                 return Task.FromResult(new CommonActionResult(true, "恭喜您注册成功！"));
             }
             catch (Exception ex)
@@ -673,7 +673,7 @@ namespace UserLottery.Service.ModuleServices
             //}
             //return time;
         }
-        DBbase dBbase = new DBbase();
+
 
         /// <summary>
         /// 本地 注册账号
@@ -700,7 +700,7 @@ namespace UserLottery.Service.ModuleServices
                 }
             }
 
-            var roleIds = ConfigHelper.ConfigInfo["PageRegisterDefaultRole"].ToString().Split(',');
+            
 
             regInfo.LoginName = regInfo.LoginName.Trim();
             //if (!Common.Utilities.UsefullHelper.IsInTest)
@@ -715,247 +715,25 @@ namespace UserLottery.Service.ModuleServices
             //    if (myByte.Length < 4 || regInfo.LoginName.Length > 20)
             //        throw new ArgumentException("登录名长度必须在4位到20位之间");
             //}
-     
-                 string userId;
 
-                dBbase.DB.Begin();
 
-                #region 注册权限控制帐号
-
-                var authBiz = new GameBizAuthBusiness();
-                var regBiz = new RegisterBusiness();
-                var userEntity = new SystemUser
-                {
-                    RegFrom = string.IsNullOrEmpty(regInfo.ComeFrom) ? "LOCAL" : regInfo.ComeFrom,
-                    AgentId = regInfo.AgentId,
-                };
-               regBiz.RegisterUser(userEntity, roleIds);
-                userId = userEntity.UserId;
-
-                #endregion
-
-                #region 注册核心系统显示帐号
-
-                var userRegInfo = new UserRegInfo
-                {
-                    DisplayName = regInfo.LoginName,
-                    ComeFrom = string.IsNullOrEmpty(regInfo.ComeFrom) ? "LOCAL" : regInfo.ComeFrom,
-                    Referrer = regInfo.Referrer,
-                    ReferrerUrl = regInfo.ReferrerUrl,
-                    RegisterIp = regInfo.RegisterIp,
-                    RegType = regInfo.RegType,
-                    AgentId = regInfo.AgentId,
-                };
-
-                regBiz.RegisterUser(userEntity, userRegInfo);
-
-                #endregion
-
-                #region 注册本地登录帐号
-
-                var loginBiz = new LocalLoginBusiness();
-                var loginEntity = new LoginLocal
-                {
-                    LoginName = regInfo.LoginName,
-                    Password = regInfo.Password,
-                    mobile = regInfo.Mobile
-                };
-                loginBiz.Register(loginEntity, userEntity.UserId);
-
-            #endregion
-
-            #region 如果是通过代理链接注册，则设置用户返点 屏蔽：范  
-
-            if (!string.IsNullOrEmpty(regInfo.AgentId))
-            {
-                SetUserRebate(userId, regInfo.AgentId);
-            }
-
-            #endregion
-
-            #region 初始化用户战绩数据和中奖概率数据
-
-            InitUserBeedingAndBounsPercent(userId);
-
-            #endregion
-
-            #region 初始化其它数据
-
-            InitBlog_ProfileBonusLevel(userId);
-            InitUserAttentionSummary(userId);
-
-            #endregion
-
-            dBbase.DB.Commit();
+          
+           var success= new RegisterBusiness().UserRegister(regInfo);
+             
             
             //! 执行扩展功能代码 - 提交事务后
-            //BusinessHelper.ExecPlugin<IRegister_AfterTranCommit>(new object[] { regInfo.ComeFrom, userId });
+            BusinessHelper.ExecPlugin<IRegister_AfterTranCommit>(new object[] { regInfo.ComeFrom, success.ReturnValue });
 
             return new CommonActionResult
             {
                 IsSuccess = true,
                 Message = "注册成功",
-                ReturnValue = userId,
+                ReturnValue = success.ReturnValue,
             };
 
         }
-        private void InitUserBeedingAndBounsPercent(string userId)
-        {
-            var sportsManager = new Sports_Manager();
+     
 
-            var allGameCodeArray = new string[] { "CTZQ", "BJDC", "JCZQ", "JCLQ", "SSQ", "DLT", "FC3D", "PL3", "CQSSC", "JX11X5" };
-            var lotteryGameCodeArray = new string[] { "SSQ", "DLT", "FC3D", "PL3", "CQSSC", "JX11X5" };
-            foreach (var item in allGameCodeArray)
-            {
-                if (lotteryGameCodeArray.Contains(item))
-                {
-                    //数字彩
-                    AddUserBeedingAndBonusPercent(sportsManager,userId, item, string.Empty);
-                }
-                else
-                {
-                    //足彩
-                    var gameTypeArray = GetGameTypeArray(item);
-                    foreach (var t in gameTypeArray)
-                    {
-                        AddUserBeedingAndBonusPercent(sportsManager,userId, item, t);
-                    }
-
-                }
-            }
-        }
-
-        private void AddUserBeedingAndBonusPercent(Sports_Manager sportsManager, string userId, string gameCode, string gameType)
-        {
-            var beeding = sportsManager.QueryUserBeedings(userId, gameCode, gameType);
-            if (beeding == null)
-            {
-                var UserBeedings=new C_User_Beedings
-                {
-                    UserId = userId,
-                    UpdateTime = DateTime.Now,
-                    GameCode = gameCode,
-                    GameType = gameType,
-                    BeFollowedTotalMoney = 0M,
-                    BeFollowerUserCount = 0,
-                    GoldCrownCount = 0,
-                    GoldCupCount = 0,
-                    GoldDiamondsCount = 0,
-                    GoldStarCount = 0,
-                    SilverCrownCount = 0,
-                    SilverCupCount = 0,
-                    SilverDiamondsCount = 0,
-                    SilverStarCount = 0,
-                    TotalBonusMoney = 0M,
-                    TotalBonusTimes = 0,
-                };
-                sportsManager.AddUserBeedings(UserBeedings);
-
-            }
-            var bonusPercent = sportsManager.QueryUserBonusPercent(userId, gameCode, gameType);
-            if (bonusPercent == null)
-            {
-                var UserBonusPercent= new C_User_BonusPercent
-                {
-                    BonusPercent = 0M,
-                    CreateTime = DateTime.Now,
-                    CurrentDate = DateTime.Now.ToString("yyyyMM"),
-                    GameCode = gameCode,
-                    GameType = gameType,
-                    UserId = userId,
-                    BonusOrderCount = 0,
-                    TotalOrderCount = 0,
-                };
-                sportsManager.AddUserBonusPercent(UserBonusPercent);
-
-            }
-        }
-
-        private string[] GetGameTypeArray(string gameCode)
-        {
-            switch (gameCode)
-            {
-                case "CTZQ":
-                    return new string[] { "T14C", "TR9", "T6BQC", "T4CJQ" };
-                case "BJDC":
-                    return new string[] { "SPF", "ZJQ", "SXDS", "BF", "BQC" };
-                case "JCZQ":
-                    return new string[] { "SPF", "BRQSPF", "BF", "ZJQ", "BQC", "HH" };
-                case "JCLQ":
-                    return new string[] { "SF", "RFSF", "SFC", "DXF", "HH" };
-            }
-            return new string[] { };
-        }
-
-
-        private void InitBlog_ProfileBonusLevel(string userId)
-        {
-            var manager = new BlogManager();
-            var BlogProfileBonusLevel= new E_Blog_ProfileBonusLevel
-            {
-                UserId = userId,
-                MaxLevelName = "幸运彩民",
-                MaxLevelValue = 0,
-                TotalBonusMoney = 0,
-                UpdateTime = DateTime.Now,
-                WinHundredMillionCount = 0,
-                WinOneHundredCount = 0,
-                WinOneHundredThousandCount = 0,
-                WinOneMillionCount = 0,
-                WinOneThousandCount = 0,
-                WinTenMillionCount = 0,
-                WinTenThousandCount = 0,
-            };
-            manager.AddBlog_ProfileBonusLevel(BlogProfileBonusLevel);
-
-            var BlogDataReport=new E_Blog_DataReport
-            {
-                CreateSchemeCount = 0,
-                JoinSchemeCount = 0,
-                TotalBonusCount = 0,
-                TotalBonusMoney = 0,
-                UpdateTime = DateTime.Now,
-                UserId = userId,
-            };
-            manager.AddBlog_DataReport(BlogDataReport);
-
-        }
-
-        private void InitUserAttentionSummary(string userId)
-        {
-            var sportsManager = new Sports_Manager();
-            var UserAttentionSummary= new C_User_Attention_Summary
-            {
-                UserId = userId,
-                UpdateTime = DateTime.Now,
-                BeAttentionUserCount = 0,
-                FollowerUserCount = 0,
-            };
-            sportsManager.AddUserAttentionSummary(UserAttentionSummary);
-        }
-
-        private void SetUserRebate(string userId, string agentId)
-        {
-            try
-            {
-                var agentManager = new OCAgentManager();
-                var parentRebateList = agentManager.QueryOCAgentRebateList(agentId);
-                var rebateList = new List<string>();
-                foreach (var item in parentRebateList)
-                {
-                    rebateList.Add(string.Format("{0}:{1}:{2}:{3}", item.GameCode, item.GameType, item.SubUserRebate, item.RebateType));
-                }
-                var setString = string.Join("|", rebateList.ToArray());
-                //new OCAgentBusiness().UpdateOCAgentRebate(agentId, userId, setString);
-                
-                //new OCAgentBusiness().EditOCAgentRebate(agentId, userId, setString);
-            }
-            catch (Exception ex)
-            {
-                //var writer = Common.Log.LogWriterGetter.GetLogWriter();
-                //writer.Write("SetUserRebate", "SetUserRebate_设置返点", Common.Log.LogType.Error, "设置返点异常", ex.ToString());
-            }
-        }
 
         /// <summary>
         /// 注册验证手机 
@@ -1085,12 +863,9 @@ namespace UserLottery.Service.ModuleServices
             if (flag) //如果手机号已注册则发送
             {
                 
-                    dBbase.DB.Begin();
                     var biz = new ValidationMobileBusiness();
                     //SendValidateCodeToUserMobileByForgetPWD
                     validateCode = biz.SendValidationCode(mobile, "SendValidateCodeToUserMobileByForgetPWD", validateCode, GetDelay(30), GetMaxTimes(3));
-                    dBbase.DB.Commit();
-                
                 var pList = new List<string>();
                 pList.Add(string.Format("{0}={1}", "[ValidNumber]", validateCode));
                 //发送短信

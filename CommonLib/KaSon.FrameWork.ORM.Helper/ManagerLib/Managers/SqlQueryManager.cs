@@ -33,7 +33,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
            var RedBagMoney= SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "P_Blog_RedBagMoney").SQL;
             var RedBagMoney_query = DB.CreateSQLQuery(RedBagMoney)
-              .SetString("AgentId", AgentId).First<int>();
+              .SetString("AgentId", AgentId).First<decimal>();
 
             string str = string.Empty;
            

@@ -10,46 +10,54 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
     {
         public string SendValidationCode(string mobile, string category, string validateCode, int delaySeconds, int maxTimesEachDay)
         {
-
-            DB.Begin();
-            var validation = DB.CreateQuery<E_Validation_Mobile>().Where(p => p.Mobile == mobile && p.Category == category).FirstOrDefault();
-            if (validation != null)
+            try
             {
-                if (DateTime.Today == validation.UpdateTime.Date)
+                DB.Begin();
+                var validation = DB.CreateQuery<E_Validation_Mobile>().Where(p => p.Mobile == mobile && p.Category == category).FirstOrDefault();
+                if (validation != null)
                 {
-                    if (validation.SendTimes >= maxTimesEachDay)
+                    if (DateTime.Today == validation.UpdateTime.Date)
                     {
-                        throw new Exception(string.Format("今天已发送每天允许的最大限制次数【{0}】次，请明天再试。", maxTimesEachDay));
+                        if (validation.SendTimes >= maxTimesEachDay)
+                        {
+                            throw new Exception(string.Format("今天已发送每天允许的最大限制次数【{0}】次，请明天再试。", maxTimesEachDay));
+                        }
                     }
+                    var span = validation.UpdateTime.AddSeconds(delaySeconds) - DateTime.Now;
+                    if (span.TotalSeconds > 0)
+                    {
+                        throw new Exception(string.Format("发送短信验证码与上次验证码操作至少间隔【{0}】秒，请稍等【{1}】秒后重试。", delaySeconds, (int)span.TotalSeconds + 1));
+                    }
+                    validation.SendTimes++;
+                    validation.RetryTimes = 0;
+                    validation.UpdateTime = DateTime.Now;
+                    DB.GetDal<E_Validation_Mobile>().Update(validation);
+
+
+                    validateCode = validation.ValidateCode;
                 }
-                var span = validation.UpdateTime.AddSeconds(delaySeconds) - DateTime.Now;
-                if (span.TotalSeconds > 0)
+                else
                 {
-                    throw new Exception(string.Format("发送短信验证码与上次验证码操作至少间隔【{0}】秒，请稍等【{1}】秒后重试。", delaySeconds, (int)span.TotalSeconds + 1));
+                    validation = new E_Validation_Mobile
+                    {
+                        Mobile = mobile,
+                        Category = category,
+                        SendTimes = 1,
+                        RetryTimes = 0,
+                        ValidateCode = validateCode,
+                        UpdateTime = DateTime.Now
+                    };
+                    DB.GetDal<E_Validation_Mobile>().Add(validation);
                 }
-                validation.SendTimes++;
-                validation.RetryTimes = 0;
-                validation.UpdateTime = DateTime.Now;
-                DB.GetDal<E_Validation_Mobile>().Update(validation);
 
-
-                validateCode = validation.ValidateCode;
+                DB.Commit();
             }
-            else
+            catch (Exception)
             {
-                validation = new E_Validation_Mobile
-                {
-                    Mobile = mobile,
-                    Category = category,
-                    SendTimes = 1,
-                    RetryTimes = 0,
-                    ValidateCode = validateCode,
-                    UpdateTime = DateTime.Now
-                };
-                DB.GetDal<E_Validation_Mobile>().Add(validation);
+                DB.Rollback();
+                throw;
             }
-
-            DB.Commit();
+           
 
             return validateCode;
         }

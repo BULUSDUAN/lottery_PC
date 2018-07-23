@@ -43,7 +43,7 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             if (string.IsNullOrEmpty(sql)) return;
             //  Session.Clear();
-            this.DB.CreateSQLQuery(sql);//.ExecuteUpdate();
+            DB.CreateSQLQuery(sql).Excute();//.ExecuteUpdate();
         }
         public void AddSingleSchemeOrder(T_SingleScheme_Order entity)
         {
@@ -434,6 +434,15 @@ namespace KaSon.FrameWork.ORM.Helper
         public void UpdateSports_Order_Complate(params C_Sports_Order_Complate[] entity)
         {
             DB.GetDal<C_Sports_Order_Complate>().Update(entity);
+        }
+
+        public decimal GetUserMaxBonusMoney(string userId)
+        {
+           
+            string strSql = "select isnull(max(AfterTaxBonusMoney),0) maxBonusMoney from C_Sports_Order_Complate where UserId=:UserId and BonusStatus=20 and IsVirtualOrder=0";
+            var maxBonusMoney = DB.CreateSQLQuery(strSql).SetString("UserId", userId).First<decimal>();
+
+            return maxBonusMoney;
         }
     }
 }

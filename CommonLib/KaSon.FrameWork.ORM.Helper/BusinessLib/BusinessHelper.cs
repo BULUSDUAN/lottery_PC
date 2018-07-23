@@ -1085,7 +1085,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// 收入 --添加用户成长值
         /// 返回用户vip等级
         /// </summary>
-        public int Payin_UserGrowth(string category, string orderId, string userId, int userGrowth, string summary)
+        public static int Payin_UserGrowth(string category, string orderId, string userId, int userGrowth, string summary)
         {
             if (userGrowth <= 0) return 0;
 
@@ -1105,7 +1105,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 Summary = summary,
                 AfterBalance = userBalance.UserGrowth + userGrowth,
             };
-            DB.GetDal<C_Fund_UserGrowthDetail>().Add(Fund_UserGrowthDetail);
+            SDB.GetDal<C_Fund_UserGrowthDetail>().Add(Fund_UserGrowthDetail);
 
             var payDetailList = new List<PayDetail>();
             payDetailList.Add(new PayDetail
@@ -1151,7 +1151,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 }
                 //修改vip等级
                 user.VipLevel = vipLevel;
-                DB.GetDal<C_User_Register>().Update(user);
+                SDB.GetDal<C_User_Register>().Update(user);
             }
 
             return user.VipLevel;
@@ -1233,9 +1233,9 @@ namespace KaSon.FrameWork.ORM.Helper
                 }
             }
 
-            var sql = string.Format("update [C_User_Balance] set {0},[Version]+=1 where userid='{1};select 1'", string.Join(",", setList), userId);
+            var sql = string.Format("update [C_User_Balance] set {0},[Version]+=1 where userid='{1}'", string.Join(",", setList), userId);
             // DB.CreateSQLExc();
-            var result = SDB.CreateSQLQuery(sql).First<int>();
+            var result = SDB.CreateSQLQuery(sql).Excute();
             Console.WriteLine("result:" + result);
         }
 

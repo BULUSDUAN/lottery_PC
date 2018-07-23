@@ -11,10 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="GameBiz\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="KaSon.FrameWork.ORM">
       <HintPath>..\..\FramWorkDLL\KaSon.FrameWork.ORM.dll</HintPath>
     </Reference>

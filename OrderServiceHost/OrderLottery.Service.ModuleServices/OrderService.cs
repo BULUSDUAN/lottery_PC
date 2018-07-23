@@ -11,7 +11,7 @@ using EntityModel;
 using EntityModel.Enum;
 using EntityModel.Communication;
 using System.Threading.Tasks;
-using KaSon.FrameWork.ORM.Helper.OrderQuery;
+using KaSon.FrameWork.ORM.Helper;
 using KaSon.FrameWork.Common;
 
 namespace OrderLottery.Service.ModuleServices
@@ -308,6 +308,10 @@ namespace OrderLottery.Service.ModuleServices
         public Task<CTZQMatchInfo_Collection> QueryCTZQMatchListByIssuseNumber(string gameType, string issuseNumber, string userToken)
         {
             return Task.FromResult(_order.QueryCTZQMatchListByIssuseNumber(gameType, issuseNumber, userToken));
+        }
+        public Task<GameWinNumber_InfoCollection> QueryAllGameNewWinNumber(string gameString)
+        {
+            return Task.FromResult(_order.QueryAllGameNewWinNumber(gameString));
         }
     }
 }

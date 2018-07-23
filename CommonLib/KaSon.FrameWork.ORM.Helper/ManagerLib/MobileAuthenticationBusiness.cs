@@ -173,8 +173,7 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
             {
                 //增加成长值 
                 var orderId = Guid.NewGuid().ToString("N");
-                BusinessHelper businessHelper = new BusinessHelper();
-                businessHelper.Payin_UserGrowth("绑定手机号", orderId, userId, 100, "完成手机号绑定可获得100点成长值");
+                BusinessHelper.Payin_UserGrowth("绑定手机号", orderId, userId, 100, "完成手机号绑定可获得100点成长值");
                 var UserTaskRecord = new E_UserTaskRecord
                 {
                     CreateTime = DateTime.Now,
