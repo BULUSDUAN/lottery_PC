@@ -1976,7 +1976,7 @@ namespace Lottery.Api.Controllers
                     throw new Exception("被关注用户编号不能为空！");
                 Dictionary<string, object> param = new Dictionary<string, object>()
                 {
-                    { "currentUserId",currentUserId},{"bgzUserId",bgzUserId }
+                    { "currUserId",currentUserId},{"bgzUserId",bgzUserId }
                 };
                 if (gzType == "1")//关注
                 {
