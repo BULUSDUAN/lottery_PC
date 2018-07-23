@@ -1233,9 +1233,9 @@ namespace KaSon.FrameWork.ORM.Helper
                 }
             }
 
-            var sql = string.Format("update [C_User_Balance] set {0},[Version]+=1 where userid='{1};select 1'", string.Join(",", setList), userId);
+            var sql = string.Format("update [C_User_Balance] set {0},[Version]+=1 where userid='{1}'", string.Join(",", setList), userId);
             // DB.CreateSQLExc();
-            var result = SDB.CreateSQLQuery(sql).First<int>();
+            var result = SDB.CreateSQLQuery(sql).Excute();
             Console.WriteLine("result:" + result);
         }
 

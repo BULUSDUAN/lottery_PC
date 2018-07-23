@@ -65,7 +65,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }
 
             var sql = string.Format("update [C_User_Balance] set {0},[Version]+=1 FROM  C_User_Balance where userid='{1}'", string.Join(",", setList), userId);
-            DB.CreateSQLQuery(sql);
+            DB.CreateSQLQuery(sql).Excute();
         }
 
         /// <summary>

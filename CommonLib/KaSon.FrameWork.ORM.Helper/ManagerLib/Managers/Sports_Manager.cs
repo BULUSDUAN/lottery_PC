@@ -43,7 +43,7 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             if (string.IsNullOrEmpty(sql)) return;
             //  Session.Clear();
-            this.DB.CreateSQLQuery(sql);//.ExecuteUpdate();
+            DB.CreateSQLQuery(sql).Excute();//.ExecuteUpdate();
         }
         public void AddSingleSchemeOrder(T_SingleScheme_Order entity)
         {
