@@ -1,7 +1,7 @@
 {
-    "Ip": "127.0.0.1",
-    "WatchInterval": 10,
-    "Port": 98,
-    "Token": "true",
-    "RequestCacheEnabled": false
+  "Ip": "127.0.0.1",
+  "WatchInterval": 10,
+  "Port": 10099,
+  "Token": "true",
+  "RequestCacheEnabled": false
 }
