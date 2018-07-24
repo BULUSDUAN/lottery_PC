@@ -40,7 +40,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             catch (Exception ex)
             {
-                return result;
+                return null;
             }
         }
 
@@ -1165,7 +1165,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public Sports_SchemeQueryInfo QuerySportsSchemeInfo(string schemeId)
         {
             var orderDetail = DB.CreateQuery<C_OrderDetail>().FirstOrDefault(o => o.SchemeId == schemeId);
-            if (orderDetail == null) return new Sports_SchemeQueryInfo();
+            if (orderDetail == null) return null;
             var info = (orderDetail.ProgressStatus == (int)ProgressStatus.Complate
                 || orderDetail.ProgressStatus == (int)ProgressStatus.Aborted
                 || orderDetail.ProgressStatus == (int)ProgressStatus.AutoStop) ? QuerySports_Order_ComplateInfo(schemeId) : QuerySports_Order_RunningInfo(schemeId);
@@ -2034,7 +2034,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 }
                 else
                 {
-                    return new BDFXOrderDetailInfo();
+                    return null;
                 }
                   
             }
@@ -2081,7 +2081,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 }
                 else
                 {
-                    return new BDFXOrderDetailInfo();
+                    return null;
 
                 }
             }
