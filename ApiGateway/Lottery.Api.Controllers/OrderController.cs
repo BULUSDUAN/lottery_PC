@@ -8,6 +8,7 @@ using KaSon.FrameWork.Analyzer.AnalyzerFactory;
 using KaSon.FrameWork.Common;
 using KaSon.FrameWork.Common.Sport;
 using KaSon.FrameWork.Common.Utilities;
+using Lottery.Api.Controllers.CommonFilterActtribute;
 using Lottery.ApiGateway.Model.HelpModel;
 using Lottery.Base.Controllers;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,7 @@ using System.Threading.Tasks;
 namespace Lottery.Api.Controllers
 {
     [Area("api")]
+    [ReusltFilter]
     public class OrderController : BaseController
     {
         /// <summary>
