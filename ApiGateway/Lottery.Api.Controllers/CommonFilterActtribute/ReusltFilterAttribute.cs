@@ -18,9 +18,19 @@ namespace Lottery.Api.Controllers.CommonFilterActtribute
         {
 
 
-            //var origin = context.HttpContext.Request.Headers["Origin"];
+            var origin = context.HttpContext.Request.Headers["Origin"].ToString();
             //string requestHeaders = context.HttpContext.Request.Headers["Access-Control-Request-Headers"];
+            if (String.IsNullOrEmpty(origin)) {
+                origin = "*";
+            }
+
+            context.HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", origin);
+           
+            context.HttpContext.Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+            context.HttpContext.Response.Headers.Add("Access-Control-Request-Headers", "Content-Type");
             context.HttpContext.Response.Headers.Add("Access-Control-Allow-Credentials", "true");
+
+          
             //Action action = () =>
             //{
             //    context.HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", origin);
@@ -34,7 +44,7 @@ namespace Lottery.Api.Controllers.CommonFilterActtribute
             //    context.HttpContext.Response.AppendHeader("Access-Control-Allow-Origin", origin);
 
             //};
-           // action();
+            // action();
             //if (AllowSites != null && AllowSites.Any())
             //{
             //    if (AllowSites[0] == "*")
