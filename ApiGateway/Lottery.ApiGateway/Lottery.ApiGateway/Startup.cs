@@ -59,7 +59,7 @@ namespace Lottery.ApiGateway
         {
             var list = AssemblyHelper.LoadAssembly();
             var feature = new ControllerFeature();
-            services.AddCors();
+          //  services.AddCors();
             services.AddMvc().ConfigureApplicationPartManager(m =>
             {
                 //   var feature = new ControllerFeature();
@@ -133,7 +133,7 @@ namespace Lottery.ApiGateway
             {
                 app.UseExceptionHandler("/mg/Home/Error");
             }
-            app.UseCors(builder => builder.WithOrigins("*"));
+         //   app.UseCors(builder => builder.WithOrigins("*"));
             //app.UseCors(builder =>
             //{
             //    var policy = Kason.Sg.Core.ApiGateWay.AppConfig.Policy;
