@@ -7,6 +7,7 @@ using KaSon.FrameWork.Common;
 using KaSon.FrameWork.Common.Net;
 using KaSon.FrameWork.Common.Utilities;
 using KaSon.FrameWork.Common.ValidateCodeHelper;
+using Lottery.Api.Controllers.CommonFilterActtribute;
 using Lottery.ApiGateway.Model.HelpModel;
 using Lottery.Base.Controllers;
 using Microsoft.AspNetCore.Http;
@@ -25,6 +26,7 @@ using System.Web;
 namespace Lottery.Api.Controllers
 {
     [Area("api")]
+    [ReusltFilter]
     public class UserController : BaseController
     {
         private IHttpContextAccessor _accessor;

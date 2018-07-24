@@ -15,10 +15,12 @@ using System.IO;
 using KaSon.FrameWork.Common;
 using KaSon.FrameWork.Common.Utilities;
 using EntityModel.LotteryJsonInfo;
+using Lottery.Api.Controllers.CommonFilterActtribute;
 
 namespace Lottery.Api.Controllers
 {
     [Area("api")]
+    [ReusltFilter]
     public class DataController : BaseController
     {
         public IActionResult Index()
