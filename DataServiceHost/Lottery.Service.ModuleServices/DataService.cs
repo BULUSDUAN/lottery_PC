@@ -601,7 +601,20 @@ namespace Lottery.Service.ModuleServices
             var authBiz = new UserAuthentication();
             var token = authBiz.GetGuestToken();
             return Task.FromResult(new CommonActionResult(true, "获取匿名用户口令成功") { ReturnValue = token });
-        } 
+        }
+
+
+        public Task<List<C_Bank_Info>> GetBankList()
+        {
+            try
+            {
+                return Task.FromResult(new DataQuery().GetBankList());
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
         #endregion
 
     }

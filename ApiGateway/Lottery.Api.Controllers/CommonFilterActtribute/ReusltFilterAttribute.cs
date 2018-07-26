@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Lottery.Api.Controllers.CommonFilterActtribute
@@ -13,24 +14,51 @@ namespace Lottery.Api.Controllers.CommonFilterActtribute
 
 
         }
-
+        public string[] AllowSites { get; set; }
         void IActionFilter.OnActionExecuting(ActionExecutingContext context)
         {
-
-
             var origin = context.HttpContext.Request.Headers["Origin"].ToString();
-            //string requestHeaders = context.HttpContext.Request.Headers["Access-Control-Request-Headers"];
-            if (String.IsNullOrEmpty(origin)) {
-                origin = "*";
+            string requestHeaders = context.HttpContext.Request.Headers["Access-Control-Request-Headers"];
+            Action action = () =>
+            {
+                context.HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", origin);
+                context.HttpContext.Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+                context.HttpContext.Response.Headers.Add("Access-Control-Request-Headers", "Content-Type");
+                context.HttpContext.Response.Headers.Add("Access-Control-Allow-Credentials", "true");
+
+            };
+            //Action action = () =>
+            //{
+            //    context.HttpContext.Response.AppendHeader("Access-Control-Allow-Origin", origin);
+
+            //};
+            if (AllowSites != null && AllowSites.Any())
+            {
+                if (AllowSites[0] == "*")
+                {
+                    action();
+                }
+                else if (AllowSites.Contains(origin))
+                {
+                    action();
+                }
             }
+            
 
-            context.HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", origin);
-           
-            context.HttpContext.Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-            context.HttpContext.Response.Headers.Add("Access-Control-Request-Headers", "Content-Type");
-            context.HttpContext.Response.Headers.Add("Access-Control-Allow-Credentials", "true");
 
-          
+            //var origin = context.HttpContext.Request.Headers["Origin"].ToString();
+            ////string requestHeaders = context.HttpContext.Request.Headers["Access-Control-Request-Headers"];
+            //if (String.IsNullOrEmpty(origin)) {
+            //    origin = "*";
+            //}
+
+            //context.HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", origin);
+
+            //context.HttpContext.Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+            //context.HttpContext.Response.Headers.Add("Access-Control-Request-Headers", "Content-Type");
+            //context.HttpContext.Response.Headers.Add("Access-Control-Allow-Credentials", "true");
+
+
             //Action action = () =>
             //{
             //    context.HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", origin);

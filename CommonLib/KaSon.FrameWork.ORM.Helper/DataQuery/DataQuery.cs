@@ -474,6 +474,11 @@ namespace KaSon.FrameWork.ORM.Helper
                         select string.Format("{0}_{1}_{2}", l.Id, l.GameCode, l.UsePercent.ToString("N2"));
             return string.Join("|", query.ToArray());
         }
+
+        public List<C_Bank_Info> GetBankList()
+        {
+            return DB.CreateQuery<C_Bank_Info>().Where(p=>p.Disabled==false).ToList();
+        }
         #endregion
 
         public ArticleInfo_QueryCollection QueryArticleList_YouHua(string[] category, string[] gameCode, int pageIndex, int pageSize)
