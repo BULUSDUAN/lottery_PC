@@ -504,10 +504,18 @@ namespace Lottery.Api.Controllers
             {
                 var p = WebHelper.Decode(entity.Param);
                 string verifyCode = p.verifyCode;
-                if (string.IsNullOrEmpty(verifyCode))
-                    throw new Exception("图形验证码不能为空");
-                if (!VerifyCode(verifyCode))
-                    throw new Exception("图形验证码错误或已过期");
+                string plattype = p.plattype;
+                if (!string.IsNullOrEmpty(plattype))
+                {
+                    plattype = plattype.ToLower();
+                }
+                if (plattype != "app")
+                {
+                    if (string.IsNullOrEmpty(verifyCode))
+                        throw new Exception("图形验证码不能为空");
+                    if (!VerifyCode(verifyCode))
+                        throw new Exception("图形验证码错误或已过期");
+                }
                 string mobile = p.mobile;
                 if (string.IsNullOrEmpty(mobile))
                     throw new Exception("手机号码不能为空");

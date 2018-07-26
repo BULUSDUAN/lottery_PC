@@ -64,7 +64,7 @@ namespace KaSon.FrameWork.ORM.Helper
          
             // 通过数据库存储过程进行查询
             var result = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "rj_Fund_QueryWithdrawById").SQL;
-           var withdraw_Info = DB.CreateSQLQuery(result).SetString("OrderId", orderId)
+           var withdraw_Info = DB.CreateSQLQuery(result).SetString("@OrderId", orderId)
                 .First<Withdraw_QueryInfo>();
 
             return withdraw_Info;
