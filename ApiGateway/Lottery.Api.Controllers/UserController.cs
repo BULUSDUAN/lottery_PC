@@ -1581,7 +1581,7 @@ namespace Lottery.Api.Controllers
                 {
                     UserToken = UserToken.Replace("%2B", "+").Replace("%26", "&");
                     Dictionary<string, object> param = new Dictionary<string, object>();
-                    param["token"] = UserToken;
+                    param["userToken"] = UserToken;
                     var lInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/LoginByUserToken");
                     if (lInfo.IsSuccess)
                     {

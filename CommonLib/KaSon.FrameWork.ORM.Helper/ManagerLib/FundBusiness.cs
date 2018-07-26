@@ -156,7 +156,7 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             var userManager = new UserBalanceManager();
             var user = userManager.QueryUserRegister(userId);
-            if (user.IsEnable!=null && !user.IsEnable)
+            if (!user.IsEnable)
                 throw new LogicException("用户已禁用");
             DB.Begin();
             try
