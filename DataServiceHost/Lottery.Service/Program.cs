@@ -37,7 +37,7 @@ namespace Lottery.Service.Host
                         option.AddServiceRuntime()
                         .AddRelateService()
                         .AddConfigurationWatch()
-                        //option.UseZooKeeperManager(new ConfigInfo("127.0.0.1:2181"));
+                        //option.UseZooKeeperManager(new ConfigInfo("127.0.0.1 10.0.3.27:2181"));
                         .UseConsulManager(new ConfigInfo("10.0.3.27:8500", reloadOnChange:true))
                         .UseDotNettyTransport()
                         .UseRabbitMQTransport()
@@ -65,11 +65,12 @@ namespace Lottery.Service.Host
                 //.UseServer("127.0.0.1", 98，“123456789”) //固定密码Token
                 .UseServer(options =>
                 {
+                    //10099
                     //  options.IpEndpoint = new IPEndPoint(IPAddress.Any, 98);  
                     options.Port = 10099;
                     options.Ip = "127.0.0.1";
                     options.Token = "True";
-                    options.ExecutionTimeoutInMilliseconds = 30000;
+                    options.ExecutionTimeoutInMilliseconds = 5000;
                     options.MaxConcurrentRequests = 200;
                 })
                // .UseServiceCache()
