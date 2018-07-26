@@ -316,17 +316,34 @@ namespace Lottery.Api.Controllers
         /// <param name="_serviceProxyProvider"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public ActionResult QueryBankList([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        public async Task<IActionResult> QueryBankList([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
             {
+                List<C_Bank_Info> BankList = await _serviceProxyProvider.Invoke<List<C_Bank_Info>>(new Dictionary<string,object>(), "api/Data/GetBankList");
+                var returnlist = new List<object>();
+                if (BankList != null && BankList.Count > 0)
+                {
+                    foreach (var item in BankList)
+                    {
+                        returnlist.Add(new {id=item.Id,value=item.BankCode,name=item.BankName });
+                    }
+                    return Json(new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.成功,
+                        Message = "查询成功",
+                        MsgId = entity.MsgId,
+                        Value = returnlist,
+                    });
+                }
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
                     Message = "查询成功",
                     MsgId = entity.MsgId,
-                    Value = GetBankDic(),
+                    Value = returnlist,
                 });
+
             }
             catch (ArgumentException ex)
             {
@@ -352,31 +369,31 @@ namespace Lottery.Api.Controllers
             }
         }
 
-        private Dictionary<string, string> GetBankDic()
-        {
-            var dic = new Dictionary<string, string>();
-            dic.Add("CMB", "招商银行");
-            dic.Add("ICBC", "中国工商银行");
-            dic.Add("CCB", "中国建设银行");
-            dic.Add("BOC", "中国银行");
-            dic.Add("COMM", "中国交通银行");
-            dic.Add("CITIC", "中信银行");
-            dic.Add("CIB", "兴业银行");
-            dic.Add("CEBBANK", "中国光大银行");
-            dic.Add("CMBC", "中国民生银行");
-            dic.Add("ABC", "中国农业银行");
-            //dic.Add("SPAB", "平安银行");
-            dic.Add("GDB", "广东发展银行");
-            dic.Add("SDB", "深圳发展银行");
-            dic.Add("BJB", "北京银行");
-            dic.Add("SPDB", "上海浦东发展银行");
-            dic.Add("SHB", "上海银行");
-            //dic.Add("NBBANK", "宁波银行");
-            //dic.Add("WZCB", "温州银行");
-            dic.Add("CQCB", "重庆银行");
+        //private List<object> GetBankDic()
+        //{
+        //    //var dic = new Dictionary<string, string>();
+        //    //dic.Add("CMB", "招商银行");
+        //    //dic.Add("ICBC", "中国工商银行");
+        //    //dic.Add("CCB", "中国建设银行");
+        //    //dic.Add("BOC", "中国银行");
+        //    //dic.Add("COMM", "中国交通银行");
+        //    //dic.Add("CITIC", "中信银行");
+        //    //dic.Add("CIB", "兴业银行");
+        //    //dic.Add("CEBBANK", "中国光大银行");
+        //    //dic.Add("CMBC", "中国民生银行");
+        //    //dic.Add("ABC", "中国农业银行");
+        //    ////dic.Add("SPAB", "平安银行");
+        //    //dic.Add("GDB", "广东发展银行");
+        //    //dic.Add("SDB", "深圳发展银行");
+        //    //dic.Add("BJB", "北京银行");
+        //    //dic.Add("SPDB", "上海浦东发展银行");
+        //    //dic.Add("SHB", "上海银行");
+        //    ////dic.Add("NBBANK", "宁波银行");
+        //    ////dic.Add("WZCB", "温州银行");
+        //    //dic.Add("CQCB", "重庆银行");
 
-            return dic;
-        }
+        //    return dic;
+        //}
         #endregion
 
         #region 查询当前遗漏(119)
@@ -2830,5 +2847,14 @@ namespace Lottery.Api.Controllers
             }
         }
         #endregion
+
+        //public async Task<IActionResult> TestOne()
+        //{
+        //    LotteryServiceResponse s = null;
+        //    MemoryStream ms = new MemoryStream();
+        //    var ss = JsonHelper.Serialize(s);
+        //    var a = JsonHelper.Deserialize<LotteryServiceResponse>(ss);
+        //    return Json("");
+        //}
     }
 }
