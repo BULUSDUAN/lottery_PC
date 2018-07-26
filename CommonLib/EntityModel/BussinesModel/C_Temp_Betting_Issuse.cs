@@ -71,31 +71,31 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(9)]
             [Field("ProgressStatus")]
-            public int? ProgressStatus{ get; set; }
+            public int ProgressStatus{ get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(10)]
             [Field("TicketStatus")]
-            public int? TicketStatus{ get; set; }
+            public int TicketStatus{ get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(11)]
             [Field("Amount")]
-            public int? Amount{ get; set; }
+            public int Amount{ get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(12)]
             [Field("CurrentIndex")]
-            public int? CurrentIndex{ get; set; }
+            public int CurrentIndex{ get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(13)]
             [Field("CanChase")]
-            public bool? CanChase{ get; set; }
+            public bool CanChase{ get; set; }
             /// <summary>
             // 
             ///</summary>
@@ -113,13 +113,13 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(16)]
             [Field("IssuseMoney")]
-            public decimal? IssuseMoney{ get; set; }
+            public decimal IssuseMoney{ get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(17)]
             [Field("BonusStatus")]
-            public int? BonusStatus{ get; set; }
+            public int BonusStatus{ get; set; }
             /// <summary>
             // 
             ///</summary>
@@ -131,25 +131,25 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(19)]
             [Field("BonusTime")]
-            public DateTime? BonusTime{ get; set; }
+            public DateTime BonusTime{ get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(20)]
             [Field("PreTaxBonusMoney")]
-            public decimal? PreTaxBonusMoney{ get; set; }
+            public decimal PreTaxBonusMoney{ get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(21)]
             [Field("AfterTaxBonusMoney")]
-            public decimal? AfterTaxBonusMoney{ get; set; }
+            public decimal AfterTaxBonusMoney{ get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(22)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
             /// <summary>
             // 
             ///</summary>

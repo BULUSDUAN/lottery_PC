@@ -19,28 +19,28 @@ namespace EntityModel
         
         }
             /// <summary>
-            // 
+            // 主键
             ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
             /// <summary>
-            // 
+            // 用户编号
             ///</summary>
             [ProtoMember(2)]
             [Field("UserId")]
             public string UserId{ get; set; }
             /// <summary>
-            // 
+            // 赠送红包金额
             ///</summary>
             [ProtoMember(3)]
             [Field("GiveRedBagMoney")]
-            public decimal? GiveRedBagMoney{ get; set; }
+            public decimal GiveRedBagMoney{ get; set; }
             /// <summary>
-            // 
+            // 创建时间
             ///</summary>
             [ProtoMember(4)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

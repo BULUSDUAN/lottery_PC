@@ -47,18 +47,18 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(5)]
             [Field("BonusCount")]
-            public int? BonusCount{ get; set; }
+            public int BonusCount{ get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(6)]
             [Field("BonusMoney")]
-            public decimal? BonusMoney{ get; set; }
+            public decimal BonusMoney{ get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(7)]
             [Field("UpdateTime")]
-            public DateTime? UpdateTime{ get; set; }
+            public DateTime UpdateTime{ get; set; }
     }
 }

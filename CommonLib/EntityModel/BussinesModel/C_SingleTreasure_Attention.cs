@@ -19,28 +19,28 @@ namespace EntityModel
         
         }
             /// <summary>
-            // 
+            // 主键
             ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
             /// <summary>
-            // 
+            // 被关注用户编号
             ///</summary>
             [ProtoMember(2)]
             [Field("ConcernedUserId")]
             public string ConcernedUserId{ get; set; }
             /// <summary>
-            // 
+            // 关注者用户编号
             ///</summary>
             [ProtoMember(3)]
             [Field("BeConcernedUserId")]
             public string BeConcernedUserId{ get; set; }
             /// <summary>
-            // 
+            // 创建时间
             ///</summary>
             [ProtoMember(4)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

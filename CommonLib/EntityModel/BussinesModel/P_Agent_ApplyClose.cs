@@ -47,12 +47,12 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(5)]
             [Field("Sale")]
-            public decimal? Sale{ get; set; }
+            public decimal Sale{ get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(6)]
             [Field("Commission")]
-            public decimal? Commission{ get; set; }
+            public decimal Commission{ get; set; }
     }
 }

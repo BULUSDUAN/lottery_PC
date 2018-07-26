@@ -47,24 +47,24 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(5)]
             [Field("MyPoint")]
-            public decimal? MyPoint{ get; set; }
+            public decimal MyPoint{ get; set; }
             /// <summary>
             // 下级的返点
             ///</summary>
             [ProtoMember(6)]
             [Field("LowerPoint")]
-            public decimal? LowerPoint{ get; set; }
+            public decimal LowerPoint{ get; set; }
             /// <summary>
             // 下级的修改时间
             ///</summary>
             [ProtoMember(7)]
             [Field("LowerUpTime")]
-            public DateTime? LowerUpTime{ get; set; }
+            public DateTime LowerUpTime{ get; set; }
             /// <summary>
             // 我的修改时间
             ///</summary>
             [ProtoMember(8)]
             [Field("MyUpTime")]
-            public DateTime? MyUpTime{ get; set; }
+            public DateTime MyUpTime{ get; set; }
     }
 }

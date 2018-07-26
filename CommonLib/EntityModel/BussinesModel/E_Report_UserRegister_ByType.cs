@@ -47,12 +47,12 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(5)]
             [Field("UserCount")]
-            public int? UserCount{ get; set; }
+            public int UserCount{ get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(6)]
             [Field("UpdateTime")]
-            public DateTime? UpdateTime{ get; set; }
+            public DateTime UpdateTime{ get; set; }
     }
 }

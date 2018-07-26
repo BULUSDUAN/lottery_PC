@@ -8,7 +8,7 @@ using System.Text;
 namespace EntityModel
 {
     /// <summary>
-    // 
+    // 传统足球奖池信息
     ///</summary>
     [ProtoContract]
     [Entity("C_CTZQ_MatchPool",Type = EntityType.Table)]
@@ -19,7 +19,7 @@ namespace EntityModel
         
         }
             /// <summary>
-            // 
+            // GameCode|GameType|IssuseNumber|BonusLevel
             ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = false, IsPrimaryKey = true)]
@@ -47,13 +47,13 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(5)]
             [Field("BonusLevel")]
-            public int? BonusLevel{ get; set; }
+            public int BonusLevel{ get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(6)]
             [Field("BonusCount")]
-            public int? BonusCount{ get; set; }
+            public int BonusCount{ get; set; }
             /// <summary>
             // 
             ///</summary>
@@ -65,7 +65,7 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(8)]
             [Field("BonusMoney")]
-            public decimal? BonusMoney{ get; set; }
+            public decimal BonusMoney{ get; set; }
             /// <summary>
             // 
             ///</summary>
@@ -77,6 +77,6 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(10)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

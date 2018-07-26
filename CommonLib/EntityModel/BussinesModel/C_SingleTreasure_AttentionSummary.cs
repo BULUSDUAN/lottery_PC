@@ -19,40 +19,40 @@ namespace EntityModel
         
         }
             /// <summary>
-            // 
+            // 主键
             ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
             /// <summary>
-            // 
+            // 用户编号
             ///</summary>
             [ProtoMember(2)]
             [Field("UserId")]
             public string UserId{ get; set; }
             /// <summary>
-            // 
+            // 被关注总数
             ///</summary>
             [ProtoMember(3)]
             [Field("ConcernedUserCount")]
-            public int? ConcernedUserCount{ get; set; }
+            public int ConcernedUserCount{ get; set; }
             /// <summary>
-            // 
+            // 关注总数
             ///</summary>
             [ProtoMember(4)]
             [Field("BeConcernedUserCount")]
-            public int? BeConcernedUserCount{ get; set; }
+            public int BeConcernedUserCount{ get; set; }
             /// <summary>
-            // 
+            // 晒单总数
             ///</summary>
             [ProtoMember(5)]
             [Field("SingleTreasureCount")]
-            public int? SingleTreasureCount{ get; set; }
+            public int SingleTreasureCount{ get; set; }
             /// <summary>
-            // 
+            // 修改时间
             ///</summary>
             [ProtoMember(6)]
             [Field("UpdateTime")]
-            public DateTime? UpdateTime{ get; set; }
+            public DateTime UpdateTime{ get; set; }
     }
 }

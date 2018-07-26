@@ -47,7 +47,7 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(5)]
             [Field("BonusType")]
-            public int? BonusType{ get; set; }
+            public int BonusType{ get; set; }
             /// <summary>
             // 
             ///</summary>
@@ -83,7 +83,7 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(11)]
             [Field("EndTime")]
-            public DateTime? EndTime{ get; set; }
+            public DateTime EndTime{ get; set; }
             /// <summary>
             // 
             ///</summary>

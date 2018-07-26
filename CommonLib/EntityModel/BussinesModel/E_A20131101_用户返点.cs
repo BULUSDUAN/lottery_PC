@@ -19,40 +19,40 @@ namespace EntityModel
         
         }
             /// <summary>
-            // 
+            // 主键
             ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
             /// <summary>
-            // 
+            // 用户编号
             ///</summary>
             [ProtoMember(2)]
             [Field("UserId")]
             public string UserId{ get; set; }
             /// <summary>
-            // 
+            // 月份
             ///</summary>
             [ProtoMember(3)]
             [Field("Month")]
-            public int? Month{ get; set; }
+            public int Month{ get; set; }
             /// <summary>
-            // 
+            // 总金额
             ///</summary>
             [ProtoMember(4)]
             [Field("TotalMoney")]
-            public decimal? TotalMoney{ get; set; }
+            public decimal TotalMoney{ get; set; }
             /// <summary>
-            // 
+            // 赠送金额
             ///</summary>
             [ProtoMember(5)]
             [Field("GiveMoney")]
-            public decimal? GiveMoney{ get; set; }
+            public decimal GiveMoney{ get; set; }
             /// <summary>
-            // 
+            // 创建时间
             ///</summary>
             [ProtoMember(6)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

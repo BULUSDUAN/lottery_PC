@@ -19,49 +19,49 @@ namespace EntityModel
         
         }
             /// <summary>
-            // 
+            // 用户编号
             ///</summary>
             [ProtoMember(1)]
             [Field("UserId", IsIdenty = false, IsPrimaryKey = true)]
             public string UserId{ get; set; }
             /// <summary>
-            // 
+            // 是否设置邮箱
             ///</summary>
             [ProtoMember(2)]
             [Field("IsSettedEmail")]
-            public bool? IsSettedEmail{ get; set; }
+            public bool IsSettedEmail{ get; set; }
             /// <summary>
-            // 
+            // 认证来源
             ///</summary>
             [ProtoMember(3)]
             [Field("AuthFrom")]
             public string AuthFrom{ get; set; }
             /// <summary>
-            // 
+            // 邮箱
             ///</summary>
             [ProtoMember(4)]
             [Field("Email")]
             public string Email{ get; set; }
             /// <summary>
-            // 
+            // 创建时间
             ///</summary>
             [ProtoMember(5)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
             /// <summary>
-            // 
+            // 创建自
             ///</summary>
             [ProtoMember(6)]
             [Field("CreateBy")]
             public string CreateBy{ get; set; }
             /// <summary>
-            // 
+            // 更新时间
             ///</summary>
             [ProtoMember(7)]
             [Field("UpdateTime")]
-            public DateTime? UpdateTime{ get; set; }
+            public DateTime UpdateTime{ get; set; }
             /// <summary>
-            // 
+            // 更新自
             ///</summary>
             [ProtoMember(8)]
             [Field("UpdateBy")]

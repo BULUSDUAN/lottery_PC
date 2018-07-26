@@ -19,40 +19,40 @@ namespace EntityModel
         
         }
             /// <summary>
-            // 
+            // 主键
             ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
             /// <summary>
-            // 
+            // 用户编号
             ///</summary>
             [ProtoMember(2)]
             [Field("UserId")]
             public string UserId{ get; set; }
             /// <summary>
-            // 
+            // 彩种代码
             ///</summary>
             [ProtoMember(3)]
             [Field("GameCode")]
             public string GameCode{ get; set; }
             /// <summary>
-            // 
+            // 玩法
             ///</summary>
             [ProtoMember(4)]
             [Field("GameType")]
             public string GameType{ get; set; }
             /// <summary>
-            // 
+            // 串关方式
             ///</summary>
             [ProtoMember(5)]
             [Field("PlayType")]
             public string PlayType{ get; set; }
             /// <summary>
-            // 
+            // 创建时间
             ///</summary>
             [ProtoMember(6)]
             [Field("CreateTime")]
-            public DateTime? CreateTime{ get; set; }
+            public DateTime CreateTime{ get; set; }
     }
 }

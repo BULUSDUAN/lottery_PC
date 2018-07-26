@@ -19,31 +19,31 @@ namespace EntityModel
         
         }
             /// <summary>
-            // 
+            // 主键
             ///</summary>
             [ProtoMember(1)]
             [Field("IId", IsIdenty = false, IsPrimaryKey = true)]
             public int IId{ get; set; }
             /// <summary>
-            // 
+            // 用户编号
             ///</summary>
             [ProtoMember(2)]
             [Field("UserId")]
             public string UserId{ get; set; }
             /// <summary>
-            // 
+            // 函数编号
             ///</summary>
             [ProtoMember(3)]
             [Field("FunctionId")]
             public string FunctionId{ get; set; }
             /// <summary>
-            // 
+            // 状态
             ///</summary>
             [ProtoMember(4)]
             [Field("Status")]
-            public int? Status{ get; set; }
+            public int Status{ get; set; }
             /// <summary>
-            // 
+            // R:读；W:写
             ///</summary>
             [ProtoMember(5)]
             [Field("Mode")]
