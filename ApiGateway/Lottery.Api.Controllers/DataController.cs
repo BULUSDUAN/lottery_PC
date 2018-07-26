@@ -2006,7 +2006,7 @@ namespace Lottery.Api.Controllers
                     Value = ex.Message,
                 });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return Json(new LotteryServiceResponse
                 {
@@ -2858,5 +2858,34 @@ namespace Lottery.Api.Controllers
         //    var a = JsonHelper.Deserialize<LotteryServiceResponse>(ss);
         //    return Json("");
         //}
+
+        public async Task<IActionResult> GetBankValueByNum([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var aliurl = "https://ccdcapi.alipay.com/validateAndCacheCardInfo.json";
+                var p = JsonHelper.Decode(entity.Param);
+                string cardNo = p.cardNo;
+                var R_Url = aliurl + "?_input_charset=utf-8&cardNo=" + cardNo + "&cardBinCheck=true";
+                var result = PostManager.Get(R_Url, Encoding.UTF8);
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询成功",
+                    MsgId = entity.MsgId,
+                    Value = result,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "查询失败",
+                    MsgId = entity.MsgId,
+                    Value = null,
+                });
+            }
+        }
     }
 }

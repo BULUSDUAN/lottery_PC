@@ -647,7 +647,7 @@ namespace Lottery.Api.Controllers
                                 OrderId = item.OrderId,
                                 ProvinceName = item.ProvinceName,
                                 RequestMoney = item.RequestMoney,
-                                RequestTime = ConvertHelper.ConvertDateTimeInt(item.RequestTime),
+                                RequestTime = ConvertHelper.ConvertDateTimeInt(item.RequestTime.Value),
                                 ResponseTime = ConvertHelper.ConvertDateTimeInt(item.ResponseTime.Value),
                                 ResponseMoney = item.ResponseMoney,
                                 WithdrawAgent = item.WithdrawAgent,
