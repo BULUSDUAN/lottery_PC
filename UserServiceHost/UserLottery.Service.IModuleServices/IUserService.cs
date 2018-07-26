@@ -36,8 +36,8 @@ namespace UserLottery.Service.IModuleServices
         [Service(Date = "2018-6-06", Director = "renjun", Name = "修改密码")]
         Task<CommonActionResult> ChangeMyPassword(string oldPassword, string newPassword, string userToken);
 
-        //[Service(Date = "2018-6-08", Director = "renjun", Name = "token登录")]
-        //Task<LoginInfo> LoginByUserToken(string userToken);
+        [Service(Date = "2018-6-08", Director = "renjun", Name = "token登录")]
+        Task<LoginInfo> LoginByUserToken(string userToken);
 
         [Service(Date = "2018-6-29", Director = "renjun", Name = "根据UserId查询用户信息")]
         Task<LoginInfo> GetLocalLoginByUserId(string userId);
@@ -99,13 +99,13 @@ namespace UserLottery.Service.IModuleServices
         [Service(Date = "2018-6-29", Director = "renjun", Name = "增加银行卡信息")]
         Task<CommonActionResult> AddBankCard(C_BankCard bankCard, string userToken);
 
-        //[Service(Date = "2018-7-02", Director = "renjun", Name = "提款确认")]
-        //Task<CheckWithdrawResult> RequestWithdraw_Step1(string userId, decimal requestMoney);
+        [Service(Date = "2018-7-02", Director = "renjun", Name = "提款确认")]
+        Task<CheckWithdrawResult> RequestWithdraw_Step1(string userId, decimal requestMoney);
 
-        //[Service(Date = "2018-7-03", Director = "renjun", Name = "提款成功")]
-        //Task<CommonActionResult> RequestWithdraw_Step2(Withdraw_RequestInfo info, string userId, string password);
+        [Service(Date = "2018-7-03", Director = "renjun", Name = "提款成功")]
+        Task<CommonActionResult> RequestWithdraw_Step2(Withdraw_RequestInfo info, string userId, string balancepwd);
 
-        //[Service(Date = "2018-7-03", Director = "renjun", Name = "提现记录")]
-        //Task<Withdraw_QueryInfoCollection> QueryMyWithdrawList(WithdrawStatus? status, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string userToken);
+        [Service(Date = "2018-7-03", Director = "renjun", Name = "提现记录")]
+        Task<Withdraw_QueryInfoCollection> QueryMyWithdrawList(WithdrawStatus? status, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string userToken);
     }
 }

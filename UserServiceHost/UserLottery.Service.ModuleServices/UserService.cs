@@ -1130,11 +1130,11 @@ namespace UserLottery.Service.ModuleServices
         /// <param name="userId"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        public Task<CommonActionResult> RequestWithdraw_Step2(Withdraw_RequestInfo info, string userId, string password)
+        public Task<CommonActionResult> RequestWithdraw_Step2(Withdraw_RequestInfo info, string userId, string balancepwd)
         {
             try
             {
-                new FundBusiness().RequestWithdraw_Step2(info, userId, password);
+                new FundBusiness().RequestWithdraw_Step2(info, userId, balancepwd);
                 return Task.FromResult(new CommonActionResult
                 {
                     IsSuccess = true,

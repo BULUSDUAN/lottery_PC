@@ -1296,7 +1296,7 @@ namespace Lottery.Api.Controllers
                 if (string.IsNullOrEmpty(token))
                     throw new ArgumentException("token不能为空");
                 Dictionary<string, object> param = new Dictionary<string, object>();
-                param["token"] = token;
+                param["userToken"] = token;
 
 
                 if ((DateTime.Now.Hour < 8 || (DateTime.Now.Hour == 8 && DateTime.Now.Minute < 50))
@@ -1310,6 +1310,7 @@ namespace Lottery.Api.Controllers
                 if (userinfo.IsSuccess)
                 {
                     Dictionary<string, object> bindParam = new Dictionary<string, object>();
+                    bindParam["UserId"] = userinfo.UserId; 
                     var info = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
                     if (info == null)
                         throw new ArgumentException("未找到用户信息");
@@ -1372,11 +1373,12 @@ namespace Lottery.Api.Controllers
                 if (string.IsNullOrEmpty(money))
                     throw new ArgumentException("提款金额不能为空");
                 Dictionary<string, object> param = new Dictionary<string, object>();
-                param["token"] = token;
+                param["userToken"] = token;
                 var userinfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/LoginByUserToken");
                 if (userinfo.IsSuccess)
                 {
                     Dictionary<string, object> bindParam = new Dictionary<string, object>();
+                    bindParam["UserId"] = userinfo.UserId;
                     var info = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
                     if (info == null)
                         throw new ArgumentException("未找到用户信息");
@@ -1389,7 +1391,17 @@ namespace Lottery.Api.Controllers
                     paramRequestWithdraw["userId"] = info.UserId;
                     paramRequestWithdraw["requestMoney"] = decimal.Parse(money);
                     var RequestWithdraw_1 = await _serviceProxyProvider.Invoke<CheckWithdrawResult>(paramRequestWithdraw, "api/user/RequestWithdraw_Step1");
+                    if (RequestWithdraw_1.WithdrawCategory == WithdrawCategory.Error)
+                    {
+                        return JsonEx(new LotteryServiceResponse
+                        {
+                            Code = ResponseCode.失败,
+                            Message = RequestWithdraw_1.Summary,
+                            MsgId = entity.MsgId
+                        });
+                    }
                     var cashMoney = await _serviceProxyProvider.Invoke<UserBalanceInfo>(param, "api/user/QueryMyBalance");
+
 
                     return JsonEx(new LotteryServiceResponse
                     {
@@ -1451,11 +1463,12 @@ namespace Lottery.Api.Controllers
                 decimal.TryParse(money, out RequestMoney);
                 PreconditionAssert.IsTrue(RequestMoney >= 10, "提款金额不能小于10元");
                 Dictionary<string, object> param = new Dictionary<string, object>();
-                param["token"] = token;
+                param["userToken"] = token;
                 var userinfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/LoginByUserToken");
                 if (userinfo.IsSuccess)
                 {
                     Dictionary<string, object> bindParam = new Dictionary<string, object>();
+                    bindParam["UserId"] = userinfo.UserId;
                     var info = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
                     if (info == null)
                         throw new ArgumentException("未找到用户信息");
@@ -1465,7 +1478,6 @@ namespace Lottery.Api.Controllers
                         throw new ArgumentException("请先绑定银行卡");
 
                     Withdraw_RequestInfo withdrawinfo = new Withdraw_RequestInfo();
-                    ViewBag.FetchAccount = info.BankCardNumber;
                     withdrawinfo.BankCardNumber = info.BankCardNumber;
                     //withdrawinfo.BankCode = "";
                     withdrawinfo.BankName = info.BankName;
@@ -1477,18 +1489,10 @@ namespace Lottery.Api.Controllers
                     withdrawinfo.userRealName = info.RealName;
 
                     Dictionary<string, object> Withdraw_Param = new Dictionary<string, object>();
-                    Withdraw_Param["BankCardNumber"] = info.BankCardNumber;
-                    Withdraw_Param["BankName"] = info.BankName;
-                    Withdraw_Param["BankSubName"] = info.BankSubName;
-                    Withdraw_Param["CityName"] = info.CityName;
-                    Withdraw_Param["ProvinceName"] = info.ProvinceName;
-                    Withdraw_Param["RequestMoney"] = RequestMoney;
-                    Withdraw_Param["WithdrawAgent"] = WithdrawAgentType.BankCard;
-                    Withdraw_Param["userRealName"] = info.RealName;
-                    Withdraw_Param["UserId"] = info.UserId;
+                    Withdraw_Param["info"] = withdrawinfo;        
+                    Withdraw_Param["userId"] = info.UserId;
                     Withdraw_Param["balancepwd"] = balancepwd;
-
-                    var RequestWithdraw_Step2 = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/RequestWithdraw_Step2");
+                    var RequestWithdraw_Step2 = await _serviceProxyProvider.Invoke<UserBindInfos>(Withdraw_Param, "api/user/RequestWithdraw_Step2");
 
                     return JsonEx(new LotteryServiceResponse
                     {
