@@ -152,11 +152,11 @@ namespace KaSon.FrameWork.ORM.Helper
         /// 申请提现
         /// 实际添加提现记录，扣除用户资金
         /// </summary>
-        public void RequestWithdraw_Step2(Withdraw_RequestInfo info, string userId, string password)
+        public void RequestWithdraw_Step2(Withdraw_RequestInfo info, string userId, string balancepwd)
         {
             var userManager = new UserBalanceManager();
             var user = userManager.QueryUserRegister(userId);
-            if (!user.IsEnable)
+            if (user.IsEnable!=null && !user.IsEnable)
                 throw new LogicException("用户已禁用");
             DB.Begin();
             try
@@ -166,7 +166,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 var orderId = BettingHelper.GetWithdrawId();
                 BusinessHelper businessHelper = new BusinessHelper();
                 var category = businessHelper.Payout_To_Frozen_Withdraw(BusinessHelper.FundCategory_RequestWithdraw, userId, orderId, info.RequestMoney
-                      , string.Format("申请提现：{0:N2}元", info.RequestMoney), "Withdraw", password, out resonseMoney);
+                      , string.Format("申请提现：{0:N2}元", info.RequestMoney), "Withdraw", balancepwd, out resonseMoney);
 
                 var fundManager = new FundManager();
                 var addWithdraw = new C_Withdraw
@@ -183,7 +183,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     RequestMoney = info.RequestMoney,
                     WithdrawAgent = (int)info.WithdrawAgent,
                     Status = (int)WithdrawStatus.Requesting,
-
+                     
                     WithdrawCategory = (int)category,
                     ResponseMoney = resonseMoney,
                 };

@@ -466,9 +466,8 @@ namespace UserLottery.Service.ModuleServices
             var loginBiz = new MobileAuthenticationBusiness();        
                 _coreConfigList = loginBiz.BanRegistrMobile(key);
 
-            //if (_coreConfigList == null)
-            //    throw new Exception(string.Format("找不到配置项：{0}", key));
-            return Task.FromResult(_coreConfigList);
+                return Task.FromResult(_coreConfigList);
+
         }
 
         /// <summary>
@@ -895,13 +894,13 @@ namespace UserLottery.Service.ModuleServices
         /// <param name="newPassword"></param>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public Task<CommonActionResult> CheckIsSame2LoginPassword(string newPassword, string userToken)
+        public Task<CommonActionResult> CheckIsSame2LoginPassword(string newPwd, string userToken)
         {
             // 验证用户身份及权限
             var userId = userAuthentication.ValidateUserAuthentication(userToken);
 
             var loginBiz = new LocalLoginBusiness();
-            var result = loginBiz.CheckIsSame2LoginPassword(userId, newPassword);
+            var result = loginBiz.CheckIsSame2LoginPassword(userId, newPwd);
             var flag = "N";
             if (result.HasValue)
             {
@@ -926,9 +925,9 @@ namespace UserLottery.Service.ModuleServices
             {
                 var biz = new FundBusiness();
                 biz.SetBalancePassword(userId, oldPassword, isSetPwd, newPassword);
-                #region 还没做
-                //BusinessHelper.ExecPlugin<IBalancePassword>(new object[] { userId, oldPassword, isSetPwd, newPassword });
-                #endregion
+              
+                BusinessHelper.ExecPlugin<IBalancePassword>(new object[] { userId, oldPassword, isSetPwd, newPassword });
+               
                 return Task.FromResult(new CommonActionResult { IsSuccess = true, Message = "操作资金密码完成" });
             }
             catch (Exception ex)
@@ -1094,9 +1093,9 @@ namespace UserLottery.Service.ModuleServices
                 new BankCardBusiness().AddBankCard(bankCard);
                 new CacheDataBusiness().ClearUserBindInfoCache(userId);
                 //绑定银行卡之后实现接口
-                #region 还没做
-                //BusinessHelper.ExecPlugin<IAddBankCard>(new object[] { bankCard.UserId, bankCard.BankCardNumber, bankCard.BankCode, bankCard.BankName, bankCard.BankSubName, bankCard.CityName, bankCard.ProvinceName, bankCard.RealName });
-                #endregion
+            
+                BusinessHelper.ExecPlugin<IAddBankCard>(new object[] { bankCard.UserId, bankCard.BankCardNumber, bankCard.BankCode, bankCard.BankName, bankCard.BankSubName, bankCard.CityName, bankCard.ProvinceName, bankCard.RealName });
+               
                 return Task.FromResult(new CommonActionResult(true, "添加银行卡信息成功"));
             }
             catch (Exception ex)
@@ -1131,11 +1130,11 @@ namespace UserLottery.Service.ModuleServices
         /// <param name="userId"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        public Task<CommonActionResult> RequestWithdraw_Step2(Withdraw_RequestInfo info, string userId, string password)
+        public Task<CommonActionResult> RequestWithdraw_Step2(Withdraw_RequestInfo info, string userId, string balancepwd)
         {
             try
             {
-                new FundBusiness().RequestWithdraw_Step2(info, userId, password);
+                new FundBusiness().RequestWithdraw_Step2(info, userId, balancepwd);
                 return Task.FromResult(new CommonActionResult
                 {
                     IsSuccess = true,
