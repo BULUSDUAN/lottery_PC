@@ -36,8 +36,8 @@ namespace UserLottery.Service.IModuleServices
         [Service(Date = "2018-6-06", Director = "renjun", Name = "修改密码")]
         Task<CommonActionResult> ChangeMyPassword(string oldPassword, string newPassword, string userToken);
 
-        //[Service(Date = "2018-6-08", Director = "renjun", Name = "token登录")]
-        //Task<LoginInfo> LoginByUserToken(string userToken);
+        [Service(Date = "2018-6-08", Director = "renjun", Name = "token登录")]
+        Task<LoginInfo> LoginByUserToken(string userToken);
 
         [Service(Date = "2018-6-29", Director = "renjun", Name = "根据UserId查询用户信息")]
         Task<LoginInfo> GetLocalLoginByUserId(string userId);
@@ -84,14 +84,14 @@ namespace UserLottery.Service.IModuleServices
         [Service(Date = "2018-6-28", Director = "renjun", Name = "找回密码发送验证码")]
         Task<CommonActionResult> SendValidateCodeToUserMobileByForgetPWD(string mobile);
 
-        //[Service(Date = "2018-6-28", Director = "renjun", Name = " 检查是否和登录密码一至")]
-        //Task<CommonActionResult> CheckIsSame2LoginPassword(string newPassword, string userToken);
+        [Service(Date = "2018-6-28", Director = "renjun", Name = " 检查是否和登录密码一至")]
+        Task<CommonActionResult> CheckIsSame2LoginPassword(string newPwd, string userToken);
 
-        //[Service(Date = "2018-6-28", Director = "renjun", Name = " 设置资金密码")]
-        //Task<CommonActionResult> SetBalancePassword(string oldPassword, bool isSetPwd, string newPassword, string userToken);
+        [Service(Date = "2018-6-28", Director = "renjun", Name = " 设置资金密码")]
+        Task<CommonActionResult> SetBalancePassword(string oldPassword, bool isSetPwd, string newPassword, string userToken);
 
-        //[Service(Date = "2018-6-28", Director = "renjun", Name = " 设置资金密码类型")]
-        //Task<CommonActionResult> SetBalancePasswordNeedPlace(string password, string placeList, string userToken);
+        [Service(Date = "2018-6-28", Director = "renjun", Name = " 设置资金密码类型")]
+        Task<CommonActionResult> SetBalancePasswordNeedPlace(string password, string placeList, string userToken);
 
         [Service(Date = "2018-6-29", Director = "renjun", Name = "实名认证")]
         Task<CommonActionResult> AuthenticateMyRealName(string IdCardNumber, string RealName, SchemeSource source, string userToken);
@@ -99,13 +99,13 @@ namespace UserLottery.Service.IModuleServices
         [Service(Date = "2018-6-29", Director = "renjun", Name = "增加银行卡信息")]
         Task<CommonActionResult> AddBankCard(C_BankCard bankCard, string userToken);
 
-        //[Service(Date = "2018-7-02", Director = "renjun", Name = "提款确认")]
-        //Task<CheckWithdrawResult> RequestWithdraw_Step1(string userId, decimal requestMoney);
+        [Service(Date = "2018-7-02", Director = "renjun", Name = "提款确认")]
+        Task<CheckWithdrawResult> RequestWithdraw_Step1(string userId, decimal requestMoney);
 
-        //[Service(Date = "2018-7-03", Director = "renjun", Name = "提款成功")]
-        //Task<CommonActionResult> RequestWithdraw_Step2(Withdraw_RequestInfo info, string userId, string password);
+        [Service(Date = "2018-7-03", Director = "renjun", Name = "提款成功")]
+        Task<CommonActionResult> RequestWithdraw_Step2(Withdraw_RequestInfo info, string userId, string balancepwd);
 
-        //[Service(Date = "2018-7-03", Director = "renjun", Name = "提现记录")]
-        //Task<Withdraw_QueryInfoCollection> QueryMyWithdrawList(WithdrawStatus? status, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string userToken);
+        [Service(Date = "2018-7-03", Director = "renjun", Name = "提现记录")]
+        Task<Withdraw_QueryInfoCollection> QueryMyWithdrawList(WithdrawStatus? status, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string userToken);
     }
 }

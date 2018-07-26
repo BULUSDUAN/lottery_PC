@@ -24,7 +24,6 @@ namespace OrderLottery.Service.ModuleServices
         public OrderService()
         {
             _order = new OrderQuery();
-
         }
 
         /// <summary>

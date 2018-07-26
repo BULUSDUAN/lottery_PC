@@ -89,7 +89,7 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(12)]
             [Field("RequestTime")]
-            public DateTime RequestTime{ get; set; }
+            public DateTime? RequestTime{ get; set; }
             /// <summary>
             // 提款状态
             ///</summary>
@@ -119,7 +119,7 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(17)]
             [Field("ResponseTime")]
-            public DateTime ResponseTime{ get; set; }
+            public DateTime? ResponseTime{ get; set; }
             /// <summary>
             // 代理商
             ///</summary>

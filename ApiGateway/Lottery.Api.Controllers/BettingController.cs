@@ -5,6 +5,7 @@ using EntityModel.Redis;
 using Kason.Sg.Core.ProxyGenerator;
 using KaSon.FrameWork.Common;
 using KaSon.FrameWork.Common.Redis;
+using Lottery.Api.Controllers.CommonFilterActtribute;
 using Lottery.ApiGateway.Model.HelpModel;
 using Lottery.Base.Controllers;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,7 @@ using System.Threading.Tasks;
 namespace Lottery.Api.Controllers
 {
     [Area("api")]
+    [ReusltFilter]
     public class BettingController: BaseController
     {
         #region 普通投注,世界杯投注(104,210)

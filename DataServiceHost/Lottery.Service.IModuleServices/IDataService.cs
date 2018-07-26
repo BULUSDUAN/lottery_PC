@@ -81,6 +81,7 @@ namespace Lottery.Service.IModuleServices
         Task<string> QueryRedBagUseConfig();
 
         [Service(Date = "2018-07-05", Director = "lidi", Name = "查询文章列表")]
+        //[Command(Strategy = StrategyType.Failover, ShuntStrategy = AddressSelectorMode.Random, ExecutionTimeoutInMilliseconds = 60000, BreakerRequestVolumeThreshold = 0, Injection =null, RequestCacheEnabled = false)]
         Task<ArticleInfo_QueryCollection> QueryArticleList_YouHua(string category, string gameCode, int pageIndex, int pageSize);
 
         [Service(Date = "2018-07-05", Director = "lidi", Name = "查询fxid活动下所有邀请")]

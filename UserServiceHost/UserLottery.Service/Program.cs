@@ -38,7 +38,7 @@ namespace UserLottery.Service.Host
                         .AddRelateService()
                         .AddConfigurationWatch()
                         //option.UseZooKeeperManager(new ConfigInfo("127.0.0.1:2181"));
-                        .UseConsulManager(new ConfigInfo("10.0.3.27:8500", reloadOnChange: true))
+                        .UseConsulManager(new ConfigInfo("10.0.3.27:8501", reloadOnChange: true))
                         .UseDotNettyTransport()
                         .UseRabbitMQTransport()
                         .AddRabbitMQAdapt()
@@ -66,7 +66,7 @@ namespace UserLottery.Service.Host
                 .UseServer(options =>
                 {
                     //  options.IpEndpoint = new IPEndPoint(IPAddress.Any, 98);  
-                    options.Port = 98;
+                    options.Port = 10098;
                     options.Ip = "127.0.0.1";
                     options.Token = "True";
                     options.ExecutionTimeoutInMilliseconds = 30000;

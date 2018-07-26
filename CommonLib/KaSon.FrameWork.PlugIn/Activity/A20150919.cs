@@ -61,7 +61,9 @@ namespace KaSon.FrameWork.PlugIn.Activity
             }
 
             //开启事务
-           
+
+            try
+            {
                 DB.Begin();
                 //分享推广送绑定了卡的送红包
                 //绑定卡了 且是通过分享注册的用户 没有送红包 就执行分享推广活动
@@ -83,6 +85,12 @@ namespace KaSon.FrameWork.PlugIn.Activity
                     }
                 }
                 DB.Commit();
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw ex;
+            }
             
 
 
@@ -554,7 +562,9 @@ namespace KaSon.FrameWork.PlugIn.Activity
 
             //开启事务
 
-            DB.Begin();
+            try
+            {
+                DB.Begin();
                 var givedMoney = manager.QueryTotalFillMoneyGiveRedBag(userId, DateTime.Now.ToString("yyyyMM"), 1);
                 var maxGiveMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.FillMoneyMaxGiveRedBagOneMonth").ConfigValue);
                 //本月赠送金额已达到最大
@@ -602,6 +612,12 @@ namespace KaSon.FrameWork.PlugIn.Activity
                     PayType = 1
                 });
                 DB.Commit();
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw ex;
+            }
             
             #region 给分享用户送红包逻辑
             FirstRechargeGiveRedBag(userId, fillMoney);
@@ -742,7 +758,9 @@ namespace KaSon.FrameWork.PlugIn.Activity
         public void DoGiveAddMoney(string schemeId)
         {
             //开启事务
-         
+
+            try
+            {
                 DB.Begin();
 
                 var manager = new Sports_Manager();
@@ -890,6 +908,12 @@ namespace KaSon.FrameWork.PlugIn.Activity
                 }
 
                 DB.Commit();
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw ex;
+            }
             
         }
 

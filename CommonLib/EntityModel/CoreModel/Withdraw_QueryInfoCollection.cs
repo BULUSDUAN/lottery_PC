@@ -90,7 +90,7 @@ namespace EntityModel.CoreModel
         /// <summary>
         /// 申请时间
         /// </summary>
-        public DateTime RequestTime { get; set; }
+        public DateTime? RequestTime { get; set; }
         /// <summary>
         /// 提款状态
         /// </summary>

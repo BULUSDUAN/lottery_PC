@@ -8,6 +8,7 @@ using KaSon.FrameWork.Analyzer.AnalyzerFactory;
 using KaSon.FrameWork.Common;
 using KaSon.FrameWork.Common.Sport;
 using KaSon.FrameWork.Common.Utilities;
+using Lottery.Api.Controllers.CommonFilterActtribute;
 using Lottery.ApiGateway.Model.HelpModel;
 using Lottery.Base.Controllers;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,7 @@ using System.Threading.Tasks;
 namespace Lottery.Api.Controllers
 {
     [Area("api")]
+    [ReusltFilter]
     public class OrderController : BaseController
     {
         /// <summary>
@@ -29,7 +31,7 @@ namespace Lottery.Api.Controllers
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public LotteryServiceResponse QueryOrderHistoryRecord(LotteryServiceRequest entity)
+        public JsonResult QueryOrderHistoryRecord(LotteryServiceRequest entity)
         {
             try
             {
@@ -64,33 +66,33 @@ namespace Lottery.Api.Controllers
                         });
                     }
                 }                
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
                     Message = "查询订单开奖历史记录成功",
                     MsgId = entity.MsgId,
                     Value = list,
-                };
+                });
             }
             catch (ArgumentException ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = "业务参数错误",
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
             catch (Exception ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = "服务器内部错误，请联系接口提供商",
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
         }
         /// <summary>
@@ -145,7 +147,7 @@ namespace Lottery.Api.Controllers
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public LotteryServiceResponse QueryGameCurrBonusInfo(LotteryServiceRequest entity)
+        public JsonResult QueryGameCurrBonusInfo(LotteryServiceRequest entity)
         {
             try
             {
@@ -180,33 +182,33 @@ namespace Lottery.Api.Controllers
                         });
                     }
                 }
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
                     Message = "查询最新开奖成功",
                     MsgId = entity.MsgId,
                     Value = list,
-                };
+                });
             }
             catch (ArgumentException ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = "业务参数错误",
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
             catch (Exception ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = "查询最新开奖失败",
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
         }
         /// <summary>
@@ -214,7 +216,7 @@ namespace Lottery.Api.Controllers
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<LotteryServiceResponse> QueryJingCaiBonusHistory([FromServices]IServiceProxyProvider _serviceProxyProvider,LotteryServiceRequest entity)
+        public async Task<IActionResult> QueryJingCaiBonusHistory([FromServices]IServiceProxyProvider _serviceProxyProvider,LotteryServiceRequest entity)
         {
             try
             {
@@ -451,33 +453,33 @@ namespace Lottery.Api.Controllers
                         });
                     }
                 }
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
                     Message = "查询开奖历史成功",
                     MsgId = entity.MsgId,
                     Value = list,
-                };
+                });
             }
             catch (ArgumentException ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = "业务参数错误",
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
             catch (Exception ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = "查询历史开奖失败",
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
         }
         /// <summary>
@@ -485,12 +487,10 @@ namespace Lottery.Api.Controllers
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<LotteryServiceResponse> QueryAccountDetial([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        public async Task<IActionResult> QueryAccountDetial([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
             {
-                
-
                 var p = JsonHelper.Decode(entity.Param);
                 string viewType = p.ViewType;
                 string userToken = p.UserToken;
@@ -665,33 +665,33 @@ namespace Lottery.Api.Controllers
                         }
                     }
                 }
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
                     Message = "查询账户明细成功",
                     MsgId = entity.MsgId,
                     Value = list,
-                };
+                });
             }
             catch (ArgumentException ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = "业务参数错误",
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
             catch (Exception ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = "查询账户明细出错",
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
         }
         /// <summary>
@@ -700,13 +700,13 @@ namespace Lottery.Api.Controllers
         /// <param name="_serviceProxyProvider"></param>
         /// <param name=""></param>
         /// <returns></returns>
-        public async Task<LotteryServiceResponse> QueryOrderListByBonusState([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        public async Task<IActionResult> QueryOrderListByBonusState([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
             {
                 var p = JsonHelper.Decode(entity.Param);
                 string userId = p.UserId;
-                int state = p.BonusStatus;
+                int state = p.bonusStatus;
                 //int schemeType = p.SchemeType;
                 int days = p.ViewDay;
                 DateTime startTime =Convert.ToDateTime("2015-01-01 00:00:00");
@@ -723,7 +723,7 @@ namespace Lottery.Api.Controllers
                 var list = new List<object>();
                 if (orderQueryType == 1)
                 {
-                    var Model = new QueryMyBettingOrderParam() { userToken = userToken, bonusStatus = (BonusStatus)state, gameCode = gamecode, startTime = startTime, endTime = endTime, pageIndex = pageIndex, pageSize = pageSize };
+                    var Model = new QueryMyBettingOrderParam() { userToken = userToken, bonusStatus = (BonusStatus)state, gameCode =gamecode??"", startTime = startTime, endTime = endTime, pageIndex = pageIndex, pageSize = pageSize };
                     param["Model"] = Model;
                     //代购
                     var orderList = await _serviceProxyProvider.Invoke<MyBettingOrderInfoCollection>(param, "api/Order/QueryMyBettingOrderList");
@@ -820,23 +820,23 @@ namespace Lottery.Api.Controllers
                         });
                     }
                 }
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
                     Message = "查询投注记录成功",
                     MsgId = entity.MsgId,
                     Value = list,
-                };
+                });
             }
             catch (Exception ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = "查询投注记录失败",
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
             
         }
@@ -846,7 +846,7 @@ namespace Lottery.Api.Controllers
         /// <param name="_serviceProxyProvider"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<LotteryServiceResponse> QuerySportsTogetherList([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        public async Task<IActionResult> QuerySportsTogetherList([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
             {
@@ -929,33 +929,33 @@ namespace Lottery.Api.Controllers
                         });
                     }
                 }
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
                     Message = "查询合买大厅成功",
                     MsgId = entity.MsgId,
                     Value = list,
-                };
+                });
             }
             catch (ArgumentException ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = "业务参数错误",
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
             catch (Exception ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = "查询合买大厅失败",
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
         }
         /// <summary>
@@ -965,7 +965,7 @@ namespace Lottery.Api.Controllers
         /// <param name="entity"></param>
         /// <returns></returns>
 
-        public async Task<LotteryServiceResponse> QueryRankReport([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        public async Task<IActionResult> QueryRankReport([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
             {
@@ -1010,33 +1010,33 @@ namespace Lottery.Api.Controllers
                         }
                     }
                 }
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
                     Message = "查询中奖榜单成功",
                     MsgId = entity.MsgId,
                     Value = list,
-                };
+                });
             }
             catch (ArgumentException ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = "业务参数错误",
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
             catch (Exception ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = "查询中奖榜单失败",
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
         }
         /// <summary>
@@ -1045,7 +1045,7 @@ namespace Lottery.Api.Controllers
         /// <param name="_serviceProxyProvider"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<LotteryServiceResponse> QueryNewOrderDetailBySchemeId([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        public async Task<IActionResult> QueryNewOrderDetailBySchemeId([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
             {
@@ -1072,23 +1072,23 @@ namespace Lottery.Api.Controllers
             }
             catch (ArgumentException ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = "业务参数错误",
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
             catch (Exception ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = "查询订单详情失败",
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
 
         }
@@ -1100,7 +1100,7 @@ namespace Lottery.Api.Controllers
         /// <param name="schemeId"></param>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public async Task<LotteryServiceResponse> QueryCHASEOrderDetail([FromServices]IServiceProxyProvider _serviceProxyProvider,LotteryServiceRequest entity, string schemeId, string userToken)
+        public async Task<IActionResult> QueryCHASEOrderDetail([FromServices]IServiceProxyProvider _serviceProxyProvider,LotteryServiceRequest entity, string schemeId, string userToken)
         {
             Dictionary<string, object> param = new Dictionary<string, object>
             {
@@ -1185,13 +1185,13 @@ namespace Lottery.Api.Controllers
                 StopAfterBonus = firstIssuse.StopAfterBonus,
             };
 
-            return new LotteryServiceResponse
+            return Json(new LotteryServiceResponse
             {
                 Code = ResponseCode.成功,
                 Message = "查询订单明细成功",
                 MsgId = entity.MsgId,
                 Value = result,
-            };
+            });
         }
         /// <summary>
         /// 查看合买订单详情
@@ -1201,7 +1201,7 @@ namespace Lottery.Api.Controllers
         /// <param name="schemeId"></param>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public async Task<LotteryServiceResponse> QueryTMSOrderDetail([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity, string schemeId, string userToken)
+        public async Task<IActionResult> QueryTMSOrderDetail([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity, string schemeId, string userToken)
         {
             Dictionary<string, object> param = new Dictionary<string, object>
             {
@@ -1290,13 +1290,13 @@ namespace Lottery.Api.Controllers
                 ServiceTime = ConvertHelper.ConvertDateTimeInt(DateTime.Now),
             };
 
-            return new LotteryServiceResponse
+            return Json(new LotteryServiceResponse
             {
                 Code = ResponseCode.成功,
                 Message = "查询订单明细成功",
                 MsgId = entity.MsgId,
                 Value = result,
-            };
+            });
         }
         /// <summary>
         /// 查询普通订单详情
@@ -1306,7 +1306,7 @@ namespace Lottery.Api.Controllers
         /// <param name="schemeId"></param>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public async Task<LotteryServiceResponse> QueryGeneralOrderDetail([FromServices]IServiceProxyProvider _serviceProxyProvider,LotteryServiceRequest entity, string schemeId, string userToken)
+        public async Task<IActionResult> QueryGeneralOrderDetail([FromServices]IServiceProxyProvider _serviceProxyProvider,LotteryServiceRequest entity, string schemeId, string userToken)
         {
             Dictionary<string, object> param = new Dictionary<string, object>
             {
@@ -1385,13 +1385,13 @@ namespace Lottery.Api.Controllers
                 IsVirtualOrder = schemeInfo.IsVirtualOrder,
                 CodeList = codeList,
             };
-            return new LotteryServiceResponse
+            return Json(new LotteryServiceResponse
             {
                 Code = ResponseCode.成功,
                 Message = "查询订单详情成功",
                 MsgId = entity.MsgId,
                 Value = result,
-            };
+            });
         }
         public async Task<List<object>> GetCodeList_GSAPP([FromServices]IServiceProxyProvider _serviceProxyProvider, Sports_AnteCodeQueryInfoCollection code, string gameCode, int amount)
         {
@@ -1537,7 +1537,7 @@ namespace Lottery.Api.Controllers
         /// <param name="_serviceProxyProvider"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<LotteryServiceResponse> QueryAutofollowList([FromServices]IServiceProxyProvider _serviceProxyProvider,LotteryServiceRequest entity)
+        public async Task<IActionResult> QueryAutofollowList([FromServices]IServiceProxyProvider _serviceProxyProvider,LotteryServiceRequest entity)
         {
             try
             {
@@ -1585,33 +1585,33 @@ namespace Lottery.Api.Controllers
                         });
                     }
                 }
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
                     Message = "查询定制跟单列表成功",
                     MsgId = entity.MsgId,
                     Value = list,
-                };
+                });
             }
             catch (ArgumentException ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = ex.Message,
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
             catch (Exception ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = ex.Message,
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
         }
         /// <summary>
@@ -1620,7 +1620,7 @@ namespace Lottery.Api.Controllers
         /// <param name="_serviceProxyProvider"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<LotteryServiceResponse> QueryTogetherFollowerRule([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        public async Task<IActionResult> QueryTogetherFollowerRule([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
             {
@@ -1661,44 +1661,44 @@ namespace Lottery.Api.Controllers
                 }
                 if (list != null && list.Count > 0)
                 {
-                    return new LotteryServiceResponse
+                    return Json(new LotteryServiceResponse
                     {
                         Code = ResponseCode.成功,
                         Message = "查询跟单信息成功",
                         MsgId = entity.MsgId,
                         Value = list,
-                    };
+                    });
                 }
                 else
                 {
-                    return new LotteryServiceResponse
+                    return Json(new LotteryServiceResponse
                     {
                         Code = ResponseCode.失败,
                         Message = "未查询到跟单信息",
                         MsgId = entity.MsgId,
                         Value = list,
-                    };
+                    });
                 }
             }
             catch (ArgumentException ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = ex.Message,
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
             catch (Exception ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = ex.Message,
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
         }
         /// <summary>
@@ -1706,7 +1706,7 @@ namespace Lottery.Api.Controllers
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<LotteryServiceResponse> QueryTodayBDFXList([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        public async Task<IActionResult> QueryTodayBDFXList([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
             {
@@ -1766,33 +1766,33 @@ namespace Lottery.Api.Controllers
                         });
                     }
                 }
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
                     Message = "查询今日宝单成功",
                     MsgId = entity.MsgId,
                     Value = list,
-                };
+                });
             }
             catch (ArgumentException ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = ex.Message,
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
             catch (Exception ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = ex.Message,
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
         }
         /// <summary>
@@ -1801,7 +1801,7 @@ namespace Lottery.Api.Controllers
         /// <param name="_serviceProxyProvider"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<LotteryServiceResponse> QueryBDFXAutherHomePage([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        public async Task<IActionResult> QueryBDFXAutherHomePage([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
             {
@@ -1860,33 +1860,33 @@ namespace Lottery.Api.Controllers
                         });
                     }
                 }
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
                     Message = "查询宝单作者主页成功",
                     MsgId = entity.MsgId,
                     Value = list,
-                };
+                });
             }
             catch (ArgumentException ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = ex.Message,
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
             catch (Exception ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = ex.Message,
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
         }
         /// <summary>
@@ -1895,7 +1895,7 @@ namespace Lottery.Api.Controllers
         /// <param name="_serviceProxyProvider"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<LotteryServiceResponse> QueryConcernedByUserId([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        public async Task<IActionResult> QueryConcernedByUserId([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
             {
@@ -1922,33 +1922,33 @@ namespace Lottery.Api.Controllers
                         UserName = result.UserName,
                     });
                 }
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
                     Message = "查询成功",
                     MsgId = entity.MsgId,
                     Value = list,
-                };
+                });
             }
             catch (ArgumentException ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = ex.Message,
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
             catch (Exception ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = ex.Message,
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
         }
         /// <summary>
@@ -1957,7 +1957,7 @@ namespace Lottery.Api.Controllers
         /// <param name="_serviceProxyProvider"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<LotteryServiceResponse> BDFXAttentionAndCancel([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        public async Task<IActionResult> BDFXAttentionAndCancel([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
             {
@@ -1976,51 +1976,51 @@ namespace Lottery.Api.Controllers
                     throw new Exception("被关注用户编号不能为空！");
                 Dictionary<string, object> param = new Dictionary<string, object>()
                 {
-                    { "currentUserId",currentUserId},{"bgzUserId",bgzUserId }
+                    { "currUserId",currentUserId},{"bgzUserId",bgzUserId }
                 };
                 if (gzType == "1")//关注
                 {
                     var result =await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Order/BDFXAttention");
-                    return new LotteryServiceResponse
+                    return Json(new LotteryServiceResponse
                     {
                         Code = result.IsSuccess ? ResponseCode.成功 : ResponseCode.失败,
                         Message = result.Message,
                         MsgId = entity.MsgId,
                         Value = result.Message,
-                    };
+                    });
                 }
                 else if (gzType == "0")//取消关注
                 {
                     var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Order/BDFXCancelAttention");
-                    return new LotteryServiceResponse
+                    return Json(new LotteryServiceResponse
                     {
                         Code = result.IsSuccess ? ResponseCode.成功 : ResponseCode.失败,
                         Message = result.Message,
                         MsgId = entity.MsgId,
                         Value = result.Message,
-                    };
+                    });
                 }
                 throw new Exception("传入关注类型错误");
             }
             catch (ArgumentException ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = ex.Message,
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
             catch (Exception ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = ex.Message,
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
         }
         /// <summary>
@@ -2029,7 +2029,7 @@ namespace Lottery.Api.Controllers
         /// <param name="_serviceProxyProvider"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<LotteryServiceResponse> QueryGSRankList([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        public async Task<IActionResult> QueryGSRankList([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
             {
@@ -2062,33 +2062,33 @@ namespace Lottery.Api.Controllers
                         });
                     }
                 }
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
                     Message = "查询成功",
                     MsgId = entity.MsgId,
                     Value = list,
-                };
+                });
             }
             catch (ArgumentException ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = ex.Message,
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
             catch (Exception ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = ex.Message,
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
         }
         /// <summary>
@@ -2097,7 +2097,7 @@ namespace Lottery.Api.Controllers
         /// <param name="_serviceProxyProvider"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<LotteryServiceResponse> QueryMyBDFXList([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        public async Task<IActionResult> QueryMyBDFXList([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
             {
@@ -2152,33 +2152,33 @@ namespace Lottery.Api.Controllers
                         });
                     }
                 }
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
                     Message = "查询我的关注成功",
                     MsgId = entity.MsgId,
                     Value = list,
-                };
+                });
             }
             catch (ArgumentException ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = ex.Message,
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
             catch (Exception ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = ex.Message,
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
         }
         /// <summary>
@@ -2187,7 +2187,7 @@ namespace Lottery.Api.Controllers
         /// <param name="_serviceProxyProvider"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<LotteryServiceResponse> QueryBDFXOrderDetailBySchemeId([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        public async Task<IActionResult> QueryBDFXOrderDetailBySchemeId([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
             {
@@ -2238,33 +2238,33 @@ namespace Lottery.Api.Controllers
                         UserName = result.UserName,
                     });
                 }
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
                     Message = "查询宝单详情成功",
                     MsgId = entity.MsgId,
                     Value = list,
-                };
+                });
             }
             catch (ArgumentException ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = ex.Message,
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
             catch (Exception ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = ex.Message,
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
         }
         /// <summary>
@@ -2273,7 +2273,7 @@ namespace Lottery.Api.Controllers
         /// <param name="_serviceProxyProvider"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<LotteryServiceResponse> QueryUserOrderList([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        public async Task<IActionResult> QueryUserOrderList([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
             {
@@ -2307,13 +2307,13 @@ namespace Lottery.Api.Controllers
                 if (_schemeType == "2")
                 {
                     var result =await _serviceProxyProvider.Invoke<BettingOrderInfoCollection>(param, "api/Order/QueryMyChaseOrderList");
-                    return new LotteryServiceResponse
+                    return Json(new LotteryServiceResponse
                     {
                         Code = ResponseCode.成功,
                         Message = "查询投注记录成功",
                         MsgId = entity.MsgId,
                         Value = result,
-                    };
+                    });
                 }
                 else
                 {
@@ -2321,34 +2321,34 @@ namespace Lottery.Api.Controllers
                     var Model = new QueryMyOrderListInfoParam() { userToken= userToken, pageIndex= pageIndex, pageSize= pageSize, gameCode= _gameCode, bonusStatus= bonusStatus, schemeType= schemeType, startTime= startTime, endTime= endTime };
                     param["Model"] = Model;
                     var result =await _serviceProxyProvider.Invoke<MyOrderListInfoCollection>(param, "api/Order/QueryMyOrderListInfo");
-                    return new LotteryServiceResponse
+                    return Json(new LotteryServiceResponse
                     {
                         Code = ResponseCode.成功,
                         Message = "查询投注记录成功",
                         MsgId = entity.MsgId,
                         Value = result,
-                    };
+                    });
                 }
             }
             catch (ArgumentException ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = "业务参数错误",
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
             catch (Exception ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = "查询失败",
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
         }
         /// <summary>
@@ -2357,7 +2357,7 @@ namespace Lottery.Api.Controllers
         /// <param name="_serviceProxyProvider"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<LotteryServiceResponse> QueryUserOrderDetail([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        public async Task<IActionResult> QueryUserOrderDetail([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
             {
@@ -2417,13 +2417,13 @@ namespace Lottery.Api.Controllers
                         JoinTogetherUserList = joinTogetherUserList,
                         IssuseList = schemeInfo.OrderList
                     };
-                    return new LotteryServiceResponse
+                    return Json(new LotteryServiceResponse
                     {
                         Code = ResponseCode.成功,
                         Message = "查询订单明细成功",
                         MsgId = entity.MsgId,
                         Value = result,
-                    };
+                    });
                 }
                 else
                 {
@@ -2475,34 +2475,34 @@ namespace Lottery.Api.Controllers
                         JoinTogetherUserList = joinTogetherUserList,
                     };
 
-                    return new LotteryServiceResponse
+                    return Json(new LotteryServiceResponse
                     {
                         Code = ResponseCode.成功,
                         Message = "查询订单明细成功",
                         MsgId = entity.MsgId,
                         Value = result,
-                    };
+                    });
                 }
             }
             catch (ArgumentException ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = "业务参数错误",
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
             catch (Exception ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = "查询订单详情失败",
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
         }
         /// <summary>
@@ -2511,7 +2511,7 @@ namespace Lottery.Api.Controllers
         /// <param name="_serviceProxyProvider"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<LotteryServiceResponse> GetBonus([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        public async Task<IActionResult> GetBonus([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
             {
@@ -2530,31 +2530,31 @@ namespace Lottery.Api.Controllers
                         UserDisplayName = p.UserDisplayName,
                         TotalMoney = p.TotalMoney
                     }).ToList();
-                    return new LotteryServiceResponse
+                    return Json(new LotteryServiceResponse
                     {
                         Code = ResponseCode.成功,
                         Message = "获取成功",
                         MsgId = entity.MsgId,
                         Value = list,
-                    };                  
+                    });
                 }
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = "暂无数据",
                     MsgId = entity.MsgId,
                     Value = "暂无数据",
-                };
+                });
             }
             catch (Exception ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = ex.Message,
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
         }
         /// <summary>
@@ -2563,7 +2563,7 @@ namespace Lottery.Api.Controllers
         /// <param name="_serviceProxyProvider"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<LotteryServiceResponse> LotteryRecord([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        public async Task<IActionResult> LotteryRecord([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
             {
@@ -2573,23 +2573,23 @@ namespace Lottery.Api.Controllers
                 int page = 0;
                 int.TryParse(term, out page);
                 var list = GetHistory(_serviceProxyProvider,type, page);
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
                     Message = "获取开奖记录成功",
                     MsgId = entity.MsgId,
                     Value = list,
-                };
+                });
             }
             catch (Exception ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = ex.Message,
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
         }
         /// <summary>
@@ -2648,28 +2648,28 @@ namespace Lottery.Api.Controllers
         /// <param name="_serviceProxyProvider"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<LotteryServiceResponse> RecordHistory_Normal([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        public async Task<IActionResult> RecordHistory_Normal([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
             {
                 var infos =await GetKaiJiang(_serviceProxyProvider);
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
                     Message = "获取开奖记录成功",
                     MsgId = entity.MsgId,
                     Value = infos,
-                };
+                });
             }
             catch (Exception ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = ex.Message,
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
         }
         public async static Task<List<KaiJiang>> GetKaiJiang([FromServices]IServiceProxyProvider _serviceProxyProvider)
@@ -2709,7 +2709,7 @@ namespace Lottery.Api.Controllers
         /// <param name="_serviceProxyProvider"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async static Task<LotteryServiceResponse> RecordDetail([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        public async static Task<IActionResult> RecordDetail([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
 
             try
@@ -2718,23 +2718,23 @@ namespace Lottery.Api.Controllers
                 string type = p.GameCode;
                 string term = p.IssuseNumber;                
                 var obj =await GetKaiJingInfo(_serviceProxyProvider, "Web", type, term);
-                return new LotteryServiceResponse
+                return new JsonResult(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
                     Message = "获取开奖详情成功",
                     MsgId = entity.MsgId,
                     Value = obj,
-                };
+                });
             }
             catch (Exception ex)
             {
-                return new LotteryServiceResponse
+                return new JsonResult(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = ex.Message,
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
 
         }
@@ -2795,7 +2795,7 @@ namespace Lottery.Api.Controllers
         /// <param name="_serviceProxyProvider"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<LotteryServiceResponse> RecordOpenMatch([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        public async Task<IActionResult> RecordOpenMatch([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
             {
@@ -2803,23 +2803,23 @@ namespace Lottery.Api.Controllers
                 var type = p.GameType;
                 var term = p.IssuseNumber;
                 var list =await GetphoneOpenMatch(_serviceProxyProvider, "web", type, term);
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
                     Message = "获取开奖比赛数据成功",
                     MsgId = entity.MsgId,
                     Value = list,
-                };
+                });
             }
             catch (Exception ex)
             {
-                return new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = ex.Message,
                     MsgId = entity.MsgId,
                     Value = ex.Message,
-                };
+                });
             }
         }
         /// <summary>

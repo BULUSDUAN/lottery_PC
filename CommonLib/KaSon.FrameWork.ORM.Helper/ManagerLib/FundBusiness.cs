@@ -152,219 +152,226 @@ namespace KaSon.FrameWork.ORM.Helper
         /// 申请提现
         /// 实际添加提现记录，扣除用户资金
         /// </summary>
-        public void RequestWithdraw_Step2(Withdraw_RequestInfo info, string userId, string password)
+        public void RequestWithdraw_Step2(Withdraw_RequestInfo info, string userId, string balancepwd)
         {
             var userManager = new UserBalanceManager();
             var user = userManager.QueryUserRegister(userId);
-            if (!user.IsEnable)
+            if (user.IsEnable!=null && !user.IsEnable)
                 throw new LogicException("用户已禁用");
-
-
             DB.Begin();
-
-
-            var resonseMoney = 0M;
-            var orderId = BettingHelper.GetWithdrawId();
-            BusinessHelper businessHelper = new BusinessHelper();
-            var category = businessHelper.Payout_To_Frozen_Withdraw(BusinessHelper.FundCategory_RequestWithdraw, userId, orderId, info.RequestMoney
-                  , string.Format("申请提现：{0:N2}元", info.RequestMoney), "Withdraw", password, out resonseMoney);
-
-            var fundManager = new FundManager();
-            var addWithdraw = new C_Withdraw
-            {
-                OrderId = orderId,
-                BankCardNumber = info.BankCardNumber,
-                BankCode = info.BankCode,
-                BankName = info.BankName,
-                BankSubName = info.BankSubName,
-                CityName = info.CityName,
-                RequestTime = DateTime.Now,
-                ProvinceName = info.ProvinceName,
-                UserId = userId,
-                RequestMoney = info.RequestMoney,
-                WithdrawAgent = (int)info.WithdrawAgent,
-                Status = (int)WithdrawStatus.Requesting,
-
-                WithdrawCategory = (int)category,
-                ResponseMoney = resonseMoney,
-            };
-            fundManager.AddWithdraw(addWithdraw);
-
-            //查询到账金额
-            var wi = GetWithdrawById(orderId);
-
-            //判断DP是否可用
-            var cacheDataBusiness = new CacheDataBusiness();
-            var iscoreConfigInfo = cacheDataBusiness.QueryCoreConfigByKey("DP.Isvailable");
-            //获取当前系统时间（4-5点DP关闭）
-            var datetime = System.DateTime.Now;
-            var nowHourAndM = datetime.ToString("t");
-            var datestar = cacheDataBusiness.QueryCoreConfigByKey("DP.StartTime");
-            var dateend = cacheDataBusiness.QueryCoreConfigByKey("DP.EndTime");
-            DateTime dstar = Convert.ToDateTime(datestar.ConfigValue);
-            DateTime dend = Convert.ToDateTime(dateend.ConfigValue);
-
-            if (iscoreConfigInfo.ConfigValue == "1")
+            try
             {
 
-                if (datetime <= dstar || datetime >= dend)
+                var resonseMoney = 0M;
+                var orderId = BettingHelper.GetWithdrawId();
+                BusinessHelper businessHelper = new BusinessHelper();
+                var category = businessHelper.Payout_To_Frozen_Withdraw(BusinessHelper.FundCategory_RequestWithdraw, userId, orderId, info.RequestMoney
+                      , string.Format("申请提现：{0:N2}元", info.RequestMoney), "Withdraw", balancepwd, out resonseMoney);
+
+                var fundManager = new FundManager();
+                var addWithdraw = new C_Withdraw
                 {
-                    //发送消息到DP
-                    //判断是否发送到DP
-                    String htmls = info.BankName;
-                    //获取Dp提现最大限额
-                    var coreConfigInfo = cacheDataBusiness.QueryCoreConfigByKey("DP.WithdrawHigthMoney");
-                    //获取Dp给的公司编码
-                    var coreConfigInfoC = cacheDataBusiness.QueryCoreConfigByKey("DP.Companyid");
-                    //获取DP给的key
-                    var ck = cacheDataBusiness.QueryCoreConfigByKey("DP.Key");
-                    //获取DP访问路径
-                    var cw = cacheDataBusiness.QueryCoreConfigByKey("DP.WebUrl");
-                    decimal withdrawHigthMoney = decimal.Parse(coreConfigInfo.ConfigValue);
-                    //var writer = Common.Log.LogWriterGetter.GetLogWriter();
-                    //writer.Write("关于DP日志", "关于DP日志", Common.Log.LogType.Information, "关于DP日志", "withdrawHigthMoney===============" + withdrawHigthMoney);
+                    OrderId = orderId,
+                    BankCardNumber = info.BankCardNumber,
+                    BankCode = info.BankCode,
+                    BankName = info.BankName,
+                    BankSubName = info.BankSubName,
+                    CityName = info.CityName,
+                    RequestTime = DateTime.Now,
+                    ProvinceName = info.ProvinceName,
+                    UserId = userId,
+                    RequestMoney = info.RequestMoney,
+                    WithdrawAgent = (int)info.WithdrawAgent,
+                    Status = (int)WithdrawStatus.Requesting,
+                     
+                    WithdrawCategory = (int)category,
+                    ResponseMoney = resonseMoney,
+                };
+                fundManager.AddWithdraw(addWithdraw);
 
-                    String str = String.Format("BankCardNumber=" + info.BankCardNumber + ",BankCode=" + info.BankCode + ",BankName=" + info.BankName + ",BankSubName=" + info.BankSubName + ",CityName=" + info.CityName + ",ProvinceName=" + info.ProvinceName + ",RequestMoney=" + info.RequestMoney + ",userRealName=" + info.userRealName + ",WithdrawAgent=" + info.WithdrawAgent + "");
-                    //writer.Write("输出参数写测试用例", "输出参数写测试用例", Common.Log.LogType.Information, "输出参数写测试用例", "输出参数写测试用例===============" + str);
-                    WithdrawApplyInfo wai = new WithdrawApplyInfo();
-                    wai.company_order_num = orderId;
-                    wai.company_user = userId;
-                    wai.card_name = info.userRealName;
-                    wai.card_num = info.BankCardNumber;
-                    wai.issue_bank_name = info.BankName;
-                    wai.issue_bank_address = info.BankSubName;
-                    wai.memo = "";
-                    String amount = wi.ResponseMoney.ToString();
-                    wai.amount = Math.Round(decimal.Parse(amount), 2);
+                //查询到账金额
+                var wi = GetWithdrawById(orderId);
 
-                    wai.company_id = Int32.Parse(coreConfigInfoC.ConfigValue);
-                    String dpresult = null;
-                    decimal dpHighmoney = decimal.Parse(coreConfigInfo.ConfigValue);
-                    if (info.RequestMoney < withdrawHigthMoney)
+                //判断DP是否可用
+                var cacheDataBusiness = new CacheDataBusiness();
+                var iscoreConfigInfo = cacheDataBusiness.QueryCoreConfigByKey("DP.Isvailable");
+                //获取当前系统时间（4-5点DP关闭）
+                var datetime = System.DateTime.Now;
+                var nowHourAndM = datetime.ToString("t");
+                var datestar = cacheDataBusiness.QueryCoreConfigByKey("DP.StartTime");
+                var dateend = cacheDataBusiness.QueryCoreConfigByKey("DP.EndTime");
+                DateTime dstar = Convert.ToDateTime(datestar.ConfigValue);
+                DateTime dend = Convert.ToDateTime(dateend.ConfigValue);
+
+                if (iscoreConfigInfo.ConfigValue == "1")
+                {
+
+                    if (datetime <= dstar || datetime >= dend)
                     {
-                        if (htmls.Contains("工商银行"))
+                        //发送消息到DP
+                        //判断是否发送到DP
+                        String htmls = info.BankName;
+                        //获取Dp提现最大限额
+                        var coreConfigInfo = cacheDataBusiness.QueryCoreConfigByKey("DP.WithdrawHigthMoney");
+                        //获取Dp给的公司编码
+                        var coreConfigInfoC = cacheDataBusiness.QueryCoreConfigByKey("DP.Companyid");
+                        //获取DP给的key
+                        var ck = cacheDataBusiness.QueryCoreConfigByKey("DP.Key");
+                        //获取DP访问路径
+                        var cw = cacheDataBusiness.QueryCoreConfigByKey("DP.WebUrl");
+                        decimal withdrawHigthMoney = decimal.Parse(coreConfigInfo.ConfigValue);
+                        //var writer = Common.Log.LogWriterGetter.GetLogWriter();
+                        //writer.Write("关于DP日志", "关于DP日志", Common.Log.LogType.Information, "关于DP日志", "withdrawHigthMoney===============" + withdrawHigthMoney);
+
+                        String str = String.Format("BankCardNumber=" + info.BankCardNumber + ",BankCode=" + info.BankCode + ",BankName=" + info.BankName + ",BankSubName=" + info.BankSubName + ",CityName=" + info.CityName + ",ProvinceName=" + info.ProvinceName + ",RequestMoney=" + info.RequestMoney + ",userRealName=" + info.userRealName + ",WithdrawAgent=" + info.WithdrawAgent + "");
+                        //writer.Write("输出参数写测试用例", "输出参数写测试用例", Common.Log.LogType.Information, "输出参数写测试用例", "输出参数写测试用例===============" + str);
+                        WithdrawApplyInfo wai = new WithdrawApplyInfo();
+                        wai.company_order_num = orderId;
+                        wai.company_user = userId;
+                        wai.card_name = info.userRealName;
+                        wai.card_num = info.BankCardNumber;
+                        wai.issue_bank_name = info.BankName;
+                        wai.issue_bank_address = info.BankSubName;
+                        wai.memo = "";
+                        String amount = wi.ResponseMoney.ToString();
+                        wai.amount = Math.Round(decimal.Parse(amount), 2);
+
+                        wai.company_id = Int32.Parse(coreConfigInfoC.ConfigValue);
+                        String dpresult = null;
+                        decimal dpHighmoney = decimal.Parse(coreConfigInfo.ConfigValue);
+                        if (info.RequestMoney < withdrawHigthMoney)
                         {
-                            int bankid = (int)BankCode.ICBC;
-                            wai.bank_id = bankid.ToString();
-                        }
-                        else if (htmls.Contains("招商银行"))
-                        {
-                            int bankid = (int)BankCode.CMB;
-                            wai.bank_id = bankid.ToString();
-                        }
-                        else if (htmls.Contains("建设银行"))
-                        {
-                            int bankid = (int)BankCode.CCB;
-                            wai.bank_id = bankid.ToString();
-                        }
-                        else if (htmls.Contains("农业银行"))
-                        {
-                            int bankid = (int)BankCode.ABC;
-                            wai.bank_id = bankid.ToString();
-                        }
-                        else if (htmls.Contains("中国银行"))
-                        {
-                            int bankid = (int)BankCode.BOC;
-                            wai.bank_id = bankid.ToString();
-                        }
-                        else if (htmls.Contains("交通银行"))
-                        {
-                            int bankid = (int)BankCode.BCM;
-                            wai.bank_id = bankid.ToString();
+                            if (htmls.Contains("工商银行"))
+                            {
+                                int bankid = (int)BankCode.ICBC;
+                                wai.bank_id = bankid.ToString();
+                            }
+                            else if (htmls.Contains("招商银行"))
+                            {
+                                int bankid = (int)BankCode.CMB;
+                                wai.bank_id = bankid.ToString();
+                            }
+                            else if (htmls.Contains("建设银行"))
+                            {
+                                int bankid = (int)BankCode.CCB;
+                                wai.bank_id = bankid.ToString();
+                            }
+                            else if (htmls.Contains("农业银行"))
+                            {
+                                int bankid = (int)BankCode.ABC;
+                                wai.bank_id = bankid.ToString();
+                            }
+                            else if (htmls.Contains("中国银行"))
+                            {
+                                int bankid = (int)BankCode.BOC;
+                                wai.bank_id = bankid.ToString();
+                            }
+                            else if (htmls.Contains("交通银行"))
+                            {
+                                int bankid = (int)BankCode.BCM;
+                                wai.bank_id = bankid.ToString();
+                            }
+
+                            else if (htmls.Contains("中国民生银行") || htmls.Contains("民生银行"))
+                            {
+                                int bankid = (int)BankCode.CMBC;
+                                wai.bank_id = bankid.ToString();
+                            }
+
+                            else if (htmls.Contains("中信银行"))
+                            {
+                                int bankid = (int)BankCode.ECC;
+                                wai.bank_id = bankid.ToString();
+                            }
+                            else if (htmls.Contains("浦东发展银行") || htmls.Contains("浦发") || htmls.Contains("浦东"))
+                            {
+                                int bankid = (int)BankCode.SPDB;
+                                wai.bank_id = bankid.ToString();
+                            }
+                            else if (htmls.Contains("邮政储蓄") || htmls.Contains("中国邮政"))
+                            {
+                                int bankid = (int)BankCode.PSBC;
+                                wai.bank_id = bankid.ToString();
+                            }
+
+                            else if (htmls.Contains("光大银行"))
+                            {
+                                int bankid = (int)BankCode.CEB;
+                                wai.bank_id = bankid.ToString();
+                            }
+
+                            else if (htmls.Contains("平安银行"))
+                            {
+                                int bankid = (int)BankCode.PINGAN;
+                                wai.bank_id = bankid.ToString();
+                            }
+                            else if (htmls.Contains("广东发展银行") || htmls.Contains("广发银行"))
+                            {
+                                int bankid = (int)BankCode.CGB;
+                                wai.bank_id = bankid.ToString();
+                            }
+                            else if (htmls.Contains("华夏银行"))
+                            {
+                                int bankid = (int)BankCode.HXB;
+                                wai.bank_id = bankid.ToString();
+                            }
+
+                            else if (htmls.Contains("兴业银行"))
+                            {
+                                int bankid = (int)BankCode.CIB;
+                                wai.bank_id = bankid.ToString();
+                            }
+                            else
+                            {
+                                var pListe = new List<string>();
+                                pListe.Add(string.Format("{0}={1}", "[OrderId]", orderId));
+                                pListe.Add(string.Format("{0}={1}", "[UserName]", user.DisplayName));
+                                pListe.Add(string.Format("{0}={1}", "[RequestMoney]", info.RequestMoney));
+                                pListe.Add(string.Format("{0}={1}", "[ResponseMoney]", resonseMoney));
+                                //发送短信
+                                new SiteMessageControllBusiness().DoSendSiteMessage(userId, "", "ON_User_Request_Withdraw", pListe.ToArray());
+                                DB.Commit();
+                                //刷新余额
+                                BusinessHelper.RefreshRedisUserBalance(userId);
+                                return;
+                            }
+                            dpresult = Withdrawal(wai, ck.ConfigValue, cw.ConfigValue);
+                            if (dpresult == null || dpresult == "")
+                            {
+                                DB.Rollback();
+                                throw new Exception("服务繁忙，请稍后重试,如多次尝试失败,请在客服服务时间内联系在线客服咨询");
+                            }
                         }
 
-                        else if (htmls.Contains("中国民生银行") || htmls.Contains("民生银行"))
-                        {
-                            int bankid = (int)BankCode.CMBC;
-                            wai.bank_id = bankid.ToString();
-                        }
 
-                        else if (htmls.Contains("中信银行"))
-                        {
-                            int bankid = (int)BankCode.ECC;
-                            wai.bank_id = bankid.ToString();
-                        }
-                        else if (htmls.Contains("浦东发展银行") || htmls.Contains("浦发") || htmls.Contains("浦东"))
-                        {
-                            int bankid = (int)BankCode.SPDB;
-                            wai.bank_id = bankid.ToString();
-                        }
-                        else if (htmls.Contains("邮政储蓄") || htmls.Contains("中国邮政"))
-                        {
-                            int bankid = (int)BankCode.PSBC;
-                            wai.bank_id = bankid.ToString();
-                        }
-
-                        else if (htmls.Contains("光大银行"))
-                        {
-                            int bankid = (int)BankCode.CEB;
-                            wai.bank_id = bankid.ToString();
-                        }
-
-                        else if (htmls.Contains("平安银行"))
-                        {
-                            int bankid = (int)BankCode.PINGAN;
-                            wai.bank_id = bankid.ToString();
-                        }
-                        else if (htmls.Contains("广东发展银行") || htmls.Contains("广发银行"))
-                        {
-                            int bankid = (int)BankCode.CGB;
-                            wai.bank_id = bankid.ToString();
-                        }
-                        else if (htmls.Contains("华夏银行"))
-                        {
-                            int bankid = (int)BankCode.HXB;
-                            wai.bank_id = bankid.ToString();
-                        }
-
-                        else if (htmls.Contains("兴业银行"))
-                        {
-                            int bankid = (int)BankCode.CIB;
-                            wai.bank_id = bankid.ToString();
-                        }
-                        else
-                        {
-                            var pListe = new List<string>();
-                            pListe.Add(string.Format("{0}={1}", "[OrderId]", orderId));
-                            pListe.Add(string.Format("{0}={1}", "[UserName]", user.DisplayName));
-                            pListe.Add(string.Format("{0}={1}", "[RequestMoney]", info.RequestMoney));
-                            pListe.Add(string.Format("{0}={1}", "[ResponseMoney]", resonseMoney));
-                            //发送短信
-                            new SiteMessageControllBusiness().DoSendSiteMessage(userId, "", "ON_User_Request_Withdraw", pListe.ToArray());
-                            DB.Commit();
-                            //刷新余额
-                            BusinessHelper.RefreshRedisUserBalance(userId);
-                            return;
-                        }
-                        dpresult = Withdrawal(wai, ck.ConfigValue, cw.ConfigValue);
-                        if (dpresult == null || dpresult == "")
-                        {
-                            DB.Rollback();
-                            throw new Exception("服务繁忙，请稍后重试,如多次尝试失败,请在客服服务时间内联系在线客服咨询");
-                        }
                     }
-
 
                 }
 
+                #region 发送站内消息：手机短信或站内信
+                var pList = new List<string>();
+                pList.Add(string.Format("{0}={1}", "[OrderId]", orderId));
+                pList.Add(string.Format("{0}={1}", "[UserName]", ""));
+                pList.Add(string.Format("{0}={1}", "[RequestMoney]", info.RequestMoney));
+                pList.Add(string.Format("{0}={1}", "[ResponseMoney]", resonseMoney));
+                //发送短信
+                new SiteMessageControllBusiness().DoSendSiteMessage(userId, "", "ON_User_Request_Withdraw", pList.ToArray());
+
+                #endregion
+
+                DB.Commit();
+                //刷新余额
+                BusinessHelper.RefreshRedisUserBalance(userId);
             }
-
-            #region 发送站内消息：手机短信或站内信
-            var pList = new List<string>();
-            pList.Add(string.Format("{0}={1}", "[OrderId]", orderId));
-            pList.Add(string.Format("{0}={1}", "[UserName]", ""));
-            pList.Add(string.Format("{0}={1}", "[RequestMoney]", info.RequestMoney));
-            pList.Add(string.Format("{0}={1}", "[ResponseMoney]", resonseMoney));
-            //发送短信
-            new SiteMessageControllBusiness().DoSendSiteMessage(userId, "", "ON_User_Request_Withdraw", pList.ToArray());
-
-            #endregion
-
-            DB.Commit();
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw ex;
+            }
+          
 
 
-            //刷新余额
-            BusinessHelper.RefreshRedisUserBalance(userId);
+          
 
 
         }

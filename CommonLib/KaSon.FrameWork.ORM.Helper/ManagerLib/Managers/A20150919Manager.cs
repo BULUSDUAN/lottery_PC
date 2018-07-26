@@ -66,7 +66,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public void UpdateA20150919_注册绑定送红包(E_A20150919_注册绑定送红包 entity)
         {
-            DB.GetDal<E_A20150919_注册绑定送红包>().Update(entity);
+            var num= DB.GetDal<E_A20150919_注册绑定送红包>().Update(entity);
         }
 
         public void UpdateA20150919_充值送红包配置(E_A20150919_充值送红包配置 entity)

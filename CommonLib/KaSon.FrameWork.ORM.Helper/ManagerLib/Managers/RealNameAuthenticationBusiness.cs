@@ -106,9 +106,10 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public void UpdateAuthenticationRealName(string authFrom, string userId, string realName, string cardType, string idCardNumber, string updateBy)
         {
-
-            using (DB) {
-                DB.Begin();
+            DB.Begin();
+            try
+            {
+              
 
                 var manager = new UserRealNameManager();
                 var entity = GetAuthenticatedRealName(userId);
@@ -127,7 +128,14 @@ namespace KaSon.FrameWork.ORM.Helper
                 entity.IsSettedRealName = true;
                 manager.UpdateUserRealName(entity);
                 DB.Commit();
-            } 
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw ex;
+            }
+              
+            
                
 
         }

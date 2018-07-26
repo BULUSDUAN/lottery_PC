@@ -66,43 +66,51 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
         {
             bool isSuccess;
 
-            DB.Begin();
+            try
+            {
+                DB.Begin();
 
-            //查询是否发送过验证码
-            var validation = DB.CreateQuery<E_Validation_Mobile>().Where(p => p.Mobile == mobile && p.Category == category).FirstOrDefault();
-            if (validation == null)
-            {
-                throw new Exception("尚未发送验证码");
-            }
+                //查询是否发送过验证码
+                var validation = DB.CreateQuery<E_Validation_Mobile>().Where(p => p.Mobile == mobile && p.Category == category).FirstOrDefault();
+                if (validation == null)
+                {
+                    throw new Exception("尚未发送验证码");
+                }
 
-            //新增发送短信的记录
-            var MobileValidationLog = new E_Validation_Mobile_Log
-            {
-                CreateTime = DateTime.Now,
-                DB_ValidateCode = validation.ValidateCode,
-                Mobile = mobile,
-                User_ValidateCode = validateCode,
-            };
-            DB.GetDal<E_Validation_Mobile_Log>().Add(MobileValidationLog);
+                //新增发送短信的记录
+                var MobileValidationLog = new E_Validation_Mobile_Log
+                {
+                    CreateTime = DateTime.Now,
+                    DB_ValidateCode = validation.ValidateCode,
+                    Mobile = mobile,
+                    User_ValidateCode = validateCode,
+                };
+                DB.GetDal<E_Validation_Mobile_Log>().Add(MobileValidationLog);
 
-            if (validation.RetryTimes >= maxRetryTime)
-            {
-                throw new Exception(string.Format("重试次数超出最大限制次数【{0}】次，请尝试重新发送验证码。", maxRetryTime));
-            }
-            if (validation.ValidateCode == validateCode)
-            {
-                DB.GetDal<E_Validation_Mobile>().Delete(validation);
-                isSuccess = true;
-            }
-            else
-            {
-                validation.RetryTimes++;
-                validation.UpdateTime = DateTime.Now;
-                DB.GetDal<E_Validation_Mobile>().Update(validation);
-                isSuccess = false;
-            }
+                if (validation.RetryTimes >= maxRetryTime)
+                {
+                    throw new Exception(string.Format("重试次数超出最大限制次数【{0}】次，请尝试重新发送验证码。", maxRetryTime));
+                }
+                if (validation.ValidateCode == validateCode)
+                {
+                    DB.GetDal<E_Validation_Mobile>().Delete(validation);
+                    isSuccess = true;
+                }
+                else
+                {
+                    validation.RetryTimes++;
+                    validation.UpdateTime = DateTime.Now;
+                    DB.GetDal<E_Validation_Mobile>().Update(validation);
+                    isSuccess = false;
+                }
 
-            DB.Commit();
+                DB.Commit();
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw ex;
+            }
 
             return isSuccess;
         }

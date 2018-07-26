@@ -33,7 +33,7 @@ namespace KaSon.FrameWork.ORM.Helper
         ///  用户支出，申请提现
         /// </summary>
         public  WithdrawCategory Payout_To_Frozen_Withdraw(string category, string userId, string orderId, decimal payoutMoney,
-            string summary, string place, string password, out decimal responseMoney)
+            string summary, string place, string balancepwd, out decimal responseMoney)
         {
             var requestMoney = payoutMoney;
             if (payoutMoney <= 0M)
@@ -48,8 +48,8 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                 if (userBalance.NeedPwdPlace == "ALL" || userBalance.NeedPwdPlace.Split('|', ',').Contains(place))
                 {
-                    password = Encipherment.MD5(string.Format("{0}{1}", password, _gbKey)).ToUpper();
-                    if (!userBalance.Password.ToUpper().Equals(password))
+                    balancepwd = Encipherment.MD5(string.Format("{0}{1}", balancepwd, _gbKey)).ToUpper();
+                    if (!userBalance.Password.ToUpper().Equals(balancepwd))
                     {
                         throw new Exception("资金密码输入错误");
                     }

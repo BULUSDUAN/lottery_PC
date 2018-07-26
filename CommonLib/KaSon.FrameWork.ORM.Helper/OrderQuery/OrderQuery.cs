@@ -1844,9 +1844,9 @@ namespace KaSon.FrameWork.ORM.Helper
         public CommonActionResult BDFXAttention(string currUserId, string bgzUserId)
         {
             CommonActionResult result = new CommonActionResult();
+            DB.Begin();
             try
             {
-                DB.Begin();
                 #region 关注
                 if (string.IsNullOrEmpty(currUserId))
                     throw new Exception("关注人编号不能为空");
@@ -1900,10 +1900,6 @@ namespace KaSon.FrameWork.ORM.Helper
                 }
                 #endregion
                 DB.Commit();
-                result.IsSuccess = true;
-                result.Message = "关注成功";
-                result.ReturnValue = "1";
-                return result;
             }
             catch (Exception)
             {
@@ -1913,6 +1909,10 @@ namespace KaSon.FrameWork.ORM.Helper
                 result.ReturnValue = "0";
                 return result;
             }
+            result.IsSuccess = true;
+            result.Message = "关注成功";
+            result.ReturnValue = "1";
+            return result;
         }
         /// <summary>
         /// 取消关注
@@ -1922,10 +1922,10 @@ namespace KaSon.FrameWork.ORM.Helper
         public CommonActionResult BDFXCancelAttention(string currUserId, string bgzUserId)
         {
             CommonActionResult result = new CommonActionResult();
+            DB.Begin();
             try
             {
                 #region 取消关注
-                DB.Begin();
                 var singleTreasureAttention = QuerySingleTreasureAttentionByUserId(bgzUserId, currUserId);
                 if (singleTreasureAttention == null || string.IsNullOrEmpty(singleTreasureAttention.ConcernedUserId))
                     throw new Exception("您还未关注他");
@@ -1949,10 +1949,6 @@ namespace KaSon.FrameWork.ORM.Helper
                 }
                 DB.Commit();
                 #endregion
-                result.IsSuccess = true;
-                result.Message = "取消关注成功";
-                result.ReturnValue = "1";
-                return result;
             }
             catch (Exception)
             {
@@ -1962,6 +1958,10 @@ namespace KaSon.FrameWork.ORM.Helper
                 result.ReturnValue = "0";
                 return result;
             }
+            result.IsSuccess = true;
+            result.Message = "取消关注成功";
+            result.ReturnValue = "1";
+            return result;
         }
 
         public C_SingleTreasure_Attention QuerySingleTreasureAttentionByUserId(string beConcernedUserId, string concernedUserId)
@@ -1990,7 +1990,7 @@ namespace KaSon.FrameWork.ORM.Helper
         }
         public BDFXOrderDetailInfo QueryBDFXOrderDetailBySchemeId_Dal(string schemeId)
         {
-            var orderRunning = DB.CreateQuery<C_Sports_Order_Running>().FirstOrDefault(s => s.SchemeId == schemeId);
+            var orderRunning = DB.CreateQuery<C_Sports_Order_Running>().Where(s => s.SchemeId == schemeId).FirstOrDefault();
             if (orderRunning != null && !string.IsNullOrEmpty(orderRunning.SchemeId))
             {
                 var query = from t in DB.CreateQuery<C_TotalSingleTreasure>()
@@ -2029,7 +2029,14 @@ namespace KaSon.FrameWork.ORM.Helper
                     TicketStatus = (TicketStatus)p.o.TicketStatus,
                 });
                 if (result != null && result.Count() > 0)
+                {
                     return result.FirstOrDefault();
+                }
+                else
+                {
+                    return null;
+                }
+                  
             }
             else
             {
@@ -2069,10 +2076,15 @@ namespace KaSon.FrameWork.ORM.Helper
                     TicketStatus = (TicketStatus)p.o.TicketStatus,
                 });
                 if (result != null && result.Count() > 0)
+                {
                     return result.FirstOrDefault();
-            }
+                }
+                else
+                {
+                    return null;
 
-            return new BDFXOrderDetailInfo();
+                }
+            }
         }
         /// <summary>
         /// 查询高手排行/我的关注
