@@ -29,7 +29,7 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(2)]
             [Field("Category")]
-            public int Category{ get; set; }
+            public int? Category{ get; set; }
             /// <summary>
             // 
             ///</summary>
@@ -53,18 +53,18 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(6)]
             [Field("Amount")]
-            public int Amount{ get; set; }
+            public int? Amount{ get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(7)]
             [Field("GateWay")]
-            public int GateWay{ get; set; }
+            public int? GateWay{ get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(8)]
             [Field("UpdateTime")]
-            public DateTime UpdateTime{ get; set; }
+            public DateTime? UpdateTime{ get; set; }
     }
 }

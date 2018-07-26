@@ -19,46 +19,46 @@ namespace EntityModel
         
         }
             /// <summary>
-            // 主键
+            // 
             ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
             /// <summary>
-            // 手机号码
+            // 
             ///</summary>
             [ProtoMember(2)]
             [Field("Mobile")]
             public string Mobile{ get; set; }
             /// <summary>
-            // 类别
+            // 
             ///</summary>
             [ProtoMember(3)]
             [Field("Category")]
             public string Category{ get; set; }
             /// <summary>
-            // 验证码
+            // 
             ///</summary>
             [ProtoMember(4)]
             [Field("ValidateCode")]
             public string ValidateCode{ get; set; }
             /// <summary>
-            // 发送时间
+            // 
             ///</summary>
             [ProtoMember(5)]
             [Field("SendTimes")]
-            public int SendTimes{ get; set; }
+            public int? SendTimes{ get; set; }
             /// <summary>
-            // 重试时间
+            // 
             ///</summary>
             [ProtoMember(6)]
             [Field("RetryTimes")]
-            public int RetryTimes{ get; set; }
+            public int? RetryTimes{ get; set; }
             /// <summary>
-            // 更新时间
+            // 
             ///</summary>
             [ProtoMember(7)]
             [Field("UpdateTime")]
-            public DateTime UpdateTime{ get; set; }
+            public DateTime? UpdateTime{ get; set; }
     }
 }

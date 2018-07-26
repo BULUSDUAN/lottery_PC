@@ -19,22 +19,22 @@ namespace EntityModel
         
         }
             /// <summary>
-            // 彩种
+            // 
             ///</summary>
             [ProtoMember(1)]
             [Field("GameCode", IsIdenty = false, IsPrimaryKey = true)]
             public string GameCode{ get; set; }
             /// <summary>
-            // 名称
+            // 
             ///</summary>
             [ProtoMember(2)]
             [Field("DisplayName")]
             public string DisplayName{ get; set; }
             /// <summary>
-            // 启用状态
+            // 
             ///</summary>
             [ProtoMember(3)]
             [Field("EnableStatus")]
-            public int EnableStatus{ get; set; }
+            public int? EnableStatus{ get; set; }
     }
 }

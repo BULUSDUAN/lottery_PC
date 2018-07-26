@@ -19,34 +19,34 @@ namespace EntityModel
         
         }
             /// <summary>
-            // 消息主键Id
+            // 
             ///</summary>
             [ProtoMember(1)]
             [Field("MsgId", IsIdenty = true, IsPrimaryKey = true)]
             public int MsgId{ get; set; }
             /// <summary>
-            // 手机号码
+            // 
             ///</summary>
             [ProtoMember(2)]
             [Field("PhoneNumber")]
             public string PhoneNumber{ get; set; }
             /// <summary>
-            // IP地址
+            // 
             ///</summary>
             [ProtoMember(3)]
             [Field("IP")]
             public string IP{ get; set; }
             /// <summary>
-            // 消息内容
+            // 
             ///</summary>
             [ProtoMember(4)]
             [Field("MsgType")]
-            public int MsgType{ get; set; }
+            public int? MsgType{ get; set; }
             /// <summary>
-            // 创建时间
+            // 
             ///</summary>
             [ProtoMember(5)]
             [Field("CreateTime")]
-            public DateTime CreateTime{ get; set; }
+            public DateTime? CreateTime{ get; set; }
     }
 }

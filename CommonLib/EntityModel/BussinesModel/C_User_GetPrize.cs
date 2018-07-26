@@ -8,7 +8,7 @@ using System.Text;
 namespace EntityModel
 {
     /// <summary>
-    // 用户获取奖品
+    // 
     ///</summary>
     [ProtoContract]
     [Entity("C_User_GetPrize",Type = EntityType.Table)]
@@ -19,23 +19,23 @@ namespace EntityModel
         
         }
             /// <summary>
-            // 主键
+            // 
             ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
             /// <summary>
-            // 用户编号
+            // 
             ///</summary>
             [ProtoMember(2)]
             [Field("UserId")]
             public string UserId{ get; set; }
             /// <summary>
-            // 订单金额
+            // 
             ///</summary>
             [ProtoMember(3)]
             [Field("OrderMoney")]
-            public decimal OrderMoney{ get; set; }
+            public decimal? OrderMoney{ get; set; }
             /// <summary>
             // 奖品类型[10:IPHONE5s；20：QQ3；30：送2元；40：送5元；50：送10元；60：送58元；70：送588元；80：送2888元]
             ///</summary>
@@ -43,19 +43,19 @@ namespace EntityModel
             [Field("PrizeType")]
             public string PrizeType{ get; set; }
             /// <summary>
-            // 积分
+            // 
             ///</summary>
             [ProtoMember(5)]
             [Field("PayInegral")]
-            public int PayInegral{ get; set; }
+            public int? PayInegral{ get; set; }
             /// <summary>
-            // 付款金额
+            // 
             ///</summary>
             [ProtoMember(6)]
             [Field("GiveMoney")]
-            public decimal GiveMoney{ get; set; }
+            public decimal? GiveMoney{ get; set; }
             /// <summary>
-            // 备注
+            // 
             ///</summary>
             [ProtoMember(7)]
             [Field("Summary")]
@@ -65,6 +65,6 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(8)]
             [Field("CreateTime")]
-            public DateTime CreateTime{ get; set; }
+            public DateTime? CreateTime{ get; set; }
     }
 }

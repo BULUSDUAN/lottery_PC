@@ -19,34 +19,34 @@ namespace EntityModel
         
         }
             /// <summary>
-            // 方案编号
+            // 
             ///</summary>
             [ProtoMember(1)]
             [Field("SchemeId", IsIdenty = false, IsPrimaryKey = true)]
             public string SchemeId{ get; set; }
             /// <summary>
-            // 用户编号
+            // 
             ///</summary>
             [ProtoMember(2)]
             [Field("UserId")]
             public string UserId{ get; set; }
             /// <summary>
-            // 投注号码
+            // 
             ///</summary>
             [ProtoMember(3)]
             [Field("AnteCode")]
             public string AnteCode{ get; set; }
             /// <summary>
-            // 活动类型
+            // 
             ///</summary>
             [ProtoMember(4)]
             [Field("ActivityType")]
-            public int ActivityType{ get; set; }
+            public int? ActivityType{ get; set; }
             /// <summary>
-            // 创建时间
+            // 
             ///</summary>
             [ProtoMember(5)]
             [Field("CreateTime")]
-            public DateTime CreateTime{ get; set; }
+            public DateTime? CreateTime{ get; set; }
     }
 }

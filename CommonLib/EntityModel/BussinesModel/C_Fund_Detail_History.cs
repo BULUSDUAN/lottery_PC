@@ -8,7 +8,7 @@ using System.Text;
 namespace EntityModel
 {
     /// <summary>
-    // （资金明细历史）【与资金明细表相同】
+    // 
     ///</summary>
     [ProtoContract]
     [Entity("C_Fund_Detail_History",Type = EntityType.Table)]
@@ -71,19 +71,19 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(9)]
             [Field("PayMoney")]
-            public decimal PayMoney{ get; set; }
+            public decimal? PayMoney{ get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(10)]
             [Field("BeforeBalance")]
-            public decimal BeforeBalance{ get; set; }
+            public decimal? BeforeBalance{ get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(11)]
             [Field("AfterBalance")]
-            public decimal AfterBalance{ get; set; }
+            public decimal? AfterBalance{ get; set; }
             /// <summary>
             // 
             ///</summary>

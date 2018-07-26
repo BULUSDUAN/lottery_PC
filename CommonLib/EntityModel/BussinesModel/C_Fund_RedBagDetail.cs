@@ -8,7 +8,7 @@ using System.Text;
 namespace EntityModel
 {
     /// <summary>
-    // 红包明细
+    // 
     ///</summary>
     [ProtoContract]
     [Entity("C_Fund_RedBagDetail",Type = EntityType.Table)]
@@ -29,7 +29,7 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(2)]
             [Field("RedBagCategory")]
-            public int RedBagCategory{ get; set; }
+            public int? RedBagCategory{ get; set; }
             /// <summary>
             // 
             ///</summary>
@@ -47,12 +47,12 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(5)]
             [Field("RedBagMoney")]
-            public decimal RedBagMoney{ get; set; }
+            public decimal? RedBagMoney{ get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(6)]
             [Field("CreateTime")]
-            public DateTime CreateTime{ get; set; }
+            public DateTime? CreateTime{ get; set; }
     }
 }

@@ -29,12 +29,12 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(2)]
             [Field("Counts")]
-            public int Counts{ get; set; }
+            public int? Counts{ get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(3)]
             [Field("LastUpdateTime")]
-            public DateTime LastUpdateTime{ get; set; }
+            public DateTime? LastUpdateTime{ get; set; }
     }
 }

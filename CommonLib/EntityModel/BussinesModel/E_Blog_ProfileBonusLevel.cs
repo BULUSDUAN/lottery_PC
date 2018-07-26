@@ -8,7 +8,7 @@ using System.Text;
 namespace EntityModel
 {
     /// <summary>
-    // 用户获奖记录
+    // 
     ///</summary>
     [ProtoContract]
     [Entity("E_Blog_ProfileBonusLevel",Type = EntityType.Table)]
@@ -19,82 +19,82 @@ namespace EntityModel
         
         }
             /// <summary>
-            // 主键
+            // 
             ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
             /// <summary>
-            // 用户编号
+            // 
             ///</summary>
             [ProtoMember(2)]
             [Field("UserId")]
             public string UserId{ get; set; }
             /// <summary>
-            // 最高中奖等级
+            // 
             ///</summary>
             [ProtoMember(3)]
             [Field("MaxLevelValue")]
-            public int MaxLevelValue{ get; set; }
+            public int? MaxLevelValue{ get; set; }
             /// <summary>
-            // 最高中奖中文
+            // 
             ///</summary>
             [ProtoMember(4)]
             [Field("MaxLevelName")]
             public string MaxLevelName{ get; set; }
             /// <summary>
-            // 中奖一百元次数
+            // 
             ///</summary>
             [ProtoMember(5)]
             [Field("WinOneHundredCount")]
-            public int WinOneHundredCount{ get; set; }
+            public int? WinOneHundredCount{ get; set; }
             /// <summary>
-            // 中一千元次数
+            // 
             ///</summary>
             [ProtoMember(6)]
             [Field("WinOneThousandCount")]
-            public int WinOneThousandCount{ get; set; }
+            public int? WinOneThousandCount{ get; set; }
             /// <summary>
-            // 中一万元次数
+            // 
             ///</summary>
             [ProtoMember(7)]
             [Field("WinTenThousandCount")]
-            public int WinTenThousandCount{ get; set; }
+            public int? WinTenThousandCount{ get; set; }
             /// <summary>
-            // 中十万元次数
+            // 
             ///</summary>
             [ProtoMember(8)]
             [Field("WinOneHundredThousandCount")]
-            public int WinOneHundredThousandCount{ get; set; }
+            public int? WinOneHundredThousandCount{ get; set; }
             /// <summary>
-            // 中百万元次数
+            // 
             ///</summary>
             [ProtoMember(9)]
             [Field("WinOneMillionCount")]
-            public int WinOneMillionCount{ get; set; }
+            public int? WinOneMillionCount{ get; set; }
             /// <summary>
-            // 中一千万次数
+            // 
             ///</summary>
             [ProtoMember(10)]
             [Field("WinTenMillionCount")]
-            public int WinTenMillionCount{ get; set; }
+            public int? WinTenMillionCount{ get; set; }
             /// <summary>
-            // 中一亿元次数
+            // 
             ///</summary>
             [ProtoMember(11)]
             [Field("WinHundredMillionCount")]
-            public int WinHundredMillionCount{ get; set; }
+            public int? WinHundredMillionCount{ get; set; }
             /// <summary>
-            // 总中奖金额
+            // 
             ///</summary>
             [ProtoMember(12)]
             [Field("TotalBonusMoney")]
-            public decimal TotalBonusMoney{ get; set; }
+            public decimal? TotalBonusMoney{ get; set; }
             /// <summary>
-            // 更新时间
+            // 
             ///</summary>
             [ProtoMember(13)]
             [Field("UpdateTime")]
-            public DateTime UpdateTime{ get; set; }
+            public DateTime? UpdateTime{ get; set; }
     }
 }

@@ -47,7 +47,7 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(5)]
             [Field("StopBettingTime")]
-            public DateTime StopBettingTime{ get; set; }
+            public DateTime? StopBettingTime{ get; set; }
             /// <summary>
             // 
             ///</summary>
@@ -59,6 +59,6 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(7)]
             [Field("CreateTime")]
-            public DateTime CreateTime{ get; set; }
+            public DateTime? CreateTime{ get; set; }
     }
 }

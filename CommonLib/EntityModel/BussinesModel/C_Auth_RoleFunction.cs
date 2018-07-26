@@ -37,13 +37,13 @@ namespace EntityModel
             [Field("FunctionId")]
             public string FunctionId{ get; set; }
             /// <summary>
-            // 允许/禁止
+            // 
             ///</summary>
             [ProtoMember(4)]
             [Field("Status")]
-            public int Status{ get; set; }
+            public int? Status{ get; set; }
             /// <summary>
-            // R:读；W:写
+            // 
             ///</summary>
             [ProtoMember(5)]
             [Field("Mode")]

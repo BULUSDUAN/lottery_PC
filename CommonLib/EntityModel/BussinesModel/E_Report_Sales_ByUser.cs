@@ -47,30 +47,30 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(5)]
             [Field("OrderCount")]
-            public int OrderCount{ get; set; }
+            public int? OrderCount{ get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(6)]
             [Field("OrderMoney")]
-            public decimal OrderMoney{ get; set; }
+            public decimal? OrderMoney{ get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(7)]
             [Field("PayCount")]
-            public int PayCount{ get; set; }
+            public int? PayCount{ get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(8)]
             [Field("PayMoney")]
-            public decimal PayMoney{ get; set; }
+            public decimal? PayMoney{ get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(9)]
             [Field("UpdateTime")]
-            public DateTime UpdateTime{ get; set; }
+            public DateTime? UpdateTime{ get; set; }
     }
 }

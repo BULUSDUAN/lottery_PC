@@ -19,28 +19,28 @@ namespace EntityModel
         
         }
             /// <summary>
-            // 主键
+            // 
             ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
             /// <summary>
-            // 彩种代码
+            // 
             ///</summary>
             [ProtoMember(2)]
             [Field("GameCode")]
             public string GameCode{ get; set; }
             /// <summary>
-            // 使用比率
+            // 
             ///</summary>
             [ProtoMember(3)]
             [Field("UsePercent")]
-            public decimal UsePercent{ get; set; }
+            public decimal? UsePercent{ get; set; }
             /// <summary>
-            // 创建时间
+            // 
             ///</summary>
             [ProtoMember(4)]
             [Field("CreateTime")]
-            public DateTime CreateTime{ get; set; }
+            public DateTime? CreateTime{ get; set; }
     }
 }

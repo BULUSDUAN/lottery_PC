@@ -19,19 +19,19 @@ namespace EntityModel
         
         }
             /// <summary>
-            // 主键ID，自增长
+            // 
             ///</summary>
             [ProtoMember(1)]
             [Field("FinanceId", IsIdenty = true, IsPrimaryKey = true)]
             public int FinanceId{ get; set; }
             /// <summary>
-            // 财务人员
+            // 
             ///</summary>
             [ProtoMember(2)]
             [Field("UserId")]
             public string UserId{ get; set; }
             /// <summary>
-            // 操作级别 101：初级；102：高级
+            // 
             ///</summary>
             [ProtoMember(3)]
             [Field("OperateRank")]
@@ -43,28 +43,28 @@ namespace EntityModel
             [Field("OperateType")]
             public string OperateType{ get; set; }
             /// <summary>
-            // 最小金额
+            // 
             ///</summary>
             [ProtoMember(5)]
             [Field("MinMoney")]
-            public decimal MinMoney{ get; set; }
+            public decimal? MinMoney{ get; set; }
             /// <summary>
-            // 最大金额
+            // 
             ///</summary>
             [ProtoMember(6)]
             [Field("MaxMoney")]
-            public decimal MaxMoney{ get; set; }
+            public decimal? MaxMoney{ get; set; }
             /// <summary>
-            // 创建人员Id
+            // 
             ///</summary>
             [ProtoMember(7)]
             [Field("OperatorId")]
             public string OperatorId{ get; set; }
             /// <summary>
-            // 创建时间
+            // 
             ///</summary>
             [ProtoMember(8)]
             [Field("CreateTime")]
-            public DateTime CreateTime{ get; set; }
+            public DateTime? CreateTime{ get; set; }
     }
 }

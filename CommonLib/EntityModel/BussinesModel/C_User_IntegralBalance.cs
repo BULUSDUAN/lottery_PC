@@ -8,7 +8,7 @@ using System.Text;
 namespace EntityModel
 {
     /// <summary>
-    // 用户积分余额
+    // 
     ///</summary>
     [ProtoContract]
     [Entity("C_User_IntegralBalance",Type = EntityType.Table)]
@@ -19,28 +19,28 @@ namespace EntityModel
         
         }
             /// <summary>
-            // 用户编号
+            // 
             ///</summary>
             [ProtoMember(1)]
             [Field("UserId", IsIdenty = false, IsPrimaryKey = true)]
             public string UserId{ get; set; }
             /// <summary>
-            // 当前积分余额
+            // 
             ///</summary>
             [ProtoMember(2)]
             [Field("CurrIntegralBalance")]
-            public int CurrIntegralBalance{ get; set; }
+            public int? CurrIntegralBalance{ get; set; }
             /// <summary>
-            // 用户积分余额
+            // 
             ///</summary>
             [ProtoMember(3)]
             [Field("UseIntegralBalance")]
-            public int UseIntegralBalance{ get; set; }
+            public int? UseIntegralBalance{ get; set; }
             /// <summary>
-            // 创建时间
+            // 
             ///</summary>
             [ProtoMember(4)]
             [Field("CreateTime")]
-            public DateTime CreateTime{ get; set; }
+            public DateTime? CreateTime{ get; set; }
     }
 }

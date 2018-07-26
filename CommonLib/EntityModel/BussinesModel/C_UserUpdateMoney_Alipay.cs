@@ -35,12 +35,12 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(3)]
             [Field("updateStatus")]
-            public bool updateStatus{ get; set; }
+            public bool? updateStatus{ get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(4)]
             [Field("createTime")]
-            public DateTime createTime{ get; set; }
+            public DateTime? createTime{ get; set; }
     }
 }

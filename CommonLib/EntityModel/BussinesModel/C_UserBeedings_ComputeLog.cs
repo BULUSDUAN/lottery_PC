@@ -65,6 +65,6 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(8)]
             [Field("CreateTime")]
-            public DateTime CreateTime{ get; set; }
+            public DateTime? CreateTime{ get; set; }
     }
 }

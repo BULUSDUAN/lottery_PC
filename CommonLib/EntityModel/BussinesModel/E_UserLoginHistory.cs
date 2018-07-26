@@ -47,19 +47,19 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(5)]
             [Field("TaskCategory")]
-            public int TaskCategory{ get; set; }
+            public int? TaskCategory{ get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(6)]
             [Field("ContinuousLoginCount")]
-            public int ContinuousLoginCount{ get; set; }
+            public int? ContinuousLoginCount{ get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(7)]
             [Field("ValueGrowth")]
-            public int ValueGrowth{ get; set; }
+            public int? ValueGrowth{ get; set; }
             /// <summary>
             // 
             ///</summary>
@@ -71,6 +71,6 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(9)]
             [Field("CreateTime")]
-            public DateTime CreateTime{ get; set; }
+            public DateTime? CreateTime{ get; set; }
     }
 }

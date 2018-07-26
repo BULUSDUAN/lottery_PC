@@ -19,34 +19,34 @@ namespace EntityModel
         
         }
             /// <summary>
-            // 主键Id
+            // 
             ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
             /// <summary>
-            // 比赛编号
+            // 
             ///</summary>
             [ProtoMember(2)]
             [Field("MatchId")]
             public string MatchId{ get; set; }
             /// <summary>
-            // 比赛名字
+            // 
             ///</summary>
             [ProtoMember(3)]
             [Field("MatchName")]
             public string MatchName{ get; set; }
             /// <summary>
-            // 队伍图片路径
+            // 
             ///</summary>
             [ProtoMember(4)]
             [Field("ImgPath")]
             public string ImgPath{ get; set; }
             /// <summary>
-            // 创建时间
+            // 
             ///</summary>
             [ProtoMember(5)]
             [Field("CreateTime")]
-            public DateTime CreateTime{ get; set; }
+            public DateTime? CreateTime{ get; set; }
     }
 }

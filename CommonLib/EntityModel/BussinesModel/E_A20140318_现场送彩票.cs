@@ -19,52 +19,52 @@ namespace EntityModel
         
         }
             /// <summary>
-            // 主键
+            // 
             ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
             /// <summary>
-            // 用户编号
+            // 
             ///</summary>
             [ProtoMember(2)]
             [Field("UserId")]
             public string UserId{ get; set; }
             /// <summary>
-            // 手机号码
+            // 
             ///</summary>
             [ProtoMember(3)]
             [Field("MobileNumber")]
             public string MobileNumber{ get; set; }
             /// <summary>
-            // 方案编号
+            // 
             ///</summary>
             [ProtoMember(4)]
             [Field("SchemeId")]
             public string SchemeId{ get; set; }
             /// <summary>
-            // 注数
+            // 
             ///</summary>
             [ProtoMember(5)]
             [Field("BetCount")]
-            public int BetCount{ get; set; }
+            public int? BetCount{ get; set; }
             /// <summary>
-            // 投注金额
+            // 
             ///</summary>
             [ProtoMember(6)]
             [Field("BetMoney")]
-            public decimal BetMoney{ get; set; }
+            public decimal? BetMoney{ get; set; }
             /// <summary>
-            // 中奖金额
+            // 
             ///</summary>
             [ProtoMember(7)]
             [Field("BonusMoney")]
-            public decimal BonusMoney{ get; set; }
+            public decimal? BonusMoney{ get; set; }
             /// <summary>
-            // 创建时间
+            // 
             ///</summary>
             [ProtoMember(8)]
             [Field("CreateTime")]
-            public DateTime CreateTime{ get; set; }
+            public DateTime? CreateTime{ get; set; }
     }
 }

@@ -19,34 +19,34 @@ namespace EntityModel
         
         }
             /// <summary>
-            // 主键
+            // 
             ///</summary>
             [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
             /// <summary>
-            // 美家颂号码
+            // 
             ///</summary>
             [ProtoMember(2)]
             [Field("MJSNumber")]
             public string MJSNumber{ get; set; }
             /// <summary>
-            // 用户编号
+            // 
             ///</summary>
             [ProtoMember(3)]
             [Field("BelongUserId")]
             public string BelongUserId{ get; set; }
             /// <summary>
-            // 使用时间
+            // 
             ///</summary>
             [ProtoMember(4)]
             [Field("UsedTime")]
-            public DateTime UsedTime{ get; set; }
+            public DateTime? UsedTime{ get; set; }
             /// <summary>
-            // 创建时间
+            // 
             ///</summary>
             [ProtoMember(5)]
             [Field("CreateTime")]
-            public DateTime CreateTime{ get; set; }
+            public DateTime? CreateTime{ get; set; }
     }
 }

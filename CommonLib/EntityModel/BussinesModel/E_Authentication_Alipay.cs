@@ -19,28 +19,28 @@ namespace EntityModel
         
         }
             /// <summary>
-            // 用户编号
+            // 
             ///</summary>
             [ProtoMember(1)]
             [Field("UserId", IsIdenty = false, IsPrimaryKey = true)]
             public string UserId{ get; set; }
             /// <summary>
-            // 支付宝账户
+            // 
             ///</summary>
             [ProtoMember(2)]
             [Field("AlipayAccount")]
             public string AlipayAccount{ get; set; }
             /// <summary>
-            // 更新时间
+            // 
             ///</summary>
             [ProtoMember(3)]
             [Field("UpdateTime")]
-            public DateTime UpdateTime{ get; set; }
+            public DateTime? UpdateTime{ get; set; }
             /// <summary>
-            // 创建时间
+            // 
             ///</summary>
             [ProtoMember(4)]
             [Field("CreateTime")]
-            public DateTime CreateTime{ get; set; }
+            public DateTime? CreateTime{ get; set; }
     }
 }

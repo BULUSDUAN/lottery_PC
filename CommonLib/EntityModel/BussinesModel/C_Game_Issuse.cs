@@ -83,12 +83,12 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(11)]
             [Field("AwardTime")]
-            public DateTime AwardTime{ get; set; }
+            public DateTime? AwardTime{ get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(12)]
             [Field("CreateTime")]
-            public DateTime CreateTime{ get; set; }
+            public DateTime? CreateTime{ get; set; }
     }
 }
