@@ -1404,7 +1404,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "查询订单详情失败",
                     MsgId = entity.MsgId,
-                    Value = ex.ToString(),
+                    Value = "查询订单详情失败",
                 });
             }
         }
