@@ -65,14 +65,14 @@ namespace Lottery.Api.Controllers
                 Dictionary<string, object> balanceParam = new Dictionary<string, object>();
                 balanceParam["userToken"] = loginInfo.UserToken;
                 var balance = await _serviceProxyProvider.Invoke<UserBalanceInfo>(balanceParam, "api/user/QueryMyBalance");
-
+              
                 var bankInfo = await _serviceProxyProvider.Invoke<C_BankCard>(balanceParam, "api/user/QueryBankCard");
 
                 if (bankInfo == null) bankInfo = new C_BankCard();
-
+          
                 var unReadCount = await _serviceProxyProvider.Invoke<int>(balanceParam, "api/user/GetMyUnreadInnerMailCount");
-
-
+              
+               
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
@@ -136,7 +136,7 @@ namespace Lottery.Api.Controllers
             }
 
         }
-
+       
         #region 还需要的成长值
 
         private decimal GrowthStatus(decimal UserGrowth)
@@ -208,7 +208,7 @@ namespace Lottery.Api.Controllers
                     throw new Exception("Token不能为空");
                 paramCheck["newPassword"] = newPassword;
                 paramCheck["userId"] = userId;
-
+                
                 param["oldPassword"] = oldPassword;
                 param["newPassword"] = newPassword;
                 param["userToken"] = userToken;
@@ -356,13 +356,13 @@ namespace Lottery.Api.Controllers
             }
         }
 
-        /// <summary>
-        /// 适应web版本注册 211
-        /// </summary>
-        /// <param name="_serviceProxyProvider"></param>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        public async Task<IActionResult> RegisterWeb([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+            /// <summary>
+            /// 适应web版本注册 211
+            /// </summary>
+            /// <param name="_serviceProxyProvider"></param>
+            /// <param name="entity"></param>
+            /// <returns></returns>
+            public async Task<IActionResult> RegisterWeb([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
             {
@@ -384,7 +384,7 @@ namespace Lottery.Api.Controllers
                 {
                     schemeSource = SchemeSource.Iphone;
                 }
-
+              
                 var userInfo = new RegisterInfo_Local();
                 //userInfo.RegisterIp = IpManager.IPAddress;
                 userInfo.RegisterIp = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
@@ -470,8 +470,8 @@ namespace Lottery.Api.Controllers
                         });
                     }
                 }
-
-                return JsonEx(new LotteryServiceResponse
+             
+                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = string.IsNullOrEmpty(result.Message) ? result.Message : result.Message.Replace("验证码输入不正确", "手机验证码输入不正确"),
@@ -500,23 +500,38 @@ namespace Lottery.Api.Controllers
         /// <returns></returns>
         public async Task<IActionResult> RegisterSendmsg([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
+            var returnResult = new LotteryServiceResponse()
+            {
+                Code = ResponseCode.失败,
+                //Message = ex.Message,
+                MsgId = entity.MsgId,
+                //Value = ex.Message,
+            };
             try
             {
                 var p = WebHelper.Decode(entity.Param);
                 string verifyCode = p.verifyCode;
-                string plattype = p.plattype;
-                string guidKey = p.guidKey;
-                if (!string.IsNullOrEmpty(plattype))
+                //string plattype = p.plattype;
+
+                if (string.IsNullOrEmpty(entity.MsgId))
                 {
-                    plattype = plattype.ToLower();
+                    returnResult.Message = "消息序号不能为空";
+                    return JsonEx(returnResult);  
                 }
-                if (plattype != "app")
-                {
-                    if (string.IsNullOrEmpty(verifyCode))
-                        throw new Exception("图形验证码不能为空");
-                    if (!VerifyCode(_serviceProxyProvider, verifyCode, guidKey).Result)
-                        throw new Exception("图形验证码错误或已过期");
+                ///redis 获取验证码
+               string codeValue= KaSon.FrameWork.Common.Redis.RedisHelper.StringGet(entity.MsgId);
+                if (codeValue != verifyCode) {
+                    returnResult.Code = ResponseCode.ValiteCodeError;
+                    returnResult.Message = "验证码错误";
+                    return JsonEx(returnResult);
                 }
+                //if (plattype != "app")
+                //{
+                //    if (string.IsNullOrEmpty(verifyCode))
+                //        throw new Exception("图形验证码不能为空");
+                //    if (!VerifyCode(verifyCode))
+                //        throw new Exception("图形验证码错误或已过期");
+                //}
                 string mobile = p.mobile;
                 if (string.IsNullOrEmpty(mobile))
                     throw new Exception("手机号码不能为空");
@@ -524,8 +539,8 @@ namespace Lottery.Api.Controllers
                     throw new Exception("手机号码格式错误");
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param["mobile"] = mobile;
-                var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/RegisterRequestMobile");
-
+                var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/RegisterRequestMobile");               
+              
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = result.IsSuccess ? ResponseCode.成功 : ResponseCode.失败,
@@ -537,13 +552,9 @@ namespace Lottery.Api.Controllers
             catch (Exception ex)
             {
                 //return Json(new { status = false, message = exp.Message }, JsonRequestBehavior.AllowGet);
-                return JsonEx(new LotteryServiceResponse
-                {
-                    Code = ResponseCode.失败,
-                    Message = ex.Message,
-                    MsgId = entity.MsgId,
-                    Value = ex.Message,
-                });
+                returnResult.Code = ResponseCode.失败;
+                returnResult.Message = ex.Message;
+                return JsonEx(returnResult);
             }
         }
 
@@ -552,24 +563,19 @@ namespace Lottery.Api.Controllers
         /// </summary>
         /// <param name="verifycode"></param>
         /// <returns></returns>
-        private async Task<bool> VerifyCode(IServiceProxyProvider _serviceProxyProvider, string verifycode, string guidKey)
+        private bool VerifyCode(string verifycode)
         {
             try
             {
-
-                if (string.IsNullOrEmpty(verifycode) || string.IsNullOrEmpty(guidKey))
+                
+                if (string.IsNullOrEmpty(verifycode) || HttpContext.Session.GetString("VerifyCode") == null)
                 {
                     return false;
                 }
-                var resultcode = await GetVerifyCodeByGuid(_serviceProxyProvider, guidKey);
-                if (verifycode == resultcode)
+                if (verifycode.ToLower() == HttpContext.Session.GetString("VerifyCode").ToString().ToLower())
                 {
                     return true;
                 }
-                //if (verifycode.ToLower() == HttpContext.Session.GetString("VerifyCode").ToString().ToLower())
-                //{
-                //    return true;
-                //}
                 return false;
             }
             catch
@@ -579,14 +585,40 @@ namespace Lottery.Api.Controllers
         }
 
         #region 本地验证码相关
-        public async Task<IActionResult> CreateValidateCode([FromServices]IServiceProxyProvider _serviceProxyProvider, string guidKey)
+        //public async Task<IActionResult> CreateValidateCode()
+        //{
+        //    var num = 0;
+        //    string randomText = SelectRandomNumber(5, out num);
+
+        //    //HttpContext.Session.SetString("VerifyCode", num.ToString());
+        //    ValidateCodeGenerator vlimg = new ValidateCodeGenerator()
+        //    {
+        //        BackGroundColor = Color.FromKnownColor(KnownColor.LightGray),
+        //        RandomWord = randomText,
+        //        ImageHeight = 25,
+        //        ImageWidth = 100,
+        //        fontSize = 14,
+        //    };
+        //    var img = vlimg.OnPaint();
+        //    if (img == null)
+        //    {
+        //        return await Task.FromResult(Content("Error")); ;
+        //    }
+        //    return await Task.FromResult(File(img, "image/gif"));
+        //    //return vlimg;
+        //}
+
+        public  IActionResult CreateValidateCode(string MsgId)
         {
             var num = 0;
             string randomText = SelectRandomNumber(5, out num);
-            if (!string.IsNullOrEmpty(guidKey))
+            var result = new LotteryServiceResponse
             {
-                SetVerifyCodeByGuid(_serviceProxyProvider, num.ToString(), guidKey);
-            }
+                Code = ResponseCode.失败,
+                Message ="获取验证码失败,请刷新验证码",
+                //   MsgId = entity.MsgId,
+                //  Value = ex.Message,
+            };
             //HttpContext.Session.SetString("VerifyCode", num.ToString());
             ValidateCodeGenerator vlimg = new ValidateCodeGenerator()
             {
@@ -599,11 +631,34 @@ namespace Lottery.Api.Controllers
             var img = vlimg.OnPaint();
             if (img == null)
             {
-                return await Task.FromResult(Content("Error")); ;
+                // return Content("Error");
             }
-            return await Task.FromResult(File(img, "image/gif"));
+            else {
+                result.Code = ResponseCode.成功;
+                result.Message = "成功获取验证码";
+                
+                //录入验证码
+                string key = "R_"+Guid.NewGuid().ToString("N");
+                if (!String.IsNullOrEmpty(MsgId))
+                {
+                    key = MsgId;
+                }
+              
+                KaSon.FrameWork.Common.Redis.RedisHelper.StringSet(key, num.ToString(), 60 * 10);
+
+                string base64 = Convert.ToBase64String(img);
+                //data:image/gif;base64,
+                if (!base64.StartsWith("data:image"))
+                {
+                    base64 = "data:image/gif;base64" + base64;
+                }
+                result.Value =base64;
+                result.MsgId = key;
+            }
+            return JsonEx(result);
             //return vlimg;
         }
+
 
         //选择随机数字
         private string SelectRandomNumber(int numberOfChars, out int num)
@@ -660,24 +715,24 @@ namespace Lottery.Api.Controllers
                         Code = ResponseCode.成功,
                         Message = "因检测到该号码在黑名单中，无法注册用户，请联系在线客服。",
                         MsgId = entity.MsgId,
-                        Value = "因检测到该号码在黑名单中，无法注册用户，请联系在线客服。",
+                        Value = false,
                     });
                 }
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param["mobile"] = mobile;
                 var flag = await _serviceProxyProvider.Invoke<bool>(param, "api/user/HasMobile");
-
+          
                 var result = new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
                     Message = "手机号可用",
                     MsgId = entity.MsgId,
-                    Value = "手机号可用",
+                    Value = true,
                 };
                 if (flag)
                 {
                     result.Message = "手机号已被注册";
-                    result.Value = "手机号已被注册";
+                    result.Value =false;
                     return JsonEx(result);
                 }
                 else
@@ -692,7 +747,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = ex.Message,
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = false,
                 });
             }
         }
@@ -839,8 +894,8 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-
-                var p = WebHelper.Decode(entity.Param);
+                
+                 var p = WebHelper.Decode(entity.Param);
                 string oldPwd = p.OldPwd;
                 string newPwd = p.NewPwd;
                 bool isSet = Convert.ToBoolean(p.IsSet);
@@ -912,7 +967,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
+                var p = WebHelper.Decode(entity.Param); 
                 string strPlace = p.StrPlace;
                 string pwd = p.Pwd;
                 string userToken = p.UserToken;
@@ -1029,10 +1084,9 @@ namespace Lottery.Api.Controllers
                     throw new Exception("真实姓名不能为空");
                 if (string.IsNullOrEmpty(userToken))
                     throw new Exception("userToken不能为空");
-                var userRealName = new UserRealNameInfo
-                {
+                var userRealName = new UserRealNameInfo {
                     IdCardNumber = idCardNumber,
-                    RealName = realName,
+                    RealName = realName,                   
                 };
 
                 Dictionary<string, object> param = new Dictionary<string, object>();
@@ -1110,7 +1164,7 @@ namespace Lottery.Api.Controllers
                     throw new Exception("userToken不能为空");
                 if (string.IsNullOrEmpty(bankrealName))
                     throw new Exception("开户名不能为空");
-
+            
                 var bankDic = GetBankDic();
                 if (!bankDic.ContainsKey(bankCode))
                     throw new ArgumentException(string.Format("银行编码：{0}不可用", bankCode));
@@ -1124,17 +1178,16 @@ namespace Lottery.Api.Controllers
                 //{
                 //    throw new ArgumentException("因检测到该银行卡号码在黑名单中，无法绑定，请联系在线客服。");
                 //}
-                C_BankCard bankCard = new C_BankCard
-                {
-                    BankCode = bankCode,
-                    BankName = bankDic[bankCode],
-                    BankSubName = subBankName,
-                    BankCardNumber = cardnumber,
-                    ProvinceName = province,
-                    CityName = city,
-                    RealName = bankrealName,
+               C_BankCard bankCard = new C_BankCard {
+                      BankCode= bankCode,
+                      BankName = bankDic[bankCode],
+                      BankSubName =subBankName,
+                      BankCardNumber=cardnumber,
+                      ProvinceName=province,
+                      CityName=city,
+                      RealName= bankrealName,
 
-                };
+               };
                 #endregion
                 Dictionary<string, object> paramCard = new Dictionary<string, object>();
                 paramCard["bankCard"] = bankCard;
@@ -1325,11 +1378,11 @@ namespace Lottery.Api.Controllers
                 }
                 var cashMoney = await _serviceProxyProvider.Invoke<UserBalanceInfo>(param, "api/user/QueryMyBalance");
                 var userinfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/LoginByUserToken");
-
+           
                 if (userinfo.IsSuccess)
                 {
                     Dictionary<string, object> bindParam = new Dictionary<string, object>();
-                    bindParam["UserId"] = userinfo.UserId;
+                    bindParam["UserId"] = userinfo.UserId; 
                     var info = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
                     if (info == null)
                         throw new ArgumentException("未找到用户信息");
@@ -1338,7 +1391,7 @@ namespace Lottery.Api.Controllers
                     if (string.IsNullOrEmpty(info.BankCardNumber))
                         throw new ArgumentException("请先绑定银行卡");
 
-
+                  
                     return JsonEx(new LotteryServiceResponse
                     {
                         Code = ResponseCode.成功,
@@ -1508,7 +1561,7 @@ namespace Lottery.Api.Controllers
                     withdrawinfo.userRealName = info.RealName;
 
                     Dictionary<string, object> Withdraw_Param = new Dictionary<string, object>();
-                    Withdraw_Param["info"] = withdrawinfo;
+                    Withdraw_Param["info"] = withdrawinfo;        
                     Withdraw_Param["userId"] = info.UserId;
                     Withdraw_Param["balancepwd"] = balancepwd;
                     var RequestWithdraw_Step2 = await _serviceProxyProvider.Invoke<UserBindInfos>(Withdraw_Param, "api/user/RequestWithdraw_Step2");
@@ -1538,7 +1591,7 @@ namespace Lottery.Api.Controllers
             }
         }
 
-
+       
         //充值记录
         public async Task<IActionResult> Drawingsrecord([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
@@ -1606,7 +1659,7 @@ namespace Lottery.Api.Controllers
                     {
                         Dictionary<string, object> param2 = new Dictionary<string, object>();
                         param2.Add("key", "FillMoney_Enable_GateWay");
-                        var FillMoney_Enable_GateWay = await _serviceProxyProvider.Invoke<C_Core_Config>(param2, "api/user/QueryCoreConfigByKey");
+                        var FillMoney_Enable_GateWay = await _serviceProxyProvider.Invoke<C_Core_Config>(param2, "api/user/QueryCoreConfigByKey");                    
                         string[] gateWayArray = FillMoney_Enable_GateWay.ConfigValue.ToLower().Split('|');
                         return JsonEx(new LotteryServiceResponse
                         {
@@ -1660,7 +1713,7 @@ namespace Lottery.Api.Controllers
         private dynamic LoadPayConfig(string os, string[] gateWayArray)
         {
 
-
+          
             List<WebPayItem> list = new List<WebPayItem>();
             var baselist = loadPayConfig();
             foreach (WebPayItem item in baselist)
@@ -1727,55 +1780,6 @@ namespace Lottery.Api.Controllers
             item.actionUrl = null;
             item.payType = item.payType;
             return item;
-        }
-
-
-        public async Task<IActionResult> GetRegisterGuid([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
-        {
-            var id = Guid.NewGuid().ToString("N");
-            //var RedisId = "R_" + id;
-            //var param = new Dictionary<string, object>();
-            //param.Add("RedisKey", RedisId);
-            //var RedisValue = await _serviceProxyProvider.Invoke<string>(param, "api/user/QueryRegisterGuidByKey");
-            return JsonEx(new LotteryServiceResponse
-            {
-                Code = ResponseCode.成功,
-                Message = "获取成功",
-                MsgId = entity.MsgId,
-                Value = new { guidKey = id },
-            });
-        }
-
-        /// <summary>
-        /// 把图形验证码的结果存入redis
-        /// </summary>
-        /// <param name="_serviceProxyProvider"></param>
-        /// <param name="VerifyCode"></param>
-        /// <param name="RedisKey"></param>
-        /// <returns></returns>
-        private async Task<bool> SetVerifyCodeByGuid(IServiceProxyProvider _serviceProxyProvider, string VerifyCode, string RedisKey)
-        {
-            var RedisId = "R_" + RedisKey;
-            var param = new Dictionary<string, object>();
-            param.Add("RedisKey", RedisId);
-            param.Add("RedisValue", VerifyCode);
-            var result = await _serviceProxyProvider.Invoke<bool>(param, "api/user/SetVerifyCodeByGuid");
-            return result;
-        }
-
-        /// <summary>
-        /// 根据key获取redis值
-        /// </summary>
-        /// <param name="_serviceProxyProvider"></param>
-        /// <param name="RedisKey"></param>
-        /// <returns></returns>
-        private async Task<string> GetVerifyCodeByGuid(IServiceProxyProvider _serviceProxyProvider, string RedisKey)
-        {
-            var RedisId = "R_" + RedisKey;
-            var param = new Dictionary<string, object>();
-            param.Add("RedisKey", RedisId);
-            var RedisValue = await _serviceProxyProvider.Invoke<string>(param, "api/user/GetVerifyCodeByGuid");
-            return RedisValue;
         }
 
     }
