@@ -500,22 +500,38 @@ namespace Lottery.Api.Controllers
         /// <returns></returns>
         public async Task<IActionResult> RegisterSendmsg([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
+            var returnResult = new LotteryServiceResponse()
+            {
+                Code = ResponseCode.失败,
+                //Message = ex.Message,
+                MsgId = entity.MsgId,
+                //Value = ex.Message,
+            };
             try
             {
                 var p = WebHelper.Decode(entity.Param);
                 string verifyCode = p.verifyCode;
                 string plattype = p.plattype;
-                if (!string.IsNullOrEmpty(plattype))
+
+                if (string.IsNullOrEmpty(entity.MsgId))
                 {
-                    plattype = plattype.ToLower();
+                    returnResult.Message = "消息序号不能为空";
+                    return JsonEx(returnResult);  
                 }
-                if (plattype != "app")
-                {
-                    if (string.IsNullOrEmpty(verifyCode))
-                        throw new Exception("图形验证码不能为空");
-                    if (!VerifyCode(verifyCode))
-                        throw new Exception("图形验证码错误或已过期");
+                ///redis 获取验证码
+               string codeValue= KaSon.FrameWork.Common.Redis.RedisHelper.StringGet(entity.MsgId);
+                if (codeValue != verifyCode) {
+                    returnResult.Code = ResponseCode.ValiteCodeError;
+                    returnResult.Message = "验证码错误";
+                    return JsonEx(returnResult);
                 }
+                //if (plattype != "app")
+                //{
+                //    if (string.IsNullOrEmpty(verifyCode))
+                //        throw new Exception("图形验证码不能为空");
+                //    if (!VerifyCode(verifyCode))
+                //        throw new Exception("图形验证码错误或已过期");
+                //}
                 string mobile = p.mobile;
                 if (string.IsNullOrEmpty(mobile))
                     throw new Exception("手机号码不能为空");
@@ -536,13 +552,9 @@ namespace Lottery.Api.Controllers
             catch (Exception ex)
             {
                 //return Json(new { status = false, message = exp.Message }, JsonRequestBehavior.AllowGet);
-                return JsonEx(new LotteryServiceResponse
-                {
-                    Code = ResponseCode.失败,
-                    Message = ex.Message,
-                    MsgId = entity.MsgId,
-                    Value = ex.Message,
-                });
+                returnResult.Code = ResponseCode.失败;
+                returnResult.Message = ex.Message;
+                return JsonEx(returnResult);
             }
         }
 
@@ -595,6 +607,57 @@ namespace Lottery.Api.Controllers
             return await Task.FromResult(File(img, "image/gif"));
             //return vlimg;
         }
+
+        public  IActionResult CreateValidateCode_Ex(string MsgId)
+        {
+            var num = 0;
+            string randomText = SelectRandomNumber(5, out num);
+            var result = new LotteryServiceResponse
+            {
+                Code = ResponseCode.失败,
+                  Message ="获取验证码失败,请刷新验证码",
+                //   MsgId = entity.MsgId,
+                //  Value = ex.Message,
+            };
+            //HttpContext.Session.SetString("VerifyCode", num.ToString());
+            ValidateCodeGenerator vlimg = new ValidateCodeGenerator()
+            {
+                BackGroundColor = Color.FromKnownColor(KnownColor.LightGray),
+                RandomWord = randomText,
+                ImageHeight = 25,
+                ImageWidth = 100,
+                fontSize = 14,
+            };
+            var img = vlimg.OnPaint();
+            if (img == null)
+            {
+                // return Content("Error");
+            }
+            else {
+                result.Code = ResponseCode.成功;
+                result.Message = "成功获取验证码";
+                
+                //录入验证码
+                string key = Guid.NewGuid().ToString("N")+ "_Code";
+                if (!String.IsNullOrEmpty(MsgId))
+                {
+                    key = MsgId;
+                 
+                }
+              
+                KaSon.FrameWork.Common.Redis.RedisHelper.StringSet(key, JsonHelper.Serialize(vlimg), 60 * 10);
+
+                string base64 = Convert.ToBase64String(img);
+                result.Value =base64;
+                result.MsgId = key;
+            }
+
+
+
+            return JsonEx(result);
+            //return vlimg;
+        }
+
 
         //选择随机数字
         private string SelectRandomNumber(int numberOfChars, out int num)
