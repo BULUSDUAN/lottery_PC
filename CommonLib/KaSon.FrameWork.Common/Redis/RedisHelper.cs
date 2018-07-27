@@ -20,6 +20,9 @@ namespace KaSon.FrameWork.Common.Redis
     {
 
         static JObject RdConfigInfo=null;
+        private static ConnectionMultiplexer _instance;
+        private static string _redisConectStr = "";// RdConfigInfo["RedisConnect"].ToString();
+        private static readonly object redisLock = new object();
         static RedisHelper() {
             Init();
         }
@@ -33,6 +36,41 @@ namespace KaSon.FrameWork.Common.Redis
                 _redisConectStr = RdConfigInfo["RedisConnect"].ToString();
             }
             
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static string StringGet(string key)
+        {
+            try
+            {
+                using (var client = ConnectionMultiplexer.Connect(_redisConectStr))
+                {
+                    return client.GetDatabase().StringGet(key);
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 设置 Redis 过期时间 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <param name="Seconds"></param>
+        /// <returns></returns>
+        public static bool StringSet(string key, string value, int Seconds)
+        {
+            var timeSpan = DateTime.Now.AddSeconds(Seconds) - DateTime.Now;
+            using (var client = ConnectionMultiplexer.Connect(_redisConectStr))
+            {
+                return client.GetDatabase().StringSet(key, value, timeSpan);
+            }
         }
         /// <summary>
         /// 是否启用Redis
@@ -107,9 +145,7 @@ namespace KaSon.FrameWork.Common.Redis
             }
         }
 
-        private static ConnectionMultiplexer _instance;
-        private static string _redisConectStr = "";// RdConfigInfo["RedisConnect"].ToString();
-        private static readonly object redisLock = new object();
+    
         /// <summary>
         /// Redis实例
         /// </summary>

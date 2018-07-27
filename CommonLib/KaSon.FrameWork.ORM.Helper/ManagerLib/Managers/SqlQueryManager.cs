@@ -61,13 +61,20 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public Withdraw_QueryInfo GetWithdrawById(string orderId)
         {
-         
-            // 通过数据库存储过程进行查询
-            var result = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "rj_Fund_QueryWithdrawById").SQL;
-           var withdraw_Info = DB.CreateSQLQuery(result).SetString("OrderId", orderId)
-                .First<Withdraw_QueryInfo>();
+            try
+            {
+                // 通过数据库存储过程进行查询
+                var result = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "rj_Fund_QueryWithdrawById").SQL;
+                var withdraw_Info = DB.CreateSQLQuery(result).SetString("@OrderId", orderId)
+                    .First<Withdraw_QueryInfo>();
 
-            return withdraw_Info;
+                return withdraw_Info;
+            }
+             catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
         public List<Withdraw_QueryInfo> QueryWithdrawList(string userId, WithdrawAgentType? agent, WithdrawStatus? status, decimal minMoney, decimal maxMoney, DateTime startTime, DateTime endTime, int sortType, int pageIndex, int pageSize, string orderId,

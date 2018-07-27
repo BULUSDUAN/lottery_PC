@@ -1164,6 +1164,35 @@ namespace UserLottery.Service.ModuleServices
             }
         }
 
+
+        //public async Task<bool> SetVerifyCodeByGuid(string RedisKey,string RedisValue)
+        //{
+        //    try
+        //    {
+        //        var db = RedisHelper.DB_UserBindData;
+        //        var result= await db.StringSetAsync(RedisKey, RedisValue, TimeSpan.FromMinutes(10));
+        //        return result;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception("获取图形验证码失败 - " + ex.Message, ex);
+        //    }
+        //}
+
+
+        //public async Task<string> GetVerifyCodeByGuid(string RedisKey)
+        //{
+        //    try
+        //    {
+        //        var db = RedisHelper.DB_UserBindData;
+        //        var value= await db.StringGetAsync(RedisKey);
+        //        return value;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception("存储图形验证码失败 - " + ex.Message, ex);
+        //    }
+        //}
         #endregion Implementation of IUserService
     }
 }

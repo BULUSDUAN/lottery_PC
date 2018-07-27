@@ -500,14 +500,38 @@ namespace Lottery.Api.Controllers
         /// <returns></returns>
         public async Task<IActionResult> RegisterSendmsg([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
+            var returnResult = new LotteryServiceResponse()
+            {
+                Code = ResponseCode.失败,
+                //Message = ex.Message,
+                MsgId = entity.MsgId,
+                //Value = ex.Message,
+            };
             try
             {
                 var p = WebHelper.Decode(entity.Param);
                 string verifyCode = p.verifyCode;
-                if (string.IsNullOrEmpty(verifyCode))
-                    throw new Exception("图形验证码不能为空");
-                if (!VerifyCode(verifyCode))
-                    throw new Exception("图形验证码错误或已过期");
+                //string plattype = p.plattype;
+
+                if (string.IsNullOrEmpty(entity.MsgId))
+                {
+                    returnResult.Message = "消息序号不能为空";
+                    return JsonEx(returnResult);  
+                }
+                ///redis 获取验证码
+               string codeValue= KaSon.FrameWork.Common.Redis.RedisHelper.StringGet(entity.MsgId);
+                if (codeValue != verifyCode) {
+                    returnResult.Code = ResponseCode.ValiteCodeError;
+                    returnResult.Message = "验证码错误";
+                    return JsonEx(returnResult);
+                }
+                //if (plattype != "app")
+                //{
+                //    if (string.IsNullOrEmpty(verifyCode))
+                //        throw new Exception("图形验证码不能为空");
+                //    if (!VerifyCode(verifyCode))
+                //        throw new Exception("图形验证码错误或已过期");
+                //}
                 string mobile = p.mobile;
                 if (string.IsNullOrEmpty(mobile))
                     throw new Exception("手机号码不能为空");
@@ -528,13 +552,9 @@ namespace Lottery.Api.Controllers
             catch (Exception ex)
             {
                 //return Json(new { status = false, message = exp.Message }, JsonRequestBehavior.AllowGet);
-                return JsonEx(new LotteryServiceResponse
-                {
-                    Code = ResponseCode.失败,
-                    Message = ex.Message,
-                    MsgId = entity.MsgId,
-                    Value = ex.Message,
-                });
+                returnResult.Code = ResponseCode.失败;
+                returnResult.Message = ex.Message;
+                return JsonEx(returnResult);
             }
         }
 
@@ -565,12 +585,41 @@ namespace Lottery.Api.Controllers
         }
 
         #region 本地验证码相关
-        public async Task<IActionResult> CreateValidateCode()
+        //public async Task<IActionResult> CreateValidateCode()
+        //{
+        //    var num = 0;
+        //    string randomText = SelectRandomNumber(5, out num);
+
+        //    //HttpContext.Session.SetString("VerifyCode", num.ToString());
+        //    ValidateCodeGenerator vlimg = new ValidateCodeGenerator()
+        //    {
+        //        BackGroundColor = Color.FromKnownColor(KnownColor.LightGray),
+        //        RandomWord = randomText,
+        //        ImageHeight = 25,
+        //        ImageWidth = 100,
+        //        fontSize = 14,
+        //    };
+        //    var img = vlimg.OnPaint();
+        //    if (img == null)
+        //    {
+        //        return await Task.FromResult(Content("Error")); ;
+        //    }
+        //    return await Task.FromResult(File(img, "image/gif"));
+        //    //return vlimg;
+        //}
+
+        public  IActionResult CreateValidateCode(string MsgId)
         {
             var num = 0;
             string randomText = SelectRandomNumber(5, out num);
-
-            HttpContext.Session.SetString("VerifyCode", num.ToString());
+            var result = new LotteryServiceResponse
+            {
+                Code = ResponseCode.失败,
+                Message ="获取验证码失败,请刷新验证码",
+                //   MsgId = entity.MsgId,
+                //  Value = ex.Message,
+            };
+            //HttpContext.Session.SetString("VerifyCode", num.ToString());
             ValidateCodeGenerator vlimg = new ValidateCodeGenerator()
             {
                 BackGroundColor = Color.FromKnownColor(KnownColor.LightGray),
@@ -582,11 +631,34 @@ namespace Lottery.Api.Controllers
             var img = vlimg.OnPaint();
             if (img == null)
             {
-                return await Task.FromResult(Content("Error")); ;
+                // return Content("Error");
             }
-            return await Task.FromResult(File(img, "image/gif"));
+            else {
+                result.Code = ResponseCode.成功;
+                result.Message = "成功获取验证码";
+                
+                //录入验证码
+                string key = "R_"+Guid.NewGuid().ToString("N");
+                if (!String.IsNullOrEmpty(MsgId))
+                {
+                    key = MsgId;
+                }
+              
+                KaSon.FrameWork.Common.Redis.RedisHelper.StringSet(key, num.ToString(), 60 * 10);
+
+                string base64 = Convert.ToBase64String(img);
+                //data:image/gif;base64,
+                if (!base64.StartsWith("data:image"))
+                {
+                    base64 = "data:image/gif;base64" + base64;
+                }
+                result.Value =base64;
+                result.MsgId = key;
+            }
+            return JsonEx(result);
             //return vlimg;
         }
+
 
         //选择随机数字
         private string SelectRandomNumber(int numberOfChars, out int num)
@@ -643,7 +715,7 @@ namespace Lottery.Api.Controllers
                         Code = ResponseCode.成功,
                         Message = "因检测到该号码在黑名单中，无法注册用户，请联系在线客服。",
                         MsgId = entity.MsgId,
-                        Value = "因检测到该号码在黑名单中，无法注册用户，请联系在线客服。",
+                        Value = false,
                     });
                 }
                 Dictionary<string, object> param = new Dictionary<string, object>();
@@ -655,12 +727,12 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.成功,
                     Message = "手机号可用",
                     MsgId = entity.MsgId,
-                    Value = "手机号可用",
+                    Value = true,
                 };
                 if (flag)
                 {
                     result.Message = "手机号已被注册";
-                    result.Value = "手机号已被注册";
+                    result.Value =false;
                     return JsonEx(result);
                 }
                 else
@@ -675,7 +747,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = ex.Message,
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = false,
                 });
             }
         }

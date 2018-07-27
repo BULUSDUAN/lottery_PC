@@ -124,6 +124,7 @@ namespace EntityModel.Enum
     {
         成功 = 101,
         失败 = 201,
+        ValiteCodeError = 301,
     }
     /// <summary>
     /// 中奖状态

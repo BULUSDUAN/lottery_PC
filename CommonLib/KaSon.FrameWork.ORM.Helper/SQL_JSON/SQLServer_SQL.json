@@ -308,7 +308,7 @@
       "Desc": "查询提现明细",
       "ParamDesc": "@OrderId:OrderId",
       "Director": "renjun",
-      "SQL": "SET NOCOUNT ON;SELECT w.OrderId,u1.DisplayName as RequesterDisplayName,u1.UserId as RequesterUserKey,u1.ComeFrom as RequesterComeFrom,u2.DisplayName as ProcessorsDisplayName,u2.UserId as ProcessorsUserKey,w.WithdrawAgent,w.ProvinceName,w.CityName,w.BankCode,w.BankName,w.BankSubName,w.BankCardNumber,w.RequestMoney,w.RequestTime,w.Status,w.ResponseMoney,w.ResponseMessage,w.ResponseTime,real_1.RealName,mobile_1.Mobile FROM C_Withdraw w LEFT JOIN C_User_Register u1 on w.UserId = u1.UserId LEFT JOIN C_User_Register u2 on w.ResponseUserId = u2.UserId LEFT JOIN E_Authentication_RealName real_1 on u1.UserId = real_1.UserId LEFT JOIN E_Authentication_Mobile mobile_1 on u1.UserId = mobile_1.UserId where w.OrderId=@OrderId",
+      "SQL": "SELECT top 1 w.OrderId,u1.DisplayName as RequesterDisplayName,u1.UserId as RequesterUserKey,u1.ComeFrom as RequesterComeFrom,u2.DisplayName as ProcessorsDisplayName,u2.UserId as ProcessorsUserKey,w.WithdrawAgent,w.ProvinceName,w.CityName,w.BankCode,w.BankName,w.BankSubName,w.BankCardNumber,w.RequestMoney,w.RequestTime,w.Status,w.ResponseMoney,w.ResponseMessage,w.ResponseTime,real_1.RealName as RequesterRealName,mobile_1.Mobile as RequesterMobile FROM C_Withdraw w LEFT JOIN C_User_Register u1 on w.UserId = u1.UserId LEFT JOIN C_User_Register u2 on w.ResponseUserId = u2.UserId LEFT JOIN E_Authentication_RealName real_1 on u1.UserId = real_1.UserId LEFT JOIN E_Authentication_Mobile mobile_1 on u1.UserId = mobile_1.UserId where w.OrderId=@OrderId",
       "Remark": ""
     }
 
