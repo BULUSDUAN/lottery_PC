@@ -650,7 +650,7 @@ namespace Lottery.Api.Controllers
                 //data:image/gif;base64,
                 if (!base64.StartsWith("data:image"))
                 {
-                    base64 = "data:image/gif;base64" + base64;
+                    base64 = "data:image/gif;base64," + base64;
                 }
                 result.Value =base64;
                 result.MsgId = key;
