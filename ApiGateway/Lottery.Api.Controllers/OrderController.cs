@@ -1308,6 +1308,10 @@ namespace Lottery.Api.Controllers
         /// <returns></returns>
         public async Task<IActionResult> QueryGeneralOrderDetail([FromServices]IServiceProxyProvider _serviceProxyProvider,LotteryServiceRequest entity, string schemeId, string userToken)
         {
+            try
+            {
+
+           
             Dictionary<string, object> param = new Dictionary<string, object>
             {
                 {"schemeId",schemeId }
@@ -1392,6 +1396,17 @@ namespace Lottery.Api.Controllers
                 MsgId = entity.MsgId,
                 Value = result,
             });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "查询订单详情失败",
+                    MsgId = entity.MsgId,
+                    Value = ex.ToString(),
+                });
+            }
         }
         public async Task<List<object>> GetCodeList_GSAPP([FromServices]IServiceProxyProvider _serviceProxyProvider, Sports_AnteCodeQueryInfoCollection code, string gameCode, int amount)
         {
