@@ -714,7 +714,7 @@ namespace Lottery.Api.Controllers
                         Code = ResponseCode.成功,
                         Message = "因检测到该号码在黑名单中，无法注册用户，请联系在线客服。",
                         MsgId = entity.MsgId,
-                        Value = "因检测到该号码在黑名单中，无法注册用户，请联系在线客服。",
+                        Value = false,
                     });
                 }
                 Dictionary<string, object> param = new Dictionary<string, object>();
@@ -726,12 +726,12 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.成功,
                     Message = "手机号可用",
                     MsgId = entity.MsgId,
-                    Value = "手机号可用",
+                    Value = true,
                 };
                 if (flag)
                 {
                     result.Message = "手机号已被注册";
-                    result.Value = "手机号已被注册";
+                    result.Value =false;
                     return JsonEx(result);
                 }
                 else
@@ -746,7 +746,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = ex.Message,
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = false,
                 });
             }
         }
