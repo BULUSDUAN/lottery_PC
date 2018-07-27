@@ -158,18 +158,20 @@ namespace KaSon.FrameWork.ORM.Helper
             var user = userManager.QueryUserRegister(userId);
             if (!user.IsEnable)
                 throw new LogicException("用户已禁用");
+            var orderId = BettingHelper.GetWithdrawId();
+           
             DB.Begin();
             try
             {
 
                 var resonseMoney = 0M;
-                var orderId = BettingHelper.GetWithdrawId();
+               
                 BusinessHelper businessHelper = new BusinessHelper();
                 var category = businessHelper.Payout_To_Frozen_Withdraw(BusinessHelper.FundCategory_RequestWithdraw, userId, orderId, info.RequestMoney
                       , string.Format("申请提现：{0:N2}元", info.RequestMoney), "Withdraw", balancepwd, out resonseMoney);
 
                 var fundManager = new FundManager();
-                var addWithdraw = new C_Withdraw
+                fundManager.AddWithdraw (new C_Withdraw
                 {
                     OrderId = orderId,
                     BankCardNumber = info.BankCardNumber,
@@ -186,11 +188,11 @@ namespace KaSon.FrameWork.ORM.Helper
                      
                     WithdrawCategory = (int)category,
                     ResponseMoney = resonseMoney,
-                };
-                fundManager.AddWithdraw(addWithdraw);
+                });
 
                 //查询到账金额
-                var wi = GetWithdrawById(orderId);
+                //var wi = GetWithdrawById(orderId);
+
 
                 //判断DP是否可用
                 var cacheDataBusiness = new CacheDataBusiness();
@@ -233,7 +235,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         wai.issue_bank_name = info.BankName;
                         wai.issue_bank_address = info.BankSubName;
                         wai.memo = "";
-                        String amount = wi.ResponseMoney.ToString();
+                        String amount = resonseMoney.ToString();
                         wai.amount = Math.Round(decimal.Parse(amount), 2);
 
                         wai.company_id = Int32.Parse(coreConfigInfoC.ConfigValue);
