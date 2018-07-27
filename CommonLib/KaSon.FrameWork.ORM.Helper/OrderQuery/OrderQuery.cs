@@ -211,20 +211,9 @@ namespace KaSon.FrameWork.ORM.Helper
             if (Model.pageSize < 10000)
                 Model.pageSize = Model.pageSize > Model.MaxPageSize ? Model.MaxPageSize : Model.pageSize;
 
-            int totalPayinCount = 0;
-            decimal totalPayinMoney = 0M;
-            int totalPayoutCount = 0;
-            decimal totalPayoutMoney = 0M;
-
-            //var AccountTyleList =string.Join(',',string.Format("'{0}'", Model.accountTypeList.Split('|', StringSplitOptions.RemoveEmptyEntries)));
-
             //查询资金明细
             var sqlKey = string.IsNullOrEmpty(userId) ? "Debug_AccountDetailNoUserID" : "Debug_AccountDetailHasUserID";
             string AccountDetail_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == sqlKey).SQL;
-            //if (string.IsNullOrEmpty(userId))
-            //{
-            //    userId = "";
-            //}
             var AccountDetail_query = DB.CreateSQLQuery(AccountDetail_sql).SetString("@UserId",string.IsNullOrEmpty(userId)?"":userId)//添加共同参数
                 .SetString("@StartTime", Model.fromDate.ToString())
                 .SetString("@EndTime", Model.toDate.ToString())
