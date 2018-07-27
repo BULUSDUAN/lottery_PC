@@ -513,7 +513,7 @@ namespace Lottery.Api.Controllers
                 string verifyCode = p.verifyCode;
                 //string plattype = p.plattype;
 
-                if (string.IsNullOrEmpty(p.MsgId))
+                if (string.IsNullOrEmpty(entity.MsgId))
                 {
                     returnResult.Message = "消息序号不能为空";
                     return JsonEx(returnResult);  
