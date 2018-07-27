@@ -216,41 +216,46 @@ namespace KaSon.FrameWork.ORM.Helper
             int totalPayoutCount = 0;
             decimal totalPayoutMoney = 0M;
 
+            //var AccountTyleList =string.Join(',',string.Format("'{0}'", Model.accountTypeList.Split('|', StringSplitOptions.RemoveEmptyEntries)));
 
-
-            //查询账户类型 和 类别
-            //var AccountTyleList = Model.accountTypeList.Split('|');
             //查询资金明细
-            string AccountDetail_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_AccountDetail").SQL;
-            if (string.IsNullOrEmpty(userId))
-            {
-                userId = "";
-                AccountDetail_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_AccountDetailNoUserID").SQL;
-            }
-            var AccountDetail_query = DB.CreateSQLQuery(AccountDetail_sql).SetString("@UserId", userId)
+            var sqlKey = string.IsNullOrEmpty(userId) ? "Debug_AccountDetailNoUserID" : "Debug_AccountDetailHasUserID";
+            string AccountDetail_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == sqlKey).SQL;
+            //if (string.IsNullOrEmpty(userId))
+            //{
+            //    userId = "";
+            //}
+            var AccountDetail_query = DB.CreateSQLQuery(AccountDetail_sql).SetString("@UserId",string.IsNullOrEmpty(userId)?"":userId)//添加共同参数
                 .SetString("@StartTime", Model.fromDate.ToString())
                 .SetString("@EndTime", Model.toDate.ToString())
                 .SetInt("@PageIndex", Model.pageIndex)
-                .SetInt("@PageSize", Model.pageSize).List<C_Fund_Detail>();
+                .SetInt("@PageSize", Model.pageSize);
+            if (!string.IsNullOrEmpty(userId))//有用户要加AccountList
+            {
+                AccountDetail_query.SetString("@AccountList", Model.accountTypeList);
+            }
+            var result=AccountDetail_query.List<C_Fund_Detail>();//执行查询
             //收入条数和金额
             string IncomeAndMoney_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_IncomeAndMoney").SQL;
             var IncomeAndMoney_query = DB.CreateSQLQuery(IncomeAndMoney_sql)
                 .SetString("@UserId", userId)
                 .SetString("@StartTime", Model.fromDate.ToString())
+                .SetString("@AccountList", Model.accountTypeList)
                 .SetString("@EndTime", Model.toDate.ToString()).First<PayTypeDetail>();
             //支出条数和金额
             string OutAndMoney_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_OutAndMoney").SQL;
             var OutAndMoney_query = DB.CreateSQLQuery(OutAndMoney_sql)
                  .SetString("@UserId", userId)
                 .SetString("@StartTime", Model.fromDate.ToString())
+                .SetString("@AccountList", Model.accountTypeList)
                 .SetString("@EndTime", Model.toDate.ToString()).First<PayTypeDetail>();
 
             //整合数据
-            collection.FundDetailList = AccountDetail_query;
-            totalPayinCount = IncomeAndMoney_query.PayCount;
-            totalPayinMoney = IncomeAndMoney_query.TotalPayMoney;
-            totalPayoutCount = OutAndMoney_query.PayCount;
-            totalPayoutMoney = OutAndMoney_query.TotalPayMoney;
+            collection.FundDetailList = result;
+            collection.TotalPayinCount = IncomeAndMoney_query.PayCount;
+            collection.TotalPayinMoney = IncomeAndMoney_query.TotalPayMoney;
+            collection.TotalPayoutCount = OutAndMoney_query.PayCount;
+            collection.TotalBalanceMoney = OutAndMoney_query.TotalPayMoney;
             return collection;
         }
         /// <summary>
