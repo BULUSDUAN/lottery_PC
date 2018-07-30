@@ -982,7 +982,7 @@ namespace EntityModel.LotteryJsonInfo
         /// 让球数
         /// </summary>
         public int LetBall { get; set; }
-        public string LocalStopTime { get; set; }
+        public DateTime LocalStopTime { get; set; }
         //public decimal LoseOdds { get; set; }
         /// <summary>
         /// 比赛颜色
@@ -997,7 +997,7 @@ namespace EntityModel.LotteryJsonInfo
         /// 比赛id
         /// </summary>
         public int MatchOrderId { get; set; }
-        public string MatchStartTime { get; set; }
+        public DateTime MatchStartTime { get; set; }
         public int MatchState { get; set; }
         //public decimal WinOdds { get; set; }
         //public int Mid { get; set; }
@@ -1120,7 +1120,7 @@ namespace EntityModel.LotteryJsonInfo
         //public int MatchId { get; set; }
         public string MatchName { get; set; }
         //public string MatchResult { get; set; }
-        public string MatchStartTime { get; set; }
+        public DateTime MatchStartTime { get; set; }
         public CTZQMatchState MatchState { get; set; }
         public int OrderNumber { get; set; }
         //public string UpdateTime { get; set; }
@@ -1161,7 +1161,7 @@ namespace EntityModel.LotteryJsonInfo
         public string MatchResult { get; set; }
         public decimal MatchResultSp { get; set; }
         public string MatchState { get; set; }
-        public string StartTime { get; set; }
+        public DateTime StartTime { get; set; }
         public int Amount { get; set; }
         public int BetCount { get; set; }
         public string Detail_RF { get; set; }
@@ -1177,7 +1177,7 @@ namespace EntityModel.LotteryJsonInfo
         //队伍基础信息
         //public string CreateTime { get; set; }
         //public string DSStopBettingTime { get; set; }
-        public int MatcheDateTime { get; set; }
+        public DateTime MatcheDateTime { get; set; }
         /// <summary>
         /// 比赛日期
         /// </summary>
@@ -1226,7 +1226,7 @@ namespace EntityModel.LotteryJsonInfo
         /// <summary>
         /// 开比赛时间
         /// </summary>
-        public string StartDateTime { get; set; }
+        public DateTime StartDateTime { get; set; }
         //public decimal WinOdds { get; set; }
         //public int Mid { get; set; }
         public int FXId { get; set; }
@@ -1331,7 +1331,7 @@ namespace EntityModel.LotteryJsonInfo
         //public decimal AverageWin { get; set; }
         //public string CreateTime { get; set; }
         //public string DSStopBettingTime { get; set; }
-        public int MatcheDateTime { get; set; }
+        public DateTime MatcheDateTime { get; set; }
         /// <summary>
         /// 复式投注结时间
         /// </summary>
@@ -1368,7 +1368,7 @@ namespace EntityModel.LotteryJsonInfo
         /// </summary>
         public string MatchId { get; set; }
         public string MatchNumber { get; set; }
-        public string StartDateTime { get; set; }
+        public DateTime StartDateTime { get; set; }
         //public int Mid { get; set; }
         public int FXId { get; set; }
         public string PrivilegesType { get; set; }

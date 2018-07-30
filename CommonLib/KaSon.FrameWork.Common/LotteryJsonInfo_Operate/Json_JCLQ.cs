@@ -122,7 +122,7 @@ namespace KaSon.FrameWork.Common
             {
                 #region 队伍基础信息
 
-                var matchDataTime = ConvertHelper.ConvertDateTimeInt(ConvertHelper.ConvertStrToDateTime("20" + item.MatchData));
+                var matchDataTime = ConvertHelper.ConvertStrToDateTime("20" + item.MatchData);
                 var info = new JCLQ_MatchInfo_WEB()
                 {
                     //CreateTime = item.CreateTime.ToString("yyyyMMddHHmmss"),
@@ -139,7 +139,7 @@ namespace KaSon.FrameWork.Common
                     //LeagueId = item.LeagueId,
                     LeagueName = item.LeagueName,
                     MatchIdName = item.MatchIdName,
-                    StartDateTime = ConvertHelper.ConvertDateTimeInt(Convert.ToDateTime(item.StartDateTime)).ToString(),
+                    StartDateTime = Convert.ToDateTime(item.StartDateTime),
                     //StartDateTime = item.StartDateTime.ToString("yyyyMMddHHmmss"),
                     MatchData = item.MatchData,
                     MatchId = item.MatchId,
@@ -322,7 +322,7 @@ namespace KaSon.FrameWork.Common
             {
                 foreach (var item in match)
                 {
-                    var matchDataTime = ConvertHelper.ConvertDateTimeInt(ConvertHelper.ConvertStrToDateTime("20" + item.MatchData));
+                    var matchDataTime = ConvertHelper.ConvertStrToDateTime("20" + item.MatchData);
                     var info = new JCLQ_MatchInfo_WEB()
                     {
                         //CreateTime = item.CreateTime.ToString("yyyyMMddHHmmss"),
@@ -340,7 +340,7 @@ namespace KaSon.FrameWork.Common
                         LeagueName = item.LeagueName,
                         MatchIdName = item.MatchIdName,
                         //StartDateTime = bizHelper.ConvertDateTimeInt(Convert.ToDateTime(item.StartDateTime)).ToString(),
-                        StartDateTime = item.StartDateTime,
+                        StartDateTime = Convert.ToDateTime(item.StartDateTime),
                         //StartDateTime = item.StartDateTime.ToString("yyyyMMddHHmmss"),
                         MatchData = item.MatchData,
                         MatchId = item.MatchId,
