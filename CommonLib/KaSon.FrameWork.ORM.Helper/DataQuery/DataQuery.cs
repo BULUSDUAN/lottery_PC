@@ -35,7 +35,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 query = query.Where(p => p.GameCode == gameCode &&
                   p.Status == (int)IssuseStatus.OnSale &&
                   p.LocalStopTime > DateTime.Now
-                ).OrderByDescending(p => p.LocalStopTime);
+                ).OrderBy(p => p.LocalStopTime);
             }
             else
             {
@@ -43,7 +43,7 @@ namespace KaSon.FrameWork.ORM.Helper
                   p.Status == (int)IssuseStatus.OnSale &&
                   p.LocalStopTime > DateTime.Now &&
                   p.GameType == gameType
-                ).OrderByDescending(p => p.LocalStopTime);
+                ).OrderBy(p => p.LocalStopTime);
             }
             return query.ToList().Select(p => new Issuse_QueryInfo
             {
