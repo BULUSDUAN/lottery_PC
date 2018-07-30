@@ -511,15 +511,16 @@ namespace Lottery.Api.Controllers
             {
                 var p = WebHelper.Decode(entity.Param);
                 string verifyCode = p.verifyCode;
+                string MsgId = p.MsgId;
                 //string plattype = p.plattype;
 
-                if (string.IsNullOrEmpty(entity.MsgId))
+                if (string.IsNullOrEmpty(MsgId))
                 {
                     returnResult.Message = "消息序号不能为空";
                     return JsonEx(returnResult);  
                 }
                 ///redis 获取验证码
-               string codeValue= KaSon.FrameWork.Common.Redis.RedisHelper.StringGet(entity.MsgId);
+               string codeValue= KaSon.FrameWork.Common.Redis.RedisHelper.StringGet(MsgId);
                 if (codeValue != verifyCode) {
                     returnResult.Code = ResponseCode.ValiteCodeError;
                     returnResult.Message = "验证码错误";
