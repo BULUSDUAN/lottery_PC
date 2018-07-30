@@ -90,7 +90,7 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
 
                 if (validation.RetryTimes >= maxRetryTime)
                 {
-                    throw new Exception(string.Format("{1}_重试次数超出最大限制次数【{0}】次，请尝试重新发送验证码。", maxRetryTime, ResponseCode.ValiteCodeError.ToString()));
+                    throw new Exception(string.Format("重试次数超出最大限制次数【{0}】次，请尝试重新发送验证码。", maxRetryTime));
                 }
                 if (validation.ValidateCode == validateCode)
                 {

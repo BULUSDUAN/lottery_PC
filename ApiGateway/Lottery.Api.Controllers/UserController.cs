@@ -481,8 +481,7 @@ namespace Lottery.Api.Controllers
             }
             catch (Exception ex)
             {
-                var Code = ResponseCode.失败;
-                if (ex.Message.StartsWith(ResponseCode.ValiteCodeTimes.ToString()))
+            
                 return JsonEx(new LotteryServiceResponse
                 {
                    
