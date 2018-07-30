@@ -1599,11 +1599,12 @@ namespace Lottery.Api.Controllers
             {
                 var p = WebHelper.Decode(entity.Param);
                 string token = p.token;
-                DateTime begin = DateTime.Parse(p.begin);
-                DateTime end = DateTime.Parse(p.end);
-                int pageNo = int.Parse(p.pageNo);
-                int PageSize = int.Parse(p.PageSize);
+                DateTime begin =Convert.ToDateTime(p.begin);
+                DateTime end = Convert.ToDateTime(p.end);
+                int pageNo = Convert.ToInt32(p.pageNo);
+                int PageSize = Convert.ToInt32(p.PageSize);
                 var status = string.IsNullOrEmpty(Request.Query["status"]) ? null : (WithdrawStatus?)int.Parse(p.Status);
+                    //string.IsNullOrEmpty(Request.Query["status"]) ? null : (WithdrawStatus?)Convert.ToInt32(p.Status);
                 //var withdrawList = WCFClients.GameFundClient.QueryMyWithdrawList(WithdrawStatus.Success, begin, end.AddDays(1), pageNo, PageSize, token);
                 //var withdrawList = WCFClients.GameFundClient.QueryMyWithdrawList(null, begin, end.AddDays(1), pageNo, PageSize, token);
                 if (begin < DateTime.Now.AddMonths(-1))
