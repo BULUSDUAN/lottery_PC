@@ -310,10 +310,34 @@
       "Director": "renjun",
       "SQL": "SELECT top 1 w.OrderId,u1.DisplayName as RequesterDisplayName,u1.UserId as RequesterUserKey,u1.ComeFrom as RequesterComeFrom,u2.DisplayName as ProcessorsDisplayName,u2.UserId as ProcessorsUserKey,w.WithdrawAgent,w.ProvinceName,w.CityName,w.BankCode,w.BankName,w.BankSubName,w.BankCardNumber,w.RequestMoney,w.RequestTime,w.Status,w.ResponseMoney,w.ResponseMessage,w.ResponseTime,real_1.RealName as RequesterRealName,mobile_1.Mobile as RequesterMobile FROM C_Withdraw w LEFT JOIN C_User_Register u1 on w.UserId = u1.UserId LEFT JOIN C_User_Register u2 on w.ResponseUserId = u2.UserId LEFT JOIN E_Authentication_RealName real_1 on u1.UserId = real_1.UserId LEFT JOIN E_Authentication_Mobile mobile_1 on u1.UserId = mobile_1.UserId where w.OrderId=@OrderId",
       "Remark": ""
+
+    },
+    {
+      "key": "P_Blog_TotalUserCount",
+      "Desc": "用户总数",
+      "ParamDesc": "@AgentId:AgentId,@UserId:UserId,@TotalUserCount:TotalUserCount,@UserCount:UserCount",
+      "Director": "renjun",
+      "SQL": "declare my_cursor cursor for select UserId from E_Blog_UserSpread where AgentId=@AgentId open my_cursor fetch next from my_cursor into @UserId while @@FETCH_STATUS=0 begin begin with smbk as(select r.UserId from C_User_Register r left join E_Authentication_RealName e on r.UserId=e.UserId left join C_BankCard b on b.UserId=r.UserId  where r.UserType=0 and r.IsEnable=1 and r.UserId<>'admin' and r.UserId=@UserId),cz as(select top 1 f.UserId from  C_FillMoney f where f.RequestMoney>10 and f.status =1 and f.UserId=@UserId) select @UserCount=COUNT(a.UserId) from smbk a,cz b where  a.UserId=b.UserId; end begin set @TotalUserCount=@TotalUserCount+@UserCount; end fetch next from my_cursor into  @UserId end close my_cursor deallocate my_cursor select @TotalUserCount;",
+      "Remark": ""
+    },
+    {
+      "key": "P_Blog_UserSpread",
+      "Desc": "所有的",
+      "ParamDesc": "@AgentId:AgentId",
+      "Director": "renjun",
+      "SQL": "select COUNT(UserId) from E_Blog_UserSpread where AgentId=@AgentId;",
+      "Remark": ""
+    },
+    {
+      "key": "P_Blog_RedBagMoney",
+      "Desc": "领取红包总额",
+      "ParamDesc": "@AgentId:AgentId",
+      "Director": "renjun",
+      "SQL": "select sum(RedBagMoney) from C_Fund_RedBagDetail where RedBagCategory=5 and UserId=@AgentId;",
+      "Remark": ""
     }
-
-
   ],
+
   "DataModule": [
     {
       "key": "Data_QueryArticleList",

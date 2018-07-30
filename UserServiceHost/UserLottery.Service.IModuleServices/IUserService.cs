@@ -108,6 +108,9 @@ namespace UserLottery.Service.IModuleServices
         [Service(Date = "2018-7-03", Director = "renjun", Name = "提现记录")]
         Task<Withdraw_QueryInfoCollection> QueryMyWithdrawList(WithdrawStatus? status, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string userToken);
 
+        [Service(Date = "2018-7-30", Director = "renjun", Name = "QueryYqidRegisterByAgentId方法的手机接口")]
+        Task<string> QueryYqidRegisterByAgentIdToApp(string userToken);
+
         //[Service(Date = "2018-7-27", Director = "lidi", Name = "设置图形验证码到redis")]
         //Task<bool> SetVerifyCodeByGuid(string RedisKey, string RedisValue);
 

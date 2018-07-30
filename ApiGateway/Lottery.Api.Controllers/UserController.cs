@@ -481,8 +481,11 @@ namespace Lottery.Api.Controllers
             }
             catch (Exception ex)
             {
+                var Code = ResponseCode.失败;
+                if (ex.Message.StartsWith(ResponseCode.ValiteCodeTimes.ToString()))
                 return JsonEx(new LotteryServiceResponse
                 {
+                   
                     Code = ResponseCode.失败,
                     Message = ex.Message,
                     MsgId = entity.MsgId,
@@ -1031,7 +1034,7 @@ namespace Lottery.Api.Controllers
                     throw new Exception("您还未登录，请登录！");
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param["userToken"] = userToken;
-                var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/QueryYqidRegisterByAgentIdToApp");
+                var result = await _serviceProxyProvider.Invoke<string>(param, "api/user/QueryYqidRegisterByAgentIdToApp");
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
@@ -1600,11 +1603,12 @@ namespace Lottery.Api.Controllers
             {
                 var p = WebHelper.Decode(entity.Param);
                 string token = p.token;
-                DateTime begin = DateTime.Parse(p.begin);
-                DateTime end = DateTime.Parse(p.end);
-                int pageNo = int.Parse(p.pageNo);
-                int PageSize = int.Parse(p.PageSize);
+                DateTime begin =Convert.ToDateTime(p.begin);
+                DateTime end = Convert.ToDateTime(p.end);
+                int pageNo = Convert.ToInt32(p.pageNo);
+                int PageSize = Convert.ToInt32(p.PageSize);
                 var status = string.IsNullOrEmpty(Request.Query["status"]) ? null : (WithdrawStatus?)int.Parse(p.Status);
+                    //string.IsNullOrEmpty(Request.Query["status"]) ? null : (WithdrawStatus?)Convert.ToInt32(p.Status);
                 //var withdrawList = WCFClients.GameFundClient.QueryMyWithdrawList(WithdrawStatus.Success, begin, end.AddDays(1), pageNo, PageSize, token);
                 //var withdrawList = WCFClients.GameFundClient.QueryMyWithdrawList(null, begin, end.AddDays(1), pageNo, PageSize, token);
                 if (begin < DateTime.Now.AddMonths(-1))

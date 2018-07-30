@@ -22,18 +22,18 @@ namespace KaSon.FrameWork.ORM.Helper
             // 通过数据库存储过程进行查询
             var query = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "P_Blog_TotalUserCount").SQL;
             var TotalUserCount_query = DB.CreateSQLQuery(query)
-                .SetString("AgentId", AgentId)
-                .SetString("UserId", "0")
-                .SetInt("TotalUserCount", 0)
-                .SetInt("UserCount", 0).First<int>();
+                .SetString("@AgentId", AgentId)
+                .SetString("@UserId", "0")
+                .SetInt("@TotalUserCount", 0)
+                .SetInt("@UserCount", 0).First<int>();
                 //List<E_Blog_UserSpread>();
             var UserSpread= SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "P_Blog_UserSpread").SQL;
             var UserSpread_query = DB.CreateSQLQuery(UserSpread)
-               .SetString("AgentId", AgentId).First<int>();
+               .SetString("@AgentId", AgentId).First<int>();
 
            var RedBagMoney= SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "P_Blog_RedBagMoney").SQL;
             var RedBagMoney_query = DB.CreateSQLQuery(RedBagMoney)
-              .SetString("AgentId", AgentId).First<decimal>();
+              .SetString("@AgentId", AgentId).First<decimal>();
 
             string str = string.Empty;
            
