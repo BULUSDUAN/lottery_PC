@@ -511,7 +511,7 @@ namespace Lottery.Api.Controllers
             {
                 var p = WebHelper.Decode(entity.Param);
                 string verifyCode = p.verifyCode;
-                string MsgId = p.MsgId;
+                string MsgId = entity.MsgId;
                 //string plattype = p.plattype;
 
                 if (string.IsNullOrEmpty(MsgId))
