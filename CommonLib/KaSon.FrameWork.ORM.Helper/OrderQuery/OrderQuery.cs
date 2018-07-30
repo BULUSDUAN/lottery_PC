@@ -1235,7 +1235,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public Sports_SchemeQueryInfo QuerySports_Order_RunningInfo(string schemeId)
         {
             var query = from r in DB.CreateQuery<C_Sports_Order_Running>()
-                        join u in DB.CreateQuery<UserRegister>() on r.UserId equals u.UserId
+                        join u in DB.CreateQuery<C_User_Register>() on r.UserId equals u.UserId
                         where r.SchemeId == schemeId
                         select new { r, u };
             var queryResult = query.ToList().Select(b => new Sports_SchemeQueryInfo

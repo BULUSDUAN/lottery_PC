@@ -62,10 +62,10 @@ namespace Lottery.Api.Controllers
                     list.Add(new
                     {
                         CurrIssuseNumber = gameIssuseInfo.IssuseNumber,
-                        LocalStopTime = ConvertHelper.ConvertDateTimeInt(gameIssuseInfo.LocalStopTime),
-                        OfficialStopTime = ConvertHelper.ConvertDateTimeInt(gameIssuseInfo.OfficialStopTime),
+                        LocalStopTime = gameIssuseInfo.LocalStopTime,
+                        OfficialStopTime = gameIssuseInfo.OfficialStopTime,
                         DelayTime = DelayTime,
-                        ServiceTime = ConvertHelper.ConvertDateTimeInt(DateTime.Now),
+                        ServiceTime = DateTime.Now,
                     });
                     return Json(new LotteryServiceResponse
                     {
@@ -132,10 +132,10 @@ namespace Lottery.Api.Controllers
                     {
                         GameCode = gameInfo.GameCode,
                         CurrIssuseNumber = gameInfo.IssuseNumber,
-                        LocalStopTime = ConvertHelper.ConvertDateTimeInt(gameInfo.LocalStopTime),
-                        OfficialStopTime = ConvertHelper.ConvertDateTimeInt(gameInfo.OfficialStopTime),
+                        LocalStopTime = gameInfo.LocalStopTime,
+                        OfficialStopTime = gameInfo.OfficialStopTime,
                         DelayTime = gameInfo.GameDelaySecond,
-                        ServiceTime = ConvertHelper.ConvertDateTimeInt(DateTime.Now),
+                        ServiceTime = DateTime.Now,
                     });
                 }
 
@@ -195,9 +195,9 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var currTime = ConvertHelper.ConvertDateTimeInt(DateTime.Now);
-                if (currTime > 0)
-                {
+                var currTime = DateTime.Now;
+                //if (currTime > 0)
+                //{
                     return Json(new LotteryServiceResponse
                     {
                         Code = ResponseCode.成功,
@@ -205,14 +205,14 @@ namespace Lottery.Api.Controllers
                         MsgId = entity.MsgId,
                         Value = currTime,
                     });
-                }
-                return Json(new LotteryServiceResponse
-                {
-                    Code = ResponseCode.失败,
-                    Message = "查询服务器当前时间失败",
-                    MsgId = entity.MsgId,
-                    Value = 0,
-                });
+                //}
+                //return Json(new LotteryServiceResponse
+                //{
+                //    Code = ResponseCode.失败,
+                //    Message = "查询服务器当前时间失败",
+                //    MsgId = entity.MsgId,
+                //    Value = 0,
+                //});
             }
             catch (ArgumentException ex)
             {
@@ -266,7 +266,7 @@ namespace Lottery.Api.Controllers
                             BannerId = item.BannerId,
                             BannerTitle = item.BannerTitle,
                             BannerType = item.BannerType,
-                            CreateTime = ConvertHelper.ConvertDateTimeInt(item.CreateTime),
+                            CreateTime = item.CreateTime,
                             ImageUrl = item.ImageUrl,
                             IsEnable = item.IsEnable,
                             JumpUrl = item.JumpUrl,
@@ -917,7 +917,7 @@ namespace Lottery.Api.Controllers
                         NextTitle = resultInfo.NextTitle,
                         Content = content,
                         DescContent = resultInfo.DescContent,
-                        CreateTime = ConvertHelper.ConvertDateTimeInt(resultInfo.CreateTime),
+                        CreateTime = resultInfo.CreateTime,
                         author = "玩彩编辑",
                         readcount = resultInfo.ReadCount
                     });
@@ -988,7 +988,7 @@ namespace Lottery.Api.Controllers
                                 Title = item.Title,
                                 GameCode = item.GameCode,
                                 Category = item.Category.Trim(),
-                                CreateTime = ConvertHelper.ConvertDateTimeInt(item.CreateTime),
+                                CreateTime = item.CreateTime,
                                 ReadCount = item.ReadCount,
                             });
                         }
@@ -1006,7 +1006,7 @@ namespace Lottery.Api.Controllers
                                 Title = item.Title,
                                 GameCode = item.GameCode,
                                 Category = item.Category.Trim(),
-                                CreateTime = ConvertHelper.ConvertDateTimeInt(item.CreateTime),
+                                CreateTime = item.CreateTime,
                                 ReadCount = item.ReadCount,
                             });
                         }
@@ -1024,7 +1024,7 @@ namespace Lottery.Api.Controllers
                                 Title = item.Title,
                                 GameCode = item.GameCode,
                                 Category = item.Category.Trim(),
-                                CreateTime = ConvertHelper.ConvertDateTimeInt(item.CreateTime),
+                                CreateTime = item.CreateTime,
                                 ReadCount = item.ReadCount,
                             });
                         }
@@ -1042,7 +1042,7 @@ namespace Lottery.Api.Controllers
                                 Title = item.Title,
                                 GameCode = item.GameCode,
                                 Category = item.Category.Trim(),
-                                CreateTime = ConvertHelper.ConvertDateTimeInt(item.CreateTime),
+                                CreateTime = item.CreateTime,
                                 ReadCount = item.ReadCount,
                             });
                         }
@@ -1060,7 +1060,7 @@ namespace Lottery.Api.Controllers
                                 Title = item.Title,
                                 GameCode = item.GameCode,
                                 Category = item.Category.Trim(),
-                                CreateTime = ConvertHelper.ConvertDateTimeInt(item.CreateTime),
+                                CreateTime = item.CreateTime,
                                 ReadCount = item.ReadCount,
                             });
                         }
@@ -1078,7 +1078,7 @@ namespace Lottery.Api.Controllers
                                 Title = item.Title,
                                 GameCode = item.GameCode,
                                 Category = item.Category.Trim(),
-                                CreateTime = ConvertHelper.ConvertDateTimeInt(item.CreateTime),
+                                CreateTime = item.CreateTime,
                                 ReadCount = item.ReadCount,
                             });
                         }
@@ -1160,7 +1160,7 @@ namespace Lottery.Api.Controllers
                             Category = "GG",
                             //Description = DeleteHtml(item.Content, 25),
                             //Content = item.Content,
-                            CreateTime = ConvertHelper.ConvertDateTimeInt(item.CreateTime),
+                            CreateTime = item.CreateTime,
                         });
                     }
                     return Json(new LotteryServiceResponse
@@ -1504,7 +1504,7 @@ namespace Lottery.Api.Controllers
                         list.Add(new
                         {
                             ConfigKey = item.ConfigKey,
-                            CreateTime = ConvertHelper.ConvertDateTimeInt(item.CreateTime),
+                            CreateTime = item.CreateTime,
                             Id = item.Id,
                             IsEnable = item.IsEnable,
                             Remarks = item.Remarks,
@@ -1538,7 +1538,7 @@ namespace Lottery.Api.Controllers
                 list.Add(new
                 {
                     ConfigKey = "all_sjzy",
-                    CreateTime = ConvertHelper.ConvertDateTimeInt(DateTime.Now),
+                    CreateTime = DateTime.Now,
                     Id = 1,
                     IsEnable = true,
                     Remarks = "手机主页",
@@ -1548,7 +1548,7 @@ namespace Lottery.Api.Controllers
                 list.Add(new
                 {
                     ConfigKey = "all_zcdz",
-                    CreateTime = ConvertHelper.ConvertDateTimeInt(DateTime.Now),
+                    CreateTime = DateTime.Now,
                     Id = 3,
                     IsEnable = true,
                     Remarks = "注册地址",
@@ -1558,7 +1558,7 @@ namespace Lottery.Api.Controllers
                 list.Add(new
                 {
                     ConfigKey = "all_czdz",
-                    CreateTime = ConvertHelper.ConvertDateTimeInt(DateTime.Now),
+                    CreateTime = DateTime.Now,
                     Id = 3,
                     IsEnable = true,
                     Remarks = "充值地址",
@@ -1568,7 +1568,7 @@ namespace Lottery.Api.Controllers
                 list.Add(new
                 {
                     ConfigKey = "all_tkdz",
-                    CreateTime = ConvertHelper.ConvertDateTimeInt(DateTime.Now),
+                    CreateTime = DateTime.Now,
                     Id = 3,
                     IsEnable = true,
                     Remarks = "提款地址",
@@ -1663,14 +1663,14 @@ namespace Lottery.Api.Controllers
                     {
                         list.Add(new
                         {
-                            ActionTime = ConvertHelper.ConvertDateTimeInt(item.SendTime),
+                            ActionTime = item.SendTime,
                             Content = string.IsNullOrEmpty(item.MsgContent) ? string.Empty : item.MsgContent,
                             HandleType = item.HandleType,
                             MailId = item.MailId,
                             SenderId = item.SenderId,
-                            SendTime = ConvertHelper.ConvertDateTimeInt(item.SendTime),
+                            SendTime = item.SendTime,
                             Title = item.Title,
-                            UpdateTime = ConvertHelper.ConvertDateTimeInt(item.SendTime)
+                            UpdateTime = item.SendTime
                         });
                     }
                     #endregion
@@ -1735,15 +1735,15 @@ namespace Lottery.Api.Controllers
                     }
                     list.Add(new
                     {
-                        ActionTime = ConvertHelper.ConvertDateTimeInt(mailContent.ActionTime),
+                        ActionTime = mailContent.ActionTime,
                         Content = string.IsNullOrEmpty(content) ? string.Empty : content,
                         HandleType = mailContent.HandleType,
                         MailId = mailContent.MailId,
                         SenderId = mailContent.SenderId,
                         AuthorName = "爱玩彩",
-                        SendTime = ConvertHelper.ConvertDateTimeInt(mailContent.SendTime),
+                        SendTime = mailContent.SendTime,
                         Title = mailContent.Title,
-                        UpdateTime = ConvertHelper.ConvertDateTimeInt(mailContent.UpdateTime)
+                        UpdateTime = mailContent.UpdateTime
                     });
                     return Json(new LotteryServiceResponse
                     {
@@ -1878,7 +1878,7 @@ namespace Lottery.Api.Controllers
                                 Title = item.Title,
                                 GameCode = item.GameCode,
                                 Category = item.Category.Trim(),
-                                CreateTime = ConvertHelper.ConvertDateTimeInt(item.CreateTime),
+                                CreateTime = item.CreateTime,
                             });
                         }
                         break;
@@ -1897,7 +1897,7 @@ namespace Lottery.Api.Controllers
                                 Title = item.Title,
                                 GameCode = item.GameCode,
                                 Category = item.Category.Trim(),
-                                CreateTime = ConvertHelper.ConvertDateTimeInt(item.CreateTime),
+                                CreateTime = item.CreateTime,
                             });
                         }
                         break;
@@ -1916,7 +1916,7 @@ namespace Lottery.Api.Controllers
                                 Title = item.Title,
                                 GameCode = item.GameCode,
                                 Category = item.Category.Trim(),
-                                CreateTime = ConvertHelper.ConvertDateTimeInt(item.CreateTime),
+                                CreateTime = item.CreateTime,
                             });
                         }
                         break;
@@ -1935,7 +1935,7 @@ namespace Lottery.Api.Controllers
                                 Title = item.Title,
                                 GameCode = item.GameCode,
                                 Category = item.Category.Trim(),
-                                CreateTime = ConvertHelper.ConvertDateTimeInt(item.CreateTime),
+                                CreateTime = item.CreateTime,
                             });
                         }
                         break;
@@ -1954,7 +1954,7 @@ namespace Lottery.Api.Controllers
                                 Title = item.Title,
                                 GameCode = item.GameCode,
                                 Category = item.Category.Trim(),
-                                CreateTime = ConvertHelper.ConvertDateTimeInt(item.CreateTime),
+                                CreateTime = item.CreateTime,
                             });
                         }
                         break;
@@ -1973,7 +1973,7 @@ namespace Lottery.Api.Controllers
                                 Title = item.Title,
                                 GameCode = item.GameCode,
                                 Category = item.Category.Trim(),
-                                CreateTime = ConvertHelper.ConvertDateTimeInt(item.CreateTime),
+                                CreateTime = item.CreateTime,
                             });
                         }
                         break;
@@ -2300,9 +2300,9 @@ namespace Lottery.Api.Controllers
                             LinkUrl = ConvertHelper.GetDomain() + item.LinkUrl,
                             Title = item.Title,
                             Summary = item.Summary,
-                            BeginTime = ConvertHelper.ConvertDateTimeInt(item.BeginTime),
-                            EndTime = ConvertHelper.ConvertDateTimeInt(item.EndTime),
-                            CreateTime = ConvertHelper.ConvertDateTimeInt(item.CreateTime)
+                            BeginTime = item.BeginTime,
+                            EndTime = item.EndTime,
+                            CreateTime = item.CreateTime
                         });
                     }
                     return Json(new LotteryServiceResponse
@@ -2602,7 +2602,7 @@ namespace Lottery.Api.Controllers
                     startDate = Convert.ToDateTime(theissuse.StartTime);
                 }
 
-                list.Add(new { issuse = cur.IssuseNumber, stoptime = ConvertHelper.ConvertDateTimeInt(cur.LocalStopTime).ToString(), servertime = ConvertHelper.ConvertDateTimeInt(DateTime.Now).ToString(), starttime = ConvertHelper.ConvertDateTimeInt(startDate != null ? startDate.Value : cur.StartTime).ToString() });
+                list.Add(new { issuse = cur.IssuseNumber, stoptime = startDate != null ? startDate.Value : cur.StartTime });
 
                 return Json(new LotteryServiceResponse
                 {
@@ -2815,8 +2815,8 @@ namespace Lottery.Api.Controllers
                         new
                         {
                             issuse = result.IssuseNumber,
-                            stoptime = ConvertHelper.ConvertDateTimeInt(DateTime.Parse(result.MinLocalStopTime)).ToString(),
-                            servertime = ConvertHelper.ConvertDateTimeInt(DateTime.Now).ToString()
+                            stoptime = DateTime.Parse(result.MinLocalStopTime),
+                            servertime = DateTime.Now
                         });
                 }
                 return Json(new LotteryServiceResponse

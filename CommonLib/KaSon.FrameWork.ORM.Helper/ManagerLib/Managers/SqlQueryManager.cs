@@ -84,6 +84,7 @@ namespace KaSon.FrameWork.ORM.Helper
             pageIndex = pageIndex < 0 ? 0 : pageIndex;
             pageSize = pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : pageSize;
 
+
             var query = from r in DB.CreateQuery<C_Withdraw>()
                         join u in DB.CreateQuery<C_User_Register>() on r.UserId equals u.UserId
                         where (userId == string.Empty || r.UserId == userId)

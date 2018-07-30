@@ -481,8 +481,10 @@ namespace Lottery.Api.Controllers
             }
             catch (Exception ex)
             {
+            
                 return JsonEx(new LotteryServiceResponse
                 {
+                   
                     Code = ResponseCode.失败,
                     Message = ex.Message,
                     MsgId = entity.MsgId,
@@ -1031,7 +1033,7 @@ namespace Lottery.Api.Controllers
                     throw new Exception("您还未登录，请登录！");
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param["userToken"] = userToken;
-                var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/QueryYqidRegisterByAgentIdToApp");
+                var result = await _serviceProxyProvider.Invoke<string>(param, "api/user/QueryYqidRegisterByAgentIdToApp");
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,

@@ -15,11 +15,11 @@ namespace KaSon.FrameWork.Common.Utilities {
         /// </summary>
         /// <param name=”time”></param>
         /// <returns></returns>
-        public static int ConvertDateTimeInt(DateTime time)
-        {
-            DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
-            return (int)(time - startTime).TotalSeconds;
-        }
+        //public static int ConvertDateTimeInt(DateTime time)
+        //{
+        //    DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
+        //    return (int)(time - startTime).TotalSeconds;
+        //}
         /// <summary>
         /// 删除Html
         /// </summary>

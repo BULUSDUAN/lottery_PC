@@ -71,7 +71,7 @@ namespace KaSon.FrameWork.Common
                     //MatchId = item.MatchId,
                     MatchName = item.MatchName,
                     //MatchResult = item.MatchResult,
-                    MatchStartTime = ConvertHelper.ConvertDateTimeInt(Convert.ToDateTime(item.MatchStartTime)).ToString(),
+                    MatchStartTime = Convert.ToDateTime(item.MatchStartTime),
                     //MatchStartTime = item.MatchStartTime.ToString("yyyyMMddHHmmss"),
                     MatchState = item.MatchState,
                     //HomeTeamHalfScore = item.HomeTeamHalfScore,
@@ -156,7 +156,7 @@ namespace KaSon.FrameWork.Common
                     info.MatchResult = item.MatchResult;
                     info.MatchResultSp = 0M;
                     info.MatchState = item.MatchState.ToString();
-                    info.StartTime = ConvertHelper.ConvertDateTimeInt(Convert.ToDateTime(item.MatchStartTime)).ToString();
+                    info.StartTime = Convert.ToDateTime(item.MatchStartTime);
                     info.OrderNumber = item.OrderNumber;
                     ctzqList.Add(info);
                 }

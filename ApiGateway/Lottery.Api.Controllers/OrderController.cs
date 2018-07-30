@@ -62,7 +62,7 @@ namespace Lottery.Api.Controllers
                         {
                             item.IssuseNumber,
                             item.WinNumber,
-                            CreateTime = ConvertHelper.ConvertDateTimeInt(item.CreateTime),
+                            CreateTime = item.CreateTime,
                         });
                     }
                 }                
@@ -178,7 +178,7 @@ namespace Lottery.Api.Controllers
                             item.IssuseNumber,
                             item.GameType,
                             item.GameCode,
-                            CreateTime = ConvertHelper.ConvertDateTimeInt(item.CreateTime),
+                            CreateTime = item.CreateTime,
                         });
                     }
                 }
@@ -266,7 +266,7 @@ namespace Lottery.Api.Controllers
                             {
                                 MatchId = item.MatchId,
                                 MatchIdName = item.MatchIdName,
-                                StartTime = ConvertHelper.ConvertDateTimeInt(item.StartTime),
+                                StartTime = item.StartTime,
                                 LeagueId = item.LeagueId,
                                 LeagueName = item.LeagueName,
                                 LeagueColor = item.LeagueColor,
@@ -298,7 +298,7 @@ namespace Lottery.Api.Controllers
                                 BQC_Result = item.BQC_Result,
                                 BQC_Name = ConvertHelper.ANTECODES_JCZQ("bqc", item.BQC_Result),
                                 BQC_SP = item.BQC_SP,
-                                CreateTime = ConvertHelper.ConvertDateTimeInt(item.CreateTime),
+                                CreateTime = item.CreateTime,
                             });
                         }
                     }
@@ -328,7 +328,7 @@ namespace Lottery.Api.Controllers
                             {
                                 MatchId = item.MatchId,
                                 MatchIdName = item.MatchIdName,
-                                StartTime = ConvertHelper.ConvertDateTimeInt(item.StartTime),
+                                StartTime = item.StartTime,
                                 LeagueId = item.LeagueId,
                                 LeagueName = item.LeagueName,
                                 LeagueColor = item.LeagueColor,
@@ -351,7 +351,7 @@ namespace Lottery.Api.Controllers
                                 SFC_SP = item.SFC_SP,
                                 RFSF_Trend = item.RFSF_Trend,
                                 DXF_Trend = item.DXF_Trend,
-                                CreateTime = ConvertHelper.ConvertDateTimeInt(item.CreateTime),
+                                CreateTime = item.CreateTime,
                             });
                         }
                     }
@@ -388,7 +388,7 @@ namespace Lottery.Api.Controllers
                                 MatchColor = item.MatchColor,
                                 MatchName = item.MatchName,
                                 MatchOrderId = item.MatchOrderId,
-                                MatchStartTime = ConvertHelper.ConvertDateTimeInt(item.MatchStartTime),
+                                MatchStartTime = item.MatchStartTime,
                                 MatchState = item.MatchState,
                                 SPF_Result = item.SPF_Result == null ? "" : item.SPF_Result,
                                 SPF_Name = ConvertHelper.ANTECODES_BJDC("spf", item.SPF_Result),
@@ -445,11 +445,11 @@ namespace Lottery.Api.Controllers
                             MatchId = item.MatchId,
                             MatchName = item.MatchName,
                             MatchResult = item.MatchResult == null ? "" : item.MatchResult,
-                            MatchStartTime = ConvertHelper.ConvertDateTimeInt(item.MatchStartTime),
+                            MatchStartTime = item.MatchStartTime,
                             Mid = item.Mid,
                             OrderNumber = item.OrderNumber,
-                            UpdateTime = ConvertHelper.ConvertDateTimeInt(item.UpdateTime),
-                            BonusTime = item.BounsTime.Year < 1900 ? -1 : ConvertHelper.ConvertDateTimeInt(item.BounsTime),
+                            UpdateTime = item.UpdateTime,
+                            BonusTime = item.BounsTime.Year < 1900 ? null : item.BounsTime.ToString("yyyy-MM-dd HH:mm:ss"),
                         });
                     }
                 }
@@ -537,7 +537,7 @@ namespace Lottery.Api.Controllers
                                 PayMoney = item.PayMoney,
                                 PayType = item.PayType,
                                 Summary = item.Summary,
-                                CreateTime = ConvertHelper.ConvertDateTimeInt(item.CreateTime),
+                                CreateTime = item.CreateTime,
                                 TotalPayinCount = FundDetails.TotalPayinCount,
                                 TotalPayinMoney = FundDetails.TotalPayinMoney,
                                 TotalPayoutCount = FundDetails.TotalPayinMoney,
@@ -561,8 +561,8 @@ namespace Lottery.Api.Controllers
                                 FillMoneyAgentType = item.FillMoneyAgent,
                                 StrFillMoneyAgentType = ConvertHelper.GetFillMoneyAgentType(item.FillMoneyAgent),
                                 OrderId = item.OrderId,
-                                RequestTime = ConvertHelper.ConvertDateTimeInt(item.RequestTime),
-                                ResponseTime = ConvertHelper.ConvertDateTimeInt(item.ResponseTime.Value),
+                                RequestTime = item.RequestTime,
+                                ResponseTime = item.ResponseTime.Value,
                                 FillMoneyStatus = item.Status,
                                 StrFillMoneyStatus = ConvertHelper.GetFillMoneyStatus(item.Status),
                                 RequestMoney = item.RequestMoney,
@@ -584,7 +584,7 @@ namespace Lottery.Api.Controllers
                         {
                             list.Add(new
                             {
-                                BuyTime = ConvertHelper.ConvertDateTimeInt(item.BuyTime),
+                                BuyTime = item.BuyTime,
                                 BuyMoney = item.BuyMoney,
                                 SchemeBettingCategory = item.SchemeBettingCategory,
                                 StrSchemeBettingCategory = ConvertHelper.GetSchemeBettingCategory(item.SchemeBettingCategory),
@@ -619,7 +619,7 @@ namespace Lottery.Api.Controllers
                                 PayMoney = item.PayMoney,
                                 PayType = item.PayType,
                                 Summary = item.Summary,
-                                CreateTime = ConvertHelper.ConvertDateTimeInt(item.CreateTime),
+                                CreateTime = item.CreateTime,
                                 TotalPayinCount = result.TotalPayinCount,
                                 TotalPayinMoney = result.TotalPayinMoney,
                                 TotalPayoutCount = result.TotalPayoutCount,
@@ -647,8 +647,8 @@ namespace Lottery.Api.Controllers
                                 OrderId = item.OrderId,
                                 ProvinceName = item.ProvinceName,
                                 RequestMoney = item.RequestMoney,
-                                RequestTime = ConvertHelper.ConvertDateTimeInt(item.RequestTime.Value),
-                                ResponseTime = ConvertHelper.ConvertDateTimeInt(item.ResponseTime.Value),
+                                RequestTime = item.RequestTime.Value,
+                                ResponseTime = item.ResponseTime.Value,
                                 ResponseMoney = item.ResponseMoney,
                                 WithdrawAgent = item.WithdrawAgent,
                                 StrWithdrawAgent = ConvertHelper.WithdrawAgentTypeName((WithdrawAgentType)item.WithdrawAgent),
@@ -740,7 +740,7 @@ namespace Lottery.Api.Controllers
                                 CreatorDisplayName = item.CreatorDisplayName,
                                 IssuseNumber = item.IssuseNumber,
                                 CurrentBettingMoney = item.BuyMoney,
-                                BetTime = ConvertHelper.ConvertDateTimeInt(item.BetTime),
+                                BetTime = item.BetTime,
                                 SchemeType = item.SchemeType,
                                 TicketStatus = item.TicketStatus,
                                 ProgressStatus = item.ProgressStatus,
@@ -751,7 +751,7 @@ namespace Lottery.Api.Controllers
                                 StrBonusStatus = ConvertHelper.BonusStatusName(item.BonusStatus),
                                 StrOrderStateName = ConvertHelper.GetOrderStatusName(item.SchemeType, item.ProgressStatus, item.TicketStatus, item.BonusStatus, true, true, false),
                                 TotalMoney = item.TotalMoney,
-                                CreateTime = ConvertHelper.ConvertDateTimeInt(item.BuyTime)
+                                CreateTime = item.BuyTime
                             });
                         }
                     }
@@ -773,7 +773,7 @@ namespace Lottery.Api.Controllers
                             CreatorDisplayName = item.CreatorDisplayName,
                             IssuseNumber = item.IssuseNumber,
                             CurrentBettingMoney = item.TotalMoney,
-                            BetTime = ConvertHelper.ConvertDateTimeInt(item.CreateTime),
+                            BetTime = item.CreateTime,
                             SchemeType = item.SchemeType,
                             TicketStatus = item.TicketStatus,
                             ProgressStatus = item.ProgressStatus,
@@ -784,7 +784,7 @@ namespace Lottery.Api.Controllers
                             StrBonusStatus = ConvertHelper.BonusStatusName(item.BonusStatus),
                             StrOrderStateName = ConvertHelper.GetOrderStatusName(item.SchemeType, item.ProgressStatus, item.TicketStatus, item.BonusStatus, true, true, false),
                             TotalMoney = item.TotalMoney,
-                            CreateTime = ConvertHelper.ConvertDateTimeInt(item.CreateTime)
+                            CreateTime = item.CreateTime
                         });
                     }
                 }
@@ -805,7 +805,7 @@ namespace Lottery.Api.Controllers
                             CreatorDisplayName = item.CreatorDisplayName,
                             IssuseNumber = item.IssuseNumber,
                             CurrentBettingMoney = item.TotalMoney,
-                            BetTime = ConvertHelper.ConvertDateTimeInt(item.CreateTime),
+                            BetTime = item.CreateTime,
                             SchemeType = item.SchemeType,
                             TicketStatus = item.TicketStatus,
                             ProgressStatus = item.ProgressStatus,
@@ -816,7 +816,7 @@ namespace Lottery.Api.Controllers
                             StrBonusStatus = ConvertHelper.BonusStatusName(item.BonusStatus),
                             StrOrderStateName = ConvertHelper.GetOrderStatusName(item.SchemeType, item.ProgressStatus, item.TicketStatus, item.BonusStatus, true, true, false),
                             TotalMoney = item.TotalMoney,
-                            CreateTime = ConvertHelper.ConvertDateTimeInt(item.CreateTime)
+                            CreateTime = item.CreateTime
                         });
                     }
                 }
@@ -914,7 +914,7 @@ namespace Lottery.Api.Controllers
                             GameType = item.GameType,
                             GameTypeDisplayName = item.GameTypeDisplayName,
                             PlayType = item.PlayType,
-                            StopTime = ConvertHelper.ConvertDateTimeInt(item.StopTime).ToString(),
+                            StopTime = item.StopTime,
                             TotalMatchCount = item.TotalMatchCount,
                             GoldCrownCount = item.GoldCrownCount,
                             GoldCupCount = item.GoldCupCount,
@@ -1168,7 +1168,7 @@ namespace Lottery.Api.Controllers
                 UserId = firstIssuse.UserId,
                 UserDisplayName = firstIssuse.CreatorDisplayName,
                 HideDisplayNameCount = firstIssuse.HideDisplayNameCount,
-                CreateTime = ConvertHelper.ConvertDateTimeInt(firstIssuse.CreateTime),
+                CreateTime = firstIssuse.CreateTime,
                 TotalMoney = schemeInfo.TotalOrderMoney,
                 TotalBuyMoney = schemeInfo.TotalBuyMoney,
                 BonusMoney = schemeInfo.TotalAfterTaxBonusMoney,
@@ -1224,7 +1224,7 @@ namespace Lottery.Api.Controllers
                     Price = item.Price,
                     JoinType = ConvertHelper.FomartJoinType(item.JoinType),
                     JoinId = item.JoinId,
-                    JoinDateTime = ConvertHelper.ConvertDateTimeInt(item.JoinDateTime),
+                    JoinDateTime = item.JoinDateTime,
                     IsSucess = item.IsSucess,
                     BuyCount = item.BuyCount,
                     BonusMoney = item.BonusMoney,
@@ -1258,7 +1258,7 @@ namespace Lottery.Api.Controllers
                 TotalMoney = schemeInfo.TotalMoney,
                 TotalCount = schemeInfo.TotalCount,
                 SoldCount = schemeInfo.SoldCount,
-                StopTime =ConvertHelper.ConvertDateTimeInt(schemeInfo.StopTime),
+                StopTime = schemeInfo.StopTime,
                 Price = schemeInfo.Price,
                 Progress = schemeInfo.Progress,
                 JoinPwd = schemeInfo.JoinPwd,
@@ -1270,7 +1270,7 @@ namespace Lottery.Api.Controllers
                 Subscription = schemeInfo.Subscription,
                 Guarantees = schemeInfo.Guarantees,
                 WinNumber = schemeInfo.WinNumber,
-                CreateTime = ConvertHelper.ConvertDateTimeInt(schemeInfo.CreateTime),
+                CreateTime = schemeInfo.CreateTime,
                 HitMatchCount = schemeInfo.HitMatchCount,
                 BonusCount = schemeInfo.BonusCount,
                 BonusMoney = schemeInfo.AfterTaxBonusMoney,
@@ -1287,7 +1287,7 @@ namespace Lottery.Api.Controllers
                 Description = schemeInfo.Description,
                 CodeList = codeList,
                 JoinList = joinList,
-                ServiceTime = ConvertHelper.ConvertDateTimeInt(DateTime.Now),
+                ServiceTime = DateTime.Now,
             };
 
             return Json(new LotteryServiceResponse
@@ -1367,7 +1367,7 @@ namespace Lottery.Api.Controllers
                 HideDisplayNameCount = schemeInfo.HideDisplayNameCount,
                 MatchCount = schemeInfo.TotalMatchCount,
                 PlayType = schemeInfo.PlayType,
-                CreateTime = ConvertHelper.ConvertDateTimeInt(schemeInfo.CreateTime),
+                CreateTime = schemeInfo.CreateTime,
                 TotalMoney = schemeInfo.TotalMoney,
                 BonusMoney = schemeInfo.AfterTaxBonusMoney,
                 AddMoney = schemeInfo.AddMoney,
@@ -1491,7 +1491,7 @@ namespace Lottery.Api.Controllers
                         MatchResult = issuseInfo == null ? string.Empty : issuseInfo.WinNumber,
                         MatchResultSp = item.MatchResultSp,
                         MatchState = item.MatchState,
-                        StartTime = ConvertHelper.ConvertDateTimeInt(Convert.ToDateTime(item.StartTime)),
+                        StartTime = Convert.ToDateTime(item.StartTime),
                         Amount = amount,
                         BetCount = betCount,
                         Detail_RF = AnalyticalCurrentSp(item.CurrentSp, "RF"),
@@ -1535,7 +1535,7 @@ namespace Lottery.Api.Controllers
                         MatchResult = issuseInfo == null ? string.Empty : issuseInfo.WinNumber,
                         MatchResultSp = item.MatchResultSp,
                         MatchState = item.MatchState,
-                        StartTime = ConvertHelper.ConvertDateTimeInt(Convert.ToDateTime(item.StartTime)),
+                        StartTime = Convert.ToDateTime(item.StartTime),
                         Amount = amount,
                         BetCount = betCount,
                         Detail_RF =AnalyticalCurrentSp(item.CurrentSp, "RF"),
@@ -1760,12 +1760,12 @@ namespace Lottery.Api.Controllers
                             CurrProfitRate = item.CurrProfitRate,
                             ExpectedBonusMoney = item.ExpectedBonusMoney,
                             ExpectedReturnRate = item.ExpectedReturnRate,
-                            FirstMatchStopTime =ConvertHelper.ConvertDateTimeInt(item.FirstMatchStopTime),
+                            FirstMatchStopTime = item.FirstMatchStopTime,
                             GameCode = item.GameCode,
                             GameType = item.GameType,
                             IsComplate = item.IsComplate,
                             IssuseNumber = item.IssuseNumber,
-                            LastMatchStopTime = ConvertHelper.ConvertDateTimeInt(item.LastMatchStopTime),
+                            LastMatchStopTime = item.LastMatchStopTime,
                             LastweekProfitRate = item.LastweekProfitRate,
                             ProfitRate = item.ProfitRate,
                             SchemeId = item.SchemeId,
@@ -1860,8 +1860,8 @@ namespace Lottery.Api.Controllers
                             TotalBuyCount = item.TotalBuyCount,
                             TotalBuyMoney = item.TotalBuyMoney,
                             AfterTaxBonusMoney = item.AfterTaxBonusMoney,
-                            FirstMatchStopTime = ConvertHelper.ConvertDateTimeInt(item.FirstMatchStopTime),
-                            LastMatchStopTime = ConvertHelper.ConvertDateTimeInt(item.LastMatchStopTime),
+                            FirstMatchStopTime = item.FirstMatchStopTime,
+                            LastMatchStopTime = item.LastMatchStopTime,
                             ProfitRate = item.ProfitRate,
                             SchemeId = item.SchemeId,
                             TotalBonusMoney = item.TotalBuyMoney,
@@ -2147,12 +2147,12 @@ namespace Lottery.Api.Controllers
                             CurrProfitRate = item.CurrProfitRate,
                             ExpectedBonusMoney = item.ExpectedBonusMoney,
                             ExpectedReturnRate = item.ExpectedReturnRate,
-                            FirstMatchStopTime =ConvertHelper.ConvertDateTimeInt(item.FirstMatchStopTime),
+                            FirstMatchStopTime = item.FirstMatchStopTime,
                             GameCode = item.GameCode,
                             GameType = item.GameType,
                             IsComplate = item.IsComplate,
                             IssuseNumber = item.IssuseNumber,
-                            LastMatchStopTime = ConvertHelper.ConvertDateTimeInt(item.LastMatchStopTime),
+                            LastMatchStopTime = item.LastMatchStopTime,
                             LastweekProfitRate = item.LastweekProfitRate,
                             ProfitRate = item.ProfitRate,
                             SchemeId = item.SchemeId,
@@ -2230,12 +2230,12 @@ namespace Lottery.Api.Controllers
                         CurrProfitRate = result.CurrProfitRate,
                         ExpectedBonusMoney = result.ExpectedBonusMoney,
                         ExpectedReturnRate = result.ExpectedReturnRate,
-                        FirstMatchStopTime = ConvertHelper.ConvertDateTimeInt(result.FirstMatchStopTime),
+                        FirstMatchStopTime = result.FirstMatchStopTime,
                         GameCode = result.GameCode,
                         GameType = result.GameType,
                         IsComplate = result.IsComplate,
                         IssuseNumber = result.IssuseNumber,
-                        LastMatchStopTime = ConvertHelper.ConvertDateTimeInt(result.LastMatchStopTime),
+                        LastMatchStopTime = result.LastMatchStopTime,
                         NearTimeProfitRateCollection = result.NearTimeProfitRateCollection,
                         PlayType = result.PlayType,
                         ProfitRate = result.ProfitRate,

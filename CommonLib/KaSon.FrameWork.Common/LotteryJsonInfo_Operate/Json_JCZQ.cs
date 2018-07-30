@@ -124,7 +124,7 @@ namespace KaSon.FrameWork.Common
                 //if (startTime.Date == DateTime.Now.AddDays(1).Date)
                 //    startTime = startTime.AddHours(-9);
 
-                var matchDataTime = ConvertHelper.ConvertDateTimeInt(ConvertHelper.ConvertStrToDateTime("20" + item.MatchData));
+                var matchDataTime = ConvertHelper.ConvertStrToDateTime("20" + item.MatchData);
                 //var matchDataTime = bizHelper.ConvertDateTimeInt(bizHelper.ConvertStrToDateTime("20150623"));
                 var info = new JCZQ_MatchInfo_WEB()
                 {
@@ -144,7 +144,7 @@ namespace KaSon.FrameWork.Common
                     LetBall = item.LetBall,
                     //LoseOdds = item.LoseOdds,
                     MatchIdName = item.MatchIdName,
-                    StartDateTime = ConvertHelper.ConvertDateTimeInt(Convert.ToDateTime(item.StartDateTime)).ToString(),
+                    StartDateTime = Convert.ToDateTime(item.StartDateTime),
                     //StartDateTime = item.StartDateTime.ToString("yyyyMMddHHmmss"),
                     //WinOdds = item.WinOdds,
                     //FlatOdds = item.FlatOdds,
@@ -391,7 +391,7 @@ namespace KaSon.FrameWork.Common
                 foreach (var item in matchList)
                 {
                     JCZQ_MatchInfo_WEB info = new JCZQ_MatchInfo_WEB();
-                    info.MatcheDateTime = ConvertHelper.ConvertDateTimeInt(ConvertHelper.ConvertStrToDateTime("20" + item.MatchData));
+                    info.MatcheDateTime = ConvertHelper.ConvertStrToDateTime("20" + item.MatchData);
                     //info.FSStopBettingTime = bizHelper.ConvertDateTimeInt(Convert.ToDateTime(item.FSStopBettingTime)).ToString();
                     info.FSStopBettingTime = item.FSStopBettingTime;
                     //info.//FSStopBettingTime = item.FSStopBettingTime.ToString("yyyyMMddHHmmss"),
@@ -406,7 +406,7 @@ namespace KaSon.FrameWork.Common
                     //info.//LoseOdds = item.LoseOdds,
                     info.MatchIdName = item.MatchIdName;
                     //info.StartDateTime = bizHelper.ConvertDateTimeInt(Convert.ToDateTime(item.StartDateTime)).ToString();
-                    info.StartDateTime = item.StartDateTime;
+                    info.StartDateTime = Convert.ToDateTime(item.StartDateTime);
                     //info.//StartDateTime = item.StartDateTime.ToString("yyyyMMddHHmmss"),
                     //info.//WinOdds = item.WinOdds,
                     //info.//FlatOdds = item.FlatOdds,
