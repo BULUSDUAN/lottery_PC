@@ -1007,11 +1007,11 @@ namespace UserLottery.Service.ModuleServices
         /// </summary>
         /// <param name = "userToken" ></ param >
         /// < returns ></ returns >
-        public string QueryYqidRegisterByAgentIdToApp(string userToken)
+        public Task<string> QueryYqidRegisterByAgentIdToApp(string userToken)
         {
             // 验证用户身份及权限
             var userId = userAuthentication.ValidateUserAuthentication(userToken);
-            return QueryYqidRegisterByAgentId(userId);
+            return Task.FromResult(QueryYqidRegisterByAgentId(userId));
         }
 
         /// <summary>
