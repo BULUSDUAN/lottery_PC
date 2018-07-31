@@ -533,7 +533,7 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                 var collection = new BettingOrderInfoCollection();
                 string sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_QueryOrderListByChaseKeyLine").SQL;
-                collection.OrderList = DB.CreateSQLQuery(sql).List<BettingOrderInfo>();
+                collection.OrderList = DB.CreateSQLQuery(sql).SetString("@KeyLine", keyLine).List<BettingOrderInfo>();
                 if (collection != null && collection.OrderList != null && collection.OrderList.Count > 0)
                 {
                     collection.TotalCount = collection.OrderList.Count;
@@ -561,7 +561,7 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             string sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_QueryAnteCodeListBySchemeId").SQL;
             var collection = new BettingAnteCodeInfoCollection();
-            collection.AnteCodeList = DB.CreateSQLQuery(sql).List<BettingAnteCodeInfo>();
+            collection.AnteCodeList = DB.CreateSQLQuery(sql).SetString("@@SchemeId",schemeId).List<BettingAnteCodeInfo>();
             return collection;
         }
         /// <summary>
@@ -1521,7 +1521,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var eTime = currTime.Date;
             using (DB)
             {
-                string tempTable_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_TempOrderRunning_Complate_table").SQL;                               
+                string tempTable_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_TempOrderRunning_Complate_table").SQL;
                 if (Model.isMyBD == "1")
                 {
                   
