@@ -35,10 +35,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
              
             var query = from s in LottertDataDB.CreateQuery<CTZQ_T6BQC_GameWinNumber>()
                         where s.GameType == "T6BQC"
-                        orderby s.IssuseNumber descending
                         select s;
             totalCount = query.Count();
-            return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+            return query.OrderByDescending(x=>x.IssuseNumber).Skip(pageIndex * pageSize).Take(pageSize).ToList();
         }
 
         public List<CTZQ_T6BQC_GameWinNumber> QueryCTZQ_T6BQC_GameWinNumber(DateTime startTime, DateTime endTime, int pageIndex, int pageSize, out int totalCount)
@@ -47,10 +46,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
             var query = from s in LottertDataDB.CreateQuery<CTZQ_T6BQC_GameWinNumber>()
                         where s.GameType == "T6BQC"
                         && (s.CreateTime >= startTime && s.CreateTime < endTime)
-                        orderby s.IssuseNumber descending
                         select s;
             totalCount = query.Count();
-            return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+            return query.OrderByDescending(x => x.IssuseNumber).Skip(pageIndex * pageSize).Take(pageSize).ToList();
         }
     }
 }

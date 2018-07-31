@@ -25,30 +25,27 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public List<CTZQ_T14C_GameWinNumber> QueryCTZQ_T14C_TR9_GameWinNumber(int pageIndex, int pageSize, out int totalCount)
         {            
             var query = from s in LottertDataDB.CreateQuery<CTZQ_T14C_GameWinNumber>()
-                        where s.GameType == "T14C"
-                        orderby s.IssuseNumber descending
+                        where s.GameType == "T14C"                        
                         select s;
             totalCount = query.Count();
-            return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+            return query.OrderByDescending(x=>x.IssuseNumber).Skip(pageIndex * pageSize).Take(pageSize).ToList();
         }
         public List<CTZQ_T14C_GameWinNumber> QueryCTZQ_TR9_GameWinNumber(int pageIndex, int pageSize, out int totalCount)
         {
             var query = from s in LottertDataDB.CreateQuery<CTZQ_T14C_GameWinNumber>()
                         where s.GameType == "TR9"
-                        orderby s.IssuseNumber descending
                         select s;
             totalCount = query.Count();
-            return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+            return query.OrderByDescending(x => x.IssuseNumber).Skip(pageIndex * pageSize).Take(pageSize).ToList();
         }
         public List<CTZQ_T14C_GameWinNumber> QueryCTZQ_T14C_TR9_GameWinNumber(DateTime startTime, DateTime endTime, int pageIndex, int pageSize, out int totalCount)
         {
             var query = from s in LottertDataDB.CreateQuery<CTZQ_T14C_GameWinNumber>()
                         where s.GameType == "T14C"
                         && (s.CreateTime >= startTime && s.CreateTime < endTime)
-                        orderby s.IssuseNumber descending
                         select s;
             totalCount = query.Count();
-            return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+            return query.OrderByDescending(x => x.IssuseNumber).Skip(pageIndex * pageSize).Take(pageSize).ToList();
         }
     }
 }

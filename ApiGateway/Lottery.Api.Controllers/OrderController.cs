@@ -2689,34 +2689,42 @@ namespace Lottery.Api.Controllers
         }
         public async static Task<List<KaiJiang>> GetKaiJiang([FromServices]IServiceProxyProvider _serviceProxyProvider)
         {
-            Dictionary<string, object> param = new Dictionary<string, object>()
+            try
+            {
+                Dictionary<string, object> param = new Dictionary<string, object>()
             {
                 { "gameString","JX11X5|CQSSC|SSQ|DLT|FC3D|PL3|CTZQ_T14C|CTZQ_T6BQC|CTZQ_T4CJQ|CTZQ_TR9"}
             };
-            var entitys =await _serviceProxyProvider.Invoke<GameWinNumber_InfoCollection>(param, "api/Order/QueryAllGameNewWinNumber");
-            List<KaiJiang> list = new List<KaiJiang>();
-            foreach (var item in entitys.List)
-            {
-                var poolInfo = BettingHelper.GetPoolInfo(item.GameCode, item.IssuseNumber);
-                list.Add(new KaiJiang()
+                var entitys = await _serviceProxyProvider.Invoke<GameWinNumber_InfoCollection>(param, "api/Order/QueryAllGameNewWinNumber");
+                List<KaiJiang> list = new List<KaiJiang>();
+                foreach (var item in entitys.List)
                 {
-                    result = item.WinNumber,
-                    prizepool = poolInfo != null ? poolInfo.TotalPrizePoolMoney.ToString("###,##0.00") : "",
-                    nums = ConvertHelper.Getnums(poolInfo),
-                    name = item.GameCode.ToUpper() == "CTZQ" ? item.GameType : item.GameCode,
-                    termNo = item.IssuseNumber,
-                    ver = "1",
-                    grades = ConvertHelper.Getgrades(poolInfo),
-                    date = item.CreateTime.ToString("yyyy-MM-dd"),
-                    type = ConvertHelper.GetGameName(item.GameCode, item.GameType),
-                    sale = poolInfo != null ? poolInfo.TotalSellMoney.ToString("###,##0.00") : ""
-                });
+                    var poolInfo = BettingHelper.GetPoolInfo(item.GameCode, item.IssuseNumber);
+                    list.Add(new KaiJiang()
+                    {
+                        result = item.WinNumber,
+                        prizepool = poolInfo != null ? poolInfo.TotalPrizePoolMoney.ToString("###,##0.00") : "",
+                        nums = ConvertHelper.Getnums(poolInfo),
+                        name = item.GameCode.ToUpper() == "CTZQ" ? item.GameType : item.GameCode,
+                        termNo = item.IssuseNumber,
+                        ver = "1",
+                        grades = ConvertHelper.Getgrades(poolInfo),
+                        date = item.CreateTime.ToString("yyyy-MM-dd"),
+                        type = ConvertHelper.GetGameName(item.GameCode, item.GameType),
+                        sale = poolInfo != null ? poolInfo.TotalSellMoney.ToString("###,##0.00") : ""
+                    });
+                }
+
+                list[list.Count - 1].name = "tr9";
+                list[list.Count - 1].type = "任选9";
+
+                return list;
             }
+            catch (Exception ex)
+            {
 
-            list[list.Count - 1].name = "tr9";
-            list[list.Count - 1].type = "任选9";
-
-            return list;
+                throw ex;
+            }
         }
         /// <summary>
         /// 开奖详情_222
