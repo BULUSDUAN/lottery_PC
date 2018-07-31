@@ -84,36 +84,40 @@ namespace KaSon.FrameWork.ORM.Helper
             pageIndex = pageIndex < 0 ? 0 : pageIndex;
             pageSize = pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : pageSize;
 
-
-            var query = from r in DB.CreateQuery<C_Withdraw>()
-                        join u in DB.CreateQuery<C_User_Register>() on r.UserId equals u.UserId
-                        where (userId == string.Empty || r.UserId == userId)
-                        && r.RequestTime >= startTime && r.RequestTime < endTime
-                        && (status == null || r.Status == (int)status)
-                        && (orderId == string.Empty || r.BankCode == orderId)
-                        && (agent == null || r.WithdrawAgent == (int)agent)
-                        && (minMoney == -1 || r.RequestMoney >= minMoney)
-                        && (maxMoney == -1 || r.RequestMoney <= maxMoney)
-                        select new Withdraw_QueryInfo
-                        {
-                            BankCardNumber = r.BankCardNumber,
-                            BankCode = r.BankCode,
-                            BankName = r.BankName,
-                            BankSubName = r.BankSubName,
-                            CityName = r.CityName,
-                            OrderId = r.OrderId,
-                            ProvinceName = r.ProvinceName,
-                            RequestMoney = r.RequestMoney,
-                            RequestTime = r.RequestTime,
-                            ResponseTime = r.ResponseTime,
-                            ResponseMoney = r.ResponseMoney,
-                            WithdrawAgent = r.WithdrawAgent,
-                            Status = r.Status,
-                            ResponseMessage = r.ResponseMessage,
-                            RequesterDisplayName = u.DisplayName,
-                            RequesterUserKey = u.UserId,
-                        };
-            winCount = query.Where(p => p.Status == (int)WithdrawStatus.Success).Count();
+            int Status = (int)status;
+            int Agent = agent == null ? 90 : 1;
+            DateTime startTime1 = new DateTime(2017,5,3);
+            DateTime dateTime1 = DateTime.Now;
+            var query = (from r in DB.CreateQuery<C_Withdraw>()
+                         join u in DB.CreateQuery<C_User_Register>() on r.UserId equals u.UserId
+                         where (userId == string.Empty || r.UserId == userId)
+                         && r.RequestTime >= startTime1 && r.RequestTime < dateTime1
+                         && (status == null || r.Status == Status)
+                         && (orderId == string.Empty || r.OrderId == orderId)
+                         && (agent == null || r.WithdrawAgent == Agent)
+                         && (minMoney == -1 || r.RequestMoney >= minMoney)
+                         && (maxMoney == -1 || r.RequestMoney <= maxMoney)select new {r,u })
+                         .ToList().Select(b => new Withdraw_QueryInfo {
+                             BankCardNumber = b.r.BankCardNumber,
+                             BankCode = b.r.BankCode,
+                             BankName = b.r.BankName,
+                             BankSubName = b.r.BankSubName,
+                             CityName = b.r.CityName,
+                             OrderId = b.r.OrderId,
+                             ProvinceName = b.r.ProvinceName,
+                             RequestMoney = b.r.RequestMoney,
+                             RequestTime = b.r.RequestTime,
+                             ResponseTime = b.r.ResponseTime,
+                             ResponseMoney = b.r.ResponseMoney,
+                             WithdrawAgent = b.r.WithdrawAgent,
+                             Status = b.r.Status,
+                             ResponseMessage = b.r.ResponseMessage,
+                             RequesterDisplayName = b.u.DisplayName,
+                             RequesterUserKey = b.u.UserId,
+                         });
+                     
+            int Success = (int)WithdrawStatus.Success;
+            winCount = query.Where(p => p.Status == Success).Count();
             refusedCount = query.Where(p => p.Status == (int)WithdrawStatus.Refused).Count();
 
             totalWinMoney = winCount == 0 ? 0M : query.Where(p => p.Status == (int)WithdrawStatus.Success).Sum(p => p.RequestMoney);
