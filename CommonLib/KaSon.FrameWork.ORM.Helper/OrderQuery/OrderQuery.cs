@@ -654,7 +654,7 @@ namespace KaSon.FrameWork.ORM.Helper
             if (info != null && info.GameCode != "JCZQ" && info.GameCode != "JCLQ" && info.GameCode != "BJDC")
             {
                 var key = info.GameCode == "CTZQ" ? string.Format("{0}|{1}|{2}", info.GameCode, info.GameType, info.IssuseNumber) : string.Format("{0}|{1}", info.GameCode, info.IssuseNumber);
-                var gameIssuse = DB.CreateQuery<C_Game_Issuse>().FirstOrDefault(g => g.GameCode_IssuseNumber == key);
+                var gameIssuse = DB.CreateQuery<C_Game_Issuse>().Where(g => g.GameCode_IssuseNumber == key).FirstOrDefault();
                 if (gameIssuse != null)
                     info.WinNumber = gameIssuse.WinNumber;
             }
@@ -734,7 +734,7 @@ namespace KaSon.FrameWork.ORM.Helper
             if (info != null && info.GameCode != "JCZQ" && info.GameCode != "JCLQ" && info.GameCode != "BJDC")
             {
                 var key = info.GameCode == "CTZQ" ? string.Format("{0}|{1}|{2}", info.GameCode, info.GameType, info.IssuseNumber) : string.Format("{0}|{1}", info.GameCode, info.IssuseNumber);
-                var gameIssuse = DB.CreateQuery<C_Game_Issuse>().FirstOrDefault(g => g.GameCode_IssuseNumber == key);
+                var gameIssuse = DB.CreateQuery<C_Game_Issuse>().Where(g => g.GameCode_IssuseNumber == key).FirstOrDefault();
                 if (gameIssuse != null)
                     info.WinNumber = gameIssuse.WinNumber;
             }
@@ -1099,35 +1099,35 @@ namespace KaSon.FrameWork.ORM.Helper
         }
         public C_BJDC_Match QueryBJDC_Match(string id)
         {
-            return DB.CreateQuery<C_BJDC_Match>().FirstOrDefault(p => p.Id == id);
+            return DB.CreateQuery<C_BJDC_Match>().Where(p => p.Id == id).FirstOrDefault();
         }
         public C_BJDC_MatchResult QueryBJDC_MatchResult(string id)
         {
-            return DB.CreateQuery<C_BJDC_MatchResult>().FirstOrDefault(p => p.Id == id);
+            return DB.CreateQuery<C_BJDC_MatchResult>().Where(p => p.Id == id).FirstOrDefault();
         }
         public C_JCZQ_Match QueryJCZQ_Match(string matchId)
         {
-            return DB.CreateQuery<C_JCZQ_Match>().FirstOrDefault(p => p.MatchId == matchId);
+            return DB.CreateQuery<C_JCZQ_Match>().Where(p => p.MatchId == matchId).FirstOrDefault();
         }
         public C_JCZQ_MatchResult QueryJCZQ_MatchResult(string matchId)
         {
-            return DB.CreateQuery<C_JCZQ_MatchResult>().FirstOrDefault(p => p.MatchId == matchId);
+            return DB.CreateQuery<C_JCZQ_MatchResult>().Where(p => p.MatchId == matchId).FirstOrDefault();
         }
         public C_JCLQ_Match QueryJCLQ_Match(string matchId)
         {
-            return DB.CreateQuery<C_JCLQ_Match>().FirstOrDefault(p => p.MatchId == matchId);
+            return DB.CreateQuery<C_JCLQ_Match>().Where(p => p.MatchId == matchId).FirstOrDefault();
         }
         public C_JCLQ_MatchResult QueryJCLQ_MatchResult(string matchId)
         {
-            return DB.CreateQuery<C_JCLQ_MatchResult>().FirstOrDefault(p => p.MatchId == matchId);
+            return DB.CreateQuery<C_JCLQ_MatchResult>().Where(p => p.MatchId == matchId).FirstOrDefault();
         }
         public C_SJB_Match GetSJBMatch(string gameType, int matchId)
         {
-            return DB.CreateQuery<C_SJB_Match>().FirstOrDefault(p => p.GameType == gameType && p.MatchId == matchId);
+            return DB.CreateQuery<C_SJB_Match>().Where(p => p.GameType == gameType && p.MatchId == matchId).FirstOrDefault();
         }
         public C_Game_Issuse QueryGameIssuse(string gameCode, string issuseNumber)
         {
-            return DB.CreateQuery<C_Game_Issuse>().FirstOrDefault(p => p.GameCode == gameCode && p.IssuseNumber == issuseNumber);
+            return DB.CreateQuery<C_Game_Issuse>().Where(p => p.GameCode == gameCode && p.IssuseNumber == issuseNumber).FirstOrDefault();
         }
 
         public Issuse_QueryInfo QueryIssuseInfo(string gameCode, string gameType, string issuseNumber)
@@ -1158,7 +1158,7 @@ namespace KaSon.FrameWork.ORM.Helper
         }
         public Sports_SchemeQueryInfo QuerySportsSchemeInfo(string schemeId)
         {
-            var orderDetail = DB.CreateQuery<C_OrderDetail>().FirstOrDefault(o => o.SchemeId == schemeId);
+            var orderDetail = DB.CreateQuery<C_OrderDetail>().Where(o => o.SchemeId == schemeId).FirstOrDefault();
             if (orderDetail == null) return null;
             var info = (orderDetail.ProgressStatus == (int)ProgressStatus.Complate
                 || orderDetail.ProgressStatus == (int)ProgressStatus.Aborted
@@ -1226,7 +1226,7 @@ namespace KaSon.FrameWork.ORM.Helper
             if (info != null && info.GameCode != "JCZQ" && info.GameCode != "JCLQ" && info.GameCode != "BJDC")
             {
                 var key = info.GameCode == "CTZQ" ? string.Format("{0}|{1}|{2}", info.GameCode, info.GameType, info.IssuseNumber) : string.Format("{0}|{1}", info.GameCode, info.IssuseNumber);
-                var gameIssuse = DB.CreateQuery<C_Game_Issuse>().FirstOrDefault(g => g.GameCode_IssuseNumber == key);
+                var gameIssuse = DB.CreateQuery<C_Game_Issuse>().Where(g => g.GameCode_IssuseNumber == key).FirstOrDefault();
                 if (gameIssuse != null)
                     info.WinNumber = gameIssuse.WinNumber;
             }
@@ -1289,7 +1289,7 @@ namespace KaSon.FrameWork.ORM.Helper
             if (info != null && info.GameCode != "JCZQ" && info.GameCode != "JCLQ" && info.GameCode != "BJDC")
             {
                 var key = info.GameCode == "CTZQ" ? string.Format("{0}|{1}|{2}", info.GameCode, info.GameType, info.IssuseNumber) : string.Format("{0}|{1}", info.GameCode, info.IssuseNumber);
-                var gameIssuse = DB.CreateQuery<C_Game_Issuse>().FirstOrDefault(g => g.GameCode_IssuseNumber == key);
+                var gameIssuse = DB.CreateQuery<C_Game_Issuse>().Where(g => g.GameCode_IssuseNumber == key).FirstOrDefault();
                 if (gameIssuse != null)
                     info.WinNumber = gameIssuse.WinNumber;
             }
@@ -1960,7 +1960,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public C_SingleTreasure_Attention QuerySingleTreasureAttentionByUserId(string beConcernedUserId, string concernedUserId)
         {
-            return DB.CreateQuery<C_SingleTreasure_Attention>().FirstOrDefault(s => s.BeConcernedUserId == beConcernedUserId && s.ConcernedUserId == concernedUserId);
+            return DB.CreateQuery<C_SingleTreasure_Attention>().Where(s => s.BeConcernedUserId == beConcernedUserId && s.ConcernedUserId == concernedUserId).FirstOrDefault();
         }
         public void AddSingleTreasureAttention(C_SingleTreasure_Attention entity)
         {
@@ -1968,7 +1968,7 @@ namespace KaSon.FrameWork.ORM.Helper
         }
         public C_SingleTreasure_AttentionSummary QuerySingleTreasureAttentionSummaryByUserId(string userId)
         {
-            return DB.CreateQuery<C_SingleTreasure_AttentionSummary>().FirstOrDefault(s => s.UserId == userId);
+            return DB.CreateQuery<C_SingleTreasure_AttentionSummary>().Where(s => s.UserId == userId).FirstOrDefault();
         }
         public void UpdateSingleTreasureAttentionSummary(C_SingleTreasure_AttentionSummary entity)
         {
@@ -2484,7 +2484,7 @@ namespace KaSon.FrameWork.ORM.Helper
         }
         public KJGameIssuse QueryKJGameIssuse(string gameCode, string issuseNumber)
         {
-            return DB.CreateQuery<KJGameIssuse>().FirstOrDefault(p => p.GameCode == gameCode && p.IssuseNumber == issuseNumber);
+            return DB.CreateQuery<KJGameIssuse>().Where(p => p.GameCode == gameCode && p.IssuseNumber == issuseNumber).FirstOrDefault();
         }
         public List<LotteryIssuse_QueryInfo> QueryAllGameCurrentIssuse(bool byOfficial)
         {
