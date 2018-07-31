@@ -1606,8 +1606,8 @@ namespace Lottery.Api.Controllers
                 DateTime end = Convert.ToDateTime(p.end);
                 int pageNo = Convert.ToInt32(p.pageNo);
                 int PageSize = Convert.ToInt32(p.PageSize);
-                var status = string.IsNullOrEmpty(Request.Query["status"]) ? null : (WithdrawStatus?)int.Parse(p.Status);
-                    //string.IsNullOrEmpty(Request.Query["status"]) ? null : (WithdrawStatus?)Convert.ToInt32(p.Status);
+                var status = string.IsNullOrEmpty(p.Status) ? null : (WithdrawStatus?)Convert.ToInt32(p.Status);
+
                 //var withdrawList = WCFClients.GameFundClient.QueryMyWithdrawList(WithdrawStatus.Success, begin, end.AddDays(1), pageNo, PageSize, token);
                 //var withdrawList = WCFClients.GameFundClient.QueryMyWithdrawList(null, begin, end.AddDays(1), pageNo, PageSize, token);
                 if (begin < DateTime.Now.AddMonths(-1))
