@@ -120,6 +120,9 @@ namespace KaSon.FrameWork.ORM.Helper
 
         }
         private DbProvider lottertdataDB = null;
+        /// <summary>
+        /// LottertData数据库连接DB
+        /// </summary>
         public DbProvider LottertDataDB
         {
             get
@@ -138,9 +141,19 @@ namespace KaSon.FrameWork.ORM.Helper
                         lottertdataDB.Init("SqlServer.ECP_LottertData");
                     }
                 }
+                else if (!sdb.HasDbKey())
+                {
+                    if (_DBType == "MySql")
+                    {
+                        sdb.Init("MySql.ECP_LottertData");
+                    }
+                    else
+                    {
+                        sdb.Init("SqlServer.ECP_LottertData");
+                    }
+                }
                 return lottertdataDB;
             }
-
         }
         /// <summary>
         /// SQL 语言模块
