@@ -2868,12 +2868,26 @@ namespace Lottery.Api.Controllers
                 string cardNo = p.cardNo;
                 var R_Url = aliurl + "?_input_charset=utf-8&cardNo=" + cardNo + "&cardBinCheck=true";
                 var result = PostManager.Get(R_Url, Encoding.UTF8);
+                var obj= JsonHelper.Decode(result);
+                object value = new
+                {
+                    bank = obj.bank,
+                    validated = obj.validated,
+                    cardType = obj.cardType,
+                    key = obj.key,
+                    messages = obj.messages,
+                    stat = obj.stat
+                };
+                //if ((bool)obj.validated == true)
+                //{
+                    
+                //}
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
                     Message = "查询成功",
                     MsgId = entity.MsgId,
-                    Value = result,
+                    Value = value,
                 });
             }
             catch (Exception ex)
