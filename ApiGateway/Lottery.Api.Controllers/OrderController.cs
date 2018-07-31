@@ -2739,7 +2739,7 @@ namespace Lottery.Api.Controllers
             {
                 var p = JsonHelper.Decode(entity.Param);
                 string type = p.GameCode;
-                string term = p.IssuseNumber;                
+                string term = p.IssuseNumber;
                 var obj =await GetKaiJingInfo(_serviceProxyProvider, "Web", type, term);
                 return new JsonResult(new LotteryServiceResponse
                 {
