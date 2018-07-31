@@ -21,9 +21,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public List<JX11X5_GameWinNumber> QueryJX11X5_GameWinNumber(int pageIndex, int pageSize, out int totalCount)
         {
              
-            var query = from s in LottertDataDB.CreateQuery<JX11X5_GameWinNumber>()
+            var query = (from s in LottertDataDB.CreateQuery<JX11X5_GameWinNumber>()
                         orderby s.IssuseNumber descending
-                        select s;
+                        select s).ToList();
             totalCount = query.Count();
             return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
         }

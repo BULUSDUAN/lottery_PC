@@ -341,7 +341,7 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(54)]
             [Field("TicketTime")]
-            public DateTime TicketTime{ get; set; }
+            public DateTime? TicketTime{ get; set; }
             /// <summary>
             // 是否拆票
             ///</summary>
