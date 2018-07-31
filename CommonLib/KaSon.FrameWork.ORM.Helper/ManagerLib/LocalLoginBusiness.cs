@@ -152,6 +152,7 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
                                                  FunctionId = p.FunctionId,
                                                  IId = p.IId,
                                                  Mode = p.Mode,
+                                              
 
                                              }).ToList();
                     systemUser.FunctionList = UserFunctionList;
