@@ -1167,9 +1167,11 @@ namespace Lottery.Api.Controllers
                     throw new Exception("userToken不能为空");
                 if (string.IsNullOrEmpty(bankrealName))
                     throw new Exception("开户名不能为空");
-            
-                var bankDic = GetBankDic();
-                if (!bankDic.ContainsKey(bankCode))
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["bankCode"] = bankCode;
+                var resultbankCode = await _serviceProxyProvider.Invoke<C_Bank_Info>(param, "api/user/QueryBankInfo");
+
+                if (resultbankCode==null)
                     throw new ArgumentException(string.Format("银行编码：{0}不可用", bankCode));
 
                 #region "20171108增加配置（禁止注册的银行卡号码）"
@@ -1183,13 +1185,12 @@ namespace Lottery.Api.Controllers
                 //}
                C_BankCard bankCard = new C_BankCard {
                       BankCode= bankCode,
-                      BankName = bankDic[bankCode],
+                      BankName = resultbankCode.BankName,
                       BankSubName =subBankName,
                       BankCardNumber=cardnumber,
                       ProvinceName=province,
                       CityName=city,
                       RealName= bankrealName,
-
                };
                 #endregion
                 Dictionary<string, object> paramCard = new Dictionary<string, object>();
@@ -1606,7 +1607,7 @@ namespace Lottery.Api.Controllers
                 DateTime end = Convert.ToDateTime(p.end);
                 int pageNo = Convert.ToInt32(p.pageNo);
                 int PageSize = Convert.ToInt32(p.PageSize);
-                var status = string.IsNullOrEmpty(p.Status) ? null : (WithdrawStatus?)Convert.ToInt32(p.Status);
+                var status = string.IsNullOrEmpty((string)p.Status) ? null :Convert.ToInt32(p.Status);
 
                 //var withdrawList = WCFClients.GameFundClient.QueryMyWithdrawList(WithdrawStatus.Success, begin, end.AddDays(1), pageNo, PageSize, token);
                 //var withdrawList = WCFClients.GameFundClient.QueryMyWithdrawList(null, begin, end.AddDays(1), pageNo, PageSize, token);

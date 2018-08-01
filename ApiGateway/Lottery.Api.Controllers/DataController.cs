@@ -1147,9 +1147,10 @@ namespace Lottery.Api.Controllers
                 var noticeList = await _serviceProxyProvider.Invoke<BulletinInfo_Collection>(param, "api/Data/QueryDisplayBulletinCollection");
                 //var noticeList = WCFClients.ExternalClient.QueryDisplayBulletinCollection(BulletinAgent.Local, pageIndex, pageSize, userToken);
                 noticeList.BulletinList.OrderByDescending(a => a.IsPutTop).OrderByDescending(a => a.CreateTime).ToList();
+                var list = new List<object>();
                 if (noticeList != null && noticeList.BulletinList.Count > 0)
                 {
-                    var list = new List<object>();
+                    
                     foreach (var item in noticeList.BulletinList)
                     {
                         list.Add(new
@@ -1163,20 +1164,20 @@ namespace Lottery.Api.Controllers
                             CreateTime = item.CreateTime,
                         });
                     }
-                    return Json(new LotteryServiceResponse
-                    {
-                        Code = ResponseCode.成功,
-                        Message = "查询公告列表成功",
-                        MsgId = entity.MsgId,
-                        Value = list,
-                    });
+                    //return Json(new LotteryServiceResponse
+                    //{
+                    //    Code = ResponseCode.成功,
+                    //    Message = "查询公告列表成功",
+                    //    MsgId = entity.MsgId,
+                    //    Value = list,
+                    //});
                 }
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
                     Message = "查询公告列表成功",
                     MsgId = entity.MsgId,
-                    Value = string.Empty,
+                    Value = list,
                 });
             }
             catch (ArgumentException ex)
