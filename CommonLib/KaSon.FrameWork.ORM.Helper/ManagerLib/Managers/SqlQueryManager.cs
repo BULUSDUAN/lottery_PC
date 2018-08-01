@@ -85,13 +85,11 @@ namespace KaSon.FrameWork.ORM.Helper
             pageSize = pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : pageSize;
 
             int Status = (int)status;
-            int Agent = agent == null ? 90 : 1;
-            DateTime startTime1 = new DateTime(2017,5,3);
-            DateTime dateTime1 = DateTime.Now;
+            int? Agent = (int?)agent;
             var query = (from r in DB.CreateQuery<C_Withdraw>()
                          join u in DB.CreateQuery<C_User_Register>() on r.UserId equals u.UserId
                          where (userId == string.Empty || r.UserId == userId)
-                         && r.RequestTime >= startTime1 && r.RequestTime < dateTime1
+                         && r.RequestTime >= startTime && r.RequestTime < endTime
                          && (status == null || r.Status == Status)
                          && (orderId == string.Empty || r.OrderId == orderId)
                          && (agent == null || r.WithdrawAgent == Agent)
