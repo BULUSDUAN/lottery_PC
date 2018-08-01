@@ -2610,7 +2610,7 @@ namespace Lottery.Api.Controllers
         /// <summary>
         /// 查询开奖历史
         /// </summary>
-        public async static Task<List<KaiJiangHistory>> GetHistory([FromServices]IServiceProxyProvider _serviceProxyProvider, string gameCode, int page)
+        public async  Task<List<KaiJiangHistory>> GetHistory([FromServices]IServiceProxyProvider _serviceProxyProvider, string gameCode, int page)
         {
             gameCode = gameCode.ToUpper();
             var startTime = DateTime.Now.AddYears(-1);
