@@ -1165,6 +1165,28 @@ namespace UserLottery.Service.ModuleServices
         }
 
 
+        /// <summary>
+        /// 查询银行卡
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="userId"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>\
+        private static C_Bank_Info _BankCardList = new C_Bank_Info();
+        public Task<C_Bank_Info> QueryBankInfo(string bankCode)
+        {
+            try
+            {
+               var fub= new FundBusiness();
+                _BankCardList = fub.QueryBankInfo(bankCode);
+                return Task.FromResult(_BankCardList);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("出错 - " + ex.Message, ex);
+            }
+        }
+        
         //public async Task<bool> SetVerifyCodeByGuid(string RedisKey,string RedisValue)
         //{
         //    try
