@@ -2578,7 +2578,7 @@ namespace Lottery.Api.Controllers
         /// <param name="_serviceProxyProvider"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<IActionResult> LotteryRecord([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        public  IActionResult LotteryRecord([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
             {
@@ -2610,7 +2610,7 @@ namespace Lottery.Api.Controllers
         /// <summary>
         /// 查询开奖历史
         /// </summary>
-        public async static Task<List<KaiJiangHistory>> GetHistory([FromServices]IServiceProxyProvider _serviceProxyProvider, string gameCode, int page)
+        public async  Task<List<KaiJiangHistory>> GetHistory([FromServices]IServiceProxyProvider _serviceProxyProvider, string gameCode, int page)
         {
             gameCode = gameCode.ToUpper();
             var startTime = DateTime.Now.AddYears(-1);
