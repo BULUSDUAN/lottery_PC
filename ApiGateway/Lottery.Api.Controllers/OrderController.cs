@@ -2578,7 +2578,7 @@ namespace Lottery.Api.Controllers
         /// <param name="_serviceProxyProvider"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public  IActionResult LotteryRecord([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        public async Task<IActionResult> LotteryRecord([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
             {
