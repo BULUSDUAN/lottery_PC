@@ -111,6 +111,9 @@ namespace UserLottery.Service.IModuleServices
         [Service(Date = "2018-7-30", Director = "renjun", Name = "QueryYqidRegisterByAgentId方法的手机接口")]
         Task<string> QueryYqidRegisterByAgentIdToApp(string userToken);
 
+        [Service(Date = "2018-8-01", Director = "renjun", Name = "查询银行卡")]
+        Task<C_Bank_Info> QueryBankInfo(string bankCode);
+
         //[Service(Date = "2018-7-27", Director = "lidi", Name = "设置图形验证码到redis")]
         //Task<bool> SetVerifyCodeByGuid(string RedisKey, string RedisValue);
 

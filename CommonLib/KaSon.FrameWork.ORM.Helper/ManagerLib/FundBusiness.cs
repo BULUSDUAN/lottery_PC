@@ -457,5 +457,10 @@ namespace KaSon.FrameWork.ORM.Helper
             result.TotalResponseMoney = totalResponseMoney;
             return result;
         }
+
+        public C_Bank_Info QueryBankInfo(string bankCode) {
+
+          return DB.CreateQuery<C_Bank_Info>().Where(p => p.BankCode == bankCode && p.Disabled==false).FirstOrDefault();
+        }
     }
 }
