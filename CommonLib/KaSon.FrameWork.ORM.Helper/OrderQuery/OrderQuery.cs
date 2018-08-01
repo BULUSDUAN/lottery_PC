@@ -324,16 +324,16 @@ namespace KaSon.FrameWork.ORM.Helper
                 .SetString("@userId", userId)
                 .SetInt("@BonusStatus", state)
                 .SetString("@GameCode", Model.gameCode)
-                .SetString("@FromDate", Model.startTime.Value.ToString("yyyy-MM-dd") ?? "")
-                .SetString("@ToDate", Model.endTime.Value.ToString("yyyy-MM-dd") ?? "").First<MyBettingOrderInfoCollection>();
+                .SetString("@FromDate", Model.startTime.HasValue ? Model.startTime.Value.ToString("yyyy-MM-dd"):"")
+                .SetString("@ToDate", Model.endTime.HasValue ? Model.endTime.Value.AddDays(1).ToString("yyyy-MM-dd") : "").First<MyBettingOrderInfoCollection>();
 
             string MyBettingOrdePage_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_MyBettingOrderPage").SQL;
             Collection.OrderList = DB.CreateSQLQuery(MyBettingOrdePage_sql)
                 .SetString("@userId", userId)
                 .SetInt("@BonusStatus", state)
                 .SetString("@GameCode", Model.gameCode)
-                .SetString("@FromDate", Model.startTime.Value.ToString("yyyy-MM-dd") ?? "")
-                .SetString("@ToDate", Model.endTime.Value.ToString("yyyy-MM-dd") ?? "")
+                .SetString("@FromDate", Model.startTime.HasValue ? Model.startTime.Value.ToString("yyyy-MM-dd"):"")
+                .SetString("@ToDate", Model.endTime.HasValue ? Model.endTime.Value.AddDays(1).ToString("yyyy-MM-dd") : "")
                 .SetInt("@PageIndex", Model.pageIndex)
                 .SetInt("@PageSize", Model.pageSize).List<MyBettingOrderInfo>();
             return Collection;

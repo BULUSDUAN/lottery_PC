@@ -23,7 +23,7 @@ namespace Lottery.ApiGateway
                 .UseUrls("http://*:729")
                 .UseKestrel(options =>
                 {
-                    options.Limits.MaxConcurrentConnections = 100;
+                    options.Limits.MaxConcurrentConnections = 30000;
                     options.Limits.MaxConcurrentUpgradedConnections = 100;
                     options.Limits.MaxRequestBodySize = 10 * 1024;
                     options.Limits.MinRequestBodyDataRate =

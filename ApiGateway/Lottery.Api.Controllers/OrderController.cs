@@ -2587,7 +2587,7 @@ namespace Lottery.Api.Controllers
                 string term = p.PageIndex;
                 int page = 0;
                 int.TryParse(term, out page);
-                var list = GetHistory(_serviceProxyProvider,type, page);
+                var list =await GetHistory(_serviceProxyProvider,type, page);
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
