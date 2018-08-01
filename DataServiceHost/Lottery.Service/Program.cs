@@ -70,8 +70,8 @@ namespace Lottery.Service.Host
                     options.Port = 10099;
                     options.Ip = "127.0.0.1";
                     options.Token = "True";
-                    options.ExecutionTimeoutInMilliseconds = 5000;
-                    options.MaxConcurrentRequests = 200;
+                    options.ExecutionTimeoutInMilliseconds = 30000;
+                    options.MaxConcurrentRequests = 2000;
                 })
                // .UseServiceCache()
                 .Configure(build =>

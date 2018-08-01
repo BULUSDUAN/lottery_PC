@@ -24,7 +24,7 @@ namespace Lottery.ApiGateway
                 .UseKestrel(options =>
                 {
                     options.Limits.MaxConcurrentConnections = 30000;
-                    options.Limits.MaxConcurrentUpgradedConnections = 100;
+                    options.Limits.MaxConcurrentUpgradedConnections = 2000;
                     options.Limits.MaxRequestBodySize = 10 * 1024;
                     options.Limits.MinRequestBodyDataRate =
                         new MinDataRate(bytesPerSecond: 100, gracePeriod: TimeSpan.FromSeconds(10));

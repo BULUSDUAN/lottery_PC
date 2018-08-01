@@ -70,7 +70,7 @@ namespace OrderLottery.Service.Host
                     options.Ip = "127.0.0.1";
                     options.Token = "True";
                     options.ExecutionTimeoutInMilliseconds = 30000;
-                    options.MaxConcurrentRequests = 200;
+                    options.MaxConcurrentRequests = 2000;
                 })
                // .UseServiceCache()
                 .Configure(build =>
