@@ -2741,7 +2741,7 @@ namespace Lottery.Api.Controllers
                 string type = p.GameCode;
                 string term = p.IssuseNumber;
                 var obj =await GetKaiJingInfo(_serviceProxyProvider, "Web", type, term);
-                return new JsonResult(new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
                     Message = "获取开奖详情成功",
@@ -2751,7 +2751,7 @@ namespace Lottery.Api.Controllers
             }
             catch (Exception ex)
             {
-                return new JsonResult(new LotteryServiceResponse
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = ex.Message,
