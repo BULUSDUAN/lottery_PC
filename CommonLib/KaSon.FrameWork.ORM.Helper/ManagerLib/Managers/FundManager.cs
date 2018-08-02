@@ -68,7 +68,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public int QueryFillMoneyCount(string userId)
         {
          
-            return DB.CreateQuery<C_FillMoney>().Count(p => p.UserId == userId && p.Status == (int)FillMoneyStatus.Success);
+            return DB.CreateQuery<C_FillMoney>().Where(p => p.UserId == userId && p.Status == (int)FillMoneyStatus.Success).Count();
         }
 
         /// <summary>

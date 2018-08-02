@@ -88,7 +88,7 @@ namespace KaSon.FrameWork.ORM.Helper
             {
               
                 //return this.Session.Query<TaskList>().Where(p => p.UserId == userId && p.TaskCategory == taskCategory).Count();
-                return DB.CreateQuery<E_TaskList>().Count(p => p.UserId == userId && p.TaskCategory == (int)taskCategory);
+                return DB.CreateQuery<E_TaskList>().Where(p => p.UserId == userId && p.TaskCategory == (int)taskCategory).Count();
             }
 
             /// <summary>

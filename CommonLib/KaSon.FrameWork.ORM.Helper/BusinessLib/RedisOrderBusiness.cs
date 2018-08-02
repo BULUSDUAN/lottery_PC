@@ -207,7 +207,7 @@ namespace KaSon.FrameWork.ORM.Helper
             try
             {
                 var sportsManager = new Sports_Manager();
-                var oldCount = DB.CreateQuery<C_Sports_Ticket>().Count(p => p.SchemeId == order.RunningOrder.SchemeId); //sportsManager.QueryTicketCount(order.RunningOrder.SchemeId);
+                var oldCount = DB.CreateQuery<C_Sports_Ticket>().Where(p => p.SchemeId == order.RunningOrder.SchemeId).Count(); //sportsManager.QueryTicketCount(order.RunningOrder.SchemeId);
                 if (oldCount <= 0)
                 {
                     //清理冻结

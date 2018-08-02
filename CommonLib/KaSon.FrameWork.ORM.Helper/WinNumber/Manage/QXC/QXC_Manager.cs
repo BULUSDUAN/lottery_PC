@@ -97,7 +97,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public int QueryQXC_JBZSIssuseNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<QXC_JBZS>().Count(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<QXC_JBZS>().Where(p => p.IssuseNumber == issuseNumber).Count();
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public int QuerQXC_DXIssuseNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<QXC_DX>().Count(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<QXC_DX>().Where(p => p.IssuseNumber == issuseNumber).Count();
         }
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public int QueryQXC_JOIssuseNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<QXC_JO>().Count(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<QXC_JO>().Where(p => p.IssuseNumber == issuseNumber).Count();
         }
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public int QueryQXC_ZHIssuseNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<QXC_ZH>().Count(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<QXC_ZH>().Where(p => p.IssuseNumber == issuseNumber).Count();
         }
 
         /// <summary>
@@ -201,7 +201,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public int QueryQXC_Chu3IssuseNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<QXC_Chu3>().Count(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<QXC_Chu3>().Where(p => p.IssuseNumber == issuseNumber).Count();
         }
 
         #endregion

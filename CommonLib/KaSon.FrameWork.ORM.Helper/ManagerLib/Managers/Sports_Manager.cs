@@ -19,7 +19,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public int QueryTicketCount(string schemeId)
         {
             //Session.Clear();
-            return this.DB.CreateQuery<C_Sports_Ticket>().Count(p => p.SchemeId == schemeId);
+            return this.DB.CreateQuery<C_Sports_Ticket>().Where(p => p.SchemeId == schemeId).Count();
         }
         public C_Sports_Order_Running QuerySports_Order_Running(string schemeId)
         {

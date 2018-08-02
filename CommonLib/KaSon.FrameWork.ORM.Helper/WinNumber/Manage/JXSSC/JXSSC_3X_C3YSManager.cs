@@ -37,7 +37,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public int QueryJXSSC_3X_C3YSIssuseNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<JXSSC_3X_C3YS>().Count(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<JXSSC_3X_C3YS>().Where(p => p.IssuseNumber == issuseNumber).Count();
         }
     }
 }

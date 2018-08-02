@@ -24,7 +24,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public int QuerySDKLPK3_JBZSIssuseNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<SDKLPK3_JBZS>().Count(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<SDKLPK3_JBZS>().Where(p => p.IssuseNumber == issuseNumber).Count();
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public int QuerySDKLPK3_ZHXZSIssuseNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<SDKLPK3_ZHXZS>().Count(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<SDKLPK3_ZHXZS>().Where(p => p.IssuseNumber == issuseNumber).Count();
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public int QuerySDKLPK3_HSZSIssuseNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<SDKLPK3_HSZS>().Count(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<SDKLPK3_HSZS>().Where(p => p.IssuseNumber == issuseNumber).Count();
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public int QuerySDKLPK3_DXZSIssuseNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<SDKLPK3_DXZS>().Count(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<SDKLPK3_DXZS>().Where(p => p.IssuseNumber == issuseNumber).Count();
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public int QuerySDKLPK3_JOZSIssuseNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<SDKLPK3_JOZS>().Count(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<SDKLPK3_JOZS>().Where(p => p.IssuseNumber == issuseNumber).Count();
         }
 
         /// <summary>
@@ -157,7 +157,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public int QuerySDKLPK3_ZHZSIssuseNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<SDKLPK3_ZHZS>().Count(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<SDKLPK3_ZHZS>().Where(p => p.IssuseNumber == issuseNumber).Count();
         }
 
         /// <summary>
@@ -183,7 +183,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public int QuerySDKLPK3_C3YZSIssuseNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<SDKLPK3_C3YZS>().Count(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<SDKLPK3_C3YZS>().Where(p => p.IssuseNumber == issuseNumber).Count();
         }
 
         /// <summary>
@@ -209,7 +209,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public int QuerySDKLPK3_HZZSIssuseNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<SDKLPK3_HZZS>().Count(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<SDKLPK3_HZZS>().Where(p => p.IssuseNumber == issuseNumber).Count();
         }
 
         /// <summary>
@@ -235,7 +235,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public int QuerySDKLPK3_LXZSIssuseNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<SDKLPK3_LXZS>().Count(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<SDKLPK3_LXZS>().Where(p => p.IssuseNumber == issuseNumber).Count();
         }
 
 
