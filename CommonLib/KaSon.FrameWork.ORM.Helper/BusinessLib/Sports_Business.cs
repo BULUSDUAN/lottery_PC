@@ -21,6 +21,7 @@ using KaSon.FrameWork.Common.ExtensionFn;
 using KaSon.FrameWork.Common.Sport;
 using EntityModel.Communication;
 using KaSon.FrameWork.Analyzer.AnalyzerFactory;
+using EntityModel.Interface;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
@@ -695,12 +696,460 @@ namespace KaSon.FrameWork.ORM.Helper
                 }
             }
 
-            //var order = string.IsNullOrEmpty(orderInfo.Attach) ?
-            //    AnalyzeOrder_Sport<Ticket_Order_Running, Ticket_Ticket_Running, Ticket_AnteCode_Running>(orderInfo, "LOCAL")
-            //   : AnalyzeOrder_Sport_YH<Ticket_Order_Running, Ticket_Ticket_Running, Ticket_AnteCode_Running>(orderInfo, "LOCAL", orderInfo.Attach);
+            var order = string.IsNullOrEmpty(orderInfo.Attach) ?
+                AnalyzeOrder_Sport<Ticket_Order_Running, Ticket_Ticket_Running, Ticket_AnteCode_Running>(orderInfo, "LOCAL")
+               : AnalyzeOrder_Sport_YH<Ticket_Order_Running, Ticket_Ticket_Running, Ticket_AnteCode_Running>(orderInfo, "LOCAL", orderInfo.Attach);
 
 
-            //RequestTicket_Sport(order, orderInfo.IsRunningTicket, matchIdOddsList, matchIdArray);
+            RequestTicket_Sport(order, orderInfo.IsRunningTicket, matchIdOddsList, matchIdArray);
+        }
+
+
+        /// <summary>
+        /// 优化投注运用
+        /// </summary>
+        public TOrder AnalyzeOrder_Sport_YH<TOrder, TTicket, TAnteCode>(GatewayTicketOrder_Sport order, string gateway, string attch)
+            where TOrder : I_Sport_Order<TTicket, TAnteCode>, new()
+            where TTicket : I_Sport_Ticket<TAnteCode>, new()
+            where TAnteCode : I_Sport_AnteCode, new()
+        {
+            var maxAmount = GetMaxTicketAmount(order.GameCode);
+            var result = new TOrder
+            {
+                AgentId = "agentId",
+                OrderId = order.OrderId,
+                TicketGateway = gateway,
+                GameCode = order.GameCode,
+                GameType = order.GameType,
+                PlayType = order.PlayType,
+                IssuseNumber = order.IssuseNumber,
+                TotalMoney = order.TotalMoney,
+                Amount = order.Amount,
+                Attach = order.Attach,
+                Price = order.Price,
+                RequestTime = DateTime.Now,
+                TicketStatus = ProgressStatus.Running,
+                TicketTime = null,
+                TotalMatchCount = order.AnteCodeList.Count,
+
+                TicketList = new List<TTicket>(),
+            };
+            //          140915018_brqspf_3|140915019_spf_3^3
+            //        ,140915018_spf_3|140915019_spf_3^1
+            var strList = attch.Split(',');
+            var num = 1;
+            var gameType = "HH";
+            //if (order.AnteCodeList.GroupBy(an => an.GameType).Count() == 1)
+            //{
+            //    gameType = order.AnteCodeList.GroupBy(an => an.GameType).First().Key ?? order.GameType;
+            //}
+            foreach (var item in strList)
+            {
+                //item   140915018_brqspf_3|140915019_spf_3^3
+                var arrayList = item.Split('^');
+                if (arrayList.Length != 2)
+                    throw new Exception("优化投注拆票有错！");
+
+                if (item.Split('|').Count() > 1)
+                {
+                    var checkGameTypeArray = item.Split('|');
+                    var strL = new List<string>();
+                    foreach (var check in checkGameTypeArray)
+                    {
+                        var arry = check.Split('_');
+                        if (arry != null && arry.Length == 3)
+                            strL.Add(arry[1]);
+                    }
+                    if (strL.Distinct().Count() > 1)
+                        gameType = "HH";
+                    else
+                        gameType = strL.FirstOrDefault().ToUpper();
+                }
+                else
+                {
+                    gameType = item.Split('_')[1];
+                }
+                //var checkGameTypeArray = item.Split('_');
+                //if (checkGameTypeArray[1] == checkGameTypeArray[3])
+                //    gameType = checkGameTypeArray[1].ToUpper();
+                //else
+                //    gameType = "HH";
+
+                //if (anteList.Length != 2)
+                //    throw new Exception("优化投注拆票有错！");
+                var anteList = arrayList[0].Split('|');
+                foreach (var ante in anteList)
+                {
+                    var anteArray = ante.Split('_');
+                    if (order.AnteCodeList.Where(p => p.MatchId.Contains(anteArray[0])).Count() <= 0)
+                        throw new Exception("优化投注拆票有错！");
+                }
+
+                var tmpAmount = int.Parse(arrayList[1]);
+                while (tmpAmount > 0)
+                {
+                    var currentAmount = maxAmount;
+                    if (tmpAmount <= maxAmount)
+                    {
+                        currentAmount = tmpAmount;
+                    }
+                    tmpAmount -= maxAmount;
+                    var tmpAmountList = GetAmountList(1, currentAmount);
+                    foreach (var checkedAmount in tmpAmountList)
+                    {
+                        var ticket = new TTicket
+                        {
+                            Id = order.OrderId + "|" + (num++).ToString("D3"),
+                            AgentId = "agentId",
+                            OrderId = order.OrderId,
+                            TicketGateway = gateway.ToUpper(),
+                            GameCode = order.GameCode,
+                            GameType = gameType,
+                            BaseCount = anteList.Length,
+                            PlayType = "P" + anteList.Length + "_1",
+                            IssuseNumber = order.IssuseNumber,
+                            TotalMoney = order.Price * checkedAmount,
+                            Amount = checkedAmount,
+                            BetCount = 1,
+                            Attach = order.Attach,
+                            Price = order.Price,
+                            RequestTime = DateTime.Now,
+                            TicketStatus = TicketStatus.Ticketing,
+                            TicketTime = null,
+                            TotalMatchCount = anteList.Length,
+                            AnteCodeList = new List<TAnteCode>(),
+                        };
+                        foreach (var code in anteList)
+                        {
+                            var ante = new TAnteCode
+                            {
+                                Id = Guid.NewGuid().ToString().ToUpper(),
+                                AgentId = "agentId",
+                                TicketId = ticket.Id,
+                                OrderId = order.OrderId,
+                                GameCode = order.GameCode,
+                                GameType = code.Split('_')[1].ToUpper(),
+                                IssuseNumber = order.IssuseNumber,
+                                MatchId = code.Split('_')[0],
+                                AnteNumber = code.Split('_')[2],
+                                IsDan = false,
+                                BonusStatus = BonusStatus.Waitting,
+                                CreateTime = DateTime.Now,
+                                UpdateTime = DateTime.Now,
+                            };
+                            ticket.AnteCodeList.Add(ante);
+                        }
+                        result.TotalBetCount += ticket.BetCount;
+                        result.TicketList.Add(ticket);
+                    }
+                }
+            }
+            if (!result.TicketList.Sum(t => t.TotalMoney).Equals(order.TotalMoney))
+            {
+                throw new Exception(string.Format("订单金额与投注号码不匹配。应为￥{0:N}，实际为￥{1:N}。", result.TicketList.Sum(t => t.TotalMoney), order.TotalMoney));
+            }
+            return result;
+        }
+
+        public TOrder AnalyzeOrder_Sport<TOrder, TTicket, TAnteCode>(GatewayTicketOrder_Sport order, string gateway)
+            where TOrder : I_Sport_Order<TTicket, TAnteCode>, new()
+            where TTicket : I_Sport_Ticket<TAnteCode>, new()
+            where TAnteCode : I_Sport_AnteCode, new()
+        {
+            var maxAmount = GetMaxTicketAmount(order.GameCode);
+            var result = new TOrder
+            {
+                AgentId = "agentId",
+                OrderId = order.OrderId,
+                TicketGateway = gateway,
+                GameCode = order.GameCode,
+                GameType = order.GameType,
+                PlayType = order.PlayType,
+                IssuseNumber = order.IssuseNumber,
+                TotalMoney = order.TotalMoney,
+                Amount = order.Amount,
+                Attach = order.Attach,
+                Price = order.Price,
+                RequestTime = DateTime.Now,
+                TicketStatus = ProgressStatus.Running,
+                TicketTime = null,
+                TotalMatchCount = order.AnteCodeList.Count,
+
+                TicketList = new List<TTicket>(),
+            };
+            var index = 1;
+            var tmp = order.PlayType.Split('|');
+            var ac = new ArrayCombination();
+            var c = new Combination();
+            var danList = order.AnteCodeList.Where(a => a.IsDan).ToList();
+            //var tuoList = order.AnteCodeList.Where(a => !a.IsDan).ToList();
+            //按比赛编号组成二维数组
+            var totalCodeList = new List<GatewayAnteCode_Sport[]>();
+            foreach (var g in order.AnteCodeList.GroupBy(p => p.MatchId))
+            {
+                totalCodeList.Add(order.AnteCodeList.Where(p => p.MatchId == g.Key).ToArray());
+            }
+
+            foreach (var chuan in tmp)
+            {
+                var a = int.Parse(chuan.Split('_')[0]);
+                var b = int.Parse(chuan.Split('_')[1]);
+                //串关包括的真实串数
+                var countList = SportAnalyzer.AnalyzeChuan(a, b);
+                if (b > 1)
+                {
+                    //3_3类型
+                    c.Calculate(order.AnteCodeList.ToArray(), a, (match) =>
+                    {
+                        //m场比赛
+                        if (match.Select(p => p.MatchId).Distinct().Count() == a)
+                        {
+                            var zhu = 0;
+                            foreach (var count in countList)
+                            {
+                                var analyzer = AnalyzerFactory.GetSportAnalyzer(order.GameCode, order.GameType, count);
+                                //M串1
+                                c.Calculate(match, count, (arr) =>
+                                {
+                                    zhu += analyzer.AnalyzeAnteCode(arr);
+                                });
+                            }
+                            index = AddToTicketListM_N<TOrder, TTicket, TAnteCode>(order, gateway, maxAmount, result, index, danList, a, b, zhu, match.ToArray());
+                        }
+                    });
+                }
+                else
+                {
+                    //3_1类型
+                    foreach (var count in countList)
+                    {
+                        var analyzer = AnalyzerFactory.GetSportAnalyzer(order.GameCode, order.GameType, count);
+
+                        c.Calculate(totalCodeList.ToArray(), count, (arr2) =>
+                        {
+                            ac.Calculate(arr2, (tuoArr) =>
+                            {
+                                #region 拆分组合票
+
+                                var isContainsDan = true;
+                                foreach (var dan in danList)
+                                {
+                                    var con = tuoArr.FirstOrDefault(p => p.MatchId == dan.MatchId);
+                                    if (con == null)
+                                    {
+                                        isContainsDan = false;
+                                        break;
+                                    }
+                                }
+
+                                if (isContainsDan)
+                                {
+                                    index = AddToTicketList<TOrder, TTicket, TAnteCode>(order, gateway, maxAmount, result, index, danList, count, analyzer, tuoArr);
+                                }
+
+                                #endregion
+                            });
+                        });
+                    }
+                }
+
+            }
+
+
+            if (!result.TicketList.Sum(t => t.TotalMoney).Equals(order.TotalMoney))
+            {
+                throw new Exception(string.Format("订单金额与投注号码不匹配。应为￥{0:N}，实际为￥{1:N}。", result.TicketList.Sum(t => t.TotalMoney), order.TotalMoney));
+            }
+            return result;
+        }
+
+        private int AddToTicketList<TOrder, TTicket, TAnteCode>(GatewayTicketOrder_Sport order, string gateway, int maxAmount, TOrder result, int index, List<GatewayAnteCode_Sport> danList, int count, IAntecodeAnalyzable_Sport analyzer, GatewayAnteCode_Sport[] tuoArr)
+            where TOrder : I_Sport_Order<TTicket, TAnteCode>, new()
+            where TTicket : I_Sport_Ticket<TAnteCode>, new()
+            where TAnteCode : I_Sport_AnteCode, new()
+        {
+            //var list = new List<GatewayAnteCode_Sport>(danList);
+            var list = new List<GatewayAnteCode_Sport>();
+            list.AddRange(tuoArr);
+            var arr = list.ToArray();
+            var gameType = "HH";
+            if (arr.GroupBy(an => an.GameType).Count() == 1)
+            {
+                gameType = arr.GroupBy(an => an.GameType).First().Key ?? order.GameType;
+            }
+            var betCount = analyzer.AnalyzeAnteCode(arr);
+            //if (betCount > 10000)
+            //{
+            //    throw new ArgumentException("超出单票金额限制 - " + (10000 * 2));
+            //}
+            var tmpAmount = order.Amount;
+            while (tmpAmount > 0)
+            {
+                var currentAmount = maxAmount;
+                if (tmpAmount <= maxAmount)
+                {
+                    currentAmount = tmpAmount;
+                }
+                tmpAmount -= maxAmount;
+                var tmpAmountList = GetAmountList(betCount, currentAmount);
+                foreach (var checkedAmount in tmpAmountList)
+                {
+                    var ticket = new TTicket
+                    {
+                        Id = order.OrderId + "|" + (index++).ToString("D3"),
+                        AgentId = "agentId",
+                        OrderId = order.OrderId,
+                        TicketGateway = gateway,
+                        GameCode = order.GameCode,
+                        GameType = gameType,
+                        BaseCount = count,
+                        PlayType = "P" + count + "_1",
+                        IssuseNumber = order.IssuseNumber,
+                        TotalMoney = betCount * order.Price * checkedAmount,
+                        Amount = checkedAmount,
+                        BetCount = betCount,
+                        Attach = order.Attach,
+                        Price = order.Price,
+                        RequestTime = DateTime.Now,
+                        TicketStatus = TicketStatus.Ticketing,
+                        TicketTime = null,
+                        TotalMatchCount = count,
+
+                        AnteCodeList = new List<TAnteCode>(),
+                    };
+                    foreach (var code in arr)
+                    {
+                        var ante = new TAnteCode
+                        {
+                            Id = Guid.NewGuid().ToString().ToUpper(),
+                            AgentId = "agentId",
+                            TicketId = ticket.Id,
+                            OrderId = order.OrderId,
+                            GameCode = order.GameCode,
+                            GameType = code.GameType,
+                            IssuseNumber = order.IssuseNumber,
+                            MatchId = code.MatchId,
+                            AnteNumber = code.AnteCode,
+                            IsDan = code.IsDan,
+                            BonusStatus = BonusStatus.Waitting,
+                            CreateTime = DateTime.Now,
+                            UpdateTime = DateTime.Now,
+                        };
+                        ticket.AnteCodeList.Add(ante);
+                    }
+                    result.TotalBetCount += ticket.BetCount;
+                    result.TicketList.Add(ticket);
+                }
+            }
+            return index;
+        }
+
+        private int AddToTicketListM_N<TOrder, TTicket, TAnteCode>(GatewayTicketOrder_Sport order, string gateway, int maxAmount, TOrder result, int index, List<GatewayAnteCode_Sport> danList, int count, int chuan, int zhu, GatewayAnteCode_Sport[] tuoArr)
+            where TOrder : I_Sport_Order<TTicket, TAnteCode>, new()
+            where TTicket : I_Sport_Ticket<TAnteCode>, new()
+            where TAnteCode : I_Sport_AnteCode, new()
+        {
+            var list = new List<GatewayAnteCode_Sport>();
+            list.AddRange(tuoArr);
+            var arr = list.ToArray();
+            var gameType = "HH";
+            if (arr.GroupBy(an => an.GameType).Count() == 1)
+            {
+                gameType = arr.GroupBy(an => an.GameType).First().Key ?? order.GameType;
+            }
+            var betCount = zhu;
+            //if (betCount > 10000)
+            //{
+            //    throw new ArgumentException("超出单票金额限制 - 20000");
+            //}
+            var tmpAmount = order.Amount;
+            while (tmpAmount > 0)
+            {
+                var currentAmount = maxAmount;
+                if (tmpAmount <= maxAmount)
+                {
+                    currentAmount = tmpAmount;
+                }
+                tmpAmount -= maxAmount;
+                var tmpAmountList = GetAmountList(betCount, currentAmount);
+                foreach (var checkedAmount in tmpAmountList)
+                {
+                    var ticket = new TTicket
+                    {
+                        Id = order.OrderId + "|" + (index++).ToString("D3"),
+                        AgentId = "agentId",
+                        OrderId = order.OrderId,
+                        TicketGateway = gateway,
+                        GameCode = order.GameCode,
+                        GameType = gameType,
+                        BaseCount = count,
+                        PlayType = "P" + count + "_" + chuan,
+                        IssuseNumber = order.IssuseNumber,
+                        TotalMoney = betCount * order.Price * checkedAmount,
+                        Amount = checkedAmount,
+                        BetCount = betCount,
+                        Attach = order.Attach,
+                        Price = order.Price,
+                        RequestTime = DateTime.Now,
+                        TicketStatus = TicketStatus.Ticketing,
+                        TicketTime = null,
+                        TotalMatchCount = count,
+
+                        AnteCodeList = new List<TAnteCode>(),
+                    };
+                    foreach (var code in arr)
+                    {
+                        var ante = new TAnteCode
+                        {
+                            Id = Guid.NewGuid().ToString().ToUpper(),
+                            AgentId = "agentId",
+                            TicketId = ticket.Id,
+                            OrderId = order.OrderId,
+                            GameCode = order.GameCode,
+                            GameType = code.GameType,
+                            IssuseNumber = order.IssuseNumber,
+                            MatchId = code.MatchId,
+                            AnteNumber = code.AnteCode,
+                            IsDan = code.IsDan,
+                            BonusStatus = BonusStatus.Waitting,
+                            CreateTime = DateTime.Now,
+                            UpdateTime = DateTime.Now,
+                        };
+                        ticket.AnteCodeList.Add(ante);
+                    }
+                    result.TotalBetCount += ticket.BetCount;
+                    result.TicketList.Add(ticket);
+                }
+            }
+            return index;
+        }
+
+        private List<int> GetAmountList(int betCount, int amount)
+        {
+            var list = new List<int>();
+            var flag = amount;
+            while (betCount * flag > 10000)
+            {
+                flag--;
+            }
+            while (amount > 0)
+            {
+                list.Add(System.Math.Min(flag, amount));
+                amount -= flag;
+            }
+            return list;
+        }
+
+        public int GetMaxTicketAmount(string gameCode)
+        {
+            switch (gameCode.ToLower())
+            {
+                case "ssq":
+                case "fc3d":
+                    return 50;
+                default:
+                    return 99;
+            }
         }
         /// <summary>
         /// 足彩普通投注
@@ -839,6 +1288,89 @@ namespace KaSon.FrameWork.ORM.Helper
 
             return schemeId;
         }
+
+        private int AddToTicketList<TOrder, TTicket, TAnteCode>(GatewayTicketOrder_Sport order, string gateway, string agentId, int maxAmount, TOrder result, int index, List<GatewayAnteCode_Sport> danList, int count, IAntecodeAnalyzable_Sport analyzer, GatewayAnteCode_Sport[] tuoArr)
+            where TOrder : I_Sport_Order<TTicket, TAnteCode>, new()
+            where TTicket : I_Sport_Ticket<TAnteCode>, new()
+            where TAnteCode : I_Sport_AnteCode, new()
+        {
+            //var list = new List<GatewayAnteCode_Sport>(danList);
+            var list = new List<GatewayAnteCode_Sport>();
+            list.AddRange(tuoArr);
+            var arr = list.ToArray();
+            var gameType = "HH";
+            if (arr.GroupBy(an => an.GameType).Count() == 1)
+            {
+                gameType = arr.GroupBy(an => an.GameType).First().Key ?? order.GameType;
+            }
+            var betCount = analyzer.AnalyzeAnteCode(arr);
+            //if (betCount > 10000)
+            //{
+            //    throw new ArgumentException("超出单票金额限制 - " + (10000 * 2));
+            //}
+            var tmpAmount = order.Amount;
+            while (tmpAmount > 0)
+            {
+                var currentAmount = maxAmount;
+                if (tmpAmount <= maxAmount)
+                {
+                    currentAmount = tmpAmount;
+                }
+                tmpAmount -= maxAmount;
+                var tmpAmountList = GetAmountList(betCount, currentAmount);
+                foreach (var checkedAmount in tmpAmountList)
+                {
+                    var ticket = new TTicket
+                    {
+                        Id = agentId + "|" + order.OrderId + "|" + (index++).ToString("D3"),
+                        AgentId = agentId,
+                        OrderId = order.OrderId,
+                        TicketGateway = gateway,
+                        GameCode = order.GameCode,
+                        GameType = gameType,
+                        BaseCount = count,
+                        PlayType = "P" + count + "_1",
+                        IssuseNumber = order.IssuseNumber,
+                        TotalMoney = betCount * order.Price * checkedAmount,
+                        Amount = checkedAmount,
+                        BetCount = betCount,
+                        Attach = order.Attach,
+                        Price = order.Price,
+                        RequestTime = DateTime.Now,
+                        TicketStatus = TicketStatus.Ticketing,
+                        TicketTime = null,
+                        TotalMatchCount = count,
+
+                        AnteCodeList = new List<TAnteCode>(),
+                    };
+                    foreach (var code in arr)
+                    {
+                        var ante = new TAnteCode
+                        {
+                            Id = Guid.NewGuid().ToString().ToUpper(),
+                            AgentId = agentId,
+                            TicketId = ticket.Id,
+                            OrderId = order.OrderId,
+                            GameCode = order.GameCode,
+                            GameType = code.GameType,
+                            IssuseNumber = order.IssuseNumber,
+                            MatchId = code.MatchId,
+                            AnteNumber = code.AnteCode,
+                            IsDan = code.IsDan,
+                            BonusStatus = BonusStatus.Waitting,
+                            CreateTime = DateTime.Now,
+                            UpdateTime = DateTime.Now,
+                        };
+                        ticket.AnteCodeList.Add(ante);
+                    }
+                    result.TotalBetCount += ticket.BetCount;
+                    result.TicketList.Add(ticket);
+                }
+            }
+            return index;
+        }
+
+
         /// <summary>
         /// 拆票，单式上传
         /// </summary>
@@ -3194,6 +3726,171 @@ namespace KaSon.FrameWork.ORM.Helper
             return schemeId;
         }
 
+
+        public void RequestTicket_Sport(IEntityOrder order, bool isTrue, Dictionary<string, string> matchIdOddsList, string[] matchIdArray)
+        {
+            var redisTicketList = new List<RedisTicketInfo>();
+            var matchIdList = new List<string>();
+
+            var manager = new Sports_Manager();
+            var ticketTable = GetNewTicketTable();
+            var count = 0L;
+            //key:比赛编号_玩法  value:赔率
+            var oddDic = new Dictionary<string, string>();
+            foreach (var ticket in order.GetTicketList())
+            {
+                count++;
+                var betContent = ticket.ToAnteString_LocalhostShop();
+                var betMatchList = betContent.Split('/');
+                var locOdds = new List<string>();
+                if (order.GameCode.ToUpper() == "JCZQ" || order.GameCode.ToUpper() == "JCLQ")
+                {
+                    foreach (var item in betMatchList)
+                    {
+                        var matchL = item.Split('_');
+                        if (matchL.Length < 2)
+                            throw new Exception("投注比赛内容出错 - " + item);
+                        if (matchL.Length == 2)
+                            locOdds.Add(matchIdOddsList.FirstOrDefault(p => p.Key == string.Format("{0}_{1}", ticket.GameType.ToUpper(), matchL[0])).Value);
+                        else if (matchL.Length == 3 && ticket.GameType.ToUpper() == "HH")
+                            locOdds.Add(matchIdOddsList.FirstOrDefault(p => p.Key == string.Format("{0}_{1}", matchL[0].ToUpper(), matchL[1])).Value);
+                    }
+                }
+                var locOddStr = string.Join("/", locOdds);
+
+                //var history = new Sports_Ticket
+                //{
+                //    GameCode = ticket.GameCode.ToUpper(),
+                //    GameType = ticket.GameType.ToUpper(),
+                //    SchemeId = ticket.OrderId,
+                //    TicketId = ticket.Id,
+                //    IssuseNumber = ticket.IssuseNumber,
+                //    CreateTime = DateTime.Now,
+                //    TicketStatus = isTrue ? TicketStatus.Ticketing : TicketStatus.Waitting,
+                //    PlayType = ticket.PlayType,
+                //    Amount = ticket.Amount,
+                //    BetUnits = ticket.BetCount,
+                //    BetMoney = ticket.TotalMoney,
+                //    BetContent = betContent,
+                //    MatchIdList = ticket.ToAnteString_zhongminToMatchId(),
+                //    LocOdds = string.Join("/", locOdds),
+                //    PrintNumber3 = Guid.NewGuid().ToString("N").ToUpper(),
+                //    IsAppend = false,
+                //};
+                //manager.AddSports_Ticket(history);
+
+                //替换为批量插入票表
+                DataRow r = ticketTable.NewRow();
+                r["Id"] = count;
+                r["GameCode"] = ticket.GameCode.ToUpper();
+                r["GameType"] = ticket.GameType.ToUpper();
+                r["SchemeId"] = ticket.OrderId;
+                r["TicketId"] = ticket.Id;
+                r["IssuseNumber"] = ticket.IssuseNumber;
+                r["PlayType"] = ticket.PlayType;
+                r["BetContent"] = betContent;
+                r["LocOdds"] = locOddStr;
+                r["TicketStatus"] = 90;
+                r["Amount"] = ticket.Amount;
+                r["BetUnits"] = ticket.BetCount;
+                r["BetMoney"] = ticket.TotalMoney;
+                r["MatchIdList"] = ticket.ToAnteString_zhongminToMatchId();
+                r["PrintNumber3"] = Guid.NewGuid().ToString("N").ToUpper();
+                r["IsAppend"] = false;
+                r["BonusStatus"] = 0;
+                r["PreTaxBonusMoney"] = 0M;
+                r["AfterTaxBonusMoney"] = 0M;
+                r["PrintDateTime"] = DateTime.Now;
+                r["CreateTime"] = DateTime.Now;
+
+                ticketTable.Rows.Add(r);
+
+                redisTicketList.Add(new RedisTicketInfo
+                {
+                    AfterBonusMoney = 0M,
+                    Amount = ticket.Amount,
+                    BetContent = betContent,
+                    BetMoney = ticket.TotalMoney,
+                    BetUnits = ticket.BetCount,
+                    BonusStatus = BonusStatus.Waitting,
+                    GameCode = ticket.GameCode.ToUpper(),
+                    GameType = ticket.GameType.ToUpper(),
+                    IsAppend = false,
+                    IssuseNumber = ticket.IssuseNumber,
+                    LocOdds = locOddStr,
+                    MatchIdList = ticket.ToAnteString_zhongminToMatchId(),
+                    PlayType = ticket.PlayType,
+                    PreBonusMoney = 0M,
+                    SchemeId = ticket.OrderId,
+                    TicketId = ticket.Id,
+                });
+
+                #region 号码表更新对应比赛sp
+
+                var betContentArray = betContent.Split('/');
+                foreach (var content in betContentArray)
+                {
+                    var contentArray = content.Split('_');
+                    var gameType = string.Empty;
+                    var matchId = string.Empty;
+                    if (contentArray.Length == 3)
+                    {
+                        //混合
+                        gameType = contentArray[0];
+                        matchId = contentArray[1];
+                    }
+                    if (contentArray.Length == 2)
+                    {
+                        //普通
+                        gameType = ticket.GameType.ToUpper();
+                        matchId = contentArray[0];
+                    }
+                    if (string.IsNullOrEmpty(gameType) || string.IsNullOrEmpty(matchId)) continue;
+
+                    var matchIdStr = string.Format("{0}_", matchId);
+                    var oddItem = locOdds.FirstOrDefault(p => p.StartsWith(matchIdStr));
+                    if (string.IsNullOrEmpty(oddItem)) continue;
+                    var matchIdOdd = oddItem.Replace(matchIdStr, string.Empty);
+                    var key = string.Format("{0}_{1}", matchId, gameType).ToUpper();
+                    if (!oddDic.ContainsKey(key))
+                        oddDic.Add(key, matchIdOdd);
+                }
+
+                #endregion
+            }
+
+            //批量插入票表
+            manager.SqlBulkAddTable(ticketTable);
+            //调用Redis保存
+            if (RedisHelper.EnableRedis)
+            {
+                if (order.GameCode == "BJDC")
+                {
+                    RedisOrderBusiness.AddToRunningOrder_BJDC(order.OrderId, matchIdArray, redisTicketList);
+                }
+                if (new string[] { "JCZQ", "JCLQ" }.Contains(order.GameCode))
+                {
+                    RedisOrderBusiness.AddToRunningOrder_JC(order.GameCode, order.OrderId, matchIdArray, redisTicketList);
+                }
+            }
+
+            //更新号码表比赛SP
+            var codeList = manager.QuerySportsAnteCodeBySchemeId(order.OrderId);
+            foreach (var item in codeList)
+            {
+                if (!string.IsNullOrEmpty(item.Odds))
+                    continue;
+
+                var key = string.Format("{0}_{1}", item.MatchId, item.GameType).ToUpper();
+                if (oddDic.ContainsKey(key))
+                {
+                    var odd = oddDic[key] + ",-1|1";
+                    item.Odds = odd;
+                    manager.UpdateSports_AnteCode(item);
+                }
+            }
+        }
+
         /// <summary>
         /// 合买保存订单；注意：合买保存订单时不做扣款,但需要记录售出份数
         /// </summary>
@@ -4054,6 +4751,43 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             //}
             return entity;
+        }
+
+        private DataTable GetNewTicketTable()
+        {
+            var ticketTable = new DataTable("C_Sports_Ticket");
+            ticketTable.Columns.Add("Id", typeof(long));
+            ticketTable.Columns.Add("SchemeId", typeof(string));
+            ticketTable.Columns.Add("TicketId", typeof(string));
+            ticketTable.Columns.Add("GameCode", typeof(string));
+            ticketTable.Columns.Add("GameType", typeof(string));
+            ticketTable.Columns.Add("PlayType", typeof(string));
+            ticketTable.Columns.Add("MatchIdList", typeof(string));
+            ticketTable.Columns.Add("IssuseNumber", typeof(string));
+            ticketTable.Columns.Add("BetUnits", typeof(int));
+            ticketTable.Columns.Add("Amount", typeof(int));
+            ticketTable.Columns.Add("BetMoney", typeof(decimal));
+            ticketTable.Columns.Add("BetContent", typeof(string));
+            ticketTable.Columns.Add("LocOdds", typeof(string));
+            ticketTable.Columns.Add("TicketStatus", typeof(int));
+            ticketTable.Columns.Add("TicketLog", typeof(string));
+            ticketTable.Columns.Add("PartnerId", typeof(string));
+            ticketTable.Columns.Add("Palmid", typeof(string));
+            ticketTable.Columns.Add("PrintNumber1", typeof(string));
+            ticketTable.Columns.Add("PrintNumber2", typeof(string));
+            ticketTable.Columns.Add("PrintNumber3", typeof(string));
+            ticketTable.Columns.Add("BarCode", typeof(string));
+            ticketTable.Columns.Add("PrintOdd", typeof(string));
+            ticketTable.Columns.Add("PrintUnOdd", typeof(string));
+            ticketTable.Columns.Add("BonusStatus", typeof(int));
+            ticketTable.Columns.Add("PreTaxBonusMoney", typeof(decimal));
+            ticketTable.Columns.Add("AfterTaxBonusMoney", typeof(decimal));
+            ticketTable.Columns.Add("PrintDateTime", typeof(DateTime));
+            ticketTable.Columns.Add("Gateway", typeof(string));
+            ticketTable.Columns.Add("CreateTime", typeof(DateTime));
+            ticketTable.Columns.Add("IsAppend", typeof(bool));
+            ticketTable.PrimaryKey = new DataColumn[] { ticketTable.Columns["Id"] };
+            return ticketTable;
         }
 
         #region 宝单分享
