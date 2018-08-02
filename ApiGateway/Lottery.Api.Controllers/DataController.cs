@@ -59,6 +59,11 @@ namespace Lottery.Api.Controllers
                 if (gameIssuseInfo != null && !string.IsNullOrEmpty(DelayTime))
                 {
                     var list = new List<object>();
+                    DateTime? OpeningTime = null;
+                    if (gameCode.ToUpper() == "FC3D")
+                    {
+                        OpeningTime = gameIssuseInfo.LocalStopTime.Date.AddHours(21).AddMinutes(30);
+                    }
                     list.Add(new
                     {
                         CurrIssuseNumber = gameIssuseInfo.IssuseNumber,
@@ -66,6 +71,7 @@ namespace Lottery.Api.Controllers
                         OfficialStopTime = gameIssuseInfo.OfficialStopTime,
                         DelayTime = DelayTime,
                         ServiceTime = DateTime.Now,
+                        OpeningTime = OpeningTime
                     });
                     return Json(new LotteryServiceResponse
                     {
