@@ -1568,7 +1568,7 @@ namespace Lottery.Api.Controllers
                     Withdraw_Param["info"] = withdrawinfo;        
                     Withdraw_Param["userId"] = info.UserId;
                     Withdraw_Param["balancepwd"] = balancepwd;
-                    var RequestWithdraw_Step2 = await _serviceProxyProvider.Invoke<UserBindInfos>(Withdraw_Param, "api/user/RequestWithdraw_Step2");
+                    var RequestWithdraw_Step2 = await _serviceProxyProvider.Invoke<CommonActionResult>(Withdraw_Param, "api/user/RequestWithdraw_Step2");
 
                     return JsonEx(new LotteryServiceResponse
                     {
