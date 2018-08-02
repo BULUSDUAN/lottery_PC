@@ -98,7 +98,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public int QueryHBK3_JBZSIssuseNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<HBK3_JBZS>().Count(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<HBK3_JBZS>().Where(p => p.IssuseNumber == issuseNumber).Count();
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public int QueryHBK3_HZIssuseNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<HBK3_HZ>().Count(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<HBK3_HZ>().Where(p => p.IssuseNumber == issuseNumber).Count();
         }
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public int QueryHBK3_XTIssuseNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<HBK3_XT>().Count(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<HBK3_XT>().Where(p => p.IssuseNumber == issuseNumber).Count();
         }
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public int QueryHBK3_ZHIssuseNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<HBK3_ZH>().Count(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<HBK3_ZH>().Where(p => p.IssuseNumber == issuseNumber).Count();
         }
 
         /// <summary>
@@ -202,7 +202,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public int QueryHBK3_ZHZSIssuseNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<HBK3_ZHZS>().Count(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<HBK3_ZHZS>().Where(p => p.IssuseNumber == issuseNumber).Count();
         }
 
         #endregion

@@ -109,7 +109,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public int QueryPL5_JBZSIssuseNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<PL5_JBZS>().Count(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<PL5_JBZS>().Where(p => p.IssuseNumber == issuseNumber).Count();
         }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public int QueryPL5_DXIssuseNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<PL5_DX>().Count(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<PL5_DX>().Where(p => p.IssuseNumber == issuseNumber).Count();
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public int QueryPL5_JOIssuseNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<PL5_JO>().Count(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<PL5_JO>().Where(p => p.IssuseNumber == issuseNumber).Count();
         }
 
         /// <summary>
@@ -187,7 +187,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public int QueryPL5_ZHIssuseNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<PL5_ZH>().Count(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<PL5_ZH>().Where(p => p.IssuseNumber == issuseNumber).Count();
         }
 
         /// <summary>
@@ -213,7 +213,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public int QueryPL5_Chu3IssuseNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<PL5_Chu3>().Count(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<PL5_Chu3>().Where(p => p.IssuseNumber == issuseNumber).Count();
         }
 
         /// <summary>
@@ -239,7 +239,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public int QueryPL5_HZIssuseNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<PL5_HZ>().Count(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<PL5_HZ>().Where(p => p.IssuseNumber == issuseNumber).Count();
         }
 
 

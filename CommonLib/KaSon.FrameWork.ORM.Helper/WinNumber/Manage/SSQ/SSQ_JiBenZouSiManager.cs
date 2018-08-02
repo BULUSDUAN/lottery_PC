@@ -106,7 +106,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public int QuerySSQ_JiBenZouSiIssuseNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<SSQ_JiBenZouSi>().Count(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<SSQ_JiBenZouSi>().Where(p => p.IssuseNumber == issuseNumber).Count();
         }
     }
 }

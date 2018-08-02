@@ -98,7 +98,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public int QueryQLC_JBZSIssuseNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<QLC_JBZS>().Count(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<QLC_JBZS>().Where(p => p.IssuseNumber == issuseNumber).Count();
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public int QueryQLC_DXIssuseNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<QLC_DX>().Count(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<QLC_DX>().Where(p => p.IssuseNumber == issuseNumber).Count();
         }
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public int QueryQLC_JOIssuseNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<QLC_JO>().Count(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<QLC_JO>().Where(p => p.IssuseNumber == issuseNumber).Count();
         }
         /// <summary>
         /// 添加质和走势数据
@@ -175,7 +175,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public int QueryQLC_ZHIssuseNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<QLC_ZH>().Count(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<QLC_ZH>().Where(p => p.IssuseNumber == issuseNumber).Count();
         }
 
         /// <summary>
@@ -201,7 +201,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public int QueryQLC_Chu3IssuseNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<QLC_Chu3>().Count(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<QLC_Chu3>().Where(p => p.IssuseNumber == issuseNumber).Count();
         }
 
         #endregion
