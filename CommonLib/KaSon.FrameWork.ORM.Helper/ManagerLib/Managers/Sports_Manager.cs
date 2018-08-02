@@ -30,15 +30,21 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             DB.GetDal<C_Sports_Order_Running>().Add(entity);
         }
-        public void SqlBulkAddTable(DataTable dt)
+        //public void SqlBulkAddTable(DataTable dt)
+        //{
+        //    if (dt.Rows.Count <= 0) return;
+        //    GameBiz.Business.Domain.Managers.SqlBulkCopyHelper.WriteTableToDataBase(dt, Session.Connection as System.Data.SqlClient.SqlConnection, new System.Data.SqlClient.SqlRowsCopiedEventHandler((obj, arg) =>
+        //    {
+        //        Console.WriteLine(arg.RowsCopied.ToString());
+        //    }));
+        //}
+
+        public void SqlBulkAddTable(List<C_Sports_Ticket> list)
         {
-            if (dt.Rows.Count <= 0) return;
-            throw new NotImplementedException("SqlBulkAddTable");
-            //GameBiz.Business.Domain.Managers.SqlBulkCopyHelper.WriteTableToDataBase(dt, Session.Connection as System.Data.SqlClient.SqlConnection, new System.Data.SqlClient.SqlRowsCopiedEventHandler((obj, arg) =>
-            //{
-            //    Console.WriteLine(arg.RowsCopied.ToString());
-            //}));
+            if (list.Count <= 0) return;
+            DB.GetDal<C_Sports_Ticket>().Add(list);
         }
+
         public void ExecSql(string sql)
         {
             if (string.IsNullOrEmpty(sql)) return;

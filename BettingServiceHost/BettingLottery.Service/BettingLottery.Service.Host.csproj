@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\CommonLib\KaSon.FrameWork.PlugIn\KaSon.FrameWork.PlugIn.csproj" />
     <ProjectReference Include="..\BettingLottery.Service.IModuleServices\BettingLottery.Service.IModuleServices.csproj" />
     <ProjectReference Include="..\BettingLottery.Service.Model\BettingLottery.Service.Model.csproj" />
     <ProjectReference Include="..\BettingLottery.Service.ModuleServices\BettingLottery.Service.ModuleServices.csproj" />

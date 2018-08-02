@@ -449,7 +449,8 @@ namespace KaSon.FrameWork.ORM.Helper
                 var redisTicketList = new List<RedisTicketInfo>();
                 var gameType = string.Empty;
                 var ticketList = AnalyzeOrder(orderInfo);
-                var ticketTable = BettingHelper.GetNewTicketTable();
+                //var ticketTable = BettingHelper.GetNewTicketTable();
+                var ticketTable = new List<C_Sports_Ticket>();
                 var index = 1;
                 var locOdds = string.Empty;
                 foreach (var ticket in ticketList)
@@ -498,27 +499,49 @@ namespace KaSon.FrameWork.ORM.Helper
                     };
 
                     //sql.Append(CreateInsertSql(orderInfo, ticket, info, locOdds));
-                    System.Data.DataRow r = ticketTable.NewRow();
-                    r["Id"] = index;
-                    r["GameCode"] = orderInfo.GameCode.ToUpper();
-                    r["GameType"] = ticket.GameType.ToUpper();
-                    r["SchemeId"] = orderInfo.OrderId;
-                    r["TicketId"] = info.OrderId;
-                    r["IssuseNumber"] = orderInfo.IssuseNumber;
-                    r["PlayType"] = info.BetType;
-                    r["BetContent"] = info.BetContent;
-                    r["TicketStatus"] = 90;
-                    r["Amount"] = info.Multiple;
-                    r["BetUnits"] = info.BetUnits;
-                    r["BetMoney"] = info.BetMoney;
-                    r["PrintNumber3"] = Guid.NewGuid().ToString("N").ToUpper();
-                    r["IsAppend"] = orderInfo.IsAppend;
-                    r["BonusStatus"] = 0;
-                    r["PreTaxBonusMoney"] = 0M;
-                    r["AfterTaxBonusMoney"] = 0M;
-                    r["PrintDateTime"] = DateTime.Now;
-                    r["CreateTime"] = DateTime.Now;
-                    r["LocOdds"] = locOdds;
+                    //System.Data.DataRow r = ticketTable.NewRow();
+                    var item = new C_Sports_Ticket();
+                    //r["Id"] = index;
+                    //r["GameCode"] = orderInfo.GameCode.ToUpper();
+                    //r["GameType"] = ticket.GameType.ToUpper();
+                    //r["SchemeId"] = orderInfo.OrderId;
+                    //r["TicketId"] = info.OrderId;
+                    //r["IssuseNumber"] = orderInfo.IssuseNumber;
+                    //r["PlayType"] = info.BetType;
+                    //r["BetContent"] = info.BetContent;
+                    //r["TicketStatus"] = 90;
+                    //r["Amount"] = info.Multiple;
+                    //r["BetUnits"] = info.BetUnits;
+                    //r["BetMoney"] = info.BetMoney;
+                    //r["PrintNumber3"] = Guid.NewGuid().ToString("N").ToUpper();
+                    //r["IsAppend"] = orderInfo.IsAppend;
+                    //r["BonusStatus"] = 0;
+                    //r["PreTaxBonusMoney"] = 0M;
+                    //r["AfterTaxBonusMoney"] = 0M;
+                    //r["PrintDateTime"] = DateTime.Now;
+                    //r["CreateTime"] = DateTime.Now;
+                    //r["LocOdds"] = locOdds;
+
+                    item.Id  = index;
+                    item.GameCode  = orderInfo.GameCode.ToUpper();
+                    item.GameType  = ticket.GameType.ToUpper();
+                    item.SchemeId  = orderInfo.OrderId;
+                    item.TicketId  = info.OrderId;
+                    item.IssuseNumber  = orderInfo.IssuseNumber;
+                    item.PlayType  = info.BetType;
+                    item.BetContent  = info.BetContent;
+                    item.TicketStatus  = 90;
+                    item.Amount  = info.Multiple;
+                    item.BetUnits  = info.BetUnits;
+                    item.BetMoney  = info.BetMoney;
+                    item.PrintNumber3  = Guid.NewGuid().ToString("N").ToUpper();
+                    item.IsAppend  = orderInfo.IsAppend;
+                    item.BonusStatus  = 0;
+                    item.PreTaxBonusMoney  = 0M;
+                    item.AfterTaxBonusMoney  = 0M;
+                    item.PrintDateTime  = DateTime.Now;
+                    item.CreateTime  = DateTime.Now;
+                    item.LocOdds  = locOdds;
 
                     if (string.IsNullOrEmpty(gameType))
                         gameType = ticket.GameType.ToUpper();
@@ -541,7 +564,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         SchemeId = orderInfo.OrderId,
                         TicketId = info.OrderId,
                     });
-                    ticketTable.Rows.Add(r);
+                    ticketTable.Add(item);
                 }
 
                 //var watch = new Stopwatch();
@@ -1460,7 +1483,8 @@ namespace KaSon.FrameWork.ORM.Helper
             var oddDic = new Dictionary<string, string>();
             try
             {
-                var ticketTable = BettingHelper.GetNewTicketTable();
+                //var ticketTable = BettingHelper.GetNewTicketTable();
+                var ticketTable = new List<C_Sports_Ticket>();
                 var dictionary = new Dictionary<string, int>();
                 foreach (var item in codeList)
                 {
@@ -1537,28 +1561,49 @@ namespace KaSon.FrameWork.ORM.Helper
                         //};
                         //hisManager.AddSports_Ticket(history);
 
-                        DataRow r = ticketTable.NewRow();
-                        r["Id"] = ticketNum;
-                        r["GameCode"] = order.GameCode.ToUpper();
-                        r["GameType"] = order.GameType.ToUpper();
-                        r["SchemeId"] = order.OrderId;
-                        r["TicketId"] = ticketId;
-                        r["IssuseNumber"] = ConvertIssuseNumber(order.GameCode, order.IssuseNumber);
-                        r["PlayType"] = string.Format("P{0}", betType);
-                        r["BetContent"] = string.Join("/", locBetContentList);
-                        r["TicketStatus"] = 90;
-                        r["Amount"] = currentAmount;
-                        r["BetUnits"] = 1;
-                        r["BetMoney"] = ticketMoney;
-                        r["PrintNumber3"] = Guid.NewGuid().ToString("N").ToUpper();
-                        r["MatchIdList"] = string.Join(",", matchIdList.ToArray());
-                        r["LocOdds"] = locOddStr;
-                        r["IsAppend"] = false;
-                        r["BonusStatus"] = 0;
-                        r["PreTaxBonusMoney"] = 0M;
-                        r["AfterTaxBonusMoney"] = 0M;
-                        r["PrintDateTime"] = DateTime.Now;
-                        r["CreateTime"] = DateTime.Now;
+                        C_Sports_Ticket r = new C_Sports_Ticket();
+                        //r["Id"] = ticketNum;
+                        //r["GameCode"] = order.GameCode.ToUpper();
+                        //r["GameType"] = order.GameType.ToUpper();
+                        //r["SchemeId"] = order.OrderId;
+                        //r["TicketId"] = ticketId;
+                        //r["IssuseNumber"] = ConvertIssuseNumber(order.GameCode, order.IssuseNumber);
+                        //r["PlayType"] = string.Format("P{0}", betType);
+                        //r["BetContent"] = string.Join("/", locBetContentList);
+                        //r["TicketStatus"] = 90;
+                        //r["Amount"] = currentAmount;
+                        //r["BetUnits"] = 1;
+                        //r["BetMoney"] = ticketMoney;
+                        //r["PrintNumber3"] = Guid.NewGuid().ToString("N").ToUpper();
+                        //r["MatchIdList"] = string.Join(",", matchIdList.ToArray());
+                        //r["LocOdds"] = locOddStr;
+                        //r["IsAppend"] = false;
+                        //r["BonusStatus"] = 0;
+                        //r["PreTaxBonusMoney"] = 0M;
+                        //r["AfterTaxBonusMoney"] = 0M;
+                        //r["PrintDateTime"] = DateTime.Now;
+                        //r["CreateTime"] = DateTime.Now;
+
+                        r.GameCode  = order.GameCode.ToUpper();
+                        r.GameType  = order.GameType.ToUpper();
+                        r.SchemeId  = order.OrderId;
+                        r.TicketId  = ticketId;
+                        r.IssuseNumber  = ConvertIssuseNumber(order.GameCode, order.IssuseNumber);
+                        r.PlayType  = string.Format("P{0}", betType);
+                        r.BetContent  = string.Join("/", locBetContentList);
+                        r.TicketStatus  = 90;
+                        r.Amount  = currentAmount;
+                        r.BetUnits  = 1;
+                        r.BetMoney  = ticketMoney;
+                        r.PrintNumber3  = Guid.NewGuid().ToString("N").ToUpper();
+                        r.MatchIdList  = string.Join(",", matchIdList.ToArray());
+                        r.LocOdds  = locOddStr;
+                        r.IsAppend  = false;
+                        r.BonusStatus  = 0;
+                        r.PreTaxBonusMoney  = 0M;
+                        r.AfterTaxBonusMoney  = 0M;
+                        r.PrintDateTime  = DateTime.Now;
+                        r.CreateTime  = DateTime.Now;
 
                         redisTicketList.Add(new RedisTicketInfo
                         {
@@ -1580,7 +1625,7 @@ namespace KaSon.FrameWork.ORM.Helper
                             TicketId = ticketId,
                         });
 
-                        ticketTable.Rows.Add(r);
+                        ticketTable.Add(r);
 
                         #region 号码表更新对应比赛sp
 
@@ -1666,7 +1711,8 @@ namespace KaSon.FrameWork.ORM.Helper
             var redisTicketList = new List<RedisTicketInfo>();
             var gameType = string.Empty;
             var ticketList = AnalyzeOrder(orderInfo);
-            var ticketTable = BettingHelper.GetNewTicketTable();
+            //var ticketTable = BettingHelper.GetNewTicketTable();
+            var ticketTable = new List<C_Sports_Ticket>();
             var index = 1;
             var locOdds = string.Empty;
             foreach (var ticket in ticketList)
@@ -1714,27 +1760,49 @@ namespace KaSon.FrameWork.ORM.Helper
                     BetContent = locBetContent,
                 };
 
-                DataRow r = ticketTable.NewRow();
-                r["Id"] = index;
-                r["GameCode"] = orderInfo.GameCode.ToUpper();
-                r["GameType"] = ticket.GameType.ToUpper();
-                r["SchemeId"] = orderInfo.OrderId;
-                r["TicketId"] = info.OrderId;
-                r["IssuseNumber"] = orderInfo.IssuseNumber;
-                r["PlayType"] = info.BetType;
-                r["BetContent"] = info.BetContent;
-                r["TicketStatus"] = 90;
-                r["Amount"] = info.Multiple;
-                r["BetUnits"] = info.BetUnits;
-                r["BetMoney"] = info.BetMoney;
-                r["PrintNumber3"] = Guid.NewGuid().ToString("N").ToUpper();
-                r["IsAppend"] = orderInfo.IsAppend;
-                r["BonusStatus"] = 0;
-                r["PreTaxBonusMoney"] = 0M;
-                r["AfterTaxBonusMoney"] = 0M;
-                r["PrintDateTime"] = DateTime.Now;
-                r["CreateTime"] = DateTime.Now;
-                r["LocOdds"] = locOdds;
+                //DataRow r = ticketTable.NewRow();
+                C_Sports_Ticket r = new C_Sports_Ticket();
+                //r["Id"] = index;
+                //r["GameCode"] = orderInfo.GameCode.ToUpper();
+                //r["GameType"] = ticket.GameType.ToUpper();
+                //r["SchemeId"] = orderInfo.OrderId;
+                //r["TicketId"] = info.OrderId;
+                //r["IssuseNumber"] = orderInfo.IssuseNumber;
+                //r["PlayType"] = info.BetType;
+                //r["BetContent"] = info.BetContent;
+                //r["TicketStatus"] = 90;
+                //r["Amount"] = info.Multiple;
+                //r["BetUnits"] = info.BetUnits;
+                //r["BetMoney"] = info.BetMoney;
+                //r["PrintNumber3"] = Guid.NewGuid().ToString("N").ToUpper();
+                //r["IsAppend"] = orderInfo.IsAppend;
+                //r["BonusStatus"] = 0;
+                //r["PreTaxBonusMoney"] = 0M;
+                //r["AfterTaxBonusMoney"] = 0M;
+                //r["PrintDateTime"] = DateTime.Now;
+                //r["CreateTime"] = DateTime.Now;
+                //r["LocOdds"] = locOdds;
+
+
+                r.GameCode  = orderInfo.GameCode.ToUpper();
+                r.GameType  = ticket.GameType.ToUpper();
+                r.SchemeId  = orderInfo.OrderId;
+                r.TicketId  = info.OrderId;
+                r.IssuseNumber  = orderInfo.IssuseNumber;
+                r.PlayType  = info.BetType;
+                r.BetContent  = info.BetContent;
+                r.TicketStatus  = 90;
+                r.Amount  = info.Multiple;
+                r.BetUnits  = info.BetUnits;
+                r.BetMoney  = info.BetMoney;
+                r.PrintNumber3  = Guid.NewGuid().ToString("N").ToUpper();
+                r.IsAppend  = orderInfo.IsAppend;
+                r.BonusStatus  = 0;
+                r.PreTaxBonusMoney  = 0M;
+                r.AfterTaxBonusMoney  = 0M;
+                r.PrintDateTime  = DateTime.Now;
+                r.CreateTime  = DateTime.Now;
+                r.LocOdds  = locOdds;
                 if (string.IsNullOrEmpty(gameType))
                     gameType = ticket.GameType.ToUpper();
                 redisTicketList.Add(new RedisTicketInfo
@@ -1757,7 +1825,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     TicketId = info.OrderId,
                 });
 
-                ticketTable.Rows.Add(r);
+                ticketTable.Add(r);
             }
 
             //var watch = new Stopwatch();
@@ -3733,7 +3801,8 @@ namespace KaSon.FrameWork.ORM.Helper
             var matchIdList = new List<string>();
 
             var manager = new Sports_Manager();
-            var ticketTable = GetNewTicketTable();
+            //var ticketTable = GetNewTicketTable();
+            var ticketTable = new List<C_Sports_Ticket>();
             var count = 0L;
             //key:比赛编号_玩法  value:赔率
             var oddDic = new Dictionary<string, string>();
@@ -3780,30 +3849,52 @@ namespace KaSon.FrameWork.ORM.Helper
                 //manager.AddSports_Ticket(history);
 
                 //替换为批量插入票表
-                DataRow r = ticketTable.NewRow();
-                r["Id"] = count;
-                r["GameCode"] = ticket.GameCode.ToUpper();
-                r["GameType"] = ticket.GameType.ToUpper();
-                r["SchemeId"] = ticket.OrderId;
-                r["TicketId"] = ticket.Id;
-                r["IssuseNumber"] = ticket.IssuseNumber;
-                r["PlayType"] = ticket.PlayType;
-                r["BetContent"] = betContent;
-                r["LocOdds"] = locOddStr;
-                r["TicketStatus"] = 90;
-                r["Amount"] = ticket.Amount;
-                r["BetUnits"] = ticket.BetCount;
-                r["BetMoney"] = ticket.TotalMoney;
-                r["MatchIdList"] = ticket.ToAnteString_zhongminToMatchId();
-                r["PrintNumber3"] = Guid.NewGuid().ToString("N").ToUpper();
-                r["IsAppend"] = false;
-                r["BonusStatus"] = 0;
-                r["PreTaxBonusMoney"] = 0M;
-                r["AfterTaxBonusMoney"] = 0M;
-                r["PrintDateTime"] = DateTime.Now;
-                r["CreateTime"] = DateTime.Now;
+                //DataRow r = ticketTable.NewRow();
+                C_Sports_Ticket r = new C_Sports_Ticket();
+                //r["Id"] = count;
+                //r["GameCode"] = ticket.GameCode.ToUpper();
+                //r["GameType"] = ticket.GameType.ToUpper();
+                //r["SchemeId"] = ticket.OrderId;
+                //r["TicketId"] = ticket.Id;
+                //r["IssuseNumber"] = ticket.IssuseNumber;
+                //r["PlayType"] = ticket.PlayType;
+                //r["BetContent"] = betContent;
+                //r["LocOdds"] = locOddStr;
+                //r["TicketStatus"] = 90;
+                //r["Amount"] = ticket.Amount;
+                //r["BetUnits"] = ticket.BetCount;
+                //r["BetMoney"] = ticket.TotalMoney;
+                //r["MatchIdList"] = ticket.ToAnteString_zhongminToMatchId();
+                //r["PrintNumber3"] = Guid.NewGuid().ToString("N").ToUpper();
+                //r["IsAppend"] = false;
+                //r["BonusStatus"] = 0;
+                //r["PreTaxBonusMoney"] = 0M;
+                //r["AfterTaxBonusMoney"] = 0M;
+                //r["PrintDateTime"] = DateTime.Now;
+                //r["CreateTime"] = DateTime.Now;
 
-                ticketTable.Rows.Add(r);
+                r.GameCode  = ticket.GameCode.ToUpper();
+                r.GameType  = ticket.GameType.ToUpper();
+                r.SchemeId  = ticket.OrderId;
+                r.TicketId  = ticket.Id;
+                r.IssuseNumber  = ticket.IssuseNumber;
+                r.PlayType  = ticket.PlayType;
+                r.BetContent  = betContent;
+                r.LocOdds  = locOddStr;
+                r.TicketStatus  = 90;
+                r.Amount  = ticket.Amount;
+                r.BetUnits  = ticket.BetCount;
+                r.BetMoney  = ticket.TotalMoney;
+                r.MatchIdList  = ticket.ToAnteString_zhongminToMatchId();
+                r.PrintNumber3  = Guid.NewGuid().ToString("N").ToUpper();
+                r.IsAppend  = false;
+                r.BonusStatus  = 0;
+                r.PreTaxBonusMoney  = 0M;
+                r.AfterTaxBonusMoney  = 0M;
+                r.PrintDateTime  = DateTime.Now;
+                r.CreateTime  = DateTime.Now;
+                
+                ticketTable.Add(r);
 
                 redisTicketList.Add(new RedisTicketInfo
                 {

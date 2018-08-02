@@ -179,7 +179,7 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(27)]
             [Field("PrintDateTime")]
-            public DateTime PrintDateTime{ get; set; }
+            public DateTime? PrintDateTime{ get; set; }
             /// <summary>
             // 出票接口
             ///</summary>
@@ -203,6 +203,6 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(31)]
             [Field("PrizeDateTime")]
-            public DateTime PrizeDateTime{ get; set; }
+            public DateTime? PrizeDateTime{ get; set; }
     }
 }
