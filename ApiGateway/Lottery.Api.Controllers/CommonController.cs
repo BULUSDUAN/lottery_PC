@@ -45,7 +45,7 @@ namespace Lottery.Api.Controllers
             var result = new LotteryServiceResponse
             {
                 Code = ResponseCode.成功,
-                Message = "投注成功",
+                Message = "",
                 MsgId = entity.MsgId,
                 // Value = returnValue.TrimEnd('~'),
             };
