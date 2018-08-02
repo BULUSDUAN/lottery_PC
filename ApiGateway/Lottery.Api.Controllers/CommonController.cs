@@ -59,7 +59,7 @@ namespace Lottery.Api.Controllers
             if (string.IsNullOrEmpty(GameCode))
                 throw new Exception("彩票类型不能为空");
             if (Count<1)
-                throw new Exception("最期必须2期以上");
+                throw new Exception("追期数必须1期以上");
             // BettingDateHelper
             IList<string> list = new List<string>();
             if (Count == 1) {
