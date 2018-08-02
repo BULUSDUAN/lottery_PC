@@ -59,6 +59,11 @@ namespace Lottery.Api.Controllers
                 if (gameIssuseInfo != null && !string.IsNullOrEmpty(DelayTime))
                 {
                     var list = new List<object>();
+                    DateTime? OpeningTime = null;
+                    if (gameCode.ToUpper() == "FC3D")
+                    {
+                        OpeningTime = gameIssuseInfo.LocalStopTime.Date.AddHours(21).AddMinutes(30);
+                    }
                     list.Add(new
                     {
                         CurrIssuseNumber = gameIssuseInfo.IssuseNumber,
@@ -66,6 +71,7 @@ namespace Lottery.Api.Controllers
                         OfficialStopTime = gameIssuseInfo.OfficialStopTime,
                         DelayTime = DelayTime,
                         ServiceTime = DateTime.Now,
+                        OpeningTime = OpeningTime
                     });
                     return Json(new LotteryServiceResponse
                     {
@@ -978,7 +984,7 @@ namespace Lottery.Api.Controllers
                     case "hot"://今日热点
                         param.Add("category", "Lottery_Hot");
                         param.Add("gameCode", "");
-                        var hot = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_Optimize");
+                        var hot = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_YouHua");
                         //var hot = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_Hot", "", pageIndex, pageSize);
                         foreach (var item in hot.ArticleList)
                         {
@@ -996,7 +1002,7 @@ namespace Lottery.Api.Controllers
                     case "gpc"://高频彩
                         param.Add("category", "Lottery_GameCode");
                         param.Add("gameCode", "JX11X5|CQSSC|SD11X5|GD11X5|GDKLSF|JSKS|SDKLPK3");
-                        var gpc = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_Optimize");
+                        var gpc = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_YouHua");
                         //var gpc = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_GameCode", "JX11X5|CQSSC|SD11X5|GD11X5|GDKLSF|JSKS|SDKLPK3", pageIndex, pageSize);
                         foreach (var item in gpc.ArticleList)
                         {
@@ -1014,7 +1020,7 @@ namespace Lottery.Api.Controllers
                     case "szc"://数字彩
                         param.Add("category", "Lottery_GameCode");
                         param.Add("gameCode", "SSQ|DLT|PL3|FC3D");
-                        var scz = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_Optimize");
+                        var scz = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_YouHua");
                         //var scz = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_GameCode", "SSQ|DLT|PL3|FC3D", pageIndex, pageSize);
                         foreach (var item in scz.ArticleList)
                         {
@@ -1032,7 +1038,7 @@ namespace Lottery.Api.Controllers
                     case "jjc"://竞技彩
                         param.Add("category", "Lottery_GameCode");
                         param.Add("gameCode", "JCZQ|JCLQ|BJDC");
-                        var jjc = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_Optimize");
+                        var jjc = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_YouHua");
                         //var jjc = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_GameCode", "JCZQ|JCLQ|BJDC", pageIndex, pageSize);
                         foreach (var item in jjc.ArticleList)
                         {
@@ -1050,7 +1056,7 @@ namespace Lottery.Api.Controllers
                     case "FocusCMS"://焦点新闻
                         param.Add("category", "FocusCMS");
                         param.Add("gameCode", "");
-                        var FocusCMS = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_Optimize");
+                        var FocusCMS = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_YouHua");
                         //var FocusCMS = WCFClients.ExternalClient.QueryArticleList_YouHua("FocusCMS", "", pageIndex, pageSize);
                         foreach (var item in FocusCMS.ArticleList)
                         {
@@ -1068,7 +1074,7 @@ namespace Lottery.Api.Controllers
                     case "BonusCMS"://焦点新闻
                         param.Add("category", "BonusCMS");
                         param.Add("gameCode", "");
-                        var BonusCMS = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_Optimize");
+                        var BonusCMS = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_YouHua");
                         //var BonusCMS = WCFClients.ExternalClient.QueryArticleList_YouHua("BonusCMS", "", pageIndex, pageSize);
                         foreach (var item in BonusCMS.ArticleList)
                         {

@@ -780,7 +780,7 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             UserAuthentication Auth = new UserAuthentication();
             var userId = Auth.ValidateUserAuthentication(userToken);
-            int flag = DB.CreateQuery<C_Sports_TogetherJoin>().Count(p => p.SchemeId == schemeId && p.JoinUserId == userId && p.JoinSucess);
+            int flag = DB.CreateQuery<C_Sports_TogetherJoin>().Where(p => p.SchemeId == schemeId && p.JoinUserId == userId && p.JoinSucess).Count();
             return flag > 0;
         }
         public Sports_AnteCodeQueryInfoCollection QuerySportsOrderAnteCodeList(string schemeId)

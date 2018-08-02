@@ -196,7 +196,7 @@
       "Desc": "按keyline查询追号列表",
       "ParamDesc": "@KeyLine:KeyLine",
       "Director": "Debug",
-      "SQL": "SELECT o.*,i.WinNumber,ISNULL(complate.Amount,running.Amount) Amount,r.VipLevel,r.DisplayName CreatorDisplayName,r.HideDisplayNameCount,g.DisplayName GameName FROM C_Lottery_Scheme c INNER JOIN C_OrderDetail o ON c.SchemeId=o.SchemeId LEFT OUTER JOIN C_User_Register r ON r.UserId=o.UserId LEFT OUTER JOIN C_Lottery_Game g on o.GameCode=g.GameCode LEFT OUTER JOIN C_Sports_Order_Complate complate on complate.SchemeId=o.SchemeId LEFT OUTER JOIN C_Sports_Order_Running running on running.SchemeId=o.SchemeId LEFT OUTER JOIN C_Game_Issuse i on i.GameCode=o.GameCode AND i.IssuseNumber=o.StartIssuseNumber WHERE c.KeyLine=@KeyLine ORDER BY o.StartIssuseNumber",
+      "SQL": "SELECT o.CurrentIssuseNumber as IssuseNumber,o.*,i.WinNumber,ISNULL(complate.Amount,running.Amount) Amount,r.VipLevel,r.DisplayName CreatorDisplayName,r.HideDisplayNameCount,g.DisplayName GameName FROM C_Lottery_Scheme c INNER JOIN C_OrderDetail o ON c.SchemeId=o.SchemeId LEFT OUTER JOIN C_User_Register r ON r.UserId=o.UserId LEFT OUTER JOIN C_Lottery_Game g on o.GameCode=g.GameCode LEFT OUTER JOIN C_Sports_Order_Complate complate on complate.SchemeId=o.SchemeId LEFT OUTER JOIN C_Sports_Order_Running running on running.SchemeId=o.SchemeId LEFT OUTER JOIN C_Game_Issuse i on i.GameCode=o.GameCode AND i.IssuseNumber=o.StartIssuseNumber WHERE c.KeyLine=@KeyLine ORDER BY o.StartIssuseNumber",
       "Remark": ""
     },
     {

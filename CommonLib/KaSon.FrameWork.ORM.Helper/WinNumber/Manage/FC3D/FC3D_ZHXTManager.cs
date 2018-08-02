@@ -38,7 +38,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public int QueryFC3D_ZHXTIssuseNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<FC3D_ZHXT>().Count(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<FC3D_ZHXT>().Where(p => p.IssuseNumber == issuseNumber).Count();
         }
     }
 }
