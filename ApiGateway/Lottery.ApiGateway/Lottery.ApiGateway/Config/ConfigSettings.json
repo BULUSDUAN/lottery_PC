@@ -1,6 +1,6 @@
 ﻿{
   "SelfDomain": "http://localhost:786",
-  "MobileDomain": "http://localhost:786",
+  "MobileDomain": "http://10.0.3.6:729",
   "ResSiteUrl": "http://10.0.3.6:888",
   "ResourceSiteUrl_res": "http://10.0.3.6:788/test.touch"
 }

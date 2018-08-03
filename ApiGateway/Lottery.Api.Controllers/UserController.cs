@@ -18,6 +18,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.DrawingCore;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -1757,7 +1758,7 @@ namespace Lottery.Api.Controllers
             }
             string url = ConfigHelper.ConfigInfo["MobileDomain"].ToString();
             StringBuilder s = new StringBuilder(url);
-            s.Append("/App/mobile?");
+            s.Append("/api/user/mobile?");
             s.Append("amount={amount}");
             s.Append("&token={token}");
             s.Append("&gateway=" + HttpUtility.UrlEncode(item.gateway));
@@ -1788,5 +1789,100 @@ namespace Lottery.Api.Controllers
             return item;
         }
 
+        public async Task<IActionResult> mobile([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                string token = p.token;
+                string bank = p.bank;
+                if (string.IsNullOrEmpty(token))
+                {
+                    throw new Exception("无效参数");
+                }
+                string amount = p.amount;
+                if (!CheckInt(amount, 1, 100000))
+                {
+                    throw new Exception("充值金额无效");
+                }
+
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["userToken"] = token;
+                var lInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/LoginByUserToken");
+                if (!lInfo.IsSuccess)
+                {
+                    throw new Exception(lInfo.Message);
+                }
+                var bankInfo = await _serviceProxyProvider.Invoke<C_BankCard>(param, "api/user/QueryBankCard");
+                CallBackParam callBackParam = new CallBackParam();
+                callBackParam.BankCardNo = "";
+                if (bankInfo != null)
+                {
+                    callBackParam.BankCardNo = bankInfo.BankCardNumber;
+                }
+                var cui = new LoginInfo();
+                cui = lInfo;
+                callBackParam.CurrentUser = cui.UserId;
+                callBackParam.payAmount = amount;
+                Dictionary<string, object> param2 = new Dictionary<string, object>();
+                param2.Add("key", "FillMoney.CallBackDomain");
+                var CallBackDomain = await _serviceProxyProvider.Invoke<C_Core_Config>(param2, "api/user/QueryCoreConfigByKey");
+                callBackParam.CurrentDomain = CallBackDomain.ConfigValue;
+                string gateway = p.gateway;
+
+                var q = from c in baseConfig where c.gateway == gateway select c;
+                WebPayItem item = q.FirstOrDefault();
+                if (item == null || string.IsNullOrEmpty(item.actionUrl))
+                {
+                    return Content("不支持的支付类型");
+                }
+                //   "payType": "hw_bank|touch",
+                if (item.bank != null && item.bank.Count > 0 && !string.IsNullOrEmpty(bank))
+                {
+                    callBackParam.HdpayType = item.payType.Split('|')[0] + "|" + bank;//
+                }
+                else
+                {
+                    callBackParam.HdpayType = item.payType;//
+                }
+                callBackParam.ActionUrl = item.actionUrl;// "http://pay2.ahmwwl.com/user/redirectpay";
+             
+                return JsonEx(callBackParam);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        private bool CheckInt(string str, int min, int max)
+        {
+            if (string.IsNullOrEmpty(str))
+            {
+                return false;
+            }
+            try
+            {
+                int val = int.Parse(str);
+                if (val >= min && val <= max)
+                {
+                    return true;
+                }
+            }
+            catch
+            {
+
+            }
+            return false;// throw new Exception("参数错误：" + name);
+        }
+
+        private List<WebPayItem> baseConfig
+        {
+            get
+            {
+                return loadPayConfig();
+            }
+        }
     }
 }
