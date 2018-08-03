@@ -60,7 +60,7 @@ namespace Lottery.Api.Controllers
                 {
                     var list = new List<object>();
                     DateTime? OpeningTime = null;
-                    if (gameCode.ToUpper() == "FC3D")
+                    if (gameCode.ToUpper() == "FC3D"|| gameCode.ToUpper() == "PL3")
                     {
                         OpeningTime = gameIssuseInfo.LocalStopTime.Date.AddHours(21).AddMinutes(30);
                     }
