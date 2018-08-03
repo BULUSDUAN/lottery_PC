@@ -522,8 +522,9 @@ namespace Lottery.Api.Controllers
                     returnResult.Message = "消息序号不能为空";
                     return JsonEx(returnResult);  
                 }
-                ///redis 获取验证码
-               string codeValue= KaSon.FrameWork.Common.Redis.RedisHelper.StringGet(MsgId);
+                //redis 获取验证码
+                string key = "R_" + MsgId;
+                string codeValue= KaSon.FrameWork.Common.Redis.RedisHelper.StringGet(key);
                 if (codeValue != verifyCode) {
                     returnResult.Code = ResponseCode.ValiteCodeError;
                     returnResult.Message = "验证码错误";
