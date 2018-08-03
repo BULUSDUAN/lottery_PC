@@ -1821,7 +1821,7 @@ namespace Lottery.Api.Controllers
                 }
                 var cui = new LoginInfo();
                 cui = lInfo;
-                callBackParam.CurrentUser = cui.UserId;
+                callBackParam.UserId = cui.UserId;
                 callBackParam.payAmount = amount;
                 Dictionary<string, object> param2 = new Dictionary<string, object>();
                 param2.Add("key", "FillMoney.CallBackDomain");

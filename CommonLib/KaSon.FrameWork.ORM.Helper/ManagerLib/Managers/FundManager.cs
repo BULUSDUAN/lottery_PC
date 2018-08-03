@@ -18,6 +18,11 @@ namespace KaSon.FrameWork.ORM.Helper
 
             DB.GetDal<C_Fund_RedBagDetail>().Add(RedBagDetail);
         }
+        public void AddOCDouDouDetail(C_Fund_OCDouDouDetail entity)
+        {
+            DB.GetDal<C_Fund_OCDouDouDetail>().Add(entity);
+         
+        }
 
         /// <summary>
         /// 资金明细
