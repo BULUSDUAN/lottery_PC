@@ -1977,5 +1977,40 @@ namespace KaSon.FrameWork.ORM.Helper
                 }
             }
         }
+
+        /// <summary>
+        /// 收入 --添加用户豆豆值
+        /// </summary>
+        public static void Payin_OCDouDou(string category, string orderId, string userId, int doudou, string summary)
+        {
+            if (doudou <= 0) return;
+
+            var balanceManager = new UserBalanceManager();
+            var fundManager = new FundManager();
+            var user = balanceManager.QueryUserBalance(userId);
+            fundManager.AddOCDouDouDetail(new C_Fund_OCDouDouDetail
+            {
+                OrderId = orderId,
+                UserId = userId,
+                Category = category,
+                CreateTime = DateTime.Now,
+                BeforeBalance = user.CurrentDouDou,
+                PayMoney = doudou,
+                PayType = (int)PayType.Payin,
+                Summary = summary,
+                AfterBalance = user.CurrentDouDou + doudou,
+            });
+            var payDetailList = new List<PayDetail>();
+            payDetailList.Add(new PayDetail
+            {
+                AccountType = AccountType.DouDou,
+                PayMoney = doudou,
+                PayType = PayType.Payin,
+            });
+
+            //user.CurrentDouDou += doudou;
+            //balanceManager.UpdateUserBalance(user);
+            balanceManager.PayToUserBalance(userId, payDetailList.ToArray());
+        }
     }
 }

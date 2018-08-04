@@ -69,7 +69,7 @@ namespace EntityModel.CoreModel
     public class CallBackParam
     {
         public string BankCardNo { get; set; }
-        public string CurrentUser { get; set; }
+        public string UserId { get; set; }
         public string payAmount { get; set; }
         public string CurrentDomain { get; set; }
         public string HdpayType { get; set; }
