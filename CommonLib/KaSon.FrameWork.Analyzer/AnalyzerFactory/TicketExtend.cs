@@ -5,6 +5,9 @@ using System.Text;
 
 namespace KaSon.FrameWork.Analyzer
 {
+    /// <summary>
+    /// 票据扩展方法
+    /// </summary>
    public static class TicketExtend
     {
         /// <summary>
