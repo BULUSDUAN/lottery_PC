@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using EntityModel;
-using KaSon.FrameWork.ORM.Helper.UserHelper;
 using EntityModel.ExceptionExtend;
 using System.Diagnostics;
 using EntityModel.Enum;

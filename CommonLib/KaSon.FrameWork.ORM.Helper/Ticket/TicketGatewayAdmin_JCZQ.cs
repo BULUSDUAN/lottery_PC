@@ -1,7 +1,6 @@
 ﻿using EntityModel;
 using EntityModel.Ticket;
 using KaSon.FrameWork.Analyzer.AnalyzerFactory;
-using KaSon.FrameWork.ORM.Helper.UserHelper;
 using System;
 using System.Collections.Generic;
 using System.Linq;

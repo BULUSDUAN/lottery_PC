@@ -23,9 +23,9 @@ namespace KaSon.FrameWork.PlugIn.External
             //if (afterTaxBonusMoney >= 10000M) return;
 
             //开启事务
-          
-               DB.Begin();
-
+            DB.Begin();
+            try
+            {                
                 var manager = new Sports_Manager();
                 var order = manager.QuerySports_Order_Complate(schemeId);
                 if (order == null)
@@ -172,36 +172,43 @@ namespace KaSon.FrameWork.PlugIn.External
                     }
 
                     //添加最新中奖记录表
-                    //if (afterTaxBonusMoney >= 2000M)
-                    //{
-                    //    var userInfo = new UserBalanceManager().GetUserRegister(order.UserId);
-                    //    if (userInfo != null)
-                    //    {
-                    //        new External.Domain.Managers.SiteMessage.SiteActivityManager().AddLotteryNewBonus(new External.Domain.Entities.SiteMessage.LotteryNewBonus
-                    //        {
-                    //            AfterTaxBonusMoney = order.AfterTaxBonusMoney,
-                    //            Amount = order.Amount,
-                    //            CreateTime = order.ComplateDateTime,
-                    //            GameCode = order.GameCode,
-                    //            GameType = order.GameType,
-                    //            IssuseNumber = order.IssuseNumber,
-                    //            PlayType = order.PlayType,
-                    //            PreTaxBonusMoney = order.PreTaxBonusMoney,
-                    //            SchemeId = order.SchemeId,
-                    //            TotalMoney = order.TotalMoney,
-                    //            UserDisplayName = userInfo.DisplayName,
-                    //            HideUserDisplayNameCount = userInfo.HideDisplayNameCount
-                    //        });
-                    //    }
-                    //}
+                    if (afterTaxBonusMoney >= 2000M)
+                    {
+                        var userInfo = new UserBalanceManager().QueryUserRegister(order.UserId);
+                        if (userInfo != null)
+                        {
+                            new SiteActivityManager().AddLotteryNewBonus(new E_LotteryNewBonus
+                            {
+                                AfterTaxBonusMoney = order.AfterTaxBonusMoney,
+                                Amount = order.Amount,
+                                CreateTime = order.ComplateDateTime,
+                                GameCode = order.GameCode,
+                                GameType = order.GameType,
+                                IssuseNumber = order.IssuseNumber,
+                                PlayType = order.PlayType,
+                                PreTaxBonusMoney = order.PreTaxBonusMoney,
+                                SchemeId = order.SchemeId,
+                                TotalMoney = order.TotalMoney,
+                                UserDisplayName = userInfo.DisplayName,
+                                HideUserDisplayNameCount = userInfo.HideDisplayNameCount
+                            });
+                        }
+                    }
                 }
 
-               DB.Commit();
-            
+                DB.Commit();
 
-            //刷新用户在Redis中的余额
-            if (afterTaxBonusMoney > 0M)
-                BusinessHelper.RefreshRedisUserBalance(userId);
+
+                //刷新用户在Redis中的余额
+                if (afterTaxBonusMoney > 0M)
+                    BusinessHelper.RefreshRedisUserBalance(userId);
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw ex;
+            }
+              
         }
 
         public object ExecPlugin(string type, object inputParam)

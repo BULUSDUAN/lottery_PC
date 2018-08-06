@@ -11,7 +11,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace KaSon.FrameWork.ORM.Helper.UserHelper
+namespace KaSon.FrameWork.ORM.Helper
 {
    public class RegisterBusiness:DBbase
     {

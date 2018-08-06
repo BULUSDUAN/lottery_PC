@@ -2,7 +2,6 @@
 using EntityModel.Enum;
 using GameBiz.Domain.Entities;
 using KaSon.FrameWork.Common.Utilities;
-using KaSon.FrameWork.ORM.Helper.UserHelper;
 using System;
 using System.Collections.Generic;
 using System.Text;

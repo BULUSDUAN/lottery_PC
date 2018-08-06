@@ -38,7 +38,6 @@ using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using KaSon.FrameWork.Common;
 using KaSon.FrameWork.ORM.Helper;
-using KaSon.FrameWork.ORM.Helper.UserHelper;
 using KaSon.FrameWork.Common.Redis;
 using EntityModel.ExceptionExtend;
 using KaSon.FrameWork.Common.Sport;
