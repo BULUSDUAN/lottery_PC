@@ -11,7 +11,7 @@ namespace EntityModel
     // 插件类
     ///</summary>
     [ProtoContract]
-    [Entity("C_Activity_PluginClass",Type = EntityType.Table)]
+    [Entity("C_Activity_PluginClass_New",Type = EntityType.Table)]
     public class C_Activity_PluginClass
     { 
         public C_Activity_PluginClass()
