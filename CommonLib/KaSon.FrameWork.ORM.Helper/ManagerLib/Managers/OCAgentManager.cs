@@ -3,6 +3,7 @@ using EntityModel.CoreModel;
 using EntityModel.Enum;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 
@@ -359,5 +360,33 @@ namespace KaSon.FrameWork.ORM.Helper
         //    return listInfo;
         //}
 
+        /// <summary>
+        /// 佣金管理，查询结算报表
+        /// </summary>
+        //public List<AgentPayDetailReportInfo> QueryAgentPayDetailReportInfo(string userId, DateTime fromDate, DateTime toDate)
+        //{
+
+        //    // 通过数据库存储过程进行查询
+        //    var query = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "P_Agent_GetPayDetailReport").SQL;
+        //    var query_info= DB.CreateSQLQuery(query)
+        //        .SetString("pAgentId", userId)
+        //        .SetString("fromDate", fromDate.ToString("yyyy-MM-dd"))
+        //        .SetString("toDate", toDate.ToString("yyyy-MM-dd"));
+        //    DataTable dt = query_info.List<AgentPayDetailReportInfo>().;
+        //    var list = new List<AgentPayDetailReportInfo>(); 
+        //    foreach (DataRow row in dt.)
+        //    {
+        //        list.Add(new AgentPayDetailReportInfo
+        //        {
+        //            CommissionMoney = row["CommissionMoney"] == DBNull.Value ? 0M : decimal.Parse(row["CommissionMoney"].ToString()),
+        //            GameCode = row["GameCode"] == DBNull.Value ? string.Empty : row["GameCode"].ToString(),
+        //            GameType = row["GameType"] == DBNull.Value ? string.Empty : row["GameType"].ToString(),
+        //            TotalMoney = row["TotalMoney"] == DBNull.Value ? 0M : decimal.Parse(row["TotalMoney"].ToString()),
+        //            UserId = row["UserId"] == DBNull.Value ? string.Empty : row["UserId"].ToString()
+        //        });
+        //    }
+        //    return list;
+        //    //return Common.Database.ORM.ORMHelper.DataTableToList<AgentPayDetailReportInfo>(dt);
+        //}
     }
 }

@@ -46,6 +46,8 @@ namespace KaSon.FrameWork.PlugIn.External
             string msg = string.Empty;
          
                 DB.Begin();
+            try
+            {
                 if (order.IsVirtualOrder)
                 {
                     //虚订单，只修改状态
@@ -140,6 +142,12 @@ namespace KaSon.FrameWork.PlugIn.External
                 currentUserId = order.UserId;
                 currentBetMoney = order.SuccessMoney;
                 currentGameCode = order.GameCode;
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw ex;
+            }
             
             //计算代理销量
             //CalculationAgentSales(currentUserId, currentGameCode, currentBetMoney, currentIsAgent, 0);
@@ -149,7 +157,9 @@ namespace KaSon.FrameWork.PlugIn.External
         /// </summary>
         public void ComplateTicket(string userId, string schemeId, decimal totalMoney, decimal totalErrorMoney)
         {
-       
+
+            try
+            {
                 DB.Begin();
 
                 var agentManager = new OCAgentManager();
@@ -197,6 +207,12 @@ namespace KaSon.FrameWork.PlugIn.External
                 //PayOrderRebate(agentManager, user, schemeId, userId, order.SchemeType, gameCode, gameType, totalMoney, totalMoney - totalErrorMoney, 0);
 
                 DB.Commit();
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw ex;
+            }
          
         }
 
@@ -327,7 +343,9 @@ namespace KaSon.FrameWork.PlugIn.External
         /// </summary>
         public void PayBack(string schemeId, string ticketId, decimal ticketMoney)
         {
-         
+
+            try
+            {
                 DB.Begin();
 
                 var sportsManager = new Sports_Manager();
@@ -352,7 +370,13 @@ namespace KaSon.FrameWork.PlugIn.External
                 //递归调用
                 PayBackRebate(agentManager, user, schemeId, order.UserId, (SchemeType)order.SchemeType, gameCode, gameType, order.TotalMoney, ticketMoney, 0);
 
-               DB.Commit();
+                DB.Commit();
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw ex;
+            }
             
         }
 
@@ -414,8 +438,10 @@ namespace KaSon.FrameWork.PlugIn.External
             if (orderDetail == null)
                 throw new LogicException(string.Format("找不到订单 ：{0} ", schemeId));
 
-       
-                DB.Begin();
+            DB.Begin();
+            try
+            {
+               
                 if (order.IsVirtualOrder)
                 {
                     //虚订单，只修改状态
@@ -510,6 +536,12 @@ namespace KaSon.FrameWork.PlugIn.External
                 currentUserId = order.UserId;
                 currentBetMoney = order.SuccessMoney;
                 currentGameCode = order.GameCode;
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw ex;
+            }
             
             //计算代理销量
             //CalculationAgentSales(currentUserId, currentGameCode, currentBetMoney, currentIsAgent, 0);
@@ -583,7 +615,8 @@ namespace KaSon.FrameWork.PlugIn.External
         {
           
                DB.Begin();
-
+            try
+            {
                 if (parentUserId == userId)
                     throw new Exception("不能将自己添加为自己的上级代理");
                 var balanceManager = new UserBalanceManager();
@@ -717,6 +750,13 @@ namespace KaSon.FrameWork.PlugIn.External
 
                 DB.Commit();
             }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw ex;
+            }
+
+            }
         
 
 
@@ -725,9 +765,10 @@ namespace KaSon.FrameWork.PlugIn.External
         /// </summary>
         public void AddOCAgent_New_CPS(OCAgentCategory category, string parentUserId, string userId, CPSMode cpsmode, string channelName)
         {
-          
-                DB.Begin();
-
+            DB.Begin();
+            try
+            {
+                
                 if (parentUserId == userId)
                     throw new Exception("不能将自己添加为自己的上级代理");
                 var balanceManager = new UserBalanceManager();
@@ -823,7 +864,13 @@ namespace KaSon.FrameWork.PlugIn.External
                     });
                 }
 
-               DB.Commit();
+                DB.Commit();
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw ex;
+            }
             
         }
 
@@ -953,8 +1000,10 @@ namespace KaSon.FrameWork.PlugIn.External
         /// </summary>
         public void SetOCAgentRebate(string userId, string setString)
         {
-     
-               DB.Begin();
+            DB.Begin();
+            try
+            {
+               
 
                 var agentManager = new OCAgentManager();
                 var rebateList = agentManager.QueryOCAgentRebateList(userId);
@@ -1012,6 +1061,12 @@ namespace KaSon.FrameWork.PlugIn.External
                 }
 
                 DB.Commit();
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw ex;
+            }
             
         }
 
@@ -1023,10 +1078,18 @@ namespace KaSon.FrameWork.PlugIn.External
         {
            
                 DB.Begin();
-
+            try
+            {
                 EditOCAgentRebate(parentUserId, userId, setString);
 
                 DB.Commit();
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw ex;
+            }
+              
            
         }
         public void EditOCAgentRebate(string parentUserId, string userId, string setString)
@@ -1271,7 +1334,8 @@ namespace KaSon.FrameWork.PlugIn.External
             //开启事务
            
                 DB.Begin();
-
+            try
+            {
                 var agentManager = new OCAgentManager();
                 var manager = new UserBalanceManager();
                 string oldAgentId = string.Empty;
@@ -1332,6 +1396,13 @@ namespace KaSon.FrameWork.PlugIn.External
                 }
 
                 DB.Commit();
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw ex;
+            }
+               
             
         }
         public void UpdateRelationChildRebate(string currUserId, string oldAgentId, string newAgentId, string path)
@@ -1605,7 +1676,8 @@ namespace KaSon.FrameWork.PlugIn.External
         {
           
                 DB.Begin();
-
+            try
+            {
                 var balanceManager = new UserBalanceManager();
                 var userBalance = balanceManager.QueryUserBalance(userId);
                 if (userBalance == null)
@@ -1635,7 +1707,14 @@ namespace KaSon.FrameWork.PlugIn.External
                 userBalance.CPSBalance = userBalance.CPSBalance - bonusMoney;
                 balanceManager.UpdateUserBalance(userBalance);
 
-             DB.Commit();
+                DB.Commit();
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw ex;
+            }
+               
             
         }
 

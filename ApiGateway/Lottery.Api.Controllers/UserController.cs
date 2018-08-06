@@ -1755,6 +1755,7 @@ namespace Lottery.Api.Controllers
 
         private WebPayItem buildPayUrl(WebPayItem item, string os)
         {
+            if (item.amounts == null) item.amounts = new List<int>();
             if (string.IsNullOrEmpty(item.payType))
             {
                 item.webViewUrl = item.actionUrl;
@@ -1790,7 +1791,7 @@ namespace Lottery.Api.Controllers
             item.gateway = item.gateway;
             item.actionUrl = null;
             item.payType = item.payType;
-            if (item.amounts == null) item.amounts = new List<int>();
+           
             return item;
         }
 
