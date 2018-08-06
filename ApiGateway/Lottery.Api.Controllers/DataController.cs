@@ -2908,5 +2908,39 @@ namespace Lottery.Api.Controllers
                 });
             }
         }
+
+
+        public async Task<IActionResult> GetMinWithdraw([FromServices]IServiceProxyProvider _serviceProxyProvider)
+        {
+            try
+            {
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param.Add("key", "Site.Financial.MinWithDrwaMoney");
+                var config = await _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/Data/QueryCoreConfigByKey");
+                decimal RequestMoney = 100;
+                if (config != null)
+                {
+                    var minmoney = config.ConfigValue;
+                    decimal.TryParse(minmoney, out RequestMoney);
+                }
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询成功",
+                    MsgId = "",
+                    Value = RequestMoney,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "查询最低提现金额失败",
+                    MsgId = "",
+                    Value = ex.Message,
+                });
+            }
+        }
     }
 }

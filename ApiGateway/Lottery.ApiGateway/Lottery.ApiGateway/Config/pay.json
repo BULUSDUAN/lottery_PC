@@ -477,33 +477,35 @@
         "actionUrl": "http://m.baidu.com/member/WXRequestPay?type=af_upay",
 		"bank": []
     },
-	{
-        "icon": "weixin.png",
-        "iconUrl": "http://res.wx.qq.com/a/wx_fed/weixin_portal/res/static/img/2vR--p6.png",
-        "desc": [
-            "无需手续费，单笔最高1000"
-        ],
-        "title": "微信H5",
-        "gateway": "haoyi_H5wxWap",
-        "payType": "haoyi_H5wxWap|wxwap",
-        "openUrl": null,
-        "webViewUrl": null,
-        "actionUrl": "http://pay1.szdrbkj.com/user/redirectpay",
-		"bank": []
-    },{
-        "icon": "alipay.png",
-        "iconUrl": "https://img.alicdn.com/tps/TB17ghmIFXXXXXAXFXXXXXXXXXX.png",
-        "desc": [
-            "支付宝余额，银行卡支付"
-        ],
-        "title": "支付宝H5",
-        "gateway": "shenfu_alipay",
-        "payType": "haoyi_H5alipayWap|zfbwap",
-        "openUrl": null,
-        "webViewUrl": null,
-        "actionUrl": "http://pay1.szdrbkj.com/user/redirectpay",
-		"bank": []
-    },
+  {
+    "icon": "weixin.png",
+    "iconUrl": "http://res.wx.qq.com/a/wx_fed/weixin_portal/res/static/img/2vR--p6.png",
+    "desc": [
+      "无需手续费，单笔最高1000"
+    ],
+    "title": "微信H5",
+    "gateway": "haoyi_H5wxWap",
+    "payType": "haoyi_H5wxWap|wxwap",
+    "openUrl": null,
+    "webViewUrl": null,
+    "actionUrl": "http://pay1.szdrbkj.com/user/redirectpay",
+    "bank": []
+  },
+  {
+    "icon": "alipay.png",
+    "iconUrl": "https://img.alicdn.com/tps/TB17ghmIFXXXXXAXFXXXXXXXXXX.png",
+    "desc": [
+      "支付宝余额，银行卡支付"
+    ],
+    "title": "支付宝H5",
+    "gateway": "shenfu_alipay",
+    "payType": "haoyi_H5alipayWap|zfbwap",
+    "openUrl": null,
+    "webViewUrl": null,
+    "actionUrl": "http://pay1.szdrbkj.com/user/redirectpay",
+    "bank": [],
+    "amounts": [ 500, 1000, 2000, 5000, 10000 ]
+  },
 	{
         "icon": "weixin.png",
         "iconUrl": "http://res.wx.qq.com/a/wx_fed/weixin_portal/res/static/img/2vR--p6.png",

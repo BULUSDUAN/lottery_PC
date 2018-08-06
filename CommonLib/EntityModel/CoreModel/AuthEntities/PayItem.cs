@@ -61,8 +61,9 @@ namespace EntityModel.CoreModel
             public string actionUrl { get; set; }
             public string payType { get; set; }
 
+        public List<int> amounts { get; set; }
 
-        
+
     }
 
 

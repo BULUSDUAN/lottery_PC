@@ -641,9 +641,10 @@ namespace Lottery.Api.Controllers
             else {
                 result.Code = ResponseCode.成功;
                 result.Message = "成功获取验证码";
-                
+
                 //录入验证码
-                string key = "R_"+Guid.NewGuid().ToString("N");
+                var guidkey = Guid.NewGuid().ToString("N");
+                string key = "R_"+ guidkey;
                 if (!String.IsNullOrEmpty(MsgId))
                 {
                     key = MsgId;
@@ -658,7 +659,7 @@ namespace Lottery.Api.Controllers
                     base64 = "data:image/gif;base64," + base64;
                 }
                 result.Value =base64;
-                result.MsgId = key;
+                result.MsgId = guidkey;
             }
             return JsonEx(result);
             //return vlimg;
@@ -1464,7 +1465,8 @@ namespace Lottery.Api.Controllers
                         throw new ArgumentException("请先实名认证");
                     if (string.IsNullOrEmpty(info.BankCardNumber))
                         throw new ArgumentException("请先绑定银行卡");
-
+                    var minwithdrawmoney = await GetMinWithdrawMoney(_serviceProxyProvider);
+                    PreconditionAssert.IsTrue(decimal.Parse(money) >= minwithdrawmoney, "提款金额不能小于" + minwithdrawmoney.ToString() + "元");
                     Dictionary<string, object> paramRequestWithdraw = new Dictionary<string, object>();
                     paramRequestWithdraw["userId"] = info.UserId;
                     paramRequestWithdraw["requestMoney"] = decimal.Parse(money);
@@ -1539,7 +1541,9 @@ namespace Lottery.Api.Controllers
                 if (string.IsNullOrEmpty(money))
                     throw new ArgumentException("提款金额不能为空");
                 decimal.TryParse(money, out RequestMoney);
-                PreconditionAssert.IsTrue(RequestMoney >= 10, "提款金额不能小于10元");
+                //PreconditionAssert.IsTrue(RequestMoney >= 10, "提款金额不能小于10元");
+                var minwithdrawmoney = await GetMinWithdrawMoney(_serviceProxyProvider);
+                PreconditionAssert.IsTrue(int.Parse(money) >= minwithdrawmoney, "提款金额不能小于" + minwithdrawmoney.ToString() + "元");
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param["userToken"] = token;
                 var userinfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/LoginByUserToken");
@@ -1738,7 +1742,7 @@ namespace Lottery.Api.Controllers
                 //}
                 //list.Add(buildPayUrl(item, os));
             }
-            return new { pay = list, amount = new int[] { 100, 200, 500, 1000 } };
+            return new { pay = list };
         }
         private static List<WebPayItem> loadPayConfig()
         {
@@ -1786,6 +1790,7 @@ namespace Lottery.Api.Controllers
             item.gateway = item.gateway;
             item.actionUrl = null;
             item.payType = item.payType;
+            if (item.amounts == null) item.amounts = new List<int>();
             return item;
         }
 
@@ -1883,6 +1888,20 @@ namespace Lottery.Api.Controllers
             {
                 return loadPayConfig();
             }
+        }
+
+        private async Task<decimal> GetMinWithdrawMoney([FromServices]IServiceProxyProvider _serviceProxyProvider)
+        {
+            decimal defaultmoney = 100;
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            param.Add("key", "Site.Financial.MinWithDrwaMoney");
+            var config = await _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/Data/QueryCoreConfigByKey");
+            if (config != null)
+            {
+                var minmoney = config.ConfigValue;
+                decimal.TryParse(minmoney, out defaultmoney);
+            }
+            return defaultmoney;
         }
     }
 }
