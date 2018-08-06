@@ -7,7 +7,6 @@ using EntityModel.Enum;
 using System.Linq.Expressions;
 using EntityModel.Domain.Entities;
 using EntityModel.ExceptionExtend;
-using KaSon.FrameWork.ORM.Helper.UserHelper;
 using KaSon.FrameWork.Common.Utilities;
 using KaSon.FrameWork.Common;
 using KaSon.FrameWork.Common.Redis;
@@ -611,6 +610,182 @@ namespace KaSon.FrameWork.ORM.Helper
             balanceManager.PayToUserBalance(userId, payDetailList.ToArray());
         }
 
+        /// <summary>
+        /// 用户支出
+        /// 指定帐户支出
+        /// </summary>
+        public static void Payout_To_End(AccountType accountType, string category, string userId, string orderId, decimal payoutMoney, string summary, string operatorId = "")
+        {
+            if (payoutMoney <= 0M)
+                throw new Exception("消费金额不能小于0.");
+            //查询帐户余额
+            var balanceManager = new UserBalanceManager();
+            var fundManager = new FundManager();
+            //资金密码判断
+            var userBalance = balanceManager.QueryUserBalance(userId);
+            if (userBalance == null) { throw new Exception("用户帐户不存在 - " + userId); }
+
+            #region 扣除账户金额
+
+            var payDetailList = new List<PayDetail>();
+            payDetailList.Add(new PayDetail
+            {
+                AccountType = accountType,
+                PayMoney = payoutMoney,
+                PayType = PayType.Payout,
+            });
+
+            switch (accountType)
+            {
+                case AccountType.Bonus:
+                    if (userBalance.BonusBalance < payoutMoney)
+                        throw new Exception("账户余额不足");
+                    fundManager.AddFundDetail(new C_Fund_Detail
+                    {
+                        Category = category,
+                        CreateTime = DateTime.Now,
+                        KeyLine = orderId,
+                        OrderId = orderId,
+                        AccountType = (int)accountType,
+                        PayMoney = payoutMoney,
+                        PayType = (int)PayType.Payout,
+                        Summary = summary,
+                        UserId = userId,
+                        BeforeBalance = userBalance.BonusBalance,
+                        AfterBalance = userBalance.BonusBalance - payoutMoney,
+                        OperatorId = string.IsNullOrEmpty(operatorId) ? userId : operatorId,
+                    });
+                    //userBalance.BonusBalance -= payoutMoney;
+                    break;
+                case AccountType.Freeze:
+                    if (userBalance.FreezeBalance < payoutMoney)
+                        throw new Exception("账户余额不足");
+                    fundManager.AddFundDetail(new C_Fund_Detail
+                    {
+                        Category = category,
+                        CreateTime = DateTime.Now,
+                        KeyLine = orderId,
+                        OrderId = orderId,
+                        AccountType = (int)accountType,
+                        PayMoney = payoutMoney,
+                        PayType = (int)PayType.Payout,
+                        Summary = summary,
+                        UserId = userId,
+                        BeforeBalance = userBalance.FreezeBalance,
+                        AfterBalance = userBalance.FreezeBalance - payoutMoney,
+                        OperatorId = string.IsNullOrEmpty(operatorId) ? userId : operatorId,
+                    });
+                    //userBalance.FreezeBalance -= payoutMoney;
+                    break;
+                case AccountType.Commission:
+                    if (userBalance.CommissionBalance < payoutMoney)
+                        throw new Exception("账户余额不足");
+                    fundManager.AddFundDetail(new C_Fund_Detail
+                    {
+                        Category = category,
+                        CreateTime = DateTime.Now,
+                        KeyLine = orderId,
+                        OrderId = orderId,
+                        AccountType = (int)accountType,
+                        PayMoney = payoutMoney,
+                        PayType = (int)PayType.Payout,
+                        Summary = summary,
+                        UserId = userId,
+                        BeforeBalance = userBalance.CommissionBalance,
+                        AfterBalance = userBalance.CommissionBalance - payoutMoney,
+                        OperatorId = string.IsNullOrEmpty(operatorId) ? userId : operatorId,
+                    });
+                    //userBalance.CommissionBalance -= payoutMoney;
+                    break;
+                case AccountType.FillMoney:
+                    if (userBalance.FillMoneyBalance < payoutMoney)
+                        throw new Exception("账户余额不足");
+                    fundManager.AddFundDetail(new C_Fund_Detail
+                    {
+                        Category = category,
+                        CreateTime = DateTime.Now,
+                        KeyLine = orderId,
+                        OrderId = orderId,
+                        AccountType = (int)accountType,
+                        PayMoney = payoutMoney,
+                        PayType = (int)PayType.Payout,
+                        Summary = summary,
+                        UserId = userId,
+                        BeforeBalance = userBalance.FillMoneyBalance,
+                        AfterBalance = userBalance.FillMoneyBalance - payoutMoney,
+                        OperatorId = string.IsNullOrEmpty(operatorId) ? userId : operatorId,
+                    });
+                    //userBalance.FillMoneyBalance -= payoutMoney;
+                    break;
+                case AccountType.Experts:
+                    if (userBalance.ExpertsBalance < payoutMoney)
+                        throw new Exception("账户余额不足");
+                    fundManager.AddFundDetail(new C_Fund_Detail
+                    {
+                        Category = category,
+                        CreateTime = DateTime.Now,
+                        KeyLine = orderId,
+                        OrderId = orderId,
+                        AccountType = (int)accountType,
+                        PayMoney = payoutMoney,
+                        PayType = (int)PayType.Payout,
+                        Summary = summary,
+                        UserId = userId,
+                        BeforeBalance = userBalance.ExpertsBalance,
+                        AfterBalance = userBalance.ExpertsBalance - payoutMoney,
+                        OperatorId = string.IsNullOrEmpty(operatorId) ? userId : operatorId,
+                    });
+                    //userBalance.ExpertsBalance -= payoutMoney;
+                    break;
+                case AccountType.RedBag:
+                    if (userBalance.RedBagBalance < payoutMoney)
+                        throw new Exception("账户余额不足");
+                    fundManager.AddFundDetail(new C_Fund_Detail
+                    {
+                        Category = category,
+                        CreateTime = DateTime.Now,
+                        KeyLine = orderId,
+                        OrderId = orderId,
+                        AccountType = (int)accountType,
+                        PayMoney = payoutMoney,
+                        PayType = (int)PayType.Payout,
+                        Summary = summary,
+                        UserId = userId,
+                        BeforeBalance = userBalance.RedBagBalance,
+                        AfterBalance = userBalance.RedBagBalance - payoutMoney,
+                        OperatorId = string.IsNullOrEmpty(operatorId) ? userId : operatorId,
+                    });
+                    //userBalance.RedBagBalance -= payoutMoney;
+                    break;
+                case AccountType.CPS:
+                    if (userBalance.CPSBalance < payoutMoney)
+                        throw new Exception("账户余额不足");
+                    fundManager.AddFundDetail(new C_Fund_Detail
+                    {
+                        Category = category,
+                        CreateTime = DateTime.Now,
+                        KeyLine = orderId,
+                        OrderId = orderId,
+                        AccountType = (int)accountType,
+                        PayMoney = payoutMoney,
+                        PayType = (int)PayType.Payout,
+                        Summary = summary,
+                        UserId = userId,
+                        BeforeBalance = userBalance.CPSBalance,
+                        AfterBalance = userBalance.CPSBalance - payoutMoney,
+                        OperatorId = string.IsNullOrEmpty(operatorId) ? userId : operatorId,
+                    });
+                    //userBalance.CPSBalance -= payoutMoney;
+                    break;
+                default:
+                    break;
+            }
+
+            #endregion
+
+            //balanceManager.UpdateUserBalance(userBalance);
+            balanceManager.PayToUserBalance(userId, payDetailList.ToArray());
+        }
 
         /// <summary>
         /// 用户支出，仅扣除用户红包余额，非冻结

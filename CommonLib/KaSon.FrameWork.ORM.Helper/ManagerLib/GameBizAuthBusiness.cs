@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace KaSon.FrameWork.ORM.Helper.UserHelper
+namespace KaSon.FrameWork.ORM.Helper
 {
     public class GameBizAuthBusiness:DBbase
     {
@@ -95,29 +95,37 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
         //        biz.CommitTran();
         //    }
         //}
-        //public void AddUserRoles(string userId, string[] roleIds)
-        //{
-        //    using (var biz = new GameBizAuthBusinessManagement())
-        //    {
-        //        biz.BeginTran();
-        //        using (var userManager = new UserManager())
-        //        {
-        //            var user = userManager.GetUserById(userId);
-        //            if (user == null)
-        //            {
-        //                throw new ArgumentException("指定的用户不存在。");
-        //            }
-        //            NHibernate.NHibernateUtil.Initialize(user.RoleList);
-        //            var roleList = userManager.GetRoleListByIds(roleIds);
-        //            foreach (var role in roleList)
-        //            {
-        //                user.RoleList.Add(role);
-        //            }
-        //            userManager.UpdateSystemUser(user);
-        //        }
-        //        biz.CommitTran();
-        //    }
-        //}
+        public void AddUserRoles(string userId, string[] roleIds)
+        {
+
+            DB.Begin();
+            try
+            {
+                var userManager = new UserManager();
+
+                var user = userManager.LoadUser(userId);
+                if (user == null)
+                {
+                    throw new ArgumentException("指定的用户不存在。");
+                }
+              
+                var roleList = userManager.GetRoleListByIds(roleIds);
+                foreach (var role in roleList)
+                {
+                    //user.AgentId.Add(role);
+                }
+                userManager.UpdateSystemUser(user);
+
+                DB.Commit();
+            }
+            catch (Exception EX)
+            {
+                DB.Rollback();
+                throw EX;
+            }
+           
+
+        }
         //public void RemoveUserRoles(string userId, string[] roleIds)
         //{
         //    using (var biz = new GameBizAuthBusinessManagement())
@@ -361,7 +369,7 @@ namespace KaSon.FrameWork.ORM.Helper.UserHelper
         //        biz.CommitTran();
         //    }
         //}
-       
+
         private void CheckUser(SystemUser user, string userId)
         {
             if (user == null)

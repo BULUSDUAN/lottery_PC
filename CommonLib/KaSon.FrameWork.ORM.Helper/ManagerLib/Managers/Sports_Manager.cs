@@ -24,7 +24,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public C_Sports_Order_Running QuerySports_Order_Running(string schemeId)
         {
            // Session.Clear();
-            return this.DB.CreateQuery<C_Sports_Order_Running>().FirstOrDefault(p => p.SchemeId == schemeId);
+            return this.DB.CreateQuery<C_Sports_Order_Running>().Where(p => p.SchemeId == schemeId).FirstOrDefault();
         }
         public void AddSports_Order_Running(C_Sports_Order_Running entity)
         {
@@ -449,6 +449,45 @@ namespace KaSon.FrameWork.ORM.Helper
             var maxBonusMoney = DB.CreateSQLQuery(strSql).SetString("UserId", userId).First<decimal>();
 
             return maxBonusMoney;
+        }
+
+        public C_OrderDetail QueryOrderDetailBySchemeId(string schemeId)
+        {
+           
+            return DB.CreateQuery<C_OrderDetail>().Where(s => s.SchemeId == schemeId).FirstOrDefault();
+        }
+
+        public C_Sports_Ticket QueryTicket(string ticketId)
+        {
+         
+            return DB.CreateQuery<C_Sports_Ticket>().Where(p => p.TicketId == ticketId).FirstOrDefault();
+        }
+
+        public List<string> QueryWaitPayRebateRunningOrder()
+        {
+           
+            var query = from o in DB.CreateQuery<C_Sports_Order_Running>()
+                        where o.IsPayRebate == false
+                        && o.CanChase == true
+                        && o.TicketStatus == (int)TicketStatus.Ticketed
+                        && o.IsVirtualOrder == false
+                        orderby o.CreateTime ascending
+                        select o.SchemeId;
+            return query.ToList();
+        }
+
+        public List<string> QueryWaitPayRebateComplateOrder()
+        {
+           
+            var query = from o in DB.CreateQuery<C_Sports_Order_Complate>()
+                        where o.IsPayRebate == false
+                        && o.CanChase == true
+                        && o.TicketStatus == (int)TicketStatus.Ticketed
+                        && o.IsVirtualOrder == false
+                        && o.CreateTime > DateTime.Parse("2016-07-11")
+                        orderby o.CreateTime ascending
+                        select o.SchemeId;
+            return query.ToList();
         }
     }
 }

@@ -119,6 +119,11 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             DB.GetDal<C_User_Register>().Update(user);
         }
+        //public P_OCAgent_ReportSales QueryOCAgentReportSales(string userId, string gameCode)
+        //{
+       
+        //    return Session.Query<OCAgentReportSales>().FirstOrDefault(s => s.UserId == userId && s.GameCode == gameCode && s.CreateTime.Date == DateTime.Now.Date);
+        //}
 
     }
 }

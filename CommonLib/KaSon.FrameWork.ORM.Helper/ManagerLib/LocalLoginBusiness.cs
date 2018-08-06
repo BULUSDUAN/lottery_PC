@@ -17,7 +17,7 @@ using EntityModel.CoreModel.AuthEntities;
 using EntityModel.Enum;
 using EntityModel.ExceptionExtend;
 
-namespace KaSon.FrameWork.ORM.Helper.UserHelper
+namespace KaSon.FrameWork.ORM.Helper
 {
     public class LocalLoginBusiness : DBbase
     {
