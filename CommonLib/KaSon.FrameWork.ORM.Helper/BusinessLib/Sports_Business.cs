@@ -22,6 +22,7 @@ using KaSon.FrameWork.Common.Sport;
 using EntityModel.Communication;
 using KaSon.FrameWork.Analyzer.AnalyzerFactory;
 using EntityModel.Interface;
+using KaSon.FrameWork.Analyzer;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
@@ -431,7 +432,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 }
             }
             var ticketList = BettingHelper. AnalyzeTickets(o);
-            ticketList.AnalyzeOrder(order.GameCode, order.Price);
+            ticketList.AnalyzeOrderEx(order.GameCode, order.Price);
             if (ticketList.TotalMoney != order.TotalMoney)
             {
                 throw new Exception(string.Format("订单金额与投注号码不匹配。应为￥{0:N}，实际为￥{1:N}。", ticketList.TotalMoney, order.TotalMoney));

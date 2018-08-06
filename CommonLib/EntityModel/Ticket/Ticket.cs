@@ -50,15 +50,15 @@ namespace EntityModel.Ticket
         /// <summary>
         /// 获取票包含的总注数。计算后有值
         /// </summary>
-        public int BetCount { get; private set; }
+        public int BetCount { get;  set; }
         /// <summary>
         /// 获取票的总金额。计算后有值
         /// </summary>
-        public decimal TicketMoney { get; private set; }
+        public decimal TicketMoney { get;  set; }
         /// <summary>
         /// 号码列表
         /// </summary>
-        public List<Antecode> AnteCodeList { get; private set; }
+        public List<Antecode> AnteCodeList { get;  set; }
         public List<IAntecode> GetAnteCodeList()
         {
             return AnteCodeList.Select(a => (IAntecode)a).ToList();
@@ -66,19 +66,19 @@ namespace EntityModel.Ticket
         /// <summary>
         /// 分析票。计算出包含注数以及金额
         /// </summary>
-        public void AnalyzeTicket(string GameCode, decimal price = 2M)
-        {
-            throw new NotImplementedException("NotImplementedException");
-            //var analyzer = AnalyzerFactory.GetAntecodeAnalyzer(GameCode, GameType);
-            //BetCount = 0;
-            //TicketMoney = 0;
-            //AnteCodeList.ForEach(c =>
-            //{
-            //    c.AnalyzeAntecode(analyzer, price);
-            //    BetCount += c.BetCount;
-            //    TicketMoney += c.AntecodeMoney * Amount;
-            //});
-        }
+        //public void AnalyzeTicket(string GameCode, decimal price = 2M)
+        //{
+        //    throw new NotImplementedException("NotImplementedException");
+        //    //var analyzer = AnalyzerFactory.GetAntecodeAnalyzer(GameCode, GameType);
+        //    //BetCount = 0;
+        //    //TicketMoney = 0;
+        //    //AnteCodeList.ForEach(c =>
+        //    //{
+        //    //    c.AnalyzeAntecode(analyzer, price);
+        //    //    BetCount += c.BetCount;
+        //    //    TicketMoney += c.AntecodeMoney * Amount;
+        //    //});
+        //}
     }
     /// <summary>
     /// 订单中的票列表
@@ -88,24 +88,24 @@ namespace EntityModel.Ticket
         /// <summary>
         /// 获取订单包含的总注数。计算后有值
         /// </summary>
-        public int BetCount { get; private set; }
+        public int BetCount { get;  set; }
         /// <summary>
         /// 获取订单的总金额。计算后有值
         /// </summary>
-        public decimal TotalMoney { get; private set; }
+        public decimal TotalMoney { get;  set; }
         /// <summary>
         /// 分析订单。计算出包含注数以及金额
         /// </summary>
-        public void AnalyzeOrder(string GameCode, decimal price = 2M)
-        {
-            BetCount = 0;
-            TotalMoney = 0;
-            ForEach(t =>
-            {
-                t.AnalyzeTicket(GameCode, price);
-                BetCount += t.BetCount;
-                TotalMoney += t.TicketMoney;
-            });
-        }
+        //public void AnalyzeOrder(string GameCode, decimal price = 2M)
+        //{
+        //    BetCount = 0;
+        //    TotalMoney = 0;
+        //    ForEach(t =>
+        //    {
+        //        t.AnalyzeTicket(GameCode, price);
+        //        BetCount += t.BetCount;
+        //        TotalMoney += t.TicketMoney;
+        //    });
+        //}
     }
 }
