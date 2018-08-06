@@ -2690,7 +2690,7 @@ namespace Lottery.Api.Controllers
                 });
             }
         }
-        public async static Task<List<KaiJiang>> GetKaiJiang([FromServices]IServiceProxyProvider _serviceProxyProvider)
+        public async Task<List<KaiJiang>> GetKaiJiang([FromServices]IServiceProxyProvider _serviceProxyProvider)
         {
             try
             {
@@ -2764,7 +2764,7 @@ namespace Lottery.Api.Controllers
             }
 
         }
-        public async static Task<PrizelevelInfo> GetKaiJingInfo([FromServices]IServiceProxyProvider _serviceProxyProvider, string version, string type, string term)
+        public async Task<PrizelevelInfo> GetKaiJingInfo([FromServices]IServiceProxyProvider _serviceProxyProvider, string version, string type, string term)
         {
             type = type.ToUpper();
             //"JX11X5|CQSSC|SSQ|DLT|FC3D|PL3|CTZQ_T14C|CTZQ_T6BQC|CTZQ_T4CJQ|CTZQ_TR9"
@@ -2826,8 +2826,8 @@ namespace Lottery.Api.Controllers
             try
             {
                 var p = JsonHelper.Decode(entity.Param);
-                var type = p.GameType;
-                var term = p.IssuseNumber;
+                string type = p.GameType;
+                string term = p.IssuseNumber;
                 var list =await GetphoneOpenMatch(_serviceProxyProvider, "web", type, term);
                 return Json(new LotteryServiceResponse
                 {
@@ -2851,7 +2851,7 @@ namespace Lottery.Api.Controllers
         /// <summary>
         /// 3.4对阵详情：是在传统足球开奖详情页内请求
         /// </summary>
-        public async static Task<List<KaiJiangOpenMatch>> GetphoneOpenMatch([FromServices]IServiceProxyProvider _serviceProxyProvider, string version, string type, string term)
+        public async Task<List<KaiJiangOpenMatch>> GetphoneOpenMatch([FromServices]IServiceProxyProvider _serviceProxyProvider, string version, string type, string term)
         {
             Dictionary<string, object> param = new Dictionary<string, object>()
             {
