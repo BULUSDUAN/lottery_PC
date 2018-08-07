@@ -617,6 +617,20 @@ namespace Lottery.Service.ModuleServices
         }
         #endregion
 
+        #region 根据GameCode与期号获取当年/当天最大期号
+        public Task<List<string>> GetMaxIssueByGameCode(string gameCode, string currIssueNumber, int issueCount)
+        {
+            try
+            {
+                return Task.FromResult(new DataQuery().GetMaxIssueByGameCode(gameCode, currIssueNumber, issueCount));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        #endregion
+
     }
 
 

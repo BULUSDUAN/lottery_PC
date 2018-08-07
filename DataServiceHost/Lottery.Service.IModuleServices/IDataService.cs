@@ -116,5 +116,8 @@ namespace Lottery.Service.IModuleServices
 
         [Service(Date = "2018-07-26", Director = "lidi", Name = "获取银行列表")]
         Task<List<C_Bank_Info>> GetBankList();
+
+        [Service(Date = "2018-07-26", Director = "lidi", Name = "获取当年/当日最大场次数")]
+        Task<List<string>> GetMaxIssueByGameCode(string gameCode, string currIssueNumber,int issueCount);
     }
 }
