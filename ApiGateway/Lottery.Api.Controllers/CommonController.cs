@@ -18,12 +18,14 @@ using Lottery.ApiGateway.Model.HelpModel;
 using KaSon.FrameWork.Common.KaSon;
 using KaSon.FrameWork.Common;
 using EntityModel.Enum;
+using Lottery.Api.Controllers.CommonFilterActtribute;
 //using Lottery.Service.IModuleServices;
 
 namespace Lottery.Api.Controllers
 {
     [Area("api")]
-   // [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
+    [ReusltFilter]
+    // [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
     public class CommonController : BaseController
     {
 
@@ -40,7 +42,7 @@ namespace Lottery.Api.Controllers
        //     _serviceRouteProvider = serviceRouteProvider;
        //    // _authorizationServerProvider = authorizationServerProvider;
        // }
-        public IActionResult GetAppendBettingDate(LotteryServiceRequest entity)
+        public async Task<IActionResult> GetAppendBettingDate([FromServices]IServiceProxyProvider _serviceProxyProvider,LotteryServiceRequest entity)
         {
             var result = new LotteryServiceResponse
             {
@@ -65,7 +67,7 @@ namespace Lottery.Api.Controllers
             if (Count == 1) {
                 list.Add(IssuseNumber);
             }
-
+            var MainGameCode = new List<string>() { "SSQ", "DLT", "FC3D", "PL3" };
             if (Count > 1) {
                 int currentMaxDate = BettingDateHelper.GetMaxDate(GameCode);
                 if (currentMaxDate == 0) {
@@ -76,7 +78,18 @@ namespace Lottery.Api.Controllers
                     return JsonEx(result);
                    
                 }
-                list = BettingDateHelper.GetUpdate(IssuseNumber, currentMaxDate, GameCode, Count);
+                if (MainGameCode.Contains(GameCode.ToUpper()))
+                {
+                    Dictionary<string, object> param = new Dictionary<string, object>();
+                    param.Add("gameCode", GameCode.ToUpper());
+                    param.Add("currIssueNumber", IssuseNumber);
+                    param.Add("issueCount", Count);
+                    list = await _serviceProxyProvider.Invoke<List<string>>(param, "api/Data/GetMaxIssueByGameCode");
+                }
+                else
+                {
+                    list = BettingDateHelper.GetUpdate(IssuseNumber, currentMaxDate, GameCode, Count);
+                }
                 result.Value = list;
             }
 

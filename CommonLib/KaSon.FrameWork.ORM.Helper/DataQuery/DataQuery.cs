@@ -524,6 +524,38 @@ namespace KaSon.FrameWork.ORM.Helper
             //    return list;
         }
 
+
+        #region 根据GameCode与期号获取当年/当天最大期号
+
+        public List<string> GetMaxIssueByGameCode(string gameCode, string currIssuseNumber,int issueCount)
+        {
+            //var DayGame = new List<string>() {"SSQ","DLT","FC3D","PL3"};
+            //var MinGame = new List<string>() {"CQSSC","GD11X5","SD11X5","JX11X5"};
+            var theGameCode = gameCode.ToLower();
+            var model = DB.CreateQuery<C_Game_Issuse>().Where(p => p.GameCode == theGameCode && p.IssuseNumber == currIssuseNumber).FirstOrDefault();
+            var IssuseList = new List<string>();
+            if (model != null)
+            {
+                //if (DayGame.Contains(theGameCode))
+                //{
+                //    var thisYear = model.OfficialStopTime.Year;
+                //    var lastDay = new DateTime(thisYear + 1, 1, 1);
+                //    var lastIssuse = DB.CreateQuery<C_Game_Issuse>().Where(p => p.OfficialStopTime < lastDay && p.GameCode == theGameCode).OrderBy(p => p.OfficialStopTime).Take(100);
+                //    MaxIssue = lastIssuse.IssuseNumber;
+                //}
+                //else if (MinGame.Contains(theGameCode))
+                //{
+                //    var today = model.LocalStopTime.Date;
+                //    var tomorrow = today.AddDays(1);
+                //    var lastIssuse = DB.CreateQuery<C_Game_Issuse>().Where(p => p.LocalStopTime > today && p.LocalStopTime < tomorrow &&p.GameCode== theGameCode).OrderBy(p => p.OfficialStopTime).FirstOrDefault();
+                //    MaxIssue= lastIssuse.IssuseNumber;
+                //}
+                IssuseList = DB.CreateQuery<C_Game_Issuse>().Where(p => p.OfficialStopTime >= model.OfficialStopTime && p.GameCode == theGameCode).OrderBy(p => p.OfficialStopTime).Take(issueCount).Select(p=>p.IssuseNumber).ToList();
+            }
+            return IssuseList;
+        } 
+        #endregion
+
         /// <summary>
         /// 查询fxid分享推广
         /// </summary>
