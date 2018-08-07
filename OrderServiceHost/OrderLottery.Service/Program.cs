@@ -20,6 +20,7 @@ using Kason.Sg.Core.ServiceHosting.Internal.Implementation;
 using System;
 using System.Text;
 using Kason.Sg.Core.EventBusRabbitMQ.Configurations;
+using KaSon.FrameWork.Common;
 
 namespace OrderLottery.Service.Host
 {
