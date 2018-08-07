@@ -489,5 +489,43 @@ namespace KaSon.FrameWork.ORM.Helper
                         select o.SchemeId;
             return query.ToList();
         }
+
+        public C_UserSaveOrder QuerySaveOrder(string schemeId)
+        {
+           
+            return DB.CreateQuery<C_UserSaveOrder>().Where(p => p.SchemeId == schemeId).FirstOrDefault();
+        }
+
+        public C_BJDC_Match QueryBJDC_Match(string id)
+        {
+          
+            return DB.CreateQuery<C_BJDC_Match>().Where(p => p.Id == id).FirstOrDefault();
+        }
+        public C_BJDC_MatchResult QueryBJDC_MatchResult(string id)
+        {
+           
+            return DB.CreateQuery<C_BJDC_MatchResult>().Where(p => p.Id == id).FirstOrDefault();
+        }
+
+        public C_JCZQ_Match QueryJCZQ_Match(string matchId)
+        {
+          
+            return DB.CreateQuery<C_JCZQ_Match>().Where(p => p.MatchId == matchId).FirstOrDefault();
+        }
+        public C_JCZQ_MatchResult QueryJCZQ_MatchResult(string matchId)
+        {
+         
+            return DB.CreateQuery<C_JCZQ_MatchResult>().Where(p => p.MatchId == matchId).FirstOrDefault();
+        }
+        public C_JCLQ_Match QueryJCLQ_Match(string matchId)
+        {
+          
+            return DB.CreateQuery<C_JCLQ_Match>().Where(p => p.MatchId == matchId).FirstOrDefault();
+        }
+        public C_JCLQ_MatchResult QueryJCLQ_MatchResult(string matchId)
+        {
+           
+            return DB.CreateQuery<C_JCLQ_MatchResult>().Where(p => p.MatchId == matchId).FirstOrDefault();
+        }
     }
 }

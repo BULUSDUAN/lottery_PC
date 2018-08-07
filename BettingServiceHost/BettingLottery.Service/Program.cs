@@ -40,7 +40,7 @@ namespace BettingLottery.Service.Host
                         .AddRelateService()
                         .AddConfigurationWatch()
                         //option.UseZooKeeperManager(new ConfigInfo("127.0.0.1:2181"));
-                        .UseConsulManager(new ConfigInfo("10.0.3.27:8501", reloadOnChange:true))
+                        .UseConsulManager(new ConfigInfo("10.0.3.27:8500", reloadOnChange:true))
                         .UseDotNettyTransport()
                         .UseRabbitMQTransport()
                         .AddRabbitMQAdapt()
