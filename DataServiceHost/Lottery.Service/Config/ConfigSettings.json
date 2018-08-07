@@ -1,4 +1,6 @@
 ﻿{
   "SelfDomain": "http://localhost:786",
-  "MobileDomain": "http://localhost:786"
+  "MobileDomain": "http://localhost:786",
+  "Consul": "127.0.0.1:8500",
+  //"Consul": "10.0.3.27:8501"
 }
