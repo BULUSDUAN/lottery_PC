@@ -64,17 +64,17 @@ namespace Lottery.Service.Host
                 //.UseServer("127.0.0.1", 98)
                 //.UseServer("127.0.0.1", 98，“true”) //自动生成Token
                 //.UseServer("127.0.0.1", 98，“123456789”) //固定密码Token
-                //.UseServer(options =>
-                //{
-                //    //10099
-                //    //  options.IpEndpoint = new IPEndPoint(IPAddress.Any, 98);  
-                //    options.Port = 10099;
-                //    options.Ip = "127.0.0.1";
-                //    options.Token = "True";
-                //    options.ExecutionTimeoutInMilliseconds = 30000;
-                //    options.MaxConcurrentRequests = 2000;
-                //})
-               // .UseServiceCache()
+                .UseServer(options =>
+                {
+                    //10099
+                    //  options.IpEndpoint = new IPEndPoint(IPAddress.Any, 98);  
+                   // options.Port = 10099;
+                 //   options.Ip = "127.0.0.1";
+                    options.Token = "True";
+                    options.ExecutionTimeoutInMilliseconds = 30000;
+                    options.MaxConcurrentRequests = 2000;
+                })
+                // .UseServiceCache()
                 .Configure(build =>
                 build.AddEventBusFile("eventBusSettings.json", optional: false))
                 .Configure(build =>
