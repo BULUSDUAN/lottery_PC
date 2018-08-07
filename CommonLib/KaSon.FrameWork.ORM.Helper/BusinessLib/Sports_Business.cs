@@ -3268,8 +3268,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         else
                             schemeId = keyLine;
                     }
-                    lock (schemeId)
-                    {
+
                         var anteCodeList = new List<C_Sports_AnteCode>();
                         var gameTypeList = new List<GameTypeInfo>();
                         foreach (var item in info.AnteCodeList)
@@ -3346,7 +3345,6 @@ namespace KaSon.FrameWork.ORM.Helper
                             //追号方式 存入Redis订单列表
                             redisOrderList.OrderList.Add(runningOrder);
                         }
-                    }
                     orderIndex++;
                 }
 

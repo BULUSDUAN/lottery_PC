@@ -44,56 +44,72 @@ namespace Lottery.Api.Controllers
        // }
         public async Task<IActionResult> GetAppendBettingDate([FromServices]IServiceProxyProvider _serviceProxyProvider,LotteryServiceRequest entity)
         {
-            var result = new LotteryServiceResponse
+            try
             {
-                Code = ResponseCode.成功,
-                Message = "",
-                MsgId = entity.MsgId,
-                // Value = returnValue.TrimEnd('~'),
-            };
-            var p = JsonHelper.Decode(entity.Param);
-            string IssuseNumber = p.IssuseNumber;
-            string GameCode = p.GameCode;
-            int Count = p.Count;
+                var result = new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "",
+                    MsgId = entity.MsgId,
+                    // Value = returnValue.TrimEnd('~'),
+                };
+                var p = JsonHelper.Decode(entity.Param);
+                string IssuseNumber = p.IssuseNumber;
+                string GameCode = p.GameCode;
+                int Count = p.Count;
 
-            if (string.IsNullOrEmpty(IssuseNumber))
-                throw new Exception("当前期号不能为空");
-            if (string.IsNullOrEmpty(GameCode))
-                throw new Exception("彩票类型不能为空");
-            if (Count<1)
-                throw new Exception("追期数必须1期以上");
-            // BettingDateHelper
-            IList<string> list = new List<string>();
-            if (Count == 1) {
-                list.Add(IssuseNumber);
-            }
-            var MainGameCode = new List<string>() { "SSQ", "DLT", "FC3D", "PL3" };
-            if (Count > 1) {
-                int currentMaxDate = BettingDateHelper.GetMaxDate(GameCode);
-                if (currentMaxDate == 0) {
-                    // throw new Exception("不支持彩种");
-                    result.Message = "不支持彩种";
+                if (string.IsNullOrEmpty(IssuseNumber))
+                    throw new Exception("当前期号不能为空");
+                if (string.IsNullOrEmpty(GameCode))
+                    throw new Exception("彩票类型不能为空");
+                if (Count < 1)
+                    throw new Exception("追期数必须1期以上");
+                // BettingDateHelper
+                IList<string> list = new List<string>();
+                if (Count == 1)
+                {
+                    list.Add(IssuseNumber);
+                }
+                var MainGameCode = new List<string>() { "SSQ", "DLT", "FC3D", "PL3" };
+                if (Count > 1)
+                {
+                    int currentMaxDate = BettingDateHelper.GetMaxDate(GameCode);
+                    if (currentMaxDate == 0)
+                    {
+                        // throw new Exception("不支持彩种");
+                        result.Message = "不支持彩种";
+                        result.Value = list;
+                        result.Code = ResponseCode.失败;
+                        return JsonEx(result);
+
+                    }
+                    if (MainGameCode.Contains(GameCode.ToUpper()))
+                    {
+                        Dictionary<string, object> param = new Dictionary<string, object>();
+                        param.Add("gameCode", GameCode.ToUpper());
+                        param.Add("currIssueNumber", IssuseNumber);
+                        param.Add("issueCount", Count);
+                        list = await _serviceProxyProvider.Invoke<List<string>>(param, "api/Data/GetMaxIssueByGameCode");
+                    }
+                    else
+                    {
+                        list = BettingDateHelper.GetUpdate(IssuseNumber, currentMaxDate, GameCode, Count);
+                    }
                     result.Value = list;
-                    result.Code = ResponseCode.失败;
-                    return JsonEx(result);
-                   
                 }
-                if (MainGameCode.Contains(GameCode.ToUpper()))
-                {
-                    Dictionary<string, object> param = new Dictionary<string, object>();
-                    param.Add("gameCode", GameCode.ToUpper());
-                    param.Add("currIssueNumber", IssuseNumber);
-                    param.Add("issueCount", Count);
-                    list = await _serviceProxyProvider.Invoke<List<string>>(param, "api/Data/GetMaxIssueByGameCode");
-                }
-                else
-                {
-                    list = BettingDateHelper.GetUpdate(IssuseNumber, currentMaxDate, GameCode, Count);
-                }
-                result.Value = list;
-            }
 
-            return JsonEx(result);
+                return JsonEx(result);
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "获取追期期号失败",
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                });
+            }
         }
 
     }
