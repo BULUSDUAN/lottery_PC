@@ -92,6 +92,7 @@ namespace KaSon.FrameWork.Common.KaSon
                             var date = issuseDate.Day;
                             var month = issuseDate.Month;
                             Issuse0 = issuseDate.Year + ((month < 10) ? ("0" + month) : month.ToString()).ToString() + ((date < 10) ? ("0" + date) : date.ToString()).ToString();
+                            Issuse1= int.Parse(Issuse0);
                             Issuse2 = 1;
                         }
                     }
