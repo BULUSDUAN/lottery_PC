@@ -20,6 +20,7 @@ using Kason.Sg.Core.ServiceHosting.Internal.Implementation;
 using System;
 using System.Text;
 using Kason.Sg.Core.EventBusRabbitMQ.Configurations;
+using KaSon.FrameWork.Common;
 
 namespace UserLottery.Service.Host
 {
@@ -27,7 +28,7 @@ namespace UserLottery.Service.Host
     {
         static void Main(string[] args)
         {
-
+            string consul = ConfigHelper.ConfigInfo["Consul"].ToString();
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             var host = new ServiceHostBuilder()
                 .RegisterServices(builder =>
@@ -38,7 +39,7 @@ namespace UserLottery.Service.Host
                         .AddRelateService()
                         .AddConfigurationWatch()
                         //option.UseZooKeeperManager(new ConfigInfo("127.0.0.1:2181"));
-                        .UseConsulManager(new ConfigInfo("10.0.3.27:8500", reloadOnChange: true))
+                        .UseConsulManager(new ConfigInfo(consul, reloadOnChange: true))
                         .UseDotNettyTransport()
                         .UseRabbitMQTransport()
                         .AddRabbitMQAdapt()
