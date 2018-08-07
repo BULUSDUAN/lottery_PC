@@ -12,6 +12,7 @@ using Kason.Sg.Core.ServiceHosting;
 using Kason.Sg.Core.System.Intercept;
 using System;
 using System.IO;
+using KaSon.FrameWork.Common;
 
 namespace Lottery.ApiGateway
 {
@@ -19,8 +20,9 @@ namespace Lottery.ApiGateway
     {
         public static void Main(string[] args)
         {
+            string hostUrl = ConfigHelper.ConfigInfo["Host"].ToString();
             var host = new WebHostBuilder()
-                .UseUrls("http://*:729")
+                .UseUrls(hostUrl)
                 .UseKestrel(options =>
                 {
                     options.Limits.MaxConcurrentConnections = 30000;
