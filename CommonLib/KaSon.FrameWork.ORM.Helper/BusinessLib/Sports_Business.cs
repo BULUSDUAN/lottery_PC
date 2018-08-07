@@ -22,6 +22,7 @@ using EntityModel.Communication;
 using KaSon.FrameWork.Analyzer.AnalyzerFactory;
 using EntityModel.Interface;
 using KaSon.FrameWork.Analyzer;
+using GameBiz.Domain.Entities;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
@@ -5382,5 +5383,298 @@ namespace KaSon.FrameWork.ORM.Helper
             return DateTime.Now;
         }
         #endregion
+
+        /// <summary>
+        /// 查询投注号码信息
+        /// </summary>
+        public Sports_AnteCodeQueryInfoCollection QuerySportsOrderAnteCodeList(string schemeId)
+        {
+            var result = new Sports_AnteCodeQueryInfoCollection();
+            var sportsManager = new Sports_Manager();
+            var sjbManager = new SJBMatchManager();
+            var lotteryManager = new LotteryGameManager();
+            var issuseList = new List<C_Game_Issuse>();
+            var codeList = sportsManager.QuerySportsAnteCodeBySchemeId(schemeId);
+            foreach (var item in codeList)
+            {
+                if (item.GameCode == "BJDC")
+                {
+                    #region BJDC
+
+                    var match = sportsManager.QueryBJDC_Match(string.Format("{0}|{1}", item.IssuseNumber, item.MatchId));
+                    var matchResult = sportsManager.QueryBJDC_MatchResult(string.Format("{0}|{1}", item.IssuseNumber, item.MatchId));
+                    //matchResult.MatchState
+                    var halfResult = string.Empty;
+                    var fullResult = string.Empty;
+                    var caiguo = string.Empty;
+                    var matchResultSp = 0M;
+                    var matchState = string.Empty;
+                    if (matchResult != null)
+                    {
+                        halfResult = string.Format("{0}:{1}", matchResult.HomeHalf_Result, matchResult.GuestHalf_Result);
+                        fullResult = string.Format("{0}:{1}", matchResult.HomeFull_Result, matchResult.GuestFull_Result);
+                        matchState = matchResult.MatchState;
+                        switch (item.GameType)
+                        {
+                            case "SPF":
+                                caiguo = matchResult.SPF_Result;
+                                matchResultSp = matchResult.SPF_SP;
+                                break;
+                            case "ZJQ":
+                                caiguo = matchResult.ZJQ_Result;
+                                matchResultSp = matchResult.ZJQ_SP;
+                                break;
+                            case "SXDS":
+                                caiguo = matchResult.SXDS_Result;
+                                matchResultSp = matchResult.SXDS_SP;
+                                break;
+                            case "BF":
+                                caiguo = matchResult.BF_Result;
+                                matchResultSp = matchResult.BF_SP;
+                                break;
+                            case "BQC":
+                                caiguo = matchResult.BQC_Result;
+                                matchResultSp = matchResult.BQC_SP;
+                                break;
+                        }
+                    }
+                    result.Add(new Sports_AnteCodeQueryInfo
+                    {
+                        AnteCode = item.AnteCode,
+                        IssuseNumber = match.IssuseNumber,
+                        LeagueId = string.Empty,
+                        LeagueName = match.MatchName,
+                        LeagueColor = match.MatchColor,
+                        MatchId = item.MatchId,
+                        MatchIdName = string.Empty,
+                        HomeTeamId = string.Empty,
+                        HomeTeamName = match.HomeTeamName,
+                        GuestTeamId = string.Empty,
+                        GuestTeamName = match.GuestTeamName,
+                        IsDan = item.IsDan,
+                        StartTime = match.MatchStartTime,
+                        HalfResult = halfResult,
+                        FullResult = fullResult,
+                        MatchResult = caiguo,
+                        MatchResultSp = matchResultSp,
+                        CurrentSp = item.Odds,
+                        LetBall = match.LetBall,
+                        BonusStatus = (BonusStatus)item.BonusStatus,
+                        GameType = item.GameType,
+                        MatchState = matchState,
+                        WinNumber = string.Empty,
+                    });
+
+                    #endregion
+                    continue;
+                }
+                if (item.GameCode == "JCZQ")
+                {
+                    #region JCZQ
+
+                    var match = sportsManager.QueryJCZQ_Match(item.MatchId);
+                    var matchResult = sportsManager.QueryJCZQ_MatchResult(item.MatchId);
+                    //matchResult .MatchState
+                    var halfResult = string.Empty;
+                    var fullResult = string.Empty;
+                    var caiguo = string.Empty;
+                    var matchResultSp = 0M;
+                    var matchState = string.Empty;
+                    if (matchResult != null)
+                    {
+                        halfResult = string.Format("{0}:{1}", matchResult.HalfHomeTeamScore, matchResult.HalfGuestTeamScore);
+                        fullResult = string.Format("{0}:{1}", matchResult.FullHomeTeamScore, matchResult.FullGuestTeamScore);
+                        matchState = matchResult.MatchState;
+                        switch (item.GameType.ToUpper())
+                        {
+                            case "SPF":
+                                caiguo = matchResult.SPF_Result;
+                                matchResultSp = matchResult.SPF_SP;
+                                break;
+                            case "BRQSPF":
+                                caiguo = matchResult.BRQSPF_Result;
+                                matchResultSp = matchResult.BRQSPF_SP;
+                                break;
+                            case "ZJQ":
+                                caiguo = matchResult.ZJQ_Result;
+                                matchResultSp = matchResult.ZJQ_SP;
+                                break;
+                            case "BF":
+                                caiguo = matchResult.BF_Result;
+                                matchResultSp = matchResult.BF_SP;
+                                break;
+                            case "BQC":
+                                caiguo = matchResult.BQC_Result;
+                                matchResultSp = matchResult.BQC_SP;
+                                break;
+                        }
+                    }
+                    result.Add(new Sports_AnteCodeQueryInfo
+                    {
+                        AnteCode = item.AnteCode,
+                        IssuseNumber = string.Empty,
+                        LeagueId = match.LeagueId.ToString(),
+                        LeagueName = match.LeagueName,
+                        LeagueColor = match.LeagueColor,
+                        MatchId = match.MatchId,
+                        MatchIdName = match.MatchIdName,
+                        HomeTeamId = match.HomeTeamId.ToString(),
+                        HomeTeamName = match.HomeTeamName,
+                        GuestTeamId = match.GuestTeamId.ToString(),
+                        GuestTeamName = match.GuestTeamName,
+                        IsDan = item.IsDan,
+                        StartTime = match.StartDateTime,
+                        HalfResult = halfResult,
+                        FullResult = fullResult,
+                        MatchResult = caiguo,
+                        MatchResultSp = matchResultSp,
+                        CurrentSp = item.Odds,
+                        LetBall = match.LetBall,
+                        BonusStatus = (BonusStatus)item.BonusStatus,
+                        GameType = item.GameType,
+                        MatchState = matchState,
+                        XmlHeader = string.Empty,
+                    });
+
+                    #endregion
+                    continue;
+                }
+                if (item.GameCode == "JCLQ")
+                {
+                    #region JCLQ
+
+                    var match = sportsManager.QueryJCLQ_Match(item.MatchId);
+                    var matchResult = sportsManager.QueryJCLQ_MatchResult(item.MatchId);
+                    var halfResult = string.Empty;
+                    var fullResult = string.Empty;
+                    var caiguo = string.Empty;
+                    var matchResultSp = 0M;
+                    var matchState = string.Empty;
+                    if (matchResult != null)
+                    {
+                        //halfResult = string.Format("{0}:{1}", matchResult.HomeScore, matchResult.GuestHalf_Result);
+                        fullResult = string.Format("{0}:{1}", matchResult.HomeScore, matchResult.GuestScore);
+                        matchState = matchResult.MatchState;
+                        switch (item.GameType.ToUpper())
+                        {
+                            case "SF":
+                                caiguo = matchResult.SF_Result;
+                                matchResultSp = matchResult.SF_SP;
+                                break;
+                            case "RFSF":
+                                caiguo = matchResult.RFSF_Result;
+                                matchResultSp = matchResult.RFSF_SP;
+                                break;
+                            case "SFC":
+                                caiguo = matchResult.SFC_Result;
+                                matchResultSp = matchResult.SFC_SP;
+                                break;
+                            case "DXF":
+                                caiguo = matchResult.DXF_Result;
+                                matchResultSp = matchResult.DXF_SP;
+                                break;
+                        }
+                    }
+                    result.Add(new Sports_AnteCodeQueryInfo
+                    {
+                        AnteCode = item.AnteCode,
+                        IssuseNumber = string.Empty,
+                        LeagueId = match.LeagueId.ToString(),
+                        LeagueName = match.LeagueName,
+                        LeagueColor = match.LeagueColor,
+                        MatchId = match.MatchId,
+                        MatchIdName = match.MatchIdName,
+                        HomeTeamId = string.Empty,
+                        HomeTeamName = match.HomeTeamName,
+                        GuestTeamId = string.Empty,
+                        GuestTeamName = match.GuestTeamName,
+                        IsDan = item.IsDan,
+                        StartTime = match.StartDateTime,
+                        HalfResult = halfResult,
+                        FullResult = fullResult,
+                        MatchResult = caiguo,
+                        MatchResultSp = matchResultSp,
+                        CurrentSp = item.Odds,
+                        BonusStatus = (BonusStatus)item.BonusStatus,
+                        GameType = item.GameType,
+                        MatchState = matchState,
+                        WinNumber = string.Empty,
+                    });
+
+                    #endregion
+                    continue;
+                }
+                if (item.GameCode == "CTZQ")
+                {
+                    #region CTZQ
+
+                    result.Add(new Sports_AnteCodeQueryInfo
+                    {
+                        AnteCode = item.AnteCode,
+                        IssuseNumber = item.IssuseNumber,
+                        LeagueId = string.Empty,
+                        LeagueName = string.Empty,
+                        LeagueColor = string.Empty,
+                        MatchId = string.Empty,
+                        MatchIdName = string.Empty,
+                        HomeTeamId = string.Empty,
+                        HomeTeamName = string.Empty,
+                        GuestTeamId = string.Empty,
+                        GuestTeamName = string.Empty,
+                        IsDan = item.IsDan,
+                        StartTime = DateTime.Now,
+                        HalfResult = string.Empty,
+                        FullResult = string.Empty,
+                        MatchResult = string.Empty,
+                        MatchResultSp = 0M,
+                        CurrentSp = item.Odds,
+                        BonusStatus = (BonusStatus)item.BonusStatus,
+                        GameType = item.GameType,
+                        WinNumber = string.Empty,
+                    });
+
+                    #endregion
+                    continue;
+                }
+                if (item.GameCode == "JCSJBGJ" || item.GameCode == "JCYJ")
+                {
+                    var match = sjbManager.GetSJBMatch(item.GameCode, int.Parse(item.AnteCode));
+                    result.Add(new Sports_AnteCodeQueryInfo
+                    {
+                        AnteCode = item.AnteCode,
+                        IssuseNumber = string.Empty,
+                        HomeTeamId = string.Empty,
+                        HomeTeamName = match.Team,
+                        GuestTeamId = string.Empty,
+                        GuestTeamName = match.Team,
+                        IsDan = item.IsDan,
+                        CurrentSp = item.Odds,
+                        BonusStatus = (BonusStatus)item.BonusStatus,
+                        GameType = item.GameType,
+                        StartTime = DateTime.Now,
+                    });
+                    continue;
+                }
+
+                var c = issuseList.Where(p => p.GameCode == item.GameCode && p.IssuseNumber == item.IssuseNumber).FirstOrDefault();
+                if (c == null)
+                {
+                    c = lotteryManager.QueryGameIssuse(item.GameCode, item.IssuseNumber);
+                    issuseList.Add(c);
+                }
+                result.Add(new Sports_AnteCodeQueryInfo
+                {
+                    AnteCode = item.AnteCode,
+                    IssuseNumber = item.IssuseNumber,
+                    BonusStatus = (BonusStatus)item.BonusStatus,
+                    CurrentSp = item.Odds,
+                    IsDan = item.IsDan,
+                    GameType = item.GameType,
+                    WinNumber = c == null ? string.Empty : string.IsNullOrEmpty(c.WinNumber) ? string.Empty : c.WinNumber,
+                    StartTime = DateTime.Now,
+                });
+            }
+            return result;
+        }
     }
 }

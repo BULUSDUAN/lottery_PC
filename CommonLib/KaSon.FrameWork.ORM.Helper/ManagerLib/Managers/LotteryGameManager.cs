@@ -172,5 +172,10 @@ namespace KaSon.FrameWork.ORM.Helper
                 //        select i;
             return query.FirstOrDefault();
         }
+        public C_Game_Issuse QueryGameIssuse(string gameCode, string issuseNumber)
+        {
+          
+            return DB.CreateQuery<C_Game_Issuse>().Where(p => p.GameCode == gameCode && p.IssuseNumber == issuseNumber).FirstOrDefault();
+        }
     }
 }

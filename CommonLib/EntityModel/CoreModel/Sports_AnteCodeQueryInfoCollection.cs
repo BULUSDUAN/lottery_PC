@@ -1,4 +1,5 @@
 ﻿using EntityModel.Enum;
+using EntityModel.Xml;
 using ProtoBuf;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ namespace EntityModel.CoreModel
 {
     [Serializable]
     [ProtoContract]
-   public class Sports_AnteCodeQueryInfoCollection
+    public class Sports_AnteCodeQueryInfoCollection: XmlMappingList<Sports_AnteCodeQueryInfo>
     {
         public Sports_AnteCodeQueryInfoCollection()
         {
@@ -19,7 +20,7 @@ namespace EntityModel.CoreModel
     }
     [Serializable]
     [ProtoContract]
-    public class Sports_AnteCodeQueryInfo
+    public class Sports_AnteCodeQueryInfo: XmlMappingObject
     {
 
         public Sports_AnteCodeQueryInfo()

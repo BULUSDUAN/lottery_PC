@@ -103,12 +103,12 @@ namespace KaSon.FrameWork.ORM.Helper
                 return query.ToList();
             return new List<C_Sports_AnteCode>();
         }
-        public List<C_Sports_AnteCode> QueryAnteCodeListBySchemeId(string schemeId)
+        public List<AnteCodeInfo> QueryAnteCodeListBySchemeId(string schemeId)
         {
           
             var query = from a in DB.CreateQuery<C_Sports_AnteCode>()
                         where a.SchemeId == schemeId
-                        select new C_Sports_AnteCode
+                        select new AnteCodeInfo
                         {
                             AnteCode = a.AnteCode,
                             GameType = a.GameType,
@@ -121,12 +121,12 @@ namespace KaSon.FrameWork.ORM.Helper
                         };
             if (query != null && query.Count() > 0)
                 return query.ToList();
-            return new List<C_Sports_AnteCode>();
+            return new List<AnteCodeInfo>();
         }
 
         //public TotalSingleTreasure_Collection QueryTodayBDFXList(string userId, string userName, string gameCode, string orderBy, string desc, DateTime startTime, DateTime endTime, string isMyBD, int pageIndex, int pageSize)
         //{
-           
+
         //    TotalSingleTreasure_Collection collection = new TotalSingleTreasure_Collection();
         //    collection.TotalCount = 0;
 
@@ -196,154 +196,154 @@ namespace KaSon.FrameWork.ORM.Helper
         //    }
         //    return collection;
         //}
-        //public List<NearTimeProfitRateInfo> QueryNearTimeProfitRate(string bdfxUserId)
-        //{
-        //    //查询近段时间盈利率
-        //    List<NearTimeProfitRateInfo> ListInfo = new List<NearTimeProfitRateInfo>();
-        //    var endTime = DateTime.Now.Date.AddDays(1);
-        //    var startTime = endTime.AddDays(-7);
-        //    //20151008
-        //    //var strSql = "select tab.rowNumber,isnull(tab.currDay,'')CurrDay,isnull(tab.CurrProfitRate,0)CurrProfitRate from(select ROW_NUMBER() over(order by CONVERT(varchar(10),CreateTime,120)) rowNumber, CONVERT(varchar(10),CreateTime,120) currDay,(case t.IsBonus when 0 then 0 when 1 then((SUM(t.CurrBonusMoney)-SUM(t.CurrentBetMoney))/SUM(t.CurrentBetMoney)) else 0 end) CurrProfitRate from C_TotalSingleTreasure t where CONVERT(varchar(10),CreateTime,120)>=:StartTime and CONVERT(varchar(10),CreateTime,120) <:EndTime and UserId=:BDFXUserId group by CONVERT(varchar(10),CreateTime,120) ,t.UserId,t.IsBonus) tab";
-        //    var strSql = "select tab.rowNumber,isnull(tab.currDay,'')CurrDay,isnull(tab.CurrProfitRate,0)CurrProfitRate from ( select ROW_NUMBER() over(order by CONVERT(varchar(10),CreateTime,120)) rowNumber, CONVERT(varchar(10),CreateTime,120) currDay, (SUM(t.CurrBonusMoney)-SUM(t.CurrentBetMoney))/SUM(t.CurrentBetMoney) CurrProfitRate  from C_TotalSingleTreasure t where CONVERT(varchar(10),CreateTime,120)>=:StartTime and CONVERT(varchar(10),CreateTime,120) <:EndTime and UserId=:BDFXUserId and IsBonus=1 group by CONVERT(varchar(10),CreateTime,120) ,t.UserId ) tab";
-        //    var query = Session.CreateSQLQuery(strSql)
-        //                   .SetDateTime("StartTime", startTime)
-        //                   .SetDateTime("EndTime", endTime)
-        //                   .SetString("BDFXUserId", bdfxUserId)
-        //                   .List();
-        //    if (query != null && query.Count > 0)
-        //    {
-        //        foreach (var item in query)
-        //        {
-        //            var array = item as object[];
-        //            NearTimeProfitRateInfo nInfo = new NearTimeProfitRateInfo();
-        //            nInfo.RowNumber = Convert.ToInt32(array[0]);
-        //            nInfo.CurrDate = Convert.ToString(array[1]);
-        //            nInfo.CurrProfitRate = Convert.ToDecimal(array[2]);
-        //            ListInfo.Add(nInfo);
-        //        }
-        //    }
-        //    if (ListInfo == null || ListInfo.Count <= 0)
-        //    {
-        //        for (int i = 1; i <= 7; i++)
-        //        {
-        //            NearTimeProfitRateInfo nInfo = new NearTimeProfitRateInfo();
-        //            nInfo.RowNumber = i;
-        //            nInfo.CurrDate = string.Empty;
-        //            nInfo.CurrProfitRate = 0;
-        //            ListInfo.Add(nInfo);
-        //        }
-        //    }
-        //    //else if (ListInfo != null && ListInfo.Count < 7)
-        //    //{
-        //    //    var newListInfo = ListInfo.OrderByDescending(s => Convert.ToDateTime(s.CurrDate));
-        //    //    for (int i = 0; i < ListInfo.Count; i++)
-        //    //    {
-        //    //        var currInfo=
-        //    //    }
-        //    //}
-        //    return ListInfo;
-        //}
-        //public int QueryRankNumber(string bdfxUserId)
-        //{
-        //    //查询上周排行,根据当前时间，计算出上个星期的时间段
+        public List<NearTimeProfitRateInfo> QueryNearTimeProfitRate(string bdfxUserId)
+        {
+            //查询近段时间盈利率
+            List<NearTimeProfitRateInfo> ListInfo = new List<NearTimeProfitRateInfo>();
+            var endTime = DateTime.Now.Date.AddDays(1);
+            var startTime = endTime.AddDays(-7);
+            //20151008
+            //var strSql = "select tab.rowNumber,isnull(tab.currDay,'')CurrDay,isnull(tab.CurrProfitRate,0)CurrProfitRate from(select ROW_NUMBER() over(order by CONVERT(varchar(10),CreateTime,120)) rowNumber, CONVERT(varchar(10),CreateTime,120) currDay,(case t.IsBonus when 0 then 0 when 1 then((SUM(t.CurrBonusMoney)-SUM(t.CurrentBetMoney))/SUM(t.CurrentBetMoney)) else 0 end) CurrProfitRate from C_TotalSingleTreasure t where CONVERT(varchar(10),CreateTime,120)>=:StartTime and CONVERT(varchar(10),CreateTime,120) <:EndTime and UserId=:BDFXUserId group by CONVERT(varchar(10),CreateTime,120) ,t.UserId,t.IsBonus) tab";
+            var strSql = "select tab.rowNumber,isnull(tab.currDay,'')CurrDay,isnull(tab.CurrProfitRate,0)CurrProfitRate from ( select ROW_NUMBER() over(order by CONVERT(varchar(10),CreateTime,120)) rowNumber, CONVERT(varchar(10),CreateTime,120) currDay, (SUM(t.CurrBonusMoney)-SUM(t.CurrentBetMoney))/SUM(t.CurrentBetMoney) CurrProfitRate  from C_TotalSingleTreasure t where CONVERT(varchar(10),CreateTime,120)>=:StartTime and CONVERT(varchar(10),CreateTime,120) <:EndTime and UserId=:BDFXUserId and IsBonus=1 group by CONVERT(varchar(10),CreateTime,120) ,t.UserId ) tab";
+            var query = DB.CreateSQLQuery(strSql)
+                           .SetString("StartTime", startTime.ToString("yyyy-MM-dd"))
+                           .SetString("EndTime", endTime.ToString("yyyy-MM-dd"))
+                           .SetString("BDFXUserId", bdfxUserId)
+                           .List<object>();
+            if (query != null && query.Count > 0)
+            {
+                foreach (var item in query)
+                {
+                    var array = item as object[];
+                    NearTimeProfitRateInfo nInfo = new NearTimeProfitRateInfo();
+                    nInfo.RowNumber = Convert.ToInt32(array[0]);
+                    nInfo.CurrDate = Convert.ToString(array[1]);
+                    nInfo.CurrProfitRate = Convert.ToDecimal(array[2]);
+                    ListInfo.Add(nInfo);
+                }
+            }
+            if (ListInfo == null || ListInfo.Count <= 0)
+            {
+                for (int i = 1; i <= 7; i++)
+                {
+                    NearTimeProfitRateInfo nInfo = new NearTimeProfitRateInfo();
+                    nInfo.RowNumber = i;
+                    nInfo.CurrDate = string.Empty;
+                    nInfo.CurrProfitRate = 0;
+                    ListInfo.Add(nInfo);
+                }
+            }
+            //else if (ListInfo != null && ListInfo.Count < 7)
+            //{
+            //    var newListInfo = ListInfo.OrderByDescending(s => Convert.ToDateTime(s.CurrDate));
+            //    for (int i = 0; i < ListInfo.Count; i++)
+            //    {
+            //        var currInfo=
+            //    }
+            //}
+            return ListInfo;
+        }
+        public int QueryRankNumber(string bdfxUserId)
+        {
+            //查询上周排行,根据当前时间，计算出上个星期的时间段
 
-        //    //计算上周时间
-        //    var currTime = DateTime.Now;
-        //    int day = Convert.ToInt32(currTime.DayOfWeek) - 1;
-        //    if (currTime.DayOfWeek != 0)
-        //        currTime = currTime.AddDays(-day);
-        //    else
-        //        currTime = currTime.AddDays(-6);
-        //    var sTime = currTime.AddDays(-7).Date;
-        //    var eTime = currTime.Date;
-        //    //var strSql = "select tt.rownumber from (select ROW_NUMBER() over(order by sum(ProfitRate) desc) rownumber,UserId from C_TotalSingleTreasure t where CreateTime>=:StartTime and CreateTime<:EndTime group by UserId)tt where UserId=:BDFXUserId";
+            //计算上周时间
+            var currTime = DateTime.Now;
+            int day = Convert.ToInt32(currTime.DayOfWeek) - 1;
+            if (currTime.DayOfWeek != 0)
+                currTime = currTime.AddDays(-day);
+            else
+                currTime = currTime.AddDays(-6);
+            var sTime = currTime.AddDays(-7).Date;
+            var eTime = currTime.Date;
+            //var strSql = "select tt.rownumber from (select ROW_NUMBER() over(order by sum(ProfitRate) desc) rownumber,UserId from C_TotalSingleTreasure t where CreateTime>=:StartTime and CreateTime<:EndTime group by UserId)tt where UserId=:BDFXUserId";
 
-        //    var strSql = "select tt.LastweekRank from (select ROW_NUMBER() over(order by sum(CurrProfitRate) desc) LastweekRank,lastTab.UserId from (select (case SUM(t.CurrentBetMoney) when 0 then 0 else ((SUM(t.CurrBonusMoney)-SUM(t.CurrentBetMoney))/SUM(t.CurrentBetMoney)) end) CurrProfitRate,UserId from C_TotalSingleTreasure t where CreateTime>=:StartTime and CreateTime<:EndTime and t.IsBonus=1 group by UserId	)	lastTab group by UserId		)tt where tt.UserId=:BDFXUserId";
-        //    var query = Session.CreateSQLQuery(strSql)
-        //                  .SetDateTime("StartTime", sTime)
-        //                  .SetDateTime("EndTime", eTime)
-        //                  .SetString("BDFXUserId", bdfxUserId)
-        //                  .List();
-        //    if (query != null && query.Count > 0)
-        //        return Convert.ToInt32(query[0]);
-        //    return 0;
-        //}
-        //public ConcernedInfo QueryConcernedByUserId(string bdfxUserId, string currUserId, DateTime startTime, DateTime endTime)
-        //{
-        //    Session.Clear();
-        //    ConcernedInfo info = new ConcernedInfo();
-        //    //查询关注信息
-        //    string strSql = "select u.UserId,u.DisplayName,isnull(att.BeConcernedUserCount,0)BeConcernedUserCount,isnull(att.ConcernedUserCount,0)ConcernedUserCount,isnull(att.SingleTreasureCount,0)SingleTreasureCount from C_User_Register u left join C_SingleTreasure_AttentionSummary att on u.UserId=att.UserId  where u.UserId=:BDFXUserId";
-        //    var query = Session.CreateSQLQuery(strSql)
-        //                     .SetString("BDFXUserId", bdfxUserId).List();
-        //    if (query != null && query.Count > 0)
-        //    {
-        //        var array = query[0] as object[];
-        //        info.UserId = Convert.ToString(array[0]);
-        //        info.UserName = Convert.ToString(array[1]);
-        //        info.BeConcernedUserCount = Convert.ToInt32(array[2]);
-        //        info.ConcernedUserCount = Convert.ToInt32(array[3]);
-        //        info.SingleTreasureCount = Convert.ToInt32(array[4]);
-        //    }
-        //    //查询是否已关注
-        //    strSql = "select count(1) GZ from C_SingleTreasure_Attention at where at.BeConcernedUserId=:BDFXUserId and at.ConcernedUserId=:CurrUserId";
-        //    query = Session.CreateSQLQuery(strSql)
-        //                 .SetString("BDFXUserId", bdfxUserId)
-        //                 .SetString("CurrUserId", currUserId)
-        //                 .List();
-        //    if (query != null && query.Count > 0)
-        //        info.IsGZ = Convert.ToInt32(query[0]) > 0;
+            var strSql = "select tt.LastweekRank from (select ROW_NUMBER() over(order by sum(CurrProfitRate) desc) LastweekRank,lastTab.UserId from (select (case SUM(t.CurrentBetMoney) when 0 then 0 else ((SUM(t.CurrBonusMoney)-SUM(t.CurrentBetMoney))/SUM(t.CurrentBetMoney)) end) CurrProfitRate,UserId from C_TotalSingleTreasure t where CreateTime>=:StartTime and CreateTime<:EndTime and t.IsBonus=1 group by UserId	)	lastTab group by UserId		)tt where tt.UserId=:BDFXUserId";
+            var query = DB.CreateSQLQuery(strSql)
+                          .SetString("StartTime", sTime.ToString("yyyy-MM-dd"))
+                          .SetString("EndTime", eTime.ToString("yyyy-MM-dd"))
+                          .SetString("BDFXUserId", bdfxUserId)
+                          .List<object>();
+            if (query != null && query.Count > 0)
+                return Convert.ToInt32(query[0]);
+            return 0;
+        }
+        public ConcernedInfo QueryConcernedByUserId(string bdfxUserId, string currUserId, DateTime startTime, DateTime endTime)
+        {
+           
+            ConcernedInfo info = new ConcernedInfo();
+            //查询关注信息
+            string strSql = "select u.UserId,u.DisplayName,isnull(att.BeConcernedUserCount,0)BeConcernedUserCount,isnull(att.ConcernedUserCount,0)ConcernedUserCount,isnull(att.SingleTreasureCount,0)SingleTreasureCount from C_User_Register u left join C_SingleTreasure_AttentionSummary att on u.UserId=att.UserId  where u.UserId=:BDFXUserId";
+            var query = DB.CreateSQLQuery(strSql)
+                             .SetString("BDFXUserId", bdfxUserId).List<object>();
+            if (query != null && query.Count > 0)
+            {
+                var array = query[0] as object[];
+                info.UserId = Convert.ToString(array[0]);
+                info.UserName = Convert.ToString(array[1]);
+                info.BeConcernedUserCount = Convert.ToInt32(array[2]);
+                info.ConcernedUserCount = Convert.ToInt32(array[3]);
+                info.SingleTreasureCount = Convert.ToInt32(array[4]);
+            }
+            //查询是否已关注
+            strSql = "select count(1) GZ from C_SingleTreasure_Attention at where at.BeConcernedUserId=:BDFXUserId and at.ConcernedUserId=:CurrUserId";
+            query =DB.CreateSQLQuery(strSql)
+                         .SetString("BDFXUserId", bdfxUserId)
+                         .SetString("CurrUserId", currUserId)
+                         .List<object>();
+            if (query != null && query.Count > 0)
+                info.IsGZ = Convert.ToInt32(query[0]) > 0;
 
-        //    #region 暂时屏蔽
-        //    ////查询近段时间盈利率
-        //    //var endTime = DateTime.Now.Date;
-        //    //var startTime = endTime.AddDays(-7);
-        //    //strSql = "select tab.rowNumber,isnull(tab.currDay,'')CurrDay,isnull(tab.ProfitRate,0)ProfitRate from(select ROW_NUMBER() over(order by CONVERT(varchar(10),CreateTime,120)) rowNumber, CONVERT(varchar(10),CreateTime,120) currDay,t.ProfitRate from C_TotalSingleTreasure t where CONVERT(varchar(10),CreateTime,120)>=:StartTime and CONVERT(varchar(10),CreateTime,120) <:EndTime and UserId=:BDFXUserId group by CONVERT(varchar(10),CreateTime,120),t.ProfitRate ) tab";
-        //    //query = Session.CreateSQLQuery(strSql)
-        //    //             .SetDateTime("StartTime", startTime)
-        //    //             .SetDateTime("EndTime", endTime)
-        //    //             .SetString("BDFXUserId", bdfxUserId)
-        //    //             .List();
-        //    //if (query != null && query.Count > 0)
-        //    //{
-        //    //    foreach (var item in query)
-        //    //    {
-        //    //        var array = item as object[];
-        //    //        NearTimeProfitRateInfo nInfo = new NearTimeProfitRateInfo();
-        //    //        nInfo.RowNumber = Convert.ToInt32(array[0]);
-        //    //        nInfo.CurrDate = Convert.ToString(array[1]);
-        //    //        nInfo.ProfitRate = Convert.ToDecimal(array[2]);
-        //    //        info.NearTimeProfitRateCollection.NearTimeProfitRateList.Add(nInfo);
-        //    //    }
-        //    //}
+            #region 暂时屏蔽
+            ////查询近段时间盈利率
+            //var endTime = DateTime.Now.Date;
+            //var startTime = endTime.AddDays(-7);
+            //strSql = "select tab.rowNumber,isnull(tab.currDay,'')CurrDay,isnull(tab.ProfitRate,0)ProfitRate from(select ROW_NUMBER() over(order by CONVERT(varchar(10),CreateTime,120)) rowNumber, CONVERT(varchar(10),CreateTime,120) currDay,t.ProfitRate from C_TotalSingleTreasure t where CONVERT(varchar(10),CreateTime,120)>=:StartTime and CONVERT(varchar(10),CreateTime,120) <:EndTime and UserId=:BDFXUserId group by CONVERT(varchar(10),CreateTime,120),t.ProfitRate ) tab";
+            //query = Session.CreateSQLQuery(strSql)
+            //             .SetDateTime("StartTime", startTime)
+            //             .SetDateTime("EndTime", endTime)
+            //             .SetString("BDFXUserId", bdfxUserId)
+            //             .List();
+            //if (query != null && query.Count > 0)
+            //{
+            //    foreach (var item in query)
+            //    {
+            //        var array = item as object[];
+            //        NearTimeProfitRateInfo nInfo = new NearTimeProfitRateInfo();
+            //        nInfo.RowNumber = Convert.ToInt32(array[0]);
+            //        nInfo.CurrDate = Convert.ToString(array[1]);
+            //        nInfo.ProfitRate = Convert.ToDecimal(array[2]);
+            //        info.NearTimeProfitRateCollection.NearTimeProfitRateList.Add(nInfo);
+            //    }
+            //}
 
-        //    ////查询上周排行,根据当前时间，计算出上个星期的时间段
-        //    //var currTime = DateTime.Now;
-        //    //int day = Convert.ToInt32(currTime.DayOfWeek) - 1;
-        //    //if (currTime.DayOfWeek != 0)
-        //    //    currTime = currTime.AddDays(-day);
-        //    //else
-        //    //    currTime = currTime.AddDays(-6);
-        //    //startTime = currTime.AddDays(-7).Date;
-        //    //endTime = currTime.Date;
-        //    //strSql = "select tt.rownumber from (select ROW_NUMBER() over(order by sum(ProfitRate) desc) rownumber,UserId from C_TotalSingleTreasure t where CreateTime>=:StartTime and CreateTime<:EndTime group by UserId)tt where UserId=:BDFXUserId";
-        //    //query = Session.CreateSQLQuery(strSql)
-        //    //             .SetDateTime("StartTime", startTime)
-        //    //             .SetDateTime("EndTime", endTime)
-        //    //             .SetString("BDFXUserId", bdfxUserId)
-        //    //             .List();
-        //    //if (query != null && query.Count > 0)
-        //    //    info.RankNumber = Convert.ToInt32(query[0]); 
-        //    #endregion
+            ////查询上周排行,根据当前时间，计算出上个星期的时间段
+            //var currTime = DateTime.Now;
+            //int day = Convert.ToInt32(currTime.DayOfWeek) - 1;
+            //if (currTime.DayOfWeek != 0)
+            //    currTime = currTime.AddDays(-day);
+            //else
+            //    currTime = currTime.AddDays(-6);
+            //startTime = currTime.AddDays(-7).Date;
+            //endTime = currTime.Date;
+            //strSql = "select tt.rownumber from (select ROW_NUMBER() over(order by sum(ProfitRate) desc) rownumber,UserId from C_TotalSingleTreasure t where CreateTime>=:StartTime and CreateTime<:EndTime group by UserId)tt where UserId=:BDFXUserId";
+            //query = Session.CreateSQLQuery(strSql)
+            //             .SetDateTime("StartTime", startTime)
+            //             .SetDateTime("EndTime", endTime)
+            //             .SetString("BDFXUserId", bdfxUserId)
+            //             .List();
+            //if (query != null && query.Count > 0)
+            //    info.RankNumber = Convert.ToInt32(query[0]); 
+            #endregion
 
-        //    //查询近段时间盈利率
-        //    var nInfo = QueryNearTimeProfitRate(bdfxUserId);
-        //    info.NearTimeProfitRateCollection = new NearTimeProfitRate_Collection();
-        //    info.NearTimeProfitRateCollection.NearTimeProfitRateList.AddRange(nInfo);
-        //    //查询上周排行,根据当前时间，计算出上个星期的时间段
-        //    info.RankNumber = QueryRankNumber(bdfxUserId);
-        //    return info;
-        //}
+            //查询近段时间盈利率
+            var nInfo = QueryNearTimeProfitRate(bdfxUserId);
+            info.NearTimeProfitRateCollection = new NearTimeProfitRate_Collection();
+            info.NearTimeProfitRateCollection.NearTimeProfitRateList.AddRange(nInfo);
+            //查询上周排行,根据当前时间，计算出上个星期的时间段
+            info.RankNumber = QueryRankNumber(bdfxUserId);
+            return info;
+        }
         public BDFXOrderDetailInfo QueryBDFXOrderDetailBySchemeId(string schemeId)
         {
            
@@ -674,5 +674,80 @@ namespace KaSon.FrameWork.ORM.Helper
         //           .SetString("id", id)
         //           .UniqueResult();
         //}
+
+        public BDFXCommisionInfo QueryBDFXCommision(string schemeId)
+        {
+          
+            var query = from t in DB.CreateQuery<C_TotalSingleTreasure>()
+                        join u in DB.CreateQuery<C_User_Register>() on t.UserId equals u.UserId
+                        join r in DB.CreateQuery<C_BDFX_RecordSingleCopy>() on t.SchemeId equals r.BDXFSchemeId
+                        where r.SingleCopySchemeId == schemeId
+                        select new BDFXCommisionInfo
+                        {
+                            UserId = u.UserId,
+                            UserName = u.DisplayName,
+                            Commission = t.Commission,
+                        };
+            if (query != null)
+                return query.FirstOrDefault();
+            return new BDFXCommisionInfo();
+        }
+
+        public string QueryYesterdayNR(DateTime startTime, DateTime endTime, int count)
+        {
+         
+            startTime = startTime.Date.AddDays(-1);
+            endTime = endTime.Date;
+            string strSql = "select top " + count + " t.UserId,t.DisplayName from(select (case SUM(t.CurrentBetMoney) when 0 then 0 else ((SUM(t.CurrBonusMoney)-SUM(t.CurrentBetMoney))/SUM(t.CurrentBetMoney)) end) CurrProfitRate,u.UserId,u.DisplayName from C_TotalSingleTreasure t inner join C_User_Register u on t.UserId=u.UserId where  t.CreateTime>=:StartTime and t.CreateTime<:EndTime and t.IsBonus=1 group by u.UserId,u.DisplayName	)t where  t.CurrProfitRate>=0 order by t.CurrProfitRate desc";
+            var query = DB.CreateSQLQuery(strSql)
+                .SetString("StartTime", startTime.ToString("yyyy-MM-dd"))
+                .SetString("EndTime", endTime.ToString("yyyy-MM-dd"))
+                .List<object>();
+            string str = string.Empty;
+            if (query != null && query.Count > 0)
+            {
+                foreach (var item in query)
+                {
+                    var array = item as object[];
+                    str += array[0] + "|" + array[1] + "%";
+                    //str = array[0] + "|" + array[1];
+                }
+            }
+            if (!string.IsNullOrEmpty(str))
+                str = str.TrimEnd('%');
+            return str;
+        }
+
+        public BDFXNRRankList_Collection QueryNRRankList(DateTime startTime, DateTime endTime, int count)
+        {
+          
+            BDFXNRRankList_Collection collection = new BDFXNRRankList_Collection();
+            startTime = startTime.Date;
+            var sTime = DateTime.Now.Date.AddDays(-1);
+            var eTime = sTime.AddDays(1).Date;
+            endTime = endTime.AddDays(1).Date;
+            string strSql = "select nrtable.UserId,nrtable.DisplayName,isnull(nrtable.CurrProfitRate,0)CurrProfitRate,isnull(nrph.rankNumber,0)rankNumber  from  ( select top " + count + " t.UserId,t.DisplayName,CurrProfitRate from(select (case SUM(t.CurrentBetMoney) when 0 then 0 else ((SUM(t.CurrBonusMoney)-SUM(t.CurrentBetMoney))/SUM(t.CurrentBetMoney)) end) CurrProfitRate,u.UserId,u.DisplayName from C_TotalSingleTreasure t inner join C_User_Register u on t.UserId=u.UserId where  t.IsBonus=1 and t.CreateTime>=:sTime and t.CreateTime<:eTime group by u.UserId,u.DisplayName	)t where  t.CurrProfitRate>=0 order by t.CurrProfitRate desc ) nrtable left join  ( select ROW_NUMBER() over(order by tabl.CurrProfitRate desc) rankNumber,tabl.UserId from  ( select (case SUM(CurrentBetMoney) when 0 then 0 else ((SUM(CurrBonusMoney)-SUM(CurrentBetMoney))/SUM(CurrentBetMoney)) end) CurrProfitRate,UserId from C_TotalSingleTreasure where CreateTime>=:StartTime and CreateTime<:EndTime and IsBonus=1   group by UserId ) tabl ) nrph on nrtable.UserId=nrph.UserId";
+            var query = DB.CreateSQLQuery(strSql)
+                .SetString("sTime", sTime.ToString("yyyy-MM-dd"))
+                .SetString("eTime", eTime.ToString("yyyy-MM-dd"))
+               .SetString("StartTime", startTime.ToString("yyyy-MM-dd"))
+               .SetString("EndTime", endTime.ToString("yyyy-MM-dd"))
+                 .List<object>();
+            if (query != null && query.Count > 0)
+            {
+                collection.TotalCount = query.Count;
+                foreach (var item in query)
+                {
+                    var array = item as object[];
+                    BDFXNRRankListInfo info = new BDFXNRRankListInfo();
+                    info.UserId = Convert.ToString(array[0]);
+                    info.UserName = Convert.ToString(array[1]);
+                    info.CurrProfitRate = Convert.ToDecimal(array[2]);
+                    info.RankNumber = Convert.ToInt32(array[3]);
+                    collection.RanList.Add(info);
+                }
+            }
+            return collection;
+        }
     }
 }
