@@ -22,7 +22,7 @@ namespace Lottery.ApiGateway
         {
             string hostUrl = ConfigHelper.ConfigInfo["Host"].ToString();
             var host = new WebHostBuilder()
-                .UseUrls("http://*:729")
+                .UseUrls(hostUrl)
                 .UseKestrel(options =>
                 {
                     options.Limits.MaxConcurrentConnections = 30000;
