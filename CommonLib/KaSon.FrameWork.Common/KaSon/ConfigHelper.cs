@@ -19,5 +19,8 @@ namespace KaSon.FrameWork.Common
             string jsonText = FileHelper.txtReader(path);
             ConfigInfo = (JObject)JsonConvert.DeserializeObject(jsonText);
         }
+
+
+
     }
 }

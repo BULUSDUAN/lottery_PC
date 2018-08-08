@@ -20,6 +20,7 @@ using Kason.Sg.Core.ServiceHosting.Internal.Implementation;
 using System;
 using System.Text;
 using Kason.Sg.Core.EventBusRabbitMQ.Configurations;
+using KaSon.FrameWork.Common;
 
 namespace Lottery.Service.Host
 {
@@ -27,7 +28,7 @@ namespace Lottery.Service.Host
     {
         static void Main(string[] args)
         {
-
+            string consul = ConfigHelper.ConfigInfo["Consul"].ToString();
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             var host = new ServiceHostBuilder()
                 .RegisterServices(builder =>
@@ -38,7 +39,7 @@ namespace Lottery.Service.Host
                         .AddRelateService()
                         .AddConfigurationWatch()
                         //option.UseZooKeeperManager(new ConfigInfo("127.0.0.1 10.0.3.27:2181"));
-                        .UseConsulManager(new ConfigInfo("10.0.3.27:8500", reloadOnChange:true))
+                        .UseConsulManager(new ConfigInfo(consul, reloadOnChange:true))
                         .UseDotNettyTransport()
                         .UseRabbitMQTransport()
                         .AddRabbitMQAdapt()
@@ -67,13 +68,13 @@ namespace Lottery.Service.Host
                 {
                     //10099
                     //  options.IpEndpoint = new IPEndPoint(IPAddress.Any, 98);  
-                    options.Port = 10099;
-                    options.Ip = "127.0.0.1";
+                   // options.Port = 10099;
+                 //   options.Ip = "127.0.0.1";
                     options.Token = "True";
                     options.ExecutionTimeoutInMilliseconds = 30000;
                     options.MaxConcurrentRequests = 2000;
                 })
-               // .UseServiceCache()
+                // .UseServiceCache()
                 .Configure(build =>
                 build.AddEventBusFile("eventBusSettings.json", optional: false))
                 .Configure(build =>

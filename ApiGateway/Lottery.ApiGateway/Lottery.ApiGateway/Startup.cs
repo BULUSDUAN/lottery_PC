@@ -97,17 +97,20 @@ namespace Lottery.ApiGateway
                 options.SerializerSettings.ContractResolver = new DefaultContractResolver();
             });
             services.AddLogging();
-            var builder = new ContainerBuilder();
+         
+               var builder = new ContainerBuilder();
             builder.Populate(services);
 
             builder.AddMicroService(option =>
             {
                 option.AddClient();
-              //  option.AddCache();
+                //  option.AddCache();
+           
                 option.AddClientIntercepted(typeof(CacheProviderInterceptor));
                 //option.UseZooKeeperManager(new ConfigInfo("127.0.0.1:2181"));
                // if (registerConfig.Provider == RegisterProvider.Consul)
                     option.UseConsulManager(new ConfigInfo(registerConfig.Address));
+                
                 //else if (registerConfig.Provider == RegisterProvider.Zookeeper)
                 //    option.UseZooKeeperManager(new ZookeeperConfigInfo(registerConfig.Address));
                 option.UseDotNettyTransport();

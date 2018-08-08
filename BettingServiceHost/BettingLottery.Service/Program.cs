@@ -20,6 +20,7 @@ using Kason.Sg.Core.ServiceHosting.Internal.Implementation;
 using System;
 using System.Text;
 using Kason.Sg.Core.EventBusRabbitMQ.Configurations;
+using KaSon.FrameWork.Common;
 
 namespace BettingLottery.Service.Host
 {
@@ -29,7 +30,7 @@ namespace BettingLottery.Service.Host
         {
 
 
-
+            string consul = ConfigHelper.ConfigInfo["Consul"].ToString();
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             var host = new ServiceHostBuilder()
                 .RegisterServices(builder =>
@@ -40,7 +41,7 @@ namespace BettingLottery.Service.Host
                         .AddRelateService()
                         .AddConfigurationWatch()
                         //option.UseZooKeeperManager(new ConfigInfo("127.0.0.1:2181"));
-                        .UseConsulManager(new ConfigInfo("10.0.3.27:8500", reloadOnChange:true))
+                        .UseConsulManager(new ConfigInfo(consul, reloadOnChange:true))
                         .UseDotNettyTransport()
                         .UseRabbitMQTransport()
                         .AddRabbitMQAdapt()
@@ -68,8 +69,8 @@ namespace BettingLottery.Service.Host
                 .UseServer(options =>
                 {
                     //  options.IpEndpoint = new IPEndPoint(IPAddress.Any, 98);  
-                    options.Port = 10101;
-                    options.Ip = "127.0.0.1";
+                   // options.Port = 10101;
+                   // options.Ip = "127.0.0.1";
                     options.Token = "True";
                     options.ExecutionTimeoutInMilliseconds = 30000;
                     options.MaxConcurrentRequests = 2000;
