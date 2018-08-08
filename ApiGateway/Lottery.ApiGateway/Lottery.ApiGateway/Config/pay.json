@@ -13,20 +13,21 @@
     "actionUrl": "http://pay1.szdrbkj.com/user/redirectpay",
     "bank": []
   },
-	{
-        "icon": "alipay.png",
-        "iconUrl": "https://img.alicdn.com/tps/TB17ghmIFXXXXXAXFXXXXXXXXXX.png",
-        "desc": [
-            "支付宝余额，银行卡支付"
-        ],
-        "title": "支付宝(扫码)",
-        "gateway": "slf_alipay",
-        "payType": "slf_alipay|alipay",
-        "openUrl": null,
-        "webViewUrl": null,
-        "actionUrl": "http://pay1.szdrbkj.com/user/redirectpay",
-		"bank": []
-    },
+  {
+    "icon": "alipay.png",
+    "iconUrl": "https://img.alicdn.com/tps/TB17ghmIFXXXXXAXFXXXXXXXXXX.png",
+    "desc": [
+      "支付宝余额，银行卡支付"
+    ],
+    "title": "支付宝(扫码)",
+    "gateway": "slf_alipay",
+    "payType": "slf_alipay|alipay",
+    "openUrl": null,
+    "webViewUrl": null,
+    "actionUrl": "http://pay1.szdrbkj.com/user/redirectpay",
+    "bank": [],
+    "amounts": [ 500, 1000, 2000, 5000, 10000 ]
+  },
 	{
         "icon": "expresspay.png",
         "iconUrl": "http://cn.unionpay.com/images/images2014/logo.png",

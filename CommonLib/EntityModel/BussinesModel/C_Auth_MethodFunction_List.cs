@@ -11,7 +11,7 @@ namespace EntityModel
     // 函数要求的权限信息
     ///</summary>
     [ProtoContract]
-    [Entity("C_Auth_MethodFunction_List",Type = EntityType.Table)]
+    [Entity("C_Auth_MethodFunction_List_New", Type = EntityType.Table)]
     public class C_Auth_MethodFunction_List
     { 
         public C_Auth_MethodFunction_List()

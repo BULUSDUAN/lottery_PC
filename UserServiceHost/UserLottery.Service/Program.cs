@@ -43,7 +43,7 @@ namespace UserLottery.Service.Host
                         .UseRabbitMQTransport()
                         .AddRabbitMQAdapt()
                         
-                        //.AddCache()
+                        .AddCache()
                         //.UseKafkaMQTransport(kafkaOption =>
                         //{
                         //    kafkaOption.Servers = "127.0.0.1";

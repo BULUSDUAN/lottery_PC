@@ -1852,13 +1852,25 @@ namespace Lottery.Api.Controllers
                     callBackParam.HdpayType = item.payType;//
                 }
                 callBackParam.ActionUrl = item.actionUrl;// "http://pay2.ahmwwl.com/user/redirectpay";
-             
-                return JsonEx(callBackParam);
+
+                return JsonEx(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "成功",
+                    MsgId = entity.MsgId,
+                    Value = callBackParam,
+                });
             }
             catch (Exception ex)
             {
-
-                throw;
+                return JsonEx(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "失败",
+                    MsgId = entity.MsgId,
+                    Value = ex.Message,
+                });
+               
             }
         }
 
