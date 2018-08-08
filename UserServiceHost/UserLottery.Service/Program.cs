@@ -21,14 +21,29 @@ using System;
 using System.Text;
 using Kason.Sg.Core.EventBusRabbitMQ.Configurations;
 using KaSon.FrameWork.Common;
+using System.Collections.Generic;
+using Microsoft.Extensions.Configuration.Memory;
+using Microsoft.Extensions.Configuration;
+using System.Collections;
+using System.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using KaSon.FrameWork.ORM.Provider;
 
 namespace UserLottery.Service.Host
 {
+ 
     public class Program
     {
         static void Main(string[] args)
         {
-            string consul = ConfigHelper.ConfigInfo["Consul"].ToString();
+
+            string consul = ConfigHelper.AllConfigInfo["ConsulSettings"]["IpAddrs"].ToString();
+
+            JToken RebbitMqSettings = ConfigHelper.AllConfigInfo["RebbitMqSettings"];
+            JToken HostSettings = ConfigHelper.AllConfigInfo["HostSettings"];
+
+            JToken ORMSettings = ConfigHelper.AllConfigInfo["ORMSettings"];
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             var host = new ServiceHostBuilder()
                 .RegisterServices(builder =>
@@ -76,14 +91,18 @@ namespace UserLottery.Service.Host
                 })
                 // .UseServiceCache()
                 .Configure(build =>
-                build.AddEventBusFile("eventBusSettings.json", optional: false))
+                build.AddEventBusJson(RebbitMqSettings))
                 .Configure(build =>
                 build.AddCacheFile("cacheSettings.json", optional: false, reloadOnChange: true))
                   .Configure(build =>
-                build.AddCPlatformFile("HostSettings.json", optional: false, reloadOnChange: true))
+                build.AddCPlatformJSON(HostSettings))
                 .UseProxy()
                 .UseStartup<Startup>()
                 .Build();
+
+
+            var list = JsonHelper.Deserialize<List<KaSon.FrameWork.ORM.OrmConfigInfo>>(ORMSettings.ToString());
+            DbProvider.InitConfigJson(list);
 
             using (host.Run())
             {

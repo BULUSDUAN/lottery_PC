@@ -42,8 +42,8 @@ namespace UserLottery.Service.Host
 
         private static void ConfigureEventBus(IConfigurationBuilder build)
         {
-            build
-            .AddEventBusFile("eventBusSettings.json", optional: false);
+            //build
+            //.AddEventBusFile("eventBusSettings.json", optional: false);
         }
 
         /// <summary>
@@ -51,8 +51,8 @@ namespace UserLottery.Service.Host
         /// </summary>
         private void ConfigureCache(IConfigurationBuilder build)
         {
-            build
-              .AddCacheFile("cacheSettings.json", optional: false);
+            //build
+            //  .AddCacheFile("cacheSettings.json", optional: false);
         }
         #endregion
 

@@ -13,13 +13,24 @@ namespace KaSon.FrameWork.Common
     public static class ConfigHelper
     {
       public  static JObject ConfigInfo;
+        public static JObject AllConfigInfo;
         static ConfigHelper()
         {
             string path = Path.Combine(Directory.GetCurrentDirectory(), @"Config\ConfigSettings.json");
             string jsonText = FileHelper.txtReader(path);
             ConfigInfo = (JObject)JsonConvert.DeserializeObject(jsonText);
+             path = Path.Combine(Directory.GetCurrentDirectory(), @"Config\AllConfig.json");
+             jsonText = FileHelper.txtReader(path);
+            AllConfigInfo = (JObject)JsonConvert.DeserializeObject(jsonText);
         }
 
+        /// <summary>
+        /// 获取Json 配置
+        /// </summary>
+        public static void GetServiceAllJsonCfg() {
+
+          
+        }
 
 
     }
