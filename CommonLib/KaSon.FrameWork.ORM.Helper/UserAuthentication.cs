@@ -93,9 +93,9 @@ namespace KaSon.FrameWork.ORM.Helper
             if (_guestRole == null)
             {
                 string roleId = "Guest";
-                if (ConfigHelper.ConfigInfo != null && ConfigHelper.ConfigInfo["GuestRoleId"] != null)
+                if (ConfigHelper.AllConfigInfo != null && ConfigHelper.AllConfigInfo["GuestRoleId"] != null)
                 {
-                    roleId = ConfigHelper.ConfigInfo["GuestRoleId"].ToString();
+                    roleId = ConfigHelper.AllConfigInfo["GuestRoleId"].ToString();
                 }
                 _guestRole = GetRoleById(roleId);
                 //_guestRole.FunctionList = new List<RoleFunction>();

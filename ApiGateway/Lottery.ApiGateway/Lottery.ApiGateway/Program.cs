@@ -20,7 +20,7 @@ namespace Lottery.ApiGateway
     {
         public static void Main(string[] args)
         {
-            string hostUrl = ConfigHelper.ConfigInfo["Host"].ToString();
+            string hostUrl = ConfigHelper.AllConfigInfo["Host"].ToString();
             var host = new WebHostBuilder()
                 .UseUrls(hostUrl)
                 .UseKestrel(options =>

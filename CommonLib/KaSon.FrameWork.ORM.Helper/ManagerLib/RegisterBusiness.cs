@@ -229,7 +229,7 @@ namespace KaSon.FrameWork.ORM.Helper
             try
             {
                 string userId = null;
-                var roleIds = ConfigHelper.ConfigInfo["PageRegisterDefaultRole"].ToString().Split(',');
+                var roleIds = ConfigHelper.AllConfigInfo["PageRegisterDefaultRole"].ToString().Split(',');
                 #region 注册权限控制帐号
 
                 var authBiz = new GameBizAuthBusiness();

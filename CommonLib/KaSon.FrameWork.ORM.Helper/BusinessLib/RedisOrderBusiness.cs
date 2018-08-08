@@ -345,7 +345,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 {
                     //ConfigurationManager.AppSettings["Max_PrizeListCount"]
                    
-                    string _Max_PrizeListCount = ConfigHelper.ConfigInfo["Max_PrizeListCount"].ToString();
+                    string _Max_PrizeListCount = ConfigHelper.AllConfigInfo["Max_PrizeListCount"].ToString();
 
                     return int.Parse(_Max_PrizeListCount);
                 }
@@ -438,7 +438,7 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                 //    ConfigurationManager.AppSettings["WaitingOrderListCount"]
              
-                string WaitingOrderListCount = ConfigHelper.ConfigInfo["WaitingOrderListCount"].ToString();// DBbase.GlobalConfig["WaitingOrderListCount"].ToString();
+                string WaitingOrderListCount = ConfigHelper.AllConfigInfo["WaitingOrderListCount"].ToString();// DBbase.GlobalConfig["WaitingOrderListCount"].ToString();
 
                 var count = int.Parse(WaitingOrderListCount);
                 var db = RedisHelper.DB_NoTicket_Order;

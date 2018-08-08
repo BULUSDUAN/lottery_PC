@@ -2112,7 +2112,7 @@ namespace Lottery.Api.Controllers
                 if (string.IsNullOrEmpty(GameType))
                     throw new Exception("传入游戏类型不能为空");
                 //string photourl = ConfigurationManager.AppSettings["ResourceSiteUrl_res"].ToString();
-                var photourl = ConfigHelper.ConfigInfo["ResourceSiteUrl_res"].ToString();
+                var photourl = ConfigHelper.AllConfigInfo["ResourceSiteUrl_res"].ToString();
                 string data = string.Empty;
                 if (GameType.ToUpper() == "GJ")
                 {

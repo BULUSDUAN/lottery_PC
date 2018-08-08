@@ -95,6 +95,9 @@
     <None Update="cacheSettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Config\AllConfig.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Config\KgLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

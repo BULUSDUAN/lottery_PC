@@ -112,7 +112,7 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             UserAuthentication Auth = new UserAuthentication();
             var userId = Auth.ValidateUserAuthentication(Model.userToken);
-            var v = ConfigHelper.ConfigInfo["QueryUserFundDetailFromCache"].ToString();
+            var v = ConfigHelper.AllConfigInfo["QueryUserFundDetailFromCache"].ToString();
             var collection = new UserFundDetailCollection();
             if (!string.IsNullOrEmpty(v))
             {
