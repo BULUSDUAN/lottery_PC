@@ -95,6 +95,7 @@
   "ConsulSettings": {
     "IpAddrs": "127.0.0.1:8500" //服务启动IP
   },
+  //必须配置 连接数据配置
   "ORMSettings": [
     {
       "DbKey": "SqlServer.Default",
@@ -112,6 +113,6 @@
       "FactoryType": "KaSon.ORM.Factory.MySqlFactory"
 
     }
-  ] 
+  ]
 
 }
