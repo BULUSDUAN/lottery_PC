@@ -9,7 +9,7 @@ namespace EntityModel.CoreModel
     /// <summary>
     /// 函数要求的权限信息 C_Auth_MethodFunction_List
     /// </summary>
-    [Entity("C_Auth_MethodFunction_List", Type = EntityType.Table)]
+    [Entity("C_Auth_MethodFunction_List_New", Type = EntityType.Table)]
     public class MethodFunction
     {
         [Field("Id", IsIdenty = true, IsPrimaryKey = true)]

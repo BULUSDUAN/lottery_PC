@@ -89,6 +89,9 @@
     <None Update="cacheSettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Config\AllConfig.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Config\ConfigSettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
