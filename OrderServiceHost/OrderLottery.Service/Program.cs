@@ -29,6 +29,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using KaSon.FrameWork.ORM.Provider;
+//using KaSon.FrameWork.ORM.Provider;
 
 namespace OrderLottery.Service.Host
 {
