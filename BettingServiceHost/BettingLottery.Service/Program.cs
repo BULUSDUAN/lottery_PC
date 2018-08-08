@@ -21,16 +21,29 @@ using System;
 using System.Text;
 using Kason.Sg.Core.EventBusRabbitMQ.Configurations;
 using KaSon.FrameWork.Common;
+using System.Collections.Generic;
+using Microsoft.Extensions.Configuration.Memory;
+using Microsoft.Extensions.Configuration;
+using System.Collections;
+using System.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using KaSon.FrameWork.ORM.Provider;
 
 namespace BettingLottery.Service.Host
 {
+
     public class Program
     {
         static void Main(string[] args)
         {
 
+            string consul = ConfigHelper.AllConfigInfo["ConsulSettings"]["IpAddrs"].ToString();
 
-            string consul = ConfigHelper.ConfigInfo["Consul"].ToString();
+            JToken RebbitMqSettings = ConfigHelper.AllConfigInfo["RebbitMqSettings"];
+            JToken HostSettings = ConfigHelper.AllConfigInfo["HostSettings"];
+
+            JToken ORMSettings = ConfigHelper.AllConfigInfo["ORMSettings"];
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             var host = new ServiceHostBuilder()
                 .RegisterServices(builder =>
@@ -41,11 +54,12 @@ namespace BettingLottery.Service.Host
                         .AddRelateService()
                         .AddConfigurationWatch()
                         //option.UseZooKeeperManager(new ConfigInfo("127.0.0.1:2181"));
-                        .UseConsulManager(new ConfigInfo(consul, reloadOnChange:true))
+                        .UseConsulManager(new ConfigInfo(consul, reloadOnChange: true))
                         .UseDotNettyTransport()
                         .UseRabbitMQTransport()
                         .AddRabbitMQAdapt()
-                       //.AddCache()
+
+                        .AddCache()
                         //.UseKafkaMQTransport(kafkaOption =>
                         //{
                         //    kafkaOption.Servers = "127.0.0.1";
@@ -60,8 +74,8 @@ namespace BettingLottery.Service.Host
                         builder.Register(p => new CPlatformContainer(ServiceLocator.Current));
                     });
                 })
-                .SubscribeAt() 
-               // .UseLog4net(LogLevel.Error, "Configs/log4net.config")
+                .SubscribeAt()
+                // .UseLog4net(LogLevel.Error, "Config/log4net.config")
                 .UseNLog(LogLevel.Error, "Config/NLog.config")
                 //.UseServer("127.0.0.1", 98)
                 //.UseServer("127.0.0.1", 98，“true”) //自动生成Token
@@ -69,22 +83,26 @@ namespace BettingLottery.Service.Host
                 .UseServer(options =>
                 {
                     //  options.IpEndpoint = new IPEndPoint(IPAddress.Any, 98);  
-                   // options.Port = 10101;
-                   // options.Ip = "127.0.0.1";
+                    // options.Port = 10098;
+                    // options.Ip = "127.0.0.1";
                     options.Token = "True";
                     options.ExecutionTimeoutInMilliseconds = 30000;
                     options.MaxConcurrentRequests = 2000;
                 })
-               // .UseServiceCache()
+                // .UseServiceCache()
                 .Configure(build =>
-                build.AddEventBusFile("eventBusSettings.json", optional: false))
+                build.AddEventBusJson(RebbitMqSettings))
                 .Configure(build =>
-                build.AddCacheFile("cacheSettings.json", optional: false,reloadOnChange:true))
+                build.AddCacheFile("cacheSettings.json", optional: false, reloadOnChange: true))
                   .Configure(build =>
-                build.AddCPlatformFile("HostSettings.json", optional: false, reloadOnChange: true))
+                build.AddCPlatformJSON(HostSettings))
                 .UseProxy()
                 .UseStartup<Startup>()
                 .Build();
+
+
+            var list = JsonHelper.Deserialize<List<KaSon.FrameWork.ORM.OrmConfigInfo>>(ORMSettings.ToString());
+            DbProvider.InitConfigJson(list);
 
             using (host.Run())
             {
@@ -92,4 +110,6 @@ namespace BettingLottery.Service.Host
             }
         }
     }
+
 }
+

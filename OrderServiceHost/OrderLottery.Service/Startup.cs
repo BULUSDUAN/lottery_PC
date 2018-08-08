@@ -5,15 +5,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Kason.Sg.Core.Caching.Configurations;
 using Kason.Sg.Core.CPlatform.Utilities;
 using Kason.Sg.Core.EventBusKafka.Configurations;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.AspNetCore.Http;
 
 namespace OrderLottery.Service.Host
 {
     public class Startup
     {
         public Startup(IConfigurationBuilder config)
-        { 
+        {
             ConfigureEventBus(config);
             ConfigureCache(config);
         }
@@ -21,9 +19,6 @@ namespace OrderLottery.Service.Host
         public IContainer ConfigureServices(ContainerBuilder builder)
         {
             var services = new ServiceCollection();
-
-           
-
             ConfigureLogging(services);
             builder.Populate(services);
             ServiceLocator.Current = builder.Build();
@@ -32,7 +27,7 @@ namespace OrderLottery.Service.Host
 
         public void Configure(IContainer app)
         {
-   
+
         }
 
         #region 私有方法
@@ -47,8 +42,8 @@ namespace OrderLottery.Service.Host
 
         private static void ConfigureEventBus(IConfigurationBuilder build)
         {
-            build
-            .AddEventBusFile("eventBusSettings.json", optional: false);
+            //build
+            //.AddEventBusFile("eventBusSettings.json", optional: false);
         }
 
         /// <summary>
@@ -56,8 +51,8 @@ namespace OrderLottery.Service.Host
         /// </summary>
         private void ConfigureCache(IConfigurationBuilder build)
         {
-            build
-              .AddCacheFile("cacheSettings.json", optional: false);
+            //build
+            //  .AddCacheFile("cacheSettings.json", optional: false);
         }
         #endregion
 

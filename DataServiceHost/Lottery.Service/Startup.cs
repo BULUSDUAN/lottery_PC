@@ -11,7 +11,7 @@ namespace Lottery.Service.Host
     public class Startup
     {
         public Startup(IConfigurationBuilder config)
-        { 
+        {
             ConfigureEventBus(config);
             ConfigureCache(config);
         }
@@ -27,7 +27,7 @@ namespace Lottery.Service.Host
 
         public void Configure(IContainer app)
         {
-   
+
         }
 
         #region 私有方法
@@ -42,8 +42,8 @@ namespace Lottery.Service.Host
 
         private static void ConfigureEventBus(IConfigurationBuilder build)
         {
-            build
-            .AddEventBusFile("eventBusSettings.json", optional: false);
+            //build
+            //.AddEventBusFile("eventBusSettings.json", optional: false);
         }
 
         /// <summary>
@@ -51,8 +51,8 @@ namespace Lottery.Service.Host
         /// </summary>
         private void ConfigureCache(IConfigurationBuilder build)
         {
-            build
-              .AddCacheFile("cacheSettings.json", optional: false);
+            //build
+            //  .AddCacheFile("cacheSettings.json", optional: false);
         }
         #endregion
 
