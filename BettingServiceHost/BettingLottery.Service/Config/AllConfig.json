@@ -1,4 +1,13 @@
 {
+  "RedisConfig": {
+    "EnableRedis": true,
+    "RedisHost": "10.0.3.6",
+    "RedisPost": 6379,
+    "RedisPassword": "wancai_redis123",
+    "RedisConnect": "10.0.3.6,password=wancai_redis123",
+    "Port": "6379"
+  },
+
   "compilerOptions": {
     "noImplicitAny": false,
     "noEmitOnError": true,
@@ -143,15 +152,15 @@
       "FactoryType": "KaSon.ORM.Factory.MySqlFactory"
 
     },
-    
-      {
-        "DbKey": "SqlServer.ECP_LottertData",
-        "ConnectionString": "Data Source=10.0.3.6;Initial Catalog=ECP_LotteryData;User ID=sa;Password=x123456789;Connection Timeout=10;",
-        "Provider": "SqlServer",
-        "CommandTimeout": 300,
-        "FactoryType": "KaSon.ORM.Factory.SQLServerFactory"
-      }
-    
+
+    {
+      "DbKey": "SqlServer.ECP_LottertData",
+      "ConnectionString": "Data Source=10.0.3.6;Initial Catalog=ECP_LotteryData;User ID=sa;Password=x123456789;Connection Timeout=10;",
+      "Provider": "SqlServer",
+      "CommandTimeout": 300,
+      "FactoryType": "KaSon.ORM.Factory.SQLServerFactory"
+    }
+
   ]
 
 }

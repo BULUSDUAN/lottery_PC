@@ -30,9 +30,10 @@ namespace KaSon.FrameWork.Common.Redis
         public static void Init() {
             if (string.IsNullOrEmpty(_redisConectStr)|| RdConfigInfo==null)
             {
-                string path = Path.Combine(Directory.GetCurrentDirectory(), @"Redis\redisSettings.json");
+                string path = Path.Combine(Directory.GetCurrentDirectory(), @"Config\AllConfig.json");
                 string jsonText = FileHelper.txtReader(path);
-                RdConfigInfo = (JObject)JsonConvert.DeserializeObject(jsonText);
+                var alljson= (JObject)JsonConvert.DeserializeObject(jsonText);
+                RdConfigInfo = (JObject)JsonConvert.DeserializeObject(alljson["RedisConfig"].ToString());
                 _redisConectStr = RdConfigInfo["RedisConnect"].ToString();
             }
             
