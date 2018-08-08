@@ -1761,7 +1761,7 @@ namespace Lottery.Api.Controllers
                 item.webViewUrl = item.actionUrl;
                 return item;
             }
-            string url = ConfigHelper.ConfigInfo["MobileDomain"].ToString();
+            string url = ConfigHelper.AllConfigInfo["MobileDomain"].ToString();
             StringBuilder s = new StringBuilder(url);
             s.Append("/api/user/mobile?");
             s.Append("amount={amount}");

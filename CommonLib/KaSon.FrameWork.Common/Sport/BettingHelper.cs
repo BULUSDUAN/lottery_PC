@@ -1026,7 +1026,7 @@ namespace KaSon.FrameWork.Common.Sport
             {
                 //
                 var key = string.Format("{0}_{1}", gameCode.ToUpper(), "StopTicketing");
-                string value = ConfigHelper.ConfigInfo[key].ToString();// "";  // ConfigurationManager.AppSettings[key];
+                string value = ConfigHelper.AllConfigInfo[key].ToString();// "";  // ConfigurationManager.AppSettings[key];
                // var key = string.Format("{0}_{1}", gameCode.ToUpper(), "StopTicketing");
                // string value = AppSettings; //DBbase.GlobalConfig[key].ToString();
                 if (!_stopTime.ContainsKey(key))
@@ -1224,7 +1224,7 @@ namespace KaSon.FrameWork.Common.Sport
         public BettingHelper()
         {
             //http://res.iqucai.com/matchdata/jczq/match_list.json?_=1425952243703
-            ResUrl = string.IsNullOrEmpty(ConfigHelper.ConfigInfo["ResSiteUrl"].ToString())? "http://10.0.3.6:888/": ConfigHelper.ConfigInfo["ResSiteUrl"].ToString();
+            ResUrl = string.IsNullOrEmpty(ConfigHelper.AllConfigInfo["ResSiteUrl"].ToString())? "http://10.0.3.6:888/": ConfigHelper.AllConfigInfo["ResSiteUrl"].ToString();
             //ConfigurationManager.AppSettings["ResSiteUrl"] 
         }
 

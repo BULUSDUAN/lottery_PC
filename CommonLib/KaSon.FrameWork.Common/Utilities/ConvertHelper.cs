@@ -230,8 +230,8 @@ namespace KaSon.FrameWork.Common.Utilities {
         public static string GetDomain()
         {
             var domain = "";
-            if(ConfigHelper.ConfigInfo!=null&& ConfigHelper.ConfigInfo["Domain"]!=null)
-                domain= ConfigHelper.ConfigInfo["Domain"].ToString();
+            if(ConfigHelper.AllConfigInfo!=null&& ConfigHelper.AllConfigInfo["Domain"]!=null)
+                domain= ConfigHelper.AllConfigInfo["Domain"].ToString();
             return domain;
         }
         public static string GetFillMoneyAgentType(FillMoneyAgentType type)

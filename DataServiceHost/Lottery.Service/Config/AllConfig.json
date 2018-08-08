@@ -1,4 +1,35 @@
-{ //缓存配置文件，暂时没用到默认
+{
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "noEmitOnError": true,
+    "removeComments": false,
+    "sourceMap": true,
+    "target": "es5"
+  },
+  "exclude": [
+    "node_modules",
+    "wwwroot"
+  ],
+  "PageRegisterDefaultRole": "User",
+
+  //彩种不出票时间段 从星期天 到 星期六
+  "CTZQ_StopTicketing": "01:00-09:00|01:00-09:00|00:00-09:00|00:00-09:00|00:00-09:00|00:00-09:00|00:00-09:00",
+  "BJDC_StopTicketing": "05:50-09:00|05:50-09:00|05:50-09:00|05:50-09:00|05:50-09:00|05:50-09:00|05:50-09:00",
+  "JCZQ_StopTicketing": "01:00-09:00|01:00-09:00|00:00-09:00|00:00-09:00|00:00-09:00|00:00-09:00|00:00-09:00",
+  "JCLQ_StopTicketing": "01:00-09:00|01:00-09:00|00:00-09:00|00:00-07:30|00:00-07:30|00:00-09:00|00:00-09:00",
+  "SSQ_StopTicketing": "19:40-21:00",
+  "DLT_StopTicketing": "19:40-21:00",
+  "FC3D_StopTicketing": "19:40-21:00",
+  "PL3_StopTicketing": "19:40-21:00",
+  "JCGJ_StopTicketing": "19:40-21:00",
+
+
+  "SelfDomain": "http://localhost:729",
+  "MobileDomain": "http://localhost:729",
+
+  "QueryUserFundDetailFromCache": false,
+
+  //缓存配置文件，暂时没用到默认
   "CachingSettings": [
     {
       "Id": "ddlCache",
@@ -93,7 +124,7 @@
   },
   //必须配置 服务发现配置
   "ConsulSettings": {
-    "IpAddrs": "10.0.3.27:8500" //服务启动IP
+    "IpAddrs": "10.0.3.27:8501" //服务启动IP
   },
   //必须配置 连接数据配置
   "ORMSettings": [
@@ -112,6 +143,14 @@
       "CommandTimeout": 300,
       "FactoryType": "KaSon.ORM.Factory.MySqlFactory"
 
+    },
+
+    {
+      "DbKey": "SqlServer.ECP_LottertData",
+      "ConnectionString": "Data Source=10.0.3.6;Initial Catalog=ECP_LotteryData;User ID=sa;Password=x123456789;Connection Timeout=10;",
+      "Provider": "SqlServer",
+      "CommandTimeout": 300,
+      "FactoryType": "KaSon.ORM.Factory.SQLServerFactory"
     }
   ]
 

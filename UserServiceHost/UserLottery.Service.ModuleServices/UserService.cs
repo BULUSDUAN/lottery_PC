@@ -679,7 +679,7 @@ namespace UserLottery.Service.ModuleServices
         public CommonActionResult RegisterLoacal(RegisterInfo_Local regInfo)
         {
             
-            if (string.IsNullOrEmpty(ConfigHelper.ConfigInfo["PageRegisterDefaultRole"].ToString()))
+            if (string.IsNullOrEmpty(ConfigHelper.AllConfigInfo["PageRegisterDefaultRole"].ToString()))
             {
                 throw new ArgumentNullException("未配置前台注册用户默认角色的参数 - PageRegisterDefaultRole");
             }
