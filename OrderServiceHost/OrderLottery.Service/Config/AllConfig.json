@@ -78,7 +78,7 @@
   "HostSettings": {
     "Ip": "127.0.0.1", //服务启动IP
     "WatchInterval": 30,
-    "Port": 10100, //服务启动端口
+    "Port": 10098, //服务启动端口
     "Token": "true",
     "RequestCacheEnabled": false
   },
@@ -112,7 +112,16 @@
       "CommandTimeout": 300,
       "FactoryType": "KaSon.ORM.Factory.MySqlFactory"
 
+    },
+    {
+      "DbKey": "SqlServer.ECP_LottertData",
+      "ConnectionString": "Data Source=10.0.3.6;Initial Catalog=ECP_LotteryData;User ID=sa;Password=x123456789;Connection Timeout=10;",
+      "Provider": "SqlServer",
+      "CommandTimeout": 300,
+      "FactoryType": "KaSon.ORM.Factory.SQLServerFactory"
+
     }
   ]
 
 }
+
