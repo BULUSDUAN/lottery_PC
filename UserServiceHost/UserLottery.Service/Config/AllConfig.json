@@ -112,7 +112,16 @@
       "CommandTimeout": 300,
       "FactoryType": "KaSon.ORM.Factory.MySqlFactory"
 
+    },
+    {
+      "DbKey": "SqlServer.ECP_LottertData",
+      "ConnectionString": "Data Source=10.0.3.6;Initial Catalog=ECP_LotteryData;User ID=sa;Password=x123456789;Connection Timeout=10;",
+      "Provider": "SqlServer",
+      "CommandTimeout": 300,
+      "FactoryType": "KaSon.ORM.Factory.SQLServerFactory"
+
     }
   ]
 
 }
+
