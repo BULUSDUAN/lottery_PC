@@ -1,4 +1,5 @@
 {
+  //redis配置
   "RedisConfig": {
     "EnableRedis": true,
     "RedisHost": "10.0.3.6",
@@ -20,14 +21,6 @@
   ],
   "PageRegisterDefaultRole": "User",
 
-  "RedisConfig": {
-    "EnableRedis": true,
-    "RedisHost": "10.0.3.6",
-    "RedisPost": 6379,
-    "RedisPassword": "wancai_redis123",
-    "RedisConnect": "10.0.3.6,password=wancai_redis123",
-    "Port": "6379"
-  },
 
   //彩种不出票时间段 从星期天 到 星期六
   "CTZQ_StopTicketing": "01:00-09:00|01:00-09:00|00:00-09:00|00:00-09:00|00:00-09:00|00:00-09:00|00:00-09:00",

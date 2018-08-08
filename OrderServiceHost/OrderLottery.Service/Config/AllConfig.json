@@ -1,4 +1,5 @@
 {
+  //redis≈‰÷√
   "RedisConfig": {
     "EnableRedis": true,
     "RedisHost": "10.0.3.6",
