@@ -107,7 +107,7 @@ namespace Lottery.Service.Host
             using (host.Run())
             {
                 Console.WriteLine($"服务端启动成功，{DateTime.Now}。");
-            //}
+            }
         }
     }
 
