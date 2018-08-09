@@ -94,7 +94,7 @@ namespace KaSon.FrameWork.ORM.Helper
                             mobile = manager.QueryMobileByUserId(userId);
                         if (!string.IsNullOrEmpty(mobile))
                         {
-                            this.SendSMS(mobile, msgContent, userId);
+                            //this.SendSMS(mobile, msgContent, userId);
                         }
                         break;
                     case (int)SiteMessageCategory.InnerMail:

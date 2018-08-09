@@ -461,7 +461,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 return user.Password.ToUpper().Equals(Encipherment.MD5(string.Format("{0}{1}", newPassword, _gbKey)).ToUpper());
             
         }
-        public Task<string> ChangePassword(string userId, string oldPassword, string newPassword)
+        public string ChangePassword(string userId, string oldPassword, string newPassword)
         {
             oldPassword = Encipherment.MD5(string.Format("{0}{1}", oldPassword, _gbKey)).ToUpper();
             newPassword = Encipherment.MD5(string.Format("{0}{1}", newPassword, _gbKey)).ToUpper();
@@ -472,17 +472,17 @@ namespace KaSon.FrameWork.ORM.Helper
                 var user = DB.CreateQuery<E_Login_Local>().Where(p => p.UserId == userId).FirstOrDefault();
                 if (user == null)
                 {
-                    return Task.FromResult("用户不是本地注册用户，不允许修改密码。请确定是否是通过支付宝或QQ帐号进行登录，如有疑问，请联系客服。");
+                    throw new Exception("用户不是本地注册用户，不允许修改密码。请确定是否是通过支付宝或QQ帐号进行登录，如有疑问，请联系客服。");
                 }
                 if (user.Password.ToUpper() != oldPassword)
                 {
-                    return Task.FromResult("旧密码输入错误。");
+                     throw new Exception("旧密码输入错误。");
                 }
                 user.Password = newPassword;
                 DB.GetDal<E_Login_Local>().Update(user);
 
                 DB.Commit();
-                return Task.FromResult("修改密码成功");
+                throw new Exception("修改密码成功");
             }
             catch (Exception ex)
             {

@@ -5,7 +5,7 @@ using System.Text;
 using System.Xml;
 
 using System.Text.RegularExpressions;
-
+using KaSon.FrameWork.Common.Xml;
 
 namespace KaSon.FrameWork.Common.SMS
 {
@@ -111,19 +111,19 @@ namespace KaSon.FrameWork.Common.SMS
         /// <param name="mobile"></param>
         /// <param name="content"></param>
         /// <returns></returns>
-        //public static string SendSMS(string mobile, string content)
-        //{
-        //    try
-        //    {
-        //        var config = SMSConfigInfo.GetConfigByXmlConfig(SettingConfigAnalyzer.GetConfigElementByKey("SMSAgent"));
-        //        var instance = GetSMSSenderInstance(config);
-        //        return instance.SendSMS(mobile, content, config.Attach);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return ex.Message;
-        //    }
-        //}
+        public static string SendSMS(string mobile, string content)
+        {
+            try
+            {
+                var config = SMSConfigInfo.GetConfigByXmlConfig(SettingConfigAnalyzer.GetConfigElementByKey("SMSAgent"));
+                var instance = GetSMSSenderInstance(config);
+                return instance.SendSMS(mobile, content, config.Attach);
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
 
         /// <summary>
         /// 获取短信接口余额
@@ -131,21 +131,21 @@ namespace KaSon.FrameWork.Common.SMS
         /// <param name="mobile"></param>
         /// <param name="content"></param>
         /// <returns></returns>
-        //public static string GetBalance
-        //{
-        //    get
-        //    {
-        //        try
-        //        {
-        //            var config = SMSConfigInfo.GetConfigByXmlConfig(SettingConfigAnalyzer.GetConfigElementByKey("SMSAgent"));
-        //            var instance = GetSMSSenderInstance(config);
-        //            return instance.GetBalance();
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            return ex.Message;
-        //        }
-        //    }
-        //}
+        public static string GetBalance
+        {
+            get
+            {
+                try
+                {
+                    var config = SMSConfigInfo.GetConfigByXmlConfig(SettingConfigAnalyzer.GetConfigElementByKey("SMSAgent"));
+                    var instance = GetSMSSenderInstance(config);
+                    return instance.GetBalance();
+                }
+                catch (Exception ex)
+                {
+                    return ex.Message;
+                }
+            }
+        }
     }
 }
