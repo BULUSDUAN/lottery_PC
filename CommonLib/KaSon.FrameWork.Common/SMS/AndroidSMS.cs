@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using WebSocket4Net;
 
 namespace KaSon.FrameWork.Common.SMS
 {
@@ -23,25 +24,25 @@ namespace KaSon.FrameWork.Common.SMS
 
         public string SendSMS(string mobile, string content, string attach)
         {
-            //var webSocket = new WebSocket(config_account);
-            //webSocket.Opened += (object sender, EventArgs e) =>
-            //{
-            //    //发送消息
-            //    var msg = new AndroidSMSMessageInfo
-            //    {
-            //        ClientCategory = AndroidSMSClientCategory.Web,
-            //        MessageCategory = AndroidSMSMessageCategory.SendSMS,
-            //        MessageJson = JsonSerializer.Serialize(new AndroidSMSSendInfo
-            //        {
-            //            Content = content,
-            //            MobileArray = mobile,
-            //        }),
-            //    };
-            //    webSocket.Send(JsonSerializer.Serialize(msg));
+            var webSocket = new WebSocket(config_account);
+            webSocket.Opened += (object sender, EventArgs e) =>
+            {
+                //发送消息
+                var msg = new AndroidSMSMessageInfo
+                {
+                    ClientCategory = AndroidSMSClientCategory.Web,
+                    MessageCategory = AndroidSMSMessageCategory.SendSMS,
+                    MessageJson = JsonHelper.Serialize(new AndroidSMSSendInfo
+                    {
+                        Content = content,
+                        MobileArray = mobile,
+                    }),
+                };
+                webSocket.Send(JsonHelper.Serialize(msg));
 
-            //    webSocket.Close();
-            //};
-            //webSocket.Open();
+                webSocket.Close();
+            };
+            webSocket.Open();
             return string.Empty;
         }
 
