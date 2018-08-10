@@ -13,7 +13,7 @@ using EntityModel.CoreModel;
 
 namespace KaSon.FrameWork.Common.Sport
 {
-   public class  BettingHelper
+    public class BettingHelper
     {
         /// <summary>
         /// 申请提现编号
@@ -672,9 +672,9 @@ namespace KaSon.FrameWork.Common.Sport
                     switch (gameType)
                     {
                         case "T14C":
-                            return "14场胜负";
+                            return "胜负14场";
                         case "TR9":
-                            return "胜负任9";
+                            return "任选9";
                         case "T6BQC":
                             return "6场半全场";
                         case "T4CJQ":
@@ -1027,8 +1027,8 @@ namespace KaSon.FrameWork.Common.Sport
                 //
                 var key = string.Format("{0}_{1}", gameCode.ToUpper(), "StopTicketing");
                 string value = ConfigHelper.AllConfigInfo[key].ToString();// "";  // ConfigurationManager.AppSettings[key];
-               // var key = string.Format("{0}_{1}", gameCode.ToUpper(), "StopTicketing");
-               // string value = AppSettings; //DBbase.GlobalConfig[key].ToString();
+                                                                          // var key = string.Format("{0}_{1}", gameCode.ToUpper(), "StopTicketing");
+                                                                          // string value = AppSettings; //DBbase.GlobalConfig[key].ToString();
                 if (!_stopTime.ContainsKey(key))
                 {
                     _stopTime.Add(key, value);
@@ -1224,7 +1224,7 @@ namespace KaSon.FrameWork.Common.Sport
         public BettingHelper()
         {
             //http://res.iqucai.com/matchdata/jczq/match_list.json?_=1425952243703
-            ResUrl = string.IsNullOrEmpty(ConfigHelper.AllConfigInfo["ResSiteUrl"].ToString())? "http://10.0.3.6:888/": ConfigHelper.AllConfigInfo["ResSiteUrl"].ToString();
+            ResUrl = string.IsNullOrEmpty(ConfigHelper.AllConfigInfo["ResSiteUrl"].ToString()) ? "http://10.0.3.6:888/" : ConfigHelper.AllConfigInfo["ResSiteUrl"].ToString();
             //ConfigurationManager.AppSettings["ResSiteUrl"] 
         }
 
