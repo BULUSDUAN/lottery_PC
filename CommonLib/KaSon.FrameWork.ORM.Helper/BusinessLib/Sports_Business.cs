@@ -3297,7 +3297,8 @@ namespace KaSon.FrameWork.ORM.Helper
                                 gameTypeList.Add(gameType);
                             }
                         }
-
+                    //kason测试 赋值
+                    info.SchemeId = schemeId;
                         var currentIssuseMoney = totalNumberZhu * issuse.Amount * ((info.IsAppend && info.GameCode == "DLT") ? 3M : 2M);
                         if (string.IsNullOrEmpty(firstSchemeId))
                         {
