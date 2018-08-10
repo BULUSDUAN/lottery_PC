@@ -38,7 +38,7 @@
       "Desc": "查询竞彩足球赔率",
       "ParamDesc": "@MatchId",
       "Director": "kason",
-      "SQL": "SELECT * FROM T_JCZQ_Odds_SPF O INNER JOIN (SELECT MAX(Id) [MaxId] FROM T_JCZQ_Odds_SPFWHERE [MatchId] = @MatchId) T ON O.[Id]=T.[MaxId]",
+      "SQL": "SELECT * FROM T_JCZQ_Odds_SPF O INNER JOIN (SELECT MAX(Id) [MaxId] FROM T_JCZQ_Odds_SPF WHERE [MatchId] = @MatchId) T ON O.[Id]=T.[MaxId]",
       "Remark": "备注"
     },
     {
