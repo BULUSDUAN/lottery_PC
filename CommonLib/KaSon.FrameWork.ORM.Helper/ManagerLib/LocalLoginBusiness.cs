@@ -461,7 +461,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 return user.Password.ToUpper().Equals(Encipherment.MD5(string.Format("{0}{1}", newPassword, _gbKey)).ToUpper());
             
         }
-        public string ChangePassword(string userId, string oldPassword, string newPassword)
+        public void ChangePassword(string userId, string oldPassword, string newPassword)
         {
             oldPassword = Encipherment.MD5(string.Format("{0}{1}", oldPassword, _gbKey)).ToUpper();
             newPassword = Encipherment.MD5(string.Format("{0}{1}", newPassword, _gbKey)).ToUpper();
@@ -482,7 +482,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 DB.GetDal<E_Login_Local>().Update(user);
 
                 DB.Commit();
-                throw new Exception("修改密码成功");
+                //throw new Exception("修改密码成功");
             }
             catch (Exception ex)
             {
