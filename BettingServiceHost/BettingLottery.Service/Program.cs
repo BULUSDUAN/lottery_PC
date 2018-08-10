@@ -87,6 +87,7 @@ namespace BettingLottery.Service.Host
                     // options.Ip = "127.0.0.1";
                     options.Token = "True";
                     options.ExecutionTimeoutInMilliseconds = 30000;
+
                     options.MaxConcurrentRequests = 2000;
                 })
                 // .UseServiceCache()
@@ -100,6 +101,7 @@ namespace BettingLottery.Service.Host
                 .UseStartup<Startup>()
                 .Build();
 
+           
 
             var list = JsonHelper.Deserialize<List<KaSon.FrameWork.ORM.OrmConfigInfo>>(ORMSettings.ToString());
             DbProvider.InitConfigJson(list);

@@ -3427,6 +3427,9 @@ namespace KaSon.FrameWork.ORM.Helper
                 throw ex;
             }
 
+            try {
+
+           
                 
             //}
             watch.Stop();
@@ -3464,7 +3467,12 @@ namespace KaSon.FrameWork.ORM.Helper
 
             //刷新用户在Redis中的余额
             BusinessHelper.RefreshRedisUserBalance(userId);
+            }
+            catch (Exception ex)
+            {
+                var p = ex;
 
+            }
             return keyLine;
         }
 
