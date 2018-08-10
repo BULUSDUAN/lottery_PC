@@ -826,13 +826,14 @@ namespace BettingLottery.Service.ModuleServices
                 //watch.Start();
                 var checkError = CheckGeneralRepeatBetting(userId, info);
                 if (!string.IsNullOrEmpty(checkError))
-                    throw new Exception(checkError);
+                    throw new Exception(checkError,new Exception("重复投注频繁投注"));
 
                 var keyLine = string.Empty;
                 //lock (UsefullHelper.moneyLocker)
                 //{
                 keyLine = new Sports_Business().LotteryBetting(info, userId, balancePassword, "Bet", redBagMoney);
                 //2017-12-4 更新用户推广
+               
                 BusinessHelper.ExecPlugin<IBettingLottery_AfterTranCommit>(new object[] { userId, info, info.SchemeId, keyLine });
                 //}
 
