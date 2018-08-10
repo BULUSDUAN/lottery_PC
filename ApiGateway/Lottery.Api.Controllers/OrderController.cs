@@ -2772,9 +2772,11 @@ namespace Lottery.Api.Controllers
             {
                 {"byOfficial",true }
             };
+           
             var entity = await _serviceProxyProvider.Invoke<List<LotteryIssuse_QueryInfo>>(param, "api/Order/QueryAllGameCurrentIssuse");
             var entitys = entity as List<LotteryIssuse_QueryInfo>;
-            var bjdcentity = await _serviceProxyProvider.Invoke<BJDCIssuseInfo>(null, "api/Order/QueryBJDCCurrentIssuseInfo");//北单
+            param.Clear();
+            var bjdcentity = await _serviceProxyProvider.Invoke<BJDCIssuseInfo>(param, "api/Order/QueryBJDCCurrentIssuseInfo");//北单
             PrizelevelInfo info = new PrizelevelInfo();
             info.prizeLevel = new List<Prizelevel>();
             var gameCode = type;
