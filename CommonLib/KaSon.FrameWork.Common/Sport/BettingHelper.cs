@@ -672,9 +672,9 @@ namespace KaSon.FrameWork.Common.Sport
                     switch (gameType)
                     {
                         case "T14C":
-                            return "14场胜负";
+                            return "胜负14场";
                         case "TR9":
-                            return "胜负任9";
+                            return "任选9";
                         case "T6BQC":
                             return "6场半全场";
                         case "T4CJQ":
