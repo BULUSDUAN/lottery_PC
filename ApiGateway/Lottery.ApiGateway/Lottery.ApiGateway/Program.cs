@@ -43,7 +43,7 @@ namespace Lottery.ApiGateway
 
             // ConsoleOut.Install();
             //Console.Clear()；
-            ConsoleHelper.Clear();
+            //ConsoleHelper.Clear();
 
 
             host.Run();
