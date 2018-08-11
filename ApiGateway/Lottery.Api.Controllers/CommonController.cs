@@ -124,6 +124,7 @@ namespace Lottery.Api.Controllers
                 var APP_tuijianyoulipid_Key = "APP_tuijianyoulipid";
                 var APP_tuijianyoulifxid_Key = "APP_tuijianyoulifxid";
                 var APP_shareScheme_Key = "APP_shareScheme";
+                var APP_ServicePhone_Key = "Site.Service.Phone";
 
                 var APP_Common_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_Common_Key);
                 var APP_UserCenter_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_UserCenter_Key);
@@ -132,6 +133,7 @@ namespace Lottery.Api.Controllers
                 var APP_tuijianyoulipid_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_tuijianyoulipid_Key);
                 var APP_tuijianyoulifxid_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_tuijianyoulifxid_Key);
                 var APP_shareScheme_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_shareScheme_Key);
+                var APP_ServicePhone_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_ServicePhone_Key);
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
@@ -139,13 +141,14 @@ namespace Lottery.Api.Controllers
                     MsgId = entity.MsgId,
                     Value = new
                     {
-                        APP_Common = APP_Common_Value,
-                        APP_UserCenter = APP_UserCenter_Value,
-                        APP_Index = APP_Index_Value,
-                        APP_tuijianyouli = APP_tuijianyouli_Value,
-                        APP_tuijianyoulipid = APP_tuijianyoulipid_Value,
-                        APP_tuijianyoulifxid = APP_tuijianyoulifxid_Value,
-                        APP_shareScheme = APP_shareScheme_Value,
+                        APP_Common =JsonHelper.Deserialize<object>(APP_Common_Value),
+                        APP_UserCenter = JsonHelper.Deserialize<object>(APP_UserCenter_Value),
+                        APP_Index = JsonHelper.Deserialize<object>(APP_Index_Value),
+                        APP_tuijianyouli = JsonHelper.Deserialize<object>(APP_tuijianyouli_Value),
+                        APP_tuijianyoulipid = JsonHelper.Deserialize<object>(APP_tuijianyoulipid_Value),
+                        APP_tuijianyoulifxid = JsonHelper.Deserialize<object>(APP_tuijianyoulifxid_Value),
+                        APP_shareScheme = JsonHelper.Deserialize<object>(APP_shareScheme_Value),
+                        APP_ServicePhone= APP_ServicePhone_Value,
                     },
                 });
             }
@@ -161,6 +164,57 @@ namespace Lottery.Api.Controllers
             }
         }
 
+        public async Task<IActionResult> PhoneCheckversionNew([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                SchemeSource Type = entity.SourceCode;
+                if (Type == SchemeSource.Android)
+                {
+                    var AKey = "ANDRIOD_PhoneCheckversionNew";
+                    var AValue = await GetAppConfigByKey(_serviceProxyProvider, AKey);
+                    return Json(new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.成功,
+                        Message = "查询配置成功",
+                        MsgId = entity.MsgId,
+                        Value = JsonHelper.Deserialize<object>(AValue)
+                    });
+                }
+                else if (Type == SchemeSource.Iphone)
+                {
+                    var IKey = "IOS_PhoneCheckversionNew";
+                    var IValue = await GetAppConfigByKey(_serviceProxyProvider, IKey);
+                    return Json(new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.成功,
+                        Message = "查询配置成功",
+                        MsgId = entity.MsgId,
+                        Value = JsonHelper.Deserialize<object>(IValue)
+                    });
+                }
+                else
+                {
+                    return Json(new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.成功,
+                        Message = "查询配置成功",
+                        MsgId = entity.MsgId,
+                        Value = ""
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "查询配置失败",
+                    MsgId = entity.MsgId,
+                    Value = "",
+                });
+            }
+        }
         /// <summary>
         /// 获取app相关配置
         /// </summary>
