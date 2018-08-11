@@ -73,6 +73,14 @@ namespace KaSon.FrameWork.Common.Redis
                 return client.GetDatabase().StringSet(key, value, timeSpan);
             }
         }
+
+        public static bool KeyExists(string key)
+        {
+            using (var client = ConnectionMultiplexer.Connect(_redisConectStr))
+            {
+                return client.GetDatabase().KeyExists(key);
+            }
+        }
         /// <summary>
         /// 是否启用Redis
         /// </summary>
@@ -365,6 +373,8 @@ namespace KaSon.FrameWork.Common.Redis
                 return RedisHelper.Instance.GetDatabase(12);
             }
         }
+
+        
     }
 
 }

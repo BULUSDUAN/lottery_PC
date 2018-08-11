@@ -19,6 +19,7 @@ using KaSon.FrameWork.Common.KaSon;
 using KaSon.FrameWork.Common;
 using EntityModel.Enum;
 using Lottery.Api.Controllers.CommonFilterActtribute;
+using EntityModel;
 //using Lottery.Service.IModuleServices;
 
 namespace Lottery.Api.Controllers
@@ -29,20 +30,20 @@ namespace Lottery.Api.Controllers
     public class CommonController : BaseController
     {
 
-       // private readonly IServiceProxyProvider _serviceProxyProvider;
-       // private readonly IServiceRouteProvider _serviceRouteProvider;
-       //// private readonly IAuthorizationServerProvider _authorizationServerProvider;
+        // private readonly IServiceProxyProvider _serviceProxyProvider;
+        // private readonly IServiceRouteProvider _serviceRouteProvider;
+        //// private readonly IAuthorizationServerProvider _authorizationServerProvider;
 
 
-       // public HomeController(IServiceProxyProvider serviceProxyProvider,
-       //     IServiceRouteProvider serviceRouteProvider
-       //     )
-       // {
-       //     _serviceProxyProvider = serviceProxyProvider;
-       //     _serviceRouteProvider = serviceRouteProvider;
-       //    // _authorizationServerProvider = authorizationServerProvider;
-       // }
-        public async Task<IActionResult> GetAppendBettingDate([FromServices]IServiceProxyProvider _serviceProxyProvider,LotteryServiceRequest entity)
+        // public HomeController(IServiceProxyProvider serviceProxyProvider,
+        //     IServiceRouteProvider serviceRouteProvider
+        //     )
+        // {
+        //     _serviceProxyProvider = serviceProxyProvider;
+        //     _serviceRouteProvider = serviceRouteProvider;
+        //    // _authorizationServerProvider = authorizationServerProvider;
+        // }
+        public async Task<IActionResult> GetAppendBettingDate([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
             {
@@ -112,5 +113,94 @@ namespace Lottery.Api.Controllers
             }
         }
 
+        public async Task<IActionResult> GetAppConfig([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var APP_Common_Key = "APP_Common";
+                var APP_UserCenter_Key = "APP_UserCenter";
+                var APP_Index_Key = "APP_Index";
+                var APP_tuijianyouli_Key = "APP_tuijianyouli";
+                var APP_tuijianyoulipid_Key = "APP_tuijianyoulipid";
+                var APP_tuijianyoulifxid_Key = "APP_tuijianyoulifxid";
+                var APP_shareScheme_Key = "APP_shareScheme";
+
+                var APP_Common_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_Common_Key);
+                var APP_UserCenter_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_UserCenter_Key);
+                var APP_Index_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_Index_Key);
+                var APP_tuijianyouli_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_tuijianyouli_Key);
+                var APP_tuijianyoulipid_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_tuijianyoulipid_Key);
+                var APP_tuijianyoulifxid_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_tuijianyoulifxid_Key);
+                var APP_shareScheme_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_shareScheme_Key);
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询配置成功",
+                    MsgId = entity.MsgId,
+                    Value = new
+                    {
+                        APP_Common = APP_Common_Value,
+                        APP_UserCenter = APP_UserCenter_Value,
+                        APP_Index = APP_Index_Value,
+                        APP_tuijianyouli = APP_tuijianyouli_Value,
+                        APP_tuijianyoulipid = APP_tuijianyoulipid_Value,
+                        APP_tuijianyoulifxid = APP_tuijianyoulifxid_Value,
+                        APP_shareScheme = APP_shareScheme_Value,
+                    },
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "查询配置失败",
+                    MsgId = entity.MsgId,
+                    Value="",
+                });
+            }
+        }
+
+        /// <summary>
+        /// 获取app相关配置
+        /// </summary>
+        private async Task<string> GetAppConfigByKey([FromServices]IServiceProxyProvider _serviceProxyProvider,string key,string defalutValue = "")
+        {
+            try
+            {
+                //1.从redis中取
+                //2.取不到则在sql中取
+                //3.不为空则存入redis中，3分钟缓存
+                var flag = KaSon.FrameWork.Common.Redis.RedisHelper.KeyExists(key);
+                var v = "";
+                if (flag)
+                {
+                    v = KaSon.FrameWork.Common.Redis.RedisHelper.StringGet(key);
+                }
+                else
+                {
+                    var param = new Dictionary<string, object>();
+                    param.Add("key", key);
+                    var config = await _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/Data/QueryCoreConfigByKey");
+                    if (config != null)
+                    {
+                        v = config.ConfigValue;
+                        KaSon.FrameWork.Common.Redis.RedisHelper.StringSet(key, config.ConfigValue, 3 * 60);
+                    }
+                }
+                if (string.IsNullOrEmpty(v))
+                {
+                    return defalutValue;
+                }
+                else
+                {
+                    return v;
+                }
+            }
+            catch (Exception)
+            {
+                return defalutValue;
+            }
+        }
     }
 }

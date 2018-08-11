@@ -92,10 +92,10 @@ namespace KaSon.FrameWork.Common
                 {
                     //CreateTime = item.CreateTime.ToString("yyyyMMddHHmmss"),
                     //FlatOdds = item.FlatOdds,
-                    GuestTeamName = item.GuestTeamName.Replace("&nbsp;", ""),
+                    GuestTeamName = BettingHelper.GetTeamName(item.GuestTeamName),
                     //GuestTeamSort = item.GuestTeamSort,
                     //GuestTeamId = item.GuestTeamId.ToString(),
-                    HomeTeamName = item.HomeTeamName.Replace("&nbsp;", ""),
+                    HomeTeamName = BettingHelper.GetTeamName(item.HomeTeamName),
                     //HomeTeamSort = item.HomeTeamSort,
                     //HomeTeamId = item.HomeTeamId.ToString(),
                     Id = item.Id,

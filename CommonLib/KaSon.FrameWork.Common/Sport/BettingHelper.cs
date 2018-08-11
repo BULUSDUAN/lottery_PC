@@ -1476,5 +1476,432 @@ namespace KaSon.FrameWork.Common.Sport
                 }
             }
         }
+
+        public static List<string> BackToDetailByAnteCode(string GameCode, string GameType, string AnteCodes, string CurrentSp)
+        {
+            if (GameCode == "JCZQ")
+            {
+                switch (GameType)
+                {
+                    case "BRQSPF":
+                        return JCZQ_BRQSPF_Detail(AnteCodes, CurrentSp);
+                    case "SPF":
+                        return JCZQ_SPF_Detail(AnteCodes, CurrentSp);
+                    case "BF":
+                        return JCZQ_BF_Detail(AnteCodes, CurrentSp);
+                    case "ZJQ":
+                        return JCZQ_ZJQ_Detail(AnteCodes, CurrentSp);
+                    case "BQC":
+                        return JCZQ_BQC_Detail(AnteCodes, CurrentSp);
+                }
+            }
+            else if (GameCode == "JCLQ")
+            {
+                switch (GameType)
+                {
+                    case "SF":
+                        return JCLQ_SF_Detail(AnteCodes, CurrentSp);
+                    case "RFSF":
+                        return JCLQ_RFSF_Detail(AnteCodes, CurrentSp);
+                    case "DXF":
+                        return JCLQ_DXF_Detail(AnteCodes, CurrentSp);
+                    case "SFC":
+                        return JCLQ_SFC_Detail(AnteCodes, CurrentSp);
+                }
+            }
+            return new List<string>();
+        }
+
+        private static List<string> JCZQ_BRQSPF_Detail(string AnteCodes, string CurrentSp)
+        {
+            var result = new List<string>();
+            if (string.IsNullOrEmpty(AnteCodes)) return result;
+            var AnteCodeList = AnteCodes.Split(',');
+            var CurrentSpList = new Dictionary<string, string>();
+            if (!string.IsNullOrEmpty(CurrentSp))
+            {
+                var tempsp = CurrentSp.Split(',');
+                foreach (var spitem in tempsp)
+                {
+                    var tempspitem = spitem.Split('|');
+                    CurrentSpList.Add(tempspitem[0], tempspitem[1]);
+                }
+            }
+            foreach (var item in AnteCodeList)
+            {
+                if (item == "3")
+                {
+                    var str = "主胜";
+                    if (CurrentSpList.ContainsKey(item))
+                    {
+                        str += "(" + CurrentSpList[item] + ")";
+                    }
+                    result.Add(str);
+                }
+                else if (item == "1")
+                {
+                    var str = "平";
+                    if (CurrentSpList.ContainsKey(item))
+                    {
+                        str += "(" + CurrentSpList[item] + ")";
+                    }
+                    result.Add(str);
+                }
+                else if (item == "0")
+                {
+                    var str = "客胜";
+                    if (CurrentSpList.ContainsKey(item))
+                    {
+                        str += "(" + CurrentSpList[item] + ")";
+                    }
+                    result.Add(str);
+                }
+            }
+            return result;
+        }
+
+
+        private static List<string> JCZQ_SPF_Detail(string AnteCodes, string CurrentSp)
+        {
+            var result = new List<string>();
+            if (string.IsNullOrEmpty(AnteCodes)) return result;
+            var AnteCodeList = AnteCodes.Split(',');
+            var CurrentSpList = new Dictionary<string, string>();
+            if (!string.IsNullOrEmpty(CurrentSp))
+            {
+                var tempsp = CurrentSp.Split(',');
+                foreach (var spitem in tempsp)
+                {
+                    var tempspitem = spitem.Split('|');
+                    CurrentSpList.Add(tempspitem[0], tempspitem[1]);
+                }
+            }
+            foreach (var item in AnteCodeList)
+            {
+                if (item == "3")
+                {
+                    var str = "主让胜";
+                    if (CurrentSpList.ContainsKey(item))
+                    {
+                        str += "(" + CurrentSpList[item] + ")";
+                    }
+                    result.Add(str);
+                }
+                else if (item == "1")
+                {
+                    var str = "让平";
+                    if (CurrentSpList.ContainsKey(item))
+                    {
+                        str += "(" + CurrentSpList[item] + ")";
+                    }
+                    result.Add(str);
+                }
+                else if (item == "0")
+                {
+                    var str = "客让胜";
+                    if (CurrentSpList.ContainsKey(item))
+                    {
+                        str += "(" + CurrentSpList[item] + ")";
+                    }
+                    result.Add(str);
+                }
+            }
+            return result;
+        }
+
+
+        private static List<string> JCZQ_BF_Detail(string AnteCodes, string CurrentSp)
+        {
+            var result = new List<string>();
+            if (string.IsNullOrEmpty(AnteCodes)) return result;
+            var AnteCodeList = AnteCodes.Split(',');
+            var CurrentSpList = new Dictionary<string, string>();
+            if (!string.IsNullOrEmpty(CurrentSp))
+            {
+                var tempsp = CurrentSp.Split(',');
+                foreach (var spitem in tempsp)
+                {
+                    var tempspitem = spitem.Split('|');
+                    CurrentSpList.Add(tempspitem[0], tempspitem[1]);
+                }
+            }
+            foreach (var item in AnteCodeList)
+            {
+                if (item == "X0")
+                {
+                    var str = "胜其他";
+                    if (CurrentSpList.ContainsKey(item))
+                    {
+                        str += "(" + CurrentSpList[item] + ")";
+                    }
+                    result.Add(str);
+                }
+                else if (item == "XX")
+                {
+                    var str = "平其他";
+                    if (CurrentSpList.ContainsKey(item))
+                    {
+                        str += "(" + CurrentSpList[item] + ")";
+                    }
+                    result.Add(str);
+                }
+                else if (item == "0X")
+                {
+                    var str = "负其他";
+                    if (CurrentSpList.ContainsKey(item))
+                    {
+                        str += "(" + CurrentSpList[item] + ")";
+                    }
+                    result.Add(str);
+                }
+                else
+                {
+                    var str = item[0] + ":" + item[1];
+                    if (CurrentSpList.ContainsKey(item))
+                    {
+                        str += "(" + CurrentSpList[item] + ")";
+                    }
+                    result.Add(str);
+                }
+            }
+            return result;
+        }
+
+        private static List<string> JCZQ_ZJQ_Detail(string AnteCodes, string CurrentSp)
+        {
+            var result = new List<string>();
+            if (string.IsNullOrEmpty(AnteCodes)) return result;
+            var AnteCodeList = AnteCodes.Split(',');
+            var CurrentSpList = new Dictionary<string, string>();
+            if (!string.IsNullOrEmpty(CurrentSp))
+            {
+                var tempsp = CurrentSp.Split(',');
+                foreach (var spitem in tempsp)
+                {
+                    var tempspitem = spitem.Split('|');
+                    CurrentSpList.Add(tempspitem[0], tempspitem[1]);
+                }
+            }
+            foreach (var item in AnteCodeList)
+            {
+                if (item == "7")
+                {
+                    var str = item + "球+";
+                    if (CurrentSpList.ContainsKey(item))
+                    {
+                        str += "(" + CurrentSpList[item] + ")";
+                    }
+                    result.Add(str);
+                }
+                else
+                {
+                    var str = item + "球";
+                    if (CurrentSpList.ContainsKey(item))
+                    {
+                        str += "(" + CurrentSpList[item] + ")";
+                    }
+                    result.Add(str);
+                }
+            }
+            return result;
+        }
+
+        private static List<string> JCZQ_BQC_Detail(string AnteCodes, string CurrentSp)
+        {
+            var result = new List<string>();
+            if (string.IsNullOrEmpty(AnteCodes)) return result;
+            var AnteCodeList = AnteCodes.Split(',');
+            var CurrentSpList = new Dictionary<string, string>();
+            if (!string.IsNullOrEmpty(CurrentSp))
+            {
+                var tempsp = CurrentSp.Split(',');
+                foreach (var spitem in tempsp)
+                {
+                    var tempspitem = spitem.Split('|');
+                    CurrentSpList.Add(tempspitem[0], tempspitem[1]);
+                }
+            }
+            foreach (var item in AnteCodeList)
+            {
+                var str1 = item[0] == '3' ? "胜" : item[0] == '1' ? "平" : "负";
+                var str2 = item[1] == '3' ? "胜" : item[1] == '1' ? "平" : "负";
+                var str = str1 + "-" + str2;
+                if (CurrentSpList.ContainsKey(item))
+                {
+                    str += "(" + CurrentSpList[item] + ")";
+                }
+                result.Add(str);
+            }
+            return result;
+        }
+
+
+        private static List<string> JCLQ_SF_Detail(string AnteCodes, string CurrentSp)
+        {
+            var result = new List<string>();
+            if (string.IsNullOrEmpty(AnteCodes)) return result;
+            var AnteCodeList = AnteCodes.Split(',');
+            var CurrentSpList = new Dictionary<string, string>();
+            if (!string.IsNullOrEmpty(CurrentSp))
+            {
+                var tempsp = CurrentSp.Split(',');
+                foreach (var spitem in tempsp)
+                {
+                    var tempspitem = spitem.Split('|');
+                    CurrentSpList.Add(tempspitem[0], tempspitem[1]);
+                }
+            }
+            foreach (var item in AnteCodeList)
+            {
+                if (item == "3")
+                {
+                    var str = "主胜";
+                    if (CurrentSpList.ContainsKey(item))
+                    {
+                        str += "(" + CurrentSpList[item] + ")";
+                    }
+                    result.Add(str);
+                }
+                else if (item == "0")
+                {
+                    var str = "客胜";
+                    if (CurrentSpList.ContainsKey(item))
+                    {
+                        str += "(" + CurrentSpList[item] + ")";
+                    }
+                    result.Add(str);
+                }
+            }
+            return result;
+        }
+
+
+        private static List<string> JCLQ_RFSF_Detail(string AnteCodes, string CurrentSp)
+        {
+            var result = new List<string>();
+            if (string.IsNullOrEmpty(AnteCodes)) return result;
+            var AnteCodeList = AnteCodes.Split(',');
+            var CurrentSpList = new Dictionary<string, string>();
+            if (!string.IsNullOrEmpty(CurrentSp))
+            {
+                var tempsp = CurrentSp.Split(',');
+                foreach (var spitem in tempsp)
+                {
+                    var tempspitem = spitem.Split('|');
+                    CurrentSpList.Add(tempspitem[0], tempspitem[1]);
+                }
+            }
+            foreach (var item in AnteCodeList)
+            {
+                if (item == "3")
+                {
+                    var str = "主让胜";
+                    if (CurrentSpList.ContainsKey(item))
+                    {
+                        str += "(" + CurrentSpList[item] + ")";
+                    }
+                    result.Add(str);
+                }
+                else if (item == "0")
+                {
+                    var str = "客让胜";
+                    if (CurrentSpList.ContainsKey(item))
+                    {
+                        str += "(" + CurrentSpList[item] + ")";
+                    }
+                    result.Add(str);
+                }
+            }
+            return result;
+        }
+
+        private static List<string> JCLQ_DXF_Detail(string AnteCodes, string CurrentSp)
+        {
+            var result = new List<string>();
+            if (string.IsNullOrEmpty(AnteCodes)) return result;
+            var AnteCodeList = AnteCodes.Split(',');
+            var CurrentSpList = new Dictionary<string, string>();
+            if (!string.IsNullOrEmpty(CurrentSp))
+            {
+                var tempsp = CurrentSp.Split(',');
+                foreach (var spitem in tempsp)
+                {
+                    var tempspitem = spitem.Split('|');
+                    CurrentSpList.Add(tempspitem[0], tempspitem[1]);
+                }
+            }
+            foreach (var item in AnteCodeList)
+            {
+                if (item == "3")
+                {
+                    var str = "大分";
+                    if (CurrentSpList.ContainsKey(item))
+                    {
+                        str += "(" + CurrentSpList[item] + ")";
+                    }
+                    result.Add(str);
+                }
+                else if (item == "0")
+                {
+                    var str = "小分";
+                    if (CurrentSpList.ContainsKey(item))
+                    {
+                        str += "(" + CurrentSpList[item] + ")";
+                    }
+                    result.Add(str);
+                }
+            }
+            return result;
+        }
+
+        private static List<string> JCLQ_SFC_Detail(string AnteCodes, string CurrentSp)
+        {
+            var result = new List<string>();
+            if (string.IsNullOrEmpty(AnteCodes)) return result;
+            var AnteCodeList = AnteCodes.Split(',');
+            var CurrentSpList = new Dictionary<string, string>();
+            if (!string.IsNullOrEmpty(CurrentSp))
+            {
+                var tempsp = CurrentSp.Split(',');
+                foreach (var spitem in tempsp)
+                {
+                    var tempspitem = spitem.Split('|');
+                    CurrentSpList.Add(tempspitem[0], tempspitem[1]);
+                }
+            }
+            var SFCdic = new Dictionary<string, string>();
+            SFCdic.Add("1", "1-5");
+            SFCdic.Add("2", "6-10");
+            SFCdic.Add("3", "11-15");
+            SFCdic.Add("4", "16-20");
+            SFCdic.Add("5", "21-25");
+            SFCdic.Add("6", "26+");
+            foreach (var item in AnteCodeList)
+            {
+                var str1 = item[0] == '1' ? "客胜" : "主胜";
+                var str2 = "";
+                if (SFCdic.ContainsKey(item[1].ToString()))
+                {
+                    str2 = SFCdic[item[1].ToString()];
+                }
+                var str = str1 + str2;
+                if (CurrentSpList.ContainsKey(item))
+                {
+                    str += "(" + CurrentSpList[item] + ")";
+                }
+                result.Add(str);
+
+            }
+            return result;
+        }
+
+        public static string GetTeamName(string TeamName)
+        {
+            if (string.IsNullOrEmpty(TeamName)) return TeamName;
+            TeamName = TeamName.Replace("&nbsp;", "");
+            if(TeamName.Length<=4) return TeamName;
+            return TeamName.Substring(0, 4);
+        }
+
     }
 }

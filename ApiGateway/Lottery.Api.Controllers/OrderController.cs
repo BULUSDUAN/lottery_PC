@@ -1517,6 +1517,7 @@ namespace Lottery.Api.Controllers
                     codeList.Add(new
                     {
                         AnteCode = item.AnteCode,
+                        AnteCodeDetail = BettingHelper.BackToDetailByAnteCode(gameCode.ToUpper(),item.GameType, item.AnteCode, item.CurrentSp),
                         BonusStatus = (int)item.BonusStatus,
                         CurrentSp = item.CurrentSp,
                         FullResult = item.FullResult,

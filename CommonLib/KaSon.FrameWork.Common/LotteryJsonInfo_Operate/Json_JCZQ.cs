@@ -135,9 +135,9 @@ namespace KaSon.FrameWork.Common
                     FSStopBettingTime = item.FSStopBettingTime,
                     //FSStopBettingTime = item.FSStopBettingTime.ToString("yyyyMMddHHmmss"),
                     //GuestTeamId = item.GuestTeamId,
-                    GuestTeamName = item.GuestTeamName,
+                    GuestTeamName = BettingHelper.GetTeamName(item.GuestTeamName),
                     //HomeTeamId = item.HomeTeamId,
-                    HomeTeamName = item.HomeTeamName,
+                    HomeTeamName = BettingHelper.GetTeamName(item.HomeTeamName),
                     LeagueColor = item.LeagueColor,
                     //LeagueId = item.LeagueId,
                     LeagueName = item.LeagueName,
@@ -396,9 +396,9 @@ namespace KaSon.FrameWork.Common
                     info.FSStopBettingTime = item.FSStopBettingTime;
                     //info.//FSStopBettingTime = item.FSStopBettingTime.ToString("yyyyMMddHHmmss"),
                     //info.//GuestTeamId = item.GuestTeamId,
-                    info.GuestTeamName = item.GuestTeamName;
+                    info.GuestTeamName = BettingHelper.GetTeamName(item.GuestTeamName);
                     //info.//HomeTeamId = item.HomeTeamId,
-                    info.HomeTeamName = item.HomeTeamName;
+                    info.HomeTeamName = BettingHelper.GetTeamName(item.HomeTeamName);
                     info.LeagueColor = item.LeagueColor;
                     //info.//LeagueId = item.LeagueId,
                     info.LeagueName = item.LeagueName;
