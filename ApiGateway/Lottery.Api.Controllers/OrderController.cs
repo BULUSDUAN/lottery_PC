@@ -2307,7 +2307,11 @@ namespace Lottery.Api.Controllers
                 DateTime endTime = Convert.ToDateTime(p.EndTime);
                 int pageIndex = Convert.ToInt32(p.PageIndex);
                 int pageSize = Convert.ToInt32(p.PageSize);
-
+                int ProgressStatusType = 0;
+                if (p.ProgressStatusType != null)
+                {
+                    ProgressStatusType = Convert.ToInt32(p.ProgressStatusType);
+                }
                 string _gameCode = p.GameCode;
                 string _bonusStatus = p.BonusStatus;
                 if (!string.IsNullOrEmpty(_bonusStatus))
@@ -2321,7 +2325,13 @@ namespace Lottery.Api.Controllers
                 }
                 Dictionary<string, object> param = new Dictionary<string, object>()
                 {
-                    {"gameCode",_gameCode },{ "startTime",startTime},{ "endTime",endTime},{ "pageIndex",pageIndex},{"pageSize",pageSize },{"userToken",userToken }
+                    {"gameCode",_gameCode },
+                    { "startTime",startTime},
+                    { "endTime",endTime},
+                    { "pageIndex",pageIndex},
+                    { "pageSize",pageSize },
+                    { "userToken",userToken },
+                    { "ProgressStatusType",ProgressStatusType }
                 };
                 if (_schemeType == "2")
                 {

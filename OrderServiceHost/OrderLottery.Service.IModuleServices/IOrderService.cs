@@ -82,7 +82,7 @@ namespace OrderLottery.Service.IModuleServices
         [Service(Date = "2018-06-14", Director = "Debug", Name = "查询宝单详情")]
         Task<BDFXOrderDetailInfo> QueryBDFXOrderDetailBySchemeId(string schemeId);
         [Service(Date = "2018-06-14", Director = "Debug", Name = "查询我的追号订单列表")]
-        Task<BettingOrderInfoCollection> QueryMyChaseOrderList(string gameCode, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string userToken);
+        Task<BettingOrderInfoCollection> QueryMyChaseOrderList(string gameCode, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string userToken, int ProgressStatusType);
         [Service(Date = "2018-06-14", Director = "Debug", Name = "查询我的订单列表信息")]
         Task<MyOrderListInfoCollection> QueryMyOrderListInfo(QueryMyOrderListInfoParam Model);
         [Service(Date = "2018-06-14", Director = "Debug", Name = "查询我的订单详细信息")]

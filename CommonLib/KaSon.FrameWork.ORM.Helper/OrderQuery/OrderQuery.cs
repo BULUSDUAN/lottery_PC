@@ -2182,27 +2182,37 @@ namespace KaSon.FrameWork.ORM.Helper
             return new List<AnteCodeInfo>();
         }
 
-        public BettingOrderInfoCollection QueryMyChaseOrderList(string gameCode, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string userToken)
+        public BettingOrderInfoCollection QueryMyChaseOrderList(string gameCode, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string userToken,int ProgressStatusType)
         {
             var userId = new UserAuthentication().ValidateUserAuthentication(userToken);
             pageIndex = pageIndex < 0 ? 0 : pageIndex;
             pageSize = pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : pageSize;
             var collection = new BettingOrderInfoCollection();
             string Countsql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_QueryMyChaseOrderListCount").SQL;
+            var NotFinishProgressStatus = "0,10";
+            var FinishProgressStatus = "20,80,90";
+            var ProgressStatusList = "0,10,20,80,90";
+            if (ProgressStatusType == 1) { ProgressStatusList = NotFinishProgressStatus; }
+            if (ProgressStatusType == 2) { ProgressStatusList = FinishProgressStatus; }
+            Countsql = string.Format(Countsql, ProgressStatusList);
+            
             collection.TotalCount = DB.CreateSQLQuery(Countsql)
                 .SetString("@GameCode", gameCode)
                 .SetString("@UserId", userId)
                 .SetString("@FromDate", startTime.ToString("yyyy-MM-dd"))
-                .SetString("@ToDate", endTime.AddDays(1).ToString("yyyy-MM-dd")).First<int>();
-
+                .SetString("@ToDate", endTime.AddDays(1).ToString("yyyy-MM-dd"))
+                .SetString("@ProgressStatus", ProgressStatusList).First<int>();
             string PageSql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_QueryMyChaseOrderListPage").SQL;
+            PageSql = string.Format(PageSql, ProgressStatusList);
             collection.OrderList = DB.CreateSQLQuery(PageSql)
                  .SetString("@GameCode", gameCode)
                 .SetString("@UserId", userId)
                 .SetString("@FromDate", startTime.ToString("yyyy-MM-dd"))
                 .SetString("@ToDate", endTime.AddDays(1).ToString("yyyy-MM-dd"))
+                .SetString("@ProgressStatus", ProgressStatusList)
                 .SetInt("@PageIndex", pageIndex)
                 .SetInt("@PageSize", pageSize).List<BettingOrderInfo>();
+
 
             return collection;
         }

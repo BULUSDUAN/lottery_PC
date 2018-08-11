@@ -272,9 +272,9 @@ namespace OrderLottery.Service.ModuleServices
         {
             return Task.FromResult(_order.QueryBDFXOrderDetailBySchemeId(schemeId));
         }
-        public Task<BettingOrderInfoCollection> QueryMyChaseOrderList(string gameCode, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string userToken)
+        public Task<BettingOrderInfoCollection> QueryMyChaseOrderList(string gameCode, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string userToken, int ProgressStatusType)
         {
-            return Task.FromResult(_order.QueryMyChaseOrderList(gameCode, startTime, endTime, pageIndex, pageSize, userToken));
+            return Task.FromResult(_order.QueryMyChaseOrderList(gameCode, startTime, endTime, pageIndex, pageSize, userToken, ProgressStatusType));
         }
         public Task<MyOrderListInfoCollection> QueryMyOrderListInfo(QueryMyOrderListInfoParam Model)
         {
