@@ -26,6 +26,8 @@ nuget.exe
 *.psess
 *.vsp
 *.pidb
+Program.cs
+Startup.cs
 *.userprefs
 *DS_Store
 *.ncrunchsolution
