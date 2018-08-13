@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <log4net>
+    <logger name="logerror">
+      <level value="ERROR" />
+      <appender-ref ref="ErrorAppender" />
+    </logger>
+    <logger name="apiLogerror">
+      <level value="ERROR" />
+      <appender-ref ref="APILogError" />
+    </logger>
+    <logger name="loginfo">
+      <level value="INFO" />
+      <appender-ref ref="InfoAppender" />
+    </logger>
+    <logger name="logWarning">
+      <level value="INFO" />
+      <appender-ref ref="InfoWarning" />
+    </logger>
+    <appender name="APILogError" type="log4net.Appender.RollingFileAppender">
+      <param name="File" value="Log_Log\\APILogError\\" />
+      <param name="AppendToFile" value="true" />
+      <param name="MaxSizeRollBackups" value="100" />
+      <param name="MaxFileSize" value="10240" />
+      <param name="StaticLogFileName" value="false" />
+      <param name="DatePattern" value="yyyyMMdd&quot;.txt&quot;" />
+      <param name="RollingStyle" value="Date" />
+      <layout type="log4net.Layout.PatternLayout">
+        <param name="ConversionPattern" value="%n异常时间：%d %n异常级别：%-5p%n异常内容：%m%n" />
+      </layout>
+    </appender>
+    <appender name="ErrorAppender" type="log4net.Appender.RollingFileAppender">
+      <param name="File" value="Log_Log\\UserLogError\\" />
+      <param name="AppendToFile" value="true" />
+      <param name="MaxSizeRollBackups" value="100" />
+      <param name="MaxFileSize" value="10240" />
+      <param name="StaticLogFileName" value="false" />
+      <param name="DatePattern" value="yyyyMMdd&quot;.txt&quot;" />
+      <param name="RollingStyle" value="Date" />
+      <layout type="log4net.Layout.PatternLayout">
+        <param name="ConversionPattern" value="%n异常时间：%d %n异常级别：%-5p%n异常内容：%m%n" />
+      </layout>
+    </appender>
+    <appender name="InfoAppender" type="log4net.Appender.RollingFileAppender">
+      <param name="File" value="Log_Log\\LogError\\" />
+      <param name="AppendToFile" value="true" />
+      <param name="MaxFileSize" value="10240" />
+      <param name="MaxSizeRollBackups" value="100" />
+      <param name="StaticLogFileName" value="false" />
+      <param name="DatePattern" value="yyyyMMdd&quot;.txt&quot;" />
+      <param name="RollingStyle" value="Date" />
+      <layout type="log4net.Layout.PatternLayout">
+        <param name="ConversionPattern" value="日志时间：%d %n日志级别：%-5p  %n日志内容：%m%n%n" />
+      </layout>
+    </appender>
+    <appender name="InfoWarning" type="log4net.Appender.RollingFileAppender">
+      <param name="File" value="Log_Log\\LogWarningInfo\\" />
+      <param name="AppendToFile" value="true" />
+      <param name="MaxFileSize" value="10240" />
+      <param name="MaxSizeRollBackups" value="100" />
+      <param name="StaticLogFileName" value="false" />
+      <param name="DatePattern" value="yyyyMMdd&quot;.txt&quot;" />
+      <param name="RollingStyle" value="Date" />
+      <layout type="log4net.Layout.PatternLayout">
+        <param name="ConversionPattern" value="日志时间：%d %n日志级别：%-5p  %n日志内容：%m%n%n" />
+      </layout>
+    </appender>
+    <root>
+      <level value="ALL"/>
+   
+    </root>
+  </log4net>
+</configuration>
+

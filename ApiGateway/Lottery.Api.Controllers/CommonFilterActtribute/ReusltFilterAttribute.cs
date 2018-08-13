@@ -32,7 +32,7 @@ namespace Lottery.Api.Controllers.CommonFilterActtribute
                     //   Microsoft.AspNetCore.Mvc.JsonResult 
                     // context.Result
                 }
-                else if (resp.Code == ResponseCode.失败)
+                else if (resp.Code == ResponseCode.失败 && !resp.Message.Contains("ER"))
                 {
 
                     //  string url = context.HttpContext.Request.Path;

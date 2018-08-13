@@ -104,4 +104,10 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Config\log4net.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

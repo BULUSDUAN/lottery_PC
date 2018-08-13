@@ -87,13 +87,14 @@ namespace KaSon.FrameWork.Common
                     logWarning.Info(name, ex);
                     break;
                 default:
+                    if (errorlogger == null)
+                    {
+                        errorlogger = LogManager.GetLogger(repository.Name, "logerror");
+                    }
+                    errorlogger.Error(name, ex);
                     break;
             }
-            if (errorlogger == null)
-            {
-                errorlogger = LogManager.GetLogger(repository.Name, "logerror");
-            }
-            errorlogger.Error(name, ex);
+           
         }
         public void ErrrorLog(string name, Exception ex)
         {
