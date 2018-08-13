@@ -2731,7 +2731,7 @@ namespace Lottery.Api.Controllers
                     });
                 }
 
-                list[list.Count - 1].name = "tr9";
+                list[list.Count - 1].name = "TR9";
                 list[list.Count - 1].type = "任选9";
 
                 return list;
