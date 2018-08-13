@@ -1458,7 +1458,7 @@ namespace Lottery.Api.Controllers
                         }
                     }
                 }
-                if (gameCode.ToUpper() == "SJB")
+                else if (gameCode.ToUpper() == "SJB")
                 {
                     Dictionary<string, object> param = new Dictionary<string, object>
                     {
