@@ -23,6 +23,7 @@ namespace Lottery.ApiGateway
         public static void Main(string[] args)
         {
             string hostUrl = ConfigHelper.AllConfigInfo["Host"].ToString();
+            string ISConsoleLog = ConfigHelper.AllConfigInfo["ISConsoleLog"].ToString(); 
             var host = new WebHostBuilder()
                 .UseUrls(hostUrl)
                 .UseKestrel(options =>
@@ -44,7 +45,7 @@ namespace Lottery.ApiGateway
             // ConsoleOut.Install();
             //Console.Clear()；
             //ConsoleHelper.Clear();
-
+            if(!bool.Parse(ISConsoleLog)) ConsoleHelper.Clear();
 
             host.Run();
 

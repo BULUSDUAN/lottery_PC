@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
+﻿using EntityModel.Enum;
+using KaSon.FrameWork.Common;
+using Lottery.ApiGateway.Model.HelpModel;
+using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,14 +9,40 @@ using System.Text;
 
 namespace Lottery.Api.Controllers.CommonFilterActtribute
 {
-   
+
     public class ReusltFilterAttribute : Attribute, IActionFilter
     {
         void IActionFilter.OnActionExecuted(ActionExecutedContext context)
         {
+            var result = context.Result as Microsoft.AspNetCore.Mvc.JsonResult;
+            if (result != null)
+            {
+                string url = context.HttpContext.Request.Path;
+                var resp = result.Value as LotteryServiceResponse;
+                if (resp != null && resp.Code == ResponseCode.失败 && resp.Message.Contains("ER"))
+                {
+                    //日志记录
+                    //  using ()
+                    //   Log4Log log4 = new Log4Log();
 
+                    string msg = string.Format("API:{0} \r\n {1}", url, resp.Message);
+                    Log4Log.LogEX(KLogLevel.APIError, "API或服务错误***", new Exception(msg));
+                    resp.Message = "系统错误，请重试";
+                    resp.Value = "系统错误，请重试";
+                    //   Microsoft.AspNetCore.Mvc.JsonResult 
+                    // context.Result
+                }
+                else if (resp.Code == ResponseCode.失败)
+                {
+
+                    //  string url = context.HttpContext.Request.Path;
+                    string msg = string.Format("API:{0} \r\n {1}", url, resp.Message);
+                    Log4Log.LogEX(KLogLevel.GenError, "用户级别错误***", new Exception(msg));
+                }
+            }
 
         }
+
         public string[] AllowSites { get; set; }
         void IActionFilter.OnActionExecuting(ActionExecutingContext context)
         {
@@ -24,8 +53,8 @@ namespace Lottery.Api.Controllers.CommonFilterActtribute
                 context.HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", origin);
                 context.HttpContext.Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
                 context.HttpContext.Response.Headers.Add("Access-Control-Request-Headers", "Content-Type");
-               // context.HttpContext.Response.Headers.Add("Access-Control-Max-Age", "86400");
-              //  context.HttpContext.Response.Headers.Add("Transfer-Encoding", "chunked");
+                // context.HttpContext.Response.Headers.Add("Access-Control-Max-Age", "86400");
+                //  context.HttpContext.Response.Headers.Add("Transfer-Encoding", "chunked");
                 context.HttpContext.Response.Headers.Add("Access-Control-Allow-Credentials", "true");
 
             };
@@ -45,7 +74,8 @@ namespace Lottery.Api.Controllers.CommonFilterActtribute
                     action();
                 }
             }
-            else {
+            else
+            {
                 action();
             }
 
