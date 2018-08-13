@@ -379,7 +379,14 @@ namespace KaSon.FrameWork.Common.Utilities {
             {
                 return "";
             }
-            type = string.IsNullOrEmpty(type) ? gamecode : type;
+            if (gamecode.ToLower() == "ctzq")
+            {
+                type = string.IsNullOrEmpty(type) ? gamecode : type;
+            }
+            else
+            {
+                type = "";
+            }
             //根据彩种编号获取彩种名称
             switch (gamecode.ToLower())
             {
