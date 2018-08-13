@@ -436,8 +436,8 @@ namespace KaSon.FrameWork.Common.Utilities {
                 case "ctzq":
                     switch (type.ToLower())
                     {
-                        case "t14c": return "14场胜负";
-                        case "tr9": return "任9场";
+                        case "t14c": return "胜负14场";
+                        case "tr9": return "任选9";
                         case "t6bqc": return "6场半全";
                         case "t4cjq": return "4场进球";
                         default: return "传统足球";
@@ -655,9 +655,9 @@ namespace KaSon.FrameWork.Common.Utilities {
                     switch (gameType)
                     {
                         case "T14C":
-                            return "14场胜负";
+                            return "胜负14场";
                         case "TR9":
-                            return "胜负任9";
+                            return "任选9";
                         case "T6BQC":
                             return "6场半全场";
                         case "T4CJQ":
