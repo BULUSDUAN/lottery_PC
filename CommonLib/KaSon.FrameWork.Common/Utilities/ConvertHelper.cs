@@ -390,7 +390,7 @@ namespace KaSon.FrameWork.Common.Utilities {
             //根据彩种编号获取彩种名称
             switch (gamecode.ToLower())
             {
-                case "cqssc": return "时时彩";
+                case "cqssc": return "重庆时时彩";
                 case "jxssc": return "新时时彩";
                 case "sd11x5": return "山东11选5";
                 case "gd11x5": return "广东11选5";
