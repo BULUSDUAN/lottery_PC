@@ -385,9 +385,9 @@ namespace KaSon.FrameWork.Common.Utilities {
             {
                 case "cqssc": return "时时彩";
                 case "jxssc": return "新时时彩";
-                case "sd11x5": return "老11选5";
-                case "gd11x5": return "新11选5";
-                case "jx11x5": return "11选5";
+                case "sd11x5": return "山东11选5";
+                case "gd11x5": return "广东11选5";
+                case "jx11x5": return "江西11选5";
                 case "pl3": return "排列三";
                 case "fc3d": return "福彩3D";
                 case "ssq": return "双色球";
