@@ -133,7 +133,7 @@
   },
   //必须配置 服务发现配置
   "ConsulSettings": {
-    "IpAddrs": "127.0.0.1:8500" //服务启动IP
+    "IpAddrs": "10.0.3.27:8501" //服务启动IP
   },
   //必须配置 连接数据配置
   "ORMSettings": [
@@ -158,7 +158,7 @@
       "DbKey": "SqlServer.ECP_LottertData",
       "ConnectionString": "Data Source=10.0.3.6;Initial Catalog=ECP_LotteryData;User ID=sa;Password=x123456789;Connection Timeout=10;",
       "Provider": "SqlServer",
-      "CommandTimeout": 300,
+      "CommandTimeout": 30000,
       "FactoryType": "KaSon.ORM.Factory.SQLServerFactory"
     }
   ]

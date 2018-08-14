@@ -1362,7 +1362,7 @@ namespace Lottery.Api.Controllers
                     GameCode = schemeInfo.GameCode,
                     GameDisplayName = schemeInfo.GameDisplayName,
                     GameType = schemeInfo.GameType,
-                    GameTypeDisplayName = ConvertHelper.GameName(schemeInfo.GameCode, schemeInfo.GameType),
+                    GameTypeDisplayName = ConvertHelper.GameName(schemeInfo.GameCode, schemeInfo.GameType,true),
                     GameName = ConvertHelper.GameName(schemeInfo.GameCode, schemeInfo.GameType),
                     UserId = schemeInfo.UserId,
                     UserDisplayName = schemeInfo.UserDisplayName,
@@ -2709,7 +2709,7 @@ namespace Lottery.Api.Controllers
             {
                 Dictionary<string, object> param = new Dictionary<string, object>()
             {
-                { "gameString","JX11X5|CQSSC|SSQ|DLT|FC3D|PL3|CTZQ_T14C|CTZQ_T6BQC|CTZQ_T4CJQ|CTZQ_TR9"}
+                { "gameString","JX11X5|GD11X5|SD11X5|CQSSC|SSQ|DLT|FC3D|PL3|CTZQ_T14C|CTZQ_T6BQC|CTZQ_T4CJQ|CTZQ_TR9"}
             };
                 var entitys = await _serviceProxyProvider.Invoke<GameWinNumber_InfoCollection>(param, "api/Order/QueryAllGameNewWinNumber");
                 List<KaiJiang> list = new List<KaiJiang>();
@@ -2787,7 +2787,8 @@ namespace Lottery.Api.Controllers
             };
             var entity = await _serviceProxyProvider.Invoke<List<LotteryIssuse_QueryInfo>>(param, "api/Order/QueryAllGameCurrentIssuse");
             var entitys = entity as List<LotteryIssuse_QueryInfo>;
-            var bjdcentity = await _serviceProxyProvider.Invoke<BJDCIssuseInfo>(null, "api/Order/QueryBJDCCurrentIssuseInfo");//北单
+            param.Clear();
+            var bjdcentity = await _serviceProxyProvider.Invoke<BJDCIssuseInfo>(param, "api/Order/QueryBJDCCurrentIssuseInfo");//北单
             PrizelevelInfo info = new PrizelevelInfo();
             info.prizeLevel = new List<Prizelevel>();
             var gameCode = type;
