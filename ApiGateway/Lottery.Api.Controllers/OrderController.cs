@@ -1356,13 +1356,14 @@ namespace Lottery.Api.Controllers
                 //{
 
                 //}
+                var GameTypeDisplayName =string.IsNullOrEmpty(schemeInfo.GameTypeDisplayName)?"": schemeInfo.GameTypeDisplayName.Replace("胜负任9", "任选9").Replace("14场胜负", "胜负14场");
                 var result = new
                 {
                     SchemeId = schemeInfo.SchemeId,
                     GameCode = schemeInfo.GameCode,
                     GameDisplayName = schemeInfo.GameDisplayName,
                     GameType = schemeInfo.GameType,
-                    GameTypeDisplayName = ConvertHelper.GameName(schemeInfo.GameCode, schemeInfo.GameType,true),
+                    GameTypeDisplayName = GameTypeDisplayName,
                     GameName = ConvertHelper.GameName(schemeInfo.GameCode, schemeInfo.GameType),
                     UserId = schemeInfo.UserId,
                     UserDisplayName = schemeInfo.UserDisplayName,
