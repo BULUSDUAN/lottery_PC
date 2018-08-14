@@ -404,7 +404,7 @@ namespace KaSon.FrameWork.Common.Utilities {
                 case "sdqyh": return "群英会";
                 case "gdklsf": return "广东快乐十分";
                 case "gxklsf": return "广西快乐十分";
-                case "jsks": return "江苏快3";
+                case "jsks": return "江苏快三";
                 case "sdklpk3":return "山东快乐扑克3";
                 case "sjb":
                     switch (type.ToLower())
