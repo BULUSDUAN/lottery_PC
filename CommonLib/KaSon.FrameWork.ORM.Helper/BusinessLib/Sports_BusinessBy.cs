@@ -218,7 +218,8 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
                 while (true)
                 {
                     Task.Delay(1000 * seconds);
-                    Task.FromResult(this.WriteChaseOrderToDb());
+                    this.WriteChaseOrderToDb();
+                    //this.WriteChaseOrderToDb() Task.FromResult(this.WriteChaseOrderToDb());
                 }
 
             });

@@ -102,8 +102,8 @@ namespace OrderLottery.Service.Host
                 .Build();
 
 
-            var list = JsonHelper.Deserialize<List<KaSon.FrameWork.ORM.OrmConfigInfo>>(ORMSettings.ToString());
-            DbProvider.InitConfigJson(list);
+            //var list = JsonHelper.Deserialize<List<KaSon.FrameWork.ORM.OrmConfigInfo>>(ORMSettings.ToString());
+            //DbProvider.InitConfigJson(list);
 
             using (host.Run())
             {
