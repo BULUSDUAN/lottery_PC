@@ -402,9 +402,10 @@ namespace KaSon.FrameWork.Common.Utilities {
                 case "qlc": return "七乐彩";
                 case "dlt": return "大乐透";
                 case "sdqyh": return "群英会";
-                case "gdklsf": return "快乐十分";
+                case "gdklsf": return "广东快乐十分";
                 case "gxklsf": return "广西快乐十分";
                 case "jsks": return "江苏快3";
+                case "sdklpk3":return "山东快乐扑克3";
                 case "sjb":
                     switch (type.ToLower())
                     {
