@@ -379,7 +379,7 @@ namespace KaSon.FrameWork.Common.Utilities {
             {
                 return "";
             }
-            if (gamecode.ToLower() == "ctzq"&&!flag)
+            if (gamecode.ToLower() == "ctzq"||flag)
             {
                 type = string.IsNullOrEmpty(type) ? gamecode : type;
             }
