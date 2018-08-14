@@ -33,6 +33,7 @@ nuget.exe
 *.ipch
 .settings
 *.sln.ide
+LogError
 node_modules
 *launchSettings.json
 *.orig
