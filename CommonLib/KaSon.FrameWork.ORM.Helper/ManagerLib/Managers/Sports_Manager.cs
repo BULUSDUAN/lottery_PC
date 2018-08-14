@@ -527,5 +527,27 @@ namespace KaSon.FrameWork.ORM.Helper
            
             return DB.CreateQuery<C_JCLQ_MatchResult>().Where(p => p.MatchId == matchId).FirstOrDefault();
         }
+        /// <summary>
+        /// 查询追号
+        /// </summary>
+        /// <param name="keyLine"></param>
+        /// <returns></returns>
+        public List<C_Lottery_Scheme> QueryAllLotterySchemeByKeyLine(string keyLine)
+        {
+
+            return DB.CreateQuery<C_Lottery_Scheme>().Where(p => p.KeyLine == keyLine).OrderBy(p => p.OrderIndex).ToList();
+           // return this.Session.Query<C_Lottery_Scheme>().Where(p => p.KeyLine == keyLine).OrderBy(p => p.OrderIndex).ToList();
+        }
+
+        public List<C_Sports_Order_Running> QueryOrderRunningBySchemeIdArray(string[] schemeIdArray)
+        {
+          //  Session.Clear();
+            return DB.CreateQuery<C_Sports_Order_Running>().Where(p => schemeIdArray.Contains(p.SchemeId)).ToList();
+        }
+        public List<C_Sports_Order_Complate> QueryOrderComplateBySchemeIdArray(string[] schemeIdArray)
+        {
+            //   Session.Clear();
+            return DB.CreateQuery<C_Sports_Order_Complate>().Where(p => schemeIdArray.Contains(p.SchemeId)).ToList();
+        }
     }
 }

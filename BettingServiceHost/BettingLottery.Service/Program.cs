@@ -42,6 +42,7 @@ namespace BettingLottery.Service.Host
 
             JToken RebbitMqSettings = ConfigHelper.AllConfigInfo["RebbitMqSettings"];
             JToken HostSettings = ConfigHelper.AllConfigInfo["HostSettings"];
+            string Sports_SchemeJobSeconds = ConfigHelper.AllConfigInfo["Sports_SchemeJobSeconds"].ToString();
 
             JToken ORMSettings = ConfigHelper.AllConfigInfo["ORMSettings"];
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
@@ -101,10 +102,10 @@ namespace BettingLottery.Service.Host
                 .UseStartup<Startup>()
                 .Build();
 
-           
 
-            var list = JsonHelper.Deserialize<List<KaSon.FrameWork.ORM.OrmConfigInfo>>(ORMSettings.ToString());
-            DbProvider.InitConfigJson(list);
+            new KaSon.FrameWork.ORM.Helper.BusinessLib.Sports_BusinessBy().StartTaskByWriteChaseOrderToDb(int.Parse(Sports_SchemeJobSeconds));
+            //var list = JsonHelper.Deserialize<List<KaSon.FrameWork.ORM.OrmConfigInfo>>(ORMSettings.ToString());
+            //DbProvider.InitConfigJson(list);
 
             using (host.Run())
             {
