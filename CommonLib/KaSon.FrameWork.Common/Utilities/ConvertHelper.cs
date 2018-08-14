@@ -373,13 +373,13 @@ namespace KaSon.FrameWork.Common.Utilities {
         /// <param name="gamecode">彩种编码</param>
         /// <param name="type">玩法编码，可为空</param>
         /// <returns>彩种（玩法）名称</returns>
-        public static string GameName(string gamecode, string type = "")
+        public static string GameName(string gamecode, string type = "",bool flag=false)
         {
             if (string.IsNullOrEmpty(gamecode))
             {
                 return "";
             }
-            if (gamecode.ToLower() == "ctzq")
+            if (gamecode.ToLower() == "ctzq"&&!flag)
             {
                 type = string.IsNullOrEmpty(type) ? gamecode : type;
             }

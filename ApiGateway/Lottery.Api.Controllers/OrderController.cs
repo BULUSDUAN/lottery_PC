@@ -1362,7 +1362,7 @@ namespace Lottery.Api.Controllers
                     GameCode = schemeInfo.GameCode,
                     GameDisplayName = schemeInfo.GameDisplayName,
                     GameType = schemeInfo.GameType,
-                    GameTypeDisplayName = ConvertHelper.GameName(schemeInfo.GameCode, schemeInfo.GameType),
+                    GameTypeDisplayName = ConvertHelper.GameName(schemeInfo.GameCode, schemeInfo.GameType,true),
                     GameName = ConvertHelper.GameName(schemeInfo.GameCode, schemeInfo.GameType),
                     UserId = schemeInfo.UserId,
                     UserDisplayName = schemeInfo.UserDisplayName,
