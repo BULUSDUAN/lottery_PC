@@ -43,7 +43,7 @@ namespace UserLottery.Service.Host
             JToken RebbitMqSettings = ConfigHelper.AllConfigInfo["RebbitMqSettings"];
             JToken HostSettings = ConfigHelper.AllConfigInfo["HostSettings"];
 
-            JToken ORMSettings = ConfigHelper.AllConfigInfo["ORMSettings"];
+          //  JToken ORMSettings = ConfigHelper.AllConfigInfo["ORMSettings"];
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             var host = new ServiceHostBuilder()
                 .RegisterServices(builder =>
@@ -101,8 +101,8 @@ namespace UserLottery.Service.Host
                 .Build();
 
 
-            var list = JsonHelper.Deserialize<List<KaSon.FrameWork.ORM.OrmConfigInfo>>(ORMSettings.ToString());
-            DbProvider.InitConfigJson(list);
+            //var list = JsonHelper.Deserialize<List<KaSon.FrameWork.ORM.OrmConfigInfo>>(ORMSettings.ToString());
+            //DbProvider.InitConfigJson(list);
 
             using (host.Run())
             {

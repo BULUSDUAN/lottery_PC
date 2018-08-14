@@ -94,6 +94,9 @@
     <None Update="cacheSettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Config\KaSon.FrameWork.ORM.Config.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Config\KgLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
