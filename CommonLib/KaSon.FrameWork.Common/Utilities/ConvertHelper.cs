@@ -446,8 +446,8 @@ namespace KaSon.FrameWork.Common.Utilities {
                     {
                         case "t14c": return "胜负14场";
                         case "tr9": return "任选9";
-                        case "t6bqc": return "6场半全";
-                        case "t4cjq": return "4场进球";
+                        case "t6bqc": return "六场半全场";
+                        case "t4cjq": return "四场进球彩";
                         default: return "传统足球";
                     }
                 case "bjdc":
