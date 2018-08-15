@@ -1356,7 +1356,11 @@ namespace Lottery.Api.Controllers
                 //{
 
                 //}
-                var GameTypeDisplayName =string.IsNullOrEmpty(schemeInfo.GameTypeDisplayName)?"": schemeInfo.GameTypeDisplayName.Replace("胜负任9", "任选9").Replace("14场胜负", "胜负14场");
+                var GameTypeDisplayName =string.IsNullOrEmpty(schemeInfo.GameTypeDisplayName)?"": schemeInfo.GameTypeDisplayName
+                    .Replace("胜负任9", "任选9")
+                    .Replace("14场胜负", "胜负14场")
+                    .Replace("6场半全场", "六场半全场")
+                    .Replace("4场进球", "四场进球彩");
                 var result = new
                 {
                     SchemeId = schemeInfo.SchemeId,

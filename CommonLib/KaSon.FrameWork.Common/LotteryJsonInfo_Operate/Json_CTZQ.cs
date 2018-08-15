@@ -97,7 +97,7 @@ namespace KaSon.FrameWork.Common
                     info.AverageOdds = res.AverageOdds;
                     if (gameType == "T6BQC")
                     {
-                        info.AverageOdds = res.FullAverageOdds + ":" + res.HalfAverageOdds;
+                        info.AverageOdds = res.FullAverageOdds + ";" + res.HalfAverageOdds;
                     }
                     //info.KLFlat = res.KLFlat;
                     //info.KLLose = res.KLLose;
@@ -129,9 +129,13 @@ namespace KaSon.FrameWork.Common
                 foreach (var item in match)
                 {
                     var antecode = anteCodeArr[item.OrderNumber - 1];
-                    if (gameType.ToUpper() == "T6BQC" || gameType.ToUpper() == "T4CJQ")
+                    if ( gameType.ToUpper() == "T4CJQ")
                     {
-                        antecode = anteCodeArr[item.OrderNumber*2 - 2]+"," + anteCodeArr[item.OrderNumber * 2 - 1];
+                        antecode = anteCodeArr[item.OrderNumber * 2 - 2] + "," + anteCodeArr[item.OrderNumber * 2 - 1];
+                    }
+                    if (gameType.ToUpper() == "T6BQC")
+                    {
+                        antecode = anteCodeArr[item.OrderNumber - 2] + "," + anteCodeArr[item.OrderNumber - 1];
                     }
                     CTZQ_MatchList_AnteCode info = new CTZQ_MatchList_AnteCode();
                     info.AnteCode = antecode;
