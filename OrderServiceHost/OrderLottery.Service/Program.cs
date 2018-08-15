@@ -44,7 +44,7 @@ namespace OrderLottery.Service.Host
             JToken RebbitMqSettings = ConfigHelper.AllConfigInfo["RebbitMqSettings"];
             JToken HostSettings = ConfigHelper.AllConfigInfo["HostSettings"];
 
-            JToken ORMSettings = ConfigHelper.AllConfigInfo["ORMSettings"];
+          //  JToken ORMSettings = ConfigHelper.AllConfigInfo["ORMSettings"];
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             var host = new ServiceHostBuilder()
                 .RegisterServices(builder =>
