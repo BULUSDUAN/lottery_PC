@@ -103,7 +103,7 @@ namespace BettingLottery.Service.Host
                 .Build();
 
 
-            new KaSon.FrameWork.ORM.Helper.BusinessLib.Sports_BusinessBy().StartTaskByWriteChaseOrderToDb(int.Parse(Sports_SchemeJobSeconds));
+          
             //var list = JsonHelper.Deserialize<List<KaSon.FrameWork.ORM.OrmConfigInfo>>(ORMSettings.ToString());
             //DbProvider.InitConfigJson(list);
 
@@ -111,6 +111,7 @@ namespace BettingLottery.Service.Host
             {
                 Console.WriteLine($"服务端启动成功，{DateTime.Now}。");
             }
+             KaSon.FrameWork.ORM.Helper.BusinessLib.Sports_BusinessBy.StartTaskByWriteChaseOrderToDb(int.Parse(Sports_SchemeJobSeconds));
         }
     }
 

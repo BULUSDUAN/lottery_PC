@@ -10,6 +10,7 @@ using EntityModel.Enum;
 using KaSon.FrameWork.Common.Sport;
 using KaSon.FrameWork.Common;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace KaSon.FrameWork.ORM.Helper.BusinessLib
 {
@@ -22,25 +23,30 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
         /// 最号订单处理
         /// </summary>
         /// <returns></returns>
-        public string WriteChaseOrderToDb()
+        public static string WriteChaseOrderToDb()
         {
             var logList = new List<string>();
             logList.Add("<---------开始写入追号订单数据到数据库 ");
+            Console.WriteLine("<---------开始写入追号订单数据到数据库 ");
             var maxDay = 5;
+            var gameTypes = new LotteryGameManager().QueryEnableGameTypes();
             for (int i = 0; i < maxDay; i++)
             {
                 var now = DateTime.Today.AddDays(-i);
                 var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "CacheData", "ChaseOrder", now.ToString("yyyy-MM-dd"));
                 logList.Add(string.Format("查询目录:{0} ", path));
+
+                Console.WriteLine(string.Format("查询目录:{0} ", path));
                 if (!Directory.Exists(path))
                     continue;
 
                 var sportsManager = new Sports_Manager();
                 var schemeManager = new SchemeManager();
-                var gameTypes = new LotteryGameManager().QueryEnableGameTypes();
+           
                 //日期下面只有一级文件
                 var fileArray = Directory.GetFiles(path);
                 logList.Add(string.Format("文件数：{0}个 ", fileArray.Length));
+                Console.WriteLine(string.Format("文件数：{0}个 ", fileArray.Length));
                 foreach (var item in fileArray)
                 {
                     var json = File.ReadAllText(item, Encoding.UTF8);
@@ -53,20 +59,28 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
                     });
 
                     logList.Add(string.Format("开始处理{0} ", chaseOrderId));
+                    Console.WriteLine(string.Format("开始处理{0} ", chaseOrderId));
                     //一个追号订单，保存到数据库
                     try
                     {
                         var chaseSchemeList = sportsManager.QueryAllLotterySchemeByKeyLine(chaseOrderId);
+                     //   Console.WriteLine(string.Format("开始处理1{0} ", chaseOrderId));
                         var schemeIdArray = chaseSchemeList.Select(p => p.SchemeId).ToArray();
+                     //   Console.WriteLine(string.Format("开始处理2{0} ", chaseOrderId));
                         //查询三个订单表数据
+                      //  string log1 = string.Join(",", schemeIdArray);
+                     //   Console.WriteLine(string.Format("订单号****{0} ", log1));
                         var orderDetailList = schemeManager.QueryOrderDetailListBySchemeId(schemeIdArray);
+                     //   Console.WriteLine(string.Format("开始处理3{0} ", chaseOrderId));
                         var orderRunningList = sportsManager.QueryOrderRunningBySchemeIdArray(schemeIdArray);
+                      //  Console.WriteLine(string.Format("开始处理4{0} ", chaseOrderId));
                         var orderComplateList = sportsManager.QueryOrderComplateBySchemeIdArray(schemeIdArray);
-
+                      //  Console.WriteLine(string.Format("开始处理5{0} ", chaseOrderId));
                         if (chaseSchemeList.Count == orderDetailList.Count && chaseSchemeList.Count == orderRunningList.Count + orderComplateList.Count)
                         {
                             //订单数据正常，删除订单文件
                             logList.Add("订单数据正常，删除订单文件 ");
+                            Console.WriteLine("订单数据正常，删除订单文件 ");
                             File.Delete(item);
                             continue;
                         }
@@ -89,6 +103,7 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
                             if (orderDetail == null)
                             {
                                 logList.Add("写入orderDetail ");
+                                Console.WriteLine("写入orderDetail ");
                                 var currentIssuse = order.IssuseNumberList.FirstOrDefault(p => p.IssuseNumber == scheme.IssuseNumber);
 
                                 schemeManager.AddOrderDetail(new C_OrderDetail
@@ -139,6 +154,7 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
                             if (runningOrder == null && comlateOrder == null)
                             {
                                 logList.Add("写入runningOrder ");
+                                Console.WriteLine("写入runningOrder ");
                                 var currentIssuse = order.IssuseNumberList.FirstOrDefault(p => p.IssuseNumber == scheme.IssuseNumber);
                                 sportsManager.AddSports_Order_Running(new C_Sports_Order_Running
                                 {
@@ -197,13 +213,16 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
                     catch (Exception ex)
                     {
                         logList.Add(string.Format("保存追号订单数据失败:{0}", ex.ToString()));
+                        Console.WriteLine(string.Format("保存追号订单数据失败:{0}", ex.ToString()));
                     }
                 }
             }
             //写入日志
             logList.Add("本次处理全部完成----------> ");
-         
-           string log= string.Join(Environment.NewLine, logList.ToArray());
+            Console.WriteLine("本次处理全部完成----------> ");
+
+            string log= string.Join(Environment.NewLine, logList.ToArray());
+            Console.WriteLine(log);
          //   string log = Common.JSON.JsonHelper.Serialize(logList);
             Log4Log.LogEX(KLogLevel.Info, "追号消息***", new Exception(log));
 
@@ -211,14 +230,15 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
         }
 
 
-       public void StartTaskByWriteChaseOrderToDb(int seconds) {
+       public static void StartTaskByWriteChaseOrderToDb(int seconds) {
             Task.Factory.StartNew(() =>
             {
                 Console.WriteLine(string.Format( "追号作业启动...每{0}秒执行一次",seconds));
                 while (true)
                 {
-                    Task.Delay(1000 * seconds);
-                    this.WriteChaseOrderToDb();
+                    Thread.Sleep(1000 * seconds);
+                   // Task.Delay(1000 * seconds);
+                    Sports_BusinessBy.WriteChaseOrderToDb();
                     //this.WriteChaseOrderToDb() Task.FromResult(this.WriteChaseOrderToDb());
                 }
 
