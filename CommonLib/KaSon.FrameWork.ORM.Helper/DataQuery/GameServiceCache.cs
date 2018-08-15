@@ -82,18 +82,23 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public static Issuse_QueryInfo QueryCurretNewIssuseInfo(string gameCode, string gameType)
         {
+            var newgamecode = gameCode;
+            if (newgamecode.ToUpper() == "CTZQ")
+            {
+                newgamecode = gameCode + gameType;
+            }
             lock (_lckObj_IssuseOffical)
             {
-                if (!_issuseOficalDictionary.ContainsKey(gameCode)
-                    || _issuseOficalDictionary[gameCode] == null
-                    || _issuseOficalDictionary[gameCode].OfficialStopTime < DateTime.Now)
+                if (!_issuseOficalDictionary.ContainsKey(newgamecode)
+                    || _issuseOficalDictionary[newgamecode] == null
+                    || _issuseOficalDictionary[newgamecode].OfficialStopTime < DateTime.Now)
                 {
                     lock (_lckObj_IssuseOffical2)
                     {
-                        _issuseOficalDictionary[gameCode] = new GameBusiness().QueryCurrentNewIssuseInfo(gameCode, gameType);
+                        _issuseOficalDictionary[newgamecode] = new GameBusiness().QueryCurrentNewIssuseInfo(gameCode, gameType);
                     }
                 }
-                return _issuseOficalDictionary[gameCode];
+                return _issuseOficalDictionary[newgamecode];
             }
         }
 
