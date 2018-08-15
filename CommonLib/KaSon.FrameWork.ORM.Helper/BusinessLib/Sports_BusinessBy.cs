@@ -28,6 +28,8 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
             var logList = new List<string>();
             logList.Add("<---------开始写入追号订单数据到数据库 ");
             Console.WriteLine("<---------开始写入追号订单数据到数据库 ");
+
+
             var maxDay = 5;
             var gameTypes = new LotteryGameManager().QueryEnableGameTypes();
             for (int i = 0; i < maxDay; i++)
