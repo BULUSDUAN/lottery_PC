@@ -131,7 +131,7 @@ namespace KaSon.FrameWork.Common
                     var antecode = anteCodeArr[item.OrderNumber - 1];
                     if (gameType.ToUpper() == "T6BQC" || gameType.ToUpper() == "T4CJQ")
                     {
-                        antecode = anteCodeArr[item.OrderNumber*2 - 1]+"," + anteCodeArr[item.OrderNumber * 2 - 2];
+                        antecode = anteCodeArr[item.OrderNumber*2 - 2]+"," + anteCodeArr[item.OrderNumber * 2 - 1];
                     }
                     CTZQ_MatchList_AnteCode info = new CTZQ_MatchList_AnteCode();
                     info.AnteCode = antecode;
