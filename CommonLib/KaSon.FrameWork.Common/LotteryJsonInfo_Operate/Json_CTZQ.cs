@@ -128,8 +128,13 @@ namespace KaSon.FrameWork.Common
                 match = match.OrderBy(s => s.OrderNumber).ToList();
                 foreach (var item in match)
                 {
+                    var antecode = anteCodeArr[item.OrderNumber - 1];
+                    if (gameType.ToUpper() == "T6BQC" || gameType.ToUpper() == "T4CJQ")
+                    {
+                        antecode = anteCodeArr[item.OrderNumber*2 - 1]+"," + anteCodeArr[item.OrderNumber * 2 - 2];
+                    }
                     CTZQ_MatchList_AnteCode info = new CTZQ_MatchList_AnteCode();
-                    info.AnteCode = anteCodeArr[item.OrderNumber - 1];
+                    info.AnteCode = antecode;
                     info.CurrentSp = string.Empty;
                     info.Detail_RF = string.Empty;
                     info.Detail_YSZF = string.Empty;
