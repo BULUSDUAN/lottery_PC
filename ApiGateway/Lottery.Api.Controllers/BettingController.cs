@@ -1244,15 +1244,23 @@ namespace Lottery.Api.Controllers
                 {
                     result = query.Skip(pageIndex * PageSize).Take(PageSize).ToList();
                 }
-                else if (!string.IsNullOrEmpty(OrderBy) && OrderBy.ToLower() == "asc")
+                else if (!string.IsNullOrEmpty(OrderBy) && OrderBy.ToLower() == "masc")
                 {
                     result = query.OrderBy(c=>c.TotalMoney).Skip(pageIndex * PageSize).Take(PageSize).ToList();
                 }
-                else if (!string.IsNullOrEmpty(OrderBy) && OrderBy.ToLower() == "desc")
+                else if (!string.IsNullOrEmpty(OrderBy) && OrderBy.ToLower() == "mdesc")
                 {
                     result = query.OrderByDescending(c => c.TotalMoney).Skip(pageIndex * PageSize).Take(PageSize).ToList();
                 }
-                    return Json(new LotteryServiceResponse
+                else if (!string.IsNullOrEmpty(OrderBy) && OrderBy.ToLower() == "pasc")
+                {
+                    result = query.OrderBy(c => c.Progress).Skip(pageIndex * PageSize).Take(PageSize).ToList();
+                }
+                else if (!string.IsNullOrEmpty(OrderBy) && OrderBy.ToLower() == "pdesc")
+                {
+                    result = query.OrderByDescending(c => c.Progress).Skip(pageIndex * PageSize).Take(PageSize).ToList();
+                }
+                return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
                     Message = "查询订单明细成功",
