@@ -125,6 +125,7 @@ namespace Lottery.Api.Controllers
                 var APP_tuijianyoulifxid_Key = "APP_tuijianyoulifxid";
                 var APP_shareScheme_Key = "APP_shareScheme";
                 var APP_ServicePhone_Key = "Site.Service.Phone";
+                var APP_ScoreURL_Key = "APP_ScoreURL";
 
                 var APP_Common_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_Common_Key);
                 var APP_UserCenter_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_UserCenter_Key);
@@ -134,6 +135,7 @@ namespace Lottery.Api.Controllers
                 var APP_tuijianyoulifxid_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_tuijianyoulifxid_Key);
                 var APP_shareScheme_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_shareScheme_Key);
                 var APP_ServicePhone_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_ServicePhone_Key);
+                var APP_ScoreURL_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_ScoreURL_Key);
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
@@ -149,6 +151,7 @@ namespace Lottery.Api.Controllers
                         APP_tuijianyoulifxid = JsonHelper.Deserialize<object>(APP_tuijianyoulifxid_Value),
                         APP_shareScheme = JsonHelper.Deserialize<object>(APP_shareScheme_Value),
                         APP_ServicePhone= APP_ServicePhone_Value,
+                        APP_ScoreURL = APP_ScoreURL_Value,
                     },
                 });
             }

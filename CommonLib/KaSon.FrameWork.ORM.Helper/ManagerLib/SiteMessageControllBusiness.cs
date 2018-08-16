@@ -94,7 +94,6 @@ namespace KaSon.FrameWork.ORM.Helper
                             mobile = manager.QueryMobileByUserId(userId);
                         if (!string.IsNullOrEmpty(mobile))
                         {
-                            //发送验证码
                             this.SendSMS(mobile, msgContent, userId);
                         }
                         break;
