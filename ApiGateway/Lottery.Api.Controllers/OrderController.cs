@@ -2,10 +2,12 @@
 using EntityModel.CoreModel;
 using EntityModel.Enum;
 using EntityModel.LotteryJsonInfo;
+using EntityModel.Redis;
 using EntityModel.RequestModel;
 using Kason.Sg.Core.ProxyGenerator;
 using KaSon.FrameWork.Analyzer.AnalyzerFactory;
 using KaSon.FrameWork.Common;
+using KaSon.FrameWork.Common.Redis;
 using KaSon.FrameWork.Common.Sport;
 using KaSon.FrameWork.Common.Utilities;
 using Lottery.Api.Controllers.CommonFilterActtribute;
@@ -2712,12 +2714,38 @@ namespace Lottery.Api.Controllers
         {
             try
             {
+                var list = await GetRedisList(_serviceProxyProvider);
+                return list;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        private async Task<List<KaiJiang>> GetRedisList([FromServices]IServiceProxyProvider _serviceProxyProvider)
+        {
+            var key = RedisKeys.KaiJiang_Key;
+            var flag = KaSon.FrameWork.Common.Redis.RedisHelper.KeyExists(key);
+            var list = new List<KaiJiang>();
+            var str = "";
+            if (flag)
+            {
+                str = KaSon.FrameWork.Common.Redis.RedisHelper.StringGet(key);
+            }
+            if (!string.IsNullOrEmpty(str))
+            {
+                list = JsonHelper.Deserialize<List<KaiJiang>>(str);
+            }
+            else
+            {
                 Dictionary<string, object> param = new Dictionary<string, object>()
             {
                 { "gameString","JX11X5|GD11X5|SD11X5|CQSSC|SSQ|DLT|FC3D|PL3|CTZQ_T14C|CTZQ_T6BQC|CTZQ_T4CJQ|CTZQ_TR9"}
             };
                 var entitys = await _serviceProxyProvider.Invoke<GameWinNumber_InfoCollection>(param, "api/Order/QueryAllGameNewWinNumber");
-                List<KaiJiang> list = new List<KaiJiang>();
+                
                 foreach (var item in entitys.List)
                 {
                     var poolInfo = BettingHelper.GetPoolInfo(item.GameCode, item.IssuseNumber);
@@ -2738,15 +2766,11 @@ namespace Lottery.Api.Controllers
 
                 list[list.Count - 1].name = "TR9";
                 list[list.Count - 1].type = "任选9";
-
-                return list;
+                KaSon.FrameWork.Common.Redis.RedisHelper.StringSet(key, JsonHelper.Serialize(list), 5 * 60);
             }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
+            return list;
         }
+
         /// <summary>
         /// 开奖详情_222
         /// </summary>

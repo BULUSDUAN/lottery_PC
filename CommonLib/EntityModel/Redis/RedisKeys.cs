@@ -59,7 +59,7 @@ namespace EntityModel.Redis
         /// </summary>
         public const string Key_Core_GGTJ_List = "Core_GGTJ_List";
 
-
+        public const string KaiJiang_Key = "KaiJiang_RedisKey";
 
         /// <summary>
         /// 彩种未结算的订单（已出票的订单）
