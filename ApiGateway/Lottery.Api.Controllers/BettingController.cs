@@ -1229,6 +1229,7 @@ namespace Lottery.Api.Controllers
                 int pageIndex = p.PageIndex;
                 int PageSize = p.PageSize;
                 string key = p.Key;
+                string OrderBy = p.OrderBy;
 
                 //查询列表
                 var strPro = "10|20|30";
@@ -1236,11 +1237,22 @@ namespace Lottery.Api.Controllers
                 var query = from s in list
                             where arrProg.Contains(Convert.ToInt32(s.ProgressStatus).ToString())
                               && (s.StopTime >= DateTime.Now)
-                              && (key == null || key == string.Empty || s.CreateUserId == key || s.SchemeId == key || s.CreaterDisplayName == key)
+                              && (string.IsNullOrEmpty(key) || (s.CreateUserId!=null&& s.CreateUserId.Contains(key)) || (s.SchemeId != null && s.SchemeId.Contains(key)) || (s.CreaterDisplayName!=null&&s.CreaterDisplayName.Contains(key)))
                             select s;
-                var result = query.Skip(pageIndex * PageSize).Take(PageSize).ToList();
-
-                return Json(new LotteryServiceResponse
+                var result = new List<Sports_TogetherSchemeQueryInfo>();
+                if (string.IsNullOrEmpty(OrderBy))
+                {
+                    result = query.Skip(pageIndex * PageSize).Take(PageSize).ToList();
+                }
+                else if (!string.IsNullOrEmpty(OrderBy) && OrderBy.ToLower() == "asc")
+                {
+                    result = query.OrderBy(c=>c.TotalMoney).Skip(pageIndex * PageSize).Take(PageSize).ToList();
+                }
+                else if (!string.IsNullOrEmpty(OrderBy) && OrderBy.ToLower() == "desc")
+                {
+                    result = query.OrderByDescending(c => c.TotalMoney).Skip(pageIndex * PageSize).Take(PageSize).ToList();
+                }
+                    return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
                     Message = "查询订单明细成功",
