@@ -60,7 +60,7 @@ namespace Lottery.Api.Controllers
                 {
                     var list = new List<object>();
                     DateTime? OpeningTime = null;
-                    if (gameCode.ToUpper() == "FC3D"|| gameCode.ToUpper() == "PL3")
+                    if (gameCode.ToUpper() == "FC3D" || gameCode.ToUpper() == "PL3")
                     {
                         OpeningTime = gameIssuseInfo.LocalStopTime.Date.AddHours(21).AddMinutes(30);
                     }
@@ -204,13 +204,13 @@ namespace Lottery.Api.Controllers
                 var currTime = DateTime.Now;
                 //if (currTime > 0)
                 //{
-                    return Json(new LotteryServiceResponse
-                    {
-                        Code = ResponseCode.成功,
-                        Message = "查询服务器当前时间成功",
-                        MsgId = entity.MsgId,
-                        Value = currTime,
-                    });
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询服务器当前时间成功",
+                    MsgId = entity.MsgId,
+                    Value = currTime,
+                });
                 //}
                 //return Json(new LotteryServiceResponse
                 //{
@@ -328,13 +328,13 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                List<C_Bank_Info> BankList = await _serviceProxyProvider.Invoke<List<C_Bank_Info>>(new Dictionary<string,object>(), "api/Data/GetBankList");
+                List<C_Bank_Info> BankList = await _serviceProxyProvider.Invoke<List<C_Bank_Info>>(new Dictionary<string, object>(), "api/Data/GetBankList");
                 var returnlist = new List<object>();
                 if (BankList != null && BankList.Count > 0)
                 {
                     foreach (var item in BankList)
                     {
-                        returnlist.Add(new {id=item.Id,value=item.BankCode,name=item.BankName });
+                        returnlist.Add(new { id = item.Id, value = item.BankCode, name = item.BankName });
                     }
                     return Json(new LotteryServiceResponse
                     {
@@ -1156,7 +1156,7 @@ namespace Lottery.Api.Controllers
                 var list = new List<object>();
                 if (noticeList != null && noticeList.BulletinList.Count > 0)
                 {
-                    
+
                     foreach (var item in noticeList.BulletinList)
                     {
                         list.Add(new
@@ -1794,7 +1794,7 @@ namespace Lottery.Api.Controllers
             {
 
                 //var result = WCFClients.ActivityClient.QueryRedBagUseConfig();
-                var result = await _serviceProxyProvider.Invoke<string>(new Dictionary<string,object>(), "api/Data/QueryRedBagUseConfig");
+                var result = await _serviceProxyProvider.Invoke<string>(new Dictionary<string, object>(), "api/Data/QueryRedBagUseConfig");
                 var list = new List<object>();
                 if (!string.IsNullOrEmpty(result))
                 {
@@ -2516,34 +2516,64 @@ namespace Lottery.Api.Controllers
                     throw new Exception("期号不能为空");
 
                 var matchDataList = new List<object>();
+                object mlist = null;
+                string key = "";
                 switch (gameCode)
                 {
                     case "CTZQ":
                         //var cur = await _serviceProxyProvider.Invoke<ActivityListInfoCollection>(param, "api/Data/QueryActivInfoList");
                         //var cur = WCFClients.GameIssuseClient.QueryCurretNewIssuseInfo(gameCode, gameType);
-                        var issuse = Json_CTZQ.IssuseList(gameType);
+                        //cache 获取
+                        var _issuse = HashTableCache._IssuseCTZQHt[gameType] ?? Json_CTZQ.IssuseList(gameType);
+                        List<CtzqIssuesWeb> issuse = new List<CtzqIssuesWeb>();
+                        issuse = _issuse as List<CtzqIssuesWeb>;
                         var theissuse = issuse.FirstOrDefault(c => c.IssuseNumber == issuseNumber);
                         if (theissuse != null)
                         {
                             var now = DateTime.Now;
                             if (Convert.ToDateTime(theissuse.StartTime) > now) break;
-                            matchDataList.AddRange(Json_CTZQ.MatchList_WEB(issuseNumber, gameType));
+                            key = issuseNumber + gameType;
+                            mlist = HashTableCache._CTZQHt[key] ?? Json_CTZQ.MatchList_WEB(issuseNumber, gameType);
+
+                            //  var slist = ;
+                            matchDataList.AddRange(mlist as List<CTZQ_MatchInfo_WEB>);
                         }
                         break;
                     case "BJDC":
-                        matchDataList.AddRange(Json_BJDC.MatchList_WEB(issuseNumber, gameType));
+                        key = issuseNumber + gameType;
+                        mlist = HashTableCache._BJDCHt[key] ?? Json_BJDC.MatchList_WEB(issuseNumber, gameType);
+                        // var slist =;
+                        matchDataList.AddRange(mlist as List<BJDC_MatchInfo_WEB>);
                         break;
                     case "JCZQ":
+                        key = gameType + (newVerType == null ? "" : newVerType);
                         if (gameType.ToLower() == "hhdg")
-                            matchDataList.AddRange(Json_JCZQ.GetJCZQHHDGList());
+                            mlist = HashTableCache._JCZQHt[key] ?? Json_JCZQ.GetJCZQHHDGList();
                         else
-                            matchDataList.AddRange(Json_JCZQ.MatchList_WEB(gameType, newVerType));
+                            mlist = HashTableCache._JCZQHt[key] ?? Json_JCZQ.MatchList_WEB(gameType, newVerType);
+                        //matchDataList.AddRange(Json_JCZQ.MatchList_WEB(gameType, newVerType));
+                        //    matchDataList.AddRange(Json_JCZQ.GetJCZQHHDGList());
+                        // var slist =;
+                        matchDataList.AddRange(mlist as List<JCZQ_MatchInfo_WEB>);
                         break;
+
+                    // key = issuseNumber + gameType;
+
+                    //  break;
                     case "JCLQ":
+                        key = gameType;
                         if (gameType.ToLower() == "hhdg")
-                            matchDataList.AddRange(Json_JCLQ.GetJCLQHHDGList());
+                            mlist = HashTableCache._JCLQHt[key] ?? Json_JCLQ.GetJCLQHHDGList();
+
                         else
-                            matchDataList.AddRange(Json_JCLQ.MatchList_WEB(gameType));
+                            mlist = HashTableCache._JCLQHt[key] ?? Json_JCLQ.MatchList_WEB( gameType);
+                        //   matchDataList.AddRange(Json_JCLQ.MatchList_WEB(gameType));
+                        // matchDataList.AddRange(Json_JCLQ.GetJCLQHHDGList());
+
+                        // key = issuseNumber + gameType;
+
+                        // var slist =;
+                        matchDataList.AddRange(mlist as List<JCLQ_MatchInfo_WEB>);
                         break;
                     default:
                         throw new ArgumentException(string.Format("传入彩种{0}没有队伍信息", gameCode));
@@ -2609,7 +2639,7 @@ namespace Lottery.Api.Controllers
                     startDate = Convert.ToDateTime(theissuse.StartTime);
                 }
 
-                list.Add(new { issuse = cur.IssuseNumber, stoptime =cur.LocalStopTime, servertime =DateTime.Now, starttime = startDate != null ? startDate.Value : cur.StartTime });
+                list.Add(new { issuse = cur.IssuseNumber, stoptime = cur.LocalStopTime, servertime = DateTime.Now, starttime = startDate != null ? startDate.Value : cur.StartTime });
 
                 return Json(new LotteryServiceResponse
                 {
@@ -2814,7 +2844,7 @@ namespace Lottery.Api.Controllers
             try
             {
                 var list = new List<object>();
-                var result = await _serviceProxyProvider.Invoke<BJDCIssuseInfo>(new Dictionary<string,object>(), "api/Data/QueryBJDCCurrentIssuseInfo");
+                var result = await _serviceProxyProvider.Invoke<BJDCIssuseInfo>(new Dictionary<string, object>(), "api/Data/QueryBJDCCurrentIssuseInfo");
                 //var result = WCFClients.GameIssuseClient.QueryBJDCCurrentIssuseInfo();
                 if (result != null)
                 {
@@ -2875,7 +2905,7 @@ namespace Lottery.Api.Controllers
                 string cardNo = p.cardNo;
                 var R_Url = aliurl + "?_input_charset=utf-8&cardNo=" + cardNo + "&cardBinCheck=true";
                 var result = PostManager.Get(R_Url, Encoding.UTF8);
-                var obj= JsonHelper.Decode(result);
+                var obj = JsonHelper.Decode(result);
                 object value = new
                 {
                     bank = obj.bank,
@@ -2887,7 +2917,7 @@ namespace Lottery.Api.Controllers
                 };
                 //if ((bool)obj.validated == true)
                 //{
-                    
+
                 //}
                 return Json(new LotteryServiceResponse
                 {
