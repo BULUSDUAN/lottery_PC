@@ -49,7 +49,7 @@ namespace Lottery.Base.Controllers
         {
             try
             {
-                var domain = ConfigHelper.AllConfigInfo["SelfDomain"] ?? "http://www.iqucai.com";
+                var domain = ConfigHelper.AllConfigInfo["SelfDomain"] ?? "";
                 url = domain + url;
                 if (string.IsNullOrEmpty(url))
                     return string.Empty;

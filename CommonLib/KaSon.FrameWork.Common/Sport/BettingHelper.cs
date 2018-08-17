@@ -1223,7 +1223,6 @@ namespace KaSon.FrameWork.Common.Sport
         static string ResUrl = string.Empty;
         public BettingHelper()
         {
-            //http://res.iqucai.com/matchdata/jczq/match_list.json?_=1425952243703
             ResUrl = string.IsNullOrEmpty(ConfigHelper.AllConfigInfo["ResSiteUrl"].ToString()) ? "http://10.0.3.6:888/" : ConfigHelper.AllConfigInfo["ResSiteUrl"].ToString();
             //ConfigurationManager.AppSettings["ResSiteUrl"] 
         }
