@@ -1208,12 +1208,19 @@ namespace Lottery.Api.Controllers
         {
             Dictionary<string, object> param = new Dictionary<string, object>
             {
-                {"schemeId",schemeId },{"userToken",userToken },{ "PageIndex",0},{ "PageSize",100}
+                {"schemeId",schemeId }
+                //{"userToken",userToken },{ "PageIndex",0},{ "PageSize",100}
             };
             var schemeInfo = await _serviceProxyProvider.Invoke<Sports_TogetherSchemeQueryInfo>(param, "'api/Order/QuerySportsTogetherDetail");
+            param.Clear();
+            param.Add("userToken", userToken);
             var userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
+            param.Clear();
+            param.Add("schemeId", schemeId);
+            param.Add("PageIndex", 0);
+            param.Add("PageSize", 100);
+            param.Add("userToken", userToken);
             var join = await _serviceProxyProvider.Invoke<Sports_TogetherJoinInfoCollection>(param, "api/Order/QuerySportsTogetherJoinList");
-
             var joinList = new List<object>();
             foreach (var item in join.List)
             {
