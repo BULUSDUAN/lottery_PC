@@ -1078,6 +1078,10 @@ namespace KaSon.FrameWork.Common.Utilities {
                     return "任选九";
                 case "CTZQ":
                     return "传统足球";
+                case "SD11X5":
+                    return "山东11选5";
+                case "GD11X5":
+                    return "广东11选5";
                 default:
                     return "";
             }
