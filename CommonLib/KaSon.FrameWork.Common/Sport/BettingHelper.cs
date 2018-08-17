@@ -1223,8 +1223,7 @@ namespace KaSon.FrameWork.Common.Sport
         static string ResUrl = string.Empty;
         public BettingHelper()
         {
-            ResUrl = string.IsNullOrEmpty(ConfigHelper.AllConfigInfo["ResSiteUrl"].ToString()) ? "http://10.0.3.6:888/" : ConfigHelper.AllConfigInfo["ResSiteUrl"].ToString();
-            //ConfigurationManager.AppSettings["ResSiteUrl"] 
+            ResUrl = ConfigHelper.AllConfigInfo["ResSiteUrl"].ToString();
         }
 
         public List<T> GetMatchInfoList<T>(string filePath)
