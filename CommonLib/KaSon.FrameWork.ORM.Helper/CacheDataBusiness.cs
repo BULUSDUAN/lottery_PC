@@ -14,13 +14,13 @@ namespace KaSon.FrameWork.ORM.Helper
     public class CacheDataBusiness : DBbase
     {
 
-        private static List<C_Core_Config> _coreConfigList = new List<C_Core_Config>();
+        //private static List<C_Core_Config> _coreConfigList = new List<C_Core_Config>();
 
         public C_Core_Config QueryCoreConfigByKey(string key)
         {
-            if (_coreConfigList.Count == 0)
-                _coreConfigList = QueryAllCoreConfig();
-            var config = _coreConfigList.Where(p => p.ConfigKey == key).FirstOrDefault();
+            //if (_coreConfigList.Count == 0)
+            //    _coreConfigList = QueryAllCoreConfig();
+            var config = DB.CreateQuery<C_Core_Config>().Where(p => p.ConfigKey == key).FirstOrDefault();
             if (config == null)
                 throw new Exception(string.Format("找不到配置项：{0}", key));
             return config;

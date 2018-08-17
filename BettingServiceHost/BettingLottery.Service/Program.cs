@@ -44,7 +44,7 @@ namespace BettingLottery.Service.Host
             JToken HostSettings = ConfigHelper.AllConfigInfo["HostSettings"];
             string Sports_SchemeJobSeconds = ConfigHelper.AllConfigInfo["Sports_SchemeJobSeconds"].ToString();
 
-            JToken ORMSettings = ConfigHelper.AllConfigInfo["ORMSettings"];
+            //JToken ORMSettings = ConfigHelper.AllConfigInfo["ORMSettings"];
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             var host = new ServiceHostBuilder()
                 .RegisterServices(builder =>
