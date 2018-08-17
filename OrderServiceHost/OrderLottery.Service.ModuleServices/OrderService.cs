@@ -312,5 +312,10 @@ namespace OrderLottery.Service.ModuleServices
         {
             return Task.FromResult(_order.QueryAllGameNewWinNumber(gameString));
         }
+
+        public Task<Sports_TogetherJoinInfoCollection> QuerySportsTogetherJoinList(string schemeId, int pageIndex, int pageSize, string UserToken)
+        {
+            return Task.FromResult(_order.QuerySportsTogetherJoinList(schemeId, pageIndex, pageSize, UserToken));
+        }
     }
 }

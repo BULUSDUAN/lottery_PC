@@ -350,7 +350,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new Exception("查询我的余额出错 - " + ex.Message, ex);
+                throw new Exception("查询我的余额出错 - " + ex.Message);
             }
         }
 
@@ -377,7 +377,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new LogicException(ex.Message, ex);
+                throw new LogicException(ex.Message);
             }
         }
         
@@ -451,7 +451,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message, ex);
+                throw new Exception(ex.Message);
             }
         }
 
@@ -485,7 +485,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message, ex);
+                throw new Exception(ex.Message);
             }
         }
 
@@ -931,7 +931,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new Exception("操作资金密码出错 - " + ex.Message, ex);
+                throw new Exception("操作资金密码出错 - " + ex.Message);
             }
         }
 
@@ -979,7 +979,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new Exception("设置资金密码类型出错 - " + ex.Message, ex);
+                throw new Exception("设置资金密码类型出错 - " + ex.Message);
             }
         }
 
@@ -998,7 +998,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new Exception("查询某个yqid下面的能满足领红包条件的用户个数出错 - " + ex.Message, ex);
+                throw new Exception("查询某个yqid下面的能满足领红包条件的用户个数出错 - " + ex.Message);
             }
         }
         /// <summary>
@@ -1099,7 +1099,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new Exception("添加银行卡信息出错 - " + ex.Message, ex);
+                throw new Exception("添加银行卡信息出错 - " + ex.Message);
             }
         }
 
@@ -1118,7 +1118,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new Exception("申请提现出错 - " + ex.Message, ex);
+                throw new Exception("申请提现出错 - " + ex.Message);
             }
         }
 
@@ -1142,7 +1142,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new Exception("申请提现出错 - " + ex.Message, ex);
+                throw new Exception("申请提现出错 - " + ex.Message);
             }
         }
 
@@ -1159,7 +1159,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new Exception("查询我的提现记录列表 - " + ex.Message, ex);
+                throw new Exception("查询我的提现记录列表 - " + ex.Message);
             }
         }
 
@@ -1182,7 +1182,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new Exception("出错 - " + ex.Message, ex);
+                throw new Exception("出错 - " + ex.Message);
             }
         }
         

@@ -955,7 +955,7 @@ namespace KaSon.FrameWork.PlugIn.External
             if (!string.IsNullOrEmpty(agent.CustomerDomain))
                 throw new Exception("代理已设置过自定义链接:" + agent.CustomerDomain);
 
-            var domainFormat = "http://{0}.vip.iqucai.com";
+            var domainFormat = "http://{0}.vip.baidu.com";
             domain = string.Format(domainFormat, domain);
             var existAgent = manager.QueryOCAgentByDomain(domain);
             if (existAgent != null)
