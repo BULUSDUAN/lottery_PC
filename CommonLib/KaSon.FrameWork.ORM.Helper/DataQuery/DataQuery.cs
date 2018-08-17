@@ -251,6 +251,15 @@ namespace KaSon.FrameWork.ORM.Helper
               .List<GameIssuse>().FirstOrDefault();
             return model;
         }
+
+        public IList<C_BJDC_Issuse> CurrentBJDCIssuseInfo()
+        {
+            var query = from b in DB.CreateQuery<C_BJDC_Issuse>()
+                        where b.MinLocalStopTime >= DateTime.Now
+                        orderby b.MinLocalStopTime ascending
+                        select b;
+            return query.ToList();
+        }
         /// <summary>
         /// 北京单场场次信息
         /// </summary>

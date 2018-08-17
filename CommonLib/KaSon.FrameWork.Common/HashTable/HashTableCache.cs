@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Collections;
 using System.Text;
+using EntityModel.CoreModel;
 
 namespace KaSon.FrameWork.Common
 {
   public   class HashTableCache
     {
         public static System.Collections.Hashtable _CTZQHt =  System.Collections.Hashtable.Synchronized(new Hashtable());
+        public static Issuse_QueryInfoEX _Issuse_QueryInfo = new Issuse_QueryInfoEX();
         public static System.Collections.Hashtable _IssuseCTZQHt = System.Collections.Hashtable.Synchronized(new Hashtable());
 
         public static System.Collections.Hashtable _BJDCHt = System.Collections.Hashtable.Synchronized(new Hashtable());
@@ -18,17 +20,25 @@ namespace KaSon.FrameWork.Common
         public static string[] _JCZQType = { "SPF", "BRQSPF", "ZJQ", "BF", "BQC","HHDG" };
         public static string[] _JCLQType = { "SF", "RFSF", "DXF", "SFC",  "HHDG" };
         public static string[] _BJDCType = { "SPF"};
+
+        public static void Set_Issuse_QueryInfo(Issuse_QueryInfoEX ex) {
+
+            lock (_Issuse_QueryInfo) {
+                _Issuse_QueryInfo = ex;
+            }
+        }
+
         /// <summary>
         /// 传统足球
         /// </summary>
         /// <param name="IssuseNumber"></param>
-        public static void Init_CTZQ_Data(string issuseNumber) {
+        public static void Init_CTZQ_Data(Issuse_QueryInfoEX ex) {
             //  Issuse_QueryInfo cur = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Data/QueryCurretNewIssuseInfo");
             string key = "";
-            foreach (var item in _CTZQType)
+            foreach (var item in ex.CTZQ_IssuseNumber)
             {
-                key = item + issuseNumber;
-                _CTZQHt[item] = Json_CTZQ.MatchList_WEB(issuseNumber, item);
+                key = item.Game.GameCode + item.IssuseNumber;
+                _CTZQHt[item] = Json_CTZQ.MatchList_WEB(item.IssuseNumber, item.Game.GameCode);
             }
           
         }
