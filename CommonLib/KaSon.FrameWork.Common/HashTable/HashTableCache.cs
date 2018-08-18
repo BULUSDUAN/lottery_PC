@@ -65,7 +65,7 @@ namespace KaSon.FrameWork.Common
             string key = "";
             foreach (var item in _BJDCType)
             {
-                key = item  + issuseNumber;
+                key = item  + issuseNumber;//SF+期号
                 _BJDCHt[item] = Json_BJDC.MatchList_WEB(issuseNumber, item);
             }
 

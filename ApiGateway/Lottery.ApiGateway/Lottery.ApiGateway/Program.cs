@@ -70,35 +70,97 @@ namespace Lottery.ApiGateway
             
 
             if (!bool.Parse(ISConsoleLog)) ConsoleHelper.Clear();
+
+            Task.WhenAll(new Task[] {
+                CTZQ_BJDC(),
+                JCLQ(),
+                JCZQ()
+            });
+
+
             //定时更新最新期号信息 
-            Task.Factory.StartNew(async delegate {
-                await Task.Delay(1000 * 5);
+            //Task.Factory.StartNew(async delegate {
+            //    await Task.Delay(1000 * 5);
               
-                var _serviceProxyProvider = ServiceLocator.GetService<IServiceProxyProvider>();
-                Issuse_QueryInfoEX val= await _serviceProxyProvider.Invoke<Issuse_QueryInfoEX>(new Dictionary<string, object>(), "api/Data/QueryCurretNewIssuseInfoList");
-                HashTableCache.Set_Issuse_QueryInfo(val);// = val;
-                                                         //Console.WriteLine("");
-                                                         //初始化传统采集信息
-                HashTableCache.Init_CTZQ_Data(val);
-                HashTableCache.Init_BJDC_Data(val.BJDC_IssuseNumber.IssuseNumber);
-               //Task.Factory.StartNew(()=> {
-               //     ;
-               // });
+            //    var _serviceProxyProvider = ServiceLocator.GetService<IServiceProxyProvider>();
+            //    Issuse_QueryInfoEX val= await _serviceProxyProvider.Invoke<Issuse_QueryInfoEX>(new Dictionary<string, object>(), "api/Data/QueryCurretNewIssuseInfoList");
+            //    HashTableCache.Set_Issuse_QueryInfo(val);// = val;
+            //                                             //Console.WriteLine("");
+            //                                             //初始化传统采集信息
+            //    HashTableCache.Init_CTZQ_Data(val);
+            //    HashTableCache.Init_BJDC_Data(val.BJDC_IssuseNumber.IssuseNumber);
+            //   //Task.Factory.StartNew(()=> {
+            //   //     ;
+            //   // });
 
-            });
-            Task.Factory.StartNew(() => {
+            //});
+            //Task.Factory.StartNew(() => {
 
-                HashTableCache.Init_JCLQ_Data();
-            });
-            Task.Factory.StartNew(() => {
+            //    HashTableCache.Init_JCLQ_Data();
+            //});
+            //Task.Factory.StartNew(() => {
 
-                HashTableCache.Init_JCZQ_Data("1");
-                HashTableCache.Init_JCZQ_Data();
-            });
+            //    HashTableCache.Init_JCZQ_Data("1");
+            //    HashTableCache.Init_JCZQ_Data();
+            //});
             host.Run();
 
           
 
+        }
+
+
+        public static async Task CTZQ_BJDC()
+        {
+            while (true)
+            {
+                try
+                {
+                    var _serviceProxyProvider = ServiceLocator.GetService<IServiceProxyProvider>();
+                    Issuse_QueryInfoEX val = await _serviceProxyProvider.Invoke<Issuse_QueryInfoEX>(new Dictionary<string, object>(), "api/Data/QueryCurretNewIssuseInfoList");
+                    HashTableCache.Set_Issuse_QueryInfo(val);
+                    HashTableCache.Init_CTZQ_Data(val);
+                    HashTableCache.Init_BJDC_Data(val.BJDC_IssuseNumber.IssuseNumber);
+                }
+                catch (Exception ex)
+                {
+
+                }
+                await Task.Delay(5000);
+            }
+        }
+
+        public static async Task JCLQ()
+        {
+            while (true)
+            {
+                try
+                {
+                    HashTableCache.Init_JCLQ_Data();
+                }
+                catch (Exception ex)
+                {
+
+                }
+                await Task.Delay(5000);
+            }
+        }
+
+        public static async Task JCZQ()
+        {
+            while (true)
+            {
+                try
+                {
+                    HashTableCache.Init_JCZQ_Data("1");
+                    HashTableCache.Init_JCZQ_Data();
+                }
+                catch (Exception ex)
+                {
+
+                }
+                await Task.Delay(5000);
+            }
         }
     }
 }

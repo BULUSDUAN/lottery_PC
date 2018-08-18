@@ -2540,7 +2540,7 @@ namespace Lottery.Api.Controllers
                         }
                         break;
                     case "BJDC":
-                        key = issuseNumber + gameType;
+                        key = gameType + issuseNumber;
                         mlist = HashTableCache._BJDCHt[key] ?? Json_BJDC.MatchList_WEB(issuseNumber, gameType);
                         // var slist =;
                         matchDataList.AddRange(mlist as List<BJDC_MatchInfo_WEB>);
@@ -2566,7 +2566,7 @@ namespace Lottery.Api.Controllers
                             mlist = HashTableCache._JCLQHt[key] ?? Json_JCLQ.GetJCLQHHDGList();
 
                         else
-                            mlist = HashTableCache._JCLQHt[key] ?? Json_JCLQ.MatchList_WEB( gameType);
+                            mlist = HashTableCache._JCLQHt[key] ?? Json_JCLQ.MatchList_WEB(gameType);
                         //   matchDataList.AddRange(Json_JCLQ.MatchList_WEB(gameType));
                         // matchDataList.AddRange(Json_JCLQ.GetJCLQHHDGList());
 
