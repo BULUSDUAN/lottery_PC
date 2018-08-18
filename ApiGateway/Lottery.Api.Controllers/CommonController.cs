@@ -174,7 +174,7 @@ namespace Lottery.Api.Controllers
                 SchemeSource Type = entity.SourceCode;
                 if (Type == SchemeSource.Android)
                 {
-                    var AKey = "ANDRIOD_PhoneCheckversionNew";
+                    var AKey = "ANDRIOD_PhoneCheckversionNew_V2";
                     var AValue = await GetAppConfigByKey(_serviceProxyProvider, AKey);
                     return Json(new LotteryServiceResponse
                     {
@@ -186,7 +186,7 @@ namespace Lottery.Api.Controllers
                 }
                 else if (Type == SchemeSource.Iphone)
                 {
-                    var IKey = "IOS_PhoneCheckversionNew";
+                    var IKey = "IOS_PhoneCheckversionNew_V2";
                     var IValue = await GetAppConfigByKey(_serviceProxyProvider, IKey);
                     return Json(new LotteryServiceResponse
                     {
