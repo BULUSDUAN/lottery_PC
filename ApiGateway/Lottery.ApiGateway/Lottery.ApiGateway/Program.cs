@@ -118,7 +118,9 @@ namespace Lottery.ApiGateway
                 {
                     var _serviceProxyProvider = ServiceLocator.GetService<IServiceProxyProvider>();
                     Issuse_QueryInfoEX val = await _serviceProxyProvider.Invoke<Issuse_QueryInfoEX>(new Dictionary<string, object>(), "api/Data/QueryCurretNewIssuseInfoList");
-                    HashTableCache.Set_Issuse_QueryInfo(val);
+                    //HashTableCache.Set_Issuse_QueryInfo(val);
+                    //HashTableCache.ClearHashTable();
+                    HashTableCache.Init_CTZQ_Issuse_Data();
                     HashTableCache.Init_CTZQ_Data(val);
                     HashTableCache.Init_BJDC_Data(val.BJDC_IssuseNumber.IssuseNumber);
                 }

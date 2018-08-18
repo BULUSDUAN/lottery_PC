@@ -2532,7 +2532,7 @@ namespace Lottery.Api.Controllers
                         {
                             var now = DateTime.Now;
                             if (Convert.ToDateTime(theissuse.StartTime) > now) break;
-                            key = issuseNumber + gameType;
+                            key = gameType + issuseNumber;
                             mlist = HashTableCache._CTZQHt[key] ?? Json_CTZQ.MatchList_WEB(issuseNumber, gameType);
 
                             //  var slist = ;

@@ -28,6 +28,13 @@ namespace KaSon.FrameWork.Common
             }
         }
 
+
+        public static void ClearHashTable()
+        {
+            _CTZQHt.Clear();
+            _BJDCHt.Clear();
+        }
+
         /// <summary>
         /// 传统足球
         /// </summary>
@@ -35,10 +42,17 @@ namespace KaSon.FrameWork.Common
         public static void Init_CTZQ_Data(Issuse_QueryInfoEX ex) {
             //  Issuse_QueryInfo cur = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Data/QueryCurretNewIssuseInfo");
             string key = "";
+            //_CTZQHt.Clear();
             foreach (var item in ex.CTZQ_IssuseNumber)
             {
-                key = item.Game.GameCode + item.IssuseNumber;
-                _CTZQHt[item] = Json_CTZQ.MatchList_WEB(item.IssuseNumber, item.Game.GameCode);
+                var type = item.GameCode_IssuseNumber.Split('|')[1];
+                key = type + item.IssuseNumber;
+                var result= Json_CTZQ.MatchList_WEB(item.IssuseNumber, type);
+                foreach (string _keyitem in _CTZQHt.Keys)
+                {
+                    if (_keyitem.StartsWith(type)) _CTZQHt.Remove(_keyitem);
+                }
+                _CTZQHt[key] = result;
             }
           
         }
@@ -63,10 +77,13 @@ namespace KaSon.FrameWork.Common
         {
             //  Issuse_QueryInfo cur = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Data/QueryCurretNewIssuseInfo");
             string key = "";
+            //_BJDCHt.Clear();
             foreach (var item in _BJDCType)
             {
                 key = item  + issuseNumber;//SF+期号
-                _BJDCHt[item] = Json_BJDC.MatchList_WEB(issuseNumber, item);
+                var result = Json_BJDC.MatchList_WEB(issuseNumber, item);
+                _BJDCHt.Clear();
+                _BJDCHt[key] = result;
             }
 
         }
