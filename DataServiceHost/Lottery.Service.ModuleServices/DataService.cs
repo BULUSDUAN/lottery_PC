@@ -205,6 +205,18 @@ namespace Lottery.Service.ModuleServices
                 throw new Exception("查询当前奖期出错", ex);
             }
         }
+        public Task<Issuse_QueryInfoEX> QueryCurretNewIssuseInfoList()
+        {
+            try
+            {
+                return Task.FromResult(GameServiceCache.QueryCurretNewIssuseInfoByList());
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询当前奖期出错", ex);
+            }
+        }
+        //QueryCurretNewIssuseInfoByList
 
         /// <summary>
         /// 查询北京单场最新期号

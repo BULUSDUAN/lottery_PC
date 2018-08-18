@@ -1211,7 +1211,7 @@ namespace Lottery.Api.Controllers
                 {"schemeId",schemeId }
                 //{"userToken",userToken },{ "PageIndex",0},{ "PageSize",100}
             };
-            var schemeInfo = await _serviceProxyProvider.Invoke<Sports_TogetherSchemeQueryInfo>(param, "'api/Order/QuerySportsTogetherDetail");
+            var schemeInfo = await _serviceProxyProvider.Invoke<Sports_TogetherSchemeQueryInfo>(param, "api/Order/QuerySportsTogetherDetail");
             param.Clear();
             param.Add("userToken", userToken);
             var userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");

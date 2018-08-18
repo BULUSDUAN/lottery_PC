@@ -1,4 +1,5 @@
-﻿using EntityModel.CoreModel;
+﻿using EntityModel;
+using EntityModel.CoreModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -79,7 +80,50 @@ namespace KaSon.FrameWork.ORM.Helper
         //        return _issuseOficalDictionary[gameCode];
         //    }
         //}
+        /// <summary>
+        /// 传统足球 与 北京单场
+        /// </summary>
+        /// <returns></returns>
+        public static Issuse_QueryInfoEX QueryCurretNewIssuseInfoByList()
+        {
+            IList<Issuse_QueryInfo> list = new List<Issuse_QueryInfo>();
+            Issuse_QueryInfoEX qex = new Issuse_QueryInfoEX();
+                
+            GameBusiness DQ = new GameBusiness();
+           var bjlist= DQ.QueryCurrentBJDCIssuseInfo();
+            qex.BJDC_IssuseNumber= bjlist.Select(p => new BJDCIssuseInfo
+            {
+                IssuseNumber = p.IssuseNumber,
+                MinLocalStopTime = p.MinLocalStopTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                MinMatchStartTime = p.MinMatchStartTime.ToString("yyyy-MM-dd HH:mm:ss"),
+            }).FirstOrDefault();
+            string[] _CTZQType = { "T14C", "T4CJQ", "TR9", "T6BQC" };
+            string gameCode = "CTZQ";
+            foreach (var item in _CTZQType)
+            {
+                lock (_lckObj_IssuseOffical)
+                {
+                    var newgamecode = gameCode;
+                    if (newgamecode.ToUpper() == "CTZQ")
+                    {
+                        newgamecode = gameCode + item;
+                    }
+                    if (!_issuseOficalDictionary.ContainsKey(newgamecode)
+                        || _issuseOficalDictionary[newgamecode] == null
+                        || _issuseOficalDictionary[newgamecode].OfficialStopTime < DateTime.Now)
+                    {
+                        lock (_lckObj_IssuseOffical2)
+                        {
+                            _issuseOficalDictionary[newgamecode] = new GameBusiness().QueryCurrentNewIssuseInfo(gameCode, item);
+                        }
+                    }
+                    list.Add( _issuseOficalDictionary[newgamecode]);
+                }
+            }
+            qex.CTZQ_IssuseNumber = list;
 
+            return qex;
+        }
         public static Issuse_QueryInfo QueryCurretNewIssuseInfo(string gameCode, string gameType)
         {
             var newgamecode = gameCode;

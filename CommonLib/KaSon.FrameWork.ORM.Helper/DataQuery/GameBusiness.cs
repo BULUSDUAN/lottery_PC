@@ -1,4 +1,5 @@
-﻿using EntityModel.CoreModel;
+﻿using EntityModel;
+using EntityModel.CoreModel;
 using EntityModel.Enum;
 using GameBiz.Domain.Entities;
 using KaSon.FrameWork.Common.Utilities;
@@ -149,6 +150,11 @@ namespace KaSon.FrameWork.ORM.Helper
             return entity;
         }
 
+        public IList<C_BJDC_Issuse> QueryCurrentBJDCIssuseInfo()
+        {
+            return new DataQuery().CurrentBJDCIssuseInfo();
+          //  return entity;
+        }
         public Issuse_QueryInfo QueryCurrentNewIssuseInfo(string gameCode, string gameType)
         {
 

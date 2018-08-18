@@ -155,11 +155,15 @@ namespace KaSon.FrameWork.ORM.Helper
         public void RequestWithdraw_Step2(Withdraw_RequestInfo info, string userId, string balancepwd)
         {
             var userManager = new UserBalanceManager();
+            var fundManager = new FundManager();
             var user = userManager.QueryUserRegister(userId);
             if (!user.IsEnable)
                 throw new LogicException("用户已禁用");
             var orderId = BettingHelper.GetWithdrawId();
-           
+            var maxTimes = 3;
+            var currentTimes = fundManager.QueryTodayWithdrawTimes(userId);
+            if (currentTimes >= maxTimes)
+                throw new Exception(string.Format("每日只能提现{0}次", maxTimes));
             DB.Begin();
             try
             {
@@ -170,7 +174,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 var category = businessHelper.Payout_To_Frozen_Withdraw(BusinessHelper.FundCategory_RequestWithdraw, userId, orderId, info.RequestMoney
                       , string.Format("申请提现：{0:N2}元", info.RequestMoney), "Withdraw", balancepwd, out resonseMoney);
 
-                var fundManager = new FundManager();
+             
                 fundManager.AddWithdraw (new C_Withdraw
                 {
                     OrderId = orderId,

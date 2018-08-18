@@ -62,6 +62,9 @@ namespace Lottery.Service.IModuleServices
         [Service(Date = "2018-07-05", Director = "lidi", Name = "查询最新期号")]
         Task<Issuse_QueryInfo> QueryCurretNewIssuseInfo(string gameCode, string gameType);
 
+        [Service(Date = "2018-07-05", Director = "Kason", Name = "查询最新期号")]
+        Task<Issuse_QueryInfoEX> QueryCurretNewIssuseInfoList();
+
         [Service(Date = "2018-07-05", Director = "lidi", Name = "根据公告编号查询公告")]
         Task<BulletinInfo_Query> QueryDisplayBulletinDetailById(long bulletinId);
 

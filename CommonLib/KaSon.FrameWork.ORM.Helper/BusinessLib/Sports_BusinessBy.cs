@@ -233,14 +233,15 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
 
 
        public static void StartTaskByWriteChaseOrderToDb(int seconds) {
-            Task.Factory.StartNew(() =>
+            Task.Factory.StartNew(async delegate
             {
                 Console.WriteLine(string.Format( "追号作业启动...每{0}秒执行一次",seconds));
                 while (true)
                 {
-                    Thread.Sleep(1000 * seconds);
-                   // Task.Delay(1000 * seconds);
+                    // Thread.Sleep(1000 * seconds);
                     Sports_BusinessBy.WriteChaseOrderToDb();
+                    Console.WriteLine(string.Format("追号作业启动...每{0}秒执行一次", seconds));
+                    await Task.Delay(1000 * seconds);
                     //this.WriteChaseOrderToDb() Task.FromResult(this.WriteChaseOrderToDb());
                 }
 

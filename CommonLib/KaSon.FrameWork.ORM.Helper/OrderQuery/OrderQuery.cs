@@ -585,7 +585,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public Sports_TogetherSchemeQueryInfo QueryComplateSportsTogetherDetail(string schemeId)
         {
             var query = from t in DB.CreateQuery<C_Sports_Together>()
-                        join u in DB.CreateQuery<UserRegister>() on t.CreateUserId equals u.UserId
+                        join u in DB.CreateQuery<C_User_Register>() on t.CreateUserId equals u.UserId
                         join r in DB.CreateQuery<C_Sports_Order_Complate>() on t.SchemeId equals r.SchemeId
                         join b in DB.CreateQuery<C_User_Beedings>() on t.CreateUserId equals b.UserId
                         where t.SchemeId == schemeId && t.GameCode == b.GameCode && t.GameType == b.GameType
@@ -662,74 +662,80 @@ namespace KaSon.FrameWork.ORM.Helper
         }
         public Sports_TogetherSchemeQueryInfo QueryRunningSportsTogetherDetail(string schemeId)
         {
-            var query = from t in DB.CreateQuery<C_Sports_Together>()
-                        join u in DB.CreateQuery<UserRegister>() on t.CreateUserId equals u.UserId
-                        join r in DB.CreateQuery<C_Sports_Order_Running>() on t.SchemeId equals r.SchemeId
-                        join b in DB.CreateQuery<C_User_Beedings>() on t.CreateUserId equals b.UserId
+            var Sports_Together = DB.CreateQuery<C_Sports_Together>();
+            var User_Register = DB.CreateQuery<C_User_Register>();
+            var Sports_Order_Running = DB.CreateQuery<C_Sports_Order_Running>();
+            var User_Beedings = DB.CreateQuery<C_User_Beedings>();
+            var query = from t in Sports_Together
+                        join u in User_Register on t.CreateUserId equals u.UserId
+                        join r in Sports_Order_Running on t.SchemeId equals r.SchemeId
+                        join b in User_Beedings on t.CreateUserId equals b.UserId
                         where t.SchemeId == schemeId && t.GameCode == b.GameCode && t.GameType == b.GameType
                         select new { t, u, r, b };
-            var queryResult = query.ToList().Select(z => new Sports_TogetherSchemeQueryInfo
-            {
-                BonusDeduct = z.t.BonusDeduct,
-                CreateUserId = z.t.CreateUserId,
-                CreaterDisplayName = z.u.DisplayName,
-                CreaterHideDisplayNameCount = z.u.HideDisplayNameCount,
-                Description = z.t.Description,
-                GameDisplayName = KaSon.FrameWork.Common.Utilities.ConvertHelper.FormatGameCode(z.t.GameCode),
-                GameTypeDisplayName = KaSon.FrameWork.Common.Utilities.ConvertHelper.FormatGameType(z.t.GameCode, z.t.GameType),
-                Guarantees = z.t.Guarantees,
-                PlayType = z.t.PlayType,
-                Price = z.t.Price,
-                SchemeDeduct = z.t.SchemeDeduct,
-                SchemeSource = (SchemeSource)z.t.SchemeSource,
-                Security = (TogetherSchemeSecurity)z.t.Security,
-                StopTime = z.t.StopTime,
-                Subscription = z.t.Subscription,
-                Title = z.t.Title,
-                TotalCount = z.t.TotalCount,
-                TotalMoney = z.t.TotalMoney,
-                SchemeId = z.t.SchemeId,
-                JoinPwd = z.t.JoinPwd,
-                Progress = z.t.Progress,
-                ProgressStatus = (TogetherSchemeProgress)z.t.ProgressStatus,
-                SystemGuarantees = z.t.SystemGuarantees,
-                GameCode = z.t.GameCode,
-                GameType = z.t.GameType,
-                SoldCount = z.t.SoldCount,
-                TotalMatchCount = z.t.TotalMatchCount,
-                Amount = z.r.Amount,
-                BetCount = z.r.BetCount,
-                PreTaxBonusMoney = z.r.PreTaxBonusMoney,
-                AfterTaxBonusMoney = z.r.AfterTaxBonusMoney,
-                WinNumber = string.Empty,
-                BonusStatus = (BonusStatus)z.r.BonusStatus,
-                BonusCount = 0,
-                CreateTime = z.t.CreateTime,
-                IsPrizeMoney = false,
-                TicketStatus = (TicketStatus)z.r.TicketStatus,
-                IssuseNumber = z.r.IssuseNumber,
-                AddMoney = 0M,
-                AddMoneyDescription = string.Empty,
-                IsVirtualOrder = z.r.IsVirtualOrder,
-                HitMatchCount = z.r.HitMatchCount,
-                SchemeBettingCategory = (SchemeBettingCategory)z.r.SchemeBettingCategory,
-                JoinUserCount = z.t.JoinUserCount,
-                Attach = z.r.Attach,
-                MinBonusMoney = z.r.MinBonusMoney,
-                MaxBonusMoney = z.r.MaxBonusMoney,
-                ExtensionOne = z.r.ExtensionOne,
-                GoldCrownCount = z.b.GoldCrownCount,
-                GoldCupCount = z.b.GoldCupCount,
-                GoldDiamondsCount = z.b.GoldDiamondsCount,
-                GoldStarCount = z.b.GoldStarCount,
-                SilverCrownCount = z.b.SilverCrownCount,
-                SilverCupCount = z.b.SilverCupCount,
-                SilverDiamondsCount = z.b.SilverDiamondsCount,
-                SilverStarCount = z.b.SilverStarCount,
-                IsAppend = z.r.IsAppend == false ? false : z.r.IsAppend,
-                TicketTime = z.r.TicketTime,
+            var queryResult = new List<Sports_TogetherSchemeQueryInfo>();
+            var list = query.ToList();
+            //var queryResult = query.ToList().Select(z => new Sports_TogetherSchemeQueryInfo()
+            //{
+            //    BonusDeduct = z.t.BonusDeduct,
+            //    CreateUserId = z.t.CreateUserId,
+            //    CreaterDisplayName = z.u.DisplayName,
+            //    CreaterHideDisplayNameCount = z.u.HideDisplayNameCount,
+            //    Description = z.t.Description,
+            //    GameDisplayName = KaSon.FrameWork.Common.Utilities.ConvertHelper.FormatGameCode(z.t.GameCode),
+            //    GameTypeDisplayName = KaSon.FrameWork.Common.Utilities.ConvertHelper.FormatGameType(z.t.GameCode, z.t.GameType),
+            //    Guarantees = z.t.Guarantees,
+            //    PlayType = z.t.PlayType,
+            //    Price = z.t.Price,
+            //    SchemeDeduct = z.t.SchemeDeduct,
+            //    SchemeSource = (SchemeSource)z.t.SchemeSource,
+            //    Security = (TogetherSchemeSecurity)z.t.Security,
+            //    StopTime = z.t.StopTime,
+            //    Subscription = z.t.Subscription,
+            //    Title = z.t.Title,
+            //    TotalCount = z.t.TotalCount,
+            //    TotalMoney = z.t.TotalMoney,
+            //    SchemeId = z.t.SchemeId,
+            //    JoinPwd = z.t.JoinPwd,
+            //    Progress = z.t.Progress,
+            //    ProgressStatus = (TogetherSchemeProgress)z.t.ProgressStatus,
+            //    SystemGuarantees = z.t.SystemGuarantees,
+            //    GameCode = z.t.GameCode,
+            //    GameType = z.t.GameType,
+            //    SoldCount = z.t.SoldCount,
+            //    TotalMatchCount = z.t.TotalMatchCount,
+            //    Amount = z.r.Amount,
+            //    BetCount = z.r.BetCount,
+            //    PreTaxBonusMoney = z.r.PreTaxBonusMoney,
+            //    AfterTaxBonusMoney = z.r.AfterTaxBonusMoney,
+            //    WinNumber = string.Empty,
+            //    BonusStatus = (BonusStatus)z.r.BonusStatus,
+            //    BonusCount = 0,
+            //    CreateTime = z.t.CreateTime,
+            //    IsPrizeMoney = false,
+            //    TicketStatus = (TicketStatus)z.r.TicketStatus,
+            //    IssuseNumber = z.r.IssuseNumber,
+            //    AddMoney = 0M,
+            //    AddMoneyDescription = string.Empty,
+            //    IsVirtualOrder = z.r.IsVirtualOrder,
+            //    HitMatchCount = z.r.HitMatchCount,
+            //    SchemeBettingCategory = (SchemeBettingCategory)z.r.SchemeBettingCategory,
+            //    JoinUserCount = z.t.JoinUserCount,
+            //    Attach = z.r.Attach,
+            //    MinBonusMoney = z.r.MinBonusMoney,
+            //    MaxBonusMoney = z.r.MaxBonusMoney,
+            //    ExtensionOne = z.r.ExtensionOne,
+            //    GoldCrownCount = z.b.GoldCrownCount,
+            //    GoldCupCount = z.b.GoldCupCount,
+            //    GoldDiamondsCount = z.b.GoldDiamondsCount,
+            //    GoldStarCount = z.b.GoldStarCount,
+            //    SilverCrownCount = z.b.SilverCrownCount,
+            //    SilverCupCount = z.b.SilverCupCount,
+            //    SilverDiamondsCount = z.b.SilverDiamondsCount,
+            //    SilverStarCount = z.b.SilverStarCount,
+            //    IsAppend = z.r.IsAppend == false ? false : z.r.IsAppend,
+            //    TicketTime = z.r.TicketTime,
 
-            });
+            //});
             var info = queryResult.FirstOrDefault();
             if (info != null && info.GameCode != "JCZQ" && info.GameCode != "JCLQ" && info.GameCode != "BJDC")
             {

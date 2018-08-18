@@ -179,6 +179,26 @@ namespace EntityModel.CoreModel
     }
 
     [ProtoContract]
+    public class Issuse_QueryInfoEX
+    {
+
+        /// <summary>
+        /// 主键
+        /// </summary>
+        /// 
+        [ProtoMember(1)]
+        public IList<Issuse_QueryInfo> CTZQ_IssuseNumber { get; set; }
+        /// <summary>
+        /// 游戏名称
+        /// </summary>
+        /// 
+        [ProtoMember(2)]
+        public BJDCIssuseInfo BJDC_IssuseNumber { get; set; }
+      
+       
+    }
+
+    [ProtoContract]
     public class Issuse_QueryCollection
     {
         public Issuse_QueryCollection()
