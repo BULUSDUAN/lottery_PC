@@ -610,7 +610,7 @@ namespace Lottery.Api.Controllers
             }
             catch (Exception ex)
             {
-                //return Json(new { status = false, message = exp.Message }, JsonRequestBehavior.AllowGet);
+                //return Json(new { status = false, message = exp.ToGetMessage() }, JsonRequestBehavior.AllowGet);
                 returnResult.Code = ResponseCode.失败;
                 returnResult.Message = ex.ToGetMessage();
                 return JsonEx(returnResult);
@@ -1480,7 +1480,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "服务器内部错误，请联系接口提供商",
                     MsgId = entity.MsgId,
-                    Value = exp.Message,
+                    Value = exp.ToGetMessage(),
                 });
             }
         }
@@ -1568,7 +1568,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "服务器内部错误，请联系接口提供商",
                     MsgId = entity.MsgId,
-                    Value = exp.Message,
+                    Value = exp.ToGetMessage(),
                 });
             }
         }
@@ -1650,7 +1650,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "服务器内部错误，请联系接口提供商",
                     MsgId = entity.MsgId,
-                    Value = exp.Message,
+                    Value = exp.ToGetMessage(),
                 });
             }
         }
@@ -1699,7 +1699,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "服务器内部错误，请联系接口提供商",
                     MsgId = entity.MsgId,
-                    Value = exp.Message,
+                    Value = exp.ToGetMessage(),
                 });
             }
         }
