@@ -124,6 +124,7 @@ namespace EntityModel.Enum
     {
         成功 = 101,
         失败 = 201,
+        //验证码错误
         ValiteCodeError = 301,
     }
     /// <summary>
@@ -374,10 +375,7 @@ namespace EntityModel.Enum
         WinnerModel = 7,
         HunHeDG = 8
     }
-    public enum 
-        
-        
-        AgentType
+    public enum WithdrawAgentType
     {
         Alipay = 10,
         Yeepay = 20,

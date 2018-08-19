@@ -18,10 +18,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.DrawingCore;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using KaSon.FrameWork.Common.ExceptionEx;
 
 namespace Lottery.Api.Controllers
 {
@@ -65,14 +67,14 @@ namespace Lottery.Api.Controllers
                 Dictionary<string, object> balanceParam = new Dictionary<string, object>();
                 balanceParam["userToken"] = loginInfo.UserToken;
                 var balance = await _serviceProxyProvider.Invoke<UserBalanceInfo>(balanceParam, "api/user/QueryMyBalance");
-              
+
                 var bankInfo = await _serviceProxyProvider.Invoke<C_BankCard>(balanceParam, "api/user/QueryBankCard");
 
                 if (bankInfo == null) bankInfo = new C_BankCard();
-          
+
                 var unReadCount = await _serviceProxyProvider.Invoke<int>(balanceParam, "api/user/GetMyUnreadInnerMailCount");
-              
-               
+
+
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
@@ -85,27 +87,27 @@ namespace Lottery.Api.Controllers
                         LoginName = loginInfo.LoginName,
                         UserId = loginInfo.UserId,
                         VipLevel = loginInfo.VipLevel,
-                        CommissionBalance = balance.CommissionBalance,
+                        CommissionBalance = Convert.ToDecimal(balance.CommissionBalance.ToString("0.00")),
                         //CommissionBalance = 0,
-                        ExpertsBalance = balance.ExpertsBalance,
-                        BonusBalance = balance.BonusBalance,
-                        FreezeBalance = balance.FreezeBalance,
-                        FillMoneyBalance = balance.FillMoneyBalance,
-                        Mobile = string.IsNullOrEmpty(bindInfo.Mobile) ? string.Empty : bindInfo.Mobile, //mobile == null ? string.Empty : mobile.Mobile,
-                        RealName = string.IsNullOrEmpty(bindInfo.RealName) ? string.Empty : bindInfo.RealName, // realName == null ? string.Empty : realName.RealName,
-                        IdCardNumber = string.IsNullOrEmpty(bindInfo.IdCardNumber) ? string.Empty : bindInfo.IdCardNumber, // realName == null ? string.Empty : realName.IdCardNumber,
+                        ExpertsBalance = Convert.ToDecimal(balance.ExpertsBalance.ToString("0.00")),
+                        BonusBalance = Convert.ToDecimal(balance.BonusBalance.ToString("0.00")),
+                        FreezeBalance = Convert.ToDecimal(balance.FreezeBalance.ToString("0.00")),
+                        FillMoneyBalance = Convert.ToDecimal(balance.FillMoneyBalance.ToString("0.00")),
+                        Mobile = string.IsNullOrEmpty(bindInfo.Mobile) ? string.Empty : Regex.Replace(bindInfo.Mobile, "(\\d{3})\\d{3}(\\d{5})", "$1***$2"), //mobile == null ? string.Empty : mobile.Mobile,
+                        RealName = string.IsNullOrEmpty(bindInfo.RealName) ? string.Empty : GetxxxString(bindInfo.RealName), // realName == null ? string.Empty : realName.RealName,
+                        IdCardNumber = string.IsNullOrEmpty(bindInfo.IdCardNumber) ? string.Empty : GetBankCardNumberxxxString(bindInfo.IdCardNumber), // realName == null ? string.Empty : realName.IdCardNumber,
                         IsSetBalancePwd = balance.IsSetPwd,
                         NeedBalancePwdPlace = string.IsNullOrEmpty(balance.NeedPwdPlace) ? string.Empty : balance.NeedPwdPlace,
                         IsBingBankCard = !string.IsNullOrEmpty(bindInfo.IdCardNumber), // bankInfo == null ? false : !string.IsNullOrEmpty(bankInfo.UserId),
                         UserGrowth = balance.UserGrowth,
-                        RedBagBalance = balance.RedBagBalance,
+                        RedBagBalance = Convert.ToDecimal(balance.RedBagBalance.ToString("0.00")),
                         NeedGrowth = GrowthStatus(balance.UserGrowth),
                         IsBetHM = true,
                         UnReadMailCount = unReadCount,
                         HideDisplayNameCount = loginInfo.HideDisplayNameCount,
 
                         #region 新字段
-                        BankCardNumber = string.IsNullOrEmpty(bankInfo.BankCardNumber) ? "" : bankInfo.BankCardNumber,
+                        BankCardNumber = string.IsNullOrEmpty(bankInfo.BankCardNumber) ? "" : GetBankCardNumberxxxString(bankInfo.BankCardNumber),
                         BankName = string.IsNullOrEmpty(bankInfo.BankName) ? "" : bankInfo.BankName,
                         BankSubName = string.IsNullOrEmpty(bankInfo.BankSubName) ? "" : bankInfo.BankSubName,
                         #endregion
@@ -119,9 +121,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = "登录失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -129,14 +131,67 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = "登录失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
 
         }
-       
+
+        /// <summary>
+        /// 返回隐藏中间的字符串
+        /// </summary>
+        /// <param name="Input">输入</param>
+        /// <returns>输出</returns>
+        public static string GetxxxString(string Input)
+        {
+            string Output = "";
+            switch (Input.Length)
+            {
+                case 1:
+                    Output = "*";
+                    break;
+                case 2:
+                    Output = Input[0] + "*";
+                    break;
+                case 0:
+                    Output = "";
+                    break;
+                default:
+                    Output = Input.Substring(0, 1);
+                    for (int i = 0; i < Input.Length - 1; i++)
+                    {
+                        Output += "*";
+                    }
+                    Output += Input.Substring(Input.Length - 1, 0);
+                    break;
+            }
+            return Output;
+        }
+
+        /// <summary>
+        /// 返回隐藏中间的身份证号
+        /// </summary>
+        /// <param name="Input">输入</param>
+        /// <returns>输出</returns>
+        public static string GetBankCardNumberxxxString(string Input)
+        {
+            string Output = "";
+            if (Input.Length > 7)
+            {
+                Output = Input.Substring(0, 5);
+                for (int i = 5; i < 8; i++)
+                {
+                    Output += "*";
+                }
+                Output += Input.Substring(7, Input.Length - 7);
+            }
+            return Output;
+        }
+
+
+
         #region 还需要的成长值
 
         private decimal GrowthStatus(decimal UserGrowth)
@@ -208,7 +263,7 @@ namespace Lottery.Api.Controllers
                     throw new Exception("Token不能为空");
                 paramCheck["newPassword"] = newPassword;
                 paramCheck["userId"] = userId;
-                
+
                 param["oldPassword"] = oldPassword;
                 param["newPassword"] = newPassword;
                 param["userToken"] = userToken;
@@ -232,12 +287,12 @@ namespace Lottery.Api.Controllers
             }
             catch (ArgumentException ex)
             {
-                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = ex.Message, MsgId = entity.MsgId, Value = null });
+                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = "执行失败" + "●" + ex.ToString(), MsgId = entity.MsgId, Value = null });
 
             }
             catch (Exception ex)
             {
-                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = ex.Message, MsgId = entity.MsgId, Value = null });
+                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = "执行失败" + "●" + ex.ToString(), MsgId = entity.MsgId, Value = null });
 
             }
         }
@@ -290,12 +345,12 @@ namespace Lottery.Api.Controllers
 
             catch (ArgumentException ex)
             {
-                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = ex.Message, MsgId = entity.MsgId, Value = null });
+                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = "执行失败" + "●" + ex.ToString(), MsgId = entity.MsgId, Value = null });
 
             }
             catch (Exception ex)
             {
-                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = ex.Message, MsgId = entity.MsgId, Value = null });
+                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = "执行失败" + "●" + ex.ToString(), MsgId = entity.MsgId, Value = null });
 
             }
             return null;
@@ -339,9 +394,9 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = "执行失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -349,20 +404,20 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = "执行失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
 
-            /// <summary>
-            /// 适应web版本注册 211
-            /// </summary>
-            /// <param name="_serviceProxyProvider"></param>
-            /// <param name="entity"></param>
-            /// <returns></returns>
-            public async Task<IActionResult> RegisterWeb([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        /// <summary>
+        /// 适应web版本注册 211
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> RegisterWeb([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
             {
@@ -377,14 +432,14 @@ namespace Lottery.Api.Controllers
                     throw new Exception("验证码不能为空！");
                 if (!ValidateHelper.IsMobile(mobile))
                     throw new ArgumentException("手机号码不能为空！");
-                string cfrom = "";
+                //string cfrom = "";
                 string pid = p.pid;
-                SchemeSource schemeSource = SchemeSource.Web;
-                if (!string.IsNullOrEmpty(cfrom) && cfrom == "ios")
-                {
-                    schemeSource = SchemeSource.Iphone;
-                }
-              
+                SchemeSource schemeSource = entity.SourceCode;
+                //if (!string.IsNullOrEmpty(cfrom) && cfrom == "ios")
+                //{
+                //    schemeSource = SchemeSource.Iphone;
+                //}
+
                 var userInfo = new RegisterInfo_Local();
                 //userInfo.RegisterIp = IpManager.IPAddress;
                 userInfo.RegisterIp = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
@@ -432,29 +487,29 @@ namespace Lottery.Api.Controllers
                                 LoginName = loginInfo.LoginName,
                                 UserId = loginInfo.UserId,
                                 VipLevel = loginInfo.VipLevel,
-                                CommissionBalance = balance.CommissionBalance,
+                                CommissionBalance = Convert.ToDecimal(balance.CommissionBalance.ToString("0.00")),
                                 //CommissionBalance = 0,
-                                ExpertsBalance = balance.ExpertsBalance,
-                                BonusBalance = balance.BonusBalance,
-                                FreezeBalance = balance.FreezeBalance,
-                                FillMoneyBalance = balance.FillMoneyBalance,
-                                Mobile = string.IsNullOrEmpty(bindInfo.Mobile) ? string.Empty : bindInfo.Mobile, //mobile == null ? string.Empty : mobile.Mobile,
-                                RealName = string.IsNullOrEmpty(bindInfo.RealName) ? string.Empty : bindInfo.RealName, // realName == null ? string.Empty : realName.RealName,
-                                IdCardNumber = string.IsNullOrEmpty(bindInfo.IdCardNumber) ? string.Empty : bindInfo.IdCardNumber, // realName == null ? string.Empty : realName.IdCardNumber,
+                                ExpertsBalance = Convert.ToDecimal(balance.ExpertsBalance.ToString("0.00")),
+                                BonusBalance = Convert.ToDecimal(balance.BonusBalance.ToString("0.00")),
+                                FreezeBalance = Convert.ToDecimal(balance.FreezeBalance.ToString("0.00")),
+                                FillMoneyBalance = Convert.ToDecimal(balance.FillMoneyBalance.ToString("0.00")),
+                                Mobile = string.IsNullOrEmpty(bindInfo.Mobile) ? string.Empty : Regex.Replace(bindInfo.Mobile, "(\\d{3})\\d{3}(\\d{5})", "$1***$2"), //mobile == null ? string.Empty : mobile.Mobile,
+                                RealName = string.IsNullOrEmpty(bindInfo.RealName) ? string.Empty : GetxxxString(bindInfo.RealName), // realName == null ? string.Empty : realName.RealName,
+                                IdCardNumber = string.IsNullOrEmpty(bindInfo.IdCardNumber) ? string.Empty : GetBankCardNumberxxxString(bindInfo.IdCardNumber), // realName == null ? string.Empty : realName.IdCardNumber,
                                 IsSetBalancePwd = balance.IsSetPwd,
                                 NeedBalancePwdPlace = string.IsNullOrEmpty(balance.NeedPwdPlace) ? string.Empty : balance.NeedPwdPlace,
                                 IsBingBankCard = !string.IsNullOrEmpty(bindInfo.IdCardNumber), // bankInfo == null ? false : !string.IsNullOrEmpty(bankInfo.UserId),
                                 UserGrowth = balance.UserGrowth,
-                                RedBagBalance = balance.RedBagBalance,
+                                RedBagBalance = Convert.ToDecimal(balance.RedBagBalance.ToString("0.00")),
                                 NeedGrowth = GrowthStatus(balance.UserGrowth),
                                 IsBetHM = true,
                                 UnReadMailCount = unReadCount,
                                 HideDisplayNameCount = loginInfo.HideDisplayNameCount,
 
                                 #region 新字段
-                                BankCardNumber = bankInfo.BankCardNumber,
-                                BankName = bankInfo.BankName,
-                                BankSubName = bankInfo.BankSubName,
+                                BankCardNumber = string.IsNullOrEmpty(bankInfo.BankCardNumber) ? "" : GetBankCardNumberxxxString(bankInfo.BankCardNumber),
+                                BankName = string.IsNullOrEmpty(bankInfo.BankName) ? "" : bankInfo.BankName,
+                                BankSubName = string.IsNullOrEmpty(bankInfo.BankSubName) ? "" : bankInfo.BankSubName,
                                 #endregion
                             }
                         });
@@ -470,8 +525,8 @@ namespace Lottery.Api.Controllers
                         });
                     }
                 }
-             
-                 return JsonEx(new LotteryServiceResponse
+
+                return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
                     Message = string.IsNullOrEmpty(result.Message) ? result.Message : result.Message.Replace("验证码输入不正确", "手机验证码输入不正确"),
@@ -481,12 +536,14 @@ namespace Lottery.Api.Controllers
             }
             catch (Exception ex)
             {
+
                 return JsonEx(new LotteryServiceResponse
                 {
+
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = "注册失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -503,24 +560,27 @@ namespace Lottery.Api.Controllers
             var returnResult = new LotteryServiceResponse()
             {
                 Code = ResponseCode.失败,
-                //Message = ex.Message,
+                //Message = ex.ToGetMessage(),
                 MsgId = entity.MsgId,
-                //Value = ex.Message,
+                //Value = ex.ToGetMessage(),
             };
             try
             {
                 var p = WebHelper.Decode(entity.Param);
                 string verifyCode = p.verifyCode;
+                string MsgId = p.MsgId;
                 //string plattype = p.plattype;
 
-                if (string.IsNullOrEmpty(entity.MsgId))
+                if (string.IsNullOrEmpty(MsgId))
                 {
                     returnResult.Message = "消息序号不能为空";
-                    return JsonEx(returnResult);  
+                    return JsonEx(returnResult);
                 }
-                ///redis 获取验证码
-               string codeValue= KaSon.FrameWork.Common.Redis.RedisHelper.StringGet(entity.MsgId);
-                if (codeValue != verifyCode) {
+                //redis 获取验证码
+                string key = "R_" + MsgId;
+                string codeValue = KaSon.FrameWork.Common.Redis.RedisHelper.StringGet(key);
+                if (codeValue != verifyCode)
+                {
                     returnResult.Code = ResponseCode.ValiteCodeError;
                     returnResult.Message = "验证码错误";
                     return JsonEx(returnResult);
@@ -539,8 +599,8 @@ namespace Lottery.Api.Controllers
                     throw new Exception("手机号码格式错误");
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param["mobile"] = mobile;
-                var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/RegisterRequestMobile");               
-              
+                var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/RegisterRequestMobile");
+
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = result.IsSuccess ? ResponseCode.成功 : ResponseCode.失败,
@@ -551,9 +611,10 @@ namespace Lottery.Api.Controllers
             }
             catch (Exception ex)
             {
-                //return Json(new { status = false, message = exp.Message }, JsonRequestBehavior.AllowGet);
+                //return Json(new { status = false, message = exp.ToGetMessage() }, JsonRequestBehavior.AllowGet);
                 returnResult.Code = ResponseCode.失败;
-                returnResult.Message = ex.Message;
+                returnResult.Message = "发送失败" + "●" + ex.ToString();
+                returnResult.Value = ex.ToGetMessage();
                 return JsonEx(returnResult);
             }
         }
@@ -567,7 +628,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                
+
                 if (string.IsNullOrEmpty(verifycode) || HttpContext.Session.GetString("VerifyCode") == null)
                 {
                     return false;
@@ -608,54 +669,69 @@ namespace Lottery.Api.Controllers
         //    //return vlimg;
         //}
 
-        public  IActionResult CreateValidateCode(string MsgId)
+        public IActionResult CreateValidateCode(string MsgId)
         {
-            var num = 0;
-            string randomText = SelectRandomNumber(5, out num);
-            var result = new LotteryServiceResponse
+            try
             {
-                Code = ResponseCode.失败,
-                Message ="获取验证码失败,请刷新验证码",
-                //   MsgId = entity.MsgId,
-                //  Value = ex.Message,
-            };
-            //HttpContext.Session.SetString("VerifyCode", num.ToString());
-            ValidateCodeGenerator vlimg = new ValidateCodeGenerator()
-            {
-                BackGroundColor = Color.FromKnownColor(KnownColor.LightGray),
-                RandomWord = randomText,
-                ImageHeight = 25,
-                ImageWidth = 100,
-                fontSize = 14,
-            };
-            var img = vlimg.OnPaint();
-            if (img == null)
-            {
-                // return Content("Error");
-            }
-            else {
-                result.Code = ResponseCode.成功;
-                result.Message = "成功获取验证码";
-                
-                //录入验证码
-                string key = "R_"+Guid.NewGuid().ToString("N");
-                if (!String.IsNullOrEmpty(MsgId))
+                var num = 0;
+                string randomText = SelectRandomNumber(5, out num);
+                var result = new LotteryServiceResponse
                 {
-                    key = MsgId;
+                    Code = ResponseCode.失败,
+                    Message = "获取验证码失败,请刷新验证码",
+                    //   MsgId = entity.MsgId,
+                    //  Value = ex.ToGetMessage(),
+                };
+                //HttpContext.Session.SetString("VerifyCode", num.ToString());
+                ValidateCodeGenerator vlimg = new ValidateCodeGenerator()
+                {
+                    BackGroundColor = Color.FromKnownColor(KnownColor.LightGray),
+                    RandomWord = randomText,
+                    ImageHeight = 25,
+                    ImageWidth = 100,
+                    fontSize = 14,
+                };
+                var img = vlimg.OnPaint();
+                if (img == null)
+                {
+                    // return Content("Error");
                 }
-              
-                KaSon.FrameWork.Common.Redis.RedisHelper.StringSet(key, num.ToString(), 60 * 10);
+                else
+                {
+                    result.Code = ResponseCode.成功;
+                    result.Message = "成功获取验证码";
 
-                string base64 = Convert.ToBase64String(img);
-                //data:image/gif;base64,
-                if (!base64.StartsWith("data:image"))
-                {
-                    base64 = "data:image/gif;base64" + base64;
+                    //录入验证码
+                    var guidkey = Guid.NewGuid().ToString("N");
+                    string key = "R_" + guidkey;
+                    if (!String.IsNullOrEmpty(MsgId))
+                    {
+                        key = MsgId;
+                    }
+
+                    KaSon.FrameWork.Common.Redis.RedisHelper.StringSet(key, num.ToString(), 60 * 10);
+
+                    string base64 = Convert.ToBase64String(img);
+                    //data:image/gif;base64,
+                    if (!base64.StartsWith("data:image"))
+                    {
+                        base64 = "data:image/gif;base64," + base64;
+                    }
+                    result.Value = base64;
+                    result.MsgId = guidkey;
                 }
-                result.Value =base64;
-                result.MsgId = key;
+                return JsonEx(result);
             }
-            return JsonEx(result);
+            catch (Exception ex)
+            {
+                return JsonEx(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "获取验证码失败" + "●" + ex.ToString(),
+                    //   MsgId = entity.MsgId,
+                    //  Value = ex.ToGetMessage(),
+                });
+            }
             //return vlimg;
         }
 
@@ -721,7 +797,7 @@ namespace Lottery.Api.Controllers
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param["mobile"] = mobile;
                 var flag = await _serviceProxyProvider.Invoke<bool>(param, "api/user/HasMobile");
-          
+
                 var result = new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
@@ -732,7 +808,7 @@ namespace Lottery.Api.Controllers
                 if (flag)
                 {
                     result.Message = "手机号已被注册";
-                    result.Value =false;
+                    result.Value = false;
                     return JsonEx(result);
                 }
                 else
@@ -745,7 +821,7 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = "验证失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = false,
                 });
@@ -828,9 +904,9 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = "操作失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
-                    Value = ex,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -880,9 +956,9 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = "发送验证码失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -894,8 +970,8 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                
-                 var p = WebHelper.Decode(entity.Param);
+
+                var p = WebHelper.Decode(entity.Param);
                 string oldPwd = p.OldPwd;
                 string newPwd = p.NewPwd;
                 bool isSet = Convert.ToBoolean(p.IsSet);
@@ -940,9 +1016,9 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = "设置失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -950,9 +1026,9 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = "设置失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -967,7 +1043,7 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param); 
+                var p = WebHelper.Decode(entity.Param);
                 string strPlace = p.StrPlace;
                 string pwd = p.Pwd;
                 string userToken = p.UserToken;
@@ -995,9 +1071,9 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = "设置失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -1005,9 +1081,9 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = "设置失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -1030,7 +1106,7 @@ namespace Lottery.Api.Controllers
                     throw new Exception("您还未登录，请登录！");
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param["userToken"] = userToken;
-                var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/QueryYqidRegisterByAgentIdToApp");
+                var result = await _serviceProxyProvider.Invoke<string>(param, "api/user/QueryYqidRegisterByAgentIdToApp");
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
@@ -1044,9 +1120,9 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -1054,9 +1130,9 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -1084,9 +1160,10 @@ namespace Lottery.Api.Controllers
                     throw new Exception("真实姓名不能为空");
                 if (string.IsNullOrEmpty(userToken))
                     throw new Exception("userToken不能为空");
-                var userRealName = new UserRealNameInfo {
+                var userRealName = new UserRealNameInfo
+                {
                     IdCardNumber = idCardNumber,
-                    RealName = realName,                   
+                    RealName = realName,
                 };
 
                 Dictionary<string, object> param = new Dictionary<string, object>();
@@ -1116,7 +1193,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "业务参数错误",
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -1126,7 +1203,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "服务器内部错误，请联系接口提供商",
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -1164,9 +1241,11 @@ namespace Lottery.Api.Controllers
                     throw new Exception("userToken不能为空");
                 if (string.IsNullOrEmpty(bankrealName))
                     throw new Exception("开户名不能为空");
-            
-                var bankDic = GetBankDic();
-                if (!bankDic.ContainsKey(bankCode))
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["bankCode"] = bankCode;
+                var resultbankCode = await _serviceProxyProvider.Invoke<C_Bank_Info>(param, "api/user/QueryBankInfo");
+
+                if (resultbankCode == null)
                     throw new ArgumentException(string.Format("银行编码：{0}不可用", bankCode));
 
                 #region "20171108增加配置（禁止注册的银行卡号码）"
@@ -1178,16 +1257,16 @@ namespace Lottery.Api.Controllers
                 //{
                 //    throw new ArgumentException("因检测到该银行卡号码在黑名单中，无法绑定，请联系在线客服。");
                 //}
-               C_BankCard bankCard = new C_BankCard {
-                      BankCode= bankCode,
-                      BankName = bankDic[bankCode],
-                      BankSubName =subBankName,
-                      BankCardNumber=cardnumber,
-                      ProvinceName=province,
-                      CityName=city,
-                      RealName= bankrealName,
-
-               };
+                C_BankCard bankCard = new C_BankCard
+                {
+                    BankCode = bankCode,
+                    BankName = resultbankCode.BankName,
+                    BankSubName = subBankName,
+                    BankCardNumber = cardnumber,
+                    ProvinceName = province,
+                    CityName = city,
+                    RealName = bankrealName,
+                };
                 #endregion
                 Dictionary<string, object> paramCard = new Dictionary<string, object>();
                 paramCard["bankCard"] = bankCard;
@@ -1211,9 +1290,9 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = "绑定失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -1221,9 +1300,9 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = "绑定失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -1298,32 +1377,32 @@ namespace Lottery.Api.Controllers
                     MsgId = entity.MsgId,
                     Value = new
                     {
-                        UserToken = userToken,
+                        UserToken = loginInfo.UserToken,
                         DisplayName = loginInfo.DisplayName,
-                        LoginName = loginName,
+                        LoginName = loginInfo.LoginName,
                         UserId = loginInfo.UserId,
                         VipLevel = loginInfo.VipLevel,
-                        BonusBalance = balance.BonusBalance,
-                        CommissionBalance = balance.CommissionBalance,
+                        CommissionBalance = Convert.ToDecimal(balance.CommissionBalance.ToString("0.00")),
                         //CommissionBalance = 0,
-                        ExpertsBalance = balance.ExpertsBalance,
-                        RedBagBalance = balance.RedBagBalance,
-                        FillMoneyBalance = balance.FillMoneyBalance,
-                        FreezeBalance = balance.FreezeBalance,
-                        Mobile = bindInfo.Mobile,
-                        RealName = string.IsNullOrEmpty(bindInfo.RealName) ? "" : bindInfo.RealName,
-                        IdCardNumber = string.IsNullOrEmpty(bindInfo.IdCardNumber) ? "" : bindInfo.IdCardNumber,
+                        ExpertsBalance = Convert.ToDecimal(balance.ExpertsBalance.ToString("0.00")),
+                        BonusBalance = Convert.ToDecimal(balance.BonusBalance.ToString("0.00")),
+                        FreezeBalance = Convert.ToDecimal(balance.FreezeBalance.ToString("0.00")),
+                        FillMoneyBalance = Convert.ToDecimal(balance.FillMoneyBalance.ToString("0.00")),
+                        Mobile = string.IsNullOrEmpty(bindInfo.Mobile) ? string.Empty : Regex.Replace(bindInfo.Mobile, "(\\d{3})\\d{3}(\\d{5})", "$1***$2"), //mobile == null ? string.Empty : mobile.Mobile,
+                        RealName = string.IsNullOrEmpty(bindInfo.RealName) ? string.Empty : GetxxxString(bindInfo.RealName), // realName == null ? string.Empty : realName.RealName,
+                        IdCardNumber = string.IsNullOrEmpty(bindInfo.IdCardNumber) ? string.Empty : GetBankCardNumberxxxString(bindInfo.IdCardNumber), // realName == null ? string.Empty : realName.IdCardNumber,
                         IsSetBalancePwd = balance.IsSetPwd,
                         NeedBalancePwdPlace = string.IsNullOrEmpty(balance.NeedPwdPlace) ? string.Empty : balance.NeedPwdPlace,
-                        IsBingBankCard = !string.IsNullOrEmpty(bindInfo.BankCardNumber),
+                        IsBingBankCard = !string.IsNullOrEmpty(bindInfo.IdCardNumber), // bankInfo == null ? false : !string.IsNullOrEmpty(bankInfo.UserId),
                         UserGrowth = balance.UserGrowth,
+                        RedBagBalance = Convert.ToDecimal(balance.RedBagBalance.ToString("0.00")),
                         NeedGrowth = GrowthStatus(balance.UserGrowth),
-                        IsBetHM = isBetHM,
-                        UnReadMailCount = unReadCount,//InnerMailUnReadList == null ? 0 : InnerMailUnReadList.TotalCount,
+                        IsBetHM = true,
+                        UnReadMailCount = unReadCount,
                         HideDisplayNameCount = loginInfo.HideDisplayNameCount,
 
                         #region 新字段
-                        BankCardNumber = string.IsNullOrEmpty(bankInfo.BankCardNumber) ? "" : bankInfo.BankCardNumber,
+                        BankCardNumber = string.IsNullOrEmpty(bankInfo.BankCardNumber) ? "" : GetBankCardNumberxxxString(bankInfo.BankCardNumber),
                         BankName = string.IsNullOrEmpty(bankInfo.BankName) ? "" : bankInfo.BankName,
                         BankSubName = string.IsNullOrEmpty(bankInfo.BankSubName) ? "" : bankInfo.BankSubName,
                         #endregion
@@ -1335,9 +1414,9 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "业务参数错误",
+                    Message = "业务参数错误" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -1345,9 +1424,9 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "服务器内部错误，请联系接口提供商",
+                    Message = "服务器内部错误，请联系接口提供商" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -1378,11 +1457,11 @@ namespace Lottery.Api.Controllers
                 }
                 var cashMoney = await _serviceProxyProvider.Invoke<UserBalanceInfo>(param, "api/user/QueryMyBalance");
                 var userinfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/LoginByUserToken");
-           
+
                 if (userinfo.IsSuccess)
                 {
                     Dictionary<string, object> bindParam = new Dictionary<string, object>();
-                    bindParam["UserId"] = userinfo.UserId; 
+                    bindParam["UserId"] = userinfo.UserId;
                     var info = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
                     if (info == null)
                         throw new ArgumentException("未找到用户信息");
@@ -1391,7 +1470,7 @@ namespace Lottery.Api.Controllers
                     if (string.IsNullOrEmpty(info.BankCardNumber))
                         throw new ArgumentException("请先绑定银行卡");
 
-                  
+
                     return JsonEx(new LotteryServiceResponse
                     {
                         Code = ResponseCode.成功,
@@ -1417,9 +1496,9 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "服务器内部错误，请联系接口提供商",
+                    Message = "服务器内部错误，请联系接口提供商" + "●" + exp.ToString(),
                     MsgId = entity.MsgId,
-                    Value = exp.Message,
+                    Value = exp.ToGetMessage(),
                 });
             }
         }
@@ -1458,7 +1537,8 @@ namespace Lottery.Api.Controllers
                         throw new ArgumentException("请先实名认证");
                     if (string.IsNullOrEmpty(info.BankCardNumber))
                         throw new ArgumentException("请先绑定银行卡");
-
+                    var minwithdrawmoney = await GetMinWithdrawMoney(_serviceProxyProvider);
+                    PreconditionAssert.IsTrue(decimal.Parse(money) >= minwithdrawmoney, "提款金额不能小于" + minwithdrawmoney.ToString() + "元");
                     Dictionary<string, object> paramRequestWithdraw = new Dictionary<string, object>();
                     paramRequestWithdraw["userId"] = info.UserId;
                     paramRequestWithdraw["requestMoney"] = decimal.Parse(money);
@@ -1504,9 +1584,9 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "服务器内部错误，请联系接口提供商",
+                    Message = "服务器内部错误，请联系接口提供商" + "●" + exp.ToString(),
                     MsgId = entity.MsgId,
-                    Value = exp.Message,
+                    Value = exp.ToGetMessage(),
                 });
             }
         }
@@ -1533,7 +1613,9 @@ namespace Lottery.Api.Controllers
                 if (string.IsNullOrEmpty(money))
                     throw new ArgumentException("提款金额不能为空");
                 decimal.TryParse(money, out RequestMoney);
-                PreconditionAssert.IsTrue(RequestMoney >= 10, "提款金额不能小于10元");
+                //PreconditionAssert.IsTrue(RequestMoney >= 10, "提款金额不能小于10元");
+                var minwithdrawmoney = await GetMinWithdrawMoney(_serviceProxyProvider);
+                PreconditionAssert.IsTrue(int.Parse(money) >= minwithdrawmoney, "提款金额不能小于" + minwithdrawmoney.ToString() + "元");
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param["userToken"] = token;
                 var userinfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/LoginByUserToken");
@@ -1561,10 +1643,10 @@ namespace Lottery.Api.Controllers
                     withdrawinfo.userRealName = info.RealName;
 
                     Dictionary<string, object> Withdraw_Param = new Dictionary<string, object>();
-                    Withdraw_Param["info"] = withdrawinfo;        
+                    Withdraw_Param["info"] = withdrawinfo;
                     Withdraw_Param["userId"] = info.UserId;
                     Withdraw_Param["balancepwd"] = balancepwd;
-                    var RequestWithdraw_Step2 = await _serviceProxyProvider.Invoke<UserBindInfos>(Withdraw_Param, "api/user/RequestWithdraw_Step2");
+                    var RequestWithdraw_Step2 = await _serviceProxyProvider.Invoke<CommonActionResult>(Withdraw_Param, "api/user/RequestWithdraw_Step2");
 
                     return JsonEx(new LotteryServiceResponse
                     {
@@ -1584,14 +1666,14 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "服务器内部错误，请联系接口提供商",
+                    Message = "服务器内部错误，请联系接口提供商" + "●" + exp.ToString(),
                     MsgId = entity.MsgId,
-                    Value = exp.Message,
+                    Value = exp.ToGetMessage(),
                 });
             }
         }
 
-       
+
         //充值记录
         public async Task<IActionResult> Drawingsrecord([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
@@ -1599,11 +1681,12 @@ namespace Lottery.Api.Controllers
             {
                 var p = WebHelper.Decode(entity.Param);
                 string token = p.token;
-                DateTime begin = DateTime.Parse(p.begin);
-                DateTime end = DateTime.Parse(p.end);
-                int pageNo = int.Parse(p.pageNo);
-                int PageSize = int.Parse(p.PageSize);
-                var status = string.IsNullOrEmpty(Request.Query["status"]) ? null : (WithdrawStatus?)int.Parse(p.Status);
+                DateTime begin = Convert.ToDateTime(p.begin);
+                DateTime end = Convert.ToDateTime(p.end);
+                int pageNo = Convert.ToInt32(p.pageNo);
+                int PageSize = Convert.ToInt32(p.PageSize);
+                var status = string.IsNullOrEmpty((string)p.Status) ? null : Convert.ToInt32(p.Status);
+
                 //var withdrawList = WCFClients.GameFundClient.QueryMyWithdrawList(WithdrawStatus.Success, begin, end.AddDays(1), pageNo, PageSize, token);
                 //var withdrawList = WCFClients.GameFundClient.QueryMyWithdrawList(null, begin, end.AddDays(1), pageNo, PageSize, token);
                 if (begin < DateTime.Now.AddMonths(-1))
@@ -1632,9 +1715,9 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "服务器内部错误，请联系接口提供商",
+                    Message = "服务器内部错误，请联系接口提供商" + "●" + exp.ToString(),
                     MsgId = entity.MsgId,
-                    Value = exp.Message,
+                    Value = exp.ToGetMessage(),
                 });
             }
         }
@@ -1659,7 +1742,7 @@ namespace Lottery.Api.Controllers
                     {
                         Dictionary<string, object> param2 = new Dictionary<string, object>();
                         param2.Add("key", "FillMoney_Enable_GateWay");
-                        var FillMoney_Enable_GateWay = await _serviceProxyProvider.Invoke<C_Core_Config>(param2, "api/user/QueryCoreConfigByKey");                    
+                        var FillMoney_Enable_GateWay = await _serviceProxyProvider.Invoke<C_Core_Config>(param2, "api/user/QueryCoreConfigByKey");
                         string[] gateWayArray = FillMoney_Enable_GateWay.ConfigValue.ToLower().Split('|');
                         return JsonEx(new LotteryServiceResponse
                         {
@@ -1685,7 +1768,7 @@ namespace Lottery.Api.Controllers
                     return JsonEx(new LotteryServiceResponse
                     {
                         Code = ResponseCode.失败,
-                        Message = "验证用户失败",
+                        Message = "验证用户失败，传入参数有误",
                         MsgId = entity.MsgId,
                         Value = "验证用户失败",
                     });
@@ -1697,9 +1780,9 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = "验证用户失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -1713,7 +1796,7 @@ namespace Lottery.Api.Controllers
         private dynamic LoadPayConfig(string os, string[] gateWayArray)
         {
 
-          
+
             List<WebPayItem> list = new List<WebPayItem>();
             var baselist = loadPayConfig();
             foreach (WebPayItem item in baselist)
@@ -1731,7 +1814,7 @@ namespace Lottery.Api.Controllers
                 //}
                 //list.Add(buildPayUrl(item, os));
             }
-            return new { pay = list, amount = new int[] { 100, 200, 500, 1000 } };
+            return new { pay = list };
         }
         private static List<WebPayItem> loadPayConfig()
         {
@@ -1744,14 +1827,15 @@ namespace Lottery.Api.Controllers
 
         private WebPayItem buildPayUrl(WebPayItem item, string os)
         {
+            if (item.amounts == null) item.amounts = new List<int>();
             if (string.IsNullOrEmpty(item.payType))
             {
                 item.webViewUrl = item.actionUrl;
                 return item;
             }
-            string url = ConfigHelper.ConfigInfo["MobileDomain"].ToString();
+            string url = ConfigHelper.AllConfigInfo["MobileDomain"].ToString();
             StringBuilder s = new StringBuilder(url);
-            s.Append("/App/mobile?");
+            s.Append("/api/user/mobile?");
             s.Append("amount={amount}");
             s.Append("&token={token}");
             s.Append("&gateway=" + HttpUtility.UrlEncode(item.gateway));
@@ -1779,8 +1863,130 @@ namespace Lottery.Api.Controllers
             item.gateway = item.gateway;
             item.actionUrl = null;
             item.payType = item.payType;
+
             return item;
         }
 
+        public async Task<IActionResult> mobile([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                string token = p.token;
+                string bank = p.bank;
+                if (string.IsNullOrEmpty(token))
+                {
+                    throw new Exception("无效参数");
+                }
+                string amount = p.amount;
+                if (!CheckInt(amount, 1, 100000))
+                {
+                    throw new Exception("充值金额无效");
+                }
+
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["userToken"] = token;
+                var lInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/LoginByUserToken");
+                if (!lInfo.IsSuccess)
+                {
+                    throw new Exception(lInfo.Message);
+                }
+                var bankInfo = await _serviceProxyProvider.Invoke<C_BankCard>(param, "api/user/QueryBankCard");
+                CallBackParam callBackParam = new CallBackParam();
+                callBackParam.BankCardNo = "";
+                if (bankInfo != null)
+                {
+                    callBackParam.BankCardNo = bankInfo.BankCardNumber;
+                }
+                var cui = new LoginInfo();
+                cui = lInfo;
+                callBackParam.UserId = cui.UserId;
+                callBackParam.payAmount = amount;
+                Dictionary<string, object> param2 = new Dictionary<string, object>();
+                param2.Add("key", "FillMoney.CallBackDomain");
+                var CallBackDomain = await _serviceProxyProvider.Invoke<C_Core_Config>(param2, "api/user/QueryCoreConfigByKey");
+                callBackParam.CurrentDomain = CallBackDomain.ConfigValue;
+                string gateway = p.gateway;
+
+                var q = from c in baseConfig where c.gateway == gateway select c;
+                WebPayItem item = q.FirstOrDefault();
+                if (item == null || string.IsNullOrEmpty(item.actionUrl))
+                {
+                    return Content("不支持的支付类型");
+                }
+                //   "payType": "hw_bank|touch",
+                if (item.bank != null && item.bank.Count > 0 && !string.IsNullOrEmpty(bank))
+                {
+                    callBackParam.HdpayType = item.payType.Split('|')[0] + "|" + bank;//
+                }
+                else
+                {
+                    callBackParam.HdpayType = item.payType;//
+                }
+                callBackParam.ActionUrl = item.actionUrl;// "http://pay2.ahmwwl.com/user/redirectpay";
+
+                return JsonEx(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "成功",
+                    MsgId = entity.MsgId,
+                    Value = callBackParam,
+                });
+            }
+            catch (Exception ex)
+            {
+                return JsonEx(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "失败" + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage(),
+                });
+
+            }
+        }
+
+        private bool CheckInt(string str, int min, int max)
+        {
+            if (string.IsNullOrEmpty(str))
+            {
+                return false;
+            }
+            try
+            {
+                int val = int.Parse(str);
+                if (val >= min && val <= max)
+                {
+                    return true;
+                }
+            }
+            catch
+            {
+
+            }
+            return false;// throw new Exception("参数错误：" + name);
+        }
+
+        private List<WebPayItem> baseConfig
+        {
+            get
+            {
+                return loadPayConfig();
+            }
+        }
+
+        private async Task<decimal> GetMinWithdrawMoney([FromServices]IServiceProxyProvider _serviceProxyProvider)
+        {
+            decimal defaultmoney = 100;
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            param.Add("key", "Site.Financial.MinWithDrwaMoney");
+            var config = await _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/Data/QueryCoreConfigByKey");
+            if (config != null)
+            {
+                var minmoney = config.ConfigValue;
+                decimal.TryParse(minmoney, out defaultmoney);
+            }
+            return defaultmoney;
+        }
     }
 }

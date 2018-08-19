@@ -21,9 +21,7 @@ namespace EntityModel.CoreModel
         /// <summary>
         /// 提现类别
         /// </summary>
-        public 
-            
-            Category WithdrawCategory { get; set; }
+        public WithdrawCategory WithdrawCategory { get; set; }
         /// <summary>
         /// 描述
         /// </summary>
