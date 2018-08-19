@@ -121,7 +121,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.ToGetMessage(),
+                    Message = "登录失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -131,7 +131,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.ToGetMessage(),
+                    Message = "登录失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -287,12 +287,12 @@ namespace Lottery.Api.Controllers
             }
             catch (ArgumentException ex)
             {
-                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = ex.ToGetMessage(), MsgId = entity.MsgId, Value = null });
+                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = "执行失败" + "●" + ex.ToString(), MsgId = entity.MsgId, Value = null });
 
             }
             catch (Exception ex)
             {
-                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = ex.ToGetMessage(), MsgId = entity.MsgId, Value = null });
+                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = "执行失败" + "●" + ex.ToString(), MsgId = entity.MsgId, Value = null });
 
             }
         }
@@ -345,12 +345,12 @@ namespace Lottery.Api.Controllers
 
             catch (ArgumentException ex)
             {
-                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = ex.ToGetMessage(), MsgId = entity.MsgId, Value = null });
+                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = "执行失败" + "●" + ex.ToString(), MsgId = entity.MsgId, Value = null });
 
             }
             catch (Exception ex)
             {
-                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = ex.ToGetMessage(), MsgId = entity.MsgId, Value = null });
+                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = "执行失败" + "●" + ex.ToString(), MsgId = entity.MsgId, Value = null });
 
             }
             return null;
@@ -394,7 +394,7 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.ToGetMessage(),
+                    Message = "执行失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -404,7 +404,7 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.ToGetMessage(),
+                    Message = "执行失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -432,13 +432,13 @@ namespace Lottery.Api.Controllers
                     throw new Exception("验证码不能为空！");
                 if (!ValidateHelper.IsMobile(mobile))
                     throw new ArgumentException("手机号码不能为空！");
-                string cfrom = "";
+                //string cfrom = "";
                 string pid = p.pid;
-                SchemeSource schemeSource = SchemeSource.Web;
-                if (!string.IsNullOrEmpty(cfrom) && cfrom == "ios")
-                {
-                    schemeSource = SchemeSource.Iphone;
-                }
+                SchemeSource schemeSource = entity.SourceCode;
+                //if (!string.IsNullOrEmpty(cfrom) && cfrom == "ios")
+                //{
+                //    schemeSource = SchemeSource.Iphone;
+                //}
               
                 var userInfo = new RegisterInfo_Local();
                 //userInfo.RegisterIp = IpManager.IPAddress;
@@ -541,7 +541,7 @@ namespace Lottery.Api.Controllers
                 {
                    
                     Code = ResponseCode.失败,
-                    Message = ex.ToGetMessage(),
+                    Message ="注册失败" +"●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -612,7 +612,8 @@ namespace Lottery.Api.Controllers
             {
                 //return Json(new { status = false, message = exp.ToGetMessage() }, JsonRequestBehavior.AllowGet);
                 returnResult.Code = ResponseCode.失败;
-                returnResult.Message = ex.ToGetMessage();
+                returnResult.Message = "发送失败"+ "●" + ex.ToString();
+                returnResult.Value = ex.ToGetMessage();
                 return JsonEx(returnResult);
             }
         }
@@ -668,54 +669,68 @@ namespace Lottery.Api.Controllers
         //}
 
         public  IActionResult CreateValidateCode(string MsgId)
-        {
-            var num = 0;
-            string randomText = SelectRandomNumber(5, out num);
-            var result = new LotteryServiceResponse
+        {     
+            try
             {
-                Code = ResponseCode.失败,
-                Message ="获取验证码失败,请刷新验证码",
-                //   MsgId = entity.MsgId,
-                //  Value = ex.ToGetMessage(),
-            };
-            //HttpContext.Session.SetString("VerifyCode", num.ToString());
-            ValidateCodeGenerator vlimg = new ValidateCodeGenerator()
-            {
-                BackGroundColor = Color.FromKnownColor(KnownColor.LightGray),
-                RandomWord = randomText,
-                ImageHeight = 25,
-                ImageWidth = 100,
-                fontSize = 14,
-            };
-            var img = vlimg.OnPaint();
-            if (img == null)
-            {
-                // return Content("Error");
-            }
-            else {
-                result.Code = ResponseCode.成功;
-                result.Message = "成功获取验证码";
-
-                //录入验证码
-                var guidkey = Guid.NewGuid().ToString("N");
-                string key = "R_"+ guidkey;
-                if (!String.IsNullOrEmpty(MsgId))
+                var num = 0;
+                string randomText = SelectRandomNumber(5, out num);
+                var result = new LotteryServiceResponse
                 {
-                    key = MsgId;
-                }
-              
-                KaSon.FrameWork.Common.Redis.RedisHelper.StringSet(key, num.ToString(), 60 * 10);
-
-                string base64 = Convert.ToBase64String(img);
-                //data:image/gif;base64,
-                if (!base64.StartsWith("data:image"))
+                    Code = ResponseCode.失败,
+                    Message = "获取验证码失败,请刷新验证码",
+                    //   MsgId = entity.MsgId,
+                    //  Value = ex.ToGetMessage(),
+                };
+                //HttpContext.Session.SetString("VerifyCode", num.ToString());
+                ValidateCodeGenerator vlimg = new ValidateCodeGenerator()
                 {
-                    base64 = "data:image/gif;base64," + base64;
+                    BackGroundColor = Color.FromKnownColor(KnownColor.LightGray),
+                    RandomWord = randomText,
+                    ImageHeight = 25,
+                    ImageWidth = 100,
+                    fontSize = 14,
+                };
+                var img = vlimg.OnPaint();
+                if (img == null)
+                {
+                    // return Content("Error");
                 }
-                result.Value =base64;
-                result.MsgId = guidkey;
+                else
+                {
+                    result.Code = ResponseCode.成功;
+                    result.Message = "成功获取验证码";
+
+                    //录入验证码
+                    var guidkey = Guid.NewGuid().ToString("N");
+                    string key = "R_" + guidkey;
+                    if (!String.IsNullOrEmpty(MsgId))
+                    {
+                        key = MsgId;
+                    }
+
+                    KaSon.FrameWork.Common.Redis.RedisHelper.StringSet(key, num.ToString(), 60 * 10);
+
+                    string base64 = Convert.ToBase64String(img);
+                    //data:image/gif;base64,
+                    if (!base64.StartsWith("data:image"))
+                    {
+                        base64 = "data:image/gif;base64," + base64;
+                    }
+                    result.Value = base64;
+                    result.MsgId = guidkey;
+                }
+                return JsonEx(result);
             }
-            return JsonEx(result);
+            catch (Exception ex)
+            {
+                return JsonEx(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "获取验证码失败" + "●" + ex.ToString(),
+                    //   MsgId = entity.MsgId,
+                    //  Value = ex.ToGetMessage(),
+                });
+            }
             //return vlimg;
         }
 
@@ -805,7 +820,7 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.ToGetMessage(),
+                    Message = "验证失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = false,
                 });
@@ -888,9 +903,9 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.ToGetMessage(),
+                    Message = "操作失败" +"●" + ex.ToString(),
                     MsgId = entity.MsgId,
-                    Value = ex,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -940,7 +955,7 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.ToGetMessage(),
+                    Message = "发送验证码失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -1000,7 +1015,7 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.ToGetMessage(),
+                    Message = "设置失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -1010,7 +1025,7 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.ToGetMessage(),
+                    Message = "设置失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -1055,7 +1070,7 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.ToGetMessage(),
+                    Message = "设置失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -1065,7 +1080,7 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.ToGetMessage(),
+                    Message = "设置失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -1272,7 +1287,7 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.ToGetMessage(),
+                    Message = "绑定失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -1282,7 +1297,7 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.ToGetMessage(),
+                    Message = "绑定失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -1396,7 +1411,7 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "业务参数错误",
+                    Message = "业务参数错误" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -1406,7 +1421,7 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "服务器内部错误，请联系接口提供商",
+                    Message = "服务器内部错误，请联系接口提供商" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -1478,7 +1493,7 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "服务器内部错误，请联系接口提供商",
+                    Message = "服务器内部错误，请联系接口提供商" + "●" + exp.ToString(),
                     MsgId = entity.MsgId,
                     Value = exp.ToGetMessage(),
                 });
@@ -1566,7 +1581,7 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "服务器内部错误，请联系接口提供商",
+                    Message = "服务器内部错误，请联系接口提供商" + "●" + exp.ToString(),
                     MsgId = entity.MsgId,
                     Value = exp.ToGetMessage(),
                 });
@@ -1648,7 +1663,7 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "服务器内部错误，请联系接口提供商",
+                    Message = "服务器内部错误，请联系接口提供商" + "●" + exp.ToString(),
                     MsgId = entity.MsgId,
                     Value = exp.ToGetMessage(),
                 });
@@ -1697,7 +1712,7 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "服务器内部错误，请联系接口提供商",
+                    Message = "服务器内部错误，请联系接口提供商" + "●" + exp.ToString(),
                     MsgId = entity.MsgId,
                     Value = exp.ToGetMessage(),
                 });
@@ -1750,7 +1765,7 @@ namespace Lottery.Api.Controllers
                     return JsonEx(new LotteryServiceResponse
                     {
                         Code = ResponseCode.失败,
-                        Message = "验证用户失败",
+                        Message = "验证用户失败，传入参数有误",
                         MsgId = entity.MsgId,
                         Value = "验证用户失败",
                     });
@@ -1762,7 +1777,7 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.ToGetMessage(),
+                    Message = "验证用户失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -1920,7 +1935,7 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "失败",
+                    Message = "失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });

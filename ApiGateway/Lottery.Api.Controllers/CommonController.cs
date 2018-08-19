@@ -107,7 +107,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "获取追期期号失败",
+                    Message = "获取追期期号失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -161,7 +161,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "查询配置失败",
+                    Message = "查询配置失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value="",
                 });

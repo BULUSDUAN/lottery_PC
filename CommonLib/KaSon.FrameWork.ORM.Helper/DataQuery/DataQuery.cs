@@ -88,7 +88,7 @@ namespace KaSon.FrameWork.ORM.Helper
                             JumpUrl = s.JumpUrl,
                         };
             SiteMessageBannerInfo_Collection collection = new SiteMessageBannerInfo_Collection();
-            collection.ListInfo = null;
+            collection.ListInfo = new List<SiteMessageBannerInfo>();
             if (query != null)
             {
                 collection.ListInfo = query.Take(returnRecord).ToList();
