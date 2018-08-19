@@ -20,30 +20,28 @@ namespace EntityModel.CoreModel
     /// <param name="issue_bank_address">开户行地址</param>
     /// <param name="memo">备用字段</param>
     /// <returns></returns>
-    public class 
-        
-        ApplyInfo
-        {
-            public int company_id { get; set; }
-            public String bank_id { get; set; }
-            public String company_order_num { get; set; }
-            public decimal amount { get; set; }
-            public String card_num { get; set; }
-            public String card_name { get; set; }
-            public String company_user { get; set; }
-            public String issue_bank_name { get; set; }
-            public String issue_bank_address { get; set; }
-            //手续费
-            public decimal transaction_charge { get; set; }
-            //DP订单编号
-            public String mownecum_order_num { get; set; }
-            //状态
-            public int status { get; set; }
-            //错误信息
-            public String error_msg { get; set; }
-            public String memo { get; set; }
+    public class WithdrawApplyInfo
+    {
+        public int company_id { get; set; }
+        public String bank_id { get; set; }
+        public String company_order_num { get; set; }
+        public decimal amount { get; set; }
+        public String card_num { get; set; }
+        public String card_name { get; set; }
+        public String company_user { get; set; }
+        public String issue_bank_name { get; set; }
+        public String issue_bank_address { get; set; }
+        //手续费
+        public decimal transaction_charge { get; set; }
+        //DP订单编号
+        public String mownecum_order_num { get; set; }
+        //状态
+        public int status { get; set; }
+        //错误信息
+        public String error_msg { get; set; }
+        public String memo { get; set; }
 
-      
+
     }
-    
+
 }
