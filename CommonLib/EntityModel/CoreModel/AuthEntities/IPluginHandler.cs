@@ -196,7 +196,9 @@ namespace EntityModel.CoreModel
 
     //#endregion
 
-    //#region 请求提现接口
+    //#region 请求
+
+   //接口
 
     //public interface IRequestWithdraw_BeforeTranBegin : IPlugin
     //{

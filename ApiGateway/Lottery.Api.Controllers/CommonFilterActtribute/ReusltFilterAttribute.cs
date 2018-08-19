@@ -12,6 +12,8 @@ namespace Lottery.Api.Controllers.CommonFilterActtribute
 
     public class ReusltFilterAttribute : Attribute, IActionFilter
     {
+        public string cxin = "★";
+        public char cyuan = '●';
         void IActionFilter.OnActionExecuted(ActionExecutedContext context)
         {
             var result = context.Result as Microsoft.AspNetCore.Mvc.JsonResult;
@@ -19,24 +21,31 @@ namespace Lottery.Api.Controllers.CommonFilterActtribute
             {
                 string url = context.HttpContext.Request.Path;
                 var resp = result.Value as LotteryServiceResponse;
-                if (resp != null && resp.Code == ResponseCode.失败 && resp.Message.Contains("ER"))
+                if (resp != null && resp.Code == ResponseCode.失败 && resp.Message.Contains(cxin))
                 {
                     //日志记录
-                    //  using ()
+                    //  using ()【】
                     //   Log4Log log4 = new Log4Log();
 
                     string msg = string.Format("API:{0} \r\n {1}", url, resp.Message);
                     Log4Log.LogEX(KLogLevel.APIError, "API或服务错误***", new Exception(msg));
-                    resp.Message = "系统错误，请重试";
-                    resp.Value = "系统错误，请重试";
+
+                    var temp = resp.Message.Split(cyuan);
+                  //  string st = "系统错误，请重试";
+                    string st = temp[0];
+
+                    resp.Message = st;
+                 //   resp.Value = "系统错误，请重试";
                     //   Microsoft.AspNetCore.Mvc.JsonResult 
                     // context.Result
                 }
-                else if (resp.Code == ResponseCode.失败 && !resp.Message.Contains("ER"))
+                else if (resp.Code == ResponseCode.失败 && !resp.Message.Contains(cxin))
                 {
-
+                    var temp = resp.Message.Split(cyuan);
                     //  string url = context.HttpContext.Request.Path;
                     string msg = string.Format("API:{0} \r\n {1}", url, resp.Message);
+                    string st = temp[0];
+                    resp.Message = st;
                     Log4Log.LogEX(KLogLevel.GenError, "用户级别错误***", new Exception(msg));
                 }
             }

@@ -124,7 +124,8 @@ namespace EntityModel.CoreModel
             /// </summary>
             public CPSMode CPSMode { get; set; }
             /// <summary>
-            /// 处理人（用于提现返点，结算分红）
+            /// 处理人（用于
+            /// 返点，结算分红）
             /// </summary>
             public string HandlPeople { get; set; }
             public DateTime CreateTime { get; set; }
