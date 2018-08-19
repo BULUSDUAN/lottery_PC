@@ -375,7 +375,10 @@ namespace EntityModel.Enum
         WinnerModel = 7,
         HunHeDG = 8
     }
-    public enum WithdrawAgentType
+    public enum 
+        
+        
+        AgentType
     {
         Alipay = 10,
         Yeepay = 20,

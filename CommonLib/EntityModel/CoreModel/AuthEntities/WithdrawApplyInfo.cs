@@ -20,7 +20,9 @@ namespace EntityModel.CoreModel
     /// <param name="issue_bank_address">开户行地址</param>
     /// <param name="memo">备用字段</param>
     /// <returns></returns>
-    public class WithdrawApplyInfo
+    public class 
+        
+        ApplyInfo
         {
             public int company_id { get; set; }
             public String bank_id { get; set; }
