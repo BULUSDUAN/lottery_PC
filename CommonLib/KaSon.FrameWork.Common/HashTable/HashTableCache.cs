@@ -43,6 +43,7 @@ namespace KaSon.FrameWork.Common
             //  Issuse_QueryInfo cur = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Data/QueryCurretNewIssuseInfo");
             string key = "";
             //_CTZQHt.Clear();
+            ex = ex == null ? new Issuse_QueryInfoEX() : ex;
             foreach (var item in ex.CTZQ_IssuseNumber)
             {
                 var type = item.GameCode_IssuseNumber.Split('|')[1];
