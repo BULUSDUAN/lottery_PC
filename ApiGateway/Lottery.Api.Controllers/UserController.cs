@@ -23,6 +23,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using KaSon.FrameWork.Common.ExceptionEx;
 
 namespace Lottery.Api.Controllers
 {
@@ -120,9 +121,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -130,9 +131,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
 
@@ -286,12 +287,12 @@ namespace Lottery.Api.Controllers
             }
             catch (ArgumentException ex)
             {
-                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = ex.Message, MsgId = entity.MsgId, Value = null });
+                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = ex.ToGetMessage(), MsgId = entity.MsgId, Value = null });
 
             }
             catch (Exception ex)
             {
-                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = ex.Message, MsgId = entity.MsgId, Value = null });
+                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = ex.ToGetMessage(), MsgId = entity.MsgId, Value = null });
 
             }
         }
@@ -344,12 +345,12 @@ namespace Lottery.Api.Controllers
 
             catch (ArgumentException ex)
             {
-                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = ex.Message, MsgId = entity.MsgId, Value = null });
+                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = ex.ToGetMessage(), MsgId = entity.MsgId, Value = null });
 
             }
             catch (Exception ex)
             {
-                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = ex.Message, MsgId = entity.MsgId, Value = null });
+                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = ex.ToGetMessage(), MsgId = entity.MsgId, Value = null });
 
             }
             return null;
@@ -393,9 +394,9 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -403,9 +404,9 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -540,9 +541,9 @@ namespace Lottery.Api.Controllers
                 {
                    
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -559,9 +560,9 @@ namespace Lottery.Api.Controllers
             var returnResult = new LotteryServiceResponse()
             {
                 Code = ResponseCode.失败,
-                //Message = ex.Message,
+                //Message = ex.ToGetMessage(),
                 MsgId = entity.MsgId,
-                //Value = ex.Message,
+                //Value = ex.ToGetMessage(),
             };
             try
             {
@@ -611,7 +612,7 @@ namespace Lottery.Api.Controllers
             {
                 //return Json(new { status = false, message = exp.Message }, JsonRequestBehavior.AllowGet);
                 returnResult.Code = ResponseCode.失败;
-                returnResult.Message = ex.Message;
+                returnResult.Message = ex.ToGetMessage();
                 return JsonEx(returnResult);
             }
         }
@@ -675,7 +676,7 @@ namespace Lottery.Api.Controllers
                 Code = ResponseCode.失败,
                 Message ="获取验证码失败,请刷新验证码",
                 //   MsgId = entity.MsgId,
-                //  Value = ex.Message,
+                //  Value = ex.ToGetMessage(),
             };
             //HttpContext.Session.SetString("VerifyCode", num.ToString());
             ValidateCodeGenerator vlimg = new ValidateCodeGenerator()
@@ -804,7 +805,7 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
                     Value = false,
                 });
@@ -887,7 +888,7 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
                     Value = ex,
                 });
@@ -939,9 +940,9 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -999,9 +1000,9 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -1009,9 +1010,9 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -1054,9 +1055,9 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -1064,9 +1065,9 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -1103,9 +1104,9 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -1113,9 +1114,9 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -1175,7 +1176,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "业务参数错误",
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -1185,7 +1186,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "服务器内部错误，请联系接口提供商",
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -1271,9 +1272,9 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -1281,9 +1282,9 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -1397,7 +1398,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "业务参数错误",
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -1407,7 +1408,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "服务器内部错误，请联系接口提供商",
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -1761,9 +1762,9 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -1921,7 +1922,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "失败",
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
                
             }
