@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using KaSon.FrameWork.Common.ExceptionEx;
 
 namespace Lottery.Api.Controllers
 {
@@ -300,9 +301,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -310,9 +311,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -427,9 +428,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -437,9 +438,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -640,9 +641,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -650,9 +651,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -699,9 +700,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -709,9 +710,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -888,9 +889,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -898,9 +899,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -984,9 +985,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -994,9 +995,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -1035,9 +1036,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -1045,9 +1046,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -1180,9 +1181,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -1190,9 +1191,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -1275,7 +1276,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "业务参数错误",
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -1285,7 +1286,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "查询订单详情失败",
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }

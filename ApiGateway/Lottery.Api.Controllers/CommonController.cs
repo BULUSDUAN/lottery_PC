@@ -20,6 +20,7 @@ using KaSon.FrameWork.Common;
 using EntityModel.Enum;
 using Lottery.Api.Controllers.CommonFilterActtribute;
 using EntityModel;
+using KaSon.FrameWork.Common.ExceptionEx;
 //using Lottery.Service.IModuleServices;
 
 namespace Lottery.Api.Controllers
@@ -108,7 +109,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "获取追期期号失败",
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }

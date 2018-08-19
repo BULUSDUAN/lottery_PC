@@ -21,6 +21,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using KaSon.FrameWork.Common.ExceptionEx;
 
 namespace Lottery.Api.Controllers
 {
@@ -83,7 +84,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "业务参数错误",
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -93,7 +94,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "服务器内部错误，请联系接口提供商",
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -199,7 +200,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "业务参数错误",
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -209,7 +210,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "查询最新开奖失败",
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -470,7 +471,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "业务参数错误",
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -480,7 +481,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "查询历史开奖失败",
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -682,7 +683,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "业务参数错误",
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -692,7 +693,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "查询账户明细出错",
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -838,7 +839,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "查询投注记录失败",
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
 
@@ -947,7 +948,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "业务参数错误",
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -957,7 +958,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "查询合买大厅失败",
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -1028,7 +1029,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "业务参数错误",
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -1038,7 +1039,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "查询中奖榜单失败",
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -1080,7 +1081,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "业务参数错误",
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -1090,7 +1091,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "查询订单详情失败",
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
 
@@ -1633,9 +1634,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -1643,9 +1644,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -1720,9 +1721,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -1730,9 +1731,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -1814,9 +1815,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -1824,9 +1825,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -1908,9 +1909,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -1918,9 +1919,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -1970,9 +1971,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -1980,9 +1981,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -2042,9 +2043,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -2052,9 +2053,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -2110,9 +2111,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -2120,9 +2121,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -2200,9 +2201,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -2210,9 +2211,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -2286,9 +2287,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -2296,9 +2297,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -2382,7 +2383,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "业务参数错误",
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -2392,7 +2393,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "查询失败",
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -2536,7 +2537,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "业务参数错误",
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
             catch (Exception ex)
@@ -2546,7 +2547,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "查询订单详情失败",
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -2596,9 +2597,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -2631,9 +2632,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -2711,9 +2712,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -2806,9 +2807,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
 
@@ -2892,9 +2893,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
-                    Value = ex.Message,
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
