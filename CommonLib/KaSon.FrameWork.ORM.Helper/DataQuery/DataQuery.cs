@@ -7,6 +7,7 @@ using System.Linq;
 using EntityModel.Enum;
 using EntityModel.CoreModel;
 using System.Linq;
+using KaSon.FrameWork.ORM.Provider;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
@@ -545,6 +546,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var IssuseList = new List<string>();
             if (model != null)
             {
+                //"<>h__TransparentIdentifier2.b"
                 //if (DayGame.Contains(theGameCode))
                 //{
                 //    var thisYear = model.OfficialStopTime.Year;
@@ -559,6 +561,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 //    var lastIssuse = DB.CreateQuery<C_Game_Issuse>().Where(p => p.LocalStopTime > today && p.LocalStopTime < tomorrow &&p.GameCode== theGameCode).OrderBy(p => p.OfficialStopTime).FirstOrDefault();
                 //    MaxIssue= lastIssuse.IssuseNumber;
                 //}
+               // DbProvider.IsShowOneSQL = true;
                 IssuseList = DB.CreateQuery<C_Game_Issuse>().Where(p => p.OfficialStopTime >= model.OfficialStopTime && p.GameCode == theGameCode).OrderBy(p => p.OfficialStopTime).Take(issueCount).Select(p=>p.IssuseNumber).ToList();
             }
             return IssuseList;
