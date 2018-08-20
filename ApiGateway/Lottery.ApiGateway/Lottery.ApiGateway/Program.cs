@@ -81,7 +81,7 @@ namespace Lottery.ApiGateway
             //定时更新最新期号信息 
             //Task.Factory.StartNew(async delegate {
             //    await Task.Delay(1000 * 5);
-              
+
             //    var _serviceProxyProvider = ServiceLocator.GetService<IServiceProxyProvider>();
             //    Issuse_QueryInfoEX val= await _serviceProxyProvider.Invoke<Issuse_QueryInfoEX>(new Dictionary<string, object>(), "api/Data/QueryCurretNewIssuseInfoList");
             //    HashTableCache.Set_Issuse_QueryInfo(val);// = val;
@@ -103,6 +103,7 @@ namespace Lottery.ApiGateway
             //    HashTableCache.Init_JCZQ_Data("1");
             //    HashTableCache.Init_JCZQ_Data();
             //});
+            Console.WriteLine("API 启动...");
             host.Run();
 
           
