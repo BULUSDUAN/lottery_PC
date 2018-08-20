@@ -142,6 +142,35 @@ namespace Lottery.Api.Controllers
 
         }
         #endregion
+        #region 按钮上的广告
+        /// <summary>
+        /// 按钮上的广告
+        /// 重庆时时彩     加奖92%  ★★★奖金★★★
+        /// 竞猜足球  加奖12%(红包)
+        /// 江西11选5，加奖60% ★★奖金★★
+        /// 竞猜篮球 加奖15%(红包) 
+        /// 胜负彩 加奖15% (红包)
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> GameInfoIndex_V2([FromServices]IServiceProxyProvider _serviceProxyProvider)
+        {
+            //            string json = @"{""records"":[
+            //{""desc"":""2元赢千万"",""flag"":""1"",""name"":""ssq""},{""desc"":""天天开奖"",""flag"":""1"",""name"":""3d""},{""desc"":""加奖92%(奖金)"",""flag"":""0"",""name"":""cqssc""},{""desc"":""30选7"",""flag"":""0"",""name"":""qlc""},{""desc"":""暂未开售"",""flag"":""0"",""name"":""jxssc""},{""desc"":""3元赢千万"",""flag"":""1"",""name"":""dlt""},{""desc"":""2元赢500万"",""flag"":""1"",""name"":""qxc""},{""desc"":""2元赢10万"",""flag"":""1"",""name"":""plw""},{""desc"":""天天开奖"",""flag"":""1"",""name"":""pls""},{""desc"":""加奖60%(奖金)"",""flag"":""0"",""name"":""jx11x5""},{""desc"":""每日84期"",""flag"":""1"",""name"":""gd11x5""},{""desc"":""10分钟1期"",""flag"":""1"",""name"":""sd115""},{""desc"":""暂未开售"",""flag"":""0"",""name"":""klpk""},{""desc"":""加奖15% (红包)"",""flag"":""1"",""name"":""14sfc""},{""desc"":""加奖15% (红包)"",""flag"":""1"",""name"":""r9""},{""desc"":""加奖15% (红包)"",""flag"":""1"",""name"":""4cjq""},{""desc"":""加奖15% (红包)"",""flag"":""1"",""name"":""6cb""},{""desc"":""挑战高赔率"",""flag"":""1"",""name"":""bd""},{""desc"":""加奖12%(红包)"",""flag"":""1"",""name"":""jczq""},{""desc"":""加奖15%(红包)"",""flag"":""1"",""name"":""jclq""},{""desc"":""返奖率87%"",""flag"":""1"",""name"":""jczqdg""},{""desc"":""返奖率87%"",""flag"":""1"",""name"":""jclqdg""},{""desc"":""赛事任你挑"",""flag"":""1"",""name"":""bdsf""},{""desc"":""竞猜冠亚军"",""flag"":""1"",""name"":""gyj""}]}";
+            //return WebRedisHelper.APP_Advertising;
+
+            var APP_Advertising_Key = "APP_Advertising_V2";
+            var APP_Advertising_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_Advertising_Key);
+            return Json(new LotteryServiceResponse
+            {
+                Code = ResponseCode.成功,
+                Message = "查询按钮广告成功",
+                MsgId = "",
+                Value = JsonHelper.Deserialize<object>(APP_Advertising_Value)
+            });
+
+        }
+        #endregion
+
 
 
         public async Task<IActionResult> GetAppConfig([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
