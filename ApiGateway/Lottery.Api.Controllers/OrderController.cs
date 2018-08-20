@@ -1066,7 +1066,7 @@ namespace Lottery.Api.Controllers
                     return await QueryCHASEOrderDetail(_serviceProxyProvider, entity, schemeId, userToken);
                 }
                 else if (schemeId.StartsWith("TSM"))
-                {
+               {
                     return await QueryTMSOrderDetail(_serviceProxyProvider, entity, schemeId, userToken);
                 }
                 else
@@ -1218,9 +1218,9 @@ namespace Lottery.Api.Controllers
             var userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
             param.Clear();
             param.Add("schemeId", schemeId);
-            param.Add("PageIndex", 0);
-            param.Add("PageSize", 100);
-            param.Add("userToken", userToken);
+            param.Add("pageIndex", 0);
+            param.Add("pageSize", 100);
+            param.Add("UserToken", userToken);
             var join = await _serviceProxyProvider.Invoke<Sports_TogetherJoinInfoCollection>(param, "api/Order/QuerySportsTogetherJoinList");
             var joinList = new List<object>();
             foreach (var item in join.List)

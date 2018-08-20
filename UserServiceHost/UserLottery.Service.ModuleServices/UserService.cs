@@ -80,61 +80,70 @@ namespace UserLottery.Service.ModuleServices
         //private BusinessHelper businessHelper;
         public Task<LoginInfo> User_Login(string loginName, string password,string loginIp)
         {
-            //QueryUserParam model = new QueryUserParam();
-            string IPAddress = loginIp;
-            var loginBiz = new LocalLoginBusiness();
-          
-            if (IPAddress == "Client")//移动端登录时，密码已经MD5
-                loginEntity = loginBiz.LoginAPP(loginName,password);
-            else
-                loginEntity = loginBiz.Login(loginName, password);
-            if (loginEntity == null)
+            try
             {
-                return Task.FromResult(new LoginInfo { IsSuccess = false, Message = "登录名(手机号)或密码错误", LoginFrom = "LOCAL", });
+                //QueryUserParam model = new QueryUserParam();
+                string IPAddress = loginIp;
+                var loginBiz = new LocalLoginBusiness();
+
+                if (IPAddress == "Client")//移动端登录时，密码已经MD5
+                    loginEntity = loginBiz.LoginAPP(loginName, password);
+                else
+                    loginEntity = loginBiz.Login(loginName, password);
+                if (loginEntity == null)
+                {
+                    return Task.FromResult(new LoginInfo { IsSuccess = false, Message = "登录名(手机号)或密码错误", LoginFrom = "LOCAL", });
+                }
+
+                ////var authBiz = new GameBizAuthBusiness();
+                if (!IsRoleType(loginEntity.User, RoleType.WebRole))
+                {
+                    return Task.FromResult(new LoginInfo { IsSuccess = false, Message = "此帐号角色不允许在此登录", LoginFrom = "LOCAL", });
+                }
+                if (!loginEntity.Register.IsEnable)
+                {
+                    return Task.FromResult(new LoginInfo { IsSuccess = false, Message = "用户未激活", LoginFrom = "LOCAL", UserId = loginEntity.UserId });
+                }
+
+                var authBiz = new GameBizAuthBusiness();
+                var userToken = authBiz.GetUserToken(loginEntity.User.UserId);
+
+                var blogEntity = loginBiz.QueryBlog_ProfileBonusLevel(loginEntity.User.UserId);
+
+                ////清理用户绑定数据缓存
+                ////ClearUserBindInfoCache(loginEntity.UserId);
+
+
+                //!执行扩展功能代码 - 提交事务前
+                BusinessHelper.ExecPlugin<IUser_AfterLogin>(new object[] { loginEntity.UserId, "LOCAL", loginIp, DateTime.Now });
+                //刷新用户在Redis中的余额
+                BusinessHelper.RefreshRedisUserBalance(loginEntity.UserId);
+                return Task.FromResult(new LoginInfo
+                {
+                    IsSuccess = true,
+                    Message = "登录成功",
+                    CreateTime = loginEntity.CreateTime,
+                    LoginFrom = "LOCAL",
+                    RegType = loginEntity.Register.RegType,
+                    Referrer = loginEntity.Register.Referrer,
+                    UserId = loginEntity.User.UserId,
+                    VipLevel = loginEntity.Register.VipLevel,
+                    LoginName = loginEntity.LoginName,
+                    DisplayName = loginEntity.Register.DisplayName,
+                    UserToken = userToken,
+                    AgentId = loginEntity.Register.AgentId,
+                    IsAgent = loginEntity.Register.IsAgent,
+                    HideDisplayNameCount = loginEntity.Register.HideDisplayNameCount,
+                    MaxLevelName = string.IsNullOrEmpty(blogEntity.MaxLevelName) ? "" : blogEntity.MaxLevelName,
+                    IsUserType = loginEntity.Register.UserType == 1 ? true : false
+                });
             }
-
-            ////var authBiz = new GameBizAuthBusiness();
-            if (!IsRoleType(loginEntity.User, RoleType.WebRole))
+            catch (Exception ex)
             {
-                return Task.FromResult(new LoginInfo { IsSuccess = false, Message = "此帐号角色不允许在此登录", LoginFrom = "LOCAL", });
+
+                throw new Exception(ex.Message,ex);
             }
-            if (!loginEntity.Register.IsEnable)
-            {
-                return Task.FromResult(new LoginInfo { IsSuccess = false, Message = "用户未激活", LoginFrom = "LOCAL", UserId = loginEntity.UserId });
-            }
-
-            var authBiz = new GameBizAuthBusiness();
-            var userToken = authBiz.GetUserToken(loginEntity.User.UserId);
-            
-             var blogEntity = loginBiz.QueryBlog_ProfileBonusLevel(loginEntity.User.UserId);
-
-            ////清理用户绑定数据缓存
-            ////ClearUserBindInfoCache(loginEntity.UserId);
-            
-
-            //!执行扩展功能代码 - 提交事务前
-            BusinessHelper.ExecPlugin<IUser_AfterLogin>(new object[] { loginEntity.UserId, "LOCAL", loginIp, DateTime.Now });
-            //刷新用户在Redis中的余额
-            BusinessHelper.RefreshRedisUserBalance(loginEntity.UserId);
-            return Task.FromResult(new LoginInfo
-            {
-                IsSuccess = true,
-                Message = "登录成功",
-                CreateTime = loginEntity.CreateTime,
-                LoginFrom = "LOCAL",
-                RegType = loginEntity.Register.RegType,
-                Referrer = loginEntity.Register.Referrer,
-                UserId = loginEntity.User.UserId,
-                VipLevel = loginEntity.Register.VipLevel,
-                LoginName = loginEntity.LoginName,
-                DisplayName = loginEntity.Register.DisplayName,
-                UserToken = userToken,
-                AgentId = loginEntity.Register.AgentId,
-                IsAgent = loginEntity.Register.IsAgent,
-                HideDisplayNameCount = loginEntity.Register.HideDisplayNameCount,
-                MaxLevelName = string.IsNullOrEmpty(blogEntity.MaxLevelName) ? "" : blogEntity.MaxLevelName,
-                IsUserType = loginEntity.Register.UserType == 1 ? true : false
-            });
+           
            
         }
 
@@ -143,91 +152,109 @@ namespace UserLottery.Service.ModuleServices
         /// </summary>
         public Task<LoginInfo> LoginByUserToken(string userToken)
         {
-            // 验证用户身份及权限
-            var userId = userAuthentication.ValidateUserAuthentication(userToken);
-
-            var loginBiz = new LocalLoginBusiness();
-            var reg = loginBiz.GetRegisterById(userId);
-            if (reg == null)
+            try
             {
-                return Task.FromResult(new LoginInfo { IsSuccess = false, Message = "不存在该用户", LoginFrom = "LOCAL", });
+                // 验证用户身份及权限
+                var userId = userAuthentication.ValidateUserAuthentication(userToken);
+
+                var loginBiz = new LocalLoginBusiness();
+                var reg = loginBiz.GetRegisterById(userId);
+                if (reg == null)
+                {
+                    return Task.FromResult(new LoginInfo { IsSuccess = false, Message = "不存在该用户", LoginFrom = "LOCAL", });
+                }
+                string loginFrom = reg.ComeFrom;
+                string loginName = "";
+                switch (loginFrom.ToLower())
+                {
+                    case "local":
+                    case "index":
+                    case "app":
+                    case "ios":
+                    case "touch":
+
+
+                        var loginEntity = GetLocalLoginByUserId(userId);
+                        if (loginEntity == null)
+                        {
+                            return Task.FromResult(new LoginInfo { IsSuccess = false, Message = "不存在该用户", LoginFrom = loginFrom, });
+                        }
+                        loginName = loginEntity.Result.LoginName;
+                        break;
+                    case "alipay":
+
+                        var alipayEntity = loginBiz.GetAlipayByUserId(userId);
+                        if (alipayEntity == null)
+                        {
+                            return Task.FromResult(new LoginInfo { IsSuccess = false, Message = "不存在该用户", LoginFrom = loginFrom, });
+                        }
+                        loginName = alipayEntity.LoginName;
+                        break;
+                    case "qq":
+
+                        var qqEntity = loginBiz.GetQQByUserId(userId);
+                        if (qqEntity == null)
+                        {
+                            return Task.FromResult(new LoginInfo { IsSuccess = false, Message = "不存在该用户", LoginFrom = loginFrom, });
+                        }
+                        loginName = qqEntity.LoginName;
+                        break;
+                    default:
+                        throw new ArgumentException("登录不支持的注册类型 - " + loginFrom);
+                }
+
+                //! 执行扩展功能代码 - 提交事务前
+                BusinessHelper.ExecPlugin<IUser_AfterLogin>(new object[] { userId, loginFrom, "", DateTime.Now });
+
+
+                //刷新用户在Redis中的余额
+                //BusinessHelper.RefreshRedisUserBalance(userId);
+
+                return Task.FromResult(new LoginInfo
+                {
+                    IsSuccess = true,
+                    Message = "登录成功",
+                    CreateTime = reg.CreateTime,
+                    LoginFrom = "Alipay",
+                    RegType = reg.RegType,
+                    Referrer = reg.Referrer,
+                    UserId = reg.UserId,
+                    VipLevel = reg.VipLevel,
+                    LoginName = loginName,
+                    DisplayName = reg.DisplayName,
+                    UserToken = userToken,
+                    AgentId = reg.AgentId,
+                    IsAgent = reg.IsAgent,
+                    HideDisplayNameCount = reg.HideDisplayNameCount,
+                });
             }
-            string loginFrom = reg.ComeFrom;
-            string loginName = "";
-            switch (loginFrom.ToLower())
+            catch (Exception ex)
             {
-                case "local":
-                case "index":
-                case "app":
-                case "ios":
-                case "touch":
 
-
-                    var loginEntity = GetLocalLoginByUserId(userId);
-                    if (loginEntity == null)
-                    {
-                        return Task.FromResult(new LoginInfo { IsSuccess = false, Message = "不存在该用户", LoginFrom = loginFrom, });
-                    }
-                    loginName = loginEntity.Result.LoginName;
-                    break;
-                case "alipay":
-
-                    var alipayEntity = loginBiz.GetAlipayByUserId(userId);
-                    if (alipayEntity == null)
-                    {
-                        return Task.FromResult(new LoginInfo { IsSuccess = false, Message = "不存在该用户", LoginFrom = loginFrom, });
-                    }
-                    loginName = alipayEntity.LoginName;
-                    break;
-                case "qq":
-
-                    var qqEntity = loginBiz.GetQQByUserId(userId);
-                    if (qqEntity == null)
-                    {
-                        return Task.FromResult(new LoginInfo { IsSuccess = false, Message = "不存在该用户", LoginFrom = loginFrom, });
-                    }
-                    loginName = qqEntity.LoginName;
-                    break;
-                default:
-                    throw new ArgumentException("登录不支持的注册类型 - " + loginFrom);
+                throw new Exception(ex.Message, ex);
             }
-
-            //! 执行扩展功能代码 - 提交事务前
-            BusinessHelper.ExecPlugin<IUser_AfterLogin>(new object[] { userId, loginFrom, "", DateTime.Now });
-
-
-            //刷新用户在Redis中的余额
-            //BusinessHelper.RefreshRedisUserBalance(userId);
-
-            return Task.FromResult(new LoginInfo
-            {
-                IsSuccess = true,
-                Message = "登录成功",
-                CreateTime = reg.CreateTime,
-                LoginFrom = "Alipay",
-                RegType = reg.RegType,
-                Referrer = reg.Referrer,
-                UserId = reg.UserId,
-                VipLevel = reg.VipLevel,
-                LoginName = loginName,
-                DisplayName = reg.DisplayName,
-                UserToken = userToken,
-                AgentId = reg.AgentId,
-                IsAgent = reg.IsAgent,
-                HideDisplayNameCount = reg.HideDisplayNameCount,
-            });
+          
         }
 
         public bool IsRoleType(SystemUser user, RoleType roleType)
         {
-            foreach (var role in user.RoleList)
+            try
             {
-                if (role.RoleType == roleType)
+                foreach (var role in user.RoleList)
                 {
-                    return true;
+                    if (role.RoleType == roleType)
+                    {
+                        return true;
+                    }
                 }
+                return false;
             }
-            return false;
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message, ex);
+            }
+           
         }
 
         /// <summary>
@@ -238,14 +265,23 @@ namespace UserLottery.Service.ModuleServices
         /// <returns></returns>
         public Task<CommonActionResult> CheckIsSame2BalancePassword(string newPassword, string userId)
         {
-            var loginBiz = new LocalLoginBusiness();
-            var result = loginBiz.CheckIsSame2BalancePassword(userId, newPassword);
-            var flag = "N";
-            if (result.HasValue)
+            try
             {
-                flag = result.Value ? "T" : "F";
+                var loginBiz = new LocalLoginBusiness();
+                var result = loginBiz.CheckIsSame2BalancePassword(userId, newPassword);
+                var flag = "N";
+                if (result.HasValue)
+                {
+                    flag = result.Value ? "T" : "F";
+                }
+                return Task.FromResult(new CommonActionResult(true, "查询成功") { ReturnValue = flag });
             }
-            return Task.FromResult(new CommonActionResult(true, "查询成功") { ReturnValue = flag });
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message, ex);
+            }
+          
         }
 
         /// <summary>
@@ -255,19 +291,28 @@ namespace UserLottery.Service.ModuleServices
         /// <returns></returns>
         public Task<UserBindInfos> QueryUserBindInfos(string userId) {
 
-            //尝试从缓存中读取数据
-            var info = LoadUserBindInfoFromCache(userId);
-            if (info != null)
+            try
+            {
+                //尝试从缓存中读取数据
+                var info = LoadUserBindInfoFromCache(userId);
+                if (info != null)
+                    return Task.FromResult(info);
+                //从数据库读取数据
+                info = new LocalLoginBusiness().QueryUserBindInfos(userId);
+                if (info == null)
+                    return Task.FromResult(new UserBindInfos());
+
+                //添加缓存到文件
+                SaveUserBindInfoCache(userId, info);
+
                 return Task.FromResult(info);
-            //从数据库读取数据
-            info = new LocalLoginBusiness().QueryUserBindInfos(userId);
-            if (info == null)
-                return Task.FromResult(new UserBindInfos());
+            }
+            catch (Exception ex)
+            {
 
-            //添加缓存到文件
-            SaveUserBindInfoCache(userId, info);
-
-            return Task.FromResult(info);
+                throw new Exception(ex.Message, ex);
+            }
+           
         }
 
         /// <summary>
@@ -290,8 +335,8 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                //Common.Log.LogWriterGetter.GetLogWriter().Write("QueryUserBindInfos_Read", userId, ex);
-                return null;
+                throw new Exception(ex.Message, ex);
+              
             }
         }
 
@@ -310,7 +355,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                //Common.Log.LogWriterGetter.GetLogWriter().Write("QueryUserBindInfos_Write", userId, ex);
+                throw new Exception(ex.Message, ex);
             }
         }
 
@@ -325,8 +370,9 @@ namespace UserLottery.Service.ModuleServices
                 var db = RedisHelper.DB_UserBindData;
                 db.KeyDeleteAsync(fullKey);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                throw new Exception(ex.Message, ex);
             }
         }
 
@@ -350,7 +396,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new Exception("查询我的余额出错 - " + ex.Message);
+                throw new Exception("查询我的余额出错 - " + ex.Message,ex);
             }
         }
 
@@ -377,7 +423,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new LogicException(ex.Message);
+                throw new Exception(ex.Message,ex);
             }
         }
         
@@ -389,12 +435,21 @@ namespace UserLottery.Service.ModuleServices
         /// <returns></returns>
         public Task<int> GetMyUnreadInnerMailCount(string userToken)
         {
-            var loginBiz = new LocalLoginBusiness();
-            // 验证用户身份及权限
-            var userId = userAuthentication.ValidateUserAuthentication(userToken);
+            try
+            {
+                var loginBiz = new LocalLoginBusiness();
+                // 验证用户身份及权限
+                var userId = userAuthentication.ValidateUserAuthentication(userToken);
 
-         
-            return Task.FromResult(loginBiz.GetUnreadMailCountByUser(userId));
+
+                return Task.FromResult(loginBiz.GetUnreadMailCountByUser(userId));
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message, ex);
+            }
+           
         }
 
 
@@ -410,12 +465,21 @@ namespace UserLottery.Service.ModuleServices
         /// <returns></returns>
         public Task<CommonActionResult> ChangeMyPassword(string oldPassword, string newPassword, string userToken)
         {
-            // 验证用户身份及权限
-            var userId= userAuthentication.ValidateUserAuthentication(userToken);
-            var loginBiz = new LocalLoginBusiness();
-            loginBiz.ChangePassword(userId, oldPassword, newPassword);
+            try
+            {
+                // 验证用户身份及权限
+                var userId = userAuthentication.ValidateUserAuthentication(userToken);
+                var loginBiz = new LocalLoginBusiness();
+                loginBiz.ChangePassword(userId, oldPassword, newPassword);
 
-            return Task.FromResult(new CommonActionResult(true, "修改密码成功"));
+                return Task.FromResult(new CommonActionResult(true, "修改密码成功"));
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message, ex);
+            }
+
 
         }
 
@@ -451,7 +515,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new Exception(ex.Message,ex);
             }
         }
 
@@ -461,11 +525,18 @@ namespace UserLottery.Service.ModuleServices
         private static C_Core_Config _coreConfigList = new C_Core_Config();
         public Task<C_Core_Config> QueryCoreConfigByKey(string key)
         {
-          
-            var loginBiz = new MobileAuthenticationBusiness();        
+            try
+            {
+                var loginBiz = new MobileAuthenticationBusiness();
                 _coreConfigList = loginBiz.BanRegistrMobile(key);
 
                 return Task.FromResult(_coreConfigList);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+         
 
         }
 
@@ -485,7 +556,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new Exception(ex.Message,ex);
             }
         }
 
@@ -495,15 +566,24 @@ namespace UserLottery.Service.ModuleServices
         /// <returns></returns>
         private string GetRandomMobileValidateCode()
         {
-            var validateCode = "8888";
-            //if (!UsefullHelper.IsInTest)
-            //{
+            try
+            {
+                var validateCode = "8888";
+                //if (!UsefullHelper.IsInTest)
+                //{
                 // 生成随机密码
                 Random random = new Random(DateTime.Now.Millisecond * DateTime.Now.Second);
                 validateCode = random.Next(100, 999999).ToString().PadLeft(6, '0');
                 //return RndNum(6);
-            //}
-            return validateCode;
+                //}
+                return validateCode;
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message, ex);
+            }
+         
         }
 
 
@@ -512,8 +592,10 @@ namespace UserLottery.Service.ModuleServices
         /// </summary>
         public void RepeatRequestMobile2(string userId, string mobile, string createUserId)
         {
+            try
+            {
                 var manager = new MobileAuthenticationBusiness();
-            
+
                 if (string.IsNullOrEmpty(userId))
                     throw new Exception("未查询到用户编号");
                 else if (string.IsNullOrEmpty(mobile))
@@ -524,15 +606,22 @@ namespace UserLottery.Service.ModuleServices
                 {
                     throw new ArgumentException(string.Format("此手机号【{0}】已被其他用户认证。", mobile));
                 }
-            var entity = manager.GetAuthenticatedMobile(userId);
-            if (entity != null)
-            {
-                entity.IsSettedMobile = false;
-                entity.UpdateBy = createUserId;
-                //entity.RequestTimes++;
-                entity.Mobile = mobile;
-                //manager.UpdateUserMobile(entity);
+                var entity = manager.GetAuthenticatedMobile(userId);
+                if (entity != null)
+                {
+                    entity.IsSettedMobile = false;
+                    entity.UpdateBy = createUserId;
+                    //entity.RequestTimes++;
+                    entity.Mobile = mobile;
+                    //manager.UpdateUserMobile(entity);
+                }
             }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message, ex);
+            }
+           
             //else
             //{
             //    entity = new UserMobile
@@ -678,57 +767,65 @@ namespace UserLottery.Service.ModuleServices
         /// </summary>
         public CommonActionResult RegisterLoacal(RegisterInfo_Local regInfo)
         {
-            
-            if (string.IsNullOrEmpty(ConfigHelper.AllConfigInfo["PageRegisterDefaultRole"].ToString()))
+            try
             {
-                throw new ArgumentNullException("未配置前台注册用户默认角色的参数 - PageRegisterDefaultRole");
-            }
-            if (string.IsNullOrEmpty(regInfo.LoginName))
-                throw new Exception("登录名不能为空");
-            else if (Regex.IsMatch(regInfo.LoginName, "[ ]+"))
-                throw new Exception("登录名不能包含空格");
-            if (regInfo != null && !string.IsNullOrEmpty(regInfo.AgentId))
-            {
-
-                var userEntity2 = new LocalLoginBusiness();
-               var userEntity3=  userEntity2.QueryUserRegisterByUserId(regInfo.AgentId);
-                if (userEntity3 == null || !userEntity3.IsAgent)
+                if (string.IsNullOrEmpty(ConfigHelper.AllConfigInfo["PageRegisterDefaultRole"].ToString()))
                 {
-                    regInfo.AgentId = string.Empty;
+                    throw new ArgumentNullException("未配置前台注册用户默认角色的参数 - PageRegisterDefaultRole");
                 }
+                if (string.IsNullOrEmpty(regInfo.LoginName))
+                    throw new Exception("登录名不能为空");
+                else if (Regex.IsMatch(regInfo.LoginName, "[ ]+"))
+                    throw new Exception("登录名不能包含空格");
+                if (regInfo != null && !string.IsNullOrEmpty(regInfo.AgentId))
+                {
+
+                    var userEntity2 = new LocalLoginBusiness();
+                    var userEntity3 = userEntity2.QueryUserRegisterByUserId(regInfo.AgentId);
+                    if (userEntity3 == null || !userEntity3.IsAgent)
+                    {
+                        regInfo.AgentId = string.Empty;
+                    }
+                }
+
+
+
+                regInfo.LoginName = regInfo.LoginName.Trim();
+                //if (!Common.Utilities.UsefullHelper.IsInTest)
+                //{
+                //    if (string.IsNullOrEmpty(regInfo.LoginName))
+                //        throw new ArgumentException("登录名称不能为空");
+                //    var b = System.Text.RegularExpressions.Regex.IsMatch(regInfo.LoginName, @"[^a-zA-Z0-9\u4e00-\u9fa5\s]");
+                //    if (b)
+                //        throw new ArgumentException("登录名称不能为特殊符号");
+
+                //    byte[] myByte = System.Text.Encoding.Default.GetBytes(regInfo.LoginName);
+                //    if (myByte.Length < 4 || regInfo.LoginName.Length > 20)
+                //        throw new ArgumentException("登录名长度必须在4位到20位之间");
+                //}
+
+
+
+                var success = new RegisterBusiness().UserRegister(regInfo);
+
+
+                //! 执行扩展功能代码 - 提交事务后
+                BusinessHelper.ExecPlugin<IRegister_AfterTranCommit>(new object[] { regInfo.ComeFrom, success.ReturnValue });
+
+                return new CommonActionResult
+                {
+                    IsSuccess = true,
+                    Message = "注册成功",
+                    ReturnValue = success.ReturnValue,
+                };
+
             }
-
-            
-
-            regInfo.LoginName = regInfo.LoginName.Trim();
-            //if (!Common.Utilities.UsefullHelper.IsInTest)
-            //{
-            //    if (string.IsNullOrEmpty(regInfo.LoginName))
-            //        throw new ArgumentException("登录名称不能为空");
-            //    var b = System.Text.RegularExpressions.Regex.IsMatch(regInfo.LoginName, @"[^a-zA-Z0-9\u4e00-\u9fa5\s]");
-            //    if (b)
-            //        throw new ArgumentException("登录名称不能为特殊符号");
-
-            //    byte[] myByte = System.Text.Encoding.Default.GetBytes(regInfo.LoginName);
-            //    if (myByte.Length < 4 || regInfo.LoginName.Length > 20)
-            //        throw new ArgumentException("登录名长度必须在4位到20位之间");
-            //}
-
-
-          
-           var success= new RegisterBusiness().UserRegister(regInfo);
-             
-            
-            //! 执行扩展功能代码 - 提交事务后
-            BusinessHelper.ExecPlugin<IRegister_AfterTranCommit>(new object[] { regInfo.ComeFrom, success.ReturnValue });
-
-            return new CommonActionResult
+            catch (Exception ex)
             {
-                IsSuccess = true,
-                Message = "注册成功",
-                ReturnValue = success.ReturnValue,
-            };
 
+                throw new Exception(ex.Message, ex);
+            }
+          
         }
      
 
@@ -781,11 +878,19 @@ namespace UserLottery.Service.ModuleServices
         #region 判断手机号是否已被注册
         public Task<bool> HasMobile(string mobile)
         {
+            try
+            {
+                var validateCode = GetRandomMobileValidateCode();
+                var authenticationBiz = new MobileAuthenticationBusiness();
+                var flag = authenticationBiz.HasMobile(mobile);
+                return Task.FromResult(flag);
+            }
+            catch (Exception ex)
+            {
 
-            var validateCode = GetRandomMobileValidateCode();
-            var authenticationBiz = new MobileAuthenticationBusiness();
-            var flag = authenticationBiz.HasMobile(mobile);
-            return Task.FromResult(flag);
+                throw new Exception(ex.Message, ex);
+            }
+         
         }
         #endregion
 
@@ -793,10 +898,19 @@ namespace UserLottery.Service.ModuleServices
         #region 判断找回密码验证码是否正确
         public Task<bool> CheckValidateCodeByForgetPWD(string mobile, string validateCode)
         {
-                var flag = false;         
+            try
+            {
+                var flag = false;
                 var biz = new ValidationMobileBusiness();
-                flag = biz.CheckValidationCode(mobile, "SendValidateCodeToUserMobileByForgetPWD", validateCode, GetMaxTimes(5));            
+                flag = biz.CheckValidationCode(mobile, "SendValidateCodeToUserMobileByForgetPWD", validateCode, GetMaxTimes(5));
                 return Task.FromResult(flag);
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message, ex);
+            }
+
         }
         #endregion
 
@@ -808,9 +922,18 @@ namespace UserLottery.Service.ModuleServices
         /// <returns></returns>
         public Task<string> GetUserIdByLoginName(string loginName)
         {
-            var loginBiz = new LocalLoginBusiness();
-            var user = loginBiz.GetUserByLoginName(loginName);
-            return Task.FromResult(user.UserId);
+            try
+            {
+                var loginBiz = new LocalLoginBusiness();
+                var user = loginBiz.GetUserByLoginName(loginName);
+                return Task.FromResult(user.UserId);
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message, ex);
+            }
+         
         }
 
         /// <summary>
@@ -821,9 +944,18 @@ namespace UserLottery.Service.ModuleServices
         /// <returns></returns>
         public Task<CommonActionResult> FindPassword(string userId)
         {
-            var loginBiz = new LocalLoginBusiness();
-            var pwd = loginBiz.ChangePassword(userId);
-            return Task.FromResult(new CommonActionResult(true, "修改密码成功") { ReturnValue = pwd });
+            try
+            {
+                var loginBiz = new LocalLoginBusiness();
+                var pwd = loginBiz.ChangePassword(userId);
+                return Task.FromResult(new CommonActionResult(true, "修改密码成功") { ReturnValue = pwd });
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message, ex);
+            }
+           
         }
 
 
@@ -854,35 +986,43 @@ namespace UserLottery.Service.ModuleServices
         /// <returns></returns>
         public Task<CommonActionResult> SendValidateCodeToUserMobileByForgetPWD(string mobile)
         {
-
-            var validateCode = GetRandomMobileValidateCode();
-            var authenticationBiz = new MobileAuthenticationBusiness();
-            var flag = authenticationBiz.HasMobile(mobile);
-            if (flag) //如果手机号已注册则发送
+            try
             {
-                
+                var validateCode = GetRandomMobileValidateCode();
+                var authenticationBiz = new MobileAuthenticationBusiness();
+                var flag = authenticationBiz.HasMobile(mobile);
+                if (flag) //如果手机号已注册则发送
+                {
+
                     var biz = new ValidationMobileBusiness();
                     //SendValidateCodeToUserMobileByForgetPWD
                     validateCode = biz.SendValidationCode(mobile, "SendValidateCodeToUserMobileByForgetPWD", validateCode, GetDelay(30), GetMaxTimes(3));
-                var pList = new List<string>();
-                pList.Add(string.Format("{0}={1}", "[ValidNumber]", validateCode));
-                //发送短信
-                new SiteMessageControllBusiness().DoSendSiteMessage("", mobile, "ON_User_Bind_Mobile_Before", pList.ToArray());
-                return Task.FromResult(new CommonActionResult
+                    var pList = new List<string>();
+                    pList.Add(string.Format("{0}={1}", "[ValidNumber]", validateCode));
+                    //发送短信
+                    new SiteMessageControllBusiness().DoSendSiteMessage("", mobile, "ON_User_Bind_Mobile_Before", pList.ToArray());
+                    return Task.FromResult(new CommonActionResult
+                    {
+                        IsSuccess = true,
+                        ReturnValue = validateCode,
+                    });
+                }
+                else
                 {
-                    IsSuccess = true,
-                    ReturnValue = validateCode,
-                });
+                    return Task.FromResult(new CommonActionResult
+                    {
+                        IsSuccess = false,
+                        ReturnValue = "",
+                        Message = "该手机号未注册"
+                    });
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return Task.FromResult(new CommonActionResult
-                {
-                    IsSuccess = false,
-                    ReturnValue = "",
-                    Message = "该手机号未注册"
-                });
+
+                throw new Exception(ex.Message, ex);
             }
+          
         }
         #endregion
 
@@ -895,17 +1035,26 @@ namespace UserLottery.Service.ModuleServices
         /// <returns></returns>
         public Task<CommonActionResult> CheckIsSame2LoginPassword(string newPwd, string userToken)
         {
-            // 验证用户身份及权限
-            var userId = userAuthentication.ValidateUserAuthentication(userToken);
-
-            var loginBiz = new LocalLoginBusiness();
-            var result = loginBiz.CheckIsSame2LoginPassword(userId, newPwd);
-            var flag = "N";
-            if (result.HasValue)
+            try
             {
-                flag = result.Value ? "T" : "F";
+                // 验证用户身份及权限
+                var userId = userAuthentication.ValidateUserAuthentication(userToken);
+
+                var loginBiz = new LocalLoginBusiness();
+                var result = loginBiz.CheckIsSame2LoginPassword(userId, newPwd);
+                var flag = "N";
+                if (result.HasValue)
+                {
+                    flag = result.Value ? "T" : "F";
+                }
+                return Task.FromResult(new CommonActionResult(true, "查询成功") { ReturnValue = flag });
             }
-            return Task.FromResult(new CommonActionResult(true, "查询成功") { ReturnValue = flag });
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message, ex);
+            }
+         
         }
 
         /// <summary>
@@ -931,7 +1080,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new Exception("操作资金密码出错 - " + ex.Message);
+                throw new Exception("操作资金密码出错 - " + ex.Message,ex);
             }
         }
 
@@ -979,7 +1128,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new Exception("设置资金密码类型出错 - " + ex.Message);
+                throw new Exception("设置资金密码类型出错 - " + ex.Message,ex);
             }
         }
 
@@ -998,7 +1147,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new Exception("查询某个yqid下面的能满足领红包条件的用户个数出错 - " + ex.Message);
+                throw new Exception("查询某个yqid下面的能满足领红包条件的用户个数出错 - " + ex.Message,ex);
             }
         }
         /// <summary>
@@ -1008,9 +1157,17 @@ namespace UserLottery.Service.ModuleServices
         /// < returns ></ returns >
         public Task<string> QueryYqidRegisterByAgentIdToApp(string userToken)
         {
-            // 验证用户身份及权限
-            var userId = userAuthentication.ValidateUserAuthentication(userToken);
-            return Task.FromResult(QueryYqidRegisterByAgentId(userId));
+            try
+            {
+                // 验证用户身份及权限
+                var userId = userAuthentication.ValidateUserAuthentication(userToken);
+                return Task.FromResult(QueryYqidRegisterByAgentId(userId));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+
         }
 
         /// <summary>
@@ -1022,47 +1179,55 @@ namespace UserLottery.Service.ModuleServices
         /// <returns></returns>
         public Task<CommonActionResult> AuthenticateMyRealName(string IdCardNumber, string RealName, SchemeSource source, string userToken)
         {
-            // 验证用户身份及权限
-            var userId = userAuthentication.ValidateUserAuthentication(userToken);
-
-            var biz = new RealNameAuthenticationBusiness();
-            BettingHelper.CheckUserRealName(IdCardNumber);
-            var realName = biz.GetAuthenticatedRealName(userId);
-            if (realName != null)
+            try
             {
-                if (realName.IsSettedRealName)
+                // 验证用户身份及权限
+                var userId = userAuthentication.ValidateUserAuthentication(userToken);
+
+                var biz = new RealNameAuthenticationBusiness();
+                BettingHelper.CheckUserRealName(IdCardNumber);
+                var realName = biz.GetAuthenticatedRealName(userId);
+                if (realName != null)
                 {
-                    throw new ArgumentException("此用户已进行过实名认证，不能重复认证");
+                    if (realName.IsSettedRealName)
+                    {
+                        throw new ArgumentException("此用户已进行过实名认证，不能重复认证");
+                    }
+                    biz.UpdateAuthenticationRealName("LOCAL", userId, RealName, "0", IdCardNumber, userId);
                 }
-                biz.UpdateAuthenticationRealName("LOCAL", userId, RealName, "0", IdCardNumber, userId);
+                else
+                {
+                    biz.AddAuthenticationRealName("LOCAL", userId, RealName, "0", IdCardNumber, userId, true);
+                }
+
+                #region 发送站内消息：手机短信或站内信
+
+                var userManager = new UserBalanceManager();
+                var user = userManager.QueryUserRegister(userId);
+                var pList = new List<string>();
+                pList.Add(string.Format("{0}={1}", "[UserName]", user.DisplayName));
+                pList.Add(string.Format("{0}={1}", "[UserRealityName]", RealName));
+                pList.Add(string.Format("{0}={1}", "[IdCard]", IdCardNumber));
+                //发送短信
+                new SiteMessageControllBusiness().DoSendSiteMessage(user.UserId, "", "ON_User_Bind_RealName", pList.ToArray());
+
+                #endregion
+
+                //清理用户绑定数据缓存
+                ClearUserBindInfoCache(userId);
+
+               
+                //! 执行扩展功能代码 - 提交事务后
+                BusinessHelper.ExecPlugin<IResponseAuthentication_AfterTranCommit>(new object[] { userId, "RealName", RealName + "|" + IdCardNumber, source });
+              
+
+                return Task.FromResult(new CommonActionResult(true, "实名认证成功。"));
             }
-            else
+            catch (Exception ex)
             {
-                biz.AddAuthenticationRealName("LOCAL", userId, RealName, "0", IdCardNumber, userId, true);
+                throw new Exception(ex.Message, ex);
             }
 
-            #region 发送站内消息：手机短信或站内信
-
-            var userManager = new UserBalanceManager();
-            var user = userManager.QueryUserRegister(userId);
-            var pList = new List<string>();
-            pList.Add(string.Format("{0}={1}", "[UserName]", user.DisplayName));
-            pList.Add(string.Format("{0}={1}", "[UserRealityName]", RealName));
-            pList.Add(string.Format("{0}={1}", "[IdCard]", IdCardNumber));
-            //发送短信
-            new SiteMessageControllBusiness().DoSendSiteMessage(user.UserId, "", "ON_User_Bind_RealName", pList.ToArray());
-
-            #endregion
-
-            //清理用户绑定数据缓存
-            ClearUserBindInfoCache(userId);
-
-            #region 还没做
-            //! 执行扩展功能代码 - 提交事务后
-            BusinessHelper.ExecPlugin<IResponseAuthentication_AfterTranCommit>(new object[] { userId, "RealName", RealName + "|" + IdCardNumber, source });
-            #endregion
-
-            return Task.FromResult(new CommonActionResult(true, "实名认证成功。"));
         }
 
         /// <summary>
@@ -1099,7 +1264,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new Exception("添加银行卡信息出错 - " + ex.Message);
+                throw new Exception("添加银行卡信息出错 - " + ex.Message,ex);
             }
         }
 
@@ -1118,7 +1283,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new Exception("申请提现出错 - " + ex.Message);
+                throw new Exception("申请提现出错 - " + ex.Message,ex);
             }
         }
 
@@ -1142,7 +1307,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new Exception("申请提现出错 - " + ex.Message);
+                throw new Exception("申请提现出错 - " + ex.Message,ex);
             }
         }
 
@@ -1159,7 +1324,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new Exception("查询我的提现记录列表 - " + ex.Message);
+                throw new Exception("查询我的提现记录列表 - " + ex.Message,ex);
             }
         }
 
@@ -1182,7 +1347,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new Exception("出错 - " + ex.Message);
+                throw new Exception("出错 - " + ex.Message,ex);
             }
         }
         
