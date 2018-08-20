@@ -1268,7 +1268,7 @@ namespace Lottery.Api.Controllers
                 PlayType = schemeInfo.PlayType,
                 TotalMoney = schemeInfo.TotalMoney,
                 TotalCount = schemeInfo.TotalCount,
-                SurplusCount = schemeInfo.SurplusCount,
+                //SurplusCount = schemeInfo.SurplusCount,
                 SoldCount = schemeInfo.SoldCount,
                 StopTime = schemeInfo.StopTime,
                 Price = schemeInfo.Price,
