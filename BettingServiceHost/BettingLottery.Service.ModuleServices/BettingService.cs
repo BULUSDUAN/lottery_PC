@@ -593,7 +593,7 @@ namespace BettingLottery.Service.ModuleServices
             }
             catch (AggregateException ex)
             {
-                throw new AggregateException(ex.Message);
+                throw new AggregateException(ex.Message,ex);
             }
             //catch (Exception ex)
             //{
@@ -683,7 +683,7 @@ namespace BettingLottery.Service.ModuleServices
             }
             catch (AggregateException ex)
             {
-                throw new AggregateException(ex.Message);
+                throw new AggregateException(ex.Message,ex);
             }
             catch (Exception ex)
             {
@@ -849,7 +849,7 @@ namespace BettingLottery.Service.ModuleServices
             }
             catch (AggregateException ex)
             {
-                throw new AggregateException(ex.Message);
+                throw new AggregateException(ex.Message,ex);
             }
             //catch (LogicException ex)
             //{
@@ -1113,7 +1113,7 @@ namespace BettingLottery.Service.ModuleServices
             }
             catch (AggregateException ex)
             {
-                throw new AggregateException(ex.Message);
+                throw new AggregateException(ex.Message,ex);
             }
             //catch (LogicException ex)
             //{
@@ -1264,7 +1264,7 @@ namespace BettingLottery.Service.ModuleServices
             }
             catch (AggregateException ex)
             {
-                throw new AggregateException(ex.Message);
+                throw new AggregateException(ex.Message,ex);
             }
             //catch (LogicException ex)
             //{
@@ -1308,7 +1308,7 @@ namespace BettingLottery.Service.ModuleServices
             }
             catch (AggregateException ex)
             {
-                throw new AggregateException(ex.Message);
+                throw new AggregateException(ex.Message,ex);
             }
             //catch (LogicException ex)
             //{
