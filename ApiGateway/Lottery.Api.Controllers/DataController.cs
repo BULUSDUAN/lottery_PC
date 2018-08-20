@@ -2947,14 +2947,16 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                Dictionary<string, object> param = new Dictionary<string, object>();
-                param.Add("key", "Site.Financial.MinWithDrwaMoney");
-                var config = await _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/Data/QueryCoreConfigByKey");
+                //Dictionary<string, object> param = new Dictionary<string, object>();
+                //param.Add("key", "Site.Financial.MinWithDrwaMoney");
+                //var config = await _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/Data/QueryCoreConfigByKey");
                 decimal RequestMoney = 100;
-                if (config != null)
+                var key = "Site.Financial.MinWithDrwaMoney";
+                var configvalue = await GetAppConfigByKey(_serviceProxyProvider, key);
+                if (!string.IsNullOrEmpty(configvalue))
                 {
-                    var minmoney = config.ConfigValue;
-                    decimal.TryParse(minmoney, out RequestMoney);
+                    //var minmoney = config.ConfigValue;
+                    decimal.TryParse(configvalue, out RequestMoney);
                 }
                 return Json(new LotteryServiceResponse
                 {
@@ -2973,6 +2975,48 @@ namespace Lottery.Api.Controllers
                     MsgId = "",
                     Value = ex.ToGetMessage(),
                 });
+            }
+        }
+
+        /// <summary>
+        /// 获取app相关配置
+        /// </summary>
+        private async Task<string> GetAppConfigByKey([FromServices]IServiceProxyProvider _serviceProxyProvider, string key, string defalutValue = "")
+        {
+            try
+            {
+                //1.从redis中取
+                //2.取不到则在sql中取
+                //3.不为空则存入redis中，3分钟缓存
+                var flag = KaSon.FrameWork.Common.Redis.RedisHelper.KeyExists(key);
+                var v = "";
+                if (flag)
+                {
+                    v = KaSon.FrameWork.Common.Redis.RedisHelper.StringGet(key);
+                }
+                else
+                {
+                    var param = new Dictionary<string, object>();
+                    param.Add("key", key);
+                    var config = await _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/Data/QueryCoreConfigByKey");
+                    if (config != null)
+                    {
+                        v = config.ConfigValue;
+                        KaSon.FrameWork.Common.Redis.RedisHelper.StringSet(key, config.ConfigValue, 3 * 60);
+                    }
+                }
+                if (string.IsNullOrEmpty(v))
+                {
+                    return defalutValue;
+                }
+                else
+                {
+                    return v;
+                }
+            }
+            catch (Exception)
+            {
+                return defalutValue;
             }
         }
     }
