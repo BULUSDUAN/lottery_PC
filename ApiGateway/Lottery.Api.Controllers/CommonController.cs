@@ -21,6 +21,7 @@ using EntityModel.Enum;
 using Lottery.Api.Controllers.CommonFilterActtribute;
 using EntityModel;
 using KaSon.FrameWork.Common.ExceptionEx;
+using EntityModel.CoreModel;
 //using Lottery.Service.IModuleServices;
 
 namespace Lottery.Api.Controllers
@@ -145,6 +146,107 @@ namespace Lottery.Api.Controllers
         #endregion
 
 
+        public async Task<IActionResult> GetAPP_tuijianyouli([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                var userToken = p.UserToken;
+               
+                string userId = string.Empty;
+                if (!string.IsNullOrEmpty(userToken))
+                {
+                    Dictionary<string, object> param = new Dictionary<string, object>();
+                    param.Add("userToken", userToken);
+                    var userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
+                    param.Clear();
+                    param["UserId"] = userInfo.UserId;
+                    var bindInfo = await _serviceProxyProvider.Invoke<UserBindInfos>(param, "api/user/QueryUserBindInfos");
+                    var key = "";
+                    if (bindInfo != null && bindInfo.IsAgent)
+                    {
+                        //return WebRedisHelper.APP_tuijianyoulipid;
+                        key = "APP_tuijianyoulipid";
+                    }
+                    else
+                    {
+                        //return WebRedisHelper.APP_tuijianyoulifxid;
+                        key = "APP_tuijianyoulifxid";
+                    }
+                    var value = await GetAppConfigByKey(_serviceProxyProvider, key);
+                    return Json(new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.成功,
+                        Message = "查询配置成功",
+                        MsgId = entity.MsgId,
+                        Value = JsonHelper.Deserialize<object>(value)
+                    });
+                }
+                throw new Exception("参数不能为空");
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询配置失败" + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage()
+                });
+            }
+        }
+
+
+        public async Task<IActionResult> GetAPP_shareScheme([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                var userToken = p.UserToken;
+
+                string userId = string.Empty;
+                if (!string.IsNullOrEmpty(userToken))
+                {
+                    Dictionary<string, object> param = new Dictionary<string, object>();
+                    param.Add("userToken", userToken);
+                    var userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
+                    param.Clear();
+                    param["UserId"] = userInfo.UserId;
+                    var bindInfo = await _serviceProxyProvider.Invoke<UserBindInfos>(param, "api/user/QueryUserBindInfos");
+                    var key = "";
+                    if (bindInfo != null && bindInfo.IsAgent)
+                    {
+                        //return WebRedisHelper.APP_tuijianyoulipid;
+                        key = "APP_shareScheme_Pid";
+                    }
+                    else
+                    {
+                        //return WebRedisHelper.APP_tuijianyoulifxid;
+                        key = "APP_APP_shareScheme_Fxid";
+                    }
+                    var value = await GetAppConfigByKey(_serviceProxyProvider, key);
+                    return Json(new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.成功,
+                        Message = "查询配置成功",
+                        MsgId = entity.MsgId,
+                        Value = JsonHelper.Deserialize<object>(value)
+                    });
+                }
+                throw new Exception("参数不能为空");
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询配置失败" + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage()
+                });
+            }
+        }
+
 
         public async Task<IActionResult> GetAppConfig([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
@@ -153,20 +255,20 @@ namespace Lottery.Api.Controllers
                 var APP_Common_Key = "APP_Common";
                 var APP_UserCenter_Key = "APP_UserCenter";
                 var APP_Index_Key = "APP_Index";
-                var APP_tuijianyouli_Key = "APP_tuijianyouli";
-                var APP_tuijianyoulipid_Key = "APP_tuijianyoulipid";
-                var APP_tuijianyoulifxid_Key = "APP_tuijianyoulifxid";
-                var APP_shareScheme_Key = "APP_shareScheme";
+                //var APP_tuijianyouli_Key = "APP_tuijianyouli";
+                //var APP_tuijianyoulipid_Key = "APP_tuijianyoulipid";
+                //var APP_tuijianyoulifxid_Key = "APP_tuijianyoulifxid";
+                //var APP_shareScheme_Key = "APP_shareScheme";
                 var APP_ServicePhone_Key = "Site.Service.Phone";
                 var APP_ScoreURL_Key = "APP_ScoreURL";
 
                 var APP_Common_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_Common_Key);
                 var APP_UserCenter_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_UserCenter_Key);
                 var APP_Index_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_Index_Key);
-                var APP_tuijianyouli_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_tuijianyouli_Key);
-                var APP_tuijianyoulipid_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_tuijianyoulipid_Key);
-                var APP_tuijianyoulifxid_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_tuijianyoulifxid_Key);
-                var APP_shareScheme_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_shareScheme_Key);
+                //var APP_tuijianyouli_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_tuijianyouli_Key);
+                //var APP_tuijianyoulipid_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_tuijianyoulipid_Key);
+                //var APP_tuijianyoulifxid_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_tuijianyoulifxid_Key);
+                //var APP_shareScheme_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_shareScheme_Key);
                 var APP_ServicePhone_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_ServicePhone_Key);
                 var APP_ScoreURL_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_ScoreURL_Key);
                 return Json(new LotteryServiceResponse
@@ -179,10 +281,10 @@ namespace Lottery.Api.Controllers
                         APP_Common =JsonHelper.Deserialize<object>(APP_Common_Value),
                         APP_UserCenter = JsonHelper.Deserialize<object>(APP_UserCenter_Value),
                         APP_Index = JsonHelper.Deserialize<object>(APP_Index_Value),
-                        APP_tuijianyouli = JsonHelper.Deserialize<object>(APP_tuijianyouli_Value),
-                        APP_tuijianyoulipid = JsonHelper.Deserialize<object>(APP_tuijianyoulipid_Value),
-                        APP_tuijianyoulifxid = JsonHelper.Deserialize<object>(APP_tuijianyoulifxid_Value),
-                        APP_shareScheme = JsonHelper.Deserialize<object>(APP_shareScheme_Value),
+                        //APP_tuijianyouli = JsonHelper.Deserialize<object>(APP_tuijianyouli_Value),
+                        //APP_tuijianyoulipid = JsonHelper.Deserialize<object>(APP_tuijianyoulipid_Value),
+                        //APP_tuijianyoulifxid = JsonHelper.Deserialize<object>(APP_tuijianyoulifxid_Value),
+                        //APP_shareScheme = JsonHelper.Deserialize<object>(APP_shareScheme_Value),
                         APP_ServicePhone= APP_ServicePhone_Value,
                         APP_ScoreURL = APP_ScoreURL_Value,
                     },

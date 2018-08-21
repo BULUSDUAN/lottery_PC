@@ -317,5 +317,10 @@ namespace OrderLottery.Service.ModuleServices
         {
             return Task.FromResult(_order.QuerySportsTogetherJoinList(schemeId, pageIndex, pageSize, UserToken));
         }
+
+        public Task<List<Sports_TogetherJoinInfo>> QueryMySportsTogetherListBySchemeId(string schemeId,string userId)
+        {
+            return Task.FromResult(_order.QueryMySportsTogetherListBySchemeId(schemeId, userId));
+        }
     }
 }

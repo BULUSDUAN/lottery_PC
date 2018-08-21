@@ -713,7 +713,7 @@ namespace Lottery.Api.Controllers
                 //int schemeType = p.SchemeType;
                 int days = p.ViewDay;
                 DateTime startTime = Convert.ToDateTime("2015-01-01 00:00:00");
-                DateTime endTime = DateTime.Now;
+                DateTime endTime = DateTime.Now.AddDays(1).Date;
                 int pageIndex = p.PageIndex;
                 int pageSize = p.PageSize;
                 string userToken = p.UserToken;
@@ -1066,7 +1066,7 @@ namespace Lottery.Api.Controllers
                     return await QueryCHASEOrderDetail(_serviceProxyProvider, entity, schemeId, userToken);
                 }
                 else if (schemeId.StartsWith("TSM"))
-               {
+                {
                     return await QueryTMSOrderDetail(_serviceProxyProvider, entity, schemeId, userToken);
                 }
                 else
@@ -1214,33 +1214,38 @@ namespace Lottery.Api.Controllers
             };
             var schemeInfo = await _serviceProxyProvider.Invoke<Sports_TogetherSchemeQueryInfo>(param, "api/Order/QuerySportsTogetherDetail");
             param.Clear();
-            param.Add("userToken", userToken);
-            var userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
+            var userInfo = new LoginInfo();
+            if (!string.IsNullOrEmpty(userToken))
+            {
+                param.Add("userToken", userToken);
+                userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
+            }
             param.Clear();
             param.Add("schemeId", schemeId);
-            param.Add("pageIndex", 0);
-            param.Add("pageSize", 100);
             param.Add("UserToken", userToken);
-            var join = await _serviceProxyProvider.Invoke<Sports_TogetherJoinInfoCollection>(param, "api/Order/QuerySportsTogetherJoinList");
-            var joinList = new List<object>();
-            foreach (var item in join.List)
-            {
-                joinList.Add(new
-                {
-                    UserId = item.UserId,
-                    UserDisplayName = ConvertHelper.HideUserName(item.UserDisplayName, item.HideDisplayNameCount),
-                    HideDisplayNameCount = item.HideDisplayNameCount,
-                    SchemeId = item.SchemeId,
-                    RealBuyCount = item.RealBuyCount,
-                    Price = item.Price,
-                    JoinType = ConvertHelper.FomartJoinType(item.JoinType),
-                    JoinId = item.JoinId,
-                    JoinDateTime = item.JoinDateTime,
-                    IsSucess = item.IsSucess,
-                    BuyCount = item.BuyCount,
-                    BonusMoney = item.BonusMoney,
-                });
-            }
+            //param.Add("pageIndex", 0);
+            //param.Add("pageSize", 100);
+            //param.Add("UserToken", userToken);
+            //var join = await _serviceProxyProvider.Invoke<Sports_TogetherJoinInfoCollection>(param, "api/Order/QuerySportsTogetherJoinList");
+            //var joinList = new List<object>();
+            //foreach (var item in join.List)
+            //{
+            //    joinList.Add(new
+            //    {
+            //        UserId = item.UserId,
+            //        UserDisplayName = ConvertHelper.HideUserName(item.UserDisplayName, item.HideDisplayNameCount),
+            //        HideDisplayNameCount = item.HideDisplayNameCount,
+            //        SchemeId = item.SchemeId,
+            //        RealBuyCount = item.RealBuyCount,
+            //        Price = item.Price,
+            //        JoinType = ConvertHelper.FomartJoinType(item.JoinType),
+            //        JoinId = item.JoinId,
+            //        JoinDateTime = item.JoinDateTime,
+            //        IsSucess = item.IsSucess,
+            //        BuyCount = item.BuyCount,
+            //        BonusMoney = item.BonusMoney,
+            //    });
+            //}
 
             var codeList = new List<object>();
             if (schemeInfo.Security == TogetherSchemeSecurity.Public
@@ -1298,7 +1303,7 @@ namespace Lottery.Api.Controllers
                 Title = schemeInfo.Title,
                 Description = schemeInfo.Description,
                 CodeList = codeList,
-                JoinList = joinList,
+                //JoinList = joinList,
                 ServiceTime = DateTime.Now,
             };
 
@@ -1367,7 +1372,7 @@ namespace Lottery.Api.Controllers
                 //{
 
                 //}
-                var GameTypeDisplayName =string.IsNullOrEmpty(schemeInfo.GameTypeDisplayName)?"": schemeInfo.GameTypeDisplayName
+                var GameTypeDisplayName = string.IsNullOrEmpty(schemeInfo.GameTypeDisplayName) ? "" : schemeInfo.GameTypeDisplayName
                     .Replace("胜负任9", "任选9")
                     .Replace("14场胜负", "胜负14场")
                     .Replace("6场半全场", "六场半全场")
@@ -1535,7 +1540,7 @@ namespace Lottery.Api.Controllers
                     codeList.Add(new
                     {
                         AnteCode = item.AnteCode,
-                        AnteCodeDetail = BettingHelper.BackToDetailByAnteCode(gameCode.ToUpper(),item.GameType, item.AnteCode, item.CurrentSp),
+                        AnteCodeDetail = BettingHelper.BackToDetailByAnteCode(gameCode.ToUpper(), item.GameType, item.AnteCode, item.CurrentSp),
                         BonusStatus = (int)item.BonusStatus,
                         CurrentSp = item.CurrentSp,
                         FullResult = item.FullResult,
@@ -1698,13 +1703,13 @@ namespace Lottery.Api.Controllers
                 }
                 //if (list != null && list.Count > 0)
                 //{
-                    return Json(new LotteryServiceResponse
-                    {
-                        Code = ResponseCode.成功,
-                        Message = "查询跟单信息成功",
-                        MsgId = entity.MsgId,
-                        Value = list,
-                    });
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询跟单信息成功",
+                    MsgId = entity.MsgId,
+                    Value = list,
+                });
                 //}
                 //else
                 //{
@@ -1972,7 +1977,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "查询失败" +"●" + ex.ToString(),
+                    Message = "查询失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -1982,7 +1987,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message ="查询失败" +"●" + ex.ToString(),
+                    Message = "查询失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -2054,7 +2059,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "查询失败" +"●" + ex.ToString(),
+                    Message = "查询失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -2112,7 +2117,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "查询失败" +"●" + ex.ToString(),
+                    Message = "查询失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -2569,22 +2574,22 @@ namespace Lottery.Api.Controllers
                 var bonus = await _serviceProxyProvider.Invoke<List<LotteryNewBonusInfo>>(param, "api/Order/QueryLotteryNewBonusInfoList");
                 var bonuslist = bonus.OrderByDescending(p => p.AfterTaxBonusMoney).ToList();
                 if (bonuslist == null) bonuslist = new List<LotteryNewBonusInfo>();
-                     //if (bonuslist != null && bonuslist.Count > 0)
-                     //{
-                     var list = bonuslist.Select(p => new
-                    {
-                        GameName = ConvertHelper.GameName(p.GameCode, p.GameType),
-                        CreateTime = p.CreateTime.ToString("yyyy-MM-dd HH:mm"),
-                        UserDisplayName = p.UserDisplayName,
-                        TotalMoney = p.TotalMoney
-                    }).ToList();
-                    return Json(new LotteryServiceResponse
-                    {
-                        Code = ResponseCode.成功,
-                        Message = "获取成功",
-                        MsgId = entity.MsgId,
-                        Value = list,
-                    });
+                //if (bonuslist != null && bonuslist.Count > 0)
+                //{
+                var list = bonuslist.Select(p => new
+                {
+                    GameName = ConvertHelper.GameName(p.GameCode, p.GameType),
+                    CreateTime = p.CreateTime.ToString("yyyy-MM-dd HH:mm"),
+                    UserDisplayName = p.UserDisplayName,
+                    TotalMoney = p.TotalMoney
+                }).ToList();
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "获取成功",
+                    MsgId = entity.MsgId,
+                    Value = list,
+                });
                 //}
                 //return Json(new LotteryServiceResponse
                 //{
@@ -2634,7 +2639,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "获取开奖记录失败" +"●" + ex.ToString(),
+                    Message = "获取开奖记录失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -2755,7 +2760,7 @@ namespace Lottery.Api.Controllers
                 { "gameString","JX11X5|GD11X5|SD11X5|CQSSC|SSQ|DLT|FC3D|PL3|CTZQ_T14C|CTZQ_T6BQC|CTZQ_T4CJQ|CTZQ_TR9"}
             };
                 var entitys = await _serviceProxyProvider.Invoke<GameWinNumber_InfoCollection>(param, "api/Order/QueryAllGameNewWinNumber");
-                
+
                 foreach (var item in entitys.List)
                 {
                     var poolInfo = BettingHelper.GetPoolInfo(item.GameCode, item.IssuseNumber);
@@ -2809,7 +2814,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "获取开奖详情失败"+ "●" + ex.ToString(),
+                    Message = "获取开奖详情失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -2955,5 +2960,122 @@ namespace Lottery.Api.Controllers
             }
             return string.Empty;
         }
+
+        #region 20180821新增三个接口（1.获取合买用户列表，2.获取自己的合买数据列表，3.仅根据订单号获取订单信息）
+        /// <summary>
+        /// 合买用户列表
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> GetQuerySportsTogetherJoinList([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                string schemeId = p.SchemeId;
+                int pageIndex = p.PageIndex;
+                int pageSize = p.PageSize;
+                string userToken = p.UserToken;
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param.Add("schemeId", schemeId);
+                param.Add("pageIndex", pageIndex);
+                param.Add("pageSize", pageSize);
+                param.Add("UserToken", userToken);
+                var join = await _serviceProxyProvider.Invoke<Sports_TogetherJoinInfoCollection>(param, "api/Order/QuerySportsTogetherJoinList");
+                var joinList = new List<object>();
+                foreach (var item in join.List)
+                {
+                    joinList.Add(new
+                    {
+                        UserId = item.UserId,
+                        UserDisplayName = ConvertHelper.HideUserName(item.UserDisplayName, item.HideDisplayNameCount),
+                        HideDisplayNameCount = item.HideDisplayNameCount,
+                        SchemeId = item.SchemeId,
+                        RealBuyCount = item.RealBuyCount,
+                        Price = item.Price,
+                        JoinType = ConvertHelper.FomartJoinType(item.JoinType),
+                        JoinId = item.JoinId,
+                        JoinDateTime = item.JoinDateTime,
+                        IsSucess = item.IsSucess,
+                        BuyCount = item.BuyCount,
+                        BonusMoney = item.BonusMoney,
+                    });
+                }
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "获取成功",
+                    MsgId = entity.MsgId,
+                    Value = joinList,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "获取开奖详情失败" + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage(),
+                });
+            }
+        }
+
+
+        public async Task<IActionResult> GetMySportsTogetherListBySchemeId([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                string schemeId = p.SchemeId;
+                string userToken = p.UserToken;
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param.Add("userToken", userToken);
+                var userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
+                if (userInfo == null || string.IsNullOrEmpty(userInfo.UserId)) throw new Exception("找不到相关用户");
+                param.Clear();
+                param.Add("schemeId", schemeId);
+                param.Add("userId", userInfo.UserId);
+                var join = await _serviceProxyProvider.Invoke<List<Sports_TogetherJoinInfo>>(param, "api/Order/QueryMySportsTogetherListBySchemeId");
+                var joinList = new List<object>();
+                foreach (var item in join)
+                {
+                    joinList.Add(new
+                    {
+                        UserId = item.UserId,
+                        UserDisplayName = ConvertHelper.HideUserName(item.UserDisplayName, item.HideDisplayNameCount),
+                        HideDisplayNameCount = item.HideDisplayNameCount,
+                        SchemeId = item.SchemeId,
+                        RealBuyCount = item.RealBuyCount,
+                        Price = item.Price,
+                        JoinType = ConvertHelper.FomartJoinType(item.JoinType),
+                        JoinId = item.JoinId,
+                        JoinDateTime = item.JoinDateTime,
+                        IsSucess = item.IsSucess,
+                        BuyCount = item.BuyCount,
+                        BonusMoney = item.BonusMoney,
+                    });
+                }
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "获取成功",
+                    MsgId = entity.MsgId,
+                    Value = joinList,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "获取开奖详情失败" + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage(),
+                });
+            }
+        }
+        #endregion
     }
 }

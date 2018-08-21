@@ -101,8 +101,9 @@ namespace OrderLottery.Service.IModuleServices
         Task<CTZQMatchInfo_Collection> QueryCTZQMatchListByIssuseNumber(string gameType, string issuseNumber, string userToken);
         [Service(Date ="2018-06-15",Director ="Debug",Name ="查询所有猜中最新开奖号码")]
         Task<GameWinNumber_InfoCollection> QueryAllGameNewWinNumber(string gameString);
-
         [Service(Date = "2018-08-17", Director = "Debug", Name = "查看合买详情")]
         Task<Sports_TogetherJoinInfoCollection> QuerySportsTogetherJoinList(string schemeId, int pageIndex, int pageSize, string UserToken);
+        [Service(Date = "2018-08-17", Director = "Debug", Name = "查询本人的所有合买记录")]
+        Task<List<Sports_TogetherJoinInfo>> QueryMySportsTogetherListBySchemeId(string schemeId, string userId);
     }
 }
