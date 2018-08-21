@@ -379,7 +379,7 @@ namespace KaSon.FrameWork.ORM.Helper
             public E_Blog_UserShareSpread QueryBlog_UserShareSpread(string userId)
             {
               
-                return DB.CreateQuery<E_Blog_UserShareSpread>().FirstOrDefault(p => p.UserId == userId);
+                return DB.CreateQuery<E_Blog_UserShareSpread>().Where(p => p.UserId == userId).FirstOrDefault();
             }
             /// <summary>
             /// 更新fxid分享推广

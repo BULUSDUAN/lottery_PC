@@ -307,7 +307,8 @@ namespace KaSon.FrameWork.ORM.Helper
                         isGiveLotteryRedBag = false,
                         isGiveRegisterRedBag = false,
                         UpdateTime = DateTime.Now,
-                        giveRedBagMoney = 0
+                        giveRedBagMoney = 0,
+                        isGiveRechargeRedBag = false
                     });
                 }
                 #endregion
