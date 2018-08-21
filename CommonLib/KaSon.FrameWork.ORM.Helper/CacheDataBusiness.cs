@@ -205,8 +205,80 @@ namespace KaSon.FrameWork.ORM.Helper
                 DB.Rollback();
                 throw ex;
             }
-            
+
         }
         #endregion
+
+        #region 分享中奖订单推广注册
+        public void FirstOrderShareRegisterRedBag(string schemeId)
+        {
+            try
+            {
+                DB.Begin();
+                var schemeInfo = new OrderQuery().QuerySportsSchemeInfo(schemeId);
+                if (schemeInfo != null && schemeInfo.BonusStatus != BonusStatus.Win || schemeInfo.PreTaxBonusMoney == 0) return;
+                //分享推广 购彩 送红包
+                //购彩了 且是通过分享注册的用户 没有送红包 就执行分享推广活动
+                //var entityBankCard = new BankCardManager().BankCardById(userId);
+                //var entityShareSpread = new BlogManager().QueryBlog_UserShareSpread(userId);
+                //if (entityBankCard != null && entityShareSpread != null && !entityShareSpread.isGiveLotteryRedBag)
+                //{
+                //购彩了 没有给分享者送活动红包 就执行送红包 只送一次
+                var shareGiveRedBagPre = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.WinningShareGiveRedBag").ConfigValue);
+                var business = new BlogManager();
+                var oldmodel = business.QueryBlog_OrderShareRegisterRedBag(schemeId, schemeInfo.UserId);
+                if (oldmodel != null)
+                {
+                    if (!oldmodel.IsGiveRegisterRedBag && shareGiveRedBagPre > 0)
+                    {
+                        var giveFillMoney = schemeInfo.PreTaxBonusMoney * shareGiveRedBagPre / 100;
+                        BusinessHelper.Payin_To_Balance(AccountType.RedBag, BusinessHelper.FundCategory_Activity, schemeInfo.UserId, Guid.NewGuid().ToString("N"), giveFillMoney
+                                              , string.Format("分享中奖订单{0}，加奖红包：{1}元", schemeId, giveFillMoney.ToString("f2")), RedBagCategory.OrderRegister);
+                        oldmodel.IsGiveRegisterRedBag = true;
+                    }
+                    //更新条数
+                    oldmodel.RegisterCount += 1;
+                    oldmodel.UpdateTime = DateTime.Now;
+                    business.UpdateBlog_OrderShareRegisterRedBag(oldmodel);
+                }
+                else
+                {
+                    var flag = false;
+                    var giveFillMoney = 0m;
+                    if (shareGiveRedBagPre > 0)
+                    {
+                        //发奖
+                        giveFillMoney = schemeInfo.PreTaxBonusMoney * shareGiveRedBagPre / 100;
+                        BusinessHelper.Payin_To_Balance(AccountType.RedBag, BusinessHelper.FundCategory_Activity, schemeInfo.UserId, Guid.NewGuid().ToString("N"), giveFillMoney
+                                              , string.Format("分享中奖订单{0}，加奖红包：{1}元", schemeId, giveFillMoney), RedBagCategory.OrderRegister);
+                        flag = true;
+                    }
+                    //插入数据库
+                    var newmodel = new E_Blog_OrderShareRegisterRedBag()
+                    {
+                        CreateTime = DateTime.Now,
+                        IsGiveRegisterRedBag = flag,
+                        RedBagMoney = giveFillMoney,
+                        RedBagPre = shareGiveRedBagPre,
+                        UpdateTime = DateTime.Now,
+                        RegisterCount = 1,
+                        SchemeId = schemeId,
+                        UserId = schemeInfo.UserId
+                    };
+                    business.Add_OrderShareRegisterRedBag(newmodel);
+                }
+                DB.Commit();
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw ex;
+            }
+
+        }
+        #endregion
+
+
+
     }
 }

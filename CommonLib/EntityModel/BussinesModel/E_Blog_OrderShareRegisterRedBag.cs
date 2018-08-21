@@ -42,59 +42,41 @@ namespace EntityModel
         [ProtoMember(4)]
         [Field("IsGiveRegisterRedBag")]
         public bool IsGiveRegisterRedBag { get; set; }
+
         /// <summary>
-        // 中奖一百元次数
+        // 注册
         ///</summary>
         [ProtoMember(5)]
-        [Field("WinOneHundredCount")]
-        public int WinOneHundredCount { get; set; }
+        [Field("RegisterCount")]
+        public int? RegisterCount { get; set; }
+
         /// <summary>
-        // 中一千元次数
+        // 创建时间
         ///</summary>
         [ProtoMember(6)]
-        [Field("WinOneThousandCount")]
-        public int WinOneThousandCount { get; set; }
-        /// <summary>
-        // 中一万元次数
-        ///</summary>
-        [ProtoMember(7)]
-        [Field("WinTenThousandCount")]
-        public int WinTenThousandCount { get; set; }
-        /// <summary>
-        // 中十万元次数
-        ///</summary>
-        [ProtoMember(8)]
-        [Field("WinOneHundredThousandCount")]
-        public int WinOneHundredThousandCount { get; set; }
-        /// <summary>
-        // 中百万元次数
-        ///</summary>
-        [ProtoMember(9)]
-        [Field("WinOneMillionCount")]
-        public int WinOneMillionCount { get; set; }
-        /// <summary>
-        // 中一千万次数
-        ///</summary>
-        [ProtoMember(10)]
-        [Field("WinTenMillionCount")]
-        public int WinTenMillionCount { get; set; }
-        /// <summary>
-        // 中一亿元次数
-        ///</summary>
-        [ProtoMember(11)]
-        [Field("WinHundredMillionCount")]
-        public int WinHundredMillionCount { get; set; }
-        /// <summary>
-        // 总中奖金额
-        ///</summary>
-        [ProtoMember(12)]
-        [Field("TotalBonusMoney")]
-        public decimal TotalBonusMoney { get; set; }
+        [Field("CreateTime")]
+        public DateTime CreateTime { get; set; }
+
         /// <summary>
         // 更新时间
         ///</summary>
-        [ProtoMember(13)]
+        [ProtoMember(7)]
         [Field("UpdateTime")]
         public DateTime UpdateTime { get; set; }
+
+        /// <summary>
+        // 红包
+        ///</summary>
+        [ProtoMember(8)]
+        [Field("RedBagPre")]
+        public decimal RedBagPre { get; set; }
+
+        /// <summary>
+        // 红包
+        ///</summary>
+        [ProtoMember(9)]
+        [Field("RedBagMoney")]
+        public decimal RedBagMoney { get; set; }
+
     }
 }

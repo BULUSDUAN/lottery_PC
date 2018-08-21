@@ -429,7 +429,7 @@ namespace KaSon.FrameWork.ORM.Helper
             public E_Blog_OrderShareRegisterRedBag QueryBlog_OrderShareRegisterRedBag(string schemeId, string userId)
             {
                 
-                return DB.CreateQuery<E_Blog_OrderShareRegisterRedBag>().FirstOrDefault(p => p.UserId == userId && p.SchemeId == schemeId);
+                return DB.CreateQuery<E_Blog_OrderShareRegisterRedBag>().Where(p => p.UserId == userId && p.SchemeId == schemeId).FirstOrDefault();
             }
 
             /// <summary>

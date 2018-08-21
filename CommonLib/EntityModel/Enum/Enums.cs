@@ -612,7 +612,11 @@ namespace EntityModel.Enum
         /// <summary>
         /// 分享推广送红包
         /// </summary>
-        FxidRegister = 6
+        FxidRegister = 6,
+        /// <summary>
+        /// 分享中奖订单
+        /// </summary>
+        OrderRegister = 7
     }
 
     /// <summary>

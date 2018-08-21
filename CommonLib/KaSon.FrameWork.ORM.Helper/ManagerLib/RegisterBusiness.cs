@@ -223,7 +223,7 @@ namespace KaSon.FrameWork.ORM.Helper
             return DB.CreateQuery<E_TaskList>().Where(p => p.UserId == userId && p.TaskCategory == (int)taskCategory).FirstOrDefault();
         }
 
-        public CommonActionResult UserRegister(RegisterInfo_Local regInfo)
+        public CommonActionResult UserRegister(RegisterInfo_Local regInfo,string fxid)
         {
             DB.Begin();
             try
@@ -293,6 +293,23 @@ namespace KaSon.FrameWork.ORM.Helper
                 InitBlog_ProfileBonusLevel(userId);
                 InitUserAttentionSummary(userId);
 
+                #endregion
+
+                #region fxid分享推广数据
+                if (!string.IsNullOrEmpty(fxid))
+                {
+                    var manager = new BlogManager();
+                    manager.AddBlog_UserShareSpread(new E_Blog_UserShareSpread
+                    {
+                        UserId = userId,
+                        AgentId = fxid,
+                        CreateTime = DateTime.Now,
+                        isGiveLotteryRedBag = false,
+                        isGiveRegisterRedBag = false,
+                        UpdateTime = DateTime.Now,
+                        giveRedBagMoney = 0
+                    });
+                }
                 #endregion
 
                 DB.Commit();
