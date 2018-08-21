@@ -22,8 +22,8 @@ namespace EntityModel
             // 主键
             ///</summary>
             [ProtoMember(1)]
-            [Field("Id")]
-            public int Id{ get; set; }
+           [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
+           public int Id{ get; set; }
             /// <summary>
             // 用户编号
             ///</summary>
