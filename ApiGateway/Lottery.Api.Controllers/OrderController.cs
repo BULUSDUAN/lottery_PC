@@ -3016,7 +3016,7 @@ namespace Lottery.Api.Controllers
                 }
                 return Json(new LotteryServiceResponse
                 {
-                    Code = ResponseCode.失败,
+                    Code = ResponseCode.成功,
                     Message = "获取成功",
                     MsgId = entity.MsgId,
                     Value = new {joinList= joinList,totalCount= join.TotalCount },
@@ -3074,7 +3074,7 @@ namespace Lottery.Api.Controllers
                 }
                 return Json(new LotteryServiceResponse
                 {
-                    Code = ResponseCode.失败,
+                    Code = ResponseCode.成功,
                     Message = "获取成功",
                     MsgId = entity.MsgId,
                     Value = joinList,
