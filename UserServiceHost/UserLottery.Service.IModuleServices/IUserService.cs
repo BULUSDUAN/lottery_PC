@@ -114,6 +114,8 @@ namespace UserLottery.Service.IModuleServices
         [Service(Date = "2018-8-01", Director = "renjun", Name = "查询银行卡")]
         Task<C_Bank_Info> QueryBankInfo(string bankCode);
 
+        [Service(Date = "2018-8-21", Director = "renjun", Name = "通过分享中奖订单注册后送上线红包")]
+        Task<CommonActionResult> OrderShareRegisterRedBag(string schemeId);
         //[Service(Date = "2018-7-27", Director = "lidi", Name = "设置图形验证码到redis")]
         //Task<bool> SetVerifyCodeByGuid(string RedisKey, string RedisValue);
 
