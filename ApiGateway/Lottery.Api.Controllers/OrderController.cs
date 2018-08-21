@@ -1107,7 +1107,7 @@ namespace Lottery.Api.Controllers
         /// <param name="schemeId"></param>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public async Task<IActionResult> QueryCHASEOrderDetail([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity, string schemeId, string userToken)
+        public async Task<IActionResult> QueryCHASEOrderDetail([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity, string schemeId, string userToken="")
         {
             Dictionary<string, object> param = new Dictionary<string, object>
             {
@@ -1208,7 +1208,7 @@ namespace Lottery.Api.Controllers
         /// <param name="schemeId"></param>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public async Task<IActionResult> QueryTMSOrderDetail([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity, string schemeId, string userToken)
+        public async Task<IActionResult> QueryTMSOrderDetail([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity, string schemeId, string userToken="")
         {
             Dictionary<string, object> param = new Dictionary<string, object>
             {
@@ -1326,7 +1326,7 @@ namespace Lottery.Api.Controllers
         /// <param name="schemeId"></param>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public async Task<IActionResult> QueryGeneralOrderDetail([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity, string schemeId, string userToken)
+        public async Task<IActionResult> QueryGeneralOrderDetail([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity, string schemeId, string userToken="")
         {
             try
             {
@@ -1338,14 +1338,18 @@ namespace Lottery.Api.Controllers
             };
                 var schemeInfo = await _serviceProxyProvider.Invoke<Sports_SchemeQueryInfo>(param, "api/Order/QuerySportsSchemeInfo");
                 param.Clear();
-                param["userToken"] = userToken;
-                var userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
+                var userInfo = new LoginInfo();
+                if (!string.IsNullOrEmpty(userToken))
+                {
+                    param.Add("userToken", userToken);
+                    userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
+                }
                 param.Clear();
 
                 var codeList = new List<object>();
                 if (schemeInfo.Security == TogetherSchemeSecurity.Public
                    || (schemeInfo.Security == TogetherSchemeSecurity.CompletePublic && schemeInfo.StopTime <= DateTime.Now)
-                   || schemeInfo.UserId == userInfo.UserId)
+                   || schemeInfo.UserId == userInfo.UserId|| string.IsNullOrEmpty(userToken))
                 {
                     param["schemeId"] = schemeId;
                     if (schemeInfo.Security != TogetherSchemeSecurity.FirstMatchStopPublic)
@@ -3079,6 +3083,53 @@ namespace Lottery.Api.Controllers
                 });
             }
         }
+
+
+        public async Task<IActionResult> QueryNewOrderDetailBySchemeId_Share([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                string schemeId = p.SchemeId;
+                if (string.IsNullOrEmpty(schemeId))
+                    throw new ArgumentException("订单号不能为空！");
+
+                if (schemeId.StartsWith("CHASE"))
+                {
+                    return await QueryCHASEOrderDetail(_serviceProxyProvider, entity, schemeId);
+                }
+                else if (schemeId.StartsWith("TSM"))
+                {
+                    return await QueryTMSOrderDetail(_serviceProxyProvider, entity, schemeId);
+                }
+                else
+                {
+                    return await QueryGeneralOrderDetail(_serviceProxyProvider, entity, schemeId);
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "业务参数错误" + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage(),
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "查询订单详情失败" + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage(),
+                });
+            }
+
+        }
+
         #endregion
     }
 }
