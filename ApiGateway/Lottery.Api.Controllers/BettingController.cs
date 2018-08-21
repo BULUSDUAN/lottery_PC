@@ -1238,7 +1238,7 @@ namespace Lottery.Api.Controllers
                 var query = from s in list
                             where arrProg.Contains(Convert.ToInt32(s.ProgressStatus).ToString())
                               && (s.StopTime >= DateTime.Now)
-                              && (string.IsNullOrEmpty(key) || (s.CreateUserId!=null&& s.CreateUserId.Contains(key)) || (s.SchemeId != null && s.SchemeId.Contains(key)) || (s.CreaterDisplayName!=null&&s.CreaterDisplayName.Contains(key)))
+                              && (string.IsNullOrEmpty(key) || (s.CreateUserId!=null&& s.CreateUserId.Contains(key)) || (s.SchemeId != null && s.SchemeId.Contains(key)) || (s.CreaterDisplayName!=null&&s.CreaterDisplayName.Contains(key)) || (s.GameDisplayName != null && s.GameDisplayName.Contains(key)))
                             select s;
                 var result = new List<Sports_TogetherSchemeQueryInfo>();
                 if (string.IsNullOrEmpty(OrderBy))

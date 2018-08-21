@@ -325,7 +325,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 .SetInt("@BonusStatus", state)
                 .SetString("@GameCode", Model.gameCode)
                 .SetString("@FromDate", Model.startTime.HasValue ? Model.startTime.Value.ToString("yyyy-MM-dd"):"")
-                .SetString("@ToDate", Model.endTime.HasValue ? Model.endTime.Value.AddDays(1).ToString("yyyy-MM-dd") : "").First<MyBettingOrderInfoCollection>();
+                .SetString("@ToDate", Model.endTime.HasValue ? Model.endTime.Value.ToString("yyyy-MM-dd") : "").First<MyBettingOrderInfoCollection>();
 
             string MyBettingOrdePage_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_MyBettingOrderPage").SQL;
             Collection.OrderList = DB.CreateSQLQuery(MyBettingOrdePage_sql)
@@ -333,7 +333,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 .SetInt("@BonusStatus", state)
                 .SetString("@GameCode", Model.gameCode)
                 .SetString("@FromDate", Model.startTime.HasValue ? Model.startTime.Value.ToString("yyyy-MM-dd"):"")
-                .SetString("@ToDate", Model.endTime.HasValue ? Model.endTime.Value.AddDays(1).ToString("yyyy-MM-dd") : "")
+                .SetString("@ToDate", Model.endTime.HasValue ? Model.endTime.Value.ToString("yyyy-MM-dd") : "")
                 .SetInt("@PageIndex", Model.pageIndex)
                 .SetInt("@PageSize", Model.pageSize).List<MyBettingOrderInfo>();
             return Collection;
@@ -780,6 +780,34 @@ namespace KaSon.FrameWork.ORM.Helper
             result.List.AddRange(list);
             return result;
         }
+
+
+        public List<Sports_TogetherJoinInfo> QueryMySportsTogetherListBySchemeId(string schemeId, string UserId)
+        {
+            var query = (from j in DB.CreateQuery<C_Sports_TogetherJoin>()
+                         join u in DB.CreateQuery<C_User_Register>() on j.JoinUserId equals u.UserId
+                         where j.SchemeId == schemeId && j.JoinSucess == true && j.JoinUserId==UserId
+                         orderby j.JoinType ascending
+                         select new { j, u });
+            var queryResult = query.ToList().Select(b => new Sports_TogetherJoinInfo
+            {
+                BuyCount = b.j.BuyCount,
+                RealBuyCount = b.j.RealBuyCount,
+                IsSucess = b.j.JoinSucess,
+                JoinDateTime = b.j.CreateTime,
+                JoinType = (TogetherJoinType)b.j.JoinType,
+                Price = b.j.Price,
+                UserDisplayName = b.u.DisplayName,
+                HideDisplayNameCount = b.u.HideDisplayNameCount,
+                UserId = b.u.UserId,
+                JoinId = b.j.Id,
+                SchemeId = b.j.SchemeId,
+                BonusMoney = b.j.PreTaxBonusMoney,
+            }).ToList();
+            return queryResult;
+        }
+
+
         public bool IsUserJoinSportsTogether(string schemeId, string userToken)
         {
             UserAuthentication Auth = new UserAuthentication();
