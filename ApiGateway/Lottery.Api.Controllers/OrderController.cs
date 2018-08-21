@@ -1295,6 +1295,7 @@ namespace Lottery.Api.Controllers
                 BonusCount = schemeInfo.BonusCount,
                 BonusMoney = schemeInfo.AfterTaxBonusMoney,
                 AddMoney = schemeInfo.AddMoney,
+                JoinUserCount=schemeInfo.JoinUserCount,
                 AddMoneyDescription = schemeInfo.AddMoneyDescription,
                 TicketStatus = schemeInfo.TicketStatus,
                 TogetherProgressStatus = schemeInfo.ProgressStatus,
@@ -3014,7 +3015,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "获取成功",
                     MsgId = entity.MsgId,
-                    Value = joinList,
+                    Value = new {joinList= joinList,totalCount= join.TotalCount },
                 });
             }
             catch (Exception ex)
