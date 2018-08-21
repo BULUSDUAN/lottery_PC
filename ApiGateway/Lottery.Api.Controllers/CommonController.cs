@@ -222,7 +222,7 @@ namespace Lottery.Api.Controllers
                     else
                     {
                         //return WebRedisHelper.APP_tuijianyoulifxid;
-                        key = "APP_APP_shareScheme_Fxid";
+                        key = "APP_shareScheme_Fxid";
                     }
                     var value = await GetAppConfigByKey(_serviceProxyProvider, key);
                     return Json(new LotteryServiceResponse
