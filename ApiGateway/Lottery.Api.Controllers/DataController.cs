@@ -2994,7 +2994,7 @@ namespace Lottery.Api.Controllers
                 {
                     v = KaSon.FrameWork.Common.Redis.RedisHelper.StringGet(key);
                 }
-                else
+                if (string.IsNullOrEmpty(v))
                 {
                     var param = new Dictionary<string, object>();
                     param.Add("key", key);
@@ -3004,15 +3004,12 @@ namespace Lottery.Api.Controllers
                         v = config.ConfigValue;
                         KaSon.FrameWork.Common.Redis.RedisHelper.StringSet(key, config.ConfigValue, 3 * 60);
                     }
+                    if (string.IsNullOrEmpty(v))
+                    {
+                        return defalutValue;
+                    }
                 }
-                if (string.IsNullOrEmpty(v))
-                {
-                    return defalutValue;
-                }
-                else
-                {
-                    return v;
-                }
+                return v;
             }
             catch (Exception)
             {

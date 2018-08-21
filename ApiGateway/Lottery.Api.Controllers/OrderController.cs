@@ -1055,14 +1055,15 @@ namespace Lottery.Api.Controllers
             {
                 var p = JsonHelper.Decode(entity.Param);
                 string userToken = p.UserToken;
-                if (string.IsNullOrEmpty(userToken))
-                    throw new ArgumentException("您还未登录！");
+                
                 string schemeId = p.SchemeId;
                 if (string.IsNullOrEmpty(schemeId))
                     throw new ArgumentException("订单号不能为空！");
 
                 if (schemeId.StartsWith("CHASE"))
                 {
+                    if (string.IsNullOrEmpty(userToken))
+                        throw new ArgumentException("您还未登录！");
                     return await QueryCHASEOrderDetail(_serviceProxyProvider, entity, schemeId, userToken);
                 }
                 else if (schemeId.StartsWith("TSM"))
@@ -1071,6 +1072,8 @@ namespace Lottery.Api.Controllers
                 }
                 else
                 {
+                    if (string.IsNullOrEmpty(userToken))
+                        throw new ArgumentException("您还未登录！");
                     return await QueryGeneralOrderDetail(_serviceProxyProvider, entity, schemeId, userToken);
                 }
             }
