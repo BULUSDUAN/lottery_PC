@@ -1225,6 +1225,7 @@ namespace Lottery.Api.Controllers
             }
             param.Clear();
             param.Add("schemeId", schemeId);
+            param.Add("userToken", userToken);
             //param.Add("pageIndex", 0);
             //param.Add("pageSize", 100);
             //param.Add("UserToken", userToken);
