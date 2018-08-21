@@ -2994,21 +2994,25 @@ namespace Lottery.Api.Controllers
                 var joinList = new List<object>();
                 foreach (var item in join.List)
                 {
-                    joinList.Add(new
+                    if (item.JoinType != TogetherJoinType.Guarantees&&item.JoinType!=TogetherJoinType.SystemGuarantees)
                     {
-                        UserId = item.UserId,
-                        UserDisplayName = ConvertHelper.HideUserName(item.UserDisplayName, item.HideDisplayNameCount),
-                        HideDisplayNameCount = item.HideDisplayNameCount,
-                        SchemeId = item.SchemeId,
-                        RealBuyCount = item.RealBuyCount,
-                        Price = item.Price,
-                        JoinType = ConvertHelper.FomartJoinType(item.JoinType),
-                        JoinId = item.JoinId,
-                        JoinDateTime = item.JoinDateTime,
-                        IsSucess = item.IsSucess,
-                        BuyCount = item.BuyCount,
-                        BonusMoney = item.BonusMoney,
-                    });
+                        joinList.Add(new
+                        {
+                            UserId = item.UserId,
+                            UserDisplayName = ConvertHelper.HideUserName(item.UserDisplayName, item.HideDisplayNameCount),
+                            HideDisplayNameCount = item.HideDisplayNameCount,
+                            SchemeId = item.SchemeId,
+                            RealBuyCount = item.RealBuyCount,
+                            Price = item.Price,
+                            JoinType = ConvertHelper.FomartJoinType(item.JoinType),
+                            JoinId = item.JoinId,
+                            JoinDateTime = item.JoinDateTime,
+                            IsSucess = item.IsSucess,
+                            BuyCount = item.BuyCount,
+                            BonusMoney = item.BonusMoney,
+                        });
+                    }
+                    
                 }
                 return Json(new LotteryServiceResponse
                 {
@@ -3049,21 +3053,24 @@ namespace Lottery.Api.Controllers
                 var joinList = new List<object>();
                 foreach (var item in join)
                 {
-                    joinList.Add(new
+                    if (item.JoinType != TogetherJoinType.Guarantees && item.JoinType != TogetherJoinType.SystemGuarantees)
                     {
-                        UserId = item.UserId,
-                        UserDisplayName = ConvertHelper.HideUserName(item.UserDisplayName, item.HideDisplayNameCount),
-                        HideDisplayNameCount = item.HideDisplayNameCount,
-                        SchemeId = item.SchemeId,
-                        RealBuyCount = item.RealBuyCount,
-                        Price = item.Price,
-                        JoinType = ConvertHelper.FomartJoinType(item.JoinType),
-                        JoinId = item.JoinId,
-                        JoinDateTime = item.JoinDateTime,
-                        IsSucess = item.IsSucess,
-                        BuyCount = item.BuyCount,
-                        BonusMoney = item.BonusMoney,
-                    });
+                        joinList.Add(new
+                        {
+                            UserId = item.UserId,
+                            UserDisplayName = ConvertHelper.HideUserName(item.UserDisplayName, item.HideDisplayNameCount),
+                            HideDisplayNameCount = item.HideDisplayNameCount,
+                            SchemeId = item.SchemeId,
+                            RealBuyCount = item.RealBuyCount,
+                            Price = item.Price,
+                            JoinType = ConvertHelper.FomartJoinType(item.JoinType),
+                            JoinId = item.JoinId,
+                            JoinDateTime = item.JoinDateTime,
+                            IsSucess = item.IsSucess,
+                            BuyCount = item.BuyCount,
+                            BonusMoney = item.BonusMoney,
+                        });
+                    }
                 }
                 return Json(new LotteryServiceResponse
                 {
