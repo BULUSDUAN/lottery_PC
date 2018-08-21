@@ -1359,13 +1359,13 @@ namespace UserLottery.Service.ModuleServices
         }
 
         #region 通过分享中奖订单注册后送上线红包
-        public CommonActionResult OrderShareRegisterRedBag(string schemeId)
+        public Task<CommonActionResult> OrderShareRegisterRedBag(string schemeId)
         {
             new CacheDataBusiness().FirstOrderShareRegisterRedBag(schemeId);
-            return new CommonActionResult()
+            return Task.FromResult(new CommonActionResult()
             {
                 IsSuccess = true
-            };
+            });
         }
 
         #endregion
