@@ -262,7 +262,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public void UpdateSports_Order_Running(params C_Sports_Order_Running[] entity)
         {
-            DB.GetDal<C_Sports_Order_Running>().Add(entity);
+            DB.GetDal<C_Sports_Order_Running>().Update(entity);
         }
 
         public List<C_JCLQ_Match> QueryJCLQSaleMatchCount(string[] matchIdArray)
@@ -344,7 +344,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public void UpdateTogetherFollowerRule(C_Together_FollowerRule entity)
         {
-            DB.GetDal<C_Together_FollowerRule>().Add(entity);
+            DB.GetDal<C_Together_FollowerRule>().Update(entity);
         }
 
         public void UpdateUserBeedings(params C_User_Beedings[] entity)
