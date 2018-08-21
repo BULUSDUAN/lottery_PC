@@ -151,9 +151,7 @@ namespace Lottery.Api.Controllers
             try
             {
                 var p = JsonHelper.Decode(entity.Param);
-                var userToken = p.UserToken;
-               
-                string userId = string.Empty;
+                string userToken = p.UserToken;
                 if (!string.IsNullOrEmpty(userToken))
                 {
                     Dictionary<string, object> param = new Dictionary<string, object>();
@@ -202,9 +200,7 @@ namespace Lottery.Api.Controllers
             try
             {
                 var p = JsonHelper.Decode(entity.Param);
-                var userToken = p.UserToken;
-
-                string userId = string.Empty;
+                string userToken = p.UserToken;
                 if (!string.IsNullOrEmpty(userToken))
                 {
                     Dictionary<string, object> param = new Dictionary<string, object>();
