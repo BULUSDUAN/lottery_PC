@@ -434,6 +434,8 @@ namespace Lottery.Api.Controllers
                     throw new ArgumentException("手机号码不能为空！");
                 //string cfrom = "";
                 string pid = p.pid;
+                string fxid = p.fxid;
+                string schemeId = p.schemeId;
                 SchemeSource schemeSource = entity.SourceCode;
                 //if (!string.IsNullOrEmpty(cfrom) && cfrom == "ios")
                 //{
@@ -451,13 +453,23 @@ namespace Lottery.Api.Controllers
                 param["source"] = (int)schemeSource;
 
                 param["info"] = userInfo;
-
+           
                 if (!string.IsNullOrEmpty(pid))
+                {
                     userInfo.AgentId = pid;
+                }          
+                param["fxid"] = string.IsNullOrEmpty(fxid)?"0": fxid; 
                 var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/User/RegisterResponseMobile");
+                param.Clear();             
                 if (result.Message.Contains("手机认证成功") || result.Message.Contains("恭喜您注册成功"))
                 {
-
+                    param["schemeId"] = string.IsNullOrEmpty(schemeId)?"0": schemeId;
+                    #region 此处判断执行订单送红包逻辑
+                    if (schemeId != null)
+                    {
+                      var redbag= await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/User/OrderShareRegisterRedBag");
+                    }
+                    #endregion
                     result.Message = "注册成功";
                     Dictionary<string, object> loginparam = new Dictionary<string, object>();
                     loginparam["loginName"] = userInfo.LoginName;

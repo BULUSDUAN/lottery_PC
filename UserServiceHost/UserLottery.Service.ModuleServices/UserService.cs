@@ -710,7 +710,7 @@ namespace UserLottery.Service.ModuleServices
         /// <param name="source"></param>
         /// <param name="info"></param>
         /// <returns></returns>
-        public Task<CommonActionResult> RegisterResponseMobile(string validateCode, string mobile, SchemeSource source, RegisterInfo_Local info)
+        public Task<CommonActionResult> RegisterResponseMobile(string validateCode, string mobile, SchemeSource source, RegisterInfo_Local info,string fxid)
         {
             try
             {
@@ -730,10 +730,10 @@ namespace UserLottery.Service.ModuleServices
                 if (!isCheckValidateCode)
                 {
                     throw new Exception("验证码输入不正确。");
-                }
-                info.Referrer = "mobile_regist";
+                }               
+                    info.Referrer = fxid == "0"? "mobile_regist": "fxid_regist";
                 //注册
-                var userResult = RegisterLoacal(info);
+                var userResult = RegisterLoacal(info, fxid);
                 if (userResult == null || string.IsNullOrEmpty(userResult.ReturnValue))
                     throw new Exception("注册失败,请重新注册");
                 string mobileNumber;
@@ -765,7 +765,7 @@ namespace UserLottery.Service.ModuleServices
         /// <summary>
         /// 本地 注册账号
         /// </summary>
-        public CommonActionResult RegisterLoacal(RegisterInfo_Local regInfo)
+        public CommonActionResult RegisterLoacal(RegisterInfo_Local regInfo, string fxid)
         {
             try
             {
@@ -787,7 +787,14 @@ namespace UserLottery.Service.ModuleServices
                         regInfo.AgentId = string.Empty;
                     }
                 }
-
+                if (!string.IsNullOrEmpty(fxid))
+                {
+                    var userEntity = new LocalLoginBusiness().QueryUserRegisterByUserId(fxid);
+                    if (userEntity == null)
+                    {
+                        fxid = string.Empty;
+                    }
+                }
 
 
                 regInfo.LoginName = regInfo.LoginName.Trim();
@@ -806,7 +813,7 @@ namespace UserLottery.Service.ModuleServices
 
 
 
-                var success = new RegisterBusiness().UserRegister(regInfo);
+                var success = new RegisterBusiness().UserRegister(regInfo,fxid);
 
 
                 //! 执行扩展功能代码 - 提交事务后
@@ -1350,7 +1357,19 @@ namespace UserLottery.Service.ModuleServices
                 throw new Exception("出错 - " + ex.Message,ex);
             }
         }
-        
+
+        #region 通过分享中奖订单注册后送上线红包
+        public CommonActionResult OrderShareRegisterRedBag(string schemeId)
+        {
+            new CacheDataBusiness().FirstOrderShareRegisterRedBag(schemeId);
+            return new CommonActionResult()
+            {
+                IsSuccess = true
+            };
+        }
+
+        #endregion
+
         //public async Task<bool> SetVerifyCodeByGuid(string RedisKey,string RedisValue)
         //{
         //    try
