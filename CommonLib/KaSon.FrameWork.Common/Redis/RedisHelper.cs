@@ -81,6 +81,14 @@ namespace KaSon.FrameWork.Common.Redis
                 return client.GetDatabase().KeyExists(key);
             }
         }
+
+        public static bool KeyDelete(string key)
+        {
+            using (var client = ConnectionMultiplexer.Connect(_redisConectStr))
+            {
+                return client.GetDatabase().KeyDelete(key);
+            }
+        }
         /// <summary>
         /// 是否启用Redis
         /// </summary>

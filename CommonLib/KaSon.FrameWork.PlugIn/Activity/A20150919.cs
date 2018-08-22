@@ -71,7 +71,7 @@ namespace KaSon.FrameWork.PlugIn.Activity
                 if (entityBankCard != null && entityShareSpread != null && !entityShareSpread.isGiveRegisterRedBag)
                 {
                     //该用户首次绑定卡 没有给分享者送活动红包 就执行送红包
-                    var giveFillMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.FirstBindBankCardGiveRedBagTofxid").ConfigValue);
+                    var giveFillMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.FirstBindBankCardGiveRedBagTofxid"));
                     if (giveFillMoney > 0)
                     {
                         BusinessHelper.Payin_To_Balance(AccountType.RedBag, BusinessHelper.FundCategory_Activity, entityShareSpread.AgentId, Guid.NewGuid().ToString("N"), giveFillMoney
@@ -103,7 +103,7 @@ namespace KaSon.FrameWork.PlugIn.Activity
         /// <param name="manager"></param>
         private void DoBindBankCardGiveMoney(string userId, E_A20150919_注册绑定送红包 record, A20150919Manager manager)
         {
-            var giveFillMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.FirstBindBankCardGiveFillMoney").ConfigValue);
+            var giveFillMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.FirstBindBankCardGiveFillMoney"));
             if (giveFillMoney > 0)
             {
                 BusinessHelper.Payin_To_Balance(AccountType.Bonus, BusinessHelper.FundCategory_Activity, userId, Guid.NewGuid().ToString("N"), giveFillMoney
@@ -164,7 +164,7 @@ namespace KaSon.FrameWork.PlugIn.Activity
 
         private void DoGiveMoney(string userId, E_A20150919_注册绑定送红包 record, A20150919Manager manager)
         {
-            var giveFillMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.RegistAndBindGiveFillMoney").ConfigValue);
+            var giveFillMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.RegistAndBindGiveFillMoney"));
             if (giveFillMoney > 0)
             {
                 BusinessHelper.Payin_To_Balance(AccountType.RedBag, BusinessHelper.FundCategory_Activity, userId, Guid.NewGuid().ToString("N"), giveFillMoney
@@ -217,7 +217,7 @@ namespace KaSon.FrameWork.PlugIn.Activity
         public void AfterRegisterTranCommit(string yqid)
         {
             if (string.IsNullOrEmpty(yqid)) return;
-            decimal giveMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.YqidRegistGiveRedBag").ConfigValue);
+            decimal giveMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.YqidRegistGiveRedBag"));
             if (giveMoney > 0M)
             {
                 var manager = new SqlQueryManager();
@@ -299,7 +299,7 @@ namespace KaSon.FrameWork.PlugIn.Activity
             if (string.IsNullOrEmpty(userId)) return;
 
             var manager = new A20150919Manager();
-            decimal giveMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.RegistAndBindGiveRedBag").ConfigValue);
+            decimal giveMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.RegistAndBindGiveRedBag"));
             if (giveMoney > 0M)
             {
                 BusinessHelper.Payin_To_Balance(AccountType.RedBag, BusinessHelper.FundCategory_Activity, userId, Guid.NewGuid().ToString("N"), giveMoney
@@ -371,7 +371,7 @@ namespace KaSon.FrameWork.PlugIn.Activity
             //if (!old.IsBindRealName) return;
             //if (!old.IsBindMobile) return;
 
-            decimal giveMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.BindedUserLoginGiveRedBag").ConfigValue);
+            decimal giveMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.BindedUserLoginGiveRedBag"));
             if (user.VipLevel >= 0)
             {
                 var config = ActivityCache.QueryActivityConfig(string.Format("ActivityConfig.BindedUserLoginGiveRedBagV{0}", user.VipLevel));
@@ -379,7 +379,7 @@ namespace KaSon.FrameWork.PlugIn.Activity
                 {
                     try
                     {
-                        giveMoney = decimal.Parse(config.ConfigValue);
+                        giveMoney = decimal.Parse(config);
                     }
                     catch (Exception)
                     {
@@ -465,7 +465,7 @@ namespace KaSon.FrameWork.PlugIn.Activity
                 return "今天登录红包已经领取!";
             }
 
-            decimal giveMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.BindedUserLoginGiveRedBag").ConfigValue);
+            decimal giveMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.BindedUserLoginGiveRedBag"));
             if (user.VipLevel >= 0)
             {
                 var config = ActivityCache.QueryActivityConfig(string.Format("ActivityConfig.BindedUserLoginGiveRedBagV{0}", user.VipLevel));
@@ -473,7 +473,7 @@ namespace KaSon.FrameWork.PlugIn.Activity
                 {
                     try
                     {
-                        giveMoney = decimal.Parse(config.ConfigValue);
+                        giveMoney = decimal.Parse(config);
                     }
                     catch (Exception)
                     {
@@ -565,7 +565,7 @@ namespace KaSon.FrameWork.PlugIn.Activity
             {
                 DB.Begin();
                 var givedMoney = manager.QueryTotalFillMoneyGiveRedBag(userId, DateTime.Now.ToString("yyyyMM"), 1);
-                var maxGiveMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.FillMoneyMaxGiveRedBagOneMonth").ConfigValue);
+                var maxGiveMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.FillMoneyMaxGiveRedBagOneMonth"));
                 //本月赠送金额已达到最大
                 if (givedMoney >= maxGiveMoney)
                     throw new Exception("用户本月已达到最大赠送红包数");
@@ -717,11 +717,11 @@ namespace KaSon.FrameWork.PlugIn.Activity
                 if (count == 1)
                 {
                     var entityShareSpread = new BlogManager().QueryBlog_UserShareSpread(userId);
-                    var satisfyFillMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.SatisfyRechargeGiveRedBagTofxid").ConfigValue);
+                    var satisfyFillMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.SatisfyRechargeGiveRedBagTofxid"));
                     if (entityShareSpread != null && !entityShareSpread.isGiveRechargeRedBag && totalMoney >= satisfyFillMoney)
                     {
                         //购彩了 没有给分享者送活动红包 就执行送红包 只送一次
-                        var giveFillMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.FirstRechargeGiveRedBagTofxid").ConfigValue);
+                        var giveFillMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.FirstRechargeGiveRedBagTofxid"));
                         if (giveFillMoney > 0)
                         {
                             BusinessHelper.Payin_To_Balance(AccountType.RedBag, BusinessHelper.FundCategory_Activity, entityShareSpread.AgentId, Guid.NewGuid().ToString("N"), giveFillMoney

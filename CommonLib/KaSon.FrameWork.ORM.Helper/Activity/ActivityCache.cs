@@ -1,4 +1,5 @@
 ﻿using EntityModel;
+using KaSon.FrameWork.Common.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,40 +12,59 @@ namespace KaSon.FrameWork.ORM.Helper
     /// </summary>
     public class ActivityCache
     {
-        public static List<E_Activity_Config> _activityConfigCache = new List<E_Activity_Config>();
+        public static E_Activity_Config _activityConfigCache = new E_Activity_Config();
 
         /// <summary>
         /// 查询活动配置
         /// </summary>
-        public static E_Activity_Config QueryActivityConfig(string key)
+        public static string QueryActivityConfig(string key)
         {
-            if (_activityConfigCache == null || _activityConfigCache.Count == 0)
+            var flag = RedisHelper.KeyExists(key);
+            var v = "";
+            if (flag)
             {
-                _activityConfigCache = new A20150919Manager().QueryActivityConfig();
+                v= RedisHelper.StringGet(key);
             }
-            return _activityConfigCache.Where(p => p.ConfigKey == key).FirstOrDefault();
+            if (string.IsNullOrEmpty(v))
+            {
+               var config = new A20150919Manager().QueryActivityConfig(key);
+                v = config.ConfigValue;
+                if (config != null) {
+                    RedisHelper.StringSet(key, v, 3 * 60);
+                }
+            }
+            return v;
         }
 
         /// <summary>
         /// 查询全部活动配置
         /// </summary>
-        public static List<E_Activity_Config> QueryActivityConfig()
-        {
-            if (_activityConfigCache == null || _activityConfigCache.Count == 0)
-            {
-                _activityConfigCache = new A20150919Manager().QueryActivityConfig();
-            }
-            return _activityConfigCache;
-        }
+        //public static List<E_Activity_Config> QueryActivityConfig()
+        //{
+        //    if (_activityConfigCache == null || _activityConfigCache.Count == 0)
+        //    {
+        //        _activityConfigCache = new A20150919Manager().QueryActivityConfig();
+        //    }
+        //    return _activityConfigCache;
+        //}
 
         /// <summary>
-        /// 活空活动配置
+        /// 清空活动配置
         /// </summary>
         public static void ClearActivityConfig()
         {
-            if (_activityConfigCache != null)
-                _activityConfigCache.Clear();
-            _activityConfigCache = new A20150919Manager().QueryActivityConfig();
+            var _activityConfigCache = new A20150919Manager().QueryActivityConfig();
+
+            foreach (var item in _activityConfigCache)
+            {
+                var flag = RedisHelper.KeyExists(item.ConfigValue);
+                if (flag)
+                {
+                    RedisHelper.KeyDelete(item.ConfigValue);
+                }
+            }
+
+
         }
 
         /// <summary>

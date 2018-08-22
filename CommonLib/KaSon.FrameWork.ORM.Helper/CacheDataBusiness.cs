@@ -181,11 +181,11 @@ namespace KaSon.FrameWork.ORM.Helper
                 /*entityBankCard != null */
                 var entityShareSpread = new BlogManager().QueryBlog_UserShareSpread(userId);
 
-                var satisfyFillMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.SatisfyLotteryGiveRedBagTofxid").ConfigValue);
+                var satisfyFillMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.SatisfyLotteryGiveRedBagTofxid"));
                 if (entityShareSpread != null && !entityShareSpread.isGiveLotteryRedBag && totalMoney >= satisfyFillMoney)
                 {
                     //购彩了 没有给分享者送活动红包 就执行送红包 只送一次
-                    var giveFillMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.FirstLotteryGiveRedBagTofxid").ConfigValue);
+                    var giveFillMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.FirstLotteryGiveRedBagTofxid"));
                     if (giveFillMoney > 0)
                     {
 
@@ -224,7 +224,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 //if (entityBankCard != null && entityShareSpread != null && !entityShareSpread.isGiveLotteryRedBag)
                 //{
                 //购彩了 没有给分享者送活动红包 就执行送红包 只送一次
-                var shareGiveRedBagPre = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.WinningShareGiveRedBag").ConfigValue);
+                var shareGiveRedBagPre = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.WinningShareGiveRedBag"));
                 var business = new BlogManager();
                 var oldmodel = business.QueryBlog_OrderShareRegisterRedBag(schemeId, schemeInfo.UserId);
                 if (oldmodel != null)
