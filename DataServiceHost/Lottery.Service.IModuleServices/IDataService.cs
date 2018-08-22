@@ -122,5 +122,9 @@ namespace Lottery.Service.IModuleServices
 
         [Service(Date = "2018-07-26", Director = "lidi", Name = "获取当年/当日最大场次数")]
         Task<List<string>> GetMaxIssueByGameCode(string gameCode, string currIssueNumber,int issueCount);
+
+        
+        [Service(Date = "2018-07-26", Director = "lidi", Name = "查询已读和未读站内信")]
+        Task<SiteMessageInnerMailListNew_Collection> QueryUnReadInnerMailListByReceiver(string userId, int pageIndex, int pageSize, int handleType);
     }
 }
