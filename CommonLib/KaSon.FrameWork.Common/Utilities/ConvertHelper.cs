@@ -1115,5 +1115,11 @@ namespace KaSon.FrameWork.Common.Utilities {
             var time = DateTime.ParseExact(strTime, "yyyyMMdd", ifp);
             return time;
         }
+
+
+        public static decimal getTwoplaces(decimal key)
+        {
+            return Math.Floor(key * 100 / 100.0m);
+        }
     }
 }
