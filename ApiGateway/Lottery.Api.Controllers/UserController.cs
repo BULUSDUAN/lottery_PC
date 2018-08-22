@@ -1442,6 +1442,65 @@ namespace Lottery.Api.Controllers
                 });
             }
         }
+        /// <summary>
+        /// 查询用户金额
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> QueryUserBalance([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                string userToken = p.UserToken;
+                if (string.IsNullOrEmpty(userToken))
+                    throw new ArgumentException("传入参数信息有误！");
+                Dictionary<string, object> balanceParam = new Dictionary<string, object>();
+                balanceParam["userToken"] = userToken;
+                var balance = await _serviceProxyProvider.Invoke<UserBalanceInfo>(balanceParam, "api/user/QueryMyBalance");
+                return JsonEx(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询用户金额成功",
+                    MsgId = entity.MsgId,
+                    Value = new
+                    {
+                        CommissionBalance = Convert.ToDecimal(balance.CommissionBalance.ToString("0.00")),
+                        ExpertsBalance = Convert.ToDecimal(balance.ExpertsBalance.ToString("0.00")),
+                        BonusBalance = Convert.ToDecimal(balance.BonusBalance.ToString("0.00")),
+                        FreezeBalance = Convert.ToDecimal(balance.FreezeBalance.ToString("0.00")),
+                        FillMoneyBalance = Convert.ToDecimal(balance.FillMoneyBalance.ToString("0.00")),
+                        IsSetBalancePwd = balance.IsSetPwd,
+                        NeedBalancePwdPlace = string.IsNullOrEmpty(balance.NeedPwdPlace) ? string.Empty : balance.NeedPwdPlace,
+                        UserGrowth = balance.UserGrowth,
+                        RedBagBalance = Convert.ToDecimal(balance.RedBagBalance.ToString("0.00")),
+                        NeedGrowth = GrowthStatus(balance.UserGrowth),
+                        IsBetHM = true
+                    },
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return JsonEx(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "业务参数错误" + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage(),
+                });
+            }
+            catch (Exception ex)
+            {
+                return JsonEx(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "服务器内部错误，请联系接口提供商" + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage(),
+                });
+            }
+        }
 
         /// <summary>
         /// 验证是否可以提现 204
