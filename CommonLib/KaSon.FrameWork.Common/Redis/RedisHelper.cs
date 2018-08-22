@@ -47,10 +47,7 @@ namespace KaSon.FrameWork.Common.Redis
         {
             try
             {
-                using (var client = ConnectionMultiplexer.Connect(_redisConectStr))
-                {
-                    return client.GetDatabase().StringGet(key);
-                }
+                return RedisHelper.Instance.GetDatabase(13).StringGet(key);
             }
             catch (Exception)
             {
@@ -68,26 +65,17 @@ namespace KaSon.FrameWork.Common.Redis
         public static bool StringSet(string key, string value, int Seconds)
         {
             var timeSpan = DateTime.Now.AddSeconds(Seconds) - DateTime.Now;
-            using (var client = ConnectionMultiplexer.Connect(_redisConectStr))
-            {
-                return client.GetDatabase().StringSet(key, value, timeSpan);
-            }
+            return RedisHelper.Instance.GetDatabase(13).StringSet(key, value, timeSpan);
         }
 
         public static bool KeyExists(string key)
         {
-            using (var client = ConnectionMultiplexer.Connect(_redisConectStr))
-            {
-                return client.GetDatabase().KeyExists(key);
-            }
+            return RedisHelper.Instance.GetDatabase(13).KeyExists(key);
         }
 
         public static bool KeyDelete(string key)
         {
-            using (var client = ConnectionMultiplexer.Connect(_redisConectStr))
-            {
-                return client.GetDatabase().KeyDelete(key);
-            }
+            return RedisHelper.Instance.GetDatabase(13).KeyDelete(key);
         }
         /// <summary>
         /// 是否启用Redis
