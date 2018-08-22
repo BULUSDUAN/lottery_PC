@@ -21,20 +21,20 @@ namespace KaSon.FrameWork.Common.Redis
 
         static JObject RdConfigInfo=null;
         private static ConnectionMultiplexer _instance;
-        private static string _redisConectStr = "";// RdConfigInfo["RedisConnect"].ToString();
+       // private static string _redisConectStr = "";// RdConfigInfo["RedisConnect"].ToString();
         private static readonly object redisLock = new object();
         static RedisHelper() {
             Init();
         }
 
         public static void Init() {
-            if (string.IsNullOrEmpty(_redisConectStr)|| RdConfigInfo==null)
+            if ( RdConfigInfo==null)
             {
                 string path = Path.Combine(Directory.GetCurrentDirectory(), @"Config\AllConfig.json");
                 string jsonText = FileHelper.txtReader(path);
                 var alljson= (JObject)JsonConvert.DeserializeObject(jsonText);
                 RdConfigInfo = (JObject)JsonConvert.DeserializeObject(alljson["RedisConfig"].ToString());
-                _redisConectStr = RdConfigInfo["RedisConnect"].ToString();
+                //_redisConectStr = RdConfigInfo["RedisConnect"].ToString();
             }
             
         }
