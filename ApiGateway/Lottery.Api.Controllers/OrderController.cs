@@ -1249,12 +1249,16 @@ namespace Lottery.Api.Controllers
             //        BonusMoney = item.BonusMoney,
             //    });
             //}
-
+            var flag = false;
+            if (!string.IsNullOrEmpty(userToken))
+            {
+                flag = await _serviceProxyProvider.Invoke<bool>(param, "api/Order/IsUserJoinSportsTogether");
+            }  
             var codeList = new List<object>();
             if (schemeInfo.Security == TogetherSchemeSecurity.Public
                || (schemeInfo.Security == TogetherSchemeSecurity.CompletePublic && schemeInfo.StopTime <= DateTime.Now)
                || schemeInfo.CreateUserId == userInfo.UserId
-                || (schemeInfo.Security == TogetherSchemeSecurity.JoinPublic && await _serviceProxyProvider.Invoke<bool>(param, "api/Order/IsUserJoinSportsTogether")))
+                || (schemeInfo.Security == TogetherSchemeSecurity.JoinPublic && flag))
             {
                 var anteCodeList = await _serviceProxyProvider.Invoke<Sports_AnteCodeQueryInfoCollection>(param, "api/Order/QuerySportsOrderAnteCodeList");
                 //codeList = GetCodeList(anteCodeList);
