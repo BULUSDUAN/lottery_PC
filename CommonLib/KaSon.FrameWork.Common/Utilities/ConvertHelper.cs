@@ -1119,7 +1119,7 @@ namespace KaSon.FrameWork.Common.Utilities {
 
         public static decimal getTwoplaces(decimal key)
         {
-            return Math.Floor(key * 100 / 100.0m);
+            return Math.Floor(key * 100)/100.0m;
         }
     }
 }
