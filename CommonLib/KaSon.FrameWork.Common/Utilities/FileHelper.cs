@@ -94,10 +94,13 @@ namespace KaSon.FrameWork.Common.Utilities
 
         public static string GetLogInfo(string dicPath,string fileName)
         {
+            var sb = new StringBuilder();
+#if LogInfo
+
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, dicPath);
             DirectoryInfo root = new DirectoryInfo(path);
             FileInfo[] files = root.GetFiles();
-            var sb = new StringBuilder();
+          
             foreach (var item in files)
             {
                 sb.Append(item.Name + "\r\n");
@@ -120,6 +123,8 @@ namespace KaSon.FrameWork.Common.Utilities
 
                 //  }
             }
+#endif
+
             return sb.ToString();
         }
     }

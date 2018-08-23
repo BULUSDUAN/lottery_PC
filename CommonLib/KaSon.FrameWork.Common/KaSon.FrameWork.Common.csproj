@@ -4,6 +4,10 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;NETSTANDARD;NETSTANDARD2_0;LogInfo;</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="GlobalConfigJson\**" />
     <EmbeddedResource Remove="GlobalConfigJson\**" />
