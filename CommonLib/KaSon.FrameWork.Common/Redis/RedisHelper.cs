@@ -168,8 +168,10 @@ namespace KaSon.FrameWork.Common.Redis
                       
                         if (_instance == null || !_instance.IsConnected || !_instance.GetDatabase().IsConnected("testKey"))
                         {
+#if LogInfo
                             var st = new Stopwatch();
                             st.Start();
+#endif
                             var configurationOptions = new ConfigurationOptions
                             {
                                 //AbortOnConnectFail = false,
@@ -177,9 +179,10 @@ namespace KaSon.FrameWork.Common.Redis
                             };
                             configurationOptions.EndPoints.Add(new DnsEndPoint(ServerHost, ServerPort));
                             _instance = ConnectionMultiplexer.Connect(configurationOptions);
+#if LogInfo
                             st.Stop();
                             Log4Log.LogEX(KLogLevel.RedisTimeInfo, "Redis", "连接打开时：" + st.Elapsed.TotalMilliseconds.ToString() + "毫秒");
-
+#endif
                         }
                     }
 
