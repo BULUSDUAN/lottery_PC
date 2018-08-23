@@ -1374,7 +1374,7 @@ namespace Lottery.Api.Controllers
         {
             Dictionary<string, object> param = new Dictionary<string, object>();
             param.Add("FileName", "");
-            var config = await _serviceProxyProvider.Invoke<string>(param, "api/Data/ReadSqlTimeLog");
+            var config = await _serviceProxyProvider.Invoke<string>(param, "api/Betting/ReadSqlTimeLog");
             return Content(config);
         }
     }
