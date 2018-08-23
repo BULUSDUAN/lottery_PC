@@ -118,12 +118,12 @@ namespace Lottery.Api.Controllers
         }
 
         #region 日志
-        public async Task<IActionResult> GetTimeLog([FromServices]IServiceProxyProvider _serviceProxyProvider,string DicName= "APITimeInfo")
+        public IActionResult GetTimeLog([FromServices]IServiceProxyProvider _serviceProxyProvider,string DicName= "APITimeInfo")
         {
             try
             {
                 var str = KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\"+ DicName + "\\", "");
-                return Content(str);
+                return Content("内容"+str);
             }
             catch (Exception ex)
             {
