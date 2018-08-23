@@ -17,6 +17,7 @@ namespace KaSon.FrameWork.Common
         Debug = 3,
         TimeInfo = 4,
         SevTimeInfo = 5,
+        RedisTimeInfo=6,
 
     }
     public class Log4Log : IKgLog
@@ -28,6 +29,8 @@ namespace KaSon.FrameWork.Common
 
         private static log4net.ILog timeInfoLog = null;
         private static log4net.ILog sevTimeInfo = null;
+        private static log4net.ILog redisTimeInfoLog = null;
+        
         private static ILoggerRepository repository { get; set; }
         //ILog log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         static Log4Log()
@@ -55,6 +58,7 @@ namespace KaSon.FrameWork.Common
             infologger = LogManager.GetLogger(repository.Name, "loginfo");
             logWarning = LogManager.GetLogger(repository.Name, "logWarning");
             timeInfoLog = LogManager.GetLogger(repository.Name, "ApiTimeInfo");
+            redisTimeInfoLog = LogManager.GetLogger(repository.Name, "RedisTimeInfoLog");
             sevTimeInfo = LogManager.GetLogger(repository.Name, "SevtimeIoginfo");
 
            // logWarning = LogManager.GetLogger(repository.Name, "logWarning");
@@ -107,6 +111,11 @@ namespace KaSon.FrameWork.Common
                 case KLogLevel.SevTimeInfo:
                     // string str = info as string;
                     sevTimeInfo.Info(name);
+                    break;
+                case KLogLevel.RedisTimeInfo:
+                    // string str = info as string;
+                    redisTimeInfoLog.Info(name + "|" + (info==null?"":info.ToString()));
+                   // redisTimeInfoLog.Info(name);
                     break;
                 default:
                     if (errorlogger == null)

@@ -9,6 +9,7 @@ using System.IO;
 using KaSon.FrameWork.Common;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace KaSon.FrameWork.Common.Redis
 {
@@ -162,9 +163,13 @@ namespace KaSon.FrameWork.Common.Redis
                 {
                     lock (redisLock)
                     {
+                     
+                       // var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/Sports_Betting");
+                      
                         if (_instance == null || !_instance.IsConnected || !_instance.GetDatabase().IsConnected("testKey"))
                         {
-
+                            var st = new Stopwatch();
+                            st.Start();
                             var configurationOptions = new ConfigurationOptions
                             {
                                 //AbortOnConnectFail = false,
@@ -172,6 +177,9 @@ namespace KaSon.FrameWork.Common.Redis
                             };
                             configurationOptions.EndPoints.Add(new DnsEndPoint(ServerHost, ServerPort));
                             _instance = ConnectionMultiplexer.Connect(configurationOptions);
+                            st.Stop();
+                            Log4Log.LogEX(KLogLevel.RedisTimeInfo, "Redis", "连接打开时：" + st.Elapsed.TotalMilliseconds.ToString() + "毫秒");
+
                         }
                     }
 

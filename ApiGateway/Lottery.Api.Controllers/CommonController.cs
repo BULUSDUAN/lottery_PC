@@ -117,12 +117,12 @@ namespace Lottery.Api.Controllers
             }
         }
 
-
-        public async Task<IActionResult> GetTimeLog([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        #region 日志
+        public async Task<IActionResult> GetTimeLog([FromServices]IServiceProxyProvider _serviceProxyProvider,string DicName= "APITimeInfo")
         {
             try
             {
-                var str = KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\APITimeInfo\\", "");
+                var str = KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\"+ DicName + "\\", "");
                 return Content(str);
             }
             catch (Exception ex)
@@ -131,13 +131,15 @@ namespace Lottery.Api.Controllers
                 {
                     Code = ResponseCode.失败,
                     Message = "获取失败",
-                    MsgId = entity.MsgId,
+                    MsgId = "",
                     Value = ex.ToGetMessage(),
                 });
             }
         }
 
 
+    
+        #endregion
         #region 按钮上的广告
         /// <summary>
         /// 按钮上的广告
