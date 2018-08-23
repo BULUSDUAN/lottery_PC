@@ -101,8 +101,17 @@ namespace KaSon.FrameWork.Common.Utilities
             {
                 if (item.Name.StartsWith(fileName))
                 {
-                    var txtData = System.IO.File.ReadAllText(item.FullName, Encoding.UTF8);
-                    sb.Append(txtData + "|");
+                    try
+                    {
+                        var txtData = System.IO.File.ReadAllText(item.FullName, Encoding.UTF8);
+                        sb.Append(txtData + "|");
+                    }
+                    catch 
+                    {
+
+                        continue;
+                    }
+                  
                 }
             }
            return sb.ToString();
