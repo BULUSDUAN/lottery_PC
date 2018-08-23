@@ -101,8 +101,8 @@ namespace KaSon.FrameWork.Common
                     logWarning.Info(name, ex);
                     break;
                 case KLogLevel.TimeInfo:
-                    // string str = info as string;
-                    timeInfoLog.Info(name);
+                    string str = info as string;
+                    timeInfoLog.Info(name+"|"+ str);
                     break;
                 case KLogLevel.SevTimeInfo:
                     // string str = info as string;
