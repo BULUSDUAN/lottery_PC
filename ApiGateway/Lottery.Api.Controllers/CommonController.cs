@@ -118,6 +118,7 @@ namespace Lottery.Api.Controllers
         }
 
         #region 日志
+
         public IActionResult GetTimeLog([FromServices]IServiceProxyProvider _serviceProxyProvider, string DicName = "APITimeInfo")
         {
             try
@@ -136,7 +137,7 @@ namespace Lottery.Api.Controllers
                 });
             }
         }
-#endif
+
 
 
 
