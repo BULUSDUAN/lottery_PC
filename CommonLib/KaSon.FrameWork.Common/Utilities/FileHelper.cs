@@ -8,6 +8,7 @@ namespace KaSon.FrameWork.Common.Utilities
 {
     public static class FileHelper
     {
+        private static object ReadLock = "";
         public static void CopyDirectory(string strFromPath, string strToPath, Func<string, string, bool> beforeCopyFunc)
         {
             if (!Directory.Exists(strFromPath))
@@ -93,28 +94,38 @@ namespace KaSon.FrameWork.Common.Utilities
 
         public static string GetLogInfo(string dicPath,string fileName)
         {
+            var sb = new StringBuilder();
+#if LogInfo
+
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, dicPath);
             DirectoryInfo root = new DirectoryInfo(path);
             FileInfo[] files = root.GetFiles();
-            var sb = new StringBuilder();
+          
             foreach (var item in files)
             {
-                if (item.Name.StartsWith(fileName))
+                sb.Append(item.Name + "\r\n");
+                //if (item.Name.StartsWith(fileName))
+                //{
+                try
                 {
-                    try
+                    lock (ReadLock)
                     {
                         var txtData = System.IO.File.ReadAllText(item.FullName, Encoding.UTF8);
                         sb.Append(txtData + "|");
                     }
-                    catch 
-                    {
 
-                        continue;
-                    }
-                  
                 }
+                catch (Exception ex)
+                {
+                    sb.Append(ex.ToString() + "\r\n");
+                    continue;
+                }
+
+                //  }
             }
-           return sb.ToString();
+#endif
+
+            return sb.ToString();
         }
     }
 }
