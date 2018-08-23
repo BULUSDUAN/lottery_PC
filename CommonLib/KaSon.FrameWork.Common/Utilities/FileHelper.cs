@@ -89,5 +89,23 @@ namespace KaSon.FrameWork.Common.Utilities
                 CopyChildDirectory(strzipath, strToPath + "\\" + strFolderName, beforeCopyFunc);
             }
         }
+
+
+        public static string GetLogInfo(string dicPath,string fileName)
+        {
+            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, dicPath);
+            DirectoryInfo root = new DirectoryInfo(path);
+            FileInfo[] files = root.GetFiles();
+            var sb = new StringBuilder();
+            foreach (var item in files)
+            {
+                if (item.Name.StartsWith(fileName))
+                {
+                    var txtData = System.IO.File.ReadAllText(item.FullName, Encoding.UTF8);
+                    sb.Append(txtData + "|");
+                }
+            }
+           return sb.ToString();
+        }
     }
 }

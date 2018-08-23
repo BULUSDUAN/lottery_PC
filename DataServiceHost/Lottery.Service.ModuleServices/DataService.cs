@@ -643,6 +643,10 @@ namespace Lottery.Service.ModuleServices
         }
         #endregion
 
+        public Task<string> ReadSqlTimeLog(string FileName)
+        {
+            return Task.FromResult(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\SQLInfo", "LogTime_"));
+        }
     }
 
 

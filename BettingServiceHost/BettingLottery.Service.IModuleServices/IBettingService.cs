@@ -91,5 +91,8 @@ namespace BettingLottery.Service.IModuleServices
 
         [Service(Date = "2018-7-15", Director = "lidi", Name = "世界杯投注")]
         Task<CommonActionResult> BetSJB(LotteryBettingInfo info, string balancePassword, decimal redBagMoney, string userToken);
+
+        [Service(Date = "2018-7-15", Director = "lidi", Name = "日志")]
+        Task<string> ReadSqlTimeLog(string FileName);
     }
 }

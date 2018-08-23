@@ -121,5 +121,8 @@ namespace UserLottery.Service.IModuleServices
 
         //[Service(Date = "2018-7-27", Director = "lidi", Name = "从redis中获取图形验证码")]
         //Task<string> GetVerifyCodeByGuid(string RedisKey);
+
+        [Service(Date = "2018-7-15", Director = "lidi", Name = "日志")]
+        Task<string> ReadSqlTimeLog(string FileName);
     }
 }

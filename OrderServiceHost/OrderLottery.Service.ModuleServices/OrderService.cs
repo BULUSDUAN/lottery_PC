@@ -322,5 +322,10 @@ namespace OrderLottery.Service.ModuleServices
         {
             return Task.FromResult(_order.QueryMySportsTogetherListBySchemeId(schemeId, userId));
         }
+
+        public Task<string> ReadSqlTimeLog(string FileName)
+        {
+            return Task.FromResult(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\SQLInfo", "LogTime_"));
+        }
     }
 }

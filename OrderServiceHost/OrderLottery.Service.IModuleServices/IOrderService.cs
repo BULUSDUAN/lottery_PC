@@ -105,5 +105,8 @@ namespace OrderLottery.Service.IModuleServices
         Task<Sports_TogetherJoinInfoCollection> QuerySportsTogetherJoinList(string schemeId, int pageIndex, int pageSize, string UserToken);
         [Service(Date = "2018-08-17", Director = "Debug", Name = "查询本人的所有合买记录")]
         Task<List<Sports_TogetherJoinInfo>> QueryMySportsTogetherListBySchemeId(string schemeId, string userId);
+
+        [Service(Date = "2018-7-15", Director = "lidi", Name = "日志")]
+        Task<string> ReadSqlTimeLog(string FileName);
     }
 }

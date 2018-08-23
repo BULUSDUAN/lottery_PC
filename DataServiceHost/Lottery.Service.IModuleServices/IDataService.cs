@@ -126,5 +126,8 @@ namespace Lottery.Service.IModuleServices
         
         [Service(Date = "2018-07-26", Director = "lidi", Name = "查询已读和未读站内信")]
         Task<SiteMessageInnerMailListNew_Collection> QueryUnReadInnerMailListByReceiver(string userId, int pageIndex, int pageSize, int handleType);
+
+        [Service(Date = "2018-7-15", Director = "lidi", Name = "日志")]
+        Task<string> ReadSqlTimeLog(string FileName);
     }
 }

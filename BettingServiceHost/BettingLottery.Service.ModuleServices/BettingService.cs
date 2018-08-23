@@ -12,6 +12,8 @@ using KaSon.FrameWork.ORM.Helper;
 using KaSon.FrameWork.Common.Sport;
 using System.Threading.Tasks;
 using BettingLottery.Service.IModuleServices;
+using System.IO;
+using System.Text;
 
 namespace BettingLottery.Service.ModuleServices
 {
@@ -1318,6 +1320,12 @@ namespace BettingLottery.Service.ModuleServices
             {
                 throw new Exception("订单投注异常，请重试 ", ex);
             }
+        }
+
+
+        public Task<string> ReadSqlTimeLog(string FileName)
+        {
+           return Task.FromResult(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\SQLInfo", "LogTime_"));
         }
     }
 }
