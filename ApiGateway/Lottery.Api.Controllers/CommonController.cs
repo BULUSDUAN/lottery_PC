@@ -122,20 +122,8 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = JsonHelper.Decode(entity.Param);
-                string fileName = p.FileName;
-                var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Log_Log\\APILogError");
-                if (!Directory.Exists(path))
-                    Directory.CreateDirectory(path);
-                var fileFullName = Path.Combine(path, string.Format("{0}.txt", fileName));
-                var data = new GameWinNumber_InfoCollection();
-                if (System.IO.File.Exists(fileFullName))
-                {
-                    var txtData = System.IO.File.ReadAllText(fileFullName, Encoding.UTF8);
-                    return JsonEx(txtData);
-                }
-
-                return JsonEx("错误");
+                var str = KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\APITimeInfo\\", "");
+                return Content(str);
             }
             catch (Exception ex)
             {
