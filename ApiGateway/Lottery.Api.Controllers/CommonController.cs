@@ -22,6 +22,8 @@ using Lottery.Api.Controllers.CommonFilterActtribute;
 using EntityModel;
 using KaSon.FrameWork.Common.ExceptionEx;
 using EntityModel.CoreModel;
+using System.IO;
+using System.Text;
 //using Lottery.Service.IModuleServices;
 
 namespace Lottery.Api.Controllers
@@ -115,7 +117,39 @@ namespace Lottery.Api.Controllers
             }
         }
 
-       
+
+        public async Task<IActionResult> GetTimeLog([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                string fileName = p.FileName;
+                var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Log_Log\\APILogError");
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
+                var fileFullName = Path.Combine(path, string.Format("{0}.txt", fileName));
+                var data = new GameWinNumber_InfoCollection();
+                if (System.IO.File.Exists(fileFullName))
+                {
+                    var txtData = System.IO.File.ReadAllText(fileFullName, Encoding.UTF8);
+                    return JsonEx(txtData);
+                }
+
+                return JsonEx("错误");
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "获取失败",
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage(),
+                });
+            }
+        }
+
+
         #region 按钮上的广告
         /// <summary>
         /// 按钮上的广告
