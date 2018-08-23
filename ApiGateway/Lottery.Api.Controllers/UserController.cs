@@ -1459,11 +1459,15 @@ namespace Lottery.Api.Controllers
                     throw new ArgumentException("传入参数信息有误！");
                 Dictionary<string, object> balanceParam = new Dictionary<string, object>();
                 balanceParam["userToken"] = userToken;
+#if LogInfo
                 var st = new Stopwatch();
                 st.Start();
+#endif
                 var balance = await _serviceProxyProvider.Invoke<UserBalanceInfo>(balanceParam, "api/user/QueryMyBalance");
+#if LogInfo
                 st.Stop();
                 Log4Log.LogEX(KLogLevel.TimeInfo, "查询用户金额用时", "参数"+ userToken+"；用时："+st.Elapsed.TotalMilliseconds.ToString()+"毫秒");
+#endif
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
@@ -2065,7 +2069,7 @@ namespace Lottery.Api.Controllers
             return defaultmoney;
         }
 
-
+#if LogInfo
         public async Task<IActionResult> GetTimeLog([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             Dictionary<string, object> param = new Dictionary<string, object>();
@@ -2073,5 +2077,6 @@ namespace Lottery.Api.Controllers
             var config = await _serviceProxyProvider.Invoke<string>(param, "api/User/ReadSqlTimeLog");
             return Content(config);
         }
+#endif
     }
 }

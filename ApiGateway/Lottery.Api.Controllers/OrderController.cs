@@ -2755,19 +2755,27 @@ namespace Lottery.Api.Controllers
         private async Task<List<KaiJiang>> GetRedisList([FromServices]IServiceProxyProvider _serviceProxyProvider)
         {
             var key = RedisKeys.KaiJiang_Key;
+#if LogInfo
             var st = new Stopwatch();
             st.Start();
+#endif
             var flag = KaSon.FrameWork.Common.Redis.RedisHelper.KeyExists(key);
+#if LogInfo
             st.Stop();
             Log4Log.LogEX(KLogLevel.TimeInfo, "redis判断是否有key"+ key, "用时：" + st.Elapsed.TotalMilliseconds.ToString() + "毫秒");
+#endif
             var list = new List<KaiJiang>();
             var str = "";
             if (flag)
             {
+#if LogInfo
                 st.Reset();
+#endif
                 str = KaSon.FrameWork.Common.Redis.RedisHelper.StringGet(key);
+#if LogInfo
                 st.Stop();
                 Log4Log.LogEX(KLogLevel.TimeInfo, "redis获取key："+ key, "用时：" + st.Elapsed.TotalMilliseconds.ToString() + "毫秒");
+#endif
             }
             if (!string.IsNullOrEmpty(str))
             {
@@ -2801,9 +2809,12 @@ namespace Lottery.Api.Controllers
 
                 list[list.Count - 1].name = "TR9";
                 list[list.Count - 1].type = "任选9";
+#if LogInfo
                 st.Reset();
                 KaSon.FrameWork.Common.Redis.RedisHelper.StringSet(key, JsonHelper.Serialize(list), 5 * 60);
+                st.Stop();
                 Log4Log.LogEX(KLogLevel.TimeInfo, "redis设置key：" + key, "用时：" + st.Elapsed.TotalMilliseconds.ToString() + "毫秒");
+#endif
             }
             return list;
         }
@@ -2983,7 +2994,7 @@ namespace Lottery.Api.Controllers
             return string.Empty;
         }
 
-        #region 20180821新增三个接口（1.获取合买用户列表，2.获取自己的合买数据列表，3.仅根据订单号获取订单信息）
+#region 20180821新增三个接口（1.获取合买用户列表，2.获取自己的合买数据列表，3.仅根据订单号获取订单信息）
         /// <summary>
         /// 合买用户列表
         /// </summary>
@@ -3152,8 +3163,8 @@ namespace Lottery.Api.Controllers
 
         }
 
-        #endregion
-
+#endregion
+#if LogInfo
         public async Task<IActionResult> GetTimeLog([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             Dictionary<string, object> param = new Dictionary<string, object>();
@@ -3161,5 +3172,6 @@ namespace Lottery.Api.Controllers
             var config = await _serviceProxyProvider.Invoke<string>(param, "api/Order/ReadSqlTimeLog");
             return Content(config);
         }
+#endif
     }
 }

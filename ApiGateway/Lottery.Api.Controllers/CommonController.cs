@@ -118,8 +118,10 @@ namespace Lottery.Api.Controllers
         }
 
         #region 日志
+        #if LogInfo
         public async Task<IActionResult> GetTimeLog([FromServices]IServiceProxyProvider _serviceProxyProvider,string DicName= "APITimeInfo")
         {
+            
             try
             {
                 var str = KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\"+ DicName + "\\", "");
@@ -135,10 +137,12 @@ namespace Lottery.Api.Controllers
                     Value = ex.ToGetMessage(),
                 });
             }
-        }
+
+    }
+    #endif
 
 
-    
+
         #endregion
         #region 按钮上的广告
         /// <summary>
@@ -167,7 +171,7 @@ namespace Lottery.Api.Controllers
             });
 
         }
-        #endregion
+#endregion
 
 
         public async Task<IActionResult> GetAPP_tuijianyouli([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)

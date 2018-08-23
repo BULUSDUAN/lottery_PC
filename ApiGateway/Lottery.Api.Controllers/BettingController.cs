@@ -123,11 +123,15 @@ namespace Lottery.Api.Controllers
                                     param.Add("password", balancePassword);
                                     param.Add("redBagMoney", redBagMoney);
                                     param.Add("userToken", userToken);
+#if LogInfo
                                     var st = new Stopwatch();
                                     st.Start();
+#endif
                                     var result=  await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/Sports_Betting");
+#if LogInfo
                                     st.Stop();
                                     Log4Log.LogEX(KLogLevel.TimeInfo, "投注足彩", "用时：" + st.Elapsed.TotalMilliseconds.ToString() + "毫秒");
+#endif
                                     //var result = WCFClients.GameClient.Sports_Betting(info, balancePassword, redBagMoney, userToken);
                                     //if (!result.IsSuccess)
                                     //    throw new Exception(result.Message);
@@ -225,19 +229,23 @@ namespace Lottery.Api.Controllers
                         var saveparam= new Dictionary<string, object>();
                         saveparam.Add("info", info);
                         saveparam.Add("userToken", userToken);
+#if LogInfo
                         var st = new Stopwatch();
                         st.Start();
+#endif
                         var result = IsSaveOrder == "0" ? await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/Sports_Betting") :
                             await _serviceProxyProvider.Invoke<CommonActionResult>(saveparam, "api/Betting/SaveOrderSportsBetting");
+#if LogInfo
                         st.Stop();
                         Log4Log.LogEX(KLogLevel.TimeInfo, "投注竞技足彩", "用时：" + st.Elapsed.TotalMilliseconds.ToString() + "毫秒");
+#endif
                         //var result = IsSaveOrder == "0" ? WCFClients.GameClient.Sports_Betting(info, balancePassword, redBagMoney, userToken) : WCFClients.GameClient.SaveOrderSportsBetting(info, userToken);
                         if (!result.IsSuccess)
                             throw new Exception(result.Message);
                         returnValue = result.ReturnValue;
                     }
 
-                    #endregion
+#endregion
                 }
                 else
                 {
@@ -289,13 +297,17 @@ namespace Lottery.Api.Controllers
                     saveparam.Add("info", info);
                     saveparam.Add("userToken", userToken);
                     //var c = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/LotteryBetting");
+#if LogInfo
                     var st = new Stopwatch();
                     st.Start();
+#endif
                     var result = IsSaveOrder == "0" ? await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/LotteryBetting") :
                            await _serviceProxyProvider.Invoke<CommonActionResult>(saveparam, "api/Betting/SaveOrderLotteryBetting");
                     //var result = IsSaveOrder == "0" ? WCFClients.GameClient.LotteryBetting(info, balancePassword, redBagMoney, userToken) : WCFClients.GameClient.SaveOrderLotteryBetting(info, userToken);
+#if LogInfo
                     st.Stop();
                     Log4Log.LogEX(KLogLevel.TimeInfo, "投注数字彩或传统足球", "用时：" + st.Elapsed.TotalMilliseconds.ToString() + "毫秒");
+#endif
                     if (!result.IsSuccess)
                         throw new Exception(result.Message);
                     returnValue = result.ReturnValue;
@@ -458,9 +470,9 @@ namespace Lottery.Api.Controllers
             }
         }
 
-        #endregion
+#endregion
 
-        #region 合买投注、参与合买投注(134,148)
+#region 合买投注、参与合买投注(134,148)
         /// <summary>
         /// 发起合买_134
         /// </summary>
@@ -729,9 +741,9 @@ namespace Lottery.Api.Controllers
                 });
             }
         }
-        #endregion
+#endregion
 
-        #region 网站优化投注(142)
+#region 网站优化投注(142)
         /// <summary>
         /// 优化投注_142
         /// </summary>
@@ -919,9 +931,9 @@ namespace Lottery.Api.Controllers
             }
         }
 
-        #endregion
+#endregion
 
-        #region 定制跟单(149,151)
+#region 定制跟单(149,151)
         /// <summary>
         /// 定制跟单_149
         /// </summary>
@@ -1065,9 +1077,9 @@ namespace Lottery.Api.Controllers
                 });
             }
         }
-        #endregion
+#endregion
 
-        #region 抄单投注(159)
+#region 抄单投注(159)
         /// <summary>
         /// 抄单投注_159
         /// </summary>
@@ -1106,7 +1118,7 @@ namespace Lottery.Api.Controllers
                 var sportArray = new string[] { "JCZQ" };
                 if (sportArray.Contains(gameCode))
                 {
-                    #region
+#region
                     //足球
                     _code =JsonHelper.Decode(_code);
                     _issuseList = JsonHelper.Decode(_issuseList);
@@ -1179,7 +1191,7 @@ namespace Lottery.Api.Controllers
                     });
                 }
 
-                #endregion
+#endregion
 
                 return Json(new LotteryServiceResponse
                 {
@@ -1210,9 +1222,9 @@ namespace Lottery.Api.Controllers
                 });
             }
         }
-        #endregion
+#endregion
 
-        #region 查询合买大厅(202)
+#region 查询合买大厅(202)
         /// <summary>
         /// 从Redis查询出合买订单数据_202
         /// </summary>
@@ -1325,57 +1337,59 @@ namespace Lottery.Api.Controllers
         //    }
         //}
 
-        //private static int _cacheRedisPort = 0;
-        ///// <summary>
-        ///// 缓存Redis的端口
-        ///// </summary>
-        //public static int CacheRedisPost
-        //{
-        //    get
-        //    {
-        //        try
-        //        {
-        //            if (_cacheRedisPort > 0)
-        //                return _cacheRedisPort;
-        //            _cacheRedisPort = int.Parse(ConfigHelper.ConfigInfo["CacheRedisPost"].ToString());
-        //            return _cacheRedisPort;
-        //        }
-        //        catch (Exception)
-        //        {
-        //            return 6379;
-        //        }
-        //    }
-        //}
+//private static int _cacheRedisPort = 0;
+///// <summary>
+///// 缓存Redis的端口
+///// </summary>
+//public static int CacheRedisPost
+//{
+//    get
+//    {
+//        try
+//        {
+//            if (_cacheRedisPort > 0)
+//                return _cacheRedisPort;
+//            _cacheRedisPort = int.Parse(ConfigHelper.ConfigInfo["CacheRedisPost"].ToString());
+//            return _cacheRedisPort;
+//        }
+//        catch (Exception)
+//        {
+//            return 6379;
+//        }
+//    }
+//}
 
-        //private static string _cacheRedisPassword = string.Empty;
-        ///// <summary>
-        ///// 缓存Redis的密码
-        ///// </summary>
-        //public static string CacheRedisPassword
-        //{
-        //    get
-        //    {
-        //        try
-        //        {
-        //            if (!string.IsNullOrEmpty(_cacheRedisPassword))
-        //                return _cacheRedisPassword;
-        //            _cacheRedisPassword = ConfigHelper.ConfigInfo["CacheRedisPassword"].ToString();
-        //            return _cacheRedisPassword;
-        //        }
-        //        catch (Exception)
-        //        {
-        //            return "123456";
-        //        }
-        //    }
-        //}
-        #endregion
+//private static string _cacheRedisPassword = string.Empty;
+///// <summary>
+///// 缓存Redis的密码
+///// </summary>
+//public static string CacheRedisPassword
+//{
+//    get
+//    {
+//        try
+//        {
+//            if (!string.IsNullOrEmpty(_cacheRedisPassword))
+//                return _cacheRedisPassword;
+//            _cacheRedisPassword = ConfigHelper.ConfigInfo["CacheRedisPassword"].ToString();
+//            return _cacheRedisPassword;
+//        }
+//        catch (Exception)
+//        {
+//            return "123456";
+//        }
+//    }
+//}
+#endregion
 
+#if LogInfo
         public async Task<IActionResult> GetTimeLog([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             Dictionary<string, object> param = new Dictionary<string, object>();
             param.Add("FileName", "");
-            var config = await _serviceProxyProvider.Invoke<string>(param, "api/Data/ReadSqlTimeLog");
+            var config = await _serviceProxyProvider.Invoke<string>(param, "api/Betting/ReadSqlTimeLog");
             return Content(config);
         }
+#endif
     }
 }

@@ -3016,7 +3016,7 @@ namespace Lottery.Api.Controllers
                 return defalutValue;
             }
         }
-
+        #if LogInfo
         public async Task<IActionResult> GetTimeLog([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             Dictionary<string, object> param = new Dictionary<string, object>();
@@ -3024,5 +3024,6 @@ namespace Lottery.Api.Controllers
             var config = await _serviceProxyProvider.Invoke<string>(param, "api/Data/ReadSqlTimeLog");
             return Content(config);
         }
+        #endif
     }
 }
