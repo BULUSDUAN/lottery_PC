@@ -10,7 +10,7 @@ namespace KaSon.FrameWork.ORM.Helper
     {
         public C_Auth_Users LoadUser(string userId)
         {
-            return DB.CreateQuery<C_Auth_Users>().FirstOrDefault(p => p.UserId == userId);
+            return DB.CreateQuery<C_Auth_Users>().Where(p => p.UserId == userId).FirstOrDefault();
         }
         public IList<C_Auth_Users> GetRoleListByIds(string[] roleIds)
         {

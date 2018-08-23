@@ -25,7 +25,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public KJGameIssuse QueryKJGameIssuse(string gameCode, string issuseNumber)
         {
            
-            return LottertDataDB.CreateQuery<KJGameIssuse>().FirstOrDefault(p=>p.GameCode == gameCode && p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<KJGameIssuse>().Where(p => p.GameCode == gameCode && p.IssuseNumber == issuseNumber).FirstOrDefault();
         }
 
         public KJGameIssuse QueryCurrentIssuseWithOffical(string gameCode)

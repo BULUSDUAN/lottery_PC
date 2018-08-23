@@ -16,7 +16,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public JXSSC_GameWinNumber QueryWinNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<JXSSC_GameWinNumber>().FirstOrDefault(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<JXSSC_GameWinNumber>().Where(p => p.IssuseNumber == issuseNumber).FirstOrDefault();
         }
         public List<JXSSC_GameWinNumber> QueryJXSSC_GameWinNumber(int pageIndex, int pageSize, out int totalCount)
         {

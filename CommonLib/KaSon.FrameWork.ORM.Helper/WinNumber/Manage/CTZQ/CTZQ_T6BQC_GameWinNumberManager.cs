@@ -17,7 +17,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         public CTZQ_T6BQC_GameWinNumber QueryWinNumber(string issuseNumber)
         {
              
-            return LottertDataDB.CreateQuery<CTZQ_T6BQC_GameWinNumber>().FirstOrDefault(p => p.IssuseNumber == issuseNumber);
+            return LottertDataDB.CreateQuery<CTZQ_T6BQC_GameWinNumber>().Where(p => p.IssuseNumber == issuseNumber).FirstOrDefault();
         }
 
         public void AddCTZQ_T4CJQ_GameWinNumber(CTZQ_T4CJQ_GameWinNumber entity)

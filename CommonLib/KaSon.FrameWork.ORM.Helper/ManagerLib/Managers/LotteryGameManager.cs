@@ -29,7 +29,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public C_Lottery_Game QueryLotteryGame(string gameCode)
         {
            // Session.Clear();
-            return this.DB.CreateQuery<C_Lottery_Game>().FirstOrDefault(p => p.GameCode == gameCode);
+            return this.DB.CreateQuery<C_Lottery_Game>().Where(p => p.GameCode == gameCode).FirstOrDefault();
         }
         public List<C_Lottery_Game> QueryAllGame()
         {

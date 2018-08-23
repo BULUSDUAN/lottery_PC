@@ -23,7 +23,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public C_Bonus_Rule GetBonusRule(string gameCode, string gameType, int bonusLevel)
         {
            // Session.Clear();
-            return this.DB.CreateQuery<C_Bonus_Rule>().FirstOrDefault(p => p.GameCode == gameCode && p.GameType == gameType && p.BonusGrade == bonusLevel);
+            return this.DB.CreateQuery<C_Bonus_Rule>().Where(p => p.GameCode == gameCode && p.GameType == gameType && p.BonusGrade == bonusLevel).FirstOrDefault();
         }
     }
 }

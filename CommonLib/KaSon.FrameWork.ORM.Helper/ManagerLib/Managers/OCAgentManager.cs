@@ -272,7 +272,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public C_User_Register Test_QueryUserRegister(string userId)
         {
          
-            return DB.CreateQuery<C_User_Register>().FirstOrDefault(s => s.UserId == userId);
+            return DB.CreateQuery<C_User_Register>().Where(s => s.UserId == userId).FirstOrDefault();
         }
         public void UpdateUserRigister(C_User_Register entity)
         {

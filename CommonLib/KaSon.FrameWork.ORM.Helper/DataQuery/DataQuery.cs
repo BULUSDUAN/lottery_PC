@@ -342,7 +342,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public C_App_Config QueryAppConfigByAgentId(string appAgentId)
         {
-            return DB.CreateQuery<C_App_Config>().FirstOrDefault(p => p.AppAgentId == appAgentId);
+            return DB.CreateQuery<C_App_Config>().Where(p => p.AppAgentId == appAgentId).FirstOrDefault();
         }
         #endregion
 
@@ -453,7 +453,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public E_SiteMessage_InnerMail_List_new QuerySiteMessageInnerMailListNewByMailId(string mailId)
         {
-            return DB.CreateQuery<E_SiteMessage_InnerMail_List_new>().FirstOrDefault(s => s.MailId == mailId);
+            return DB.CreateQuery<E_SiteMessage_InnerMail_List_new>().Where(s => s.MailId == mailId).FirstOrDefault();
         }
 
         /// <summary>
