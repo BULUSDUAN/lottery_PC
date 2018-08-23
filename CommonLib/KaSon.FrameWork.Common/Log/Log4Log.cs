@@ -15,7 +15,9 @@ namespace KaSon.FrameWork.Common
         GenError = 1,
         Info = 2,
         Debug = 3,
-        TimeInfo=4
+        TimeInfo = 4,
+        SevTimeInfo = 5,
+
     }
     public class Log4Log : IKgLog
     {
@@ -23,6 +25,9 @@ namespace KaSon.FrameWork.Common
         private static log4net.ILog infologger = null;
         private static log4net.ILog apiLogerror = null;
         private static log4net.ILog logWarning = null;
+
+        private static log4net.ILog timeInfoLog = null;
+        private static log4net.ILog sevTimeInfo = null;
         private static ILoggerRepository repository { get; set; }
         //ILog log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         static Log4Log()
@@ -49,6 +54,10 @@ namespace KaSon.FrameWork.Common
             errorlogger = LogManager.GetLogger(repository.Name, "logerror");
             infologger = LogManager.GetLogger(repository.Name, "loginfo");
             logWarning = LogManager.GetLogger(repository.Name, "logWarning");
+            timeInfoLog = LogManager.GetLogger(repository.Name, "ApiTimeInfo");
+            sevTimeInfo = LogManager.GetLogger(repository.Name, "SevtimeIoginfo");
+
+           // logWarning = LogManager.GetLogger(repository.Name, "logWarning");
             //logWarning
             // log4net.ILog logger = LogManager.GetLogger(typeof(Log4Log));
         }
@@ -62,9 +71,9 @@ namespace KaSon.FrameWork.Common
             }
             errorlogger.Error(name, ex);
         }
-        public static void LogEX(KLogLevel lev, string name, Exception ex)
+        public static void LogEX(KLogLevel lev, string name, object info=null)
         {
-
+            Exception ex = new Exception();
             switch (lev)
             {
                 case KLogLevel.APIError:
@@ -72,6 +81,7 @@ namespace KaSon.FrameWork.Common
                     {
                         apiLogerror = LogManager.GetLogger(repository.Name, "apiLogerror");
                     }
+                    ex = info as Exception;
                     apiLogerror.Error(name, ex);
                     break;
                 case KLogLevel.GenError:
@@ -79,13 +89,24 @@ namespace KaSon.FrameWork.Common
                     {
                         errorlogger = LogManager.GetLogger(repository.Name, "logerror");
                     }
+                     ex = info as Exception;
                     errorlogger.Error(name, ex);
                     break;
                 case KLogLevel.Info:
+                    ex = info as Exception;
                     infologger.Info(name, ex);
                     break;
                 case KLogLevel.Debug:
+                    ex = info as Exception;
                     logWarning.Info(name, ex);
+                    break;
+                case KLogLevel.TimeInfo:
+                    // string str = info as string;
+                    timeInfoLog.Info(name);
+                    break;
+                case KLogLevel.SevTimeInfo:
+                    // string str = info as string;
+                    sevTimeInfo.Info(name);
                     break;
                 default:
                     if (errorlogger == null)
@@ -97,6 +118,7 @@ namespace KaSon.FrameWork.Common
             }
            
         }
+     
         public void ErrrorLog(string name, Exception ex)
         {
             if (errorlogger == null)
