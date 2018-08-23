@@ -22,6 +22,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using KaSon.FrameWork.Common.ExceptionEx;
+using System.Diagnostics;
 
 namespace Lottery.Api.Controllers
 {
@@ -2754,12 +2755,19 @@ namespace Lottery.Api.Controllers
         private async Task<List<KaiJiang>> GetRedisList([FromServices]IServiceProxyProvider _serviceProxyProvider)
         {
             var key = RedisKeys.KaiJiang_Key;
+            var st = new Stopwatch();
+            st.Start();
             var flag = KaSon.FrameWork.Common.Redis.RedisHelper.KeyExists(key);
+            st.Stop();
+            Log4Log.LogEX(KLogLevel.TimeInfo, "redis判断是否有key"+ key, "用时：" + st.Elapsed.TotalMilliseconds.ToString() + "毫秒");
             var list = new List<KaiJiang>();
             var str = "";
             if (flag)
             {
+                st.Reset();
                 str = KaSon.FrameWork.Common.Redis.RedisHelper.StringGet(key);
+                st.Stop();
+                Log4Log.LogEX(KLogLevel.TimeInfo, "redis获取key："+ key, "用时：" + st.Elapsed.TotalMilliseconds.ToString() + "毫秒");
             }
             if (!string.IsNullOrEmpty(str))
             {
@@ -2793,7 +2801,9 @@ namespace Lottery.Api.Controllers
 
                 list[list.Count - 1].name = "TR9";
                 list[list.Count - 1].type = "任选9";
+                st.Reset();
                 KaSon.FrameWork.Common.Redis.RedisHelper.StringSet(key, JsonHelper.Serialize(list), 5 * 60);
+                Log4Log.LogEX(KLogLevel.TimeInfo, "redis设置key：" + key, "用时：" + st.Elapsed.TotalMilliseconds.ToString() + "毫秒");
             }
             return list;
         }

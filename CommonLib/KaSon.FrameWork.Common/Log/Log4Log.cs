@@ -14,7 +14,8 @@ namespace KaSon.FrameWork.Common
         APIError = 0,
         GenError = 1,
         Info = 2,
-        Debug = 3
+        Debug = 3,
+        TimeInfo=4
     }
     public class Log4Log : IKgLog
     {

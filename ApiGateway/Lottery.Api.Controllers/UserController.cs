@@ -24,6 +24,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using KaSon.FrameWork.Common.ExceptionEx;
+using System.Diagnostics;
 
 namespace Lottery.Api.Controllers
 {
@@ -1458,7 +1459,11 @@ namespace Lottery.Api.Controllers
                     throw new ArgumentException("传入参数信息有误！");
                 Dictionary<string, object> balanceParam = new Dictionary<string, object>();
                 balanceParam["userToken"] = userToken;
+                var st = new Stopwatch();
+                st.Start();
                 var balance = await _serviceProxyProvider.Invoke<UserBalanceInfo>(balanceParam, "api/user/QueryMyBalance");
+                st.Stop();
+                Log4Log.LogEX(KLogLevel.TimeInfo, "查询用户金额用时", "参数"+ userToken+"；用时："+st.Elapsed.TotalMilliseconds.ToString()+"毫秒");
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,

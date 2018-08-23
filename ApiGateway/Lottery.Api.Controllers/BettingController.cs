@@ -15,6 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using KaSon.FrameWork.Common.ExceptionEx;
+using System.Diagnostics;
 
 namespace Lottery.Api.Controllers
 {
@@ -122,7 +123,11 @@ namespace Lottery.Api.Controllers
                                     param.Add("password", balancePassword);
                                     param.Add("redBagMoney", redBagMoney);
                                     param.Add("userToken", userToken);
+                                    var st = new Stopwatch();
+                                    st.Start();
                                     var result=  await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/Sports_Betting");
+                                    st.Stop();
+                                    Log4Log.LogEX(KLogLevel.TimeInfo, "投注足彩", "用时：" + st.Elapsed.TotalMilliseconds.ToString() + "毫秒");
                                     //var result = WCFClients.GameClient.Sports_Betting(info, balancePassword, redBagMoney, userToken);
                                     //if (!result.IsSuccess)
                                     //    throw new Exception(result.Message);
@@ -220,8 +225,12 @@ namespace Lottery.Api.Controllers
                         var saveparam= new Dictionary<string, object>();
                         saveparam.Add("info", info);
                         saveparam.Add("userToken", userToken);
+                        var st = new Stopwatch();
+                        st.Start();
                         var result = IsSaveOrder == "0" ? await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/Sports_Betting") :
                             await _serviceProxyProvider.Invoke<CommonActionResult>(saveparam, "api/Betting/SaveOrderSportsBetting");
+                        st.Stop();
+                        Log4Log.LogEX(KLogLevel.TimeInfo, "投注竞技足彩", "用时：" + st.Elapsed.TotalMilliseconds.ToString() + "毫秒");
                         //var result = IsSaveOrder == "0" ? WCFClients.GameClient.Sports_Betting(info, balancePassword, redBagMoney, userToken) : WCFClients.GameClient.SaveOrderSportsBetting(info, userToken);
                         if (!result.IsSuccess)
                             throw new Exception(result.Message);
@@ -280,9 +289,13 @@ namespace Lottery.Api.Controllers
                     saveparam.Add("info", info);
                     saveparam.Add("userToken", userToken);
                     //var c = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/LotteryBetting");
+                    var st = new Stopwatch();
+                    st.Start();
                     var result = IsSaveOrder == "0" ? await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/LotteryBetting") :
                            await _serviceProxyProvider.Invoke<CommonActionResult>(saveparam, "api/Betting/SaveOrderLotteryBetting");
                     //var result = IsSaveOrder == "0" ? WCFClients.GameClient.LotteryBetting(info, balancePassword, redBagMoney, userToken) : WCFClients.GameClient.SaveOrderLotteryBetting(info, userToken);
+                    st.Stop();
+                    Log4Log.LogEX(KLogLevel.TimeInfo, "投注数字彩或传统足球", "用时：" + st.Elapsed.TotalMilliseconds.ToString() + "毫秒");
                     if (!result.IsSuccess)
                         throw new Exception(result.Message);
                     returnValue = result.ReturnValue;
