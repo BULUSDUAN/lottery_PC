@@ -136,7 +136,7 @@ namespace KaSon.FrameWork.ORM.Helper
 #endif
 
                     var uQueryRoles = (from p in DB.CreateQuery<C_Auth_Roles>()
-                                       select new SystemRole()
+                                       select p).ToList().Select(p=> new SystemRole()
                                        {
                                            RoleId = p.RoleId,
                                            RoleName = p.RoleName,
@@ -206,7 +206,7 @@ namespace KaSon.FrameWork.ORM.Helper
                                             on b.UserId equals d.UserId
                                             where d.UserId == LoginUsers.UserId
                                             select b
-                                             ).Select(p => new UserFunction()
+                                             ).ToList().Select(p => new UserFunction()
                                              {
                                                  FunctionId = p.FunctionId,
                                                  IId = p.IId,
@@ -232,15 +232,33 @@ namespace KaSon.FrameWork.ORM.Helper
 
                     }
 
+                    string userId = LoginUsers.UserId;
 
-                    LoginUsers.Register = DB.CreateQuery<C_User_Register>().Where(p => p.UserId == LoginUsers.UserId).Select(p=>new UserRegister() {
+                    LoginUsers.Register = (from p in DB.CreateQuery<C_User_Register>()
+                                           where p.UserId == userId
+                                           select p).ToList().Select(p=> new UserRegister()
+                                           {
 
-                        AgentId=p.AgentId, ComeFrom=p.ComeFrom, CreateTime=p.CreateTime, DisplayName=p.DisplayName, HideDisplayNameCount=p.HideDisplayNameCount,
-                        IsAgent=p.IsAgent, IsEnable=p.IsEnable,  IsFillMoney=p.IsFillMoney, IsIgnoreReport=p.IsIgnoreReport, ParentPath=p.ParentPath, Referrer=p.Referrer,
-                        ReferrerUrl=p.ReferrerUrl, RegisterIp=p.RegisterIp, RegType=p.RegType, UserId=p.UserId, UserType=p.UserType, VipLevel=p.VipLevel
-                    }).FirstOrDefault();
+                                               AgentId = p.AgentId,
+                                               ComeFrom = p.ComeFrom,
+                                               CreateTime = p.CreateTime,
+                                               DisplayName = p.DisplayName,
+                                               HideDisplayNameCount = p.HideDisplayNameCount,
+                                               IsAgent = p.IsAgent,
+                                               IsEnable = p.IsEnable,
+                                               IsFillMoney = p.IsFillMoney,
+                                               IsIgnoreReport = p.IsIgnoreReport,
+                                               ParentPath = p.ParentPath,
+                                               Referrer = p.Referrer,
+                                               ReferrerUrl = p.ReferrerUrl,
+                                               RegisterIp = p.RegisterIp,
+                                               RegType = p.RegType,
+                                               UserId = p.UserId,
+                                               UserType = p.UserType,
+                                               VipLevel = p.VipLevel
+                                           }).FirstOrDefault();
 
-                   
+
 
                     LoginUsers.Register.IsEnable = LoginUsers.Register.IsEnable;
 
