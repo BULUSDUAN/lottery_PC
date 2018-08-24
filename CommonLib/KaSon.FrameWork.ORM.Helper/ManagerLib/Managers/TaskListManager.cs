@@ -139,23 +139,23 @@ namespace KaSon.FrameWork.ORM.Helper
             /// </summary>
             public List<TaskListInfo> QueryCompleteTaskList(string userId, DateTime starTime, DateTime endTime, int pageIndex, int pageSize, out int totalCount)
             {
-               
-                var query = from r in DB.CreateQuery<E_TaskList>()
-                            where (r.UserId == userId && r.IsGive == true)
-                            && (r.CreateTime >= starTime && r.CreateTime < endTime)
-                            orderby r.CreateTime descending
-                            select new TaskListInfo
-                            {
-                                UserId = r.UserId,
-                                OrderId = r.OrderId,
-                                TaskName = r.TaskName,
-                                Content = r.Content,
-                                TaskCategory = (TaskCategory)r.TaskCategory,
-                                ValueGrowth = r.ValueGrowth,
-                                CreateTime = r.CreateTime,
-                            };
+
+            var query = from r in DB.CreateQuery<E_TaskList>()
+                        where (r.UserId == userId && r.IsGive == true)
+                        && (r.CreateTime >= starTime && r.CreateTime < endTime)
+                        orderby r.CreateTime descending
+                        select r;
                 totalCount = query.Count();
-                return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+                return query.Skip(pageIndex * pageSize).Take(pageSize).ToList().Select(p=>new TaskListInfo
+                {
+                    UserId = p.UserId,
+                    OrderId = p.OrderId,
+                    TaskName = p.TaskName,
+                    Content = p.Content,
+                    TaskCategory = (TaskCategory)p.TaskCategory,
+                    ValueGrowth = p.ValueGrowth,
+                    CreateTime = p.CreateTime,
+                }).ToList();
             }
 
         /// <summary>
@@ -229,14 +229,14 @@ namespace KaSon.FrameWork.ORM.Helper
                         join u in DB.CreateQuery<C_User_Register>() on r.UserId equals u.UserId
                         where r.IsGive == true
                         orderby r.CreateTime descending
-                        select new TaskHotTodayInfo
-                        {
-                            DisplayName = u.DisplayName,
-                            UserId = r.UserId,
-                            TaskName = r.TaskName,
-                            ValueGrowth = r.ValueGrowth,
-                        };
-            return query.Take(lenth).ToList();
+                        select new { r, u };
+            return query.Take(lenth).ToList().Select(p=>new TaskHotTodayInfo
+            {
+                DisplayName = p.u.DisplayName,
+                UserId = p.r.UserId,
+                TaskName = p.r.TaskName,
+                ValueGrowth = p.r.ValueGrowth,
+            }).ToList();
         }
 
         /// <summary>

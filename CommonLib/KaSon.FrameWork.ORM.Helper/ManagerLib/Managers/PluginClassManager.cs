@@ -32,9 +32,9 @@ namespace KaSon.FrameWork.ORM.Helper
         public List<C_Activity_PluginClass> QueryPluginClassByInterfaceName(string interfaceName, int pageIndex, int pageSize, out int totalCount)
         {
            // Session.Clear();
-            var query = (from a in DB.CreateQuery<C_Activity_PluginClass>()
+            var query = from a in DB.CreateQuery<C_Activity_PluginClass>()
                         where (a.InterfaceName == interfaceName)
-                        select a).ToList();
+                        select a;
             totalCount = query.ToList().Count;
             return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
         }

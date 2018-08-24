@@ -576,7 +576,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var query = (from r in DB.CreateQuery<E_Blog_UserShareSpread>()
                         join u in DB.CreateQuery<C_User_Register>() on r.UserId equals u.UserId
                         where (r.AgentId == userId)
-                        select new { r,u}).ToList();
+                        select new { r,u});
             if (query != null && query.Count() > 0)
             {
                 userTotalCount = query.Count();//总人数

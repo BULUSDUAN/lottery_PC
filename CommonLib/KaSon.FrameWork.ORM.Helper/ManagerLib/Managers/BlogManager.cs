@@ -48,33 +48,34 @@ namespace KaSon.FrameWork.ORM.Helper
                 pageIndex = pageIndex < 0 ? 0 : pageIndex;
                 pageSize = pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : pageSize;
 
-                var query = from r  in DB.CreateQuery<E_Blog_Dynamic>()
-                            join u1 in DB.CreateQuery<C_User_Register>() on r.UserId equals u1.UserId
-                            join u2 in DB.CreateQuery<C_User_Register>() on r.UserId2 equals u2.UserId
-                            where (r.UserId == userId)
-                            orderby r.CreateTime descending
-                            select new ProfileDynamicInfo
-                            {
-                                UserId = r.UserId,
-                                UserDisplayName = r.UserDisplayName,
-                                HideDisplayNameCount = u1.HideDisplayNameCount,
-                                UserId2 = r.UserId2,
-                                User2DisplayName = r.User2DisplayName,
-                                User2HideDisplayNameCount = u2.HideDisplayNameCount,
-                                GameCode = r.GameCode,
-                                GameType = r.GameType,
-                                Subscription = r.Subscription,
-                                DynamicType = r.DynamicType,
-                                IssuseNumber = r.IssuseNumber,
-                                Guarantees = r.Guarantees,
-                                Progress = r.Progress,
-                                SchemeId = r.SchemeId,
-                                Price = r.Price,
-                                TotalMonery = r.TotalMonery,
-                                CreateTime = r.CreateTime,
-                            };
+            var query = from r in DB.CreateQuery<E_Blog_Dynamic>()
+                        join u1 in DB.CreateQuery<C_User_Register>() on r.UserId equals u1.UserId
+                        join u2 in DB.CreateQuery<C_User_Register>() on r.UserId2 equals u2.UserId
+                        where (r.UserId == userId)
+                        orderby r.CreateTime descending
+                        select new { r, u1,u2 };
+                            
                 totalCount = query.Count();
-                return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+                return query.Skip(pageIndex * pageSize).Take(pageSize).ToList().Select(p=> new ProfileDynamicInfo
+                {
+                    UserId = p.r.UserId,
+                    UserDisplayName = p.r.UserDisplayName,
+                    HideDisplayNameCount = p.u1.HideDisplayNameCount,
+                    UserId2 = p.r.UserId2,
+                    User2DisplayName = p.r.User2DisplayName,
+                    User2HideDisplayNameCount = p.u2.HideDisplayNameCount,
+                    GameCode = p.r.GameCode,
+                    GameType = p.r.GameType,
+                    Subscription = p.r.Subscription,
+                    DynamicType = p.r.DynamicType,
+                    IssuseNumber = p.r.IssuseNumber,
+                    Guarantees = p.r.Guarantees,
+                    Progress = p.r.Progress,
+                    SchemeId = p.r.SchemeId,
+                    Price = p.r.Price,
+                    TotalMonery = p.r.TotalMonery,
+                    CreateTime = p.r.CreateTime,
+                }).ToList();
             }
 
             #region 用户统计数据
@@ -157,22 +158,22 @@ namespace KaSon.FrameWork.ORM.Helper
             /// </summary>
             public List<ProfileLastBonusInfo> QueryProfileLastBonusList(string userId, out int totalCount)
             {
-          
-                var query = from r in DB.CreateQuery<E_Blog_NewProfileLastBonus>()
-                            where (r.UserId == userId)
-                            orderby r.BonusTime descending
-                            select new ProfileLastBonusInfo
-                            {
-                                UserId = r.UserId,
-                                GameCode = r.GameCode,
-                                GameType = r.GameType,
-                                IssuseNumber = r.IssuseNumber,
-                                BonusMoney = r.BonusMoney,
-                                SchemeId = r.SchemeId,
-                                BonusTime = r.BonusTime,
-                            };
+
+            var query = from r in DB.CreateQuery<E_Blog_NewProfileLastBonus>()
+                        where (r.UserId == userId)
+                        orderby r.BonusTime descending
+                        select r;
                 totalCount = query.Count();
-                return query.Take(10).ToList();
+                return query.Take(10).ToList().Select(p=> new ProfileLastBonusInfo
+                {
+                    UserId = p.UserId,
+                    GameCode = p.GameCode,
+                    GameType = p.GameType,
+                    IssuseNumber = p.IssuseNumber,
+                    BonusMoney = p.BonusMoney,
+                    SchemeId = p.SchemeId,
+                    BonusTime = p.BonusTime,
+                }).ToList();
             }
 
             #region 用户登陆历史
@@ -196,20 +197,20 @@ namespace KaSon.FrameWork.ORM.Helper
             /// </summary>
             public List<UserLoginHistoryInfo> QueryBlog_UserLoginHistory(string userId)
             {
-             
-                var query = from pb in DB.CreateQuery<E_Blog_UserLoginHistory>()
-                            where (pb.UserId == userId)
-                            orderby pb.LoginTime descending
-                            select new UserLoginHistoryInfo
-                            {
-                                UserId = pb.UserId,
-                                Id = pb.Id,
-                                LoginFrom = pb.LoginFrom,
-                                IpDisplayName = pb.IpDisplayName,
-                                LoginIp = pb.LoginIp,
-                                LoginTime = pb.LoginTime
-                            };
-                return query.Take(10).ToList();
+
+            var query = from pb in DB.CreateQuery<E_Blog_UserLoginHistory>()
+                        where (pb.UserId == userId)
+                        orderby pb.LoginTime descending
+                        select pb;
+                return query.Take(10).ToList().Select(p=> new UserLoginHistoryInfo
+                {
+                    UserId = p.UserId,
+                    Id = p.Id,
+                    LoginFrom = p.LoginFrom,
+                    IpDisplayName = p.IpDisplayName,
+                    LoginIp = p.LoginIp,
+                    LoginTime = p.LoginTime
+                }).ToList();
             }
 
             public UserLoginHistoryInfo QueryLastLoginInfo(string userId)
@@ -263,18 +264,18 @@ namespace KaSon.FrameWork.ORM.Helper
                             join r in DB.CreateQuery<E_Blog_ProfileBonusLevel>() on pb.VisitUserId equals r.UserId
                             where (pb.UserId == userId)
                             orderby pb.CreateTime descending
-                            select new ProfileVisitHistoryInfo
-                            {
-                                UserId = pb.UserId,
-                                MaxLevelName = r.MaxLevelName,
-                                IpDisplayName = pb.IpDisplayName,
-                                VisitUserId = pb.VisitUserId,
-                                VisitorHideNameCount = pb.VisitorHideNameCount,
-                                VisitorUserDisplayName = pb.VisitorUserDisplayName,
-                                VisitorIp = pb.VisitorIp,
-                                CreateTime = DateTime.Now,
-                            };
-                return query.Take(10).ToList();
+                            select new {pb,r};
+                return query.Take(10).ToList().Select(p=> new ProfileVisitHistoryInfo
+                {
+                    UserId = p.pb.UserId,
+                    MaxLevelName = p.r.MaxLevelName,
+                    IpDisplayName = p.pb.IpDisplayName,
+                    VisitUserId = p.pb.VisitUserId,
+                    VisitorHideNameCount = p.pb.VisitorHideNameCount,
+                    VisitorUserDisplayName = p.pb.VisitorUserDisplayName,
+                    VisitorIp = p.pb.VisitorIp,
+                    CreateTime = DateTime.Now,
+                }).ToList();
             }
 
             #endregion
@@ -311,24 +312,11 @@ namespace KaSon.FrameWork.ORM.Helper
             /// </summary>
             public List<E_Blog_UserSpread> QueryBlog_UserSpreadList(string userId, int pageIndex, int pageSize, DateTime begin, DateTime end, out int totalCount)
             {
-              
-                var query = from r in DB.CreateQuery<E_Blog_UserSpread>()
-                            where (r.AgentId == userId && r.CrateTime <= end && r.CrateTime >= begin)
-                            orderby r.CrateTime descending
-                            select new E_Blog_UserSpread
-                            {
-                                UserId = r.UserId,
-                                userName = r.userName,
-                                AgentId = r.AgentId,
-                                CrateTime = r.CrateTime,
-                                CTZQ = r.CTZQ,
-                                BJDC = r.BJDC,
-                                JCZQ = r.JCZQ,
-                                JCLQ = r.JCLQ,
-                                SZC = r.SZC,
-                                GPC = r.GPC,
-                                UpdateTime = r.UpdateTime
-                            };
+
+            var query = from r in DB.CreateQuery<E_Blog_UserSpread>()
+                        where (r.AgentId == userId && r.CrateTime <= end && r.CrateTime >= begin)
+                        orderby r.CrateTime descending
+                        select r;
                 totalCount = query.Count();
                 return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
             }

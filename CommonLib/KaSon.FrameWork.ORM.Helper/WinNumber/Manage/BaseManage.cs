@@ -26,7 +26,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
 
         public List<T> QueryTList(int index,Expression<Func<T,bool>> Orderby)
         {
-            var query = DB.CreateQuery<T>().OrderBy(Orderby).ToList().Take(index);
+            var query = DB.CreateQuery<T>().OrderBy(Orderby).Take(index);
             return query.ToList();
         }
 
