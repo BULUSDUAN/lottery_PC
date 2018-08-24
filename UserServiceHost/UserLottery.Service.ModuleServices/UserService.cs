@@ -56,14 +56,14 @@ namespace UserLottery.Service.ModuleServices
         //    this._repository = repository;
         //}
         private readonly UserRepository _repository;
-        
+
         IKgLog log = null;
         public UserService(UserRepository repository) : base()
         {
             this._repository = repository;
             log = new Log4Log();
         }
-       
+
 
         // log demo
         /// <summary>
@@ -79,7 +79,7 @@ namespace UserLottery.Service.ModuleServices
         private UserAuthentication userAuthentication = new UserAuthentication();
         LoginLocal loginEntity = new LoginLocal();
         //private BusinessHelper businessHelper;
-        public Task<LoginInfo> User_Login(string loginName, string password,string loginIp)
+        public Task<LoginInfo> User_Login(string loginName, string password, string loginIp)
         {
 
             try
@@ -111,7 +111,7 @@ namespace UserLottery.Service.ModuleServices
                 var authBiz = new GameBizAuthBusiness();
                 var userToken = authBiz.GetUserToken(loginEntity.User.UserId);
 
-                var blogEntity = loginBiz.QueryBlog_ProfileBonusLevel(loginEntity.User.UserId);
+                //var blogEntity = loginBiz.QueryBlog_ProfileBonusLevel(loginEntity.User.UserId);
 
                 ////清理用户绑定数据缓存
                 ////ClearUserBindInfoCache(loginEntity.UserId);
@@ -141,17 +141,17 @@ namespace UserLottery.Service.ModuleServices
                     AgentId = loginEntity.Register.AgentId,
                     IsAgent = loginEntity.Register.IsAgent,
                     HideDisplayNameCount = loginEntity.Register.HideDisplayNameCount,
-                    MaxLevelName = string.IsNullOrEmpty(blogEntity.MaxLevelName) ? "" : blogEntity.MaxLevelName,
+                    MaxLevelName = "幸运彩民", //string.IsNullOrEmpty(blogEntity.MaxLevelName) ? "" : blogEntity.MaxLevelName,
                     IsUserType = loginEntity.Register.UserType == 1 ? true : false
                 });
             }
             catch (Exception ex)
             {
 
-                throw new Exception(ex.Message,ex);
+                throw new Exception(ex.Message, ex);
             }
-           
-           
+
+
         }
 
         /// <summary>
@@ -240,7 +240,7 @@ namespace UserLottery.Service.ModuleServices
 
                 throw new Exception(ex.Message, ex);
             }
-          
+
         }
 
         public bool IsRoleType(SystemUser user, RoleType roleType)
@@ -261,7 +261,7 @@ namespace UserLottery.Service.ModuleServices
 
                 throw new Exception(ex.Message, ex);
             }
-           
+
         }
 
         /// <summary>
@@ -288,7 +288,7 @@ namespace UserLottery.Service.ModuleServices
 
                 throw new Exception(ex.Message, ex);
             }
-          
+
         }
 
         /// <summary>
@@ -296,7 +296,8 @@ namespace UserLottery.Service.ModuleServices
         /// </summary>
         /// <param name="userId">用户ID</param>
         /// <returns></returns>
-        public Task<UserBindInfos> QueryUserBindInfos(string userId) {
+        public Task<UserBindInfos> QueryUserBindInfos(string userId)
+        {
 
             try
             {
@@ -319,7 +320,7 @@ namespace UserLottery.Service.ModuleServices
 
                 throw new Exception(ex.Message, ex);
             }
-           
+
         }
 
         /// <summary>
@@ -343,7 +344,7 @@ namespace UserLottery.Service.ModuleServices
             catch (Exception ex)
             {
                 throw new Exception(ex.Message, ex);
-              
+
             }
         }
 
@@ -403,7 +404,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new Exception("查询我的余额出错 - " + ex.Message,ex);
+                throw new Exception("查询我的余额出错 - " + ex.Message, ex);
             }
         }
 
@@ -430,10 +431,10 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message,ex);
+                throw new Exception(ex.Message, ex);
             }
         }
-        
+
 
         /// <summary>
         /// 获取我的未读站内信条数
@@ -456,7 +457,7 @@ namespace UserLottery.Service.ModuleServices
 
                 throw new Exception(ex.Message, ex);
             }
-           
+
         }
 
 
@@ -522,7 +523,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message,ex);
+                throw new Exception(ex.Message, ex);
             }
         }
 
@@ -543,7 +544,7 @@ namespace UserLottery.Service.ModuleServices
             {
                 throw new Exception(ex.Message, ex);
             }
-         
+
 
         }
 
@@ -563,7 +564,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message,ex);
+                throw new Exception(ex.Message, ex);
             }
         }
 
@@ -590,7 +591,7 @@ namespace UserLottery.Service.ModuleServices
 
                 throw new Exception(ex.Message, ex);
             }
-         
+
         }
 
 
@@ -628,7 +629,7 @@ namespace UserLottery.Service.ModuleServices
 
                 throw new Exception(ex.Message, ex);
             }
-           
+
             //else
             //{
             //    entity = new UserMobile
@@ -717,11 +718,11 @@ namespace UserLottery.Service.ModuleServices
         /// <param name="source"></param>
         /// <param name="info"></param>
         /// <returns></returns>
-        public Task<CommonActionResult> RegisterResponseMobile(string validateCode, string mobile, SchemeSource source, RegisterInfo_Local info,string fxid)
+        public Task<CommonActionResult> RegisterResponseMobile(string validateCode, string mobile, SchemeSource source, RegisterInfo_Local info, string fxid)
         {
             try
             {
-                
+
                 if (string.IsNullOrEmpty(validateCode))
                     throw new Exception("验证码不能为空");
                 var isCheckValidateCode = false;
@@ -737,8 +738,8 @@ namespace UserLottery.Service.ModuleServices
                 if (!isCheckValidateCode)
                 {
                     throw new Exception("验证码输入不正确。");
-                }               
-                    info.Referrer = fxid == "0"? "mobile_regist": "fxid_regist";
+                }
+                info.Referrer = fxid == "0" ? "mobile_regist" : "fxid_regist";
                 //注册
                 var userResult = RegisterLoacal(info, fxid);
                 if (userResult == null || string.IsNullOrEmpty(userResult.ReturnValue))
@@ -746,10 +747,10 @@ namespace UserLottery.Service.ModuleServices
                 string mobileNumber;
                 mobileNumber = authenticationBiz.RegisterResponseMobile(userResult.ReturnValue, mobile, 1800, "半个小时");
 
-               
+
                 //! 执行扩展功能代码 - 提交事务后
                 BusinessHelper.ExecPlugin<IResponseAuthentication_AfterTranCommit>(new object[] { userResult.ReturnValue, "Mobile", mobileNumber, source });
-              
+
                 return Task.FromResult(new CommonActionResult(true, "恭喜您注册成功！"));
             }
             catch (Exception ex)
@@ -763,7 +764,7 @@ namespace UserLottery.Service.ModuleServices
         {
             //if (UsefullHelper.IsInTest)
             //{
-          return time;
+            return time;
             //}
             //return time;
         }
@@ -820,7 +821,7 @@ namespace UserLottery.Service.ModuleServices
 
 
 
-                var success = new RegisterBusiness().UserRegister(regInfo,fxid);
+                var success = new RegisterBusiness().UserRegister(regInfo, fxid);
 
 
                 //! 执行扩展功能代码 - 提交事务后
@@ -839,9 +840,9 @@ namespace UserLottery.Service.ModuleServices
 
                 throw new Exception(ex.Message, ex);
             }
-          
+
         }
-     
+
 
 
         /// <summary>
@@ -856,7 +857,7 @@ namespace UserLottery.Service.ModuleServices
             {
                 var validateCode = GetRandomMobileValidateCode();
 
-              
+
 
                 var authenticationBiz = new MobileAuthenticationBusiness();
                 authenticationBiz.RegisterRequestMobile(mobile);
@@ -876,7 +877,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-               
+
                 return Task.FromResult(new CommonActionResult(false, ex.Message));
             }
         }
@@ -904,7 +905,7 @@ namespace UserLottery.Service.ModuleServices
 
                 throw new Exception(ex.Message, ex);
             }
-         
+
         }
         #endregion
 
@@ -947,7 +948,7 @@ namespace UserLottery.Service.ModuleServices
 
                 throw new Exception(ex.Message, ex);
             }
-         
+
         }
 
         /// <summary>
@@ -969,7 +970,7 @@ namespace UserLottery.Service.ModuleServices
 
                 throw new Exception(ex.Message, ex);
             }
-           
+
         }
 
 
@@ -1036,7 +1037,7 @@ namespace UserLottery.Service.ModuleServices
 
                 throw new Exception(ex.Message, ex);
             }
-          
+
         }
         #endregion
 
@@ -1068,7 +1069,7 @@ namespace UserLottery.Service.ModuleServices
 
                 throw new Exception(ex.Message, ex);
             }
-         
+
         }
 
         /// <summary>
@@ -1087,14 +1088,14 @@ namespace UserLottery.Service.ModuleServices
             {
                 var biz = new FundBusiness();
                 biz.SetBalancePassword(userId, oldPassword, isSetPwd, newPassword);
-              
+
                 BusinessHelper.ExecPlugin<IBalancePassword>(new object[] { userId, oldPassword, isSetPwd, newPassword });
-               
+
                 return Task.FromResult(new CommonActionResult { IsSuccess = true, Message = "操作资金密码完成" });
             }
             catch (Exception ex)
             {
-                throw new Exception("操作资金密码出错 - " + ex.Message,ex);
+                throw new Exception("操作资金密码出错 - " + ex.Message, ex);
             }
         }
 
@@ -1142,7 +1143,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new Exception("设置资金密码类型出错 - " + ex.Message,ex);
+                throw new Exception("设置资金密码类型出错 - " + ex.Message, ex);
             }
         }
 
@@ -1161,7 +1162,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new Exception("查询某个yqid下面的能满足领红包条件的用户个数出错 - " + ex.Message,ex);
+                throw new Exception("查询某个yqid下面的能满足领红包条件的用户个数出错 - " + ex.Message, ex);
             }
         }
         /// <summary>
@@ -1230,10 +1231,10 @@ namespace UserLottery.Service.ModuleServices
                 //清理用户绑定数据缓存
                 ClearUserBindInfoCache(userId);
 
-               
+
                 //! 执行扩展功能代码 - 提交事务后
                 BusinessHelper.ExecPlugin<IResponseAuthentication_AfterTranCommit>(new object[] { userId, "RealName", RealName + "|" + IdCardNumber, source });
-              
+
 
                 return Task.FromResult(new CommonActionResult(true, "实名认证成功。"));
             }
@@ -1271,14 +1272,14 @@ namespace UserLottery.Service.ModuleServices
                 new BankCardBusiness().AddBankCard(bankCard);
                 new CacheDataBusiness().ClearUserBindInfoCache(userId);
                 //绑定银行卡之后实现接口
-            
+
                 BusinessHelper.ExecPlugin<IAddBankCard>(new object[] { bankCard.UserId, bankCard.BankCardNumber, bankCard.BankCode, bankCard.BankName, bankCard.BankSubName, bankCard.CityName, bankCard.ProvinceName, bankCard.RealName });
-               
+
                 return Task.FromResult(new CommonActionResult(true, "添加银行卡信息成功"));
             }
             catch (Exception ex)
             {
-                throw new Exception("添加银行卡信息出错 - " + ex.Message,ex);
+                throw new Exception("添加银行卡信息出错 - " + ex.Message, ex);
             }
         }
 
@@ -1297,7 +1298,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new Exception("申请提现出错 - " + ex.Message,ex);
+                throw new Exception("申请提现出错 - " + ex.Message, ex);
             }
         }
 
@@ -1321,7 +1322,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new Exception("申请提现出错 - " + ex.Message,ex);
+                throw new Exception("申请提现出错 - " + ex.Message, ex);
             }
         }
 
@@ -1338,7 +1339,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new Exception("查询我的提现记录列表 - " + ex.Message,ex);
+                throw new Exception("查询我的提现记录列表 - " + ex.Message, ex);
             }
         }
 
@@ -1355,13 +1356,13 @@ namespace UserLottery.Service.ModuleServices
         {
             try
             {
-               var fub= new FundBusiness();
+                var fub = new FundBusiness();
                 _BankCardList = fub.QueryBankInfo(bankCode);
                 return Task.FromResult(_BankCardList);
             }
             catch (Exception ex)
             {
-                throw new Exception("出错 - " + ex.Message,ex);
+                throw new Exception("出错 - " + ex.Message, ex);
             }
         }
 
@@ -1411,7 +1412,7 @@ namespace UserLottery.Service.ModuleServices
         {
             if (string.IsNullOrEmpty(FileName)) FileName = "SQLInfo";//SevTimeIoginfo 服务时间
 
-            return Task.FromResult(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\"+ FileName, "LogTime_"));
+            return Task.FromResult(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\" + FileName, "LogTime_"));
         }
         //public Task<string> ReadSevTimeLog(string FileName)
         //{

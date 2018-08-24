@@ -11,26 +11,28 @@ namespace KaSon.FrameWork.ORM.Helper
 {
     public class UserAuthentication : DBbase
     {
-        private static List<C_Auth_MethodFunction_List> _allMethodFunctionList = new List<C_Auth_MethodFunction_List>();
+        //private static List<C_Auth_MethodFunction_List> _allMethodFunctionList = new List<C_Auth_MethodFunction_List>();
         /// <summary>
         /// 验证用户是否具有该方法的权限
         /// </summary>
         public string ValidateUserAuthentication(string userToken)
         {
-            if (_allMethodFunctionList == null || _allMethodFunctionList.Count == 0)
-            {
+            //List<C_Auth_MethodFunction_List> _allMethodFunctionList = new List<C_Auth_MethodFunction_List>();
+            //if (_allMethodFunctionList == null || _allMethodFunctionList.Count == 0)
+            //{
 
-                _allMethodFunctionList = DB.CreateQuery<C_Auth_MethodFunction_List>().ToList();
-            }
+            //    _allMethodFunctionList = DB.CreateQuery<C_Auth_MethodFunction_List>().ToList();
+            //}
 
-            var method = new System.Diagnostics.StackFrame(1).GetMethod();
-            var currentFullName = string.Format("{0}.{1}", method.ReflectedType.FullName, method.Name);
-            var config = _allMethodFunctionList.Where(p => p.MethodFullName == currentFullName).FirstOrDefault();
-            if (config == null)
-                throw new Exception(string.Format("没有配置方法 {0} 的调用权限数据", currentFullName));
+            //var method = new System.Diagnostics.StackFrame(1).GetMethod();
+            //var currentFullName = string.Format("{0}.{1}", method.ReflectedType.FullName, method.Name);
+            //var config = _allMethodFunctionList.Where(p => p.MethodFullName == currentFullName).FirstOrDefault();
+            //if (config == null)
+            //    throw new Exception(string.Format("没有配置方法 {0} 的调用权限数据", currentFullName));
 
             var userId = string.Empty;
-            ValidateAuthentication(userToken, config.Mode, config.FunctionId, out userId);
+            //ValidateAuthentication(userToken, config.Mode, config.FunctionId, out userId);
+            ValidateAuthentication_new(userToken, out userId);
             return userId;
         }
         /// <summary>
@@ -41,6 +43,23 @@ namespace KaSon.FrameWork.ORM.Helper
             try
             {
                 var rlt = ValidateAuthentication(userToken, needRight, functionId, "LI");
+                if (!rlt.ContainsKey("LI"))
+                {
+                    throw new Exception("UserToken不完整，缺少UserId信息");
+                }
+                userId = rlt["LI"];
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("用户身份验证失败，请检查是否已登录", ex);
+            }
+        }
+
+        public static void ValidateAuthentication_new(string userToken, out string userId)
+        {
+            try
+            {
+                var rlt = UserTokenHandler.AnalyzeUserToken(userToken);
                 if (!rlt.ContainsKey("LI"))
                 {
                     throw new Exception("UserToken不完整，缺少UserId信息");

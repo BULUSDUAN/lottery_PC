@@ -21,17 +21,18 @@ namespace KaSon.FrameWork.ORM.Helper
         public string GetUserToken(string userId)
         {
 
-            var login = DB.CreateQuery<C_Auth_Users>().Where(p => p.UserId == userId).ToList().Select(p => new SystemUser()
-            {
-                CreateTime = p.CreateTime,
-                AgentId = p.AgentId,
-                RegFrom = p.RegFrom,
-                UserId = p.UserId
-            }).FirstOrDefault();
+            //var login = DB.CreateQuery<C_Auth_Users>().Where(p => p.UserId == userId).ToList().Select(p => new SystemUser()
+            //{
+            //    CreateTime = p.CreateTime,
+            //    AgentId = p.AgentId,
+            //    RegFrom = p.RegFrom,
+            //    UserId = p.UserId
+            //}).FirstOrDefault();
 
-            CheckUser(login, userId);
+            //CheckUser(login, userId);
 
-            return GetLoginUserToken(login);
+            //return GetLoginUserToken(login);
+            return GetLoginUserToken(userId);
 
         }
         //private static string _guestToken = null;
@@ -382,21 +383,21 @@ namespace KaSon.FrameWork.ORM.Helper
                 throw new AuthException("系统配置错误，未配置角色信息");
             }
         }
-        private string GetLoginUserToken(SystemUser user)
+        private string GetLoginUserToken(string userid)
         {
             IList<AccessControlItem> acl = new List<AccessControlItem>();
-            new LocalLoginBusiness().GetSystemUser(user);
-            foreach (var role in user.RoleList)
-            {
-                if (role.RoleType == RoleType.BackgroundRole && role.IsAdmin)
-                {
-                    return GetAdminToken(user.UserId);
-                }
-                MergeRoleAccessControlList(ref acl, role, user.UserId);
-            }
-            user.FunctionList = user.FunctionList;
-            acl = MergeAccessControlList<AccessControlItem, UserFunction>(acl, user.FunctionList);
-            return GetUserToken(user.UserId, acl);
+            //new LocalLoginBusiness().GetSystemUser(user);
+            //foreach (var role in user.RoleList)
+            //{
+            //    if (role.RoleType == RoleType.BackgroundRole && role.IsAdmin)
+            //    {
+            //        return GetAdminToken(user.UserId);
+            //    }
+            //    MergeRoleAccessControlList(ref acl, role, user.UserId);
+            //}
+            //user.FunctionList = user.FunctionList;
+            //acl = MergeAccessControlList<AccessControlItem, UserFunction>(acl, user.FunctionList);
+            return GetUserToken(userid, acl);
         }
         private void MergeRoleAccessControlList(ref IList<AccessControlItem> acl, SystemRole role, string userid)
         {
@@ -429,32 +430,51 @@ namespace KaSon.FrameWork.ORM.Helper
             }
         }
 
-        private static List<MethodFunction> _allMethodFunctionList = new List<MethodFunction>();
+        //private static List<MethodFunction> _allMethodFunctionList = new List<MethodFunction>();
         /// <summary>
         /// 验证用户是否具有该方法的权限
         /// </summary>
         public static string ValidateUserAuthentication(string userToken)
         {
-            if (_allMethodFunctionList == null || _allMethodFunctionList.Count == 0)
-            {
-                //改为现在查询 old
-                // var userManager = new UserManager();
-                //new 
-                // var userManager = new UserManager();
-                //  _allMethodFunctionList = userManager.LoadAllMethodFunction();
-                _allMethodFunctionList = SDB.CreateQuery<MethodFunction>().ToList();
-            }
+            //List<MethodFunction> _allMethodFunctionList = new List<MethodFunction>();
+            //if (_allMethodFunctionList == null || _allMethodFunctionList.Count == 0)
+            //{
+            //    //改为现在查询 old
+            //    // var userManager = new UserManager();
+            //    //new 
+            //    // var userManager = new UserManager();
+            //    //  _allMethodFunctionList = userManager.LoadAllMethodFunction();
+            //    _allMethodFunctionList = SDB.CreateQuery<MethodFunction>().ToList();
+            //}
 
-            var method = new System.Diagnostics.StackFrame(1).GetMethod();
-            var currentFullName = string.Format("{0}.{1}", method.ReflectedType.FullName, method.Name);
-            var config = _allMethodFunctionList.Where(p => p.MethodFullName == currentFullName).FirstOrDefault();
-            if (config == null)
-                throw new Exception(string.Format("没有配置方法 {0} 的调用权限数据", currentFullName));
+            //var method = new System.Diagnostics.StackFrame(1).GetMethod();
+            //var currentFullName = string.Format("{0}.{1}", method.ReflectedType.FullName, method.Name);
+            //var config = _allMethodFunctionList.Where(p => p.MethodFullName == currentFullName).FirstOrDefault();
+            //if (config == null)
+            //    throw new Exception(string.Format("没有配置方法 {0} 的调用权限数据", currentFullName));
 
             var userId = string.Empty;
-            ValidateAuthentication(userToken, config.Mode, config.FunctionId, out userId);
+            //ValidateAuthentication(userToken, config.Mode, config.FunctionId, out userId);
+            ValidateAuthentication_new(userToken, out userId);
             return userId;
         }
+        public static void ValidateAuthentication_new(string userToken, out string userId)
+        {
+            try
+            {
+                var rlt = UserTokenHandler.AnalyzeUserToken(userToken);
+                if (!rlt.ContainsKey("LI"))
+                {
+                    throw new Exception("UserToken不完整，缺少UserId信息");
+                }
+                userId = rlt["LI"];
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("用户身份验证失败，请检查是否已登录", ex);
+            }
+        }
+
         #endregion
 
         //public static bool CheckIsAdmin(string userToken)
@@ -477,22 +497,23 @@ namespace KaSon.FrameWork.ORM.Helper
         }
         public string GetUserToken(string userId, IList<AccessControlItem> acl)
         {
-            var dic = new Dictionary<string, string>(acl.Count);
-            foreach (var item in acl)
-            {
-                if (item.Status != EnableStatus.Enable)
-                {
-                    throw new AuthException("被禁止的权限控制项不能出现在此");
-                }
-                if (!dic.ContainsKey(item.FunctionId))
-                {
-                    dic.Add(item.FunctionId, item.Mode);
-                }
-                else
-                {
-                    dic[item.FunctionId] = MergeFunctionMode(dic[item.FunctionId], item.Mode);
-                }
-            }
+            var dic = new Dictionary<string, string>();
+            //var dic = new Dictionary<string, string>(acl.Count);
+            //foreach (var item in acl)
+            //{
+            //    if (item.Status != EnableStatus.Enable)
+            //    {
+            //        throw new AuthException("被禁止的权限控制项不能出现在此");
+            //    }
+            //    if (!dic.ContainsKey(item.FunctionId))
+            //    {
+            //        dic.Add(item.FunctionId, item.Mode);
+            //    }
+            //    else
+            //    {
+            //        dic[item.FunctionId] = MergeFunctionMode(dic[item.FunctionId], item.Mode);
+            //    }
+            //}
             dic.Add("LI", userId);
             return UserTokenHandler.GetUserToken(dic);
         }
