@@ -11,9 +11,9 @@ namespace KaSon.FrameWork.ORM.Helper
     {
         public string SendValidationCode(string mobile, string category, string validateCode, int delaySeconds, int maxTimesEachDay)
         {
-            //try
-            //{
-            //    DB.Begin();
+          //  try
+          //  {
+              //  DB.Begin();
                 var validation = DB.CreateQuery<E_Validation_Mobile>().Where(p => p.Mobile == mobile && p.Category == category).FirstOrDefault();
                 if (validation != null)
                 {
@@ -51,8 +51,8 @@ namespace KaSon.FrameWork.ORM.Helper
                     DB.GetDal<E_Validation_Mobile>().Add(validation);
                 }
 
-            //    DB.Commit();
-            //}
+             //   DB.Commit();
+          //  }
             //catch (Exception)
             //{
             //    DB.Rollback();
