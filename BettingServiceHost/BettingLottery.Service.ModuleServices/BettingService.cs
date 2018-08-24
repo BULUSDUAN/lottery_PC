@@ -127,8 +127,8 @@ namespace BettingLottery.Service.ModuleServices
                        // var userBalance = new GameBizSportsBettion().QueryMyBalance(userToken);
                         if (userBalance == null)
                             throw new Exception("未查询到账户信息");
-                        else if ((userBalance.BonusBalance + userBalance.ExpertsBalance + userBalance.FillMoneyBalance + userBalance.RedBagBalance) < totalMoney)
-                            throw new Exception("您好，目前账户余额不足！");
+                        //else if ((userBalance.BonusBalance + userBalance.ExpertsBalance + userBalance.FillMoneyBalance + userBalance.RedBagBalance) < totalMoney)
+                        //    throw new Exception("您好，目前账户余额不足！");
                         else if ((userBalance.BonusBalance + userBalance.CommissionBalance + userBalance.ExpertsBalance + userBalance.FillMoneyBalance + userBalance.RedBagBalance) < totalMoney)
                             throw new Exception("您好，目前账户余额不足！");
                         try

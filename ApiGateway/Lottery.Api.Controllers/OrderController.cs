@@ -2811,10 +2811,11 @@ namespace Lottery.Api.Controllers
                 list[list.Count - 1].type = "任选9";
 #if LogInfo
                 st.Reset();
-                KaSon.FrameWork.Common.Redis.RedisHelper.StringSet(key, JsonHelper.Serialize(list), 5 * 60);
+                
                 st.Stop();
                 Log4Log.LogEX(KLogLevel.TimeInfo, "redis设置key：" + key, "用时：" + st.Elapsed.TotalMilliseconds.ToString() + "毫秒");
 #endif
+                KaSon.FrameWork.Common.Redis.RedisHelper.StringSet(key, JsonHelper.Serialize(list), 5 * 60);
             }
             return list;
         }
