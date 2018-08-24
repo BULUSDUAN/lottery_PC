@@ -47,7 +47,7 @@ namespace Lottery.Api.Controllers
 #if LogInfo
 
             Stopwatch watch = new Stopwatch();
-            Double opt = 0,opt1=0,opt2=0, opt3=0;
+            Double opt = 0,opt1=0,opt2=0, opt3=0,t1=0,t2=0;
 
             watch.Start();
 #endif
@@ -66,12 +66,21 @@ namespace Lottery.Api.Controllers
                 param["IPAddress"] = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
 
                 var loginInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/user_login");
+#if LogInfo
+                watch.Stop();
+                t1 = watch.Elapsed.TotalMilliseconds;
+
+#endif
                 if (loginInfo == null)
                     throw new ArgumentException("登录失败");
                 if (!loginInfo.IsSuccess)
                     throw new ArgumentException(loginInfo.Message);
                 Dictionary<string, object> bindParam = new Dictionary<string, object>();
                 bindParam["UserId"] = loginInfo.UserId;
+#if LogInfo
+                watch.Reset();
+                watch.Start();
+#endif
                 var bindInfo = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
 
 #if LogInfo
@@ -117,7 +126,7 @@ namespace Lottery.Api.Controllers
                 opt3 = watch.Elapsed.TotalMilliseconds;
 
                 Log4Log.LogEX(KLogLevel.TimeInfo,
-                    string.Format("user_login+QueryUserBindInfos time:{0},QueryMyBalance：{1}，QueryBankCard：{2},GetMyUnreadInnerMailCount:{3} \r\n", opt.ToString(),opt1.ToString(), opt2.ToString(), opt3.ToString()));
+                    string.Format("user_login+QueryUserBindInfos time:{0},{1},QueryMyBalance：{2}，QueryBankCard：{3},GetMyUnreadInnerMailCount:{4} \r\n", t1.ToString(), opt.ToString(),opt1.ToString(), opt2.ToString(), opt3.ToString()));
 
 #endif
 

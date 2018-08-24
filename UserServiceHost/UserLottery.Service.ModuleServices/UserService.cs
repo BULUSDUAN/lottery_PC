@@ -99,10 +99,10 @@ namespace UserLottery.Service.ModuleServices
                 }
 
                 ////var authBiz = new GameBizAuthBusiness();
-                if (!IsRoleType(loginEntity.User, RoleType.WebRole))
-                {
-                    return Task.FromResult(new LoginInfo { IsSuccess = false, Message = "此帐号角色不允许在此登录", LoginFrom = "LOCAL", });
-                }
+                //if (!IsRoleType(loginEntity.User, RoleType.WebRole))
+                //{
+                //    return Task.FromResult(new LoginInfo { IsSuccess = false, Message = "此帐号角色不允许在此登录", LoginFrom = "LOCAL", });
+                //}
                 if (!loginEntity.Register.IsEnable)
                 {
                     return Task.FromResult(new LoginInfo { IsSuccess = false, Message = "用户未激活", LoginFrom = "LOCAL", UserId = loginEntity.UserId });

@@ -279,27 +279,31 @@ namespace KaSon.FrameWork.ORM.Helper
             LoginLocal LoginUsers = null;
             if (Regex.IsMatch(loginName, pattern))
             {
-                LoginUsers =( from p in  LoginUser where (p.mobile == loginName && p.Password == password) select new LoginLocal
-                {
-                    CreateTime = p.CreateTime,
-                    LoginName = p.LoginName,
-                    mobile = p.mobile,
-                    Password = p.Password,
-                    UserId = p.UserId,
+                LoginUsers = (from p in LoginUser
+                              where (p.mobile == loginName && p.Password == password)
+                              select new LoginLocal
+                              {
+                                  CreateTime = p.CreateTime,
+                                  LoginName = p.LoginName,
+                                  mobile = p.mobile,
+                                  Password = p.Password,
+                                  UserId = p.UserId,
 
-                }).FirstOrDefault();
+                              }).FirstOrDefault();
             }
             else
             {
-                LoginUsers =(from p in  LoginUser where p.LoginName == loginName && p.Password == password select new LoginLocal
-                {
-                    CreateTime = p.CreateTime,
-                    LoginName = p.LoginName,
-                    mobile = p.mobile,
-                    Password = p.Password,
-                    UserId = p.UserId,
+                LoginUsers = (from p in LoginUser
+                              where p.LoginName == loginName && p.Password == password
+                              select new LoginLocal
+                              {
+                                  CreateTime = p.CreateTime,
+                                  LoginName = p.LoginName,
+                                  mobile = p.mobile,
+                                  Password = p.Password,
+                                  UserId = p.UserId,
 
-                }).FirstOrDefault();
+                              }).FirstOrDefault();
             }
             if (LoginUsers != null)
             {
