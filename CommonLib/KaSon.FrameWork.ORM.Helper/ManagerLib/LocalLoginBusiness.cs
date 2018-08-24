@@ -226,7 +226,8 @@ namespace KaSon.FrameWork.ORM.Helper
 
                 }
             }
-            Log4Log.LogEX(KLogLevel.SevTimeInfo,  string.Format("登录C_Auth_Users,E_Login_Local条数时间:{0},总共条数{1}{2},if Users 时间{3},if 结束时间 \r\n", opt,count1,count, opt2, opt3));
+            Log4Log.LogEX(KLogLevel.SevTimeInfo,  string.Format("查询C_Auth_Users,E_Login_Local 使用时间:{0},COUNT:{1},{2},进入if 开始时间 {3},if 结束时间 {4} \r\n", opt.ToString(),count1.ToString(),
+                count.ToString(), opt2.ToString(), opt3.ToString()));
 
             return LoginUsers;
             //return Session.CreateCriteria<LoginLocal>()

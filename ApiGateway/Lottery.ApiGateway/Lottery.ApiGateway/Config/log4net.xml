@@ -59,7 +59,7 @@
       <param name="MaxSizeRollBackups" value="100" />
       <param name="MaxFileSize" value="10240" />
       <param name="StaticLogFileName" value="false" />
-      <param name="DatePattern" value="LogTime_&quot;yyyyMMddHHmm&quot;A.txt&quot;" />
+      <param name="DatePattern" value="yyyyMMddHHmm&quot;A.txt&quot;" />
       <param name="RollingStyle" value="Date" />
       <layout type="log4net.Layout.PatternLayout">
         <param name="ConversionPattern" value="%n异常时间：%d %n异常级别：%-5p%n异常内容：%m%n" />

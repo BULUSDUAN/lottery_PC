@@ -15,6 +15,8 @@ using Kason.Sg.Core.ProxyGenerator.Utilitys;
 using Kason.Sg.Core.ApiGateWay.ServiceDiscovery;
 using Kason.Sg.Core.CPlatform.Utilities;
 using Lottery.ApiGateway.Model.HelpModel;
+using Kason.Sg.Core.ApiGateWay.ServiceDiscovery.Implementation;
+using Kason.Sg.Core.CPlatform.Address;
 //using Lottery.Service.IModuleServices;
 
 namespace Lottery.Api.Controllers
@@ -52,13 +54,30 @@ namespace Lottery.Api.Controllers
         /// <param name="address"></param>
         /// <param name="queryParam"></param>
         /// <returns></returns>
-        public async Task<IActionResult> GetServiceDescriptor([FromServices]IServiceDiscoveryProvider serviceDiscoveryProvider, string address, string queryParam)
+        public async Task<IActionResult> GetAddress([FromServices]IServiceDiscoveryProvider serviceDiscoveryProvider, string address, string queryParam)
         {
-           
-            var list = await serviceDiscoveryProvider.GetServiceDescriptorAsync(address, queryParam);
-            var result = ServiceResult<IEnumerable<ServiceDescriptor>>.Create(true, list);
-            return Json(result);
+            var adlist = await serviceDiscoveryProvider.GetAddressAsync();
+            IList<object> list = new List<object>();
+            foreach (ServiceAddressModel item in adlist)
+            {
+                var ip = item.Address as IpAddressModel;
+                string str = ip.Ip + ":" + ip.Port;
+                var lista = await serviceDiscoveryProvider.GetServiceDescriptorAsync(str);
+                list.Add(lista);
+            }
+
+            //var result = ServiceResult<IEnumerable<ServiceDescriptor>>.Create(true, list);
+
+            return Json(new { A= adlist,B= list });
         }
+
+        //public async Task<IActionResult> GetAddress([FromServices]IServiceDiscoveryProvider serviceDiscoveryProvider, string address, string queryParam)
+        //{
+
+        //    var list = await serviceDiscoveryProvider.GetAddressAsync();
+        //    var result = ServiceResult<IEnumerable<ServiceDescriptor>>.Create(true, list);
+        //    return Json(result);
+        //}
 
         /// <summary>
         /// 通过路由调用服务
