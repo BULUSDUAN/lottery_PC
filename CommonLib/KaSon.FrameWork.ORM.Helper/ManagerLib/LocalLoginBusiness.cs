@@ -82,7 +82,7 @@ namespace KaSon.FrameWork.ORM.Helper
             LoginLocal LoginUsers = null;
             if (Regex.IsMatch(loginName, pattern))
             {
-                 LoginUsers = LoginUser.Where(p => ( p.mobile == loginName) && p.Password == password).ToList().Select(p => new LoginLocal
+                 LoginUsers = LoginUser.Where(p => p.mobile == loginName && p.Password == password).Select(p => new LoginLocal
                 {
                     CreateTime = p.CreateTime,
                     LoginName = p.LoginName,
@@ -93,7 +93,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 }).FirstOrDefault();
             }
             else {
-                LoginUsers = LoginUser.Where(p => (p.LoginName == loginName) && p.Password == password).ToList().Select(p => new LoginLocal
+                LoginUsers = LoginUser.Where(p => (p.LoginName == loginName) && p.Password == password).Select(p => new LoginLocal
                 {
                     CreateTime = p.CreateTime,
                     LoginName = p.LoginName,
@@ -116,7 +116,7 @@ namespace KaSon.FrameWork.ORM.Helper
             if (LoginUsers != null)
             {
                
-                LoginUsers.User = DB.CreateQuery<C_Auth_Users>().Where(p => p.UserId == LoginUsers.UserId).ToList().Select(p=>new SystemUser()
+                LoginUsers.User = DB.CreateQuery<C_Auth_Users>().Where(p => p.UserId == LoginUsers.UserId).Select(p=>new SystemUser()
                 {
                      CreateTime=p.CreateTime,
                      AgentId=p.AgentId,
@@ -133,13 +133,12 @@ namespace KaSon.FrameWork.ORM.Helper
               
 #endif
 
-                    var uQueryRoles = DB.CreateQuery<C_Auth_Roles>().ToList().Select(p=>new SystemRole(){
+                    var uQueryRoles = DB.CreateQuery<C_Auth_Roles>().Select(p=>new SystemRole(){
                          RoleId=p.RoleId,
                         RoleName=p.RoleName,
                         IsInner=p.IsInner,
                         IsAdmin=p.IsAdmin,
                         RoleType=(RoleType)p.RoleType,
-                        
                     });
 
 #if LogInfo
@@ -169,7 +168,7 @@ namespace KaSon.FrameWork.ORM.Helper
                                                on b.RoleId equals d.RoleId
                                                where d.UserId == LoginUsers.UserId
                                                select b
-                                             ).ToList().Select(p=>new RoleFunction() {  
+                                             ).Select(p=>new RoleFunction() {  
                                                   FunctionId=p.FunctionId,
                                                    IId=p.IId,
                                                     Mode=p.Mode,
@@ -179,7 +178,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         if (RoleFunctionList != null && RoleFunctionList.Count() != 0) {
 
                            var Ids = RoleFunctionList.Select(p => p.FunctionId).ToList();
-                            var Auth_Function_Lists = DB.CreateQuery<C_Auth_Function_List>().Where(p => Ids.Contains(p.FunctionId)).ToList().Select(p=>new Function(){
+                            var Auth_Function_Lists = DB.CreateQuery<C_Auth_Function_List>().Where(p => Ids.Contains(p.FunctionId)).Select(p=>new Function(){
                                  DisplayName=p.DisplayName,
                                  FunctionId=p.FunctionId,
                                  IsBackBasic=p.IsBackBasic,
@@ -201,7 +200,7 @@ namespace KaSon.FrameWork.ORM.Helper
                                             on b.UserId equals d.UserId
                                             where d.UserId == LoginUsers.UserId
                                             select b
-                                             ).ToList().Select(p => new UserFunction()
+                                             ).Select(p => new UserFunction()
                                              {
                                                  FunctionId = p.FunctionId,
                                                  IId = p.IId,
@@ -214,7 +213,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     {
 
                         var Ids = RoleFunctionList.Select(p => p.FunctionId).ToList();
-                        var Auth_Function_Lists = DB.CreateQuery<C_Auth_Function_List>().Where(p => Ids.Contains(p.FunctionId)).ToList().Select(p => new Function()
+                        var Auth_Function_Lists = DB.CreateQuery<C_Auth_Function_List>().Where(p => Ids.Contains(p.FunctionId)).Select(p => new Function()
                         {
                             DisplayName = p.DisplayName,
                             FunctionId = p.FunctionId,
@@ -228,7 +227,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     }
 
 
-                    LoginUsers.Register = DB.CreateQuery<C_User_Register>().Where(p => p.UserId == LoginUsers.UserId).ToList().Select(p=>new UserRegister() {
+                    LoginUsers.Register = DB.CreateQuery<C_User_Register>().Where(p => p.UserId == LoginUsers.UserId).Select(p=>new UserRegister() {
 
                         AgentId=p.AgentId, ComeFrom=p.ComeFrom, CreateTime=p.CreateTime, DisplayName=p.DisplayName, HideDisplayNameCount=p.HideDisplayNameCount,
                         IsAgent=p.IsAgent, IsEnable=p.IsEnable,  IsFillMoney=p.IsFillMoney, IsIgnoreReport=p.IsIgnoreReport, ParentPath=p.ParentPath, Referrer=p.Referrer,
