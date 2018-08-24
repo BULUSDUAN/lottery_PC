@@ -44,6 +44,14 @@ namespace Lottery.Api.Controllers
         {
             try
             {
+#if LogInfo
+
+            Stopwatch watch = new Stopwatch();
+            Double opt = 0,opt1=0,opt2=0, opt3=0;
+
+            watch.Start();
+#endif
+
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 var p = WebHelper.Decode(entity.Param);
                 string loginName = p.LoginName;
@@ -65,15 +73,53 @@ namespace Lottery.Api.Controllers
                 Dictionary<string, object> bindParam = new Dictionary<string, object>();
                 bindParam["UserId"] = loginInfo.UserId;
                 var bindInfo = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
+
+#if LogInfo
+                watch.Stop();
+                opt = watch.Elapsed.TotalMilliseconds;
+              
+#endif
                 Dictionary<string, object> balanceParam = new Dictionary<string, object>();
                 balanceParam["userToken"] = loginInfo.UserToken;
+#if LogInfo
+                watch.Reset();
+                watch.Start();
+   #endif
                 var balance = await _serviceProxyProvider.Invoke<UserBalanceInfo>(balanceParam, "api/user/QueryMyBalance");
 
+
+#if LogInfo
+                watch.Stop();
+                opt1 = watch.Elapsed.TotalMilliseconds;
+
+#endif
+
+#if LogInfo
+                watch.Reset();
+                watch.Start();
+#endif
                 var bankInfo = await _serviceProxyProvider.Invoke<C_BankCard>(balanceParam, "api/user/QueryBankCard");
 
-                if (bankInfo == null) bankInfo = new C_BankCard();
+#if LogInfo
+                watch.Stop();
+                opt2 = watch.Elapsed.TotalMilliseconds;
 
+#endif
+                if (bankInfo == null) bankInfo = new C_BankCard();
+#if LogInfo
+                watch.Reset();
+                watch.Start();
+#endif
                 var unReadCount = await _serviceProxyProvider.Invoke<int>(balanceParam, "api/user/GetMyUnreadInnerMailCount");
+
+#if LogInfo
+                watch.Stop();
+                opt3 = watch.Elapsed.TotalMilliseconds;
+
+                Log4Log.LogEX(KLogLevel.TimeInfo,
+                    string.Format("user_login+QueryUserBindInfos time:{0},QueryMyBalance：{1}，QueryBankCard：{2},GetMyUnreadInnerMailCount:{3} \r\n", opt.ToString(),opt1.ToString(), opt2.ToString(), opt3.ToString()));
+
+#endif
 
 
                 return Json(new LotteryServiceResponse

@@ -81,13 +81,7 @@ namespace UserLottery.Service.ModuleServices
         //private BusinessHelper businessHelper;
         public Task<LoginInfo> User_Login(string loginName, string password,string loginIp)
         {
-#if LogInfo
 
-            Stopwatch watch = new Stopwatch();
-            Double opt = 0;
-
-            watch.Start();
-#endif
             try
             {
 
@@ -129,14 +123,7 @@ namespace UserLottery.Service.ModuleServices
                 BusinessHelper.RefreshRedisUserBalance(loginEntity.UserId);
 
 
-#if LogInfo
-                watch.Stop();
-                opt = watch.Elapsed.TotalMilliseconds;
-                //watch.Reset();
 
-                //watch.Stop();
-                Log4Log.LogEX(KLogLevel.SevTimeInfo, string.Format("登录使用时间 :{0} \r\n",opt.ToString()));
-#endif
 
                 return Task.FromResult(new LoginInfo
                 {
@@ -160,13 +147,7 @@ namespace UserLottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-#if LogInfo
-                watch.Stop();
-                opt = watch.Elapsed.TotalMilliseconds;
-                //watch.Reset();
-                Log4Log.LogEX(KLogLevel.SevTimeInfo, string.Format("Login Use Time:{0}{1} \r\n", opt.ToString(), ex.ToString()));
-                //watch.Stop();
-#endif
+
                 throw new Exception(ex.Message,ex);
             }
            

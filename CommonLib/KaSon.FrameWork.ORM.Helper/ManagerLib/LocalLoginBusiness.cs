@@ -103,12 +103,13 @@ namespace KaSon.FrameWork.ORM.Helper
 
                 }).FirstOrDefault();
             }
-           
+            string userId = LoginUsers.UserId;
 
 #if LogInfo
             watch.Stop();
             opt = watch.Elapsed.TotalMilliseconds;
             watch.Reset();
+            watch.Start();
             count = DB.CreateQuery<C_Auth_Users>().Count();
             count1 = LoginUser.Count();
             watch.Stop();
@@ -117,7 +118,7 @@ namespace KaSon.FrameWork.ORM.Helper
             {
 
                 LoginUsers.User = (from p in DB.CreateQuery<C_Auth_Users>()
-                                   where p.UserId == LoginUsers.UserId
+                                   where p.UserId == userId
                                    select new SystemUser()
                                    {
                                        CreateTime = p.CreateTime,
@@ -131,8 +132,9 @@ namespace KaSon.FrameWork.ORM.Helper
                 {
 #if LogInfo
                     watch.Reset();
+                    watch.Start();
 
-              
+
 #endif
 
                     var uQueryRoles = (from p in DB.CreateQuery<C_Auth_Roles>()
@@ -151,13 +153,15 @@ namespace KaSon.FrameWork.ORM.Helper
                     opt2 = watch.Elapsed.TotalMilliseconds;
                     watch.Stop();
                     watch.Reset();
+                    watch.Start();
+                    
 #endif
 
                     var uQueryUserRole = DB.CreateQuery<C_Auth_UserRole>();
                     LoginUsers.User.RoleList = (from b in uQueryRoles
                                                 join c in uQueryUserRole
                                                 on b.RoleId equals c.RoleId
-                                                where c.UserId == LoginUsers.UserId
+                                                where c.UserId == userId
                                                 select b).ToList();
 
                     systemUser.RoleList = LoginUsers.User.RoleList;
@@ -204,7 +208,7 @@ namespace KaSon.FrameWork.ORM.Helper
                                             join d in uQueryUserRole
 
                                             on b.UserId equals d.UserId
-                                            where d.UserId == LoginUsers.UserId
+                                            where d.UserId == userId
                                             select b
                                              ).ToList().Select(p => new UserFunction()
                                              {
@@ -232,7 +236,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
                     }
 
-                    string userId = LoginUsers.UserId;
+                  //  string userId = LoginUsers.UserId;
 
                     LoginUsers.Register = (from p in DB.CreateQuery<C_User_Register>()
                                            where p.UserId == userId
@@ -271,7 +275,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 }
             }
 #if LogInfo
-            Log4Log.LogEX(KLogLevel.SevTimeInfo,  string.Format("查询C_Auth_Users,E_Login_Local 使用时间:{0},COUNT:{1},{2},进入if 开始时间 {3},if 结束时间 {4} \r\n", opt.ToString(),count1.ToString(),
+            Log4Log.LogEX(KLogLevel.SevTimeInfo,  string.Format("query C_Auth_Users,E_Login_Local user Time:{0},COUNT:{1},{2},into if start time {3},end if time {4} \r\n", opt.ToString(),count1.ToString(),
                 count.ToString(), opt2.ToString(), opt3.ToString()));
 #endif
             return LoginUsers;
