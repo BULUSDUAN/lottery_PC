@@ -399,10 +399,19 @@ namespace Lottery.Api.Controllers
         /// <returns></returns>
         public async Task<IActionResult> GetTimeLog([FromServices]IServiceProxyProvider _serviceProxyProvider, string SerName = "Order", string FileName = "")
         {
-           //APITimeInfo
-            Dictionary<string, object> param = new Dictionary<string, object>();
-            param.Add("FileName", FileName);
-            var config = await _serviceProxyProvider.Invoke<string>(param, "api/" + SerName + "/ReadSqlTimeLog");
+            //APITimeInfo
+            string config = "";
+            if (SerName.ToLower() == "api")
+            {
+
+                config= KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\APITimeInfo", "LogTime_");
+            }
+            else {
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param.Add("FileName", FileName);
+                config = await _serviceProxyProvider.Invoke<string>(param, "api/" + SerName + "/ReadSqlTimeLog");
+            }
+            config = string.IsNullOrEmpty(config) ? "没有数据" : config;
             return Content(config);
         }
     }
