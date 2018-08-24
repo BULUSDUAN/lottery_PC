@@ -1402,7 +1402,15 @@ namespace UserLottery.Service.ModuleServices
 
         public Task<string> ReadSqlTimeLog(string FileName)
         {
-            return Task.FromResult(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\SQLInfo", "LogTime_"));
+            if (string.IsNullOrEmpty(FileName)) FileName = "SQLInfo";//SevTimeIoginfo 服务时间
+
+            return Task.FromResult(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\"+ FileName, "LogTime_"));
         }
+        //public Task<string> ReadSevTimeLog(string FileName)
+        //{
+        //    if (string.IsNullOrEmpty(FileName)) FileName = "SQLInfo";//SevTimeIoginfo 服务时间
+
+        //    return Task.FromResult(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\SQLInfo", "LogTime_"));
+        //}
     }
 }

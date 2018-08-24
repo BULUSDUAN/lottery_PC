@@ -16,6 +16,7 @@ using EntityModel.Communication;
 using EntityModel.CoreModel.AuthEntities;
 using EntityModel.Enum;
 using EntityModel.ExceptionExtend;
+using System.Diagnostics;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
@@ -65,7 +66,14 @@ namespace KaSon.FrameWork.ORM.Helper
         {
 
             var LoginUser = DB.CreateQuery<E_Login_Local>();
-            
+#if LogInfo
+
+            Stopwatch watch = new Stopwatch();
+              Double opt=0 ,opt1 = 0, opt2 = 0, opt3= 0;
+            int count=0, count1=0;
+         
+            watch.Start();
+#endif
             var LoginUsers = LoginUser.Where(p => (p.LoginName == loginName || p.mobile == loginName) && p.Password == password).ToList().Select(p => new LoginLocal
             {
                 CreateTime = p.CreateTime,
@@ -76,8 +84,17 @@ namespace KaSon.FrameWork.ORM.Helper
 
             }).FirstOrDefault();
 
+#if LogInfo
+            watch.Stop();
+            opt = watch.Elapsed.TotalMilliseconds;
+            watch.Reset();
+            count = DB.CreateQuery<C_Auth_Users>().Count();
+            count1 = LoginUser.Count();
+            watch.Stop();
+#endif
             if (LoginUsers != null)
             {
+               
                 LoginUsers.User = DB.CreateQuery<C_Auth_Users>().Where(p => p.UserId == LoginUsers.UserId).ToList().Select(p=>new SystemUser()
                 {
                      CreateTime=p.CreateTime,
@@ -86,8 +103,15 @@ namespace KaSon.FrameWork.ORM.Helper
                      UserId=p.UserId,
                 }).FirstOrDefault();
 
+
                 if (LoginUsers.User != null)
                 {
+#if LogInfo
+                    watch.Reset();
+
+              
+#endif
+
                     var uQueryRoles = DB.CreateQuery<C_Auth_Roles>().ToList().Select(p=>new SystemRole(){
                          RoleId=p.RoleId,
                         RoleName=p.RoleName,
@@ -96,6 +120,15 @@ namespace KaSon.FrameWork.ORM.Helper
                         RoleType=(RoleType)p.RoleType,
                         
                     });
+
+#if LogInfo
+                 
+                  
+                    opt2 = watch.Elapsed.TotalMilliseconds;
+                    watch.Stop();
+                    watch.Reset();
+#endif
+
                     var uQueryUserRole = DB.CreateQuery<C_Auth_UserRole>();
                     LoginUsers.User.RoleList = (from b in uQueryRoles
                                                 join c in uQueryUserRole
@@ -185,8 +218,15 @@ namespace KaSon.FrameWork.ORM.Helper
 
                     LoginUsers.Register.IsEnable = LoginUsers.Register.IsEnable;
 
+#if LogInfo
+                    watch.Stop();
+                    opt3 = watch.Elapsed.TotalMilliseconds;
+                   // watch.Start();
+#endif
+
                 }
             }
+            Log4Log.LogEX(KLogLevel.SevTimeInfo,  string.Format("登录C_Auth_Users,E_Login_Local条数时间:{0},总共条数{1}{2},if Users 时间{3},if 结束时间 \r\n", opt,count1,count, opt2, opt3));
 
             return LoginUsers;
             //return Session.CreateCriteria<LoginLocal>()
