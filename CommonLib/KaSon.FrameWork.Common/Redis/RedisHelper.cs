@@ -10,6 +10,7 @@ using KaSon.FrameWork.Common;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace KaSon.FrameWork.Common.Redis
 {
@@ -54,6 +55,11 @@ namespace KaSon.FrameWork.Common.Redis
             {
                 return null;
             }
+        }
+
+        public static Task<RedisValue[]> ListRangeAsync(string key)
+        {
+            return RedisHelper.Instance.GetDatabase().ListRangeAsync(key);
         }
 
         /// <summary>

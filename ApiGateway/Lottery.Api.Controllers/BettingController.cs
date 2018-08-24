@@ -1382,14 +1382,6 @@ namespace Lottery.Api.Controllers
 //}
 #endregion
 
-#if LogInfo
-        public async Task<IActionResult> GetTimeLog([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
-        {
-            Dictionary<string, object> param = new Dictionary<string, object>();
-            param.Add("FileName", "");
-            var config = await _serviceProxyProvider.Invoke<string>(param, "api/Betting/ReadSqlTimeLog");
-            return Content(config);
-        }
-#endif
+
     }
 }

@@ -117,31 +117,7 @@ namespace Lottery.Api.Controllers
             }
         }
 
-        #region 日志
-
-        public IActionResult GetTimeLog([FromServices]IServiceProxyProvider _serviceProxyProvider, string DicName = "APITimeInfo")
-        {
-            try
-            {
-                var str = KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\" + DicName + "\\", "");
-                return Content("内容" + str);
-            }
-            catch (Exception ex)
-            {
-                return Json(new LotteryServiceResponse
-                {
-                    Code = ResponseCode.失败,
-                    Message = "获取失败",
-                    MsgId = "",
-                    Value = ex.ToGetMessage(),
-                });
-            }
-        }
-
-
-
-
-        #endregion
+      
         #region 按钮上的广告
         /// <summary>
         /// 按钮上的广告
@@ -412,6 +388,22 @@ namespace Lottery.Api.Controllers
             {
                 return defalutValue;
             }
+        }
+
+        /// <summary>
+        /// Kson 获取日志
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="SerName"></param>
+        /// <param name="FileName"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> GetTimeLog([FromServices]IServiceProxyProvider _serviceProxyProvider, string SerName = "Order", string FileName = "")
+        {
+           //APITimeInfo
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            param.Add("FileName", FileName);
+            var config = await _serviceProxyProvider.Invoke<string>(param, "api/" + SerName + "/ReadSqlTimeLog");
+            return Content(config);
         }
     }
 }
