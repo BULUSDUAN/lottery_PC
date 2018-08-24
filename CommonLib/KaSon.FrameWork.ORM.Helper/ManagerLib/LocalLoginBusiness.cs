@@ -388,21 +388,21 @@ namespace KaSon.FrameWork.ORM.Helper
 
                                      }).ToList();
             user.FunctionList = UserFunctionList;
-            if (UserFunctionList != null && UserFunctionList.Count() != 0)
-            {
+            //if (UserFunctionList != null && UserFunctionList.Count() != 0)
+            //{
 
-                var Ids = RoleFunctionList.Select(p => p.FunctionId).ToList();
-                var Auth_Function_Lists = C_Auth_Function_List.Where(p => Ids.Contains(p.FunctionId)).Select(p => new Function()
-                {
-                    DisplayName = p.DisplayName,
-                    FunctionId = p.FunctionId,
-                    IsBackBasic = p.IsBackBasic,
-                    IsWebBasic = p.IsWebBasic,
-                    ParentId = p.ParentId,
-                    ParentPath = p.ParentPath,
-                }).ToList();
-                user.FunctionList = UserFunctionList;
-            }
+            //    var Ids = RoleFunctionList.Select(p => p.FunctionId).ToList();
+            //    var Auth_Function_Lists = C_Auth_Function_List.Where(p => Ids.Contains(p.FunctionId)).Select(p => new Function()
+            //    {
+            //        DisplayName = p.DisplayName,
+            //        FunctionId = p.FunctionId,
+            //        IsBackBasic = p.IsBackBasic,
+            //        IsWebBasic = p.IsWebBasic,
+            //        ParentId = p.ParentId,
+            //        ParentPath = p.ParentPath,
+            //    }).ToList();
+            //    user.FunctionList = UserFunctionList;
+            //}
         }
 
         public  void GetSystemRole(SystemRole role,string userid)
@@ -432,22 +432,23 @@ namespace KaSon.FrameWork.ORM.Helper
                                          Mode = p.Mode,
 
                                      }).ToList();
-            if (RoleFunctionList != null && RoleFunctionList.Count() != 0)
-            {
-                var Ids = RoleFunctionList.Select(p => p.FunctionId).ToList();
-                var Auth_Function_Lists = (from p in C_Auth_Function_List
-                                           where Ids.Contains(p.FunctionId)
-                                           select new Function()
-                                           {
-                                               DisplayName = p.DisplayName,
-                                               FunctionId = p.FunctionId,
-                                               IsBackBasic = p.IsBackBasic,
-                                               IsWebBasic = p.IsWebBasic,
-                                               ParentId = p.ParentId,
-                                               ParentPath = p.ParentPath,
-                                           }).ToList();
-                role.FunctionList = RoleFunctionList;
-            }
+            role.FunctionList = RoleFunctionList;
+            //if (RoleFunctionList != null && RoleFunctionList.Count() != 0)
+            //{
+            //    var Ids = RoleFunctionList.Select(p => p.FunctionId).ToList();
+            //    var Auth_Function_Lists = (from p in C_Auth_Function_List
+            //                               where Ids.Contains(p.FunctionId)
+            //                               select new Function()
+            //                               {
+            //                                   DisplayName = p.DisplayName,
+            //                                   FunctionId = p.FunctionId,
+            //                                   IsBackBasic = p.IsBackBasic,
+            //                                   IsWebBasic = p.IsWebBasic,
+            //                                   ParentId = p.ParentId,
+            //                                   ParentPath = p.ParentPath,
+            //                               }).ToList();
+            //    role.FunctionList = RoleFunctionList;
+            //}
         }
 
 
