@@ -37,14 +37,14 @@ namespace Lottery.ApiGateway
                 .UseKestrel(options =>
                 {
                     options.Limits.MaxConcurrentConnections = 30000;
-                    options.Limits.MaxConcurrentUpgradedConnections = 2000;
-                    options.Limits.MaxRequestBodySize = 100 * 1024;
-                    options.Limits.MaxResponseBufferSize= 100*1024 * 1024;
+                    options.Limits.MaxConcurrentUpgradedConnections = 10000;
+                    options.Limits.MaxRequestBodySize = 1000 * 1024;
+                    options.Limits.MaxResponseBufferSize= 1000*1024 * 1024;
                     
                     options.Limits.MinRequestBodyDataRate =
-                        new MinDataRate(bytesPerSecond: 100, gracePeriod: TimeSpan.FromSeconds(10));
+                        new MinDataRate(bytesPerSecond: 1000, gracePeriod: TimeSpan.FromSeconds(100));
                     options.Limits.MinResponseDataRate =
-                        new MinDataRate(bytesPerSecond: 100, gracePeriod: TimeSpan.FromSeconds(10));
+                        new MinDataRate(bytesPerSecond: 1000, gracePeriod: TimeSpan.FromSeconds(100));
                     //options.Listen(IPAddress.Any,int.Parse(HttpsConfig["httpsPost"].ToString()), listenOptions =>
                     //{
                     //    listenOptions.UseHttps(HttpsConfig["pfxFilePath"].ToString(), HttpsConfig["pfxPassword"].ToString());

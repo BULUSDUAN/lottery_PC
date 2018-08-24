@@ -413,5 +413,15 @@ namespace Lottery.Api.Controllers
                 return defalutValue;
             }
         }
+
+
+        public async Task<IActionResult> GetTimeLog([FromServices]IServiceProxyProvider _serviceProxyProvider, string SerName = "Order", string FileName = "")
+        {
+
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            param.Add("FileName", FileName);
+            var config = await _serviceProxyProvider.Invoke<string>(param, "api/" + SerName + "/ReadSqlTimeLog");
+            return Content(config);
+        }
     }
 }
