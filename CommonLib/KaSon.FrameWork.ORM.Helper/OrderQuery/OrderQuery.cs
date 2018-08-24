@@ -396,7 +396,7 @@ namespace KaSon.FrameWork.ORM.Helper
             Collection.TotalWinMoney = Collection.WinCount == 0 ? 0M : queryResult.Where(p => p.Status == (int)WithdrawStatus.Success).Sum(p => p.RequestMoney);
             Collection.TotalRefusedMoney = Collection.RefusedCount == 0 ? 0M : queryResult.Where(p => p.Status == (int)WithdrawStatus.Refused).Sum(p => p.RequestMoney);
             Collection.TotalCount = queryResult.Count();
-            Collection.TotalMoney = queryResult.Count() == 0 ? 0M : queryResult.Sum(p => p.RequestMoney);
+            Collection.TotalMoney = Collection.TotalCount == 0 ? 0M : queryResult.Sum(p => p.RequestMoney);
             Collection.TotalResponseMoney = Collection.WinCount == 0 ? 0M : queryResult.Where(p => p.ResponseMoney.HasValue == true).Sum(p => p.ResponseMoney.Value);
 
             if (sortType == -1)
@@ -479,7 +479,8 @@ namespace KaSon.FrameWork.ORM.Helper
             var redisKey_TogetherList = RedisKeys.Key_Core_Togegher_OrderList;
             //生成列表
             var list = new List<Sports_TogetherSchemeQueryInfo>();
-            var redisList = new List<StackExchange.Redis.RedisValue>(); //RedisHelper.QuerySportsTogetherListFromRedis(redisKey_TogetherList).Result;
+            //var redisList = new List<StackExchange.Redis.RedisValue>(); //RedisHelper.QuerySportsTogetherListFromRedis(redisKey_TogetherList).Result;
+            var redisList = RedisHelper.ListRangeAsync(redisKey_TogetherList).Result;
             foreach (var item in redisList)
             {
                 try
@@ -754,7 +755,43 @@ namespace KaSon.FrameWork.ORM.Helper
                          where j.SchemeId == schemeId && j.JoinSucess == true
                          orderby j.JoinType ascending
                          select new { j, u });
-            var queryResult = query.ToList().Select(b => new Sports_TogetherJoinInfo
+            //var queryResult = query.ToList().Select(b => new Sports_TogetherJoinInfo
+            //{
+            //    BuyCount = b.j.BuyCount,
+            //    RealBuyCount = b.j.RealBuyCount,
+            //    IsSucess = b.j.JoinSucess,
+            //    JoinDateTime = b.j.CreateTime,
+            //    JoinType = (TogetherJoinType)b.j.JoinType,
+            //    Price = b.j.Price,
+            //    UserDisplayName = b.u.DisplayName,
+            //    HideDisplayNameCount = b.u.HideDisplayNameCount,
+            //    UserId = b.u.UserId,
+            //    JoinId = b.j.Id,
+            //    SchemeId = b.j.SchemeId,
+            //    BonusMoney = b.j.PreTaxBonusMoney,
+            //}).ToList();
+            totalCount = query.Count();
+            result.TotalCount = totalCount;
+            if (pageIndex == -1 && pageSize == -1)
+            {
+                result.List = query.ToList().Select(b => new Sports_TogetherJoinInfo
+                {
+                    BuyCount = b.j.BuyCount,
+                    RealBuyCount = b.j.RealBuyCount,
+                    IsSucess = b.j.JoinSucess,
+                    JoinDateTime = b.j.CreateTime,
+                    JoinType = (TogetherJoinType)b.j.JoinType,
+                    Price = b.j.Price,
+                    UserDisplayName = b.u.DisplayName,
+                    HideDisplayNameCount = b.u.HideDisplayNameCount,
+                    UserId = b.u.UserId,
+                    JoinId = b.j.Id,
+                    SchemeId = b.j.SchemeId,
+                    BonusMoney = b.j.PreTaxBonusMoney,
+                }).ToList();
+                return result;
+            }
+            var list = query.Skip(pageIndex * pageSize).Take(pageSize).ToList().Select(b => new Sports_TogetherJoinInfo
             {
                 BuyCount = b.j.BuyCount,
                 RealBuyCount = b.j.RealBuyCount,
@@ -769,14 +806,6 @@ namespace KaSon.FrameWork.ORM.Helper
                 SchemeId = b.j.SchemeId,
                 BonusMoney = b.j.PreTaxBonusMoney,
             }).ToList();
-            totalCount = queryResult.Count();
-            if (pageIndex == -1 && pageSize == -1)
-            {
-                result.List = queryResult.ToList();
-                return result;
-            }
-            var list = queryResult.Skip(pageIndex * pageSize).Take(pageSize).ToList();
-            result.TotalCount = totalCount;
             result.List.AddRange(list);
             return result;
         }
@@ -1348,7 +1377,7 @@ namespace KaSon.FrameWork.ORM.Helper
                              && (Model.gameType == "" || f.GameType == Model.gameType)
                              && (userId == "" || f.FollowerUserId == userId)
                              select new { f, u });
-                queryResult.AddRange(query.ToList().Select(b => new TogetherFollowerRuleQueryInfo
+                queryResult.AddRange(query.Skip(Model.pageIndex * Model.pageSize).Take(Model.pageSize).ToList().Select(b => new TogetherFollowerRuleQueryInfo
                 {
                     RuleId = b.f.Id,
                     BonusMoney = b.f.TotalBonusMoney,
@@ -1371,7 +1400,10 @@ namespace KaSon.FrameWork.ORM.Helper
                     UserId = b.u.UserId,
                     UserDisplayName = b.u.DisplayName,
                     HideDisplayNameCount = b.u.HideDisplayNameCount,
-                }));
+                }).ToList());
+                collection.TotalCount = query.Count();
+                collection.List = queryResult;
+                return collection;
             }
             else
             {
@@ -1382,7 +1414,7 @@ namespace KaSon.FrameWork.ORM.Helper
                              && (userId == "" || f.CreaterUserId == userId)
                              orderby f.FollowerIndex ascending
                              select new { f, u });
-                queryResult.AddRange(query.ToList().Select(b => new TogetherFollowerRuleQueryInfo
+                queryResult.AddRange(query.Skip(Model.pageIndex * Model.pageSize).Take(Model.pageSize).ToList().Select(b => new TogetherFollowerRuleQueryInfo
                 {
                     RuleId = b.f.Id,
                     BonusMoney = b.f.TotalBonusMoney,
@@ -1405,7 +1437,10 @@ namespace KaSon.FrameWork.ORM.Helper
                     UserId = b.u.UserId,
                     UserDisplayName = b.u.DisplayName,
                     HideDisplayNameCount = b.u.HideDisplayNameCount,
-                }));
+                }).ToList());
+                collection.TotalCount = queryResult.Count();
+                collection.List = queryResult;
+                return collection;
             }
             #region
             //var query = Model.byFollower ? (from f in DB.CreateQuery<C_Together_FollowerRule>()
@@ -1468,9 +1503,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //                             HideDisplayNameCount = u.HideDisplayNameCount,
             //                         });
             #endregion
-            collection.TotalCount = queryResult.Count();
-            collection.List = queryResult.Skip(Model.pageIndex * Model.pageSize).Take(Model.pageSize).ToList();
-            return collection;
+            
         }
         /// <summary>
         ///  查询跟单信息
@@ -2260,30 +2293,52 @@ namespace KaSon.FrameWork.ORM.Helper
                         && (Model.bonusStatus == null || d.BonusStatus == (int)Model.bonusStatus)
                         && (Model.schemeType == null || d.SchemeType == (int)Model.schemeType)
                         && (d.CreateTime >= Model.startTime && d.CreateTime < Model.endTime)
-                        select new { d };
-            var queryResult = query.ToList().Select(b => new MyOrderListInfo
+                        select  d ;
+            //var queryResult = query.ToList().Select(b => new MyOrderListInfo
+            //{
+            //    AddMoney = b.AddMoney,
+            //    Amount = b.Amount,
+            //    AfterTaxBonusMoney = b.AfterTaxBonusMoney,
+            //    BetTime = b.CreateTime.ToString("yyyy-MM-dd HH:mm:ss"),
+            //    BonusAwardsMoney = b.BonusAwardsMoney,
+            //    BonusStatus = (BonusStatus)b.BonusStatus,
+            //    GameCode = b.GameCode,
+            //    GameType = b.GameType,
+            //    GameTypeName = b.GameTypeName,
+            //    IssuseNumber = b.CurrentIssuseNumber,
+            //    PreTaxBonusMoney = b.PreTaxBonusMoney,
+            //    ProgressStatus = (ProgressStatus)b.ProgressStatus,
+            //    RedBagAwardsMoney = b.RedBagAwardsMoney,
+            //    SchemeBettingCategory = (SchemeBettingCategory)b.SchemeBettingCategory,
+            //    SchemeId = b.SchemeId,
+            //    SchemeSource = (SchemeSource)b.SchemeSource,
+            //    SchemeType = (SchemeType)b.SchemeType,
+            //    TicketStatus = (TicketStatus)b.TicketStatus,
+            //    TotalMoney = b.TotalMoney,
+            //});
+            collection.TotalCount = query.Count();
+            collection.List = query.Skip(Model.pageIndex * Model.pageSize).Take(Model.pageSize).ToList().Select(b => new MyOrderListInfo
             {
-                AddMoney = b.d.AddMoney,
-                Amount = b.d.Amount,
-                AfterTaxBonusMoney = b.d.AfterTaxBonusMoney,
-                BetTime = b.d.CreateTime.ToString("yyyy-MM-dd HH:mm:ss"),
-                BonusAwardsMoney = b.d.BonusAwardsMoney,
-                BonusStatus = (BonusStatus)b.d.BonusStatus,
-                GameCode = b.d.GameCode,
-                GameType = b.d.GameType,
-                GameTypeName = b.d.GameTypeName,
-                IssuseNumber = b.d.CurrentIssuseNumber,
-                PreTaxBonusMoney = b.d.PreTaxBonusMoney,
-                ProgressStatus = (ProgressStatus)b.d.ProgressStatus,
-                RedBagAwardsMoney = b.d.RedBagAwardsMoney,
-                SchemeBettingCategory = (SchemeBettingCategory)b.d.SchemeBettingCategory,
-                SchemeId = b.d.SchemeId,
-                SchemeSource = (SchemeSource)b.d.SchemeSource,
-                SchemeType = (SchemeType)b.d.SchemeType,
-                TicketStatus = (TicketStatus)b.d.TicketStatus,
-                TotalMoney = b.d.TotalMoney,
-            });
-            collection.List = queryResult.Skip(Model.pageIndex * Model.pageSize).Take(Model.pageSize).ToList();
+                AddMoney = b.AddMoney,
+                Amount = b.Amount,
+                AfterTaxBonusMoney = b.AfterTaxBonusMoney,
+                BetTime = b.CreateTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                BonusAwardsMoney = b.BonusAwardsMoney,
+                BonusStatus = (BonusStatus)b.BonusStatus,
+                GameCode = b.GameCode,
+                GameType = b.GameType,
+                GameTypeName = b.GameTypeName,
+                IssuseNumber = b.CurrentIssuseNumber,
+                PreTaxBonusMoney = b.PreTaxBonusMoney,
+                ProgressStatus = (ProgressStatus)b.ProgressStatus,
+                RedBagAwardsMoney = b.RedBagAwardsMoney,
+                SchemeBettingCategory = (SchemeBettingCategory)b.SchemeBettingCategory,
+                SchemeId = b.SchemeId,
+                SchemeSource = (SchemeSource)b.SchemeSource,
+                SchemeType = (SchemeType)b.SchemeType,
+                TicketStatus = (TicketStatus)b.TicketStatus,
+                TotalMoney = b.TotalMoney,
+            }).ToList();
             return collection;
         }
 
@@ -2291,29 +2346,29 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             var query = from d in DB.CreateQuery<C_OrderDetail>()
                         where d.SchemeId == schemeId
-                        select new { d };
+                        select  d;
             var queryResult = query.ToList().Select(b => new MyOrderListInfo
             {
-                AddMoney = b.d.AddMoney,
-                Amount = b.d.Amount,
-                AfterTaxBonusMoney = b.d.AfterTaxBonusMoney,
-                BetTime = b.d.CreateTime.ToString("yyyy-MM-dd HH:mm:ss"),
-                BonusAwardsMoney = b.d.BonusAwardsMoney,
-                BonusStatus = (BonusStatus)b.d.BonusStatus,
-                GameCode = b.d.GameCode,
-                GameType = b.d.GameType,
-                GameTypeName = b.d.GameTypeName,
-                IssuseNumber = b.d.CurrentIssuseNumber,
-                PreTaxBonusMoney = b.d.PreTaxBonusMoney,
-                ProgressStatus = (ProgressStatus)b.d.ProgressStatus,
-                RedBagAwardsMoney = b.d.RedBagAwardsMoney,
-                SchemeBettingCategory = (SchemeBettingCategory)b.d.SchemeBettingCategory,
-                SchemeId = b.d.SchemeId,
-                SchemeSource = (SchemeSource)b.d.SchemeSource,
-                SchemeType = (SchemeType)b.d.SchemeType,
-                TicketStatus = (TicketStatus)b.d.TicketStatus,
-                TotalMoney = b.d.TotalMoney,
-                StopAfterBonus = b.d.StopAfterBonus,
+                AddMoney = b.AddMoney,
+                Amount = b.Amount,
+                AfterTaxBonusMoney = b.AfterTaxBonusMoney,
+                BetTime = b.CreateTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                BonusAwardsMoney = b.BonusAwardsMoney,
+                BonusStatus = (BonusStatus)b.BonusStatus,
+                GameCode = b.GameCode,
+                GameType = b.GameType,
+                GameTypeName = b.GameTypeName,
+                IssuseNumber = b.CurrentIssuseNumber,
+                PreTaxBonusMoney = b.PreTaxBonusMoney,
+                ProgressStatus = (ProgressStatus)b.ProgressStatus,
+                RedBagAwardsMoney = b.RedBagAwardsMoney,
+                SchemeBettingCategory = (SchemeBettingCategory)b.SchemeBettingCategory,
+                SchemeId = b.SchemeId,
+                SchemeSource = (SchemeSource)b.SchemeSource,
+                SchemeType = (SchemeType)b.SchemeType,
+                TicketStatus = (TicketStatus)b.TicketStatus,
+                TotalMoney = b.TotalMoney,
+                StopAfterBonus = b.StopAfterBonus,
             });
             return queryResult.FirstOrDefault();
         }
@@ -2321,23 +2376,37 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             var query = from b in DB.CreateQuery<E_LotteryNewBonus>()
                         orderby b.CreateTime descending
-                        select new { b };
-            var queryResult = query.ToList().Select(z => new LotteryNewBonusInfo
+                        select b;
+            //var queryResult = query.ToList().Select(z => new LotteryNewBonusInfo
+            //{
+            //    AfterTaxBonusMoney = z.AfterTaxBonusMoney,
+            //    Amount = z.Amount,
+            //    CreateTime = z.CreateTime,
+            //    GameCode = z.GameCode,
+            //    GameType = z.GameType,
+            //    HideUserDisplayNameCount = z.HideUserDisplayNameCount,
+            //    IssuseNumber = z.IssuseNumber,
+            //    PlayType = z.PlayType,
+            //    PreTaxBonusMoney = z.PreTaxBonusMoney,
+            //    SchemeId = z.SchemeId,
+            //    TotalMoney = z.TotalMoney,
+            //    UserDisplayName = z.UserDisplayName,
+            //});
+            return query.Take(count).ToList().Select(z => new LotteryNewBonusInfo
             {
-                AfterTaxBonusMoney = z.b.AfterTaxBonusMoney,
-                Amount = z.b.Amount,
-                CreateTime = z.b.CreateTime,
-                GameCode = z.b.GameCode,
-                GameType = z.b.GameType,
-                HideUserDisplayNameCount = z.b.HideUserDisplayNameCount,
-                IssuseNumber = z.b.IssuseNumber,
-                PlayType = z.b.PlayType,
-                PreTaxBonusMoney = z.b.PreTaxBonusMoney,
-                SchemeId = z.b.SchemeId,
-                TotalMoney = z.b.TotalMoney,
-                UserDisplayName = z.b.UserDisplayName,
-            });
-            return queryResult.Take(count).ToList();
+                AfterTaxBonusMoney = z.AfterTaxBonusMoney,
+                Amount = z.Amount,
+                CreateTime = z.CreateTime,
+                GameCode = z.GameCode,
+                GameType = z.GameType,
+                HideUserDisplayNameCount = z.HideUserDisplayNameCount,
+                IssuseNumber = z.IssuseNumber,
+                PlayType = z.PlayType,
+                PreTaxBonusMoney = z.PreTaxBonusMoney,
+                SchemeId = z.SchemeId,
+                TotalMoney = z.TotalMoney,
+                UserDisplayName = z.UserDisplayName,
+            }).ToList();
         }
 
         /// <summary>
