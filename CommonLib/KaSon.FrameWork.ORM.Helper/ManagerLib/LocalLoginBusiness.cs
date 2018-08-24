@@ -17,6 +17,7 @@ using EntityModel.CoreModel.AuthEntities;
 using EntityModel.Enum;
 using EntityModel.ExceptionExtend;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
@@ -66,23 +67,43 @@ namespace KaSon.FrameWork.ORM.Helper
         {
 
             var LoginUser = DB.CreateQuery<E_Login_Local>();
+
+           
+            String pattern = @"^(0|86|17951)?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8}$";//"^((1[3,5,8][0-9])|(14[5,7])|(17[0,6,7,8])|(19[7]))\\d{8}$";
+            
 #if LogInfo
 
-            Stopwatch watch = new Stopwatch();
+                    Stopwatch watch = new Stopwatch();
               Double opt=0 ,opt1 = 0, opt2 = 0, opt3= 0;
             int count=0, count1=0;
          
             watch.Start();
 #endif
-            var LoginUsers = LoginUser.Where(p => (p.LoginName == loginName || p.mobile == loginName) && p.Password == password).ToList().Select(p => new LoginLocal
+            LoginLocal LoginUsers = null;
+            if (Regex.IsMatch(loginName, pattern))
             {
-                CreateTime = p.CreateTime,
-                LoginName = p.LoginName,
-                mobile = p.mobile,
-                Password = p.Password,
-                UserId = p.UserId,
+                 LoginUsers = LoginUser.Where(p => ( p.mobile == loginName) && p.Password == password).ToList().Select(p => new LoginLocal
+                {
+                    CreateTime = p.CreateTime,
+                    LoginName = p.LoginName,
+                    mobile = p.mobile,
+                    Password = p.Password,
+                    UserId = p.UserId,
 
-            }).FirstOrDefault();
+                }).FirstOrDefault();
+            }
+            else {
+                LoginUsers = LoginUser.Where(p => (p.LoginName == loginName) && p.Password == password).ToList().Select(p => new LoginLocal
+                {
+                    CreateTime = p.CreateTime,
+                    LoginName = p.LoginName,
+                    mobile = p.mobile,
+                    Password = p.Password,
+                    UserId = p.UserId,
+
+                }).FirstOrDefault();
+            }
+           
 
 #if LogInfo
             watch.Stop();
@@ -226,9 +247,10 @@ namespace KaSon.FrameWork.ORM.Helper
 
                 }
             }
+#if LogInfo
             Log4Log.LogEX(KLogLevel.SevTimeInfo,  string.Format("查询C_Auth_Users,E_Login_Local 使用时间:{0},COUNT:{1},{2},进入if 开始时间 {3},if 结束时间 {4} \r\n", opt.ToString(),count1.ToString(),
                 count.ToString(), opt2.ToString(), opt3.ToString()));
-
+#endif
             return LoginUsers;
             //return Session.CreateCriteria<LoginLocal>()
             //    .Add(Restrictions.Eq("LoginName", loginName))
