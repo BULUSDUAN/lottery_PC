@@ -448,7 +448,7 @@ namespace Lottery.Api.Controllers
                 userInfo.RegisterIp = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
                 userInfo.LoginName = mobile;
                 userInfo.Password = password;
-
+                userInfo.Mobile = mobile;
                 param["validateCode"] = validateCode;
                 param["mobile"] = mobile;
                 param["source"] = (int)schemeSource;
@@ -464,10 +464,11 @@ namespace Lottery.Api.Controllers
                 param.Clear();             
                 if (result.Message.Contains("手机认证成功") || result.Message.Contains("恭喜您注册成功"))
                 {
-                    param["schemeId"] = string.IsNullOrEmpty(schemeId)?"0": schemeId;
+                    
                     #region 此处判断执行订单送红包逻辑
-                    if (schemeId != null)
+                    if (!string.IsNullOrEmpty(schemeId))
                     {
+                        param["schemeId"] =  schemeId;
                       var redbag= await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/User/OrderShareRegisterRedBag");
                     }
                     #endregion
