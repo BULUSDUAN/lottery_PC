@@ -10,12 +10,7 @@ namespace EntityModel.CoreModel
         public virtual string UserId { get; set; }
         /// <summary>
         /// 系统用户
-        /// </summary>
-        public virtual SystemUser User { get; set; }
-        /// <summary>
-        /// 用户注册信息
-        /// </summary>
-        public virtual UserRegister Register { get; set; }
+       
         /// <summary>
         /// 登录名
         /// </summary>
@@ -32,5 +27,12 @@ namespace EntityModel.CoreModel
         /// 手机号
         /// </summary>
         public virtual string mobile { get; set; }
+
+        /// </summary>
+        public virtual SystemUser User { get; set; }
+        /// <summary>
+        /// 用户注册信息
+        /// </summary>
+        public virtual UserRegister Register { get; set; }
     }
 }

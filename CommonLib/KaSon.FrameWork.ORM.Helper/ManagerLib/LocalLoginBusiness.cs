@@ -279,44 +279,49 @@ namespace KaSon.FrameWork.ORM.Helper
             LoginLocal LoginUsers = null;
             if (Regex.IsMatch(loginName, pattern))
             {
-                LoginUsers = (from p in LoginUser
-                              where (p.mobile == loginName && p.Password == password)
-                              select new LoginLocal
-                              {
-                                  CreateTime = p.CreateTime,
-                                  LoginName = p.LoginName,
-                                  mobile = p.mobile,
-                                  Password = p.Password,
-                                  UserId = p.UserId,
+                var p = (from b in LoginUser
+                         where (b.mobile == loginName && b.Password == password)
+                         select b).FirstOrDefault();
 
-                              }).FirstOrDefault();
+                
+                LoginUsers = p != null ? new LoginLocal(){
+                    CreateTime = p.CreateTime,
+                    LoginName = p.LoginName,
+                    mobile = p.mobile,
+                    Password = p.Password,
+                    UserId = p.UserId,
+
+                }: null;
             }
             else
             {
-                LoginUsers = (from p in LoginUser
-                              where p.LoginName == loginName && p.Password == password
-                              select new LoginLocal
-                              {
-                                  CreateTime = p.CreateTime,
-                                  LoginName = p.LoginName,
-                                  mobile = p.mobile,
-                                  Password = p.Password,
-                                  UserId = p.UserId,
+               var p = (from b in LoginUser
+                              where b.LoginName == loginName && b.Password == password
+                              select b).FirstOrDefault();
+                LoginUsers = p != null ? new LoginLocal()
+                {
+                    CreateTime = p.CreateTime,
+                    LoginName = p.LoginName,
+                    mobile = p.mobile,
+                    Password = p.Password,
+                    UserId = p.UserId,
 
-                              }).FirstOrDefault();
+                } : null;
             }
             if (LoginUsers != null)
             {
                 string userId = LoginUsers.UserId;
-                LoginUsers.User = (from p in DB.CreateQuery<C_Auth_Users>()
-                                   where p.UserId == userId
-                                   select new SystemUser()
+               var d = (from b in DB.CreateQuery<C_Auth_Users>()
+                                   where b.UserId == userId
+                                   select b).FirstOrDefault();
+
+                LoginUsers.User = d != null ? new SystemUser()
                                    {
-                                       CreateTime = p.CreateTime,
-                                       AgentId = p.AgentId,
-                                       RegFrom = p.RegFrom,
-                                       UserId = p.UserId,
-                                   }).FirstOrDefault();               
+                                       CreateTime = d.CreateTime,
+                                       AgentId = d.AgentId,
+                                       RegFrom = d.RegFrom,
+                                       UserId = d.UserId,
+                                   }:null;               
                 LoginUsers.Register = (from p in DB.CreateQuery<C_User_Register>()
                                        where p.UserId == userId
                                        select p).ToList().Select(p => new UserRegister()
