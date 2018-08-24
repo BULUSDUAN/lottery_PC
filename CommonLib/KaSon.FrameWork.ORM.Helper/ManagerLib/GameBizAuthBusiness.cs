@@ -11,7 +11,7 @@ using System.Text;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
-    public class GameBizAuthBusiness:DBbase
+    public class GameBizAuthBusiness : DBbase
     {
         /// <summary>
         /// 获取用户口令
@@ -20,19 +20,19 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <returns>口令</returns>
         public string GetUserToken(string userId)
         {
-           
-                var login = DB.CreateQuery<C_Auth_Users>().Where(p => p.UserId == userId).ToList().Select(p => new SystemUser()
-                {
-                    CreateTime = p.CreateTime,
-                    AgentId = p.AgentId,
-                    RegFrom = p.RegFrom,
-                    UserId = p.UserId
-                }).FirstOrDefault();
 
-                CheckUser(login, userId);
+            var login = DB.CreateQuery<C_Auth_Users>().Where(p => p.UserId == userId).ToList().Select(p => new SystemUser()
+            {
+                CreateTime = p.CreateTime,
+                AgentId = p.AgentId,
+                RegFrom = p.RegFrom,
+                UserId = p.UserId
+            }).FirstOrDefault();
 
-                return GetLoginUserToken(login);
-            
+            CheckUser(login, userId);
+
+            return GetLoginUserToken(login);
+
         }
         //private static string _guestToken = null;
         //public string GetGuestToken()
@@ -108,7 +108,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 {
                     throw new ArgumentException("指定的用户不存在。");
                 }
-              
+
                 var roleList = userManager.GetRoleListByIds(roleIds);
                 foreach (var role in roleList)
                 {
@@ -123,7 +123,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 DB.Rollback();
                 throw EX;
             }
-           
+
 
         }
         //public void RemoveUserRoles(string userId, string[] roleIds)
@@ -376,8 +376,8 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                 throw new LogicException("登录名\"" + userId + "\"不存在");
             }
-           
-            if (LocalLoginBusiness.systemUser.RoleList.Count==0)
+            new LocalLoginBusiness().GetSystemUser(user);
+            if (user.RoleList.Count == 0)
             {
                 throw new AuthException("系统配置错误，未配置角色信息");
             }
@@ -385,25 +385,27 @@ namespace KaSon.FrameWork.ORM.Helper
         private string GetLoginUserToken(SystemUser user)
         {
             IList<AccessControlItem> acl = new List<AccessControlItem>();
-            foreach (var role in LocalLoginBusiness.systemUser.RoleList)
+            new LocalLoginBusiness().GetSystemUser(user);
+            foreach (var role in user.RoleList)
             {
                 if (role.RoleType == RoleType.BackgroundRole && role.IsAdmin)
                 {
                     return GetAdminToken(user.UserId);
                 }
-                MergeRoleAccessControlList(ref acl, role);
+                MergeRoleAccessControlList(ref acl, role, user.UserId);
             }
-            user.FunctionList=LocalLoginBusiness.systemUser.FunctionList;
+            user.FunctionList = user.FunctionList;
             acl = MergeAccessControlList<AccessControlItem, UserFunction>(acl, user.FunctionList);
             return GetUserToken(user.UserId, acl);
         }
-        private void MergeRoleAccessControlList(ref IList<AccessControlItem> acl, SystemRole role)
+        private void MergeRoleAccessControlList(ref IList<AccessControlItem> acl, SystemRole role, string userid)
         {
             if (role.ParentRole != null)
             {
-                MergeRoleAccessControlList(ref acl, role.ParentRole);
+                MergeRoleAccessControlList(ref acl, role.ParentRole, userid);
             }
-            role.FunctionList = LocalLoginBusiness.systemRole.FunctionList;
+            new LocalLoginBusiness().GetSystemRole(role, userid);
+            role.FunctionList = role.FunctionList;
             acl = MergeAccessControlList<AccessControlItem, RoleFunction>(acl, role.FunctionList);
         }
         #region 普通投注用到 kason

@@ -28,61 +28,258 @@ namespace KaSon.FrameWork.ORM.Helper
         public LoginLocal Login(string loginName, string password)
         {
             password = MD5Helper.MD5(string.Format("{0}{1}", password, _gbKey)).ToUpper();
-
-            LoginLocal loginInfo = null;
-
-            loginInfo = UserLogin(loginName, password);
-
-
+            LoginLocal loginInfo = UserLogin(loginName, password);
             return loginInfo;
         }
         public LoginLocal LoginAPP(string loginName, string password)
         {
-            //password = Encipherment.MD5(password);
-
-            LoginLocal loginInfo = null;
-
-            loginInfo = UserLogin(loginName, password);
-            if (loginInfo != null && loginInfo.User != null)
-            {
-                //NHibernate.NHibernateUtil.Initialize(loginInfo.User.RoleList);
-                //NHibernate.NHibernateUtil.Initialize(loginInfo.Register);
-            }
-
+            LoginLocal loginInfo = UserLogin(loginName, password);
             return loginInfo;
         }
 
-        private UserAuthentication userAuthentication = new UserAuthentication();
-
-
-       public static  SystemUser systemUser = new SystemUser();
-        public static SystemRole systemRole = new SystemRole();
+        #region test
+        //private UserAuthentication userAuthentication = new UserAuthentication();
+        //public static SystemUser systemUser = new SystemUser();
+        //public static SystemRole systemRole = new SystemRole();
         /// <summary>
         /// 用户名(手机)密码登录
         /// </summary>
         /// <param name="loginName"></param>
         /// <param name="password"></param>
         /// <returns></returns>
+        //        public LoginLocal UserLogin_old(string loginName, string password)
+        //        {
+
+        //            var LoginUser = DB.CreateQuery<E_Login_Local>();
+
+
+        //            String pattern = @"^(0|86|17951)?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8}$";//"^((1[3,5,8][0-9])|(14[5,7])|(17[0,6,7,8])|(19[7]))\\d{8}$";
+
+        //#if LogInfo
+
+        //                    Stopwatch watch = new Stopwatch();
+        //              Double opt=0 ,opt1 = 0, opt2 = 0, opt3= 0;
+        //            int count=0, count1=0;
+
+        //            watch.Start();
+        //#endif
+        //            LoginLocal LoginUsers = null;
+        //            if (Regex.IsMatch(loginName, pattern))
+        //            {
+        //                LoginUsers = LoginUser.Where(p => p.mobile == loginName && p.Password == password).Select(p => new LoginLocal
+        //                {
+        //                    CreateTime = p.CreateTime,
+        //                    LoginName = p.LoginName,
+        //                    mobile = p.mobile,
+        //                    Password = p.Password,
+        //                    UserId = p.UserId,
+
+        //                }).FirstOrDefault();
+        //            }
+        //            else
+        //            {
+        //                LoginUsers = LoginUser.Where(p => (p.LoginName == loginName) && p.Password == password).Select(p => new LoginLocal
+        //                {
+        //                    CreateTime = p.CreateTime,
+        //                    LoginName = p.LoginName,
+        //                    mobile = p.mobile,
+        //                    Password = p.Password,
+        //                    UserId = p.UserId,
+
+        //                }).FirstOrDefault();
+        //            }
+
+
+        //#if LogInfo
+        //            watch.Stop();
+        //            opt = watch.Elapsed.TotalMilliseconds;
+        //            watch.Reset();
+        //            count = DB.CreateQuery<C_Auth_Users>().Count();
+        //            count1 = LoginUser.Count();
+        //            watch.Stop();
+        //#endif
+        //            if (LoginUsers != null)
+        //            {
+
+        //                LoginUsers.User = (from p in DB.CreateQuery<C_Auth_Users>()
+        //                                   where p.UserId == LoginUsers.UserId
+        //                                   select new SystemUser()
+        //                                   {
+        //                                       CreateTime = p.CreateTime,
+        //                                       AgentId = p.AgentId,
+        //                                       RegFrom = p.RegFrom,
+        //                                       UserId = p.UserId,
+        //                                   }).FirstOrDefault();
+
+
+        //                if (LoginUsers.User != null)
+        //                {
+        //#if LogInfo
+        //                    watch.Reset();
+
+
+        //#endif
+
+        //                    var uQueryRoles = (from p in DB.CreateQuery<C_Auth_Roles>()
+        //                                       select p).ToList().Select(p => new SystemRole()
+        //                                       {
+        //                                           RoleId = p.RoleId,
+        //                                           RoleName = p.RoleName,
+        //                                           IsInner = p.IsInner,
+        //                                           IsAdmin = p.IsAdmin,
+        //                                           RoleType = (RoleType)p.RoleType,
+        //                                       }).ToList();
+
+        //#if LogInfo
+
+
+        //                    opt2 = watch.Elapsed.TotalMilliseconds;
+        //                    watch.Stop();
+        //                    watch.Reset();
+        //#endif
+
+        //                    var uQueryUserRole = DB.CreateQuery<C_Auth_UserRole>();
+        //                    LoginUsers.User.RoleList = (from b in uQueryRoles
+        //                                                join c in uQueryUserRole
+        //                                                on b.RoleId equals c.RoleId
+        //                                                where c.UserId == LoginUsers.UserId
+        //                                                select b).ToList();
+
+        //                    systemUser.RoleList = LoginUsers.User.RoleList;
+
+        //                    var C_Auth_RoleFunction_query = DB.CreateQuery<C_Auth_RoleFunction>();
+        //                    // var C_Auth_UserRole_query = DB.CreateQuery<C_Auth_UserRole>();
+        //                    var C_Auth_Function_List = DB.CreateQuery<C_Auth_Function_List>();
+        //                    //systemRole.FunctionList
+        //                    var RoleFunctionList = (from b in C_Auth_RoleFunction_query
+        //                                            join d in uQueryUserRole
+
+        //                                            on b.RoleId equals d.RoleId
+        //                                            where d.UserId == LoginUsers.UserId
+        //                                            select b
+        //                                             ).Select(p => new RoleFunction()
+        //                                             {
+        //                                                 FunctionId = p.FunctionId,
+        //                                                 IId = p.IId,
+        //                                                 Mode = p.Mode,
+
+        //                                             }).ToList();
+
+        //                    if (RoleFunctionList != null && RoleFunctionList.Count() != 0)
+        //                    {
+
+        //                        var Ids = RoleFunctionList.Select(p => p.FunctionId).ToList();
+        //                        var Auth_Function_Lists = (from p in DB.CreateQuery<C_Auth_Function_List>()
+        //                                                   where Ids.Contains(p.FunctionId)
+        //                                                   select new Function()
+        //                                                   {
+        //                                                       DisplayName = p.DisplayName,
+        //                                                       FunctionId = p.FunctionId,
+        //                                                       IsBackBasic = p.IsBackBasic,
+        //                                                       IsWebBasic = p.IsWebBasic,
+        //                                                       ParentId = p.ParentId,
+        //                                                       ParentPath = p.ParentPath,
+        //                                                   }).ToList();
+        //                        systemRole.FunctionList = RoleFunctionList;
+
+        //                    }
+
+        //                    var C_Auth_UserFunction_query = DB.CreateQuery<C_Auth_UserFunction>();
+        //                    // var C_Auth_UserRole = DB.CreateQuery<C_Auth_UserRole>();
+        //                    var C_Auth_UserFunction_List = DB.CreateQuery<C_Auth_Function_List>();
+        //                    //systemRole.FunctionList
+        //                    var UserFunctionList = (from b in C_Auth_UserFunction_query
+        //                                            join d in uQueryUserRole
+
+        //                                            on b.UserId equals d.UserId
+        //                                            where d.UserId == LoginUsers.UserId
+        //                                            select b
+        //                                             ).ToList().Select(p => new UserFunction()
+        //                                             {
+        //                                                 FunctionId = p.FunctionId,
+        //                                                 IId = p.IId,
+        //                                                 Mode = p.Mode,
+
+
+        //                                             }).ToList();
+        //                    systemUser.FunctionList = UserFunctionList;
+        //                    if (UserFunctionList != null && UserFunctionList.Count() != 0)
+        //                    {
+
+        //                        var Ids = RoleFunctionList.Select(p => p.FunctionId).ToList();
+        //                        var Auth_Function_Lists = DB.CreateQuery<C_Auth_Function_List>().Where(p => Ids.Contains(p.FunctionId)).Select(p => new Function()
+        //                        {
+        //                            DisplayName = p.DisplayName,
+        //                            FunctionId = p.FunctionId,
+        //                            IsBackBasic = p.IsBackBasic,
+        //                            IsWebBasic = p.IsWebBasic,
+        //                            ParentId = p.ParentId,
+        //                            ParentPath = p.ParentPath,
+        //                        }).ToList();
+        //                        systemUser.FunctionList = UserFunctionList;
+
+        //                    }
+
+        //                    string userId = LoginUsers.UserId;
+
+        //                    LoginUsers.Register = (from p in DB.CreateQuery<C_User_Register>()
+        //                                           where p.UserId == userId
+        //                                           select p).ToList().Select(p => new UserRegister()
+        //                                           {
+
+        //                                               AgentId = p.AgentId,
+        //                                               ComeFrom = p.ComeFrom,
+        //                                               CreateTime = p.CreateTime,
+        //                                               DisplayName = p.DisplayName,
+        //                                               HideDisplayNameCount = p.HideDisplayNameCount,
+        //                                               IsAgent = p.IsAgent,
+        //                                               IsEnable = p.IsEnable,
+        //                                               IsFillMoney = p.IsFillMoney,
+        //                                               IsIgnoreReport = p.IsIgnoreReport,
+        //                                               ParentPath = p.ParentPath,
+        //                                               Referrer = p.Referrer,
+        //                                               ReferrerUrl = p.ReferrerUrl,
+        //                                               RegisterIp = p.RegisterIp,
+        //                                               RegType = p.RegType,
+        //                                               UserId = p.UserId,
+        //                                               UserType = p.UserType,
+        //                                               VipLevel = p.VipLevel
+        //                                           }).FirstOrDefault();
+
+
+
+        //                    LoginUsers.Register.IsEnable = LoginUsers.Register.IsEnable;
+
+        //#if LogInfo
+        //                    watch.Stop();
+        //                    opt3 = watch.Elapsed.TotalMilliseconds;
+        //                   // watch.Start();
+        //#endif
+
+        //                }
+        //            }
+        //#if LogInfo
+        //            Log4Log.LogEX(KLogLevel.SevTimeInfo,  string.Format("查询C_Auth_Users,E_Login_Local 使用时间:{0},COUNT:{1},{2},进入if 开始时间 {3},if 结束时间 {4} \r\n", opt.ToString(),count1.ToString(),
+        //                count.ToString(), opt2.ToString(), opt3.ToString()));
+        //#endif
+        //            return LoginUsers;
+        //            //return Session.CreateCriteria<LoginLocal>()
+        //            //    .Add(Restrictions.Eq("LoginName", loginName))
+        //            //    .Add(Restrictions.Eq("Password", password))
+        //            //    .UniqueResult<LoginLocal>();
+        //        }
+
+        #endregion
+
         public LoginLocal UserLogin(string loginName, string password)
         {
 
             var LoginUser = DB.CreateQuery<E_Login_Local>();
-
-           
             String pattern = @"^(0|86|17951)?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8}$";//"^((1[3,5,8][0-9])|(14[5,7])|(17[0,6,7,8])|(19[7]))\\d{8}$";
-            
-#if LogInfo
-
-                    Stopwatch watch = new Stopwatch();
-              Double opt=0 ,opt1 = 0, opt2 = 0, opt3= 0;
-            int count=0, count1=0;
-         
-            watch.Start();
-#endif
             LoginLocal LoginUsers = null;
             if (Regex.IsMatch(loginName, pattern))
             {
-                 LoginUsers = LoginUser.Where(p => p.mobile == loginName && p.Password == password).Select(p => new LoginLocal
+                LoginUsers =( from p in  LoginUser where (p.mobile == loginName && p.Password == password) select new LoginLocal
                 {
                     CreateTime = p.CreateTime,
                     LoginName = p.LoginName,
@@ -92,8 +289,9 @@ namespace KaSon.FrameWork.ORM.Helper
 
                 }).FirstOrDefault();
             }
-            else {
-                LoginUsers = LoginUser.Where(p => (p.LoginName == loginName) && p.Password == password).Select(p => new LoginLocal
+            else
+            {
+                LoginUsers =(from p in  LoginUser where p.LoginName == loginName && p.Password == password select new LoginLocal
                 {
                     CreateTime = p.CreateTime,
                     LoginName = p.LoginName,
@@ -103,20 +301,9 @@ namespace KaSon.FrameWork.ORM.Helper
 
                 }).FirstOrDefault();
             }
-            string userId = LoginUsers.UserId;
-
-#if LogInfo
-            watch.Stop();
-            opt = watch.Elapsed.TotalMilliseconds;
-            watch.Reset();
-            watch.Start();
-            count = DB.CreateQuery<C_Auth_Users>().Count();
-            count1 = LoginUser.Count();
-            watch.Stop();
-#endif
             if (LoginUsers != null)
             {
-
+                string userId = LoginUsers.UserId;
                 LoginUsers.User = (from p in DB.CreateQuery<C_Auth_Users>()
                                    where p.UserId == userId
                                    select new SystemUser()
@@ -125,164 +312,142 @@ namespace KaSon.FrameWork.ORM.Helper
                                        AgentId = p.AgentId,
                                        RegFrom = p.RegFrom,
                                        UserId = p.UserId,
-                                   }).FirstOrDefault();
-
-
-                if (LoginUsers.User != null)
-                {
-#if LogInfo
-                    watch.Reset();
-                    watch.Start();
-
-
-#endif
-
-                    var uQueryRoles = (from p in DB.CreateQuery<C_Auth_Roles>()
-                                       select p).ToList().Select(p=> new SystemRole()
+                                   }).FirstOrDefault();               
+                LoginUsers.Register = (from p in DB.CreateQuery<C_User_Register>()
+                                       where p.UserId == userId
+                                       select p).ToList().Select(p => new UserRegister()
                                        {
-                                           RoleId = p.RoleId,
-                                           RoleName = p.RoleName,
-                                           IsInner = p.IsInner,
-                                           IsAdmin = p.IsAdmin,
-                                           RoleType = (RoleType)p.RoleType,
-                                       }).ToList();
 
-#if LogInfo
-                 
-                  
-                    opt2 = watch.Elapsed.TotalMilliseconds;
-                    watch.Stop();
-                    watch.Reset();
-                    watch.Start();
-                    
-#endif
-
-                    var uQueryUserRole = DB.CreateQuery<C_Auth_UserRole>();
-                    LoginUsers.User.RoleList = (from b in uQueryRoles
-                                                join c in uQueryUserRole
-                                                on b.RoleId equals c.RoleId
-                                                where c.UserId == userId
-                                                select b).ToList();
-
-                    systemUser.RoleList = LoginUsers.User.RoleList;
-
-                    var C_Auth_RoleFunction_query = DB.CreateQuery<C_Auth_RoleFunction>();
-                   // var C_Auth_UserRole_query = DB.CreateQuery<C_Auth_UserRole>();
-                    var C_Auth_Function_List = DB.CreateQuery<C_Auth_Function_List>();
-                    //systemRole.FunctionList
-                    var RoleFunctionList = (from b in C_Auth_RoleFunction_query
-                                               join d in uQueryUserRole
-
-                                               on b.RoleId equals d.RoleId
-                                               where d.UserId == LoginUsers.UserId
-                                               select b
-                                             ).Select(p=>new RoleFunction() {  
-                                                  FunctionId=p.FunctionId,
-                                                   IId=p.IId,
-                                                    Mode=p.Mode,
-                                                    
-                                             }).ToList();
-
-                        if (RoleFunctionList != null && RoleFunctionList.Count() != 0) {
-
-                           var Ids = RoleFunctionList.Select(p => p.FunctionId).ToList();
-                            var Auth_Function_Lists =(from p in  DB.CreateQuery<C_Auth_Function_List>()
-                                                     where Ids.Contains(p.FunctionId)
-                                                     select new Function(){
-                                 DisplayName=p.DisplayName,
-                                 FunctionId=p.FunctionId,
-                                 IsBackBasic=p.IsBackBasic,
-                                 IsWebBasic=p.IsWebBasic,
-                                 ParentId=p.ParentId,
-                                 ParentPath=p.ParentPath,
-                        }).ToList();
-                        systemRole.FunctionList = RoleFunctionList;
-                        
-                    }
-
-                    var C_Auth_UserFunction_query = DB.CreateQuery<C_Auth_UserFunction>();
-                   // var C_Auth_UserRole = DB.CreateQuery<C_Auth_UserRole>();
-                    var C_Auth_UserFunction_List = DB.CreateQuery<C_Auth_Function_List>();
-                    //systemRole.FunctionList
-                    var UserFunctionList = (from b in C_Auth_UserFunction_query
-                                            join d in uQueryUserRole
-
-                                            on b.UserId equals d.UserId
-                                            where d.UserId == userId
-                                            select b
-                                             ).ToList().Select(p => new UserFunction()
-                                             {
-                                                 FunctionId = p.FunctionId,
-                                                 IId = p.IId,
-                                                 Mode = p.Mode,
-                                              
-
-                                             }).ToList();
-                    systemUser.FunctionList = UserFunctionList;
-                    if (UserFunctionList != null && UserFunctionList.Count() != 0)
-                    {
-
-                        var Ids = RoleFunctionList.Select(p => p.FunctionId).ToList();
-                        var Auth_Function_Lists = DB.CreateQuery<C_Auth_Function_List>().Where(p => Ids.Contains(p.FunctionId)).Select(p => new Function()
-                        {
-                            DisplayName = p.DisplayName,
-                            FunctionId = p.FunctionId,
-                            IsBackBasic = p.IsBackBasic,
-                            IsWebBasic = p.IsWebBasic,
-                            ParentId = p.ParentId,
-                            ParentPath = p.ParentPath,
-                        }).ToList();
-                        systemUser.FunctionList = UserFunctionList;
-
-                    }
-
-                  //  string userId = LoginUsers.UserId;
-
-                    LoginUsers.Register = (from p in DB.CreateQuery<C_User_Register>()
-                                           where p.UserId == userId
-                                           select p).ToList().Select(p=> new UserRegister()
-                                           {
-
-                                               AgentId = p.AgentId,
-                                               ComeFrom = p.ComeFrom,
-                                               CreateTime = p.CreateTime,
-                                               DisplayName = p.DisplayName,
-                                               HideDisplayNameCount = p.HideDisplayNameCount,
-                                               IsAgent = p.IsAgent,
-                                               IsEnable = p.IsEnable,
-                                               IsFillMoney = p.IsFillMoney,
-                                               IsIgnoreReport = p.IsIgnoreReport,
-                                               ParentPath = p.ParentPath,
-                                               Referrer = p.Referrer,
-                                               ReferrerUrl = p.ReferrerUrl,
-                                               RegisterIp = p.RegisterIp,
-                                               RegType = p.RegType,
-                                               UserId = p.UserId,
-                                               UserType = p.UserType,
-                                               VipLevel = p.VipLevel
-                                           }).FirstOrDefault();
-
-
-
-                    LoginUsers.Register.IsEnable = LoginUsers.Register.IsEnable;
-
-#if LogInfo
-                    watch.Stop();
-                    opt3 = watch.Elapsed.TotalMilliseconds;
-                   // watch.Start();
-#endif
-
-                }
+                                           AgentId = p.AgentId,
+                                           ComeFrom = p.ComeFrom,
+                                           CreateTime = p.CreateTime,
+                                           DisplayName = p.DisplayName,
+                                           HideDisplayNameCount = p.HideDisplayNameCount,
+                                           IsAgent = p.IsAgent,
+                                           IsEnable = p.IsEnable,
+                                           IsFillMoney = p.IsFillMoney,
+                                           IsIgnoreReport = p.IsIgnoreReport,
+                                           ParentPath = p.ParentPath,
+                                           Referrer = p.Referrer,
+                                           ReferrerUrl = p.ReferrerUrl,
+                                           RegisterIp = p.RegisterIp,
+                                           RegType = p.RegType,
+                                           UserId = p.UserId,
+                                           UserType = p.UserType,
+                                           VipLevel = p.VipLevel
+                                       }).FirstOrDefault();
             }
-#if LogInfo
-            Log4Log.LogEX(KLogLevel.SevTimeInfo,  string.Format("query C_Auth_Users,E_Login_Local user Time:{0},COUNT:{1},{2},into if start time {3},end if time {4} \r\n", opt.ToString(),count1.ToString(),
-                count.ToString(), opt2.ToString(), opt3.ToString()));
-#endif
             return LoginUsers;
-            //return Session.CreateCriteria<LoginLocal>()
-            //    .Add(Restrictions.Eq("LoginName", loginName))
-            //    .Add(Restrictions.Eq("Password", password))
-            //    .UniqueResult<LoginLocal>();
+        }
+
+
+        public  void GetSystemUser(SystemUser user)
+        {
+            var uQueryRoles = (from p in DB.CreateQuery<C_Auth_Roles>()
+                               select p).ToList().Select(p => new SystemRole()
+                               {
+                                   RoleId = p.RoleId,
+                                   RoleName = p.RoleName,
+                                   IsInner = p.IsInner,
+                                   IsAdmin = p.IsAdmin,
+                                   RoleType = (RoleType)p.RoleType,
+                               }).ToList();
+            var uQueryUserRole = DB.CreateQuery<C_Auth_UserRole>();
+            var C_Auth_RoleFunction_query = DB.CreateQuery<C_Auth_RoleFunction>();
+            var C_Auth_Function_List = DB.CreateQuery<C_Auth_Function_List>();
+            var C_Auth_UserFunction_query = DB.CreateQuery<C_Auth_UserFunction>();
+            user.RoleList = (from b in uQueryRoles
+                                        join c in uQueryUserRole
+                                        on b.RoleId equals c.RoleId
+                                        where c.UserId == user.UserId
+                             select b).ToList();
+            var RoleFunctionList = (from b in C_Auth_RoleFunction_query
+                                    join d in uQueryUserRole
+                                    on b.RoleId equals d.RoleId
+                                    where d.UserId == user.UserId
+                                    select b
+                                     ).Select(p => new RoleFunction()
+                                     {
+                                         FunctionId = p.FunctionId,
+                                         IId = p.IId,
+                                         Mode = p.Mode,
+
+                                     }).ToList();
+            var UserFunctionList = (from b in C_Auth_UserFunction_query
+                                    join d in uQueryUserRole
+
+                                    on b.UserId equals d.UserId
+                                    where d.UserId == user.UserId
+                                    select b
+                                     ).ToList().Select(p => new UserFunction()
+                                     {
+                                         FunctionId = p.FunctionId,
+                                         IId = p.IId,
+                                         Mode = p.Mode,
+
+
+                                     }).ToList();
+            user.FunctionList = UserFunctionList;
+            if (UserFunctionList != null && UserFunctionList.Count() != 0)
+            {
+
+                var Ids = RoleFunctionList.Select(p => p.FunctionId).ToList();
+                var Auth_Function_Lists = C_Auth_Function_List.Where(p => Ids.Contains(p.FunctionId)).Select(p => new Function()
+                {
+                    DisplayName = p.DisplayName,
+                    FunctionId = p.FunctionId,
+                    IsBackBasic = p.IsBackBasic,
+                    IsWebBasic = p.IsWebBasic,
+                    ParentId = p.ParentId,
+                    ParentPath = p.ParentPath,
+                }).ToList();
+                user.FunctionList = UserFunctionList;
+            }
+        }
+
+        public  void GetSystemRole(SystemRole role,string userid)
+        {
+            var uQueryRoles = (from p in DB.CreateQuery<C_Auth_Roles>()
+                               select p).ToList().Select(p => new SystemRole()
+                               {
+                                   RoleId = p.RoleId,
+                                   RoleName = p.RoleName,
+                                   IsInner = p.IsInner,
+                                   IsAdmin = p.IsAdmin,
+                                   RoleType = (RoleType)p.RoleType,
+                               }).ToList();
+            var uQueryUserRole = DB.CreateQuery<C_Auth_UserRole>();
+            var C_Auth_RoleFunction_query = DB.CreateQuery<C_Auth_RoleFunction>();
+            var C_Auth_Function_List = DB.CreateQuery<C_Auth_Function_List>();
+            var C_Auth_UserFunction_query = DB.CreateQuery<C_Auth_UserFunction>();
+            var RoleFunctionList = (from b in C_Auth_RoleFunction_query
+                                    join d in uQueryUserRole
+                                    on b.RoleId equals d.RoleId
+                                    where d.UserId == userid
+                                    select b
+                                     ).Select(p => new RoleFunction()
+                                     {
+                                         FunctionId = p.FunctionId,
+                                         IId = p.IId,
+                                         Mode = p.Mode,
+
+                                     }).ToList();
+            if (RoleFunctionList != null && RoleFunctionList.Count() != 0)
+            {
+                var Ids = RoleFunctionList.Select(p => p.FunctionId).ToList();
+                var Auth_Function_Lists = (from p in C_Auth_Function_List
+                                           where Ids.Contains(p.FunctionId)
+                                           select new Function()
+                                           {
+                                               DisplayName = p.DisplayName,
+                                               FunctionId = p.FunctionId,
+                                               IsBackBasic = p.IsBackBasic,
+                                               IsWebBasic = p.IsWebBasic,
+                                               ParentId = p.ParentId,
+                                               ParentPath = p.ParentPath,
+                                           }).ToList();
+                role.FunctionList = RoleFunctionList;
+            }
         }
 
 
@@ -323,7 +488,7 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             return DB.CreateQuery<C_User_Register>().Where(p => p.UserId == userId).FirstOrDefault();
         }
-       
+
 
         /// <summary>
         /// 查询本地用户
@@ -349,30 +514,30 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public UserBalanceInfo QueryUserBalance(string userId)
         {
-           
-                var balance = QueryUserBalanceInfo(userId);
-                if (balance == null)
-                {
-                    throw new ArgumentException("用户账户不存在");
-                }
-                return new UserBalanceInfo
-                {
-                    UserId = balance.UserId,
-                    FillMoneyBalance = balance.FillMoneyBalance,
-                    BonusBalance = balance.BonusBalance,
-                    CommissionBalance = balance.CommissionBalance,
-                    FreezeBalance = balance.FreezeBalance,
-                    ExpertsBalance = balance.ExpertsBalance,
-                    RedBagBalance = balance.RedBagBalance,
-                    IsSetPwd = balance.IsSetPwd,
-                    NeedPwdPlace = balance.NeedPwdPlace,
-                    CurrentDouDou = balance.CurrentDouDou,
-                    UserGrowth = balance.UserGrowth,
-                    CPSBalance = balance.CPSBalance,
-                    BalancePwd = balance.Password,
 
-                };
-            
+            var balance = QueryUserBalanceInfo(userId);
+            if (balance == null)
+            {
+                throw new ArgumentException("用户账户不存在");
+            }
+            return new UserBalanceInfo
+            {
+                UserId = balance.UserId,
+                FillMoneyBalance = balance.FillMoneyBalance,
+                BonusBalance = balance.BonusBalance,
+                CommissionBalance = balance.CommissionBalance,
+                FreezeBalance = balance.FreezeBalance,
+                ExpertsBalance = balance.ExpertsBalance,
+                RedBagBalance = balance.RedBagBalance,
+                IsSetPwd = balance.IsSetPwd,
+                NeedPwdPlace = balance.NeedPwdPlace,
+                CurrentDouDou = balance.CurrentDouDou,
+                UserGrowth = balance.UserGrowth,
+                CPSBalance = balance.CPSBalance,
+                BalancePwd = balance.Password,
+
+            };
+
         }
 
         /// <summary>
@@ -382,9 +547,9 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <returns></returns>
         public C_User_Balance QueryUserBalanceInfo(string userId)
         {
-           
+
             return DB.CreateQuery<C_User_Balance>().Where(p => p.UserId == userId).FirstOrDefault();
-      
+
         }
 
         /// <summary>
@@ -392,7 +557,8 @@ namespace KaSon.FrameWork.ORM.Helper
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public C_BankCard BankCardById(string userId) {
+        public C_BankCard BankCardById(string userId)
+        {
             var entity = new BankCardManager().BankCardById(userId);
             if (entity == null)
                 throw new LogicException(string.Format("查不到{0}的银行卡信息", userId));
@@ -412,7 +578,8 @@ namespace KaSon.FrameWork.ORM.Helper
             };
         }
 
-        public  int GetUnreadMailCountByUser(string userId) {
+        public int GetUnreadMailCountByUser(string userId)
+        {
 
             var query = DB.CreateQuery<E_SiteMessage_InnerMail_List_new>().Where(s => s.HandleType == 0 && (s.ReceiverId == userId || s.ReceiverId == "U:" + userId));
             if (query != null) return query.Count();
@@ -432,7 +599,7 @@ namespace KaSon.FrameWork.ORM.Helper
             DB.Begin();
             try
             {
-              
+
 
                 var tmp = DB.CreateQuery<E_Login_Local>().Where(p => (p.LoginName == loginEntity.LoginName || p.mobile == loginEntity.LoginName)).FirstOrDefault();
                 if (tmp != null)
@@ -460,7 +627,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 DB.Rollback();
                 throw ex;
             }
-        
+
 
         }
 
@@ -495,14 +662,14 @@ namespace KaSon.FrameWork.ORM.Helper
         //}
         public E_Login_Local GetUserByLoginName(string loginName)
         {
-           
-                var user = GetLoginByName(loginName);
-                if (user == null)
-                {
-                    throw new AuthException("用户不存在或不是本地注册用户。请确定是否是通过支付宝或QQ帐号进行登录，如有疑问，请联系客服。");
-                }
-                return user;
-            
+
+            var user = GetLoginByName(loginName);
+            if (user == null)
+            {
+                throw new AuthException("用户不存在或不是本地注册用户。请确定是否是通过支付宝或QQ帐号进行登录，如有疑问，请联系客服。");
+            }
+            return user;
+
         }
         //public string GetLoginNameIsExsite(string loginName)
         //{
@@ -542,14 +709,14 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public bool? CheckIsSame2LoginPassword(string userId, string newPassword)
         {
-           
-                var user = GetLocalLoginByUserId(userId);
-                if (user == null)
-                {
-                    return null;
-                }
-                return user.Password.ToUpper().Equals(Encipherment.MD5(string.Format("{0}{1}", newPassword, _gbKey)).ToUpper());
-            
+
+            var user = GetLocalLoginByUserId(userId);
+            if (user == null)
+            {
+                return null;
+            }
+            return user.Password.ToUpper().Equals(Encipherment.MD5(string.Format("{0}{1}", newPassword, _gbKey)).ToUpper());
+
         }
         public void ChangePassword(string userId, string oldPassword, string newPassword)
         {
@@ -566,7 +733,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 }
                 if (user.Password.ToUpper() != oldPassword)
                 {
-                     throw new Exception("旧密码输入错误。");
+                    throw new Exception("旧密码输入错误。");
                 }
                 user.Password = newPassword;
                 DB.GetDal<E_Login_Local>().Update(user);
@@ -579,7 +746,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 DB.Rollback();
                 throw ex;
             }
-         
+
         }
 
         public string ChangePassword(string userId)
@@ -613,8 +780,8 @@ namespace KaSon.FrameWork.ORM.Helper
                 DB.Rollback();
                 throw ex;
             }
-              
-            
+
+
             return string.Format("{0}|{1}", password, password_balance);
         }
         private const string C_DefaultPassword = "123456";
@@ -904,7 +1071,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <returns></returns>
         public C_User_Register QueryUserRegisterByUserId(string userid)
         {
-           
+
             var user = GetRegisterById(userid);
             if (user == null)
                 new C_User_Register();
@@ -1081,27 +1248,27 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                 array.LoadDateTime = DateTime.Now;
             }
-                //没有去解决一个用户 由于不明原因绑定了多个卡 此处根据前台后台当前逻辑 都是默认读取第一条数据 所以读取完了第一条直接break 
-                // 这样redis中就会保存用户和后台显示一样的卡号
-                return array;
+            //没有去解决一个用户 由于不明原因绑定了多个卡 此处根据前台后台当前逻辑 都是默认读取第一条数据 所以读取完了第一条直接break 
+            // 这样redis中就会保存用户和后台显示一样的卡号
+            return array;
         }
-            //public void BatchSetInnerUser(string userIds)
-            //{
-            //    if (string.IsNullOrEmpty(userIds))
-            //        throw new Exception("用户编号不能为空");
-            //    var arrUserIds = userIds.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-            //    using (var biz = new GameBizAuthBusinessManagement())
-            //    {
-            //        var manager = new UserBalanceManager();
-            //        biz.BeginTran();
-            //        foreach (var item in arrUserIds)
-            //        {
-            //            var entity = manager.LoadUserRegister(item);
-            //            entity.UserType = 1;
-            //            manager.UpdateUserRegister(entity);
-            //        }
-            //        biz.CommitTran();
-            //    }
-            //}
-        }
+        //public void BatchSetInnerUser(string userIds)
+        //{
+        //    if (string.IsNullOrEmpty(userIds))
+        //        throw new Exception("用户编号不能为空");
+        //    var arrUserIds = userIds.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+        //    using (var biz = new GameBizAuthBusinessManagement())
+        //    {
+        //        var manager = new UserBalanceManager();
+        //        biz.BeginTran();
+        //        foreach (var item in arrUserIds)
+        //        {
+        //            var entity = manager.LoadUserRegister(item);
+        //            entity.UserType = 1;
+        //            manager.UpdateUserRegister(entity);
+        //        }
+        //        biz.CommitTran();
+        //    }
+        //}
+    }
 }
