@@ -130,7 +130,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 query = query.OrderBy(p => p.RequestMoney);
             if (sortType == 1)
                 query = query.OrderByDescending(p => p.RequestMoney);
-
+             
             if (pageSize == -1)
                 return query.ToList();
             return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();

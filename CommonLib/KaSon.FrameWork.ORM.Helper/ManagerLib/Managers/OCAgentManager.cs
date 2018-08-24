@@ -171,27 +171,27 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public List<OCAgentPayDetailInfo> QueryOCAgentPayDetailList(DateTime fromDate, DateTime toDate, string userId, int pageIndex, int pageSize, out int totalCount)
         {
-          
+
             var query = from d in DB.CreateQuery<P_OCAgent_PayDetail>()
                         join u in DB.CreateQuery<C_User_Register>() on d.OrderUser equals u.UserId
                         where (d.CreateTime >= fromDate && d.CreateTime < toDate)
                         && (string.Empty == userId || d.PayInUserId == userId)
-                        select new OCAgentPayDetailInfo
-                        {
-                            CreateTime = d.CreateTime,
-                            GameCode = d.GameCode,
-                            GameType = d.GameType,
-                            TotalMoney = d.OrderTotalMoney,
-                            OrderUser = d.OrderUser,
-                            OrderUserDisplayName = u.DisplayName,
-                            PayMoney = d.PayMoney,
-                            Rebate = d.Rebate,
-                            Remark = d.Remark,
-                            SchemeId = d.SchemeId,
-                            SchemeType = (SchemeType)d.SchemeType,
-                        };
+                        select new {d,u };
             totalCount = query.Count();
-            return query.OrderByDescending(p => p.CreateTime).Skip(pageIndex * pageSize).Take(pageSize).ToList();
+            return query.Skip(pageIndex * pageSize).Take(pageSize).ToList().Select(p=>new OCAgentPayDetailInfo
+            {
+                CreateTime = p.d.CreateTime,
+                GameCode =  p.d.GameCode,
+                GameType =  p.d.GameType,
+                TotalMoney =  p.d.OrderTotalMoney,
+                OrderUser =  p.d.OrderUser,
+                OrderUserDisplayName =  p.u.DisplayName,
+                PayMoney =  p.d.PayMoney,
+                Rebate =  p.d.Rebate,
+                Remark =  p.d.Remark,
+                SchemeId =  p.d.SchemeId,
+                SchemeType = (SchemeType) p.d.SchemeType,
+            }).OrderByDescending(p => p.CreateTime).ToList();
         }
 
         /// <summary>

@@ -448,7 +448,7 @@ namespace Lottery.Api.Controllers
                 userInfo.RegisterIp = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
                 userInfo.LoginName = mobile;
                 userInfo.Password = password;
-
+                userInfo.Mobile = mobile;
                 param["validateCode"] = validateCode;
                 param["mobile"] = mobile;
                 param["source"] = (int)schemeSource;
