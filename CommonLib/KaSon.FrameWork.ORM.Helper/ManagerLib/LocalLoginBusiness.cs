@@ -115,14 +115,16 @@ namespace KaSon.FrameWork.ORM.Helper
 #endif
             if (LoginUsers != null)
             {
-               
-                LoginUsers.User = DB.CreateQuery<C_Auth_Users>().Where(p => p.UserId == LoginUsers.UserId).Select(p=>new SystemUser()
-                {
-                     CreateTime=p.CreateTime,
-                     AgentId=p.AgentId,
-                     RegFrom=p.RegFrom,
-                     UserId=p.UserId,
-                }).FirstOrDefault();
+
+                LoginUsers.User = (from p in DB.CreateQuery<C_Auth_Users>()
+                                   where p.UserId == LoginUsers.UserId
+                                   select new SystemUser()
+                                   {
+                                       CreateTime = p.CreateTime,
+                                       AgentId = p.AgentId,
+                                       RegFrom = p.RegFrom,
+                                       UserId = p.UserId,
+                                   }).FirstOrDefault();
 
 
                 if (LoginUsers.User != null)
@@ -133,13 +135,15 @@ namespace KaSon.FrameWork.ORM.Helper
               
 #endif
 
-                    var uQueryRoles = DB.CreateQuery<C_Auth_Roles>().Select(p=>new SystemRole(){
-                         RoleId=p.RoleId,
-                        RoleName=p.RoleName,
-                        IsInner=p.IsInner,
-                        IsAdmin=p.IsAdmin,
-                        RoleType=(RoleType)p.RoleType,
-                    });
+                    var uQueryRoles = (from p in DB.CreateQuery<C_Auth_Roles>()
+                                       select new SystemRole()
+                                       {
+                                           RoleId = p.RoleId,
+                                           RoleName = p.RoleName,
+                                           IsInner = p.IsInner,
+                                           IsAdmin = p.IsAdmin,
+                                           RoleType = (RoleType)p.RoleType,
+                                       }).ToList();
 
 #if LogInfo
                  
@@ -159,12 +163,12 @@ namespace KaSon.FrameWork.ORM.Helper
                     systemUser.RoleList = LoginUsers.User.RoleList;
 
                     var C_Auth_RoleFunction_query = DB.CreateQuery<C_Auth_RoleFunction>();
-                    var C_Auth_UserRole_query = DB.CreateQuery<C_Auth_UserRole>();
+                   // var C_Auth_UserRole_query = DB.CreateQuery<C_Auth_UserRole>();
                     var C_Auth_Function_List = DB.CreateQuery<C_Auth_Function_List>();
                     //systemRole.FunctionList
                     var RoleFunctionList = (from b in C_Auth_RoleFunction_query
-                                               join d in C_Auth_UserRole_query
-                                              
+                                               join d in uQueryUserRole
+
                                                on b.RoleId equals d.RoleId
                                                where d.UserId == LoginUsers.UserId
                                                select b
@@ -178,7 +182,9 @@ namespace KaSon.FrameWork.ORM.Helper
                         if (RoleFunctionList != null && RoleFunctionList.Count() != 0) {
 
                            var Ids = RoleFunctionList.Select(p => p.FunctionId).ToList();
-                            var Auth_Function_Lists = DB.CreateQuery<C_Auth_Function_List>().Where(p => Ids.Contains(p.FunctionId)).Select(p=>new Function(){
+                            var Auth_Function_Lists =(from p in  DB.CreateQuery<C_Auth_Function_List>()
+                                                     where Ids.Contains(p.FunctionId)
+                                                     select new Function(){
                                  DisplayName=p.DisplayName,
                                  FunctionId=p.FunctionId,
                                  IsBackBasic=p.IsBackBasic,
@@ -191,11 +197,11 @@ namespace KaSon.FrameWork.ORM.Helper
                     }
 
                     var C_Auth_UserFunction_query = DB.CreateQuery<C_Auth_UserFunction>();
-                    var C_Auth_UserRole = DB.CreateQuery<C_Auth_UserRole>();
+                   // var C_Auth_UserRole = DB.CreateQuery<C_Auth_UserRole>();
                     var C_Auth_UserFunction_List = DB.CreateQuery<C_Auth_Function_List>();
                     //systemRole.FunctionList
                     var UserFunctionList = (from b in C_Auth_UserFunction_query
-                                            join d in C_Auth_UserRole
+                                            join d in uQueryUserRole
 
                                             on b.UserId equals d.UserId
                                             where d.UserId == LoginUsers.UserId
