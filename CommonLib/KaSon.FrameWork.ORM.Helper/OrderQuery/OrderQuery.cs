@@ -2319,25 +2319,23 @@ namespace KaSon.FrameWork.ORM.Helper
         }
         public List<LotteryNewBonusInfo> QueryLotteryNewBonusInfoList(int count)
         {
-            var query = from b in DB.CreateQuery<E_LotteryNewBonus>()
+            var query = (from b in DB.CreateQuery<E_LotteryNewBonus>()
                         orderby b.CreateTime descending
-                        select new { b };
-            var queryResult = query.ToList().Select(z => new LotteryNewBonusInfo
-            {
-                AfterTaxBonusMoney = z.b.AfterTaxBonusMoney,
-                Amount = z.b.Amount,
-                CreateTime = z.b.CreateTime,
-                GameCode = z.b.GameCode,
-                GameType = z.b.GameType,
-                HideUserDisplayNameCount = z.b.HideUserDisplayNameCount,
-                IssuseNumber = z.b.IssuseNumber,
-                PlayType = z.b.PlayType,
-                PreTaxBonusMoney = z.b.PreTaxBonusMoney,
-                SchemeId = z.b.SchemeId,
-                TotalMoney = z.b.TotalMoney,
-                UserDisplayName = z.b.UserDisplayName,
-            });
-            return queryResult.Take(count).ToList();
+                        select new LotteryNewBonusInfo {
+                            AfterTaxBonusMoney = b.AfterTaxBonusMoney,
+                            Amount = b.Amount,
+                            CreateTime = b.CreateTime,
+                            GameCode = b.GameCode,
+                            GameType = b.GameType,
+                            HideUserDisplayNameCount = b.HideUserDisplayNameCount,
+                            IssuseNumber = b.IssuseNumber,
+                            PlayType = b.PlayType,
+                            PreTaxBonusMoney = b.PreTaxBonusMoney,
+                            SchemeId = b.SchemeId,
+                            TotalMoney = b.TotalMoney,
+                            UserDisplayName = b.UserDisplayName,
+                        }).Take(count).ToList();
+            return query;
         }
 
         /// <summary>
