@@ -59,7 +59,7 @@ namespace KaSon.FrameWork.Common.Redis
 
         public static Task<RedisValue[]> ListRangeAsync(string key)
         {
-            return RedisHelper.Instance.GetDatabase().ListRangeAsync(key);
+            return RedisHelper.Instance.GetDatabase(13).ListRangeAsync(key);
         }
 
         /// <summary>
