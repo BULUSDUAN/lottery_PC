@@ -46,13 +46,13 @@ namespace UserLottery.Service.IModuleServices
         Task<UserBindInfos> QueryUserBindInfos(string UserId);
 
         [Service(Date = "2018-6-12", Director = "renjun", Name = "查询余额信息")]
-        Task<UserBalanceInfo> QueryMyBalance(string userToken);
+        Task<UserBalanceInfo> QueryMyBalance(string userId);
 
         [Service(Date = "2018-6-12", Director = "renjun", Name = "查询银行卡信息")]
-        Task<C_BankCard> QueryBankCard(string userToken);
+        Task<C_BankCard> QueryBankCard(string userId);
 
         [Service(Date = "2018-6-12", Director = "renjun", Name = "获取用户站内信数量")]
-        Task<int> GetMyUnreadInnerMailCount(string userToken);
+        Task<int> GetMyUnreadInnerMailCount(string userId);
 
         [Service(Date = "2018-6-14", Director = "renjun", Name = "注册")]
         Task<CommonActionResult> RegisterResponseMobile(string validateCode, string mobile, SchemeSource source, RegisterInfo_Local info, string fxid);
@@ -124,5 +124,8 @@ namespace UserLottery.Service.IModuleServices
 
         [Service(Date = "2018-7-15", Director = "lidi", Name = "日志")]
         Task<string> ReadSqlTimeLog(string FileName);
+
+        [Service(Date = "2018-8-25", Director = "lidi", Name = "根据token获取UserId")]
+        Task<string> GetUserIdByUserToken(string UserToken);
     }
 }

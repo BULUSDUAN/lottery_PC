@@ -81,8 +81,8 @@ namespace Lottery.Api.Controllers
                 watch.Reset();
                 watch.Start();
 #endif
-                var bindInfo = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
-
+                //var bindInfo = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
+                var bindInfo = new UserBindInfos();
 #if LogInfo
                 watch.Stop();
                 opt = watch.Elapsed.TotalMilliseconds;
@@ -94,8 +94,8 @@ namespace Lottery.Api.Controllers
                 watch.Reset();
                 watch.Start();
    #endif
-                var balance = await _serviceProxyProvider.Invoke<UserBalanceInfo>(balanceParam, "api/user/QueryMyBalance");
-
+                //var balance = await _serviceProxyProvider.Invoke<UserBalanceInfo>(balanceParam, "api/user/QueryMyBalance");
+                var balance = new UserBalanceInfo();
 
 #if LogInfo
                 watch.Stop();
@@ -107,8 +107,8 @@ namespace Lottery.Api.Controllers
                 watch.Reset();
                 watch.Start();
 #endif
-                var bankInfo = await _serviceProxyProvider.Invoke<C_BankCard>(balanceParam, "api/user/QueryBankCard");
-
+                //var bankInfo = await _serviceProxyProvider.Invoke<C_BankCard>(balanceParam, "api/user/QueryBankCard");
+                var bankInfo = new C_BankCard();
 #if LogInfo
                 watch.Stop();
                 opt2 = watch.Elapsed.TotalMilliseconds;
@@ -119,6 +119,8 @@ namespace Lottery.Api.Controllers
                 watch.Reset();
                 watch.Start();
 #endif
+                balanceParam.Clear();
+                balanceParam["userId"] = loginInfo.UserId;
                 var unReadCount = await _serviceProxyProvider.Invoke<int>(balanceParam, "api/user/GetMyUnreadInnerMailCount");
 
 #if LogInfo
@@ -536,7 +538,7 @@ namespace Lottery.Api.Controllers
                     if (loginInfo.IsSuccess)
                     {
                         Dictionary<string, object> balanceParam = new Dictionary<string, object>();
-                        balanceParam["userToken"] = loginInfo.UserToken;
+                        balanceParam["userId"] = loginInfo.UserId;
                         var balance = await _serviceProxyProvider.Invoke<UserBalanceInfo>(balanceParam, "api/user/QueryMyBalance");
                         Dictionary<string, object> bindParam = new Dictionary<string, object>();
                         bindParam["UserId"] = loginInfo.UserId;
@@ -1431,7 +1433,7 @@ namespace Lottery.Api.Controllers
                 //var mobile = WCFClients.ExternalClient.GetMyMobileInfo(userToken);
                 //var realName = WCFClients.ExternalClient.GetMyRealNameInfo(userToken);
                 Dictionary<string, object> balanceParam = new Dictionary<string, object>();
-                balanceParam["userToken"] = userToken;
+                balanceParam["userId"] = userId;
                 var balance = await _serviceProxyProvider.Invoke<UserBalanceInfo>(balanceParam, "api/user/QueryMyBalance");
 
                 var bankInfo = await _serviceProxyProvider.Invoke<C_BankCard>(balanceParam, "api/user/QueryBankCard");
@@ -1514,11 +1516,16 @@ namespace Lottery.Api.Controllers
                 if (string.IsNullOrEmpty(userToken))
                     throw new ArgumentException("传入参数信息有误！");
                 Dictionary<string, object> balanceParam = new Dictionary<string, object>();
-                balanceParam["userToken"] = userToken;
+                balanceParam["UserToken"] = userToken;
+                var UserId = await _serviceProxyProvider.Invoke<string>(balanceParam, "api/user/GetUserIdByUserToken");
+                if (string.IsNullOrEmpty(UserId))
+                    throw new ArgumentException("未查询到当前用户信息！");
 #if LogInfo
                 var st = new Stopwatch();
                 st.Start();
 #endif
+                balanceParam.Clear();
+                balanceParam.Add("UserId", UserId);
                 var balance = await _serviceProxyProvider.Invoke<UserBalanceInfo>(balanceParam, "api/user/QueryMyBalance");
 #if LogInfo
                 st.Stop();
@@ -1591,11 +1598,15 @@ namespace Lottery.Api.Controllers
                 {
                     throw new ArgumentException("提现时间早上9点到凌晨1点，请您明天9点再来，感谢配合");
                 }
-                var cashMoney = await _serviceProxyProvider.Invoke<UserBalanceInfo>(param, "api/user/QueryMyBalance");
                 var userinfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/LoginByUserToken");
+                
 
                 if (userinfo.IsSuccess)
                 {
+                    param.Clear();
+                    param.Add("userId", userinfo.UserId);
+                    var cashMoney = await _serviceProxyProvider.Invoke<UserBalanceInfo>(param, "api/user/QueryMyBalance");
+
                     Dictionary<string, object> bindParam = new Dictionary<string, object>();
                     bindParam["UserId"] = userinfo.UserId;
                     var info = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
@@ -1688,6 +1699,8 @@ namespace Lottery.Api.Controllers
                             MsgId = entity.MsgId
                         });
                     }
+                    param.Clear();
+                    param["userId"] = userinfo.UserId ;
                     var cashMoney = await _serviceProxyProvider.Invoke<UserBalanceInfo>(param, "api/user/QueryMyBalance");
 
 
@@ -2027,6 +2040,8 @@ namespace Lottery.Api.Controllers
                 {
                     throw new Exception(lInfo.Message);
                 }
+                param.Clear();
+                param.Add("userId", lInfo.UserId);
                 var bankInfo = await _serviceProxyProvider.Invoke<C_BankCard>(param, "api/user/QueryBankCard");
                 CallBackParam callBackParam = new CallBackParam();
                 callBackParam.BankCardNo = "";

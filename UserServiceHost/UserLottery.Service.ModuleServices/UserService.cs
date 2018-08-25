@@ -154,6 +154,7 @@ namespace UserLottery.Service.ModuleServices
 
         }
 
+
         /// <summary>
         /// 使用token登录
         /// </summary>
@@ -241,6 +242,20 @@ namespace UserLottery.Service.ModuleServices
                 throw new Exception(ex.Message, ex);
             }
 
+        }
+
+
+        public Task<string> GetUserIdByUserToken(string UserToken)
+        {
+            try
+            {
+                var userId = userAuthentication.ValidateUserAuthentication(UserToken);
+                return Task.FromResult(userId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
         }
 
         public bool IsRoleType(SystemUser user, RoleType roleType)
@@ -389,12 +404,12 @@ namespace UserLottery.Service.ModuleServices
         /// </summary>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public Task<UserBalanceInfo> QueryMyBalance(string userToken)
+        public Task<UserBalanceInfo> QueryMyBalance(string userId)
         {
             // 验证用户身份及权限
-            var userId = userAuthentication.ValidateUserAuthentication(userToken);
-            if (userId == "admin")
-                return null;
+            //var userId = userAuthentication.ValidateUserAuthentication(userToken);
+            //if (userId == "admin")
+            //    return null;
             try
             {
                 var loginBiz = new LocalLoginBusiness();
@@ -414,12 +429,11 @@ namespace UserLottery.Service.ModuleServices
         /// </summary>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public Task<C_BankCard> QueryBankCard(string userToken)
+        public Task<C_BankCard> QueryBankCard(string userId)
         {
 
             // 验证用户身份及权限
-            var userId = userAuthentication.ValidateUserAuthentication(userToken);
-
+            //var userId = userAuthentication.ValidateUserAuthentication(userToken);
             try
             {
                 var loginBiz = new LocalLoginBusiness();
@@ -441,13 +455,13 @@ namespace UserLottery.Service.ModuleServices
         /// </summary>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public Task<int> GetMyUnreadInnerMailCount(string userToken)
+        public Task<int> GetMyUnreadInnerMailCount(string userId)
         {
             try
             {
                 var loginBiz = new LocalLoginBusiness();
                 // 验证用户身份及权限
-                var userId = userAuthentication.ValidateUserAuthentication(userToken);
+                //var userId = userAuthentication.ValidateUserAuthentication(userToken);
 
 
                 return Task.FromResult(loginBiz.GetUnreadMailCountByUser(userId));

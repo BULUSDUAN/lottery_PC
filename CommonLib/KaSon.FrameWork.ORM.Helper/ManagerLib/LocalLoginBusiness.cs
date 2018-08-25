@@ -1224,34 +1224,36 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public UserBindInfos QueryUserBinds(string userId)
         {
-            var sql = string.Format(@"select r.UserId,r.VipLevel,r.DisplayName,r.ComeFrom,r.IsFillMoney,r.IsEnable,r.IsAgent,r.HideDisplayNameCount,
-                                            b.RealName BankCardRealName,b.ProvinceName,b.CityName,b.BankName,b.BankSubName,b.BankCardNumber,
-                                            e.Email,m.Mobile,n.RealName,n.CardType,n.IdCardNumber,
-                                            --h.LoginFrom LastLoginFrom,h.LoginIp LastLoginIp,h.IpDisplayName LastLoginIpName,h.LoginTime LastLoginTime,
-                                            a.c RebateCount,
-                                            p.MaxLevelValue,p.MaxLevelName,p.WinOneHundredCount,p.WinOneThousandCount,p.WinTenThousandCount,p.WinOneHundredThousandCount,p.WinOneMillionCount,p.WinTenMillionCount,p.WinHundredMillionCount,p.TotalBonusMoney,q.QQ,al.AlipayAccount
-                                            ,m.IsSettedMobile,r.userType
+            //var sql = string.Format(@"select r.UserId,r.VipLevel,r.DisplayName,r.ComeFrom,r.IsFillMoney,r.IsEnable,r.IsAgent,r.HideDisplayNameCount,
+            //                                b.RealName BankCardRealName,b.ProvinceName,b.CityName,b.BankName,b.BankSubName,b.BankCardNumber,
+            //                                e.Email,m.Mobile,n.RealName,n.CardType,n.IdCardNumber,
+            //                                --h.LoginFrom LastLoginFrom,h.LoginIp LastLoginIp,h.IpDisplayName LastLoginIpName,h.LoginTime LastLoginTime,
+            //                                a.c RebateCount,
+            //                                p.MaxLevelValue,p.MaxLevelName,p.WinOneHundredCount,p.WinOneThousandCount,p.WinTenThousandCount,p.WinOneHundredThousandCount,p.WinOneMillionCount,p.WinTenMillionCount,p.WinHundredMillionCount,p.TotalBonusMoney,q.QQ,al.AlipayAccount
+            //                                ,m.IsSettedMobile,r.userType
 
-                                            from C_User_Register r
-                                            left join C_BankCard b on r.userid=b.userid
-                                            left join E_Authentication_Email e on r.userid=e.userid
-                                            left join E_Authentication_Mobile m on r.userid=m.userid
-                                            left join E_Authentication_RealName n on r.userid=n.userid
-                                            left join E_Authentication_QQ q on r.userid=q.userid
-                                            left join E_Authentication_Alipay al on r.userid=al.userid
+            //                                from C_User_Register r
+            //                                left join C_BankCard b on r.userid=b.userid
+            //                                left join E_Authentication_Email e on r.userid=e.userid
+            //                                left join E_Authentication_Mobile m on r.userid=m.userid
+            //                                left join E_Authentication_RealName n on r.userid=n.userid
+            //                                left join E_Authentication_QQ q on r.userid=q.userid
+            //                                left join E_Authentication_Alipay al on r.userid=al.userid
                                            
-                                            --left join (SELECT top 1 UserId,LoginFrom,LoginIp,IpDisplayName,LoginTime
-                                   --                FROM [E_Blog_UserLoginHistory]
-                                   --                where userid='{0}'
-                                   --                order by LoginTime desc) as h on r.userid=h.userid
+            //                                --left join (SELECT top 1 UserId,LoginFrom,LoginIp,IpDisplayName,LoginTime
+            //                       --                FROM [E_Blog_UserLoginHistory]
+            //                       --                where userid='{0}'
+            //                       --                order by LoginTime desc) as h on r.userid=h.userid
 
-                                            left join (SELECT UserId, count(1) c
-                                                   FROM  [P_OCAgent_Rebate]
-                                                where UserId='{0}'
-                                                   group by UserId)as a on r.userid=a.userid
-                                            left join [E_Blog_ProfileBonusLevel] p on r.userid=p.userid
-                                            where r.userid='{0}' ", userId);
-
+            //                                left join (SELECT UserId, count(1) c
+            //                                       FROM  [P_OCAgent_Rebate]
+            //                                    where UserId='{0}'
+            //                                       group by UserId)as a on r.userid=a.userid
+            //                                left join [E_Blog_ProfileBonusLevel] p on r.userid=p.userid
+            //                                where r.userid='{0}' ", userId);
+            var sql = string.Format(@"select m.Mobile,n.RealName,n.IdCardNumber,n.CardType,m.IsSettedMobile
+ from C_User_Register r left join E_Authentication_Mobile m on r.userid=m.userid
+ left join E_Authentication_RealName n on r.userid=n.userid where r.userid='{0}'", userId);
             var array = DB.CreateSQLQuery(sql).List<UserBindInfos>().FirstOrDefault();
 
             if (array != null)
