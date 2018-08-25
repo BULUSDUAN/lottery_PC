@@ -452,11 +452,11 @@ namespace KaSon.FrameWork.ORM.Helper
             Model.pageSize = Model.pageSize > Model.MaxPageSize ? Model.MaxPageSize : Model.pageSize;
             var collection = new TogetherOrderInfoCollection();
             string sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_QueryJoinTogetherOrderCount").SQL;
-            collection = DB.CreateSQLQuery(sql)
+            collection.TotalCount = DB.CreateSQLQuery(sql)
                 .SetString("@UserId", Model.userId)
                .SetString("@GameCode", Model.gameCode)
                .SetString("@DateFrom", Model.startTime.ToString("yyyy-MM-dd"))
-               .SetString("@DateTo", Model.endTime.ToString("yyyy-MM-dd")).First<TogetherOrderInfoCollection>();
+               .SetString("@DateTo", Model.endTime.ToString("yyyy-MM-dd")).First<int>();
 
             string page_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_QueryJoinTogetherOrderPage").SQL;
             collection.OrderList = DB.CreateSQLQuery(page_sql)
