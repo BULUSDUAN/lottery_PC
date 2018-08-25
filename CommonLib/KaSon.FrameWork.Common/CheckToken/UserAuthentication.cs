@@ -11,7 +11,7 @@ namespace KaSon.FrameWork.Common.CheckToken
         /// </summary>
         /// <param name="userId">帐号</param>
         /// <returns>口令</returns>
-        public static string GetUserToken(string userId,string loginName)
+        public static string GetUserToken(string userId, string loginName)
         {
             var dic = new Dictionary<string, string>();
             dic.Add("LI", userId);
@@ -21,7 +21,7 @@ namespace KaSon.FrameWork.Common.CheckToken
         }
 
         public static string GetUserToken(Dictionary<string, string> dic)
-        { 
+        {
             return UserTokenHelper.GetUserToken(dic);
         }
         /// <summary>
@@ -42,7 +42,10 @@ namespace KaSon.FrameWork.Common.CheckToken
                 //{
                 //    throw new Exception("用户身份验证失败");
                 //}
-                return rlt["LI"];
+                string userid = rlt["LI"];
+                if (string.IsNullOrEmpty(userid))
+                    throw new Exception("用户身份验证失败");
+                return userid;
             }
             catch (Exception ex)
             {
