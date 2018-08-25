@@ -3232,8 +3232,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var gameInfo = BusinessHelper.QueryLotteryGame(info.GameCode);
             var schemeManager = new SchemeManager();
             var sportsManager = new Sports_Manager();
-            if (string.IsNullOrEmpty(keyLine))
-                keyLine = info.IssuseNumberList.Count > 1 ? BusinessHelper.GetChaseLotterySchemeKeyLine(info.GameCode) : string.Empty;
+            
             var orderIndex = 1;
             var totalBetMoney = 0M; 
             var currentIssuseNumberList = new List<C_Game_Issuse>();
@@ -3248,6 +3247,8 @@ namespace KaSon.FrameWork.ORM.Helper
                     throw new LogicException(string.Format("奖期{0}结束时间为{1}", issuse.IssuseNumber, currentIssuseNumber.LocalStopTime.ToString("yyyy-MM-dd HH:mm")));
                 currentIssuseNumberList.Add(currentIssuseNumber);
             }
+            if (string.IsNullOrEmpty(keyLine))
+                keyLine = info.IssuseNumberList.Count > 1 ? BusinessHelper.GetChaseLotterySchemeKeyLine(info.GameCode) : string.Empty;
             DB.Begin();
             try
             {
