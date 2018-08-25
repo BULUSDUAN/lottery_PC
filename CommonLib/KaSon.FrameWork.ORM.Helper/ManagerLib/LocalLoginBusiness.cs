@@ -606,9 +606,9 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             loginEntity.Password = Encipherment.MD5(string.Format("{0}{1}", loginEntity.Password, _gbKey)).ToUpper();
 
-            DB.Begin();
-            try
-            {
+            //DB.Begin();
+            //try
+            //{
 
 
                 var tmp = DB.CreateQuery<E_Login_Local>().Where(p => (p.LoginName == loginEntity.LoginName || p.mobile == loginEntity.LoginName)).FirstOrDefault();
@@ -630,13 +630,13 @@ namespace KaSon.FrameWork.ORM.Helper
 
                 };
                 DB.GetDal<E_Login_Local>().Add(register);
-                DB.Commit();
-            }
-            catch (Exception ex)
-            {
-                DB.Rollback();
-                throw ex;
-            }
+                //DB.Commit();
+            //}
+            //catch (Exception ex)
+            //{
+            //    DB.Rollback();
+            //    throw ex;
+            //}
 
 
         }
@@ -732,9 +732,9 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             oldPassword = Encipherment.MD5(string.Format("{0}{1}", oldPassword, _gbKey)).ToUpper();
             newPassword = Encipherment.MD5(string.Format("{0}{1}", newPassword, _gbKey)).ToUpper();
-            try
-            {
-                DB.Begin();
+            //try
+            //{
+            //    DB.Begin();
 
                 var user = DB.CreateQuery<E_Login_Local>().Where(p => p.UserId == userId).FirstOrDefault();
                 if (user == null)
@@ -748,14 +748,14 @@ namespace KaSon.FrameWork.ORM.Helper
                 user.Password = newPassword;
                 DB.GetDal<E_Login_Local>().Update(user);
 
-                DB.Commit();
-                //throw new Exception("修改密码成功");
-            }
-            catch (Exception ex)
-            {
-                DB.Rollback();
-                throw ex;
-            }
+            //    DB.Commit();
+            //    //throw new Exception("修改密码成功");
+            //}
+            //catch (Exception ex)
+            //{
+            //    DB.Rollback();
+            //    throw ex;
+            //}
 
         }
 

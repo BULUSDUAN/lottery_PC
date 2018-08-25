@@ -3229,16 +3229,29 @@ namespace KaSon.FrameWork.ORM.Helper
             //开启事务
             //using (var biz = new GameBizBusinessManagement())
             //{
-                DB.Begin();
+            var gameInfo = BusinessHelper.QueryLotteryGame(info.GameCode);
+            var schemeManager = new SchemeManager();
+            var sportsManager = new Sports_Manager();
+            if (string.IsNullOrEmpty(keyLine))
+                keyLine = info.IssuseNumberList.Count > 1 ? BusinessHelper.GetChaseLotterySchemeKeyLine(info.GameCode) : string.Empty;
+            var orderIndex = 1;
+            var totalBetMoney = 0M; 
+            var currentIssuseNumberList = new List<C_Game_Issuse>();
+            foreach (var issuse in info.IssuseNumberList)
+            {
+                var currentIssuseNumber = lotteryManager.QueryGameIssuseByKey(info.GameCode, info.GameCode.ToUpper() == "CTZQ" ? info.AnteCodeList[0].GameType.ToUpper() : string.Empty, issuse.IssuseNumber);
+                if (currentIssuseNumber == null)
+                    throw new LogicException(string.Format("奖期{0}不存在", issuse.IssuseNumber));
+                if (!string.IsNullOrEmpty(currentIssuseNumber.WinNumber))
+                    throw new LogicException("奖期已开出开奖号");
+                if (info.CurrentBetTime > currentIssuseNumber.LocalStopTime)
+                    throw new LogicException(string.Format("奖期{0}结束时间为{1}", issuse.IssuseNumber, currentIssuseNumber.LocalStopTime.ToString("yyyy-MM-dd HH:mm")));
+                currentIssuseNumberList.Add(currentIssuseNumber);
+            }
+            DB.Begin();
             try
             {
-                var gameInfo = BusinessHelper.QueryLotteryGame(info.GameCode);
-                var schemeManager = new SchemeManager();
-                var sportsManager = new Sports_Manager();
-                if (string.IsNullOrEmpty(keyLine))
-                    keyLine = info.IssuseNumberList.Count > 1 ? BusinessHelper.GetChaseLotterySchemeKeyLine(info.GameCode) : string.Empty;
-                var orderIndex = 1;
-                var totalBetMoney = 0M;
+                
                 foreach (var issuse in info.IssuseNumberList)
                 {
                     //var IsEnableLimitBetAmount = Convert.ToBoolean(new CacheDataBusiness().QueryCoreConfigByKey("IsEnableLimitBetAmount").ConfigValue);
@@ -3249,14 +3262,14 @@ namespace KaSon.FrameWork.ORM.Helper
                     //    else if (issuse.Amount > 0 && issuse.IssuseTotalMoney / issuse.Amount > 100)
                     //        throw new Exception("对不起，暂时不支持多串过关单倍金额超过100元。");
                     //}
-                    var currentIssuseNumber = lotteryManager.QueryGameIssuseByKey(info.GameCode, info.GameCode.ToUpper() == "CTZQ" ? info.AnteCodeList[0].GameType.ToUpper() : string.Empty, issuse.IssuseNumber);
-                    if (currentIssuseNumber == null)
-                        throw new LogicException(string.Format("奖期{0}不存在", issuse.IssuseNumber));
-                    if (!string.IsNullOrEmpty(currentIssuseNumber.WinNumber))
-                        throw new LogicException("奖期已开出开奖号");
-                    if (info.CurrentBetTime > currentIssuseNumber.LocalStopTime)
-                        throw new LogicException(string.Format("奖期{0}结束时间为{1}", issuse.IssuseNumber, currentIssuseNumber.LocalStopTime.ToString("yyyy-MM-dd HH:mm")));
-
+                    //var currentIssuseNumber = lotteryManager.QueryGameIssuseByKey(info.GameCode, info.GameCode.ToUpper() == "CTZQ" ? info.AnteCodeList[0].GameType.ToUpper() : string.Empty, issuse.IssuseNumber);
+                    //if (currentIssuseNumber == null)
+                    //    throw new LogicException(string.Format("奖期{0}不存在", issuse.IssuseNumber));
+                    //if (!string.IsNullOrEmpty(currentIssuseNumber.WinNumber))
+                    //    throw new LogicException("奖期已开出开奖号");
+                    //if (info.CurrentBetTime > currentIssuseNumber.LocalStopTime)
+                    //    throw new LogicException(string.Format("奖期{0}结束时间为{1}", issuse.IssuseNumber, currentIssuseNumber.LocalStopTime.ToString("yyyy-MM-dd HH:mm")));
+                    var currentIssuseNumber = currentIssuseNumberList.FirstOrDefault(p => p.IssuseNumber == issuse.IssuseNumber);
                     var schemeId = string.Empty;
                     if (info.IssuseNumberList.Count > 1)
                     {
@@ -3559,9 +3572,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var gameTypes = lotteryManager.QueryEnableGameTypes();
             //using (var biz = new GameBizBusinessManagement())
             //{
-                DB.Begin();
-            try
-            {
+
                 var gameInfo = lotteryManager.LoadGame(info.GameCode);
                 var userManager = new UserBalanceManager();
                 var user = userManager.LoadUserRegister(userId);
@@ -3571,14 +3582,24 @@ namespace KaSon.FrameWork.ORM.Helper
                 if (info.IssuseNumberList.Count > 1)
                     throw new Exception("保存的订单只能投注一期");
                 var orderIndex = 1;
+                var IssuseNumberList = new List<C_Game_Issuse>();
                 foreach (var issuse in info.IssuseNumberList)
                 {
-                    //var currentIssuseNumber = lotteryManager.QueryGameIssuseByKey(info.GameCode, info.AnteCodeList[0].GameType, issuse.IssuseNumber);
                     var currentIssuseNumber = lotteryManager.QueryGameIssuseByKey(info.GameCode, info.GameCode.ToUpper() == "CTZQ" ? info.AnteCodeList[0].GameType.ToUpper() : string.Empty, issuse.IssuseNumber);
                     if (currentIssuseNumber == null)
                         throw new Exception(string.Format("奖期{0}不存在", issuse.IssuseNumber));
                     if (currentIssuseNumber.LocalStopTime < DateTime.Now)
                         throw new Exception(string.Format("奖期{0}结束时间为{1}", issuse.IssuseNumber, currentIssuseNumber.LocalStopTime.ToString("yyyy-MM-dd HH:mm")));
+                    IssuseNumberList.Add(currentIssuseNumber);
+                }
+            DB.Begin();
+            try
+            {
+                foreach (var issuse in info.IssuseNumberList)
+                {
+                    //var currentIssuseNumber = lotteryManager.QueryGameIssuseByKey(info.GameCode, info.AnteCodeList[0].GameType, issuse.IssuseNumber);
+
+                    var currentIssuseNumber = IssuseNumberList.FirstOrDefault(p => p.IssuseNumber == issuse.IssuseNumber);
                     var schemeId = BettingHelper.GetSportsBettingSchemeId(info.GameCode);
                     var gameTypeList = new List<GameTypeInfo>();
                     foreach (var item in info.AnteCodeList)
@@ -4679,9 +4700,9 @@ namespace KaSon.FrameWork.ORM.Helper
             //开启事务
             //using (var biz = new GameBizBusinessManagement())
             //{
-                DB.Begin();
-            try
-            {
+            //    DB.Begin();
+            //try
+            //{
                 var sportsManager = new Sports_Manager();
                 var entity = sportsManager.QueryTogetherFollowerRule(ruleId);
                 if (entity == null)
@@ -4700,13 +4721,13 @@ namespace KaSon.FrameWork.ORM.Helper
                 entity.StopFollowerMinBalance = info.StopFollowerMinBalance;
                 sportsManager.UpdateTogetherFollowerRule(entity);
 
-                DB.Commit();
-            }
-            catch (Exception ex)
-            {
-                DB.Rollback();
-                throw ex;
-            }
+            //    DB.Commit();
+            //}
+            //catch (Exception ex)
+            //{
+            //    DB.Rollback();
+            //    throw ex;
+            //}
             //}
         }
 
@@ -4718,38 +4739,39 @@ namespace KaSon.FrameWork.ORM.Helper
             //开启事务
             //using (var biz = new GameBizBusinessManagement())
             //{
-                DB.Begin();
+            if (info.CreaterUserId == info.FollowerUserId)
+                throw new LogicException("用户不能定制跟单自己。");
+            var numberGameCode = new string[] { "SSQ", "DLT", "FC3D", "PL3" };
+            if (numberGameCode.Contains(info.GameCode))
+            {
+                if (string.IsNullOrEmpty(info.CreaterUserId) || string.IsNullOrEmpty(info.FollowerUserId) || string.IsNullOrEmpty(info.GameCode))
+                    throw new LogicException("请输入必填项");
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(info.CreaterUserId) || string.IsNullOrEmpty(info.FollowerUserId) || string.IsNullOrEmpty(info.GameCode) || string.IsNullOrEmpty(info.GameType))
+                    throw new LogicException("请输入必填项");
+            }
+            if (info.SchemeCount < 1 && info.SchemeCount != -1)
+                throw new LogicException("跟单方案数只能等于-1或大于0");
+            if (info.MinSchemeMoney < 1 && info.MinSchemeMoney != -1)
+                throw new LogicException("最小方案金额只能等于-1或大于0");
+            if (info.MaxSchemeMoney < 1 && info.MaxSchemeMoney != -1)
+                throw new LogicException("最大方案金额只能等于-1或大于0");
+            if ((info.FollowerCount == -1 && info.FollowerPercent == -1) || (info.FollowerCount != -1 && info.FollowerPercent != -1))
+                throw new LogicException("跟单份数和跟单百分比必须设置一个");
+            if (info.CancelNoBonusSchemeCount < 1 && info.CancelNoBonusSchemeCount != -1)
+                throw new LogicException("连续X个方案未中奖则停止跟单配置只能等于-1或大于0");
+            if (info.StopFollowerMinBalance < 1 && info.StopFollowerMinBalance != -1)
+                throw new LogicException("当用户金额小于X时停止跟单配置只能等于-1或大于0");
+
+            info.GameCode = info.GameCode.ToUpper();
+            info.GameType = info.GameType.ToUpper();
+            DB.Begin();
 
             try
             {
-                if (info.CreaterUserId == info.FollowerUserId)
-                    throw new LogicException("用户不能定制跟单自己。");
-                var numberGameCode = new string[] { "SSQ", "DLT", "FC3D", "PL3" };
-                if (numberGameCode.Contains(info.GameCode))
-                {
-                    if (string.IsNullOrEmpty(info.CreaterUserId) || string.IsNullOrEmpty(info.FollowerUserId) || string.IsNullOrEmpty(info.GameCode))
-                        throw new LogicException("请输入必填项");
-                }
-                else
-                {
-                    if (string.IsNullOrEmpty(info.CreaterUserId) || string.IsNullOrEmpty(info.FollowerUserId) || string.IsNullOrEmpty(info.GameCode) || string.IsNullOrEmpty(info.GameType))
-                        throw new LogicException("请输入必填项");
-                }
-                if (info.SchemeCount < 1 && info.SchemeCount != -1)
-                    throw new LogicException("跟单方案数只能等于-1或大于0");
-                if (info.MinSchemeMoney < 1 && info.MinSchemeMoney != -1)
-                    throw new LogicException("最小方案金额只能等于-1或大于0");
-                if (info.MaxSchemeMoney < 1 && info.MaxSchemeMoney != -1)
-                    throw new LogicException("最大方案金额只能等于-1或大于0");
-                if ((info.FollowerCount == -1 && info.FollowerPercent == -1) || (info.FollowerCount != -1 && info.FollowerPercent != -1))
-                    throw new LogicException("跟单份数和跟单百分比必须设置一个");
-                if (info.CancelNoBonusSchemeCount < 1 && info.CancelNoBonusSchemeCount != -1)
-                    throw new LogicException("连续X个方案未中奖则停止跟单配置只能等于-1或大于0");
-                if (info.StopFollowerMinBalance < 1 && info.StopFollowerMinBalance != -1)
-                    throw new LogicException("当用户金额小于X时停止跟单配置只能等于-1或大于0");
-
-                info.GameCode = info.GameCode.ToUpper();
-                info.GameType = info.GameType.ToUpper();
+                
 
                 var sportsManager = new Sports_Manager();
                 var entity = sportsManager.QueryTogetherFollowerRule(info.CreaterUserId, info.FollowerUserId, info.GameCode, info.GameType);

@@ -32,9 +32,9 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public void AddBankCard(C_BankCard bankCard)
         {
-            try
-            {
-                DB.Begin();
+            //try
+            //{
+            //    DB.Begin();
                 var manager = new BankCardManager();
                 var entity = new C_BankCard()
                 {
@@ -50,13 +50,13 @@ namespace KaSon.FrameWork.ORM.Helper
                     UpdateTime = DateTime.Now
                 };
                 manager.AddBankCard(entity);
-                DB.Commit();
-            }
-            catch (Exception ex)
-            {
-                DB.Rollback();
-                throw ex;
-            }
+            //    DB.Commit();
+            //}
+            //catch (Exception ex)
+            //{
+            //    DB.Rollback();
+            //    throw ex;
+            //}
         
 
         }
@@ -64,14 +64,14 @@ namespace KaSon.FrameWork.ORM.Helper
         public void UpdateBankCard(C_BankCard bankCard, string userId)
         {
 
-            DB.Begin();
-            try
-            {
+            //DB.Begin();
+            //try
+            //{
                 var manager = new BankCardManager();
                 var entity = manager.BankCardById(userId);
                 if (entity == null)
                 {
-                    DB.Rollback();
+                    //DB.Rollback();
                     throw new Exception("修改信息未被查询到");
                 }
                 entity.BankCardNumber = bankCard.BankCardNumber;
@@ -83,13 +83,13 @@ namespace KaSon.FrameWork.ORM.Helper
                 entity.RealName = bankCard.RealName;
                 entity.UpdateTime = DateTime.Now;
                 manager.UpdateBankCard(entity);
-                DB.Commit();
-            }
-            catch (Exception ex)
-            {
-                DB.Rollback();
-                throw ex;
-            }
+            //    DB.Commit();
+            //}
+            //catch (Exception ex)
+            //{
+            //    DB.Rollback();
+            //    throw ex;
+            //}
           
 
         }
@@ -98,24 +98,24 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public void CancelBankCard(string userId)
         {
-            try
-            {
-                DB.Begin();
+            //try
+            //{
+            //    DB.Begin();
                 var manager = new BankCardManager();
                 var entity = manager.BankCardById(userId);
                 if (entity == null)
                 {
-                    DB.Rollback();
+                    //DB.Rollback();
                     throw new Exception("未查到信息");
                 }
                 manager.DeleteBankCard(entity);
-                DB.Commit();
-            }
-            catch (Exception ex)
-            {
-                DB.Rollback();
-                throw ex;
-            }
+            //    DB.Commit();
+            //}
+            //catch (Exception ex)
+            //{
+            //    DB.Rollback();
+            //    throw ex;
+            //}
           
 
         }
