@@ -611,268 +611,268 @@ namespace KaSon.FrameWork.PlugIn.External
         /// <summary>
         /// 添加代理
         /// </summary>
-        public void AddOCAgent(OCAgentCategory category, string parentUserId, string userId, CPSMode cpsmode)
-        {
+        //public void AddOCAgent(OCAgentCategory category, string parentUserId, string userId, CPSMode cpsmode)
+        //{
           
-               DB.Begin();
-            try
-            {
-                if (parentUserId == userId)
-                    throw new Exception("不能将自己添加为自己的上级代理");
-                var balanceManager = new UserBalanceManager();
-                var parent = balanceManager.QueryUserRegister(parentUserId);
+        //       DB.Begin();
+        //    try
+        //    {
+        //        if (parentUserId == userId)
+        //            throw new Exception("不能将自己添加为自己的上级代理");
+        //        var balanceManager = new UserBalanceManager();
+        //        var parent = balanceManager.QueryUserRegister(parentUserId);
 
-                if (category != OCAgentCategory.Company && parent == null && category != OCAgentCategory.Company && !string.IsNullOrEmpty(parentUserId))
-                    throw new LogicException(string.Format("上级用户{0}不存在", parentUserId));
+        //        if (category != OCAgentCategory.Company && parent == null && category != OCAgentCategory.Company && !string.IsNullOrEmpty(parentUserId))
+        //            throw new LogicException(string.Format("上级用户{0}不存在", parentUserId));
 
-                var user = balanceManager.QueryUserRegister(userId);
-                if (user == null)
-                    throw new LogicException(string.Format("用户{0}不存在", userId));
+        //        var user = balanceManager.QueryUserRegister(userId);
+        //        if (user == null)
+        //            throw new LogicException(string.Format("用户{0}不存在", userId));
 
-                if (category != OCAgentCategory.Company)
-                {
-                    if (string.IsNullOrEmpty(user.AgentId))
-                        throw new Exception("用户不属于您的下级用户");
-                    if (user.AgentId != parentUserId)
-                        throw new Exception("该用户非您发展的用户");
-                }
+        //        if (category != OCAgentCategory.Company)
+        //        {
+        //            if (string.IsNullOrEmpty(user.AgentId))
+        //                throw new Exception("用户不属于您的下级用户");
+        //            if (user.AgentId != parentUserId)
+        //                throw new Exception("该用户非您发展的用户");
+        //        }
 
-                var agentManager = new OCAgentManager();
-                var userAgent = agentManager.QueryOCAgent(userId);
-                if (userAgent != null)
-                    throw new Exception(string.Format("用户{0}已经是代理", userId));
-                var parentAgent = agentManager.QueryOCAgent(parentUserId);
-                if (category != OCAgentCategory.Company)
-                {
-                    if (parentAgent == null)
-                        throw new Exception("上级用户不是代理");
-                    if (category != OCAgentCategory.SportLotteryAgent)
-                    {
-                        switch (parentAgent.OCAgentCategory)
-                        {
-                            case (int)OCAgentCategory.Company:
-                                if (category == OCAgentCategory.Company)
-                                    throw new LogicException("添加代理类型不正确，不能为公司类型");
-                                break;
-                            case (int)OCAgentCategory.Market:
-                                if (category == OCAgentCategory.Company)
-                                    throw new LogicException("添加代理类型不正确，不能为公司类型");
-                                break;
-                            case (int)OCAgentCategory.GeneralAgent:
-                                if (category != OCAgentCategory.GeneralAgent)
-                                    throw new LogicException("添加代理类型不正确，只能添加普通代理");
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                }
-                user.AgentId = parentUserId;
-                user.IsAgent = true;
-                user.ParentPath = parentAgent != null ? parentAgent.ParentPath + "/" + parentUserId : user.ParentPath;
-                balanceManager.UpdateUserRegister(user);
+        //        var agentManager = new OCAgentManager();
+        //        var userAgent = agentManager.QueryOCAgent(userId);
+        //        if (userAgent != null)
+        //            throw new Exception(string.Format("用户{0}已经是代理", userId));
+        //        var parentAgent = agentManager.QueryOCAgent(parentUserId);
+        //        if (category != OCAgentCategory.Company)
+        //        {
+        //            if (parentAgent == null)
+        //                throw new Exception("上级用户不是代理");
+        //            if (category != OCAgentCategory.SportLotteryAgent)
+        //            {
+        //                switch (parentAgent.OCAgentCategory)
+        //                {
+        //                    case (int)OCAgentCategory.Company:
+        //                        if (category == OCAgentCategory.Company)
+        //                            throw new LogicException("添加代理类型不正确，不能为公司类型");
+        //                        break;
+        //                    case (int)OCAgentCategory.Market:
+        //                        if (category == OCAgentCategory.Company)
+        //                            throw new LogicException("添加代理类型不正确，不能为公司类型");
+        //                        break;
+        //                    case (int)OCAgentCategory.GeneralAgent:
+        //                        if (category != OCAgentCategory.GeneralAgent)
+        //                            throw new LogicException("添加代理类型不正确，只能添加普通代理");
+        //                        break;
+        //                    default:
+        //                        break;
+        //                }
+        //            }
+        //        }
+        //        user.AgentId = parentUserId;
+        //        user.IsAgent = true;
+        //        user.ParentPath = parentAgent != null ? parentAgent.ParentPath + "/" + parentUserId : user.ParentPath;
+        //        balanceManager.UpdateUserRegister(user);
 
-                var authBiz = new GameBizAuthBusiness();
-                var userManager = new UserManager();
-                var strRole = userManager.QueryUserRoleIdsByUserId(userId);
-                if (!string.IsNullOrEmpty(strRole))
-                {
-                    var array_Role = strRole.Split(new string[] { "%item%" }, StringSplitOptions.RemoveEmptyEntries);
-                    if (array_Role != null && array_Role.Length > 0)
-                    {
-                        if (!array_Role.Contains("Agent"))
-                            authBiz.AddUserRoles(userId, new string[] { "Agent" });
-                    }
-                    else
-                        authBiz.AddUserRoles(userId, new string[] { "Agent" });
-                }
-                else
-                    authBiz.AddUserRoles(userId, new string[] { "Agent" });
-                //保存代理上下级关系
-                agentManager.AddOCAgent(new P_OCAgent
-                {
-                    CreateTime = DateTime.Now,
-                    OCAgentCategory = (int)category,
-                    ParentUserId = parentUserId,
-                    UserId = userId,
-                    CustomerDomain = string.Empty,
-                    ParentPath = parentAgent != null ? parentAgent.ParentPath + "/" + parentUserId : user.ParentPath,
-                    CPSMode = category == (int)OCAgentCategory.Company ? (int)cpsmode : (int)parentAgent.CPSMode,
-                });
-                //返点配置
-                var rebateList = agentManager.QueryOCAgentRebateList(parentUserId);
-                foreach (var item in rebateList)
-                {
-                    if (item.SubUserRebate < 0M)
-                        throw new Exception("添加下级代理前，请先设置上级代理的下级默认返点");
-
-
-                    var currAgent = agentManager.QueryOCAgentDefaultRebateByRebateType(userId, item.GameCode, item.GameType, item.RebateType);
-                    if (currAgent == null)
-                    {
-                        agentManager.AddOCAgentRebate(new P_OCAgent_Rebate
-                        {
-                            CreateTime = DateTime.Now,
-                            GameCode = item.GameCode,
-                            GameType = item.GameType,
-                            UserId = userId,
-                            Rebate = item.SubUserRebate,
-                            SubUserRebate = 0M,
-                            RebateType = item.RebateType,
-                            CPSMode = category == (int)OCAgentCategory.Company ? (int)cpsmode : (int)parentAgent.CPSMode,
-                        });
-                    }
-                    //else
-                    //{
-                    //    currAgent.Rebate = item.SubUserRebate;
-                    //    currAgent.SubUserRebate = 0M;
-                    //    currAgent.RebateType = item.RebateType;
-                    //    agentManager.UpdateOCAgentRebate(currAgent);
-                    //}
+        //        var authBiz = new GameBizAuthBusiness();
+        //        var userManager = new UserManager();
+        //        var strRole = userManager.QueryUserRoleIdsByUserId(userId);
+        //        if (!string.IsNullOrEmpty(strRole))
+        //        {
+        //            var array_Role = strRole.Split(new string[] { "%item%" }, StringSplitOptions.RemoveEmptyEntries);
+        //            if (array_Role != null && array_Role.Length > 0)
+        //            {
+        //                if (!array_Role.Contains("Agent"))
+        //                    authBiz.AddUserRoles(userId, new string[] { "Agent" });
+        //            }
+        //            else
+        //                authBiz.AddUserRoles(userId, new string[] { "Agent" });
+        //        }
+        //        else
+        //            authBiz.AddUserRoles(userId, new string[] { "Agent" });
+        //        //保存代理上下级关系
+        //        agentManager.AddOCAgent(new P_OCAgent
+        //        {
+        //            CreateTime = DateTime.Now,
+        //            OCAgentCategory = (int)category,
+        //            ParentUserId = parentUserId,
+        //            UserId = userId,
+        //            CustomerDomain = string.Empty,
+        //            ParentPath = parentAgent != null ? parentAgent.ParentPath + "/" + parentUserId : user.ParentPath,
+        //            CPSMode = category == (int)OCAgentCategory.Company ? (int)cpsmode : (int)parentAgent.CPSMode,
+        //        });
+        //        //返点配置
+        //        var rebateList = agentManager.QueryOCAgentRebateList(parentUserId);
+        //        foreach (var item in rebateList)
+        //        {
+        //            if (item.SubUserRebate < 0M)
+        //                throw new Exception("添加下级代理前，请先设置上级代理的下级默认返点");
 
 
-                    //foreach (var itemAgent in currAgent)
-                    //{
+        //            var currAgent = agentManager.QueryOCAgentDefaultRebateByRebateType(userId, item.GameCode, item.GameType, item.RebateType);
+        //            if (currAgent == null)
+        //            {
+        //                agentManager.AddOCAgentRebate(new P_OCAgent_Rebate
+        //                {
+        //                    CreateTime = DateTime.Now,
+        //                    GameCode = item.GameCode,
+        //                    GameType = item.GameType,
+        //                    UserId = userId,
+        //                    Rebate = item.SubUserRebate,
+        //                    SubUserRebate = 0M,
+        //                    RebateType = item.RebateType,
+        //                    CPSMode = category == (int)OCAgentCategory.Company ? (int)cpsmode : (int)parentAgent.CPSMode,
+        //                });
+        //            }
+        //            //else
+        //            //{
+        //            //    currAgent.Rebate = item.SubUserRebate;
+        //            //    currAgent.SubUserRebate = 0M;
+        //            //    currAgent.RebateType = item.RebateType;
+        //            //    agentManager.UpdateOCAgentRebate(currAgent);
+        //            //}
 
-                    //    if (currAgent != null && !string.IsNullOrEmpty(itemAgent.UserId))
-                    //    {
-                    //        if (itemAgent.Rebate == 0)
-                    //        {
-                    //            agentManager.UpdateOCAgentRebate(itemAgent);
-                    //        }
-                    //    }
-                    //    else
-                    //    {
 
-                    //    }
-                    //}
-                }
+        //            //foreach (var itemAgent in currAgent)
+        //            //{
 
-                DB.Commit();
-            }
-            catch (Exception ex)
-            {
-                DB.Rollback();
-                throw ex;
-            }
+        //            //    if (currAgent != null && !string.IsNullOrEmpty(itemAgent.UserId))
+        //            //    {
+        //            //        if (itemAgent.Rebate == 0)
+        //            //        {
+        //            //            agentManager.UpdateOCAgentRebate(itemAgent);
+        //            //        }
+        //            //    }
+        //            //    else
+        //            //    {
 
-            }
+        //            //    }
+        //            //}
+        //        }
+
+        //        DB.Commit();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        DB.Rollback();
+        //        throw ex;
+        //    }
+
+        //    }
         
 
 
-        /// <summary>
-        /// 添加代理
-        /// </summary>
-        public void AddOCAgent_New_CPS(OCAgentCategory category, string parentUserId, string userId, CPSMode cpsmode, string channelName)
-        {
-            DB.Begin();
-            try
-            {
+        ///// <summary>
+        ///// 添加代理
+        ///// </summary>
+        //public void AddOCAgent_New_CPS(OCAgentCategory category, string parentUserId, string userId, CPSMode cpsmode, string channelName)
+        //{
+        //    DB.Begin();
+        //    try
+        //    {
                 
-                if (parentUserId == userId)
-                    throw new Exception("不能将自己添加为自己的上级代理");
-                var balanceManager = new UserBalanceManager();
-                var parent = balanceManager.QueryUserRegister(parentUserId);
-                //if (category != OCAgentCategory.Company && parent == null && category != OCAgentCategory.Company && !string.IsNullOrEmpty(parentUserId))
-                //    throw new LogicException(string.Format("上级用户{0}不存在", parentUserId));
+        //        if (parentUserId == userId)
+        //            throw new Exception("不能将自己添加为自己的上级代理");
+        //        var balanceManager = new UserBalanceManager();
+        //        var parent = balanceManager.QueryUserRegister(parentUserId);
+        //        //if (category != OCAgentCategory.Company && parent == null && category != OCAgentCategory.Company && !string.IsNullOrEmpty(parentUserId))
+        //        //    throw new LogicException(string.Format("上级用户{0}不存在", parentUserId));
 
-                var user = balanceManager.QueryUserRegister(userId);
-                if (user == null)
-                    throw new LogicException(string.Format("用户{0}不存在", userId));
+        //        var user = balanceManager.QueryUserRegister(userId);
+        //        if (user == null)
+        //            throw new LogicException(string.Format("用户{0}不存在", userId));
 
-                if (string.IsNullOrEmpty(parentUserId) && !string.IsNullOrEmpty(user.AgentId))
-                    throw new LogicException(string.Format("用户{0}已经是{1}的下级用户", userId, user.AgentId));
+        //        if (string.IsNullOrEmpty(parentUserId) && !string.IsNullOrEmpty(user.AgentId))
+        //            throw new LogicException(string.Format("用户{0}已经是{1}的下级用户", userId, user.AgentId));
 
-                if (!string.IsNullOrEmpty(parentUserId))
-                {
-                    if (user.AgentId != parentUserId)
-                        throw new Exception("该用户非您发展的用户");
-                }
+        //        if (!string.IsNullOrEmpty(parentUserId))
+        //        {
+        //            if (user.AgentId != parentUserId)
+        //                throw new Exception("该用户非您发展的用户");
+        //        }
 
-                //if (category != OCAgentCategory.Company && !string.IsNullOrEmpty(parentUserId))
-                //{
-                //    if (string.IsNullOrEmpty(user.AgentId))
-                //        throw new Exception("用户不属于您的下级用户");
-                //    if (user.AgentId != parentUserId)
-                //        throw new Exception("该用户非您发展的用户");
-                //}
+        //        //if (category != OCAgentCategory.Company && !string.IsNullOrEmpty(parentUserId))
+        //        //{
+        //        //    if (string.IsNullOrEmpty(user.AgentId))
+        //        //        throw new Exception("用户不属于您的下级用户");
+        //        //    if (user.AgentId != parentUserId)
+        //        //        throw new Exception("该用户非您发展的用户");
+        //        //}
 
-                var agentManager = new OCAgentManager();
-                var userAgent = agentManager.QueryOCAgent(userId);
-                if (userAgent != null)
-                    throw new Exception(string.Format("用户{0}已经是代理或者推广员", userId));
-                var parentAgent = agentManager.QueryOCAgent(parentUserId);
+        //        var agentManager = new OCAgentManager();
+        //        var userAgent = agentManager.QueryOCAgent(userId);
+        //        if (userAgent != null)
+        //            throw new Exception(string.Format("用户{0}已经是代理或者推广员", userId));
+        //        var parentAgent = agentManager.QueryOCAgent(parentUserId);
 
-                if (!string.IsNullOrEmpty(parentUserId))
-                {
-                    if (parentAgent == null)
-                        throw new LogicException("上级用户不是代理");
-                    if (parentAgent.CPSMode != (int)cpsmode)
-                        throw new LogicException("上级返点模式跟添加用户选择不一致");
-                    switch (parentAgent.OCAgentCategory)
-                    {
-                        case (int)OCAgentCategory.Company:
-                            if (category == OCAgentCategory.Company)
-                                throw new LogicException("添加代理类型不正确，不能为总代理");
-                            break;
-                        case (int)OCAgentCategory.GeneralAgent:
-                            if (category != OCAgentCategory.Extension)
-                                throw new LogicException("添加代理类型不正确，只能添加推广员");
-                            break;
-                        case (int)OCAgentCategory.Extension:
-                            if (category == OCAgentCategory.Extension)
-                                throw new LogicException("添加代理类型不正确，上级已经是推广员");
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                user.AgentId = parentUserId;
-                user.IsAgent = true;
-                user.ParentPath = parentAgent != null ? parentAgent.ParentPath + "/" + parentUserId : user.ParentPath;
-                balanceManager.UpdateUserRegister(user);
+        //        if (!string.IsNullOrEmpty(parentUserId))
+        //        {
+        //            if (parentAgent == null)
+        //                throw new LogicException("上级用户不是代理");
+        //            if (parentAgent.CPSMode != (int)cpsmode)
+        //                throw new LogicException("上级返点模式跟添加用户选择不一致");
+        //            switch (parentAgent.OCAgentCategory)
+        //            {
+        //                case (int)OCAgentCategory.Company:
+        //                    if (category == OCAgentCategory.Company)
+        //                        throw new LogicException("添加代理类型不正确，不能为总代理");
+        //                    break;
+        //                case (int)OCAgentCategory.GeneralAgent:
+        //                    if (category != OCAgentCategory.Extension)
+        //                        throw new LogicException("添加代理类型不正确，只能添加推广员");
+        //                    break;
+        //                case (int)OCAgentCategory.Extension:
+        //                    if (category == OCAgentCategory.Extension)
+        //                        throw new LogicException("添加代理类型不正确，上级已经是推广员");
+        //                    break;
+        //                default:
+        //                    break;
+        //            }
+        //        }
+        //        user.AgentId = parentUserId;
+        //        user.IsAgent = true;
+        //        user.ParentPath = parentAgent != null ? parentAgent.ParentPath + "/" + parentUserId : user.ParentPath;
+        //        balanceManager.UpdateUserRegister(user);
 
-                //保存代理上下级关系
-                agentManager.AddOCAgent(new P_OCAgent
-                {
-                    CreateTime = DateTime.Now,
-                    OCAgentCategory = (int)category,
-                    ParentUserId = parentUserId,
-                    UserId = userId,
-                    CustomerDomain = string.Empty,
-                    ParentPath = parentAgent != null ? parentAgent.ParentPath + "/" + parentUserId : user.ParentPath,
-                    CPSMode = (int)cpsmode,
-                    ChannelName = channelName
-                });
-                //返点配置
-                var rebateList = agentManager.QueryOCAgentRebateList(parentUserId);
-                foreach (var item in rebateList)
-                {
-                    if (item.SubUserRebate < 0M)
-                        throw new Exception("添加下级代理前，请先设置上级代理的下级默认返点");
+        //        //保存代理上下级关系
+        //        agentManager.AddOCAgent(new P_OCAgent
+        //        {
+        //            CreateTime = DateTime.Now,
+        //            OCAgentCategory = (int)category,
+        //            ParentUserId = parentUserId,
+        //            UserId = userId,
+        //            CustomerDomain = string.Empty,
+        //            ParentPath = parentAgent != null ? parentAgent.ParentPath + "/" + parentUserId : user.ParentPath,
+        //            CPSMode = (int)cpsmode,
+        //            ChannelName = channelName
+        //        });
+        //        //返点配置
+        //        var rebateList = agentManager.QueryOCAgentRebateList(parentUserId);
+        //        foreach (var item in rebateList)
+        //        {
+        //            if (item.SubUserRebate < 0M)
+        //                throw new Exception("添加下级代理前，请先设置上级代理的下级默认返点");
 
-                    agentManager.AddOCAgentRebate(new P_OCAgent_Rebate
-                    {
-                        CreateTime = DateTime.Now,
-                        GameCode = item.GameCode,
-                        GameType = item.GameType,
-                        UserId = userId,
-                        Rebate = item.SubUserRebate,
-                        SubUserRebate = 0M,
-                        RebateType = item.RebateType,
-                        CPSMode = (int)cpsmode
-                    });
-                }
+        //            agentManager.AddOCAgentRebate(new P_OCAgent_Rebate
+        //            {
+        //                CreateTime = DateTime.Now,
+        //                GameCode = item.GameCode,
+        //                GameType = item.GameType,
+        //                UserId = userId,
+        //                Rebate = item.SubUserRebate,
+        //                SubUserRebate = 0M,
+        //                RebateType = item.RebateType,
+        //                CPSMode = (int)cpsmode
+        //            });
+        //        }
 
-                DB.Commit();
-            }
-            catch (Exception ex)
-            {
-                DB.Rollback();
-                throw ex;
-            }
+        //        DB.Commit();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        DB.Rollback();
+        //        throw ex;
+        //    }
             
-        }
+        //}
 
         /// <summary>
         /// 店面代理信息

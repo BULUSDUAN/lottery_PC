@@ -96,37 +96,37 @@ namespace KaSon.FrameWork.ORM.Helper
         //        biz.CommitTran();
         //    }
         //}
-        public void AddUserRoles(string userId, string[] roleIds)
-        {
+        //public void AddUserRoles(string userId, string[] roleIds)
+        //{
 
-            DB.Begin();
-            try
-            {
-                var userManager = new UserManager();
+        //    DB.Begin();
+        //    try
+        //    {
+        //        var userManager = new UserManager();
 
-                var user = userManager.LoadUser(userId);
-                if (user == null)
-                {
-                    throw new ArgumentException("指定的用户不存在。");
-                }
+        //        var user = userManager.LoadUser(userId);
+        //        if (user == null)
+        //        {
+        //            throw new ArgumentException("指定的用户不存在。");
+        //        }
 
-                var roleList = userManager.GetRoleListByIds(roleIds);
-                foreach (var role in roleList)
-                {
-                    //user.AgentId.Add(role);
-                }
-                userManager.UpdateSystemUser(user);
+        //        var roleList = userManager.GetRoleListByIds(roleIds);
+        //        foreach (var role in roleList)
+        //        {
+        //            //user.AgentId.Add(role);
+        //        }
+        //        userManager.UpdateSystemUser(user);
 
-                DB.Commit();
-            }
-            catch (Exception EX)
-            {
-                DB.Rollback();
-                throw EX;
-            }
+        //        DB.Commit();
+        //    }
+        //    catch (Exception EX)
+        //    {
+        //        DB.Rollback();
+        //        throw EX;
+        //    }
 
 
-        }
+        //}
         //public void RemoveUserRoles(string userId, string[] roleIds)
         //{
         //    using (var biz = new GameBizAuthBusinessManagement())

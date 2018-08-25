@@ -105,7 +105,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 var entity = manager.BankCardById(userId);
                 if (entity == null)
                 {
-                    //DB.Rollback();
+                    DB.Rollback();
                     throw new Exception("未查到信息");
                 }
                 manager.DeleteBankCard(entity);
