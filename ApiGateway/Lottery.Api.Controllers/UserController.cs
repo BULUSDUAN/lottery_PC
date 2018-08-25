@@ -1525,7 +1525,7 @@ namespace Lottery.Api.Controllers
                 st.Start();
 #endif
                 balanceParam.Clear();
-                balanceParam.Add("UserId", UserId);
+                balanceParam.Add("userId", UserId);
                 var balance = await _serviceProxyProvider.Invoke<UserBalanceInfo>(balanceParam, "api/user/QueryMyBalance");
 #if LogInfo
                 st.Stop();

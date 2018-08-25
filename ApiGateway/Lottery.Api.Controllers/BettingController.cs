@@ -21,7 +21,7 @@ namespace Lottery.Api.Controllers
 {
     [Area("api")]
     [ReusltFilter]
-    public class BettingController: BaseController
+    public class BettingController : BaseController
     {
         #region 普通投注,世界杯投注(104,210)
         /// <summary>
@@ -59,6 +59,7 @@ namespace Lottery.Api.Controllers
                 var IsSaveOrder = "0";//是否为保存订单，0：不是保存订单；1：保存订单；
                 if (!string.IsNullOrEmpty(SavaOrder))
                     IsSaveOrder = SavaOrder;
+                string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 string returnValue = string.Empty;
                 var successCount = 0;
                 var codeCount = 0;
@@ -127,7 +128,7 @@ namespace Lottery.Api.Controllers
                                     var st = new Stopwatch();
                                     st.Start();
 #endif
-                                    var result=  await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/Sports_Betting");
+                                    var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/Sports_Betting");
 #if LogInfo
                                     st.Stop();
                                     Log4Log.LogEX(KLogLevel.TimeInfo, "投注足彩", "用时：" + st.Elapsed.TotalMilliseconds.ToString() + "毫秒");
@@ -226,7 +227,7 @@ namespace Lottery.Api.Controllers
                         param.Add("password", balancePassword);
                         param.Add("redBagMoney", redBagMoney);
                         param.Add("userToken", userToken);
-                        var saveparam= new Dictionary<string, object>();
+                        var saveparam = new Dictionary<string, object>();
                         saveparam.Add("info", info);
                         saveparam.Add("userToken", userToken);
 #if LogInfo
@@ -245,12 +246,12 @@ namespace Lottery.Api.Controllers
                         returnValue = result.ReturnValue;
                     }
 
-#endregion
+                    #endregion
                 }
                 else
                 {
                     //数字彩和传统足球
-                    var codeList =new  List<LotteryAnteCodeInfo>(); //new LotteryAnteCodeInfoCollection();
+                    var codeList = new List<LotteryAnteCodeInfo>(); //new LotteryAnteCodeInfoCollection();
                     var _codeList = JsonHelper.Decode(_code);
                     foreach (var item in _codeList)
                     {
@@ -470,9 +471,9 @@ namespace Lottery.Api.Controllers
             }
         }
 
-#endregion
+        #endregion
 
-#region 合买投注、参与合买投注(134,148)
+        #region 合买投注、参与合买投注(134,148)
         /// <summary>
         /// 发起合买_134
         /// </summary>
@@ -483,9 +484,9 @@ namespace Lottery.Api.Controllers
                 var p = JsonHelper.Decode(entity.Param);
                 string userToken = p.UserToken;
                 string balancePassword = p.BalancePassword;
-                string gameCode = p.GameCode==null?null: ((string)p.GameCode).ToUpper();
-                string gameType = p.GameType==null?null: ((string)p.GameType).ToUpper();
-                string playType = p.PlayType==null?null: ((string)p.PlayType).ToUpper();
+                string gameCode = p.GameCode == null ? null : ((string)p.GameCode).ToUpper();
+                string gameType = p.GameType == null ? null : ((string)p.GameType).ToUpper();
+                string playType = p.PlayType == null ? null : ((string)p.PlayType).ToUpper();
                 string issuseNumber = p.IssuseNumber;
                 int amount = p.Amount;
                 decimal totalMoney = p.TotalMoney;
@@ -646,8 +647,8 @@ namespace Lottery.Api.Controllers
                     var hmResult = isSaveOrder == "0" ? await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/CreateSportsTogether") :
                         await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/SaveOrder_CreateSportsTogether");
                     //var hmResult = isSaveOrder == "0" ? WCFClients.GameClient.CreateSportsTogether(togInfo, balancePassword, userToken)
-                        //: WCFClients.GameClient.SaveOrder_CreateSportsTogether(togInfo, balancePassword, userToken);
-                    
+                    //: WCFClients.GameClient.SaveOrder_CreateSportsTogether(togInfo, balancePassword, userToken);
+
                     if (!hmResult.IsSuccess)
                         throw new Exception(hmResult.Message);
                     returnValue = hmResult.ReturnValue;
@@ -709,7 +710,7 @@ namespace Lottery.Api.Controllers
                 param.Add("joinPwd", joinpwd);
                 param.Add("balancePassword", balancepwd);
                 param.Add("userToken", userToken);
-                
+
                 var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/JoinSportsTogether");
                 //var result = WCFClients.GameClient.JoinSportsTogether(schemeId, buycount, joinpwd, balancepwd, userToken);
                 return Json(new LotteryServiceResponse
@@ -741,9 +742,9 @@ namespace Lottery.Api.Controllers
                 });
             }
         }
-#endregion
+        #endregion
 
-#region 网站优化投注(142)
+        #region 网站优化投注(142)
         /// <summary>
         /// 优化投注_142
         /// </summary>
@@ -931,9 +932,9 @@ namespace Lottery.Api.Controllers
             }
         }
 
-#endregion
+        #endregion
 
-#region 定制跟单(149,151)
+        #region 定制跟单(149,151)
         /// <summary>
         /// 定制跟单_149
         /// </summary>
@@ -996,7 +997,7 @@ namespace Lottery.Api.Controllers
                     param.Add("userToken", userToken);
                     result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/CustomTogetherFollower");
                     //result = WCFClients.GameClient.CustomTogetherFollower(info, userToken);
-                }         
+                }
                 return Json(new LotteryServiceResponse
                 {
                     Code = result.IsSuccess ? ResponseCode.成功 : ResponseCode.失败,
@@ -1077,9 +1078,9 @@ namespace Lottery.Api.Controllers
                 });
             }
         }
-#endregion
+        #endregion
 
-#region 抄单投注(159)
+        #region 抄单投注(159)
         /// <summary>
         /// 抄单投注_159
         /// </summary>
@@ -1091,9 +1092,9 @@ namespace Lottery.Api.Controllers
             {
                 var p = JsonHelper.Decode(entity.Param);
                 string balancePassword = p.BalancePassword;
-                string gameCode = p.GameCode==null?null: ((string)p.GameCode).ToUpper();
-                string gameType = p.GameType == null ? null : ((string)p.GameType).ToUpper(); 
-                string playType = p.PlayType == null ? null : ((string)p.PlayType).ToUpper(); 
+                string gameCode = p.GameCode == null ? null : ((string)p.GameCode).ToUpper();
+                string gameType = p.GameType == null ? null : ((string)p.GameType).ToUpper();
+                string playType = p.PlayType == null ? null : ((string)p.PlayType).ToUpper();
                 int security = p.Security;
                 decimal totalMoney = p.TotalMoney;
                 int totalMatchCount = p.TotalMatchCount;
@@ -1118,9 +1119,9 @@ namespace Lottery.Api.Controllers
                 var sportArray = new string[] { "JCZQ" };
                 if (sportArray.Contains(gameCode))
                 {
-#region
+                    #region
                     //足球
-                    _code =JsonHelper.Decode(_code);
+                    _code = JsonHelper.Decode(_code);
                     _issuseList = JsonHelper.Decode(_issuseList);
                     if (isChaoDan == "0")
                     {
@@ -1191,7 +1192,7 @@ namespace Lottery.Api.Controllers
                     });
                 }
 
-#endregion
+                #endregion
 
                 return Json(new LotteryServiceResponse
                 {
@@ -1222,9 +1223,9 @@ namespace Lottery.Api.Controllers
                 });
             }
         }
-#endregion
+        #endregion
 
-#region 查询合买大厅(202)
+        #region 查询合买大厅(202)
         /// <summary>
         /// 从Redis查询出合买订单数据_202
         /// </summary>
@@ -1263,7 +1264,7 @@ namespace Lottery.Api.Controllers
                 var query = from s in list
                             where arrProg.Contains(Convert.ToInt32(s.ProgressStatus).ToString())
                               && (s.StopTime >= DateTime.Now)
-                              && (string.IsNullOrEmpty(key) || (s.CreateUserId!=null&& s.CreateUserId.Contains(key)) || (s.SchemeId != null && s.SchemeId.Contains(key)) || (s.CreaterDisplayName!=null&&s.CreaterDisplayName.Contains(key)) || (s.GameDisplayName != null && s.GameDisplayName.Contains(key)))
+                              && (string.IsNullOrEmpty(key) || (s.CreateUserId != null && s.CreateUserId.Contains(key)) || (s.SchemeId != null && s.SchemeId.Contains(key)) || (s.CreaterDisplayName != null && s.CreaterDisplayName.Contains(key)) || (s.GameDisplayName != null && s.GameDisplayName.Contains(key)))
                             select s;
                 var result = new List<Sports_TogetherSchemeQueryInfo>();
                 if (string.IsNullOrEmpty(OrderBy))
@@ -1272,7 +1273,7 @@ namespace Lottery.Api.Controllers
                 }
                 else if (!string.IsNullOrEmpty(OrderBy) && OrderBy.ToLower() == "masc")
                 {
-                    result = query.OrderBy(c=>c.TotalMoney).Skip(pageIndex * PageSize).Take(PageSize).ToList();
+                    result = query.OrderBy(c => c.TotalMoney).Skip(pageIndex * PageSize).Take(PageSize).ToList();
                 }
                 else if (!string.IsNullOrEmpty(OrderBy) && OrderBy.ToLower() == "mdesc")
                 {
@@ -1337,50 +1338,50 @@ namespace Lottery.Api.Controllers
         //    }
         //}
 
-//private static int _cacheRedisPort = 0;
-///// <summary>
-///// 缓存Redis的端口
-///// </summary>
-//public static int CacheRedisPost
-//{
-//    get
-//    {
-//        try
-//        {
-//            if (_cacheRedisPort > 0)
-//                return _cacheRedisPort;
-//            _cacheRedisPort = int.Parse(ConfigHelper.ConfigInfo["CacheRedisPost"].ToString());
-//            return _cacheRedisPort;
-//        }
-//        catch (Exception)
-//        {
-//            return 6379;
-//        }
-//    }
-//}
+        //private static int _cacheRedisPort = 0;
+        ///// <summary>
+        ///// 缓存Redis的端口
+        ///// </summary>
+        //public static int CacheRedisPost
+        //{
+        //    get
+        //    {
+        //        try
+        //        {
+        //            if (_cacheRedisPort > 0)
+        //                return _cacheRedisPort;
+        //            _cacheRedisPort = int.Parse(ConfigHelper.ConfigInfo["CacheRedisPost"].ToString());
+        //            return _cacheRedisPort;
+        //        }
+        //        catch (Exception)
+        //        {
+        //            return 6379;
+        //        }
+        //    }
+        //}
 
-//private static string _cacheRedisPassword = string.Empty;
-///// <summary>
-///// 缓存Redis的密码
-///// </summary>
-//public static string CacheRedisPassword
-//{
-//    get
-//    {
-//        try
-//        {
-//            if (!string.IsNullOrEmpty(_cacheRedisPassword))
-//                return _cacheRedisPassword;
-//            _cacheRedisPassword = ConfigHelper.ConfigInfo["CacheRedisPassword"].ToString();
-//            return _cacheRedisPassword;
-//        }
-//        catch (Exception)
-//        {
-//            return "123456";
-//        }
-//    }
-//}
-#endregion
+        //private static string _cacheRedisPassword = string.Empty;
+        ///// <summary>
+        ///// 缓存Redis的密码
+        ///// </summary>
+        //public static string CacheRedisPassword
+        //{
+        //    get
+        //    {
+        //        try
+        //        {
+        //            if (!string.IsNullOrEmpty(_cacheRedisPassword))
+        //                return _cacheRedisPassword;
+        //            _cacheRedisPassword = ConfigHelper.ConfigInfo["CacheRedisPassword"].ToString();
+        //            return _cacheRedisPassword;
+        //        }
+        //        catch (Exception)
+        //        {
+        //            return "123456";
+        //        }
+        //    }
+        //}
+        #endregion
 
 
     }
