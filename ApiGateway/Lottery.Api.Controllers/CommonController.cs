@@ -30,23 +30,8 @@ namespace Lottery.Api.Controllers
 {
     [Area("api")]
     [ReusltFilter]
-    // [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
     public class CommonController : BaseController
     {
-
-        // private readonly IServiceProxyProvider _serviceProxyProvider;
-        // private readonly IServiceRouteProvider _serviceRouteProvider;
-        //// private readonly IAuthorizationServerProvider _authorizationServerProvider;
-
-
-        // public HomeController(IServiceProxyProvider serviceProxyProvider,
-        //     IServiceRouteProvider serviceRouteProvider
-        //     )
-        // {
-        //     _serviceProxyProvider = serviceProxyProvider;
-        //     _serviceRouteProvider = serviceRouteProvider;
-        //    // _authorizationServerProvider = authorizationServerProvider;
-        // }
         public async Task<IActionResult> GetAppendBettingDate([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
@@ -56,7 +41,6 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.成功,
                     Message = "",
                     MsgId = entity.MsgId,
-                    // Value = returnValue.TrimEnd('~'),
                 };
                 var p = JsonHelper.Decode(entity.Param);
                 string IssuseNumber = p.IssuseNumber;
@@ -81,12 +65,10 @@ namespace Lottery.Api.Controllers
                     int currentMaxDate = BettingDateHelper.GetMaxDate(GameCode);
                     if (currentMaxDate == 0)
                     {
-                        // throw new Exception("不支持彩种");
                         result.Message = "不支持彩种";
                         result.Value = list;
                         result.Code = ResponseCode.失败;
                         return JsonEx(result);
-
                     }
                     if (MainGameCode.Contains(GameCode.ToUpper()))
                     {
@@ -117,7 +99,7 @@ namespace Lottery.Api.Controllers
             }
         }
 
-      
+
         #region 按钮上的广告
         /// <summary>
         /// 按钮上的广告
@@ -130,10 +112,6 @@ namespace Lottery.Api.Controllers
         /// <returns></returns>
         public async Task<IActionResult> GameInfoIndex([FromServices]IServiceProxyProvider _serviceProxyProvider)
         {
-            //            string json = @"{""records"":[
-            //{""desc"":""2元赢千万"",""flag"":""1"",""name"":""ssq""},{""desc"":""天天开奖"",""flag"":""1"",""name"":""3d""},{""desc"":""加奖92%(奖金)"",""flag"":""0"",""name"":""cqssc""},{""desc"":""30选7"",""flag"":""0"",""name"":""qlc""},{""desc"":""暂未开售"",""flag"":""0"",""name"":""jxssc""},{""desc"":""3元赢千万"",""flag"":""1"",""name"":""dlt""},{""desc"":""2元赢500万"",""flag"":""1"",""name"":""qxc""},{""desc"":""2元赢10万"",""flag"":""1"",""name"":""plw""},{""desc"":""天天开奖"",""flag"":""1"",""name"":""pls""},{""desc"":""加奖60%(奖金)"",""flag"":""0"",""name"":""jx11x5""},{""desc"":""每日84期"",""flag"":""1"",""name"":""gd11x5""},{""desc"":""10分钟1期"",""flag"":""1"",""name"":""sd115""},{""desc"":""暂未开售"",""flag"":""0"",""name"":""klpk""},{""desc"":""加奖15% (红包)"",""flag"":""1"",""name"":""14sfc""},{""desc"":""加奖15% (红包)"",""flag"":""1"",""name"":""r9""},{""desc"":""加奖15% (红包)"",""flag"":""1"",""name"":""4cjq""},{""desc"":""加奖15% (红包)"",""flag"":""1"",""name"":""6cb""},{""desc"":""挑战高赔率"",""flag"":""1"",""name"":""bd""},{""desc"":""加奖12%(红包)"",""flag"":""1"",""name"":""jczq""},{""desc"":""加奖15%(红包)"",""flag"":""1"",""name"":""jclq""},{""desc"":""返奖率87%"",""flag"":""1"",""name"":""jczqdg""},{""desc"":""返奖率87%"",""flag"":""1"",""name"":""jclqdg""},{""desc"":""赛事任你挑"",""flag"":""1"",""name"":""bdsf""},{""desc"":""竞猜冠亚军"",""flag"":""1"",""name"":""gyj""}]}";
-            //return WebRedisHelper.APP_Advertising;
-
             var APP_Advertising_Key = "APP_Advertising_V2";
             var APP_Advertising_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_Advertising_Key);
             return Json(new LotteryServiceResponse
@@ -145,7 +123,7 @@ namespace Lottery.Api.Controllers
             });
 
         }
-#endregion
+        #endregion
 
 
         public async Task<IActionResult> GetAPP_tuijianyouli([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
@@ -154,35 +132,33 @@ namespace Lottery.Api.Controllers
             {
                 var p = JsonHelper.Decode(entity.Param);
                 string userToken = p.UserToken;
-                if (!string.IsNullOrEmpty(userToken))
+                if (string.IsNullOrEmpty(userToken))
+                    throw new Exception("参数不能为空");
+                string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                //param.Add("userid", userid);
+                //var userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
+                //param.Clear();
+                param["UserId"] = userid;
+                var bindInfo = await _serviceProxyProvider.Invoke<UserBindInfos>(param, "api/user/QueryUserBindInfos");
+                var key = "";
+                if (bindInfo != null && bindInfo.IsAgent)
                 {
-                    Dictionary<string, object> param = new Dictionary<string, object>();
-                    param.Add("userToken", userToken);
-                    var userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
-                    param.Clear();
-                    param["UserId"] = userInfo.UserId;
-                    var bindInfo = await _serviceProxyProvider.Invoke<UserBindInfos>(param, "api/user/QueryUserBindInfos");
-                    var key = "";
-                    if (bindInfo != null && bindInfo.IsAgent)
-                    {
-                        //return WebRedisHelper.APP_tuijianyoulipid;
-                        key = "APP_tuijianyoulipid";
-                    }
-                    else
-                    {
-                        //return WebRedisHelper.APP_tuijianyoulifxid;
-                        key = "APP_tuijianyoulifxid";
-                    }
-                    var value = await GetAppConfigByKey(_serviceProxyProvider, key);
-                    return Json(new LotteryServiceResponse
-                    {
-                        Code = ResponseCode.成功,
-                        Message = "查询配置成功",
-                        MsgId = entity.MsgId,
-                        Value = JsonHelper.Deserialize<object>(value)
-                    });
+                    key = "APP_tuijianyoulipid";
                 }
-                throw new Exception("参数不能为空");
+                else
+                {
+                    key = "APP_tuijianyoulifxid";
+                }
+                var value = await GetAppConfigByKey(_serviceProxyProvider, key);
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询配置成功",
+                    MsgId = entity.MsgId,
+                    Value = JsonHelper.Deserialize<object>(value)
+                });
+
             }
             catch (Exception ex)
             {
@@ -203,35 +179,32 @@ namespace Lottery.Api.Controllers
             {
                 var p = JsonHelper.Decode(entity.Param);
                 string userToken = p.UserToken;
-                if (!string.IsNullOrEmpty(userToken))
+                if (string.IsNullOrEmpty(userToken))
+                    throw new Exception("参数不能为空");
+                string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                //param.Add("userid", userid);
+                //var userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
+                //param.Clear();
+                param["UserId"] = userid;
+                var bindInfo = await _serviceProxyProvider.Invoke<UserBindInfos>(param, "api/user/QueryUserBindInfos");
+                var key = "";
+                if (bindInfo != null && bindInfo.IsAgent)
                 {
-                    Dictionary<string, object> param = new Dictionary<string, object>();
-                    param.Add("userToken", userToken);
-                    var userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
-                    param.Clear();
-                    param["UserId"] = userInfo.UserId;
-                    var bindInfo = await _serviceProxyProvider.Invoke<UserBindInfos>(param, "api/user/QueryUserBindInfos");
-                    var key = "";
-                    if (bindInfo != null && bindInfo.IsAgent)
-                    {
-                        //return WebRedisHelper.APP_tuijianyoulipid;
-                        key = "APP_shareScheme_Pid";
-                    }
-                    else
-                    {
-                        //return WebRedisHelper.APP_tuijianyoulifxid;
-                        key = "APP_shareScheme_Fxid";
-                    }
-                    var value = await GetAppConfigByKey(_serviceProxyProvider, key);
-                    return Json(new LotteryServiceResponse
-                    {
-                        Code = ResponseCode.成功,
-                        Message = "查询配置成功",
-                        MsgId = entity.MsgId,
-                        Value = JsonHelper.Deserialize<object>(value)
-                    });
+                    key = "APP_shareScheme_Pid";
                 }
-                throw new Exception("参数不能为空");
+                else
+                {
+                    key = "APP_shareScheme_Fxid";
+                }
+                var value = await GetAppConfigByKey(_serviceProxyProvider, key);
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询配置成功",
+                    MsgId = entity.MsgId,
+                    Value = JsonHelper.Deserialize<object>(value)
+                });
             }
             catch (Exception ex)
             {
@@ -253,20 +226,12 @@ namespace Lottery.Api.Controllers
                 var APP_Common_Key = "APP_Common";
                 var APP_UserCenter_Key = "APP_UserCenter";
                 var APP_Index_Key = "APP_Index";
-                //var APP_tuijianyouli_Key = "APP_tuijianyouli";
-                //var APP_tuijianyoulipid_Key = "APP_tuijianyoulipid";
-                //var APP_tuijianyoulifxid_Key = "APP_tuijianyoulifxid";
-                //var APP_shareScheme_Key = "APP_shareScheme";
                 var APP_ServicePhone_Key = "Site.Service.Phone";
                 var APP_ScoreURL_Key = "APP_ScoreURL";
 
                 var APP_Common_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_Common_Key);
                 var APP_UserCenter_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_UserCenter_Key);
                 var APP_Index_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_Index_Key);
-                //var APP_tuijianyouli_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_tuijianyouli_Key);
-                //var APP_tuijianyoulipid_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_tuijianyoulipid_Key);
-                //var APP_tuijianyoulifxid_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_tuijianyoulifxid_Key);
-                //var APP_shareScheme_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_shareScheme_Key);
                 var APP_ServicePhone_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_ServicePhone_Key);
                 var APP_ScoreURL_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_ScoreURL_Key);
                 return Json(new LotteryServiceResponse
@@ -276,14 +241,10 @@ namespace Lottery.Api.Controllers
                     MsgId = entity.MsgId,
                     Value = new
                     {
-                        APP_Common =JsonHelper.Deserialize<object>(APP_Common_Value),
+                        APP_Common = JsonHelper.Deserialize<object>(APP_Common_Value),
                         APP_UserCenter = JsonHelper.Deserialize<object>(APP_UserCenter_Value),
                         APP_Index = JsonHelper.Deserialize<object>(APP_Index_Value),
-                        //APP_tuijianyouli = JsonHelper.Deserialize<object>(APP_tuijianyouli_Value),
-                        //APP_tuijianyoulipid = JsonHelper.Deserialize<object>(APP_tuijianyoulipid_Value),
-                        //APP_tuijianyoulifxid = JsonHelper.Deserialize<object>(APP_tuijianyoulifxid_Value),
-                        //APP_shareScheme = JsonHelper.Deserialize<object>(APP_shareScheme_Value),
-                        APP_ServicePhone= APP_ServicePhone_Value,
+                        APP_ServicePhone = APP_ServicePhone_Value,
                         APP_ScoreURL = APP_ScoreURL_Value,
                     },
                 });
@@ -295,7 +256,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "查询配置失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
-                    Value="",
+                    Value = "",
                 });
             }
         }
@@ -345,16 +306,16 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "查询配置失败",
+                    Message = "查询配置失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
-                    Value = "",
+                    Value = ex.ToGetMessage()
                 });
             }
         }
         /// <summary>
         /// 获取app相关配置
         /// </summary>
-        private async Task<string> GetAppConfigByKey([FromServices]IServiceProxyProvider _serviceProxyProvider,string key,string defalutValue = "")
+        private async Task<string> GetAppConfigByKey([FromServices]IServiceProxyProvider _serviceProxyProvider, string key, string defalutValue = "")
         {
             try
             {
@@ -366,7 +327,7 @@ namespace Lottery.Api.Controllers
                 if (flag)
                 {
                     v = KaSon.FrameWork.Common.Redis.RedisHelper.StringGet(key);
-                }   
+                }
                 if (string.IsNullOrEmpty(v))
                 {
                     var param = new Dictionary<string, object>();
@@ -399,14 +360,14 @@ namespace Lottery.Api.Controllers
         /// <returns></returns>
         public async Task<IActionResult> GetTimeLog([FromServices]IServiceProxyProvider _serviceProxyProvider, string SerName = "Order", string FileName = "")
         {
-            //APITimeInfo
             string config = "";
             if (SerName.ToLower() == "api")
             {
 
-                config= KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\APITimeInfo", "LogTime_");
+                config = KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\APITimeInfo", "LogTime_");
             }
-            else {
+            else
+            {
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param.Add("FileName", FileName);
                 config = await _serviceProxyProvider.Invoke<string>(param, "api/" + SerName + "/ReadSqlTimeLog");

@@ -42,7 +42,7 @@ namespace OrderLottery.Service.IModuleServices
         Task<Sports_TogetherSchemeQueryInfoCollection> QuerySportsTogetherListFromRedis(QuerySportsTogetherListFromRedisParam Model);
 
         [Service(Date = "2018-06-11", Director = "Debug", Name = "按keyline查询追号列表")]
-        Task<BettingOrderInfoCollection> QueryBettingOrderListByChaseKeyLine(string keyLine, string userToken);
+        Task<BettingOrderInfoCollection> QueryBettingOrderListByChaseKeyLine(string keyLine);
 
         [Service(Date = "2018-06-11", Director = "Debug", Name = "查询指定订单的投注号码列表")]
         Task<BettingAnteCodeInfoCollection> QueryAnteCodeListBySchemeId(string schemeId );
@@ -51,7 +51,7 @@ namespace OrderLottery.Service.IModuleServices
         Task<Sports_TogetherSchemeQueryInfo> QuerySportsTogetherDetail(string schemeId);
 
         [Service(Date = "2018-06-12", Director = "Debug", Name = "查询用户是否已经参与了合买")]
-        Task<bool> IsUserJoinSportsTogether(string schemeId, string userToken);
+        Task<bool> IsUserJoinSportsTogether(string schemeId, string userId);
 
         [Service(Date = "2018-06-12", Director = "Debug", Name = "查询投注号码信息")]
         Task<Sports_AnteCodeQueryInfoCollection> QuerySportsOrderAnteCodeList(string schemeId);
@@ -82,7 +82,7 @@ namespace OrderLottery.Service.IModuleServices
         [Service(Date = "2018-06-14", Director = "Debug", Name = "查询宝单详情")]
         Task<BDFXOrderDetailInfo> QueryBDFXOrderDetailBySchemeId(string schemeId);
         [Service(Date = "2018-06-14", Director = "Debug", Name = "查询我的追号订单列表")]
-        Task<BettingOrderInfoCollection> QueryMyChaseOrderList(string gameCode, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string userToken, int ProgressStatusType);
+        Task<BettingOrderInfoCollection> QueryMyChaseOrderList(string gameCode, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string userId, int ProgressStatusType);
         [Service(Date = "2018-06-14", Director = "Debug", Name = "查询我的订单列表信息")]
         Task<MyOrderListInfoCollection> QueryMyOrderListInfo(QueryMyOrderListInfoParam Model);
         [Service(Date = "2018-06-14", Director = "Debug", Name = "查询我的订单详细信息")]
@@ -98,11 +98,11 @@ namespace OrderLottery.Service.IModuleServices
         [Service(Date = "2018-06-15", Director = "Debug", Name = "查询北京单场信息")]
         Task<BJDCIssuseInfo> QueryBJDCCurrentIssuseInfo();
         [Service(Date = "2018-06-15", Director = "Debug", Name = "传统足球开奖比赛内容")]
-        Task<CTZQMatchInfo_Collection> QueryCTZQMatchListByIssuseNumber(string gameType, string issuseNumber, string userToken);
+        Task<CTZQMatchInfo_Collection> QueryCTZQMatchListByIssuseNumber(string gameType, string issuseNumber);
         [Service(Date ="2018-06-15",Director ="Debug",Name ="查询所有猜中最新开奖号码")]
         Task<GameWinNumber_InfoCollection> QueryAllGameNewWinNumber(string gameString);
         [Service(Date = "2018-08-17", Director = "Debug", Name = "查看合买详情")]
-        Task<Sports_TogetherJoinInfoCollection> QuerySportsTogetherJoinList(string schemeId, int pageIndex, int pageSize, string UserToken);
+        Task<Sports_TogetherJoinInfoCollection> QuerySportsTogetherJoinList(string schemeId, int pageIndex, int pageSize, string userId);
         [Service(Date = "2018-08-17", Director = "Debug", Name = "查询本人的所有合买记录")]
         Task<List<Sports_TogetherJoinInfo>> QueryMySportsTogetherListBySchemeId(string schemeId, string userId);
 

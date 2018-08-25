@@ -76,14 +76,6 @@ namespace Lottery.Api.Controllers
                     {
                         if (array_gameType[1].ToLower() == "hhdg")//单关固定投注
                         {
-
-                            //var userBalance = WCFClients.GameFundClient.QueryMyBalance(userToken);
-                            //if (userBalance == null)
-                            //    throw new Exception("未查询到账户信息");
-                            //else if ((userBalance.BonusBalance + userBalance.ExpertsBalance + userBalance.FillMoneyBalance + userBalance.RedBagBalance) < totalMoney)
-                            //    throw new Exception("您好，目前账户余额不足！");
-                            //else if ((userBalance.BonusBalance + userBalance.CommissionBalance + userBalance.ExpertsBalance + userBalance.FillMoneyBalance + userBalance.RedBagBalance) < totalMoney)
-                            //    throw new Exception("您好，目前账户余额不足！");
                             try
                             {
                                 foreach (var item in _codeList)
@@ -123,7 +115,7 @@ namespace Lottery.Api.Controllers
                                     param.Add("info", info);
                                     param.Add("password", balancePassword);
                                     param.Add("redBagMoney", redBagMoney);
-                                    param.Add("userToken", userToken);
+                                    param.Add("userid", userid);
 #if LogInfo
                                     var st = new Stopwatch();
                                     st.Start();
@@ -133,9 +125,6 @@ namespace Lottery.Api.Controllers
                                     st.Stop();
                                     Log4Log.LogEX(KLogLevel.TimeInfo, "投注足彩", "用时：" + st.Elapsed.TotalMilliseconds.ToString() + "毫秒");
 #endif
-                                    //var result = WCFClients.GameClient.Sports_Betting(info, balancePassword, redBagMoney, userToken);
-                                    //if (!result.IsSuccess)
-                                    //    throw new Exception(result.Message);
                                     if (result.IsSuccess)
                                     {
                                         successCount++;
@@ -226,10 +215,10 @@ namespace Lottery.Api.Controllers
                         param.Add("info", info);
                         param.Add("password", balancePassword);
                         param.Add("redBagMoney", redBagMoney);
-                        param.Add("userToken", userToken);
+                        param.Add("userid", userid);
                         var saveparam = new Dictionary<string, object>();
                         saveparam.Add("info", info);
-                        saveparam.Add("userToken", userToken);
+                        saveparam.Add("userid", userid);
 #if LogInfo
                         var st = new Stopwatch();
                         st.Start();
@@ -240,7 +229,6 @@ namespace Lottery.Api.Controllers
                         st.Stop();
                         Log4Log.LogEX(KLogLevel.TimeInfo, "投注竞技足彩", "用时：" + st.Elapsed.TotalMilliseconds.ToString() + "毫秒");
 #endif
-                        //var result = IsSaveOrder == "0" ? WCFClients.GameClient.Sports_Betting(info, balancePassword, redBagMoney, userToken) : WCFClients.GameClient.SaveOrderSportsBetting(info, userToken);
                         if (!result.IsSuccess)
                             throw new Exception(result.Message);
                         returnValue = result.ReturnValue;
@@ -293,18 +281,16 @@ namespace Lottery.Api.Controllers
                     param.Add("info", info);
                     param.Add("balancePassword", balancePassword);
                     param.Add("redBagMoney", redBagMoney);
-                    param.Add("userToken", userToken);
+                    param.Add("userid", userid);
                     var saveparam = new Dictionary<string, object>();
                     saveparam.Add("info", info);
-                    saveparam.Add("userToken", userToken);
-                    //var c = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/LotteryBetting");
+                    saveparam.Add("userid", userid);
 #if LogInfo
                     var st = new Stopwatch();
                     st.Start();
 #endif
                     var result = IsSaveOrder == "0" ? await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/LotteryBetting") :
                            await _serviceProxyProvider.Invoke<CommonActionResult>(saveparam, "api/Betting/SaveOrderLotteryBetting");
-                    //var result = IsSaveOrder == "0" ? WCFClients.GameClient.LotteryBetting(info, balancePassword, redBagMoney, userToken) : WCFClients.GameClient.SaveOrderLotteryBetting(info, userToken);
 #if LogInfo
                     st.Stop();
                     Log4Log.LogEX(KLogLevel.TimeInfo, "投注数字彩或传统足球", "用时：" + st.Elapsed.TotalMilliseconds.ToString() + "毫秒");
@@ -380,9 +366,8 @@ namespace Lottery.Api.Controllers
                 var IsSaveOrder = "0";//是否为保存订单，0：不是保存订单；1：保存订单；
                 if (!string.IsNullOrEmpty(SavaOrder))
                     IsSaveOrder = SavaOrder;
+                string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 string returnValue = string.Empty;
-                var successCount = 0;
-                var codeCount = 0;
                 if (gameCode == "SJB")
                 {
                     //投注信息
@@ -414,21 +399,13 @@ namespace Lottery.Api.Controllers
                         Amount = amount,
                         IssuseTotalMoney = totalMoney,
                     });
-
-                    /*
-                    var result = IsSaveOrder == "0" ? WCFClients.GameClient.LotteryBetting(info, balancePassword, redBagMoney, userToken) : WCFClients.GameClient.SaveOrderLotteryBetting(info, userToken);
-                    if (!result.IsSuccess)
-                        throw new Exception(result.Message);
-                    returnValue = result.ReturnValue;
-                     */
                     var result = new CommonActionResult();
                     var param = new Dictionary<string, object>();
                     param.Add("info", info);
                     param.Add("password", balancePassword);
                     param.Add("redBagMoney", redBagMoney);
-                    param.Add("userToken", userToken);
+                    param.Add("userid", userid);
                     result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/BetSJB");
-                    //result = WCFClients.GameClient.BetSJB(info, balancePassword, redBagMoney, userToken);
                     return Json(new LotteryServiceResponse
                     {
                         Code = ResponseCode.成功,
@@ -518,9 +495,7 @@ namespace Lottery.Api.Controllers
                     throw new Exception("倍数不能为空");
                 if (string.IsNullOrEmpty(userToken))
                     throw new Exception("标识不能为空");
-
-
-                //ReturnValue = schemeId + "|" + info.TotalMoney,
+                string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 string returnValue = string.Empty;
                 var sportArray = new string[] { "BJDC", "JCZQ", "JCLQ" };
                 if (sportArray.Contains(gameCode))
@@ -591,11 +566,9 @@ namespace Lottery.Api.Controllers
                         var param = new Dictionary<string, object>();
                         param.Add("info", togInfo);
                         param.Add("balancePassword", balancePassword);
-                        param.Add("userToken", userToken);
+                        param.Add("userid", userid);
                         var hmResult = isSaveOrder == "0" ? await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/CreateSportsTogether") :
                             await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/SaveOrder_CreateSportsTogether");
-                        //var hmResult = isSaveOrder == "0" ? WCFClients.GameClient.CreateSportsTogether(togInfo, balancePassword, userToken)
-                        //    : WCFClients.GameClient.SaveOrder_CreateSportsTogether(togInfo, balancePassword, userToken);
                         if (!hmResult.IsSuccess)
                             throw new Exception(hmResult.Message);
                         returnValue = hmResult.ReturnValue;
@@ -643,12 +616,9 @@ namespace Lottery.Api.Controllers
                     var param = new Dictionary<string, object>();
                     param.Add("info", togInfo);
                     param.Add("balancePassword", balancePassword);
-                    param.Add("userToken", userToken);
+                    param.Add("userid", userid);
                     var hmResult = isSaveOrder == "0" ? await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/CreateSportsTogether") :
                         await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/SaveOrder_CreateSportsTogether");
-                    //var hmResult = isSaveOrder == "0" ? WCFClients.GameClient.CreateSportsTogether(togInfo, balancePassword, userToken)
-                    //: WCFClients.GameClient.SaveOrder_CreateSportsTogether(togInfo, balancePassword, userToken);
-
                     if (!hmResult.IsSuccess)
                         throw new Exception(hmResult.Message);
                     returnValue = hmResult.ReturnValue;
@@ -704,15 +674,14 @@ namespace Lottery.Api.Controllers
                     throw new Exception("订单号不能为空");
                 else if (buycount <= 0)
                     throw new Exception("购买份数不能小于1份");
+                string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 var param = new Dictionary<string, object>();
                 param.Add("schemeId", schemeId);
                 param.Add("buyCount", buycount);
                 param.Add("joinPwd", joinpwd);
                 param.Add("balancePassword", balancepwd);
-                param.Add("userToken", userToken);
-
+                param.Add("userid", userid);
                 var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/JoinSportsTogether");
-                //var result = WCFClients.GameClient.JoinSportsTogether(schemeId, buycount, joinpwd, balancepwd, userToken);
                 return Json(new LotteryServiceResponse
                 {
                     Code = result.IsSuccess ? ResponseCode.成功 : ResponseCode.失败,
@@ -772,7 +741,7 @@ namespace Lottery.Api.Controllers
                 string attach = p.Attach;
                 bool isHemai = p.IsHemai;
                 int bettingCategory = p.BettingCategory;
-
+                string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 var anteCodeList = new Sports_AnteCodeInfoCollection();
                 var codeArray = JsonHelper.Decode(_code);
                 foreach (var item in codeArray)
@@ -842,9 +811,8 @@ namespace Lottery.Api.Controllers
                     param.Add("info", togInfo);
                     param.Add("balancePassword", balancePwd);
                     param.Add("realTotalMoney", totalMoney);
-                    param.Add("userToken", userToken);
+                    param.Add("userid", userid);
                     var hmResult = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/CreateYouHuaSchemeTogether");
-                    //var hmResult = WCFClients.GameClient.CreateYouHuaSchemeTogether(togInfo, balancePwd, totalMoney, userToken);
                     return Json(new LotteryServiceResponse
                     {
                         Code = hmResult.IsSuccess ? ResponseCode.成功 : ResponseCode.失败,
@@ -878,16 +846,14 @@ namespace Lottery.Api.Controllers
                         TotalMoney = org,
                         IsRepeat = p.IsRepeat == null ? false : p.IsRepeat
                     };
-                    //var result = WCFClients.GameClient.YouHuaBet(opt, balancePwd, totalMoney, redBagMoney, userToken);
                     var result = new CommonActionResult();
                     if (entity.SourceCode == SchemeSource.Iphone)//IOS先是以虚拟订单的方式保存，然后再跳转到网页购买保存订单
                     {
                         var param = new Dictionary<string, object>();
                         param.Add("info", opt);
                         param.Add("realTotalMoney", totalMoney);
-                        param.Add("userToken", userToken);
+                        param.Add("userid", userid);
                         result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/VirtualOrderYouHuaBet");
-                        //result = WCFClients.GameClient.VirtualOrderYouHuaBet(opt, totalMoney, userToken);
                     }
                     else
                     {
@@ -896,9 +862,8 @@ namespace Lottery.Api.Controllers
                         param.Add("password", balancePwd);
                         param.Add("realTotalMoney", totalMoney);
                         param.Add("redBagMoney", redBagMoney);
-                        param.Add("userToken", userToken);
+                        param.Add("userid", userid);
                         result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/YouHuaBet");
-                        //result = WCFClients.GameClient.YouHuaBet(opt, balancePwd, totalMoney, redBagMoney, userToken);
                     }
                     return Json(new LotteryServiceResponse
                     {
@@ -964,6 +929,7 @@ namespace Lottery.Api.Controllers
                     throw new Exception("您还未登录，请登录！");
                 else if (string.IsNullOrEmpty(currentUserId) || string.IsNullOrEmpty(createUserId))
                     throw new Exception("用户编号不能为空！");
+                string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 TogetherFollowerRuleInfo info = new TogetherFollowerRuleInfo()
                 {
                     CreaterUserId = createUserId,
@@ -986,17 +952,15 @@ namespace Lottery.Api.Controllers
                     var param = new Dictionary<string, object>();
                     param.Add("info", info);
                     param.Add("ruleId", ruleId);
-                    param.Add("userToken", userToken);
+                    param.Add("userid", userid);
                     result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/EditTogetherFollower");
-                    //result = WCFClients.GameClient.EditTogetherFollower(info, ruleId, userToken);
                 }
                 else
                 {
                     var param = new Dictionary<string, object>();
                     param.Add("info", info);
-                    param.Add("userToken", userToken);
+                    param.Add("userid", userid);
                     result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/CustomTogetherFollower");
-                    //result = WCFClients.GameClient.CustomTogetherFollower(info, userToken);
                 }
                 return Json(new LotteryServiceResponse
                 {
@@ -1044,11 +1008,11 @@ namespace Lottery.Api.Controllers
                     throw new Exception("定制跟单编号不能为空");
                 else if (string.IsNullOrEmpty(userToken))
                     throw new Exception("您还未登录，请登录！");
+                string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 var param = new Dictionary<string, object>();
                 param.Add("followerId", ruleId);
-                param.Add("userToken", userToken);
+                param.Add("userid", userid);
                 var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/ExistTogetherFollower");
-                //var result = WCFClients.GameClient.ExistTogetherFollower(ruleId, userToken);
                 return Json(new LotteryServiceResponse
                 {
                     Code = result.IsSuccess ? ResponseCode.成功 : ResponseCode.失败,

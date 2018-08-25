@@ -38,10 +38,10 @@ namespace KaSon.FrameWork.Common.CheckToken
                 {
                     throw new Exception("用户身份验证失败");
                 }
-                //if (!rlt.ContainsKey("LN"))
-                //{
-                //    throw new Exception("用户身份验证失败");
-                //}
+                if (!rlt.ContainsKey("LN"))
+                {
+                    throw new Exception("用户身份验证失败");
+                }
                 string userid = rlt["LI"];
                 if (string.IsNullOrEmpty(userid))
                     throw new Exception("用户身份验证失败");

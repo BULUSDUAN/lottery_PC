@@ -127,9 +127,9 @@ namespace OrderLottery.Service.ModuleServices
         /// <param name="keyLine"></param>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public Task<BettingOrderInfoCollection> QueryBettingOrderListByChaseKeyLine(string keyLine, string userToken)
+        public Task<BettingOrderInfoCollection> QueryBettingOrderListByChaseKeyLine(string keyLine)
         {
-            return Task.FromResult(_order.QueryBettingOrderListByChaseKeyLine(keyLine, userToken));
+            return Task.FromResult(_order.QueryBettingOrderListByChaseKeyLine(keyLine));
         }
         /// <summary>
         /// 查询指定订单的投注号码列表
@@ -156,9 +156,9 @@ namespace OrderLottery.Service.ModuleServices
         /// <param name="schemeId"></param>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public Task<bool> IsUserJoinSportsTogether(string schemeId, string userToken)
+        public Task<bool> IsUserJoinSportsTogether(string schemeId, string userId)
         {
-            return Task.FromResult(_order.IsUserJoinSportsTogether(schemeId, userToken));
+            return Task.FromResult(_order.IsUserJoinSportsTogether(schemeId, userId));
         }
         public Task<Sports_AnteCodeQueryInfoCollection> QuerySportsOrderAnteCodeList(string schemeId)
         {
@@ -272,9 +272,9 @@ namespace OrderLottery.Service.ModuleServices
         {
             return Task.FromResult(_order.QueryBDFXOrderDetailBySchemeId(schemeId));
         }
-        public Task<BettingOrderInfoCollection> QueryMyChaseOrderList(string gameCode, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string userToken, int ProgressStatusType)
+        public Task<BettingOrderInfoCollection> QueryMyChaseOrderList(string gameCode, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string userId, int ProgressStatusType)
         {
-            return Task.FromResult(_order.QueryMyChaseOrderList(gameCode, startTime, endTime, pageIndex, pageSize, userToken, ProgressStatusType));
+            return Task.FromResult(_order.QueryMyChaseOrderList(gameCode, startTime, endTime, pageIndex, pageSize, userId, ProgressStatusType));
         }
         public Task<MyOrderListInfoCollection> QueryMyOrderListInfo(QueryMyOrderListInfoParam Model)
         {
@@ -304,18 +304,18 @@ namespace OrderLottery.Service.ModuleServices
         {
             return Task.FromResult(_order.QueryBJDCCurrentIssuseInfo());
         }
-        public Task<CTZQMatchInfo_Collection> QueryCTZQMatchListByIssuseNumber(string gameType, string issuseNumber, string userToken)
+        public Task<CTZQMatchInfo_Collection> QueryCTZQMatchListByIssuseNumber(string gameType, string issuseNumber)
         {
-            return Task.FromResult(_order.QueryCTZQMatchListByIssuseNumber(gameType, issuseNumber, userToken));
+            return Task.FromResult(_order.QueryCTZQMatchListByIssuseNumber(gameType, issuseNumber));
         }
         public Task<GameWinNumber_InfoCollection> QueryAllGameNewWinNumber(string gameString)
         {
             return Task.FromResult(_order.QueryAllGameNewWinNumber(gameString));
         }
 
-        public Task<Sports_TogetherJoinInfoCollection> QuerySportsTogetherJoinList(string schemeId, int pageIndex, int pageSize, string UserToken)
+        public Task<Sports_TogetherJoinInfoCollection> QuerySportsTogetherJoinList(string schemeId, int pageIndex, int pageSize, string userId)
         {
-            return Task.FromResult(_order.QuerySportsTogetherJoinList(schemeId, pageIndex, pageSize, UserToken));
+            return Task.FromResult(_order.QuerySportsTogetherJoinList(schemeId, pageIndex, pageSize, userId));
         }
 
         public Task<List<Sports_TogetherJoinInfo>> QueryMySportsTogetherListBySchemeId(string schemeId,string userId)

@@ -282,8 +282,6 @@ namespace KaSon.FrameWork.ORM.Helper
                 var p = (from b in LoginUser
                          where (b.mobile == loginName && b.Password == password)
                          select b).FirstOrDefault();
-
-                
                 LoginUsers = p != null ? new LoginLocal(){
                     CreateTime = p.CreateTime,
                     LoginName = p.LoginName,

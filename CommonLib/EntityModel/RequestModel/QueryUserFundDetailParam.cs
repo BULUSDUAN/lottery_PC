@@ -14,7 +14,7 @@ namespace EntityModel.RequestModel
         public DateTime toDate { get; set; }
         public string accountTypeList { get; set; }
         public string categoryList { get; set; }
-        public string userToken { get; set; }
+        public string userid { get; set; }
         public string keyLine { get; set; }
         public string viewtype { get; set; }
         public string accountType { get; set; }

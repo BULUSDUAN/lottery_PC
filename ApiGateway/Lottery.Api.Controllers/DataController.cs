@@ -38,17 +38,9 @@ namespace Lottery.Api.Controllers
             {
                 var p = JsonHelper.Decode(entity.Param);
                 Dictionary<string, object> param = new Dictionary<string, object>();
-                //var param = System.Web.Helpers.Json.Decode(entity.Param);
                 string gameCode = p.GameCode;
                 param.Add("gameCode", gameCode);
                 var gameIssuseInfo = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Data/QueryCurrentIssuseInfo");
-                //var gameIssuseInfo = WCFClients.GameIssuseClient.QueryCurrentIssuseInfo(param.GameCode);
-                //param.Clear();
-                //param.Add("key", "Site.GameDelay." + p.GameCode.ToUpper());
-                //var config = await _serviceProxyProvider.Invoke<CoreConfigInfo>(param, "api/Data/QueryCoreConfigByKey");
-                //var config = WCFClients.GameClient.QueryCoreConfigByKey("Site.GameDelay." + param.GameCode.ToUpper()).ConfigValue;
-                //var config = await QueryCurrentIssuseInfo(_serviceProxyProvider, "Site.GameDelay." + p.GameCode.ToUpper());
-                //Dictionary<string, object> param = new Dictionary<string, object>();
                 param.Clear();
                 param.Add("key", "Site.GameDelay." + gameCode.ToUpper());
                 var config = await _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/Data/QueryCoreConfigByKey");
@@ -123,18 +115,11 @@ namespace Lottery.Api.Controllers
                 var gameCodeArray = new string[] { "SSQ", "DLT", "FC3D", "PL3", "CQSSC", "JX11X5" };
                 var result = new List<object>();
                 Dictionary<string, object> param = new Dictionary<string, object>();
-                //var param = System.Web.Helpers.Json.Decode(entity.Param);
-
                 foreach (var gameCode in gameCodeArray)
                 {
                     param.Clear();
                     param.Add("gameCode", gameCode);
                     var gameInfo = await _serviceProxyProvider.Invoke<LotteryIssuse_QueryInfo>(param, "api/Data/QueryNextIssuseListByLocalStopTime");
-                    //var list = WebRedisHelper.QueryNextIssuseListByLocalStopTime(gameCode);
-                    //LotteryIssuse_QueryInfo gameInfo;
-                    //if (list == null || list.Count <= 0)
-                    //    gameInfo=null;
-                    //gameInfo= list.Where(p => p.LocalStopTime > DateTime.Now).OrderBy(p => p.OfficialStopTime).FirstOrDefault();
                     if (gameInfo == null) continue;
                     result.Add(new
                     {
@@ -146,21 +131,6 @@ namespace Lottery.Api.Controllers
                         ServiceTime = DateTime.Now,
                     });
                 }
-
-                //var list = LoadAllGameIssuse_RefreshByLocalStopTime();
-                //foreach (var gameInfo in list)
-                //{
-                //    result.Add(new
-                //    {
-                //        GameCode = gameInfo.GameCode,
-                //        CurrIssuseNumber = gameInfo.IssuseNumber,
-                //        LocalStopTime = ConvertDateTimeInt(gameInfo.LocalStopTime),
-                //        OfficialStopTime = ConvertDateTimeInt(gameInfo.OfficialStopTime),
-                //        DelayTime = gameInfo.GameDelaySecond,
-                //        ServiceTime = ConvertDateTimeInt(DateTime.Now),
-                //    });
-                //}
-
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
@@ -204,8 +174,6 @@ namespace Lottery.Api.Controllers
             try
             {
                 var currTime = DateTime.Now;
-                //if (currTime > 0)
-                //{
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
@@ -213,14 +181,6 @@ namespace Lottery.Api.Controllers
                     MsgId = entity.MsgId,
                     Value = currTime,
                 });
-                //}
-                //return Json(new LotteryServiceResponse
-                //{
-                //    Code = ResponseCode.失败,
-                //    Message = "查询服务器当前时间失败",
-                //    MsgId = entity.MsgId,
-                //    Value = 0,
-                //});
             }
             catch (ArgumentException ex)
             {
@@ -236,7 +196,7 @@ namespace Lottery.Api.Controllers
             {
                 return Json(new LotteryServiceResponse
                 {
-                    Code = ResponseCode.失败 ,
+                    Code = ResponseCode.失败,
                     Message = "服务器内部错误，请联系接口提供商" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = "",
@@ -257,45 +217,33 @@ namespace Lottery.Api.Controllers
             try
             {
                 BannerType bannerType = BannerType.APP;
-                //if (entity.SourceCode == SchemeSource.Iphone)
-                //    bannerType = BannerType.IOS;
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param.Add("bannerType", (int)bannerType);
                 param.Add("returnRecord", 10);
 
                 var bannerList = await _serviceProxyProvider.Invoke<SiteMessageBannerInfo_Collection>(param, "api/Data/QuerySitemessageBanngerList_Web");
                 if (bannerList.ListInfo == null) bannerList.ListInfo = new List<SiteMessageBannerInfo>();
-                //if (bannerList.ListInfo.Count > 0)
-                //{
-                    var list = new List<object>();
-                    foreach (var item in bannerList.ListInfo)
+                var list = new List<object>();
+                foreach (var item in bannerList.ListInfo)
+                {
+                    list.Add(new
                     {
-                        list.Add(new
-                        {
-                            BannerId = item.BannerId,
-                            BannerTitle = item.BannerTitle,
-                            BannerType = item.BannerType,
-                            CreateTime = item.CreateTime,
-                            ImageUrl = item.ImageUrl,
-                            IsEnable = item.IsEnable,
-                            JumpUrl = item.JumpUrl,
-                        });
-                    }
-                    return Json(new LotteryServiceResponse
-                    {
-                        Code = ResponseCode.成功,
-                        Message = "查询广告列表成功",
-                        MsgId = entity.MsgId,
-                        Value = list,
+                        BannerId = item.BannerId,
+                        BannerTitle = item.BannerTitle,
+                        BannerType = item.BannerType,
+                        CreateTime = item.CreateTime,
+                        ImageUrl = item.ImageUrl,
+                        IsEnable = item.IsEnable,
+                        JumpUrl = item.JumpUrl,
                     });
-                //}
-                //return Json(new LotteryServiceResponse
-                //{
-                //    Code = ResponseCode.失败,
-                //    Message = "查询广告列表失败",
-                //    MsgId = entity.MsgId,
-                //    Value = "",
-                //});
+                }
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询广告列表成功",
+                    MsgId = entity.MsgId,
+                    Value = list,
+                });
             }
             catch (ArgumentException ex)
             {
@@ -311,7 +259,7 @@ namespace Lottery.Api.Controllers
             {
                 return Json(new LotteryServiceResponse
                 {
-                    Code = ResponseCode.失败 ,
+                    Code = ResponseCode.失败,
                     Message = "服务器内部错误，请联系接口提供商" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = "",
@@ -358,7 +306,7 @@ namespace Lottery.Api.Controllers
             }
             catch (ArgumentException ex)
             {
-                Log("116", ex);
+                //Log("116", ex);
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
@@ -369,7 +317,7 @@ namespace Lottery.Api.Controllers
             }
             catch (Exception ex)
             {
-                Log("116", ex);
+                //Log("116", ex);
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
@@ -379,32 +327,6 @@ namespace Lottery.Api.Controllers
                 });
             }
         }
-
-        //private List<object> GetBankDic()
-        //{
-        //    //var dic = new Dictionary<string, string>();
-        //    //dic.Add("CMB", "招商银行");
-        //    //dic.Add("ICBC", "中国工商银行");
-        //    //dic.Add("CCB", "中国建设银行");
-        //    //dic.Add("BOC", "中国银行");
-        //    //dic.Add("COMM", "中国交通银行");
-        //    //dic.Add("CITIC", "中信银行");
-        //    //dic.Add("CIB", "兴业银行");
-        //    //dic.Add("CEBBANK", "中国光大银行");
-        //    //dic.Add("CMBC", "中国民生银行");
-        //    //dic.Add("ABC", "中国农业银行");
-        //    ////dic.Add("SPAB", "平安银行");
-        //    //dic.Add("GDB", "广东发展银行");
-        //    //dic.Add("SDB", "深圳发展银行");
-        //    //dic.Add("BJB", "北京银行");
-        //    //dic.Add("SPDB", "上海浦东发展银行");
-        //    //dic.Add("SHB", "上海银行");
-        //    ////dic.Add("NBBANK", "宁波银行");
-        //    ////dic.Add("WZCB", "温州银行");
-        //    //dic.Add("CQCB", "重庆银行");
-
-        //    return dic;
-        //}
         #endregion
 
         #region 查询当前遗漏(119)
@@ -426,9 +348,6 @@ namespace Lottery.Api.Controllers
                 if (string.IsNullOrEmpty(gameCode) || string.IsNullOrEmpty(gameType) || string.IsNullOrEmpty(issuseNumber))
                     throw new ArgumentException("请求参数错误！");
                 Dictionary<string, object> param = new Dictionary<string, object>();
-                //param.Add("gameCode", gameCode);
-                //param.Add("gameType", gameType);
-                //param.Add("issuseNumber", issuseNumber);
                 param.Add("key", gameCode + "_" + gameType + "_" + issuseNumber);
                 var result = new LotteryServiceResponse() { Code = ResponseCode.失败, Message = "请求参数错误！", Value = "" };
                 switch (gameType.ToUpper())
@@ -471,7 +390,6 @@ namespace Lottery.Api.Controllers
                     Value = "",
                 });
             }
-            //throw new ArgumentException("请求参数错误！");
         }
 
 
@@ -481,7 +399,6 @@ namespace Lottery.Api.Controllers
         {
             param.Add("index", 1);
             var result = await _serviceProxyProvider.Invoke<CQSSC_1X_ZS>(param, "api/Data/QueryCQSSCCurrNumberOmission_1XDX");
-            //var result = WCFClients.ChartClient.QueryCQSSCCurrNumberOmission_1XDX(gameCode + "_" + gameType + "_" + issuseNumber, 1);
             if (result == null)
                 throw new Exception("未查询到遗漏数据！");
             var list = new List<object>();
@@ -526,7 +443,6 @@ namespace Lottery.Api.Controllers
         {
             param.Add("index", 1);
             var result = await _serviceProxyProvider.Invoke<CQSSC_2X_ZXZS>(param, "api/Data/QueryCQSSCCurrNumberOmission_2XZX");
-            //var result = WCFClients.ChartClient.QueryCQSSCCurrNumberOmission_2XZX(gameCode + "_" + gameType + "_" + issuseNumber, 1);
             if (result == null)
                 throw new Exception("未查询到遗漏数据！");
             var list = new List<object>();
@@ -816,78 +732,6 @@ namespace Lottery.Api.Controllers
         #endregion
 
         #region 查询文章列表(新闻详情_123、新闻列表_208)
-        ///// <summary>
-        ///// 旧接口_不实现
-        ///// </summary>
-        ///// <param name="entity"></param>
-        ///// <returns></returns>
-        //public LotteryServiceResponse QueryArticleList(LotteryServiceRequest entity)
-        //{
-        //    try
-        //    {
-        //        var p = System.Web.Helpers.Json.Decode(entity.Param);
-        //        //热点彩讯  FocusCMS
-        //        //赛事点评 Match_Comment
-        //        //彩票资讯 Lottery_GameCode
-        //        string category = p.Category;
-        //        int pageIndex = p.PageIndex;
-        //        int pageSize = p.PageSize;
-        //        string userToken = this.GuestUserToken;
-        //        var resultList = WCFClients.ExternalClient.QueryArticleList("", "", category, pageIndex, pageSize, userToken);
-        //        if (resultList != null && resultList.ArticleList.Count > 0)
-        //        {
-        //            var list = new List<object>();
-        //            foreach (var item in resultList.ArticleList)
-        //            {
-        //                list.Add(new
-        //                {
-        //                    Id = item.Id,
-        //                    Title = item.Title,
-        //                    GameCode = item.GameCode,
-        //                    Category = item.Category.Trim(),
-        //                    //Description = item.Description,
-        //                    //Content = item.DescContent,
-        //                    CreateTime = ConvertDateTimeInt(item.CreateTime),
-        //                });
-        //            }
-        //            return new LotteryServiceResponse
-        //            {
-        //                Code = ResponseCode.成功,
-        //                Message = "查询文章成功",
-        //                MsgId = entity.MsgId,
-        //                Value = list,
-        //            };
-        //        }
-        //        return new LotteryServiceResponse
-        //        {
-        //            Code = ResponseCode.成功,
-        //            Message = "查询文章成功",
-        //            MsgId = entity.MsgId,
-        //            Value = string.Empty,
-        //        };
-        //    }
-        //    catch (ArgumentNullException ex)
-        //    {
-        //        return new LotteryServiceResponse
-        //        {
-        //            Code = ResponseCode.失败,
-        //            Message = "业务参数错误",
-        //            MsgId = entity.MsgId,
-        //            Value = ex.ToGetMessage(),
-        //        };
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return new LotteryServiceResponse
-        //        {
-        //            Code = ResponseCode.失败,
-        //            Message = "查询文章列表失败",
-        //            MsgId = entity.MsgId,
-        //            Value = string.Empty,
-        //        };
-        //    }
-        //}
-
         /// <summary>
         /// 新闻详情_123
         /// </summary>
@@ -1168,18 +1012,9 @@ namespace Lottery.Api.Controllers
                             Title = item.Title,
                             GameCode = string.Empty,
                             Category = "GG",
-                            //Description = DeleteHtml(item.Content, 25),
-                            //Content = item.Content,
                             CreateTime = item.CreateTime,
                         });
                     }
-                    //return Json(new LotteryServiceResponse
-                    //{
-                    //    Code = ResponseCode.成功,
-                    //    Message = "查询公告列表成功",
-                    //    MsgId = entity.MsgId,
-                    //    Value = list,
-                    //});
                 }
                 return Json(new LotteryServiceResponse
                 {
@@ -3016,6 +2851,6 @@ namespace Lottery.Api.Controllers
                 return defalutValue;
             }
         }
-       
+
     }
 }

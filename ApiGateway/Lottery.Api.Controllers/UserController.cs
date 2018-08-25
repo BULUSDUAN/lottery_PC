@@ -44,14 +44,6 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-#if LogInfo
-
-            Stopwatch watch = new Stopwatch();
-            Double opt = 0,opt1=0,opt2=0, opt3=0,t1=0,t2=0;
-
-            watch.Start();
-#endif
-
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 var p = WebHelper.Decode(entity.Param);
                 string loginName = p.LoginName;
@@ -60,79 +52,28 @@ namespace Lottery.Api.Controllers
                     throw new Exception("登录名不能为空");
                 if (string.IsNullOrEmpty(password))
                     throw new Exception("密码不能为空");
-                //param.Add("model", new QueryUserParam());IPAddress
                 param["loginName"] = loginName;
                 param["password"] = password;
                 param["IPAddress"] = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
-
                 var loginInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/user_login");
-#if LogInfo
-                watch.Stop();
-                t1 = watch.Elapsed.TotalMilliseconds;
-
-#endif
                 if (loginInfo == null)
                     throw new ArgumentException("登录失败");
                 if (!loginInfo.IsSuccess)
                     throw new ArgumentException(loginInfo.Message);
                 Dictionary<string, object> bindParam = new Dictionary<string, object>();
                 bindParam["UserId"] = loginInfo.UserId;
-#if LogInfo
-                watch.Reset();
-                watch.Start();
-#endif
                 //var bindInfo = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
                 var bindInfo = new UserBindInfos();
-#if LogInfo
-                watch.Stop();
-                opt = watch.Elapsed.TotalMilliseconds;
-              
-#endif
                 Dictionary<string, object> balanceParam = new Dictionary<string, object>();
-                balanceParam["userToken"] = loginInfo.UserToken;
-#if LogInfo
-                watch.Reset();
-                watch.Start();
-   #endif
+                balanceParam["userId"] = loginInfo.UserId;
+                //balanceParam["userToken"] = loginInfo.UserToken;
                 //var balance = await _serviceProxyProvider.Invoke<UserBalanceInfo>(balanceParam, "api/user/QueryMyBalance");
                 var balance = new UserBalanceInfo();
-
-#if LogInfo
-                watch.Stop();
-                opt1 = watch.Elapsed.TotalMilliseconds;
-
-#endif
-
-#if LogInfo
-                watch.Reset();
-                watch.Start();
-#endif
-                //var bankInfo = await _serviceProxyProvider.Invoke<C_BankCard>(balanceParam, "api/user/QueryBankCard");
-                var bankInfo = new C_BankCard();
-#if LogInfo
-                watch.Stop();
-                opt2 = watch.Elapsed.TotalMilliseconds;
-
-#endif
-                if (bankInfo == null) bankInfo = new C_BankCard();
-#if LogInfo
-                watch.Reset();
-                watch.Start();
-#endif
-                balanceParam.Clear();
-                balanceParam["userId"] = loginInfo.UserId;
+                var bankInfo = await _serviceProxyProvider.Invoke<C_BankCard>(balanceParam, "api/user/QueryBankCard");
+                //var bankInfo = new C_BankCard();
+                //if (bankInfo == null) bankInfo = new C_BankCard();
+                //balanceParam.Clear();
                 var unReadCount = await _serviceProxyProvider.Invoke<int>(balanceParam, "api/user/GetMyUnreadInnerMailCount");
-
-#if LogInfo
-                watch.Stop();
-                opt3 = watch.Elapsed.TotalMilliseconds;
-
-                Log4Log.LogEX(KLogLevel.TimeInfo,
-                    string.Format("user_login+QueryUserBindInfos time:{0},{1},QueryMyBalance：{2}，QueryBankCard：{3},GetMyUnreadInnerMailCount:{4} \r\n", t1.ToString(), opt.ToString(),opt1.ToString(), opt2.ToString(), opt3.ToString()));
-
-#endif
-
-
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
@@ -248,7 +189,7 @@ namespace Lottery.Api.Controllers
             return Output;
         }
 
-      
+
 
         #region 还需要的成长值
 
@@ -319,12 +260,14 @@ namespace Lottery.Api.Controllers
                     throw new Exception("新密码不能为空");
                 if (string.IsNullOrEmpty(userToken))
                     throw new Exception("Token不能为空");
+                string tokenuserId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+                if (tokenuserId == userId)
+                    throw new Exception("Token验证失败");
                 paramCheck["newPassword"] = newPassword;
                 paramCheck["userId"] = userId;
-
                 param["oldPassword"] = oldPassword;
                 param["newPassword"] = newPassword;
-                param["userToken"] = userToken;
+                //param["userToken"] = userToken;
                 var chkPwd = await _serviceProxyProvider.Invoke<CommonActionResult>(paramCheck, "api/user/CheckIsSame2BalancePassword");
                 if (chkPwd.ReturnValue == "T" || chkPwd.ReturnValue == "N")
                     throw new Exception("登录密码不能和资金密码一样");
@@ -378,9 +321,11 @@ namespace Lottery.Api.Controllers
                     throw new ArgumentException("手机号码格式错误");
                 if (string.IsNullOrEmpty(userId))
                     throw new ArgumentException("用户编号不能为空！");
-
-                param["mobile"] = mobile;
-                param["userToken"] = userToken;
+                string tokenuserId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+                if (tokenuserId != userId)
+                    throw new ArgumentException("token验证失败！");
+                //param["mobile"] = mobile;
+                //param["userToken"] = userToken;
                 param["userId"] = userId;
 
                 var loginInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/GetLocalLoginByUserId");
@@ -432,9 +377,10 @@ namespace Lottery.Api.Controllers
                     throw new Exception("手机验证码不能为空");
                 if (string.IsNullOrEmpty(userToken))
                     throw new Exception("userToken不能为空");
+                string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 param["validateCode"] = mobileCode;
                 param["source"] = (int)SchemeSource.Web;
-                param["userToken"] = userToken;
+                param["userId"] = userId;
                 var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/ResponseAuthenticationMobile");
                 if (!result.IsSuccess)
                     throw new Exception(result.Message);
@@ -511,22 +457,22 @@ namespace Lottery.Api.Controllers
                 param["source"] = (int)schemeSource;
 
                 param["info"] = userInfo;
-           
+
                 if (!string.IsNullOrEmpty(pid))
                 {
                     userInfo.AgentId = pid;
-                }          
-                param["fxid"] = string.IsNullOrEmpty(fxid)?"0": fxid; 
+                }
+                param["fxid"] = string.IsNullOrEmpty(fxid) ? "0" : fxid;
                 var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/User/RegisterResponseMobile");
-                param.Clear();             
+                param.Clear();
                 if (result.Message.Contains("手机认证成功") || result.Message.Contains("恭喜您注册成功"))
                 {
-                    
+
                     #region 此处判断执行订单送红包逻辑
                     if (!string.IsNullOrEmpty(schemeId))
                     {
-                        param["schemeId"] =  schemeId;
-                      var redbag= await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/User/OrderShareRegisterRedBag");
+                        param["schemeId"] = schemeId;
+                        var redbag = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/User/OrderShareRegisterRedBag");
                     }
                     #endregion
                     result.Message = "注册成功";
@@ -1051,6 +997,7 @@ namespace Lottery.Api.Controllers
                     throw new Exception("您还未登录，请登录！");
                 else if (string.IsNullOrEmpty(newPwd))
                     throw new Exception("资金密码不能为空！");
+                string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 if (isSet)
                 {
                     if (!Regex.IsMatch(newPwd, "^\\d{6}$"))
@@ -1061,7 +1008,7 @@ namespace Lottery.Api.Controllers
                     Dictionary<string, object> param = new Dictionary<string, object>();
 
                     param["newPwd"] = newPwd;
-                    param["userToken"] = userToken;
+                    param["userId"] = userId;
                     var checkRes = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/CheckIsSame2LoginPassword");
 
                     PreconditionAssert.IsTrue(checkRes.IsSuccess && checkRes.ReturnValue != "T", "资金密码不能与登录密码相同");
@@ -1071,7 +1018,7 @@ namespace Lottery.Api.Controllers
                 paramPwd["oldPassword"] = isSet ? oldPwd : newPwd;
                 paramPwd["isSetPwd"] = isSet;
                 paramPwd["newPassword"] = newPwd;
-                paramPwd["userToken"] = userToken;
+                paramPwd["userId"] = userId;
 
                 var result = await _serviceProxyProvider.Invoke<CommonActionResult>(paramPwd, "api/user/SetBalancePassword");
                 return JsonEx(new LotteryServiceResponse
@@ -1122,11 +1069,11 @@ namespace Lottery.Api.Controllers
                     throw new Exception("您还未登录，请登录！");
                 else if (string.IsNullOrEmpty(pwd))
                     throw new Exception("资金密码不能为空");
-
+                string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 Dictionary<string, object> paramPwd = new Dictionary<string, object>();
                 paramPwd["pwd"] = pwd;
                 paramPwd["strPlace"] = strPlace;
-                paramPwd["userToken"] = userToken;
+                paramPwd["userId"] = userId;
 
                 var result = await _serviceProxyProvider.Invoke<CommonActionResult>(paramPwd, "api/user/SetBalancePasswordNeedPlace");
                 return JsonEx(new LotteryServiceResponse
@@ -1175,8 +1122,9 @@ namespace Lottery.Api.Controllers
                 string userToken = p.UserToken;
                 if (string.IsNullOrEmpty(userToken))
                     throw new Exception("您还未登录，请登录！");
+                string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 Dictionary<string, object> param = new Dictionary<string, object>();
-                param["userToken"] = userToken;
+                param["userId"] = userId;
                 var result = await _serviceProxyProvider.Invoke<string>(param, "api/user/QueryYqidRegisterByAgentIdToApp");
                 return JsonEx(new LotteryServiceResponse
                 {
@@ -1231,6 +1179,7 @@ namespace Lottery.Api.Controllers
                     throw new Exception("真实姓名不能为空");
                 if (string.IsNullOrEmpty(userToken))
                     throw new Exception("userToken不能为空");
+                string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 var userRealName = new UserRealNameInfo
                 {
                     IdCardNumber = idCardNumber,
@@ -1241,7 +1190,7 @@ namespace Lottery.Api.Controllers
                 param["IdCardNumber"] = idCardNumber;
                 param["RealName"] = realName;
                 param["source"] = (int)SchemeSource.Web;
-                param["userToken"] = userToken;
+                param["userId"] = userId;
 
 
                 var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/AuthenticateMyRealName");
@@ -1312,6 +1261,7 @@ namespace Lottery.Api.Controllers
                     throw new Exception("userToken不能为空");
                 if (string.IsNullOrEmpty(bankrealName))
                     throw new Exception("开户名不能为空");
+                string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param["bankCode"] = bankCode;
                 var resultbankCode = await _serviceProxyProvider.Invoke<C_Bank_Info>(param, "api/user/QueryBankInfo");
@@ -1341,7 +1291,7 @@ namespace Lottery.Api.Controllers
                 #endregion
                 Dictionary<string, object> paramCard = new Dictionary<string, object>();
                 paramCard["bankCard"] = bankCard;
-                paramCard["userToken"] = userToken;
+                paramCard["userId"] = userId;
 
 
                 var result = await _serviceProxyProvider.Invoke<CommonActionResult>(paramCard, "api/user/AddBankCard");
@@ -1418,7 +1368,9 @@ namespace Lottery.Api.Controllers
                 string loginName = p.LoginName;
                 if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userToken) || string.IsNullOrEmpty(loginName))
                     throw new ArgumentException("传入参数信息有误！");
-
+                string tokenuserId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+                if(tokenuserId!=userId)
+                    throw new ArgumentException("token验证失败！");
                 //if (!CanDoLoadUserInfo(loginName))
                 //    throw new Exception("刷新频繁，请稍后再试");
                 Dictionary<string, object> param = new Dictionary<string, object>();
@@ -1448,7 +1400,7 @@ namespace Lottery.Api.Controllers
                     MsgId = entity.MsgId,
                     Value = new
                     {
-                        UserToken = loginInfo.UserToken,
+                        UserToken = userToken,
                         DisplayName = loginInfo.DisplayName,
                         LoginName = loginInfo.LoginName,
                         UserId = loginInfo.UserId,
@@ -1515,21 +1467,22 @@ namespace Lottery.Api.Controllers
                 string userToken = p.UserToken;
                 if (string.IsNullOrEmpty(userToken))
                     throw new ArgumentException("传入参数信息有误！");
+                string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 Dictionary<string, object> balanceParam = new Dictionary<string, object>();
-                balanceParam["UserToken"] = userToken;
-                var UserId = await _serviceProxyProvider.Invoke<string>(balanceParam, "api/user/GetUserIdByUserToken");
-                if (string.IsNullOrEmpty(UserId))
-                    throw new ArgumentException("未查询到当前用户信息！");
+                //balanceParam["UserToken"] = userToken;
+                //var UserId = await _serviceProxyProvider.Invoke<string>(balanceParam, "api/user/GetUserIdByUserToken");
+                //if (string.IsNullOrEmpty(UserId))
+                //    throw new ArgumentException("未查询到当前用户信息！");
 #if LogInfo
                 var st = new Stopwatch();
                 st.Start();
 #endif
                 balanceParam.Clear();
-                balanceParam.Add("userId", UserId);
+                balanceParam.Add("userId", userId);
                 var balance = await _serviceProxyProvider.Invoke<UserBalanceInfo>(balanceParam, "api/user/QueryMyBalance");
 #if LogInfo
                 st.Stop();
-                Log4Log.LogEX(KLogLevel.TimeInfo, "查询用户金额用时", "参数"+ userToken+"；用时："+st.Elapsed.TotalMilliseconds.ToString()+"毫秒");
+                Log4Log.LogEX(KLogLevel.TimeInfo, "查询用户金额用时", "参数" + userToken + "；用时：" + st.Elapsed.TotalMilliseconds.ToString() + "毫秒");
 #endif
                 return JsonEx(new LotteryServiceResponse
                 {
@@ -1585,58 +1538,43 @@ namespace Lottery.Api.Controllers
             {
                 //读取json数据
                 var p = WebHelper.Decode(entity.Param);
-                string token = p.token;
+                string userToken = p.token;
                 string client = p.client;
-                if (string.IsNullOrEmpty(token))
+                if (string.IsNullOrEmpty(userToken))
                     throw new ArgumentException("token不能为空");
-                Dictionary<string, object> param = new Dictionary<string, object>();
-                param["userToken"] = token;
-
-
+                string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 if ((DateTime.Now.Hour < 8 || (DateTime.Now.Hour == 8 && DateTime.Now.Minute < 50))
                     && (DateTime.Now.Hour > 1 || (DateTime.Now.Hour == 1 && DateTime.Now.Minute > 10)))
                 {
                     throw new ArgumentException("提现时间早上9点到凌晨1点，请您明天9点再来，感谢配合");
                 }
-                var userinfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/LoginByUserToken");
-                
-
-                if (userinfo.IsSuccess)
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                //param["userToken"] = token;
+                //var userinfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/LoginByUserToken");
+                param.Add("userId", userId);
+                var cashMoney = await _serviceProxyProvider.Invoke<UserBalanceInfo>(param, "api/user/QueryMyBalance");
+                Dictionary<string, object> bindParam = new Dictionary<string, object>();
+                bindParam["UserId"] = userId;
+                var info = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
+                if (info == null)
+                    throw new ArgumentException("未找到用户信息");
+                if (string.IsNullOrEmpty(info.RealName))
+                    throw new ArgumentException("请先实名认证");
+                if (string.IsNullOrEmpty(info.BankCardNumber))
+                    throw new ArgumentException("请先绑定银行卡");
+                return JsonEx(new LotteryServiceResponse
                 {
-                    param.Clear();
-                    param.Add("userId", userinfo.UserId);
-                    var cashMoney = await _serviceProxyProvider.Invoke<UserBalanceInfo>(param, "api/user/QueryMyBalance");
-
-                    Dictionary<string, object> bindParam = new Dictionary<string, object>();
-                    bindParam["UserId"] = userinfo.UserId;
-                    var info = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
-                    if (info == null)
-                        throw new ArgumentException("未找到用户信息");
-                    if (string.IsNullOrEmpty(info.RealName))
-                        throw new ArgumentException("请先实名认证");
-                    if (string.IsNullOrEmpty(info.BankCardNumber))
-                        throw new ArgumentException("请先绑定银行卡");
-
-
-                    return JsonEx(new LotteryServiceResponse
+                    Code = ResponseCode.成功,
+                    Message = "可以提现",
+                    MsgId = entity.MsgId,
+                    Value = new
                     {
-                        Code = ResponseCode.成功,
-                        Message = "可以提现",
-                        MsgId = entity.MsgId,
-                        Value = new
-                        {
-                            RealName = info.RealName,
-                            BankName = info.BankName,
-                            BankCardNumber = info.BankCardNumber,
-                            TotalCashMoney = cashMoney.GetTotalCashMoney()
-                        }
-                    });
-
-                }
-                else
-                {
-                    throw new Exception(userinfo.Message);
-                }
+                        RealName = info.RealName,
+                        BankName = info.BankName,
+                        BankCardNumber = info.BankCardNumber,
+                        TotalCashMoney = cashMoney.GetTotalCashMoney()
+                    }
+                });
             }
             catch (Exception exp)
             {
@@ -1663,70 +1601,61 @@ namespace Lottery.Api.Controllers
             {
                 //读取json数据
                 var p = WebHelper.Decode(entity.Param);
-                string token = p.token;
+                string userToken = p.token;
                 string client = p.client;
                 string money = p.money;
-                if (string.IsNullOrEmpty(token))
+                if (string.IsNullOrEmpty(userToken))
                     throw new ArgumentException("token不能为空");
                 if (string.IsNullOrEmpty(money))
                     throw new ArgumentException("提款金额不能为空");
+                string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 Dictionary<string, object> param = new Dictionary<string, object>();
-                param["userToken"] = token;
-                var userinfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/LoginByUserToken");
-                if (userinfo.IsSuccess)
+                //param["userToken"] = token;
+                //var userinfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/LoginByUserToken");
+                Dictionary<string, object> bindParam = new Dictionary<string, object>();
+                bindParam["UserId"] = userId;
+                var info = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
+                if (info == null)
+                    throw new ArgumentException("未找到用户信息");
+                if (string.IsNullOrEmpty(info.RealName))
+                    throw new ArgumentException("请先实名认证");
+                if (string.IsNullOrEmpty(info.BankCardNumber))
+                    throw new ArgumentException("请先绑定银行卡");
+                var minwithdrawmoney = await GetMinWithdrawMoney(_serviceProxyProvider);
+                PreconditionAssert.IsTrue(decimal.Parse(money) >= minwithdrawmoney, "提款金额不能小于" + minwithdrawmoney.ToString() + "元");
+                Dictionary<string, object> paramRequestWithdraw = new Dictionary<string, object>();
+                paramRequestWithdraw["userId"] = info.UserId;
+                paramRequestWithdraw["requestMoney"] = decimal.Parse(money);
+                var RequestWithdraw_1 = await _serviceProxyProvider.Invoke<CheckWithdrawResult>(paramRequestWithdraw, "api/user/RequestWithdraw_Step1");
+                if (RequestWithdraw_1.WithdrawCategory == WithdrawCategory.Error)
                 {
-                    Dictionary<string, object> bindParam = new Dictionary<string, object>();
-                    bindParam["UserId"] = userinfo.UserId;
-                    var info = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
-                    if (info == null)
-                        throw new ArgumentException("未找到用户信息");
-                    if (string.IsNullOrEmpty(info.RealName))
-                        throw new ArgumentException("请先实名认证");
-                    if (string.IsNullOrEmpty(info.BankCardNumber))
-                        throw new ArgumentException("请先绑定银行卡");
-                    var minwithdrawmoney = await GetMinWithdrawMoney(_serviceProxyProvider);
-                    PreconditionAssert.IsTrue(decimal.Parse(money) >= minwithdrawmoney, "提款金额不能小于" + minwithdrawmoney.ToString() + "元");
-                    Dictionary<string, object> paramRequestWithdraw = new Dictionary<string, object>();
-                    paramRequestWithdraw["userId"] = info.UserId;
-                    paramRequestWithdraw["requestMoney"] = decimal.Parse(money);
-                    var RequestWithdraw_1 = await _serviceProxyProvider.Invoke<CheckWithdrawResult>(paramRequestWithdraw, "api/user/RequestWithdraw_Step1");
-                    if (RequestWithdraw_1.WithdrawCategory == WithdrawCategory.Error)
-                    {
-                        return JsonEx(new LotteryServiceResponse
-                        {
-                            Code = ResponseCode.失败,
-                            Message = RequestWithdraw_1.Summary,
-                            MsgId = entity.MsgId
-                        });
-                    }
-                    param.Clear();
-                    param["userId"] = userinfo.UserId ;
-                    var cashMoney = await _serviceProxyProvider.Invoke<UserBalanceInfo>(param, "api/user/QueryMyBalance");
-
-
                     return JsonEx(new LotteryServiceResponse
                     {
-                        Code = ResponseCode.成功,
-                        Message = "可以提现",
-                        MsgId = entity.MsgId,
-                        Value = new
-                        {
-                            RealName = info.RealName,
-                            BankName = info.BankName,
-                            BankCardNumber = info.BankCardNumber,
-                            TotalCashMoney = cashMoney.GetTotalCashMoney(),
-                            Money = money,
-                            ResponseMoney = RequestWithdraw_1.ResponseMoney,
-                            Commission = RequestWithdraw_1.RequestMoney - RequestWithdraw_1.ResponseMoney,
-                            IsNeedPwd = cashMoney.CheckIsNeedPassword("Withdraw")
-                        }
+                        Code = ResponseCode.失败,
+                        Message = RequestWithdraw_1.Summary,
+                        MsgId = entity.MsgId
                     });
-
                 }
-                else
+                param.Clear();
+                param["userId"] = userId;
+                var cashMoney = await _serviceProxyProvider.Invoke<UserBalanceInfo>(param, "api/user/QueryMyBalance");
+                return JsonEx(new LotteryServiceResponse
                 {
-                    throw new Exception(userinfo.Message);
-                }
+                    Code = ResponseCode.成功,
+                    Message = "可以提现",
+                    MsgId = entity.MsgId,
+                    Value = new
+                    {
+                        RealName = info.RealName,
+                        BankName = info.BankName,
+                        BankCardNumber = info.BankCardNumber,
+                        TotalCashMoney = cashMoney.GetTotalCashMoney(),
+                        Money = money,
+                        ResponseMoney = RequestWithdraw_1.ResponseMoney,
+                        Commission = RequestWithdraw_1.RequestMoney - RequestWithdraw_1.ResponseMoney,
+                        IsNeedPwd = cashMoney.CheckIsNeedPassword("Withdraw")
+                    }
+                });
             }
             catch (Exception exp)
             {
@@ -1752,63 +1681,54 @@ namespace Lottery.Api.Controllers
             {
                 //读取json数据
                 var p = WebHelper.Decode(entity.Param);
-                string token = p.token;
+                string userToken = p.token;
                 string client = p.client;
                 string money = p.money;
                 string balancepwd = p.balancepwd;
                 decimal RequestMoney = 0;
-                if (string.IsNullOrEmpty(token))
+                if (string.IsNullOrEmpty(userToken))
                     throw new ArgumentException("token不能为空");
                 if (string.IsNullOrEmpty(money))
                     throw new ArgumentException("提款金额不能为空");
+                string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 decimal.TryParse(money, out RequestMoney);
                 //PreconditionAssert.IsTrue(RequestMoney >= 10, "提款金额不能小于10元");
                 var minwithdrawmoney = await GetMinWithdrawMoney(_serviceProxyProvider);
                 PreconditionAssert.IsTrue(int.Parse(money) >= minwithdrawmoney, "提款金额不能小于" + minwithdrawmoney.ToString() + "元");
                 Dictionary<string, object> param = new Dictionary<string, object>();
-                param["userToken"] = token;
-                var userinfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/LoginByUserToken");
-                if (userinfo.IsSuccess)
+                //param["userToken"] = token;
+                //var userinfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/LoginByUserToken");
+                Dictionary<string, object> bindParam = new Dictionary<string, object>();
+                bindParam["UserId"] = userId;
+                var info = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
+                if (info == null)
+                    throw new ArgumentException("未找到用户信息");
+                if (string.IsNullOrEmpty(info.RealName))
+                    throw new ArgumentException("请先实名认证");
+                if (string.IsNullOrEmpty(info.BankCardNumber))
+                    throw new ArgumentException("请先绑定银行卡");
+
+                Withdraw_RequestInfo withdrawinfo = new Withdraw_RequestInfo();
+                withdrawinfo.BankCardNumber = info.BankCardNumber;
+                //withdrawinfo.BankCode = "";
+                withdrawinfo.BankName = info.BankName;
+                withdrawinfo.BankSubName = info.BankSubName;
+                withdrawinfo.CityName = info.CityName;
+                withdrawinfo.ProvinceName = info.ProvinceName;
+                withdrawinfo.RequestMoney = RequestMoney;
+                withdrawinfo.WithdrawAgent = WithdrawAgentType.BankCard;
+                withdrawinfo.userRealName = info.RealName;
+                Dictionary<string, object> Withdraw_Param = new Dictionary<string, object>();
+                Withdraw_Param["info"] = withdrawinfo;
+                Withdraw_Param["userId"] = info.UserId;
+                Withdraw_Param["balancepwd"] = balancepwd;
+                var RequestWithdraw_Step2 = await _serviceProxyProvider.Invoke<CommonActionResult>(Withdraw_Param, "api/user/RequestWithdraw_Step2");
+                return JsonEx(new LotteryServiceResponse
                 {
-                    Dictionary<string, object> bindParam = new Dictionary<string, object>();
-                    bindParam["UserId"] = userinfo.UserId;
-                    var info = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
-                    if (info == null)
-                        throw new ArgumentException("未找到用户信息");
-                    if (string.IsNullOrEmpty(info.RealName))
-                        throw new ArgumentException("请先实名认证");
-                    if (string.IsNullOrEmpty(info.BankCardNumber))
-                        throw new ArgumentException("请先绑定银行卡");
-
-                    Withdraw_RequestInfo withdrawinfo = new Withdraw_RequestInfo();
-                    withdrawinfo.BankCardNumber = info.BankCardNumber;
-                    //withdrawinfo.BankCode = "";
-                    withdrawinfo.BankName = info.BankName;
-                    withdrawinfo.BankSubName = info.BankSubName;
-                    withdrawinfo.CityName = info.CityName;
-                    withdrawinfo.ProvinceName = info.ProvinceName;
-                    withdrawinfo.RequestMoney = RequestMoney;
-                    withdrawinfo.WithdrawAgent = WithdrawAgentType.BankCard;
-                    withdrawinfo.userRealName = info.RealName;
-
-                    Dictionary<string, object> Withdraw_Param = new Dictionary<string, object>();
-                    Withdraw_Param["info"] = withdrawinfo;
-                    Withdraw_Param["userId"] = info.UserId;
-                    Withdraw_Param["balancepwd"] = balancepwd;
-                    var RequestWithdraw_Step2 = await _serviceProxyProvider.Invoke<CommonActionResult>(Withdraw_Param, "api/user/RequestWithdraw_Step2");
-
-                    return JsonEx(new LotteryServiceResponse
-                    {
-                        Code = ResponseCode.成功,
-                        Message = "提款成功",
-                        MsgId = entity.MsgId
-                    });
-
-                }
-                else
-                {
-                    throw new Exception(userinfo.Message);
-                }
+                    Code = ResponseCode.成功,
+                    Message = "提款成功",
+                    MsgId = entity.MsgId
+                });
             }
             catch (Exception exp)
             {
@@ -1829,13 +1749,15 @@ namespace Lottery.Api.Controllers
             try
             {
                 var p = WebHelper.Decode(entity.Param);
-                string token = p.token;
+                string userToken = p.token;
                 DateTime begin = Convert.ToDateTime(p.begin);
                 DateTime end = Convert.ToDateTime(p.end);
                 int pageNo = Convert.ToInt32(p.pageNo);
                 int PageSize = Convert.ToInt32(p.PageSize);
                 var status = string.IsNullOrEmpty((string)p.Status) ? null : Convert.ToInt32(p.Status);
-
+                if (string.IsNullOrEmpty(userToken))
+                    throw new Exception("token验证失败");
+                string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 //var withdrawList = WCFClients.GameFundClient.QueryMyWithdrawList(WithdrawStatus.Success, begin, end.AddDays(1), pageNo, PageSize, token);
                 //var withdrawList = WCFClients.GameFundClient.QueryMyWithdrawList(null, begin, end.AddDays(1), pageNo, PageSize, token);
                 if (begin < DateTime.Now.AddMonths(-1))
@@ -1847,7 +1769,7 @@ namespace Lottery.Api.Controllers
                 Param["endTime"] = end.AddDays(1);
                 Param["pageIndex"] = pageNo;
                 Param["pageSize"] = PageSize;
-                Param["userToken"] = token;
+                Param["userId"] = userId;
 
                 var withdrawList = await _serviceProxyProvider.Invoke<Withdraw_QueryInfoCollection>(Param, "api/user/QueryMyWithdrawList");
 
@@ -1880,37 +1802,22 @@ namespace Lottery.Api.Controllers
             try
             {
                 var p = WebHelper.Decode(entity.Param);
-                string UserToken = p.UserToken;
-                if (!string.IsNullOrEmpty(UserToken))
+                string userToken = p.UserToken;
+                if (!string.IsNullOrEmpty(userToken))
                 {
-                    UserToken = UserToken.Replace("%2B", "+").Replace("%26", "&");
-                    Dictionary<string, object> param = new Dictionary<string, object>();
-                    param["userToken"] = UserToken;
-                    var lInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/LoginByUserToken");
-                    if (lInfo.IsSuccess)
+                    userToken = userToken.Replace("%2B", "+").Replace("%26", "&");
+                    string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+                    Dictionary<string, object> param2 = new Dictionary<string, object>();
+                    param2.Add("key", "FillMoney_Enable_GateWay");
+                    var FillMoney_Enable_GateWay = await _serviceProxyProvider.Invoke<C_Core_Config>(param2, "api/user/QueryCoreConfigByKey");
+                    string[] gateWayArray = FillMoney_Enable_GateWay.ConfigValue.ToLower().Split('|');
+                    return JsonEx(new LotteryServiceResponse
                     {
-                        Dictionary<string, object> param2 = new Dictionary<string, object>();
-                        param2.Add("key", "FillMoney_Enable_GateWay");
-                        var FillMoney_Enable_GateWay = await _serviceProxyProvider.Invoke<C_Core_Config>(param2, "api/user/QueryCoreConfigByKey");
-                        string[] gateWayArray = FillMoney_Enable_GateWay.ConfigValue.ToLower().Split('|');
-                        return JsonEx(new LotteryServiceResponse
-                        {
-                            Code = ResponseCode.成功,
-                            Message = "获取成功",
-                            MsgId = entity.MsgId,
-                            Value = LoadPayConfig("ios", gateWayArray),
-                        });
-                    }
-                    else
-                    {
-                        return JsonEx(new LotteryServiceResponse
-                        {
-                            Code = ResponseCode.失败,
-                            Message = "验证用户失败",
-                            MsgId = entity.MsgId,
-                            Value = "验证用户失败",
-                        });
-                    }
+                        Code = ResponseCode.成功,
+                        Message = "获取成功",
+                        MsgId = entity.MsgId,
+                        Value = LoadPayConfig("ios", gateWayArray),
+                    });
                 }
                 else
                 {
@@ -2021,9 +1928,9 @@ namespace Lottery.Api.Controllers
             try
             {
                 var p = WebHelper.Decode(entity.Param);
-                string token = p.token;
+                string userToken = p.token;
                 string bank = p.bank;
-                if (string.IsNullOrEmpty(token))
+                if (string.IsNullOrEmpty(userToken))
                 {
                     throw new Exception("无效参数");
                 }
@@ -2032,16 +1939,16 @@ namespace Lottery.Api.Controllers
                 {
                     throw new Exception("充值金额无效");
                 }
-
+                string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 Dictionary<string, object> param = new Dictionary<string, object>();
-                param["userToken"] = token;
-                var lInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/LoginByUserToken");
-                if (!lInfo.IsSuccess)
-                {
-                    throw new Exception(lInfo.Message);
-                }
-                param.Clear();
-                param.Add("userId", lInfo.UserId);
+                //param["userToken"] = token;
+                //var lInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/LoginByUserToken");
+                //if (!lInfo.IsSuccess)
+                //{
+                //    throw new Exception(lInfo.Message);
+                //}
+                //param.Clear();
+                param.Add("userId", userId);
                 var bankInfo = await _serviceProxyProvider.Invoke<C_BankCard>(param, "api/user/QueryBankCard");
                 CallBackParam callBackParam = new CallBackParam();
                 callBackParam.BankCardNo = "";
@@ -2049,9 +1956,9 @@ namespace Lottery.Api.Controllers
                 {
                     callBackParam.BankCardNo = bankInfo.BankCardNumber;
                 }
-                var cui = new LoginInfo();
-                cui = lInfo;
-                callBackParam.UserId = cui.UserId;
+                //var cui = new LoginInfo();
+                //cui = lInfo;
+                callBackParam.UserId = userId;
                 callBackParam.payAmount = amount;
                 Dictionary<string, object> param2 = new Dictionary<string, object>();
                 param2.Add("key", "FillMoney.CallBackDomain");

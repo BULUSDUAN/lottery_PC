@@ -111,7 +111,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public UserFundDetailCollection QueryMyFundDetailList(QueryUserFundDetailParam Model)
         {
             UserAuthentication Auth = new UserAuthentication();
-            var userId = Auth.ValidateUserAuthentication(Model.userToken);
+            var userId = Model.userid;
             var v = ConfigHelper.AllConfigInfo["QueryUserFundDetailFromCache"].ToString();
             var collection = new UserFundDetailCollection();
             if (!string.IsNullOrEmpty(v))
@@ -255,7 +255,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public FillMoneyQueryInfoCollection QueryMyFillMoneyList(QueryFillMoneyListParam Model)
         {
             UserAuthentication Auth = new UserAuthentication();
-            var userId = Auth.ValidateUserAuthentication(Model.userToken);
+            var userId = Model.userid;
 
             var Collection = new FillMoneyQueryInfoCollection();
             Model.pageIndex = Model.pageIndex < 0 ? 0 : Model.pageIndex;
@@ -310,7 +310,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public MyBettingOrderInfoCollection QueryMyBettingOrderList(QueryMyBettingOrderParam Model)
         {
             UserAuthentication Auth = new UserAuthentication();
-            var userId = Auth.ValidateUserAuthentication(Model.userToken);
+            var userId = Model.UserID;
             Model.pageIndex = Model.pageIndex < 0 ? 0 : Model.pageIndex;
             Model.pageSize = Model.pageSize > Model.MaxPageSize ? Model.MaxPageSize : Model.pageSize;
             var state = -1;
@@ -347,7 +347,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public Withdraw_QueryInfoCollection QueryMyWithdrawList(QueryMyWithdrawParam Model)
         {
             UserAuthentication Auth = new UserAuthentication();
-            var userId = Auth.ValidateUserAuthentication(Model.userToken);
+            var userId = Model.userid;
             var statusList = new List<int>();
             if (Model.status.HasValue) statusList.Add((int)Model.status.Value);
             var Collection = new Withdraw_QueryInfoCollection();
@@ -528,7 +528,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <param name="keyLine"></param>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public BettingOrderInfoCollection QueryBettingOrderListByChaseKeyLine(string keyLine, string userToken)
+        public BettingOrderInfoCollection QueryBettingOrderListByChaseKeyLine(string keyLine)
         {
             try
             {
@@ -745,7 +745,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             return info;
         }
-        public Sports_TogetherJoinInfoCollection QuerySportsTogetherJoinList(string schemeId, int pageIndex, int pageSize, string UserToken)
+        public Sports_TogetherJoinInfoCollection QuerySportsTogetherJoinList(string schemeId, int pageIndex, int pageSize, string userId)
         {
             var result = new Sports_TogetherJoinInfoCollection();
             var totalCount = 0;
@@ -837,10 +837,9 @@ namespace KaSon.FrameWork.ORM.Helper
         }
 
 
-        public bool IsUserJoinSportsTogether(string schemeId, string userToken)
+        public bool IsUserJoinSportsTogether(string schemeId, string userId)
         {
             UserAuthentication Auth = new UserAuthentication();
-            var userId = Auth.ValidateUserAuthentication(userToken);
             int flag = DB.CreateQuery<C_Sports_TogetherJoin>().Where(p => p.SchemeId == schemeId && p.JoinUserId == userId && p.JoinSucess==true).Count();
             return flag > 0;
         }
@@ -1364,7 +1363,8 @@ namespace KaSon.FrameWork.ORM.Helper
         public TogetherFollowerRuleQueryInfoCollection QueryUserFollowRule(QueryUserFollowRuleParam Model)
         {
             UserAuthentication Auth = new UserAuthentication();
-            var userId = Auth.ValidateUserAuthentication(Model.userToken);
+            //var userId = Auth.ValidateUserAuthentication(Model.userToken);
+            string userId = Model.userId;
             var collection = new TogetherFollowerRuleQueryInfoCollection();
             Model.pageIndex = Model.pageIndex < 0 ? 0 : Model.pageIndex;
             Model.pageSize = Model.pageSize > Model.MaxPageSize ? Model.MaxPageSize : Model.pageSize;
@@ -2247,9 +2247,9 @@ namespace KaSon.FrameWork.ORM.Helper
             return new List<AnteCodeInfo>();
         }
 
-        public BettingOrderInfoCollection QueryMyChaseOrderList(string gameCode, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string userToken,int ProgressStatusType)
+        public BettingOrderInfoCollection QueryMyChaseOrderList(string gameCode, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string userId, int ProgressStatusType)
         {
-            var userId = new UserAuthentication().ValidateUserAuthentication(userToken);
+            //var userId = new UserAuthentication().ValidateUserAuthentication(userToken);
             pageIndex = pageIndex < 0 ? 0 : pageIndex;
             pageSize = pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : pageSize;
             var collection = new BettingOrderInfoCollection();
@@ -2283,12 +2283,12 @@ namespace KaSon.FrameWork.ORM.Helper
         }
         public MyOrderListInfoCollection QueryMyOrderListInfo(QueryMyOrderListInfoParam Model)
         {
-            var UserId = new UserAuthentication().ValidateUserAuthentication(Model.userToken);
+            //var UserId = new UserAuthentication().ValidateUserAuthentication(Model.userToken);
             Model.pageIndex = Model.pageIndex < 0 ? 0 : Model.pageIndex;
             Model.pageSize = Model.pageSize > Model.MaxPageSize ? Model.MaxPageSize : Model.pageSize;
             var collection = new MyOrderListInfoCollection();
             var query = from d in DB.CreateQuery<C_OrderDetail>()
-                        where d.UserId == UserId
+                        where d.UserId == Model.userId
                         && (Model.gameCode == string.Empty || d.GameCode == Model.gameCode)
                         && (Model.bonusStatus == null || d.BonusStatus == (int)Model.bonusStatus)
                         && (Model.schemeType == null || d.SchemeType == (int)Model.schemeType)
@@ -2630,7 +2630,7 @@ namespace KaSon.FrameWork.ORM.Helper
             });
             return queryResult.FirstOrDefault();
         }
-        public CTZQMatchInfo_Collection QueryCTZQMatchListByIssuseNumber(string gameType, string issuseNumber, string userToken)
+        public CTZQMatchInfo_Collection QueryCTZQMatchListByIssuseNumber(string gameType, string issuseNumber)
         {
             var collection = new CTZQMatchInfo_Collection();
             //var UserId = new UserAuthentication().ValidateUserAuthentication(userToken);

@@ -113,10 +113,13 @@ namespace Lottery.Api.Controllers
                 int pageIndex = p.PageIndex;
                 int pageSize = p.PageSize;
                 string key = p.KeyWord;
+                if (string.IsNullOrEmpty(userToken))
+                    throw new Exception("用户未登录");
                 if (string.IsNullOrEmpty(GameCode))
                     throw new Exception("彩种不能为空");
+                string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 Dictionary<string, object> param = new Dictionary<string, object>();
-                param["Model"] = new QueryBonusInfoListParam() { gameCode = GameCode, gameType = gameType, pageIndex = pageIndex, pageSize = pageSize, UserToken = userToken };
+                param["Model"] = new QueryBonusInfoListParam() { userId = userid, gameCode = GameCode, gameType = gameType, pageIndex = pageIndex, pageSize = pageSize, UserToken = userToken };
                 var list = new List<object>();
                 var _issuseNumber = string.Empty;
                 var _completeData = string.Empty;
@@ -510,7 +513,7 @@ namespace Lottery.Api.Controllers
                 int pageSize = p.PageSize ?? 1;
                 if (string.IsNullOrEmpty(userToken))
                     throw new ArgumentException("您还未登陆");
-                //endTime = endTime.AddDays(1);
+                string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 var list = new List<object>();
                 if (viewType.ToUpper() == "ZHMX")
@@ -518,7 +521,7 @@ namespace Lottery.Api.Controllers
                     string accountType = p.AccoountType;
                     if (string.IsNullOrEmpty(accountType))
                         accountType = string.Empty;
-                    var Model = new QueryUserFundDetailParam() { viewtype = viewType, userToken = userToken, fromDate = startTime, toDate = endTime, pageIndex = PageIndex, pageSize = pageSize, accountTypeList = accountType };
+                    var Model = new QueryUserFundDetailParam() { viewtype = viewType, userid = userid, fromDate = startTime, toDate = endTime, pageIndex = PageIndex, pageSize = pageSize, accountTypeList = accountType };
                     param["Model"] = Model;
                     var FundDetails = await _serviceProxyProvider.Invoke<UserFundDetailCollection>(param, "api/Order/QueryMyFundDetailList");
                     if (FundDetails != null && FundDetails.FundDetailList.Count > 0)
@@ -553,7 +556,7 @@ namespace Lottery.Api.Controllers
                 }
                 else if (viewType.ToUpper() == "CZJL")
                 {
-                    var Model = new QueryFillMoneyListParam() { userToken = userToken, startTime = startTime, endTime = endTime, pageIndex = PageIndex, pageSize = pageSize, statusList = "1" };
+                    var Model = new QueryFillMoneyListParam() { userid = userid, startTime = startTime, endTime = endTime, pageIndex = PageIndex, pageSize = pageSize, statusList = "1" };
                     param["Model"] = Model;
                     var FillMoneyCollection = await _serviceProxyProvider.Invoke<FillMoneyQueryInfoCollection>(param, "api/Order/QueryMyFillMoneyList");
                     if (FillMoneyCollection != null && FillMoneyCollection.FillMoneyList.Count > 0)
@@ -579,7 +582,7 @@ namespace Lottery.Api.Controllers
                 }
                 else if (viewType.ToUpper() == "GCJL")
                 {
-                    var Model = new QueryMyBettingOrderParam() { userToken = userToken, startTime = startTime, endTime = endTime, pageIndex = PageIndex, pageSize = pageSize, bonusStatus = null, gameCode = "" };
+                    var Model = new QueryMyBettingOrderParam() { UserID = userid, startTime = startTime, endTime = endTime, pageIndex = PageIndex, pageSize = pageSize, bonusStatus = null, gameCode = "" };
                     param["Model"] = Model;
                     var result = await _serviceProxyProvider.Invoke<MyBettingOrderInfoCollection>(param, "api/Order/QueryMyBettingOrderList");
                     if (result != null && result.OrderList != null)
@@ -602,7 +605,7 @@ namespace Lottery.Api.Controllers
                 }
                 else if (viewType.ToUpper() == "ZJJL")
                 {
-                    var Model = new QueryUserFundDetailParam() { userToken = userToken, fromDate = startTime, toDate = endTime, pageIndex = PageIndex, pageSize = pageSize, categoryList = "奖金", accountTypeList = "10" };
+                    var Model = new QueryUserFundDetailParam() { userid = userid, fromDate = startTime, toDate = endTime, pageIndex = PageIndex, pageSize = pageSize, categoryList = "奖金", accountTypeList = "10" };
                     param["Model"] = Model;
                     var result = await _serviceProxyProvider.Invoke<UserFundDetailCollection>(param, "api/Order/QueryMyFundDetailList");
                     if (result != null && result.FundDetailList != null)
@@ -634,7 +637,7 @@ namespace Lottery.Api.Controllers
                 }
                 else if (viewType.ToUpper() == "TKJL")
                 {
-                    var Model = new QueryMyWithdrawParam() { userToken = userToken, startTime = startTime, endTime = endTime, pageIndex = PageIndex, pageSize = pageSize, status = (int)WithdrawStatus.Success };
+                    var Model = new QueryMyWithdrawParam() { userid = userid, startTime = startTime, endTime = endTime, pageIndex = PageIndex, pageSize = pageSize, status = (int)WithdrawStatus.Success };
                     param["Model"] = Model;
                     var result = await _serviceProxyProvider.Invoke<Withdraw_QueryInfoCollection>(param, "api/Order/QueryMyWithdrawList");
                     if (result != null && result.WithdrawList != null)
@@ -723,11 +726,11 @@ namespace Lottery.Api.Controllers
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userToken))
                     throw new ArgumentException("您还未登陆，请登陆后查询");
-
+                string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 var list = new List<object>();
                 if (orderQueryType == 1)
                 {
-                    var Model = new QueryMyBettingOrderParam() { userToken = userToken, bonusStatus = (BonusStatus)state, gameCode = gamecode ?? "", startTime = startTime, endTime = endTime, pageIndex = pageIndex, pageSize = pageSize };
+                    var Model = new QueryMyBettingOrderParam() { UserID = userid, bonusStatus = (BonusStatus)state, gameCode = gamecode ?? "", startTime = startTime, endTime = endTime, pageIndex = pageIndex, pageSize = pageSize };
                     param["Model"] = Model;
                     //代购
                     var orderList = await _serviceProxyProvider.Invoke<MyBettingOrderInfoCollection>(param, "api/Order/QueryMyBettingOrderList");
@@ -867,12 +870,11 @@ namespace Lottery.Api.Controllers
                 string userId = string.Empty;
                 if (!string.IsNullOrEmpty(userToken))
                 {
-                    param.Add("userToken", userToken);
-                    var userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
-
-
-                    if (userInfo != null)
-                        userId = userInfo.UserId;
+                    userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+                    //param.Add("userToken", userToken);
+                    //var userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
+                    //if (userInfo != null)
+                    //    userId = userInfo.UserId;
                 }
 
                 if (orderBy == "Progress")
@@ -1056,7 +1058,7 @@ namespace Lottery.Api.Controllers
             {
                 var p = JsonHelper.Decode(entity.Param);
                 string userToken = p.UserToken;
-                
+
                 string schemeId = p.SchemeId;
                 if (string.IsNullOrEmpty(schemeId))
                     throw new ArgumentException("订单号不能为空！");
@@ -1108,27 +1110,26 @@ namespace Lottery.Api.Controllers
         /// <param name="schemeId"></param>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public async Task<IActionResult> QueryCHASEOrderDetail([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity, string schemeId, string userToken="")
+        public async Task<IActionResult> QueryCHASEOrderDetail([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity, string schemeId, string userToken = "")
         {
+            string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
             Dictionary<string, object> param = new Dictionary<string, object>
             {
-                { "schemeId", schemeId },
-                { "userToken", userToken }
+                { "schemeId", schemeId }
             };
             var schemeInfo = await _serviceProxyProvider.Invoke<BettingOrderInfoCollection>(param, "api/Order/QueryBettingOrderListByChaseKeyLine");
             if (schemeInfo.OrderList.Count == 0)
                 throw new Exception("追号方案不包括投注期信息");
             var firstIssuse = schemeInfo.OrderList[0];
-            var userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
+            //var userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
 
             var status = schemeInfo.OrderList.Min(t => t.ProgressStatus);
             var codeList = new List<object>();
             if (firstIssuse.Security == TogetherSchemeSecurity.Public
-                || (firstIssuse.Security == TogetherSchemeSecurity.CompletePublic && status != ProgressStatus.Running && status != ProgressStatus.Waitting) || (firstIssuse.UserId == userInfo.UserId))
+                || (firstIssuse.Security == TogetherSchemeSecurity.CompletePublic && status != ProgressStatus.Running && status != ProgressStatus.Waitting) || (firstIssuse.UserId == userid))
             {
                 param.Clear();
                 param.Add("SchemeId", firstIssuse.SchemeId);
-                param.Add("userToken", userToken);
                 var anteCodeList = await _serviceProxyProvider.Invoke<BettingAnteCodeInfoCollection>(param, "api/Order/QueryAnteCodeListBySchemeId");
                 foreach (var code in anteCodeList.AnteCodeList)
                 {
@@ -1209,52 +1210,27 @@ namespace Lottery.Api.Controllers
         /// <param name="schemeId"></param>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public async Task<IActionResult> QueryTMSOrderDetail([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity, string schemeId, string userToken="")
+        public async Task<IActionResult> QueryTMSOrderDetail([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity, string schemeId, string userToken = "")
         {
             Dictionary<string, object> param = new Dictionary<string, object>
             {
                 {"schemeId",schemeId }
-                //{"userToken",userToken },{ "PageIndex",0},{ "PageSize",100}
             };
             var schemeInfo = await _serviceProxyProvider.Invoke<Sports_TogetherSchemeQueryInfo>(param, "api/Order/QuerySportsTogetherDetail");
             param.Clear();
+            string userid = string.Empty;
             var userInfo = new LoginInfo();
-            if (!string.IsNullOrEmpty(userToken))
-            {
-                param.Add("userToken", userToken);
-                userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
-            }
-            param.Clear();
-            param.Add("schemeId", schemeId);
-            param.Add("userToken", userToken);
-            //param.Add("pageIndex", 0);
-            //param.Add("pageSize", 100);
-            //param.Add("UserToken", userToken);
-            //var join = await _serviceProxyProvider.Invoke<Sports_TogetherJoinInfoCollection>(param, "api/Order/QuerySportsTogetherJoinList");
-            //var joinList = new List<object>();
-            //foreach (var item in join.List)
-            //{
-            //    joinList.Add(new
-            //    {
-            //        UserId = item.UserId,
-            //        UserDisplayName = ConvertHelper.HideUserName(item.UserDisplayName, item.HideDisplayNameCount),
-            //        HideDisplayNameCount = item.HideDisplayNameCount,
-            //        SchemeId = item.SchemeId,
-            //        RealBuyCount = item.RealBuyCount,
-            //        Price = item.Price,
-            //        JoinType = ConvertHelper.FomartJoinType(item.JoinType),
-            //        JoinId = item.JoinId,
-            //        JoinDateTime = item.JoinDateTime,
-            //        IsSucess = item.IsSucess,
-            //        BuyCount = item.BuyCount,
-            //        BonusMoney = item.BonusMoney,
-            //    });
-            //}
             var flag = false;
             if (!string.IsNullOrEmpty(userToken))
             {
+                //param.Add("userToken", userToken);
+                //userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
+                userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+                param.Add("schemeId", schemeId);
+                param.Add("userid", userid);
                 flag = await _serviceProxyProvider.Invoke<bool>(param, "api/Order/IsUserJoinSportsTogether");
-            }  
+            }
+
             var codeList = new List<object>();
             if (schemeInfo.Security == TogetherSchemeSecurity.Public
                || (schemeInfo.Security == TogetherSchemeSecurity.CompletePublic && schemeInfo.StopTime <= DateTime.Now)
@@ -1300,7 +1276,7 @@ namespace Lottery.Api.Controllers
                 BonusCount = schemeInfo.BonusCount,
                 BonusMoney = schemeInfo.AfterTaxBonusMoney,
                 AddMoney = schemeInfo.AddMoney,
-                JoinUserCount=schemeInfo.JoinUserCount,
+                JoinUserCount = schemeInfo.JoinUserCount,
                 AddMoneyDescription = schemeInfo.AddMoneyDescription,
                 TicketStatus = schemeInfo.TicketStatus,
                 TogetherProgressStatus = schemeInfo.ProgressStatus,
@@ -1332,7 +1308,7 @@ namespace Lottery.Api.Controllers
         /// <param name="schemeId"></param>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public async Task<IActionResult> QueryGeneralOrderDetail([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity, string schemeId, string userToken="")
+        public async Task<IActionResult> QueryGeneralOrderDetail([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity, string schemeId, string userToken = "")
         {
             try
             {
@@ -1343,19 +1319,21 @@ namespace Lottery.Api.Controllers
                 {"schemeId",schemeId }
             };
                 var schemeInfo = await _serviceProxyProvider.Invoke<Sports_SchemeQueryInfo>(param, "api/Order/QuerySportsSchemeInfo");
+                string userId = string.Empty;
                 param.Clear();
-                var userInfo = new LoginInfo();
+                //var userInfo = new LoginInfo();
                 if (!string.IsNullOrEmpty(userToken))
                 {
-                    param.Add("userToken", userToken);
-                    userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
+                    userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+                    //param.Add("userToken", userToken);
+                    //userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
                 }
                 param.Clear();
 
                 var codeList = new List<object>();
                 if (schemeInfo.Security == TogetherSchemeSecurity.Public
                    || (schemeInfo.Security == TogetherSchemeSecurity.CompletePublic && schemeInfo.StopTime <= DateTime.Now)
-                   || schemeInfo.UserId == userInfo.UserId|| string.IsNullOrEmpty(userToken))
+                   || schemeInfo.UserId == userId || string.IsNullOrEmpty(userToken))
                 {
                     param["schemeId"] = schemeId;
                     if (schemeInfo.Security != TogetherSchemeSecurity.FirstMatchStopPublic)
@@ -1605,8 +1583,9 @@ namespace Lottery.Api.Controllers
                 bool byFollower = p.byFollower;//true=查询我的定制,false=查询定制我的
                 if (string.IsNullOrEmpty(userToken))
                     throw new Exception("您还未登录，请登录！");
+                string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 Dictionary<string, object> param = new Dictionary<string, object>();
-                var Model = new QueryUserFollowRuleParam() { userToken = userToken, pageIndex = pageIndex, pageSize = pageSize, gameCode = gameCode, gameType = gameType, byFollower = byFollower };
+                var Model = new QueryUserFollowRuleParam() { userId = userId, pageIndex = pageIndex, pageSize = pageSize, gameCode = gameCode, gameType = gameType, byFollower = byFollower };
                 param["Model"] = Model;
                 var followList = await _serviceProxyProvider.Invoke<TogetherFollowerRuleQueryInfoCollection>(param, "api/Order/QueryUserFollowRule");
                 var list = new List<object>();
@@ -1687,6 +1666,7 @@ namespace Lottery.Api.Controllers
                 string gameType = p.GameType;
                 if (string.IsNullOrEmpty(userToken))
                     throw new Exception("您还未登录，请登录！");
+                string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 Dictionary<string, object> param = new Dictionary<string, object>() {
                     {"createrUserId",createUserId },{"followerUserId", followerUserId},{"gameCode",gameCode },{ "gameType",gameType}
                 };
@@ -2029,6 +2009,7 @@ namespace Lottery.Api.Controllers
                     throw new Exception("用户编号不能为空！");
                 else if (string.IsNullOrEmpty(bgzUserId))
                     throw new Exception("被关注用户编号不能为空！");
+                string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 Dictionary<string, object> param = new Dictionary<string, object>()
                 {
                     { "currUserId",currentUserId},{"bgzUserId",bgzUserId }
@@ -2336,7 +2317,7 @@ namespace Lottery.Api.Controllers
                 string userToken = p.UserToken;
                 if (string.IsNullOrEmpty(userToken))
                     throw new ArgumentException("您还未登录！");
-
+                string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 BonusStatus? bonusStatus = null;
                 SchemeType? schemeType = null;
                 DateTime startTime = Convert.ToDateTime(p.StartTime);
@@ -2366,7 +2347,7 @@ namespace Lottery.Api.Controllers
                     { "endTime",endTime},
                     { "pageIndex",pageIndex},
                     { "pageSize",pageSize },
-                    { "userToken",userToken },
+                    { "userId",userId },
                     { "ProgressStatusType",ProgressStatusType }
                 };
                 if (_schemeType == "2")
@@ -2383,7 +2364,7 @@ namespace Lottery.Api.Controllers
                 else
                 {
                     param.Clear();
-                    var Model = new QueryMyOrderListInfoParam() { userToken = userToken, pageIndex = pageIndex, pageSize = pageSize, gameCode = _gameCode, bonusStatus = bonusStatus, schemeType = schemeType, startTime = startTime, endTime = endTime };
+                    var Model = new QueryMyOrderListInfoParam() { userId = userId, pageIndex = pageIndex, pageSize = pageSize, gameCode = _gameCode, bonusStatus = bonusStatus, schemeType = schemeType, startTime = startTime, endTime = endTime };
                     param["Model"] = Model;
                     var result = await _serviceProxyProvider.Invoke<MyOrderListInfoCollection>(param, "api/Order/QueryMyOrderListInfo");
                     return Json(new LotteryServiceResponse
@@ -2433,7 +2414,7 @@ namespace Lottery.Api.Controllers
                 string schemeId = p.SchemeId;
                 if (string.IsNullOrEmpty(schemeId))
                     throw new ArgumentException("订单号不能为空！");
-
+                string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 MyOrderListInfo orderInfo = null;
                 Sports_AnteCodeQueryInfoCollection anteCodeList = null;
                 var togetherInfo = new object();
@@ -2443,7 +2424,7 @@ namespace Lottery.Api.Controllers
                     //追号
                     Dictionary<string, object> param = new Dictionary<string, object>()
                     {
-                    {"keyLine",schemeId },{"userToken",userToken }
+                    {"keyLine",schemeId }
                     };
                     var schemeInfo = await _serviceProxyProvider.Invoke<BettingOrderInfoCollection>(param, "api/Order/QueryBettingOrderListByChaseKeyLine");
                     if (schemeInfo.OrderList.Count == 0)
@@ -2494,7 +2475,7 @@ namespace Lottery.Api.Controllers
                 {
                     Dictionary<string, object> param = new Dictionary<string, object>()
                     {
-                        {"schemeId",schemeId },{ "userToken",userToken}
+                        {"schemeId",schemeId },{ "userId",userId}
                     };
                     orderInfo = await _serviceProxyProvider.Invoke<MyOrderListInfo>(param, "api/Order/QueryMyOrderDetailInfo");
                     anteCodeList = await _serviceProxyProvider.Invoke<Sports_AnteCodeQueryInfoCollection>(param, "api/Order/QuerySportsOrderAnteCodeList");
@@ -2762,7 +2743,7 @@ namespace Lottery.Api.Controllers
             var flag = KaSon.FrameWork.Common.Redis.RedisHelper.KeyExists(key);
 #if LogInfo
             st.Stop();
-            Log4Log.LogEX(KLogLevel.TimeInfo, "redis判断是否有key"+ key, "用时：" + st.Elapsed.TotalMilliseconds.ToString() + "毫秒");
+            Log4Log.LogEX(KLogLevel.TimeInfo, "redis判断是否有key" + key, "用时：" + st.Elapsed.TotalMilliseconds.ToString() + "毫秒");
 #endif
             var list = new List<KaiJiang>();
             var str = "";
@@ -2774,7 +2755,7 @@ namespace Lottery.Api.Controllers
                 str = KaSon.FrameWork.Common.Redis.RedisHelper.StringGet(key);
 #if LogInfo
                 st.Stop();
-                Log4Log.LogEX(KLogLevel.TimeInfo, "redis获取key："+ key, "用时：" + st.Elapsed.TotalMilliseconds.ToString() + "毫秒");
+                Log4Log.LogEX(KLogLevel.TimeInfo, "redis获取key：" + key, "用时：" + st.Elapsed.TotalMilliseconds.ToString() + "毫秒");
 #endif
             }
             if (!string.IsNullOrEmpty(str))
@@ -2811,7 +2792,7 @@ namespace Lottery.Api.Controllers
                 list[list.Count - 1].type = "任选9";
 #if LogInfo
                 st.Reset();
-                
+
                 st.Stop();
                 Log4Log.LogEX(KLogLevel.TimeInfo, "redis设置key：" + key, "用时：" + st.Elapsed.TotalMilliseconds.ToString() + "毫秒");
 #endif
@@ -2947,7 +2928,7 @@ namespace Lottery.Api.Controllers
         {
             Dictionary<string, object> param = new Dictionary<string, object>()
             {
-                { "gameType",type},{ "issuseNumber",term},{"userToken","" }
+                { "gameType",type},{ "issuseNumber",term}
             };
             List<KaiJiangOpenMatch> list = new List<KaiJiangOpenMatch>();
             var match = await _serviceProxyProvider.Invoke<CTZQMatchInfo_Collection>(param, "api/Order/QueryCTZQMatchListByIssuseNumber");
@@ -2995,7 +2976,7 @@ namespace Lottery.Api.Controllers
             return string.Empty;
         }
 
-#region 20180821新增三个接口（1.获取合买用户列表，2.获取自己的合买数据列表，3.仅根据订单号获取订单信息）
+        #region 20180821新增三个接口（1.获取合买用户列表，2.获取自己的合买数据列表，3.仅根据订单号获取订单信息）
         /// <summary>
         /// 合买用户列表
         /// </summary>
@@ -3011,16 +2992,17 @@ namespace Lottery.Api.Controllers
                 int pageIndex = p.PageIndex;
                 int pageSize = p.PageSize;
                 string userToken = p.UserToken;
+                string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param.Add("schemeId", schemeId);
                 param.Add("pageIndex", pageIndex);
                 param.Add("pageSize", pageSize);
-                param.Add("UserToken", userToken);
+                param.Add("userId", userId);
                 var join = await _serviceProxyProvider.Invoke<Sports_TogetherJoinInfoCollection>(param, "api/Order/QuerySportsTogetherJoinList");
                 var joinList = new List<object>();
                 foreach (var item in join.List)
                 {
-                    if (item.JoinType != TogetherJoinType.Guarantees&&item.JoinType!=TogetherJoinType.SystemGuarantees)
+                    if (item.JoinType != TogetherJoinType.Guarantees && item.JoinType != TogetherJoinType.SystemGuarantees)
                     {
                         joinList.Add(new
                         {
@@ -3038,14 +3020,14 @@ namespace Lottery.Api.Controllers
                             BonusMoney = item.BonusMoney,
                         });
                     }
-                    
+
                 }
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
                     Message = "获取成功",
                     MsgId = entity.MsgId,
-                    Value = new {joinList= joinList,totalCount= join.TotalCount },
+                    Value = new { joinList = joinList, totalCount = join.TotalCount },
                 });
             }
             catch (Exception ex)
@@ -3068,13 +3050,16 @@ namespace Lottery.Api.Controllers
                 var p = JsonHelper.Decode(entity.Param);
                 string schemeId = p.SchemeId;
                 string userToken = p.UserToken;
+                if (string.IsNullOrEmpty(userToken))
+                    throw new Exception("用户未登录");
+                string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 Dictionary<string, object> param = new Dictionary<string, object>();
-                param.Add("userToken", userToken);
-                var userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
-                if (userInfo == null || string.IsNullOrEmpty(userInfo.UserId)) throw new Exception("找不到相关用户");
-                param.Clear();
+                //param.Add("userToken", userToken);
+                //var userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
+                //if (userInfo == null || string.IsNullOrEmpty(userInfo.UserId)) throw new Exception("找不到相关用户");
+                //param.Clear();
                 param.Add("schemeId", schemeId);
-                param.Add("userId", userInfo.UserId);
+                param.Add("userId", userId);
                 var join = await _serviceProxyProvider.Invoke<List<Sports_TogetherJoinInfo>>(param, "api/Order/QueryMySportsTogetherListBySchemeId");
                 var joinList = new List<object>();
                 foreach (var item in join)
@@ -3164,7 +3149,7 @@ namespace Lottery.Api.Controllers
 
         }
 
-#endregion
+        #endregion
 
     }
 }

@@ -34,10 +34,10 @@ namespace UserLottery.Service.IModuleServices
         Task<CommonActionResult> CheckIsSame2BalancePassword(string newPassword, string userId);
 
         [Service(Date = "2018-6-06", Director = "renjun", Name = "修改密码")]
-        Task<CommonActionResult> ChangeMyPassword(string oldPassword, string newPassword, string userToken);
+        Task<CommonActionResult> ChangeMyPassword(string oldPassword, string newPassword, string userId);
 
         [Service(Date = "2018-6-08", Director = "renjun", Name = "token登录")]
-        Task<LoginInfo> LoginByUserToken(string userToken);
+        Task<LoginInfo> LoginByUserToken(string userId);
 
         [Service(Date = "2018-6-29", Director = "renjun", Name = "根据UserId查询用户信息")]
         Task<LoginInfo> GetLocalLoginByUserId(string userId);
@@ -67,7 +67,7 @@ namespace UserLottery.Service.IModuleServices
         Task<C_Core_Config> QueryCoreConfigByKey(string key);
 
         [Service(Date = "2018-6-20", Director = "renjun", Name = "回复手机认证")]
-        Task<CommonActionResult> ResponseAuthenticationMobile(string validateCode, SchemeSource source, string userToken);
+        Task<CommonActionResult> ResponseAuthenticationMobile(string validateCode, SchemeSource source, string userId);
 
         [Service(Date = "2018-6-27", Director = "renjun", Name = "判断找回密码验证码是否正确")]
         Task<bool> CheckValidateCodeByForgetPWD(string mobile, string validateCode);
@@ -85,19 +85,19 @@ namespace UserLottery.Service.IModuleServices
         Task<CommonActionResult> SendValidateCodeToUserMobileByForgetPWD(string mobile);
 
         [Service(Date = "2018-6-28", Director = "renjun", Name = " 检查是否和登录密码一至")]
-        Task<CommonActionResult> CheckIsSame2LoginPassword(string newPwd, string userToken);
+        Task<CommonActionResult> CheckIsSame2LoginPassword(string newPwd, string userId);
 
         [Service(Date = "2018-6-28", Director = "renjun", Name = " 设置资金密码")]
-        Task<CommonActionResult> SetBalancePassword(string oldPassword, bool isSetPwd, string newPassword, string userToken);
+        Task<CommonActionResult> SetBalancePassword(string oldPassword, bool isSetPwd, string newPassword, string userId);
 
         [Service(Date = "2018-6-28", Director = "renjun", Name = " 设置资金密码类型")]
-        Task<CommonActionResult> SetBalancePasswordNeedPlace(string password, string placeList, string userToken);
+        Task<CommonActionResult> SetBalancePasswordNeedPlace(string password, string placeList, string userId);
 
         [Service(Date = "2018-6-29", Director = "renjun", Name = "实名认证")]
-        Task<CommonActionResult> AuthenticateMyRealName(string IdCardNumber, string RealName, SchemeSource source, string userToken);
+        Task<CommonActionResult> AuthenticateMyRealName(string IdCardNumber, string RealName, SchemeSource source, string userId);
 
         [Service(Date = "2018-6-29", Director = "renjun", Name = "增加银行卡信息")]
-        Task<CommonActionResult> AddBankCard(C_BankCard bankCard, string userToken);
+        Task<CommonActionResult> AddBankCard(C_BankCard bankCard, string userId);
 
         [Service(Date = "2018-7-02", Director = "renjun", Name = "提款确认")]
         Task<CheckWithdrawResult> RequestWithdraw_Step1(string userId, decimal requestMoney);
@@ -106,10 +106,10 @@ namespace UserLottery.Service.IModuleServices
         Task<CommonActionResult> RequestWithdraw_Step2(Withdraw_RequestInfo info, string userId, string balancepwd);
 
         [Service(Date = "2018-7-03", Director = "renjun", Name = "提现记录")]
-        Task<Withdraw_QueryInfoCollection> QueryMyWithdrawList(WithdrawStatus? status, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string userToken);
+        Task<Withdraw_QueryInfoCollection> QueryMyWithdrawList(WithdrawStatus? status, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string userId);
 
         [Service(Date = "2018-7-30", Director = "renjun", Name = "QueryYqidRegisterByAgentId方法的手机接口")]
-        Task<string> QueryYqidRegisterByAgentIdToApp(string userToken);
+        Task<string> QueryYqidRegisterByAgentIdToApp(string userId);
 
         [Service(Date = "2018-8-01", Director = "renjun", Name = "查询银行卡")]
         Task<C_Bank_Info> QueryBankInfo(string bankCode);
@@ -125,7 +125,7 @@ namespace UserLottery.Service.IModuleServices
         [Service(Date = "2018-7-15", Director = "lidi", Name = "日志")]
         Task<string> ReadSqlTimeLog(string FileName);
 
-        [Service(Date = "2018-8-25", Director = "lidi", Name = "根据token获取UserId")]
-        Task<string> GetUserIdByUserToken(string UserToken);
+        //[Service(Date = "2018-8-25", Director = "lidi", Name = "根据token获取UserId")]
+        //Task<string> GetUserIdByUserToken(string UserToken);
     }
 }
