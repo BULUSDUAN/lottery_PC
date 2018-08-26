@@ -153,7 +153,7 @@ namespace EntityModel.CoreModel
         /// 代理商
         /// </summary>
         public virtual string AgentId { get; set; }
-        public virtual bool? IsIgnoreReport { get; set; }
+        public virtual bool IsIgnoreReport { get; set; }
         /// <summary>
         /// 父级路径
         /// </summary>
