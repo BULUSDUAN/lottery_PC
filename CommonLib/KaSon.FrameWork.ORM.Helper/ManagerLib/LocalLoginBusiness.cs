@@ -279,50 +279,73 @@ namespace KaSon.FrameWork.ORM.Helper
             LoginLocal LoginUsers = null;
             if (Regex.IsMatch(loginName, pattern))
             {
-                var p = (from b in LoginUser
-                         where (b.mobile == loginName && b.Password == password)
-                         select b).FirstOrDefault();
-                LoginUsers = p != null ? new LoginLocal(){
-                    CreateTime = p.CreateTime,
-                    LoginName = p.LoginName,
-                    mobile = p.mobile,
-                    Password = p.Password,
-                    UserId = p.UserId,
+                LoginUsers = (from p in LoginUser
+                         where (p.mobile == loginName && p.Password == password)
+                         select new LoginLocal()
+                         {
+                             CreateTime = p.CreateTime,
+                             LoginName = p.LoginName,
+                             mobile = p.mobile,
+                             Password = p.Password,
+                             UserId = p.UserId,
 
-                }: null;
+                         }).FirstOrDefault();
+                //LoginUsers = p != null ? new LoginLocal()
+                //{
+                //    CreateTime = p.CreateTime,
+                //    LoginName = p.LoginName,
+                //    mobile = p.mobile,
+                //    Password = p.Password,
+                //    UserId = p.UserId,
+
+                //} : null;
             }
             else
             {
-               var p = (from b in LoginUser
-                              where b.LoginName == loginName && b.Password == password
-                              select b).FirstOrDefault();
-                LoginUsers = p != null ? new LoginLocal()
-                {
-                    CreateTime = p.CreateTime,
-                    LoginName = p.LoginName,
-                    mobile = p.mobile,
-                    Password = p.Password,
-                    UserId = p.UserId,
+                LoginUsers = (from p in LoginUser
+                              where p.LoginName == loginName && b.Password == password
+                              select new LoginLocal()
+                              {
+                                  CreateTime = p.CreateTime,
+                                  LoginName = p.LoginName,
+                                  mobile = p.mobile,
+                                  Password = p.Password,
+                                  UserId = p.UserId,
 
-                } : null;
+                              }).FirstOrDefault();
+                //LoginUsers = p != null ? new LoginLocal()
+                //{
+                //    CreateTime = p.CreateTime,
+                //    LoginName = p.LoginName,
+                //    mobile = p.mobile,
+                //    Password = p.Password,
+                //    UserId = p.UserId,
+
+                //} : null;
             }
             if (LoginUsers != null)
             {
                 string userId = LoginUsers.UserId;
-               var d = (from b in DB.CreateQuery<C_Auth_Users>()
-                                   where b.UserId == userId
-                                   select b).FirstOrDefault();
-
-                LoginUsers.User = d != null ? new SystemUser()
+                LoginUsers.User = (from d in DB.CreateQuery<C_Auth_Users>()
+                                   where d.UserId == userId
+                                   select new SystemUser()
                                    {
                                        CreateTime = d.CreateTime,
                                        AgentId = d.AgentId,
                                        RegFrom = d.RegFrom,
                                        UserId = d.UserId,
-                                   }:null;               
+                                   }).FirstOrDefault();
+
+                //LoginUsers.User = d != null ? new SystemUser()
+                //                   {
+                //                       CreateTime = d.CreateTime,
+                //                       AgentId = d.AgentId,
+                //                       RegFrom = d.RegFrom,
+                //                       UserId = d.UserId,
+                //                   }:null;               
                 LoginUsers.Register = (from p in DB.CreateQuery<C_User_Register>()
                                        where p.UserId == userId
-                                       select p).ToList().Select(p => new UserRegister()
+                                       select  new UserRegister()
                                        {
 
                                            AgentId = p.AgentId,
@@ -351,7 +374,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public  void GetSystemUser(SystemUser user)
         {
             var uQueryRoles = (from p in DB.CreateQuery<C_Auth_Roles>()
-                               select p).ToList().Select(p => new SystemRole()
+                               select  new SystemRole()
                                {
                                    RoleId = p.RoleId,
                                    RoleName = p.RoleName,
@@ -359,10 +382,13 @@ namespace KaSon.FrameWork.ORM.Helper
                                    IsAdmin = p.IsAdmin,
                                    RoleType = (RoleType)p.RoleType,
                                }).ToList();
+
             var uQueryUserRole = DB.CreateQuery<C_Auth_UserRole>();
             var C_Auth_RoleFunction_query = DB.CreateQuery<C_Auth_RoleFunction>();
             var C_Auth_Function_List = DB.CreateQuery<C_Auth_Function_List>();
             var C_Auth_UserFunction_query = DB.CreateQuery<C_Auth_UserFunction>();
+
+
             user.RoleList = (from b in uQueryRoles
                                         join c in uQueryUserRole
                                         on b.RoleId equals c.RoleId
@@ -372,8 +398,7 @@ namespace KaSon.FrameWork.ORM.Helper
                                     join d in uQueryUserRole
                                     on b.RoleId equals d.RoleId
                                     where d.UserId == user.UserId
-                                    select b
-                                     ).Select(p => new RoleFunction()
+                                    select new RoleFunction()
                                      {
                                          FunctionId = p.FunctionId,
                                          IId = p.IId,
@@ -385,8 +410,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
                                     on b.UserId equals d.UserId
                                     where d.UserId == user.UserId
-                                    select b
-                                     ).ToList().Select(p => new UserFunction()
+                                    select  new UserFunction()
                                      {
                                          FunctionId = p.FunctionId,
                                          IId = p.IId,
@@ -415,7 +439,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public  void GetSystemRole(SystemRole role,string userid)
         {
             var uQueryRoles = (from p in DB.CreateQuery<C_Auth_Roles>()
-                               select p).ToList().Select(p => new SystemRole()
+                               select  new SystemRole()
                                {
                                    RoleId = p.RoleId,
                                    RoleName = p.RoleName,
