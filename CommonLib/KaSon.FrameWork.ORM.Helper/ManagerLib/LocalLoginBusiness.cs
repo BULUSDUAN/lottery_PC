@@ -303,7 +303,7 @@ namespace KaSon.FrameWork.ORM.Helper
             else
             {
                 LoginUsers = (from p in LoginUser
-                              where p.LoginName == loginName && b.Password == password
+                              where p.LoginName == loginName && p.Password == password
                               select new LoginLocal()
                               {
                                   CreateTime = p.CreateTime,
@@ -400,9 +400,9 @@ namespace KaSon.FrameWork.ORM.Helper
                                     where d.UserId == user.UserId
                                     select new RoleFunction()
                                      {
-                                         FunctionId = p.FunctionId,
-                                         IId = p.IId,
-                                         Mode = p.Mode,
+                                         FunctionId = b.FunctionId,
+                                         IId = b.IId,
+                                         Mode = b.Mode,
 
                                      }).ToList();
             var UserFunctionList = (from b in C_Auth_UserFunction_query
@@ -412,9 +412,9 @@ namespace KaSon.FrameWork.ORM.Helper
                                     where d.UserId == user.UserId
                                     select  new UserFunction()
                                      {
-                                         FunctionId = p.FunctionId,
-                                         IId = p.IId,
-                                         Mode = p.Mode,
+                                         FunctionId = b.FunctionId,
+                                         IId = b.IId,
+                                         Mode = b.Mode,
 
 
                                      }).ToList();
