@@ -991,11 +991,9 @@ namespace Lottery.Api.Controllers
                 var p = JsonHelper.Decode(entity.Param);
                 int pageIndex = p.PageIndex;
                 int pageSize = p.PageSize;
-                string userToken = await GuestUserToken(_serviceProxyProvider);
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param.Add("pageIndex", pageIndex);
                 param.Add("pageSize", pageSize);
-                param.Add("userToken", userToken);
                 param.Add("agent", (int)BulletinAgent.Local);
                 var noticeList = await _serviceProxyProvider.Invoke<BulletinInfo_Collection>(param, "api/Data/QueryDisplayBulletinCollection");
                 //var noticeList = WCFClients.ExternalClient.QueryDisplayBulletinCollection(BulletinAgent.Local, pageIndex, pageSize, userToken);
@@ -1450,12 +1448,15 @@ namespace Lottery.Api.Controllers
             {
                 var p = JsonHelper.Decode(entity.Param);
                 int innerstatus = p.InnerStatus;
-                string UserToken = p.UserToken;
+                string userToken = p.UserToken;
                 string userId = p.UserId;
                 int pageIndex = p.PageIndex;
                 int pageSize = p.PageSize;
-                if (string.IsNullOrEmpty(UserToken) || string.IsNullOrEmpty(userId))
+                if (string.IsNullOrEmpty(userToken) || string.IsNullOrEmpty(userId))
                     throw new ArgumentException("未获取到有效用户信息");
+                string tokenuserId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+                if(tokenuserId!=userId)
+                    throw new ArgumentException("token验证失败");
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param.Add("pageIndex", pageIndex);
                 param.Add("pageSize", pageSize);
@@ -1473,7 +1474,7 @@ namespace Lottery.Api.Controllers
                 SiteMessageInnerMailListNew_Collection collection = new SiteMessageInnerMailListNew_Collection();
                 if (innerstatus == 3)
                 {
-                    param.Add("userToken", UserToken);
+                    param.Add("userId", userId);
                     collection = await _serviceProxyProvider.Invoke<SiteMessageInnerMailListNew_Collection>(param, "api/Data/QueryMyInnerMailList");
                     //collection = WCFClients.GameQueryClient.QueryMyInnerMailList(pageIndex, pageSize, UserToken);
                 }
@@ -1563,9 +1564,10 @@ namespace Lottery.Api.Controllers
                     throw new ArgumentException("您还未登录，请先登录！");
                 if (string.IsNullOrEmpty(mailId))
                     throw new ArgumentException("站信编号不能为空！");
+                string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param.Add("innerMailId", mailId);
-                param.Add("userToken", userToken);
+                param.Add("userId", userId);
                 var mailContent = await _serviceProxyProvider.Invoke<InnerMailInfo_Query>(param, "api/Data/ReadInnerMail");
                 //var mailContent = WCFClients.GameQueryClient.ReadInnerMail(mailId, userToken);
                 if (mailContent != null)

@@ -85,12 +85,12 @@ namespace Lottery.Service.ModuleServices
         /// 查询文章列表
         /// todo:后台权限
         /// </summary>
-        public Task<ArticleInfo_QueryCollection> QueryArticleList(string key, string gameCode, string category, int pageIndex, int pageSize, string userToken)
+        public Task<ArticleInfo_QueryCollection> QueryArticleList(string key, string gameCode, string category, int pageIndex, int pageSize)
         {
             // 验证用户身份及权限
             try
             {
-                var userId = new UserAuthentication().ValidateUserAuthentication(userToken);
+                //var userId = new UserAuthentication().ValidateUserAuthentication(userToken);
                 var model = new DataQuery().QueryArticleList(key, gameCode, category, pageIndex, pageSize);
                 return Task.FromResult(model);
             }
@@ -140,12 +140,12 @@ namespace Lottery.Service.ModuleServices
         /// <param name="pageSize"></param>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public Task<BulletinInfo_Collection> QueryDisplayBulletinCollection(int agent, int pageIndex, int pageSize, string userToken)
+        public Task<BulletinInfo_Collection> QueryDisplayBulletinCollection(int agent, int pageIndex, int pageSize)
         {
             try
             {
                 // 验证用户身份及权限
-                var userId = new UserAuthentication().ValidateUserAuthentication(userToken);
+                ///var userId = new UserAuthentication().ValidateUserAuthentication(userToken);
                 return Task.FromResult(new DataQuery().QueryDisplayBulletins(agent, pageIndex, pageSize));
             }
             catch (Exception ex)
@@ -323,12 +323,12 @@ namespace Lottery.Service.ModuleServices
         ///// <summary>
         ///// 查询我的站内信
         ///// </summary>
-        public Task<SiteMessageInnerMailListNew_Collection> QueryMyInnerMailList(int pageIndex, int pageSize, string userToken)
+        public Task<SiteMessageInnerMailListNew_Collection> QueryMyInnerMailList(int pageIndex, int pageSize, string userId)
         {
             // 验证用户身份及权限
             try
             {
-                var userId = new UserAuthentication().ValidateUserAuthentication(userToken);
+                //var userId = new UserAuthentication().ValidateUserAuthentication(userToken);
                 return Task.FromResult(new DataQuery().QueryInnerMailListByReceiver(userId, pageIndex, pageSize));
             }
             catch (Exception ex)
@@ -357,12 +357,12 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 阅读站内信
         /// </summary>
-        public Task<InnerMailInfo_Query> ReadInnerMail(string innerMailId, string userToken)
+        public Task<InnerMailInfo_Query> ReadInnerMail(string innerMailId, string userId)
         {
             // 验证用户身份及权限
             try
             {
-                var userId = new UserAuthentication().ValidateUserAuthentication(userToken);
+                //var userId = new UserAuthentication().ValidateUserAuthentication(userToken);
                 var dataQuery = new DataQuery();
                 if (!dataQuery.IsMyInnerMail(innerMailId, userId))
                 {
