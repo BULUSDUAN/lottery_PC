@@ -97,55 +97,55 @@ namespace KaSon.FrameWork.ORM.Helper
         }
 
         private static List<C_APP_NestedUrlConfig> _NestedUrlConfigList = new List<C_APP_NestedUrlConfig>();
-        //private static List<C_APP_NestedUrlConfig> _AllNestedUrlConfigList = new List<C_APP_NestedUrlConfig>();
+        private static List<C_APP_NestedUrlConfig> _AllNestedUrlConfigList = new List<C_APP_NestedUrlConfig>();
         /// <summary>
         /// 根据UrlType查询所有APP嵌套配置
         /// </summary>
         /// <returns></returns>
-        //public NestedUrlConfig_Collection QueryNestedUrlConfigListByUrlType(int urlType)
-        //{
-        //    try
-        //    {
-        //        NestedUrlConfig_Collection collection = new NestedUrlConfig_Collection();
-        //        if (_AllNestedUrlConfigList == null || _AllNestedUrlConfigList.Count <= 0)
-        //        {
-        //            var nestedConfigList = new DataQuery().QueryNestedUrlList();
-        //            _AllNestedUrlConfigList.AddRange(nestedConfigList);
-        //        }
-        //        var list = _AllNestedUrlConfigList.Where(s => s.UrlType == urlType || s.UrlType == (int)UrlType.All).ToList();
-        //        if (list == null || list.Count <= 0)
-        //            _AllNestedUrlConfigList.AddRange(list);
-        //        foreach (var item in list)
-        //        {
-        //            NestedUrlConfigInfo info = new NestedUrlConfigInfo();
-        //            info.ConfigKey = item.ConfigKey;
-        //            info.CreateTime = item.CreateTime;
-        //            info.Id = item.Id;
-        //            info.IsEnable = item.IsEnable;
-        //            info.Remarks = item.Remarks;
-        //            info.Url = item.Url;
-        //            info.UrlType = (UrlType)item.UrlType;
-        //            collection.NestedUrlList.Add(info);
-        //        }
-        //        return collection;
-        //    }
-        //    catch
-        //    {
-        //        ClearNestedUrlConfig();
-        //        return new NestedUrlConfig_Collection();
-        //    }
-        //}
+        public NestedUrlConfig_Collection QueryNestedUrlConfigListByUrlType(int urlType)
+        {
+            try
+            {
+                NestedUrlConfig_Collection collection = new NestedUrlConfig_Collection();
+                if (_AllNestedUrlConfigList == null || _AllNestedUrlConfigList.Count <= 0)
+                {
+                    var nestedConfigList = new DataQuery().QueryNestedUrlList();
+                    _AllNestedUrlConfigList.AddRange(nestedConfigList);
+                }
+                var list = _AllNestedUrlConfigList.Where(s => s.UrlType == urlType || s.UrlType == (int)UrlType.All).ToList();
+                if (list == null || list.Count <= 0)
+                    _AllNestedUrlConfigList.AddRange(list);
+                foreach (var item in list)
+                {
+                    NestedUrlConfigInfo info = new NestedUrlConfigInfo();
+                    info.ConfigKey = item.ConfigKey;
+                    info.CreateTime = item.CreateTime;
+                    info.Id = item.Id;
+                    info.IsEnable = item.IsEnable;
+                    info.Remarks = item.Remarks;
+                    info.Url = item.Url;
+                    info.UrlType = (UrlType)item.UrlType;
+                    collection.NestedUrlList.Add(info);
+                }
+                return collection;
+            }
+            catch
+            {
+                ClearNestedUrlConfig();
+                return new NestedUrlConfig_Collection();
+            }
+        }
 
         /// <summary>
         /// 清空系统配置
         /// </summary>
-        //public void ClearNestedUrlConfig()
-        //{
-        //    if (_NestedUrlConfigList != null || _NestedUrlConfigList.Count <= 0)
-        //        _NestedUrlConfigList.Clear();
-        //    if (_AllNestedUrlConfigList != null || _AllNestedUrlConfigList.Count <= 0)
-        //        _AllNestedUrlConfigList.Clear();
-        //}
+        public void ClearNestedUrlConfig()
+        {
+            if (_NestedUrlConfigList != null || _NestedUrlConfigList.Count <= 0)
+                _NestedUrlConfigList.Clear();
+            if (_AllNestedUrlConfigList != null || _AllNestedUrlConfigList.Count <= 0)
+                _AllNestedUrlConfigList.Clear();
+        }
 
 
         #region 分享推广

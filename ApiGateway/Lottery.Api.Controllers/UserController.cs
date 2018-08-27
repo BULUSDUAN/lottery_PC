@@ -487,7 +487,7 @@ namespace Lottery.Api.Controllers
                         balanceParam["userId"] = loginInfo.UserId;
                         var balance = await _serviceProxyProvider.Invoke<UserBalanceInfo>(balanceParam, "api/user/QueryMyBalance");
                         Dictionary<string, object> bindParam = new Dictionary<string, object>();
-                        bindParam["UserId"] = loginInfo.UserId;
+                        bindParam["userId"] = loginInfo.UserId;
                         var bindInfo = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
                         var unReadCount = await _serviceProxyProvider.Invoke<int>(balanceParam, "api/user/GetMyUnreadInnerMailCount");
                         var bankInfo = await _serviceProxyProvider.Invoke<C_BankCard>(balanceParam, "api/user/QueryBankCard");
@@ -1380,7 +1380,7 @@ namespace Lottery.Api.Controllers
                     throw new ArgumentException("未查询到当前用户信息！");
                 var isBetHM = true;
                 Dictionary<string, object> bindParam = new Dictionary<string, object>();
-                bindParam["UserId"] = userId;
+                bindParam["userId"] = userId;
                 var bindInfo = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
                 //var mobile = WCFClients.ExternalClient.GetMyMobileInfo(userToken);
                 //var realName = WCFClients.ExternalClient.GetMyRealNameInfo(userToken);
@@ -1554,7 +1554,7 @@ namespace Lottery.Api.Controllers
                 param.Add("userId", userId);
                 var cashMoney = await _serviceProxyProvider.Invoke<UserBalanceInfo>(param, "api/user/QueryMyBalance");
                 Dictionary<string, object> bindParam = new Dictionary<string, object>();
-                bindParam["UserId"] = userId;
+                bindParam["userId"] = userId;
                 var info = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
                 if (info == null)
                     throw new ArgumentException("未找到用户信息");
@@ -1613,7 +1613,7 @@ namespace Lottery.Api.Controllers
                 //param["userToken"] = token;
                 //var userinfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/LoginByUserToken");
                 Dictionary<string, object> bindParam = new Dictionary<string, object>();
-                bindParam["UserId"] = userId;
+                bindParam["userId"] = userId;
                 var info = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
                 if (info == null)
                     throw new ArgumentException("未找到用户信息");
@@ -1699,7 +1699,7 @@ namespace Lottery.Api.Controllers
                 //param["userToken"] = token;
                 //var userinfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/LoginByUserToken");
                 Dictionary<string, object> bindParam = new Dictionary<string, object>();
-                bindParam["UserId"] = userId;
+                bindParam["userId"] = userId;
                 var info = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
                 if (info == null)
                     throw new ArgumentException("未找到用户信息");
