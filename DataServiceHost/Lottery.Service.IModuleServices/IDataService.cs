@@ -26,10 +26,6 @@ namespace Lottery.Service.IModuleServices
     [ServiceBundle("api/{Service}")]
     public interface IDataService: IServiceKey
     {
-        ////[Authorization(AuthType = AuthorizationType.JWT)]
-        //[Service(Date = "2018-06-05", Director = "lidi", Name = "根据key获取配置")]
-        //// [Command(Strategy = StrategyType.Injection, ShuntStrategy = AddressSelectorMode.HashAlgorithm, ExecutionTimeoutInMilliseconds = 1500, BreakerRequestVolumeThreshold = 3, Injection = @"return 1;", RequestCacheEnabled = false)]
-        //Task<CoreConfigInfo> QueryCoreConfigByKey(string key);
 
         [Service(Date = "2018-07-05", Director = "lidi", Name = "获取当前场次数据")]
         Task<Issuse_QueryInfo> QueryCurrentIssuseInfo(string gameCode);
@@ -45,13 +41,13 @@ namespace Lottery.Service.IModuleServices
         Task<SiteMessageBannerInfo_Collection> QuerySitemessageBanngerList_Web(int bannerType, int returnRecord = 10);
 
         [Service(Date = "2018-07-05", Director = "lidi", Name = "查询文章列表")]
-        Task<ArticleInfo_QueryCollection> QueryArticleList(string key, string gameCode, string category, int pageIndex, int pageSize, string userToken);
+        Task<ArticleInfo_QueryCollection> QueryArticleList(string key, string gameCode, string category, int pageIndex, int pageSize);
 
         [Service(Date = "2018-07-05", Director = "lidi", Name = "根据编号查询文章信息_后台")]
         Task<ArticleInfo_Query> QueryArticleById_Web(string articleId);
 
         [Service(Date = "2018-07-05", Director = "lidi", Name = "查询公告")]
-        Task<BulletinInfo_Collection> QueryDisplayBulletinCollection(int agent, int pageIndex, int pageSize, string userToken);
+        Task<BulletinInfo_Collection> QueryDisplayBulletinCollection(int agent, int pageIndex, int pageSize);
 
         [Service(Date = "2018-07-05", Director = "lidi", Name = "提交用户意见")]
         Task<CommonActionResult> SubmitUserIdea(UserIdeaInfo_Add userIdea);
@@ -75,10 +71,10 @@ namespace Lottery.Service.IModuleServices
         Task<NestedUrlConfig_Collection> QueryNestedUrlConfigListByUrlType(int urlType);
 
         [Service(Date = "2018-07-05", Director = "lidi", Name = "查询我的站内信")]
-        Task<SiteMessageInnerMailListNew_Collection> QueryMyInnerMailList(int pageIndex, int pageSize, string userToken);
+        Task<SiteMessageInnerMailListNew_Collection> QueryMyInnerMailList(int pageIndex, int pageSize, string userId);
 
         [Service(Date = "2018-07-05", Director = "lidi", Name = "阅读站内信")]
-        Task<InnerMailInfo_Query> ReadInnerMail(string innerMailId, string userToken);
+        Task<InnerMailInfo_Query> ReadInnerMail(string innerMailId, string userId);
 
         [Service(Date = "2018-07-05", Director = "lidi", Name = "查询红包使用规则")]
         Task<string> QueryRedBagUseConfig();

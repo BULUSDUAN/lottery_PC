@@ -281,7 +281,7 @@ namespace KaSon.FrameWork.ORM.Helper
         }
 
         /// <summary>
-        /// 根据公告Id查询公告信息
+        /// 根据公告Id查询公告信息  kason 框架修改支持 int 强制转换枚举，输出新对象
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -291,26 +291,45 @@ namespace KaSon.FrameWork.ORM.Helper
                         join u_create in DB.CreateQuery<C_User_Register>() on b.CreateBy equals u_create.UserId
                         //join u_update in DB.CreateQuery<C_User_Register>() on b.UpdateBy equals u_update.UserId
                         where b.Id == id
-                        select new { b, u_create };
+                        select new BulletinInfo_Query
+                        {
+                            Id = b.Id,
+                            Title = b.Title,
+                            Content = b.Content,
+                            Status = (EnableStatus)b.Status,
+                            Priority = b.Priority,
+                            IsPutTop = b.IsPutTop,
+                            EffectiveFrom = b.EffectiveFrom,
+                            EffectiveTo = b.EffectiveTo,
+                            CreateTime = b.CreateTime,
+                            CreateBy = b.CreateBy,
+                            CreatorDisplayName = u_create.DisplayName,
+                            UpdateTime = b.UpdateTime,
+                            UpdateBy = b.UpdateBy,
+                            //UpdatorDisplayName = t.u_update.DisplayName,
+                            BulletinAgent = (BulletinAgent)b.BulletinAgent
+                        };
 
-            var model= query.ToList().Select(t => new BulletinInfo_Query
-            {
-                Id = t.b.Id,
-                Title = t.b.Title,
-                Content = t.b.Content,
-                Status = (EnableStatus)t.b.Status,
-                Priority = t.b.Priority,
-                IsPutTop = t.b.IsPutTop,
-                EffectiveFrom = t.b.EffectiveFrom,
-                EffectiveTo = t.b.EffectiveTo,
-                CreateTime = t.b.CreateTime,
-                CreateBy = t.b.CreateBy,
-                CreatorDisplayName = t.u_create.DisplayName,
-                UpdateTime = t.b.UpdateTime,
-                UpdateBy = t.b.UpdateBy,
-                //UpdatorDisplayName = t.u_update.DisplayName,
-                BulletinAgent = (BulletinAgent)t.b.BulletinAgent
-            }).FirstOrDefault();
+            var model = query.FirstOrDefault();
+                
+            //    .Select(t => new BulletinInfo_Query
+            //{
+            //    Id = t.b.Id,
+            //    Title = t.b.Title,
+            //    Content = t.b.Content,
+            //    Status = (EnableStatus)t.b.Status,
+            //    Priority = t.b.Priority,
+            //    IsPutTop = t.b.IsPutTop,
+            //    EffectiveFrom = t.b.EffectiveFrom,
+            //    EffectiveTo = t.b.EffectiveTo,
+            //    CreateTime = t.b.CreateTime,
+            //    CreateBy = t.b.CreateBy,
+            //    CreatorDisplayName = t.u_create.DisplayName,
+            //    UpdateTime = t.b.UpdateTime,
+            //    UpdateBy = t.b.UpdateBy,
+            //    //UpdatorDisplayName = t.u_update.DisplayName,
+            //    BulletinAgent = (BulletinAgent)t.b.BulletinAgent
+            //}).FirstOrDefault();
             if (model != null && !string.IsNullOrEmpty(model.UpdateBy))
             {
                 var updateuser = DB.CreateQuery<C_User_Register>().Where(p => p.UserId == model.UpdateBy).FirstOrDefault();

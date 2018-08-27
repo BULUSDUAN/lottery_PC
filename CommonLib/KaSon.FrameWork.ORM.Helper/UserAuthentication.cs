@@ -94,9 +94,9 @@ namespace KaSon.FrameWork.ORM.Helper
 
 
         #region 获取游客权限
-        private static string _guestToken = null;
         public string GetGuestToken()
         {
+            string _guestToken = null;
             if (string.IsNullOrEmpty(_guestToken))
             {
                 IList<AccessControlItem> acl = new List<AccessControlItem>();

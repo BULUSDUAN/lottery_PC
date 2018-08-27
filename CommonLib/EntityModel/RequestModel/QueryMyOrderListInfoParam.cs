@@ -12,6 +12,6 @@ namespace EntityModel.RequestModel
         public SchemeType? schemeType { get; set; }
         public DateTime startTime { get; set; }
         public DateTime endTime { get; set; }
-        public string userToken { get; set; }
+        public string userId { get; set; }
     }
 }

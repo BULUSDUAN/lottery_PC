@@ -21,52 +21,11 @@ namespace BettingLottery.Service.ModuleServices
     public class BettingService : KgBaseService, IBettingService
     {
        
-        // private readonly UserRepository _repository;
-        //public UserService(UserRepository repository)
-        //{
-        //    this._repository = repository;
-        //}
         IKgLog log = null;
         public BettingService()
         {
-
             log = new Log4Log();
-
         }
-        //public void PublicInfo(IntegrationEvent evt)
-        //{
-        //    Publish(evt);
-        //}
-
-        //Task IIntegrationEventHandler<EventModel>.Handle(EventModel @event)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        // log demo
-        /// <summary>
-        /// 日志使用 demo
-        /// </summary>
-       
-        
-
-        //public Task<int> GetUserId(string userName)
-        //{
-        //    //var xid = RpcContext.GetContext().GetAttachment("xid");
-
-        //    //throw new Exception("错误！");
-
-        //    //测试容错
-        //   // Thread.Sleep(200000);
-
-        //    //var T1 = TTest1();
-        //    //var T21 = Test21();
-        //    //var T2 = Test2();
-        //    //var T3 = Test3();
-
-        //    return Task.FromResult(1);
-        //}
-
 
         #region 普通投注
         /// <summary>
@@ -105,6 +64,7 @@ namespace BettingLottery.Service.ModuleServices
             var IsSaveOrder = "0";//是否为保存订单，0：不是保存订单；1：保存订单；
             if (!string.IsNullOrEmpty(SavaOrder))
                 IsSaveOrder = SavaOrder;
+            string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
             string returnValue = string.Empty;
             var successCount = 0;
             var codeCount = 0;
@@ -121,14 +81,10 @@ namespace BettingLottery.Service.ModuleServices
                 {
                     if (array_gameType[1].ToLower() == "hhdg")//单关固定投注
                     {
-                        var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
                         var fund = new FundBusiness();
-                        var userBalance = fund.QueryUserBalance(userId);
-                       // var userBalance = new GameBizSportsBettion().QueryMyBalance(userToken);
+                        var userBalance = fund.QueryUserBalance(userid);
                         if (userBalance == null)
                             throw new Exception("未查询到账户信息");
-                        //else if ((userBalance.BonusBalance + userBalance.ExpertsBalance + userBalance.FillMoneyBalance + userBalance.RedBagBalance) < totalMoney)
-                        //    throw new Exception("您好，目前账户余额不足！");
                         else if ((userBalance.BonusBalance + userBalance.CommissionBalance + userBalance.ExpertsBalance + userBalance.FillMoneyBalance + userBalance.RedBagBalance) < totalMoney)
                             throw new Exception("您好，目前账户余额不足！");
                         try
@@ -166,7 +122,7 @@ namespace BettingLottery.Service.ModuleServices
                                     ActivityType = ActivityType.NoParticipate,
                                     IsRepeat = p.IsRepeat == null ? false : p.IsRepeat,
                                 };
-                                var result =new GameBizSportsBettion().Sports_Betting(info, balancePassword, redBagMoney, userToken);
+                                var result =new GameBizSportsBettion().Sports_Betting(info, balancePassword, redBagMoney, userid);
                                 //if (!result.IsSuccess)
                                 //    throw new Exception(result.Message);
                                 if (result.IsSuccess)
@@ -226,15 +182,6 @@ namespace BettingLottery.Service.ModuleServices
                             code.GameType = gameType;
                         }
                         codeList.Add(code);
-
-                        //codeList.Add(new Sports_AnteCodeInfo
-                        //{
-                        //    AnteCode = item.AnteCode,
-                        //    GameType = gameType != "HH" ? gameType : item.GameType,
-                        //    IsDan = item.IsDan,
-                        //    MatchId = item.MatchId,
-                        //    PlayType = playType,
-                        //});
                     }
                     playType = playType.Replace("P0_1", "").Replace("P", "").Replace(",", "|");
                     var info = new Sports_BetingInfo
@@ -257,7 +204,7 @@ namespace BettingLottery.Service.ModuleServices
                     };
                     var bettion = new GameBizSportsBettion();
                    
-                    var result = IsSaveOrder == "0" ? bettion.Sports_Betting(info, balancePassword, redBagMoney, userToken): bettion.SaveOrderSportsBettingByResult(info, userToken);
+                    var result = IsSaveOrder == "0" ? bettion.Sports_Betting(info, balancePassword, redBagMoney, userid) : bettion.SaveOrderSportsBettingByResult(info, userid);
                     if (!result.IsSuccess)
                         throw new Exception(result.Message);
                     returnValue = result.ReturnValue;
@@ -271,19 +218,19 @@ namespace BettingLottery.Service.ModuleServices
         #endregion
 
         #region 合买投注
-        public Task<CommonActionResult> CreateSportsTogether(Sports_TogetherSchemeInfo info, string balancePassword, string userToken)
+        public Task<CommonActionResult> CreateSportsTogether(Sports_TogetherSchemeInfo info, string balancePassword, string userid)
         {
             //检查彩种是否暂停销售
             BusinessHelper.CheckGameEnable(info.GameCode.ToUpper());
             BettingHelper.CheckGameCodeAndType(info.GameCode, info.GameType);
             // 验证用户身份及权限
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
 
             //栓查是否实名
             //if (!BusinessHelper.IsUserValidateRealName(userId))
             //    throw new LogicException("未实名认证用户不能购买彩票");
             //检查重复投注
-            CheckTogetherRepeatBetting(userId, info);
+            CheckTogetherRepeatBetting(userid, info);
             //CheckDisableGame(info.GameCode, info.GameType);
 
             // 检查订单基本信息
@@ -304,13 +251,13 @@ namespace BettingLottery.Service.ModuleServices
                 string schemeId;
                 DateTime stopTime;
                 var canChase = false;
-                schemeId = new Sports_Business().CreateSportsTogether(info, 0, userId, balancePassword, sysGuarantees, isTop, out canChase, out stopTime, ref schemeInfo);
+                schemeId = new Sports_Business().CreateSportsTogether(info, 0, userid, balancePassword, sysGuarantees, isTop, out canChase, out stopTime, ref schemeInfo);
 
                 //! 执行扩展功能代码 - 提交事务后
-                BusinessHelper.ExecPlugin<ICreateTogether_AfterTranCommit>(new object[] { userId, schemeId, info.GameCode, info.GameType, info.IssuseNumber, info.TotalMoney, stopTime });
+                BusinessHelper.ExecPlugin<ICreateTogether_AfterTranCommit>(new object[] { userid, schemeId, info.GameCode, info.GameType, info.IssuseNumber, info.TotalMoney, stopTime });
 
                 //参与合买后
-                BusinessHelper.ExecPlugin<IJoinTogether_AfterTranCommit>(new object[] { userId, schemeId, schemeInfo.SoldCount, schemeInfo.GameCode, schemeInfo.GameType, schemeInfo.IssuseNumber, schemeInfo.TotalMoney, schemeInfo.SchemeProgress });
+                BusinessHelper.ExecPlugin<IJoinTogether_AfterTranCommit>(new object[] { userid, schemeId, schemeInfo.SoldCount, schemeInfo.GameCode, schemeInfo.GameType, schemeInfo.IssuseNumber, schemeInfo.TotalMoney, schemeInfo.SchemeProgress });
 
                 return Task.FromResult(new CommonActionResult(true, "发起合买成功")
                 {
@@ -330,22 +277,17 @@ namespace BettingLottery.Service.ModuleServices
         /// <summary>
         /// 发起合买_保存订单
         /// </summary>
-        public Task<CommonActionResult> SaveOrder_CreateSportsTogether(Sports_TogetherSchemeInfo info, string balancePassword, string userToken)
+        public Task<CommonActionResult> SaveOrder_CreateSportsTogether(Sports_TogetherSchemeInfo info, string balancePassword, string userid)
         {
             // 验证用户身份及权限
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
-
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 var isTop = false;
                 var sysGuarantees = int.Parse(new CacheDataBusiness().QueryCoreConfigByKey("Site.Together.SystemGuarantees").ConfigValue);
-
                 Sports_BetingInfo schemeInfo = new Sports_BetingInfo();
-
                 string schemeId;
-                DateTime stopTime;
-                var canChase = false;
-                schemeId = new Sports_Business().SaveCreateSportsTogether(info, 0, userId, balancePassword, sysGuarantees, isTop);
+                schemeId = new Sports_Business().SaveCreateSportsTogether(info, 0, userid, balancePassword, sysGuarantees, isTop);
 
                 return Task.FromResult(new CommonActionResult(true, "发起合买成功")
                 {
@@ -361,10 +303,10 @@ namespace BettingLottery.Service.ModuleServices
         /// <summary>
         /// 参与合买
         /// </summary>
-        public Task<CommonActionResult> JoinSportsTogether(string schemeId, int buyCount, string joinPwd, string balancePassword, string userToken)
+        public Task<CommonActionResult> JoinSportsTogether(string schemeId, int buyCount, string joinPwd, string balancePassword, string userid)
         {
             // 验证用户身份及权限
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userid);
             //bool isBet = new Sports_Business().UserIsBetting(userId);
             //if (!isBet)
             //    throw new Exception("对不起，网站已暂停彩票代购业务");
@@ -374,7 +316,7 @@ namespace BettingLottery.Service.ModuleServices
             try
             {
                 Sports_BetingInfo schemeInfo = new Sports_BetingInfo();
-                var canChase = new Sports_Business().JoinSportsTogether(schemeId, buyCount, userId, joinPwd, balancePassword, ref schemeInfo);
+                var canChase = new Sports_Business().JoinSportsTogether(schemeId, buyCount, userid, joinPwd, balancePassword, ref schemeInfo);
 
                 //生成JsonData文件(合买大厅)
                 //BusinessHelper.BuildJsonDataNotice("500");
@@ -382,7 +324,7 @@ namespace BettingLottery.Service.ModuleServices
                 BusinessHelper.ExecPlugin<IAgentPayIn>(new object[] { schemeId });
 
                 //! 执行扩展功能代码 - 提交事务后
-                BusinessHelper.ExecPlugin<IJoinTogether_AfterTranCommit>(new object[] { userId, schemeId, buyCount, schemeInfo.GameCode, schemeInfo.GameType, schemeInfo.IssuseNumber, schemeInfo.TotalMoney, schemeInfo.SchemeProgress });
+                BusinessHelper.ExecPlugin<IJoinTogether_AfterTranCommit>(new object[] { userid, schemeId, buyCount, schemeInfo.GameCode, schemeInfo.GameType, schemeInfo.IssuseNumber, schemeInfo.TotalMoney, schemeInfo.SchemeProgress });
                 return Task.FromResult(new CommonActionResult(true, "参与合买成功"));
             }
             catch (Exception ex)
@@ -557,7 +499,7 @@ namespace BettingLottery.Service.ModuleServices
 
         #region 北单、竞彩投注
 
-        public Task<CommonActionResult> Sports_Betting(Sports_BetingInfo info , string password, decimal redBagMoney, string userToken)
+        public Task<CommonActionResult> Sports_Betting(Sports_BetingInfo info , string password, decimal redBagMoney, string userid)
         {
             try
             {
@@ -566,25 +508,25 @@ namespace BettingLottery.Service.ModuleServices
                    BusinessHelper.CheckGameEnable(info.GameCode.ToUpper());
                 BettingHelper.CheckGameCodeAndType(info.GameCode, info.GameType);
                 // 验证用户身份及权限
-                var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+                //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
 
                 //栓查是否实名
                 //if (!BusinessHelper.IsUserValidateRealName(userId))
                 //    throw new LogicException("未实名认证用户不能购买彩票");
 
-                CheckJCRepeatBetting(userId, info);
+                CheckJCRepeatBetting(userid, info);
                 //检查投注内容,并获取投注注数
-                var totalCount = BusinessHelper.CheckBetCode(userId, info.GameCode.ToUpper(), info.GameType.ToUpper(), info.SchemeSource, info.PlayType, info.Amount, info.TotalMoney, info.AnteCodeList);
+                var totalCount = BusinessHelper.CheckBetCode(userid, info.GameCode.ToUpper(), info.GameType.ToUpper(), info.SchemeSource, info.PlayType, info.Amount, info.TotalMoney, info.AnteCodeList);
                 //检查投注的比赛，并获取最早结束时间
                 var stopTime = RedisMatchBusiness.CheckGeneralBettingMatch(info.GameCode.ToUpper(), info.GameType.ToUpper(), info.PlayType, info.AnteCodeList, info.IssuseNumber, info.BettingCategory);
 
                 string schemeId = string.Empty;
                 //lock (UsefullHelper.moneyLocker)
                 //{
-                schemeId = new Sports_Business().SportsBetting(info, userId, password, "Bet", totalCount, stopTime, redBagMoney);
+                schemeId = new Sports_Business().SportsBetting(info, userid, password, "Bet", totalCount, stopTime, redBagMoney);
                 //}
                 //! 执行扩展功能代码 - 提交事务后
-                BusinessHelper.ExecPlugin<IBettingSport_AfterTranCommit>(new object[] { userId, info, schemeId });
+                BusinessHelper.ExecPlugin<IBettingSport_AfterTranCommit>(new object[] { userid, info, schemeId });
 
                 return Task.FromResult(new CommonActionResult
                 {
@@ -618,10 +560,10 @@ namespace BettingLottery.Service.ModuleServices
         /// <summary>
         /// 足彩投注,用户保存的订单
         /// </summary>
-        public Task<CommonActionResult> SaveOrderSportsBetting(Sports_BetingInfo info, string userToken)
+        public Task<CommonActionResult> SaveOrderSportsBetting(Sports_BetingInfo info, string userId)
         {
             // 验证用户身份及权限    
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
 
             try
             {
@@ -659,15 +601,15 @@ namespace BettingLottery.Service.ModuleServices
         /// <summary>
         /// 足彩投注和追号
         /// </summary>
-        public CommonActionResult Sports_BettingAndChase(Sports_BetingInfo info, string password, decimal redBagMoney, string userToken)
+        public CommonActionResult Sports_BettingAndChase(Sports_BetingInfo info, string password, decimal redBagMoney, string userid)
         {
             // 验证用户身份及权限
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 var isSuceess = true;
                 //info,
-                var t = this.Sports_Betting(info,password, redBagMoney, userToken);
+                var t = this.Sports_Betting(info,password, redBagMoney, userid);
                 isSuceess = t.Result.IsSuccess;
                 var schemeId = string.Empty;
                 var money = 0M;
@@ -697,10 +639,6 @@ namespace BettingLottery.Service.ModuleServices
 
         #region 检查竞彩和优化
 
-        /// <summary>
-        /// 竞彩足球缓存数据
-        /// </summary>
-        //private static Dictionary<string, Sports_BetingInfo> _sportsBettingListInfo = new Dictionary<string, Sports_BetingInfo>();
         /// <summary>
         /// 竞彩足球缓存数据
         /// </summary>
@@ -810,40 +748,25 @@ namespace BettingLottery.Service.ModuleServices
         /// <summary>
         /// 数字彩投注
         /// </summary>
-        public Task<CommonActionResult> LotteryBetting(LotteryBettingInfo info, string balancePassword, decimal redBagMoney, string userToken)
+        public Task<CommonActionResult> LotteryBetting(LotteryBettingInfo info, string balancePassword, decimal redBagMoney, string userId)
         {
             // 验证用户身份及权限
             //检查彩种是否暂停销售
             //LotteryBettingInfo info = new LotteryBettingInfo();
             BusinessHelper.CheckGameEnable(info.GameCode.ToUpper());
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 //栓查是否实名
                 //if (!BusinessHelper.IsUserValidateRealName(userId))
                 //    throw new LogicException("未实名认证用户不能购买彩票");
-                //var log = new List<string>();
-                //log.Add("开始计时：" + userId);
-                //var watch = new Stopwatch();
-                //watch.Start();
                 var checkError = CheckGeneralRepeatBetting(userId, info);
                 if (!string.IsNullOrEmpty(checkError))
                     throw new Exception(checkError,new Exception("重复投注频繁投注"));
-
                 var keyLine = string.Empty;
-                //lock (UsefullHelper.moneyLocker)
-                //{
                 keyLine = new Sports_Business().LotteryBetting(info, userId, balancePassword, "Bet", redBagMoney);
                 //2017-12-4 更新用户推广
-               
                 BusinessHelper.ExecPlugin<IBettingLottery_AfterTranCommit>(new object[] { userId, info, info.SchemeId, keyLine });
-                //}
-
-                //watch.Stop();
-                //log.Add("计时结束：" + keyLine);
-                //log.Add("用时 " + watch.Elapsed.TotalMilliseconds);
-                //logger.Write("LotteryBeting", userId + "-" + watch.Elapsed.TotalMilliseconds, Common.Log.LogType.Information, "投注", string.Join(Environment.NewLine, log.ToArray()));
-
                 return Task.FromResult(new CommonActionResult(true, "数字彩投注方案提交成功")
                 {
                     ReturnValue = keyLine + "|" + info.TotalMoney,
@@ -853,10 +776,6 @@ namespace BettingLottery.Service.ModuleServices
             {
                 throw new AggregateException(ex.Message,ex);
             }
-            //catch (LogicException ex)
-            //{
-            //    throw ex;
-            //}
             catch (Exception ex)
             {
                 throw new Exception("订单投注异常，请重试 ", ex);
@@ -951,10 +870,10 @@ namespace BettingLottery.Service.ModuleServices
         /// <summary>
         /// 保存用户未购买订单
         /// </summary>
-        public Task<CommonActionResult> SaveOrderLotteryBetting(LotteryBettingInfo info, string userToken)
+        public Task<CommonActionResult> SaveOrderLotteryBetting(LotteryBettingInfo info, string userId)
         {
             // 验证用户身份及权限
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 //栓查是否实名
@@ -987,12 +906,12 @@ namespace BettingLottery.Service.ModuleServices
         /// <summary>
         /// 奖金优化合买
         /// </summary>
-        public Task<CommonActionResult> CreateYouHuaSchemeTogether(Sports_TogetherSchemeInfo info, string balancePassword, decimal realTotalMoney, string userToken)
+        public Task<CommonActionResult> CreateYouHuaSchemeTogether(Sports_TogetherSchemeInfo info, string balancePassword, decimal realTotalMoney, string userId)
         {
             //检查彩种是否暂停销售
             BusinessHelper.CheckGameEnable(info.GameCode.ToUpper());
             // 验证用户身份及权限
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 //栓查是否实名
@@ -1047,9 +966,9 @@ namespace BettingLottery.Service.ModuleServices
         /// <summary>
         /// 虚拟奖金优化投注
         /// </summary>
-        public Task<CommonActionResult> VirtualOrderYouHuaBet(Sports_BetingInfo info, decimal realTotalMoney, string userToken)
+        public Task<CommonActionResult> VirtualOrderYouHuaBet(Sports_BetingInfo info, decimal realTotalMoney, string userId)
         {
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             //检查彩种是否暂停销售
             BusinessHelper.CheckGameEnable(info.GameCode.ToUpper());
 
@@ -1080,11 +999,11 @@ namespace BettingLottery.Service.ModuleServices
         /// <summary>
         /// 奖金优化投注
         /// </summary>
-        public Task<CommonActionResult> YouHuaBet(Sports_BetingInfo info, string password, decimal realTotalMoney, decimal redBagMoney, string userToken)
+        public Task<CommonActionResult> YouHuaBet(Sports_BetingInfo info, string password, decimal realTotalMoney, decimal redBagMoney, string userId)
         {
             try
             {
-                var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+                //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
 
                 //栓查是否实名
                 //if (!BusinessHelper.IsUserValidateRealName(userId))
@@ -1132,10 +1051,10 @@ namespace BettingLottery.Service.ModuleServices
         /// <summary>
         /// 编辑合买跟单
         /// </summary>
-        public Task<CommonActionResult> EditTogetherFollower(TogetherFollowerRuleInfo info, long ruleId, string userToken)
+        public Task<CommonActionResult> EditTogetherFollower(TogetherFollowerRuleInfo info, long ruleId, string userId)
         {
             // 验证用户身份及权限
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 new Sports_Business().EditTogetherFollower(info, ruleId);
@@ -1153,10 +1072,10 @@ namespace BettingLottery.Service.ModuleServices
         /// <param name="info"></param>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public Task<CommonActionResult> CustomTogetherFollower(TogetherFollowerRuleInfo info, string userToken)
+        public Task<CommonActionResult> CustomTogetherFollower(TogetherFollowerRuleInfo info, string userId)
         {
             // 验证用户身份及权限
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 new Sports_Business().CustomTogetherFollower(info);
@@ -1178,10 +1097,10 @@ namespace BettingLottery.Service.ModuleServices
         /// <summary>
         /// 退订跟单
         /// </summary>
-        public Task<CommonActionResult> ExistTogetherFollower(long followerId, string userToken)
+        public Task<CommonActionResult> ExistTogetherFollower(long followerId, string userId)
         {
             // 验证用户身份及权限
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 var rule = new Sports_Business().ExistTogetherFollower(followerId, userId);
@@ -1281,12 +1200,12 @@ namespace BettingLottery.Service.ModuleServices
         /// <summary>
         /// 世界杯投注
         /// </summary>
-        public Task<CommonActionResult> BetSJB(LotteryBettingInfo info, string balancePassword, decimal redBagMoney, string userToken)
+        public Task<CommonActionResult> BetSJB(LotteryBettingInfo info, string balancePassword, decimal redBagMoney, string userId)
         {
             // 验证用户身份及权限
             //检查彩种是否暂停销售
             BusinessHelper.CheckGameEnable(info.GameCode.ToUpper());
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 //栓查是否实名

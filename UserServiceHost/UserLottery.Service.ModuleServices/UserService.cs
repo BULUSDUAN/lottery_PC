@@ -84,11 +84,8 @@ namespace UserLottery.Service.ModuleServices
 
             try
             {
-
-                //QueryUserParam model = new QueryUserParam();
                 string IPAddress = loginIp;
                 var loginBiz = new LocalLoginBusiness();
-
                 if (IPAddress == "Client")//移动端登录时，密码已经MD5
                     loginEntity = loginBiz.LoginAPP(loginName, password);
                 else
@@ -97,7 +94,6 @@ namespace UserLottery.Service.ModuleServices
                 {
                     return Task.FromResult(new LoginInfo { IsSuccess = false, Message = "登录名(手机号)或密码错误", LoginFrom = "LOCAL", });
                 }
-
                 ////var authBiz = new GameBizAuthBusiness();
                 //if (!IsRoleType(loginEntity.User, RoleType.WebRole))
                 //{
@@ -107,24 +103,16 @@ namespace UserLottery.Service.ModuleServices
                 {
                     return Task.FromResult(new LoginInfo { IsSuccess = false, Message = "用户未激活", LoginFrom = "LOCAL", UserId = loginEntity.UserId });
                 }
-
-                var authBiz = new GameBizAuthBusiness();
-                var userToken = authBiz.GetUserToken(loginEntity.User.UserId);
-
-                //var blogEntity = loginBiz.QueryBlog_ProfileBonusLevel(loginEntity.User.UserId);
-
+                //var authBiz = new GameBizAuthBusiness();
+                //var userToken = authBiz.GetUserToken(loginEntity.User.UserId);
+                string userToken = KaSon.FrameWork.Common.CheckToken.UserAuthentication.GetUserToken(loginEntity.UserId, loginEntity.LoginName);
+                var blogEntity = loginBiz.QueryBlog_ProfileBonusLevel(loginEntity.User.UserId);
                 ////清理用户绑定数据缓存
                 ////ClearUserBindInfoCache(loginEntity.UserId);
-
-
                 //!执行扩展功能代码 - 提交事务前
                 BusinessHelper.ExecPlugin<IUser_AfterLogin>(new object[] { loginEntity.UserId, "LOCAL", loginIp, DateTime.Now });
                 //刷新用户在Redis中的余额
                 BusinessHelper.RefreshRedisUserBalance(loginEntity.UserId);
-
-
-
-
                 return Task.FromResult(new LoginInfo
                 {
                     IsSuccess = true,
@@ -141,7 +129,7 @@ namespace UserLottery.Service.ModuleServices
                     AgentId = loginEntity.Register.AgentId,
                     IsAgent = loginEntity.Register.IsAgent,
                     HideDisplayNameCount = loginEntity.Register.HideDisplayNameCount,
-                    MaxLevelName = "幸运彩民", //string.IsNullOrEmpty(blogEntity.MaxLevelName) ? "" : blogEntity.MaxLevelName,
+                    MaxLevelName = string.IsNullOrEmpty(blogEntity.MaxLevelName) ? "" : blogEntity.MaxLevelName,
                     IsUserType = loginEntity.Register.UserType == 1 ? true : false
                 });
             }
@@ -158,13 +146,12 @@ namespace UserLottery.Service.ModuleServices
         /// <summary>
         /// 使用token登录
         /// </summary>
-        public Task<LoginInfo> LoginByUserToken(string userToken)
+        public Task<LoginInfo> LoginByUserToken(string userId)
         {
             try
             {
                 // 验证用户身份及权限
-                var userId = userAuthentication.ValidateUserAuthentication(userToken);
-
+                //var userId = userAuthentication.ValidateUserAuthentication(userToken);
                 var loginBiz = new LocalLoginBusiness();
                 var reg = loginBiz.GetRegisterById(userId);
                 if (reg == null)
@@ -180,8 +167,6 @@ namespace UserLottery.Service.ModuleServices
                     case "app":
                     case "ios":
                     case "touch":
-
-
                         var loginEntity = GetLocalLoginByUserId(userId);
                         if (loginEntity == null)
                         {
@@ -190,7 +175,6 @@ namespace UserLottery.Service.ModuleServices
                         loginName = loginEntity.Result.LoginName;
                         break;
                     case "alipay":
-
                         var alipayEntity = loginBiz.GetAlipayByUserId(userId);
                         if (alipayEntity == null)
                         {
@@ -199,7 +183,6 @@ namespace UserLottery.Service.ModuleServices
                         loginName = alipayEntity.LoginName;
                         break;
                     case "qq":
-
                         var qqEntity = loginBiz.GetQQByUserId(userId);
                         if (qqEntity == null)
                         {
@@ -213,8 +196,6 @@ namespace UserLottery.Service.ModuleServices
 
                 //! 执行扩展功能代码 - 提交事务前
                 BusinessHelper.ExecPlugin<IUser_AfterLogin>(new object[] { userId, loginFrom, "", DateTime.Now });
-
-
                 //刷新用户在Redis中的余额
                 //BusinessHelper.RefreshRedisUserBalance(userId);
 
@@ -230,7 +211,7 @@ namespace UserLottery.Service.ModuleServices
                     VipLevel = reg.VipLevel,
                     LoginName = loginName,
                     DisplayName = reg.DisplayName,
-                    UserToken = userToken,
+                    //UserToken = userToken,
                     AgentId = reg.AgentId,
                     IsAgent = reg.IsAgent,
                     HideDisplayNameCount = reg.HideDisplayNameCount,
@@ -245,18 +226,18 @@ namespace UserLottery.Service.ModuleServices
         }
 
 
-        public Task<string> GetUserIdByUserToken(string UserToken)
-        {
-            try
-            {
-                var userId = userAuthentication.ValidateUserAuthentication(UserToken);
-                return Task.FromResult(userId);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message, ex);
-            }
-        }
+        //public Task<string> GetUserIdByUserToken(string UserToken)
+        //{
+        //    try
+        //    {
+        //        var userId = userAuthentication.ValidateUserAuthentication(UserToken);
+        //        return Task.FromResult(userId);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception(ex.Message, ex);
+        //    }
+        //}
 
         public bool IsRoleType(SystemUser user, RoleType roleType)
         {
@@ -485,12 +466,12 @@ namespace UserLottery.Service.ModuleServices
         /// <param name="newPassword">新密码</param>
         /// <param name="userToken">用户Token</param>
         /// <returns></returns>
-        public Task<CommonActionResult> ChangeMyPassword(string oldPassword, string newPassword, string userToken)
+        public Task<CommonActionResult> ChangeMyPassword(string oldPassword, string newPassword, string userId)
         {
             try
             {
                 // 验证用户身份及权限
-                var userId = userAuthentication.ValidateUserAuthentication(userToken);
+                //var userId = userAuthentication.ValidateUserAuthentication(userToken);
                 var loginBiz = new LocalLoginBusiness();
                 loginBiz.ChangePassword(userId, oldPassword, newPassword);
 
@@ -669,10 +650,10 @@ namespace UserLottery.Service.ModuleServices
         /// <param name="source"></param>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public Task<CommonActionResult> ResponseAuthenticationMobile(string validateCode, SchemeSource source, string userToken)
+        public Task<CommonActionResult> ResponseAuthenticationMobile(string validateCode, SchemeSource source, string userId)
         {
             // 验证用户身份及权限
-            var userId = userAuthentication.ValidateUserAuthentication(userToken);
+            //var userId = userAuthentication.ValidateUserAuthentication(userToken);
 
             try
             {
@@ -1062,12 +1043,12 @@ namespace UserLottery.Service.ModuleServices
         /// <param name="newPassword"></param>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public Task<CommonActionResult> CheckIsSame2LoginPassword(string newPwd, string userToken)
+        public Task<CommonActionResult> CheckIsSame2LoginPassword(string newPwd, string userId)
         {
             try
             {
                 // 验证用户身份及权限
-                var userId = userAuthentication.ValidateUserAuthentication(userToken);
+                //var userId = userAuthentication.ValidateUserAuthentication(userToken);
 
                 var loginBiz = new LocalLoginBusiness();
                 var result = loginBiz.CheckIsSame2LoginPassword(userId, newPwd);
@@ -1094,10 +1075,10 @@ namespace UserLottery.Service.ModuleServices
         /// <param name="newPassword"></param>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public Task<CommonActionResult> SetBalancePassword(string oldPassword, bool isSetPwd, string newPassword, string userToken)
+        public Task<CommonActionResult> SetBalancePassword(string oldPassword, bool isSetPwd, string newPassword, string userId)
         {
             // 验证用户身份及权限
-            var userId = userAuthentication.ValidateUserAuthentication(userToken);
+            //var userId = userAuthentication.ValidateUserAuthentication(userToken);
             try
             {
                 var biz = new FundBusiness();
@@ -1120,10 +1101,10 @@ namespace UserLottery.Service.ModuleServices
         /// <param name="placeList"></param>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public Task<CommonActionResult> SetBalancePasswordNeedPlace(string password, string placeList, string userToken)
+        public Task<CommonActionResult> SetBalancePasswordNeedPlace(string password, string placeList, string userId)
         {
             // 验证用户身份及权限
-            var userId = userAuthentication.ValidateUserAuthentication(userToken);
+            //var userId = userAuthentication.ValidateUserAuthentication(userToken);
 
             var innerList = new string[] {
                 "Bet"               // 投注
@@ -1184,12 +1165,12 @@ namespace UserLottery.Service.ModuleServices
         /// </summary>
         /// <param name = "userToken" ></ param >
         /// < returns ></ returns >
-        public Task<string> QueryYqidRegisterByAgentIdToApp(string userToken)
+        public Task<string> QueryYqidRegisterByAgentIdToApp(string userId)
         {
             try
             {
                 // 验证用户身份及权限
-                var userId = userAuthentication.ValidateUserAuthentication(userToken);
+                //var userId = userAuthentication.ValidateUserAuthentication(userToken);
                 return Task.FromResult(QueryYqidRegisterByAgentId(userId));
             }
             catch (Exception ex)
@@ -1206,12 +1187,12 @@ namespace UserLottery.Service.ModuleServices
         /// <param name="source"></param>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public Task<CommonActionResult> AuthenticateMyRealName(string IdCardNumber, string RealName, SchemeSource source, string userToken)
+        public Task<CommonActionResult> AuthenticateMyRealName(string IdCardNumber, string RealName, SchemeSource source, string userId)
         {
             try
             {
                 // 验证用户身份及权限
-                var userId = userAuthentication.ValidateUserAuthentication(userToken);
+                //var userId = userAuthentication.ValidateUserAuthentication(userToken);
 
                 var biz = new RealNameAuthenticationBusiness();
                 BettingHelper.CheckUserRealName(IdCardNumber);
@@ -1265,10 +1246,10 @@ namespace UserLottery.Service.ModuleServices
         /// <param name="bankCard"></param>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public Task<CommonActionResult> AddBankCard(C_BankCard bankCard, string userToken)
+        public Task<CommonActionResult> AddBankCard(C_BankCard bankCard, string userId)
         {
             // 验证用户身份及权限
-            var userId = userAuthentication.ValidateUserAuthentication(userToken);
+            //var userId = userAuthentication.ValidateUserAuthentication(userToken);
 
             try
             {
@@ -1341,11 +1322,11 @@ namespace UserLottery.Service.ModuleServices
         }
 
 
-        public Task<Withdraw_QueryInfoCollection> QueryMyWithdrawList(WithdrawStatus? status, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string userToken)
+        public Task<Withdraw_QueryInfoCollection> QueryMyWithdrawList(WithdrawStatus? status, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string userId)
         {
 
             // 验证用户身份及权限
-            var userId = userAuthentication.ValidateUserAuthentication(userToken);
+            //var userId = userAuthentication.ValidateUserAuthentication(userToken);
 
             try
             {

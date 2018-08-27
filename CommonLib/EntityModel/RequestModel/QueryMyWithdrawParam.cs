@@ -9,6 +9,6 @@ namespace EntityModel.RequestModel
         public int? status { get; set; }
         public DateTime startTime { get; set; }
         public DateTime endTime { get; set; }
-        public string userToken { get; set; }
+        public string userid { get; set; }
     }
 }

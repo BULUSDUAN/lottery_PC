@@ -146,10 +146,10 @@ namespace BettingLottery.Service.ModuleServices.SportsBettionCore
         /// <summary>
         /// 足彩投注,用户保存的订单
         /// </summary>
-        public CommonActionResult SaveOrderSportsBettingByResult(Sports_BetingInfo info, string userToken)
+        public CommonActionResult SaveOrderSportsBettingByResult(Sports_BetingInfo info, string userid)
         {
             // 验证用户身份及权限    
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
 
             try
             {
@@ -163,10 +163,10 @@ namespace BettingLottery.Service.ModuleServices.SportsBettionCore
                 // 检查订单基本信息
                 BettingHelper.CheckSchemeOrder(info);
 
-                string schemeId = new Sports_Business().SaveOrderSportsBetting(info, userId);
+                string schemeId = new Sports_Business().SaveOrderSportsBetting(info, userid);
 
                 //! 执行扩展功能代码 - 提交事务后
-                BusinessHelper.ExecPlugin<IBettingSport_AfterTranCommit>(new object[] { userId, info, schemeId });
+                BusinessHelper.ExecPlugin<IBettingSport_AfterTranCommit>(new object[] { userid, info, schemeId });
 
                 return new CommonActionResult
                 {
@@ -193,7 +193,7 @@ namespace BettingLottery.Service.ModuleServices.SportsBettionCore
         /// </summary>
         private static System.Collections.Concurrent.ConcurrentDictionary<string, Sports_BetingInfo> _sportsBettingListInfo = new System.Collections.Concurrent.ConcurrentDictionary<string, Sports_BetingInfo>();
 
-        public CommonActionResult Sports_Betting(Sports_BetingInfo info, string password, decimal redBagMoney, string userToken)
+        public CommonActionResult Sports_Betting(Sports_BetingInfo info, string password, decimal redBagMoney, string userid)
         {
             try
             {
@@ -201,25 +201,25 @@ namespace BettingLottery.Service.ModuleServices.SportsBettionCore
                 KaSon.FrameWork.ORM.Helper.BusinessHelper.CheckGameEnable(info.GameCode.ToUpper());
                 BettingHelper.CheckGameCodeAndType(info.GameCode, info.GameType);
                 // 验证用户身份及权限
-                var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+                //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
 
                 //栓查是否实名
                 //if (!BusinessHelper.IsUserValidateRealName(userId))
                 //    throw new LogicException("未实名认证用户不能购买彩票");
 
-                CheckJCRepeatBetting(userId, info);
+                CheckJCRepeatBetting(userid, info);
                 //检查投注内容,并获取投注注数
-                var totalCount = BusinessHelper.CheckBetCode(userId, info.GameCode.ToUpper(), info.GameType.ToUpper(), info.SchemeSource, info.PlayType, info.Amount, info.TotalMoney, info.AnteCodeList);
+                var totalCount = BusinessHelper.CheckBetCode(userid, info.GameCode.ToUpper(), info.GameType.ToUpper(), info.SchemeSource, info.PlayType, info.Amount, info.TotalMoney, info.AnteCodeList);
                 //检查投注的比赛，并获取最早结束时间
                 var stopTime = RedisMatchBusiness.CheckGeneralBettingMatch(info.GameCode.ToUpper(), info.GameType.ToUpper(), info.PlayType, info.AnteCodeList, info.IssuseNumber, info.BettingCategory);
 
                 string schemeId = string.Empty;
                 //lock (UsefullHelper.moneyLocker)
                 //{
-                schemeId = new Sports_Business().SportsBetting(info, userId, password, "Bet", totalCount, stopTime, redBagMoney);
+                schemeId = new Sports_Business().SportsBetting(info, userid, password, "Bet", totalCount, stopTime, redBagMoney);
                 //}
                 //! 执行扩展功能代码 - 提交事务后
-                BusinessHelper.ExecPlugin<IBettingSport_AfterTranCommit>(new object[] { userId, info, schemeId });
+                BusinessHelper.ExecPlugin<IBettingSport_AfterTranCommit>(new object[] { userid, info, schemeId });
 
                 return new CommonActionResult
                 {
