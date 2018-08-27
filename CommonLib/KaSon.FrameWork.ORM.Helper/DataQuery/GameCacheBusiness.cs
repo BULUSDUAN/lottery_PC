@@ -17,7 +17,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //dic.Remove(
         }
 
-        private static Dictionary<string, GameTypeInfoCollection> _gameTypeDictionary = new Dictionary<string, GameTypeInfoCollection>();
+        //private static Dictionary<string, GameTypeInfoCollection> _gameTypeDictionary = new Dictionary<string, GameTypeInfoCollection>();
         ///// <summary>
         ///// 查询彩种所有玩法信息
         ///// </summary>

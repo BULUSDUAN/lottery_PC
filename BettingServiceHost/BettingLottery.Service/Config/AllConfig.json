@@ -3,8 +3,8 @@
     "EnableRedis": true,
     "RedisHost": "10.0.3.6",
     "RedisPost": 6379,
-    "RedisPassword": "wancai_redis123",
-    "RedisConnect": "10.0.3.6,password=wancai_redis123",
+    "RedisPassword": "wancai_redis123\\",
+    "RedisConnect": "10.0.3.6,password=wancai_redis123\\",
     "Port": "6379"
   },
 
