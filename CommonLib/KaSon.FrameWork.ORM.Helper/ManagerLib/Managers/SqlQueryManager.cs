@@ -94,7 +94,7 @@ namespace KaSon.FrameWork.ORM.Helper
                          && (orderId == string.Empty || r.OrderId == orderId)
                          && (agent == null || r.WithdrawAgent == Agent)
                          && (minMoney == -1 || r.RequestMoney >= minMoney)
-                         && (maxMoney == -1 || r.RequestMoney <= maxMoney)select new {r,u })
+                         && (maxMoney == -1 || r.RequestMoney <= maxMoney)select new {r,u }).OrderByDescending(P => P.r.RequestTime)
                          .ToList().Select(b => new Withdraw_QueryInfo {
                              BankCardNumber = ConvertHelper.GetBankCardNumberxxxString(b.r.BankCardNumber),
                              BankCode = b.r.BankCode,
@@ -133,7 +133,7 @@ namespace KaSon.FrameWork.ORM.Helper
              
             if (pageSize == -1)
                 return query.ToList();
-            return query.Skip(pageIndex * pageSize).Take(pageSize).OrderByDescending(P=>P.RequestTime).ToList();
+            return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
         }
 
     }
