@@ -93,8 +93,8 @@ namespace Lottery.Api.Controllers
                         FreezeBalance = ConvertHelper.getTwoplaces(balance.FreezeBalance),
                         FillMoneyBalance = ConvertHelper.getTwoplaces(balance.FillMoneyBalance),
                         Mobile = string.IsNullOrEmpty(bindInfo.Mobile) ? string.Empty : Regex.Replace(bindInfo.Mobile, "(\\d{3})\\d{3}(\\d{5})", "$1***$2"), //mobile == null ? string.Empty : mobile.Mobile,
-                        RealName = string.IsNullOrEmpty(bindInfo.RealName) ? string.Empty : GetxxxString(bindInfo.RealName), // realName == null ? string.Empty : realName.RealName,
-                        IdCardNumber = string.IsNullOrEmpty(bindInfo.IdCardNumber) ? string.Empty : GetBankCardNumberxxxString(bindInfo.IdCardNumber), // realName == null ? string.Empty : realName.IdCardNumber,
+                        RealName = string.IsNullOrEmpty(bindInfo.RealName) ? string.Empty : ConvertHelper.GetxxxString(bindInfo.RealName), // realName == null ? string.Empty : realName.RealName,
+                        IdCardNumber = string.IsNullOrEmpty(bindInfo.IdCardNumber) ? string.Empty : ConvertHelper.GetBankCardNumberxxxString(bindInfo.IdCardNumber), // realName == null ? string.Empty : realName.IdCardNumber,
                         IsSetBalancePwd = balance.IsSetPwd,
                         NeedBalancePwdPlace = string.IsNullOrEmpty(balance.NeedPwdPlace) ? string.Empty : balance.NeedPwdPlace,
                         IsBingBankCard = !string.IsNullOrEmpty(bindInfo.IdCardNumber), // bankInfo == null ? false : !string.IsNullOrEmpty(bankInfo.UserId),
@@ -106,7 +106,7 @@ namespace Lottery.Api.Controllers
                         HideDisplayNameCount = loginInfo.HideDisplayNameCount,
 
                         #region 新字段
-                        BankCardNumber = string.IsNullOrEmpty(bankInfo.BankCardNumber) ? "" : GetBankCardNumberxxxString(bankInfo.BankCardNumber),
+                        BankCardNumber = string.IsNullOrEmpty(bankInfo.BankCardNumber) ? "" : ConvertHelper.GetBankCardNumberxxxString(bankInfo.BankCardNumber),
                         BankName = string.IsNullOrEmpty(bankInfo.BankName) ? "" : bankInfo.BankName,
                         BankSubName = string.IsNullOrEmpty(bankInfo.BankSubName) ? "" : bankInfo.BankSubName,
                         #endregion
@@ -137,59 +137,6 @@ namespace Lottery.Api.Controllers
             }
 
         }
-
-        /// <summary>
-        /// 返回隐藏中间的字符串
-        /// </summary>
-        /// <param name="Input">输入</param>
-        /// <returns>输出</returns>
-        public static string GetxxxString(string Input)
-        {
-            string Output = "";
-            switch (Input.Length)
-            {
-                case 1:
-                    Output = "*";
-                    break;
-                case 2:
-                    Output = Input[0] + "*";
-                    break;
-                case 0:
-                    Output = "";
-                    break;
-                default:
-                    Output = Input.Substring(0, 1);
-                    for (int i = 0; i < Input.Length - 1; i++)
-                    {
-                        Output += "*";
-                    }
-                    Output += Input.Substring(Input.Length - 1, 0);
-                    break;
-            }
-            return Output;
-        }
-
-        /// <summary>
-        /// 返回隐藏中间的身份证号
-        /// </summary>
-        /// <param name="Input">输入</param>
-        /// <returns>输出</returns>
-        public static string GetBankCardNumberxxxString(string Input)
-        {
-            string Output = "";
-            if (Input.Length > 7)
-            {
-                Output = Input.Substring(0, 5);
-                for (int i = 5; i < 8; i++)
-                {
-                    Output += "*";
-                }
-                Output += Input.Substring(7, Input.Length - 7);
-            }
-            return Output;
-        }
-
-
 
         #region 还需要的成长值
 
@@ -511,8 +458,8 @@ namespace Lottery.Api.Controllers
                                 FreezeBalance = ConvertHelper.getTwoplaces(balance.FreezeBalance),
                                 FillMoneyBalance = ConvertHelper.getTwoplaces(balance.FillMoneyBalance),
                                 Mobile = string.IsNullOrEmpty(bindInfo.Mobile) ? string.Empty : Regex.Replace(bindInfo.Mobile, "(\\d{3})\\d{3}(\\d{5})", "$1***$2"), //mobile == null ? string.Empty : mobile.Mobile,
-                                RealName = string.IsNullOrEmpty(bindInfo.RealName) ? string.Empty : GetxxxString(bindInfo.RealName), // realName == null ? string.Empty : realName.RealName,
-                                IdCardNumber = string.IsNullOrEmpty(bindInfo.IdCardNumber) ? string.Empty : GetBankCardNumberxxxString(bindInfo.IdCardNumber), // realName == null ? string.Empty : realName.IdCardNumber,
+                                RealName = string.IsNullOrEmpty(bindInfo.RealName) ? string.Empty : ConvertHelper.GetxxxString(bindInfo.RealName), // realName == null ? string.Empty : realName.RealName,
+                                IdCardNumber = string.IsNullOrEmpty(bindInfo.IdCardNumber) ? string.Empty : ConvertHelper.GetBankCardNumberxxxString(bindInfo.IdCardNumber), // realName == null ? string.Empty : realName.IdCardNumber,
                                 IsSetBalancePwd = balance.IsSetPwd,
                                 NeedBalancePwdPlace = string.IsNullOrEmpty(balance.NeedPwdPlace) ? string.Empty : balance.NeedPwdPlace,
                                 IsBingBankCard = !string.IsNullOrEmpty(bindInfo.IdCardNumber), // bankInfo == null ? false : !string.IsNullOrEmpty(bankInfo.UserId),
@@ -524,7 +471,7 @@ namespace Lottery.Api.Controllers
                                 HideDisplayNameCount = loginInfo.HideDisplayNameCount,
 
                                 #region 新字段
-                                BankCardNumber = string.IsNullOrEmpty(bankInfo.BankCardNumber) ? "" : GetBankCardNumberxxxString(bankInfo.BankCardNumber),
+                                BankCardNumber = string.IsNullOrEmpty(bankInfo.BankCardNumber) ? "" : ConvertHelper.GetBankCardNumberxxxString(bankInfo.BankCardNumber),
                                 BankName = string.IsNullOrEmpty(bankInfo.BankName) ? "" : bankInfo.BankName,
                                 BankSubName = string.IsNullOrEmpty(bankInfo.BankSubName) ? "" : bankInfo.BankSubName,
                                 #endregion
@@ -1412,8 +1359,8 @@ namespace Lottery.Api.Controllers
                         FreezeBalance = ConvertHelper.getTwoplaces(balance.FreezeBalance),
                         FillMoneyBalance = ConvertHelper.getTwoplaces(balance.FillMoneyBalance),
                         Mobile = string.IsNullOrEmpty(bindInfo.Mobile) ? string.Empty : Regex.Replace(bindInfo.Mobile, "(\\d{3})\\d{3}(\\d{5})", "$1***$2"), //mobile == null ? string.Empty : mobile.Mobile,
-                        RealName = string.IsNullOrEmpty(bindInfo.RealName) ? string.Empty : GetxxxString(bindInfo.RealName), // realName == null ? string.Empty : realName.RealName,
-                        IdCardNumber = string.IsNullOrEmpty(bindInfo.IdCardNumber) ? string.Empty : GetBankCardNumberxxxString(bindInfo.IdCardNumber), // realName == null ? string.Empty : realName.IdCardNumber,
+                        RealName = string.IsNullOrEmpty(bindInfo.RealName) ? string.Empty : ConvertHelper.GetxxxString(bindInfo.RealName), // realName == null ? string.Empty : realName.RealName,
+                        IdCardNumber = string.IsNullOrEmpty(bindInfo.IdCardNumber) ? string.Empty : ConvertHelper.GetBankCardNumberxxxString(bindInfo.IdCardNumber), // realName == null ? string.Empty : realName.IdCardNumber,
                         IsSetBalancePwd = balance.IsSetPwd,
                         NeedBalancePwdPlace = string.IsNullOrEmpty(balance.NeedPwdPlace) ? string.Empty : balance.NeedPwdPlace,
                         IsBingBankCard = !string.IsNullOrEmpty(bindInfo.IdCardNumber), // bankInfo == null ? false : !string.IsNullOrEmpty(bankInfo.UserId),
@@ -1425,7 +1372,7 @@ namespace Lottery.Api.Controllers
                         HideDisplayNameCount = loginInfo.HideDisplayNameCount,
 
                         #region 新字段
-                        BankCardNumber = string.IsNullOrEmpty(bankInfo.BankCardNumber) ? "" : GetBankCardNumberxxxString(bankInfo.BankCardNumber),
+                        BankCardNumber = string.IsNullOrEmpty(bankInfo.BankCardNumber) ? "" : ConvertHelper.GetBankCardNumberxxxString(bankInfo.BankCardNumber),
                         BankName = string.IsNullOrEmpty(bankInfo.BankName) ? "" : bankInfo.BankName,
                         BankSubName = string.IsNullOrEmpty(bankInfo.BankSubName) ? "" : bankInfo.BankSubName,
                         #endregion
@@ -1752,7 +1699,7 @@ namespace Lottery.Api.Controllers
                 string userToken = p.token;
                 int pageNo = Convert.ToInt32(p.pageNo);
                 int PageSize = Convert.ToInt32(p.PageSize);
-                var status = string.IsNullOrEmpty((string)p.Status) ? null : Convert.ToInt32(p.Status);
+                var status = string.IsNullOrEmpty((string)p.Status) ? -1 : Convert.ToInt32(p.Status);
                 if (string.IsNullOrEmpty(userToken))
                     throw new Exception("token验证失败");
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);

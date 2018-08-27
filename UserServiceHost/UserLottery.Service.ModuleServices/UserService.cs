@@ -47,7 +47,7 @@ using System.Diagnostics;
 namespace UserLottery.Service.ModuleServices
 {
     [ModuleName("User")]
-    public class UserService : KgBaseService, IUserService
+    public class UserService : KgBaseService,  IUserService
     {
         #region Implementation of IUserService
         // private readonly UserRepository _repository;
@@ -1322,7 +1322,7 @@ namespace UserLottery.Service.ModuleServices
         }
 
 
-        public Task<Withdraw_QueryInfoCollection> QueryMyWithdrawList(WithdrawStatus? status, int pageIndex, int pageSize, string userId)
+        public Task<Withdraw_QueryInfoCollection> QueryMyWithdrawList(int status, int pageIndex, int pageSize, string userId)
         {
 
             // 验证用户身份及权限

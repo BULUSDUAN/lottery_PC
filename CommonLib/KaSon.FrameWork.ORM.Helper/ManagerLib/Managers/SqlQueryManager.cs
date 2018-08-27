@@ -1,6 +1,7 @@
 ﻿using EntityModel;
 using EntityModel.CoreModel;
 using EntityModel.Enum;
+using KaSon.FrameWork.Common.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,25 +78,25 @@ namespace KaSon.FrameWork.ORM.Helper
             }
         }
 
-        public List<Withdraw_QueryInfo> QueryWithdrawList(string userId, WithdrawAgentType? agent, WithdrawStatus? status, decimal minMoney, decimal maxMoney, int sortType, int pageIndex, int pageSize, string orderId,
+        public List<Withdraw_QueryInfo> QueryWithdrawList(string userId, WithdrawAgentType? agent, int status, decimal minMoney, decimal maxMoney, int sortType, int pageIndex, int pageSize, string orderId,
        out int winCount, out int refusedCount, out decimal totalWinMoney, out decimal totalRefusedMoney, out decimal totalResponseMoney, out int totalCount, out decimal totalMoney)
         {
          
             pageIndex = pageIndex < 0 ? 0 : pageIndex;
             pageSize = pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : pageSize;
 
-            int? Status = (int?)status;
+          
             int? Agent = (int?)agent;
             var query = (from r in DB.CreateQuery<C_Withdraw>()
                          join u in DB.CreateQuery<C_User_Register>() on r.UserId equals u.UserId
                          where (userId == string.Empty || r.UserId == userId)                  
-                         && (status == null || r.Status == Status)
+                         && (status == -1 || r.Status == status)
                          && (orderId == string.Empty || r.OrderId == orderId)
                          && (agent == null || r.WithdrawAgent == Agent)
                          && (minMoney == -1 || r.RequestMoney >= minMoney)
                          && (maxMoney == -1 || r.RequestMoney <= maxMoney)select new {r,u })
                          .ToList().Select(b => new Withdraw_QueryInfo {
-                             BankCardNumber = b.r.BankCardNumber,
+                             BankCardNumber = ConvertHelper.GetBankCardNumberxxxString(b.r.BankCardNumber),
                              BankCode = b.r.BankCode,
                              BankName = b.r.BankName,
                              BankSubName = b.r.BankSubName,
