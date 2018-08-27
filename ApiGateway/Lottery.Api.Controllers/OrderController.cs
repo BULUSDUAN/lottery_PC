@@ -1219,7 +1219,7 @@ namespace Lottery.Api.Controllers
             var schemeInfo = await _serviceProxyProvider.Invoke<Sports_TogetherSchemeQueryInfo>(param, "api/Order/QuerySportsTogetherDetail");
             param.Clear();
             string userid = string.Empty;
-            var userInfo = new LoginInfo();
+            //var userInfo = new LoginInfo();
             var flag = false;
             if (!string.IsNullOrEmpty(userToken))
             {
@@ -1227,14 +1227,14 @@ namespace Lottery.Api.Controllers
                 //userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
                 userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 param.Add("schemeId", schemeId);
-                param.Add("userid", userid);
+                param.Add("userId", userid);
                 flag = await _serviceProxyProvider.Invoke<bool>(param, "api/Order/IsUserJoinSportsTogether");
             }
 
             var codeList = new List<object>();
             if (schemeInfo.Security == TogetherSchemeSecurity.Public
                || (schemeInfo.Security == TogetherSchemeSecurity.CompletePublic && schemeInfo.StopTime <= DateTime.Now)
-               || schemeInfo.CreateUserId == userInfo.UserId
+               || schemeInfo.CreateUserId == userid
                 || (schemeInfo.Security == TogetherSchemeSecurity.JoinPublic && flag))
             {
                 var anteCodeList = await _serviceProxyProvider.Invoke<Sports_AnteCodeQueryInfoCollection>(param, "api/Order/QuerySportsOrderAnteCodeList");

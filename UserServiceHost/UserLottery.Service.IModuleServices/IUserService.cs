@@ -43,7 +43,7 @@ namespace UserLottery.Service.IModuleServices
         Task<LoginInfo> GetLocalLoginByUserId(string userId);
 
         [Service(Date = "2018-6-12", Director = "renjun", Name = "绑定信息")]
-        Task<UserBindInfos> QueryUserBindInfos(string UserId);
+        Task<UserBindInfos> QueryUserBindInfos(string userId);
 
         [Service(Date = "2018-6-12", Director = "renjun", Name = "查询余额信息")]
         Task<UserBalanceInfo> QueryMyBalance(string userId);
