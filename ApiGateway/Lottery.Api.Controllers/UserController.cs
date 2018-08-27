@@ -61,7 +61,7 @@ namespace Lottery.Api.Controllers
                 if (!loginInfo.IsSuccess)
                     throw new ArgumentException(loginInfo.Message);
                 Dictionary<string, object> bindParam = new Dictionary<string, object>();
-                bindParam["UserId"] = loginInfo.UserId;
+                bindParam["userId"] = loginInfo.UserId;
                 //var bindInfo = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
                 var bindInfo = new UserBindInfos();
                 Dictionary<string, object> balanceParam = new Dictionary<string, object>();

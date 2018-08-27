@@ -139,7 +139,7 @@ namespace Lottery.Api.Controllers
                 //param.Add("userid", userid);
                 //var userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
                 //param.Clear();
-                param["UserId"] = userid;
+                param["userId"] = userid;
                 var bindInfo = await _serviceProxyProvider.Invoke<UserBindInfos>(param, "api/user/QueryUserBindInfos");
                 var key = "";
                 if (bindInfo != null && bindInfo.IsAgent)
@@ -186,7 +186,7 @@ namespace Lottery.Api.Controllers
                 //param.Add("userid", userid);
                 //var userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
                 //param.Clear();
-                param["UserId"] = userid;
+                param["userId"] = userid;
                 var bindInfo = await _serviceProxyProvider.Invoke<UserBindInfos>(param, "api/user/QueryUserBindInfos");
                 var key = "";
                 if (bindInfo != null && bindInfo.IsAgent)
