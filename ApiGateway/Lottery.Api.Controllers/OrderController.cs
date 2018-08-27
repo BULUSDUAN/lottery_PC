@@ -504,9 +504,9 @@ namespace Lottery.Api.Controllers
                 string starttime = p.StartTime;
                 bool Boolstarttime = string.IsNullOrEmpty(starttime);
                 string endtime = p.EndTime;
-                bool Boolendtime = string.IsNullOrEmpty(starttime);
+                bool Boolendtime = string.IsNullOrEmpty(endtime);
                 DateTime startTime = Boolstarttime ? DateTime.Now : Convert.ToDateTime(p.StartTime);
-                DateTime endTime = Boolendtime ? DateTime.Now : Convert.ToDateTime(p.EndTime);
+                DateTime endTime = Boolendtime ? DateTime.Now.AddDays(1).Date : Convert.ToDateTime(p.EndTime);
                 int days = p.Days;
                 startTime = startTime.AddDays(-days).Date;
                 int PageIndex = p.PageIndex ?? 0;

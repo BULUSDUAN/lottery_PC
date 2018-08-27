@@ -206,7 +206,7 @@ namespace KaSon.FrameWork.ORM.Helper
             Model.keyLine = string.IsNullOrEmpty(Model.keyLine) ? string.Empty : Model.keyLine;
             Model.accountTypeList = string.IsNullOrEmpty(Model.accountTypeList) ? string.Empty : Model.accountTypeList;
             Model.categoryList = string.IsNullOrEmpty(Model.categoryList) ? string.Empty : Model.categoryList;
-            Model.toDate = Model.toDate.AddDays(1).Date;
+            //Model.toDate = Model.toDate.AddDays(1).Date;
             Model.pageIndex = Model.pageIndex < 0 ? 0 : Model.pageIndex;
             if (Model.pageSize < 10000)
                 Model.pageSize = Model.pageSize > Model.MaxPageSize ? Model.MaxPageSize : Model.pageSize;
