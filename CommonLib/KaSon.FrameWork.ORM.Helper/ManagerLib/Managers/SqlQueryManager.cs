@@ -77,19 +77,18 @@ namespace KaSon.FrameWork.ORM.Helper
             }
         }
 
-        public List<Withdraw_QueryInfo> QueryWithdrawList(string userId, WithdrawAgentType? agent, WithdrawStatus? status, decimal minMoney, decimal maxMoney, DateTime startTime, DateTime endTime, int sortType, int pageIndex, int pageSize, string orderId,
+        public List<Withdraw_QueryInfo> QueryWithdrawList(string userId, WithdrawAgentType? agent, WithdrawStatus? status, decimal minMoney, decimal maxMoney, int sortType, int pageIndex, int pageSize, string orderId,
        out int winCount, out int refusedCount, out decimal totalWinMoney, out decimal totalRefusedMoney, out decimal totalResponseMoney, out int totalCount, out decimal totalMoney)
         {
-            endTime = endTime.AddDays(1).Date;
+         
             pageIndex = pageIndex < 0 ? 0 : pageIndex;
             pageSize = pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : pageSize;
 
-            int Status = (int)status;
+            int? Status = (int?)status;
             int? Agent = (int?)agent;
             var query = (from r in DB.CreateQuery<C_Withdraw>()
                          join u in DB.CreateQuery<C_User_Register>() on r.UserId equals u.UserId
-                         where (userId == string.Empty || r.UserId == userId)
-                         && r.RequestTime >= startTime && r.RequestTime < endTime
+                         where (userId == string.Empty || r.UserId == userId)                  
                          && (status == null || r.Status == Status)
                          && (orderId == string.Empty || r.OrderId == orderId)
                          && (agent == null || r.WithdrawAgent == Agent)
@@ -133,7 +132,7 @@ namespace KaSon.FrameWork.ORM.Helper
              
             if (pageSize == -1)
                 return query.ToList();
-            return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+            return query.Skip(pageIndex * pageSize).Take(pageSize).OrderByDescending(P=>P.RequestTime).ToList();
         }
 
     }

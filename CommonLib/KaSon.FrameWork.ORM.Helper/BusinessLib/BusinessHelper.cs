@@ -997,23 +997,35 @@ namespace KaSon.FrameWork.ORM.Helper
             if (game.EnableStatus != EntityModel.Enum.EnableStatus.Enable)
                 throw new Exception(string.Format("{0} 暂停销售", game.DisplayName));
         }
-        /// <summary>
-        /// 所有彩种
-        /// </summary>
-        private static List<LotteryGame> _cacheAllGameList = new List<LotteryGame>();
 
         /// <summary>
         /// 查询彩种
         /// </summary>
         public static LotteryGame QueryLotteryGame(string gameCode)
         {
-            if (_cacheAllGameList == null || _cacheAllGameList.Count <= 0)
+            var RedisKeyH = "CoreConfig_";
+            var RedisKey = RedisKeyH + gameCode;
+            var flag = RedisHelper.KeyExists(gameCode);
+            var v = "";
+            var Game = new LotteryGame();
+            if (flag)
             {
-                //var manager = new LotteryGameManager();
-                var p = SDB.CreateQuery<LotteryGame>().ToList();
-                _cacheAllGameList.AddRange(p);
+                v = RedisHelper.StringGet(gameCode);
+                Game.GameCode = v;
             }
-            return _cacheAllGameList.FirstOrDefault(p => p.GameCode == gameCode);
+          
+            if (string.IsNullOrEmpty(v))
+            {
+                var LotteryGame = SDB.CreateQuery<LotteryGame>().Where(p => p.GameCode == gameCode).FirstOrDefault();
+                v = LotteryGame.GameCode;
+                if (LotteryGame != null)
+                {
+                    RedisHelper.StringSet(RedisKey, v, 3 * 60);
+                }
+            }
+          
+        
+            return Game;
         }
 
         #endregion

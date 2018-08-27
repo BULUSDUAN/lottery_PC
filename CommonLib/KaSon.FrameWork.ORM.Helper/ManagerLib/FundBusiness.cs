@@ -437,7 +437,7 @@ namespace KaSon.FrameWork.ORM.Helper
             return ubkey;
         }
 
-        public Withdraw_QueryInfoCollection QueryWithdrawList(string userId, WithdrawAgentType? agent, WithdrawStatus? status, decimal minMoney, decimal maxMoney, DateTime startTime, DateTime endTime, int sortType, int pageIndex, int pageSize, string orderId = "")
+        public Withdraw_QueryInfoCollection QueryWithdrawList(string userId, WithdrawAgentType? agent, WithdrawStatus? status, decimal minMoney, decimal maxMoney, int sortType, int pageIndex, int pageSize, string orderId = "")
         {
             var statusList = new List<int>();
             if (status.HasValue) statusList.Add((int)status.Value);
@@ -450,7 +450,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var refusedCount = 0;
             var totalWinMoney = 0M;
             var totalRefusedMoney = 0M;
-            result.WithdrawList = new SqlQueryManager().QueryWithdrawList(userId, agent, status, minMoney, maxMoney, startTime, endTime, sortType, pageIndex, pageSize, orderId,
+            result.WithdrawList = new SqlQueryManager().QueryWithdrawList(userId, agent, status, minMoney, maxMoney, sortType, pageIndex, pageSize, orderId,
                 out winCount, out refusedCount, out totalWinMoney, out totalRefusedMoney, out totalResponseMoney, out totalCount, out totalMoney);
             result.TotalCount = totalCount;
             result.TotalMoney = totalMoney;
