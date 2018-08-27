@@ -1322,7 +1322,7 @@ namespace UserLottery.Service.ModuleServices
         }
 
 
-        public Task<Withdraw_QueryInfoCollection> QueryMyWithdrawList(WithdrawStatus? status, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string userId)
+        public Task<Withdraw_QueryInfoCollection> QueryMyWithdrawList(WithdrawStatus? status, int pageIndex, int pageSize, string userId)
         {
 
             // 验证用户身份及权限
@@ -1330,7 +1330,7 @@ namespace UserLottery.Service.ModuleServices
 
             try
             {
-                return Task.FromResult(new FundBusiness().QueryWithdrawList(userId, null, status, -1, -1, startTime, endTime, -1, pageIndex, pageSize));
+                return Task.FromResult(new FundBusiness().QueryWithdrawList(userId, null, status, -1, -1, -1, pageIndex, pageSize));
             }
             catch (Exception ex)
             {

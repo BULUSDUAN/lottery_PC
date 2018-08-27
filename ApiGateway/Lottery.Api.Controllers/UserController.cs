@@ -1750,8 +1750,6 @@ namespace Lottery.Api.Controllers
             {
                 var p = WebHelper.Decode(entity.Param);
                 string userToken = p.token;
-                DateTime begin = Convert.ToDateTime(p.begin);
-                DateTime end = Convert.ToDateTime(p.end);
                 int pageNo = Convert.ToInt32(p.pageNo);
                 int PageSize = Convert.ToInt32(p.PageSize);
                 var status = string.IsNullOrEmpty((string)p.Status) ? null : Convert.ToInt32(p.Status);
@@ -1760,13 +1758,8 @@ namespace Lottery.Api.Controllers
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 //var withdrawList = WCFClients.GameFundClient.QueryMyWithdrawList(WithdrawStatus.Success, begin, end.AddDays(1), pageNo, PageSize, token);
                 //var withdrawList = WCFClients.GameFundClient.QueryMyWithdrawList(null, begin, end.AddDays(1), pageNo, PageSize, token);
-                if (begin < DateTime.Now.AddMonths(-1))
-                    begin = DateTime.Now.AddMonths(-1);
-
                 Dictionary<string, object> Param = new Dictionary<string, object>();
                 Param["status"] = status;
-                Param["startTime"] = begin;
-                Param["endTime"] = end.AddDays(1);
                 Param["pageIndex"] = pageNo;
                 Param["pageSize"] = PageSize;
                 Param["userId"] = userId;
