@@ -94,8 +94,8 @@ namespace KaSon.FrameWork.ORM.Helper
                          && (orderId == string.Empty || r.OrderId == orderId)
                          && (agent == null || r.WithdrawAgent == Agent)
                          && (minMoney == -1 || r.RequestMoney >= minMoney)
-                         && (maxMoney == -1 || r.RequestMoney <= maxMoney)select new {r,u }).OrderByDescending(P => P.r.RequestTime)
-                         .ToList().Select(b => new Withdraw_QueryInfo {
+                         && (maxMoney == -1 || r.RequestMoney <= maxMoney)select new {r,u })
+                         .ToList().OrderByDescending(p => p.r.RequestTime).Select(b => new Withdraw_QueryInfo {
                              BankCardNumber = ConvertHelper.GetBankCardNumberxxxString(b.r.BankCardNumber),
                              BankCode = b.r.BankCode,
                              BankName = b.r.BankName,
@@ -124,15 +124,15 @@ namespace KaSon.FrameWork.ORM.Helper
             totalMoney = query.Count() == 0 ? 0M : query.Sum(p => p.RequestMoney);
             totalResponseMoney = winCount == 0 ? 0M : query.Where(p => p.ResponseMoney.HasValue == true).Sum(p => p.ResponseMoney.Value);
 
-            if (sortType == -1)
-                query = query.OrderBy(p => p.RequestTime);
-            if (sortType == 0)
-                query = query.OrderBy(p => p.RequestMoney);
-            if (sortType == 1)
-                query = query.OrderByDescending(p => p.RequestMoney);
+            //if (sortType == -1)
+            //    query = query.OrderBy(p => p.RequestTime);
+            //if (sortType == 0)
+            //    query = query.OrderBy(p => p.RequestMoney);
+            //if (sortType == 1)
+            //    query = query.OrderByDescending(p => p.RequestMoney);
              
-            if (pageSize == -1)
-                return query.ToList();
+            //if (pageSize == -1)
+            //    return query.ToList();
             return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
         }
 

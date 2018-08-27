@@ -1330,7 +1330,7 @@ namespace UserLottery.Service.ModuleServices
 
             try
             {
-                return Task.FromResult(new FundBusiness().QueryWithdrawList(userId, null, status, -1, -1, -1, pageIndex, pageSize));
+                return Task.FromResult(new FundBusiness().QueryWithdrawList(userId, null, status, -1, -1, 1, pageIndex, pageSize));
             }
             catch (Exception ex)
             {
