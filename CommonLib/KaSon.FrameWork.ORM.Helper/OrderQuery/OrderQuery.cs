@@ -267,26 +267,26 @@ namespace KaSon.FrameWork.ORM.Helper
             var agentTypeList = string.Format("{0}", string.Join(',', (Model.agentTypeList ?? "").Split('|', StringSplitOptions.RemoveEmptyEntries))).ToString();
             var statusList = string.Format("{0}", string.Join(',', (Model.statusList ?? "").Split('|', StringSplitOptions.RemoveEmptyEntries))).ToString();
             var sourceList = string.Format("{0}", string.Join(',', (Model.sourceList ?? "").Split('|', StringSplitOptions.RemoveEmptyEntries))).ToString();
-            string sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_TotalRequestMoney").SQL;
-            sql = string.Format(sql, agentTypeList, statusList, sourceList);
-            Collection = DB.CreateSQLQuery(sql)
-                .SetString("@UserId", userId)
-                .SetString("@AgentList", agentTypeList)
-                .SetString("@StatusList", statusList)
-                .SetString("@SourceList", sourceList)
-                .SetString("@StartTime", Model.startTime.ToString("yyyy-MM-dd"))
-                .SetString("@EndTime", Model.endTime.AddDays(1).ToString("yyyy-MM-dd"))
-                .SetString("@OrderId", Model.OrderId).First<FillMoneyQueryInfoCollection>();
+            //string sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_TotalRequestMoney").SQL;
+            //sql = string.Format(sql, agentTypeList, statusList, sourceList);
+            //Collection = DB.CreateSQLQuery(sql)
+            //    .SetString("@UserId", userId)
+            //    .SetString("@AgentList", agentTypeList)
+            //    .SetString("@StatusList", statusList)
+            //    .SetString("@SourceList", sourceList)
+            //    .SetString("@StartTime", Model.startTime.ToString("yyyy-MM-dd"))
+            //    .SetString("@EndTime", Model.endTime.AddDays(1).ToString("yyyy-MM-dd"))
+            //    .SetString("@OrderId", Model.OrderId).First<FillMoneyQueryInfoCollection>();
 
-            string TotalResponseMoney_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_TotalResponseMoney").SQL;
-            TotalResponseMoney_sql = string.Format(TotalResponseMoney_sql, agentTypeList, sourceList);
-            Collection = DB.CreateSQLQuery(TotalResponseMoney_sql)
-                .SetString("@UserId", userId)
-                .SetString("@AgentList", agentTypeList)
-                .SetString("@SourceList", sourceList)
-                .SetString("@StartTime", Model.startTime.ToString("yyyy-MM-dd"))
-                .SetString("@EndTime", Model.endTime.AddDays(1).ToString("yyyy-MM-dd"))
-                .SetString("@OrderId", Model.OrderId).First<FillMoneyQueryInfoCollection>();
+            //string TotalResponseMoney_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_TotalResponseMoney").SQL;
+            //TotalResponseMoney_sql = string.Format(TotalResponseMoney_sql, agentTypeList, sourceList);
+            //Collection = DB.CreateSQLQuery(TotalResponseMoney_sql)
+            //    .SetString("@UserId", userId)
+            //    .SetString("@AgentList", agentTypeList)
+            //    .SetString("@SourceList", sourceList)
+            //    .SetString("@StartTime", Model.startTime.ToString("yyyy-MM-dd"))
+            //    .SetString("@EndTime", Model.endTime.AddDays(1).ToString("yyyy-MM-dd"))
+            //    .SetString("@OrderId", Model.OrderId).First<FillMoneyQueryInfoCollection>();
 
             string FillMoneyPage_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_FillMoneyPage").SQL;
             FillMoneyPage_sql = string.Format(FillMoneyPage_sql, agentTypeList, statusList, sourceList);

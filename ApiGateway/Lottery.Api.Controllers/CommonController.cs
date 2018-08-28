@@ -136,11 +136,8 @@ namespace Lottery.Api.Controllers
                     throw new Exception("参数不能为空");
                 string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 Dictionary<string, object> param = new Dictionary<string, object>();
-                //param.Add("userid", userid);
-                //var userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
-                //param.Clear();
                 param["userId"] = userid;
-                var bindInfo = await _serviceProxyProvider.Invoke<UserBindInfos>(param, "api/user/QueryUserBindInfos");
+                var bindInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/GetLocalLoginByUserId");
                 var key = "";
                 if (bindInfo != null && bindInfo.IsAgent)
                 {
@@ -183,11 +180,8 @@ namespace Lottery.Api.Controllers
                     throw new Exception("参数不能为空");
                 string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 Dictionary<string, object> param = new Dictionary<string, object>();
-                //param.Add("userid", userid);
-                //var userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
-                //param.Clear();
                 param["userId"] = userid;
-                var bindInfo = await _serviceProxyProvider.Invoke<UserBindInfos>(param, "api/user/QueryUserBindInfos");
+                var bindInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/GetLocalLoginByUserId");
                 var key = "";
                 if (bindInfo != null && bindInfo.IsAgent)
                 {
