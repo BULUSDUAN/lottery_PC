@@ -399,6 +399,18 @@ namespace Lottery.Api.Controllers
                 userInfo.LoginName = mobile;
                 userInfo.Password = password;
                 userInfo.Mobile = mobile;
+                switch (schemeSource)
+                {
+                    case SchemeSource.Android:
+                        userInfo.ComeFrom = "Android";
+                        break;
+                    case SchemeSource.Iphone:
+                        userInfo.ComeFrom = "IOS";
+                        break;
+                    case SchemeSource.Touch:
+                        userInfo.ComeFrom = "TOUCH";
+                        break;
+                }
                 param["validateCode"] = validateCode;
                 param["mobile"] = mobile;
                 param["source"] = (int)schemeSource;
@@ -1316,7 +1328,7 @@ namespace Lottery.Api.Controllers
                 if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userToken) || string.IsNullOrEmpty(loginName))
                     throw new ArgumentException("传入参数信息有误！");
                 string tokenuserId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
-                if(tokenuserId!=userId)
+                if (tokenuserId != userId)
                     throw new ArgumentException("token验证失败！");
                 //if (!CanDoLoadUserInfo(loginName))
                 //    throw new Exception("刷新频繁，请稍后再试");
