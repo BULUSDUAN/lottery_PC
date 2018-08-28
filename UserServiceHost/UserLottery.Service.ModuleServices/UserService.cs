@@ -1035,29 +1035,29 @@ namespace UserLottery.Service.ModuleServices
         /// <param name="newPassword"></param>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public Task<CommonActionResult> CheckIsSame2LoginPassword(string newPwd, string userId)
-        {
-            try
-            {
-                // 验证用户身份及权限
-                //var userId = userAuthentication.ValidateUserAuthentication(userToken);
+        //public Task<CommonActionResult> CheckIsSame2LoginPassword(string newPwd, string userId)
+        //{
+        //    try
+        //    {
+        //        // 验证用户身份及权限
+        //        //var userId = userAuthentication.ValidateUserAuthentication(userToken);
 
-                var loginBiz = new LocalLoginBusiness();
-                var result = loginBiz.CheckIsSame2LoginPassword(userId, newPwd);
-                var flag = "N";
-                if (result.HasValue)
-                {
-                    flag = result.Value ? "T" : "F";
-                }
-                return Task.FromResult(new CommonActionResult(true, "查询成功") { ReturnValue = flag });
-            }
-            catch (Exception ex)
-            {
+        //        var loginBiz = new LocalLoginBusiness();
+        //        var result = loginBiz.CheckIsSame2LoginPassword(userId, newPwd);
+        //        var flag = "N";
+        //        if (result.HasValue)
+        //        {
+        //            flag = result.Value ? "T" : "F";
+        //        }
+        //        return Task.FromResult(new CommonActionResult(true, "查询成功") { ReturnValue = flag });
+        //    }
+        //    catch (Exception ex)
+        //    {
 
-                throw new Exception(ex.Message, ex);
-            }
+        //        throw new Exception(ex.Message, ex);
+        //    }
 
-        }
+        //}
 
         /// <summary>
         /// 设置资金密码
@@ -1067,14 +1067,25 @@ namespace UserLottery.Service.ModuleServices
         /// <param name="newPassword"></param>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public Task<CommonActionResult> SetBalancePassword(string oldPassword, bool isSetPwd, string newPassword, string userId)
+        public Task<CommonActionResult> SetBalancePassword(string oldPassword, bool isSetPwd, string newPassword, string userId, string placeList)
         {
             // 验证用户身份及权限
             //var userId = userAuthentication.ValidateUserAuthentication(userToken);
             try
             {
                 var biz = new FundBusiness();
-                biz.SetBalancePassword(userId, oldPassword, isSetPwd, newPassword);
+                var loginBiz = new LocalLoginBusiness();
+                var result= loginBiz.CheckIsSame2LoginPassword(userId, newPassword);
+                var flag = false;
+                if (result.HasValue)
+                {
+                    flag = result.Value;
+                }
+                if (flag)
+                {
+                    throw new Exception("资金密码不能与登录密码相同");
+                }
+                biz.SetBalancePassword(userId, oldPassword, isSetPwd, newPassword, placeList);
 
                 BusinessHelper.ExecPlugin<IBalancePassword>(new object[] { userId, oldPassword, isSetPwd, newPassword });
 

@@ -940,6 +940,7 @@ namespace Lottery.Api.Controllers
                 string newPwd = p.NewPwd;
                 bool isSet = Convert.ToBoolean(p.IsSet);
                 string userToken = p.UserToken;
+                string strPlace = string.IsNullOrEmpty(p.StrPlace)?"": p.StrPlace ;
                 if (string.IsNullOrEmpty(userToken))
                     throw new Exception("您还未登录，请登录！");
                 else if (string.IsNullOrEmpty(newPwd))
@@ -951,14 +952,13 @@ namespace Lottery.Api.Controllers
                     {
                         throw new Exception("新资金密码只能使用0-9的6位数字！");
                     }
+                    //Dictionary<string, object> param = new Dictionary<string, object>();
 
-                    Dictionary<string, object> param = new Dictionary<string, object>();
+                    //param["newPwd"] = newPwd;
+                    //param["userId"] = userId;
+                    //var checkRes = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/CheckIsSame2LoginPassword");
 
-                    param["newPwd"] = newPwd;
-                    param["userId"] = userId;
-                    var checkRes = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/CheckIsSame2LoginPassword");
-
-                    PreconditionAssert.IsTrue(checkRes.IsSuccess && checkRes.ReturnValue != "T", "资金密码不能与登录密码相同");
+                    //PreconditionAssert.IsTrue(checkRes.IsSuccess && checkRes.ReturnValue != "T", "资金密码不能与登录密码相同");
                 }
 
                 Dictionary<string, object> paramPwd = new Dictionary<string, object>();
@@ -966,7 +966,7 @@ namespace Lottery.Api.Controllers
                 paramPwd["isSetPwd"] = isSet;
                 paramPwd["newPassword"] = newPwd;
                 paramPwd["userId"] = userId;
-
+                paramPwd["placeList"] = strPlace;
                 var result = await _serviceProxyProvider.Invoke<CommonActionResult>(paramPwd, "api/user/SetBalancePassword");
                 return JsonEx(new LotteryServiceResponse
                 {
@@ -1009,7 +1009,7 @@ namespace Lottery.Api.Controllers
             try
             {
                 var p = WebHelper.Decode(entity.Param);
-                string strPlace = p.StrPlace;
+                string strPlace = string.IsNullOrEmpty(p.StrPlace) ? "" : p.StrPlace;
                 string pwd = p.Pwd;
                 string userToken = p.UserToken;
                 if (string.IsNullOrEmpty(userToken))
@@ -1018,8 +1018,8 @@ namespace Lottery.Api.Controllers
                     throw new Exception("资金密码不能为空");
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 Dictionary<string, object> paramPwd = new Dictionary<string, object>();
-                paramPwd["pwd"] = pwd;
-                paramPwd["strPlace"] = strPlace;
+                paramPwd["password"] = pwd;
+                paramPwd["placeList"] = strPlace;
                 paramPwd["userId"] = userId;
 
                 var result = await _serviceProxyProvider.Invoke<CommonActionResult>(paramPwd, "api/user/SetBalancePasswordNeedPlace");

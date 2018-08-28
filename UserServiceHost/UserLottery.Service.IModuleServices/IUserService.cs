@@ -84,11 +84,11 @@ namespace UserLottery.Service.IModuleServices
         [Service(Date = "2018-6-28", Director = "renjun", Name = "找回密码发送验证码")]
         Task<CommonActionResult> SendValidateCodeToUserMobileByForgetPWD(string mobile);
 
-        [Service(Date = "2018-6-28", Director = "renjun", Name = " 检查是否和登录密码一至")]
-        Task<CommonActionResult> CheckIsSame2LoginPassword(string newPwd, string userId);
+        //[Service(Date = "2018-6-28", Director = "renjun", Name = " 检查是否和登录密码一至")]
+        //Task<CommonActionResult> CheckIsSame2LoginPassword(string newPwd, string userId);
 
         [Service(Date = "2018-6-28", Director = "renjun", Name = " 设置资金密码")]
-        Task<CommonActionResult> SetBalancePassword(string oldPassword, bool isSetPwd, string newPassword, string userId);
+        Task<CommonActionResult> SetBalancePassword(string oldPassword, bool isSetPwd, string newPassword, string userId, string placeList);
 
         [Service(Date = "2018-6-28", Director = "renjun", Name = " 设置资金密码类型")]
         Task<CommonActionResult> SetBalancePasswordNeedPlace(string password, string placeList, string userId);
