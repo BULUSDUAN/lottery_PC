@@ -399,6 +399,18 @@ namespace Lottery.Api.Controllers
                 userInfo.LoginName = mobile;
                 userInfo.Password = password;
                 userInfo.Mobile = mobile;
+                switch (schemeSource)
+                {
+                    case SchemeSource.Android:
+                        userInfo.ComeFrom = "Android";
+                        break;
+                    case SchemeSource.Iphone:
+                        userInfo.ComeFrom = "IOS";
+                        break;
+                    case SchemeSource.Touch:
+                        userInfo.ComeFrom = "TOUCH";
+                        break;
+                }
                 param["validateCode"] = validateCode;
                 param["mobile"] = mobile;
                 param["source"] = (int)schemeSource;

@@ -787,7 +787,7 @@ namespace KaSon.FrameWork.ORM.Helper
             left join E_Authentication_Mobile m on r.userid = m.userid
             left join C_BankCard b on r.userid = b.userid
             LEFT JOIN C_User_Balance balance ON balance.UserId = r.UserId
-            left join E_Authentication_RealName n on r.userid = n.userid where r.userid ={userId}";
+            left join E_Authentication_RealName n on r.userid = n.userid where r.userid ='{userId}'";
             var array = DB.CreateSQLQuery(sql).First<UserBindInfos>();
             if (array != null)
             {
