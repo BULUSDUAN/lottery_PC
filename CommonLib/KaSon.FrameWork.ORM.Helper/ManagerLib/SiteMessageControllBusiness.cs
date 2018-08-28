@@ -128,7 +128,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 return;
             var manager = new InnerMailManager();
 
-            DB.Begin();
+            //DB.Begin();
             try
             {
                 foreach (var item in arrReceive)
@@ -147,11 +147,11 @@ namespace KaSon.FrameWork.ORM.Helper
                     };
                     manager.AddSiteMessageInnerMailListNew(mail);
                 }
-                DB.Commit();
+                //DB.Commit();
             }
-            catch (Exception ex)
+            catch  (Exception ex)
             {
-                DB.Rollback();
+                //DB.Rollback();
                 throw ex;
             }
           
