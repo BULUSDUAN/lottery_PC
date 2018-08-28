@@ -29,6 +29,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using KaSon.FrameWork.ORM.Provider;
+using KaSon.FrameWork.ORM.Helper;
 
 namespace BettingLottery.Service.Host
 {
@@ -111,7 +112,15 @@ namespace BettingLottery.Service.Host
             {
                 Console.WriteLine($"服务端启动成功，{DateTime.Now}。");
             }
-             KaSon.FrameWork.ORM.Helper.BusinessLib.Sports_BusinessBy.StartTaskByWriteChaseOrderToDb(int.Parse(Sports_SchemeJobSeconds));
+            //初始化内存期号 k_todo，可用彩种类型,执行一次
+            LotteryGameManager lotGm = new LotteryGameManager();
+
+            lotGm.StartInitData();
+
+            KaSon.FrameWork.ORM.Helper.BusinessLib.Sports_BusinessBy.StartTaskByWriteChaseOrderToDb(int.Parse(Sports_SchemeJobSeconds));
+
+       
+
         }
     }
 

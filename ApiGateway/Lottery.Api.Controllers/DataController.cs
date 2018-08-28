@@ -39,12 +39,16 @@ namespace Lottery.Api.Controllers
                 var p = JsonHelper.Decode(entity.Param);
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 string gameCode = p.GameCode;
+
+                param.Add("key", "Site.GameDelay." + gameCode.ToUpper());
+                var configtask =  _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/Data/QueryCoreConfigByKey");
+                param.Clear();
+              
                 param.Add("gameCode", gameCode);
                 var gameIssuseInfo = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Data/QueryCurrentIssuseInfo");
-                param.Clear();
-                param.Add("key", "Site.GameDelay." + gameCode.ToUpper());
-                var config = await _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/Data/QueryCoreConfigByKey");
+               
                 string DelayTime = string.Empty;
+                var config = await configtask;
                 if (config != null)
                 {
                     DelayTime = config.ConfigValue;

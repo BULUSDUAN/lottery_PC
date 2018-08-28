@@ -114,20 +114,79 @@ namespace KaSon.FrameWork.ORM.Helper
             //}
             return list;
         }
+        /// <summary>
+        /// 内存期号
+        /// </summary>
+        private static IList<C_Game_Issuse> C_Game_IssuseList = null;
+        private static IList<GameTypeInfo> C_GameTypeInfoList = null;
+
+        /// <summary>
+        ///  初始化内存期号 k_todo
+        /// </summary>
+        public  void StartInitData() {
+            if (C_Game_IssuseList == null) {
+
+                C_Game_IssuseList = this.DB.CreateQuery<C_Game_Issuse>().ToList();
+            }
+
+            if (C_GameTypeInfoList == null) {
+
+                C_GameTypeInfoList=(from g in DB.CreateQuery<C_Lottery_GameType>()
+                 join f in DB.CreateQuery<C_Lottery_Game>() on g.GameCode equals f.GameCode
+                 orderby g.GameType
+                 select new { g, f }
+                    ).ToList().Select(p => new GameTypeInfo
+                    {
+                        Game = new GameInfo
+                        {
+                            GameCode = p.g.GameCode,
+                            DisplayName = p.f.DisplayName
+                        },
+                        GameType = p.g.GameType,
+                        DisplayName = p.g.DisplayName,
+                    }).ToList();
+            }
+
+           
+        }
 
         public C_Game_Issuse QueryGameIssuseByKey(string gameCode, string gameType, string issuseNumber)
         {
+            if (C_Game_IssuseList != null)
+            {
+                var query = from g in C_Game_IssuseList
+                            where g.GameCode == gameCode
+                            && g.IssuseNumber == issuseNumber
+                            && (gameType == string.Empty || g.GameType == gameType)
+                            select g;
+                return query.FirstOrDefault();
+            }
+            else {
+                var query = from g in this.DB.CreateQuery<C_Game_Issuse>()
+                            where g.GameCode == gameCode
+                            && g.IssuseNumber == issuseNumber
+                            && (gameType == string.Empty || g.GameType == gameType)
+                            select g;
+                return query.FirstOrDefault();
+            }
           //  Session.Clear();
-            var query = from g in this.DB.CreateQuery<C_Game_Issuse>()
-                        where g.GameCode == gameCode
-                        && g.IssuseNumber == issuseNumber
-                        && (gameType == string.Empty || g.GameType == gameType)
-                        select g;
-            return query.FirstOrDefault();
+            //var query = from g in this.DB.CreateQuery<C_Game_Issuse>()
+            //            where g.GameCode == gameCode
+            //            && g.IssuseNumber == issuseNumber
+            //            && (gameType == string.Empty || g.GameType == gameType)
+            //            select g;
+            //return query.FirstOrDefault();
         }
-
+        /// <summary>
+        /// 优化 彩种类型  k_todo
+        /// </summary>
+        /// <returns></returns>
         public IList<GameTypeInfo> QueryEnableGameTypes()
         {
+
+            if (C_GameTypeInfoList != null) {
+                return C_GameTypeInfoList;
+            }
             return (from g in DB.CreateQuery<C_Lottery_GameType>()
                     join f in DB.CreateQuery<C_Lottery_Game>() on g.GameCode equals f.GameCode
                     orderby g.GameType

@@ -38,8 +38,8 @@ namespace Lottery.ApiGateway
                 {
                     options.Limits.MaxConcurrentConnections = 30000;
                     options.Limits.MaxConcurrentUpgradedConnections = 5000;
-                    options.Limits.MaxRequestBodySize = 500 * 1024;
-                    options.Limits.MaxResponseBufferSize= 500*1024 * 1024;
+                    options.Limits.MaxRequestBodySize = 800 * 1024;
+                    options.Limits.MaxResponseBufferSize=800*1024 * 1024;
                     
                     options.Limits.MinRequestBodyDataRate =
                         new MinDataRate(bytesPerSecond: 100, gracePeriod: TimeSpan.FromSeconds(10));
