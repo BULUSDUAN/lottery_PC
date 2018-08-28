@@ -41,14 +41,14 @@ namespace KaSon.FrameWork.ORM.Helper
         }
 
         /// <summary>
-        /// KASON
+        /// 红包使用配置 k_todo, make:是否可以放到内存，定时获取红包配置
         /// </summary>
         /// <param name="gameCode"></param>
         /// <returns></returns>
         public decimal QueryRedBagUseConfig(string gameCode)
         {
           //  this.Session.Clear();
-            return this.DB.CreateSQLQuery(string.Format("select DISTINCT [UsePercent] from [E_A20150919_红包使用配置] where gamecode='{0}'", gameCode)).First<decimal>();
+            return this.DB.CreateSQLQuery(string.Format("select DISTINCT TOP 1 [UsePercent] from [E_A20150919_红包使用配置] where gamecode='{0}'", gameCode)).First<decimal>();
         }
 
         public void AddWithdraw(C_Withdraw entity)

@@ -1232,7 +1232,9 @@ namespace KaSon.FrameWork.ORM.Helper
                      info.IssuseNumber, info.Amount, totalCount, info.TotalMatchCount, info.TotalMoney, stopTime, info.SchemeSource, info.Security,
                      SchemeType.GeneralBetting, true, false, user.UserId, user.AgentId, info.CurrentBetTime, info.ActivityType, info.Attach, false, redBagMoney,
                      canTicket ? ProgressStatus.Running : ProgressStatus.Waitting, canTicket ? TicketStatus.Ticketed : TicketStatus.Waitting);
+             //   IList<C_Sports_AnteCode> anteList = new List<C_Sports_AnteCode>();
 
+               
                 foreach (var item in info.AnteCodeList)
                 {
                     var entityAnteCode = new C_Sports_AnteCode
@@ -1250,11 +1252,11 @@ namespace KaSon.FrameWork.ORM.Helper
                         Odds = string.Empty,
                     };
                     anteCodeList.Add(entityAnteCode);
-                    DB.GetDal<C_Sports_AnteCode>().Add(entityAnteCode);
+                   
                     //sportsManager.AddSports_AnteCode(entityAnteCode);
                 }
-
-
+                //kson 批量优化录入
+                DB.GetDal<C_Sports_AnteCode>().BulkAdd(anteCodeList);
                 // 消费资金
                 string msg = info.GameCode == "BJDC" ? string.Format("{0}第{1}期投注", BettingHelper.FormatGameCode(info.GameCode), info.IssuseNumber)
                                                     : string.Format("{0} 投注", BettingHelper.FormatGameCode(info.GameCode));
