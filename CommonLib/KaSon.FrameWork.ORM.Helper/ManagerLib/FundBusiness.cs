@@ -53,7 +53,10 @@ namespace KaSon.FrameWork.ORM.Helper
                 {
                     throw new Exception("输入资金密码错误");
                 }
-                entity.NeedPwdPlace = placeList;
+            }
+            if (isSetPwd&& !entity.IsSetPwd)
+            {
+                entity.NeedPwdPlace= placeList;
             }
             entity.IsSetPwd = isSetPwd;
             entity.Password = Encipherment.MD5(string.Format("{0}{1}", newPassword, _gbKey)).ToUpper();
