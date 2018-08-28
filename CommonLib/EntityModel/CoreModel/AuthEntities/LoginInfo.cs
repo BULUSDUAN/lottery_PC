@@ -203,6 +203,15 @@ namespace EntityModel.CoreModel
         /// </summary>
         [ProtoMember(44)]
         public string NeedPwdPlace { get; set; }
+
+        /// <summary>
+        /// 获取现金金额
+        /// </summary>
+        public decimal GetTotalCashMoney()
+        {
+            return this.FillMoneyBalance + this.BonusBalance + this.CommissionBalance + this.ExpertsBalance;
+            //return this.FillMoneyBalance + this.BonusBalance + this.ExpertsBalance;
+        }
     }
 }
 

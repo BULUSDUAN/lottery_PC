@@ -1483,11 +1483,11 @@ namespace Lottery.Api.Controllers
                 {
                     throw new ArgumentException("提现时间早上9点到凌晨1点，请您明天9点再来，感谢配合");
                 }
-                Dictionary<string, object> param = new Dictionary<string, object>();
+                //Dictionary<string, object> param = new Dictionary<string, object>();
                 //param["userToken"] = token;
                 //var userinfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/LoginByUserToken");
-                param.Add("userId", userId);
-                var cashMoney = await _serviceProxyProvider.Invoke<UserBalanceInfo>(param, "api/user/QueryMyBalance");
+                //param.Add("userId", userId);
+                //var cashMoney = await _serviceProxyProvider.Invoke<UserBalanceInfo>(param, "api/user/QueryMyBalance");
                 Dictionary<string, object> bindParam = new Dictionary<string, object>();
                 bindParam["userId"] = userId;
                 var info = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
@@ -1507,7 +1507,7 @@ namespace Lottery.Api.Controllers
                         RealName = info.RealName,
                         BankName = info.BankName,
                         BankCardNumber = info.BankCardNumber,
-                        TotalCashMoney = cashMoney.GetTotalCashMoney()
+                        TotalCashMoney = info.GetTotalCashMoney()
                     }
                 });
             }
