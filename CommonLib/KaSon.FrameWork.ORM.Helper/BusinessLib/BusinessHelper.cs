@@ -15,6 +15,7 @@ using EntityModel.PayModel;
 using KaSon.FrameWork.Common.Sport;
 using KaSon.FrameWork.Analyzer.AnalyzerFactory;
 using EntityModel.CoreModel;
+using System.Threading.Tasks;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
@@ -316,50 +317,63 @@ namespace KaSon.FrameWork.ORM.Helper
             if (_enablePluginClass == null || _enablePluginClass.Count == 0)
                 _enablePluginClass = new PluginClassManager().QueryPluginClass(true);
 
+            //启动线程
+            Task.Factory.StartNew(()=>{
 
-            foreach (var plugin in _enablePluginClass)
-            {
-                try
+                foreach (var plugin in _enablePluginClass)
                 {
-                    if (typeof(T).FullName != plugin.InterfaceName) continue;
-
-
-                   
-
-                    if (plugin.StartTime !=null && plugin.StartTime > DateTime.Now) continue;//未开始
-                    if (plugin.EndTime != null && plugin.EndTime < DateTime.Now) continue;//已结束
-
-                    var fullName = plugin.ClassName + "," + plugin.AssemblyFileName;
-
-                    //kason
-                    string snamespace = plugin.AssemblyFileName;
-                    string classname = plugin.ClassName;
-                    //拆分,确定ClassName
-                    if (plugin.ClassName.Contains("."))
-                    {
-                        var arr = plugin.ClassName.Split('.');
-                        classname = arr[arr.Length - 1];
-                    }
-                    //var type = AssemblyRefHelper.GetType(classname, snamespace);
-                    var type = Type.GetType(fullName);
-                    if (type == null)
-                    {
-                        throw new ArgumentNullException("类型在当前域中不存在，或对应组件未加载：" + fullName);
-                    }
-                    var instance = Type.GetType(fullName).GetConstructor(Type.EmptyTypes).Invoke(new object[0]) as T;
-                    // object instance = Activator.CreateInstance(type); //创建实例
-                    //var i = Type.GetType(fullName).GetConstructor(Type.EmptyTypes).Invoke(new object[0]) as T;
-                    if (instance == null)
-                    {
-                        throw new ArgumentNullException("无法实例化对象：" + fullName);
-                    }
-                    //new Thread(() =>
-                    //{
                     try
                     {
-                        //type.GetMethod("ExecPlugin").Invoke(instance, new object[] { inputParam });
-                        instance.ExecPlugin(typeof(T).Name, inputParam);
-                        // i.ExecPlugin(typeof(T).Name, inputParam);
+                        if (typeof(T).FullName != plugin.InterfaceName) continue;
+
+
+
+
+                        if (plugin.StartTime != null && plugin.StartTime > DateTime.Now) continue;//未开始
+                        if (plugin.EndTime != null && plugin.EndTime < DateTime.Now) continue;//已结束
+
+                        var fullName = plugin.ClassName + "," + plugin.AssemblyFileName;
+
+                        //kason
+                        string snamespace = plugin.AssemblyFileName;
+                        string classname = plugin.ClassName;
+                        //拆分,确定ClassName
+                        if (plugin.ClassName.Contains("."))
+                        {
+                            var arr = plugin.ClassName.Split('.');
+                            classname = arr[arr.Length - 1];
+                        }
+                        //var type = AssemblyRefHelper.GetType(classname, snamespace);
+                        var type = Type.GetType(fullName);
+                        if (type == null)
+                        {
+                            throw new ArgumentNullException("类型在当前域中不存在，或对应组件未加载：" + fullName);
+                        }
+                        var instance = Type.GetType(fullName).GetConstructor(Type.EmptyTypes).Invoke(new object[0]) as T;
+                        // object instance = Activator.CreateInstance(type); //创建实例
+                        //var i = Type.GetType(fullName).GetConstructor(Type.EmptyTypes).Invoke(new object[0]) as T;
+                        if (instance == null)
+                        {
+                            throw new ArgumentNullException("无法实例化对象：" + fullName);
+                        }
+                        //new Thread(() =>
+                        //{
+                        try
+                        {
+                            //type.GetMethod("ExecPlugin").Invoke(instance, new object[] { inputParam });
+                            instance.ExecPlugin(typeof(T).Name, inputParam);
+                            // i.ExecPlugin(typeof(T).Name, inputParam);
+                        }
+                        catch (AggregateException ex)
+                        {
+                            throw new AggregateException(ex.Message);
+                        }
+                        catch (Exception ex)
+                        {
+                            // var writer = Common.Log.LogWriterGetter.GetLogWriter();
+                            writerLog.WriteLog("ERROR_ExecPlugin", "_ExecPlugin", (int)LogType.Error, string.Format("执行插件{0}出错", plugin.ClassName), ex.ToString());
+                        }
+                        //}).Start();
                     }
                     catch (AggregateException ex)
                     {
@@ -367,21 +381,14 @@ namespace KaSon.FrameWork.ORM.Helper
                     }
                     catch (Exception ex)
                     {
-                        // var writer = Common.Log.LogWriterGetter.GetLogWriter();
+                        //  var writer = Common.Log.LogWriterGetter.GetLogWriter();
                         writerLog.WriteLog("ERROR_ExecPlugin", "_ExecPlugin", (int)LogType.Error, string.Format("执行插件{0}出错", plugin.ClassName), ex.ToString());
                     }
-                    //}).Start();
                 }
-                catch (AggregateException ex)
-                {
-                    throw new AggregateException(ex.Message);
-                }
-                catch (Exception ex)
-                {
-                  //  var writer = Common.Log.LogWriterGetter.GetLogWriter();
-                    writerLog.WriteLog("ERROR_ExecPlugin", "_ExecPlugin", (int)LogType.Error, string.Format("执行插件{0}出错", plugin.ClassName), ex.ToString());
-                }
-            }
+
+            });
+
+       
 
         }
 

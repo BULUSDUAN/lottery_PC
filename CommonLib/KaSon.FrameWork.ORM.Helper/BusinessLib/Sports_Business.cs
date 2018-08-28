@@ -3248,7 +3248,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     throw new LogicException(string.Format("奖期{0}结束时间为{1}", issuse.IssuseNumber, currentIssuseNumber.LocalStopTime.ToString("yyyy-MM-dd HH:mm")));
                 currentIssuseNumberList.Add(currentIssuseNumber);
             }
-            DB.Begin();
+           
             try
             {
                 
@@ -3362,124 +3362,135 @@ namespace KaSon.FrameWork.ORM.Helper
                         }
                     orderIndex++;
                 }
-
-                if (info.IssuseNumberList.Count > 1)
+                DB.Begin();
+                try
                 {
-                    #region 发送站内消息：手机短信或站内信
 
-                    var pList = new List<string>();
-                    pList.Add(string.Format("{0}={1}", "[Chase_Id]", keyLine));
-                    pList.Add(string.Format("{0}={1}", "[UserName]", user.DisplayName));
-                    pList.Add(string.Format("{0}={1}", "[IssuseCount]", info.IssuseNumberList.Count));
-                    pList.Add(string.Format("{0}={1}", "[SchemeTotalMoney]", totalBetMoney));
-                    //发送短信
-                    new SiteMessageControllBusiness().DoSendSiteMessage(user.UserId, "", "ON_User_Create_ChaseScheme", pList.ToArray());
+
+                    if (info.IssuseNumberList.Count > 1)
+                    {
+                        #region 发送站内消息：手机短信或站内信
+
+                        var pList = new List<string>();
+                        pList.Add(string.Format("{0}={1}", "[Chase_Id]", keyLine));
+                        pList.Add(string.Format("{0}={1}", "[UserName]", user.DisplayName));
+                        pList.Add(string.Format("{0}={1}", "[IssuseCount]", info.IssuseNumberList.Count));
+                        pList.Add(string.Format("{0}={1}", "[SchemeTotalMoney]", totalBetMoney));
+                        //发送短信
+                        new SiteMessageControllBusiness().DoSendSiteMessage(user.UserId, "", "ON_User_Create_ChaseScheme", pList.ToArray());
+
+                        #endregion
+                    }
+
+                    #region 支付
+
+                    //摇钱树订单，不扣用户的钱，扣代理商余额
+                    if (info.SchemeSource != SchemeSource.YQS
+                        && info.SchemeSource != SchemeSource.YQS_Advertising
+                        && info.SchemeSource != SchemeSource.NS_Bet
+                        && info.SchemeSource != SchemeSource.YQS_Bet
+                        && info.SchemeSource != SchemeSource.Publisher_0321
+                        && info.SchemeSource != SchemeSource.WX_GiveLottery
+                        && info.SchemeSource != SchemeSource.Web_GiveLottery
+                        && info.SchemeSource != SchemeSource.LuckyDraw)
+                    {
+                        // 消费资金
+                        //BusinessHelper.Payout_2End(BusinessHelper.FundCategory_Betting, schemeId, schemeId, true, "Bet", balancePassword, userId, AccountType.Common, currentIssuseMoney
+                        //    , string.Format("{0}第{1}期投注", gameInfo.DisplayName, issuse.IssuseNumber));
+                        if (info.IssuseNumberList.Count == 1)
+                        {
+                            //普通投注
+                            var msg = string.Format("{0}第{1}期投注", gameInfo.DisplayName, info.IssuseNumberList[0].IssuseNumber);
+                            if (redBagMoney > 0M)
+                            {
+                                var fundManager = new FundManager();
+                                var percent = fundManager.QueryRedBagUseConfig(info.GameCode);
+                                var maxUseMoney = info.TotalMoney * percent / 100;
+                                if (redBagMoney > maxUseMoney)
+                                    throw new LogicException(string.Format("本彩种只允许使用红包为订单总金额的{0:N2}%，即{1:N2}元", percent, maxUseMoney));
+                                //红包支付
+                                BusinessHelper.Payout_RedBag_To_End(BusinessHelper.FundCategory_Betting, userId, keyLine, redBagMoney, msg, "Bet", balancePassword);
+                            }
+                            //其它账户支付
+                            BusinessHelper.Payout_To_End(BusinessHelper.FundCategory_Betting, userId, keyLine, totalBetMoney - redBagMoney
+                                , msg, "Bet", balancePassword);
+                        }
+                        else
+                        {
+                            //追号投注
+                            var msg = string.Format("追号订单{0}投注", keyLine);
+                            if (redBagMoney > 0M)
+                            {
+                                var fundManager = new FundManager();
+                                var percent = fundManager.QueryRedBagUseConfig(info.GameCode);
+                                var maxUseMoney = info.TotalMoney * percent / 100;
+                                if (redBagMoney > maxUseMoney)
+                                    throw new LogicException(string.Format("本彩种只允许使用红包为订单总金额的{0}%，即{1:N2}元", percent, maxUseMoney));
+                                //红包支付
+                                BusinessHelper.Payout_RedBag_To_End(BusinessHelper.FundCategory_Betting, userId, keyLine, redBagMoney, msg, "Bet", balancePassword);
+                            }
+                            //其它账户支付
+                            BusinessHelper.Payout_To_Frozen(BusinessHelper.FundCategory_Betting, userId, keyLine, totalBetMoney
+                                , msg, "Bet", balancePassword);
+                        }
+                    }
 
                     #endregion
+                    DB.Commit();
                 }
-
-                #region 支付
-
-                //摇钱树订单，不扣用户的钱，扣代理商余额
-                if (info.SchemeSource != SchemeSource.YQS
-                    && info.SchemeSource != SchemeSource.YQS_Advertising
-                    && info.SchemeSource != SchemeSource.NS_Bet
-                    && info.SchemeSource != SchemeSource.YQS_Bet
-                    && info.SchemeSource != SchemeSource.Publisher_0321
-                    && info.SchemeSource != SchemeSource.WX_GiveLottery
-                    && info.SchemeSource != SchemeSource.Web_GiveLottery
-                    && info.SchemeSource != SchemeSource.LuckyDraw)
+                catch (Exception ex1)
                 {
-                    // 消费资金
-                    //BusinessHelper.Payout_2End(BusinessHelper.FundCategory_Betting, schemeId, schemeId, true, "Bet", balancePassword, userId, AccountType.Common, currentIssuseMoney
-                    //    , string.Format("{0}第{1}期投注", gameInfo.DisplayName, issuse.IssuseNumber));
-                    if (info.IssuseNumberList.Count == 1)
-                    {
-                        //普通投注
-                        var msg = string.Format("{0}第{1}期投注", gameInfo.DisplayName, info.IssuseNumberList[0].IssuseNumber);
-                        if (redBagMoney > 0M)
-                        {
-                            var fundManager = new FundManager();
-                            var percent = fundManager.QueryRedBagUseConfig(info.GameCode);
-                            var maxUseMoney = info.TotalMoney * percent / 100;
-                            if (redBagMoney > maxUseMoney)
-                                throw new LogicException(string.Format("本彩种只允许使用红包为订单总金额的{0:N2}%，即{1:N2}元", percent, maxUseMoney));
-                            //红包支付
-                            BusinessHelper.Payout_RedBag_To_End(BusinessHelper.FundCategory_Betting, userId, keyLine, redBagMoney, msg, "Bet", balancePassword);
-                        }
-                        //其它账户支付
-                        BusinessHelper.Payout_To_End(BusinessHelper.FundCategory_Betting, userId, keyLine, totalBetMoney - redBagMoney
-                            , msg, "Bet", balancePassword);
-                    }
-                    else
-                    {
-                        //追号投注
-                        var msg = string.Format("追号订单{0}投注", keyLine);
-                        if (redBagMoney > 0M)
-                        {
-                            var fundManager = new FundManager();
-                            var percent = fundManager.QueryRedBagUseConfig(info.GameCode);
-                            var maxUseMoney = info.TotalMoney * percent / 100;
-                            if (redBagMoney > maxUseMoney)
-                                throw new LogicException(string.Format("本彩种只允许使用红包为订单总金额的{0}%，即{1:N2}元", percent, maxUseMoney));
-                            //红包支付
-                            BusinessHelper.Payout_RedBag_To_End(BusinessHelper.FundCategory_Betting, userId, keyLine, redBagMoney, msg, "Bet", balancePassword);
-                        }
-                        //其它账户支付
-                        BusinessHelper.Payout_To_Frozen(BusinessHelper.FundCategory_Betting, userId, keyLine, totalBetMoney
-                            , msg, "Bet", balancePassword);
-                    }
+                    DB.Rollback();
+                    throw ex1;
                 }
-
-                #endregion
-                DB.Commit();
             }
             catch (Exception ex)
             {
-                DB.Rollback();
+               // DB.Rollback();
                 throw ex;
             }
 
-            try {
-
-           
-                
-            //}
-            watch.Stop();
-            if (watch.Elapsed.TotalMilliseconds > 1000)
-                writerLog.WriteLog("LotteryBetting", "SQL", (int)LogType.Warning, "存入订单、号码、扣钱操作", string.Format("总用时：{0}毫秒", watch.Elapsed.TotalMilliseconds));
-
-
-            watch.Reset();
-            if (RedisHelper.EnableRedis)
+            try
             {
-                if (info.IssuseNumberList.Count > 1)
+
+
+
+                //}
+                // watch.Stop();
+                //if (watch.Elapsed.TotalMilliseconds > 1000)
+                //    writerLog.WriteLog("LotteryBetting", "SQL", (int)LogType.Warning, "存入订单、号码、扣钱操作", string.Format("总用时：{0}毫秒", watch.Elapsed.TotalMilliseconds));
+
+
+                //watch.Reset();
+                if (RedisHelper.EnableRedis)
                 {
-                    //追号
-                    redisOrderList.KeyLine = keyLine;
-                    redisOrderList.StopAfterBonus = info.StopAfterBonus;
-                    RedisOrderBusiness.AddOrderToWaitSplitList(info.GameCode, redisOrderList);
-                    //序列化订单到文件
-                    SerializChaseOrder(info, keyLine);
+                    if (info.IssuseNumberList.Count > 1)
+                    {
+                        //追号
+                        redisOrderList.KeyLine = keyLine;
+                        redisOrderList.StopAfterBonus = info.StopAfterBonus;
+                        RedisOrderBusiness.AddOrderToWaitSplitList(info.GameCode, redisOrderList);
+                        //序列化订单到文件
+                        SerializChaseOrder(info, keyLine);
+                    }
+                    else
+                    {
+                        //普通投注
+                        if (redisOrderList.OrderList.Count > 0)
+                            RedisOrderBusiness.AddOrderToRedis(info.GameCode, redisOrderList.OrderList[0]);
+                    }
                 }
-                else
-                {
-                    //普通投注
-                    if (redisOrderList.OrderList.Count > 0)
-                        RedisOrderBusiness.AddOrderToRedis(info.GameCode, redisOrderList.OrderList[0]);
-                }
-            }
 
-            //拆票
-            if (!RedisHelper.EnableRedis)
-                DoSplitOrderTickets(firstSchemeId);
+                //拆票
+                if (!RedisHelper.EnableRedis)
+                    DoSplitOrderTickets(firstSchemeId);
 
-            watch.Stop();
-            if (watch.Elapsed.TotalMilliseconds > 1000)
-                writerLog.WriteLog("LotteryBetting", "Redis", (int)LogType.Information, "投注耗时记录", string.Format("订单{0}总用时{1}毫秒", keyLine, watch.Elapsed.TotalMilliseconds));
+                //watch.Stop();
+                if (watch.Elapsed.TotalMilliseconds > 1000)
+                    writerLog.WriteLog("LotteryBetting", "Redis", (int)LogType.Information, "投注耗时记录", string.Format("订单{0}总用时{1}毫秒", keyLine, watch.Elapsed.TotalMilliseconds));
 
-            //刷新用户在Redis中的余额
-            BusinessHelper.RefreshRedisUserBalance(userId);
+                //刷新用户在Redis中的余额
+                BusinessHelper.RefreshRedisUserBalance(userId);
             }
             catch (Exception ex)
             {

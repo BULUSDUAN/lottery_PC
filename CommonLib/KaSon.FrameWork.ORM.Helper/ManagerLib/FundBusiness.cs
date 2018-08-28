@@ -42,7 +42,7 @@ namespace KaSon.FrameWork.ORM.Helper
         }
 
         private string _gbKey = "Q56GtyNkop97H334TtyturfgErvvv98a";
-        public void SetBalancePassword(string userId, string oldPassword, bool isSetPwd, string newPassword)
+        public void SetBalancePassword(string userId, string oldPassword, bool isSetPwd, string newPassword,string placeList)
         {
             var balanceManager = new UserBalanceManager();
             var entity = balanceManager.QueryUserBalance(userId);
@@ -53,6 +53,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 {
                     throw new Exception("输入资金密码错误");
                 }
+                entity.NeedPwdPlace = placeList;
             }
             entity.IsSetPwd = isSetPwd;
             entity.Password = Encipherment.MD5(string.Format("{0}{1}", newPassword, _gbKey)).ToUpper();
