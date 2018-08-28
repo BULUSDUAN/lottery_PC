@@ -1211,8 +1211,8 @@ namespace KaSon.FrameWork.ORM.Helper
             }
 
             //投注流程计时
-            var watch = new Stopwatch();
-            watch.Start();
+         //   var watch = new Stopwatch();
+          //  watch.Start();
             info.GameCode = info.GameCode.ToUpper();
             info.GameType = info.GameType.ToUpper();
             if (string.IsNullOrEmpty(schemeId))
@@ -1281,13 +1281,13 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             //}
 
-            watch.Stop();
-            if (watch.Elapsed.TotalMilliseconds > 1000)
-                writerLog.WriteLog("SportsBetting", "SQL", (int)LogType.Warning, "存入订单、号码、扣钱操作", string.Format("总用时：{0}毫秒", watch.Elapsed.TotalMilliseconds));
+            //watch.Stop();
+            //if (watch.Elapsed.TotalMilliseconds > 1000)
+            //    writerLog.WriteLog("SportsBetting", "SQL", (int)LogType.Warning, "存入订单、号码、扣钱操作", string.Format("总用时：{0}毫秒", watch.Elapsed.TotalMilliseconds));
 
             #region 拆票
 
-            watch.Restart();
+          //  watch.Restart();
             if (RedisHelper.EnableRedis)
             {
                 var reidsWaitOrder = new RedisWaitTicketOrder
@@ -1303,9 +1303,9 @@ namespace KaSon.FrameWork.ORM.Helper
                 DoSplitOrderTickets(schemeId);
             }
 
-            watch.Stop();
-            if (watch.Elapsed.TotalMilliseconds > 1000)
-                writerLog.WriteLog("SportsBetting", "Redis",(int) LogType.Warning, "拆票", string.Format("总用时：{0}毫秒", watch.Elapsed.TotalMilliseconds));
+            //watch.Stop();
+            //if (watch.Elapsed.TotalMilliseconds > 1000)
+            //    writerLog.WriteLog("SportsBetting", "Redis",(int) LogType.Warning, "拆票", string.Format("总用时：{0}毫秒", watch.Elapsed.TotalMilliseconds));
 
             #endregion
 
