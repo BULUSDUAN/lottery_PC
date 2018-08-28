@@ -106,7 +106,7 @@ namespace UserLottery.Service.IModuleServices
         Task<CommonActionResult> RequestWithdraw_Step2(Withdraw_RequestInfo info, string userId, string balancepwd);
 
         [Service(Date = "2018-7-03", Director = "renjun", Name = "提现记录")]
-        Task<Withdraw_QueryInfoCollection> QueryMyWithdrawList(WithdrawStatus? status, int pageIndex, int pageSize, string userId);
+        Task<Withdraw_QueryInfoCollection> QueryMyWithdrawList(int status, int pageIndex, int pageSize, string userId);
 
         [Service(Date = "2018-7-30", Director = "renjun", Name = "QueryYqidRegisterByAgentId方法的手机接口")]
         Task<string> QueryYqidRegisterByAgentIdToApp(string userId);

@@ -1121,5 +1121,56 @@ namespace KaSon.FrameWork.Common.Utilities {
         {
             return Math.Floor(key * 100)/100.0m;
         }
+
+        /// <summary>
+        /// 返回隐藏中间的字符串
+        /// </summary>
+        /// <param name="Input">输入</param>
+        /// <returns>输出</returns>
+        public static string GetxxxString(string Input)
+        {
+            string Output = "";
+            switch (Input.Length)
+            {
+                case 1:
+                    Output = "*";
+                    break;
+                case 2:
+                    Output = Input[0] + "*";
+                    break;
+                case 0:
+                    Output = "";
+                    break;
+                default:
+                    Output = Input.Substring(0, 1);
+                    for (int i = 0; i < Input.Length - 1; i++)
+                    {
+                        Output += "*";
+                    }
+                    Output += Input.Substring(Input.Length - 1, 0);
+                    break;
+            }
+            return Output;
+        }
+
+        /// <summary>
+        /// 返回隐藏中间的身份证号或者银行卡号
+        /// </summary>
+        /// <param name="Input">输入</param>
+        /// <returns>输出</returns>
+        public static string GetBankCardNumberxxxString(string Input)
+        {
+            string Output = "";
+            if (Input.Length > 7)
+            {
+                Output = Input.Substring(0, 5);
+                for (int i = 5; i < 8; i++)
+                {
+                    Output += "*";
+                }
+                Output += Input.Substring(7, Input.Length - 7);
+            }
+            return Output;
+        }
     }
 }

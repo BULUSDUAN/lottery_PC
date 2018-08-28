@@ -437,10 +437,10 @@ namespace KaSon.FrameWork.ORM.Helper
             return ubkey;
         }
 
-        public Withdraw_QueryInfoCollection QueryWithdrawList(string userId, WithdrawAgentType? agent, WithdrawStatus? status, decimal minMoney, decimal maxMoney, int sortType, int pageIndex, int pageSize, string orderId = "")
+        public Withdraw_QueryInfoCollection QueryWithdrawList(string userId, WithdrawAgentType? agent, int status, decimal minMoney, decimal maxMoney, int sortType, int pageIndex, int pageSize, string orderId = "")
         {
-            var statusList = new List<int>();
-            if (status.HasValue) statusList.Add((int)status.Value);
+            //var statusList = new List<int>();
+            //statusList.Add(status);
 
             var result = new Withdraw_QueryInfoCollection();
             var totalCount = 0;

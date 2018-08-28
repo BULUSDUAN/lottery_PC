@@ -93,8 +93,8 @@ namespace Lottery.Api.Controllers
                         FreezeBalance = ConvertHelper.getTwoplaces(balance.FreezeBalance),
                         FillMoneyBalance = ConvertHelper.getTwoplaces(balance.FillMoneyBalance),
                         Mobile = string.IsNullOrEmpty(bindInfo.Mobile) ? string.Empty : Regex.Replace(bindInfo.Mobile, "(\\d{3})\\d{3}(\\d{5})", "$1***$2"), //mobile == null ? string.Empty : mobile.Mobile,
-                        RealName = string.IsNullOrEmpty(bindInfo.RealName) ? string.Empty : GetxxxString(bindInfo.RealName), // realName == null ? string.Empty : realName.RealName,
-                        IdCardNumber = string.IsNullOrEmpty(bindInfo.IdCardNumber) ? string.Empty : GetBankCardNumberxxxString(bindInfo.IdCardNumber), // realName == null ? string.Empty : realName.IdCardNumber,
+                        RealName = string.IsNullOrEmpty(bindInfo.RealName) ? string.Empty : ConvertHelper.GetxxxString(bindInfo.RealName), // realName == null ? string.Empty : realName.RealName,
+                        IdCardNumber = string.IsNullOrEmpty(bindInfo.IdCardNumber) ? string.Empty : ConvertHelper.GetBankCardNumberxxxString(bindInfo.IdCardNumber), // realName == null ? string.Empty : realName.IdCardNumber,
                         IsSetBalancePwd = balance.IsSetPwd,
                         NeedBalancePwdPlace = string.IsNullOrEmpty(balance.NeedPwdPlace) ? string.Empty : balance.NeedPwdPlace,
                         IsBingBankCard = !string.IsNullOrEmpty(bindInfo.IdCardNumber), // bankInfo == null ? false : !string.IsNullOrEmpty(bankInfo.UserId),
@@ -106,7 +106,7 @@ namespace Lottery.Api.Controllers
                         HideDisplayNameCount = loginInfo.HideDisplayNameCount,
 
                         #region 新字段
-                        BankCardNumber = string.IsNullOrEmpty(bankInfo.BankCardNumber) ? "" : GetBankCardNumberxxxString(bankInfo.BankCardNumber),
+                        BankCardNumber = string.IsNullOrEmpty(bankInfo.BankCardNumber) ? "" : ConvertHelper.GetBankCardNumberxxxString(bankInfo.BankCardNumber),
                         BankName = string.IsNullOrEmpty(bankInfo.BankName) ? "" : bankInfo.BankName,
                         BankSubName = string.IsNullOrEmpty(bankInfo.BankSubName) ? "" : bankInfo.BankSubName,
                         #endregion
@@ -137,59 +137,6 @@ namespace Lottery.Api.Controllers
             }
 
         }
-
-        /// <summary>
-        /// 返回隐藏中间的字符串
-        /// </summary>
-        /// <param name="Input">输入</param>
-        /// <returns>输出</returns>
-        public static string GetxxxString(string Input)
-        {
-            string Output = "";
-            switch (Input.Length)
-            {
-                case 1:
-                    Output = "*";
-                    break;
-                case 2:
-                    Output = Input[0] + "*";
-                    break;
-                case 0:
-                    Output = "";
-                    break;
-                default:
-                    Output = Input.Substring(0, 1);
-                    for (int i = 0; i < Input.Length - 1; i++)
-                    {
-                        Output += "*";
-                    }
-                    Output += Input.Substring(Input.Length - 1, 0);
-                    break;
-            }
-            return Output;
-        }
-
-        /// <summary>
-        /// 返回隐藏中间的身份证号
-        /// </summary>
-        /// <param name="Input">输入</param>
-        /// <returns>输出</returns>
-        public static string GetBankCardNumberxxxString(string Input)
-        {
-            string Output = "";
-            if (Input.Length > 7)
-            {
-                Output = Input.Substring(0, 5);
-                for (int i = 5; i < 8; i++)
-                {
-                    Output += "*";
-                }
-                Output += Input.Substring(7, Input.Length - 7);
-            }
-            return Output;
-        }
-
-
 
         #region 还需要的成长值
 
@@ -511,8 +458,8 @@ namespace Lottery.Api.Controllers
                                 FreezeBalance = ConvertHelper.getTwoplaces(balance.FreezeBalance),
                                 FillMoneyBalance = ConvertHelper.getTwoplaces(balance.FillMoneyBalance),
                                 Mobile = string.IsNullOrEmpty(bindInfo.Mobile) ? string.Empty : Regex.Replace(bindInfo.Mobile, "(\\d{3})\\d{3}(\\d{5})", "$1***$2"), //mobile == null ? string.Empty : mobile.Mobile,
-                                RealName = string.IsNullOrEmpty(bindInfo.RealName) ? string.Empty : GetxxxString(bindInfo.RealName), // realName == null ? string.Empty : realName.RealName,
-                                IdCardNumber = string.IsNullOrEmpty(bindInfo.IdCardNumber) ? string.Empty : GetBankCardNumberxxxString(bindInfo.IdCardNumber), // realName == null ? string.Empty : realName.IdCardNumber,
+                                RealName = string.IsNullOrEmpty(bindInfo.RealName) ? string.Empty : ConvertHelper.GetxxxString(bindInfo.RealName), // realName == null ? string.Empty : realName.RealName,
+                                IdCardNumber = string.IsNullOrEmpty(bindInfo.IdCardNumber) ? string.Empty : ConvertHelper.GetBankCardNumberxxxString(bindInfo.IdCardNumber), // realName == null ? string.Empty : realName.IdCardNumber,
                                 IsSetBalancePwd = balance.IsSetPwd,
                                 NeedBalancePwdPlace = string.IsNullOrEmpty(balance.NeedPwdPlace) ? string.Empty : balance.NeedPwdPlace,
                                 IsBingBankCard = !string.IsNullOrEmpty(bindInfo.IdCardNumber), // bankInfo == null ? false : !string.IsNullOrEmpty(bankInfo.UserId),
@@ -524,7 +471,7 @@ namespace Lottery.Api.Controllers
                                 HideDisplayNameCount = loginInfo.HideDisplayNameCount,
 
                                 #region 新字段
-                                BankCardNumber = string.IsNullOrEmpty(bankInfo.BankCardNumber) ? "" : GetBankCardNumberxxxString(bankInfo.BankCardNumber),
+                                BankCardNumber = string.IsNullOrEmpty(bankInfo.BankCardNumber) ? "" : ConvertHelper.GetBankCardNumberxxxString(bankInfo.BankCardNumber),
                                 BankName = string.IsNullOrEmpty(bankInfo.BankName) ? "" : bankInfo.BankName,
                                 BankSubName = string.IsNullOrEmpty(bankInfo.BankSubName) ? "" : bankInfo.BankSubName,
                                 #endregion
@@ -1369,30 +1316,19 @@ namespace Lottery.Api.Controllers
                 if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userToken) || string.IsNullOrEmpty(loginName))
                     throw new ArgumentException("传入参数信息有误！");
                 string tokenuserId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
-                if(tokenuserId!=userId)
+                if (tokenuserId != userId)
                     throw new ArgumentException("token验证失败！");
-                //if (!CanDoLoadUserInfo(loginName))
-                //    throw new Exception("刷新频繁，请稍后再试");
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param["userId"] = userId;
-                var loginInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/GetLocalLoginByUserId");
-                if (loginInfo == null)
-                    throw new ArgumentException("未查询到当前用户信息！");
-                var isBetHM = true;
                 Dictionary<string, object> bindParam = new Dictionary<string, object>();
                 bindParam["userId"] = userId;
                 var bindInfo = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
-                //var mobile = WCFClients.ExternalClient.GetMyMobileInfo(userToken);
-                //var realName = WCFClients.ExternalClient.GetMyRealNameInfo(userToken);
+                if (bindInfo == null)
+                    throw new ArgumentException("未查询到当前用户信息！");
                 Dictionary<string, object> balanceParam = new Dictionary<string, object>();
                 balanceParam["userId"] = userId;
-                var balance = await _serviceProxyProvider.Invoke<UserBalanceInfo>(balanceParam, "api/user/QueryMyBalance");
-
-                var bankInfo = await _serviceProxyProvider.Invoke<C_BankCard>(balanceParam, "api/user/QueryBankCard");
-                if (bankInfo == null) bankInfo = new C_BankCard();
-                //var InnerMailUnReadList = WCFClients.GameQueryClient.QueryUnReadInnerMailListByReceiver(loginInfo.UserId, 0, 1000000, InnerMailHandleType.UnRead);
-
-                var unReadCount = await _serviceProxyProvider.Invoke<int>(balanceParam, "api/user/GetMyUnreadInnerMailCount");
+                //var balance = await _serviceProxyProvider.Invoke<UserBalanceInfo>(balanceParam, "api/user/QueryMyBalance");
+                //var unReadCount = await _serviceProxyProvider.Invoke<int>(balanceParam, "api/user/GetMyUnreadInnerMailCount");
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
@@ -1401,33 +1337,32 @@ namespace Lottery.Api.Controllers
                     Value = new
                     {
                         UserToken = userToken,
-                        DisplayName = loginInfo.DisplayName,
-                        LoginName = loginInfo.LoginName,
-                        UserId = loginInfo.UserId,
-                        VipLevel = loginInfo.VipLevel,
-                        CommissionBalance = ConvertHelper.getTwoplaces(balance.CommissionBalance),
+                        DisplayName = bindInfo.DisplayName,
+                        LoginName = bindInfo.DisplayName,
+                        UserId = bindInfo.UserId,
+                        VipLevel = bindInfo.VipLevel,
+                        CommissionBalance = ConvertHelper.getTwoplaces(bindInfo.CommissionBalance),
                         //CommissionBalance = 0,
-                        ExpertsBalance = ConvertHelper.getTwoplaces(balance.ExpertsBalance),
-                        BonusBalance = ConvertHelper.getTwoplaces(balance.BonusBalance),
-                        FreezeBalance = ConvertHelper.getTwoplaces(balance.FreezeBalance),
-                        FillMoneyBalance = ConvertHelper.getTwoplaces(balance.FillMoneyBalance),
+                        ExpertsBalance = ConvertHelper.getTwoplaces(bindInfo.ExpertsBalance),
+                        BonusBalance = ConvertHelper.getTwoplaces(bindInfo.BonusBalance),
+                        FreezeBalance = ConvertHelper.getTwoplaces(bindInfo.FreezeBalance),
+                        FillMoneyBalance = ConvertHelper.getTwoplaces(bindInfo.FillMoneyBalance),
                         Mobile = string.IsNullOrEmpty(bindInfo.Mobile) ? string.Empty : Regex.Replace(bindInfo.Mobile, "(\\d{3})\\d{3}(\\d{5})", "$1***$2"), //mobile == null ? string.Empty : mobile.Mobile,
-                        RealName = string.IsNullOrEmpty(bindInfo.RealName) ? string.Empty : GetxxxString(bindInfo.RealName), // realName == null ? string.Empty : realName.RealName,
-                        IdCardNumber = string.IsNullOrEmpty(bindInfo.IdCardNumber) ? string.Empty : GetBankCardNumberxxxString(bindInfo.IdCardNumber), // realName == null ? string.Empty : realName.IdCardNumber,
-                        IsSetBalancePwd = balance.IsSetPwd,
-                        NeedBalancePwdPlace = string.IsNullOrEmpty(balance.NeedPwdPlace) ? string.Empty : balance.NeedPwdPlace,
+                        RealName = string.IsNullOrEmpty(bindInfo.RealName) ? string.Empty : ConvertHelper.GetxxxString(bindInfo.RealName), // realName == null ? string.Empty : realName.RealName,
+                        IdCardNumber = string.IsNullOrEmpty(bindInfo.IdCardNumber) ? string.Empty : ConvertHelper.GetBankCardNumberxxxString(bindInfo.IdCardNumber), // realName == null ? string.Empty : realName.IdCardNumber,
+                        IsSetBalancePwd = bindInfo.IsSetPwd,
+                        NeedBalancePwdPlace = string.IsNullOrEmpty(bindInfo.NeedPwdPlace) ? string.Empty : bindInfo.NeedPwdPlace,
                         IsBingBankCard = !string.IsNullOrEmpty(bindInfo.IdCardNumber), // bankInfo == null ? false : !string.IsNullOrEmpty(bankInfo.UserId),
-                        UserGrowth = balance.UserGrowth,
-                        RedBagBalance = ConvertHelper.getTwoplaces(balance.RedBagBalance),
-                        NeedGrowth = GrowthStatus(balance.UserGrowth),
+                        UserGrowth = bindInfo.UserGrowth,
+                        RedBagBalance = ConvertHelper.getTwoplaces(bindInfo.RedBagBalance),
+                        NeedGrowth = GrowthStatus(bindInfo.UserGrowth),
                         IsBetHM = true,
-                        UnReadMailCount = unReadCount,
-                        HideDisplayNameCount = loginInfo.HideDisplayNameCount,
-
+                        UnReadMailCount = 0, //unReadCount,
+                        HideDisplayNameCount = bindInfo.HideDisplayNameCount,
                         #region 新字段
-                        BankCardNumber = string.IsNullOrEmpty(bankInfo.BankCardNumber) ? "" : GetBankCardNumberxxxString(bankInfo.BankCardNumber),
-                        BankName = string.IsNullOrEmpty(bankInfo.BankName) ? "" : bankInfo.BankName,
-                        BankSubName = string.IsNullOrEmpty(bankInfo.BankSubName) ? "" : bankInfo.BankSubName,
+                        BankCardNumber = string.IsNullOrEmpty(bindInfo.BankCardNumber) ? "" : ConvertHelper.GetBankCardNumberxxxString(bindInfo.BankCardNumber),
+                        BankName = string.IsNullOrEmpty(bindInfo.BankName) ? "" : bindInfo.BankName,
+                        BankSubName = string.IsNullOrEmpty(bindInfo.BankSubName) ? "" : bindInfo.BankSubName,
                         #endregion
                     },
                 });
@@ -1548,11 +1483,11 @@ namespace Lottery.Api.Controllers
                 {
                     throw new ArgumentException("提现时间早上9点到凌晨1点，请您明天9点再来，感谢配合");
                 }
-                Dictionary<string, object> param = new Dictionary<string, object>();
+                //Dictionary<string, object> param = new Dictionary<string, object>();
                 //param["userToken"] = token;
                 //var userinfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/LoginByUserToken");
-                param.Add("userId", userId);
-                var cashMoney = await _serviceProxyProvider.Invoke<UserBalanceInfo>(param, "api/user/QueryMyBalance");
+                //param.Add("userId", userId);
+                //var cashMoney = await _serviceProxyProvider.Invoke<UserBalanceInfo>(param, "api/user/QueryMyBalance");
                 Dictionary<string, object> bindParam = new Dictionary<string, object>();
                 bindParam["userId"] = userId;
                 var info = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
@@ -1572,7 +1507,7 @@ namespace Lottery.Api.Controllers
                         RealName = info.RealName,
                         BankName = info.BankName,
                         BankCardNumber = info.BankCardNumber,
-                        TotalCashMoney = cashMoney.GetTotalCashMoney()
+                        TotalCashMoney = info.GetTotalCashMoney()
                     }
                 });
             }
@@ -1752,7 +1687,7 @@ namespace Lottery.Api.Controllers
                 string userToken = p.token;
                 int pageNo = Convert.ToInt32(p.pageNo);
                 int PageSize = Convert.ToInt32(p.PageSize);
-                var status = string.IsNullOrEmpty((string)p.Status) ? null : Convert.ToInt32(p.Status);
+                var status = string.IsNullOrEmpty((string)p.Status) ? -1 : Convert.ToInt32(p.Status);
                 if (string.IsNullOrEmpty(userToken))
                     throw new Exception("token验证失败");
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
