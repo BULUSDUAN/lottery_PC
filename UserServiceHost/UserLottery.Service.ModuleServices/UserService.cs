@@ -113,6 +113,12 @@ namespace UserLottery.Service.ModuleServices
                 BusinessHelper.ExecPlugin<IUser_AfterLogin>(new object[] { loginEntity.UserId, "LOCAL", loginIp, DateTime.Now });
                 //刷新用户在Redis中的余额
                 BusinessHelper.RefreshRedisUserBalance(loginEntity.UserId);
+
+                var MaxLevelName = "";
+                if (blogEntity != null)
+                {
+                    MaxLevelName = string.IsNullOrEmpty(blogEntity.MaxLevelName) ? "" : blogEntity.MaxLevelName;
+                }
                 return Task.FromResult(new LoginInfo
                 {
                     IsSuccess = true,
@@ -129,7 +135,7 @@ namespace UserLottery.Service.ModuleServices
                     AgentId = loginEntity.Register.AgentId,
                     IsAgent = loginEntity.Register.IsAgent,
                     HideDisplayNameCount = loginEntity.Register.HideDisplayNameCount,
-                    MaxLevelName = string.IsNullOrEmpty(blogEntity.MaxLevelName) ? "" : blogEntity.MaxLevelName,
+                    MaxLevelName= MaxLevelName,
                     IsUserType = loginEntity.Register.UserType == 1 ? true : false
                 });
             }
