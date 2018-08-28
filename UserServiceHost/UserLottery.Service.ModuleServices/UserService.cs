@@ -47,7 +47,7 @@ using System.Diagnostics;
 namespace UserLottery.Service.ModuleServices
 {
     [ModuleName("User")]
-    public class UserService : KgBaseService,  IUserService
+    public class UserService : KgBaseService, IUserService
     {
         #region Implementation of IUserService
         // private readonly UserRepository _repository;
@@ -225,20 +225,6 @@ namespace UserLottery.Service.ModuleServices
 
         }
 
-
-        //public Task<string> GetUserIdByUserToken(string UserToken)
-        //{
-        //    try
-        //    {
-        //        var userId = userAuthentication.ValidateUserAuthentication(UserToken);
-        //        return Task.FromResult(userId);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception(ex.Message, ex);
-        //    }
-        //}
-
         public bool IsRoleType(SystemUser user, RoleType roleType)
         {
             try
@@ -298,17 +284,15 @@ namespace UserLottery.Service.ModuleServices
             try
             {
                 //尝试从缓存中读取数据
-                var info = LoadUserBindInfoFromCache(userId);
-                if (info != null)
-                    return Task.FromResult(info);
+                //var info = LoadUserBindInfoFromCache(userId);
+                //if (info != null)
+                //    return Task.FromResult(info);
                 //从数据库读取数据
-                info = new LocalLoginBusiness().QueryUserBindInfos(userId);
+                var info = new LocalLoginBusiness().QueryUserBindInfos(userId);
                 if (info == null)
                     return Task.FromResult(new UserBindInfos());
-
                 //添加缓存到文件
-                SaveUserBindInfoCache(userId, info);
-
+                //SaveUserBindInfoCache(userId, info);
                 return Task.FromResult(info);
             }
             catch (Exception ex)
@@ -498,18 +482,20 @@ namespace UserLottery.Service.ModuleServices
             try
             {
                 var loginBiz = new LocalLoginBusiness();
-                var local = loginBiz.GetLocalLoginByUserId(userId);
-                if (local == null)
-                    return Task.FromResult(new LoginInfo());
-                var register = loginBiz.GetRegisterById(local.UserId);
+                //var local = loginBiz.GetLocalLoginByUserId(userId);
+                //if (local == null)
+                //    return Task.FromResult(new LoginInfo());
+                var register = loginBiz.GetRegisterById(userId);
+                if (register == null)
+                    return null;
                 return Task.FromResult(new LoginInfo
                 {
-                    CreateTime = local.CreateTime,
+                    CreateTime = register.CreateTime,
                     RegType = register.RegType,
                     Referrer = register.Referrer,
-                    UserId = local.UserId,
+                    UserId = register.UserId,
                     VipLevel = register.VipLevel,
-                    LoginName = local.LoginName,
+                    LoginName = register.DisplayName,
                     DisplayName = register.DisplayName,
                     AgentId = register.AgentId,
                     IsAgent = register.IsAgent,

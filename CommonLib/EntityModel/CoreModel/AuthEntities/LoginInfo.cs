@@ -132,11 +132,6 @@ namespace EntityModel.CoreModel
         public string QQ { get; set; }
         [ProtoMember(22)]
         public string AlipayAccount { get; set; }
-
-        //public string LastLoginFrom { get; set; }
-        //public string LastLoginIp { get; set; }
-        //public string LastLoginIpName { get; set; }
-        //public string LastLoginTime { get; set; }
         [ProtoMember(23)]
         public int RebateCount { get; set; }
         [ProtoMember(24)]
@@ -166,7 +161,48 @@ namespace EntityModel.CoreModel
         /// </summary>
         [ProtoMember(35)]
         public int IsUserType { get; set; }
-
+        /// <summary>
+        /// 佣金账户，为代理商计算佣金时，转到此账户
+        /// </summary
+        [ProtoMember(36)]
+        public decimal CommissionBalance { get; set; }
+        /// <summary>
+        /// 名家余额
+        /// </summary>
+        [ProtoMember(37)]
+        public decimal ExpertsBalance { get; set; }
+        /// <summary>
+        /// 奖金账户，中奖后返到此账户，可提现
+        /// </summary>
+        [ProtoMember(38)]
+        public decimal BonusBalance { get; set; }
+        /// <summary>
+        /// 冻结账户，提现、追号、异常手工冻结
+        /// </summary>
+        [ProtoMember(39)]
+        public decimal FreezeBalance { get; set; }
+        /// <summary>
+        /// 充值账户余额，充值充到此账户
+        /// </summary>
+        [ProtoMember(40)]
+        public decimal FillMoneyBalance { get; set; }
+        /// <summary>
+        /// 红包余额
+        /// </summary>
+        [ProtoMember(41)]
+        public decimal RedBagBalance { get; set; }
+        /// <summary>
+        /// 成长值
+        /// </summary>
+        [ProtoMember(42)]
+        public int UserGrowth { get; set; }
+        [ProtoMember(43)]
+        public bool IsSetPwd { get; set; }
+        /// <summary>
+        /// 需要输入资金密码的地方
+        /// </summary>
+        [ProtoMember(44)]
+        public string NeedPwdPlace { get; set; }
     }
 }
 
