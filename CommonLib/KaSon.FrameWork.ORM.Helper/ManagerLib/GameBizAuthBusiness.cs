@@ -471,7 +471,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             catch (Exception ex)
             {
-                throw new Exception("用户身份验证失败，请检查是否已登录", ex);
+                throw new LogicException("用户身份验证失败，请检查是否已登录", ex);
             }
         }
 

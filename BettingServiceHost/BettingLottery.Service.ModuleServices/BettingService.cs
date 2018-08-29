@@ -779,7 +779,11 @@ namespace BettingLottery.Service.ModuleServices
             }
             catch (AggregateException ex)
             {
-                throw new AggregateException(ex.Message,ex);
+                throw ex;
+            }
+            catch (LogicException ex)
+            {
+                throw ex;
             }
             catch (Exception ex)
             {
@@ -900,6 +904,10 @@ namespace BettingLottery.Service.ModuleServices
                 {
                     ReturnValue = schemeId + "|" + info.TotalMoney,
                 });
+            }
+            catch (LogicException ex)
+            {
+                throw ex;
             }
             catch (Exception ex)
             {
