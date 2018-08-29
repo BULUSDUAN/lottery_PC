@@ -1459,7 +1459,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //查询帐户余额
           
             var userBalance = balanceManager.QueryUserBalanceInfo(userId);
-            if (userBalance == null) { throw new Exception("用户帐户不存在 - " + userId); }
+            if (userBalance == null) { throw new LogicException("用户帐户不存在 - " + userId); }
 
             var payDetailList = new List<PayDetail>();
             payDetailList.Add(new PayDetail
@@ -1517,7 +1517,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     //userBalance.CPSBalance = after;
                     break;
                 default:
-                    throw new ArgumentException("不支持的账户类型 - " + accountType);
+                    throw new LogicException("不支持的账户类型 - " + accountType);
             }
             var FundDetail=new C_Fund_Detail
             {

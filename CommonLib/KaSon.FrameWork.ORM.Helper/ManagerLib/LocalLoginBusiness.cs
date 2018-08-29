@@ -696,11 +696,11 @@ namespace KaSon.FrameWork.ORM.Helper
             var user = DB.CreateQuery<E_Login_Local>().Where(p => p.UserId == userId).FirstOrDefault();
             if (user == null)
             {
-                throw new Exception("用户不是本地注册用户，不允许修改密码。请确定是否是通过支付宝或QQ帐号进行登录，如有疑问，请联系客服。");
+                throw new LogicException("用户不是本地注册用户，不允许修改密码。请确定是否是通过支付宝或QQ帐号进行登录，如有疑问，请联系客服。");
             }
             if (user.Password.ToUpper() != oldPassword)
             {
-                throw new Exception("旧密码输入错误。");
+                throw new LogicException("旧密码输入错误。");
             }
             user.Password = newPassword;
             DB.GetDal<E_Login_Local>().Update(user);

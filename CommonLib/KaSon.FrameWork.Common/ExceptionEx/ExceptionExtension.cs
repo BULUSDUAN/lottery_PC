@@ -8,7 +8,7 @@ namespace KaSon.FrameWork.Common.ExceptionEx
     {
         public static string ToGetMessage(this Exception ex)
         {
-            return ex.Message.Split('★')[0];
+            return ex.Message.Split('★')[0].Replace("\r\n","");
         }
     }
 }

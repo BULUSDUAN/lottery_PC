@@ -25,6 +25,7 @@ using System.Threading.Tasks;
 using System.Web;
 using KaSon.FrameWork.Common.ExceptionEx;
 using System.Diagnostics;
+using EntityModel.ExceptionExtend;
 
 namespace Lottery.Api.Controllers
 {
@@ -224,7 +225,7 @@ namespace Lottery.Api.Controllers
 
                 if (!result.IsSuccess)
                 {
-                    throw new Exception(result.Message);
+                    throw new LogicException(result.Message);
                 }
                 return JsonEx(new LotteryServiceResponse
                 {
@@ -238,12 +239,10 @@ namespace Lottery.Api.Controllers
             catch (ArgumentException ex)
             {
                 return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = "执行失败" + "●" + ex.ToString(), MsgId = entity.MsgId, Value = null });
-
             }
             catch (Exception ex)
             {
-                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = "执行失败" + "●" + ex.ToString(), MsgId = entity.MsgId, Value = null });
-
+                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = "执行失败" + "●" + ex.ToString(), MsgId = entity.MsgId, Value = ex.ToGetMessage(), });
             }
         }
 
@@ -519,7 +518,7 @@ namespace Lottery.Api.Controllers
                 {
 
                     Code = ResponseCode.失败,
-                    Message = "注册失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
