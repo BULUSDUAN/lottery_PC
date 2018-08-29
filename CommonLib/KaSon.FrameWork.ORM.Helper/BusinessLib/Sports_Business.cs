@@ -2558,26 +2558,26 @@ namespace KaSon.FrameWork.ORM.Helper
 
             var sportsManager = new Sports_Manager();
             var main = sportsManager.QuerySports_Together(schemeId);
-            if (main == null) throw new Exception("合买订单不存在");
+            if (main == null) throw new LogicException("合买订单不存在");
             var manager = new SchemeManager();
             var orderDetail = manager.QueryOrderDetail(schemeId);
             if (orderDetail == null)
-                throw new Exception(string.Format("查不到{0}的orderDetail 信息", schemeId));
+                throw new LogicException(string.Format("查不到{0}的orderDetail 信息", schemeId));
             else if (orderDetail.IsVirtualOrder)
-                throw new Exception("当前订单还未付款不能参与合买");
+                throw new LogicException("当前订单还未付款不能参与合买");
             BusinessHelper.CheckDisableGame(orderDetail.GameCode, orderDetail.GameType);
             if (DateTime.Now >= main.StopTime)
-                throw new Exception(string.Format("合买结束时间是{0}，现在不能参与合买。", main.StopTime.ToString("yyyy-MM-dd HH:mm:ss")));
+                throw new LogicException(string.Format("合买结束时间是{0}，现在不能参与合买。", main.StopTime.ToString("yyyy-MM-dd HH:mm:ss")));
             if (main.ProgressStatus != (int)TogetherSchemeProgress.SalesIn && main.ProgressStatus != (int)TogetherSchemeProgress.Standard) throw new Exception("合买已完成，不能参与");
             if (!string.IsNullOrEmpty(main.JoinPwd) && (string.IsNullOrEmpty(joinPwd) || Encipherment.MD5(joinPwd) != main.JoinPwd))
-                throw new Exception("参与密码不正确");
+                throw new LogicException("参与密码不正确");
             var surplusCount = main.TotalCount - main.SoldCount;
             if (surplusCount < buyCount)
-                throw new Exception(string.Format("方案剩余份数不足{0}份", buyCount));
+                throw new LogicException(string.Format("方案剩余份数不足{0}份", buyCount));
 
             var buyMoney = main.Price * buyCount;
             if (buyMoney < 1)
-                throw new Exception("参与金额最少为1元");
+                throw new LogicException("参与金额最少为1元");
 
             //using (var biz = new GameBizBusinessManagement())
             //{
@@ -2650,7 +2650,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
                 var order = sportsManager.QuerySports_Order_Running(schemeId);
                 if (order == null)
-                    throw new Exception("未查询到订单信息");
+                    throw new LogicException("未查询到订单信息");
                 runningOrder = order;
                 if ((main.SoldCount + main.Guarantees + main.SystemGuarantees) >= main.TotalCount && !order.CanChase)
                 {
@@ -2745,7 +2745,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var sportsManager = new Sports_Manager();
             var order = sportsManager.QuerySports_Order_Running(schemeId);
             if (order == null)
-                throw new Exception(string.Format("查不到方案{0}的Order_Running信息", schemeId));
+                throw new LogicException(string.Format("查不到方案{0}的Order_Running信息", schemeId));
             if (order.TicketStatus != (int)TicketStatus.Waitting)
                 throw new LogicException(string.Format("订单{0}出票状态应是TicketStatus.Waitting,实际是{1}", schemeId, (TicketStatus)order.TicketStatus));
 
@@ -3387,9 +3387,9 @@ namespace KaSon.FrameWork.ORM.Helper
                     //if (IsEnableLimitBetAmount)//开启限制用户单倍投注
                     //{
                     //    if (issuse.Amount == 1 && totalNumberZhu > 50)
-                    //        throw new Exception("对不起，暂时不支持多串过关单倍金额超过100元。");
+                    //        throw new LogicException("对不起，暂时不支持多串过关单倍金额超过100元。");
                     //    else if (issuse.Amount > 0 && issuse.IssuseTotalMoney / issuse.Amount > 100)
-                    //        throw new Exception("对不起，暂时不支持多串过关单倍金额超过100元。");
+                    //        throw new LogicException("对不起，暂时不支持多串过关单倍金额超过100元。");
                     //}
                     //var currentIssuseNumber = lotteryManager.QueryGameIssuseByKey(info.GameCode, info.GameCode.ToUpper() == "CTZQ" ? info.AnteCodeList[0].GameType.ToUpper() : string.Empty, issuse.IssuseNumber);
                     //if (currentIssuseNumber == null)
@@ -3638,10 +3638,10 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             var entity = new SJBMatchManager().GetSJBMatch(gameType, matchId);
             if (entity == null)
-                throw new Exception("投注场次错误");
+                throw new LogicException("投注场次错误");
 
             if (entity.BetState != "开售")
-                throw new Exception(string.Format("比赛{0}停止销售", matchId));
+                throw new LogicException(string.Format("比赛{0}停止销售", matchId));
         }
 
         private List<C_JCZQ_SJBMatch> CheckSJBMatch(string gameType, string anteCode)
@@ -3692,27 +3692,27 @@ namespace KaSon.FrameWork.ORM.Helper
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception("投注号码出错 - " + ex.Message);
+                    throw new LogicException("投注号码出错 - " + ex.Message);
                 }
             }
             var codeMoney = 0M;
             info.IssuseNumberList.ForEach(item =>
             {
                 if (item.Amount < 1)
-                    throw new Exception("倍数不能小于1");
+                    throw new LogicException("倍数不能小于1");
                 var currentMoney = item.Amount * totalNumberZhu * 2M;
                 if (currentMoney != item.IssuseTotalMoney)
-                    throw new Exception(string.Format("第{0}期投注金额应该是{1},实际是{2}", item.IssuseNumber, currentMoney, item.IssuseTotalMoney));
+                    throw new LogicException(string.Format("第{0}期投注金额应该是{1},实际是{2}", item.IssuseNumber, currentMoney, item.IssuseTotalMoney));
                 codeMoney += currentMoney;
             });
             if (codeMoney != info.TotalMoney)
-                throw new Exception("投注期号总金额与方案总金额不匹配");
+                throw new LogicException("投注期号总金额与方案总金额不匹配");
             var lotteryManager = new LotteryGameManager();
             var currentIssuse = lotteryManager.QueryCurrentIssuse(info.GameCode, info.GameCode.ToUpper() == "CTZQ" ? info.AnteCodeList[0].GameType.ToUpper() : string.Empty);
             if (currentIssuse == null)
-                throw new Exception("订单期号不存在，请联系客服");
+                throw new LogicException("订单期号不存在，请联系客服");
             if (info.IssuseNumberList.First().IssuseNumber.CompareTo(currentIssuse.IssuseNumber) < 0)
-                throw new Exception("投注订单期号已过期");
+                throw new LogicException("投注订单期号已过期");
             #endregion
             var gameTypes = lotteryManager.QueryEnableGameTypes();
             //using (var biz = new GameBizBusinessManagement())
@@ -3725,16 +3725,16 @@ namespace KaSon.FrameWork.ORM.Helper
                 var sportsManager = new Sports_Manager();
                 keyLine = info.IssuseNumberList.Count > 1 ? BusinessHelper.GetChaseLotterySchemeKeyLine(info.GameCode) : string.Empty;
                 if (info.IssuseNumberList.Count > 1)
-                    throw new Exception("保存的订单只能投注一期");
+                    throw new LogicException("保存的订单只能投注一期");
                 var orderIndex = 1;
                 var IssuseNumberList = new List<C_Game_Issuse>();
                 foreach (var issuse in info.IssuseNumberList)
                 {
                     var currentIssuseNumber = lotteryManager.QueryGameIssuseByKey(info.GameCode, info.GameCode.ToUpper() == "CTZQ" ? info.AnteCodeList[0].GameType.ToUpper() : string.Empty, issuse.IssuseNumber);
                     if (currentIssuseNumber == null)
-                        throw new Exception(string.Format("奖期{0}不存在", issuse.IssuseNumber));
+                        throw new LogicException(string.Format("奖期{0}不存在", issuse.IssuseNumber));
                     if (currentIssuseNumber.LocalStopTime < DateTime.Now)
-                        throw new Exception(string.Format("奖期{0}结束时间为{1}", issuse.IssuseNumber, currentIssuseNumber.LocalStopTime.ToString("yyyy-MM-dd HH:mm")));
+                        throw new LogicException(string.Format("奖期{0}结束时间为{1}", issuse.IssuseNumber, currentIssuseNumber.LocalStopTime.ToString("yyyy-MM-dd HH:mm")));
                     IssuseNumberList.Add(currentIssuseNumber);
                 }
             DB.Begin();
@@ -3859,11 +3859,11 @@ namespace KaSon.FrameWork.ORM.Helper
             info.PlayType = info.PlayType.ToUpper();
 
             if (info.TotalCount * info.Price != info.TotalMoney)
-                throw new Exception("方案拆分不正确");
+                throw new LogicException("方案拆分不正确");
             if (info.Subscription < 1)
-                throw new Exception("发起者至少认购1份");
+                throw new LogicException("发起者至少认购1份");
             if (info.Subscription + info.Guarantees > info.TotalCount)
-                throw new Exception("发起者认购份数和保底份数不能超过总份数");
+                throw new LogicException("发起者认购份数和保底份数不能超过总份数");
             var schemeId = string.Empty;
 
             var sportsManager = new Sports_Manager();
@@ -3882,7 +3882,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     var msg = string.Empty;
                     var zhu = AnalyzerFactory.GetSportAnteCodeChecker(info.GameCode, item.GameType).CheckAntecodeNumber(item, out msg);
                     if (!string.IsNullOrEmpty(msg))
-                        throw new Exception(msg);
+                        throw new LogicException(msg);
                 }
             }
             else
@@ -3901,7 +3901,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception("投注号码出错 - " + ex.Message);
+                        throw new LogicException("投注号码出错 - " + ex.Message);
                     }
                 }
 
@@ -3919,14 +3919,14 @@ namespace KaSon.FrameWork.ORM.Helper
                 //if (IsEnableLimitBetAmount)//开启限制用户单倍投注
                 //{
                 //    if (info.Amount == 1 && betCount > 50)
-                //        throw new Exception("对不起，暂时不支持多串过关单倍金额超过100元。");
+                //        throw new LogicException("对不起，暂时不支持多串过关单倍金额超过100元。");
                 //    else if (info.Amount > 0 && info.TotalMoney / info.Amount > 100)
-                //        throw new Exception("对不起，暂时不支持多串过关单倍金额超过100元。");
+                //        throw new LogicException("对不起，暂时不支持多串过关单倍金额超过100元。");
                 //}
 
 
                 //if (betCount > BusinessHelper.GetMaxBetCount())
-                //    throw new Exception("您好！单票注数不能大于一万注");
+                //    throw new LogicException("您好！单票注数不能大于一万注");
                 var userManager = new UserBalanceManager();
                 var user = userManager.QueryUserRegister(userId);
 
