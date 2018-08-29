@@ -32,6 +32,7 @@ using ApiGateWayConfig = Kason.Sg.Core.ApiGateWay.AppConfig;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.AspNetCore.Http;
 using KaSon.FrameWork.Common.Net;
+using Kason.Sg.Core.Log4net;
 
 namespace Lottery.ApiGateway
 {
@@ -126,8 +127,10 @@ namespace Lottery.ApiGateway
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
         {
-            loggerFactory.AddConsole();
-
+            //loggerFactory.AddConsole();
+         //   var log = new Log4NetProvider("Config/log4net.config");
+         
+            loggerFactory.AddProvider(new Log4NetProvider("Config/log4net.config"));
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

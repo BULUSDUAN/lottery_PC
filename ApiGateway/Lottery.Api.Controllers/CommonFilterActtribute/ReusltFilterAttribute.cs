@@ -1,7 +1,9 @@
 ﻿using EntityModel.Enum;
+using Kason.Sg.Core.CPlatform.Utilities;
 using KaSon.FrameWork.Common;
 using Lottery.ApiGateway.Model.HelpModel;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,8 +16,14 @@ namespace Lottery.Api.Controllers.CommonFilterActtribute
     {
         public string cxin = "★";
         public char cyuan = '●';
+        //public ReusltFilterAttribute(ILogger<ReusltFilterAttribute> logger){
+        //    Console.Write("");
+
+        //}
         void IActionFilter.OnActionExecuted(ActionExecutedContext context)
         {
+
+        
             var result = context.Result as Microsoft.AspNetCore.Mvc.JsonResult;
             if (result != null)
             {
@@ -28,7 +36,10 @@ namespace Lottery.Api.Controllers.CommonFilterActtribute
                     //   Log4Log log4 = new Log4Log();
 
                     string msg = string.Format("API:{0} \r\n {1}", url, resp.Message);
-                    Log4Log.LogEX(KLogLevel.APIError, "API或服务错误***", new Exception(msg));
+                    var log = ServiceLocator.GetService<ILogger<ReusltFilterAttribute>>();
+
+                    log.LogError(new Exception(msg), "API或服务错误***");
+                    //  Log4Log.LogEX(KLogLevel.APIError, "API或服务错误***", new Exception(msg));
 
                     var temp = resp.Message.Split(cyuan);
                   //  string st = "系统错误，请重试";
@@ -46,7 +57,11 @@ namespace Lottery.Api.Controllers.CommonFilterActtribute
                     string msg = string.Format("API:{0} \r\n {1}", url, resp.Message);
                     string st = temp[0];
                     resp.Message = st;
-                    Log4Log.LogEX(KLogLevel.GenError, "用户级别错误***", new Exception(msg));
+                 //   Log4Log.LogEX(KLogLevel.GenError, "用户级别错误***", new Exception(msg));
+
+                    var log = ServiceLocator.GetService<ILogger<ReusltFilterAttribute>>();
+
+                    log.LogWarning(new Exception(msg), "API或服务错误***");
                 }
             }
 

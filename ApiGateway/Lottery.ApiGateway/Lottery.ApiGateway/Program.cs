@@ -76,7 +76,7 @@ namespace Lottery.ApiGateway
                 JCLQ(),
                 JCZQ()
             });
-
+          //  ServiceLocator.GetService<IServiceProxyProvider>();
 
             //定时更新最新期号信息 
             //Task.Factory.StartNew(async delegate {
