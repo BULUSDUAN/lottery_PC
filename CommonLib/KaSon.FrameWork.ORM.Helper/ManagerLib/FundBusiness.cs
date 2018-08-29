@@ -51,7 +51,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 oldPassword = Encipherment.MD5(string.Format("{0}{1}", oldPassword, _gbKey)).ToUpper();
                 if (string.IsNullOrEmpty(oldPassword) || !oldPassword.Equals(entity.Password))
                 {
-                    throw new Exception("输入资金密码错误");
+                    throw new LogicException("输入资金密码错误");
                 }
             }
             if (isSetPwd&& !entity.IsSetPwd)
@@ -72,12 +72,12 @@ namespace KaSon.FrameWork.ORM.Helper
                 password = Encipherment.MD5(string.Format("{0}{1}", password, _gbKey)).ToUpper();
                 if (string.IsNullOrEmpty(password) || !password.Equals(entity.Password))
                 {
-                    throw new Exception("输入资金密码错误");
+                    throw new LogicException("输入资金密码错误");
                 }
             }
             else
             {
-                throw new Exception("必须先设置资金密码");
+                throw new LogicException("必须先设置资金密码");
             }
             entity.NeedPwdPlace = placeList;
             balanceManager.UpdateUserBalance(entity);
@@ -97,13 +97,13 @@ namespace KaSon.FrameWork.ORM.Helper
             var maxTimes = 3;
             var currentTimes = fundManager.QueryTodayWithdrawTimes(userId);
             if (currentTimes >= maxTimes)
-                throw new Exception(string.Format("每日只能提现{0}次", maxTimes));
+                throw new LogicException(string.Format("每日只能提现{0}次", maxTimes));
             var user = userManager.LoadUser(userId);
             if (user == null)
-                throw new Exception("用户不存在 - " + userId);
+                throw new LogicException("用户不存在 - " + userId);
             var userBalance = balanceManager.QueryUserBalance(userId);
             if (userBalance == null)
-                throw new Exception("用户帐户不存在 - " + userId);
+                throw new LogicException("用户帐户不存在 - " + userId);
 
             //奖金+佣金+名家
             var can_tx_money = userBalance.BonusBalance + userBalance.CommissionBalance + userBalance.ExpertsBalance;
@@ -167,7 +167,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var maxTimes = 3;
             var currentTimes = fundManager.QueryTodayWithdrawTimes(userId);
             if (currentTimes >= maxTimes)
-                throw new Exception(string.Format("每日只能提现{0}次", maxTimes));
+                throw new LogicException(string.Format("每日只能提现{0}次", maxTimes));
             DB.Begin();
             try
             {

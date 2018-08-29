@@ -1,5 +1,6 @@
 ﻿using EntityModel;
 using EntityModel.Enum;
+using EntityModel.ExceptionExtend;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,13 +22,13 @@ namespace KaSon.FrameWork.ORM.Helper
                     {
                         if (validation.SendTimes >= maxTimesEachDay)
                         {
-                            throw new Exception(string.Format("今天已发送每天允许的最大限制次数【{0}】次，请明天再试。", maxTimesEachDay));
+                            throw new LogicException(string.Format("今天已发送每天允许的最大限制次数【{0}】次，请明天再试。", maxTimesEachDay));
                         }
                     }
                     var span = validation.UpdateTime.AddSeconds(delaySeconds) - DateTime.Now;
                     if (span.TotalSeconds > 0)
                     {
-                        throw new Exception(string.Format("发送短信验证码与上次验证码操作至少间隔【{0}】秒，请稍等【{1}】秒后重试。", delaySeconds, (int)span.TotalSeconds + 1));
+                        throw new LogicException(string.Format("发送短信验证码与上次验证码操作至少间隔【{0}】秒，请稍等【{1}】秒后重试。", delaySeconds, (int)span.TotalSeconds + 1));
                     }
                     validation.SendTimes++;
                     validation.RetryTimes = 0;
@@ -75,7 +76,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 var validation = DB.CreateQuery<E_Validation_Mobile>().Where(p => p.Mobile == mobile && p.Category == category).FirstOrDefault();
                 if (validation == null)
                 {
-                    throw new Exception("尚未发送验证码");
+                    throw new LogicException("尚未发送验证码");
                 }
 
                 //新增发送短信的记录
@@ -90,7 +91,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
                 if (validation.RetryTimes >= maxRetryTime)
                 {
-                    throw new Exception(string.Format("重试次数超出最大限制次数【{0}】次，请尝试重新发送验证码。", maxRetryTime));
+                    throw new LogicException(string.Format("重试次数超出最大限制次数【{0}】次，请尝试重新发送验证码。", maxRetryTime));
                 }
                 if (validation.ValidateCode == validateCode)
                 {

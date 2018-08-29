@@ -19,7 +19,7 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             if (roleIds.Length == 0)
             {
-                throw new AuthException("必须指定角色");
+                throw new LogicException("必须指定角色");
             }
 
             DB.Begin();
@@ -32,7 +32,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 var roleList = GetRoleListByIds(roleIds);
                 if (roleList == null)
                 {
-                    throw new AuthException("指定的角色可能不存在 - " + string.Join(",", roleIds));
+                    throw new LogicException("指定的角色可能不存在 - " + string.Join(",", roleIds));
                 }
                 //user.RoleList = roleList;
                 var Auth_UserRole = new C_Auth_UserRole

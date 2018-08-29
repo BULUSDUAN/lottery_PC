@@ -388,6 +388,10 @@ namespace UserLottery.Service.ModuleServices
                 //return new FundBusiness().QueryUserBalance(userId);
                 return Task.FromResult(entity);
             }
+            catch (LogicException ex)
+            {
+                throw ex;
+            }
             catch (Exception ex)
             {
                 throw new Exception("查询我的余额出错 - " + ex.Message, ex);
@@ -410,9 +414,9 @@ namespace UserLottery.Service.ModuleServices
                 var loginBiz = new LocalLoginBusiness();
                 return Task.FromResult(loginBiz.BankCardById(userId));
             }
-            catch (LogicException)
+            catch (LogicException ex)
             {
-                return Task.FromResult(new C_BankCard { });
+                throw ex;
             }
             catch (Exception ex)
             {
@@ -553,6 +557,10 @@ namespace UserLottery.Service.ModuleServices
                 //validateCode = biz.SendValidationCode(mobile, "MobileAuthentication", validateCode, GetDelay(30), GetMaxTimes(3));
                 return new CommonActionResult(true, "已成功提交手机认证申请，请等待") { ReturnValue = validateCode };
             }
+            catch (LogicException ex)
+            {
+                throw ex;
+            }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message, ex);
@@ -596,14 +604,14 @@ namespace UserLottery.Service.ModuleServices
                 var manager = new MobileAuthenticationBusiness();
 
                 if (string.IsNullOrEmpty(userId))
-                    throw new Exception("未查询到用户编号");
+                    throw new LogicException("未查询到用户编号");
                 else if (string.IsNullOrEmpty(mobile))
-                    throw new Exception("手机号码不能为空");
+                    throw new LogicException("手机号码不能为空");
                 //var entity = manager.GetUserMobile(userId);
                 var other = manager.GetMobileInfoByMobile(mobile);
                 if (other != null && other.IsSettedMobile && other.UserId != userId)
                 {
-                    throw new ArgumentException(string.Format("此手机号【{0}】已被其他用户认证。", mobile));
+                    throw new LogicException(string.Format("此手机号【{0}】已被其他用户认证。", mobile));
                 }
                 var entity = manager.GetAuthenticatedMobile(userId);
                 if (entity != null)
@@ -615,6 +623,7 @@ namespace UserLottery.Service.ModuleServices
                     //manager.UpdateUserMobile(entity);
                 }
             }
+        
             catch (Exception ex)
             {
 
@@ -654,14 +663,14 @@ namespace UserLottery.Service.ModuleServices
             try
             {
                 if (string.IsNullOrEmpty(validateCode))
-                    throw new Exception("验证码不能为空");
+                    throw new LogicException("验证码不能为空");
                 var isCheckValidateCode = false;
 
                 var authenticationBiz = new MobileAuthenticationBusiness();
                 var mobile = authenticationBiz.GetAuthenticatedMobile(userId);
                 if (mobile == null)
                 {
-                    throw new ArgumentException("尚未请求手机认证");
+                    throw new LogicException("尚未请求手机认证");
                 }
 
                 var mobileBiz = new ValidationMobileBusiness();
@@ -669,7 +678,7 @@ namespace UserLottery.Service.ModuleServices
 
                 if (!isCheckValidateCode)
                 {
-                    throw new Exception("验证码输入不正确。");
+                    throw new LogicException("验证码输入不正确。");
                 }
                 string mobileNumber;
                 mobileNumber = authenticationBiz.ResponseAuthenticationMobile(userId, 1800, "半个小时");
@@ -688,11 +697,15 @@ namespace UserLottery.Service.ModuleServices
 
                 #endregion
 
-                #region 还没做
+              
                 //! 执行扩展功能代码 - 提交事务后
-                //BusinessHelper.ExecPlugin<IResponseAuthentication_AfterTranCommit>(new object[] { userId, "Mobile", mobileNumber, source });
-                #endregion
+                BusinessHelper.ExecPlugin<IResponseAuthentication_AfterTranCommit>(new object[] { userId, "Mobile", mobileNumber, source });
+            
                 return Task.FromResult(new CommonActionResult(true, "手机认证成功。"));
+            }
+            catch (LogicException ex)
+            {
+                throw ex;
             }
             catch (Exception ex)
             {
@@ -743,6 +756,10 @@ namespace UserLottery.Service.ModuleServices
                 BusinessHelper.ExecPlugin<IResponseAuthentication_AfterTranCommit>(new object[] { userResult.ReturnValue, "Mobile", mobileNumber, source });
 
                 return Task.FromResult(new CommonActionResult(true, "恭喜您注册成功！"));
+            }
+            catch (LogicException ex)
+            {
+                throw ex;
             }
             catch (Exception ex)
             {
@@ -826,6 +843,10 @@ namespace UserLottery.Service.ModuleServices
                 };
 
             }
+            catch (LogicException ex)
+            {
+                throw ex;
+            }
             catch (Exception ex)
             {
 
@@ -865,6 +886,10 @@ namespace UserLottery.Service.ModuleServices
                 #endregion
 
                 return Task.FromResult(new CommonActionResult(true, "已成功提交手机认证申请，请等待。") { ReturnValue = validateCode });
+            }
+            catch (LogicException ex)
+            {
+                throw ex;
             }
             catch (Exception ex)
             {
@@ -911,6 +936,10 @@ namespace UserLottery.Service.ModuleServices
                 flag = biz.CheckValidationCode(mobile, "SendValidateCodeToUserMobileByForgetPWD", validateCode, GetMaxTimes(5));
                 return Task.FromResult(flag);
             }
+            catch (LogicException ex)
+            {
+                throw ex;
+            }
             catch (Exception ex)
             {
 
@@ -934,6 +963,10 @@ namespace UserLottery.Service.ModuleServices
                 var user = loginBiz.GetUserByLoginName(loginName);
                 return Task.FromResult(user.UserId);
             }
+            catch (LogicException ex)
+            {
+                throw ex;
+            }
             catch (Exception ex)
             {
 
@@ -955,6 +988,10 @@ namespace UserLottery.Service.ModuleServices
                 var loginBiz = new LocalLoginBusiness();
                 var pwd = loginBiz.ChangePassword(userId);
                 return Task.FromResult(new CommonActionResult(true, "修改密码成功") { ReturnValue = pwd });
+            }
+            catch (LogicException ex)
+            {
+                throw ex;
             }
             catch (Exception ex)
             {
@@ -1143,6 +1180,10 @@ namespace UserLottery.Service.ModuleServices
                 biz.SetBalancePasswordNeedPlace(userId, password, placeList);
                 return Task.FromResult(new CommonActionResult { IsSuccess = true, Message = "操作完成" });
             }
+            catch (LogicException ex)
+            {
+                throw ex;
+            }
             catch (Exception ex)
             {
                 throw new Exception("设置资金密码类型出错 - " + ex.Message, ex);
@@ -1208,7 +1249,7 @@ namespace UserLottery.Service.ModuleServices
                 {
                     if (realName.IsSettedRealName)
                     {
-                        throw new ArgumentException("此用户已进行过实名认证，不能重复认证");
+                        throw new LogicException("此用户已进行过实名认证，不能重复认证");
                     }
                     biz.UpdateAuthenticationRealName("LOCAL", userId, RealName, "0", IdCardNumber, userId);
                 }
@@ -1240,6 +1281,10 @@ namespace UserLottery.Service.ModuleServices
 
                 return Task.FromResult(new CommonActionResult(true, "实名认证成功。"));
             }
+            catch (LogicException ex)
+            {
+                throw ex;
+            }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message, ex);
@@ -1263,14 +1308,14 @@ namespace UserLottery.Service.ModuleServices
                 var entity = new BankCardManager().BankCardByCode(bankCard.BankCardNumber);
                 if (entity != null)
                 {
-                    throw new Exception("该银行卡号已经被其他用户绑定，请选择其它银行卡号");
+                    throw new LogicException("该银行卡号已经被其他用户绑定，请选择其它银行卡号");
                 }
                 if (string.IsNullOrEmpty(bankCard.UserId) || bankCard.UserId == null || bankCard.UserId.Length == 0)
                     bankCard.UserId = userId;
 
                 var bankcarduser = new BankCardManager().BankCardById(userId);
                 if (bankcarduser != null)
-                    throw new Exception("您已绑定了银行卡，请不要重复绑定！");
+                    throw new LogicException("您已绑定了银行卡，请不要重复绑定！");
                 new BankCardBusiness().AddBankCard(bankCard);
                 new CacheDataBusiness().ClearUserBindInfoCache(userId);
                 //绑定银行卡之后实现接口
@@ -1278,6 +1323,10 @@ namespace UserLottery.Service.ModuleServices
                 BusinessHelper.ExecPlugin<IAddBankCard>(new object[] { bankCard.UserId, bankCard.BankCardNumber, bankCard.BankCode, bankCard.BankName, bankCard.BankSubName, bankCard.CityName, bankCard.ProvinceName, bankCard.RealName });
 
                 return Task.FromResult(new CommonActionResult(true, "添加银行卡信息成功"));
+            }
+            catch (LogicException ex)
+            {
+                throw ex;
             }
             catch (Exception ex)
             {
@@ -1297,6 +1346,10 @@ namespace UserLottery.Service.ModuleServices
             try
             {
                 return Task.FromResult(new FundBusiness().RequestWithdraw_Step1(userId, requestMoney));
+            }
+            catch (LogicException ex)
+            {
+                throw ex;
             }
             catch (Exception ex)
             {
@@ -1321,6 +1374,10 @@ namespace UserLottery.Service.ModuleServices
                     IsSuccess = true,
                     Message = "申请提现成功",
                 });
+            }
+            catch (LogicException ex)
+            {
+                throw ex;
             }
             catch (Exception ex)
             {

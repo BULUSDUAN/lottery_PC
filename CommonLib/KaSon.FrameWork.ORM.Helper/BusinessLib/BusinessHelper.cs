@@ -37,13 +37,13 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             var requestMoney = payoutMoney;
             if (payoutMoney <= 0M)
-                throw new Exception("消费金额不能小于0.");
+                throw new LogicException("消费金额不能小于0.");
             //查询帐户余额
             var balanceManager = new UserBalanceManager();
             var fundManager = new FundManager();
             //资金密码判断
             var userBalance = balanceManager.QueryUserBalance(userId);
-            if (userBalance == null) { throw new Exception("用户帐户不存在 - " + userId); }
+            if (userBalance == null) { throw new LogicException("用户帐户不存在 - " + userId); }
             if (userBalance.IsSetPwd && !string.IsNullOrEmpty(userBalance.NeedPwdPlace))
             {
                 if (userBalance.NeedPwdPlace == "ALL" || userBalance.NeedPwdPlace.Split('|', ',').Contains(place))
@@ -51,13 +51,13 @@ namespace KaSon.FrameWork.ORM.Helper
                     balancepwd = Encipherment.MD5(string.Format("{0}{1}", balancepwd, _gbKey)).ToUpper();
                     if (!userBalance.Password.ToUpper().Equals(balancepwd))
                     {
-                        throw new Exception("资金密码输入错误");
+                        throw new LogicException("资金密码输入错误");
                     }
                 }
             }
             var totalMoney = userBalance.FillMoneyBalance + userBalance.BonusBalance + userBalance.CommissionBalance + userBalance.ExpertsBalance;
             if (totalMoney < payoutMoney)
-                throw new Exception(string.Format("用户总金额小于 {0:N2}元。", payoutMoney));
+                throw new LogicException(string.Format("用户总金额小于 {0:N2}元。", payoutMoney));
 
             var payDetailList = new List<PayDetail>();
             payDetailList.Add(new PayDetail
@@ -185,7 +185,7 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                 //使用充值金额扣款
                 if (userBalance.FillMoneyBalance < payoutMoney)
-                    throw new Exception("可用充值金额不足");
+                    throw new LogicException("可用充值金额不足");
 
                 #region 异常提现
 
