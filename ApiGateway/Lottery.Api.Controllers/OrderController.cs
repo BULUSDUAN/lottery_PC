@@ -2575,7 +2575,10 @@ namespace Lottery.Api.Controllers
                     GameName = ConvertHelper.GameName(p.GameCode, p.GameType),
                     CreateTime = p.CreateTime.ToString("yyyy-MM-dd HH:mm"),
                     UserDisplayName = p.UserDisplayName,
-                    TotalMoney = p.TotalMoney
+                    TotalMoney = p.TotalMoney,
+                    SchemeId = p.SchemeId,
+                    GameCode = p.GameCode,
+                    GameType = p.GameType
                 }).ToList();
                 return Json(new LotteryServiceResponse
                 {

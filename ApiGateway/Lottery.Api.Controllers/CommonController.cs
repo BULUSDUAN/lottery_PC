@@ -369,5 +369,70 @@ namespace Lottery.Api.Controllers
             config = string.IsNullOrEmpty(config) ? "没有数据" : config;
             return Content(config);
         }
+        /// <summary>
+        /// PlamtType=1 默认度api 日志,2读服务日志,
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="PlamtType"></param>
+        /// <param name="SerName"></param>
+        /// <param name="FileName"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> GetLogInfo([FromServices]IServiceProxyProvider _serviceProxyProvider,int PlamtType=1, int DicType = 1, string SerName="Order")
+        {
+            string config = "";
+            string DicTypeName = "APILogError";
+            switch (DicType)
+            {
+                case 1:
+                 //   config = KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\APILogError", "");
+                    DicTypeName = "APILogError";
+                    break;
+                case 2:
+                   // config = KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\APITimeInfo", "");
+                    DicTypeName = "APITimeInfo";
+                    break;
+                case 3:
+                    // config = KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\SevTimeIoginfo", "");
+                    DicTypeName = "SevTimeIoginfo";
+                    break;
+                case 4:
+                    DicTypeName = "UserLogError";
+                  //  config = KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\UserLogError", "");
+                    break;
+                case 5:
+                    DicTypeName = "RedisTimeInfoLog";
+                   // config = KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\RedisTimeInfoLog", "");
+                    break;
+                case 6:
+                    DicTypeName = "SQLInfo";
+                    // config = KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\RedisTimeInfoLog", "");
+                    break;
+                //SevTimeIoginfoUserLogError
+                default:
+                    break;
+            }
+            if (PlamtType == 1)
+            {
+                config = KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\"+ DicTypeName, "");
+            }
+            else {
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["DicName"] = DicTypeName;
+                config = await _serviceProxyProvider.Invoke<string>(param, "api/Betting/ReadLog");
+            }
+            //if (SerName.ToLower() == "api")
+            //{
+
+               
+            //}
+            //else
+            //{
+            //   
+            //    param.Add("FileName", FileName);
+            //    config = await _serviceProxyProvider.Invoke<string>(param, "api/" + SerName + "/ReadSqlTimeLog");
+            //}
+            //config = string.IsNullOrEmpty(config) ? "没有数据" : config;
+            return Content(config);
+        }
     }
 }

@@ -954,7 +954,7 @@ namespace Lottery.Api.Controllers
                 string newPwd = p.NewPwd;
                 bool isSet = Convert.ToBoolean(p.IsSet);
                 string userToken = p.UserToken;
-                string strPlace = string.IsNullOrEmpty(p.StrPlace)?"": p.StrPlace ;
+                string strPlace = string.IsNullOrEmpty((string)p.StrPlace)?"": p.StrPlace ;
                 if (string.IsNullOrEmpty(userToken))
                     throw new Exception("您还未登录，请登录！");
                 else if (string.IsNullOrEmpty(newPwd))
@@ -1023,7 +1023,7 @@ namespace Lottery.Api.Controllers
             try
             {
                 var p = WebHelper.Decode(entity.Param);
-                string strPlace = string.IsNullOrEmpty(p.StrPlace) ? "" : p.StrPlace;
+                string strPlace = string.IsNullOrEmpty((string)p.StrPlace) ? "" : p.StrPlace;
                 string pwd = p.Pwd;
                 string userToken = p.UserToken;
                 if (string.IsNullOrEmpty(userToken))

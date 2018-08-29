@@ -1246,5 +1246,10 @@ namespace BettingLottery.Service.ModuleServices
         {
            return Task.FromResult(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\SQLInfo", "LogTime_"));
         }
+        public Task<string> ReadLog(string DicName= "SQLInfo")
+        {
+            return Task.FromResult(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\"+ DicName, "LogTime_"));
+        }
+        //   Task<string> ReadLog(string DicName);
     }
 }

@@ -78,5 +78,9 @@ namespace BettingLottery.Service.IModuleServices
 
         [Service(Date = "2018-7-15", Director = "lidi", Name = "日志")]
         Task<string> ReadSqlTimeLog(string FileName);
+
+        [Service(Date = "2018-7-15", Director = "kason", Name = "日志")]
+        Task<string> ReadLog(string DicName);
+
     }
 }
