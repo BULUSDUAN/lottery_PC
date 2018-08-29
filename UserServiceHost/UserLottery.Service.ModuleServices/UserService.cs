@@ -467,10 +467,14 @@ namespace UserLottery.Service.ModuleServices
 
                 return Task.FromResult(new CommonActionResult(true, "修改密码成功"));
             }
+            catch (LogicException ex)
+            {
+                throw ex;
+            }
             catch (Exception ex)
             {
 
-                throw new Exception(ex.Message, ex);
+                throw new Exception("修改密码失败", ex);
             }
 
 
@@ -711,20 +715,20 @@ namespace UserLottery.Service.ModuleServices
             {
 
                 if (string.IsNullOrEmpty(validateCode))
-                    throw new Exception("验证码不能为空");
+                    throw new LogicException("验证码不能为空");
                 var isCheckValidateCode = false;
                 var authenticationBiz = new MobileAuthenticationBusiness();
                 var ValidationMobile = new ValidationMobileBusiness();
                 #region "20180522新增:用户名注册修改为手机号注册后,存在老用户绑定了手机号后，可以继续用手机号注册一个新号"
                 if (authenticationBiz.IsMobileAuthenticated(mobile))
-                    throw new Exception("该手机号已经认证");
+                    throw new LogicException("该手机号已经认证");
                 #endregion      
 
                 isCheckValidateCode = ValidationMobile.CheckValidationCode(mobile, "MobileAuthentication", validateCode, GetMaxTimes(3));
 
                 if (!isCheckValidateCode)
                 {
-                    throw new Exception("验证码输入不正确。");
+                    throw new LogicException("验证码输入不正确。");
                 }
                 info.Referrer = fxid == "0" ? "mobile_regist" : "fxid_regist";
                 //注册
@@ -769,9 +773,9 @@ namespace UserLottery.Service.ModuleServices
                     throw new ArgumentNullException("未配置前台注册用户默认角色的参数 - PageRegisterDefaultRole");
                 }
                 if (string.IsNullOrEmpty(regInfo.LoginName))
-                    throw new Exception("登录名不能为空");
+                    throw new LogicException("登录名不能为空");
                 else if (Regex.IsMatch(regInfo.LoginName, "[ ]+"))
-                    throw new Exception("登录名不能包含空格");
+                    throw new LogicException("登录名不能包含空格");
                 if (regInfo != null && !string.IsNullOrEmpty(regInfo.AgentId))
                 {
 
