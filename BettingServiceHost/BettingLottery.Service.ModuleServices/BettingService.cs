@@ -542,11 +542,11 @@ namespace BettingLottery.Service.ModuleServices
             }
             catch (AggregateException ex)
             {
-                throw new AggregateException(ex.Message,ex);
+                throw ex;
             }
             catch (LogicException ex)
             {
-                throw new Exception("订单投注失败 - " + ex.Message, ex);
+                throw ex;
             }
             catch (Exception ex)
             {
