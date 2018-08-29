@@ -1192,7 +1192,7 @@ namespace KaSon.FrameWork.Common.Utilities {
                 {
                     Output += "*";
                 }
-                Output += Input.Substring(7, Input.Length - 7);
+                Output += Input.Substring(7, Input.Length - 8);
             }
             return Output;
         }
