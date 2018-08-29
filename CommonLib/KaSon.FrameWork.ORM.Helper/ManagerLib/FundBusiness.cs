@@ -167,7 +167,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var maxTimes = 3;
             var currentTimes = fundManager.QueryTodayWithdrawTimes(userId);
             if (currentTimes >= maxTimes)
-                throw new Exception(string.Format("每日只能提现{0}次", maxTimes));
+                throw new LogicException(string.Format("每日只能提现{0}次", maxTimes));
             DB.Begin();
             try
             {

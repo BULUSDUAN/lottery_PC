@@ -37,13 +37,13 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             var requestMoney = payoutMoney;
             if (payoutMoney <= 0M)
-                throw new Exception("消费金额不能小于0.");
+                throw new LogicException("消费金额不能小于0.");
             //查询帐户余额
             var balanceManager = new UserBalanceManager();
             var fundManager = new FundManager();
             //资金密码判断
             var userBalance = balanceManager.QueryUserBalance(userId);
-            if (userBalance == null) { throw new Exception("用户帐户不存在 - " + userId); }
+            if (userBalance == null) { throw new LogicException("用户帐户不存在 - " + userId); }
             if (userBalance.IsSetPwd && !string.IsNullOrEmpty(userBalance.NeedPwdPlace))
             {
                 if (userBalance.NeedPwdPlace == "ALL" || userBalance.NeedPwdPlace.Split('|', ',').Contains(place))
@@ -51,13 +51,13 @@ namespace KaSon.FrameWork.ORM.Helper
                     balancepwd = Encipherment.MD5(string.Format("{0}{1}", balancepwd, _gbKey)).ToUpper();
                     if (!userBalance.Password.ToUpper().Equals(balancepwd))
                     {
-                        throw new Exception("资金密码输入错误");
+                        throw new LogicException("资金密码输入错误");
                     }
                 }
             }
             var totalMoney = userBalance.FillMoneyBalance + userBalance.BonusBalance + userBalance.CommissionBalance + userBalance.ExpertsBalance;
             if (totalMoney < payoutMoney)
-                throw new Exception(string.Format("用户总金额小于 {0:N2}元。", payoutMoney));
+                throw new LogicException(string.Format("用户总金额小于 {0:N2}元。", payoutMoney));
 
             var payDetailList = new List<PayDetail>();
             payDetailList.Add(new PayDetail
@@ -185,7 +185,7 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                 //使用充值金额扣款
                 if (userBalance.FillMoneyBalance < payoutMoney)
-                    throw new Exception("可用充值金额不足");
+                    throw new LogicException("可用充值金额不足");
 
                 #region 异常提现
 
@@ -402,7 +402,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var balanceManager = new UserBalanceManager();
 
             var userBalance = balanceManager.QueryUserBalance(userId);
-            if (userBalance == null) { throw new Exception("用户帐户不存在 - " + userId); }
+            if (userBalance == null) { throw new LogicException("用户帐户不存在 - " + userId); }
 
             var old = fundManager.QueryUserClearChaseRecord(orderId, userId);
             if (old != null)
@@ -624,13 +624,13 @@ namespace KaSon.FrameWork.ORM.Helper
         public static void Payout_To_End(AccountType accountType, string category, string userId, string orderId, decimal payoutMoney, string summary, string operatorId = "")
         {
             if (payoutMoney <= 0M)
-                throw new Exception("消费金额不能小于0.");
+                throw new LogicException("消费金额不能小于0.");
             //查询帐户余额
             var balanceManager = new UserBalanceManager();
             var fundManager = new FundManager();
             //资金密码判断
             var userBalance = balanceManager.QueryUserBalance(userId);
-            if (userBalance == null) { throw new Exception("用户帐户不存在 - " + userId); }
+            if (userBalance == null) { throw new LogicException("用户帐户不存在 - " + userId); }
 
             #region 扣除账户金额
 
@@ -646,7 +646,7 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                 case AccountType.Bonus:
                     if (userBalance.BonusBalance < payoutMoney)
-                        throw new Exception("账户余额不足");
+                        throw new LogicException("账户余额不足");
                     fundManager.AddFundDetail(new C_Fund_Detail
                     {
                         Category = category,
@@ -666,7 +666,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     break;
                 case AccountType.Freeze:
                     if (userBalance.FreezeBalance < payoutMoney)
-                        throw new Exception("账户余额不足");
+                        throw new LogicException("账户余额不足");
                     fundManager.AddFundDetail(new C_Fund_Detail
                     {
                         Category = category,
@@ -686,7 +686,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     break;
                 case AccountType.Commission:
                     if (userBalance.CommissionBalance < payoutMoney)
-                        throw new Exception("账户余额不足");
+                        throw new LogicException("账户余额不足");
                     fundManager.AddFundDetail(new C_Fund_Detail
                     {
                         Category = category,
@@ -706,7 +706,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     break;
                 case AccountType.FillMoney:
                     if (userBalance.FillMoneyBalance < payoutMoney)
-                        throw new Exception("账户余额不足");
+                        throw new LogicException("账户余额不足");
                     fundManager.AddFundDetail(new C_Fund_Detail
                     {
                         Category = category,
@@ -726,7 +726,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     break;
                 case AccountType.Experts:
                     if (userBalance.ExpertsBalance < payoutMoney)
-                        throw new Exception("账户余额不足");
+                        throw new LogicException("账户余额不足");
                     fundManager.AddFundDetail(new C_Fund_Detail
                     {
                         Category = category,
@@ -746,7 +746,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     break;
                 case AccountType.RedBag:
                     if (userBalance.RedBagBalance < payoutMoney)
-                        throw new Exception("账户余额不足");
+                        throw new LogicException("账户余额不足");
                     fundManager.AddFundDetail(new C_Fund_Detail
                     {
                         Category = category,
@@ -766,7 +766,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     break;
                 case AccountType.CPS:
                     if (userBalance.CPSBalance < payoutMoney)
-                        throw new Exception("账户余额不足");
+                        throw new LogicException("账户余额不足");
                     fundManager.AddFundDetail(new C_Fund_Detail
                     {
                         Category = category,
@@ -888,7 +888,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 var error = string.Empty;
                 AnalyzerFactory.GetSportAnteCodeChecker(gameCode, item.GameType).CheckAntecodeNumber(item, out error);
                 if (!string.IsNullOrEmpty(error))
-                    throw new Exception(error);
+                    throw new LogicException(error);
 
                 gameTypeList.Add(item.GameType);
             }
@@ -1000,9 +1000,9 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             var game = QueryLotteryGame(gameCode);
             if (game == null)
-                throw new Exception(string.Format("错误的彩种编码：{0}", gameCode));
+                throw new LogicException(string.Format("错误的彩种编码：{0}", gameCode));
             if (game.EnableStatus != EntityModel.Enum.EnableStatus.Enable)
-                throw new Exception(string.Format("{0} 暂停销售", game.DisplayName));
+                throw new LogicException(string.Format("{0} 暂停销售", game.DisplayName));
         }
 
         /// <summary>
@@ -1442,18 +1442,18 @@ namespace KaSon.FrameWork.ORM.Helper
                 case EntityModel.Enum.PayType.Payout:
                     return "-=";
             }
-            throw new Exception("PayType类型不正确");
+            throw new LogicException("PayType类型不正确");
         }
 
         public static void Payin_To_Balance(AccountType accountType, string category, string userId, string orderId, decimal payMoney, string summary, RedBagCategory redBag = RedBagCategory.FillMoney, string operatorId = "")
         {
             //if (accountType == AccountType.Freeze)
-            //    throw new Exception("退款账户不能为冻结账户");
+            //    throw new LogicException("退款账户不能为冻结账户");
 
             if (payMoney <= 0M)
                 return;
-            //throw new Exception("转入金额不能小于0.");
-            
+            //throw new LogicException("转入金额不能小于0.");
+
             var balanceManager = new LocalLoginBusiness();
             var fundManager = new FundManager();
             //查询帐户余额
@@ -1547,13 +1547,13 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             var requestMoney = payoutMoney;
             if (payoutMoney <= 0M)
-                throw new Exception("消费金额不能小于0.");
+                throw new LogicException("消费金额不能小于0.");
             //查询帐户余额
             var balanceManager = new UserBalanceManager();
             var fundManager = new FundManager();
             //资金密码判断
             var userBalance = balanceManager.QueryUserBalance(userId);
-            if (userBalance == null) { throw new Exception("用户帐户不存在 - " + userId); }
+            if (userBalance == null) { throw new LogicException("用户帐户不存在 - " + userId); }
             if (userBalance.IsSetPwd && !string.IsNullOrEmpty(userBalance.NeedPwdPlace))
             {
                 if (userBalance.NeedPwdPlace == "ALL" || userBalance.NeedPwdPlace.Split('|', ',').Contains(place))
@@ -1561,13 +1561,13 @@ namespace KaSon.FrameWork.ORM.Helper
                     password = Encipherment.MD5(string.Format("{0}{1}", password, _gbKey)).ToUpper();
                     if (!userBalance.Password.ToUpper().Equals(password))
                     {
-                        throw new Exception("资金密码输入错误");
+                        throw new LogicException("资金密码输入错误");
                     }
                 }
             }
             var totalMoney = userBalance.FillMoneyBalance + userBalance.BonusBalance + userBalance.CommissionBalance + userBalance.ExpertsBalance;
             if (totalMoney < payoutMoney)
-                throw new Exception(string.Format("用户总金额小于 {0:N2}元。", payoutMoney));
+                throw new LogicException(string.Format("用户总金额小于 {0:N2}元。", payoutMoney));
 
             var payDetailList = new List<PayDetail>();
             payDetailList.Add(new PayDetail
@@ -1697,7 +1697,7 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                 //使用充值金额扣款
                 if (userBalance.FillMoneyBalance < payoutMoney)
-                    throw new Exception("可用充值金额不足");
+                    throw new LogicException("可用充值金额不足");
 
                 #region 异常提现
 
@@ -1768,19 +1768,19 @@ namespace KaSon.FrameWork.ORM.Helper
         public static void Payback_To_Balance(string category, string userId, string orderId, decimal payBackMoney, string summary)
         {
             if (payBackMoney <= 0M)
-                throw new Exception("退款金额不能小于0.");
+                throw new LogicException("退款金额不能小于0.");
             //查询帐户余额
             var balanceManager = new UserBalanceManager();
             var fundManager = new FundManager();
             //资金密码判断
             var userBalance = balanceManager.QueryUserBalance(userId);
-            if (userBalance == null) { throw new Exception("用户帐户不存在 - " + userId); }
+            if (userBalance == null) { throw new LogicException("用户帐户不存在 - " + userId); }
 
             var fundList = fundManager.QueryFundDetailList(orderId, userId);
             if (fundList == null || fundList.Count == 0)
-                throw new Exception(string.Format("未查询到用户{0}的订单{1}的支付明细", userId, orderId));
+                throw new LogicException(string.Format("未查询到用户{0}的订单{1}的支付明细", userId, orderId));
             //if (fundList.Sum(p => p.PayMoney) < payBackMoney)
-            //    throw new Exception("退款金额大于订单总支付金额");
+            //    throw new LogicException("退款金额大于订单总支付金额");
 
             //退款顺序：名家=>佣金=>奖金=>红包=>充值金额
             #region 按顺序退款
@@ -1937,7 +1937,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 //userBalance.FillMoneyBalance += currentPayBack;
             }
             //if (payBackMoney > 0M)
-            //    throw new Exception("退款金额大于总支付金额");
+            //    throw new LogicException("退款金额大于总支付金额");
 
             #endregion
 
@@ -2144,7 +2144,7 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             var status = new GameBusiness().LotteryGameToStatus(gameCode);
             if (status != EnableStatus.Enable)
-                throw new Exception("彩种暂时不能投注");
+                throw new LogicException("彩种暂时不能投注");
         }
 
         public static void CheckBalance(string userId, string password = "", string place = "")
@@ -2152,9 +2152,9 @@ namespace KaSon.FrameWork.ORM.Helper
             var balanceManager = new UserBalanceManager();
             var userBalance = balanceManager.QueryUserBalance(userId);
             if (userBalance == null)
-                throw new Exception("未查询到您的账户信息");
+                throw new LogicException("未查询到您的账户信息");
             else if ((userBalance.ExpertsBalance + userBalance.FillMoneyBalance + userBalance.BonusBalance + userBalance.CommissionBalance) <= 0)
-                throw new Exception("对不起！您当前的余额不足");
+                throw new LogicException("对不起！您当前的余额不足");
             //资金密码判断
             if (!string.IsNullOrEmpty(password))
             {
@@ -2165,7 +2165,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         password = Encipherment.MD5(string.Format("{0}{1}", password, _gbKey)).ToUpper();
                         if (!userBalance.Password.ToUpper().Equals(password))
                         {
-                            throw new Exception("资金密码输入错误");
+                            throw new LogicException("资金密码输入错误");
                         }
                     }
                 }

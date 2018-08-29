@@ -500,10 +500,10 @@ namespace KaSon.FrameWork.ORM.Helper
                 var manager = new Sports_Manager();
                 var order = manager.QuerySports_Order_Running(schemeId);
                 if (order == null)
-                    throw new Exception("订单数据为空");
+                    throw new LogicException("订单数据为空");
                 var codeList = manager.QuerySportsAnteCodeBySchemeId(schemeId);
                 if (codeList == null || codeList.Count <= 0)
-                    throw new Exception("订单投注号码为空");
+                    throw new LogicException("订单投注号码为空");
 
                 if (order.SchemeType == (int)SchemeType.ChaseBetting)
                 {
@@ -586,7 +586,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     logList.Add("订单是【单式上传订单】");
                     var singleCode = manager.QuerySingleScheme_AnteCode(schemeId);
                     if (singleCode == null)
-                        throw new Exception("单式号码数据为空");
+                        throw new LogicException("单式号码数据为空");
 
                     AddOrderToWaitSplitList(new RedisWaitTicketOrderSingle
                     {
