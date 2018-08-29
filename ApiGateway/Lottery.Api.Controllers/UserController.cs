@@ -1004,7 +1004,7 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "设置失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -1059,7 +1059,7 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "设置失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });

@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using BettingLottery.Service.IModuleServices;
 using System.IO;
 using System.Text;
+using EntityModel.ExceptionExtend;
 
 namespace BettingLottery.Service.ModuleServices
 {
@@ -264,6 +265,10 @@ namespace BettingLottery.Service.ModuleServices
                     ReturnValue = schemeId + "|" + info.TotalMoney,
                 });
             }
+            catch (LogicException ex)
+            {
+                throw new Exception("发起合买失败 - " + ex.Message, ex);
+            }
             catch (Exception ex)
             {
                 throw new Exception("发起合买异常，请重试 ", ex);
@@ -396,7 +401,7 @@ namespace BettingLottery.Service.ModuleServices
                     _togetherSchemeInfo.Clear();
                     return;
                 }
-                throw new Exception("Repeat");
+                throw new LogicException("重复投注保护");
             }
             else
             {
@@ -441,7 +446,7 @@ namespace BettingLottery.Service.ModuleServices
                     _togetherSchemeInfo.Clear();
                     return;
                 }
-                throw new Exception("Repeat");
+                throw new LogicException("重复投注保护");
             }
         }
 
@@ -537,12 +542,12 @@ namespace BettingLottery.Service.ModuleServices
             }
             catch (AggregateException ex)
             {
-                throw new AggregateException(ex.Message,ex);
+                throw ex;
             }
-            //catch (Exception ex)
-            //{
-            //    throw ex;
-            //}
+            catch (LogicException ex)
+            {
+                throw ex;
+            }
             catch (Exception ex)
             {
                 throw new Exception("订单投注异常，请重试 ", ex);
@@ -696,7 +701,7 @@ namespace BettingLottery.Service.ModuleServices
                             }
                             else
                             {
-                                throw new Exception("Repeat");
+                                throw new LogicException("重复投注保护");
                             }
                         }
                     }
@@ -729,7 +734,7 @@ namespace BettingLottery.Service.ModuleServices
                             }
                             else
                             {
-                                throw new Exception("Repeat");
+                                throw new LogicException("重复投注保护");
                             }
                         }
                     }
@@ -762,7 +767,7 @@ namespace BettingLottery.Service.ModuleServices
                 //    throw new LogicException("未实名认证用户不能购买彩票");
                 var checkError = CheckGeneralRepeatBetting(userId, info);
                 if (!string.IsNullOrEmpty(checkError))
-                    throw new Exception(checkError,new Exception("重复投注频繁投注"));
+                    throw new LogicException("重复投注保护");
                 var keyLine = string.Empty;
                 keyLine = new Sports_Business().LotteryBetting(info, userId, balancePassword, "Bet", redBagMoney);
                 //2017-12-4 更新用户推广
