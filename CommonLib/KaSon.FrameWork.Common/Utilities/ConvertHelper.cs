@@ -1161,7 +1161,31 @@ namespace KaSon.FrameWork.Common.Utilities {
         public static string GetBankCardNumberxxxString(string Input)
         {
             string Output = "";
-            if (Input.Length > 7)
+            switch (Input.Length)
+            {
+                case 1:
+                    Output = "*";
+                    break;
+                case 2:
+                    Output = Input[0] + "*";
+                    break;
+                case 3:
+                    Output = Input[0] + "**";
+                    break;
+                case 4:
+                    Output = Input[0] + "**"+ Input[3];
+                    break;
+                case 5:
+                    Output = Input[0] + "***" + Input[3] + Input[4];
+                    break;
+                case 6:
+                    Output = Input[0]+ Input[1] + "***" + Input[4] + Input[5];
+                    break;
+                case 7:
+                    Output = Input[0] + Input[1] +Input[2] + "***" + Input[5] + Input[6];
+                    break;
+            }
+           if (Input.Length > 7)
             {
                 Output = Input.Substring(0, 5);
                 for (int i = 5; i < 8; i++)

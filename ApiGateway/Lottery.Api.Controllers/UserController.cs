@@ -50,15 +50,15 @@ namespace Lottery.Api.Controllers
                 string loginName = p.LoginName;
                 string password = p.Password;
                 if (string.IsNullOrEmpty(loginName))
-                    throw new Exception("登录名不能为空");
+                    throw new LogicException("登录名不能为空");
                 if (string.IsNullOrEmpty(password))
-                    throw new Exception("密码不能为空");
+                    throw new LogicException("密码不能为空");
                 param["loginName"] = loginName;
                 param["password"] = password;
                 param["IPAddress"] = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
                 var loginInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/user_login");
                 if (loginInfo == null)
-                    throw new ArgumentException("登录失败");
+                    throw new Exception("登录失败");
                 if (!loginInfo.IsSuccess)
                     throw new ArgumentException(loginInfo.Message);
                 Dictionary<string, object> bindParam = new Dictionary<string, object>();
@@ -203,20 +203,20 @@ namespace Lottery.Api.Controllers
                 Dictionary<string, object> param = new Dictionary<string, object>();
               
                 if (string.IsNullOrEmpty(oldPassword))
-                    throw new Exception("旧密码不能为空");
+                    throw new LogicException("旧密码不能为空");
                 if (string.IsNullOrEmpty(newPassword))
-                    throw new Exception("新密码不能为空");
+                    throw new LogicException("新密码不能为空");
                 if (string.IsNullOrEmpty(userToken))
-                    throw new Exception("Token不能为空");
+                    throw new LogicException("Token不能为空");
                 string tokenuserId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 if (tokenuserId != userId)
-                    throw new Exception("Token验证失败");
+                    throw new LogicException("Token验证失败");
                 param["newPassword"] = newPassword;
                 param["userId"] = userId;
              
                 var chkPwd = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/CheckIsSame2BalancePassword");
                 if (chkPwd.ReturnValue == "T" || chkPwd.ReturnValue == "N")
-                    throw new Exception("登录密码不能和资金密码一样");
+                    throw new LogicException("登录密码不能和资金密码一样");
                 param.Clear();
                 param["oldPassword"] = oldPassword;
                 param["newPassword"] = newPassword;
@@ -242,7 +242,7 @@ namespace Lottery.Api.Controllers
             }
             catch (Exception ex)
             {
-                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = "执行失败" + "●" + ex.ToString(), MsgId = entity.MsgId, Value = ex.ToGetMessage(), });
+                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = ex.ToGetMessage() + "●" + ex.ToString(), MsgId = entity.MsgId, Value = ex.ToGetMessage(), });
             }
         }
 
@@ -262,23 +262,23 @@ namespace Lottery.Api.Controllers
                 string userId = p.UserId;
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 if (string.IsNullOrEmpty(mobile))
-                    throw new Exception("手机号码不能为空");
+                    throw new LogicException("手机号码不能为空");
                 if (string.IsNullOrEmpty(userToken))
-                    throw new Exception("userToken不能为空");
+                    throw new LogicException("userToken不能为空");
                 if (!ValidateHelper.IsMobile(mobile))
-                    throw new ArgumentException("手机号码格式错误");
+                    throw new LogicException("手机号码格式错误");
                 if (string.IsNullOrEmpty(userId))
-                    throw new ArgumentException("用户编号不能为空！");
+                    throw new LogicException("用户编号不能为空！");
                 string tokenuserId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 if (tokenuserId != userId)
-                    throw new ArgumentException("token验证失败！");
+                    throw new LogicException("token验证失败！");
                 //param["mobile"] = mobile;
                 //param["userToken"] = userToken;
                 param["userId"] = userId;
 
                 var loginInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/GetLocalLoginByUserId");
                 if (loginInfo == null || string.IsNullOrEmpty(loginInfo.UserId))
-                    throw new ArgumentException("未查询到用户信息");
+                    throw new LogicException("未查询到用户信息");
 
                 #region "20171108增加配置（禁止注册的手机号码）"
                 Dictionary<string, object> param2 = new Dictionary<string, object>();
@@ -286,7 +286,7 @@ namespace Lottery.Api.Controllers
                 var banRegistrMobile = await _serviceProxyProvider.Invoke<C_Core_Config>(param2, "api/user/QueryCoreConfigByKey"); ;
                 if (banRegistrMobile.ConfigValue.Contains(mobile))
                 {
-                    throw new ArgumentException("因检测到该号码在黑名单中，无法注册用户，请联系在线客服。");
+                    throw new LogicException("因检测到该号码在黑名单中，无法注册用户，请联系在线客服。");
                 }
 
                 #endregion
@@ -301,7 +301,7 @@ namespace Lottery.Api.Controllers
             }
             catch (Exception ex)
             {
-                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = "执行失败" + "●" + ex.ToString(), MsgId = entity.MsgId, Value = null });
+                return JsonEx(new LotteryServiceResponse { Code = ResponseCode.失败, Message = ex.ToGetMessage() + "●" + ex.ToString(), MsgId = entity.MsgId, Value = null });
 
             }
             return null;
@@ -322,9 +322,9 @@ namespace Lottery.Api.Controllers
                 string userToken = p.UserToken;
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 if (string.IsNullOrEmpty(mobileCode))
-                    throw new Exception("手机验证码不能为空");
+                    throw new LogicException("手机验证码不能为空");
                 if (string.IsNullOrEmpty(userToken))
-                    throw new Exception("userToken不能为空");
+                    throw new LogicException("userToken不能为空");
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 param["validateCode"] = mobileCode;
                 param["source"] = (int)SchemeSource.Web;
@@ -356,7 +356,7 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "执行失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -379,11 +379,11 @@ namespace Lottery.Api.Controllers
                 string validateCode = p.validateCode;
                 string mobile = p.mobile;
                 if (string.IsNullOrEmpty(password))
-                    throw new Exception("密码不能为空！");
+                    throw new LogicException("密码不能为空！");
                 if (string.IsNullOrEmpty(validateCode))
-                    throw new Exception("验证码不能为空！");
+                    throw new LogicException("验证码不能为空！");
                 if (!ValidateHelper.IsMobile(mobile))
-                    throw new ArgumentException("手机号码不能为空！");
+                    throw new LogicException("手机号码不能为空！");
                 //string cfrom = "";
                 string pid = p.pid;
                 string fxid = p.fxid;
@@ -571,9 +571,9 @@ namespace Lottery.Api.Controllers
                 //}
                 string mobile = p.mobile;
                 if (string.IsNullOrEmpty(mobile))
-                    throw new Exception("手机号码不能为空");
+                    throw new LogicException("手机号码不能为空");
                 if (!ValidateHelper.IsMobile(mobile))
-                    throw new Exception("手机号码格式错误");
+                    throw new LogicException("手机号码格式错误");
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param["mobile"] = mobile;
                 var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/RegisterRequestMobile");
@@ -590,7 +590,7 @@ namespace Lottery.Api.Controllers
             {
                 //return Json(new { status = false, message = exp.ToGetMessage() }, JsonRequestBehavior.AllowGet);
                 returnResult.Code = ResponseCode.失败;
-                returnResult.Message = "发送失败" + "●" + ex.ToString();
+                returnResult.Message = ex.ToGetMessage() + "●" + ex.ToString();
                 returnResult.Value = ex.ToGetMessage();
                 return JsonEx(returnResult);
             }
@@ -704,9 +704,9 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "获取验证码失败" + "●" + ex.ToString(),
-                    //   MsgId = entity.MsgId,
-                    //  Value = ex.ToGetMessage(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                   // MsgId = entity.MsgId,
+                   //Value = ex.ToGetMessage(),
                 });
             }
             //return vlimg;
@@ -798,7 +798,7 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "验证失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = false,
                 });
@@ -818,23 +818,23 @@ namespace Lottery.Api.Controllers
                 string mobile = p.mobile;
                 string validateCode = p.validateCode;
                 if (string.IsNullOrEmpty(mobile))
-                    throw new Exception("手机号码不能为空");
+                    throw new LogicException("手机号码不能为空");
                 if (!ValidateHelper.IsMobile(mobile))
-                    throw new Exception("手机号码格式错误");
+                    throw new LogicException("手机号码格式错误");
                 if (string.IsNullOrEmpty(validateCode))
-                    throw new Exception("验证码不能为空");
+                    throw new LogicException("验证码不能为空");
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param["mobile"] = mobile;
                 param["validateCode"] = validateCode;
 
                 var flag = await _serviceProxyProvider.Invoke<bool>(param, "api/user/CheckValidateCodeByForgetPWD");
                 if (!flag)
-                    throw new Exception("验证码错误或已过期");
+                    throw new LogicException("验证码错误或已过期");
                 Dictionary<string, object> paramLoginName = new Dictionary<string, object>();
                 paramLoginName["loginName"] = mobile;
                 string userId = await _serviceProxyProvider.Invoke<string>(paramLoginName, "api/user/GetUserIdByLoginName");
                 if (string.IsNullOrEmpty(userId))
-                    throw new Exception("手机号错误，该手机号未注册");
+                    throw new LogicException("手机号错误，该手机号未注册");
 
                 //string userToken = WCFClients.ExternalClient.GetGuestToken().ReturnValue;
                 //var isAuthMobile = WCFClients.ExternalClient.CheckIsAuthenticatedUserMobile(userId, userToken);
@@ -881,7 +881,7 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "操作失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -901,9 +901,9 @@ namespace Lottery.Api.Controllers
                 var p = WebHelper.Decode(entity.Param);
                 string mobile = p.mobile;
                 if (string.IsNullOrEmpty(mobile))
-                    throw new Exception("手机号码不能为空");
+                    throw new LogicException("手机号码不能为空");
                 if (!ValidateHelper.IsMobile(mobile))
-                    throw new Exception("手机号码格式错误");
+                    throw new LogicException("手机号码格式错误");
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param["mobile"] = mobile;
                 var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/SendValidateCodeToUserMobileByForgetPWD");
@@ -933,7 +933,7 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "发送验证码失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -955,15 +955,15 @@ namespace Lottery.Api.Controllers
                 string userToken = p.UserToken;
                 string strPlace = string.IsNullOrEmpty((string)p.StrPlace)?"": p.StrPlace ;
                 if (string.IsNullOrEmpty(userToken))
-                    throw new Exception("您还未登录，请登录！");
+                    throw new LogicException("您还未登录，请登录！");
                 else if (string.IsNullOrEmpty(newPwd))
-                    throw new Exception("资金密码不能为空！");
+                    throw new LogicException("资金密码不能为空！");
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 if (isSet)
                 {
                     if (!Regex.IsMatch(newPwd, "^\\d{6}$"))
                     {
-                        throw new Exception("新资金密码只能使用0-9的6位数字！");
+                        throw new LogicException("新资金密码只能使用0-9的6位数字！");
                     }
                     //Dictionary<string, object> param = new Dictionary<string, object>();
 
@@ -994,7 +994,7 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "设置失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -1026,9 +1026,9 @@ namespace Lottery.Api.Controllers
                 string pwd = p.Pwd;
                 string userToken = p.UserToken;
                 if (string.IsNullOrEmpty(userToken))
-                    throw new Exception("您还未登录，请登录！");
+                    throw new LogicException("您还未登录，请登录！");
                 else if (string.IsNullOrEmpty(pwd))
-                    throw new Exception("资金密码不能为空");
+                    throw new LogicException("资金密码不能为空");
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 Dictionary<string, object> paramPwd = new Dictionary<string, object>();
                 paramPwd["password"] = pwd;
@@ -1081,7 +1081,7 @@ namespace Lottery.Api.Controllers
                 var p = WebHelper.Decode(entity.Param);
                 string userToken = p.UserToken;
                 if (string.IsNullOrEmpty(userToken))
-                    throw new Exception("您还未登录，请登录！");
+                    throw new LogicException("您还未登录，请登录！");
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param["userId"] = userId;
@@ -1134,11 +1134,11 @@ namespace Lottery.Api.Controllers
                 string userToken = p.UserToken;
 
                 if (string.IsNullOrEmpty(idCardNumber))
-                    throw new Exception("证件号码不能为空");
+                    throw new LogicException("证件号码不能为空");
                 if (string.IsNullOrEmpty(realName))
-                    throw new Exception("真实姓名不能为空");
+                    throw new LogicException("真实姓名不能为空");
                 if (string.IsNullOrEmpty(userToken))
-                    throw new Exception("userToken不能为空");
+                    throw new LogicException("userToken不能为空");
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 var userRealName = new UserRealNameInfo
                 {
@@ -1327,17 +1327,17 @@ namespace Lottery.Api.Controllers
                 string userToken = p.UserToken;
                 string loginName = p.LoginName;
                 if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userToken) || string.IsNullOrEmpty(loginName))
-                    throw new ArgumentException("传入参数信息有误！");
+                    throw new LogicException("传入参数信息有误！");
                 string tokenuserId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 if (tokenuserId != userId)
-                    throw new ArgumentException("token验证失败！");
+                    throw new LogicException("token验证失败！");
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param["userId"] = userId;
                 Dictionary<string, object> bindParam = new Dictionary<string, object>();
                 bindParam["userId"] = userId;
                 var bindInfo = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
                 if (bindInfo == null)
-                    throw new ArgumentException("未查询到当前用户信息！");
+                    throw new LogicException("未查询到当前用户信息！");
                 Dictionary<string, object> balanceParam = new Dictionary<string, object>();
                 balanceParam["userId"] = userId;
                 //var balance = await _serviceProxyProvider.Invoke<UserBalanceInfo>(balanceParam, "api/user/QueryMyBalance");
@@ -1395,7 +1395,7 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "服务器内部错误，请联系接口提供商" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -1414,7 +1414,7 @@ namespace Lottery.Api.Controllers
                 var p = WebHelper.Decode(entity.Param);
                 string userToken = p.UserToken;
                 if (string.IsNullOrEmpty(userToken))
-                    throw new ArgumentException("传入参数信息有误！");
+                    throw new LogicException("传入参数信息有误！");
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 Dictionary<string, object> balanceParam = new Dictionary<string, object>();
                 //balanceParam["UserToken"] = userToken;
@@ -1468,7 +1468,7 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "服务器内部错误，请联系接口提供商" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -1489,12 +1489,12 @@ namespace Lottery.Api.Controllers
                 string userToken = p.token;
                 string client = p.client;
                 if (string.IsNullOrEmpty(userToken))
-                    throw new ArgumentException("token不能为空");
+                    throw new LogicException("token不能为空");
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 if ((DateTime.Now.Hour < 8 || (DateTime.Now.Hour == 8 && DateTime.Now.Minute < 50))
                     && (DateTime.Now.Hour > 1 || (DateTime.Now.Hour == 1 && DateTime.Now.Minute > 10)))
                 {
-                    throw new ArgumentException("提现时间早上9点到凌晨1点，请您明天9点再来，感谢配合");
+                    throw new LogicException("提现时间早上9点到凌晨1点，请您明天9点再来，感谢配合");
                 }
                 //Dictionary<string, object> param = new Dictionary<string, object>();
                 //param["userToken"] = token;
@@ -1505,11 +1505,11 @@ namespace Lottery.Api.Controllers
                 bindParam["userId"] = userId;
                 var info = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
                 if (info == null)
-                    throw new ArgumentException("未找到用户信息");
+                    throw new LogicException("未找到用户信息");
                 if (string.IsNullOrEmpty(info.RealName))
-                    throw new ArgumentException("请先实名认证");
+                    throw new LogicException("请先实名认证");
                 if (string.IsNullOrEmpty(info.BankCardNumber))
-                    throw new ArgumentException("请先绑定银行卡");
+                    throw new LogicException("请先绑定银行卡");
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
@@ -1524,14 +1524,14 @@ namespace Lottery.Api.Controllers
                     }
                 });
             }
-            catch (Exception exp)
+            catch (Exception ex)
             {
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "服务器内部错误，请联系接口提供商" + "●" + exp.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
-                    Value = exp.ToGetMessage(),
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -1553,9 +1553,9 @@ namespace Lottery.Api.Controllers
                 string client = p.client;
                 string money = p.money;
                 if (string.IsNullOrEmpty(userToken))
-                    throw new ArgumentException("token不能为空");
+                    throw new LogicException("token不能为空");
                 if (string.IsNullOrEmpty(money))
-                    throw new ArgumentException("提款金额不能为空");
+                    throw new LogicException("提款金额不能为空");
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 //param["userToken"] = token;
@@ -1564,11 +1564,11 @@ namespace Lottery.Api.Controllers
                 bindParam["userId"] = userId;
                 var info = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
                 if (info == null)
-                    throw new ArgumentException("未找到用户信息");
+                    throw new LogicException("未找到用户信息");
                 if (string.IsNullOrEmpty(info.RealName))
-                    throw new ArgumentException("请先实名认证");
+                    throw new LogicException("请先实名认证");
                 if (string.IsNullOrEmpty(info.BankCardNumber))
-                    throw new ArgumentException("请先绑定银行卡");
+                    throw new LogicException("请先绑定银行卡");
                 var minwithdrawmoney = await GetMinWithdrawMoney(_serviceProxyProvider);
                 PreconditionAssert.IsTrue(decimal.Parse(money) >= minwithdrawmoney, "提款金额不能小于" + minwithdrawmoney.ToString() + "元");
                 Dictionary<string, object> paramRequestWithdraw = new Dictionary<string, object>();
@@ -1605,14 +1605,14 @@ namespace Lottery.Api.Controllers
                     }
                 });
             }
-            catch (Exception exp)
+            catch (Exception ex)
             {
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "服务器内部错误，请联系接口提供商" + "●" + exp.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
-                    Value = exp.ToGetMessage(),
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -1635,9 +1635,9 @@ namespace Lottery.Api.Controllers
                 string balancepwd = p.balancepwd;
                 decimal RequestMoney = 0;
                 if (string.IsNullOrEmpty(userToken))
-                    throw new ArgumentException("token不能为空");
+                    throw new LogicException("token不能为空");
                 if (string.IsNullOrEmpty(money))
-                    throw new ArgumentException("提款金额不能为空");
+                    throw new LogicException("提款金额不能为空");
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 decimal.TryParse(money, out RequestMoney);
                 //PreconditionAssert.IsTrue(RequestMoney >= 10, "提款金额不能小于10元");
@@ -1650,11 +1650,11 @@ namespace Lottery.Api.Controllers
                 bindParam["userId"] = userId;
                 var info = await _serviceProxyProvider.Invoke<UserBindInfos>(bindParam, "api/user/QueryUserBindInfos");
                 if (info == null)
-                    throw new ArgumentException("未找到用户信息");
+                    throw new LogicException("未找到用户信息");
                 if (string.IsNullOrEmpty(info.RealName))
-                    throw new ArgumentException("请先实名认证");
+                    throw new LogicException("请先实名认证");
                 if (string.IsNullOrEmpty(info.BankCardNumber))
-                    throw new ArgumentException("请先绑定银行卡");
+                    throw new LogicException("请先绑定银行卡");
 
                 Withdraw_RequestInfo withdrawinfo = new Withdraw_RequestInfo();
                 withdrawinfo.BankCardNumber = info.BankCardNumber;
@@ -1678,14 +1678,14 @@ namespace Lottery.Api.Controllers
                     MsgId = entity.MsgId
                 });
             }
-            catch (Exception exp)
+            catch (Exception ex)
             {
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "服务器内部错误，请联系接口提供商" + "●" + exp.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
-                    Value = exp.ToGetMessage(),
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -1702,7 +1702,7 @@ namespace Lottery.Api.Controllers
                 int PageSize = Convert.ToInt32(p.PageSize);
                 var status = string.IsNullOrEmpty((string)p.Status) ? -1 : Convert.ToInt32(p.Status);
                 if (string.IsNullOrEmpty(userToken))
-                    throw new Exception("token验证失败");
+                    throw new LogicException("token验证失败");
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 //var withdrawList = WCFClients.GameFundClient.QueryMyWithdrawList(WithdrawStatus.Success, begin, end.AddDays(1), pageNo, PageSize, token);
                 //var withdrawList = WCFClients.GameFundClient.QueryMyWithdrawList(null, begin, end.AddDays(1), pageNo, PageSize, token);
@@ -1722,14 +1722,14 @@ namespace Lottery.Api.Controllers
                     Value = withdrawList.WithdrawList
                 });
             }
-            catch (Exception exp)
+            catch (Exception ex)
             {
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "服务器内部错误，请联系接口提供商" + "●" + exp.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
-                    Value = exp.ToGetMessage(),
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
@@ -1777,7 +1777,7 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "验证用户失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -1873,12 +1873,12 @@ namespace Lottery.Api.Controllers
                 string bank = p.bank;
                 if (string.IsNullOrEmpty(userToken))
                 {
-                    throw new Exception("无效参数");
+                    throw new LogicException("无效参数");
                 }
                 string amount = p.amount;
                 if (!CheckInt(amount, 1, 100000))
                 {
-                    throw new Exception("充值金额无效");
+                    throw new LogicException("充值金额无效");
                 }
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 Dictionary<string, object> param = new Dictionary<string, object>();
@@ -1937,7 +1937,7 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });

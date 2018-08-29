@@ -1,6 +1,7 @@
 ﻿using EntityModel;
 using EntityModel.CoreModel.AuthEntities;
 using EntityModel.Enum;
+using EntityModel.ExceptionExtend;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -100,16 +101,16 @@ namespace KaSon.FrameWork.ORM.Helper
                 var entity = manager.GetUserMobile(userId);
                 if (entity == null)
                 {
-                    throw new ArgumentException("尚未请求手机认证");
+                    throw new LogicException("尚未请求手机认证");
                 }
                 if (entity.IsSettedMobile)
                 {
-                    throw new ArgumentException(string.Format("已于【{0:yyyy-MM-dd HH:mm:ss}】进行过手机认证。", entity.UpdateTime));
+                    throw new LogicException(string.Format("已于【{0:yyyy-MM-dd HH:mm:ss}】进行过手机认证。", entity.UpdateTime));
                 }
                 var span = DateTime.Now - entity.UpdateTime.AddSeconds(delaySeconds);
                 if (span.TotalSeconds > 0)
                 {
-                    throw new ArgumentException(string.Format("提交认证手机必须在请求认证后【{0}】内完成。", delayDescription));
+                    throw new LogicException(string.Format("提交认证手机必须在请求认证后【{0}】内完成。", delayDescription));
                 }
                 entity.IsSettedMobile = true;
 
@@ -143,10 +144,10 @@ namespace KaSon.FrameWork.ORM.Helper
                 if (entity != null)
                 {
                     if (entity.IsSettedMobile)
-                        throw new ArgumentException(string.Format("已于【{0:yyyy-MM-dd HH:mm:ss}】进行过手机认证。", entity.UpdateTime));
+                        throw new LogicException(string.Format("已于【{0:yyyy-MM-dd HH:mm:ss}】进行过手机认证。", entity.UpdateTime));
                     var span = DateTime.Now - entity.UpdateTime.AddSeconds(delaySeconds);
                     if (span.TotalSeconds > 0)
-                        throw new ArgumentException(string.Format("提交认证手机必须在请求认证后【{0}】内完成。", delayDescription));
+                        throw new LogicException(string.Format("提交认证手机必须在请求认证后【{0}】内完成。", delayDescription));
                     entity.IsSettedMobile = true;
                     manager.UpdateUserMobile(entity);
                 }

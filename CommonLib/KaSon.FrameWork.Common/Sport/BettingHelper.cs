@@ -1177,16 +1177,16 @@ namespace KaSon.FrameWork.Common.Sport
         public static void CheckUserRealName(string idCardNumber)
         {
             if (string.IsNullOrEmpty(idCardNumber))
-                throw new Exception("用户身份证信息不完整，不能购买彩票");
+                throw new LogicException("用户身份证信息不完整，不能购买彩票");
             if (idCardNumber.Length < 18)
             {
                 if (idCardNumber.Length != 15)
-                    throw new Exception("用户身份证号格式不正确，不能购买彩票");
+                    throw new LogicException("用户身份证号格式不正确，不能购买彩票");
             }
             else if (idCardNumber.Length > 15)
             {
                 if (idCardNumber.Length != 18)
-                    throw new Exception("用户身份证号格式不正确，不能购买彩票");
+                    throw new LogicException("用户身份证号格式不正确，不能购买彩票");
             }
 
             var birth = string.Empty;
@@ -1198,7 +1198,7 @@ namespace KaSon.FrameWork.Common.Sport
             if (idCardNumber.Length == 15)
                 birth = string.Format("19{0}", idCardNumber.Substring(6, 6));
             if (birth.Length != 8)
-                throw new Exception("用户身份证号格式不正确，不能购买彩票");
+                throw new LogicException("用户身份证号格式不正确，不能购买彩票");
 
             year = int.Parse(birth.Substring(0, 4));
             month = int.Parse(birth.Substring(4, 2));
@@ -1208,15 +1208,15 @@ namespace KaSon.FrameWork.Common.Sport
             if (diffYear > 18)
                 return;
             if (diffYear < 18)
-                throw new Exception("用户未满18岁，不能购买彩票");
+                throw new LogicException("用户未满18岁，不能购买彩票");
             if (diffYear == 18)
             {
                 if (DateTime.Now.Month < month)
-                    throw new Exception("用户未满18岁，不能购买彩票");
+                    throw new LogicException("用户未满18岁，不能购买彩票");
                 else if (DateTime.Now.Month == month)
                 {
                     if (DateTime.Now.Day < day)
-                        throw new Exception("用户未满18岁，不能购买彩票");
+                        throw new LogicException("用户未满18岁，不能购买彩票");
                 }
             }
         }
