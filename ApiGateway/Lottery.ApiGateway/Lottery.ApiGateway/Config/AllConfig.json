@@ -4,10 +4,8 @@
     "EnableRedis": true,
     "RedisHost": "10.0.3.6",
     "RedisPost": 6379,
-    "RedisPassword": "wancai_redis123\\",
-    "RedisConnect": "10.0.3.6:6379,password=e-3Jeh?1u_0nix)nB1Zz:-PZA-Uk,R+-",
-    "RedisConnect1": "10.0.3.6,password=wancai_redis123",
-    "Port": "6379"
+    "RedisPassword": "redis123"
+  
   },
   //Https ≈‰÷√
   "HttpsConfig": {
