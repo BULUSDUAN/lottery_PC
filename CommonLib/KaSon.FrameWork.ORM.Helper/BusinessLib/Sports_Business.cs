@@ -2247,6 +2247,132 @@ namespace KaSon.FrameWork.ORM.Helper
             return order;
         }
 
+
+        public Order_Together AddRunningOrderAndOrderDetail_BackList(string schemeId, SchemeBettingCategory category,
+         string gameCode, string gameType, string playType, bool stopAfterBonus,
+         string issuseNumber, int amount, int betCount, int totalMatchCount, decimal totalMoney, DateTime stopTime,
+         SchemeSource schemeSource, TogetherSchemeSecurity security, SchemeType schemeType, bool canChase, bool isVirtualOrder,
+         string userId, string userAgent, DateTime betTime, ActivityType activityType, string attach, bool isAppend, decimal redBagMoney, ProgressStatus progressStatus, TicketStatus ticketStatus)
+        {
+            //if (DateTime.Now >= stopTime)
+            if (betTime >= stopTime)
+                throw new LogicException(string.Format("订单结束时间是{0}，订单不能投注。", stopTime.ToString("yyyy-MM-dd HH:mm")));
+            var sportsManager = new Sports_Manager();
+            if (new string[] { "JCZQ", "JCLQ" }.Contains(gameCode))
+                issuseNumber = DateTime.Now.ToString("yyyy-MM-dd");
+
+            DateTime? ticketTime = null;
+            if (ticketStatus == TicketStatus.Ticketed)
+                ticketTime = DateTime.Now;
+            DateTime createtime = DateTime.Now;
+            if (betTime != null && betTime.ToString() != "0001/1/1 0:00:00")
+            {
+                createtime = betTime;
+            }
+            else
+            {
+                betTime = DateTime.Now;
+            }
+            betTime = createtime;
+            var order = new C_Sports_Order_Running
+            {
+                AfterTaxBonusMoney = 0M,
+                AgentId = userAgent,
+                Amount = amount,
+                BonusStatus = (int)BonusStatus.Waitting,
+                CanChase = canChase,
+                IsVirtualOrder = isVirtualOrder,
+                IsPayRebate = false,
+                RealPayRebateMoney = 0M,
+                TotalPayRebateMoney = 0M,
+                CreateTime = createtime,
+                GameCode = gameCode,
+                GameType = gameType,
+                IssuseNumber = issuseNumber,
+                PlayType = playType,
+                PreTaxBonusMoney = 0M,
+                ProgressStatus = (int)progressStatus,
+                SchemeId = schemeId,
+                SchemeType = (int)schemeType,
+                SchemeBettingCategory = (int)category,
+                TicketId = string.Empty,
+                TicketLog = string.Empty,
+                TicketStatus = (int)ticketStatus,
+                TotalMatchCount = totalMatchCount,
+                TotalMoney = totalMoney,
+                SuccessMoney = totalMoney,
+                UserId = userId,
+                StopTime = stopTime,
+                SchemeSource = (int)schemeSource,
+                BetCount = betCount,
+                BonusCount = 0,
+                HitMatchCount = 0,
+                RightCount = 0,
+                Error1Count = 0,
+                Error2Count = 0,
+                MaxBonusMoney = 0,
+                MinBonusMoney = 0,
+                Security = (int)security,
+                TicketGateway = string.Empty,
+                TicketProgress = 1M,
+                BetTime = betTime,
+                ExtensionOne = string.Format("{0}{1}", "3X1_", (int)activityType),
+                Attach = string.IsNullOrEmpty(attach) ? string.Empty : attach.ToUpper(),
+                QueryTicketStopTime = stopTime.AddMinutes(1).ToString("yyyyMMddHHmm"),
+                IsAppend = isAppend,
+                RedBagMoney = redBagMoney,
+                IsSplitTickets = ticketStatus == TicketStatus.Ticketed,
+                TicketTime = ticketTime,
+            };
+            // sportsManager.AddSports_Order_Running(order);
+          //  DB.GetDal<C_Sports_Order_Running>().Add(order);
+            //订单总表信息
+            var orderDetail = new C_OrderDetail
+            {
+                AfterTaxBonusMoney = 0M,
+                AgentId = userAgent,
+                BonusStatus = (int)BonusStatus.Waitting,
+                ComplateTime = null,
+                CreateTime = createtime,
+                CurrentBettingMoney = ticketStatus == TicketStatus.Ticketed ? totalMoney : 0M,
+                GameCode = gameCode,
+                GameType = gameType,
+                GameTypeName = BettingHelper.FormatGameType(gameCode, gameType),
+                PreTaxBonusMoney = 0M,
+                ProgressStatus = (int)progressStatus,
+                SchemeId = schemeId,
+                SchemeSource = (int)schemeSource,
+                SchemeType = (int)schemeType,
+                SchemeBettingCategory = (int)category,
+                StartIssuseNumber = issuseNumber,
+                StopAfterBonus = stopAfterBonus,
+                TicketStatus = (int)ticketStatus,
+                TotalIssuseCount = 1,
+                TotalMoney = totalMoney,
+                UserId = userId,
+                CurrentIssuseNumber = issuseNumber,
+                IsVirtualOrder = isVirtualOrder,
+                PlayType = playType,
+                Amount = amount,
+                AddMoney = 0M,
+                BetTime = betTime,
+                IsAppend = isAppend,
+                RedBagMoney = redBagMoney,
+                BonusAwardsMoney = 0M,
+                RealPayRebateMoney = 0M,
+                RedBagAwardsMoney = 0M,
+                TotalPayRebateMoney = 0M,
+                TicketTime = ticketTime,
+            };
+            //   new SchemeManager().AddOrderDetail(orderDetail);
+            //  DB.GetDal<C_OrderDetail>().Add(orderDetail);
+            Order_Together OT = new Order_Together();
+            OT.Order_Running = order;
+            OT.OrderDetail = orderDetail;
+            return OT;
+        }
+
+
         #region 创建合买，参与合买
         /// <summary>
         /// 创建合买
@@ -3253,7 +3379,8 @@ namespace KaSon.FrameWork.ORM.Helper
            
             try
             {
-                
+                IList<C_Sports_Order_Running> Order_Running_List = new List<C_Sports_Order_Running>();
+                IList<C_OrderDetail> OrderDetail_List = new List<C_OrderDetail>();
                 foreach (var issuse in info.IssuseNumberList)
                 {
                     //var IsEnableLimitBetAmount = Convert.ToBoolean(new CacheDataBusiness().QueryCoreConfigByKey("IsEnableLimitBetAmount").ConfigValue);
@@ -3340,7 +3467,7 @@ namespace KaSon.FrameWork.ORM.Helper
                             });
                         }
                         var canTicket = BettingHelper.CanRequestBet(info.GameCode);
-                        var entity = AddRunningOrderAndOrderDetail(schemeId, info.BettingCategory, info.GameCode, string.Join(",", (from g in gameTypeList group g by g.GameType into g select g.Key).ToArray()),
+                        var entity = AddRunningOrderAndOrderDetail_BackList(schemeId, info.BettingCategory, info.GameCode, string.Join(",", (from g in gameTypeList group g by g.GameType into g select g.Key).ToArray()),
                               string.Empty, info.StopAfterBonus, issuse.IssuseNumber, issuse.Amount, totalNumberZhu, 0, currentIssuseMoney, currentIssuseNumber.OfficialStopTime, info.SchemeSource, info.Security,
                               info.IssuseNumberList.Count == 1 ? SchemeType.GeneralBetting : SchemeType.ChaseBetting, orderIndex == 1, false, user.UserId, user.AgentId,
                               orderIndex == 1 ? info.CurrentBetTime : currentIssuseNumber.StartTime, info.ActivityType, "", info.IsAppend, redBagMoney,
@@ -3354,7 +3481,7 @@ namespace KaSon.FrameWork.ORM.Helper
                             var runningOrder = new RedisWaitTicketOrder
                             {
                                 AnteCodeList = anteCodeList,
-                                RunningOrder = entity,
+                                RunningOrder = entity.Order_Running,
                                 KeyLine = keyLine,
                                 StopAfterBonus = info.StopAfterBonus,
                                 SchemeType = info.IssuseNumberList.Count == 1 ? SchemeType.GeneralBetting : SchemeType.ChaseBetting
@@ -3362,12 +3489,17 @@ namespace KaSon.FrameWork.ORM.Helper
                             //追号方式 存入Redis订单列表
                             redisOrderList.OrderList.Add(runningOrder);
                         }
-                    orderIndex++;
+
+                    Order_Running_List.Add(entity.Order_Running);
+                    OrderDetail_List.Add(entity.OrderDetail);
+                orderIndex++;
                 }
                 DB.Begin();
                 try
                 {
-
+                    //kason 批量录入录入订单信息
+                    DB.GetDal<C_OrderDetail>().BulkAdd(OrderDetail_List);
+                    DB.GetDal<C_Sports_Order_Running>().BulkAdd(Order_Running_List);
 
                     if (info.IssuseNumberList.Count > 1)
                     {
@@ -3608,6 +3740,14 @@ namespace KaSon.FrameWork.ORM.Helper
             DB.Begin();
             try
             {
+                //修改批量录入
+                IList<C_OrderDetail> orderDetailList = new List<C_OrderDetail>();
+                IList<C_Sports_Order_Running> orderRunningList = new List<C_Sports_Order_Running>();
+                IList<C_UserSaveOrder> userSaveOrderList = new List<C_UserSaveOrder>();
+                IList<C_Sports_AnteCode> Sports_AnteCodeList = new List<C_Sports_AnteCode>();
+                IList<C_Lottery_Scheme> Lottery_SchemeList = new List<C_Lottery_Scheme>();
+
+                //  C_UserSaveOrder
                 foreach (var issuse in info.IssuseNumberList)
                 {
                     //var currentIssuseNumber = lotteryManager.QueryGameIssuseByKey(info.GameCode, info.AnteCodeList[0].GameType, issuse.IssuseNumber);
@@ -3617,7 +3757,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     var gameTypeList = new List<GameTypeInfo>();
                     foreach (var item in info.AnteCodeList)
                     {
-                        sportsManager.AddSports_AnteCode(new C_Sports_AnteCode
+                        Sports_AnteCodeList.Add(new C_Sports_AnteCode
                         {
                             AnteCode = item.AnteCode,
                             BonusStatus = (int)BonusStatus.Waitting,
@@ -3645,7 +3785,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     }
                     else
                     {
-                        sportsManager.AddLotteryScheme(new C_Lottery_Scheme
+                        Lottery_SchemeList.Add(new C_Lottery_Scheme
                         {
                             OrderIndex = orderIndex,
                             KeyLine = keyLine,
@@ -3655,11 +3795,12 @@ namespace KaSon.FrameWork.ORM.Helper
                             IssuseNumber = issuse.IssuseNumber,
                         });
                     }
-                    AddRunningOrderAndOrderDetail(schemeId, info.BettingCategory, info.GameCode, string.Join(",", (from g in gameTypeList group g by g.GameType into g select g.Key).ToArray()),
+                   var model= AddRunningOrderAndOrderDetail_BackList(schemeId, info.BettingCategory, info.GameCode, string.Join(",", (from g in gameTypeList group g by g.GameType into g select g.Key).ToArray()),
                         string.Empty, info.StopAfterBonus, issuse.IssuseNumber, issuse.Amount, totalNumberZhu, 0, currentIssuseMoney, currentIssuseNumber.OfficialStopTime, info.SchemeSource, info.Security,
                         SchemeType.SaveScheme, false, true, user.UserId, user.AgentId, info.CurrentBetTime, info.ActivityType, "", info.IsAppend, 0M, ProgressStatus.Waitting, TicketStatus.Waitting);
 
-                    sportsManager.AddUserSaveOrder(new C_UserSaveOrder
+                   // sportsManager.AddUserSaveOrder();
+                    userSaveOrderList.Add(new C_UserSaveOrder
                     {
                         SchemeId = schemeId,
                         UserId = userId,
@@ -3678,9 +3819,25 @@ namespace KaSon.FrameWork.ORM.Helper
                         CreateTime = DateTime.Now,
                         StrStopTime = currentIssuseNumber.LocalStopTime.AddMinutes(-5).ToString("yyyyMMddHHmm"),
                     });
+                    //修改批量录入
+                    //IList<C_OrderDetail> orderDetailList = new List<C_OrderDetail>();
+                    //IList<C_Sports_Order_Running> orderRunningList = new List<C_Sports_Order_Running>();
+                    //IList<C_UserSaveOrder> userSaveOrderList = new List<C_UserSaveOrder>();
+                    //IList<C_Sports_AnteCode> Sports_AnteCodeList = new List<C_Sports_AnteCode>();
+                    //IList<C_Lottery_Scheme> Lottery_SchemeList = new List<C_Lottery_Scheme>();
 
+                    orderDetailList.Add(model.OrderDetail);
+                    orderRunningList.Add(model.Order_Running);
                     orderIndex++;
                 }
+                //KSON 优化批量录入
+
+                DB.GetDal<C_Sports_AnteCode>().BulkAdd(Sports_AnteCodeList);
+                DB.GetDal<C_Lottery_Scheme>().BulkAdd(Lottery_SchemeList);
+                DB.GetDal<C_Sports_Order_Running>().BulkAdd(orderRunningList);
+                DB.GetDal<C_OrderDetail>().BulkAdd(orderDetailList);
+
+                DB.GetDal<C_UserSaveOrder>().BulkAdd(userSaveOrderList);
 
                 DB.Commit();
             }
