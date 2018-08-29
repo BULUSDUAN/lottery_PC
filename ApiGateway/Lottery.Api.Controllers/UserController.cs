@@ -200,7 +200,7 @@ namespace Lottery.Api.Controllers
                 string userToken = p.UserToken;
                 string userId = p.UserId;
                 Dictionary<string, object> param = new Dictionary<string, object>();
-                Dictionary<string, object> paramCheck = new Dictionary<string, object>();
+              
                 if (string.IsNullOrEmpty(oldPassword))
                     throw new Exception("旧密码不能为空");
                 if (string.IsNullOrEmpty(newPassword))
@@ -208,16 +208,18 @@ namespace Lottery.Api.Controllers
                 if (string.IsNullOrEmpty(userToken))
                     throw new Exception("Token不能为空");
                 string tokenuserId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
-                if (tokenuserId == userId)
+                if (tokenuserId != userId)
                     throw new Exception("Token验证失败");
-                paramCheck["newPassword"] = newPassword;
-                paramCheck["userId"] = userId;
-                param["oldPassword"] = oldPassword;
                 param["newPassword"] = newPassword;
-                //param["userToken"] = userToken;
-                var chkPwd = await _serviceProxyProvider.Invoke<CommonActionResult>(paramCheck, "api/user/CheckIsSame2BalancePassword");
+                param["userId"] = userId;
+             
+                var chkPwd = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/CheckIsSame2BalancePassword");
                 if (chkPwd.ReturnValue == "T" || chkPwd.ReturnValue == "N")
                     throw new Exception("登录密码不能和资金密码一样");
+                param.Clear();
+                param["oldPassword"] = oldPassword;
+                param["newPassword"] = newPassword;
+                param["userId"] = userId;
                 var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/ChangeMyPassword");
 
                 if (!result.IsSuccess)
