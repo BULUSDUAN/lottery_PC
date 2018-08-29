@@ -381,23 +381,28 @@ namespace Lottery.Api.Controllers
         {
             string config = "";
             string DicTypeName = "APILogError";
+            string ApiDicTypeName = "Error";
             switch (DicType)
             {
                 case 1:
                  //   config = KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\APILogError", "");
                     DicTypeName = "APILogError";
+                    ApiDicTypeName = "Error";
                     break;
                 case 2:
                    // config = KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\APITimeInfo", "");
                     DicTypeName = "APITimeInfo";
+                    ApiDicTypeName = "Info";
                     break;
                 case 3:
                     // config = KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\SevTimeIoginfo", "");
                     DicTypeName = "SevTimeIoginfo";
+                    ApiDicTypeName = "Debug";
                     break;
                 case 4:
                     DicTypeName = "UserLogError";
-                  //  config = KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\UserLogError", "");
+                    //  config = KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\UserLogError", "");
+                    ApiDicTypeName = "Warn";
                     break;
                 case 5:
                     DicTypeName = "RedisTimeInfoLog";
@@ -405,20 +410,28 @@ namespace Lottery.Api.Controllers
                     break;
                 case 6:
                     DicTypeName = "SQLInfo";
+                    ApiDicTypeName = "Fatal";
                     // config = KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\RedisTimeInfoLog", "");
                     break;
                 //SevTimeIoginfoUserLogError
                 default:
                     break;
             }
+            StringBuilder sb = new StringBuilder();
+
             if (PlamtType == 1)
             {
-                config = KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\"+ DicTypeName, "");
+                sb.Append( KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\"+ DicTypeName, ""));
+                sb.Append("新的日志******************\r\n");
+                sb.Append("新的日志******************\r\n");
+                sb.Append("新的日志******************\r\n");
+                sb.Append("新的日志******************\r\n");
+                sb.Append(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\" + ApiDicTypeName, ""));
             }
             else {
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param["DicName"] = DicTypeName;
-                config = await _serviceProxyProvider.Invoke<string>(param, "api/Betting/ReadLog");
+                sb.Append(await _serviceProxyProvider.Invoke<string>(param, "api/Betting/ReadLog"));
             }
             //if (SerName.ToLower() == "api")
             //{
@@ -432,7 +445,7 @@ namespace Lottery.Api.Controllers
             //    config = await _serviceProxyProvider.Invoke<string>(param, "api/" + SerName + "/ReadSqlTimeLog");
             //}
             //config = string.IsNullOrEmpty(config) ? "没有数据" : config;
-            return Content(config);
+            return Content(sb.ToString());
         }
     }
 }

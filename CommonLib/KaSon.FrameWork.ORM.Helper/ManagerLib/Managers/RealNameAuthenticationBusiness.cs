@@ -1,5 +1,6 @@
 ﻿using EntityModel;
 using EntityModel.Enum;
+using EntityModel.ExceptionExtend;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                 var other = manager.QueryUserRealName(idCardNumber);
                 if (other != null)
-                    throw new ArgumentException(string.Format("此证件号【{0}】已被其他用户认证。", idCardNumber));
+                    throw new LogicException(string.Format("此证件号【{0}】已被其他用户认证。", idCardNumber));
                 //var other2 = manager.QueryUserRealNameByName(realName);
                 //if (other2 != null)
                 //    throw new ArgumentException("对不起，由于系统检测到您的姓名已被绑定，请联系在线客服为您人工绑定，给您带来的不便敬请谅解，此绑定不影响您的正常购彩和提现。");
@@ -56,7 +57,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     manager.AddUserRealName(entity);
                 }
                 else
-                    throw new ArgumentException(string.Format("此用户已于【{0:yyyy-MM-dd HH:mm:ss}】进行过实名认证", entity.CreateTime));
+                    throw new LogicException(string.Format("此用户已于【{0:yyyy-MM-dd HH:mm:ss}】进行过实名认证", entity.CreateTime));
             }
 
             //修改vip等级
@@ -117,7 +118,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 if (entity == null)
                 {
                     DB.Rollback();
-                    throw new ArgumentException("此用户从未进行过实名认证");
+                    throw new LogicException("此用户从未进行过实名认证");
 
                 }
                 entity.AuthFrom = authFrom;

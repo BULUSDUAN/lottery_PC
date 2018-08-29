@@ -550,7 +550,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var balance = QueryUserBalanceInfo(userId);
             if (balance == null)
             {
-                throw new ArgumentException("用户账户不存在");
+                throw new LogicException("用户账户不存在");
             }
             return new UserBalanceInfo
             {
@@ -630,7 +630,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var tmp = DB.CreateQuery<E_Login_Local>().Where(p => (p.LoginName == loginEntity.LoginName || p.mobile == loginEntity.LoginName)).FirstOrDefault();
             if (tmp != null)
             {
-                throw new AuthException("登录名已经存在 - " + loginEntity.LoginName);
+                throw new LogicException("登录名已经存在 - " + loginEntity.LoginName);
             }
             //loginEntity.User = loginManager.LoadUser(userId);
             var Register = GetRegisterById(userId);
@@ -653,7 +653,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var user = GetLoginByName(loginName);
             if (user == null)
             {
-                throw new AuthException("用户不存在或不是本地注册用户。请确定是否是通过支付宝或QQ帐号进行登录，如有疑问，请联系客服。");
+                throw new LogicException("用户不存在或不是本地注册用户。请确定是否是通过支付宝或QQ帐号进行登录，如有疑问，请联系客服。");
             }
             return user;
 
@@ -721,7 +721,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 var user = GetLocalLoginByUserId(userId);
                 if (user == null)
                 {
-                    throw new AuthException("用户不存在或不是本地注册用户，不能修改密码。请确定是否是通过支付宝或QQ帐号进行登录，如有疑问，请联系客服。");
+                    throw new LogicException("用户不存在或不是本地注册用户，不能修改密码。请确定是否是通过支付宝或QQ帐号进行登录，如有疑问，请联系客服。");
                 }
                 user.Password = encodePassword;
 
