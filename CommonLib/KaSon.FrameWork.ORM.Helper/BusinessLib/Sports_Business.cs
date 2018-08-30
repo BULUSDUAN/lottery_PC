@@ -4231,7 +4231,7 @@ namespace KaSon.FrameWork.ORM.Helper
             SchemeSource schemeSource, TogetherSchemeSecurity security, int totalMatchCount, DateTime stopTime, bool isUploadAnteCode,
             decimal schemeDeduct, string userId, string userAgent, string balancePassword, int sysGuarantees, bool isTop, SchemeBettingCategory category, string issuseNumber)
         {
-            var canChase = false;
+           // var canChase = false;
             stopTime = stopTime.AddMinutes(-5);
 
             if (DateTime.Now >= stopTime)
@@ -5474,72 +5474,76 @@ namespace KaSon.FrameWork.ORM.Helper
             //开启事务
             //using (var biz = new GameBizBusinessManagement())
             //{
-                DB.Begin();
+
+            if (string.IsNullOrEmpty(schemeId))
+                schemeId = BettingHelper.GetSportsBettingSchemeId(info.GameCode);
+
+            DB.Begin();
 
             try
             {
-                var schemeManager = new SchemeManager();
-                var sportsManager = new Sports_Manager();
+                //var schemeManager = new SchemeManager();
+                //var sportsManager = new Sports_Manager();
 
                 var totalBetMoney = 0M;
                 var issuse = info.IssuseNumberList[0];
-                if (string.IsNullOrEmpty(schemeId))
-                    schemeId = BettingHelper.GetSportsBettingSchemeId(info.GameCode);
-                lock (schemeId)
+
+
+                var anteCodeList = new List<C_Sports_AnteCode>();
+                var gameTypeList = new List<string>();
+                foreach (var item in info.AnteCodeList)
                 {
-                    var anteCodeList = new List<C_Sports_AnteCode>();
-                    var gameTypeList = new List<string>();
-                    foreach (var item in info.AnteCodeList)
+                    var codeEntity = new C_Sports_AnteCode
                     {
-                        var codeEntity = new C_Sports_AnteCode
-                        {
-                            AnteCode = item.AnteCode,
-                            BonusStatus = (int)BonusStatus.Waitting,
-                            CreateTime = DateTime.Now,
-                            GameCode = info.GameCode,
-                            GameType = item.GameType.ToUpper(),
-                            IsDan = item.IsDan,
-                            IssuseNumber = issuse.IssuseNumber,
-                            MatchId = string.Empty,
-                            Odds = string.Empty,
-                            PlayType = string.Empty,
-                            SchemeId = schemeId,
-                        };
-                        anteCodeList.Add(codeEntity);
-                        sportsManager.AddSports_AnteCode(codeEntity);
-                        var gameTypeName = item.GameType.ToUpper() == "GJ" ? "冠军" : "冠亚军";
-                        if (!gameTypeList.Contains(gameTypeName))
-                        {
-                            gameTypeList.Add(gameTypeName);
-                        }
-                    }
-
-                    var currentIssuseMoney = totalNumberZhu * issuse.Amount * ((info.IsAppend && info.GameCode == "DLT") ? 3M : 2M);
-
-                    var canTicket = BettingHelper.CanRequestBet(info.GameCode);
-                    var entity = AddRunningOrderAndOrderDetail(schemeId, info.BettingCategory, info.GameCode, string.Join(",", gameTypeList.ToArray()),
-                          string.Empty, info.StopAfterBonus, issuse.IssuseNumber, issuse.Amount, totalNumberZhu, 0, currentIssuseMoney, GetSJB_StopBetTime(gameType), info.SchemeSource, info.Security,
-                          info.IssuseNumberList.Count == 1 ? SchemeType.GeneralBetting : SchemeType.ChaseBetting, true, false, user.UserId, user.AgentId,
-                           info.CurrentBetTime, info.ActivityType, "", info.IsAppend, redBagMoney,
-                          (canTicket ? ProgressStatus.Running : ProgressStatus.Waitting),
-                          (canTicket ? TicketStatus.Ticketed : TicketStatus.Waitting));
-                    totalBetMoney += currentIssuseMoney;
-
-                    //启用了Redis
-                    if (RedisHelper.EnableRedis)
+                        AnteCode = item.AnteCode,
+                        BonusStatus = (int)BonusStatus.Waitting,
+                        CreateTime = DateTime.Now,
+                        GameCode = info.GameCode,
+                        GameType = item.GameType.ToUpper(),
+                        IsDan = item.IsDan,
+                        IssuseNumber = issuse.IssuseNumber,
+                        MatchId = string.Empty,
+                        Odds = string.Empty,
+                        PlayType = string.Empty,
+                        SchemeId = schemeId,
+                    };
+                    anteCodeList.Add(codeEntity);
+                    //sportsManager.AddSports_AnteCode(codeEntity);
+                    var gameTypeName = item.GameType.ToUpper() == "GJ" ? "冠军" : "冠亚军";
+                    if (!gameTypeList.Contains(gameTypeName))
                     {
-                        var runningOrder = new RedisWaitTicketOrder
-                        {
-                            AnteCodeList = anteCodeList,
-                            RunningOrder = entity,
-                            KeyLine = string.Empty,
-                            StopAfterBonus = info.StopAfterBonus,
-                            SchemeType = info.IssuseNumberList.Count == 1 ? SchemeType.GeneralBetting : SchemeType.ChaseBetting
-                        };
-                        //追号方式 存入Redis订单列表
-                        redisOrderList.OrderList.Add(runningOrder);
+                        gameTypeList.Add(gameTypeName);
                     }
                 }
+                //录入投注号码
+                DB.GetDal<C_Sports_AnteCode>().BulkAdd(anteCodeList);
+
+                var currentIssuseMoney = totalNumberZhu * issuse.Amount * ((info.IsAppend && info.GameCode == "DLT") ? 3M : 2M);
+
+                var canTicket = BettingHelper.CanRequestBet(info.GameCode);
+                var entity = AddRunningOrderAndOrderDetail(schemeId, info.BettingCategory, info.GameCode, string.Join(",", gameTypeList.ToArray()),
+                      string.Empty, info.StopAfterBonus, issuse.IssuseNumber, issuse.Amount, totalNumberZhu, 0, currentIssuseMoney, GetSJB_StopBetTime(gameType), info.SchemeSource, info.Security,
+                      info.IssuseNumberList.Count == 1 ? SchemeType.GeneralBetting : SchemeType.ChaseBetting, true, false, user.UserId, user.AgentId,
+                       info.CurrentBetTime, info.ActivityType, "", info.IsAppend, redBagMoney,
+                      (canTicket ? ProgressStatus.Running : ProgressStatus.Waitting),
+                      (canTicket ? TicketStatus.Ticketed : TicketStatus.Waitting));
+                totalBetMoney += currentIssuseMoney;
+
+                //启用了Redis
+                if (RedisHelper.EnableRedis)
+                {
+                    var runningOrder = new RedisWaitTicketOrder
+                    {
+                        AnteCodeList = anteCodeList,
+                        RunningOrder = entity,
+                        KeyLine = string.Empty,
+                        StopAfterBonus = info.StopAfterBonus,
+                        SchemeType = info.IssuseNumberList.Count == 1 ? SchemeType.GeneralBetting : SchemeType.ChaseBetting
+                    };
+                    //追号方式 存入Redis订单列表
+                    redisOrderList.OrderList.Add(runningOrder);
+                }
+
 
                 #region 支付
 
