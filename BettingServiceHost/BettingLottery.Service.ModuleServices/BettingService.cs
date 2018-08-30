@@ -1264,9 +1264,17 @@ namespace BettingLottery.Service.ModuleServices
         {
            return Task.FromResult(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\SQLInfo", "LogTime_"));
         }
-        public Task<string> ReadLog(string DicName= "SQLInfo")
+        public Task<string> ReadLog(string DicName= "SQLInfo",string ApiDicTypeName= "Fatal")
         {
-            return Task.FromResult(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\"+ DicName, "LogTime_"));
+            StringBuilder sb = new StringBuilder();
+            sb.Append(Task.FromResult(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\" + DicName, "LogTime_")));
+
+            sb.Append("新的日志************************* \r\n");
+            sb.Append("新的日志************************* \r\n");
+            sb.Append("新的日志************************* \r\n");
+            sb.Append(Task.FromResult(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\" + ApiDicTypeName, "LogTime_")));
+
+            return Task.FromResult(sb.ToString());
         }
         //   Task<string> ReadLog(string DicName);
     }
