@@ -2,6 +2,7 @@
 using EntityModel.Communication;
 using EntityModel.CoreModel;
 using EntityModel.Enum;
+using EntityModel.ExceptionExtend;
 using EntityModel.Redis;
 using EntityModel.RequestModel;
 using KaSon.FrameWork.Common;
@@ -574,13 +575,13 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             var orderDetail = DB.CreateQuery<C_OrderDetail>().Where(x => x.SchemeId == schemeId).FirstOrDefault();
             if (orderDetail == null)
-                throw new Exception(string.Format("没有查询到方案{0}的orderDetail信息", schemeId));
+                throw new LogicException(string.Format("没有查询到方案{0}的orderDetail信息", schemeId));
 
             var info = (orderDetail.ProgressStatus == (int)ProgressStatus.Complate
               || orderDetail.ProgressStatus == (int)ProgressStatus.Aborted
               || orderDetail.ProgressStatus == (int)ProgressStatus.AutoStop) ? QueryComplateSportsTogetherDetail(schemeId) : QueryRunningSportsTogetherDetail(schemeId);
             if (info == null)
-                throw new Exception(string.Format("没有查询到方案{0}的信息", schemeId));
+                throw new LogicException(string.Format("没有查询到方案{0}的信息", schemeId));
             return info;
         }
         public Sports_TogetherSchemeQueryInfo QueryComplateSportsTogetherDetail(string schemeId)
@@ -1224,7 +1225,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 || orderDetail.ProgressStatus == (int)ProgressStatus.Aborted
                 || orderDetail.ProgressStatus == (int)ProgressStatus.AutoStop) ? QuerySports_Order_ComplateInfo(schemeId) : QuerySports_Order_RunningInfo(schemeId);
             if (info == null)
-                throw new Exception(string.Format("没有查询到方案{0}的信息", schemeId));
+                throw new LogicException(string.Format("没有查询到方案{0}的信息", schemeId));
             return info;
         }
         public Sports_SchemeQueryInfo QuerySports_Order_ComplateInfo(string schemeId)
@@ -1908,14 +1909,14 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                 #region 关注
                 if (string.IsNullOrEmpty(currUserId))
-                    throw new Exception("关注人编号不能为空");
+                    throw new LogicException("关注人编号不能为空");
                 else if (string.IsNullOrEmpty(bgzUserId))
-                    throw new Exception("被关注人编号不能为空");
+                    throw new LogicException("被关注人编号不能为空");
                 var singleTreasureAttention = QuerySingleTreasureAttentionByUserId(bgzUserId, currUserId);
                 if (singleTreasureAttention != null && !string.IsNullOrEmpty(singleTreasureAttention.ConcernedUserId))
-                    throw new Exception("您已经关注了他");
+                    throw new LogicException("您已经关注了他");
                 if (currUserId == bgzUserId)
-                    throw new Exception("不能关注自己");
+                    throw new LogicException("不能关注自己");
                 singleTreasureAttention = new C_SingleTreasure_Attention();
                 singleTreasureAttention.BeConcernedUserId = bgzUserId;
                 singleTreasureAttention.ConcernedUserId = currUserId;
@@ -1987,7 +1988,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 #region 取消关注
                 var singleTreasureAttention = QuerySingleTreasureAttentionByUserId(bgzUserId, currUserId);
                 if (singleTreasureAttention == null || string.IsNullOrEmpty(singleTreasureAttention.ConcernedUserId))
-                    throw new Exception("您还未关注他");
+                    throw new LogicException("您还未关注他");
                 DeleteSingleTreasureAttention(singleTreasureAttention);
                 //修改被关注者信息
                 var BGZSummary = QuerySingleTreasureAttentionSummaryByUserId(bgzUserId);
@@ -2523,7 +2524,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     default:
                         break;
                 }
-                throw new Exception("没有匹配的彩种: " + gameCode);
+                throw new LogicException("没有匹配的彩种: " + gameCode);
             }
             catch (Exception ex)
             {
@@ -2567,7 +2568,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     default:
                         break;
                 }
-                throw new Exception("没有匹配的彩种: " + gameCode);
+                throw new LogicException("没有匹配的彩种: " + gameCode);
             }
             catch (Exception ex)
             {

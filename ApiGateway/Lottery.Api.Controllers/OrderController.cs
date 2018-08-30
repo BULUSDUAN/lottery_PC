@@ -23,6 +23,7 @@ using System.Text;
 using System.Threading.Tasks;
 using KaSon.FrameWork.Common.ExceptionEx;
 using System.Diagnostics;
+using EntityModel.ExceptionExtend;
 
 namespace Lottery.Api.Controllers
 {
@@ -93,7 +94,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "服务器内部错误，请联系接口提供商" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -146,7 +147,7 @@ namespace Lottery.Api.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new LotteryServiceResponse { Code = ResponseCode.失败, Message = "查询中奖列表失败" + "●" + ex.ToString(), MsgId = entity.MsgId, Value = null });
+                return Json(new LotteryServiceResponse { Code = ResponseCode.失败, Message = ex.ToGetMessage() + "●" + ex.ToString(), MsgId = entity.MsgId, Value = ex.ToGetMessage() });
             }
         }
         /// <summary>
@@ -212,7 +213,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "查询最新开奖失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -245,7 +246,7 @@ namespace Lottery.Api.Controllers
                 bool boolendtime = string.IsNullOrEmpty(endtime);
                 DateTime endTime = boolendtime ? DateTime.Now : Convert.ToDateTime(p.EndTime);
                 if (string.IsNullOrEmpty(gameCode))
-                    throw new Exception("传入彩种不能为空");
+                    throw new LogicException("传入彩种不能为空");
                 var list = new List<object>();
                 if (gameCode.ToUpper() == "JCZQ")
                 {
@@ -366,7 +367,7 @@ namespace Lottery.Api.Controllers
                 else if (gameCode.ToUpper() == "BJDC")
                 {
                     if (string.IsNullOrEmpty(issuseNumber))
-                        throw new Exception("传入期号不能为空");
+                        throw new LogicException("传入期号不能为空");
                     var result = await _serviceProxyProvider.Invoke<BJDCMatchResultInfo_Collection>(param, "api/Order/QueryBJDC_MatchResultCollection");
                     if (result != null && result.ListInfo.Count > 0)
                     {
@@ -414,9 +415,9 @@ namespace Lottery.Api.Controllers
                 else if (gameCode.ToUpper() == "CTZQ")
                 {
                     if (string.IsNullOrEmpty(gameType))
-                        throw new Exception("玩法不能为空");
+                        throw new LogicException("玩法不能为空");
                     else if (string.IsNullOrEmpty(issuseNumber))
-                        throw new Exception("期号不能为空");
+                        throw new LogicException("期号不能为空");
 
                     var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "jsonData");
                     if (!Directory.Exists(path))
@@ -483,7 +484,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "查询历史开奖失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -512,7 +513,7 @@ namespace Lottery.Api.Controllers
                 int PageIndex = p.PageIndex ?? 0;
                 int pageSize = p.PageSize ?? 1;
                 if (string.IsNullOrEmpty(userToken))
-                    throw new ArgumentException("您还未登陆");
+                    throw new LogicException("您还未登陆");
                 string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 var list = new List<object>();
@@ -695,7 +696,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "查询账户明细出错" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -725,7 +726,7 @@ namespace Lottery.Api.Controllers
                 string gamecode = p.GameCode;
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userToken))
-                    throw new ArgumentException("您还未登陆，请登陆后查询");
+                    throw new LogicException("您还未登陆，请登陆后查询");
                 string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 var list = new List<object>();
                 if (orderQueryType == 1)
@@ -841,7 +842,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "查询投注记录失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -959,7 +960,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "查询合买大厅失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -1040,7 +1041,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "查询中奖榜单失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -1061,12 +1062,12 @@ namespace Lottery.Api.Controllers
 
                 string schemeId = p.SchemeId;
                 if (string.IsNullOrEmpty(schemeId))
-                    throw new ArgumentException("订单号不能为空！");
+                    throw new LogicException("订单号不能为空！");
 
                 if (schemeId.StartsWith("CHASE"))
                 {
                     if (string.IsNullOrEmpty(userToken))
-                        throw new ArgumentException("您还未登录！");
+                        throw new LogicException("您还未登录！");
                     return await QueryCHASEOrderDetail(_serviceProxyProvider, entity, schemeId, userToken);
                 }
                 else if (schemeId.StartsWith("TSM"))
@@ -1076,7 +1077,7 @@ namespace Lottery.Api.Controllers
                 else
                 {
                     if (string.IsNullOrEmpty(userToken))
-                        throw new ArgumentException("您还未登录！");
+                        throw new LogicException("您还未登录！");
                     return await QueryGeneralOrderDetail(_serviceProxyProvider, entity, schemeId, userToken);
                 }
             }
@@ -1095,7 +1096,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "查询订单详情失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -1112,95 +1113,110 @@ namespace Lottery.Api.Controllers
         /// <returns></returns>
         public async Task<IActionResult> QueryCHASEOrderDetail([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity, string schemeId, string userToken = "")
         {
-            string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
-            Dictionary<string, object> param = new Dictionary<string, object>
+            try
+            {
+                string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+                Dictionary<string, object> param = new Dictionary<string, object>
             {
                 { "schemeId", schemeId }
             };
-            var schemeInfo = await _serviceProxyProvider.Invoke<BettingOrderInfoCollection>(param, "api/Order/QueryBettingOrderListByChaseKeyLine");
-            if (schemeInfo.OrderList.Count == 0)
-                throw new Exception("追号方案不包括投注期信息");
-            var firstIssuse = schemeInfo.OrderList[0];
-            //var userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
+                var schemeInfo = await _serviceProxyProvider.Invoke<BettingOrderInfoCollection>(param, "api/Order/QueryBettingOrderListByChaseKeyLine");
+                if (schemeInfo.OrderList.Count == 0)
+                    throw new LogicException("追号方案不包括投注期信息");
+                var firstIssuse = schemeInfo.OrderList[0];
+                //var userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
 
-            var status = schemeInfo.OrderList.Min(t => t.ProgressStatus);
-            var codeList = new List<object>();
-            if (firstIssuse.Security == TogetherSchemeSecurity.Public
-                || (firstIssuse.Security == TogetherSchemeSecurity.CompletePublic && status != ProgressStatus.Running && status != ProgressStatus.Waitting) || (firstIssuse.UserId == userid))
-            {
-                param.Clear();
-                param.Add("SchemeId", firstIssuse.SchemeId);
-                var anteCodeList = await _serviceProxyProvider.Invoke<BettingAnteCodeInfoCollection>(param, "api/Order/QueryAnteCodeListBySchemeId");
-                foreach (var code in anteCodeList.AnteCodeList)
+                var status = schemeInfo.OrderList.Min(t => t.ProgressStatus);
+                var codeList = new List<object>();
+                if (firstIssuse.Security == TogetherSchemeSecurity.Public
+                    || (firstIssuse.Security == TogetherSchemeSecurity.CompletePublic && status != ProgressStatus.Running && status != ProgressStatus.Waitting) || (firstIssuse.UserId == userid))
                 {
-                    var betCount = AnalyzerFactory.GetAntecodeAnalyzer(code.GameCode, code.GameType).AnalyzeAnteCode(code.AnteCode);
-                    codeList.Add(new
+                    param.Clear();
+                    param.Add("SchemeId", firstIssuse.SchemeId);
+                    var anteCodeList = await _serviceProxyProvider.Invoke<BettingAnteCodeInfoCollection>(param, "api/Order/QueryAnteCodeListBySchemeId");
+                    foreach (var code in anteCodeList.AnteCodeList)
                     {
-                        IssuseNumber = code.IssuseNumber,
-                        GameTypeName = code.GameTypeName,
-                        GameType = code.GameType,
-                        GameName = code.GameName,
-                        GameCode = code.GameCode,
-                        AnteCode = code.AnteCode,
-                        SchemeId = code.SchemeId,
-                        BetCount = betCount,
-                        CurrBetMoney = betCount * 2,
+                        var betCount = AnalyzerFactory.GetAntecodeAnalyzer(code.GameCode, code.GameType).AnalyzeAnteCode(code.AnteCode);
+                        codeList.Add(new
+                        {
+                            IssuseNumber = code.IssuseNumber,
+                            GameTypeName = code.GameTypeName,
+                            GameType = code.GameType,
+                            GameName = code.GameName,
+                            GameCode = code.GameCode,
+                            AnteCode = code.AnteCode,
+                            SchemeId = code.SchemeId,
+                            BetCount = betCount,
+                            CurrBetMoney = betCount * 2,
+                        });
+                    }
+                }
+                var issuseList = new List<object>();
+                foreach (var item in schemeInfo.OrderList)
+                {
+                    issuseList.Add(new
+                    {
+                        WinNumber = item.WinNumber,
+                        IssuseNumber = item.IssuseNumber,
+                        BettingMoney = item.CurrentBettingMoney,
+                        Amount = item.Amount,
+                        AddMoney = item.AddMoney,
+                        AfterTaxBonusMoney = item.AfterTaxBonusMoney,
+                        BonusStatus = item.BonusStatus,
+                        TicketStatus = item.TicketStatus,
+                        ProgressStatus = item.ProgressStatus,
+                        IsVirtualOrder = item.IsVirtualOrder,
+                        SchemeType = item.SchemeType,
+                        SchemeId = item.SchemeId,
                     });
                 }
-            }
-            var issuseList = new List<object>();
-            foreach (var item in schemeInfo.OrderList)
-            {
-                issuseList.Add(new
+                var result = new
                 {
-                    WinNumber = item.WinNumber,
-                    IssuseNumber = item.IssuseNumber,
-                    BettingMoney = item.CurrentBettingMoney,
-                    Amount = item.Amount,
-                    AddMoney = item.AddMoney,
-                    AfterTaxBonusMoney = item.AfterTaxBonusMoney,
-                    BonusStatus = item.BonusStatus,
-                    TicketStatus = item.TicketStatus,
-                    ProgressStatus = item.ProgressStatus,
-                    IsVirtualOrder = item.IsVirtualOrder,
-                    SchemeType = item.SchemeType,
-                    SchemeId = item.SchemeId,
+                    ChaseId = schemeId,
+                    CurrSchemeId = firstIssuse.SchemeId,
+                    GameCode = firstIssuse.GameCode,
+                    GameDisplayName = firstIssuse.GameName,
+                    GameTypeDisplayName = firstIssuse.GameTypeName,
+                    UserId = firstIssuse.UserId,
+                    UserDisplayName = firstIssuse.CreatorDisplayName,
+                    HideDisplayNameCount = firstIssuse.HideDisplayNameCount,
+                    CreateTime = firstIssuse.CreateTime,
+                    TotalMoney = schemeInfo.TotalOrderMoney,
+                    TotalBuyMoney = schemeInfo.TotalBuyMoney,
+                    BonusMoney = schemeInfo.TotalAfterTaxBonusMoney,
+                    ChaseCount = schemeInfo.OrderList.Count,
+                    Security = firstIssuse.Security,
+                    SchemeSource = firstIssuse.SchemeSource,
+                    CurrIssuseBonusMoney = firstIssuse.AfterTaxBonusMoney,
+                    CurrIssuseBonusStatus = firstIssuse.BonusStatus,
+                    SchemeBettingCategory = (int)firstIssuse.SchemeBettingCategory,
+                    CodeList = codeList,
+                    IssuseList = issuseList,
+                    SchemeType = firstIssuse.SchemeType,
+                    IsVirtualOrder = firstIssuse.IsVirtualOrder,
+                    StopAfterBonus = firstIssuse.StopAfterBonus,
+                };
+
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询订单明细成功",
+                    MsgId = entity.MsgId,
+                    Value = result,
                 });
             }
-            var result = new
+            catch (Exception ex)
             {
-                ChaseId = schemeId,
-                CurrSchemeId = firstIssuse.SchemeId,
-                GameCode = firstIssuse.GameCode,
-                GameDisplayName = firstIssuse.GameName,
-                GameTypeDisplayName = firstIssuse.GameTypeName,
-                UserId = firstIssuse.UserId,
-                UserDisplayName = firstIssuse.CreatorDisplayName,
-                HideDisplayNameCount = firstIssuse.HideDisplayNameCount,
-                CreateTime = firstIssuse.CreateTime,
-                TotalMoney = schemeInfo.TotalOrderMoney,
-                TotalBuyMoney = schemeInfo.TotalBuyMoney,
-                BonusMoney = schemeInfo.TotalAfterTaxBonusMoney,
-                ChaseCount = schemeInfo.OrderList.Count,
-                Security = firstIssuse.Security,
-                SchemeSource = firstIssuse.SchemeSource,
-                CurrIssuseBonusMoney = firstIssuse.AfterTaxBonusMoney,
-                CurrIssuseBonusStatus = firstIssuse.BonusStatus,
-                SchemeBettingCategory = (int)firstIssuse.SchemeBettingCategory,
-                CodeList = codeList,
-                IssuseList = issuseList,
-                SchemeType = firstIssuse.SchemeType,
-                IsVirtualOrder = firstIssuse.IsVirtualOrder,
-                StopAfterBonus = firstIssuse.StopAfterBonus,
-            };
 
-            return Json(new LotteryServiceResponse
-            {
-                Code = ResponseCode.成功,
-                Message = "查询订单明细成功",
-                MsgId = entity.MsgId,
-                Value = result,
-            });
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage(),
+                });
+            }
+           
         }
         /// <summary>
         /// 查看合买订单详情
@@ -1212,93 +1228,108 @@ namespace Lottery.Api.Controllers
         /// <returns></returns>
         public async Task<IActionResult> QueryTMSOrderDetail([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity, string schemeId, string userToken = "")
         {
-            Dictionary<string, object> param = new Dictionary<string, object>
+            try
+            {
+                Dictionary<string, object> param = new Dictionary<string, object>
             {
                 {"schemeId",schemeId }
             };
-            var schemeInfo = await _serviceProxyProvider.Invoke<Sports_TogetherSchemeQueryInfo>(param, "api/Order/QuerySportsTogetherDetail");
-            param.Clear();
-            string userid = string.Empty;
-            //var userInfo = new LoginInfo();
-            var flag = false;
-            if (!string.IsNullOrEmpty(userToken))
+                var schemeInfo = await _serviceProxyProvider.Invoke<Sports_TogetherSchemeQueryInfo>(param, "api/Order/QuerySportsTogetherDetail");
+                param.Clear();
+                string userid = string.Empty;
+                //var userInfo = new LoginInfo();
+                var flag = false;
+                if (!string.IsNullOrEmpty(userToken))
+                {
+                    //param.Add("userToken", userToken);
+                    //userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
+                    userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+                    param.Add("schemeId", schemeId);
+                    param.Add("userId", userid);
+                    flag = await _serviceProxyProvider.Invoke<bool>(param, "api/Order/IsUserJoinSportsTogether");
+                }
+
+                var codeList = new List<object>();
+                if (schemeInfo.Security == TogetherSchemeSecurity.Public
+                   || (schemeInfo.Security == TogetherSchemeSecurity.CompletePublic && schemeInfo.StopTime <= DateTime.Now)
+                   || schemeInfo.CreateUserId == userid
+                    || (schemeInfo.Security == TogetherSchemeSecurity.JoinPublic && flag))
+                {
+                    var anteCodeList = await _serviceProxyProvider.Invoke<Sports_AnteCodeQueryInfoCollection>(param, "api/Order/QuerySportsOrderAnteCodeList");
+                    //codeList = GetCodeList(anteCodeList);
+                    codeList = await GetCodeList_GSAPP(_serviceProxyProvider, anteCodeList, schemeInfo.GameCode, schemeInfo.Amount);
+
+                }
+
+                var result = new
+                {
+                    SchemeId = schemeInfo.SchemeId,
+                    GameCode = schemeInfo.GameCode,
+                    GameDisplayName = schemeInfo.GameDisplayName,
+                    GameType = schemeInfo.GameType,
+                    GameTypeDisplayName = schemeInfo.GameTypeDisplayName,
+                    UserId = schemeInfo.CreateUserId,
+                    UserDisplayName = schemeInfo.CreaterDisplayName,
+                    HideDisplayNameCount = schemeInfo.CreaterHideDisplayNameCount,
+                    MatchCount = schemeInfo.TotalMatchCount,
+                    PlayType = schemeInfo.PlayType,
+                    TotalMoney = schemeInfo.TotalMoney,
+                    TotalCount = schemeInfo.TotalCount,
+                    //SurplusCount = schemeInfo.SurplusCount,
+                    SoldCount = schemeInfo.SoldCount,
+                    StopTime = schemeInfo.StopTime,
+                    Price = schemeInfo.Price,
+                    Progress = schemeInfo.Progress,
+                    JoinPwd = schemeInfo.JoinPwd,
+                    BetCount = schemeInfo.BetCount,
+                    Amount = schemeInfo.Amount,
+                    BonusDeduct = schemeInfo.BonusDeduct,
+                    IssuseNumber = schemeInfo.IssuseNumber,
+                    SchemeDeduct = schemeInfo.SchemeDeduct,
+                    Subscription = schemeInfo.Subscription,
+                    Guarantees = schemeInfo.Guarantees,
+                    WinNumber = schemeInfo.WinNumber,
+                    CreateTime = schemeInfo.CreateTime,
+                    HitMatchCount = schemeInfo.HitMatchCount,
+                    BonusCount = schemeInfo.BonusCount,
+                    BonusMoney = schemeInfo.AfterTaxBonusMoney,
+                    AddMoney = schemeInfo.AddMoney,
+                    JoinUserCount = schemeInfo.JoinUserCount,
+                    AddMoneyDescription = schemeInfo.AddMoneyDescription,
+                    TicketStatus = schemeInfo.TicketStatus,
+                    TogetherProgressStatus = schemeInfo.ProgressStatus,
+                    BonusStatus = schemeInfo.BonusStatus,
+                    Security = schemeInfo.Security,
+                    SchemeSource = schemeInfo.SchemeSource,
+                    SchemeBettingCategory = (int)schemeInfo.SchemeBettingCategory,
+                    IsPrizeMoney = schemeInfo.IsPrizeMoney,
+                    Title = schemeInfo.Title,
+                    Description = schemeInfo.Description,
+                    CodeList = codeList,
+                    //JoinList = joinList,
+                    ServiceTime = DateTime.Now,
+                };
+
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询订单明细成功",
+                    MsgId = entity.MsgId,
+                    Value = result,
+                });
+            }
+            catch (Exception ex)
             {
-                //param.Add("userToken", userToken);
-                //userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
-                userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
-                param.Add("schemeId", schemeId);
-                param.Add("userId", userid);
-                flag = await _serviceProxyProvider.Invoke<bool>(param, "api/Order/IsUserJoinSportsTogether");
+
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage(),
+                });
             }
 
-            var codeList = new List<object>();
-            if (schemeInfo.Security == TogetherSchemeSecurity.Public
-               || (schemeInfo.Security == TogetherSchemeSecurity.CompletePublic && schemeInfo.StopTime <= DateTime.Now)
-               || schemeInfo.CreateUserId == userid
-                || (schemeInfo.Security == TogetherSchemeSecurity.JoinPublic && flag))
-            {
-                var anteCodeList = await _serviceProxyProvider.Invoke<Sports_AnteCodeQueryInfoCollection>(param, "api/Order/QuerySportsOrderAnteCodeList");
-                //codeList = GetCodeList(anteCodeList);
-                codeList = await GetCodeList_GSAPP(_serviceProxyProvider, anteCodeList, schemeInfo.GameCode, schemeInfo.Amount);
-
-            }
-
-            var result = new
-            {
-                SchemeId = schemeInfo.SchemeId,
-                GameCode = schemeInfo.GameCode,
-                GameDisplayName = schemeInfo.GameDisplayName,
-                GameType = schemeInfo.GameType,
-                GameTypeDisplayName = schemeInfo.GameTypeDisplayName,
-                UserId = schemeInfo.CreateUserId,
-                UserDisplayName = schemeInfo.CreaterDisplayName,
-                HideDisplayNameCount = schemeInfo.CreaterHideDisplayNameCount,
-                MatchCount = schemeInfo.TotalMatchCount,
-                PlayType = schemeInfo.PlayType,
-                TotalMoney = schemeInfo.TotalMoney,
-                TotalCount = schemeInfo.TotalCount,
-                //SurplusCount = schemeInfo.SurplusCount,
-                SoldCount = schemeInfo.SoldCount,
-                StopTime = schemeInfo.StopTime,
-                Price = schemeInfo.Price,
-                Progress = schemeInfo.Progress,
-                JoinPwd = schemeInfo.JoinPwd,
-                BetCount = schemeInfo.BetCount,
-                Amount = schemeInfo.Amount,
-                BonusDeduct = schemeInfo.BonusDeduct,
-                IssuseNumber = schemeInfo.IssuseNumber,
-                SchemeDeduct = schemeInfo.SchemeDeduct,
-                Subscription = schemeInfo.Subscription,
-                Guarantees = schemeInfo.Guarantees,
-                WinNumber = schemeInfo.WinNumber,
-                CreateTime = schemeInfo.CreateTime,
-                HitMatchCount = schemeInfo.HitMatchCount,
-                BonusCount = schemeInfo.BonusCount,
-                BonusMoney = schemeInfo.AfterTaxBonusMoney,
-                AddMoney = schemeInfo.AddMoney,
-                JoinUserCount = schemeInfo.JoinUserCount,
-                AddMoneyDescription = schemeInfo.AddMoneyDescription,
-                TicketStatus = schemeInfo.TicketStatus,
-                TogetherProgressStatus = schemeInfo.ProgressStatus,
-                BonusStatus = schemeInfo.BonusStatus,
-                Security = schemeInfo.Security,
-                SchemeSource = schemeInfo.SchemeSource,
-                SchemeBettingCategory = (int)schemeInfo.SchemeBettingCategory,
-                IsPrizeMoney = schemeInfo.IsPrizeMoney,
-                Title = schemeInfo.Title,
-                Description = schemeInfo.Description,
-                CodeList = codeList,
-                //JoinList = joinList,
-                ServiceTime = DateTime.Now,
-            };
-
-            return Json(new LotteryServiceResponse
-            {
-                Code = ResponseCode.成功,
-                Message = "查询订单明细成功",
-                MsgId = entity.MsgId,
-                Value = result,
-            });
         }
         /// <summary>
         /// 查询普通订单详情
@@ -1413,155 +1444,159 @@ namespace Lottery.Api.Controllers
             }
             catch (Exception ex)
             {
+
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "查询订单详情失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
-                    Value = "查询订单详情失败",
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
         public async Task<List<object>> GetCodeList_GSAPP([FromServices]IServiceProxyProvider _serviceProxyProvider, Sports_AnteCodeQueryInfoCollection code, string gameCode, int amount)
         {
-            var issuseNumber = code.List.Count > 0 ? code.List[0].IssuseNumber : string.Empty;
-            var codeList = new List<object>();
-            foreach (var item in code.List)
-            {
-                string[] array_GameCode = new string[] { "JCZQ", "JCLQ", "CTZQ", "BJDC" };
-                var betCount = 0;
-                if (gameCode.ToUpper() == "CTZQ")
+           
+                var issuseNumber = code.List.Count > 0 ? code.List[0].IssuseNumber : string.Empty;
+                var codeList = new List<object>();
+                foreach (var item in code.List)
                 {
-                    var result = Json_CTZQ.GetMatchListToOrderDetail(item.IssuseNumber, item.GameType, item.AnteCode);
-                    if (result != null)
+                    string[] array_GameCode = new string[] { "JCZQ", "JCLQ", "CTZQ", "BJDC" };
+                    var betCount = 0;
+                    if (gameCode.ToUpper() == "CTZQ")
                     {
-                        foreach (var _item in result)
+                        var result = Json_CTZQ.GetMatchListToOrderDetail(item.IssuseNumber, item.GameType, item.AnteCode);
+                        if (result != null)
                         {
-                            codeList.Add(new
+                            foreach (var _item in result)
                             {
-                                AnteCode = _item.AnteCode,
-                                BonusStatus = (int)item.BonusStatus,
-                                CurrentSp = item.CurrentSp,
-                                FullResult = _item.FullResult,
-                                GameTypeDisplayName = string.IsNullOrEmpty(item.GameType) ? "" : BettingHelper.FormatGameType(gameCode, item.GameType),
-                                GameType = item.GameType,
-                                GuestTeamId = _item.GuestTeamId,
-                                GuestTeamName = _item.GuestTeamName.Replace("&nbsp;", "").Replace("nbsp;", ""),
-                                HalfResult = _item.HalfResult,
-                                HomeTeamId = _item.HomeTeamId,
-                                HomeTeamName = _item.HomeTeamName.Replace("&nbsp;", "").Replace("nbsp;", ""),
-                                IsDan = _item.IsDan,
-                                IssuseNumber = _item.IssuseNumber,
-                                LeagueColor = _item.LeagueColor,
-                                LeagueName = _item.LeagueName,
-                                LetBall = _item.LetBall,
-                                MatchId = _item.MatchId,
-                                MatchIdName = _item.MatchIdName,
-                                MatchResult = _item.MatchResult,
-                                MatchResultSp = item.MatchResultSp,
-                                MatchState = _item.MatchState,
-                                StartTime = _item.StartTime,
-                                Amount = amount,
-                                BetCount = betCount,
-                                OrderNumber = _item.OrderNumber,
-                                Detail_RF = AnalyticalCurrentSp(item.CurrentSp, "RF"),
-                                Detail_YSZF = AnalyticalCurrentSp(item.CurrentSp, "YSZF"),
-                            });
+                                codeList.Add(new
+                                {
+                                    AnteCode = _item.AnteCode,
+                                    BonusStatus = (int)item.BonusStatus,
+                                    CurrentSp = item.CurrentSp,
+                                    FullResult = _item.FullResult,
+                                    GameTypeDisplayName = string.IsNullOrEmpty(item.GameType) ? "" : BettingHelper.FormatGameType(gameCode, item.GameType),
+                                    GameType = item.GameType,
+                                    GuestTeamId = _item.GuestTeamId,
+                                    GuestTeamName = _item.GuestTeamName.Replace("&nbsp;", "").Replace("nbsp;", ""),
+                                    HalfResult = _item.HalfResult,
+                                    HomeTeamId = _item.HomeTeamId,
+                                    HomeTeamName = _item.HomeTeamName.Replace("&nbsp;", "").Replace("nbsp;", ""),
+                                    IsDan = _item.IsDan,
+                                    IssuseNumber = _item.IssuseNumber,
+                                    LeagueColor = _item.LeagueColor,
+                                    LeagueName = _item.LeagueName,
+                                    LetBall = _item.LetBall,
+                                    MatchId = _item.MatchId,
+                                    MatchIdName = _item.MatchIdName,
+                                    MatchResult = _item.MatchResult,
+                                    MatchResultSp = item.MatchResultSp,
+                                    MatchState = _item.MatchState,
+                                    StartTime = _item.StartTime,
+                                    Amount = amount,
+                                    BetCount = betCount,
+                                    OrderNumber = _item.OrderNumber,
+                                    Detail_RF = AnalyticalCurrentSp(item.CurrentSp, "RF"),
+                                    Detail_YSZF = AnalyticalCurrentSp(item.CurrentSp, "YSZF"),
+                                });
+                            }
                         }
                     }
-                }
-                if (gameCode.ToUpper() == "SJB")
-                {
-                    Dictionary<string, object> param = new Dictionary<string, object>
+                    if (gameCode.ToUpper() == "SJB")
+                    {
+                        Dictionary<string, object> param = new Dictionary<string, object>
                     {
                         {"gameCode",gameCode },{"gameType","" },{"issuseNumber",issuseNumber }
                     };
-                    var issuseInfo = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Order/QueryIssuseInfo");
-                    if (!array_GameCode.Contains(gameCode))
-                    {
-                        var analyzer = AnalyzerFactory.GetAntecodeAnalyzer(gameCode, item.GameType);
-                        betCount = analyzer.AnalyzeAnteCode(item.AnteCode);
-                    }
+                        var issuseInfo = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Order/QueryIssuseInfo");
+                        if (!array_GameCode.Contains(gameCode))
+                        {
+                            var analyzer = AnalyzerFactory.GetAntecodeAnalyzer(gameCode, item.GameType);
+                            betCount = analyzer.AnalyzeAnteCode(item.AnteCode);
+                        }
 
-                    codeList.Add(new
+                        codeList.Add(new
+                        {
+                            AnteCode = item.AnteCode,
+                            BonusStatus = (int)item.BonusStatus,
+                            CurrentSp = Json_JCZQ.GetAnteCode(item.GameType, item.AnteCode, item.CurrentSp),
+                            FullResult = item.FullResult,
+                            GameTypeDisplayName = BettingHelper.FormatGameType(gameCode, item.GameType),
+                            GameType = item.GameType,
+                            GuestTeamId = item.GuestTeamId,
+                            GuestTeamName = item.GuestTeamName,
+                            HalfResult = item.HalfResult,
+                            HomeTeamId = item.HomeTeamId,
+                            HomeTeamName = item.HomeTeamName,
+                            IsDan = item.IsDan,
+                            IssuseNumber = item.IssuseNumber,
+                            LeagueColor = item.LeagueColor,
+                            //LeagueId = item.LeagueId,
+                            LeagueName = item.LeagueName,
+                            LetBall = item.LetBall,
+                            MatchId = item.MatchId,
+                            MatchIdName = item.MatchIdName,
+                            MatchResult = issuseInfo == null ? string.Empty : issuseInfo.WinNumber,
+                            MatchResultSp = item.MatchResultSp,
+                            MatchState = item.MatchState,
+                            StartTime = Convert.ToDateTime(item.StartTime),
+                            Amount = amount,
+                            BetCount = betCount,
+                            Detail_RF = AnalyticalCurrentSp(item.CurrentSp, "RF"),
+                            Detail_YSZF = AnalyticalCurrentSp(item.CurrentSp, "YSZF"),
+                        });
+                    }
+                    else
                     {
-                        AnteCode = item.AnteCode,
-                        BonusStatus = (int)item.BonusStatus,
-                        CurrentSp = Json_JCZQ.GetAnteCode(item.GameType, item.AnteCode, item.CurrentSp),
-                        FullResult = item.FullResult,
-                        GameTypeDisplayName = BettingHelper.FormatGameType(gameCode, item.GameType),
-                        GameType = item.GameType,
-                        GuestTeamId = item.GuestTeamId,
-                        GuestTeamName = item.GuestTeamName,
-                        HalfResult = item.HalfResult,
-                        HomeTeamId = item.HomeTeamId,
-                        HomeTeamName = item.HomeTeamName,
-                        IsDan = item.IsDan,
-                        IssuseNumber = item.IssuseNumber,
-                        LeagueColor = item.LeagueColor,
-                        //LeagueId = item.LeagueId,
-                        LeagueName = item.LeagueName,
-                        LetBall = item.LetBall,
-                        MatchId = item.MatchId,
-                        MatchIdName = item.MatchIdName,
-                        MatchResult = issuseInfo == null ? string.Empty : issuseInfo.WinNumber,
-                        MatchResultSp = item.MatchResultSp,
-                        MatchState = item.MatchState,
-                        StartTime = Convert.ToDateTime(item.StartTime),
-                        Amount = amount,
-                        BetCount = betCount,
-                        Detail_RF = AnalyticalCurrentSp(item.CurrentSp, "RF"),
-                        Detail_YSZF = AnalyticalCurrentSp(item.CurrentSp, "YSZF"),
-                    });
-                }
-                else
-                {
-                    Dictionary<string, object> param = new Dictionary<string, object>
+                        Dictionary<string, object> param = new Dictionary<string, object>
                     {
                         {"gameCode",gameCode },{"gameType","" },{"issuseNumber",issuseNumber }
                     };
-                    //数字彩
-                    var issuseInfo = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Order/QueryIssuseInfo");
-                    if (!array_GameCode.Contains(gameCode))
-                    {
-                        var analyzer = AnalyzerFactory.GetAntecodeAnalyzer(gameCode, item.GameType);
-                        betCount = analyzer.AnalyzeAnteCode(item.AnteCode);
-                    }
+                        //数字彩
+                        var issuseInfo = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Order/QueryIssuseInfo");
+                        if (!array_GameCode.Contains(gameCode))
+                        {
+                            var analyzer = AnalyzerFactory.GetAntecodeAnalyzer(gameCode, item.GameType);
+                            betCount = analyzer.AnalyzeAnteCode(item.AnteCode);
+                        }
 
-                    codeList.Add(new
-                    {
-                        AnteCode = item.AnteCode,
-                        AnteCodeDetail = BettingHelper.BackToDetailByAnteCode(gameCode.ToUpper(), item.GameType, item.AnteCode, item.CurrentSp),
-                        BonusStatus = (int)item.BonusStatus,
-                        CurrentSp = item.CurrentSp,
-                        FullResult = item.FullResult,
-                        GameTypeDisplayName = BettingHelper.FormatGameType(gameCode, item.GameType),
-                        GameType = item.GameType,
-                        GuestTeamId = item.GuestTeamId,
-                        GuestTeamName = item.GuestTeamName,
-                        HalfResult = item.HalfResult,
-                        HomeTeamId = item.HomeTeamId,
-                        HomeTeamName = item.HomeTeamName,
-                        IsDan = item.IsDan,
-                        IssuseNumber = item.IssuseNumber,
-                        LeagueColor = item.LeagueColor,
-                        //LeagueId = item.LeagueId,
-                        LeagueName = item.LeagueName,
-                        LetBall = item.LetBall,
-                        MatchId = item.MatchId,
-                        MatchIdName = item.MatchIdName,
-                        MatchResult = issuseInfo == null ? string.Empty : issuseInfo.WinNumber,
-                        MatchResultSp = item.MatchResultSp,
-                        MatchState = item.MatchState,
-                        StartTime = Convert.ToDateTime(item.StartTime),
-                        Amount = amount,
-                        BetCount = betCount,
-                        Detail_RF = AnalyticalCurrentSp(item.CurrentSp, "RF"),
-                        Detail_YSZF = AnalyticalCurrentSp(item.CurrentSp, "YSZF"),
-                    });
+                        codeList.Add(new
+                        {
+                            AnteCode = item.AnteCode,
+                            AnteCodeDetail = BettingHelper.BackToDetailByAnteCode(gameCode.ToUpper(), item.GameType, item.AnteCode, item.CurrentSp),
+                            BonusStatus = (int)item.BonusStatus,
+                            CurrentSp = item.CurrentSp,
+                            FullResult = item.FullResult,
+                            GameTypeDisplayName = BettingHelper.FormatGameType(gameCode, item.GameType),
+                            GameType = item.GameType,
+                            GuestTeamId = item.GuestTeamId,
+                            GuestTeamName = item.GuestTeamName,
+                            HalfResult = item.HalfResult,
+                            HomeTeamId = item.HomeTeamId,
+                            HomeTeamName = item.HomeTeamName,
+                            IsDan = item.IsDan,
+                            IssuseNumber = item.IssuseNumber,
+                            LeagueColor = item.LeagueColor,
+                            //LeagueId = item.LeagueId,
+                            LeagueName = item.LeagueName,
+                            LetBall = item.LetBall,
+                            MatchId = item.MatchId,
+                            MatchIdName = item.MatchIdName,
+                            MatchResult = issuseInfo == null ? string.Empty : issuseInfo.WinNumber,
+                            MatchResultSp = item.MatchResultSp,
+                            MatchState = item.MatchState,
+                            StartTime = Convert.ToDateTime(item.StartTime),
+                            Amount = amount,
+                            BetCount = betCount,
+                            Detail_RF = AnalyticalCurrentSp(item.CurrentSp, "RF"),
+                            Detail_YSZF = AnalyticalCurrentSp(item.CurrentSp, "YSZF"),
+                        });
+                    }
                 }
-            }
-            return codeList;
+                return codeList;
+            
+          
         }
 
         /// <summary>
@@ -1582,7 +1617,7 @@ namespace Lottery.Api.Controllers
                 string userToken = p.UserToken;
                 bool byFollower = p.byFollower;//true=查询我的定制,false=查询定制我的
                 if (string.IsNullOrEmpty(userToken))
-                    throw new Exception("您还未登录，请登录！");
+                    throw new LogicException("您还未登录，请登录！");
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 var Model = new QueryUserFollowRuleParam() { userId = userId, pageIndex = pageIndex, pageSize = pageSize, gameCode = gameCode, gameType = gameType, byFollower = byFollower };
@@ -1642,7 +1677,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "查询定制跟单列表出错" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -1665,7 +1700,7 @@ namespace Lottery.Api.Controllers
                 string gameCode = p.GameCode;
                 string gameType = p.GameType;
                 if (string.IsNullOrEmpty(userToken))
-                    throw new Exception("您还未登录，请登录！");
+                    throw new LogicException("您还未登录，请登录！");
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 Dictionary<string, object> param = new Dictionary<string, object>() {
                     {"createrUserId",createUserId },{"followerUserId", followerUserId},{"gameCode",gameCode },{ "gameType",gameType}
@@ -1730,7 +1765,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "查询跟单信息失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -1824,7 +1859,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "查询今日宝单失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -1846,7 +1881,7 @@ namespace Lottery.Api.Controllers
                 int pageIndex = p.PageIndex;
                 int pageSize = p.PageSize;
                 if (string.IsNullOrEmpty(userId))
-                    throw new Exception("您还未登录，请先登录。");
+                    throw new LogicException("您还未登录，请先登录。");
                 var result = new TotalSingleTreasure_Collection();
                 string currenttime = string.Empty;
                 if (!string.IsNullOrEmpty(strAward) && strAward == "-1")
@@ -1918,7 +1953,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "查询保单作者首页失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -1980,7 +2015,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "查询失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -2002,13 +2037,13 @@ namespace Lottery.Api.Controllers
                 string currentUserId = p.CurrentUserId;
                 string bgzUserId = p.BGZUserId;
                 if (string.IsNullOrEmpty(userToken))
-                    throw new Exception("您还未登录,请先登录!");
+                    throw new LogicException("您还未登录,请先登录!");
                 else if (string.IsNullOrEmpty(gzType))
-                    throw new Exception("关注类型错误");
+                    throw new LogicException("关注类型错误");
                 else if (string.IsNullOrEmpty(currentUserId))
-                    throw new Exception("用户编号不能为空！");
+                    throw new LogicException("用户编号不能为空！");
                 else if (string.IsNullOrEmpty(bgzUserId))
-                    throw new Exception("被关注用户编号不能为空！");
+                    throw new LogicException("被关注用户编号不能为空！");
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 Dictionary<string, object> param = new Dictionary<string, object>()
                 {
@@ -2036,7 +2071,7 @@ namespace Lottery.Api.Controllers
                         Value = result.Message,
                     });
                 }
-                throw new Exception("传入关注类型错误");
+                throw new LogicException("传入关注类型错误");
             }
             catch (ArgumentException ex)
             {
@@ -2053,7 +2088,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "查询失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -2121,7 +2156,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "查询失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -2145,7 +2180,7 @@ namespace Lottery.Api.Controllers
                 string userName = p.userName;
                 string isMyBD = p.isMyBD;
                 if (string.IsNullOrEmpty(currUserId))
-                    throw new Exception("您还未登录，请先登录。");
+                    throw new LogicException("您还未登录，请先登录。");
                 Dictionary<string, object> param = new Dictionary<string, object>();
 
                 var Model = new QueryTodayBDFXList() { isMyBD = isMyBD, userName = userName, gameCode = GameCode, strOrderBy = "", startTime = DateTime.Parse("2015-06-06"), endTime = DateTime.Now, currentUserId = currUserId, pageIndex = pageIndex, pageSize = pageSize };
@@ -2211,7 +2246,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "查询失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -2230,7 +2265,7 @@ namespace Lottery.Api.Controllers
                 var p = JsonHelper.Decode(entity.Param);
                 string schemeId = p.SchemeId;
                 if (string.IsNullOrEmpty(schemeId))
-                    throw new Exception("订单号不能为空");
+                    throw new LogicException("订单号不能为空");
                 Dictionary<string, object> param = new Dictionary<string, object>()
                 {
                     {"schemeId",schemeId }
@@ -2297,7 +2332,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "查询失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -2316,7 +2351,7 @@ namespace Lottery.Api.Controllers
                 var p = JsonHelper.Decode(entity.Param);
                 string userToken = p.UserToken;
                 if (string.IsNullOrEmpty(userToken))
-                    throw new ArgumentException("您还未登录！");
+                    throw new LogicException("您还未登录！");
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 BonusStatus? bonusStatus = null;
                 SchemeType? schemeType = null;
@@ -2391,7 +2426,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "查询失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -2410,10 +2445,10 @@ namespace Lottery.Api.Controllers
                 var p = JsonHelper.Decode(entity.Param);
                 string userToken = p.UserToken;
                 if (string.IsNullOrEmpty(userToken))
-                    throw new ArgumentException("您还未登录！");
+                    throw new LogicException("您还未登录！");
                 string schemeId = p.SchemeId;
                 if (string.IsNullOrEmpty(schemeId))
-                    throw new ArgumentException("订单号不能为空！");
+                    throw new LogicException("订单号不能为空！");
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 MyOrderListInfo orderInfo = null;
                 Sports_AnteCodeQueryInfoCollection anteCodeList = null;
@@ -2428,7 +2463,7 @@ namespace Lottery.Api.Controllers
                     };
                     var schemeInfo = await _serviceProxyProvider.Invoke<BettingOrderInfoCollection>(param, "api/Order/QueryBettingOrderListByChaseKeyLine");
                     if (schemeInfo.OrderList.Count == 0)
-                        throw new Exception("追号方案不包括投注期信息");
+                        throw new LogicException("追号方案不包括投注期信息");
                     var firstIssuse = schemeInfo.OrderList[0];
                     param.Add("schemeId", firstIssuse.SchemeId);
                     orderInfo = await _serviceProxyProvider.Invoke<MyOrderListInfo>(param, "api/Order/QueryMyOrderDetailInfo");
@@ -2545,7 +2580,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "查询订单详情失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -2601,7 +2636,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "查询失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -2636,7 +2671,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "获取开奖记录失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -2716,7 +2751,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "获取开奖记录失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -2832,7 +2867,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "获取开奖详情失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -2918,7 +2953,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "获取开奖数据出错" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -3038,7 +3073,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "获取开奖详情失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -3054,7 +3089,7 @@ namespace Lottery.Api.Controllers
                 string schemeId = p.SchemeId;
                 string userToken = p.UserToken;
                 if (string.IsNullOrEmpty(userToken))
-                    throw new Exception("用户未登录");
+                    throw new LogicException("用户未登录");
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 //param.Add("userToken", userToken);
@@ -3099,7 +3134,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "获取开奖详情失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });
@@ -3114,7 +3149,7 @@ namespace Lottery.Api.Controllers
                 var p = JsonHelper.Decode(entity.Param);
                 string schemeId = p.SchemeId;
                 if (string.IsNullOrEmpty(schemeId))
-                    throw new ArgumentException("订单号不能为空！");
+                    throw new LogicException("订单号不能为空！");
 
                 if (schemeId.StartsWith("CHASE"))
                 {
@@ -3144,7 +3179,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "查询订单详情失败" + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });

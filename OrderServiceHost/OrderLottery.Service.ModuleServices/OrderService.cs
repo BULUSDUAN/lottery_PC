@@ -13,6 +13,7 @@ using EntityModel.Communication;
 using System.Threading.Tasks;
 using KaSon.FrameWork.ORM.Helper;
 using KaSon.FrameWork.Common;
+using EntityModel.ExceptionExtend;
 
 namespace OrderLottery.Service.ModuleServices
 {
@@ -148,7 +149,19 @@ namespace OrderLottery.Service.ModuleServices
         /// <returns></returns>
         public Task<Sports_TogetherSchemeQueryInfo> QuerySportsTogetherDetail(string schemeId)
         {
-            return Task.FromResult(_order.QuerySportsTogetherDetail(schemeId));
+            try
+            {
+                return Task.FromResult(_order.QuerySportsTogetherDetail(schemeId));
+            }
+            catch (LogicException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询失败 - " + ex.Message, ex);
+            }
+
         }
         /// <summary>
         /// 用户是否已经参与了合买
@@ -170,7 +183,19 @@ namespace OrderLottery.Service.ModuleServices
         }
         public Task<Sports_SchemeQueryInfo> QuerySportsSchemeInfo(string schemeId)
         {
-            return Task.FromResult(_order.QuerySportsSchemeInfo(schemeId));
+            try
+            {
+                return Task.FromResult(_order.QuerySportsSchemeInfo(schemeId));
+            }
+            catch (LogicException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询出错 - " + ex.Message, ex);
+            }
+
         }
         /// <summary>
         /// 查询我的定制  或 定制我的
@@ -245,7 +270,19 @@ namespace OrderLottery.Service.ModuleServices
         /// <param name="bgzUserId"></param>
         public Task<CommonActionResult> BDFXAttention(string currUserId, string bgzUserId)
         {
-          return Task.FromResult(_order.BDFXAttention(currUserId,bgzUserId));
+            try
+            {
+                return Task.FromResult(_order.BDFXAttention(currUserId, bgzUserId));
+            }
+            catch (LogicException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询出错 - " + ex.Message, ex);
+            }
+         
         }
         /// <summary>
         /// 取消关注
@@ -254,7 +291,18 @@ namespace OrderLottery.Service.ModuleServices
         /// <param name="bgzUserId"></param>
         public Task<CommonActionResult> BDFXCancelAttention(string currUserId, string bgzUserId)
         {
-          return Task.FromResult(_order.BDFXCancelAttention(currUserId, bgzUserId));
+            try
+            {
+                return Task.FromResult(_order.BDFXCancelAttention(currUserId, bgzUserId));
+            }
+            catch (LogicException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("系统异常 - " + ex.Message, ex);
+            }
         }
         /// <summary>
         /// 查询高手排行/我的关注
@@ -290,11 +338,34 @@ namespace OrderLottery.Service.ModuleServices
         }
         public Task<GameWinNumber_InfoCollection> QueryGameWinNumberByDate(DateTime startTime, DateTime endTime, string gameCode, int pageIndex, int pageSize)
         {
-            return Task.FromResult(_order.QueryGameWinNumberByDate(startTime, endTime, gameCode, pageIndex, pageSize));
+            try
+            {
+                return Task.FromResult(_order.QueryGameWinNumberByDate(startTime, endTime, gameCode, pageIndex, pageSize));
+            }
+            catch (LogicException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("系统异常 - " + ex.Message, ex);
+            }
+
         }
         public Task<GameWinNumber_InfoCollection> QueryGameWinNumberByDateDesc(DateTime startTime, DateTime endTime, string gameCode, int pageIndex, int pageSize)
         {
-            return Task.FromResult(_order.QueryGameWinNumberByDateDesc(startTime, endTime, gameCode, pageIndex, pageSize));
+            try
+            {
+                return Task.FromResult(_order.QueryGameWinNumberByDateDesc(startTime, endTime, gameCode, pageIndex, pageSize));
+            }
+            catch (LogicException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("系统异常 - " + ex.Message, ex);
+            }
         }
         public Task<List<LotteryIssuse_QueryInfo>> QueryAllGameCurrentIssuse(bool byOfficial)
         {
