@@ -22,6 +22,7 @@ using EntityModel.Communication;
 using KaSon.FrameWork.Analyzer.AnalyzerFactory;
 using EntityModel.Interface;
 using KaSon.FrameWork.Analyzer;
+
 using GameBiz.Domain.Entities;
 using System.Threading.Tasks;
 
@@ -29,7 +30,9 @@ namespace KaSon.FrameWork.ORM.Helper
 {
     public class Sports_Business: DBbase
     {
-        private static Log4Log writerLog = new Log4Log();
+       // ILogger<Sports_Business> _Log;
+       // public class Sports_Business(ILogger<BettingRepository>)
+       // private static Log4Log writerLog = new Log4Log();
       
         public int CheckBettingOrderMoney(List<Sports_AnteCodeInfo> codeList, string gameCode, string gameType, string playType, int amount, decimal schemeTotalMoney, DateTime stopTime, bool isAllow = false, string userId = "")
         {
@@ -2095,7 +2098,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             watch.Stop();
             log.Add("3)拆分和修改订单数据 " + watch.Elapsed.TotalMilliseconds);
-            //this.writer.Write("DoSplitOrderTickets", schemeId, LogType.Information, "拆票日志", string.Join(Environment.NewLine, log.ToArray()));
+            Log4Log.Fatal("DoSplitOrderTickets-"+ schemeId+","+ string.Join(Environment.NewLine, log.ToArray()));
             return string.Join(Environment.NewLine, log);
         }
 
@@ -3289,10 +3292,10 @@ namespace KaSon.FrameWork.ORM.Helper
         public string LotteryBetting(LotteryBettingInfo info, string userId, string balancePassword, string place, decimal redBagMoney)
         {
             //时间记录变量
-            long businessDT = 0, orderDT = 0, dataDT = 0, gametypesDT = 0, IssuseDT = 0, userDT = 0;
+            long businessDT = 0, orderDT = 0, dataDT = 0, gametypesDT = 0, IssuseDT = 0, userDT = 0,oneDataDt=0, oneDataDt1=0, oneDataDt2=0;
             var watch = new Stopwatch();
             watch.Start();
-
+            //UserRegister 
             var userManager = new UserBalanceManager();
             var user = userManager.LoadUserRegister(userId);
             if (!user.IsEnable)
@@ -3300,7 +3303,7 @@ namespace KaSon.FrameWork.ORM.Helper
             info.UserId = userId;
             //查询用户用时
             userDT = watch.ElapsedMilliseconds;
-            watch.Reset();
+           // 
             //Redis订单列表
             var redisOrderList = new RedisWaitTicketOrderList();
 
@@ -3350,7 +3353,7 @@ namespace KaSon.FrameWork.ORM.Helper
             if (codeMoney != info.TotalMoney)
                 throw new LogicException("投注期号总金额与方案总金额不匹配");
 
-            var lotteryManager = new LotteryGameManager();
+        
             string ctzqGameType = string.Empty;
             if (!string.IsNullOrEmpty(info.GameCode) && info.GameCode.ToUpper() == "CTZQ")
                 ctzqGameType = info.AnteCodeList[0].GameType.ToUpper();
@@ -3363,7 +3366,10 @@ namespace KaSon.FrameWork.ORM.Helper
             #endregion
             //数据验证用时
              dataDT = watch.ElapsedMilliseconds;
-            watch.Reset();
+            //
+
+
+            var lotteryManager = new LotteryGameManager();
             var gameTypes = lotteryManager.QueryEnableGameTypes();
             //开启事务
             //using (var biz = new GameBizBusinessManagement())
@@ -3378,7 +3384,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var currentIssuseNumberList = new List<C_Game_Issuse>();
             //查询彩种用时
              gametypesDT = watch.ElapsedMilliseconds;
-            watch.Reset();
+          //  
             //期号处理
             foreach (var issuse in info.IssuseNumberList)
             {
@@ -3393,7 +3399,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             //期号处理用时
              IssuseDT = watch.ElapsedMilliseconds;
-            watch.Reset();
+          //  
             try
             {
                 IList<C_Sports_Order_Running> Order_Running_List = new List<C_Sports_Order_Running>();
@@ -3514,13 +3520,20 @@ namespace KaSon.FrameWork.ORM.Helper
 
                 //订单构建用时
                 orderDT = watch.ElapsedMilliseconds;
-                watch.Reset();
+             //   
                 DB.Begin();
                 try
                 {
+
+                  
                     //kason 批量录入录入订单信息
                     DB.GetDal<C_OrderDetail>().BulkAdd(OrderDetail_List);
+
+                    oneDataDt = watch.ElapsedMilliseconds;
+                    //
                     DB.GetDal<C_Sports_Order_Running>().BulkAdd(Order_Running_List);
+                    oneDataDt1 = watch.ElapsedMilliseconds;
+                    //
 
                     if (info.IssuseNumberList.Count > 1)
                     {
@@ -3536,7 +3549,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
                         #endregion
                     }
-
+                    oneDataDt2= watch.ElapsedMilliseconds;
                     #region 支付
 
                     //摇钱树订单，不扣用户的钱，扣代理商余额
@@ -3596,7 +3609,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     DB.Commit();
                     //扣款录入订单用时间
                     businessDT = watch.ElapsedMilliseconds;
-                    watch.Reset();
+                  //  
                 }
                 catch (Exception ex1)
                 {
@@ -3622,7 +3635,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 //    writerLog.WriteLog("LotteryBetting", "SQL", (int)LogType.Warning, "存入订单、号码、扣钱操作", string.Format("总用时：{0}毫秒", watch.Elapsed.TotalMilliseconds));
 
               
-                //watch.Reset();
+                //
                 if (RedisHelper.EnableRedis)
                 {
                     if (info.IssuseNumberList.Count > 1)
@@ -3643,26 +3656,40 @@ namespace KaSon.FrameWork.ORM.Helper
                     }
                 }
                 long redisDT = watch.ElapsedMilliseconds;
-                watch.Reset();
+              //  
                 //拆票
                 if (!RedisHelper.EnableRedis)
                     DoSplitOrderTickets(firstSchemeId);
 
                 //watch.Stop();
-                if (watch.Elapsed.TotalMilliseconds > 1000)
+                if (watch.Elapsed.TotalMilliseconds >300)
                 {
                     StringBuilder sb = new StringBuilder();
-                    sb.Append("LotteryBetting + Redis + 投注耗时记录 \r\n");
-                    sb.Append("userDT 查询用户信息：" + userDT.ToString() + " \r\n");
-                    sb.Append("businessDT 检验完成时间：" + businessDT.ToString() + " \r\n");
-                    sb.Append("orderDT 订单录入时间：" + orderDT.ToString() + " \r\n");
-                    sb.Append("dataDT  数据验证时间：" + dataDT.ToString() + " \r\n");
-                    sb.Append("gametypesDT 彩种处理时间：" + gametypesDT.ToString() + " \r\n");
-                    sb.Append("IssuseDT 期号处理时间：" + IssuseDT.ToString() + " \r\n");
-                    sb.Append("redisDT redis录入订单处理时间：" + redisDT.ToString() + " \r\n");
-                    sb.Append("订单总用时毫秒" + keyLine + "," + watch.Elapsed.TotalMilliseconds.ToString() + " \r\n");
-                    //录入跟踪信息
-                     Log4Log.Fatal(sb.ToString());
+                sb.Append("LotteryBetting + Redis + 投注耗时记录 \r\n");
+                sb.Append("userDT 查询用户信息：" + userDT.ToString() + " \r\n");
+                sb.Append("dataDT  数据验证时间：" + (dataDT - userDT).ToString() + " \r\n");
+                sb.Append("gametypesDT 彩种处理时间：" + (gametypesDT - dataDT).ToString() + " \r\n");
+                sb.Append("IssuseDT 期号处理时间：" + (IssuseDT- gametypesDT).ToString() + " \r\n");
+
+                sb.Append("orderDT 订单构建用时：" + (orderDT- IssuseDT).ToString() + " \r\n");
+
+                sb.Append("oneDataDt C_OrderDetail录入订单处理时间：" + (oneDataDt- orderDT).ToString() + " \r\n");
+                sb.Append("oneDataDt1 C_Sports_Order_Running录入订单处理时间：" + (oneDataDt1- oneDataDt).ToString() + " \r\n");
+
+                sb.Append("发送短信录处理时间：" + (oneDataDt2 - oneDataDt1).ToString() + " \r\n");
+
+                sb.Append("扣款用时 ：" + (businessDT- oneDataDt2).ToString() + " \r\n");
+               
+
+             
+                
+                sb.Append("redisDT redis录入订单处理时间：" + (redisDT- businessDT).ToString() + " \r\n");
+               
+             
+                sb.Append(keyLine+",订单总用时毫秒:" +watch.Elapsed.TotalMilliseconds.ToString() + " \r\n");
+                //录入跟踪信息
+                Log4Log.Fatal(sb.ToString());
+              //  Console.WriteLine(sb.ToString());
                 }
                 //刷新用户在Redis中的余额
                 BusinessHelper.RefreshRedisUserBalance(userId);

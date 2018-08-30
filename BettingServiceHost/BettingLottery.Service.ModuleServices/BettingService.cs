@@ -15,6 +15,7 @@ using BettingLottery.Service.IModuleServices;
 using System.IO;
 using System.Text;
 using EntityModel.ExceptionExtend;
+using UserLottery.Service.ModuleServices;
 
 namespace BettingLottery.Service.ModuleServices
 {
@@ -22,12 +23,16 @@ namespace BettingLottery.Service.ModuleServices
     public class BettingService : KgBaseService, IBettingService
     {
        
-        IKgLog log = null;
-        public BettingService()
+        //IKgLog log = null;
+        //public BettingService()
+        //{
+        //    log = new Log4Log();
+        //}
+        private readonly BettingRepository _rep;
+        public BettingService(BettingRepository repository)
         {
-            log = new Log4Log();
+            this._rep = repository;
         }
-
         #region 普通投注
         /// <summary>
         /// 普通投注
@@ -1259,9 +1264,17 @@ namespace BettingLottery.Service.ModuleServices
         {
            return Task.FromResult(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\SQLInfo", "LogTime_"));
         }
-        public Task<string> ReadLog(string DicName= "SQLInfo")
+        public Task<string> ReadLog(string DicName= "SQLInfo",string ApiDicTypeName= "Fatal")
         {
-            return Task.FromResult(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\"+ DicName, "LogTime_"));
+            StringBuilder sb = new StringBuilder();
+            sb.Append(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\" + DicName, "LogTime_"));
+
+            sb.Append("新的日志************************* \r\n");
+            sb.Append("新的日志************************* \r\n");
+            sb.Append("新的日志************************* \r\n");
+            sb.Append(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\" + ApiDicTypeName, "LogTime_"));
+
+            return Task.FromResult(sb.ToString());
         }
         //   Task<string> ReadLog(string DicName);
     }

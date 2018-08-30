@@ -80,7 +80,7 @@ namespace BettingLottery.Service.IModuleServices
         Task<string> ReadSqlTimeLog(string FileName);
 
         [Service(Date = "2018-7-15", Director = "kason", Name = "日志")]
-        Task<string> ReadLog(string DicName);
+        Task<string> ReadLog(string DicName,string ApiDicTypeName);
 
     }
 }

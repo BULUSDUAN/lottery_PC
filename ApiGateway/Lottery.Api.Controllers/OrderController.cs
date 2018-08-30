@@ -1216,7 +1216,7 @@ namespace Lottery.Api.Controllers
                     Value = ex.ToGetMessage(),
                 });
             }
-           
+
         }
         /// <summary>
         /// 查看合买订单详情
@@ -1360,11 +1360,11 @@ namespace Lottery.Api.Controllers
                     //userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
                 }
                 param.Clear();
-
+                //|| string.IsNullOrEmpty(userToken)
                 var codeList = new List<object>();
                 if (schemeInfo.Security == TogetherSchemeSecurity.Public
                    || (schemeInfo.Security == TogetherSchemeSecurity.CompletePublic && schemeInfo.StopTime <= DateTime.Now)
-                   || schemeInfo.UserId == userId || string.IsNullOrEmpty(userToken))
+                   || schemeInfo.UserId == userId)
                 {
                     param["schemeId"] = schemeId;
                     if (schemeInfo.Security != TogetherSchemeSecurity.FirstMatchStopPublic)
@@ -1456,147 +1456,160 @@ namespace Lottery.Api.Controllers
         }
         public async Task<List<object>> GetCodeList_GSAPP([FromServices]IServiceProxyProvider _serviceProxyProvider, Sports_AnteCodeQueryInfoCollection code, string gameCode, int amount)
         {
-           
-                var issuseNumber = code.List.Count > 0 ? code.List[0].IssuseNumber : string.Empty;
-                var codeList = new List<object>();
-                foreach (var item in code.List)
+
+            var issuseNumber = code.List.Count > 0 ? code.List[0].IssuseNumber : string.Empty;
+            var codeList = new List<object>();
+            var issuseInfoList = new List<Issuse_QueryInfo>();
+            foreach (var item in code.List)
+            {
+                string[] array_GameCode = new string[] { "JCZQ", "JCLQ", "CTZQ", "BJDC" };
+                var betCount = 0;
+                if (gameCode.ToUpper() == "CTZQ")
                 {
-                    string[] array_GameCode = new string[] { "JCZQ", "JCLQ", "CTZQ", "BJDC" };
-                    var betCount = 0;
-                    if (gameCode.ToUpper() == "CTZQ")
+                    var result = Json_CTZQ.GetMatchListToOrderDetail(item.IssuseNumber, item.GameType, item.AnteCode);
+                    if (result != null)
                     {
-                        var result = Json_CTZQ.GetMatchListToOrderDetail(item.IssuseNumber, item.GameType, item.AnteCode);
-                        if (result != null)
+                        foreach (var _item in result)
                         {
-                            foreach (var _item in result)
+                            codeList.Add(new
                             {
-                                codeList.Add(new
-                                {
-                                    AnteCode = _item.AnteCode,
-                                    BonusStatus = (int)item.BonusStatus,
-                                    CurrentSp = item.CurrentSp,
-                                    FullResult = _item.FullResult,
-                                    GameTypeDisplayName = string.IsNullOrEmpty(item.GameType) ? "" : BettingHelper.FormatGameType(gameCode, item.GameType),
-                                    GameType = item.GameType,
-                                    GuestTeamId = _item.GuestTeamId,
-                                    GuestTeamName = _item.GuestTeamName.Replace("&nbsp;", "").Replace("nbsp;", ""),
-                                    HalfResult = _item.HalfResult,
-                                    HomeTeamId = _item.HomeTeamId,
-                                    HomeTeamName = _item.HomeTeamName.Replace("&nbsp;", "").Replace("nbsp;", ""),
-                                    IsDan = _item.IsDan,
-                                    IssuseNumber = _item.IssuseNumber,
-                                    LeagueColor = _item.LeagueColor,
-                                    LeagueName = _item.LeagueName,
-                                    LetBall = _item.LetBall,
-                                    MatchId = _item.MatchId,
-                                    MatchIdName = _item.MatchIdName,
-                                    MatchResult = _item.MatchResult,
-                                    MatchResultSp = item.MatchResultSp,
-                                    MatchState = _item.MatchState,
-                                    StartTime = _item.StartTime,
-                                    Amount = amount,
-                                    BetCount = betCount,
-                                    OrderNumber = _item.OrderNumber,
-                                    Detail_RF = AnalyticalCurrentSp(item.CurrentSp, "RF"),
-                                    Detail_YSZF = AnalyticalCurrentSp(item.CurrentSp, "YSZF"),
-                                });
-                            }
+                                AnteCode = _item.AnteCode,
+                                BonusStatus = (int)item.BonusStatus,
+                                CurrentSp = item.CurrentSp,
+                                FullResult = _item.FullResult,
+                                GameTypeDisplayName = string.IsNullOrEmpty(item.GameType) ? "" : BettingHelper.FormatGameType(gameCode, item.GameType),
+                                GameType = item.GameType,
+                                GuestTeamId = _item.GuestTeamId,
+                                GuestTeamName = _item.GuestTeamName.Replace("&nbsp;", "").Replace("nbsp;", ""),
+                                HalfResult = _item.HalfResult,
+                                HomeTeamId = _item.HomeTeamId,
+                                HomeTeamName = _item.HomeTeamName.Replace("&nbsp;", "").Replace("nbsp;", ""),
+                                IsDan = _item.IsDan,
+                                IssuseNumber = _item.IssuseNumber,
+                                LeagueColor = _item.LeagueColor,
+                                LeagueName = _item.LeagueName,
+                                LetBall = _item.LetBall,
+                                MatchId = _item.MatchId,
+                                MatchIdName = _item.MatchIdName,
+                                MatchResult = _item.MatchResult,
+                                MatchResultSp = item.MatchResultSp,
+                                MatchState = _item.MatchState,
+                                StartTime = _item.StartTime,
+                                Amount = amount,
+                                BetCount = betCount,
+                                OrderNumber = _item.OrderNumber,
+                                Detail_RF = AnalyticalCurrentSp(item.CurrentSp, "RF"),
+                                Detail_YSZF = AnalyticalCurrentSp(item.CurrentSp, "YSZF"),
+                            });
                         }
-                    }
-                    if (gameCode.ToUpper() == "SJB")
-                    {
-                        Dictionary<string, object> param = new Dictionary<string, object>
-                    {
-                        {"gameCode",gameCode },{"gameType","" },{"issuseNumber",issuseNumber }
-                    };
-                        var issuseInfo = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Order/QueryIssuseInfo");
-                        if (!array_GameCode.Contains(gameCode))
-                        {
-                            var analyzer = AnalyzerFactory.GetAntecodeAnalyzer(gameCode, item.GameType);
-                            betCount = analyzer.AnalyzeAnteCode(item.AnteCode);
-                        }
-
-                        codeList.Add(new
-                        {
-                            AnteCode = item.AnteCode,
-                            BonusStatus = (int)item.BonusStatus,
-                            CurrentSp = Json_JCZQ.GetAnteCode(item.GameType, item.AnteCode, item.CurrentSp),
-                            FullResult = item.FullResult,
-                            GameTypeDisplayName = BettingHelper.FormatGameType(gameCode, item.GameType),
-                            GameType = item.GameType,
-                            GuestTeamId = item.GuestTeamId,
-                            GuestTeamName = item.GuestTeamName,
-                            HalfResult = item.HalfResult,
-                            HomeTeamId = item.HomeTeamId,
-                            HomeTeamName = item.HomeTeamName,
-                            IsDan = item.IsDan,
-                            IssuseNumber = item.IssuseNumber,
-                            LeagueColor = item.LeagueColor,
-                            //LeagueId = item.LeagueId,
-                            LeagueName = item.LeagueName,
-                            LetBall = item.LetBall,
-                            MatchId = item.MatchId,
-                            MatchIdName = item.MatchIdName,
-                            MatchResult = issuseInfo == null ? string.Empty : issuseInfo.WinNumber,
-                            MatchResultSp = item.MatchResultSp,
-                            MatchState = item.MatchState,
-                            StartTime = Convert.ToDateTime(item.StartTime),
-                            Amount = amount,
-                            BetCount = betCount,
-                            Detail_RF = AnalyticalCurrentSp(item.CurrentSp, "RF"),
-                            Detail_YSZF = AnalyticalCurrentSp(item.CurrentSp, "YSZF"),
-                        });
-                    }
-                    else
-                    {
-                        Dictionary<string, object> param = new Dictionary<string, object>
-                    {
-                        {"gameCode",gameCode },{"gameType","" },{"issuseNumber",issuseNumber }
-                    };
-                        //数字彩
-                        var issuseInfo = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Order/QueryIssuseInfo");
-                        if (!array_GameCode.Contains(gameCode))
-                        {
-                            var analyzer = AnalyzerFactory.GetAntecodeAnalyzer(gameCode, item.GameType);
-                            betCount = analyzer.AnalyzeAnteCode(item.AnteCode);
-                        }
-
-                        codeList.Add(new
-                        {
-                            AnteCode = item.AnteCode,
-                            AnteCodeDetail = BettingHelper.BackToDetailByAnteCode(gameCode.ToUpper(), item.GameType, item.AnteCode, item.CurrentSp),
-                            BonusStatus = (int)item.BonusStatus,
-                            CurrentSp = item.CurrentSp,
-                            FullResult = item.FullResult,
-                            GameTypeDisplayName = BettingHelper.FormatGameType(gameCode, item.GameType),
-                            GameType = item.GameType,
-                            GuestTeamId = item.GuestTeamId,
-                            GuestTeamName = item.GuestTeamName,
-                            HalfResult = item.HalfResult,
-                            HomeTeamId = item.HomeTeamId,
-                            HomeTeamName = item.HomeTeamName,
-                            IsDan = item.IsDan,
-                            IssuseNumber = item.IssuseNumber,
-                            LeagueColor = item.LeagueColor,
-                            //LeagueId = item.LeagueId,
-                            LeagueName = item.LeagueName,
-                            LetBall = item.LetBall,
-                            MatchId = item.MatchId,
-                            MatchIdName = item.MatchIdName,
-                            MatchResult = issuseInfo == null ? string.Empty : issuseInfo.WinNumber,
-                            MatchResultSp = item.MatchResultSp,
-                            MatchState = item.MatchState,
-                            StartTime = Convert.ToDateTime(item.StartTime),
-                            Amount = amount,
-                            BetCount = betCount,
-                            Detail_RF = AnalyticalCurrentSp(item.CurrentSp, "RF"),
-                            Detail_YSZF = AnalyticalCurrentSp(item.CurrentSp, "YSZF"),
-                        });
                     }
                 }
-                return codeList;
-            
-          
+                if (gameCode.ToUpper() == "SJB")
+                {
+                    Dictionary<string, object> param = new Dictionary<string, object>
+                    {
+                        {"gameCode",gameCode },{"gameType","" },{"issuseNumber",issuseNumber }
+                    };
+                    //var issuseInfo = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Order/QueryIssuseInfo");
+                    var issuseInfo = new Issuse_QueryInfo();
+                    if (issuseInfoList.Exists(p => p.IssuseNumber == issuseNumber)) issuseInfo = issuseInfoList.FirstOrDefault(p => p.IssuseNumber == issuseNumber);
+                    else
+                    {
+                        issuseInfo = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Order/QueryIssuseInfo");
+                    }
+                    if (!array_GameCode.Contains(gameCode))
+                    {
+                        var analyzer = AnalyzerFactory.GetAntecodeAnalyzer(gameCode, item.GameType);
+                        betCount = analyzer.AnalyzeAnteCode(item.AnteCode);
+                    }
+
+                    codeList.Add(new
+                    {
+                        AnteCode = item.AnteCode,
+                        BonusStatus = (int)item.BonusStatus,
+                        CurrentSp = Json_JCZQ.GetAnteCode(item.GameType, item.AnteCode, item.CurrentSp),
+                        FullResult = item.FullResult,
+                        GameTypeDisplayName = BettingHelper.FormatGameType(gameCode, item.GameType),
+                        GameType = item.GameType,
+                        GuestTeamId = item.GuestTeamId,
+                        GuestTeamName = item.GuestTeamName,
+                        HalfResult = item.HalfResult,
+                        HomeTeamId = item.HomeTeamId,
+                        HomeTeamName = item.HomeTeamName,
+                        IsDan = item.IsDan,
+                        IssuseNumber = item.IssuseNumber,
+                        LeagueColor = item.LeagueColor,
+                        //LeagueId = item.LeagueId,
+                        LeagueName = item.LeagueName,
+                        LetBall = item.LetBall,
+                        MatchId = item.MatchId,
+                        MatchIdName = item.MatchIdName,
+                        MatchResult = issuseInfo == null ? string.Empty : issuseInfo.WinNumber,
+                        MatchResultSp = item.MatchResultSp,
+                        MatchState = item.MatchState,
+                        StartTime = Convert.ToDateTime(item.StartTime),
+                        Amount = amount,
+                        BetCount = betCount,
+                        Detail_RF = AnalyticalCurrentSp(item.CurrentSp, "RF"),
+                        Detail_YSZF = AnalyticalCurrentSp(item.CurrentSp, "YSZF"),
+                    });
+                }
+                else
+                {
+                    Dictionary<string, object> param = new Dictionary<string, object>
+                    {
+                        {"gameCode",gameCode },{"gameType","" },{"issuseNumber",issuseNumber }
+                    };
+                    //数字彩
+                    //var issuseInfo = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Order/QueryIssuseInfo");
+                    var issuseInfo = new Issuse_QueryInfo();
+                    if (issuseInfoList.Exists(p => p.IssuseNumber == issuseNumber)) issuseInfo = issuseInfoList.FirstOrDefault(p => p.IssuseNumber == issuseNumber);
+                    else
+                    {
+                        issuseInfo = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Order/QueryIssuseInfo");
+                    }
+                    if (!array_GameCode.Contains(gameCode))
+                    {
+                        var analyzer = AnalyzerFactory.GetAntecodeAnalyzer(gameCode, item.GameType);
+                        betCount = analyzer.AnalyzeAnteCode(item.AnteCode);
+                    }
+
+                    codeList.Add(new
+                    {
+                        AnteCode = item.AnteCode,
+                        AnteCodeDetail = BettingHelper.BackToDetailByAnteCode(gameCode.ToUpper(), item.GameType, item.AnteCode, item.CurrentSp),
+                        BonusStatus = (int)item.BonusStatus,
+                        CurrentSp = item.CurrentSp,
+                        FullResult = item.FullResult,
+                        GameTypeDisplayName = BettingHelper.FormatGameType(gameCode, item.GameType),
+                        GameType = item.GameType,
+                        GuestTeamId = item.GuestTeamId,
+                        GuestTeamName = item.GuestTeamName,
+                        HalfResult = item.HalfResult,
+                        HomeTeamId = item.HomeTeamId,
+                        HomeTeamName = item.HomeTeamName,
+                        IsDan = item.IsDan,
+                        IssuseNumber = item.IssuseNumber,
+                        LeagueColor = item.LeagueColor,
+                        //LeagueId = item.LeagueId,
+                        LeagueName = item.LeagueName,
+                        LetBall = item.LetBall,
+                        MatchId = item.MatchId,
+                        MatchIdName = item.MatchIdName,
+                        MatchResult = issuseInfo == null ? string.Empty : issuseInfo.WinNumber,
+                        MatchResultSp = item.MatchResultSp,
+                        MatchState = item.MatchState,
+                        StartTime = Convert.ToDateTime(item.StartTime),
+                        Amount = amount,
+                        BetCount = betCount,
+                        Detail_RF = AnalyticalCurrentSp(item.CurrentSp, "RF"),
+                        Detail_YSZF = AnalyticalCurrentSp(item.CurrentSp, "YSZF"),
+                    });
+                }
+            }
+            return codeList;
+
+
         }
 
         /// <summary>

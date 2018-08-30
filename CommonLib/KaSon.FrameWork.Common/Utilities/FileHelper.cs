@@ -96,9 +96,11 @@ namespace KaSon.FrameWork.Common.Utilities
         {
             var sb = new StringBuilder();
 
-
+          
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, dicPath);
             DirectoryInfo root = new DirectoryInfo(path);
+
+            if (!root.Exists) return dicPath + ",目录不存在";
             FileInfo[] files = root.GetFiles();
           
             foreach (var item in files)

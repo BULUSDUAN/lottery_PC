@@ -441,6 +441,7 @@ namespace Lottery.Api.Controllers
             else {
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param["DicName"] = DicTypeName;
+                param["ApiDicTypeName"] = ApiDicTypeName;
                 sb.Append(await _serviceProxyProvider.Invoke<string>(param, "api/Betting/ReadLog"));
             }
             //if (SerName.ToLower() == "api")
