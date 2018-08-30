@@ -3662,9 +3662,9 @@ namespace KaSon.FrameWork.ORM.Helper
                     DoSplitOrderTickets(firstSchemeId);
 
                 //watch.Stop();
-                //if (watch.Elapsed.TotalMilliseconds > 0)
-                //{
-                StringBuilder sb = new StringBuilder();
+                if (watch.Elapsed.TotalMilliseconds >300)
+                {
+                    StringBuilder sb = new StringBuilder();
                 sb.Append("LotteryBetting + Redis + 投注耗时记录 \r\n");
                 sb.Append("userDT 查询用户信息：" + userDT.ToString() + " \r\n");
                 sb.Append("dataDT  数据验证时间：" + (dataDT - userDT).ToString() + " \r\n");
@@ -3676,7 +3676,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 sb.Append("oneDataDt C_OrderDetail录入订单处理时间：" + (oneDataDt- orderDT).ToString() + " \r\n");
                 sb.Append("oneDataDt1 C_Sports_Order_Running录入订单处理时间：" + (oneDataDt1- oneDataDt).ToString() + " \r\n");
 
-                sb.Append("发送短信录入订单处理时间：" + (oneDataDt2 - oneDataDt1).ToString() + " \r\n");
+                sb.Append("发送短信录处理时间：" + (oneDataDt2 - oneDataDt1).ToString() + " \r\n");
 
                 sb.Append("扣款用时 ：" + (businessDT- oneDataDt2).ToString() + " \r\n");
                
@@ -3686,11 +3686,11 @@ namespace KaSon.FrameWork.ORM.Helper
                 sb.Append("redisDT redis录入订单处理时间：" + (redisDT- businessDT).ToString() + " \r\n");
                
              
-                sb.Append("订单总用时毫秒" + keyLine + "," + watch.Elapsed.TotalMilliseconds.ToString() + " \r\n");
+                sb.Append(keyLine+",订单总用时毫秒:" +watch.Elapsed.TotalMilliseconds.ToString() + " \r\n");
                 //录入跟踪信息
                 Log4Log.Fatal(sb.ToString());
                 Console.WriteLine(sb.ToString());
-                //}
+                }
                 //刷新用户在Redis中的余额
                 BusinessHelper.RefreshRedisUserBalance(userId);
             }
