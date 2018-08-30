@@ -126,7 +126,16 @@ namespace Lottery.ApiGateway
                     Issuse_QueryInfoEX val = await _serviceProxyProvider.Invoke<Issuse_QueryInfoEX>(new Dictionary<string, object>(), "api/Data/QueryCurretNewIssuseInfoList");
                     //HashTableCache.Set_Issuse_QueryInfo(val);
                     //HashTableCache.ClearHashTable();
-                    HashTableCache.Init_CTZQ_Issuse_Data();
+                    try
+                    {
+                        HashTableCache.Init_CTZQ_Issuse_Data();
+                    }
+                    catch
+                    {
+                       //获取期号出错
+                        
+                    }
+                  
                     HashTableCache.Init_CTZQ_Data(val);
                     HashTableCache.Init_BJDC_Data(val.BJDC_IssuseNumber.IssuseNumber);
                 }
