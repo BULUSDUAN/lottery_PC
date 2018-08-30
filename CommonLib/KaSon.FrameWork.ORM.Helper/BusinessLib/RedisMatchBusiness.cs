@@ -238,7 +238,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             catch (Exception ex)
             {
-                writerLog.ErrrorLog("RedisMatchBusiness-QueryJCZQMatchResult", ex);
+                Log4Log.Error("RedisMatchBusiness-QueryJCZQMatchResult", ex);
                 return new List<JCZQ_MatchResult>();
             }
         }
@@ -277,7 +277,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             catch (Exception ex)
             {
-                writerLog.ErrrorLog("RedisMatchBusiness-QueryJCLQMatchResult", ex);
+                Log4Log.Error("RedisMatchBusiness-QueryJCLQMatchResult", ex);
               //  writer.Write("RedisMatchBusiness", "QueryJCLQMatchResult", ex);
                 return new List<EntityModel.C_JCLQ_MatchResult>();
             }
@@ -317,7 +317,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             catch (Exception ex)
             {
-                writerLog.ErrrorLog("RedisMatchBusiness-QueryBJDCMatchResult", ex);
+                Log4Log.Error("RedisMatchBusiness-QueryBJDCMatchResult", ex);
                // writer.Write("RedisMatchBusiness", "QueryBJDCMatchResult", ex);
                 return new List<EntityModel.C_BJDC_MatchResult_Prize>();
             }
@@ -361,7 +361,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             catch (Exception ex)
             {
-                writerLog.ErrrorLog("RedisMatchBusiness-QuseryCTZQBonusPool_", ex);
+                Log4Log.Error("RedisMatchBusiness-QuseryCTZQBonusPool_", ex);
               //  writer.Write("RedisMatchBusiness", "QuseryCTZQBonusPool_" + gameType, ex);
                 return new List<EntityModel.T_Ticket_BonusPool>();
             }
@@ -409,7 +409,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             catch (Exception ex)
             {
-                writerLog.ErrrorLog("RedisMatchBusiness-QuserySZCBonusPool_", ex);
+                Log4Log.Error("RedisMatchBusiness-QuserySZCBonusPool_", ex);
                // writer.Write("RedisMatchBusiness", "QuserySZCBonusPool_" + gameCode, ex);
                 return new List<T_Ticket_BonusPool>();
             }
@@ -448,7 +448,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             catch (Exception ex)
             {
-                writerLog.ErrrorLog("RedisMatchBusiness-QuerySZCBonusRule", ex);
+                Log4Log.Error("RedisMatchBusiness-QuerySZCBonusRule", ex);
                 //writer.Write("RedisMatchBusiness", "QuerySZCBonusRule", ex);
                 return new List<C_Bonus_Rule>();
             }
@@ -522,7 +522,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             catch (Exception ex)
             {
-                writerLog.ErrrorLog("RedisMatchBusiness-QuerySZCWinNumber_"+ gameCode, ex);
+                Log4Log.Error("RedisMatchBusiness-QuerySZCWinNumber_"+ gameCode, ex);
               //  writer.Write("RedisMatchBusiness", "QuerySZCWinNumber_" + gameCode, ex);
                 return new Dictionary<string, string>();
             }
@@ -577,7 +577,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             catch (Exception ex)
             {
-                writerLog.ErrrorLog("RedisMatchBusiness-QueryOZBWinNumber" , ex);
+                Log4Log.Error("RedisMatchBusiness-QueryOZBWinNumber" , ex);
              //   writer.Write("RedisMatchBusiness", "QueryOZBWinNumber", ex);
                 return new Dictionary<string, string>();
             }
@@ -632,7 +632,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             catch (Exception ex)
             {
-                writerLog.ErrrorLog("RedisMatchBusiness-QuerySJBWinNumber", ex);
+                Log4Log.Error("RedisMatchBusiness-QuerySJBWinNumber", ex);
                 //writer.Write("RedisMatchBusiness", "QuerySJBWinNumber", ex);
                 return new Dictionary<string, string>();
             }

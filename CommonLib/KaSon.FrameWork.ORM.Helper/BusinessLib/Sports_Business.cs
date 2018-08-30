@@ -579,7 +579,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 catch (Exception exp)
                 {
 
-                    writerLog.WriteLog("SqlBulkAddTableError", orderInfo.OrderId, (int)LogType.Information, "SqlBulkAddTable", exp.Message + "/r/n");
+                    Log4Log.Error("SqlBulkAddTableError-"+orderInfo.OrderId, exp);
                     return;
                 }
                 //manager.ExecSql(sql.ToString());
@@ -618,7 +618,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             catch (Exception exp)
             {
-                writerLog.WriteLog("RequestTicketError", orderInfo.OrderId, (int)LogType.Information, "保存票数据报错", exp.Message + "/r/n" + sql.ToString());
+                Log4Log.Error("RequestTicketError-" + orderInfo.OrderId + " 保存票数据报错" + sql.ToString(), exp);
             }
             //watch.Stop();
             //this.writer.Write("RequestTicket", orderInfo.OrderId, LogType.Information, "保存票数据计时", "用时 " + watch.Elapsed.TotalMilliseconds);
@@ -2114,7 +2114,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 }
                 catch (Exception ex)
                 {
-                    writerLog.ErrrorLog("DoSplitOrderTickets-DpSplitOrderTicketsWithNoThread", ex);
+                    Log4Log.Error("DoSplitOrderTickets-DpSplitOrderTicketsWithNoThread", ex);
                 }
             }, schemeId);
 
@@ -3644,7 +3644,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
                 //watch.Stop();
                 if (watch.Elapsed.TotalMilliseconds > 1000)
-                    writerLog.WriteLog("LotteryBetting", "Redis", (int)LogType.Information, "投注耗时记录", string.Format("订单{0}总用时{1}毫秒", keyLine, watch.Elapsed.TotalMilliseconds));
+                    Log4Log.Warn("LotteryBetting+Redis+投注耗时记录"+ string.Format("订单{0}总用时{1}毫秒", keyLine, watch.Elapsed.TotalMilliseconds));
 
                 //刷新用户在Redis中的余额
                 BusinessHelper.RefreshRedisUserBalance(userId);
@@ -3690,7 +3690,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             catch (Exception ex)
             {
-                writerLog.WriteLog("LotteryBetting", "SerializChaseOrder", (int)LogType.Information, "序列化失败", ex.ToString());
+                Log4Log.Error("LotteryBetting-SerializChaseOrder-序列化失败", ex);
             }
         }
 

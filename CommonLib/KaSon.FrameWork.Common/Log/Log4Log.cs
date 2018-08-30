@@ -123,6 +123,11 @@ namespace KaSon.FrameWork.Common
             if (exception == null) exception = new Exception("");
             iLog.Debug(message, exception);
         }
+        public static void Error(string message = "", Exception exception = null)
+        {
+            if (exception == null) exception = new Exception("");
+            iLog.Error(message, exception);
+        }
 
         //public static void LogEX(KLogLevel lev, string name, object info=null)
         //{
@@ -174,9 +179,9 @@ namespace KaSon.FrameWork.Common
         //            errorlogger.Error(name, ex);
         //            break;
         //    }
-           
+
         //}
-     
+
         public void ErrrorLog(string name, Exception ex)
         {
             if (errorlogger == null)
@@ -193,40 +198,40 @@ namespace KaSon.FrameWork.Common
             }
             logWarning.Info(msg);
         }
-        public void WriteLog(string category, string source, int logType, string logMsg, string detail)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("****************** " + DateTime.Now + " ******************");
-            sb.AppendLine("Category: " + category);
-            sb.AppendLine("Source: " + source);
-            sb.AppendLine("Type: " + logType.ToString());
-            sb.AppendLine("Message: " + logMsg);
-            if (!string.IsNullOrEmpty(detail))
-            {
-                sb.AppendLine(detail);
-            }
-            sb.AppendLine("*****************END*******************");
-            sb.AppendLine("");
+        //public void WriteLog(string category, string source, int logType, string logMsg, string detail)
+        //{
+        //    StringBuilder sb = new StringBuilder();
+        //    sb.AppendLine("****************** " + DateTime.Now + " ******************");
+        //    sb.AppendLine("Category: " + category);
+        //    sb.AppendLine("Source: " + source);
+        //    sb.AppendLine("Type: " + logType.ToString());
+        //    sb.AppendLine("Message: " + logMsg);
+        //    if (!string.IsNullOrEmpty(detail))
+        //    {
+        //        sb.AppendLine(detail);
+        //    }
+        //    sb.AppendLine("*****************END*******************");
+        //    sb.AppendLine("");
 
-            switch (logType)
-            {
-                case 0://Information
-                    Log(sb.ToString());
-                    break;
-                case 1://Warning
-                    WarningLog(sb.ToString());
-                    break;
-                case 2://Error
-                    ErrrorLog(sb.ToString(), new Exception("错误日志:" + category + source + ""));
-                    break;
-                default:
-                    Log(sb.ToString());
-                    break;
-            }
+        //    switch (logType)
+        //    {
+        //        case 0://Information
+        //            Log(sb.ToString());
+        //            break;
+        //        case 1://Warning
+        //            WarningLog(sb.ToString());
+        //            break;
+        //        case 2://Error
+        //            ErrrorLog(sb.ToString(), new Exception("错误日志:" + category + source + ""));
+        //            break;
+        //        default:
+        //            Log(sb.ToString());
+        //            break;
+        //    }
 
-            //     Log( sb.ToString());
+        //    //     Log( sb.ToString());
 
-        }
+        //}
 
         /// <summary>
         /// 记录框架的调试信息

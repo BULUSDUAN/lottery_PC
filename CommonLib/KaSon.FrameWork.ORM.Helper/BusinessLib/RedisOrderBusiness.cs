@@ -106,7 +106,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 }
                 catch (Exception ex)
                 {
-                    writerLog.ErrrorLog("Redis_DoSplitOrderTicket_Single-DoSplitOrderTicketWithThread_Single", ex);
+                    Log4Log.Error("Redis_DoSplitOrderTicket_Single-DoSplitOrderTicketWithThread_Single", ex);
                 }
             }, order);
         }
@@ -127,7 +127,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 }
                 catch (Exception ex)
                 {
-                    writerLog.ErrrorLog("Redis_DoSplitOrderTicket-DoSplitOrderTicketWithThread", ex);
+                    Log4Log.Error("Redis_DoSplitOrderTicket-DoSplitOrderTicketWithThread", ex);
                 }
             }, order);
         }
@@ -329,8 +329,10 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             catch (Exception exp)
             {
-               // writerLog("Redis_DoSplitOrderTicket-DoSplitOrderTicketWithThread", ex);
-                writerLog.WriteLog("追号订单自动拆票任务", "DoSplitOrderTicket",(int) LogType.Information, "追号订单自动拆票任务日志", exp.Message);
+
+                Log4Log.Error("追号订单自动拆票任务-DoSplitOrderTicket" , exp);
+                // writerLog("Redis_DoSplitOrderTicket-DoSplitOrderTicketWithThread", ex);
+              //  writerLog.WriteLog("追号订单自动拆票任务", "DoSplitOrderTicket",(int) LogType.Information, "追号订单自动拆票任务日志", exp.Message);
 
             }
         }
