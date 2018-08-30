@@ -2622,14 +2622,24 @@ namespace KaSon.FrameWork.ORM.Helper
             var query = from b in DB.CreateQuery<C_BJDC_Issuse>()
                         where b.MinLocalStopTime >= DateTime.Now
                         orderby b.MinLocalStopTime ascending
-                        select new { b };
-            var queryResult = query.ToList().Select(z => new BJDCIssuseInfo
+                        select  b ;
+            BJDCIssuseInfo info = null;
+            var queryResult = query.FirstOrDefault();
+            if (queryResult != null)
             {
-                IssuseNumber = z.b.IssuseNumber,
-                MinLocalStopTime = z.b.MinLocalStopTime.ToString("yyyy-MM-dd HH:mm:ss"),
-                MinMatchStartTime = z.b.MinMatchStartTime.ToString("yyyy-MM-dd HH:mm:ss"),
-            });
-            return queryResult.FirstOrDefault();
+                info = new BJDCIssuseInfo()
+                {
+                    IssuseNumber = queryResult.IssuseNumber,
+                    MinLocalStopTime = queryResult.MinLocalStopTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                    MinMatchStartTime = queryResult.MinMatchStartTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                };
+            }
+            //var queryResult = query.ToList().Select(z => new BJDCIssuseInfo
+            //{
+
+            //});
+            //queryResult.FirstOrDefault()
+            return info;
         }
         public CTZQMatchInfo_Collection QueryCTZQMatchListByIssuseNumber(string gameType, string issuseNumber)
         {
