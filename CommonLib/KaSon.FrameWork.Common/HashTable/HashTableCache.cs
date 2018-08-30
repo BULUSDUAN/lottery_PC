@@ -49,9 +49,15 @@ namespace KaSon.FrameWork.Common
                 var type = item.GameCode_IssuseNumber.Split('|')[1];
                 key = type + item.IssuseNumber;
                 var result= Json_CTZQ.MatchList_WEB(item.IssuseNumber, type);
+                var RemoveKeys = new List<string>();
                 foreach (string _keyitem in _CTZQHt.Keys)
                 {
-                    if (_keyitem.StartsWith(type)) _CTZQHt.Remove(_keyitem);
+                    if (_keyitem.StartsWith(type)) RemoveKeys.Add(_keyitem);
+                        //_CTZQHt.Remove(_keyitem);
+                }
+                foreach (var str in RemoveKeys)
+                {
+                    _CTZQHt.Remove(str);
                 }
                 _CTZQHt[key] = result;
             }
