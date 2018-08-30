@@ -18,6 +18,5 @@
   "ResSiteUrl": "http://10.0.3.6:888",
   "ResourceSiteUrl_res": "http://10.0.3.6:788/test.touch",
   "ISConsoleLog": true,
-  "Host": "http://*:729",
-  "RedisConnect": "121.137.131.132:6379,password=e-3Jeh?1u_0nix)nB1Zz:-PZA-Uk,R+-"
+  "Host": "http://*:729"
 }

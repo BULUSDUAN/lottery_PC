@@ -108,10 +108,9 @@ namespace Lottery.ApiGateway
                 //  option.AddCache();
                
                 option.AddClientIntercepted(typeof(CacheProviderInterceptor));
+                option.UseConsulManager(new ConfigInfo(registerConfig.Address));
                 //option.UseZooKeeperManager(new ConfigInfo("127.0.0.1:2181"));
-               // if (registerConfig.Provider == RegisterProvider.Consul)
-                    option.UseConsulManager(new ConfigInfo(registerConfig.Address));
-                
+                // if (registerConfig.Provider == RegisterProvider.Consul)
                 //else if (registerConfig.Provider == RegisterProvider.Zookeeper)
                 //    option.UseZooKeeperManager(new ZookeeperConfigInfo(registerConfig.Address));
                 option.UseDotNettyTransport();
