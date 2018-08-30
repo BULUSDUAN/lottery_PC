@@ -222,12 +222,13 @@ namespace Lottery.Api.Controllers
                 var APP_Index_Key = "APP_Index";
                 var APP_ServicePhone_Key = "Site.Service.Phone";
                 var APP_ScoreURL_Key = "APP_ScoreURL";
-
+                var APP_ExternalLinks_Key = "APP_ExternalLinks";
                 var APP_Common_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_Common_Key);
                 var APP_UserCenter_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_UserCenter_Key);
                 var APP_Index_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_Index_Key);
                 var APP_ServicePhone_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_ServicePhone_Key);
                 var APP_ScoreURL_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_ScoreURL_Key);
+                var APP_ExternalLinks_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_ExternalLinks_Key);
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
@@ -240,6 +241,7 @@ namespace Lottery.Api.Controllers
                         APP_Index = JsonHelper.Deserialize<object>(APP_Index_Value),
                         APP_ServicePhone = APP_ServicePhone_Value,
                         APP_ScoreURL = APP_ScoreURL_Value,
+                        APP_ExternalLinks = JsonHelper.Deserialize<object>(APP_ExternalLinks_Value),
                     },
                 });
             }
@@ -316,28 +318,36 @@ namespace Lottery.Api.Controllers
                 //1.从redis中取
                 //2.取不到则在sql中取
                 //3.不为空则存入redis中，3分钟缓存
-                var flag = KaSon.FrameWork.Common.Redis.RedisHelper.KeyExists(key);
-                var v = "";
-                if (flag)
+                //var flag = KaSon.FrameWork.Common.Redis.RedisHelper.KeyExists(key);
+                //var v = "";
+                //if (flag)
+                //{
+                //    v = KaSon.FrameWork.Common.Redis.RedisHelper.StringGet(key);
+                //}
+                //if (string.IsNullOrEmpty(v))
+                //{
+                //    var param = new Dictionary<string, object>();
+                //    param.Add("key", key);
+                //    var config = await _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/Data/QueryCoreConfigByKey");
+                //    if (config != null)
+                //    {
+                //        v = config.ConfigValue;
+                //        KaSon.FrameWork.Common.Redis.RedisHelper.StringSet(key, config.ConfigValue, 3 * 60);
+                //    }
+                //    if (string.IsNullOrEmpty(v))
+                //    {
+                //        return defalutValue;
+                //    }
+                //}
+                //return v;
+                var param = new Dictionary<string, object>();
+                param.Add("key", key);
+                var config = await _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/Data/QueryCoreConfigByKey");
+                if (config != null)
                 {
-                    v = KaSon.FrameWork.Common.Redis.RedisHelper.StringGet(key);
+                    return config.ConfigValue;
                 }
-                if (string.IsNullOrEmpty(v))
-                {
-                    var param = new Dictionary<string, object>();
-                    param.Add("key", key);
-                    var config = await _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/Data/QueryCoreConfigByKey");
-                    if (config != null)
-                    {
-                        v = config.ConfigValue;
-                        KaSon.FrameWork.Common.Redis.RedisHelper.StringSet(key, config.ConfigValue, 3 * 60);
-                    }
-                    if (string.IsNullOrEmpty(v))
-                    {
-                        return defalutValue;
-                    }
-                }
-                return v;
+                return defalutValue;
             }
             catch (Exception)
             {
