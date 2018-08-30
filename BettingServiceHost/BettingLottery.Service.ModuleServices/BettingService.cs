@@ -15,6 +15,7 @@ using BettingLottery.Service.IModuleServices;
 using System.IO;
 using System.Text;
 using EntityModel.ExceptionExtend;
+using UserLottery.Service.ModuleServices;
 
 namespace BettingLottery.Service.ModuleServices
 {
@@ -22,12 +23,16 @@ namespace BettingLottery.Service.ModuleServices
     public class BettingService : KgBaseService, IBettingService
     {
        
-        IKgLog log = null;
-        public BettingService()
+        //IKgLog log = null;
+        //public BettingService()
+        //{
+        //    log = new Log4Log();
+        //}
+        private readonly BettingRepository _rep;
+        public BettingService(BettingRepository repository)
         {
-            log = new Log4Log();
+            this._rep = repository;
         }
-
         #region 普通投注
         /// <summary>
         /// 普通投注

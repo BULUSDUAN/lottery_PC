@@ -3289,7 +3289,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public string LotteryBetting(LotteryBettingInfo info, string userId, string balancePassword, string place, decimal redBagMoney)
         {
             //时间记录变量
-            long businessDT = 0, orderDT = 0, dataDT = 0, gametypesDT = 0, IssuseDT = 0, userDT = 0;
+            long businessDT = 0, orderDT = 0, dataDT = 0, gametypesDT = 0, IssuseDT = 0, userDT = 0,oneDataDt=0, oneDataDt1=0;
             var watch = new Stopwatch();
             watch.Start();
 
@@ -3350,7 +3350,7 @@ namespace KaSon.FrameWork.ORM.Helper
             if (codeMoney != info.TotalMoney)
                 throw new LogicException("投注期号总金额与方案总金额不匹配");
 
-            var lotteryManager = new LotteryGameManager();
+        
             string ctzqGameType = string.Empty;
             if (!string.IsNullOrEmpty(info.GameCode) && info.GameCode.ToUpper() == "CTZQ")
                 ctzqGameType = info.AnteCodeList[0].GameType.ToUpper();
@@ -3364,6 +3364,9 @@ namespace KaSon.FrameWork.ORM.Helper
             //数据验证用时
              dataDT = watch.ElapsedMilliseconds;
             watch.Reset();
+
+
+            var lotteryManager = new LotteryGameManager();
             var gameTypes = lotteryManager.QueryEnableGameTypes();
             //开启事务
             //using (var biz = new GameBizBusinessManagement())
@@ -3518,9 +3521,16 @@ namespace KaSon.FrameWork.ORM.Helper
                 DB.Begin();
                 try
                 {
+
+                  
                     //kason 批量录入录入订单信息
                     DB.GetDal<C_OrderDetail>().BulkAdd(OrderDetail_List);
+
+                    oneDataDt = watch.ElapsedMilliseconds;
+                    watch.Reset();
                     DB.GetDal<C_Sports_Order_Running>().BulkAdd(Order_Running_List);
+                    oneDataDt1 = watch.ElapsedMilliseconds;
+                    watch.Reset();
 
                     if (info.IssuseNumberList.Count > 1)
                     {
@@ -3660,6 +3670,8 @@ namespace KaSon.FrameWork.ORM.Helper
                     sb.Append("gametypesDT 彩种处理时间：" + gametypesDT.ToString() + " \r\n");
                     sb.Append("IssuseDT 期号处理时间：" + IssuseDT.ToString() + " \r\n");
                     sb.Append("redisDT redis录入订单处理时间：" + redisDT.ToString() + " \r\n");
+                    sb.Append("oneDataDt C_OrderDetail录入订单处理时间：" + oneDataDt.ToString() + " \r\n");
+                    sb.Append("oneDataDt1 C_Sports_Order_Running录入订单处理时间：" + oneDataDt1.ToString() + " \r\n");
                     sb.Append("订单总用时毫秒" + keyLine + "," + watch.Elapsed.TotalMilliseconds.ToString() + " \r\n");
                     //录入跟踪信息
                      Log4Log.Fatal(sb.ToString());
