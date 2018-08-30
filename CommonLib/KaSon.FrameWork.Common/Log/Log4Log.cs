@@ -182,22 +182,22 @@ namespace KaSon.FrameWork.Common
 
         //}
 
-        public void ErrrorLog(string name, Exception ex)
-        {
-            if (errorlogger == null)
-            {
-                errorlogger = LogManager.GetLogger(repository.Name, "logerror");
-            }
-            errorlogger.Error(name, ex);
-        }
-        public void WarningLog(string msg)
-        {
-            if (logWarning == null)
-            {
-                logWarning = LogManager.GetLogger(repository.Name, "logWarning");
-            }
-            logWarning.Info(msg);
-        }
+        //public void ErrrorLog(string name, Exception ex)
+        //{
+        //    if (errorlogger == null)
+        //    {
+        //        errorlogger = LogManager.GetLogger(repository.Name, "logerror");
+        //    }
+        //    errorlogger.Error(name, ex);
+        //}
+        //public void WarningLog(string msg)
+        //{
+        //    if (logWarning == null)
+        //    {
+        //        logWarning = LogManager.GetLogger(repository.Name, "logWarning");
+        //    }
+        //    logWarning.Info(msg);
+        //}
         //public void WriteLog(string category, string source, int logType, string logMsg, string detail)
         //{
         //    StringBuilder sb = new StringBuilder();

@@ -23,6 +23,7 @@ using KaSon.FrameWork.Analyzer.AnalyzerFactory;
 using EntityModel.Interface;
 using KaSon.FrameWork.Analyzer;
 using GameBiz.Domain.Entities;
+using System.Threading.Tasks;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
@@ -2106,8 +2107,7 @@ namespace KaSon.FrameWork.ORM.Helper
             if (string.IsNullOrEmpty(schemeId))
                 return;
             //return "订单号不能为空";
-            ThreadPool.QueueUserWorkItem((o) =>
-            {
+            Task.Factory.StartNew((o) => {
                 try
                 {
                     DoSplitOrderTicketsWithNoThread(o.ToString());
@@ -2117,6 +2117,10 @@ namespace KaSon.FrameWork.ORM.Helper
                     Log4Log.Error("DoSplitOrderTickets-DpSplitOrderTicketsWithNoThread", ex);
                 }
             }, schemeId);
+            //ThreadPool.QueueUserWorkItem((o) =>
+            //{
+               
+            //}, schemeId);
 
             //new Thread(() =>
             //{
@@ -3617,7 +3621,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 //if (watch.Elapsed.TotalMilliseconds > 1000)
                 //    writerLog.WriteLog("LotteryBetting", "SQL", (int)LogType.Warning, "存入订单、号码、扣钱操作", string.Format("总用时：{0}毫秒", watch.Elapsed.TotalMilliseconds));
 
-
+              
                 //watch.Reset();
                 if (RedisHelper.EnableRedis)
                 {
@@ -3628,6 +3632,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         redisOrderList.StopAfterBonus = info.StopAfterBonus;
                         RedisOrderBusiness.AddOrderToWaitSplitList(info.GameCode, redisOrderList);
                         //序列化订单到文件
+                       // Task.Factory.StartNew();
                         SerializChaseOrder(info, keyLine);
                     }
                     else
@@ -3637,15 +3642,28 @@ namespace KaSon.FrameWork.ORM.Helper
                             RedisOrderBusiness.AddOrderToRedis(info.GameCode, redisOrderList.OrderList[0]);
                     }
                 }
-
+                long redisDT = watch.ElapsedMilliseconds;
+                watch.Reset();
                 //拆票
                 if (!RedisHelper.EnableRedis)
                     DoSplitOrderTickets(firstSchemeId);
 
                 //watch.Stop();
                 if (watch.Elapsed.TotalMilliseconds > 1000)
-                    Log4Log.Warn("LotteryBetting+Redis+投注耗时记录"+ string.Format("订单{0}总用时{1}毫秒", keyLine, watch.Elapsed.TotalMilliseconds));
-
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append("LotteryBetting + Redis + 投注耗时记录 \r\n");
+                    sb.Append("userDT 查询用户信息：" + userDT.ToString() + " \r\n");
+                    sb.Append("businessDT 检验完成时间：" + businessDT.ToString() + " \r\n");
+                    sb.Append("orderDT 订单录入时间：" + orderDT.ToString() + " \r\n");
+                    sb.Append("dataDT  数据验证时间：" + dataDT.ToString() + " \r\n");
+                    sb.Append("gametypesDT 彩种处理时间：" + gametypesDT.ToString() + " \r\n");
+                    sb.Append("IssuseDT 期号处理时间：" + IssuseDT.ToString() + " \r\n");
+                    sb.Append("redisDT redis录入订单处理时间：" + redisDT.ToString() + " \r\n");
+                    sb.Append("订单总用时毫秒" + keyLine + "," + watch.Elapsed.TotalMilliseconds.ToString() + " \r\n");
+                    //录入跟踪信息
+                     Log4Log.Fatal(sb.ToString());
+                }
                 //刷新用户在Redis中的余额
                 BusinessHelper.RefreshRedisUserBalance(userId);
             }
