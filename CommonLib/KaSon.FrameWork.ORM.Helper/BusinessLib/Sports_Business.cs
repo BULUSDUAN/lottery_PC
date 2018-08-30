@@ -2098,7 +2098,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             watch.Stop();
             log.Add("3)拆分和修改订单数据 " + watch.Elapsed.TotalMilliseconds);
-            //this.writer.Write("DoSplitOrderTickets", schemeId, LogType.Information, "拆票日志", string.Join(Environment.NewLine, log.ToArray()));
+            Log4Log.Fatal("DoSplitOrderTickets-"+ schemeId+","+ string.Join(Environment.NewLine, log.ToArray()));
             return string.Join(Environment.NewLine, log);
         }
 
@@ -3689,7 +3689,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 sb.Append(keyLine+",订单总用时毫秒:" +watch.Elapsed.TotalMilliseconds.ToString() + " \r\n");
                 //录入跟踪信息
                 Log4Log.Fatal(sb.ToString());
-                Console.WriteLine(sb.ToString());
+              //  Console.WriteLine(sb.ToString());
                 }
                 //刷新用户在Redis中的余额
                 BusinessHelper.RefreshRedisUserBalance(userId);

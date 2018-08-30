@@ -2,6 +2,7 @@
 using EntityModel.Communication;
 using EntityModel.CoreModel;
 using EntityModel.Enum;
+using EntityModel.ExceptionExtend;
 using Kason.Sg.Core.CPlatform.Ioc;
 using KaSon.FrameWork.Common;
 using KaSon.FrameWork.Common.Redis;
@@ -116,13 +117,17 @@ namespace Lottery.Service.ModuleServices
                 var entity = query.GetArticleById(articleId);
                 if (entity == null)
                 {
-                    throw new ArgumentException("指定编号的文章不存在");
+                    throw new LogicException("指定编号的文章不存在");
                 }
                 entity.ReadCount++;
                 query.UpdateArticle(entity);
                 var info = new ArticleInfo_Query();
                 ObjectConvert.ConverEntityToInfo<E_SiteMessage_Article_List, ArticleInfo_Query>(entity, ref info);
                 return Task.FromResult(info);
+            }
+            catch (LogicException ex)
+            {
+                throw ex;
             }
             catch (Exception ex)
             {
@@ -244,23 +249,34 @@ namespace Lottery.Service.ModuleServices
         /// <returns></returns>
         public Task<BulletinInfo_Query> QueryDisplayBulletinDetailById(long bulletinId)
         {
-            var info = new DataQuery().QueryBulletinDetailById(bulletinId);
-            if (info != null)
+            try
             {
-                if (info.Status != EnableStatus.Enable)
+                var info = new DataQuery().QueryBulletinDetailById(bulletinId);
+                if (info != null)
                 {
-                    throw new Exception("指定公告已经禁用");
+                    if (info.Status != EnableStatus.Enable)
+                    {
+                        throw new LogicException("指定公告已经禁用");
+                    }
+                    if (info.EffectiveFrom != null && info.EffectiveFrom > DateTime.Now)
+                    {
+                        throw new LogicException("指定公告尚未发布");
+                    }
+                    if (info.EffectiveTo != null && info.EffectiveTo.Value.AddDays(1) < DateTime.Now)
+                    {
+                        throw new LogicException(string.Format("指定公告已经于{0:yyyy-MM-dd}过期", info.EffectiveTo));
+                    }
                 }
-                if (info.EffectiveFrom != null && info.EffectiveFrom > DateTime.Now)
-                {
-                    throw new Exception("指定公告尚未发布");
-                }
-                if (info.EffectiveTo != null && info.EffectiveTo.Value.AddDays(1) < DateTime.Now)
-                {
-                    throw new Exception(string.Format("指定公告已经于{0:yyyy-MM-dd}过期", info.EffectiveTo));
-                }
+                return Task.FromResult(info);
             }
-            return Task.FromResult(info);
+            catch (LogicException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
         }
         #endregion
 
@@ -293,6 +309,10 @@ namespace Lottery.Service.ModuleServices
             try
             {
                 return Task.FromResult(new CacheDataBusiness().QueryAppConfigByAgentId(appAgentId));
+            }
+            catch (LogicException ex)
+            {
+                throw ex;
             }
             catch (Exception ex)
             {
@@ -366,10 +386,14 @@ namespace Lottery.Service.ModuleServices
                 var dataQuery = new DataQuery();
                 if (!dataQuery.IsMyInnerMail(innerMailId, userId))
                 {
-                    throw new SiteMessageException(string.Format("此站内信不属于指定用户。站内信：{0}；用户：{1}。", innerMailId, userId));
+                    throw new LogicException(string.Format("此站内信不属于指定用户。站内信：{0}；用户：{1}。", innerMailId, userId));
                 }
                 var info = dataQuery.QueryInnerMailDetailByIdAndRead(innerMailId, userId);
                 return Task.FromResult(info);
+            }
+            catch (LogicException ex)
+            {
+                throw ex;
             }
             catch (Exception ex)
             {
@@ -430,7 +454,7 @@ namespace Lottery.Service.ModuleServices
                 else
                 {
                     if (string.IsNullOrEmpty(category))
-                        throw new Exception("未查询到文章类别");
+                        throw new LogicException("未查询到文章类别");
                     var array = category.Split('|');
                     var gameCodeArray = gameCode.Split('|');
                     result = new DataQuery().QueryArticleList_YouHua(array, gameCodeArray, pageIndex, pageSize);
@@ -438,6 +462,10 @@ namespace Lottery.Service.ModuleServices
                         _articleCollection.Add(cacheKey, result);
                 }
                 return Task.FromResult(result);
+            }
+            catch (LogicException ex)
+            {
+                throw ex;
             }
             catch (Exception ex)
             {
