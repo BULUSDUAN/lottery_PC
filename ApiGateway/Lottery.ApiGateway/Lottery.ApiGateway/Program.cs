@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Server.Kestrel.Https;
 using System.Net;
 using EntityModel.CoreModel;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 
 namespace Lottery.ApiGateway
 {
@@ -56,6 +57,19 @@ namespace Lottery.ApiGateway
                 .UseApplicationInsights()
                 .Build();
 
+            // ConsoleOut.Install();
+            //Console.Clear()；
+            //ConsoleHelper.Clear();
+
+            //  Issuse_QueryInfo cur = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Data/QueryCurretNewIssuseInfo");
+            //CTZQ  T14C
+           
+
+           
+            //{"GameCode":"CTZQ","GameType":"T14C","IssuseNumber":"18099","NewVerType":"1"}
+            
+            
+
             if (!bool.Parse(ISConsoleLog)) ConsoleHelper.Clear();
 
             Task.WhenAll(new Task[] {
@@ -63,9 +77,42 @@ namespace Lottery.ApiGateway
                 JCLQ(),
                 JCZQ()
             });
-        
-            Console.WriteLine("API 启动...");
+            //  ServiceLocator.GetService<IServiceProxyProvider>();
+
+            //定时更新最新期号信息 
+            //Task.Factory.StartNew(async delegate {
+            //    await Task.Delay(1000 * 5);
+
+            //    var _serviceProxyProvider = ServiceLocator.GetService<IServiceProxyProvider>();
+            //    Issuse_QueryInfoEX val= await _serviceProxyProvider.Invoke<Issuse_QueryInfoEX>(new Dictionary<string, object>(), "api/Data/QueryCurretNewIssuseInfoList");
+            //    HashTableCache.Set_Issuse_QueryInfo(val);// = val;
+            //                                             //Console.WriteLine("");
+            //                                             //初始化传统采集信息
+            //    HashTableCache.Init_CTZQ_Data(val);
+            //    HashTableCache.Init_BJDC_Data(val.BJDC_IssuseNumber.IssuseNumber);
+            //   //Task.Factory.StartNew(()=> {
+            //   //     ;
+            //   // });
+
+            //});
+            //Task.Factory.StartNew(() => {
+
+            //    HashTableCache.Init_JCLQ_Data();
+            //});
+            //Task.Factory.StartNew(() => {
+
+            //    HashTableCache.Init_JCZQ_Data("1");
+            //    HashTableCache.Init_JCZQ_Data();
+            //});
+          //var log=  ServiceLocator.GetService< ILogger <Program> > ();
+          //  Console.WriteLine("API 启动...");
+          //  log.LogInformation("API 启动...");
+          //  log.LogError("API 启动...测试错误日志");
+          //  log.LogDebug("API 启动...");
             host.Run();
+
+          
+
         }
 
 

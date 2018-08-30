@@ -306,7 +306,8 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             catch (Exception ex)
             {
-                writerLog.ErrrorLog("BusinessHelper-RefreshRedisUserBalance", ex);
+               
+                Log4Log.Error("BusinessHelper-RefreshRedisUserBalance", ex);
             }
         }
         //待测试
@@ -371,7 +372,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         catch (Exception ex)
                         {
                             // var writer = Common.Log.LogWriterGetter.GetLogWriter();
-                            writerLog.WriteLog("ERROR_ExecPlugin", "_ExecPlugin", (int)LogType.Error, string.Format("执行插件{0}出错", plugin.ClassName), ex.ToString());
+                            Log4Log.Error("ERROR_ExecPlugin-_ExecPlugin-执行插件{0}出错"+ plugin.ClassName, ex);
                         }
                         //}).Start();
                     }
@@ -381,8 +382,9 @@ namespace KaSon.FrameWork.ORM.Helper
                     }
                     catch (Exception ex)
                     {
+                        Log4Log.Error("ERROR_ExecPlugin-_ExecPlugin-执行插件{0}出错" + plugin.ClassName, ex);
                         //  var writer = Common.Log.LogWriterGetter.GetLogWriter();
-                        writerLog.WriteLog("ERROR_ExecPlugin", "_ExecPlugin", (int)LogType.Error, string.Format("执行插件{0}出错", plugin.ClassName), ex.ToString());
+                      //  writerLog.WriteLog("ERROR_ExecPlugin", "_ExecPlugin", (int)LogType.Error, string.Format("执行插件{0}出错", plugin.ClassName), ex.ToString());
                     }
                 }
 
