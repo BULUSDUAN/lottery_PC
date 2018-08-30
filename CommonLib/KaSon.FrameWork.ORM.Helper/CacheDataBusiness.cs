@@ -1,6 +1,7 @@
 ﻿using EntityModel;
 using EntityModel.CoreModel;
 using EntityModel.Enum;
+using EntityModel.ExceptionExtend;
 using EntityModel.Redis;
 using KaSon.FrameWork.Common.Redis;
 using KaSon.FrameWork.Common.Utilities;
@@ -88,7 +89,7 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                 var entity = new DataQuery().QueryAppConfigByAgentId(appAgentId);
                 if (entity == null)
-                    throw new Exception("未查询到下载地址");
+                    throw new LogicException("未查询到下载地址");
                 config = new APPConfigInfo();
                 ObjectConvert.ConverEntityToInfo(entity, ref config);
                 _AppConfigList.Add(config);
