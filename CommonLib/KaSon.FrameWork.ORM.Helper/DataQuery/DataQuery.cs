@@ -277,13 +277,24 @@ namespace KaSon.FrameWork.ORM.Helper
                         where b.MinLocalStopTime >= DateTime.Now
                         orderby b.MinLocalStopTime ascending
                         select b;
-
-            return query.ToList().Select(p => new BJDCIssuseInfo
+            var info = query.FirstOrDefault();
+            BJDCIssuseInfo returninfo = null;
+            if (info != null)
             {
-                IssuseNumber = p.IssuseNumber,
-                MinLocalStopTime = p.MinLocalStopTime.ToString("yyyy-MM-dd HH:mm:ss"),
-                MinMatchStartTime = p.MinMatchStartTime.ToString("yyyy-MM-dd HH:mm:ss"),
-            }).FirstOrDefault();
+                returninfo = new BJDCIssuseInfo
+                {
+                    IssuseNumber = info.IssuseNumber,
+                    MinLocalStopTime = info.MinLocalStopTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                    MinMatchStartTime = info.MinMatchStartTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                };
+            }
+            return returninfo;
+            //return query.ToList().Select(p => new BJDCIssuseInfo
+            //{
+            //    IssuseNumber = p.IssuseNumber,
+            //    MinLocalStopTime = p.MinLocalStopTime.ToString("yyyy-MM-dd HH:mm:ss"),
+            //    MinMatchStartTime = p.MinMatchStartTime.ToString("yyyy-MM-dd HH:mm:ss"),
+            //}).FirstOrDefault();
         }
 
         /// <summary>
