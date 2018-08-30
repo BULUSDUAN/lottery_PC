@@ -1365,7 +1365,7 @@ namespace Lottery.Api.Controllers
                         IdCardNumber = string.IsNullOrEmpty(bindInfo.IdCardNumber) ? string.Empty : ConvertHelper.GetBankCardNumberxxxString(bindInfo.IdCardNumber), // realName == null ? string.Empty : realName.IdCardNumber,
                         IsSetBalancePwd = bindInfo.IsSetPwd,
                         NeedBalancePwdPlace = string.IsNullOrEmpty(bindInfo.NeedPwdPlace) ? string.Empty : bindInfo.NeedPwdPlace,
-                        IsBingBankCard = !string.IsNullOrEmpty(bindInfo.IdCardNumber), // bankInfo == null ? false : !string.IsNullOrEmpty(bankInfo.UserId),
+                        IsBingBankCard = !string.IsNullOrEmpty(bindInfo.BankCardNumber), // bankInfo == null ? false : !string.IsNullOrEmpty(bankInfo.UserId),
                         UserGrowth = bindInfo.UserGrowth,
                         RedBagBalance = ConvertHelper.getTwoplaces(bindInfo.RedBagBalance),
                         NeedGrowth = GrowthStatus(bindInfo.UserGrowth),
