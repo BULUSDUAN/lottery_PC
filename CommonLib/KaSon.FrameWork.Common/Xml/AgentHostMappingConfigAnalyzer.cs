@@ -25,7 +25,7 @@ namespace KaSon.FrameWork.Common.Xml
             var configWatcher = new FCFileWatcher(Path.GetDirectoryName(fileName), Path.GetFileName(fileName));
             configWatcher.Changed += (object sender, FileSystemEventArgs e) =>
             {
-               new Log4Log().WriteLog("ConfigChanged", "AgentMapping.Config",(int) LogType.Information, "AgentMapping.Config", "文件监控发现代理商域名映射配置信息文件已更新");
+               Log4Log.Info("ConfigChanged-AgentMapping.Config-AgentMapping.Config-文件监控发现代理商域名映射配置信息文件已更新");
                 _allAgentList.Clear();
             };
             configWatcher.Start();

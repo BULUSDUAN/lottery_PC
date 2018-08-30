@@ -21,24 +21,26 @@ namespace KaSon.FrameWork.Common.Redis
     public static class RedisHelper
     {
 
-        static JObject RdConfigInfo=null;
+        static JObject RdConfigInfo = null;
         private static ConnectionMultiplexer _instance;
-       // private static string _redisConectStr = "";// RdConfigInfo["RedisConnect"].ToString();
+        // private static string _redisConectStr = "";// RdConfigInfo["RedisConnect"].ToString();
         private static readonly object redisLock = new object();
-        static RedisHelper() {
+        static RedisHelper()
+        {
             Init();
         }
 
-        public static void Init() {
-            if ( RdConfigInfo==null)
+        public static void Init()
+        {
+            if (RdConfigInfo == null)
             {
                 string path = Path.Combine(Directory.GetCurrentDirectory(), @"Config\AllConfig.json");
                 string jsonText = FileHelper.txtReader(path);
-                var alljson= (JObject)JsonConvert.DeserializeObject(jsonText);
+                var alljson = (JObject)JsonConvert.DeserializeObject(jsonText);
                 RdConfigInfo = (JObject)JsonConvert.DeserializeObject(alljson["RedisConfig"].ToString());
                 //_redisConectStr = RdConfigInfo["RedisConnect"].ToString();
             }
-            
+
         }
         /// <summary>
         /// 
@@ -93,7 +95,7 @@ namespace KaSon.FrameWork.Common.Redis
             {
                 try
                 {
-                   // var c =;
+                    // var c =;
                     return bool.Parse(RdConfigInfo["EnableRedis"].ToString());
                 }
                 catch (Exception)
@@ -157,7 +159,6 @@ namespace KaSon.FrameWork.Common.Redis
             }
         }
 
-    
         /// <summary>
         /// Redis实例
         /// </summary>
@@ -169,15 +170,9 @@ namespace KaSon.FrameWork.Common.Redis
                 {
                     lock (redisLock)
                     {
-                     
-                       // var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/Sports_Betting");
-                      
+
                         if (_instance == null || !_instance.IsConnected || !_instance.GetDatabase().IsConnected("testKey"))
                         {
-#if LogInfo
-                            var st = new Stopwatch();
-                            st.Start();
-#endif
                             var configurationOptions = new ConfigurationOptions
                             {
                                 //AbortOnConnectFail = false,
@@ -185,17 +180,8 @@ namespace KaSon.FrameWork.Common.Redis
                             };
                             configurationOptions.EndPoints.Add(new DnsEndPoint(ServerHost, ServerPort));
                             _instance = ConnectionMultiplexer.Connect(configurationOptions);
-#if LogInfo
-                            st.Stop();
-                            Log4Log.LogEX(KLogLevel.RedisTimeInfo, "Redis", "连接打开时：" + st.Elapsed.TotalMilliseconds.ToString() + "毫秒");
-#endif
                         }
                     }
-
-                    //if (_instance == null || !_instance.IsConnected)
-                    //{
-                    //    _instance = ConnectionMultiplexer.Connect(_redisConectStr);
-                    //}
                     return _instance;
                 }
                 catch (Exception ex)
@@ -235,14 +221,6 @@ namespace KaSon.FrameWork.Common.Redis
                 return null;
             }
         }
-
-        //public static IServer CurrentServer
-        //{
-        //    get
-        //    {
-        //        return RedisHelper.Instance.GetServer(_redisConectStr);
-        //    }
-        //}
 
         /// <summary>
         /// 未出票的订单库
@@ -387,7 +365,18 @@ namespace KaSon.FrameWork.Common.Redis
             }
         }
 
-        
+        /// <summary>
+        /// 其它
+        /// </summary>
+        public static IDatabase DB_Other
+        {
+            get
+            {
+                return RedisHelper.Instance.GetDatabase(13);
+            }
+        }
+
+
     }
 
 }

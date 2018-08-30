@@ -1195,8 +1195,7 @@ namespace Lottery.Api.Controllers
         /// </summary>
         public async Task<IActionResult> QueryTogetherHall([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
-            RedisHelper.Init();
-            var db = RedisHelper.GetInstance(RedisHelper.ServerHost, RedisHelper.ServerPort, RedisHelper.ServerPassword).GetDatabase(8);
+            var db = RedisHelper.DB_CoreCacheData;
             var redisKey_TogetherList = RedisKeys.Key_Core_Togegher_OrderList;
             //生成列表
             var list = new List<Sports_TogetherSchemeQueryInfo>();

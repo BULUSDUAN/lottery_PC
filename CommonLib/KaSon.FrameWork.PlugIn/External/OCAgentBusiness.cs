@@ -308,7 +308,7 @@ namespace KaSon.FrameWork.PlugIn.External
                 catch (Exception ex)
                 {
 
-                    writerLog.ErrrorLog("EXEC_Plugin_PayBackRebate_Error_退还佣金", ex);
+                    Log4Log.Error("EXEC_Plugin_PayBackRebate_Error_退还佣金", ex);
                 }
 
                 manager.AddOCAgentPayDetail(new P_OCAgent_PayDetail
@@ -406,7 +406,7 @@ namespace KaSon.FrameWork.PlugIn.External
             catch (Exception ex)
             {
                 
-                writerLog.ErrrorLog("EXEC_Plugin_OCAgentBusiness_Error_", ex);
+                Log4Log.Error("EXEC_Plugin_OCAgentBusiness_Error_", ex);
             }
             return null;
         }

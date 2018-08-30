@@ -24,7 +24,7 @@ namespace KaSon.FrameWork.Common.Xml
             var configWatcher = new FCFileWatcher(Path.GetDirectoryName(fileName), Path.GetFileName(fileName));
             configWatcher.Changed += (object sender, FileSystemEventArgs e) =>
             {
-                new Log4Log().WriteLog("SensitiveChanged", "SensitiveRegister.Sensitive", (int)LogType.Information, "SensitiveRegister.Sensitive", "文件监控发现系统敏感文件已更新");
+                Log4Log.Info("SensitiveChanged-SensitiveRegister.Sensitive-SensitiveRegister.Sensitive-文件监控发现系统敏感文件已更新");
                 UpdateSensitive();
             };
             configWatcher.Start();

@@ -25,7 +25,7 @@ namespace KaSon.FrameWork.Common.Xml
             var configWatcher = new FCFileWatcher(Path.GetDirectoryName(fileName), Path.GetFileName(fileName));
             configWatcher.Changed += (object sender, FileSystemEventArgs e) =>
             {
-                new Log4Log().WriteLog("ConfigChanged", "SettingConfigRegister.Configuration",(int) LogType.Information, "SettingConfigRegister.Configuration", "文件监控发现系统配置文件已更新");
+                Log4Log.Info("ConfigChanged-SettingConfigRegister.Configuration-SettingConfigRegister.Configuration-文件监控发现系统配置文件已更新");
                 _allConfigList.Clear();
                 xElement.Clear();
             };

@@ -228,7 +228,7 @@ namespace KaSon.FrameWork.PlugIn.External
             catch (Exception ex)
             {
 
-                writerLog.ErrrorLog("EXEC_Plugin_AddA20140902_Business购彩不花钱_Error_", ex);
+                Log4Log.Error("EXEC_Plugin_AddA20140902_Business购彩不花钱_Error_", ex);
             }
 
             return null;
