@@ -83,7 +83,7 @@ namespace Lottery.Api.Controllers
             }
             catch (ArgumentException ex)
             {
-                Log4Log.LogEX(KLogLevel.APIError, "API或服务错误***", ex);
+              //  Log4Log.LogEX(KLogLevel.APIError, "API或服务错误***", ex);
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,

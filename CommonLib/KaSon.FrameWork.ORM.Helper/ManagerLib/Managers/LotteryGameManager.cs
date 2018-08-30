@@ -184,14 +184,16 @@ namespace KaSon.FrameWork.ORM.Helper
         public IList<GameTypeInfo> QueryEnableGameTypes()
         {
 
-            if (C_GameTypeInfoList != null) {
+            if (C_GameTypeInfoList != null)
+            {
                 return C_GameTypeInfoList;
             }
-            return (from g in DB.CreateQuery<C_Lottery_GameType>()
-                    join f in DB.CreateQuery<C_Lottery_Game>() on g.GameCode equals f.GameCode
-                    orderby g.GameType
-                    select new { g,f}
-                    ).ToList().Select(p=> new GameTypeInfo
+            else {
+                C_GameTypeInfoList = (from g in DB.CreateQuery<C_Lottery_GameType>()
+                                      join f in DB.CreateQuery<C_Lottery_Game>() on g.GameCode equals f.GameCode
+                                      orderby g.GameType
+                                      select new { g, f }
+                    ).ToList().Select(p => new GameTypeInfo
                     {
                         Game = new GameInfo
                         {
@@ -201,6 +203,8 @@ namespace KaSon.FrameWork.ORM.Helper
                         GameType = p.g.GameType,
                         DisplayName = p.g.DisplayName,
                     }).ToList();
+            }
+            return C_GameTypeInfoList;
         }
 
         public C_Lottery_Game LoadGame(string gameCode)

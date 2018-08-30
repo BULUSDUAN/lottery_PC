@@ -42,7 +42,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public void SqlBulkAddTable(List<C_Sports_Ticket> list)
         {
             if (list.Count <= 0) return;
-            DB.GetDal<C_Sports_Ticket>().Add(list);
+            DB.GetDal<C_Sports_Ticket>().BulkAdd(list);
         }
 
         public void ExecSql(string sql)
