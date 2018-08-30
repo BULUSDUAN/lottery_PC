@@ -47,22 +47,26 @@ namespace KaSon.FrameWork.ORM.Helper
                 ).OrderBy(p => p.LocalStopTime);
             }
             var info= query.FirstOrDefault();
-            var returninfo = new Issuse_QueryInfo()
+            Issuse_QueryInfo returninfo=null;
+            if (info != null)
             {
-                CreateTime = info.CreateTime,
-                GameCode_IssuseNumber = info.GameCode_IssuseNumber,
-                GatewayStopTime = info.GatewayStopTime,
-                IssuseNumber = info.IssuseNumber,
-                LocalStopTime = info.LocalStopTime,
-                OfficialStopTime = info.OfficialStopTime,
-                StartTime = info.StartTime,
-                Status = (IssuseStatus)info.Status,
-                WinNumber = info.WinNumber,
-                Game = new GameInfo()
+                returninfo = new Issuse_QueryInfo()
                 {
-                    GameCode = info.GameCode
-                }
-            };
+                    CreateTime = info.CreateTime,
+                    GameCode_IssuseNumber = info.GameCode_IssuseNumber,
+                    GatewayStopTime = info.GatewayStopTime,
+                    IssuseNumber = info.IssuseNumber,
+                    LocalStopTime = info.LocalStopTime,
+                    OfficialStopTime = info.OfficialStopTime,
+                    StartTime = info.StartTime,
+                    Status = (IssuseStatus)info.Status,
+                    WinNumber = info.WinNumber,
+                    Game = new GameInfo()
+                    {
+                        GameCode = info.GameCode
+                    }
+                };
+            }
             return returninfo;
         }
         #endregion
@@ -273,13 +277,24 @@ namespace KaSon.FrameWork.ORM.Helper
                         where b.MinLocalStopTime >= DateTime.Now
                         orderby b.MinLocalStopTime ascending
                         select b;
-
-            return query.ToList().Select(p => new BJDCIssuseInfo
+            var info = query.FirstOrDefault();
+            BJDCIssuseInfo returninfo = null;
+            if (info != null)
             {
-                IssuseNumber = p.IssuseNumber,
-                MinLocalStopTime = p.MinLocalStopTime.ToString("yyyy-MM-dd HH:mm:ss"),
-                MinMatchStartTime = p.MinMatchStartTime.ToString("yyyy-MM-dd HH:mm:ss"),
-            }).FirstOrDefault();
+                returninfo = new BJDCIssuseInfo
+                {
+                    IssuseNumber = info.IssuseNumber,
+                    MinLocalStopTime = info.MinLocalStopTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                    MinMatchStartTime = info.MinMatchStartTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                };
+            }
+            return returninfo;
+            //return query.ToList().Select(p => new BJDCIssuseInfo
+            //{
+            //    IssuseNumber = p.IssuseNumber,
+            //    MinLocalStopTime = p.MinLocalStopTime.ToString("yyyy-MM-dd HH:mm:ss"),
+            //    MinMatchStartTime = p.MinMatchStartTime.ToString("yyyy-MM-dd HH:mm:ss"),
+            //}).FirstOrDefault();
         }
 
         /// <summary>

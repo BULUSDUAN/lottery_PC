@@ -10,7 +10,7 @@
   },
   "Register": {
     "Provider": "Consul",
-    "Address": "127.0.0.1:8500" //10.0.3.27:8501
+    "Address": "10.0.3.27:8501" //10.0.3.27:8501
   },
   "ServicePart": {
     "MainPath": "part/service/aggregation",
