@@ -46,22 +46,28 @@ namespace KaSon.FrameWork.ORM.Helper
                   p.GameType == gameType
                 ).OrderBy(p => p.LocalStopTime);
             }
-            return query.ToList().Select(p => new Issuse_QueryInfo
+            var info= query.FirstOrDefault();
+            Issuse_QueryInfo returninfo=null;
+            if (info != null)
             {
-                CreateTime = p.CreateTime,
-                GameCode_IssuseNumber = p.GameCode_IssuseNumber,
-                GatewayStopTime = p.GatewayStopTime,
-                IssuseNumber = p.IssuseNumber,
-                LocalStopTime = p.LocalStopTime,
-                OfficialStopTime = p.OfficialStopTime,
-                StartTime = p.StartTime,
-                Status = (IssuseStatus)p.Status,
-                WinNumber = p.WinNumber,
-                Game = new GameInfo()
+                returninfo = new Issuse_QueryInfo()
                 {
-                    GameCode = p.GameCode
-                }
-            }).FirstOrDefault();
+                    CreateTime = info.CreateTime,
+                    GameCode_IssuseNumber = info.GameCode_IssuseNumber,
+                    GatewayStopTime = info.GatewayStopTime,
+                    IssuseNumber = info.IssuseNumber,
+                    LocalStopTime = info.LocalStopTime,
+                    OfficialStopTime = info.OfficialStopTime,
+                    StartTime = info.StartTime,
+                    Status = (IssuseStatus)info.Status,
+                    WinNumber = info.WinNumber,
+                    Game = new GameInfo()
+                    {
+                        GameCode = info.GameCode
+                    }
+                };
+            }
+            return returninfo;
         }
         #endregion
 

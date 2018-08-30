@@ -146,7 +146,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public Issuse_QueryInfo QueryCurrentIssuseInfo(string gameCode)
         {
             var entity = new DataQuery().QueryCurrentIssuse(gameCode);
-            if (entity == null) return null;
+            //if (entity == null) return null;
             return entity;
         }
 
