@@ -21,6 +21,7 @@ using System.Net;
 using EntityModel.CoreModel;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
+using System.Threading;
 
 namespace Lottery.ApiGateway
 {
@@ -40,8 +41,8 @@ namespace Lottery.ApiGateway
                     options.Limits.MaxConcurrentConnections = 30000;
                     options.Limits.MaxConcurrentUpgradedConnections = 5000;
                     options.Limits.MaxRequestBodySize = 800 * 1024;
-                    options.Limits.MaxResponseBufferSize=800*1024 * 1024;
-                    
+                    options.Limits.MaxResponseBufferSize = 800 * 1024 * 1024;
+
                     options.Limits.MinRequestBodyDataRate =
                         new MinDataRate(bytesPerSecond: 100, gracePeriod: TimeSpan.FromSeconds(10));
                     options.Limits.MinResponseDataRate =
@@ -57,62 +58,19 @@ namespace Lottery.ApiGateway
                 .UseApplicationInsights()
                 .Build();
 
-            // ConsoleOut.Install();
-            //Console.Clear()；
-            //ConsoleHelper.Clear();
-
-            //  Issuse_QueryInfo cur = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Data/QueryCurretNewIssuseInfo");
-            //CTZQ  T14C
-           
-
-           
-            //{"GameCode":"CTZQ","GameType":"T14C","IssuseNumber":"18099","NewVerType":"1"}
-            
-            
-
             if (!bool.Parse(ISConsoleLog)) ConsoleHelper.Clear();
 
-            Task.WhenAll(new Task[] {
-                CTZQ_BJDC(),
-                JCLQ(),
-                JCZQ()
+
+            Task.Factory.StartNew(() =>
+            {
+                CTZQ_BJDC();
+                JCLQ();
+                JCZQ();
             });
-            //  ServiceLocator.GetService<IServiceProxyProvider>();
-
-            //定时更新最新期号信息 
-            //Task.Factory.StartNew(async delegate {
-            //    await Task.Delay(1000 * 5);
-
-            //    var _serviceProxyProvider = ServiceLocator.GetService<IServiceProxyProvider>();
-            //    Issuse_QueryInfoEX val= await _serviceProxyProvider.Invoke<Issuse_QueryInfoEX>(new Dictionary<string, object>(), "api/Data/QueryCurretNewIssuseInfoList");
-            //    HashTableCache.Set_Issuse_QueryInfo(val);// = val;
-            //                                             //Console.WriteLine("");
-            //                                             //初始化传统采集信息
-            //    HashTableCache.Init_CTZQ_Data(val);
-            //    HashTableCache.Init_BJDC_Data(val.BJDC_IssuseNumber.IssuseNumber);
-            //   //Task.Factory.StartNew(()=> {
-            //   //     ;
-            //   // });
-
-            //});
-            //Task.Factory.StartNew(() => {
-
-            //    HashTableCache.Init_JCLQ_Data();
-            //});
-            //Task.Factory.StartNew(() => {
-
-            //    HashTableCache.Init_JCZQ_Data("1");
-            //    HashTableCache.Init_JCZQ_Data();
-            //});
-          //var log=  ServiceLocator.GetService< ILogger <Program> > ();
-          //  Console.WriteLine("API 启动...");
-          //  log.LogInformation("API 启动...");
-          //  log.LogError("API 启动...测试错误日志");
-          //  log.LogDebug("API 启动...");
             host.Run();
 
-          
-
+            Console.WriteLine("1111");
+           
         }
 
 
@@ -134,10 +92,10 @@ namespace Lottery.ApiGateway
                     }
                     catch
                     {
-                       //获取期号出错
-                        
+                        //获取期号出错
+
                     }
-                  
+
                     HashTableCache.Init_CTZQ_Data(val);
                     HashTableCache.Init_BJDC_Data(val.BJDC_IssuseNumber.IssuseNumber);
                 }

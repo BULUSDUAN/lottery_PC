@@ -4,8 +4,8 @@
     "EnableRedis": true,
     "RedisHost": "10.0.3.6",
     "RedisPost": 6379,
-    "RedisPassword": "wancai_redis123",
-    "RedisConnect": "10.0.3.6,password=wancai_redis123",
+    "RedisPassword": "redis123",
+    "RedisConnect": "10.0.3.6,password=redis123",
     "Port": "6379"
   },
   "compilerOptions": {
@@ -49,7 +49,7 @@
   },
   //±ÿ–Î≈‰÷√  RebbitMq ∆Ù∂Øµÿ÷∑
   "RebbitMqSettings": {
-    "EventBusConnection": "10.0.3.27",
+    "EventBusConnection": "127.0.0.1",
     "EventBusUserName": "guest",
     "EventBusPassword": "guest",
     "VirtualHost": "/",
