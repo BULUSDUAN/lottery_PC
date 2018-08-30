@@ -224,9 +224,9 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
             Console.WriteLine("本次处理全部完成----------> ");
 
             string log= string.Join(Environment.NewLine, logList.ToArray());
-            Console.WriteLine(log);
+           // Console.WriteLine(log);
          //   string log = Common.JSON.JsonHelper.Serialize(logList);
-            Log4Log.LogEX(KLogLevel.Info, "追号消息***", new Exception(log));
+            Log4Log.Info( "追号消息***", new Exception(log));
 
             return log;
         }

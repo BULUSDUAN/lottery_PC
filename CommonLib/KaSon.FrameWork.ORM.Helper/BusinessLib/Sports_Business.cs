@@ -3284,6 +3284,8 @@ namespace KaSon.FrameWork.ORM.Helper
         /// </summary>
         public string LotteryBetting(LotteryBettingInfo info, string userId, string balancePassword, string place, decimal redBagMoney)
         {
+            //时间记录变量
+            long businessDT = 0, orderDT = 0, dataDT = 0, gametypesDT = 0, IssuseDT = 0, userDT = 0;
             var watch = new Stopwatch();
             watch.Start();
 
@@ -3292,7 +3294,9 @@ namespace KaSon.FrameWork.ORM.Helper
             if (!user.IsEnable)
                 throw new LogicException("用户已禁用");
             info.UserId = userId;
-
+            //查询用户用时
+            userDT = watch.ElapsedMilliseconds;
+            watch.Reset();
             //Redis订单列表
             var redisOrderList = new RedisWaitTicketOrderList();
 
@@ -3353,6 +3357,9 @@ namespace KaSon.FrameWork.ORM.Helper
             //    throw new LogicException("投注订单期号已过期或未开售");
 
             #endregion
+            //数据验证用时
+             dataDT = watch.ElapsedMilliseconds;
+            watch.Reset();
             var gameTypes = lotteryManager.QueryEnableGameTypes();
             //开启事务
             //using (var biz = new GameBizBusinessManagement())
@@ -3365,6 +3372,10 @@ namespace KaSon.FrameWork.ORM.Helper
             var orderIndex = 1;
             var totalBetMoney = 0M; 
             var currentIssuseNumberList = new List<C_Game_Issuse>();
+            //查询彩种用时
+             gametypesDT = watch.ElapsedMilliseconds;
+            watch.Reset();
+            //期号处理
             foreach (var issuse in info.IssuseNumberList)
             {
                 var currentIssuseNumber = lotteryManager.QueryGameIssuseByKey(info.GameCode, info.GameCode.ToUpper() == "CTZQ" ? info.AnteCodeList[0].GameType.ToUpper() : string.Empty, issuse.IssuseNumber);
@@ -3376,7 +3387,9 @@ namespace KaSon.FrameWork.ORM.Helper
                     throw new LogicException(string.Format("奖期{0}结束时间为{1}", issuse.IssuseNumber, currentIssuseNumber.LocalStopTime.ToString("yyyy-MM-dd HH:mm")));
                 currentIssuseNumberList.Add(currentIssuseNumber);
             }
-           
+            //期号处理用时
+             IssuseDT = watch.ElapsedMilliseconds;
+            watch.Reset();
             try
             {
                 IList<C_Sports_Order_Running> Order_Running_List = new List<C_Sports_Order_Running>();
@@ -3494,6 +3507,10 @@ namespace KaSon.FrameWork.ORM.Helper
                     OrderDetail_List.Add(entity.OrderDetail);
                 orderIndex++;
                 }
+
+                //订单构建用时
+                orderDT = watch.ElapsedMilliseconds;
+                watch.Reset();
                 DB.Begin();
                 try
                 {
@@ -3570,7 +3587,12 @@ namespace KaSon.FrameWork.ORM.Helper
                     }
 
                     #endregion
+
+                  
                     DB.Commit();
+                    //扣款录入订单用时间
+                    businessDT = watch.ElapsedMilliseconds;
+                    watch.Reset();
                 }
                 catch (Exception ex1)
                 {
@@ -3580,7 +3602,8 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             catch (Exception ex)
             {
-               // DB.Rollback();
+                // DB.Rollback();
+                watch.Stop();
                 throw ex;
             }
 
@@ -3628,9 +3651,11 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             catch (Exception ex)
             {
+                watch.Stop();
                 var p = ex;
 
             }
+            watch.Stop();
             return keyLine;
         }
 

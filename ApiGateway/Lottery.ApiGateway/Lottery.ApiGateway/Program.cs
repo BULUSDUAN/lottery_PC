@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Server.Kestrel.Https;
 using System.Net;
 using EntityModel.CoreModel;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 
 namespace Lottery.ApiGateway
 {
@@ -76,7 +77,7 @@ namespace Lottery.ApiGateway
                 JCLQ(),
                 JCZQ()
             });
-          //  ServiceLocator.GetService<IServiceProxyProvider>();
+            //  ServiceLocator.GetService<IServiceProxyProvider>();
 
             //定时更新最新期号信息 
             //Task.Factory.StartNew(async delegate {
@@ -103,7 +104,11 @@ namespace Lottery.ApiGateway
             //    HashTableCache.Init_JCZQ_Data("1");
             //    HashTableCache.Init_JCZQ_Data();
             //});
-            Console.WriteLine("API 启动...");
+          //var log=  ServiceLocator.GetService< ILogger <Program> > ();
+          //  Console.WriteLine("API 启动...");
+          //  log.LogInformation("API 启动...");
+          //  log.LogError("API 启动...测试错误日志");
+          //  log.LogDebug("API 启动...");
             host.Run();
 
           
