@@ -47,7 +47,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 ).OrderBy(p => p.LocalStopTime);
             }
             var info= query.FirstOrDefault();
-            Issuse_QueryInfo returninfo;
+            Issuse_QueryInfo returninfo=null;
             if (info != null)
             {
                 returninfo = new Issuse_QueryInfo()
@@ -66,10 +66,6 @@ namespace KaSon.FrameWork.ORM.Helper
                         GameCode = info.GameCode
                     }
                 };
-            }
-            else
-            {
-                returninfo = new Issuse_QueryInfo();
             }
             return returninfo;
         }
