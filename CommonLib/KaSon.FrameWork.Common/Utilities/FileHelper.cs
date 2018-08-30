@@ -112,7 +112,7 @@ namespace KaSon.FrameWork.Common.Utilities
                 {
                     lock (ReadLock)
                     {
-                        var txtData = System.IO.File.ReadAllText(item.FullName, Encoding.UTF8);
+                        var txtData = System.IO.File.ReadAllText(item.FullName, Encoding.GetEncoding("GB2312"));
                         sb.Append(txtData + "|");
                     }
 

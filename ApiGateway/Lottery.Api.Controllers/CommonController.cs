@@ -447,7 +447,7 @@ namespace Lottery.Api.Controllers
             //if (SerName.ToLower() == "api")
             //{
 
-               
+
             //}
             //else
             //{
@@ -456,6 +456,8 @@ namespace Lottery.Api.Controllers
             //    config = await _serviceProxyProvider.Invoke<string>(param, "api/" + SerName + "/ReadSqlTimeLog");
             //}
             //config = string.IsNullOrEmpty(config) ? "没有数据" : config;
+            //  Response.ContentType =;
+            // "text/html; charset=UTF-8"
             return Content(sb.ToString());
         }
     }
