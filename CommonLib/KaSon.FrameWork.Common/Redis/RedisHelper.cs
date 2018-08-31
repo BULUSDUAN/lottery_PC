@@ -400,7 +400,14 @@ namespace KaSon.FrameWork.Common.Redis
 
         public static void Set(this IDatabase cache, string key, object value,TimeSpan timeSpan)
         {
-            cache.StringSet(key, Serialize(value), timeSpan);
+            cache.StringSetAsync(key, Serialize(value), timeSpan);
+        }
+
+        public static void SetAsync(this IDatabase cache, string key, object value, TimeSpan timeSpan)
+        {
+            var batch = cache.CreateBatch();
+            cache.SetAsync(key, Serialize(value), timeSpan);
+            batch.Execute();
         }
 
         static byte[] Serialize(object o)
