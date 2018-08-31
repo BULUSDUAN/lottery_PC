@@ -6,7 +6,8 @@ using ProtoBuf;
 namespace EntityModel
 {
     [ProtoContract]
-   public class Page 
+    [Serializable]
+    public class Page 
     {
         /// <summary>
         /// 当前页数

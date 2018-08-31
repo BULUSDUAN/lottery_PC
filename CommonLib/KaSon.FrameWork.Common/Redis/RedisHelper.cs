@@ -11,6 +11,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace KaSon.FrameWork.Common.Redis
 {
@@ -377,6 +378,76 @@ namespace KaSon.FrameWork.Common.Redis
         }
 
 
+    }
+
+
+    public static class SampleStackExchangeRedisExtensions
+    {
+        public static T Get<T>(this IDatabase cache, string key)
+        {
+            return Deserialize<T>(cache.StringGet(key));
+        }
+
+        public static object Get(this IDatabase cache, string key)
+        {
+            return Deserialize<object>(cache.StringGet(key));
+        }
+
+        public static void Set(this IDatabase cache, string key, object value)
+        {
+            cache.StringSet(key, Serialize(value));
+        }
+
+        public static void Set(this IDatabase cache, string key, object value,TimeSpan timeSpan)
+        {
+            cache.StringSetAsync(key, Serialize(value), timeSpan);
+        }
+
+        public static void SetAsync(this IDatabase cache, string key, object value, TimeSpan timeSpan)
+        {
+            var batch = cache.CreateBatch();
+            cache.SetAsync(key, Serialize(value), timeSpan);
+            batch.Execute();
+        }
+
+        static byte[] Serialize(object o)
+        {
+            if (o == null)
+            {
+                return null;
+            }
+
+            //System.IO.MemoryStream _memory = new System.IO.MemoryStream();
+            //BinaryFormatter formatter = new BinaryFormatter();
+            //formatter.Serialize(_memory, o);
+            //_memory.Position = 0;
+            //byte[] read = new byte[_memory.Length];
+            //_memory.Read(read, 0, read.Length);
+            //_memory.Close();
+            //return read;
+            BinaryFormatter binaryFormatter = new BinaryFormatter();
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                binaryFormatter.Serialize(memoryStream, o);
+                byte[] objectDataAsStream = memoryStream.ToArray();
+                return objectDataAsStream;
+            }
+        }
+
+        static T Deserialize<T>(byte[] stream)
+        {
+            if (stream == null)
+            {
+                return default(T);
+            }
+
+            BinaryFormatter binaryFormatter = new BinaryFormatter();
+            using (MemoryStream memoryStream = new MemoryStream(stream))
+            {
+                T result = (T)binaryFormatter.Deserialize(memoryStream);
+                return result;
+            }
+        }
     }
 
 }

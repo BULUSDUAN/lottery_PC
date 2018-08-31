@@ -4,7 +4,7 @@
     "RedisHost": "10.0.3.6",
     "RedisPost": 6379,
     "RedisPassword": "redis123"
- 
+
   },
 
   "compilerOptions": {
@@ -19,8 +19,8 @@
     "wwwroot"
   ],
   "PageRegisterDefaultRole": "User",
-  "Sports_SchemeJobSeconds": 20,//追号作业时间间隔，秒单位
-//  //彩种不出票时间段 从星期天 到 星期六
+  "Sports_SchemeJobSeconds": 20, //追号作业时间间隔，秒单位
+  //  //彩种不出票时间段 从星期天 到 星期六
   "CTZQ_StopTicketing": "01:00-09:00|01:00-09:00|00:00-09:00|00:00-09:00|00:00-09:00|00:00-09:00|00:00-09:00",
   "BJDC_StopTicketing": "05:50-09:00|05:50-09:00|05:50-09:00|05:50-09:00|05:50-09:00|05:50-09:00|05:50-09:00",
   "JCZQ_StopTicketing": "01:00-09:00|01:00-09:00|00:00-09:00|00:00-09:00|00:00-09:00|00:00-09:00|00:00-09:00",
@@ -34,10 +34,11 @@
 
   "SelfDomain": "http://localhost:729",
   "MobileDomain": "http://localhost:729",
+  "ResSiteUrl": "http://10.0.3.6:888",
 
   "QueryUserFundDetailFromCache": false,
   //缓存配置文件，暂时没用到默认
-  
+
   //必须配置
   "HostSettings": {
     "Ip": "127.0.0.1", //服务启动IP
@@ -59,6 +60,6 @@
   "ConsulSettings": {
     "IpAddrs": "127.0.0.1:8500" //服务启动IP
   }
- 
+
 
 }

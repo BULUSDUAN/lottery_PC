@@ -7,7 +7,7 @@ using System.Text;
 
 namespace EntityModel.CoreModel
 {
-    
+    [Serializable]
     public class GameInfo
     {
         public string GameCode { get; set; }

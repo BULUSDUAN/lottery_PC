@@ -1454,7 +1454,7 @@ namespace Lottery.Api.Controllers
                 });
             }
         }
-        public async Task<List<object>> GetCodeList_GSAPP([FromServices]IServiceProxyProvider _serviceProxyProvider, Sports_AnteCodeQueryInfoCollection code, string gameCode, int amount,bool IsChase=false)
+        public async Task<List<object>> GetCodeList_GSAPP([FromServices]IServiceProxyProvider _serviceProxyProvider, Sports_AnteCodeQueryInfoCollection code, string gameCode, int amount, bool IsChase = false)
         {
 
             var issuseNumber = code.List.Count > 0 ? code.List[0].IssuseNumber : string.Empty;
@@ -2486,7 +2486,7 @@ namespace Lottery.Api.Controllers
                     param.Add("schemeId", firstIssuse.SchemeId);
                     orderInfo = await _serviceProxyProvider.Invoke<MyOrderListInfo>(param, "api/Order/QueryMyOrderDetailInfo");
                     anteCodeList = await _serviceProxyProvider.Invoke<Sports_AnteCodeQueryInfoCollection>(param, "api/Order/QuerySportsOrderAnteCodeList");
-                    var codeList = await GetCodeList_GSAPP(_serviceProxyProvider, anteCodeList, orderInfo.GameCode, orderInfo.Amount,true);
+                    var codeList = await GetCodeList_GSAPP(_serviceProxyProvider, anteCodeList, orderInfo.GameCode, orderInfo.Amount, true);
 
                     var result = new
                     {
@@ -2791,69 +2791,42 @@ namespace Lottery.Api.Controllers
 
         private async Task<List<KaiJiang>> GetRedisList([FromServices]IServiceProxyProvider _serviceProxyProvider)
         {
-            var key = RedisKeys.KaiJiang_Key;
-#if LogInfo
-            var st = new Stopwatch();
-            st.Start();
-#endif
-            var flag = KaSon.FrameWork.Common.Redis.RedisHelper.KeyExists(key);
-#if LogInfo
-            st.Stop();
-            Log4Log.LogEX(KLogLevel.TimeInfo, "redis判断是否有key" + key, "用时：" + st.Elapsed.TotalMilliseconds.ToString() + "毫秒");
-#endif
+
             var list = new List<KaiJiang>();
-            var str = "";
-            if (flag)
+            GameWinNumber_InfoCollection entitys;
+            string redisKey = EntityModel.Redis.RedisKeys.KaiJiang_Key;
+            var obj = RedisHelper.DB_Match.Get(redisKey);
+            if (obj != null)
             {
-#if LogInfo
-                st.Reset();
-#endif
-                str = KaSon.FrameWork.Common.Redis.RedisHelper.StringGet(key);
-#if LogInfo
-                st.Stop();
-                Log4Log.LogEX(KLogLevel.TimeInfo, "redis获取key：" + key, "用时：" + st.Elapsed.TotalMilliseconds.ToString() + "毫秒");
-#endif
-            }
-            if (!string.IsNullOrEmpty(str))
-            {
-                list = JsonHelper.Deserialize<List<KaiJiang>>(str);
+                entitys = obj as GameWinNumber_InfoCollection;
             }
             else
             {
                 Dictionary<string, object> param = new Dictionary<string, object>()
-            {
-                { "gameString","JX11X5|GD11X5|SD11X5|CQSSC|SSQ|DLT|FC3D|PL3|CTZQ_T14C|CTZQ_T6BQC|CTZQ_T4CJQ|CTZQ_TR9"}
-            };
-                var entitys = await _serviceProxyProvider.Invoke<GameWinNumber_InfoCollection>(param, "api/Order/QueryAllGameNewWinNumber");
-
-                foreach (var item in entitys.List)
                 {
-                    var poolInfo = BettingHelper.GetPoolInfo(item.GameCode, item.IssuseNumber);
-                    list.Add(new KaiJiang()
-                    {
-                        result = item.WinNumber,
-                        prizepool = poolInfo != null ? poolInfo.TotalPrizePoolMoney.ToString("###,##0.00") : "",
-                        nums = ConvertHelper.Getnums(poolInfo),
-                        name = item.GameCode.ToUpper() == "CTZQ" ? item.GameType : item.GameCode,
-                        termNo = item.IssuseNumber,
-                        ver = "1",
-                        grades = ConvertHelper.Getgrades(poolInfo),
-                        date = item.CreateTime.ToString("yyyy-MM-dd"),
-                        type = ConvertHelper.GetGameName(item.GameCode, item.GameType),
-                        sale = poolInfo != null ? poolInfo.TotalSellMoney.ToString("###,##0.00") : ""
-                    });
-                }
-
-                list[list.Count - 1].name = "TR9";
-                list[list.Count - 1].type = "任选9";
-#if LogInfo
-                st.Reset();
-
-                st.Stop();
-                Log4Log.LogEX(KLogLevel.TimeInfo, "redis设置key：" + key, "用时：" + st.Elapsed.TotalMilliseconds.ToString() + "毫秒");
-#endif
-                KaSon.FrameWork.Common.Redis.RedisHelper.StringSet(key, JsonHelper.Serialize(list), 5 * 60);
+                    { "gameString","JX11X5|GD11X5|SD11X5|CQSSC|SSQ|DLT|FC3D|PL3|CTZQ_T14C|CTZQ_T6BQC|CTZQ_T4CJQ|CTZQ_TR9"}
+                };
+                entitys = await _serviceProxyProvider.Invoke<GameWinNumber_InfoCollection>(param, "api/Order/QueryAllGameNewWinNumber");
             }
+            foreach (var item in entitys.List)
+            {
+                var poolInfo = BettingHelper.GetPoolInfo(item.GameCode, item.IssuseNumber);
+                list.Add(new KaiJiang()
+                {
+                    result = item.WinNumber,
+                    prizepool = poolInfo != null ? poolInfo.TotalPrizePoolMoney.ToString("###,##0.00") : "",
+                    nums = ConvertHelper.Getnums(poolInfo),
+                    name = item.GameCode.ToUpper() == "CTZQ" ? item.GameType : item.GameCode,
+                    termNo = item.IssuseNumber,
+                    ver = "1",
+                    grades = ConvertHelper.Getgrades(poolInfo),
+                    date = item.CreateTime.ToString("yyyy-MM-dd"),
+                    type = ConvertHelper.GetGameName(item.GameCode, item.GameType),
+                    sale = poolInfo != null ? poolInfo.TotalSellMoney.ToString("###,##0.00") : ""
+                });
+            }
+            list[list.Count - 1].name = "TR9";
+            list[list.Count - 1].type = "任选9";
             return list;
         }
 

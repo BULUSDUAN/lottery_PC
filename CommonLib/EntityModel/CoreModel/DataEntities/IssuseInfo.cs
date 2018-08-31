@@ -113,6 +113,7 @@ namespace EntityModel.CoreModel
     }
 
     [ProtoContract]
+    [Serializable]
     public class Issuse_QueryInfo
     {
 
@@ -179,6 +180,7 @@ namespace EntityModel.CoreModel
     }
 
     [ProtoContract]
+    [Serializable]
     public class Issuse_QueryInfoEX
     {
 
@@ -192,7 +194,7 @@ namespace EntityModel.CoreModel
         /// 游戏名称
         /// </summary>
         /// 
-        [ProtoMember(2)]
+        [ProtoMember(2)]      
         public BJDCIssuseInfo BJDC_IssuseNumber { get; set; }
       
        

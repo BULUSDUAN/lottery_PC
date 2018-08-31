@@ -114,6 +114,28 @@ namespace EntityModel.Redis
         /// 单式合买订单投注消息队列
         /// </summary>
         public const string Key_Together_SingleScheme_OrderBet_List = "Together_SingleScheme_OrderBet_List";
+        /// <summary>
+        /// 竞猜足球
+        /// </summary>
+        public const string Key_JCZQ_Match_Odds_List = "JCZQ_Match_Odds_List";
+        /// <summary>
+        /// 传统足球期号
+        /// </summary>
+        public const string Key_CTZQ_Issuse_List = "CTZQ_Issuse_List";
+        /// <summary>
+        /// 传统足球
+        /// </summary>
+        public const string Key_CTZQ_Match_Odds_List = "CTZQ_Match_Odds_List";
+        /// <summary>
+        /// 北京单场
+        /// </summary>
+        public const string Key_BJDC_Match_Odds_List = "BJDC_Match_Odds_List";
+        /// <summary>
+        /// 竞猜篮球
+        /// </summary>
+        public const string Key_JCLQ_Match_Odds_List = "JCLQ_Match_Odds_List";
 
+
+        
     }
 }

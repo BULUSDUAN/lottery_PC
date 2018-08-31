@@ -18,6 +18,7 @@ using EntityModel.LotteryJsonInfo;
 using Lottery.Api.Controllers.CommonFilterActtribute;
 using KaSon.FrameWork.Common.ExceptionEx;
 using EntityModel.ExceptionExtend;
+using KaSon.FrameWork.Common.Redis;
 
 namespace Lottery.Api.Controllers
 {
@@ -42,12 +43,12 @@ namespace Lottery.Api.Controllers
                 string gameCode = p.GameCode;
 
                 param.Add("key", "Site.GameDelay." + gameCode.ToUpper());
-                var configtask =  _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/Data/QueryCoreConfigByKey");
+                var configtask = _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/Data/QueryCoreConfigByKey");
                 param.Clear();
-              
+
                 param.Add("gameCode", gameCode);
                 var gameIssuseInfo = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Data/QueryCurrentIssuseInfo");
-               
+
                 string DelayTime = string.Empty;
                 var config = await configtask;
                 if (config != null)
@@ -402,7 +403,7 @@ namespace Lottery.Api.Controllers
 
         public async Task<LotteryServiceResponse> QueryCQSSCCurrNumberOmission_1XDX([FromServices]IServiceProxyProvider _serviceProxyProvider, IDictionary<string, object> param)
         {
-      
+
             param.Add("index", 1);
             var result = await _serviceProxyProvider.Invoke<CQSSC_1X_ZS>(param, "api/Data/QueryCQSSCCurrNumberOmission_1XDX");
             if (result == null)
@@ -805,7 +806,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message =ex.ToGetMessage() + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = string.Empty,
                 });
@@ -1461,7 +1462,7 @@ namespace Lottery.Api.Controllers
                 if (string.IsNullOrEmpty(userToken) || string.IsNullOrEmpty(userId))
                     throw new LogicException("未获取到有效用户信息");
                 string tokenuserId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
-                if(tokenuserId!=userId)
+                if (tokenuserId != userId)
                     throw new LogicException("token验证失败");
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param.Add("pageIndex", pageIndex);
@@ -2370,9 +2371,18 @@ namespace Lottery.Api.Controllers
                         //var cur = await _serviceProxyProvider.Invoke<ActivityListInfoCollection>(param, "api/Data/QueryActivInfoList");
                         //var cur = WCFClients.GameIssuseClient.QueryCurretNewIssuseInfo(gameCode, gameType);
                         //cache 获取
-                        var _issuse = HashTableCache._IssuseCTZQHt[gameType] ?? Json_CTZQ.IssuseList(gameType);
+                        //var _issuse = HashTableCache._IssuseCTZQHt[gameType] ?? Json_CTZQ.IssuseList(gameType);
+                        key = $"{EntityModel.Redis.RedisKeys.Key_CTZQ_Issuse_List}_{gameType}";
                         List<CtzqIssuesWeb> issuse = new List<CtzqIssuesWeb>();
-                        issuse = _issuse as List<CtzqIssuesWeb>;
+                        var obj = RedisHelper.DB_Match.Get(key);
+                        if (obj != null)
+                        {
+                            issuse = obj as List<EntityModel.LotteryJsonInfo.CtzqIssuesWeb>;
+                        }
+                        else
+                        {
+                            issuse = Json_CTZQ.IssuseList(gameType);
+                        }
                         var theissuse = issuse.FirstOrDefault(c => c.IssuseNumber == issuseNumber);
                         if (theissuse != null)
                         {
@@ -2386,20 +2396,44 @@ namespace Lottery.Api.Controllers
                         }
                         break;
                     case "BJDC":
-                        key = gameType + issuseNumber;
-                        mlist = HashTableCache._BJDCHt[key] ?? Json_BJDC.MatchList_WEB(issuseNumber, gameType);
+                        key = $"{EntityModel.Redis.RedisKeys.Key_BJDC_Match_Odds_List}_{gameType}_{issuseNumber}";
+                        //key = gameType + issuseNumber;
+                        //mlist = HashTableCache._BJDCHt[key] ?? Json_BJDC.MatchList_WEB(issuseNumber, gameType);
                         // var slist =;
+                        obj = RedisHelper.DB_Match.Get(key);
+                        if (obj != null)
+                        {
+                            mlist = obj;
+                        }
+                        else
+                        {
+                            mlist = Json_BJDC.MatchList_WEB(issuseNumber, gameType);
+                        }
                         matchDataList.AddRange(mlist as List<BJDC_MatchInfo_WEB>);
                         break;
                     case "JCZQ":
-                        key = gameType + (newVerType == null ? "" : newVerType);
-                        if (gameType.ToLower() == "hhdg")
-                            mlist = HashTableCache._JCZQHt[key] ?? Json_JCZQ.GetJCZQHHDGList();
-                        else
-                            mlist = HashTableCache._JCZQHt[key] ?? Json_JCZQ.MatchList_WEB(gameType, newVerType);
+                        key = EntityModel.Redis.RedisKeys.Key_JCZQ_Match_Odds_List;
+                        string reidskey = key + "_" + gameType + (newVerType == null ? "" : newVerType);
+                        //key = gameType + (newVerType == null ? "" : newVerType);
+                        //if (gameType.ToLower() == "hhdg")
+                        //    mlist = HashTableCache._JCZQHt[key] ?? Json_JCZQ.GetJCZQHHDGList();
+                        //else
+                        //    mlist = HashTableCache._JCZQHt[key] ?? Json_JCZQ.MatchList_WEB(gameType, newVerType);
                         //matchDataList.AddRange(Json_JCZQ.MatchList_WEB(gameType, newVerType));
                         //    matchDataList.AddRange(Json_JCZQ.GetJCZQHHDGList());
                         // var slist =;
+                        obj = RedisHelper.DB_Match.Get(reidskey);
+                        if (obj != null)
+                        {
+                            mlist = obj;
+                        }
+                        else
+                        {
+                            if (gameType.ToLower() == "hhdg")
+                                mlist = Json_JCZQ.GetJCZQHHDGList();
+                            else
+                                mlist = Json_JCZQ.MatchList_WEB(gameType, newVerType);
+                        }
                         matchDataList.AddRange(mlist as List<JCZQ_MatchInfo_WEB>);
                         break;
 
@@ -2407,12 +2441,26 @@ namespace Lottery.Api.Controllers
 
                     //  break;
                     case "JCLQ":
-                        key = gameType;
-                        if (gameType.ToLower() == "hhdg")
-                            mlist = HashTableCache._JCLQHt[key] ?? Json_JCLQ.GetJCLQHHDGList();
-
+                        //key = gameType;
+                        key = $"{EntityModel.Redis.RedisKeys.Key_JCLQ_Match_Odds_List}_{gameType}";
+                        obj = RedisHelper.DB_Match.Get(key);
+                        if (obj != null)
+                        {
+                            mlist = obj;
+                        }
                         else
-                            mlist = HashTableCache._JCLQHt[key] ?? Json_JCLQ.MatchList_WEB(gameType);
+                        {
+                            if (gameType.ToLower() == "hhdg")
+                                mlist =  Json_JCLQ.GetJCLQHHDGList();
+
+                            else
+                                mlist =  Json_JCLQ.MatchList_WEB(gameType);
+                        }
+                        //if (gameType.ToLower() == "hhdg")
+                        //    mlist = HashTableCache._JCLQHt[key] ?? Json_JCLQ.GetJCLQHHDGList();
+
+                        //else
+                        //    mlist = HashTableCache._JCLQHt[key] ?? Json_JCLQ.MatchList_WEB(gameType);
                         //   matchDataList.AddRange(Json_JCLQ.MatchList_WEB(gameType));
                         // matchDataList.AddRange(Json_JCLQ.GetJCLQHHDGList());
 
