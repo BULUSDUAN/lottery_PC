@@ -19,6 +19,7 @@ using Lottery.Api.Controllers.CommonFilterActtribute;
 using KaSon.FrameWork.Common.ExceptionEx;
 using EntityModel.ExceptionExtend;
 using KaSon.FrameWork.Common.Redis;
+using EntityModel.Redis;
 
 namespace Lottery.Api.Controllers
 {
@@ -833,116 +834,75 @@ namespace Lottery.Api.Controllers
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param.Add("pageIndex", pageIndex);
                 param.Add("pageSize", pageSize);
+                var aList = new ArticleInfo_QueryCollection();
                 switch (category)
                 {
                     case "hot"://今日热点
                         param.Add("category", "Lottery_Hot");
                         param.Add("gameCode", "");
-                        var hot = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_YouHua");
-                        //var hot = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_Hot", "", pageIndex, pageSize);
-                        foreach (var item in hot.ArticleList)
-                        {
-                            list.Add(new
-                            {
-                                Id = item.Id,
-                                Title = item.Title,
-                                GameCode = item.GameCode,
-                                Category = item.Category.Trim(),
-                                CreateTime = item.CreateTime,
-                                ReadCount = item.ReadCount,
-                            });
-                        }
+                        //aList = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_YouHua");
                         break;
                     case "gpc"://高频彩
                         param.Add("category", "Lottery_GameCode");
                         param.Add("gameCode", "JX11X5|CQSSC|SD11X5|GD11X5|GDKLSF|JSKS|SDKLPK3");
-                        var gpc = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_YouHua");
-                        //var gpc = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_GameCode", "JX11X5|CQSSC|SD11X5|GD11X5|GDKLSF|JSKS|SDKLPK3", pageIndex, pageSize);
-                        foreach (var item in gpc.ArticleList)
-                        {
-                            list.Add(new
-                            {
-                                Id = item.Id,
-                                Title = item.Title,
-                                GameCode = item.GameCode,
-                                Category = item.Category.Trim(),
-                                CreateTime = item.CreateTime,
-                                ReadCount = item.ReadCount,
-                            });
-                        }
+                        //aList = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_YouHua");
                         break;
                     case "szc"://数字彩
                         param.Add("category", "Lottery_GameCode");
                         param.Add("gameCode", "SSQ|DLT|PL3|FC3D");
-                        var scz = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_YouHua");
-                        //var scz = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_GameCode", "SSQ|DLT|PL3|FC3D", pageIndex, pageSize);
-                        foreach (var item in scz.ArticleList)
-                        {
-                            list.Add(new
-                            {
-                                Id = item.Id,
-                                Title = item.Title,
-                                GameCode = item.GameCode,
-                                Category = item.Category.Trim(),
-                                CreateTime = item.CreateTime,
-                                ReadCount = item.ReadCount,
-                            });
-                        }
+                        //aList = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_YouHua");
                         break;
                     case "jjc"://竞技彩
                         param.Add("category", "Lottery_GameCode");
                         param.Add("gameCode", "JCZQ|JCLQ|BJDC");
-                        var jjc = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_YouHua");
-                        //var jjc = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_GameCode", "JCZQ|JCLQ|BJDC", pageIndex, pageSize);
-                        foreach (var item in jjc.ArticleList)
-                        {
-                            list.Add(new
-                            {
-                                Id = item.Id,
-                                Title = item.Title,
-                                GameCode = item.GameCode,
-                                Category = item.Category.Trim(),
-                                CreateTime = item.CreateTime,
-                                ReadCount = item.ReadCount,
-                            });
-                        }
+                        //aList = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_YouHua");
                         break;
                     case "FocusCMS"://焦点新闻
                         param.Add("category", "FocusCMS");
                         param.Add("gameCode", "");
-                        var FocusCMS = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_YouHua");
-                        //var FocusCMS = WCFClients.ExternalClient.QueryArticleList_YouHua("FocusCMS", "", pageIndex, pageSize);
-                        foreach (var item in FocusCMS.ArticleList)
-                        {
-                            list.Add(new
-                            {
-                                Id = item.Id,
-                                Title = item.Title,
-                                GameCode = item.GameCode,
-                                Category = item.Category.Trim(),
-                                CreateTime = item.CreateTime,
-                                ReadCount = item.ReadCount,
-                            });
-                        }
+                        //aList = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_YouHua");
                         break;
                     case "BonusCMS"://焦点新闻
                         param.Add("category", "BonusCMS");
                         param.Add("gameCode", "");
-                        var BonusCMS = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_YouHua");
-                        //var BonusCMS = WCFClients.ExternalClient.QueryArticleList_YouHua("BonusCMS", "", pageIndex, pageSize);
-                        foreach (var item in BonusCMS.ArticleList)
-                        {
-                            list.Add(new
-                            {
-                                Id = item.Id,
-                                Title = item.Title,
-                                GameCode = item.GameCode,
-                                Category = item.Category.Trim(),
-                                CreateTime = item.CreateTime,
-                                ReadCount = item.ReadCount,
-                            });
-                        }
+                        //aList = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_YouHua");
                         break;
+                }
+
+                
+                if (param.Count > 0)
+                {
+                    var Key = RedisKeys.ArticleListKey;
+                    string cacheKey = string.Format("{0}_{1}_{2}_{3}_{4}", Key, param["category"].ToString(), param["gameCode"].ToString(), pageIndex, pageSize);
+                    var obj = RedisHelper.DB_CoreCacheData.Get(cacheKey);
+                    if (obj != null)
+                    {
+                        aList = obj as ArticleInfo_QueryCollection;
+                    }
+                    else
+                    {
+                        aList = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_YouHua");
+                        if (aList != null)
+                        {
+                            RedisHelper.DB_CoreCacheData.Set(cacheKey, aList, TimeSpan.FromMinutes(10));
+                        }
+                    }
+                }
+                if (aList != null && aList.ArticleList.Count > 0)
+                {
+                    foreach (var item in aList.ArticleList)
+                    {
+                        list.Add(new
+                        {
+                            Id = item.Id,
+                            Title = item.Title,
+                            GameCode = item.GameCode,
+                            Category = item.Category.Trim(),
+                            CreateTime = item.CreateTime,
+                            ReadCount = item.ReadCount,
+                            IsRedTitle = item.IsRedTitle
+                        });
+                    }
                 }
                 if (list != null && list.Count > 0)
                 {
@@ -2388,8 +2348,18 @@ namespace Lottery.Api.Controllers
                         {
                             var now = DateTime.Now;
                             if (Convert.ToDateTime(theissuse.StartTime) > now) break;
-                            key = gameType + issuseNumber;
-                            mlist = HashTableCache._CTZQHt[key] ?? Json_CTZQ.MatchList_WEB(issuseNumber, gameType);
+                            key = $"{EntityModel.Redis.RedisKeys.Key_CTZQ_Match_Odds_List}_{gameType}_{theissuse.IssuseNumber}";
+                            var oddlist= RedisHelper.DB_Match.Get(key);
+                            if (oddlist != null)
+                            {
+                                mlist = oddlist;
+                            }
+                            else
+                            {
+                                Json_CTZQ.MatchList_WEB(issuseNumber, gameType);
+                            }
+                            //string reidskey = $"{key}_{type}_{item.IssuseNumber}";
+                            //mlist = HashTableCache._CTZQHt[key] ?? Json_CTZQ.MatchList_WEB(issuseNumber, gameType);
 
                             //  var slist = ;
                             matchDataList.AddRange(mlist as List<CTZQ_MatchInfo_WEB>);

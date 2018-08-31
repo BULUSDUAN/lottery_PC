@@ -54,6 +54,7 @@ namespace EntityModel.CoreModel
     /// </summary>
     /// 
     [ProtoContract]
+    [Serializable]
     public class ArticleInfo_Query
     {
         /// <summary>
@@ -218,6 +219,7 @@ namespace EntityModel.CoreModel
     /// </summary>
     /// 
     [ProtoContract]
+    [Serializable]
     public class ArticleInfo_QueryCollection
     {
         public ArticleInfo_QueryCollection()

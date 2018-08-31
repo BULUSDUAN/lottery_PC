@@ -436,7 +436,7 @@ namespace Lottery.Service.ModuleServices
         #endregion
 
         #region 查询文章列表_优化
-        private static Dictionary<string, ArticleInfo_QueryCollection> _articleCollection = new Dictionary<string, ArticleInfo_QueryCollection>();
+        //private static Dictionary<string, ArticleInfo_QueryCollection> _articleCollection = new Dictionary<string, ArticleInfo_QueryCollection>();
         /// <summary>
         /// 查询文章列表
         /// todo:后台权限
@@ -445,22 +445,22 @@ namespace Lottery.Service.ModuleServices
         {
             try
             {
-                string cacheKey = string.Format("{0}_{1}_{2}_{3}", category, gameCode, pageIndex, pageSize);
+                //string cacheKey = string.Format("{0}_{1}_{2}_{3}", category, gameCode, pageIndex, pageSize);
                 var result = new ArticleInfo_QueryCollection();
-                if (_articleCollection != null && _articleCollection.Count > 0 && _articleCollection.ContainsKey(cacheKey))
-                {
-                    result = _articleCollection.FirstOrDefault(s => s.Key == cacheKey).Value;
-                }
-                else
-                {
+                //if (_articleCollection != null && _articleCollection.Count > 0 && _articleCollection.ContainsKey(cacheKey))
+                //{
+                //    result = _articleCollection.FirstOrDefault(s => s.Key == cacheKey).Value;
+                //}
+                //else
+                //{
                     if (string.IsNullOrEmpty(category))
                         throw new LogicException("未查询到文章类别");
                     var array = category.Split('|');
                     var gameCodeArray = gameCode.Split('|');
                     result = new DataQuery().QueryArticleList_YouHua(array, gameCodeArray, pageIndex, pageSize);
-                    if (!_articleCollection.ContainsKey(cacheKey))
-                        _articleCollection.Add(cacheKey, result);
-                }
+                    //if (!_articleCollection.ContainsKey(cacheKey))
+                    //    _articleCollection.Add(cacheKey, result);
+                //}
                 return Task.FromResult(result);
             }
             catch (LogicException ex)
