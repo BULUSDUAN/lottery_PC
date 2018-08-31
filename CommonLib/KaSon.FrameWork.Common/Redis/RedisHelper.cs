@@ -410,6 +410,14 @@ namespace KaSon.FrameWork.Common.Redis
                 return null;
             }
 
+            //System.IO.MemoryStream _memory = new System.IO.MemoryStream();
+            //BinaryFormatter formatter = new BinaryFormatter();
+            //formatter.Serialize(_memory, o);
+            //_memory.Position = 0;
+            //byte[] read = new byte[_memory.Length];
+            //_memory.Read(read, 0, read.Length);
+            //_memory.Close();
+            //return read;
             BinaryFormatter binaryFormatter = new BinaryFormatter();
             using (MemoryStream memoryStream = new MemoryStream())
             {

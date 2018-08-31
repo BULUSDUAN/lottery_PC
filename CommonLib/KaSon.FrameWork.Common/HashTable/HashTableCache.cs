@@ -76,6 +76,7 @@ namespace KaSon.FrameWork.Common
                 string reidskey = $"{key}_{item}";
                 var result = Json_CTZQ.IssuseList(item);
                 RedisHelper.DB_Match.Set(key, result, TimeSpan.FromMinutes(30));
+                //var obj = RedisHelper.DB_Match.Get(key) as List<EntityModel.LotteryJsonInfo.CtzqIssuesWeb>;
                 //if (result != null && result.Count > 0)
                 //{
                 //    string data = JsonConvert.SerializeObject(result);
@@ -127,28 +128,12 @@ namespace KaSon.FrameWork.Common
                 if (item.ToLower() == "hhdg")
                 {
                     var result = Json_JCZQ.GetJCZQHHDGList();
-                    if (result != null && result.Count > 0)
-                    {
-                        string data = JsonConvert.SerializeObject(result);
-                        db.StringSet(reidskey, data, TimeSpan.FromMinutes(30));
-                    }
-                    else
-                    {
-                        db.StringSet(reidskey, "", TimeSpan.FromMinutes(30));
-                    }
+                    RedisHelper.DB_Match.Set(key, result, TimeSpan.FromMinutes(30));
                 }
                 else
                 {
                     var result = Json_JCZQ.MatchList_WEB(item, newVerType);
-                    if (result != null && result.Count > 0)
-                    {
-                        string data = JsonConvert.SerializeObject(result);
-                        db.StringSet(reidskey, data, TimeSpan.FromMinutes(30));
-                    }
-                    else
-                    {
-                        db.StringSet(reidskey, "", TimeSpan.FromMinutes(30));
-                    }
+                    RedisHelper.DB_Match.Set(key, result, TimeSpan.FromMinutes(30));
                 }
             }
 
@@ -168,29 +153,12 @@ namespace KaSon.FrameWork.Common
                 if (item.ToLower() == "hhdg")
                 {
                     var result = Json_JCLQ.GetJCLQHHDGList();
-                    if (result != null && result.Count > 0)
-                    {
-                        string data = JsonConvert.SerializeObject(result);
-                        db.StringSet(reidskey, data, TimeSpan.FromMinutes(30));
-
-                    }
-                    else
-                    {
-                        db.StringSet(reidskey, "", TimeSpan.FromMinutes(30));
-                    }
+                    RedisHelper.DB_Match.Set(key, result, TimeSpan.FromMinutes(30));
                 }
                 else
                 {
                     var result = Json_JCLQ.MatchList_WEB(item);
-                    if (result != null && result.Count > 0)
-                    {
-                        string data = JsonConvert.SerializeObject(result);
-                        db.StringSet(reidskey, data, TimeSpan.FromMinutes(30));
-                    }
-                    else
-                    {
-                        db.StringSet(reidskey, "", TimeSpan.FromMinutes(30));
-                    }
+                    RedisHelper.DB_Match.Set(key, result, TimeSpan.FromMinutes(30));
                 }
             }
 

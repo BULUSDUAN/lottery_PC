@@ -956,6 +956,7 @@ namespace EntityModel.LotteryJsonInfo
     /// <summary>
     /// 北单队伍信息
     /// </summary>
+    [Serializable]
     public class BJDC_MatchInfo_WEB
     {
         //队伍基础信息
@@ -1172,6 +1173,7 @@ namespace EntityModel.LotteryJsonInfo
     /// <summary>
     /// 竞彩足球队伍信息
     /// </summary>
+    [Serializable]
     public class JCZQ_MatchInfo_WEB
     {
         //队伍基础信息
@@ -1324,6 +1326,7 @@ namespace EntityModel.LotteryJsonInfo
     /// <summary>
     /// 竞彩篮球队伍信息
     /// </summary>
+    [Serializable]
     public class JCLQ_MatchInfo_WEB
     {
         //队伍基础信息
@@ -1758,7 +1761,7 @@ namespace EntityModel.LotteryJsonInfo
         public string bout_index { get; set; }
         public string match_time { get; set; }
     }
-
+    [Serializable]
     public class CtzqIssuesWeb
     {
         public string CreateTime { get; set; }
