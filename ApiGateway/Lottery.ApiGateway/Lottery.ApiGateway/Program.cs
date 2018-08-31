@@ -59,85 +59,8 @@ namespace Lottery.ApiGateway
                 .Build();
 
             if (!bool.Parse(ISConsoleLog)) ConsoleHelper.Clear();
-
-
-            Task.Factory.StartNew(() =>
-            {
-                CTZQ_BJDC();
-                JCLQ();
-                JCZQ();
-            });
+          
             host.Run();
-
-            Console.WriteLine("1111");
-           
-        }
-
-
-        public static async Task CTZQ_BJDC()
-        {
-            while (true)
-            {
-                try
-                {
-                    Console.WriteLine("开始..._serviceProxyProvider");
-                    var _serviceProxyProvider = ServiceLocator.GetService<IServiceProxyProvider>();
-                    Issuse_QueryInfoEX val = await _serviceProxyProvider.Invoke<Issuse_QueryInfoEX>(new Dictionary<string, object>(), "api/Data/QueryCurretNewIssuseInfoList");
-                    //HashTableCache.Set_Issuse_QueryInfo(val);
-                    //HashTableCache.ClearHashTable();
-                    Console.WriteLine("开始..._serviceProxyProvider1");
-                    try
-                    {
-                        HashTableCache.Init_CTZQ_Issuse_Data();
-                    }
-                    catch
-                    {
-                        //获取期号出错
-
-                    }
-
-                    HashTableCache.Init_CTZQ_Data(val);
-                    HashTableCache.Init_BJDC_Data(val.BJDC_IssuseNumber.IssuseNumber);
-                }
-                catch (Exception ex)
-                {
-
-                }
-                await Task.Delay(5000);
-            }
-        }
-
-        public static async Task JCLQ()
-        {
-            while (true)
-            {
-                try
-                {
-                    HashTableCache.Init_JCLQ_Data();
-                }
-                catch (Exception ex)
-                {
-
-                }
-                await Task.Delay(5000);
-            }
-        }
-
-        public static async Task JCZQ()
-        {
-            while (true)
-            {
-                try
-                {
-                    HashTableCache.Init_JCZQ_Data("1");
-                    HashTableCache.Init_JCZQ_Data();
-                }
-                catch (Exception ex)
-                {
-
-                }
-                await Task.Delay(5000);
-            }
         }
     }
 }
