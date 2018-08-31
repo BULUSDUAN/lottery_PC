@@ -1454,7 +1454,7 @@ namespace Lottery.Api.Controllers
                 });
             }
         }
-        public async Task<List<object>> GetCodeList_GSAPP([FromServices]IServiceProxyProvider _serviceProxyProvider, Sports_AnteCodeQueryInfoCollection code, string gameCode, int amount)
+        public async Task<List<object>> GetCodeList_GSAPP([FromServices]IServiceProxyProvider _serviceProxyProvider, Sports_AnteCodeQueryInfoCollection code, string gameCode, int amount,bool IsChase=false)
         {
 
             var issuseNumber = code.List.Count > 0 ? code.List[0].IssuseNumber : string.Empty;
@@ -1516,6 +1516,7 @@ namespace Lottery.Api.Controllers
                     else
                     {
                         issuseInfo = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Order/QueryIssuseInfo");
+                        issuseInfoList.Add(issuseInfo);
                     }
                     if (!array_GameCode.Contains(gameCode))
                     {
@@ -1563,10 +1564,14 @@ namespace Lottery.Api.Controllers
                     //数字彩
                     //var issuseInfo = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Order/QueryIssuseInfo");
                     var issuseInfo = new Issuse_QueryInfo();
-                    if (issuseInfoList.Exists(p => p.IssuseNumber == issuseNumber)) issuseInfo = issuseInfoList.FirstOrDefault(p => p.IssuseNumber == issuseNumber);
-                    else
+                    if (IsChase)
                     {
-                        issuseInfo = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Order/QueryIssuseInfo");
+                        if (issuseInfoList.Exists(p => p.IssuseNumber == issuseNumber)) issuseInfo = issuseInfoList.FirstOrDefault(p => p.IssuseNumber == issuseNumber);
+                        else
+                        {
+                            issuseInfo = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Order/QueryIssuseInfo");
+                            issuseInfoList.Add(issuseInfo);
+                        }
                     }
                     if (!array_GameCode.Contains(gameCode))
                     {
@@ -2481,7 +2486,7 @@ namespace Lottery.Api.Controllers
                     param.Add("schemeId", firstIssuse.SchemeId);
                     orderInfo = await _serviceProxyProvider.Invoke<MyOrderListInfo>(param, "api/Order/QueryMyOrderDetailInfo");
                     anteCodeList = await _serviceProxyProvider.Invoke<Sports_AnteCodeQueryInfoCollection>(param, "api/Order/QuerySportsOrderAnteCodeList");
-                    var codeList = await GetCodeList_GSAPP(_serviceProxyProvider, anteCodeList, orderInfo.GameCode, orderInfo.Amount);
+                    var codeList = await GetCodeList_GSAPP(_serviceProxyProvider, anteCodeList, orderInfo.GameCode, orderInfo.Amount,true);
 
                     var result = new
                     {
