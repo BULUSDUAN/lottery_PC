@@ -52,7 +52,7 @@ namespace KaSon.FrameWork.Common
                 var type = item.GameCode_IssuseNumber.Split('|')[1];
                 string reidskey = $"{key}_{type}_{item.IssuseNumber}";
                 var result = Json_CTZQ.MatchList_WEB(item.IssuseNumber, type);
-                RedisHelper.DB_Match.Set(key, result, TimeSpan.FromMinutes(30));
+                RedisHelper.DB_Match.Set(reidskey, result, TimeSpan.FromMinutes(30));
                 //if (result != null && result.Count > 0)
                 //{
                 //    string data = JsonConvert.SerializeObject(result);
@@ -75,7 +75,7 @@ namespace KaSon.FrameWork.Common
             {
                 string reidskey = $"{key}_{item}";
                 var result = Json_CTZQ.IssuseList(item);
-                RedisHelper.DB_Match.Set(key, result, TimeSpan.FromMinutes(30));
+                RedisHelper.DB_Match.Set(reidskey, result, TimeSpan.FromMinutes(30));
                 //var obj = RedisHelper.DB_Match.Get(key) as List<EntityModel.LotteryJsonInfo.CtzqIssuesWeb>;
                 //if (result != null && result.Count > 0)
                 //{
@@ -101,7 +101,7 @@ namespace KaSon.FrameWork.Common
             {
                 string reidskey = $"{key}_{item}_{issuseNumber}";//SF+期号
                 var result = Json_BJDC.MatchList_WEB(issuseNumber, item);
-                RedisHelper.DB_Match.Set(key, result, TimeSpan.FromMinutes(30));
+                RedisHelper.DB_Match.Set(reidskey, result, TimeSpan.FromMinutes(30));
                 //if (result != null && result.Count > 0)
                 //{
                 //    string data = JsonConvert.SerializeObject(result);
@@ -128,12 +128,12 @@ namespace KaSon.FrameWork.Common
                 if (item.ToLower() == "hhdg")
                 {
                     var result = Json_JCZQ.GetJCZQHHDGList();
-                    RedisHelper.DB_Match.Set(key, result, TimeSpan.FromMinutes(30));
+                    RedisHelper.DB_Match.Set(reidskey, result, TimeSpan.FromMinutes(30));
                 }
                 else
                 {
                     var result = Json_JCZQ.MatchList_WEB(item, newVerType);
-                    RedisHelper.DB_Match.Set(key, result, TimeSpan.FromMinutes(30));
+                    RedisHelper.DB_Match.Set(reidskey, result, TimeSpan.FromMinutes(30));
                 }
             }
 
@@ -153,12 +153,12 @@ namespace KaSon.FrameWork.Common
                 if (item.ToLower() == "hhdg")
                 {
                     var result = Json_JCLQ.GetJCLQHHDGList();
-                    RedisHelper.DB_Match.Set(key, result, TimeSpan.FromMinutes(30));
+                    RedisHelper.DB_Match.Set(reidskey, result, TimeSpan.FromMinutes(30));
                 }
                 else
                 {
                     var result = Json_JCLQ.MatchList_WEB(item);
-                    RedisHelper.DB_Match.Set(key, result, TimeSpan.FromMinutes(30));
+                    RedisHelper.DB_Match.Set(reidskey, result, TimeSpan.FromMinutes(30));
                 }
             }
 

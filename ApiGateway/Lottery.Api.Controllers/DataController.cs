@@ -2396,20 +2396,44 @@ namespace Lottery.Api.Controllers
                         }
                         break;
                     case "BJDC":
-                        key = gameType + issuseNumber;
-                        mlist = HashTableCache._BJDCHt[key] ?? Json_BJDC.MatchList_WEB(issuseNumber, gameType);
+                        key = $"{EntityModel.Redis.RedisKeys.Key_BJDC_Match_Odds_List}_{gameType}_{issuseNumber}";
+                        //key = gameType + issuseNumber;
+                        //mlist = HashTableCache._BJDCHt[key] ?? Json_BJDC.MatchList_WEB(issuseNumber, gameType);
                         // var slist =;
+                        var obj = RedisHelper.DB_Match.Get(key);
+                        if (obj != null)
+                        {
+                            mlist = obj;
+                        }
+                        else
+                        {
+                            mlist = Json_BJDC.MatchList_WEB(issuseNumber, gameType);
+                        }
                         matchDataList.AddRange(mlist as List<BJDC_MatchInfo_WEB>);
                         break;
                     case "JCZQ":
-                        key = gameType + (newVerType == null ? "" : newVerType);
-                        if (gameType.ToLower() == "hhdg")
-                            mlist = HashTableCache._JCZQHt[key] ?? Json_JCZQ.GetJCZQHHDGList();
-                        else
-                            mlist = HashTableCache._JCZQHt[key] ?? Json_JCZQ.MatchList_WEB(gameType, newVerType);
+                        key = EntityModel.Redis.RedisKeys.Key_JCZQ_Match_Odds_List;
+                        string reidskey = key + "_" + gameType + (newVerType == null ? "" : newVerType);
+                        //key = gameType + (newVerType == null ? "" : newVerType);
+                        //if (gameType.ToLower() == "hhdg")
+                        //    mlist = HashTableCache._JCZQHt[key] ?? Json_JCZQ.GetJCZQHHDGList();
+                        //else
+                        //    mlist = HashTableCache._JCZQHt[key] ?? Json_JCZQ.MatchList_WEB(gameType, newVerType);
                         //matchDataList.AddRange(Json_JCZQ.MatchList_WEB(gameType, newVerType));
                         //    matchDataList.AddRange(Json_JCZQ.GetJCZQHHDGList());
                         // var slist =;
+                        var obj = RedisHelper.DB_Match.Get(reidskey);
+                        if (obj != null)
+                        {
+                            mlist = obj;
+                        }
+                        else
+                        {
+                            if (gameType.ToLower() == "hhdg")
+                                mlist = Json_JCZQ.GetJCZQHHDGList();
+                            else
+                                mlist = Json_JCZQ.MatchList_WEB(gameType, newVerType);
+                        }
                         matchDataList.AddRange(mlist as List<JCZQ_MatchInfo_WEB>);
                         break;
 
@@ -2417,12 +2441,26 @@ namespace Lottery.Api.Controllers
 
                     //  break;
                     case "JCLQ":
-                        key = gameType;
-                        if (gameType.ToLower() == "hhdg")
-                            mlist = HashTableCache._JCLQHt[key] ?? Json_JCLQ.GetJCLQHHDGList();
-
+                        //key = gameType;
+                        key = $"{EntityModel.Redis.RedisKeys.Key_JCLQ_Match_Odds_List}_{gameType}";
+                        var obj = RedisHelper.DB_Match.Get(key);
+                        if (obj != null)
+                        {
+                            mlist = obj;
+                        }
                         else
-                            mlist = HashTableCache._JCLQHt[key] ?? Json_JCLQ.MatchList_WEB(gameType);
+                        {
+                            if (gameType.ToLower() == "hhdg")
+                                mlist =  Json_JCLQ.GetJCLQHHDGList();
+
+                            else
+                                mlist =  Json_JCLQ.MatchList_WEB(gameType);
+                        }
+                        //if (gameType.ToLower() == "hhdg")
+                        //    mlist = HashTableCache._JCLQHt[key] ?? Json_JCLQ.GetJCLQHHDGList();
+
+                        //else
+                        //    mlist = HashTableCache._JCLQHt[key] ?? Json_JCLQ.MatchList_WEB(gameType);
                         //   matchDataList.AddRange(Json_JCLQ.MatchList_WEB(gameType));
                         // matchDataList.AddRange(Json_JCLQ.GetJCLQHHDGList());
 
