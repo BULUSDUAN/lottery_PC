@@ -7,7 +7,8 @@ namespace EntityModel.Communication
     /// <summary>
     /// 订单组合模型
     /// </summary>
-  public  class Order_Together
+    [Serializable]
+    public  class Order_Together
     {
         /// <summary>
         /// 
