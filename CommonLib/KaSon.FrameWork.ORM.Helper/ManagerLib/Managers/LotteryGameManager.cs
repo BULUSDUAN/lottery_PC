@@ -117,17 +117,17 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <summary>
         /// 内存期号
         /// </summary>
-        private static IList<C_Game_Issuse> C_Game_IssuseList = null;
+       // private static IList<C_Game_Issuse> C_Game_IssuseList = null;
         private static IList<GameTypeInfo> C_GameTypeInfoList = null;
 
         /// <summary>
         ///  初始化内存期号 k_todo
         /// </summary>
         public  void StartInitData() {
-            if (C_Game_IssuseList == null) {
+            //if (C_Game_IssuseList == null) {
 
-                C_Game_IssuseList = this.DB.CreateQuery<C_Game_Issuse>().ToList();
-            }
+            //    C_Game_IssuseList = this.DB.CreateQuery<C_Game_Issuse>().ToList();
+            //}
 
             if (C_GameTypeInfoList == null) {
 
@@ -152,23 +152,23 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public C_Game_Issuse QueryGameIssuseByKey(string gameCode, string gameType, string issuseNumber)
         {
-            if (C_Game_IssuseList != null)
-            {
-                var query = from g in C_Game_IssuseList
-                            where g.GameCode == gameCode
-                            && g.IssuseNumber == issuseNumber
-                            && (gameType == string.Empty || g.GameType == gameType)
-                            select g;
-                return query.FirstOrDefault();
-            }
-            else {
+            //if (C_Game_IssuseList != null)
+            //{
+            //    var query = from g in C_Game_IssuseList
+            //                where g.GameCode == gameCode
+            //                && g.IssuseNumber == issuseNumber
+            //                && (gameType == string.Empty || g.GameType == gameType)
+            //                select g;
+            //    return query.FirstOrDefault();
+            //}
+            //else {
                 var query = from g in this.DB.CreateQuery<C_Game_Issuse>()
                             where g.GameCode == gameCode
                             && g.IssuseNumber == issuseNumber
                             && (gameType == string.Empty || g.GameType == gameType)
                             select g;
                 return query.FirstOrDefault();
-            }
+           // }
           //  Session.Clear();
             //var query = from g in this.DB.CreateQuery<C_Game_Issuse>()
             //            where g.GameCode == gameCode

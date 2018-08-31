@@ -223,12 +223,12 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
             logList.Add("本次处理全部完成----------> ");
             Console.WriteLine("本次处理全部完成----------> ");
 
-            string log= string.Join(Environment.NewLine, logList.ToArray());
-           // Console.WriteLine(log);
-         //   string log = Common.JSON.JsonHelper.Serialize(logList);
-            Log4Log.Info( "追号消息***", new Exception(log));
+         //   string log= string.Join(Environment.NewLine, logList.ToArray());
+         //  // Console.WriteLine(log);
+         ////   string log = Common.JSON.JsonHelper.Serialize(logList);
+         //   Log4Log.Info( "追号消息***", new Exception(log));
 
-            return log;
+            return "";
         }
 
 

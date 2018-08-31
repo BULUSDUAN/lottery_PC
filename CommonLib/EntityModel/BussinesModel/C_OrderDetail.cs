@@ -10,6 +10,7 @@ namespace EntityModel
     /// <summary>
     // 订单明细
     ///</summary>
+    [Serializable]
     [ProtoContract]
     [Entity("C_OrderDetail",Type = EntityType.Table)]
     public class C_OrderDetail

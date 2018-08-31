@@ -2770,8 +2770,10 @@ namespace Lottery.Api.Controllers
                 var R_Url = aliurl + "?_input_charset=utf-8&cardNo=" + cardNo + "&cardBinCheck=true";
                 var result = PostManager.Get(R_Url, Encoding.UTF8);
                 var obj = JsonHelper.Decode(result);
+
                 object value = new
                 {
+                    validatedNum= CheckBlankCard.MatchLuhn(cardNo),
                     bank = obj.bank,
                     validated = obj.validated,
                     cardType = obj.cardType,

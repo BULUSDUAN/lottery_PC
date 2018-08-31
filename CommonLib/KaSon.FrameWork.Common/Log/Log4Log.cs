@@ -39,7 +39,10 @@ namespace KaSon.FrameWork.Common
         //ILog log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         static XmlElement log4netEle = null;
         static XmlDocument log4netConfig = null;
-        static Log4Log()
+        static Log4Log() {
+            Init();
+        }
+        static void Init()
         {
             string path = Path.Combine(Directory.GetCurrentDirectory(), @"log4net.config");
             if (!File.Exists(path))
@@ -106,26 +109,31 @@ namespace KaSon.FrameWork.Common
 
         public static void Fatal(string message="",Exception exception=null) {
             if (exception == null) exception= new Exception("");
+            if (iLog == null) Init();
             LogManager.GetLogger(repository.Name, "ClassName").Fatal(message, exception);
         }
         public static void Info(string message = "", Exception exception = null)
         {
             if (exception == null) exception = new Exception("");
+            if (iLog == null) Init();
             iLog.Info(message, exception);
         }
         public static void Warn(string message = "", Exception exception = null)
         {
             if (exception == null) exception = new Exception("");
+            if (iLog == null) Init();
             iLog.Warn(message, exception);
         }
         public static void Debug(string message = "", Exception exception = null)
         {
             if (exception == null) exception = new Exception("");
+            if (iLog == null) Init();
             iLog.Debug(message, exception);
         }
         public static void Error(string message = "", Exception exception = null)
         {
             if (exception == null) exception = new Exception("");
+            if (iLog == null) Init();
             iLog.Error(message, exception);
         }
 

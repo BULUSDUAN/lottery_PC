@@ -10,6 +10,7 @@ namespace EntityModel
     /// <summary>
     // 
     ///</summary>
+    [Serializable]
     [ProtoContract]
     [Entity("C_Sports_Order_Running",Type = EntityType.Table)]
     public class C_Sports_Order_Running
