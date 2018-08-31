@@ -69,14 +69,13 @@ namespace KaSon.FrameWork.Common
 
         public static void Init_CTZQ_Issuse_Data()
         {
-            var db = RedisHelper.DB_Match;
             string key = EntityModel.Redis.RedisKeys.Key_CTZQ_Issuse_List;
             foreach (var item in _CTZQType)//"T14C", "T4CJQ", "TR9", "T6BQC"
             {
                 string reidskey = $"{key}_{item}";
                 var result = Json_CTZQ.IssuseList(item);
                 RedisHelper.DB_Match.Set(reidskey, result, TimeSpan.FromMinutes(30));
-                //var obj = RedisHelper.DB_Match.Get(key) as List<EntityModel.LotteryJsonInfo.CtzqIssuesWeb>;
+                //var obj = RedisHelper.DB_Match.Get(reidskey) as List<EntityModel.LotteryJsonInfo.CtzqIssuesWeb>;
                 //if (result != null && result.Count > 0)
                 //{
                 //    string data = JsonConvert.SerializeObject(result);
@@ -95,7 +94,6 @@ namespace KaSon.FrameWork.Common
         /// <param name="issuseNumber"></param>
         public static void Init_BJDC_Data(string issuseNumber)
         {
-            var db = RedisHelper.DB_Match;
             string key = EntityModel.Redis.RedisKeys.Key_BJDC_Match_Odds_List;
             foreach (var item in _BJDCType)
             {
@@ -121,7 +119,6 @@ namespace KaSon.FrameWork.Common
         public static void Init_JCZQ_Data(string newVerType = null)
         {
             string key = EntityModel.Redis.RedisKeys.Key_JCZQ_Match_Odds_List;
-            var db = RedisHelper.DB_Match;
             foreach (var item in _JCZQType) //"SPF", "BRQSPF", "ZJQ", "BF", "BQC","HHDG"
             {
                 string reidskey = key + "_" + item + (newVerType == null ? "" : newVerType);
@@ -146,7 +143,6 @@ namespace KaSon.FrameWork.Common
         public static void Init_JCLQ_Data()
         {
             string key = EntityModel.Redis.RedisKeys.Key_JCLQ_Match_Odds_List;
-            var db = RedisHelper.DB_Match;
             foreach (var item in _JCLQType)
             {
                 string reidskey = $"{key}_{item}";
