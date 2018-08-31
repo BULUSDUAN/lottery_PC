@@ -2400,7 +2400,7 @@ namespace Lottery.Api.Controllers
                         //key = gameType + issuseNumber;
                         //mlist = HashTableCache._BJDCHt[key] ?? Json_BJDC.MatchList_WEB(issuseNumber, gameType);
                         // var slist =;
-                        var obj = RedisHelper.DB_Match.Get(key);
+                        obj = RedisHelper.DB_Match.Get(key);
                         if (obj != null)
                         {
                             mlist = obj;
@@ -2422,7 +2422,7 @@ namespace Lottery.Api.Controllers
                         //matchDataList.AddRange(Json_JCZQ.MatchList_WEB(gameType, newVerType));
                         //    matchDataList.AddRange(Json_JCZQ.GetJCZQHHDGList());
                         // var slist =;
-                        var obj = RedisHelper.DB_Match.Get(reidskey);
+                        obj = RedisHelper.DB_Match.Get(reidskey);
                         if (obj != null)
                         {
                             mlist = obj;
@@ -2443,7 +2443,7 @@ namespace Lottery.Api.Controllers
                     case "JCLQ":
                         //key = gameType;
                         key = $"{EntityModel.Redis.RedisKeys.Key_JCLQ_Match_Odds_List}_{gameType}";
-                        var obj = RedisHelper.DB_Match.Get(key);
+                        obj = RedisHelper.DB_Match.Get(key);
                         if (obj != null)
                         {
                             mlist = obj;
