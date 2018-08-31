@@ -380,14 +380,56 @@ namespace Lottery.Api.Controllers
             return Content(config);
         }
         /// <summary>
-        /// PlamtType=1 默认度api 日志,2读服务日志,
+        /// 校验银行卡号
         /// </summary>
         /// <param name="_serviceProxyProvider"></param>
-        /// <param name="PlamtType"></param>
-        /// <param name="SerName"></param>
-        /// <param name="FileName"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<IActionResult> GetLogInfo([FromServices]IServiceProxyProvider _serviceProxyProvider,int PlamtType=1, int DicType = 1, string SerName="Order")
+        public async Task<IActionResult> CheckBlank([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            var result = new LotteryServiceResponse
+            {
+                Code = ResponseCode.成功,
+                Message = "银行卡号格式正确",
+                MsgId = entity.MsgId,
+                Value =true
+            };
+            var p = JsonHelper.Decode(entity.Param);
+            string CardNum = p.CardNum;
+            if (string.IsNullOrEmpty(CardNum))
+            {
+                result.Message = "银行卡号不能为空";
+                result.Code = ResponseCode.失败;
+                result.Value = false;
+            }
+            else {
+               var bol= KaSon.FrameWork.Common.Utilities.CheckBlankCard.MatchLuhn(CardNum);
+                if (!bol)
+                {
+                    result.Message = "银行卡号格式正确";
+                    result.Code = ResponseCode.成功;
+                    result.Value = true;
+                }
+                else {
+
+                    result.Message = "银行卡号格式不正确";
+                    result.Code = ResponseCode.失败;
+                    result.Value = false;
+                }
+            }
+            
+                  return Json(result);
+        }
+
+            /// <summary>
+            /// PlamtType=1 默认度api 日志,2读服务日志,
+            /// </summary>
+            /// <param name="_serviceProxyProvider"></param>
+            /// <param name="PlamtType"></param>
+            /// <param name="SerName"></param>
+            /// <param name="FileName"></param>
+            /// <returns></returns>
+            public async Task<IActionResult> GetLogInfo([FromServices]IServiceProxyProvider _serviceProxyProvider,int PlamtType=1, int DicType = 1, string SerName="Order")
         {
             string config = "";
             string DicTypeName = "APILogError";
