@@ -16,9 +16,9 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
         {
             Task.WhenAll(new Task[] {
                      CTZQ_BJDC(),
-                        JCLQ(),
-                        JCZQ(),
-                        StartTaskByWriteChaseOrderToDb(seconds)
+                       // JCLQ(),
+                      //  JCZQ(),
+                        //StartTaskByWriteChaseOrderToDb(seconds)
             });
         }
 
@@ -33,7 +33,7 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
                     {
                         HashTableCache.Init_CTZQ_Issuse_Data();
                     }
-                    catch
+                    catch(Exception ex)
                     {
                         //获取期号出错
 
@@ -46,7 +46,7 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
                 {
 
                 }
-                await Task.Delay(5000);
+                await Task.Delay(30000);
             }
         }
 
@@ -62,7 +62,7 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
                 {
 
                 }
-                await Task.Delay(5000);
+                await Task.Delay(30000);
             }
         }
 
@@ -79,7 +79,7 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
                 {
 
                 }
-                await Task.Delay(5000);
+                await Task.Delay(30000);
             }
         }
 
@@ -100,7 +100,7 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
                 {
 
                 }
-                await Task.Delay(1000 * seconds);
+                await Task.Delay(10000 * seconds);
             }
         }
     }

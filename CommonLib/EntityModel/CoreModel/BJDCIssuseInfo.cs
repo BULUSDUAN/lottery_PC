@@ -6,6 +6,7 @@ using System.Text;
 namespace EntityModel.CoreModel
 {
     [ProtoContract]
+    [Serializable]
     public class BJDCIssuseInfo
     {
         public BJDCIssuseInfo()

@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Text;
 using EntityModel.CoreModel;
+using KaSon.FrameWork.Common.Redis;
+using Newtonsoft.Json;
 
 namespace KaSon.FrameWork.Common
 {
-  public   class HashTableCache
+    public class HashTableCache
     {
-        public static System.Collections.Hashtable _CTZQHt =  System.Collections.Hashtable.Synchronized(new Hashtable());
+        public static System.Collections.Hashtable _CTZQHt = System.Collections.Hashtable.Synchronized(new Hashtable());
         public static Issuse_QueryInfoEX _Issuse_QueryInfo = new Issuse_QueryInfoEX();
         public static System.Collections.Hashtable _IssuseCTZQHt = System.Collections.Hashtable.Synchronized(new Hashtable());
 
@@ -17,13 +19,15 @@ namespace KaSon.FrameWork.Common
         public static System.Collections.Hashtable _JCLQHt = System.Collections.Hashtable.Synchronized(new Hashtable());
 
         public static string[] _CTZQType = { "T14C", "T4CJQ", "TR9", "T6BQC" };
-        public static string[] _JCZQType = { "SPF", "BRQSPF", "ZJQ", "BF", "BQC","HHDG" };
-        public static string[] _JCLQType = { "SF", "RFSF", "DXF", "SFC",  "HHDG" };
-        public static string[] _BJDCType = { "SPF"};
+        public static string[] _JCZQType = { "SPF", "BRQSPF", "ZJQ", "BF", "BQC", "HHDG" };
+        public static string[] _JCLQType = { "SF", "RFSF", "DXF", "SFC", "HHDG" };
+        public static string[] _BJDCType = { "SPF" };
 
-        public static void Set_Issuse_QueryInfo(Issuse_QueryInfoEX ex) {
+        public static void Set_Issuse_QueryInfo(Issuse_QueryInfoEX ex)
+        {
 
-            lock (_Issuse_QueryInfo) {
+            lock (_Issuse_QueryInfo)
+            {
                 _Issuse_QueryInfo = ex;
             }
         }
@@ -39,40 +43,48 @@ namespace KaSon.FrameWork.Common
         /// 传统足球
         /// </summary>
         /// <param name="IssuseNumber"></param>
-        public static void Init_CTZQ_Data(Issuse_QueryInfoEX ex) {
-            //  Issuse_QueryInfo cur = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Data/QueryCurretNewIssuseInfo");
-            string key = "";
-            //_CTZQHt.Clear();
+        public static void Init_CTZQ_Data(Issuse_QueryInfoEX ex)
+        {
+            string key = EntityModel.Redis.RedisKeys.Key_CTZQ_Match_Odds_List;
             ex = ex == null ? new Issuse_QueryInfoEX() : ex;
             foreach (var item in ex.CTZQ_IssuseNumber)
             {
                 var type = item.GameCode_IssuseNumber.Split('|')[1];
-                key = type + item.IssuseNumber;
-                var result= Json_CTZQ.MatchList_WEB(item.IssuseNumber, type);
-                var RemoveKeys = new List<string>();
-                foreach (string _keyitem in _CTZQHt.Keys)
-                {
-                    if (_keyitem.StartsWith(type)) RemoveKeys.Add(_keyitem);
-                        //_CTZQHt.Remove(_keyitem);
-                }
-                foreach (var str in RemoveKeys)
-                {
-                    _CTZQHt.Remove(str);
-                }
-                _CTZQHt[key] = result;
+                string reidskey = $"{key}_{type}_{item.IssuseNumber}";
+                var result = Json_CTZQ.MatchList_WEB(item.IssuseNumber, type);
+                RedisHelper.DB_Match.Set(key, result, TimeSpan.FromMinutes(30));
+                //if (result != null && result.Count > 0)
+                //{
+                //    string data = JsonConvert.SerializeObject(result);
+                //    db.StringSet(reidskey, data, TimeSpan.FromMinutes(30));
+                //}
+                //else
+                //{
+                //    db.StringSet(reidskey, "", TimeSpan.FromMinutes(30));
+                //}
             }
-          
+
         }
 
 
         public static void Init_CTZQ_Issuse_Data()
         {
-            //  Issuse_QueryInfo cur = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Data/QueryCurretNewIssuseInfo");
-            string key = "";
-            foreach (var item in _CTZQType)
+            var db = RedisHelper.DB_Match;
+            string key = EntityModel.Redis.RedisKeys.Key_CTZQ_Issuse_List;
+            foreach (var item in _CTZQType)//"T14C", "T4CJQ", "TR9", "T6BQC"
             {
-                key = item ;
-                _IssuseCTZQHt[item] = Json_CTZQ.IssuseList(item) ;
+                string reidskey = $"{key}_{item}";
+                var result = Json_CTZQ.IssuseList(item);
+                RedisHelper.DB_Match.Set(key, result, TimeSpan.FromMinutes(30));
+                //if (result != null && result.Count > 0)
+                //{
+                //    string data = JsonConvert.SerializeObject(result);
+                //    db.StringSet(reidskey, data, TimeSpan.FromMinutes(30));
+                //}
+                //else
+                //{
+                //    db.StringSet(reidskey, "", TimeSpan.FromMinutes(30));
+                //}
             }
 
         }
@@ -82,15 +94,22 @@ namespace KaSon.FrameWork.Common
         /// <param name="issuseNumber"></param>
         public static void Init_BJDC_Data(string issuseNumber)
         {
-            //  Issuse_QueryInfo cur = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Data/QueryCurretNewIssuseInfo");
-            string key = "";
-            //_BJDCHt.Clear();
+            var db = RedisHelper.DB_Match;
+            string key = EntityModel.Redis.RedisKeys.Key_BJDC_Match_Odds_List;
             foreach (var item in _BJDCType)
             {
-                key = item  + issuseNumber;//SF+期号
+                string reidskey = $"{key}_{item}_{issuseNumber}";//SF+期号
                 var result = Json_BJDC.MatchList_WEB(issuseNumber, item);
-                _BJDCHt.Clear();
-                _BJDCHt[key] = result;
+                RedisHelper.DB_Match.Set(key, result, TimeSpan.FromMinutes(30));
+                //if (result != null && result.Count > 0)
+                //{
+                //    string data = JsonConvert.SerializeObject(result);
+                //    db.StringSet(reidskey, data, TimeSpan.FromMinutes(30));
+                //}
+                //else
+                //{
+                //    db.StringSet(reidskey, "", TimeSpan.FromMinutes(30));
+                //}
             }
 
         }
@@ -98,38 +117,81 @@ namespace KaSon.FrameWork.Common
         /// 竞猜足球
         /// </summary>
         /// <param name="issuseNumber"></param>
-        public static void Init_JCZQ_Data(string newVerType=null)
+        public static void Init_JCZQ_Data(string newVerType = null)
         {
-            //  Issuse_QueryInfo cur = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Data/QueryCurretNewIssuseInfo");
-            string key = "";
-            foreach (var item in _JCZQType)
+            string key = EntityModel.Redis.RedisKeys.Key_JCZQ_Match_Odds_List;
+            var db = RedisHelper.DB_Match;
+            foreach (var item in _JCZQType) //"SPF", "BRQSPF", "ZJQ", "BF", "BQC","HHDG"
             {
-                key = item +(newVerType==null? "": newVerType);
-             //   _JCZQHt[item] = Json_CTZQ.MatchList_WEB(issuseNumber, item);
+                string reidskey = key + "_" + item + (newVerType == null ? "" : newVerType);
                 if (item.ToLower() == "hhdg")
-                    _JCZQHt[key] = Json_JCZQ.GetJCZQHHDGList();
+                {
+                    var result = Json_JCZQ.GetJCZQHHDGList();
+                    if (result != null && result.Count > 0)
+                    {
+                        string data = JsonConvert.SerializeObject(result);
+                        db.StringSet(reidskey, data, TimeSpan.FromMinutes(30));
+                    }
+                    else
+                    {
+                        db.StringSet(reidskey, "", TimeSpan.FromMinutes(30));
+                    }
+                }
                 else
-                    _JCZQHt[key] = Json_JCZQ.MatchList_WEB(item, newVerType);
+                {
+                    var result = Json_JCZQ.MatchList_WEB(item, newVerType);
+                    if (result != null && result.Count > 0)
+                    {
+                        string data = JsonConvert.SerializeObject(result);
+                        db.StringSet(reidskey, data, TimeSpan.FromMinutes(30));
+                    }
+                    else
+                    {
+                        db.StringSet(reidskey, "", TimeSpan.FromMinutes(30));
+                    }
+                }
             }
 
         }
-       
+
         /// <summary>
         /// 竞猜篮球
         /// </summary>
         /// <param name="issuseNumber"></param>
         public static void Init_JCLQ_Data()
         {
-            //  Issuse_QueryInfo cur = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Data/QueryCurretNewIssuseInfo");
-            string key = "";
+            string key = EntityModel.Redis.RedisKeys.Key_JCLQ_Match_Odds_List;
+            var db = RedisHelper.DB_Match;
             foreach (var item in _JCLQType)
             {
-                key = item;
-              //  _JCLQHt[item] = Json_CTZQ.MatchList_WEB(issuseNumber, item);
+                string reidskey = $"{key}_{item}";
                 if (item.ToLower() == "hhdg")
-                    _JCLQHt[item] = Json_JCLQ.GetJCLQHHDGList();
+                {
+                    var result = Json_JCLQ.GetJCLQHHDGList();
+                    if (result != null && result.Count > 0)
+                    {
+                        string data = JsonConvert.SerializeObject(result);
+                        db.StringSet(reidskey, data, TimeSpan.FromMinutes(30));
+
+                    }
+                    else
+                    {
+                        db.StringSet(reidskey, "", TimeSpan.FromMinutes(30));
+                    }
+                }
                 else
-                    _JCLQHt[item] = Json_JCLQ.MatchList_WEB(item);
+                {
+                    var result = Json_JCLQ.MatchList_WEB(item);
+                    if (result != null && result.Count > 0)
+                    {
+                        string data = JsonConvert.SerializeObject(result);
+                        db.StringSet(reidskey, data, TimeSpan.FromMinutes(30));
+                    }
+                    else
+                    {
+                        db.StringSet(reidskey, "", TimeSpan.FromMinutes(30));
+                    }
+                }
             }
 
         }
@@ -137,8 +199,9 @@ namespace KaSon.FrameWork.Common
         /// <summary>
         /// 开奖信息
         /// </summary>
-        public static void Init_Pool_Data() {
-              
+        public static void Init_Pool_Data()
+        {
+
 
         }
     }

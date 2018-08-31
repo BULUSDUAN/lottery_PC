@@ -106,9 +106,49 @@ namespace Lottery.Service.Host
 
             using (host.Run())
             {
+                System.Threading.Tasks.Task.Factory.StartNew(() =>
+                {
+                    testAsync();
+                });
                 Console.WriteLine($"服务端启动成功，{DateTime.Now}。");
             }
         }
+
+
+        private static async System.Threading.Tasks.Task testAsync()
+        {
+            while (true)
+            {
+                try
+                {
+                    
+                    Console.WriteLine("开始..._serviceProxyProvider");
+                    var _serviceProxyProvider = ServiceLocator.GetService<IServiceProxyProvider>();
+                    EntityModel.CoreModel.Issuse_QueryInfoEX val = 
+                        await _serviceProxyProvider.Invoke<EntityModel.CoreModel.Issuse_QueryInfoEX>(
+                            new Dictionary<string, object>(), "api/Data/QueryCurretNewIssuseInfoList");
+                    Console.WriteLine("开始..._serviceProxyProvider1");
+                    try
+                    {
+                        HashTableCache.Init_CTZQ_Issuse_Data();
+                    }
+                    catch
+                    {
+                        //获取期号出错
+
+                    }
+
+                    HashTableCache.Init_CTZQ_Data(val);
+                    HashTableCache.Init_BJDC_Data(val.BJDC_IssuseNumber.IssuseNumber);
+                }
+                catch (Exception ex)
+                {
+
+                }
+                await System.Threading.Tasks.Task.Delay(5000);
+            }
+        }
+
     }
 }
 
