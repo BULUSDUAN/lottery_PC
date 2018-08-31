@@ -10,34 +10,34 @@ namespace KaSon.FrameWork.Common
 {
     public class HashTableCache
     {
-        public static System.Collections.Hashtable _CTZQHt = System.Collections.Hashtable.Synchronized(new Hashtable());
-        public static Issuse_QueryInfoEX _Issuse_QueryInfo = new Issuse_QueryInfoEX();
-        public static System.Collections.Hashtable _IssuseCTZQHt = System.Collections.Hashtable.Synchronized(new Hashtable());
+        //public static System.Collections.Hashtable _CTZQHt = System.Collections.Hashtable.Synchronized(new Hashtable());
+        //public static Issuse_QueryInfoEX _Issuse_QueryInfo = new Issuse_QueryInfoEX();
+        //public static System.Collections.Hashtable _IssuseCTZQHt = System.Collections.Hashtable.Synchronized(new Hashtable());
 
-        public static System.Collections.Hashtable _BJDCHt = System.Collections.Hashtable.Synchronized(new Hashtable());
-        public static System.Collections.Hashtable _JCZQHt = System.Collections.Hashtable.Synchronized(new Hashtable());
-        public static System.Collections.Hashtable _JCLQHt = System.Collections.Hashtable.Synchronized(new Hashtable());
+        //public static System.Collections.Hashtable _BJDCHt = System.Collections.Hashtable.Synchronized(new Hashtable());
+        //public static System.Collections.Hashtable _JCZQHt = System.Collections.Hashtable.Synchronized(new Hashtable());
+        //public static System.Collections.Hashtable _JCLQHt = System.Collections.Hashtable.Synchronized(new Hashtable());
 
         public static string[] _CTZQType = { "T14C", "T4CJQ", "TR9", "T6BQC" };
         public static string[] _JCZQType = { "SPF", "BRQSPF", "ZJQ", "BF", "BQC", "HHDG" };
         public static string[] _JCLQType = { "SF", "RFSF", "DXF", "SFC", "HHDG" };
         public static string[] _BJDCType = { "SPF" };
 
-        public static void Set_Issuse_QueryInfo(Issuse_QueryInfoEX ex)
-        {
+        //public static void Set_Issuse_QueryInfo(Issuse_QueryInfoEX ex)
+        //{
 
-            lock (_Issuse_QueryInfo)
-            {
-                _Issuse_QueryInfo = ex;
-            }
-        }
+        //    lock (_Issuse_QueryInfo)
+        //    {
+        //        _Issuse_QueryInfo = ex;
+        //    }
+        //}
 
 
-        public static void ClearHashTable()
-        {
-            _CTZQHt.Clear();
-            _BJDCHt.Clear();
-        }
+        //public static void ClearHashTable()
+        //{
+        //    _CTZQHt.Clear();
+        //    _BJDCHt.Clear();
+        //}
 
         /// <summary>
         /// 传统足球
@@ -160,13 +160,6 @@ namespace KaSon.FrameWork.Common
 
         }
 
-        /// <summary>
-        /// 开奖信息
-        /// </summary>
-        public static void Init_Pool_Data()
-        {
-
-
-        }
+       
     }
 }

@@ -1085,6 +1085,8 @@ namespace EntityModel.LotteryJsonInfo
     /// <summary>
     /// 传统足球队伍信息
     /// </summary>
+    /// 
+    [Serializable]
     public class CTZQ_MatchInfo_WEB
     {
         //队伍基础信息

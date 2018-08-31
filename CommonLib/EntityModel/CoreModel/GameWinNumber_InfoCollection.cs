@@ -5,7 +5,8 @@ using ProtoBuf;
 namespace EntityModel.CoreModel
 {
     [ProtoContract]
-   public class GameWinNumber_InfoCollection:Page
+    [Serializable]
+    public class GameWinNumber_InfoCollection:Page
     {
         public GameWinNumber_InfoCollection()
         {
@@ -15,6 +16,7 @@ namespace EntityModel.CoreModel
         public List<GameWinNumber_Info> List { get; set; }
     }
     [ProtoContract]
+    [Serializable]
     public class GameWinNumber_Info
     {
         public GameWinNumber_Info(){ }

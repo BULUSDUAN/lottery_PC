@@ -1,4 +1,5 @@
 ﻿using KaSon.FrameWork.Common;
+using KaSon.FrameWork.Common.Redis;
 using KaSon.FrameWork.ORM.Helper.BusinessLib;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,8 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
                      CTZQ_BJDC(),
                         JCLQ(),
                         JCZQ(),
-                        StartTaskByWriteChaseOrderToDb(seconds)
+                        StartTaskByWriteChaseOrderToDb(seconds),
+                        Init_Pool_Data()
             });
         }
 
@@ -101,6 +103,34 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
 
                 }
                 await Task.Delay(10000 * seconds);
+            }
+        }
+
+
+
+
+        /// <summary>
+        /// 开奖信息
+        /// </summary>
+        public static async Task Init_Pool_Data()
+        {
+            while (true)
+            {
+                try
+                {
+                    string key = EntityModel.Redis.RedisKeys.KaiJiang_Key;
+
+                    var orderService = new OrderQuery();
+                    var gameString = "JX11X5|GD11X5|SD11X5|CQSSC|SSQ|DLT|FC3D|PL3|CTZQ_T14C|CTZQ_T6BQC|CTZQ_T4CJQ|CTZQ_TR9";
+                    var result = orderService.QueryAllGameNewWinNumber(gameString);
+                    RedisHelper.DB_Match.Set(key, result, TimeSpan.FromMinutes(30));
+
+                }
+                catch (Exception ex)
+                {
+                   
+                }
+                await Task.Delay(30*1000);
             }
         }
     }
