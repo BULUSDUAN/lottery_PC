@@ -16,9 +16,9 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
         {
             Task.WhenAll(new Task[] {
                      CTZQ_BJDC(),
-                       // JCLQ(),
-                      //  JCZQ(),
-                        //StartTaskByWriteChaseOrderToDb(seconds)
+                        JCLQ(),
+                        JCZQ(),
+                        StartTaskByWriteChaseOrderToDb(seconds)
             });
         }
 
