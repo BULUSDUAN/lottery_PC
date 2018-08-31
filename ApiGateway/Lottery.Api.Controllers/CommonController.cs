@@ -406,15 +406,16 @@ namespace Lottery.Api.Controllers
                var bol= KaSon.FrameWork.Common.Utilities.CheckBlankCard.MatchLuhn(CardNum);
                 if (!bol)
                 {
-                    result.Message = "银行卡号格式正确";
-                    result.Code = ResponseCode.成功;
-                    result.Value = true;
-                }
-                else {
-
                     result.Message = "银行卡号格式不正确";
                     result.Code = ResponseCode.失败;
                     result.Value = false;
+                
+                }
+                else {
+                    result.Message = "银行卡号格式正确";
+                    result.Code = ResponseCode.成功;
+                    result.Value = true;
+
                 }
             }
             
