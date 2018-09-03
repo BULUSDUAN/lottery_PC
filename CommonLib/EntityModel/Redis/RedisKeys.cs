@@ -135,7 +135,8 @@ namespace EntityModel.Redis
         /// </summary>
         public const string Key_JCLQ_Match_Odds_List = "JCLQ_Match_Odds_List";
 
-        public const string ArticleListKey = "APP_ArticleList"; 
+        public const string ArticleListKey = "APP_ArticleList";
 
+        public const string IndexNewsFocus = "Index_NewsFocus";
     }
 }

@@ -2751,6 +2751,102 @@ namespace Lottery.Api.Controllers
         }
         #endregion
 
+        #region 查询首页的焦点新闻(包括最多三条公告)
+        public async Task<IActionResult> GetIndexNewsFocus([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                int PageSize = p.PageSize;
+                var RedisKey = RedisKeys.IndexNewsFocus + PageSize;
+                var IndexNewsFocusValue = RedisHelper.StringGet(RedisKey);
+                if (string.IsNullOrEmpty(IndexNewsFocusValue))
+                {
+                    //1.去获取公告
+                    var GGCount = 3;
+                    int Surplus = PageSize - GGCount >= 0 ? PageSize - GGCount : 0;
+                    GGCount = Surplus == 0 ? PageSize : GGCount;
+                    Dictionary<string, object> param = new Dictionary<string, object>();
+                    param.Add("pageIndex", 0);
+                    param.Add("pageSize", GGCount);
+                    param.Add("agent", (int)BulletinAgent.Local);
+                    var noticeList = await _serviceProxyProvider.Invoke<BulletinInfo_Collection>(param, "api/Data/QueryDisplayBulletinCollection");
+                    var ReturnList = new List<IndexNewsFocusModel>();
+                    if (noticeList != null && noticeList.BulletinList != null)
+                    {
+                        foreach (var item in noticeList.BulletinList)
+                        {
+                            var additem = new IndexNewsFocusModel()
+                            {
+                                Category = "GG",
+                                CreateTime = item.CreateTime,
+                                Id = item.Id.ToString(),
+                                IsRedTitle = true,
+                                Title = item.Title
+                            };
+                            ReturnList.Add(additem);
+                        }
+                    }
+                    //2.获取焦点新闻
+                    if (Surplus > 0)
+                    {
+                        Dictionary<string, object> focusParam = new Dictionary<string, object>();
+                        param.Add("pageIndex", 0);
+                        param.Add("pageSize", Surplus);
+                        param.Add("category", "FocusCMS");
+                        param.Add("gameCode", "");
+                        ArticleInfo_QueryCollection aList = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(focusParam, "api/Data/QueryArticleList_YouHua");
+                        if (aList != null && aList.ArticleList != null)
+                        {
+                            foreach (var item in aList.ArticleList)
+                            {
+                                var additem = new IndexNewsFocusModel()
+                                {
+                                    Category = "FocusCMS",
+                                    CreateTime = item.CreateTime,
+                                    Id = item.Id.ToString(),
+                                    IsRedTitle = item.IsRedTitle,
+                                    Title = item.Title
+                                };
+                                ReturnList.Add(additem);
+                            }
+                        }
+                    }
+                    RedisHelper.StringSet(RedisKey, JsonHelper.Serialize(ReturnList), 3 * 60);
+                    return Json(new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.成功,
+                        Message = "查询成功",
+                        MsgId = entity.MsgId,
+                        Value = ReturnList,
+                    });
+                }
+                else
+                {
+                    var list = JsonHelper.Deserialize<List<IndexNewsFocusModel>>(IndexNewsFocusValue);
+                    return Json(new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.成功,
+                        Message = "查询成功",
+                        MsgId = entity.MsgId,
+                        Value = list,
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "获取失败" + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage(),
+                });
+            }
+            
+        }
+        #endregion
+
         //public async Task<IActionResult> TestOne()
         //{
         //    LotteryServiceResponse s = null;
