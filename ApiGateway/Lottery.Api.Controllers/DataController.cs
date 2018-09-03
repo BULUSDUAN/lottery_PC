@@ -2791,10 +2791,10 @@ namespace Lottery.Api.Controllers
                     if (Surplus > 0)
                     {
                         Dictionary<string, object> focusParam = new Dictionary<string, object>();
-                        param.Add("pageIndex", 0);
-                        param.Add("pageSize", Surplus);
-                        param.Add("category", "FocusCMS");
-                        param.Add("gameCode", "");
+                        focusParam.Add("pageIndex", 0);
+                        focusParam.Add("pageSize", Surplus);
+                        focusParam.Add("category", "FocusCMS");
+                        focusParam.Add("gameCode", "");
                         ArticleInfo_QueryCollection aList = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(focusParam, "api/Data/QueryArticleList_YouHua");
                         if (aList != null && aList.ArticleList != null)
                         {
