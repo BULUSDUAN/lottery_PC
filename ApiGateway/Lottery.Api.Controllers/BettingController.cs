@@ -478,8 +478,8 @@ namespace Lottery.Api.Controllers
 
                 //如果为1 则为保存订单，用于ios
                 string isSaveOrder = p.SavaOrder;
-                if (entity.SourceCode == SchemeSource.Android || string.IsNullOrEmpty(isSaveOrder))//注意：安卓最新版本发布后，此处判断可以去掉
-                    isSaveOrder = "0";
+                //if (entity.SourceCode == SchemeSource.New_Android || string.IsNullOrEmpty(isSaveOrder))//注意：安卓最新版本发布后，此处判断可以去掉
+                //    isSaveOrder = "0";
 
 
                 string _codeStr = p.CodeList;
@@ -767,9 +767,9 @@ namespace Lottery.Api.Controllers
                     }
                     anteCodeList.Add(code);
                 }
-                SchemeSource schemeSource = SchemeSource.Android;
-                if (entity.SourceCode == SchemeSource.Iphone)
-                    schemeSource = SchemeSource.Iphone;
+                SchemeSource schemeSource = entity.SourceCode;
+                //if (entity.SourceCode == SchemeSource.Iphone)
+                //    schemeSource = SchemeSource.Iphone;
                 //投注过关方式
                 playType = playType.Replace("P0_1", "").Replace("P", "").Replace(",", "|");
                 if (isHemai)
@@ -847,16 +847,16 @@ namespace Lottery.Api.Controllers
                         IsRepeat = p.IsRepeat == null ? false : p.IsRepeat
                     };
                     var result = new CommonActionResult();
-                    if (entity.SourceCode == SchemeSource.Iphone)//IOS先是以虚拟订单的方式保存，然后再跳转到网页购买保存订单
-                    {
-                        var param = new Dictionary<string, object>();
-                        param.Add("info", opt);
-                        param.Add("realTotalMoney", totalMoney);
-                        param.Add("userid", userid);
-                        result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/VirtualOrderYouHuaBet");
-                    }
-                    else
-                    {
+                    //if (entity.SourceCode == SchemeSource.Iphone)//IOS先是以虚拟订单的方式保存，然后再跳转到网页购买保存订单
+                    //{
+                    //    var param = new Dictionary<string, object>();
+                    //    param.Add("info", opt);
+                    //    param.Add("realTotalMoney", totalMoney);
+                    //    param.Add("userid", userid);
+                    //    result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/VirtualOrderYouHuaBet");
+                    //}
+                    //else
+                    //{
                         var param = new Dictionary<string, object>();
                         param.Add("info", opt);
                         param.Add("password", balancePwd);
@@ -864,7 +864,7 @@ namespace Lottery.Api.Controllers
                         param.Add("redBagMoney", redBagMoney);
                         param.Add("userid", userid);
                         result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/YouHuaBet");
-                    }
+                    //}
                     return Json(new LotteryServiceResponse
                     {
                         Code = result.IsSuccess ? ResponseCode.成功 : ResponseCode.失败,

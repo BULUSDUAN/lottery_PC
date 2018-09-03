@@ -402,14 +402,17 @@ namespace Lottery.Api.Controllers
                 userInfo.Mobile = mobile;
                 switch (schemeSource)
                 {
-                    case SchemeSource.Android:
-                        userInfo.ComeFrom = "Android";
+                    case SchemeSource.NewAndroid:
+                        userInfo.ComeFrom = "NewAndroid";
                         break;
-                    case SchemeSource.Iphone:
-                        userInfo.ComeFrom = "IOS";
+                    case SchemeSource.NewIphone:
+                        userInfo.ComeFrom = "NewIOS";
                         break;
-                    case SchemeSource.Touch:
-                        userInfo.ComeFrom = "TOUCH";
+                    case SchemeSource.Wap:
+                        userInfo.ComeFrom = "NewTOUCH";
+                        break;
+                    case SchemeSource.NewWeb:
+                        userInfo.ComeFrom = "NewWeb";
                         break;
                 }
                 param["validateCode"] = validateCode;

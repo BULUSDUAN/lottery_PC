@@ -1248,7 +1248,7 @@ namespace Lottery.Api.Controllers
                     contentList.Add("* " + item);
                 }
                 string updateUrl = string.Format("{0}/" + configInfo.AgentName + "_{1}.apk", configInfo.ConfigDownloadUrl, configInfo.ConfigVersion);
-                if (entity.SourceCode == EntityModel.Enum.SchemeSource.Iphone)
+                if (entity.SourceCode == EntityModel.Enum.SchemeSource.NewIphone)
                     updateUrl = configInfo.ConfigDownloadUrl;
                 return Json(new LotteryServiceResponse
                 {

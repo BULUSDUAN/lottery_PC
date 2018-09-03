@@ -361,7 +361,10 @@ namespace EntityModel.Enum
         Publisher_0321 = 109,
         WX_GiveLottery = 110,
         Web_GiveLottery = 111,
-        LuckyDraw = 112
+        LuckyDraw = 112,
+        NewIphone = 113,
+        NewAndroid = 115,
+        NewWeb = 116
     }
     public enum SchemeBettingCategory
     {
