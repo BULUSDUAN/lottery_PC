@@ -2786,6 +2786,12 @@ namespace Lottery.Api.Controllers
                             };
                             ReturnList.Add(additem);
                         }
+                        GGCount = noticeList.BulletinList.Count;
+                        Surplus = PageSize - GGCount >= 0 ? PageSize - GGCount : 0;
+                    }
+                    else
+                    {
+                        Surplus = PageSize;
                     }
                     //2.获取焦点新闻
                     if (Surplus > 0)
