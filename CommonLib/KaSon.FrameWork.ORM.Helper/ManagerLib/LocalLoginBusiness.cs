@@ -592,8 +592,9 @@ namespace KaSon.FrameWork.ORM.Helper
         public C_BankCard BankCardById(string userId)
         {
             var entity = new BankCardManager().BankCardById(userId);
-            if (entity == null)
-                throw new LogicException(string.Format("查不到{0}的银行卡信息", userId));
+            //if (entity == null)
+            //    throw new LogicException(string.Format("查不到{0}的银行卡信息", userId));
+            entity = new C_BankCard();
             return new C_BankCard()
             {
                 UserId = entity.UserId,
