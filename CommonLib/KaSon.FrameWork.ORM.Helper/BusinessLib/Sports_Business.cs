@@ -3324,8 +3324,8 @@ namespace KaSon.FrameWork.ORM.Helper
             var totalNumberZhu = 0;
             foreach (var item in info.AnteCodeList)
             {
-                if (item.GameType == "TR9" && info.SchemeSource == SchemeSource.Android && !string.IsNullOrEmpty(item.AnteCode))//app投注任九时，去掉后面的|
-                    item.AnteCode = item.AnteCode.Trim().TrimEnd('|');
+                //if (item.GameType == "TR9" && info.SchemeSource == SchemeSource.Android && !string.IsNullOrEmpty(item.AnteCode))//app投注任九时，去掉后面的|
+                //    item.AnteCode = item.AnteCode.Trim().TrimEnd('|');
                 try
                 {
                     if (new string[] { "JCSJBGJ", "JCYJ" }.Contains(info.GameCode))
