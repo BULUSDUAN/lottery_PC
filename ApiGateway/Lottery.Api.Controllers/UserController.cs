@@ -558,7 +558,7 @@ namespace Lottery.Api.Controllers
                 }
                 //redis 获取验证码
                 string key = "R_" + MsgId;
-                string codeValue = KaSon.FrameWork.Common.Redis.RedisHelper.StringGet(key);
+                string codeValue = KaSon.FrameWork.Common.Redis.RedisHelper.DB_Other.Get(key);
                 if (codeValue != verifyCode)
                 {
                     returnResult.Code = ResponseCode.ValiteCodeError;
@@ -689,7 +689,7 @@ namespace Lottery.Api.Controllers
                         key = MsgId;
                     }
 
-                    KaSon.FrameWork.Common.Redis.RedisHelper.StringSet(key, num.ToString(), 60 * 10);
+                    KaSon.FrameWork.Common.Redis.RedisHelper.DB_Other.Set(key, num.ToString(), 60 * 10);
 
                     string base64 = Convert.ToBase64String(img);
                     //data:image/gif;base64,

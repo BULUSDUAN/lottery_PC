@@ -2793,14 +2793,9 @@ namespace Lottery.Api.Controllers
         {
 
             var list = new List<KaiJiang>();
-            GameWinNumber_InfoCollection entitys;
             string redisKey = EntityModel.Redis.RedisKeys.KaiJiang_Key;
-            var obj = RedisHelper.DB_Match.Get(redisKey);
-            if (obj != null)
-            {
-                entitys = obj as GameWinNumber_InfoCollection;
-            }
-            else
+            var entitys = RedisHelper.DB_Match.GetObj<GameWinNumber_InfoCollection>(redisKey);
+            if (entitys == null)
             {
                 Dictionary<string, object> param = new Dictionary<string, object>()
                 {

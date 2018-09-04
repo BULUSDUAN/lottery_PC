@@ -17,14 +17,12 @@ namespace KaSon.FrameWork.Common.Redis
 {
 
     /// <summary>
-    /// Redis数据库
+    /// Redis数据库 CsRedisCode.RedisHelper
     /// </summary>
     public static class RedisHelper
     {
 
         static JObject RdConfigInfo = null;
-       // private static ConnectionMultiplexer _instance;
-        // private static string _redisConectStr = "";// RdConfigInfo["RedisConnect"].ToString();
         private static readonly object redisLock = new object();
         static RedisHelper()
         {
@@ -39,54 +37,34 @@ namespace KaSon.FrameWork.Common.Redis
                 string jsonText = FileHelper.txtReader(path);
                 var alljson = (JObject)JsonConvert.DeserializeObject(jsonText);
                 RdConfigInfo = (JObject)JsonConvert.DeserializeObject(alljson["RedisConfig"].ToString());
-                //_redisConectStr = RdConfigInfo["RedisConnect"].ToString();
+                List<CSRedis.CSRedisConfig> list = new List<CSRedis.CSRedisConfig>(){
+                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=0,C_PoolSize=50,c_Writebuffer=10240 },
+                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=1,C_PoolSize=50,c_Writebuffer=10240 },
+                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=2,C_PoolSize=50,c_Writebuffer=10240 },
+                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=3,C_PoolSize=50,c_Writebuffer=10240 },
+                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=4,C_PoolSize=50,c_Writebuffer=10240 },
+                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=5,C_PoolSize=50,c_Writebuffer=10240 },
+                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=6,C_PoolSize=50,c_Writebuffer=10240 },
+                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=7,C_PoolSize=50,c_Writebuffer=10240 },
+                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=8,C_PoolSize=50,c_Writebuffer=10240 },
+                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=9,C_PoolSize=50,c_Writebuffer=10240 },
+                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=10,C_PoolSize=50,c_Writebuffer=10240 },
+                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=11,C_PoolSize=50,c_Writebuffer=10240 },
+                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=12,C_PoolSize=50,c_Writebuffer=10240 },
+                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=13,C_PoolSize=50,c_Writebuffer=10240 },
+                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=14,C_PoolSize=50,c_Writebuffer=10240 },
+                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=15,C_PoolSize=50,c_Writebuffer=10240 }
+                };
+                var csredis = new CSRedis.CSRedisClient(list);
+                CsRedisCode.RedisHelper.Initialization(csredis,
+value => Newtonsoft.Json.JsonConvert.SerializeObject(value),
+deserialize: (data, type) => Newtonsoft.Json.JsonConvert.DeserializeObject(data, type));
+
+                //DB_NoTicket_Order.Set("sss", new object(), 10);
             }
 
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        public static string StringGet(string key)
-        {
-            try
-            {
-                return RedisHelper.Instance.GetDatabase(13).StringGet(key);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
 
-        //public static Task<RedisValue[]> ListRangeAsync(string key)
-        //{
-        //    return RedisHelper.Instance.GetDatabase(13).ListRangeAsync(key);
-        //}
-
-        /// <summary>
-        /// 设置 Redis 过期时间 
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <param name="Seconds"></param>
-        /// <returns></returns>
-        public static bool StringSet(string key, string value, int Seconds)
-        {
-            var timeSpan = DateTime.Now.AddSeconds(Seconds) - DateTime.Now;
-            return RedisHelper.Instance.GetDatabase(13).StringSet(key, value, timeSpan);
-        }
-
-        public static bool KeyExists(string key)
-        {
-            return RedisHelper.Instance.GetDatabase(13).KeyExists(key);
-        }
-
-        public static bool KeyDelete(string key)
-        {
-            return RedisHelper.Instance.GetDatabase(13).KeyDelete(key);
-        }
         /// <summary>
         /// 是否启用Redis
         /// </summary>
@@ -160,220 +138,172 @@ namespace KaSon.FrameWork.Common.Redis
             }
         }
 
-        /// <summary>
-        /// Redis实例
-        /// </summary>
-        //public static ConnectionMultiplexer Instance
-        //{
-        //    get
-        //    {
-        //        try
-        //        {
-        //            lock (redisLock)
-        //            {
-
-        //                if (_instance == null || !_instance.IsConnected || !_instance.GetDatabase().IsConnected("testKey"))
-        //                {
-        //                    var configurationOptions = new ConfigurationOptions
-        //                    {
-        //                        //AbortOnConnectFail = false,
-        //                        Password = ServerPassword,
-        //                    };
-        //                    configurationOptions.EndPoints.Add(new DnsEndPoint(ServerHost, ServerPort));
-        //                    _instance = ConnectionMultiplexer.Connect(configurationOptions);
-        //                }
-        //            }
-        //            return _instance;
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            return null;
-        //        }
-        //    }
-        //}
-
-        //private static Dictionary<string, ConnectionMultiplexer> _instanceList = new Dictionary<string, ConnectionMultiplexer>();
-        //public static ConnectionMultiplexer GetInstance(string serverHost, int serverPort = 6379, string serverPassword = "123456")
-        //{
-        //    try
-        //    {
-        //        lock (redisLock)
-        //        {
-        //            ConnectionMultiplexer instance = null;
-        //            var key = string.Format("{0}_{1}_{2}", serverHost, serverPort, serverPassword);
-        //            if (_instanceList.Keys.Contains(key))
-        //                instance = _instanceList[key];
-        //            if (instance != null && instance.GetDatabase().IsConnected("testKey"))
-        //                return instance;
-
-        //            var configurationOptions = new ConfigurationOptions
-        //            {
-        //                //AbortOnConnectFail = false,
-        //                Password = serverPassword,
-        //            };
-        //            configurationOptions.EndPoints.Add(new DnsEndPoint(serverHost, serverPort));
-        //            instance = ConnectionMultiplexer.Connect(configurationOptions);
-        //            _instanceList.Add(key, instance);
-        //            return instance;
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return null;
-        //    }
-        //}
 
         /// <summary>
         /// 未出票的订单库
         /// </summary>
-        public static IDatabase DB_NoTicket_Order
+        public static CSRedis.RedisClient DB_NoTicket_Order
         {
             get
             {
-                return RedisHelper.Instance.GetDatabase(0);
+                string key = $"{ServerHost}:{ServerPort}/0";
+                return CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
             }
         }
 
         /// <summary>
         /// 竞彩、传统、北单的比赛数据和比赛结果库
         /// </summary>
-        public static IDatabase DB_Match
+        public static CSRedis.RedisClient DB_Match
         {
             get
             {
-                return RedisHelper.Instance.GetDatabase(1);
+                string key = $"{ServerHost}:{ServerPort}/1";
+                return CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
             }
         }
 
         /// <summary>
         /// 追号订单库
         /// </summary>
-        public static IDatabase DB_Chase_Order
+        public static CSRedis.RedisClient DB_Chase_Order
         {
             get
             {
-                return RedisHelper.Instance.GetDatabase(2);
+                string key = $"{ServerHost}:{ServerPort}/2";
+                return CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
             }
         }
 
         /// <summary>
         /// 未结算订单的库(竞彩足球、竞彩篮球)
         /// </summary>
-        public static IDatabase DB_Running_Order_JC
+        public static CSRedis.RedisClient DB_Running_Order_JC
         {
             get
             {
-                return RedisHelper.Instance.GetDatabase(3);
+                string key = $"{ServerHost}:{ServerPort}/3";
+                return CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
             }
         }
 
         /// <summary>
         /// 未结算订单的库(北京单场)
         /// </summary>
-        public static IDatabase DB_Running_Order_BJDC
+        public static CSRedis.RedisClient DB_Running_Order_BJDC
         {
             get
             {
-                return RedisHelper.Instance.GetDatabase(4);
+                string key = $"{ServerHost}:{ServerPort}/4";
+                return CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
             }
         }
 
         /// <summary>
         /// 未结算订单的库(传统足球)
         /// </summary>
-        public static IDatabase DB_Running_Order_CTZQ
+        public static CSRedis.RedisClient DB_Running_Order_CTZQ
         {
             get
             {
-                return RedisHelper.Instance.GetDatabase(5);
+                string key = $"{ServerHost}:{ServerPort}/5";
+                return CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
             }
         }
 
         /// <summary>
         /// 未结算订单的库(低频数字彩)
         /// </summary>
-        public static IDatabase DB_Running_Order_SCZ_DP
+        public static CSRedis.RedisClient DB_Running_Order_SCZ_DP
         {
             get
             {
-                return RedisHelper.Instance.GetDatabase(6);
+                string key = $"{ServerHost}:{ServerPort}/6";
+                return CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
             }
         }
 
         /// <summary>
         /// 未结算订单的库(高频数字彩)
         /// </summary>
-        public static IDatabase DB_Running_Order_SCZ_GP
+        public static CSRedis.RedisClient DB_Running_Order_SCZ_GP
         {
             get
             {
-                return RedisHelper.Instance.GetDatabase(7);
+                string key = $"{ServerHost}:{ServerPort}/7";
+                return CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
             }
         }
 
         /// <summary>
         /// 配置、奖期、比赛、合买大厅、过关统计等
         /// </summary>
-        public static IDatabase DB_CoreCacheData
+        public static CSRedis.RedisClient DB_CoreCacheData
         {
             get
             {
-                return RedisHelper.Instance.GetDatabase(8);
+                string key = $"{ServerHost}:{ServerPort}/8";
+                return CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
             }
         }
 
         /// <summary>
         /// 用户绑定信息
         /// </summary>
-        public static IDatabase DB_UserBindData
+        public static CSRedis.RedisClient DB_UserBindData
         {
             get
             {
-                return RedisHelper.Instance.GetDatabase(9);
+                string key = $"{ServerHost}:{ServerPort}/9";
+                return CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
             }
         }
 
         /// <summary>
         /// 用户博客数据
         /// </summary>
-        public static IDatabase DB_UserBlogData
+        public static CSRedis.RedisClient DB_UserBlogData
         {
             get
             {
-                return RedisHelper.Instance.GetDatabase(10);
+                string key = $"{ServerHost}:{ServerPort}/10";
+                return CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
             }
         }
 
         /// <summary>
         /// 订单详细数据
         /// </summary>
-        public static IDatabase DB_SchemeDetail
+        public static CSRedis.RedisClient DB_SchemeDetail
         {
             get
             {
-                return RedisHelper.Instance.GetDatabase(11);
+                string key = $"{ServerHost}:{ServerPort}/11";
+                return CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
             }
         }
 
         /// <summary>
         /// 用户余额
         /// </summary>
-        public static IDatabase DB_UserBalance
+        public static CSRedis.RedisClient DB_UserBalance
         {
             get
             {
-                return RedisHelper.Instance.GetDatabase(12);
+                string key = $"{ServerHost}:{ServerPort}/12";
+                return CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
             }
         }
 
         /// <summary>
         /// 其它
         /// </summary>
-        public static IDatabase DB_Other
+        public static CSRedis.RedisClient DB_Other
         {
             get
             {
-                return RedisHelper.Instance.GetDatabase(13);
+                string key = $"{ServerHost}:{ServerPort}/13";
+                return CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
             }
         }
 
@@ -381,33 +311,32 @@ namespace KaSon.FrameWork.Common.Redis
     }
 
 
+
     public static class SampleStackExchangeRedisExtensions
     {
-        public static T Get<T>(this IDatabase cache, string key)
+        public static T GetObj<T>(this CSRedis.RedisClient cache, string key)
         {
-            return Deserialize<T>(cache.StringGet(key));
+            return Deserialize<T>(cache.GetBytes(key));
         }
 
-        public static object Get(this IDatabase cache, string key)
+        public static List<T> GetObjs<T>(this CSRedis.RedisClient cache, string key)
         {
-            return Deserialize<object>(cache.StringGet(key));
+            return Deserializes<T>(cache.GetBytes(key));
         }
 
-        public static void Set(this IDatabase cache, string key, object value)
+        public static object GetObj(this CSRedis.RedisClient cache, string key)
         {
-            cache.StringSet(key, Serialize(value));
+            return Deserialize<object>(cache.GetBytes(key));
         }
 
-        public static void Set(this IDatabase cache, string key, object value,TimeSpan timeSpan)
+        public static void SetObj(this CSRedis.RedisClient cache, string key, object value)
         {
-            cache.StringSetAsync(key, Serialize(value), timeSpan);
+            cache.Set(key, Serialize(value));
         }
 
-        public static void SetAsync(this IDatabase cache, string key, object value, TimeSpan timeSpan)
+        public static void SetObj(this CSRedis.RedisClient cache, string key, object value, TimeSpan timeSpan)
         {
-            var batch = cache.CreateBatch();
-            cache.SetAsync(key, Serialize(value), timeSpan);
-            batch.Execute();
+            cache.Set(key, Serialize(value), timeSpan);
         }
 
         static byte[] Serialize(object o)
@@ -417,14 +346,6 @@ namespace KaSon.FrameWork.Common.Redis
                 return null;
             }
 
-            //System.IO.MemoryStream _memory = new System.IO.MemoryStream();
-            //BinaryFormatter formatter = new BinaryFormatter();
-            //formatter.Serialize(_memory, o);
-            //_memory.Position = 0;
-            //byte[] read = new byte[_memory.Length];
-            //_memory.Read(read, 0, read.Length);
-            //_memory.Close();
-            //return read;
             BinaryFormatter binaryFormatter = new BinaryFormatter();
             using (MemoryStream memoryStream = new MemoryStream())
             {
@@ -441,13 +362,36 @@ namespace KaSon.FrameWork.Common.Redis
                 return default(T);
             }
 
-            BinaryFormatter binaryFormatter = new BinaryFormatter();
-            using (MemoryStream memoryStream = new MemoryStream(stream))
+            try
             {
-                T result = (T)binaryFormatter.Deserialize(memoryStream);
-                return result;
+                BinaryFormatter binaryFormatter = new BinaryFormatter();
+                using (MemoryStream memoryStream = new MemoryStream(stream))
+                {
+                    T result = (T)binaryFormatter.Deserialize(memoryStream);
+                    return result;
+                }
+            }
+            catch
+            {
+                return default(T);
+            }
+        }
+
+        static List<T> Deserializes<T>(byte[] stream)
+        {
+            try
+            {
+                BinaryFormatter binaryFormatter = new BinaryFormatter();
+                using (MemoryStream memoryStream = new MemoryStream(stream))
+                {
+                    var result = binaryFormatter.Deserialize(memoryStream) as List<T>;
+                    return result;
+                }
+            }
+            catch 
+            {
+                return null;
             }
         }
     }
-
 }

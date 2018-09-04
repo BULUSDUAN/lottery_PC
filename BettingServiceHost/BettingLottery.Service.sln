@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KaSon.FrameWork.Analyzer", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KaSon.FrameWork.PlugIn", "..\CommonLib\KaSon.FrameWork.PlugIn\KaSon.FrameWork.PlugIn.csproj", "{ACDC19A1-296F-4330-A940-D490B3E82D69}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSRedisCore", "..\CommonLib\csredis-master\CSRedisCore.csproj", "{6841FD68-6165-4677-894D-72970A99DAC8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,10 @@ Global
 		{ACDC19A1-296F-4330-A940-D490B3E82D69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ACDC19A1-296F-4330-A940-D490B3E82D69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ACDC19A1-296F-4330-A940-D490B3E82D69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6841FD68-6165-4677-894D-72970A99DAC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6841FD68-6165-4677-894D-72970A99DAC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6841FD68-6165-4677-894D-72970A99DAC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6841FD68-6165-4677-894D-72970A99DAC8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
