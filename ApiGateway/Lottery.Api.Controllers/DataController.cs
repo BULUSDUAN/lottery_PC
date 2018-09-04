@@ -2377,7 +2377,7 @@ namespace Lottery.Api.Controllers
                             }
                             else
                             {
-                                Json_CTZQ.MatchList_WEB(issuseNumber, gameType);
+                                mlist = Json_CTZQ.MatchList_WEB(issuseNumber, gameType);
                             }
                             //string reidskey = $"{key}_{type}_{item.IssuseNumber}";
                             //mlist = HashTableCache._CTZQHt[key] ?? Json_CTZQ.MatchList_WEB(issuseNumber, gameType);
