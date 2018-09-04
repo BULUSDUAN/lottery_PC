@@ -18,27 +18,22 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             var RedisKeyH = "CoreConfig_";
             var RedisKey = RedisKeyH + key;
-            var flag = RedisHelper.KeyExists(RedisKey);
-            var v = "";
+            var v = RedisHelper.DB_Other.Get(RedisKey);
             var config = new C_Core_Config();
-            if (flag)
-            {
-                v = RedisHelper.StringGet(RedisKey);
-                config.ConfigValue = v;
-                config.ConfigKey = key;
-            }
             if (string.IsNullOrEmpty(v))
             {
                 config = DB.CreateQuery<C_Core_Config>().Where(p => p.ConfigKey == key).FirstOrDefault();
                 v = config.ConfigValue;
                 if (config != null)
                 {
-                    RedisHelper.StringSet(RedisKey, v, 3 * 60);
+                    RedisHelper.DB_Other.Set(RedisKey, v, 3 * 60);
                 }
                 else {
                     throw new Exception(string.Format("找不到配置项：{0}", key));
                 }
             }
+            config.ConfigValue = v;
+            config.ConfigKey = key;
             return config;
 
         }
@@ -63,7 +58,7 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                 var fullKey = string.Format("{0}_{1}", RedisKeys.Key_UserBind, userId);
                 var db = RedisHelper.DB_UserBindData;
-                db.KeyDeleteAsync(fullKey);
+                db.Del(fullKey);
             }
             catch (Exception)
             {

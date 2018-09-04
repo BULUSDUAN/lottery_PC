@@ -32,7 +32,7 @@ namespace KaSon.FrameWork.ORM.Helper
             if (ticketList.Count <= 0)
                 return;
             //把彩种、玩法、期号为Key,订单json存入List
-            IDatabase db = null;// RedisHelper.DB_Running_Order;
+            CSRedis.RedisClient db = null;// RedisHelper.DB_Running_Order;
             if (gameCode == "CTZQ")
                 db = RedisHelper.DB_Running_Order_CTZQ;
             if (new string[] { "SSQ", "DLT", "FC3D", "PL3", "OZB" }.Contains(gameCode))
@@ -56,7 +56,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 SchemeType = schemeType,
             };
             var json = JsonHelper.Serialize<RedisOrderInfo>(orderInfo);
-            db.ListRightPushAsync(fullKey, json);
+            db.SetRPush(fullKey, json);
         }
         public static void AddOrderToRedis(string gameCode, RedisWaitTicketOrder order)
         {
@@ -397,7 +397,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var orderValue = string.Format("{0}_{1}", string.Join(",", matchIdArray), orderId);
             var fullKey = string.Format("{0}_{1}", gameCode, RedisKeys.Key_Running_Order_List);
             fullKey = GetUsableList(fullKey);
-            db.ListRightPushAsync(fullKey, orderValue);
+            db.SetRPush(fullKey, orderValue);
 
             var orderInfo = new RedisOrderInfo
             {
@@ -421,7 +421,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var fullKey = string.Format("{0}_{1}_{2}", "BJDC", RedisKeys.Key_Running_Order_List, issuseNumber);
             //fullKey = GetUsableList(fullKey);
             var orderValue = string.Format("{0}_{1}", string.Join(",", matchIdArray), orderId);
-            db.ListRightPushAsync(fullKey, orderValue);
+            db.SetRPush(fullKey, orderValue);
 
             var orderInfo = new RedisOrderInfo
             {
@@ -446,15 +446,15 @@ namespace KaSon.FrameWork.ORM.Helper
                 var db = RedisHelper.DB_NoTicket_Order;
                 var key = string.Format("{0}_{1}_{2}", RedisKeys.Key_Waiting_Order_List, "General", gameCode.ToUpper());
                 var currentIndexKey = string.Format("{0}_Current", key);
-                var indexValue = db.GetAsync(currentIndexKey).Result;
+                var indexValue = db.Get(currentIndexKey);
                 var index = 0;
-                if (indexValue.HasValue)
+                if (!string.IsNullOrEmpty(indexValue))
                 {
                     //获取索引
-                    index = int.Parse(indexValue.ToString());
+                    index = int.Parse(indexValue);
                     index = index >= count ? 0 : index + 1;
                 }
-                db.SetAsync(currentIndexKey, index);
+                db.Set(currentIndexKey, index);
                 return string.Format("{0}_{1}", key, index);
             }
             catch (Exception)
@@ -487,7 +487,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var fullKey = GetWaitingOrderUsableKey(order.RunningOrder.GameCode);
             var json = JsonHelper.Serialize<RedisWaitTicketOrder>(order);
             var db = RedisHelper.DB_NoTicket_Order;
-            db.ListRightPushAsync(fullKey, json);
+            db.SetRPush(fullKey, json);
         }
 
         /// <summary>
@@ -521,27 +521,25 @@ namespace KaSon.FrameWork.ORM.Helper
                     //检查keyline在Redis库中存不存在
                     var db = RedisHelper.DB_Chase_Order;
                     var fullKey = string.Format("{0}_{1}", RedisKeys.Key_Waiting_Chase_Order_List, order.GameCode);
-                    var chaseKeyLineArray = db.ListRangeAsync(fullKey).Result;
+                    var chaseKeyLineArray = db.GetRange<string>(fullKey);
                     foreach (var k in chaseKeyLineArray)
                     {
-                        if (!k.HasValue)
-                            continue;
-                        if (k.ToString() == scheme.KeyLine)
+                        if (k == scheme.KeyLine)
                         {
                             logList.Add("追号列表中已存在KeyLine.");
                             //取出所有追号列表
-                            var chaseList = db.ListRangeAsync(scheme.KeyLine).Result;
+                            var chaseList = db.GetRange<RedisWaitTicketOrder>(scheme.KeyLine);
                             //清空key
-                            db.KeyDeleteAsync(scheme.KeyLine);
+                            db.Del(scheme.KeyLine);
                             //修改canchase为true后，添加key
                             var orderList2 = new RedisWaitTicketOrderList();
                             orderList2.KeyLine = scheme.KeyLine;
                             orderList2.StopAfterBonus = detail.StopAfterBonus;
                             var findCurrentOrder = false;
-                            foreach (var item in chaseList)
+                            foreach (var chaseOrder in chaseList)
                             {
-                                var orderJson = item.ToString();
-                                var chaseOrder = JsonHelper.Deserialize<RedisWaitTicketOrder>(orderJson);
+                                //var orderJson = item.ToString();
+                                //var chaseOrder = JsonHelper.Deserialize<RedisWaitTicketOrder>(orderJson);
                                 if (chaseOrder.RunningOrder != null)
                                 {
                                     chaseOrder.RunningOrder.CanChase = !findCurrentOrder;
@@ -631,11 +629,11 @@ namespace KaSon.FrameWork.ORM.Helper
             foreach (var item in orderList.OrderList)
             {
                 var json = JsonHelper.Serialize<RedisWaitTicketOrder>(item);
-                db.ListRightPushAsync(orderList.KeyLine, json);
+                db.SetRPush(orderList.KeyLine, json);
             }
             //把keyline存入Waiting_Chase_Order_List
             var fullKey = string.Format("{0}_{1}", RedisKeys.Key_Waiting_Chase_Order_List, gameCode);
-            db.ListRightPushAsync(fullKey, orderList.KeyLine);
+            db.SetRPush(fullKey, orderList.KeyLine);
         }
         /// <summary>
         /// 订单投注后加入Redis待拆票列表(单式投注)
@@ -648,7 +646,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var fullKey = string.Format("{0}_{1}_{2}", RedisKeys.Key_Waiting_Order_List, "Single", order.RunningOrder.GameCode.ToUpper());
             var json = JsonHelper.Serialize<RedisWaitTicketOrderSingle>(order);
             var db = RedisHelper.DB_NoTicket_Order;
-            db.ListRightPushAsync(fullKey, json);
+            db.SetRPush(fullKey, json);
         }
 
     }

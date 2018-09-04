@@ -1278,14 +1278,13 @@ namespace KaSon.FrameWork.PlugIn.Activity
         {
             var db = RedisHelper.DB_CoreCacheData;
             var key = RedisKeys.Key_RedBagUseConfig;
-            db.KeyDeleteAsync(key);
-
+            db.Del(key);
             var manager = new A20150919Manager();
             var list = manager.QueryRedBagUseConfig();
             foreach (var item in list)
             {
                 var v = string.Format("{0}_{1}", item.GameCode, item.UsePercent.ToString("N2"));
-                db.ListRightPushAsync(key, v);
+                db.SetRPush(key, v);
             }
         }
 
@@ -1296,10 +1295,10 @@ namespace KaSon.FrameWork.PlugIn.Activity
         {
             var db = RedisHelper.DB_CoreCacheData;
             var key = RedisKeys.Key_RedBagUseConfig;
-            foreach (var item in db.ListRangeAsync(key).Result)
+            var result = db.GetRange<string>(key);
+            foreach (var item in result)
             {
-                if (!item.HasValue) continue;
-                var array = item.ToString().Split('_');
+                var array = item.Split('_');
                 if (array.Length != 2)
                     continue;
                 if (array[0] == gameCode)
