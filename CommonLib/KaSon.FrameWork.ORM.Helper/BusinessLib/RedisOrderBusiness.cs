@@ -32,13 +32,13 @@ namespace KaSon.FrameWork.ORM.Helper
             if (ticketList.Count <= 0)
                 return;
             //把彩种、玩法、期号为Key,订单json存入List
-            CSRedis.RedisClient db = null;// RedisHelper.DB_Running_Order;
+            CSRedis.CSRedisClient db = null;// RedisHelperEx.DB_Running_Order;
             if (gameCode == "CTZQ")
-                db = RedisHelper.DB_Running_Order_CTZQ;
+                db = RedisHelperEx.DB_Running_Order_CTZQ;
             if (new string[] { "SSQ", "DLT", "FC3D", "PL3", "OZB" }.Contains(gameCode))
-                db = RedisHelper.DB_Running_Order_SCZ_DP;
+                db = RedisHelperEx.DB_Running_Order_SCZ_DP;
             if (new string[] { "CQSSC", "JX11X5", "SD11X5", "GD11X5", "GDKLSF", "JSKS", "SDKLPK3" }.Contains(gameCode))
-                db = RedisHelper.DB_Running_Order_SCZ_GP;
+                db = RedisHelperEx.DB_Running_Order_SCZ_GP;
 
             if (db == null)
                 throw new Exception(string.Format("找不到{0}对应的库", gameCode));
@@ -364,7 +364,7 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             try
             {
-                var db = RedisHelper.DB_NoTicket_Order;
+                var db = RedisHelperEx.DB_NoTicket_Order;
                 var currentIndexKey = string.Format("{0}_Current", key);
                 var indexValue = db.GetAsync(currentIndexKey).Result;
                 var index = 0;
@@ -374,7 +374,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     index = int.Parse(indexValue.ToString());
                     index = index >= Max_PrizeListCount ? 0 : index + 1;
                 }
-                db.SetAsync(currentIndexKey, index);
+                db.SetAsync(currentIndexKey, index.ToString());
                 return string.Format("{0}_{1}", key, index);
             }
             catch (Exception)
@@ -391,7 +391,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 return;
 
             //把订单号和订单的比赛编号存入List
-            var db = RedisHelper.DB_Running_Order_JC;
+            var db = RedisHelperEx.DB_Running_Order_JC;
             //竞彩足球、竞彩篮球格式：比赛编号1,比赛编号2_订单号
             //北京单场格式：期号|比赛编号,期号|比赛编号_订单号
             var orderValue = string.Format("{0}_{1}", string.Join(",", matchIdArray), orderId);
@@ -416,7 +416,7 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             if (ticketList.Count <= 0)
                 return;
-            var db = RedisHelper.DB_Running_Order_BJDC;
+            var db = RedisHelperEx.DB_Running_Order_BJDC;
             string issuseNumber = ticketList[0].IssuseNumber;
             var fullKey = string.Format("{0}_{1}_{2}", "BJDC", RedisKeys.Key_Running_Order_List, issuseNumber);
             //fullKey = GetUsableList(fullKey);
@@ -443,7 +443,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 string WaitingOrderListCount = ConfigHelper.AllConfigInfo["WaitingOrderListCount"].ToString();// DBbase.GlobalConfig["WaitingOrderListCount"].ToString();
 
                 var count = int.Parse(WaitingOrderListCount);
-                var db = RedisHelper.DB_NoTicket_Order;
+                var db = RedisHelperEx.DB_NoTicket_Order;
                 var key = string.Format("{0}_{1}_{2}", RedisKeys.Key_Waiting_Order_List, "General", gameCode.ToUpper());
                 var currentIndexKey = string.Format("{0}_Current", key);
                 var indexValue = db.GetAsync(currentIndexKey).Result;
@@ -454,7 +454,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     index = int.Parse(indexValue.ToString());
                     index = index >= count ? 0 : index + 1;
                 }
-                db.SetAsync(currentIndexKey, index);
+                db.SetAsync(currentIndexKey, index.ToString());
                 return string.Format("{0}_{1}", key, index);
             }
             catch (Exception)
@@ -486,7 +486,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //var fullKey = string.Format("{0}_{1}_{2}", RedisKeys.Key_Waiting_Order_List, "General", order.RunningOrder.GameCode.ToUpper());
             var fullKey = GetWaitingOrderUsableKey(order.RunningOrder.GameCode);
             var json = JsonHelper.Serialize<RedisWaitTicketOrder>(order);
-            var db = RedisHelper.DB_NoTicket_Order;
+            var db = RedisHelperEx.DB_NoTicket_Order;
             db.RPushAsync(fullKey, json);
         }
 
@@ -519,9 +519,9 @@ namespace KaSon.FrameWork.ORM.Helper
                         throw new Exception("LotteryScheme数据为空");
 
                     //检查keyline在Redis库中存不存在
-                    var db = RedisHelper.DB_Chase_Order;
+                    var db = RedisHelperEx.DB_Chase_Order;
                     var fullKey = string.Format("{0}_{1}", RedisKeys.Key_Waiting_Chase_Order_List, order.GameCode);
-                    var chaseKeyLineArray = db.LRange(fullKey,0, db.LLen(fullKey));//.Result;
+                    var chaseKeyLineArray = db.GetRangeArr(fullKey);//.Result;
                     foreach (var k in chaseKeyLineArray)
                     {
                         if (string.IsNullOrEmpty(k))
@@ -627,7 +627,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 return;
 
             //把追号订单以keyline为key存入
-            var db = RedisHelper.DB_Chase_Order;
+            var db = RedisHelperEx.DB_Chase_Order;
             foreach (var item in orderList.OrderList)
             {
                 var json = JsonHelper.Serialize<RedisWaitTicketOrder>(item);
@@ -647,7 +647,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
             var fullKey = string.Format("{0}_{1}_{2}", RedisKeys.Key_Waiting_Order_List, "Single", order.RunningOrder.GameCode.ToUpper());
             var json = JsonHelper.Serialize<RedisWaitTicketOrderSingle>(order);
-            var db = RedisHelper.DB_NoTicket_Order;
+            var db = RedisHelperEx.DB_NoTicket_Order;
             db.RPushAsync(fullKey, json);
         }
 

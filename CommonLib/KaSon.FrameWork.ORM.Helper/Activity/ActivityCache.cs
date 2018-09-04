@@ -19,14 +19,14 @@ namespace KaSon.FrameWork.ORM.Helper
         /// </summary>
         public static string QueryActivityConfig(string key)
         {
-            var v = RedisHelper.DB_Other.Get(key);
+            var v = RedisHelperEx.DB_Other.Get(key);
             if (string.IsNullOrEmpty(v))
             {
                 var config = new A20150919Manager().QueryActivityConfig(key);
                 v = config.ConfigValue;
                 if (config != null)
                 {
-                    RedisHelper.DB_Other.Set(key, v, 3 * 60);
+                    RedisHelperEx.DB_Other.Set(key, v, 3 * 60);
                 }
             }
             return v;
@@ -53,10 +53,10 @@ namespace KaSon.FrameWork.ORM.Helper
 
         //    foreach (var item in _activityConfigCache)
         //    {
-        //        var flag = RedisHelper.KeyExists(item.ConfigValue);
+        //        var flag = RedisHelperEx.KeyExists(item.ConfigValue);
         //        if (flag)
         //        {
-        //            RedisHelper.KeyDelete(item.ConfigValue);
+        //            RedisHelperEx.KeyDelete(item.ConfigValue);
         //        }
         //    }
 

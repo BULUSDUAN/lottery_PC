@@ -18,7 +18,7 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             var RedisKeyH = "CoreConfig_";
             var RedisKey = RedisKeyH + key;
-            var v = RedisHelper.DB_Other.Get(RedisKey);
+            var v = RedisHelperEx.DB_Other.Get(RedisKey);
             var config = new C_Core_Config();
             if (string.IsNullOrEmpty(v))
             {
@@ -26,7 +26,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 v = config.ConfigValue;
                 if (config != null)
                 {
-                    RedisHelper.DB_Other.Set(RedisKey, v, 3 * 60);
+                    RedisHelperEx.DB_Other.Set(RedisKey, v, 3 * 60);
                 }
                 else {
                     throw new Exception(string.Format("找不到配置项：{0}", key));
@@ -57,7 +57,7 @@ namespace KaSon.FrameWork.ORM.Helper
             try
             {
                 var fullKey = string.Format("{0}_{1}", RedisKeys.Key_UserBind, userId);
-                var db = RedisHelper.DB_UserBindData;
+                var db = RedisHelperEx.DB_UserBindData;
                 db.Del(fullKey);
             }
             catch (Exception)

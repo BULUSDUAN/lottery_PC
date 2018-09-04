@@ -123,7 +123,7 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
                     var orderService = new OrderQuery();
                     var gameString = "JX11X5|GD11X5|SD11X5|CQSSC|SSQ|DLT|FC3D|PL3|CTZQ_T14C|CTZQ_T6BQC|CTZQ_T4CJQ|CTZQ_TR9";
                     var result = orderService.QueryAllGameNewWinNumber(gameString);
-                    RedisHelper.DB_Match.Set(key, result, TimeSpan.FromMinutes(30));
+                    RedisHelperEx.DB_Match.Set(key,JsonHelper.Serialize( result), 30*60);
 
                 }
                 catch (Exception ex)

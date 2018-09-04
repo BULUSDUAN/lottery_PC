@@ -18,14 +18,14 @@ namespace KaSon.FrameWork.Common.Redis
 {
 
     /// <summary>
-    /// Redis数据库 CsRedisCode.RedisHelper
+    /// Redis数据库 CsRedisCode.RedisHelperEx
     /// </summary>
-    public static class RedisHelper
+    public static class RedisHelperEx
     {
 
         static JObject RdConfigInfo = null;
         private static readonly object redisLock = new object();
-        static RedisHelper()
+        static RedisHelperEx()
         {
             Init();
         }
@@ -65,7 +65,7 @@ namespace KaSon.FrameWork.Common.Redis
                     RedisHas[key] = new CSRedis.CSRedisClient(nlist);
                 }
 //                var csredis = new CSRedis.CSRedisClient(list);
-//                CsRedisCode.RedisHelper.Initialization(csredis,
+//                CsRedisCode.RedisHelperEx.Initialization(csredis,
 //value => Newtonsoft.Json.JsonConvert.SerializeObject(value),
 //deserialize: (data, type) => Newtonsoft.Json.JsonConvert.DeserializeObject(data, type));
 
@@ -159,7 +159,7 @@ namespace KaSon.FrameWork.Common.Redis
                 //if (_DB_NoTicket_Order == null)
                 //{
                     
-                //    _DB_NoTicket_Order= CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                //    _DB_NoTicket_Order= CsRedisCode.RedisHelperEx.ClusterNodes[key].GetConnection().Client;
                 //}
                 return RedisHas[key] as CSRedis.CSRedisClient;
             }
@@ -189,7 +189,7 @@ namespace KaSon.FrameWork.Common.Redis
                 //if (_DB_Chase_Order == null)
                 //{
                 //    string key = $"{ServerHost}:{ServerPort}/2";
-                //    _DB_Chase_Order= CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                //    _DB_Chase_Order= CsRedisCode.RedisHelperEx.ClusterNodes[key].GetConnection().Client;
                 //}
                 //return _DB_Chase_Order;
             }
@@ -207,7 +207,7 @@ namespace KaSon.FrameWork.Common.Redis
                 //if (_DB_Running_Order_JC == null)
                 //{
                 //    string key = $"{ServerHost}:{ServerPort}/3";
-                //    _DB_Running_Order_JC= CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                //    _DB_Running_Order_JC= CsRedisCode.RedisHelperEx.ClusterNodes[key].GetConnection().Client;
                 //}
                 //return _DB_Running_Order_JC;
             }
@@ -226,7 +226,7 @@ namespace KaSon.FrameWork.Common.Redis
                 //if (_DB_Running_Order_BJDC == null)
                 //{
                 //    string key = $"{ServerHost}:{ServerPort}/4";
-                //    _DB_Running_Order_BJDC= CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                //    _DB_Running_Order_BJDC= CsRedisCode.RedisHelperEx.ClusterNodes[key].GetConnection().Client;
                 //}
                 //return _DB_Running_Order_BJDC;
             }
@@ -245,7 +245,7 @@ namespace KaSon.FrameWork.Common.Redis
                 //if (_DB_Running_Order_CTZQ == null)
                 //{
                 //    string key = $"{ServerHost}:{ServerPort}/5";
-                //    _DB_Running_Order_CTZQ= CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client; 
+                //    _DB_Running_Order_CTZQ= CsRedisCode.RedisHelperEx.ClusterNodes[key].GetConnection().Client; 
                 //}
                 //return _DB_Running_Order_CTZQ;
             }
@@ -263,7 +263,7 @@ namespace KaSon.FrameWork.Common.Redis
                 //if (_DB_Running_Order_SCZ_DP == null)
                 //{
                 //    string key = $"{ServerHost}:{ServerPort}/6";
-                //    _DB_Running_Order_SCZ_DP = CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                //    _DB_Running_Order_SCZ_DP = CsRedisCode.RedisHelperEx.ClusterNodes[key].GetConnection().Client;
                 //}
                 //return _DB_Running_Order_SCZ_DP;
             }
@@ -281,7 +281,7 @@ namespace KaSon.FrameWork.Common.Redis
                 //if (_DB_Running_Order_SCZ_GP == null)
                 //{
                 //    string key = $"{ServerHost}:{ServerPort}/7";
-                //    _DB_Running_Order_SCZ_GP= CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                //    _DB_Running_Order_SCZ_GP= CsRedisCode.RedisHelperEx.ClusterNodes[key].GetConnection().Client;
                 //}
                 //return _DB_Running_Order_SCZ_GP;
             }
@@ -300,7 +300,7 @@ namespace KaSon.FrameWork.Common.Redis
                 //if (_DB_CoreCacheData == null)
                 //{
                 //    string key = $"{ServerHost}:{ServerPort}/8";
-                //    _DB_CoreCacheData= CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                //    _DB_CoreCacheData= CsRedisCode.RedisHelperEx.ClusterNodes[key].GetConnection().Client;
                 //}
                 //return _DB_CoreCacheData;
             }
@@ -319,7 +319,7 @@ namespace KaSon.FrameWork.Common.Redis
                 //if (_DB_UserBindData == null)
                 //{
                 //    string key = $"{ServerHost}:{ServerPort}/9";
-                //    _DB_UserBindData = CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                //    _DB_UserBindData = CsRedisCode.RedisHelperEx.ClusterNodes[key].GetConnection().Client;
                 //}
                 //return _DB_UserBindData;
             }
@@ -338,7 +338,7 @@ namespace KaSon.FrameWork.Common.Redis
                 //if (_DB_UserBlogData == null)
                 //{
                 //    string key = $"{ServerHost}:{ServerPort}/10";
-                //    _DB_UserBlogData = CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                //    _DB_UserBlogData = CsRedisCode.RedisHelperEx.ClusterNodes[key].GetConnection().Client;
                 //}
                 //return _DB_UserBlogData;
             }
@@ -358,7 +358,7 @@ namespace KaSon.FrameWork.Common.Redis
                 //if (_DB_SchemeDetail == null)
                 //{
                 //    string key = $"{ServerHost}:{ServerPort}/11";
-                //    _DB_SchemeDetail = CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                //    _DB_SchemeDetail = CsRedisCode.RedisHelperEx.ClusterNodes[key].GetConnection().Client;
                 //}
                 //return _DB_SchemeDetail;
             }
@@ -377,7 +377,7 @@ namespace KaSon.FrameWork.Common.Redis
                 //if (_DB_UserBalance == null)
                 //{
                 //    string key = $"{ServerHost}:{ServerPort}/12";
-                //    _DB_UserBalance = CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                //    _DB_UserBalance = CsRedisCode.RedisHelperEx.ClusterNodes[key].GetConnection().Client;
                 //}
                 //return _DB_UserBalance;
             }
@@ -395,7 +395,7 @@ namespace KaSon.FrameWork.Common.Redis
                 //if (_DB_Other == null)
                 //{
                 //    string key = $"{ServerHost}:{ServerPort}/13";
-                //    _DB_Other = CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                //    _DB_Other = CsRedisCode.RedisHelperEx.ClusterNodes[key].GetConnection().Client;
                 //}
                 //return _DB_Other;
             }
@@ -425,26 +425,38 @@ namespace KaSon.FrameWork.Common.Redis
 
         public static void SetObj(this CSRedis.CSRedisClient cache, string key, object value)
         {
-            cache.Set(key, Serialize(value));
+            cache.SetBytes(key, Serialize(value));
         }
 
         public static void SetObj(this CSRedis.CSRedisClient cache, string key, object value, TimeSpan timeSpan)
         {
-            cache.Set(key, Serialize(value), timeSpan);
+            cache.SetBytes(key, Serialize(value), (int)timeSpan.TotalSeconds);
         }
-
+        public static void Del(this CSRedis.CSRedisClient cache, params string[] key)
+        {
+            cache.Remove(key);
+        }
         public static List<T> GetRange<T>(this CSRedis.CSRedisClient cache, string key)
         {
             var index = cache.LLen(key);
             if (index == 0)
                 return null;
-            var array = cache.LRange(key, 0, index);
+            var array = cache.LRang(key, 0, index);
             List<T> list = new List<T>();
             foreach (var item in array)
             {
                 list.Add(JsonHelper.Deserialize<T>(item.ToString()));
             }
             return list;
+        }
+        public static string[] GetRangeArr(this CSRedis.CSRedisClient cache, string key)
+        {
+            var index = cache.LLen(key);
+            if (index == 0)
+                return null;
+            var array = cache.LRang(key, 0, index);
+          
+            return array;
         }
         /// <summary>
         /// 插入到集合最后一条

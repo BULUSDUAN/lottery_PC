@@ -616,7 +616,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 }
 
                 //调用Redis保存
-                if (RedisHelper.EnableRedis)
+                if (RedisHelperEx.EnableRedis)
                     RedisOrderBusiness.AddToRunningOrder_SZC(schemeType, orderInfo.GameCode.ToUpper(), gameType, orderInfo.OrderId, keyLine, stopAfterBonus, orderInfo.IssuseNumber, redisTicketList);
 
             }
@@ -1292,7 +1292,7 @@ namespace KaSon.FrameWork.ORM.Helper
             #region 拆票
 
           //  watch.Restart();
-            if (RedisHelper.EnableRedis)
+            if (RedisHelperEx.EnableRedis)
             {
                 var reidsWaitOrder = new RedisWaitTicketOrder
                 {
@@ -1672,7 +1672,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 //批量插入票表
                 hisManager.SqlBulkAddTable(ticketTable);
                 //调用Redis保存
-                if (RedisHelper.EnableRedis)
+                if (RedisHelperEx.EnableRedis)
                 {
                     if (new string[] { "JCZQ", "JCLQ" }.Contains(order.GameCode.ToUpper()))
                     {
@@ -1868,7 +1868,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }
 
             //调用Redis保存
-            if (RedisHelper.EnableRedis)
+            if (RedisHelperEx.EnableRedis)
                 RedisOrderBusiness.AddToRunningOrder_SZC(schemeType, orderInfo.GameCode.ToUpper(), gameType, orderInfo.OrderId, keyLine, stopAfterBonus, orderInfo.IssuseNumber, redisTicketList);
 
             //watch.Stop();
@@ -2511,7 +2511,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
             if (canChase)
             {
-                if (RedisHelper.EnableRedis)
+                if (RedisHelperEx.EnableRedis)
                 {
                     var redisWaitOrder = new RedisWaitTicketOrder
                     {
@@ -2689,7 +2689,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
             if (canChase)
             {
-                if (RedisHelper.EnableRedis)
+                if (RedisHelperEx.EnableRedis)
                 {
                     if (runningOrder.SchemeBettingCategory == (int)SchemeBettingCategory.SingleBetting || runningOrder.SchemeBettingCategory == (int)SchemeBettingCategory.XianFaQiHSC)
                     {
@@ -3501,7 +3501,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         totalBetMoney += currentIssuseMoney;
 
                         //启用了Redis
-                        if (RedisHelper.EnableRedis)
+                        if (RedisHelperEx.EnableRedis)
                         {
                             var runningOrder = new RedisWaitTicketOrder
                             {
@@ -3639,7 +3639,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
               
                 //
-                if (RedisHelper.EnableRedis)
+                if (RedisHelperEx.EnableRedis)
                 {
                     if (info.IssuseNumberList.Count > 1)
                     {
@@ -3661,7 +3661,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 long redisDT = watch.ElapsedMilliseconds;
               //  
                 //拆票
-                if (!RedisHelper.EnableRedis)
+                if (!RedisHelperEx.EnableRedis)
                     DoSplitOrderTickets(firstSchemeId);
 
                 //watch.Stop();
@@ -4225,7 +4225,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //批量插入票表
             manager.SqlBulkAddTable(ticketTable);
             //调用Redis保存
-            if (RedisHelper.EnableRedis)
+            if (RedisHelperEx.EnableRedis)
             {
                 if (order.GameCode == "BJDC")
                 {
@@ -4677,7 +4677,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
             if (canChase)
             {
-                if (RedisHelper.EnableRedis)
+                if (RedisHelperEx.EnableRedis)
                 {
                     var redisWaitOrder = new RedisWaitTicketOrder
                     {
@@ -4911,7 +4911,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
             #region 拆票
 
-            if (RedisHelper.EnableRedis)
+            if (RedisHelperEx.EnableRedis)
             {
                 var redisWaitOrder = new RedisWaitTicketOrder
                 {
@@ -5243,7 +5243,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
 
             #region 拆票
-            if (RedisHelper.EnableRedis)
+            if (RedisHelperEx.EnableRedis)
             {
                 var redisWaitOrder = new RedisWaitTicketOrder
                 {
@@ -5365,7 +5365,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
             #region 拆票
 
-            if (RedisHelper.EnableRedis)
+            if (RedisHelperEx.EnableRedis)
             {
                 var redisWaitOrder = new RedisWaitTicketOrder
                 {
@@ -5560,7 +5560,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 totalBetMoney += currentIssuseMoney;
 
                 //启用了Redis
-                if (RedisHelper.EnableRedis)
+                if (RedisHelperEx.EnableRedis)
                 {
                     var runningOrder = new RedisWaitTicketOrder
                     {
@@ -5616,7 +5616,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             //}
 
-            if (RedisHelper.EnableRedis)
+            if (RedisHelperEx.EnableRedis)
             {
                 //普通投注
                 if (redisOrderList.OrderList.Count > 0)
@@ -5624,7 +5624,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }
 
             //拆票
-            if (!RedisHelper.EnableRedis)
+            if (!RedisHelperEx.EnableRedis)
                 DoSplitOrderTickets(schemeId);
 
             //刷新用户在Redis中的余额

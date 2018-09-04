@@ -32,7 +32,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
         private static List<LotteryIssuse_QueryInfo> QueryNextIssuseListByKey(string key)
         {
-            var db = RedisHelper.DB_CoreCacheData;
+            var db = RedisHelperEx.DB_CoreCacheData;
             var list = db.GetRange<LotteryIssuse_QueryInfo>(key);
             return list;
         }
@@ -42,7 +42,7 @@ namespace KaSon.FrameWork.ORM.Helper
         //        /// </summary>
         //        //public static string QueryCoreConfigFromRedis(string key)
         //        //{
-        //        //    var db = RedisHelper.DB_CoreCacheData;
+        //        //    var db = RedisHelperEx.DB_CoreCacheData;
         //        //    var redisKey = RedisKeys.Key_CoreConfig;
         //        //    foreach (var item in db.ListRangeAsync(redisKey).Result)
         //        //    {
@@ -64,7 +64,7 @@ namespace KaSon.FrameWork.ORM.Helper
    //TogetherSchemeSecurity? security, SchemeBettingCategory? betCategory, TogetherSchemeProgress? progressState,
    //decimal minMoney, decimal maxMoney, decimal minProgress, decimal maxProgress, string orderBy, int pageIndex, int pageSize)
    //     {
-   //         //var db = RedisHelper.DB_CoreCacheData;
+   //         //var db = RedisHelperEx.DB_CoreCacheData;
             //var redisKey_TogetherList = RedisKeys.Key_Core_Togegher_OrderList;
             ////生成列表
             //var list = new List<Sports_TogetherSchemeQueryInfo>();

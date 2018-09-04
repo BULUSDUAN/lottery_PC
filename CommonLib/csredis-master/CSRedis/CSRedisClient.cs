@@ -6,7 +6,23 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace CSRedis {
-	public partial class CSRedisClient {
+    public class CSRedisConfig
+    {
+
+        public string C_IP { get; set; } = "127.0.0.1";
+        public int C_Post { get; set; } = 6379;
+        public string C_Password { get; set; } = "";
+
+        public int C_Defaultdatabase { get; set; } = 0;
+        public int C_PoolSize { get; set; } = 1000;
+        public int c_Writebuffer { get; set; } = 20480;
+        public string C_Prefix { get; set; } = "";
+        public bool C_SSL { get; set; } = false;
+
+
+
+    }
+    public partial class CSRedisClient {
 		public Dictionary<string, ConnectionPool> ClusterNodes { get; } = new Dictionary<string, ConnectionPool>();
 		private List<string> _clusterKeys;
 		private Func<string, string> _clusterRule;
@@ -39,8 +55,44 @@ namespace CSRedis {
 			}
 			_clusterKeys = ClusterNodes.Keys.ToList();
 		}
+        /// <summary>
+        /// kason 配置Redis
+        /// </summary>
+        /// <param name="list"></param>
+        public CSRedisClient(IList<CSRedisConfig> list)
+        {
+            _clusterRule = null;
+            if (_clusterRule == null) _clusterRule = key => {
+                var idx = Math.Abs(string.Concat(key).GetHashCode()) % ClusterNodes.Count;
+                return idx < 0 || idx >= _clusterKeys.Count ? _clusterKeys.First() : _clusterKeys[idx];
+            };
 
-		private DateTime dt1970 = new DateTime(1970, 1, 1);
+            //if (connectionStrings == null || connectionStrings.Any() == false) throw new Exception("Redis ConnectionString 未设置");
+            foreach (var item in list)
+            {
+                var pool = new ConnectionPool();
+                pool.ConnectionStringEx(item.C_IP, item.C_Post, item.C_Password, item.C_Defaultdatabase, item.c_Writebuffer, item.C_PoolSize, item.C_SSL, item.C_Prefix);
+                pool.Connected += (s, o) => {
+                    RedisClient rc = s as RedisClient;
+                };
+                if (ClusterNodes.ContainsKey(pool.ClusterKey)) throw new Exception($"ClusterName: {pool.ClusterKey} 重复，请检查");
+                ClusterNodes.Add(pool.ClusterKey, pool);
+            }
+            _clusterKeys = ClusterNodes.Keys.ToList();
+            //_clusterKeys = ClusterNodes.Keys.ToList();
+            ////   if (connectionStrings == null || connectionStrings.Any() == false) throw new Exception("Redis ConnectionString 未设置");
+            //var pool = new ConnectionPool();
+            //pool.ConnectionStringEx(ex_ip, ex_port, ex_password, ex_defaultdatabase, ex_writebuffer, ex_poolsize, ex_ssl, ex_Prefix);
+            //pool.Connected += (s, o) => {
+            //    RedisClient rc = s as RedisClient;
+            //};
+            //if (ClusterNodes.ContainsKey(pool.ClusterKey)) throw new Exception($"ClusterName: {pool.ClusterKey} 重复，请检查");
+            //ClusterNodes.Add(pool.ClusterKey, pool);
+            //_clusterKeys = ClusterNodes.Keys.ToList();
+        }
+
+
+        private DateTime dt1970 = new DateTime(1970, 1, 1);
 		/// <summary>
 		/// 缓存壳
 		/// </summary>
@@ -668,14 +720,16 @@ return 0", $"CSRedisPSubscribe{subscrKey}", "", trylong.ToString());
 		/// <param name="value">一个或多个值</param>
 		/// <returns></returns>
 		public long RPush(string key, params string[] value) => value == null || value.Any() == false ? 0 : ExecuteScalar(key, (c, k) => c.RPush(k, value));
-		/// <summary>
-		/// 获取列表指定范围内的元素
-		/// </summary>
-		/// <param name="key">不含prefix前辍</param>
-		/// <param name="start">开始位置，0表示第一个元素，-1表示最后一个元素</param>
-		/// <param name="stop">结束位置，0表示第一个元素，-1表示最后一个元素</param>
-		/// <returns></returns>
-		public string[] LRang(string key, long start, long stop) => ExecuteScalar(key, (c, k) => c.LRange(k, start, stop));
+
+        public long RPush(string key, params object[] value) => value == null || value.Any() == false ? 0 : ExecuteScalar(key, (c, k) => c.RPush(k, value));
+        /// <summary>
+        /// 获取列表指定范围内的元素
+        /// </summary>
+        /// <param name="key">不含prefix前辍</param>
+        /// <param name="start">开始位置，0表示第一个元素，-1表示最后一个元素</param>
+        /// <param name="stop">结束位置，0表示第一个元素，-1表示最后一个元素</param>
+        /// <returns></returns>
+        public string[] LRang(string key, long start, long stop) => ExecuteScalar(key, (c, k) => c.LRange(k, start, stop));
 		/// <summary>
 		/// 根据参数 count 的值，移除列表中与参数 value 相等的元素
 		/// </summary>

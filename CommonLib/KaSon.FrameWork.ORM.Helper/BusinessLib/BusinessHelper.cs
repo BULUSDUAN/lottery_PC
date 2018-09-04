@@ -297,12 +297,12 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                
 
-                var db = RedisHelper.DB_UserBalance;
+                var db = RedisHelperEx.DB_UserBalance;
                 string key = string.Format("UserBalance_{0}", userId);
                 var fund = new LocalLoginBusiness();
                 var userBalance = fund.QueryUserBalance(userId);
                 var json = JsonHelper.Serialize(userBalance);
-                db.SetAsync(key, json, TimeSpan.FromSeconds(60 * 2));
+                db.SetAsync(key, json, 60 * 2);
             }
             catch (Exception ex)
             {
@@ -1014,10 +1014,10 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             var RedisKeyH = "CoreConfig_";
             var RedisKey = RedisKeyH + gameCode;
-            //var flag = RedisHelper.KeyExists(gameCode);
+            //var flag = RedisHelperEx.KeyExists(gameCode);
             //var v = "";
             var Game = new LotteryGame();
-            var db = RedisHelper.DB_Other;
+            var db = RedisHelperEx.DB_Other;
             //if (flag)
             //{
             Game = db.GetObj<LotteryGame>(gameCode);

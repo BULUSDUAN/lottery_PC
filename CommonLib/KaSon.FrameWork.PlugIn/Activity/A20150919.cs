@@ -1276,7 +1276,7 @@ namespace KaSon.FrameWork.PlugIn.Activity
         /// </summary>
         public void LoadRedBagUseConfigToRedis()
         {
-            var db = RedisHelper.DB_CoreCacheData;
+            var db = RedisHelperEx.DB_CoreCacheData;
             var key = RedisKeys.Key_RedBagUseConfig;
             db.Del(key);
             var manager = new A20150919Manager();
@@ -1293,7 +1293,7 @@ namespace KaSon.FrameWork.PlugIn.Activity
         /// </summary>
         public decimal QueryRedBagUseConfigFromRedis(string gameCode)
         {
-            var db = RedisHelper.DB_CoreCacheData;
+            var db = RedisHelperEx.DB_CoreCacheData;
             var key = RedisKeys.Key_RedBagUseConfig;
             var result = db.GetRange<string>(key);
             foreach (var item in result)
