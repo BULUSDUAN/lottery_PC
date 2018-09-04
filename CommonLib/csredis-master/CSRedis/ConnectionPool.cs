@@ -11,9 +11,10 @@ namespace CSRedis {
 	/// </summary>
 	public partial class ConnectionPool {
 
-		private int _poolsize = 50, _port = 6379, _database = 0, _writebuffer = 10240;
-		private string _ip = "127.0.0.1", _password = "";
-		private bool _ssl = false;
+        internal int _poolsize = 50, _port = 6379, _database = 0, _writebuffer = 10240;
+        internal string _ip = "127.0.0.1", _password = "";
+        internal bool _ssl = false;
+         
 		internal string ClusterKey => $"{_ip}:{_port}/{_database}";
 		internal string Prefix { get; set; }
 		public List<RedisConnection2> AllConnections = new List<RedisConnection2>();

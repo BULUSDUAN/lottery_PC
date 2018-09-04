@@ -23,7 +23,7 @@ namespace KaSon.FrameWork.Common.Redis
     {
 
         static JObject RdConfigInfo = null;
-        private static ConnectionMultiplexer _instance;
+       // private static ConnectionMultiplexer _instance;
         // private static string _redisConectStr = "";// RdConfigInfo["RedisConnect"].ToString();
         private static readonly object redisLock = new object();
         static RedisHelper()
@@ -60,10 +60,10 @@ namespace KaSon.FrameWork.Common.Redis
             }
         }
 
-        public static Task<RedisValue[]> ListRangeAsync(string key)
-        {
-            return RedisHelper.Instance.GetDatabase(13).ListRangeAsync(key);
-        }
+        //public static Task<RedisValue[]> ListRangeAsync(string key)
+        //{
+        //    return RedisHelper.Instance.GetDatabase(13).ListRangeAsync(key);
+        //}
 
         /// <summary>
         /// 设置 Redis 过期时间 
@@ -163,65 +163,65 @@ namespace KaSon.FrameWork.Common.Redis
         /// <summary>
         /// Redis实例
         /// </summary>
-        public static ConnectionMultiplexer Instance
-        {
-            get
-            {
-                try
-                {
-                    lock (redisLock)
-                    {
+        //public static ConnectionMultiplexer Instance
+        //{
+        //    get
+        //    {
+        //        try
+        //        {
+        //            lock (redisLock)
+        //            {
 
-                        if (_instance == null || !_instance.IsConnected || !_instance.GetDatabase().IsConnected("testKey"))
-                        {
-                            var configurationOptions = new ConfigurationOptions
-                            {
-                                //AbortOnConnectFail = false,
-                                Password = ServerPassword,
-                            };
-                            configurationOptions.EndPoints.Add(new DnsEndPoint(ServerHost, ServerPort));
-                            _instance = ConnectionMultiplexer.Connect(configurationOptions);
-                        }
-                    }
-                    return _instance;
-                }
-                catch (Exception ex)
-                {
-                    return null;
-                }
-            }
-        }
+        //                if (_instance == null || !_instance.IsConnected || !_instance.GetDatabase().IsConnected("testKey"))
+        //                {
+        //                    var configurationOptions = new ConfigurationOptions
+        //                    {
+        //                        //AbortOnConnectFail = false,
+        //                        Password = ServerPassword,
+        //                    };
+        //                    configurationOptions.EndPoints.Add(new DnsEndPoint(ServerHost, ServerPort));
+        //                    _instance = ConnectionMultiplexer.Connect(configurationOptions);
+        //                }
+        //            }
+        //            return _instance;
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            return null;
+        //        }
+        //    }
+        //}
 
-        private static Dictionary<string, ConnectionMultiplexer> _instanceList = new Dictionary<string, ConnectionMultiplexer>();
-        public static ConnectionMultiplexer GetInstance(string serverHost, int serverPort = 6379, string serverPassword = "123456")
-        {
-            try
-            {
-                lock (redisLock)
-                {
-                    ConnectionMultiplexer instance = null;
-                    var key = string.Format("{0}_{1}_{2}", serverHost, serverPort, serverPassword);
-                    if (_instanceList.Keys.Contains(key))
-                        instance = _instanceList[key];
-                    if (instance != null && instance.GetDatabase().IsConnected("testKey"))
-                        return instance;
+        //private static Dictionary<string, ConnectionMultiplexer> _instanceList = new Dictionary<string, ConnectionMultiplexer>();
+        //public static ConnectionMultiplexer GetInstance(string serverHost, int serverPort = 6379, string serverPassword = "123456")
+        //{
+        //    try
+        //    {
+        //        lock (redisLock)
+        //        {
+        //            ConnectionMultiplexer instance = null;
+        //            var key = string.Format("{0}_{1}_{2}", serverHost, serverPort, serverPassword);
+        //            if (_instanceList.Keys.Contains(key))
+        //                instance = _instanceList[key];
+        //            if (instance != null && instance.GetDatabase().IsConnected("testKey"))
+        //                return instance;
 
-                    var configurationOptions = new ConfigurationOptions
-                    {
-                        //AbortOnConnectFail = false,
-                        Password = serverPassword,
-                    };
-                    configurationOptions.EndPoints.Add(new DnsEndPoint(serverHost, serverPort));
-                    instance = ConnectionMultiplexer.Connect(configurationOptions);
-                    _instanceList.Add(key, instance);
-                    return instance;
-                }
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
+        //            var configurationOptions = new ConfigurationOptions
+        //            {
+        //                //AbortOnConnectFail = false,
+        //                Password = serverPassword,
+        //            };
+        //            configurationOptions.EndPoints.Add(new DnsEndPoint(serverHost, serverPort));
+        //            instance = ConnectionMultiplexer.Connect(configurationOptions);
+        //            _instanceList.Add(key, instance);
+        //            return instance;
+        //        }
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return null;
+        //    }
+        //}
 
         /// <summary>
         /// 未出票的订单库

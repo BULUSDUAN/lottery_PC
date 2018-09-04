@@ -21,6 +21,7 @@ using EntityModel.ExceptionExtend;
 using KaSon.FrameWork.Common.Redis;
 using EntityModel.Redis;
 using Microsoft.Extensions.Caching.Distributed;
+using CSRedis;
 
 namespace Lottery.Api.Controllers
 {
@@ -31,18 +32,23 @@ namespace Lottery.Api.Controllers
         private IDistributedCache _Cache;
         public IActionResult Index()
         {
+            var Clists= new List<CSRedisConfig>();
+            var csredis = new CSRedis.CSRedisClient( Clists);
+
             CsRedisCode.RedisHelper.Initialization(
-                csredis: new CSRedis.CSRedisClient(@"10.0.3.6:6379,password=redis123,defaultDatabase=13,poolsize=50,ssl=false,writeBuffer=10240"),
+                csredis: csredis,
                 serialize: value => Newtonsoft.Json.JsonConvert.SerializeObject(value),
                 deserialize: (data, type) => Newtonsoft.Json.JsonConvert.DeserializeObject(data, type));
+
             CsRedisCode.RedisHelper.Set("Test1", "t", 10 * 60);
+
+            CsRedisCode.RedisHelper.DBKey = $"{ip}:{post}/1";
             var ss = CsRedisCode.RedisHelper.Get("Test1");
-          //  return JsonEx(new { name = "12313" });
-            var csredis = new CSRedis.CSRedisClient(null,
-  "127.0.0.1:6371,password=123,defaultDatabase=11,poolsize=10,ssl=false,writeBuffer=10240,prefix=key前辍",
-  "127.0.0.1:6372,password=123,defaultDatabase=12,poolsize=11,ssl=false,writeBuffer=10240,prefix=key前辍",
-  "127.0.0.1:6373,password=123,defaultDatabase=13,poolsize=12,ssl=false,writeBuffer=10240,prefix=key前辍",
-  "127.0.0.1:6374,password=123,defaultDatabase=14,poolsize=13,ssl=false,writeBuffer=10240,prefix=key前辍");
+
+
+            CsRedisCode.RedisHelper
+            return JsonEx(new { name = "12313" });
+          
 
           //  _Cache
         }
