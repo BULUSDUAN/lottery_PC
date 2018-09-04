@@ -3376,7 +3376,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //{
             var gameInfo = BusinessHelper.QueryLotteryGame(info.GameCode);
             var schemeManager = new SchemeManager();
-          //  var sportsManager = new Sports_Manager();
+            var sportsManager = new Sports_Manager();
             if (string.IsNullOrEmpty(keyLine))
                 keyLine = info.IssuseNumberList.Count > 1 ? BusinessHelper.GetChaseLotterySchemeKeyLine(info.GameCode) : string.Empty;
             var orderIndex = 1;
@@ -3400,9 +3400,9 @@ namespace KaSon.FrameWork.ORM.Helper
             //期号处理用时
              IssuseDT = watch.ElapsedMilliseconds;
             //  
-            DB.Begin();
             try
             {
+                var anteCodeList = new List<C_Sports_AnteCode>();
                 IList<C_Sports_Order_Running> Order_Running_List = new List<C_Sports_Order_Running>();
                 IList<C_OrderDetail> OrderDetail_List = new List<C_OrderDetail>();
                 foreach (var issuse in info.IssuseNumberList)
@@ -3436,7 +3436,7 @@ namespace KaSon.FrameWork.ORM.Helper
                             schemeId = keyLine;
                     }
 
-                        var anteCodeList = new List<C_Sports_AnteCode>();
+                        
                         var gameTypeList = new List<GameTypeInfo>();
                         foreach (var item in info.AnteCodeList)
                         {
@@ -3455,7 +3455,7 @@ namespace KaSon.FrameWork.ORM.Helper
                                 SchemeId = schemeId,
                             };
                             anteCodeList.Add(codeEntity);
-                         //  sportsManager.AddSports_AnteCode(codeEntity);
+                            //sportsManager.AddSports_AnteCode(codeEntity);
                             //var gameType = lotteryManager.QueryGameType(info.GameCode, item.GameType);
                             var gameType = gameTypes.FirstOrDefault(a => a.Game.GameCode == info.GameCode && a.GameType == item.GameType.ToUpper());
                             if (gameType != null && !gameTypeList.Contains(gameType))
@@ -3521,12 +3521,11 @@ namespace KaSon.FrameWork.ORM.Helper
 
                 //订单构建用时
                 orderDT = watch.ElapsedMilliseconds;
-             //   
-                
+                //   
+                DB.Begin();
                 try
                 {
-
-                  
+                    DB.GetDal<C_Sports_AnteCode>().BulkAdd(anteCodeList);
                     //kason 批量录入录入订单信息
                     DB.GetDal<C_OrderDetail>().BulkAdd(OrderDetail_List);
 
