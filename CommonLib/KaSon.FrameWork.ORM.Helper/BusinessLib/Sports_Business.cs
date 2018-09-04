@@ -3375,8 +3375,8 @@ namespace KaSon.FrameWork.ORM.Helper
             //using (var biz = new GameBizBusinessManagement())
             //{
             var gameInfo = BusinessHelper.QueryLotteryGame(info.GameCode);
-            var schemeManager = new SchemeManager();
-            var sportsManager = new Sports_Manager();
+            //   var schemeManager = new SchemeManager();
+            // var sportsManager = new Sports_Manager();
             if (string.IsNullOrEmpty(keyLine))
                 keyLine = info.IssuseNumberList.Count > 1 ? BusinessHelper.GetChaseLotterySchemeKeyLine(info.GameCode) : string.Empty;
             var orderIndex = 1;
