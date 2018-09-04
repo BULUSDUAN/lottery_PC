@@ -37,6 +37,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 {
                     case AccountType.Bonus:
                         setList.Add(string.Format(" [BonusBalance]{0}{1}", GetOperFun(item.PayType), item.PayMoney));
+                      //  DB.GetDal<>
                         break;
                     case AccountType.Freeze:
                         setList.Add(string.Format(" [FreezeBalance]{0}{1}", GetOperFun(item.PayType), item.PayMoney));
