@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\CommonLib\csredis-master\CSRedisCore.csproj" />
     <ProjectReference Include="..\..\CommonLib\EntityModel\EntityModel.csproj" />
     <ProjectReference Include="..\..\CommonLib\KaSon.FrameWork.Analyzer\KaSon.FrameWork.Analyzer.csproj" />
     <ProjectReference Include="..\Lottery.ApiGateway.Model\Lottery.ApiGateway.Model.csproj" />

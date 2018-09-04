@@ -25,9 +25,9 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
         /// <returns></returns>
         public static string WriteChaseOrderToDb()
         {
-            var logList = new List<string>();
-            logList.Add("<---------开始写入追号订单数据到数据库 ");
-            Console.WriteLine("<---------开始写入追号订单数据到数据库 ");
+          //  var logList = new List<string>();
+          //  logList.Add("<---------开始写入追号订单数据到数据库 ");
+          ////  Console.WriteLine("<---------开始写入追号订单数据到数据库 ");
 
 
             var maxDay = 5;
@@ -36,9 +36,9 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
             {
                 var now = DateTime.Today.AddDays(-i);
                 var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "CacheData", "ChaseOrder", now.ToString("yyyy-MM-dd"));
-                logList.Add(string.Format("查询目录:{0} ", path));
+             //   logList.Add(string.Format("查询目录:{0} ", path));
 
-                Console.WriteLine(string.Format("查询目录:{0} ", path));
+              //  Console.WriteLine(string.Format("查询目录:{0} ", path));
                 if (!Directory.Exists(path))
                     continue;
 
@@ -47,8 +47,8 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
            
                 //日期下面只有一级文件
                 var fileArray = Directory.GetFiles(path);
-                logList.Add(string.Format("文件数：{0}个 ", fileArray.Length));
-                Console.WriteLine(string.Format("文件数：{0}个 ", fileArray.Length));
+               // logList.Add(string.Format("文件数：{0}个 ", fileArray.Length));
+               // Console.WriteLine(string.Format("文件数：{0}个 ", fileArray.Length));
                 foreach (var item in fileArray)
                 {
                     var json = File.ReadAllText(item, Encoding.UTF8);
@@ -60,8 +60,8 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
                         return x.IssuseNumber.CompareTo(y.IssuseNumber);
                     });
 
-                    logList.Add(string.Format("开始处理{0} ", chaseOrderId));
-                    Console.WriteLine(string.Format("开始处理{0} ", chaseOrderId));
+                   // logList.Add(string.Format("开始处理{0} ", chaseOrderId));
+                  //  Console.WriteLine(string.Format("开始处理{0} ", chaseOrderId));
                     //一个追号订单，保存到数据库
                     try
                     {
@@ -81,8 +81,8 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
                         if (chaseSchemeList.Count == orderDetailList.Count && chaseSchemeList.Count == orderRunningList.Count + orderComplateList.Count)
                         {
                             //订单数据正常，删除订单文件
-                            logList.Add("订单数据正常，删除订单文件 ");
-                            Console.WriteLine("订单数据正常，删除订单文件 ");
+                            //logList.Add("订单数据正常，删除订单文件 ");
+                         //   Console.WriteLine("订单数据正常，删除订单文件 ");
                             File.Delete(item);
                             continue;
                         }
@@ -104,8 +104,8 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
                             var orderDetail = orderDetailList.FirstOrDefault(p => p.SchemeId == scheme.SchemeId);
                             if (orderDetail == null)
                             {
-                                logList.Add("写入orderDetail ");
-                                Console.WriteLine("写入orderDetail ");
+                               // logList.Add("写入orderDetail ");
+                               // Console.WriteLine("写入orderDetail ");
                                 var currentIssuse = order.IssuseNumberList.FirstOrDefault(p => p.IssuseNumber == scheme.IssuseNumber);
 
                                 schemeManager.AddOrderDetail(new C_OrderDetail
@@ -155,8 +155,8 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
                             var comlateOrder = orderComplateList.FirstOrDefault(p => p.SchemeId == scheme.SchemeId);
                             if (runningOrder == null && comlateOrder == null)
                             {
-                                logList.Add("写入runningOrder ");
-                                Console.WriteLine("写入runningOrder ");
+                              //  logList.Add("写入runningOrder ");
+                               // Console.WriteLine("写入runningOrder ");
                                 var currentIssuse = order.IssuseNumberList.FirstOrDefault(p => p.IssuseNumber == scheme.IssuseNumber);
                                 sportsManager.AddSports_Order_Running(new C_Sports_Order_Running
                                 {
@@ -214,14 +214,14 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib
                     }
                     catch (Exception ex)
                     {
-                        logList.Add(string.Format("保存追号订单数据失败:{0}", ex.ToString()));
-                        Console.WriteLine(string.Format("保存追号订单数据失败:{0}", ex.ToString()));
+                      //  logList.Add(string.Format("保存追号订单数据失败:{0}", ex.ToString()));
+                       // Console.WriteLine(string.Format("保存追号订单数据失败:{0}", ex.ToString()));
                     }
                 }
             }
             //写入日志
-            logList.Add("本次处理全部完成----------> ");
-            Console.WriteLine("本次处理全部完成----------> ");
+           // logList.Add("本次处理全部完成----------> ");
+           // Console.WriteLine("本次处理全部完成----------> ");
 
          //   string log= string.Join(Environment.NewLine, logList.ToArray());
          //  // Console.WriteLine(log);

@@ -61,6 +61,8 @@ namespace Lottery.ApiGateway
             if (!bool.Parse(ISConsoleLog)) ConsoleHelper.Clear();
           
             host.Run();
+            
+            
         }
     }
 }

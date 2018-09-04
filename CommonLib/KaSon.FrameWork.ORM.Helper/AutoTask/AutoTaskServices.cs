@@ -95,7 +95,7 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
             {
                 try
                 {
-                    Console.WriteLine(string.Format("追号作业启动...每{0}秒执行一次", seconds));
+                    //Console.WriteLine(string.Format("追号作业启动...每{0}秒执行一次", seconds));
                     Sports_BusinessBy.WriteChaseOrderToDb();
                 }
                 catch (Exception ex)
