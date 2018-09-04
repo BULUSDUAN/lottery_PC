@@ -2654,9 +2654,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    Message = "获取成功" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
-                    Value = ex.ToGetMessage(),
+                    Value = "获取成功",
                 });
             }
         }

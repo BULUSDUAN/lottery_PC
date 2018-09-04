@@ -115,9 +115,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    Message = "获取失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
-                    Value = ex.ToGetMessage(),
+                    Value = "获取失败",
                 });
             }
         }
@@ -282,9 +282,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    Message = "获取失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
-                    Value = ex.ToGetMessage(),
+                    Value = "获取失败",
                 });
             }
         }
@@ -952,9 +952,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    Message = "获取失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
-                    Value = ex.ToGetMessage(),
+                    Value = "获取失败",
                 });
             }
         }
@@ -1078,9 +1078,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    Message = "获取失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
-                    Value = string.Empty,
+                    Value = "获取失败",
                 });
             }
         }
@@ -2481,9 +2481,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    Message = "获取失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
-                    Value = ex.ToGetMessage(),
+                    Value = "获取失败",
                 });
             }
         }
@@ -2543,9 +2543,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    Message = "获取失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
-                    Value = ex.ToGetMessage(),
+                    Value = "获取失败",
                 });
             }
         }
@@ -2758,9 +2758,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    Message = "获取失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
-                    Value = ex.ToGetMessage(),
+                    Value = "获取失败",
                 });
             }
         }
@@ -2861,7 +2861,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = "获取失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
-                    Value = ex.ToGetMessage(),
+                    Value = "获取失败",
                 });
             }
             
