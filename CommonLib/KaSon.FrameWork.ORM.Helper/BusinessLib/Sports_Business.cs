@@ -3399,7 +3399,8 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             //期号处理用时
              IssuseDT = watch.ElapsedMilliseconds;
-          //  
+            //  
+            DB.Begin();
             try
             {
                 IList<C_Sports_Order_Running> Order_Running_List = new List<C_Sports_Order_Running>();
@@ -3521,7 +3522,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 //订单构建用时
                 orderDT = watch.ElapsedMilliseconds;
              //   
-                DB.Begin();
+                
                 try
                 {
 
