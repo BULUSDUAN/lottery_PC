@@ -3405,6 +3405,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 var anteCodeList = new List<C_Sports_AnteCode>();
                 IList<C_Sports_Order_Running> Order_Running_List = new List<C_Sports_Order_Running>();
                 IList<C_OrderDetail> OrderDetail_List = new List<C_OrderDetail>();
+                IList<C_Lottery_Scheme> Scheme_List = new List<C_Lottery_Scheme>();
                 foreach (var issuse in info.IssuseNumberList)
                 {
                     //var IsEnableLimitBetAmount = Convert.ToBoolean(new CacheDataBusiness().QueryCoreConfigByKey("IsEnableLimitBetAmount").ConfigValue);
@@ -3480,7 +3481,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         }
                         else
                         {
-                            sportsManager.AddLotteryScheme(new C_Lottery_Scheme
+                        Scheme_List.Add(new C_Lottery_Scheme
                             {
                                 OrderIndex = orderIndex,
                                 KeyLine = keyLine,
@@ -3526,6 +3527,8 @@ namespace KaSon.FrameWork.ORM.Helper
                 try
                 {
                     DB.GetDal<C_Sports_AnteCode>().BulkAdd(anteCodeList);
+
+                    DB.GetDal<C_Lottery_Scheme>().BulkAdd(Scheme_List);
                     //kason 批量录入录入订单信息
                     DB.GetDal<C_OrderDetail>().BulkAdd(OrderDetail_List);
 
