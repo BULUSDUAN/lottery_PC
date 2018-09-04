@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KaSon.FrameWork.Analyzer", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderLottery.Service.Host", "OrderLottery.Service\OrderLottery.Service.Host.csproj", "{FCC88A35-BD79-4CDB-B510-F9BC936F2BF7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSRedisCore", "..\CommonLib\csredis-master\CSRedisCore.csproj", "{6FEC40D5-C5D9-4343-A5EA-2EFF0E6A46E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSRedisCore", "..\CommonLib\csredis-master\CSRedisCore.csproj", "{680983D0-386C-4FAA-8D2E-0C22F2149D9D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,10 +65,10 @@ Global
 		{FCC88A35-BD79-4CDB-B510-F9BC936F2BF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FCC88A35-BD79-4CDB-B510-F9BC936F2BF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FCC88A35-BD79-4CDB-B510-F9BC936F2BF7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6FEC40D5-C5D9-4343-A5EA-2EFF0E6A46E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6FEC40D5-C5D9-4343-A5EA-2EFF0E6A46E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6FEC40D5-C5D9-4343-A5EA-2EFF0E6A46E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6FEC40D5-C5D9-4343-A5EA-2EFF0E6A46E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{680983D0-386C-4FAA-8D2E-0C22F2149D9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{680983D0-386C-4FAA-8D2E-0C22F2149D9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{680983D0-386C-4FAA-8D2E-0C22F2149D9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{680983D0-386C-4FAA-8D2E-0C22F2149D9D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

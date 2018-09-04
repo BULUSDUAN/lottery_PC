@@ -318,9 +318,9 @@ namespace UserLottery.Service.ModuleServices
             {
                 var fullKey = string.Format("{0}_{1}", RedisKeys.Key_UserBind, userId);
                 var db = RedisHelper.DB_UserBindData;
-                //var exist = db.KeyExistsAsync(fullKey).Result;
-                //if (!exist)
-                //    return null;
+                var exist = db.ExistsAsync(fullKey).Result;
+                if (!exist)
+                    return null;
                 var v = db.GetAsync(fullKey).Result;
                 if (string.IsNullOrEmpty(v))
                     return null;
