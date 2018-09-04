@@ -1199,12 +1199,12 @@ namespace Lottery.Api.Controllers
             var redisKey_TogetherList = RedisKeys.Key_Core_Togegher_OrderList;
             //生成列表
             var list = new List<Sports_TogetherSchemeQueryInfo>();
-            var redisList = db.ListRangeAsync(redisKey_TogetherList).Result;
+            var redisList = db.GetRange<string>(redisKey_TogetherList);
             foreach (var item in redisList)
             {
                 try
                 {
-                    if (!item.HasValue) continue;
+                    if (string.IsNullOrEmpty(item)) continue;
                     var t = JsonHelper.Deserialize<Sports_TogetherSchemeQueryInfo>(item.ToString());
                     list.Add(t);
                 }
