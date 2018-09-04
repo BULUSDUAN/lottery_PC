@@ -117,9 +117,9 @@ namespace CSRedis {
 		/// <param name="serialize">序列化函数</param>
 		/// <param name="deserialize">反序列化函数</param>
 		/// <returns></returns>
-		public T CacheShell<T>(string dbkeys, string key, int timeoutSeconds, Func<T> getData, Func<T, string> serialize, Func<string, T> deserialize) {
+		public T CacheShell<T>( string key, int timeoutSeconds, Func<T> getData, Func<T, string> serialize, Func<string, T> deserialize) {
 			if (timeoutSeconds <= 0) return getData();
-			var cacheValue = Get(dbkeys,key);
+			var cacheValue = Get(key);
 			if (cacheValue != null) {
 				try {
 					return deserialize(cacheValue);
@@ -129,7 +129,7 @@ namespace CSRedis {
 				}
 			}
 			var ret = getData();
-			Set(dbkeys,key, serialize(ret), timeoutSeconds);
+			Set(key, serialize(ret), timeoutSeconds);
 			return ret;
 		}
 		/// <summary>
@@ -143,9 +143,9 @@ namespace CSRedis {
 		/// <param name="serialize">序列化函数</param>
 		/// <param name="deserialize">反序列化函数</param>
 		/// <returns></returns>
-		public T CacheShell<T>(string dbkeys,string key, string field, int timeoutSeconds, Func<T> getData, Func<(T, long), string> serialize, Func<string, (T, long)> deserialize) {
+		public T CacheShell<T>(string key, string field, int timeoutSeconds, Func<T> getData, Func<(T, long), string> serialize, Func<string, (T, long)> deserialize) {
 			if (timeoutSeconds <= 0) return getData();
-			var cacheValue = HashGet(dbkeys,key, field);
+			var cacheValue = HashGet(key, field);
 			if (cacheValue != null) {
 				try {
 					var value = deserialize(cacheValue);
@@ -170,13 +170,13 @@ namespace CSRedis {
 		/// <param name="serialize">序列化函数</param>
 		/// <param name="deserialize">反序列化函数</param>
 		/// <returns></returns>
-		public T[] CacheShell<T>(string dbkeys, string key, string[] fields, int timeoutSeconds, Func<string[], (string, T)[]> getData, Func<(T, long), string> serialize, Func<string, (T, long)> deserialize) {
+		public T[] CacheShell<T>( string key, string[] fields, int timeoutSeconds, Func<string[], (string, T)[]> getData, Func<(T, long), string> serialize, Func<string, (T, long)> deserialize) {
 			fields = fields?.Distinct().ToArray();
 			if (fields == null || fields.Length == 0) return new T[0];
 			if (timeoutSeconds <= 0) return getData(fields).Select(a => a.Item2).ToArray();
 
 			var ret = new T[fields.Length];
-			var cacheValue = HashMGet(dbkeys,key, fields);
+			var cacheValue = HashMGet(key, fields);
 			var fieldsMGet = new Dictionary<string, int>();
 
 			for (var a = 0; a < ret.Length; a++) {
@@ -212,7 +212,7 @@ namespace CSRedis {
 					mset[msetIndex++] = fieldNull;
 					mset[msetIndex++] = serialize((default(T), (long)DateTime.Now.Subtract(dt1970).TotalSeconds));
 				}
-				if (mset.Any()) HashSet(dbkeys,key, mset);
+				if (mset.Any()) HashSet(key, mset);
 			}
 			return ret;
 		}
@@ -356,7 +356,7 @@ namespace CSRedis {
 		/// <param name="expireSeconds">过期(秒单位)</param>
 		/// <param name="exists">Nx, Xx</param>
 		/// <returns></returns>
-		public bool Set(string dbkeys, string key, string value, int expireSeconds = -1, CSRedisExistence? exists = null) => ExecuteScalar(dbkeys,key, (c, k) => expireSeconds > 0 || exists != null ? c.Set(k, value, expireSeconds > 0 ? new int?(expireSeconds) : null, exists == CSRedisExistence.Nx ? new RedisExistence?(RedisExistence.Nx) : (exists == CSRedisExistence.Xx ? new RedisExistence?(RedisExistence.Xx) : null)) : c.Set(k, value)) == "OK";
+		public bool Set( string key, string value, int expireSeconds = -1, CSRedisExistence? exists = null) => ExecuteScalar(key, (c, k) => expireSeconds > 0 || exists != null ? c.Set(k, value, expireSeconds > 0 ? new int?(expireSeconds) : null, exists == CSRedisExistence.Nx ? new RedisExistence?(RedisExistence.Nx) : (exists == CSRedisExistence.Xx ? new RedisExistence?(RedisExistence.Xx) : null)) : c.Set(k, value)) == "OK";
 		/// <summary>
 		/// 设置指定 key 的值(字节流)
 		/// </summary>
@@ -365,57 +365,57 @@ namespace CSRedis {
 		/// <param name="expireSeconds">过期(秒单位)</param>
 		/// <param name="exists">Nx, Xx</param>
 		/// <returns></returns>
-		public bool SetBytes(string dbkeys, string key, byte[] value, int expireSeconds = -1, CSRedisExistence? exists = null) => ExecuteScalar(dbkeys, key, (c, k) => expireSeconds > 0 || exists != null ? c.Set(k, value, expireSeconds > 0 ? new int?(expireSeconds) : null, exists == CSRedisExistence.Nx ? new RedisExistence?(RedisExistence.Nx) : (exists == CSRedisExistence.Xx ? new RedisExistence?(RedisExistence.Xx) : null)) : c.Set(k, value)) == "OK";
+		public bool SetBytes( string key, byte[] value, int expireSeconds = -1, CSRedisExistence? exists = null) => ExecuteScalar( key, (c, k) => expireSeconds > 0 || exists != null ? c.Set(k, value, expireSeconds > 0 ? new int?(expireSeconds) : null, exists == CSRedisExistence.Nx ? new RedisExistence?(RedisExistence.Nx) : (exists == CSRedisExistence.Xx ? new RedisExistence?(RedisExistence.Xx) : null)) : c.Set(k, value)) == "OK";
 		/// <summary>
 		/// 获取指定 key 的值
 		/// </summary>
 		/// <param name="key">不含prefix前辍</param>
 		/// <returns></returns>
-		public string Get(string dbkeys,string key) => ExecuteScalar(dbkeys,key, (c, k) => c.Get(k));
+		public string Get(string key) => ExecuteScalar(key, (c, k) => c.Get(k));
 		/// <summary>
 		/// 获取多个指定 key 的值(数组)
 		/// </summary>
 		/// <param name="keys">不含prefix前辍</param>
 		/// <returns></returns>
-		public string[] MGet(string dbkeys, params string[] keys) => ExeucteArray(dbkeys,keys, (c, k) => c.MGet(k));
+		public string[] MGet( params string[] keys) => ExeucteArray(keys, (c, k) => c.MGet(k));
 		/// <summary>
 		/// 获取指定 key 的值(字节流)
 		/// </summary>
 		/// <param name="key">不含prefix前辍</param>
 		/// <returns></returns>
-		public byte[] GetBytes(string dbkeys, string key) => ExecuteScalar(dbkeys,key, (c, k) => c.GetBytes(k));
+		public byte[] GetBytes( string key) => ExecuteScalar(key, (c, k) => c.GetBytes(k));
 		/// <summary>
 		/// 用于在 key 存在时删除 key
 		/// </summary>
 		/// <param name="key">不含prefix前辍</param>
 		/// <returns></returns>
-		public long Remove(string dbkeys, params string[] key) => ExecuteNonQuery(dbkeys,key, (c, k) => c.Del(k));
+		public long Remove( params string[] key) => ExecuteNonQuery(key, (c, k) => c.Del(k));
 		/// <summary>
 		/// 检查给定 key 是否存在
 		/// </summary>
 		/// <param name="key">不含prefix前辍</param>
 		/// <returns></returns>
-		public bool Exists(string dbkeys, string key) => ExecuteScalar(dbkeys,key, (c, k) => c.Exists(k));
+		public bool Exists( string key) => ExecuteScalar(key, (c, k) => c.Exists(k));
 		/// <summary>
 		/// 将 key 所储存的值加上给定的增量值（increment）
 		/// </summary>
 		/// <param name="key">不含prefix前辍</param>
 		/// <param name="value">增量值(默认=1)</param>
 		/// <returns></returns>
-		public long Increment(string dbkeys, string key, long value = 1) => ExecuteScalar(dbkeys, key, (c, k) => c.IncrBy(k, value));
+		public long Increment( string key, long value = 1) => ExecuteScalar( key, (c, k) => c.IncrBy(k, value));
 		/// <summary>
 		/// 为给定 key 设置过期时间
 		/// </summary>
 		/// <param name="key">不含prefix前辍</param>
 		/// <param name="expire">过期时间</param>
 		/// <returns></returns>
-		public bool Expire(string dbkeys, string key, TimeSpan expire) => ExecuteScalar(dbkeys, key, (c, k) => c.Expire(k, expire));
+		public bool Expire( string key, TimeSpan expire) => ExecuteScalar( key, (c, k) => c.Expire(k, expire));
 		/// <summary>
 		/// 以秒为单位，返回给定 key 的剩余生存时间
 		/// </summary>
 		/// <param name="key">不含prefix前辍</param>
 		/// <returns></returns>
-		public long Ttl(string dbkeys, string key) => ExecuteScalar(dbkeys, key, (c, k) => c.Ttl(k));
+		public long Ttl( string key) => ExecuteScalar( key, (c, k) => c.Ttl(k));
 		/// <summary>
 		/// 执行脚本
 		/// </summary>
@@ -423,7 +423,7 @@ namespace CSRedis {
 		/// <param name="key">不含prefix前辍</param>
 		/// <param name="args">参数</param>
 		/// <returns></returns>
-		public object Eval(string dbkeys, string script, string key, params object[] args) => ExecuteScalar(dbkeys, key, (c, k) => c.Eval(script, new[] { k }, args));
+		public object Eval( string script, string key, params object[] args) => ExecuteScalar( key, (c, k) => c.Eval(script, new[] { k }, args));
 		/// <summary>
 		/// 查找所有集群中符合给定模式(pattern)的 key
 		/// </summary>
@@ -443,9 +443,9 @@ namespace CSRedis {
 		/// <param name="channel">频道名</param>
 		/// <param name="data">消息文本</param>
 		/// <returns></returns>
-		public long Publish(string dbkeys, string channel, string data) {
-			var msgid = HashIncrement(dbkeys,"CSRedisPublishMsgId", channel, 1);
-			return ExecuteScalar(dbkeys,channel, (c, k) => c.Publish(channel, $"{msgid}|{data}"));
+		public long Publish( string channel, string data) {
+			var msgid = HashIncrement("CSRedisPublishMsgId", channel, 1);
+			return ExecuteScalar(channel, (c, k) => c.Publish(channel, $"{msgid}|{data}"));
 		}
 		private Dictionary<string, List<RedisConnection2>> _subscrsDic = new Dictionary<string, List<RedisConnection2>>();
 		private object _subscrsDic_lock = new object();
@@ -652,7 +652,7 @@ return 0", $"CSRedisPSubscribe{subscrKey}", "", trylong.ToString());
 		/// <param name="key">不含prefix前辍</param>
 		/// <param name="keyValues">field1 value1 [field2 value2]</param>
 		/// <returns></returns>
-		public string HashSet(string dbkeys, string key, params object[] keyValues) => HashSetExpire(dbkeys,key, TimeSpan.Zero, keyValues);
+		public string HashSet( string key, params object[] keyValues) => HashSetExpire(key, TimeSpan.Zero, keyValues);
 		/// <summary>
 		/// 同时将多个 field-value (域-值)对设置到哈希表 key 中
 		/// </summary>
@@ -660,7 +660,7 @@ return 0", $"CSRedisPSubscribe{subscrKey}", "", trylong.ToString());
 		/// <param name="expire">过期时间</param>
 		/// <param name="keyValues">field1 value1 [field2 value2]</param>
 		/// <returns></returns>
-		public string HashSetExpire(string dbkeys, string key, TimeSpan expire, params object[] keyValues) {
+		public string HashSetExpire( string key, TimeSpan expire, params object[] keyValues) {
 			if (keyValues == null || keyValues.Any() == false) return null;
 			if (expire > TimeSpan.Zero) {
 				var lua = "ARGV[1] = redis.call('HMSET', KEYS[1]";
@@ -671,9 +671,9 @@ return 0", $"CSRedisPSubscribe{subscrKey}", "", trylong.ToString());
 				}
 				lua += @") redis.call('EXPIRE', KEYS[1], ARGV[2]) return ARGV[1]";
 				argv.InsertRange(0, new object[] { "", (long) expire.TotalSeconds });
-				return Eval(dbkeys,lua, key, argv.ToArray())?.ToString();
+				return Eval(lua, key, argv.ToArray())?.ToString();
 			}
-			return ExecuteScalar(dbkeys,key, (c, k) => c.HMSet(k, keyValues));
+			return ExecuteScalar(key, (c, k) => c.HMSet(k, keyValues));
 		}
 		/// <summary>
 		/// 获取存储在哈希表中指定字段的值
@@ -681,14 +681,14 @@ return 0", $"CSRedisPSubscribe{subscrKey}", "", trylong.ToString());
 		/// <param name="key">不含prefix前辍</param>
 		/// <param name="field">字段</param>
 		/// <returns></returns>
-		public string HashGet(string dbkeys, string key, string field) => ExecuteScalar(dbkeys,key, (c, k) => c.HGet(k, field));
+		public string HashGet( string key, string field) => ExecuteScalar(key, (c, k) => c.HGet(k, field));
 		/// <summary>
 		/// 获取存储在哈希表中多个字段的值
 		/// </summary>
 		/// <param name="key">不含prefix前辍</param>
 		/// <param name="fields">字段</param>
 		/// <returns></returns>
-		public string[] HashMGet(string dbkeys, string key, params string[] fields) => ExecuteScalar(dbkeys,key, (c, k) => c.HMGet(k, fields));
+		public string[] HashMGet( string key, params string[] fields) => ExecuteScalar(key, (c, k) => c.HMGet(k, fields));
 		/// <summary>
 		/// 为哈希表 key 中的指定字段的整数值加上增量 increment
 		/// </summary>
@@ -696,7 +696,7 @@ return 0", $"CSRedisPSubscribe{subscrKey}", "", trylong.ToString());
 		/// <param name="field">字段</param>
 		/// <param name="value">增量值(默认=1)</param>
 		/// <returns></returns>
-		public long HashIncrement(string dbkeys, string key, string field, long value = 1) => ExecuteScalar(dbkeys,key, (c, k) => c.HIncrBy(k, field, value));
+		public long HashIncrement( string key, string field, long value = 1) => ExecuteScalar(key, (c, k) => c.HIncrBy(k, field, value));
 		/// <summary>
 		/// 为哈希表 key 中的指定字段的整数值加上增量 increment
 		/// </summary>
@@ -704,45 +704,45 @@ return 0", $"CSRedisPSubscribe{subscrKey}", "", trylong.ToString());
 		/// <param name="field">字段</param>
 		/// <param name="value">增量值(默认=1)</param>
 		/// <returns></returns>
-		public double HashIncrementFloat(string dbkeys, string key, string field, double value = 1) => ExecuteScalar(dbkeys,key, (c, k) => c.HIncrByFloat(k, field, value));
+		public double HashIncrementFloat( string key, string field, double value = 1) => ExecuteScalar(key, (c, k) => c.HIncrByFloat(k, field, value));
 		/// <summary>
 		/// 删除一个或多个哈希表字段
 		/// </summary>
 		/// <param name="key">不含prefix前辍</param>
 		/// <param name="fields">字段</param>
 		/// <returns></returns>
-		public long HashDelete(string dbkeys, string key, params string[] fields) => fields == null || fields.Any() == false ? 0 : ExecuteScalar(dbkeys,key, (c, k) => c.HDel(k, fields));
+		public long HashDelete( string key, params string[] fields) => fields == null || fields.Any() == false ? 0 : ExecuteScalar(key, (c, k) => c.HDel(k, fields));
 		/// <summary>
 		/// 查看哈希表 key 中，指定的字段是否存在
 		/// </summary>
 		/// <param name="key">不含prefix前辍</param>
 		/// <param name="field">字段</param>
 		/// <returns></returns>
-		public bool HashExists(string dbkeys, string key, string field) => ExecuteScalar(dbkeys,key, (c, k) => c.HExists(k, field));
+		public bool HashExists( string key, string field) => ExecuteScalar(key, (c, k) => c.HExists(k, field));
 		/// <summary>
 		/// 获取哈希表中字段的数量
 		/// </summary>
 		/// <param name="key">不含prefix前辍</param>
 		/// <returns></returns>
-		public long HashLength(string dbkeys, string key) => ExecuteScalar(dbkeys,key, (c, k) => c.HLen(k));
+		public long HashLength( string key) => ExecuteScalar(key, (c, k) => c.HLen(k));
 		/// <summary>
 		/// 获取在哈希表中指定 key 的所有字段和值
 		/// </summary>
 		/// <param name="key">不含prefix前辍</param>
 		/// <returns></returns>
-		public Dictionary<string, string> HashGetAll(string dbkeys, string key) => ExecuteScalar(dbkeys,key, (c, k) => c.HGetAll(k));
+		public Dictionary<string, string> HashGetAll( string key) => ExecuteScalar(key, (c, k) => c.HGetAll(k));
 		/// <summary>
 		/// 获取所有哈希表中的字段
 		/// </summary>
 		/// <param name="key">不含prefix前辍</param>
 		/// <returns></returns>
-		public string[] HashKeys(string dbkeys, string key) => ExecuteScalar(dbkeys,key, (c, k) => c.HKeys(k));
+		public string[] HashKeys( string key) => ExecuteScalar(key, (c, k) => c.HKeys(k));
 		/// <summary>
 		/// 获取哈希表中所有值
 		/// </summary>
 		/// <param name="key">不含prefix前辍</param>
 		/// <returns></returns>
-		public string[] HashVals(string dbkeys, string key) => ExecuteScalar(dbkeys,key, (c, k) => c.HVals(k));
+		public string[] HashVals( string key) => ExecuteScalar(key, (c, k) => c.HVals(k));
 		#endregion
 
 		#region List 操作
@@ -752,7 +752,7 @@ return 0", $"CSRedisPSubscribe{subscrKey}", "", trylong.ToString());
 		/// <param name="key">不含prefix前辍</param>
 		/// <param name="index">索引</param>
 		/// <returns></returns>
-		public string LIndex(string dbkeys, string key, long index) => ExecuteScalar(dbkeys,key, (c, k) => c.LIndex(k, index));
+		public string LIndex( string key, long index) => ExecuteScalar(key, (c, k) => c.LIndex(k, index));
 		/// <summary>
 		/// 在列表的元素前面插入元素
 		/// </summary>
@@ -760,7 +760,7 @@ return 0", $"CSRedisPSubscribe{subscrKey}", "", trylong.ToString());
 		/// <param name="pivot">列表的元素</param>
 		/// <param name="value">新元素</param>
 		/// <returns></returns>
-		public long LInsertBefore(string dbkeys, string key, string pivot, string value) => ExecuteScalar(dbkeys, key, (c, k) => c.LInsert(k, RedisInsert.Before, pivot, value));
+		public long LInsertBefore( string key, string pivot, string value) => ExecuteScalar( key, (c, k) => c.LInsert(k, RedisInsert.Before, pivot, value));
 		/// <summary>
 		/// 在列表的元素后面插入元素
 		/// </summary>
@@ -768,39 +768,39 @@ return 0", $"CSRedisPSubscribe{subscrKey}", "", trylong.ToString());
 		/// <param name="pivot">列表的元素</param>
 		/// <param name="value">新元素</param>
 		/// <returns></returns>
-		public long LInsertAfter(string dbkeys, string key, string pivot, string value) => ExecuteScalar(dbkeys, key, (c, k) => c.LInsert(k, RedisInsert.After, pivot, value));
+		public long LInsertAfter( string key, string pivot, string value) => ExecuteScalar( key, (c, k) => c.LInsert(k, RedisInsert.After, pivot, value));
 		/// <summary>
 		/// 获取列表长度
 		/// </summary>
 		/// <param name="key">不含prefix前辍</param>
 		/// <returns></returns>
-		public long LLen(string dbkeys, string key) => ExecuteScalar(dbkeys, key, (c, k) => c.LLen(k));
+		public long LLen( string key) => ExecuteScalar( key, (c, k) => c.LLen(k));
 		/// <summary>
 		/// 移出并获取列表的第一个元素
 		/// </summary>
 		/// <param name="key">不含prefix前辍</param>
 		/// <returns></returns>
-		public string LPop(string dbkeys, string key) => ExecuteScalar(dbkeys, key, (c, k) => c.LPop(k));
+		public string LPop( string key) => ExecuteScalar( key, (c, k) => c.LPop(k));
 		/// <summary>
 		/// 移除并获取列表最后一个元素
 		/// </summary>
 		/// <param name="key">不含prefix前辍</param>
 		/// <returns></returns>
-		public string RPop(string dbkeys, string key) => ExecuteScalar(dbkeys, key, (c, k) => c.RPop(k));
+		public string RPop( string key) => ExecuteScalar( key, (c, k) => c.RPop(k));
 		/// <summary>
 		/// 将一个或多个值插入到列表头部
 		/// </summary>
 		/// <param name="key">不含prefix前辍</param>
 		/// <param name="value">一个或多个值</param>
 		/// <returns></returns>
-		public long LPush(string dbkeys, string key, params string[] value) => value == null || value.Any() == false ? 0 : ExecuteScalar(dbkeys, key, (c, k) => c.LPush(k, value));
+		public long LPush( string key, params string[] value) => value == null || value.Any() == false ? 0 : ExecuteScalar( key, (c, k) => c.LPush(k, value));
 		/// <summary>
 		/// 在列表中添加一个或多个值
 		/// </summary>
 		/// <param name="key">不含prefix前辍</param>
 		/// <param name="value">一个或多个值</param>
 		/// <returns></returns>
-		public long RPush(string dbkeys, string key, params string[] value) => value == null || value.Any() == false ? 0 : ExecuteScalar(dbkeys, key, (c, k) => c.RPush(k, value));
+		public long RPush( string key, params string[] value) => value == null || value.Any() == false ? 0 : ExecuteScalar( key, (c, k) => c.RPush(k, value));
 		/// <summary>
 		/// 获取列表指定范围内的元素
 		/// </summary>
@@ -808,7 +808,7 @@ return 0", $"CSRedisPSubscribe{subscrKey}", "", trylong.ToString());
 		/// <param name="start">开始位置，0表示第一个元素，-1表示最后一个元素</param>
 		/// <param name="stop">结束位置，0表示第一个元素，-1表示最后一个元素</param>
 		/// <returns></returns>
-		public string[] LRang(string dbkeys, string key, long start, long stop) => ExecuteScalar(dbkeys, key, (c, k) => c.LRange(k, start, stop));
+		public string[] LRang( string key, long start, long stop) => ExecuteScalar( key, (c, k) => c.LRange(k, start, stop));
 		/// <summary>
 		/// 根据参数 count 的值，移除列表中与参数 value 相等的元素
 		/// </summary>
@@ -816,7 +816,7 @@ return 0", $"CSRedisPSubscribe{subscrKey}", "", trylong.ToString());
 		/// <param name="count">移除的数量，大于0时从表头删除数量count，小于0时从表尾删除数量-count，等于0移除所有</param>
 		/// <param name="value">元素</param>
 		/// <returns></returns>
-		public long LRem(string dbkeys, string key, long count, string value) => ExecuteScalar(dbkeys, key, (c, k) => c.LRem(k, count, value));
+		public long LRem( string key, long count, string value) => ExecuteScalar( key, (c, k) => c.LRem(k, count, value));
 		/// <summary>
 		/// 通过索引设置列表元素的值
 		/// </summary>
@@ -824,7 +824,7 @@ return 0", $"CSRedisPSubscribe{subscrKey}", "", trylong.ToString());
 		/// <param name="index">索引</param>
 		/// <param name="value">值</param>
 		/// <returns></returns>
-		public bool LSet(string dbkeys, string key, long index, string value) => ExecuteScalar(dbkeys, key, (c, k) => c.LSet(k, index, value)) == "OK";
+		public bool LSet( string key, long index, string value) => ExecuteScalar( key, (c, k) => c.LSet(k, index, value)) == "OK";
 		/// <summary>
 		/// 对一个列表进行修剪，让列表只保留指定区间内的元素，不在指定区间之内的元素都将被删除
 		/// </summary>
@@ -832,7 +832,7 @@ return 0", $"CSRedisPSubscribe{subscrKey}", "", trylong.ToString());
 		/// <param name="start">开始位置，0表示第一个元素，-1表示最后一个元素</param>
 		/// <param name="stop">结束位置，0表示第一个元素，-1表示最后一个元素</param>
 		/// <returns></returns>
-		public bool LTrim(string dbkeys, string key, long start, long stop) => ExecuteScalar(dbkeys, key, (c, k) => c.LTrim(k, start, stop)) == "OK";
+		public bool LTrim( string key, long start, long stop) => ExecuteScalar( key, (c, k) => c.LTrim(k, start, stop)) == "OK";
 		#endregion
 
 		#region Sorted Set 操作
@@ -842,17 +842,17 @@ return 0", $"CSRedisPSubscribe{subscrKey}", "", trylong.ToString());
 		/// <param name="key">不含prefix前辍</param>
 		/// <param name="memberScores">一个或多个成员分数</param>
 		/// <returns></returns>
-		public long ZAdd(string dbkeys, string key, params (double, string)[] memberScores) {
+		public long ZAdd( string key, params (double, string)[] memberScores) {
 			if (memberScores == null || memberScores.Any() == false) return 0;
 			var ms = memberScores.Select(a => new Tuple<double, string>(a.Item1, a.Item2)).ToArray();
-			return ExecuteScalar(dbkeys,key, (c, k) => c.ZAdd<double, string>(k, ms));
+			return ExecuteScalar(key, (c, k) => c.ZAdd<double, string>(k, ms));
 		}
 		/// <summary>
 		/// 获取有序集合的成员数量
 		/// </summary>
 		/// <param name="key">不含prefix前辍</param>
 		/// <returns></returns>
-		public long ZCard(string dbkeys, string key) => ExecuteScalar(dbkeys,key, (c, k) => c.ZCard(k));
+		public long ZCard( string key) => ExecuteScalar(key, (c, k) => c.ZCard(k));
 		/// <summary>
 		/// 计算在有序集合中指定区间分数的成员数量
 		/// </summary>
@@ -860,7 +860,7 @@ return 0", $"CSRedisPSubscribe{subscrKey}", "", trylong.ToString());
 		/// <param name="min">分数最小值</param>
 		/// <param name="max">分数最大值</param>
 		/// <returns></returns>
-		public long ZCount(string dbkeys, string key, double min, double max) => ExecuteScalar(dbkeys, key, (c, k) => c.ZCount(k, min, max));
+		public long ZCount( string key, double min, double max) => ExecuteScalar( key, (c, k) => c.ZCount(k, min, max));
 		/// <summary>
 		/// 有序集合中对指定成员的分数加上增量 increment
 		/// </summary>
@@ -868,7 +868,7 @@ return 0", $"CSRedisPSubscribe{subscrKey}", "", trylong.ToString());
 		/// <param name="memeber">成员</param>
 		/// <param name="increment">增量值(默认=1)</param>
 		/// <returns></returns>
-		public double ZIncrBy(string dbkeys, string key, string memeber, double increment = 1) => ExecuteScalar(dbkeys,key, (c, k) => c.ZIncrBy(k, increment, memeber));
+		public double ZIncrBy( string key, string memeber, double increment = 1) => ExecuteScalar(key, (c, k) => c.ZIncrBy(k, increment, memeber));
 
 		#region 多个有序集合 交集
 		/// <summary>
@@ -947,7 +947,7 @@ return 0", $"CSRedisPSubscribe{subscrKey}", "", trylong.ToString());
 		/// <param name="start">开始位置，0表示第一个元素，-1表示最后一个元素</param>
 		/// <param name="stop">结束位置，0表示第一个元素，-1表示最后一个元素</param>
 		/// <returns></returns>
-		public string[] ZRange(string dbkeys, string key, long start, long stop) => ExecuteScalar(dbkeys,key, (c, k) => c.ZRange(k, start, stop, false));
+		public string[] ZRange( string key, long start, long stop) => ExecuteScalar(key, (c, k) => c.ZRange(k, start, stop, false));
 		/// <summary>
 		/// 通过分数返回有序集合指定区间内的成员
 		/// </summary>
@@ -957,21 +957,21 @@ return 0", $"CSRedisPSubscribe{subscrKey}", "", trylong.ToString());
 		/// <param name="limit">返回多少成员</param>
 		/// <param name="offset">返回条件偏移位置</param>
 		/// <returns></returns>
-		public string[] ZRangeByScore(string dbkeys, string key, double minScore, double maxScore, long? limit = null, long offset = 0) => ExecuteScalar(dbkeys,key, (c, k) => c.ZRangeByScore(k, minScore, maxScore, false, false, false, offset, limit));
+		public string[] ZRangeByScore( string key, double minScore, double maxScore, long? limit = null, long offset = 0) => ExecuteScalar(key, (c, k) => c.ZRangeByScore(k, minScore, maxScore, false, false, false, offset, limit));
 		/// <summary>
 		/// 返回有序集合中指定成员的索引
 		/// </summary>
 		/// <param name="key">不含prefix前辍</param>
 		/// <param name="member">成员</param>
 		/// <returns></returns>
-		public long? ZRank(string dbkeys, string key, string member) => ExecuteScalar(dbkeys, key, (c, k) => c.ZRank(k, member));
+		public long? ZRank( string key, string member) => ExecuteScalar( key, (c, k) => c.ZRank(k, member));
 		/// <summary>
 		/// 移除有序集合中的一个或多个成员
 		/// </summary>
 		/// <param name="key">不含prefix前辍</param>
 		/// <param name="member">一个或多个成员</param>
 		/// <returns></returns>
-		public long ZRem(string dbkeys, string key, params string[] member) => ExecuteScalar(dbkeys, key, (c, k) => c.ZRem(k, member));
+		public long ZRem( string key, params string[] member) => ExecuteScalar( key, (c, k) => c.ZRem(k, member));
 		/// <summary>
 		/// 移除有序集合中给定的排名区间的所有成员
 		/// </summary>
@@ -979,7 +979,7 @@ return 0", $"CSRedisPSubscribe{subscrKey}", "", trylong.ToString());
 		/// <param name="start">开始位置，0表示第一个元素，-1表示最后一个元素</param>
 		/// <param name="stop">结束位置，0表示第一个元素，-1表示最后一个元素</param>
 		/// <returns></returns>
-		public long ZRemRangeByRank(string dbkeys, string key, long start, long stop) => ExecuteScalar(dbkeys, key, (c, k) => c.ZRemRangeByRank(k, start, stop));
+		public long ZRemRangeByRank( string key, long start, long stop) => ExecuteScalar( key, (c, k) => c.ZRemRangeByRank(k, start, stop));
 		/// <summary>
 		/// 移除有序集合中给定的分数区间的所有成员
 		/// </summary>
@@ -987,7 +987,7 @@ return 0", $"CSRedisPSubscribe{subscrKey}", "", trylong.ToString());
 		/// <param name="minScore">最小分数</param>
 		/// <param name="maxScore">最大分数</param>
 		/// <returns></returns>
-		public long ZRemRangeByScore(string dbkeys, string key, double minScore, double maxScore) => ExecuteScalar(dbkeys,key, (c, k) => c.ZRemRangeByScore(k, minScore, maxScore));
+		public long ZRemRangeByScore( string key, double minScore, double maxScore) => ExecuteScalar(key, (c, k) => c.ZRemRangeByScore(k, minScore, maxScore));
 		/// <summary>
 		/// 返回有序集中指定区间内的成员，通过索引，分数从高到底
 		/// </summary>
@@ -995,7 +995,7 @@ return 0", $"CSRedisPSubscribe{subscrKey}", "", trylong.ToString());
 		/// <param name="start">开始位置，0表示第一个元素，-1表示最后一个元素</param>
 		/// <param name="stop">结束位置，0表示第一个元素，-1表示最后一个元素</param>
 		/// <returns></returns>
-		public string[] ZRevRange(string dbkeys, string key, long start, long stop) => ExecuteScalar(dbkeys, key, (c, k) => c.ZRevRange(k, start, stop, false));
+		public string[] ZRevRange( string key, long start, long stop) => ExecuteScalar( key, (c, k) => c.ZRevRange(k, start, stop, false));
 		/// <summary>
 		/// 返回有序集中指定分数区间内的成员，分数从高到低排序
 		/// </summary>
@@ -1005,21 +1005,21 @@ return 0", $"CSRedisPSubscribe{subscrKey}", "", trylong.ToString());
 		/// <param name="limit">返回多少成员</param>
 		/// <param name="offset">返回条件偏移位置</param>
 		/// <returns></returns>
-		public string[] ZRevRangeByScore(string dbkeys, string key, double maxScore, double minScore, long? limit = null, long? offset = 0) => ExecuteScalar(dbkeys, key, (c, k) => c.ZRevRangeByScore(k, maxScore, minScore, false, false, false, offset, limit));
+		public string[] ZRevRangeByScore( string key, double maxScore, double minScore, long? limit = null, long? offset = 0) => ExecuteScalar( key, (c, k) => c.ZRevRangeByScore(k, maxScore, minScore, false, false, false, offset, limit));
 		/// <summary>
 		/// 返回有序集合中指定成员的排名，有序集成员按分数值递减(从大到小)排序
 		/// </summary>
 		/// <param name="key">不含prefix前辍</param>
 		/// <param name="member">成员</param>
 		/// <returns></returns>
-		public long? ZRevRank(string dbkeys, string key, string member) => ExecuteScalar(dbkeys, key, (c, k) => c.ZRevRank(k, member));
+		public long? ZRevRank( string key, string member) => ExecuteScalar( key, (c, k) => c.ZRevRank(k, member));
 		/// <summary>
 		/// 返回有序集中，成员的分数值
 		/// </summary>
 		/// <param name="key">不含prefix前辍</param>
 		/// <param name="member">成员</param>
 		/// <returns></returns>
-		public double? ZScore(string dbkeys, string key, string member) => ExecuteScalar(dbkeys, key, (c, k) => c.ZScore(k, member));
+		public double? ZScore( string key, string member) => ExecuteScalar( key, (c, k) => c.ZScore(k, member));
 		#endregion
 	}
 }

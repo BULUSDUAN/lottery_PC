@@ -408,32 +408,32 @@ namespace KaSon.FrameWork.Common.Redis
 
     public static class SampleStackExchangeRedisExtensions
     {
-        public static T GetObj<T>(this CSRedis.RedisClient cache, string key)
+        public static T GetObj<T>(this CSRedis.CSRedisClient cache, string key)
         {
             return Deserialize<T>(cache.GetBytes(key));
         }
 
-        public static List<T> GetObjs<T>(this CSRedis.RedisClient cache, string key)
+        public static List<T> GetObjs<T>(this CSRedis.CSRedisClient cache, string key)
         {
             return Deserializes<T>(cache.GetBytes(key));
         }
 
-        public static object GetObj(this CSRedis.RedisClient cache, string key)
+        public static object GetObj(this CSRedis.CSRedisClient cache, string key)
         {
             return Deserialize<object>(cache.GetBytes(key));
         }
 
-        public static void SetObj(this CSRedis.RedisClient cache, string key, object value)
+        public static void SetObj(this CSRedis.CSRedisClient cache, string key, object value)
         {
             cache.Set(key, Serialize(value));
         }
 
-        public static void SetObj(this CSRedis.RedisClient cache, string key, object value, TimeSpan timeSpan)
+        public static void SetObj(this CSRedis.CSRedisClient cache, string key, object value, TimeSpan timeSpan)
         {
             cache.Set(key, Serialize(value), timeSpan);
         }
 
-        public static List<T> GetRange<T>(this CSRedis.RedisClient cache, string key)
+        public static List<T> GetRange<T>(this CSRedis.CSRedisClient cache, string key)
         {
             var index = cache.LLen(key);
             if (index == 0)
@@ -452,7 +452,7 @@ namespace KaSon.FrameWork.Common.Redis
         /// <param name="cache"></param>
         /// <param name="key"></param>
         /// <param name="obj"></param>
-        public static void SetRPush(this CSRedis.RedisClient cache, string key, object obj)
+        public static void SetRPush(this CSRedis.CSRedisClient cache, string key, object obj)
         {
             cache.RPush(key, obj);
         }
@@ -462,7 +462,7 @@ namespace KaSon.FrameWork.Common.Redis
         /// <param name="cache"></param>
         /// <param name="key"></param>
         /// <param name="obj"></param>
-        public static void SetLPush(this CSRedis.RedisClient cache, string key, object obj)
+        public static void SetLPush(this CSRedis.CSRedisClient cache, string key, object obj)
         {
             cache.RPush(key, obj);
         }
