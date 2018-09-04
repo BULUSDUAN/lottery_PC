@@ -1030,7 +1030,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 //v = LotteryGame.GameCode;
                 if (LotteryGame != null)
                 {
-                    db.SetObj(RedisKey, LotteryGame, 3 * 60);
+                    db.SetAsync(RedisKey, LotteryGame, 3 * 60);
                 }
             }
           
