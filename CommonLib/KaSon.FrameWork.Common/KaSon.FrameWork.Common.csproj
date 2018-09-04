@@ -47,6 +47,7 @@
 
   <ItemGroup>
     <Folder Include="LotteryJsonInfo_Operate\" />
+    <Folder Include="Core_Redis\" />
   </ItemGroup>
 
 </Project>

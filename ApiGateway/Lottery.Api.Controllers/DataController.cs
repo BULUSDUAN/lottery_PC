@@ -29,6 +29,12 @@ namespace Lottery.Api.Controllers
     {
         public IActionResult Index()
         {
+            CsRedisCode.RedisHelper.Initialization(
+                csredis: new CSRedis.CSRedisClient(@"10.0.3.6:6379,password=redis123,defaultDatabase=13,poolsize=50,ssl=false,writeBuffer=10240"),
+                serialize: value => Newtonsoft.Json.JsonConvert.SerializeObject(value),
+                deserialize: (data, type) => Newtonsoft.Json.JsonConvert.DeserializeObject(data, type));
+            CsRedisCode.RedisHelper.Set("Test1", "t", 10 * 60);
+            var ss = CsRedisCode.RedisHelper.Get("Test1");
             return JsonEx(new { name = "12313" });
         }
         #region 查询彩种奖期信息(101)
