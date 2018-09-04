@@ -11,10 +11,9 @@ namespace CSRedis {
 	/// </summary>
 	public partial class ConnectionPool {
 
-        internal int _poolsize = 50, _port = 6379, _database = 0, _writebuffer = 10240;
-        internal string _ip = "127.0.0.1", _password = "";
-        internal bool _ssl = false;
-         
+		private int _poolsize = 50, _port = 6379, _database = 0, _writebuffer = 10240;
+		private string _ip = "127.0.0.1", _password = "";
+		private bool _ssl = false;
 		internal string ClusterKey => $"{_ip}:{_port}/{_database}";
 		internal string Prefix { get; set; }
 		public List<RedisConnection2> AllConnections = new List<RedisConnection2>();
@@ -52,36 +51,7 @@ namespace CSRedis {
 				foreach (var conn in initConns) ReleaseConnection(conn);
 			}
 		}
-        /// <summary>
-        /// kason 创建Redis 连接
-        /// </summary>
-        /// <param name="ex_ip"></param>
-        /// <param name="ex_port"></param>
-        /// <param name="ex_password"></param>
-        /// <param name="defaultdatabase"></param>
-        /// <param name="ex_writebuffer"></param>
-        /// <param name="ex_poolsize"></param>
-        /// <param name="ex_ssl"></param>
-        /// <param name="Prefix"></param>
-        public void ConnectionStringEx(string ex_ip="127.0.0.1",int ex_port= 6379,string ex_password="",
-            int ex_defaultdatabase = 0,int ex_writebuffer= 10240,
-            int ex_poolsize=2000,bool ex_ssl=false,string ex_Prefix="") {
-            _ip = ex_ip;
-            _port = ex_port;
-            _password = ex_password;
-            _database = ex_defaultdatabase;
-            _writebuffer = ex_writebuffer;
-            _poolsize = ex_poolsize;
-            _ssl = ex_ssl;
-            Prefix = ex_Prefix;
-
-            if (_poolsize <= 0) _poolsize = 50;
-            var initConns = new RedisConnection2[_poolsize];
-            for (var a = 0; a < _poolsize; a++) initConns[a] = GetFreeConnection();
-            foreach (var conn in initConns) ReleaseConnection(conn);
-        }
-        //   public
-        public ConnectionPool() {
+		public ConnectionPool() {
 			Connected += (s, o) => {
 				RedisClient rc = s as RedisClient;
 				if (!string.IsNullOrEmpty(_password)) rc.Auth(_password);
@@ -105,7 +75,7 @@ namespace CSRedis {
 					conn.Pool = this;
 					var ips = Dns.GetHostAddresses(_ip);
 					if (ips.Length == 0) throw new Exception($"无法解析“{_ip}”");
-					conn.Client = new RedisClient(new IPEndPoint(ips[0], _port), _ssl,2000, _writebuffer);
+					conn.Client = new RedisClient(new IPEndPoint(ips[0], _port), _ssl, 1000, _writebuffer);
 					conn.Client.Connected += Connected;
 				}
 			}
