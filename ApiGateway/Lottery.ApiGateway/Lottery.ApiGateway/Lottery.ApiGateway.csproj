@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\CommonLib\csredis-master\CSRedisCore.csproj" />
     <ProjectReference Include="..\..\Lottery.Api.Controllers\Lottery.Api.Controllers.csproj" />
     <ProjectReference Include="..\..\Lottery.base.Controllers\Lottery.Base.Controllers.csproj" />
     <ProjectReference Include="..\..\Lottery.ServiceMg.Controllers\Lottery.ServiceMg.Controllers.csproj" />
