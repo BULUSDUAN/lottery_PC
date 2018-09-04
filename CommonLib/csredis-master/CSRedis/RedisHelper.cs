@@ -21,6 +21,8 @@ namespace CsRedisCode
         {
             get
             {
+              var node=  Instance.ClusterNodes[""];
+
                 if (_instance == null) throw new Exception("使用前请初始化 RedisHelper.Initialization(new CSRedis.CSRedisClient(\"127.0.0.1:6379,pass=123,defaultDatabase=13,poolsize=50,ssl=false,writeBuffer=10240,prefix=key前辍\");");
                 return _instance;
             }

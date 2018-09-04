@@ -6,7 +6,34 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace CSRedis {
-	public partial class CSRedisClient {
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="ex_ip"></param>
+    /// <param name="ex_port"></param>
+    /// <param name="ex_password"></param>
+    /// <param name="ex_defaultdatabase"></param>
+    /// <param name="ex_writebuffer"></param>
+    /// <param name="ex_poolsize"></param>
+    /// <param name="ex_ssl"></param>
+    /// <param name="ex_Prefix"></param>
+    public class CSRedisConfig {
+
+        public string C_IP { get; set; } = "127.0.0.1";
+        public int C_Post { get; set; } = 6379;
+        public string C_Password { get; set; } = "";
+
+        public int C_Defaultdatabase { get; set; } =0;
+        public int C_PoolSize { get; set; } = 1000;
+        public int c_Writebuffer { get; set; } = 20480;
+        public string C_Prefix { get; set; } = "";
+        public bool C_SSL { get; set; } = false;
+
+
+
+    }
+    public partial class CSRedisClient {
 		public Dictionary<string, ConnectionPool> ClusterNodes { get; } = new Dictionary<string, ConnectionPool>();
 		private List<string> _clusterKeys;
 		private Func<string, string> _clusterRule;
@@ -40,7 +67,43 @@ namespace CSRedis {
 			_clusterKeys = ClusterNodes.Keys.ToList();
 		}
 
-		private DateTime dt1970 = new DateTime(1970, 1, 1);
+     /// <summary>
+     /// kason 配置Redis
+     /// </summary>
+     /// <param name="list"></param>
+            public CSRedisClient(IList<CSRedisConfig> list)
+        {
+            _clusterRule = null;
+            if (_clusterRule == null) _clusterRule = key => {
+                var idx = Math.Abs(string.Concat(key).GetHashCode()) % ClusterNodes.Count;
+                return idx < 0 || idx >= _clusterKeys.Count ? _clusterKeys.First() : _clusterKeys[idx];
+            };
+
+               //if (connectionStrings == null || connectionStrings.Any() == false) throw new Exception("Redis ConnectionString 未设置");
+            foreach (var item in list)
+            {
+                var pool = new ConnectionPool();
+                pool.ConnectionStringEx(item.C_IP, item.C_Post , item.C_Password, item.C_Defaultdatabase , item.c_Writebuffer , item.C_PoolSize , item.C_SSL , item.C_Prefix);
+                pool.Connected += (s, o) => {
+                    RedisClient rc = s as RedisClient;
+                };
+                if (ClusterNodes.ContainsKey(pool.ClusterKey)) throw new Exception($"ClusterName: {pool.ClusterKey} 重复，请检查");
+                ClusterNodes.Add(pool.ClusterKey, pool);
+            }
+            _clusterKeys = ClusterNodes.Keys.ToList();
+            //_clusterKeys = ClusterNodes.Keys.ToList();
+            ////   if (connectionStrings == null || connectionStrings.Any() == false) throw new Exception("Redis ConnectionString 未设置");
+            //var pool = new ConnectionPool();
+            //pool.ConnectionStringEx(ex_ip, ex_port, ex_password, ex_defaultdatabase, ex_writebuffer, ex_poolsize, ex_ssl, ex_Prefix);
+            //pool.Connected += (s, o) => {
+            //    RedisClient rc = s as RedisClient;
+            //};
+            //if (ClusterNodes.ContainsKey(pool.ClusterKey)) throw new Exception($"ClusterName: {pool.ClusterKey} 重复，请检查");
+            //ClusterNodes.Add(pool.ClusterKey, pool);
+            //_clusterKeys = ClusterNodes.Keys.ToList();
+        }
+
+        private DateTime dt1970 = new DateTime(1970, 1, 1);
 		/// <summary>
 		/// 缓存壳
 		/// </summary>

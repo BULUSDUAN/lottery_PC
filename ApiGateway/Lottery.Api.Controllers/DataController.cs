@@ -20,6 +20,7 @@ using KaSon.FrameWork.Common.ExceptionEx;
 using EntityModel.ExceptionExtend;
 using KaSon.FrameWork.Common.Redis;
 using EntityModel.Redis;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace Lottery.Api.Controllers
 {
@@ -27,6 +28,7 @@ namespace Lottery.Api.Controllers
     [ReusltFilter]
     public class DataController : BaseController
     {
+        private IDistributedCache _Cache;
         public IActionResult Index()
         {
             CsRedisCode.RedisHelper.Initialization(
@@ -35,7 +37,14 @@ namespace Lottery.Api.Controllers
                 deserialize: (data, type) => Newtonsoft.Json.JsonConvert.DeserializeObject(data, type));
             CsRedisCode.RedisHelper.Set("Test1", "t", 10 * 60);
             var ss = CsRedisCode.RedisHelper.Get("Test1");
-            return JsonEx(new { name = "12313" });
+          //  return JsonEx(new { name = "12313" });
+            var csredis = new CSRedis.CSRedisClient(null,
+  "127.0.0.1:6371,password=123,defaultDatabase=11,poolsize=10,ssl=false,writeBuffer=10240,prefix=key前辍",
+  "127.0.0.1:6372,password=123,defaultDatabase=12,poolsize=11,ssl=false,writeBuffer=10240,prefix=key前辍",
+  "127.0.0.1:6373,password=123,defaultDatabase=13,poolsize=12,ssl=false,writeBuffer=10240,prefix=key前辍",
+  "127.0.0.1:6374,password=123,defaultDatabase=14,poolsize=13,ssl=false,writeBuffer=10240,prefix=key前辍");
+
+          //  _Cache
         }
         #region 查询彩种奖期信息(101)
         /// <summary>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Configuration;
-using StackExchange.Redis;
+//using StackExchange.Redis;
 using System.Net;
 using System.IO;
 using KaSon.FrameWork.Common;
