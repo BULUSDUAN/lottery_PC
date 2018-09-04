@@ -38,6 +38,7 @@ namespace CSRedis {
 		private List<string> _clusterKeys;
 		private Func<string, string> _clusterRule;
 
+        public string DBKey = "";
 		/// <summary>
 		/// 创建redis访问类
 		/// </summary>
