@@ -32,32 +32,32 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <summary>
         ///  用户支出，申请提现
         /// </summary>
-        public  WithdrawCategory Payout_To_Frozen_Withdraw(string category, string userId, string orderId, decimal payoutMoney,
+        public  WithdrawCategory Payout_To_Frozen_Withdraw(FundManager fundManager, UserBalanceManager balanceManager, C_User_Balance userBalance, string category, string userId, string orderId, decimal payoutMoney,
             string summary, string place, string balancepwd, out decimal responseMoney)
         {
             var requestMoney = payoutMoney;
             if (payoutMoney <= 0M)
                 throw new LogicException("消费金额不能小于0.");
             //查询帐户余额
-            var balanceManager = new UserBalanceManager();
-            var fundManager = new FundManager();
-            //资金密码判断
-            var userBalance = balanceManager.QueryUserBalance(userId);
-            if (userBalance == null) { throw new LogicException("用户帐户不存在 - " + userId); }
-            if (userBalance.IsSetPwd && !string.IsNullOrEmpty(userBalance.NeedPwdPlace))
-            {
-                if (userBalance.NeedPwdPlace == "ALL" || userBalance.NeedPwdPlace.Split('|', ',').Contains(place))
-                {
-                    balancepwd = Encipherment.MD5(string.Format("{0}{1}", balancepwd, _gbKey)).ToUpper();
-                    if (!userBalance.Password.ToUpper().Equals(balancepwd))
-                    {
-                        throw new LogicException("资金密码输入错误");
-                    }
-                }
-            }
-            var totalMoney = userBalance.FillMoneyBalance + userBalance.BonusBalance + userBalance.CommissionBalance + userBalance.ExpertsBalance;
-            if (totalMoney < payoutMoney)
-                throw new LogicException(string.Format("用户总金额小于 {0:N2}元。", payoutMoney));
+            //var balanceManager = new UserBalanceManager();
+            //var fundManager = new FundManager();
+            ////资金密码判断
+            //var userBalance = balanceManager.QueryUserBalance(userId);
+            //if (userBalance == null) { throw new LogicException("用户帐户不存在 - " + userId); }
+            //if (userBalance.IsSetPwd && !string.IsNullOrEmpty(userBalance.NeedPwdPlace))
+            //{
+            //    if (userBalance.NeedPwdPlace == "ALL" || userBalance.NeedPwdPlace.Split('|', ',').Contains(place))
+            //    {
+            //        balancepwd = Encipherment.MD5(string.Format("{0}{1}", balancepwd, _gbKey)).ToUpper();
+            //        if (!userBalance.Password.ToUpper().Equals(balancepwd))
+            //        {
+            //            throw new LogicException("资金密码输入错误");
+            //        }
+            //    }
+            //}
+            //var totalMoney = userBalance.FillMoneyBalance + userBalance.BonusBalance + userBalance.CommissionBalance + userBalance.ExpertsBalance;
+            //if (totalMoney < payoutMoney)
+            //    throw new LogicException(string.Format("用户总金额小于 {0:N2}元。", payoutMoney));
 
             var payDetailList = new List<PayDetail>();
             payDetailList.Add(new PayDetail

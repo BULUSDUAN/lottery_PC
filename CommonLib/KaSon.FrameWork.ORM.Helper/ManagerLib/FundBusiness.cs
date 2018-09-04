@@ -163,6 +163,25 @@ namespace KaSon.FrameWork.ORM.Helper
             var user = userManager.QueryUserRegister(userId);
             if (!user.IsEnable)
                 throw new LogicException("用户已禁用");
+            //资金密码判断
+            string place = "Withdraw";
+            decimal payoutMoney = info.RequestMoney;
+            var userBalance = userManager.QueryUserBalance(userId);
+            if (userBalance == null) { throw new LogicException("用户帐户不存在 - " + userId); }
+            if (userBalance.IsSetPwd && !string.IsNullOrEmpty(userBalance.NeedPwdPlace))
+            {
+                if (userBalance.NeedPwdPlace == "ALL" || userBalance.NeedPwdPlace.Split('|', ',').Contains(place))
+                {
+                    balancepwd = Encipherment.MD5(string.Format("{0}{1}", balancepwd, _gbKey)).ToUpper();
+                    if (!userBalance.Password.ToUpper().Equals(balancepwd))
+                    {
+                        throw new LogicException("资金密码输入错误");
+                    }
+                }
+            }
+            var totalMoney = userBalance.FillMoneyBalance + userBalance.BonusBalance + userBalance.CommissionBalance + userBalance.ExpertsBalance;
+            if (totalMoney < payoutMoney)
+                throw new LogicException(string.Format("用户总金额小于 {0:N2}元。", payoutMoney));
             var orderId = BettingHelper.GetWithdrawId();
             var maxTimes = 3;
             var currentTimes = fundManager.QueryTodayWithdrawTimes(userId);
@@ -175,7 +194,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 var resonseMoney = 0M;
                
                 BusinessHelper businessHelper = new BusinessHelper();
-                var category = businessHelper.Payout_To_Frozen_Withdraw(BusinessHelper.FundCategory_RequestWithdraw, userId, orderId, info.RequestMoney
+                var category = businessHelper.Payout_To_Frozen_Withdraw(fundManager,userManager, userBalance, BusinessHelper.FundCategory_RequestWithdraw, userId, orderId, info.RequestMoney
                       , string.Format("申请提现：{0:N2}元", info.RequestMoney), "Withdraw", balancepwd, out resonseMoney);
 
              
