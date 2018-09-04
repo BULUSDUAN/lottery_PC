@@ -318,11 +318,11 @@ namespace UserLottery.Service.ModuleServices
             {
                 var fullKey = string.Format("{0}_{1}", RedisKeys.Key_UserBind, userId);
                 var db = RedisHelper.DB_UserBindData;
-                var exist = db.KeyExistsAsync(fullKey).Result;
-                if (!exist)
-                    return null;
-                var v = db.StringGetAsync(fullKey).Result;
-                if (!v.HasValue)
+                //var exist = db.KeyExistsAsync(fullKey).Result;
+                //if (!exist)
+                //    return null;
+                var v = db.GetAsync(fullKey).Result;
+                if (string.IsNullOrEmpty(v))
                     return null;
                 var info = JsonHelper.Deserialize<UserBindInfos>(v);
                 return null;
@@ -345,7 +345,7 @@ namespace UserLottery.Service.ModuleServices
                 var content = JsonHelper.Serialize<UserBindInfos>(info);
                 var fullKey = string.Format("{0}_{1}", RedisKeys.Key_UserBind, userId);
                 var db = RedisHelper.DB_UserBindData;
-                db.StringSetAsync(fullKey, content, TimeSpan.FromDays(1));
+                db.SetAsync(fullKey, content, TimeSpan.FromDays(1));
             }
             catch (Exception ex)
             {
@@ -362,7 +362,7 @@ namespace UserLottery.Service.ModuleServices
             {
                 var fullKey = string.Format("{0}_{1}", RedisKeys.Key_UserBind, userId);
                 var db = RedisHelper.DB_UserBindData;
-                db.KeyDeleteAsync(fullKey);
+                db.DelAsync(fullKey);
             }
             catch (Exception ex)
             {
