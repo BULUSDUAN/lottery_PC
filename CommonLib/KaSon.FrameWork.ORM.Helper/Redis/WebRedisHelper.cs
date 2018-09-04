@@ -32,21 +32,8 @@ namespace KaSon.FrameWork.ORM.Helper
 
         private static List<LotteryIssuse_QueryInfo> QueryNextIssuseListByKey(string key)
         {
-            var list = new List<LotteryIssuse_QueryInfo>();
             var db = RedisHelper.DB_CoreCacheData;
-            var jsonList = db.ListRangeAsync(key).Result;
-            foreach (var json in jsonList)
-            {
-                if (!json.HasValue) continue;
-                try
-                {
-                    var issuse = JsonHelper.Deserialize<LotteryIssuse_QueryInfo>(json);
-                    list.Add(issuse);
-                }
-                catch (Exception)
-                {
-                }
-            }
+            var list = db.GetRange<LotteryIssuse_QueryInfo>(key);
             return list;
         }
 

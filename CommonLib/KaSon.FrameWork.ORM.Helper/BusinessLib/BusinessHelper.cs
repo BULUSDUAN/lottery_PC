@@ -1014,22 +1014,23 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             var RedisKeyH = "CoreConfig_";
             var RedisKey = RedisKeyH + gameCode;
-          //  var flag = RedisHelper.KeyExists(gameCode);
-            var v = RedisHelper.DB_Other.Get(gameCode);
+            //var flag = RedisHelper.KeyExists(gameCode);
+            //var v = "";
             var Game = new LotteryGame();
-            if (!string.IsNullOrEmpty(v))
-            {
-               // v = RedisHelper.StringGet(gameCode);
-                Game.GameCode = v;
-            }
+            var db = RedisHelper.DB_Other;
+            //if (flag)
+            //{
+            Game = db.GetObj<LotteryGame>(gameCode);
+                //Game.GameCode = v;
+            //}
           
-            if (string.IsNullOrEmpty(v))
+            if (Game==null)
             {
                 var LotteryGame = SDB.CreateQuery<LotteryGame>().Where(p => p.GameCode == gameCode).FirstOrDefault();
-                v = LotteryGame.GameCode;
+                //v = LotteryGame.GameCode;
                 if (LotteryGame != null)
                 {
-                    RedisHelper.DB_Other.Set(RedisKey, v, 3 * 60);
+                    db.SetObj(RedisKey, LotteryGame, 3 * 60);
                 }
             }
           
