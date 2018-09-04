@@ -366,15 +366,15 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                 var db = RedisHelper.DB_NoTicket_Order;
                 var currentIndexKey = string.Format("{0}_Current", key);
-                var indexValue = db.StringGetAsync(currentIndexKey).Result;
+                var indexValue = db.GetAsync(currentIndexKey).Result;
                 var index = 0;
-                if (indexValue.HasValue)
+                if (string.IsNullOrEmpty(indexValue))
                 {
                     //获取索引
                     index = int.Parse(indexValue.ToString());
                     index = index >= Max_PrizeListCount ? 0 : index + 1;
                 }
-                db.StringSetAsync(currentIndexKey, index);
+                db.SetAsync(currentIndexKey, index);
                 return string.Format("{0}_{1}", key, index);
             }
             catch (Exception)
@@ -406,7 +406,7 @@ namespace KaSon.FrameWork.ORM.Helper
             };
             var json = JsonHelper.Serialize<RedisOrderInfo>(orderInfo);
             //以订单号为key 订单内容为value保存
-            db.StringSetAsync(orderId, json);
+            db.SetAsync(orderId, json);
         }
 
         /// <summary>
@@ -430,7 +430,7 @@ namespace KaSon.FrameWork.ORM.Helper
             };
             var json = JsonHelper.Serialize<RedisOrderInfo>(orderInfo);
             //以订单号为key 订单内容为value保存
-            db.StringSetAsync(orderId, json);
+            db.SetAsync(orderId, json);
         }
 
      
@@ -446,7 +446,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 var db = RedisHelper.DB_NoTicket_Order;
                 var key = string.Format("{0}_{1}_{2}", RedisKeys.Key_Waiting_Order_List, "General", gameCode.ToUpper());
                 var currentIndexKey = string.Format("{0}_Current", key);
-                var indexValue = db.StringGetAsync(currentIndexKey).Result;
+                var indexValue = db.GetAsync(currentIndexKey).Result;
                 var index = 0;
                 if (indexValue.HasValue)
                 {
@@ -454,7 +454,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     index = int.Parse(indexValue.ToString());
                     index = index >= count ? 0 : index + 1;
                 }
-                db.StringSetAsync(currentIndexKey, index);
+                db.SetAsync(currentIndexKey, index);
                 return string.Format("{0}_{1}", key, index);
             }
             catch (Exception)

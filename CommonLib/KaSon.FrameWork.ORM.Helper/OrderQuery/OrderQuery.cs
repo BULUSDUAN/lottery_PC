@@ -479,21 +479,21 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             var redisKey_TogetherList = RedisKeys.Key_Core_Togegher_OrderList;
             //生成列表
-            var list = new List<Sports_TogetherSchemeQueryInfo>();
+           // var list = new List<Sports_TogetherSchemeQueryInfo>();
             //var redisList = new List<StackExchange.Redis.RedisValue>(); //RedisHelper.QuerySportsTogetherListFromRedis(redisKey_TogetherList).Result;
-            var redisList = RedisHelper.ListRangeAsync(redisKey_TogetherList).Result;
-            foreach (var item in redisList)
-            {
-                try
-                {
-                    if (!item.HasValue) continue;
-                    var t = JsonHelper.Deserialize<Sports_TogetherSchemeQueryInfo>(item.ToString());
-                    list.Add(t);
-                }
-                catch (Exception)
-                {
-                }
-            }
+            var list = RedisHelper.DB_Other.GetRange<Sports_TogetherSchemeQueryInfo>(redisKey_TogetherList);
+            //foreach (var item in redisList)
+            //{
+            //    try
+            //    {
+            //        if (!item.HasValue) continue;
+            //        var t = JsonHelper.Deserialize<Sports_TogetherSchemeQueryInfo>(item.ToString());
+            //        list.Add(t);
+            //    }
+            //    catch (Exception)
+            //    {
+            //    }
+            //}
 
             //查询列表
             var seC = !Model.security.HasValue ? -1 : (int)Model.security.Value;
