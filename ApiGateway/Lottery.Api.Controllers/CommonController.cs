@@ -318,11 +318,11 @@ namespace Lottery.Api.Controllers
                 //1.从redis中取
                 //2.取不到则在sql中取
                 //3.不为空则存入redis中，3分钟缓存
-                //var flag = KaSon.FrameWork.Common.Redis.RedisHelper.KeyExists(key);
+                //var flag = KaSon.FrameWork.Common.Redis.RedisHelperEx.KeyExists(key);
                 //var v = "";
                 //if (flag)
                 //{
-                //    v = KaSon.FrameWork.Common.Redis.RedisHelper.StringGet(key);
+                //    v = KaSon.FrameWork.Common.Redis.RedisHelperEx.StringGet(key);
                 //}
                 //if (string.IsNullOrEmpty(v))
                 //{
@@ -332,7 +332,7 @@ namespace Lottery.Api.Controllers
                 //    if (config != null)
                 //    {
                 //        v = config.ConfigValue;
-                //        KaSon.FrameWork.Common.Redis.RedisHelper.StringSet(key, config.ConfigValue, 3 * 60);
+                //        KaSon.FrameWork.Common.Redis.RedisHelperEx.StringSet(key, config.ConfigValue, 3 * 60);
                 //    }
                 //    if (string.IsNullOrEmpty(v))
                 //    {

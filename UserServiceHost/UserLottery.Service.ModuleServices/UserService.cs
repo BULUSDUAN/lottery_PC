@@ -317,7 +317,7 @@ namespace UserLottery.Service.ModuleServices
             try
             {
                 var fullKey = string.Format("{0}_{1}", RedisKeys.Key_UserBind, userId);
-                var db = RedisHelper.DB_UserBindData;
+                var db = RedisHelperEx.DB_UserBindData;
                 var exist = db.ExistsAsync(fullKey).Result;
                 if (!exist)
                     return null;
@@ -344,8 +344,8 @@ namespace UserLottery.Service.ModuleServices
             {
                 var content = JsonHelper.Serialize<UserBindInfos>(info);
                 var fullKey = string.Format("{0}_{1}", RedisKeys.Key_UserBind, userId);
-                var db = RedisHelper.DB_UserBindData;
-                db.SetAsync(fullKey, content, TimeSpan.FromDays(1));
+                var db = RedisHelperEx.DB_UserBindData;
+                db.SetAsync(fullKey, content, 24*60*60);
             }
             catch (Exception ex)
             {
@@ -361,8 +361,8 @@ namespace UserLottery.Service.ModuleServices
             try
             {
                 var fullKey = string.Format("{0}_{1}", RedisKeys.Key_UserBind, userId);
-                var db = RedisHelper.DB_UserBindData;
-                db.DelAsync(fullKey);
+                var db = RedisHelperEx.DB_UserBindData;
+                db.Del(fullKey);
             }
             catch (Exception ex)
             {
@@ -1441,7 +1441,7 @@ namespace UserLottery.Service.ModuleServices
         //{
         //    try
         //    {
-        //        var db = RedisHelper.DB_UserBindData;
+        //        var db = RedisHelperEx.DB_UserBindData;
         //        var result= await db.StringSetAsync(RedisKey, RedisValue, TimeSpan.FromMinutes(10));
         //        return result;
         //    }
@@ -1456,7 +1456,7 @@ namespace UserLottery.Service.ModuleServices
         //{
         //    try
         //    {
-        //        var db = RedisHelper.DB_UserBindData;
+        //        var db = RedisHelperEx.DB_UserBindData;
         //        var value= await db.StringGetAsync(RedisKey);
         //        return value;
         //    }

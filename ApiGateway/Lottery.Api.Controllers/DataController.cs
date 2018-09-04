@@ -880,13 +880,13 @@ namespace Lottery.Api.Controllers
                 {
                     var Key = RedisKeys.ArticleListKey;
                     string cacheKey = string.Format("{0}_{1}_{2}_{3}_{4}", Key, param["category"].ToString(), param["gameCode"].ToString(), pageIndex, pageSize);
-                    var obj = RedisHelper.DB_CoreCacheData.GetObj<ArticleInfo_QueryCollection>(cacheKey);
+                    var obj = RedisHelperEx.DB_CoreCacheData.GetObj<ArticleInfo_QueryCollection>(cacheKey);
                     if (obj == null)
                     {
                         aList = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_YouHua");
                         if (aList != null)
                         {
-                            RedisHelper.DB_CoreCacheData.SetObj(cacheKey, aList, TimeSpan.FromMinutes(10));
+                            RedisHelperEx.DB_CoreCacheData.SetObj(cacheKey, aList, TimeSpan.FromMinutes(10));
                         }
                     }
                     else
@@ -1854,7 +1854,7 @@ namespace Lottery.Api.Controllers
                 var config = await _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/Data/QueryCoreConfigByKey");
                 var Agreement = config.ConfigValue;
                 //await _serviceProxyProvider.Invoke<string>(null, "api/Data/Agreement_Config");
-                //var Agreement = WebRedisHelper.Agreement_Config;
+                //var Agreement = WebRedisHelperEx.Agreement_Config;
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
@@ -2339,7 +2339,7 @@ namespace Lottery.Api.Controllers
                         //cache 获取
                         //var _issuse = HashTableCache._IssuseCTZQHt[gameType] ?? Json_CTZQ.IssuseList(gameType);
                         key = $"{EntityModel.Redis.RedisKeys.Key_CTZQ_Issuse_List}_{gameType}";
-                        var issuse = RedisHelper.DB_Match.GetObjs<CtzqIssuesWeb>(key);
+                        var issuse = RedisHelperEx.DB_Match.GetObjs<CtzqIssuesWeb>(key);
                         if (issuse == null)
                         {
                             issuse = Json_CTZQ.IssuseList(gameType);
@@ -2350,7 +2350,7 @@ namespace Lottery.Api.Controllers
                             var now = DateTime.Now;
                             if (Convert.ToDateTime(theissuse.StartTime) > now) break;
                             key = $"{EntityModel.Redis.RedisKeys.Key_CTZQ_Match_Odds_List}_{gameType}_{theissuse.IssuseNumber}";
-                            var oddlist_ctzq = RedisHelper.DB_Match.GetObjs<CTZQ_MatchInfo_WEB>(key);
+                            var oddlist_ctzq = RedisHelperEx.DB_Match.GetObjs<CTZQ_MatchInfo_WEB>(key);
                             if (oddlist_ctzq == null)
                             {
                                 oddlist_ctzq = Json_CTZQ.MatchList_WEB(issuseNumber, gameType); ;
@@ -2360,7 +2360,7 @@ namespace Lottery.Api.Controllers
                         break;
                     case "BJDC":
                         key = $"{EntityModel.Redis.RedisKeys.Key_BJDC_Match_Odds_List}_{gameType}_{issuseNumber}";
-                        var oddlist_bjdc = RedisHelper.DB_Match.GetObjs<BJDC_MatchInfo_WEB>(key);
+                        var oddlist_bjdc = RedisHelperEx.DB_Match.GetObjs<BJDC_MatchInfo_WEB>(key);
                         if (oddlist_bjdc == null)
                         {
                             oddlist_bjdc = Json_BJDC.MatchList_WEB(issuseNumber, gameType);
@@ -2371,7 +2371,7 @@ namespace Lottery.Api.Controllers
                     case "JCZQ":
                         key = EntityModel.Redis.RedisKeys.Key_JCZQ_Match_Odds_List;
                         string reidskey = key + "_" + gameType + (newVerType == null ? "" : newVerType);
-                        var oddlist_jczq = RedisHelper.DB_Match.GetObjs<JCZQ_MatchInfo_WEB>(reidskey);
+                        var oddlist_jczq = RedisHelperEx.DB_Match.GetObjs<JCZQ_MatchInfo_WEB>(reidskey);
                         if (oddlist_jczq == null)
                         {
                             if (gameType.ToLower() == "hhdg")
@@ -2383,7 +2383,7 @@ namespace Lottery.Api.Controllers
                         break;
                     case "JCLQ":
                         key = $"{EntityModel.Redis.RedisKeys.Key_JCLQ_Match_Odds_List}_{gameType}";
-                        var oddlist_jclq = RedisHelper.DB_Match.GetObjs<JCLQ_MatchInfo_WEB>(key);
+                        var oddlist_jclq = RedisHelperEx.DB_Match.GetObjs<JCLQ_MatchInfo_WEB>(key);
                         if (oddlist_jclq == null)
                         {
                             if (gameType.ToLower() == "hhdg")
@@ -2714,7 +2714,7 @@ namespace Lottery.Api.Controllers
                 var p = JsonHelper.Decode(entity.Param);
                 int PageSize = p.PageSize;
                 var RedisKey = RedisKeys.IndexNewsFocus + PageSize;
-                var IndexNewsFocusValue = RedisHelper.DB_Other.Get(RedisKey);
+                var IndexNewsFocusValue = RedisHelperEx.DB_Other.Get(RedisKey);
                 if (string.IsNullOrEmpty(IndexNewsFocusValue))
                 {
                     //1.去获取公告
@@ -2773,7 +2773,7 @@ namespace Lottery.Api.Controllers
                             }
                         }
                     }
-                    RedisHelper.DB_Other.Set(RedisKey, JsonHelper.Serialize(ReturnList), 3 * 60);
+                    RedisHelperEx.DB_Other.Set(RedisKey, JsonHelper.Serialize(ReturnList), 3 * 60);
                     return Json(new LotteryServiceResponse
                     {
                         Code = ResponseCode.成功,
@@ -2908,7 +2908,7 @@ namespace Lottery.Api.Controllers
                 //1.从redis中取
                 //2.取不到则在sql中取
                 //3.不为空则存入redis中，3分钟缓存
-                var v = RedisHelper.DB_Other.Get(key);
+                var v = RedisHelperEx.DB_Other.Get(key);
                 if (string.IsNullOrEmpty(v))
                 {
                     var param = new Dictionary<string, object>();
@@ -2917,7 +2917,7 @@ namespace Lottery.Api.Controllers
                     if (config != null)
                     {
                         v = config.ConfigValue;
-                        RedisHelper.DB_Other.Set(key, config.ConfigValue, 3 * 60);
+                        RedisHelperEx.DB_Other.Set(key, config.ConfigValue, 3 * 60);
                     }
                     if (string.IsNullOrEmpty(v))
                     {
