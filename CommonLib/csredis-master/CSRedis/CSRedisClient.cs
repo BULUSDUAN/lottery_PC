@@ -92,6 +92,26 @@ namespace CSRedis {
         }
 
 
+        public CSRedisClient(CSRedisConfig cSRedisConfig)
+        {
+            _clusterRule = null;
+            if (_clusterRule == null) _clusterRule = key => {
+                var idx = Math.Abs(string.Concat(key).GetHashCode()) % ClusterNodes.Count;
+                return idx < 0 || idx >= _clusterKeys.Count ? _clusterKeys.First() : _clusterKeys[idx];
+            };
+            var pool = new ConnectionPool();
+            pool.ConnectionStringEx(cSRedisConfig.C_IP, cSRedisConfig.C_Post, cSRedisConfig.C_Password,
+                cSRedisConfig.C_Defaultdatabase, cSRedisConfig.c_Writebuffer, cSRedisConfig.C_PoolSize, 
+                cSRedisConfig.C_SSL, cSRedisConfig.C_Prefix);
+            pool.Connected += (s, o) => {
+                RedisClient rc = s as RedisClient;
+            };
+            if (ClusterNodes.ContainsKey(pool.ClusterKey)) throw new Exception($"ClusterName: {pool.ClusterKey} 重复，请检查");
+            ClusterNodes.Add(pool.ClusterKey, pool);
+            _clusterKeys = ClusterNodes.Keys.ToList();
+        }
+
+
         private DateTime dt1970 = new DateTime(1970, 1, 1);
 		/// <summary>
 		/// 缓存壳

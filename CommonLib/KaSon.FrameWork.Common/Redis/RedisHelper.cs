@@ -60,9 +60,9 @@ namespace KaSon.FrameWork.Common.Redis
                 foreach (var item in list)
                 {
                     string key = $"{item.C_IP}:{item.C_Post}/{item.C_Defaultdatabase}";
-                    var nlist = new List<CSRedis.CSRedisConfig>();
-                    nlist.Add(item);
-                    RedisHas[key] = new CSRedis.CSRedisClient(nlist);
+                    //var nlist = new List<CSRedis.CSRedisConfig>();
+                    //nlist.Add(item);
+                    RedisHas[key] = new CSRedis.CSRedisClient(item);
                 }
 //                var csredis = new CSRedis.CSRedisClient(list);
 //                CsRedisCode.RedisHelperEx.Initialization(csredis,
