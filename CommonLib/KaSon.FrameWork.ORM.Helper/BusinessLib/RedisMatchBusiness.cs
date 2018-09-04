@@ -80,8 +80,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 var matchList = new Sports_Manager().QueryBJDC_Current_CacheMatchList();
                 var json = JsonHelper.Serialize(matchList);
                 var fullKey = string.Format("{0}_{1}", "BJDC", RedisKeys.Key_Running_Match_List);
-                var db = RedisHelper.DB_Match;
-                db.StringSetAsync(fullKey, json);
+                RedisHelper.DB_Match.Set(fullKey, json);
             }
             catch (Exception)
             {

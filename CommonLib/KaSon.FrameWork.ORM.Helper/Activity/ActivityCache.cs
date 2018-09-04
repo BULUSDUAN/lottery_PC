@@ -19,18 +19,14 @@ namespace KaSon.FrameWork.ORM.Helper
         /// </summary>
         public static string QueryActivityConfig(string key)
         {
-            var flag = RedisHelper.KeyExists(key);
-            var v = "";
-            if (flag)
-            {
-                v= RedisHelper.StringGet(key);
-            }
+            var v = RedisHelper.DB_Other.Get(key);
             if (string.IsNullOrEmpty(v))
             {
-               var config = new A20150919Manager().QueryActivityConfig(key);
+                var config = new A20150919Manager().QueryActivityConfig(key);
                 v = config.ConfigValue;
-                if (config != null) {
-                    RedisHelper.StringSet(key, v, 3 * 60);
+                if (config != null)
+                {
+                    RedisHelper.DB_Other.Set(key, v, 3 * 60);
                 }
             }
             return v;

@@ -339,6 +339,20 @@ deserialize: (data, type) => Newtonsoft.Json.JsonConvert.DeserializeObject(data,
             cache.Set(key, Serialize(value), timeSpan);
         }
 
+        public static List<T> GetRange<T>(this CSRedis.RedisClient cache, string key)
+        {
+            var index = cache.LLen(key);
+            if (index == 0)
+                return null;
+            var array = cache.LRange(key, 0, index);
+            List<T> list = new List<T>();
+            foreach (var item in array)
+            {
+                list.Add(JsonHelper.Deserialize<T>(item.ToString()));
+            }
+            return list;
+        }
+
         static byte[] Serialize(object o)
         {
             if (o == null)
@@ -388,7 +402,7 @@ deserialize: (data, type) => Newtonsoft.Json.JsonConvert.DeserializeObject(data,
                     return result;
                 }
             }
-            catch 
+            catch
             {
                 return null;
             }
