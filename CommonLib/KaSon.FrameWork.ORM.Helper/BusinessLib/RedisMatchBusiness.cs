@@ -493,7 +493,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 //写入redis库
                 //格式：期号^开奖号
                 var array = lastOpenIssuse.Select(p => (RedisValue)string.Format("{0}^{1}", p.IssuseNumber, p.WinNumber)).ToArray();
-                db.ListRightPushAsync(fullKey, array);
+                db.SetRPush(fullKey, array);
             }
         }
 
@@ -506,11 +506,11 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                 var db = RedisHelper.DB_Match;
                 var fullKey = string.Format("{0}_{1}", gameCode, RedisKeys.Key_MatchResult_List);
-                var array = db.ListRange(fullKey);
+                var array = db.LRange(fullKey,0, db.LLen(fullKey));
                 var dic = new Dictionary<string, string>();
                 foreach (var item in array)
                 {
-                    if (!item.HasValue)
+                    if (string.IsNullOrEmpty(item))
                         continue;
                     var k_v = item.ToString().Split('^');
                     if (k_v.Length != 2)
@@ -540,18 +540,18 @@ namespace KaSon.FrameWork.ORM.Helper
             var db = RedisHelper.DB_Match;
             var fullKey = string.Format("{0}_{1}", "OZB", RedisKeys.Key_MatchResult_List);
             //清空Key对应的value值
-            db.KeyDeleteAsync(fullKey);
+            db.Del(fullKey);
             //写入redis库
             //格式：玩法^开奖号
             if (gjIssuse != null && !string.IsNullOrEmpty(gjIssuse.WinNumber))
             {
                 var v = string.Format("{0}^{1}", "GJ", gjIssuse.WinNumber);
-                db.ListRightPushAsync(fullKey, v);
+                db.SetRPush(fullKey, v);
             }
             if (gyjIssuse != null && !string.IsNullOrEmpty(gyjIssuse.WinNumber))
             {
                 var v = string.Format("{0}^{1}", "GYJ", gyjIssuse.WinNumber);
-                db.ListRightPushAsync(fullKey, v);
+                db.SetRPush(fullKey, v);
             }
         }
 
@@ -561,11 +561,11 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                 var db = RedisHelper.DB_Match;
                 var fullKey = string.Format("{0}_{1}", "OZB", RedisKeys.Key_MatchResult_List);
-                var array = db.ListRange(fullKey);
+                var array = db.LRange(fullKey, 0, db.LLen(fullKey));
                 var dic = new Dictionary<string, string>();
                 foreach (var item in array)
                 {
-                    if (!item.HasValue)
+                    if (string.IsNullOrEmpty(item))
                         continue;
                     var k_v = item.ToString().Split('^');
                     if (k_v.Length != 2)
@@ -595,18 +595,18 @@ namespace KaSon.FrameWork.ORM.Helper
             var db = RedisHelper.DB_Match;
             var fullKey = string.Format("{0}_{1}", "SJB", RedisKeys.Key_MatchResult_List);
             //清空Key对应的value值
-            db.KeyDeleteAsync(fullKey);
+            db.Del(fullKey);
             //写入redis库
             //格式：玩法^开奖号
             if (gjIssuse != null && !string.IsNullOrEmpty(gjIssuse.WinNumber))
             {
                 var v = string.Format("{0}^{1}", "GJ", gjIssuse.WinNumber);
-                db.ListRightPushAsync(fullKey, v);
+                db.SetRPush(fullKey, v);
             }
             if (gyjIssuse != null && !string.IsNullOrEmpty(gyjIssuse.WinNumber))
             {
                 var v = string.Format("{0}^{1}", "GYJ", gyjIssuse.WinNumber);
-                db.ListRightPushAsync(fullKey, v);
+                db.SetRPush(fullKey, v);
             }
         }
 
@@ -616,11 +616,11 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                 var db = RedisHelper.DB_Match;
                 var fullKey = string.Format("{0}_{1}", "SJB", RedisKeys.Key_MatchResult_List);
-                var array = db.ListRange(fullKey);
+                var array = db.LRange(fullKey,0,db.LLen(fullKey));
                 var dic = new Dictionary<string, string>();
                 foreach (var item in array)
                 {
-                    if (!item.HasValue)
+                    if (string.IsNullOrEmpty(item))
                         continue;
                     var k_v = item.ToString().Split('^');
                     if (k_v.Length != 2)
@@ -719,11 +719,11 @@ namespace KaSon.FrameWork.ORM.Helper
             var issuseList = new LotteryGameManager().QueryNextIssuseList(true, gameCode, 10);
             if (issuseList.Count <= 0)
                 return;
-            db.KeyDeleteAsync(key);
+            db.Del(key);
             foreach (var item in issuseList)
             {
                 var json = JsonHelper.Serialize(item);
-                db.ListRightPushAsync(key, json);
+                db.SetRPush(key, json);
             }
         }
 
@@ -737,11 +737,11 @@ namespace KaSon.FrameWork.ORM.Helper
             var issuseList = new LotteryGameManager().QueryNextIssuseList(false, gameCode, 10);
             if (issuseList.Count <= 0)
                 return;
-            db.KeyDeleteAsync(key);
+            db.Del(key);
             foreach (var item in issuseList)
             {
                 var json = JsonHelper.Serialize(item);
-                db.ListRightPushAsync(key, json);
+                db.SetRPush(key, json);
             }
         }
 
