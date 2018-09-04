@@ -1027,7 +1027,7 @@ namespace KaSon.FrameWork.ORM.Helper
             if (Game==null)
             {
                 var LotteryGame = SDB.CreateQuery<LotteryGame>().Where(p => p.GameCode == gameCode).FirstOrDefault();
-                //v = LotteryGame.GameCode;
+                Game = LotteryGame;
                 if (LotteryGame != null)
                 {
                     db.SetAsync(RedisKey, LotteryGame, 3 * 60);
