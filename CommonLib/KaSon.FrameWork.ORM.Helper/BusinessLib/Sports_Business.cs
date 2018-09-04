@@ -3376,7 +3376,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //{
             var gameInfo = BusinessHelper.QueryLotteryGame(info.GameCode);
             var schemeManager = new SchemeManager();
-            var sportsManager = new Sports_Manager();
+          //  var sportsManager = new Sports_Manager();
             if (string.IsNullOrEmpty(keyLine))
                 keyLine = info.IssuseNumberList.Count > 1 ? BusinessHelper.GetChaseLotterySchemeKeyLine(info.GameCode) : string.Empty;
             var orderIndex = 1;
@@ -3455,7 +3455,7 @@ namespace KaSon.FrameWork.ORM.Helper
                                 SchemeId = schemeId,
                             };
                             anteCodeList.Add(codeEntity);
-                            sportsManager.AddSports_AnteCode(codeEntity);
+                         //  sportsManager.AddSports_AnteCode(codeEntity);
                             //var gameType = lotteryManager.QueryGameType(info.GameCode, item.GameType);
                             var gameType = gameTypes.FirstOrDefault(a => a.Game.GameCode == info.GameCode && a.GameType == item.GameType.ToUpper());
                             if (gameType != null && !gameTypeList.Contains(gameType))
