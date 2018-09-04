@@ -38,22 +38,22 @@ namespace KaSon.FrameWork.Common.Redis
                 var alljson = (JObject)JsonConvert.DeserializeObject(jsonText);
                 RdConfigInfo = (JObject)JsonConvert.DeserializeObject(alljson["RedisConfig"].ToString());
                 List<CSRedis.CSRedisConfig> list = new List<CSRedis.CSRedisConfig>(){
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=0,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=1,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=2,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=3,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=4,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=5,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=6,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=7,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=8,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=9,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=10,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=11,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=12,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=13,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=14,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=15,C_PoolSize=50,c_Writebuffer=10240 }
+                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=0,C_PoolSize=5,c_Writebuffer=10240 },
+                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=1,C_PoolSize=5,c_Writebuffer=10240 },
+                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=2,C_PoolSize=5,c_Writebuffer=10240 },
+                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=3,C_PoolSize=5,c_Writebuffer=10240 },
+                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=4,C_PoolSize=5,c_Writebuffer=10240 },
+                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=5,C_PoolSize=5,c_Writebuffer=10240 },
+                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=6,C_PoolSize=5,c_Writebuffer=10240 },
+                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=7,C_PoolSize=5,c_Writebuffer=10240 },
+                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=8,C_PoolSize=5,c_Writebuffer=10240 },
+                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=9,C_PoolSize=5,c_Writebuffer=10240 },
+                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=10,C_PoolSize=5,c_Writebuffer=10240 },
+                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=11,C_PoolSize=5,c_Writebuffer=10240 },
+                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=12,C_PoolSize=5,c_Writebuffer=10240 },
+                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=13,C_PoolSize=5,c_Writebuffer=10240 },
+                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=14,C_PoolSize=5,c_Writebuffer=10240 },
+                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=15,C_PoolSize=5,c_Writebuffer=10240 }
                 };
                 var csredis = new CSRedis.CSRedisClient(list);
                 CsRedisCode.RedisHelper.Initialization(csredis,
@@ -138,7 +138,7 @@ deserialize: (data, type) => Newtonsoft.Json.JsonConvert.DeserializeObject(data,
             }
         }
 
-
+        private static CSRedis.RedisClient _DB_NoTicket_Order;
         /// <summary>
         /// 未出票的订单库
         /// </summary>
@@ -146,12 +146,15 @@ deserialize: (data, type) => Newtonsoft.Json.JsonConvert.DeserializeObject(data,
         {
             get
             {
-               // CsRedisCode.RedisHelper.Instance.S
-                string key = $"{ServerHost}:{ServerPort}/0";
-                return CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                if (_DB_NoTicket_Order == null)
+                {
+                    string key = $"{ServerHost}:{ServerPort}/0";
+                    _DB_NoTicket_Order= CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                }
+                return _DB_NoTicket_Order;
             }
         }
-
+        private static CSRedis.RedisClient _DB_Match;
         /// <summary>
         /// 竞彩、传统、北单的比赛数据和比赛结果库
         /// </summary>
@@ -159,11 +162,15 @@ deserialize: (data, type) => Newtonsoft.Json.JsonConvert.DeserializeObject(data,
         {
             get
             {
-                string key = $"{ServerHost}:{ServerPort}/1";
-                return CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                if (_DB_Match == null)
+                {
+                    string key = $"{ServerHost}:{ServerPort}/1";
+                    _DB_Match= CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                }
+                return _DB_Match;
             }
         }
-
+        private static CSRedis.RedisClient _DB_Chase_Order;
         /// <summary>
         /// 追号订单库
         /// </summary>
@@ -171,11 +178,15 @@ deserialize: (data, type) => Newtonsoft.Json.JsonConvert.DeserializeObject(data,
         {
             get
             {
-                string key = $"{ServerHost}:{ServerPort}/2";
-                return CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                if (_DB_Chase_Order == null)
+                {
+                    string key = $"{ServerHost}:{ServerPort}/2";
+                    _DB_Chase_Order= CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                }
+                return _DB_Chase_Order;
             }
         }
-
+        private static CSRedis.RedisClient _DB_Running_Order_JC;
         /// <summary>
         /// 未结算订单的库(竞彩足球、竞彩篮球)
         /// </summary>
@@ -183,11 +194,16 @@ deserialize: (data, type) => Newtonsoft.Json.JsonConvert.DeserializeObject(data,
         {
             get
             {
-                string key = $"{ServerHost}:{ServerPort}/3";
-                return CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                if (_DB_Running_Order_JC == null)
+                {
+                    string key = $"{ServerHost}:{ServerPort}/3";
+                    _DB_Running_Order_JC= CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                }
+                return _DB_Running_Order_JC;
             }
         }
 
+        private static CSRedis.RedisClient _DB_Running_Order_BJDC;
         /// <summary>
         /// 未结算订单的库(北京单场)
         /// </summary>
@@ -195,11 +211,16 @@ deserialize: (data, type) => Newtonsoft.Json.JsonConvert.DeserializeObject(data,
         {
             get
             {
-                string key = $"{ServerHost}:{ServerPort}/4";
-                return CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                if (_DB_Running_Order_BJDC == null)
+                {
+                    string key = $"{ServerHost}:{ServerPort}/4";
+                    _DB_Running_Order_BJDC= CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                }
+                return _DB_Running_Order_BJDC;
             }
         }
 
+        private static CSRedis.RedisClient _DB_Running_Order_CTZQ;
         /// <summary>
         /// 未结算订单的库(传统足球)
         /// </summary>
@@ -207,8 +228,12 @@ deserialize: (data, type) => Newtonsoft.Json.JsonConvert.DeserializeObject(data,
         {
             get
             {
-                string key = $"{ServerHost}:{ServerPort}/5";
-                return CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                if (_DB_Running_Order_CTZQ == null)
+                {
+                    string key = $"{ServerHost}:{ServerPort}/5";
+                    _DB_Running_Order_CTZQ= CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client; 
+                }
+                return _DB_Running_Order_CTZQ;
             }
         }
 
@@ -219,11 +244,15 @@ deserialize: (data, type) => Newtonsoft.Json.JsonConvert.DeserializeObject(data,
         {
             get
             {
-                string key = $"{ServerHost}:{ServerPort}/6";
-                return CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                if (_DB_Running_Order_SCZ_DP == null)
+                {
+                    string key = $"{ServerHost}:{ServerPort}/6";
+                    _DB_Running_Order_SCZ_DP = CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                }
+                return _DB_Running_Order_SCZ_DP;
             }
         }
-
+        private static CSRedis.RedisClient _DB_Running_Order_SCZ_DP;
         /// <summary>
         /// 未结算订单的库(高频数字彩)
         /// </summary>
@@ -231,11 +260,16 @@ deserialize: (data, type) => Newtonsoft.Json.JsonConvert.DeserializeObject(data,
         {
             get
             {
-                string key = $"{ServerHost}:{ServerPort}/7";
-                return CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                if (_DB_Running_Order_SCZ_GP == null)
+                {
+                    string key = $"{ServerHost}:{ServerPort}/7";
+                    _DB_Running_Order_SCZ_GP= CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                }
+                return _DB_Running_Order_SCZ_GP;
             }
         }
-
+        private static CSRedis.RedisClient _DB_Running_Order_SCZ_GP;
+        private static CSRedis.RedisClient _DB_CoreCacheData;
         /// <summary>
         /// 配置、奖期、比赛、合买大厅、过关统计等
         /// </summary>
@@ -243,11 +277,16 @@ deserialize: (data, type) => Newtonsoft.Json.JsonConvert.DeserializeObject(data,
         {
             get
             {
-                string key = $"{ServerHost}:{ServerPort}/8";
-                return CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                if (_DB_CoreCacheData == null)
+                {
+                    string key = $"{ServerHost}:{ServerPort}/8";
+                    _DB_CoreCacheData= CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                }
+                return _DB_CoreCacheData;
             }
         }
 
+        private static CSRedis.RedisClient _DB_UserBindData;
         /// <summary>
         /// 用户绑定信息
         /// </summary>
@@ -255,11 +294,16 @@ deserialize: (data, type) => Newtonsoft.Json.JsonConvert.DeserializeObject(data,
         {
             get
             {
-                string key = $"{ServerHost}:{ServerPort}/9";
-                return CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                if (_DB_UserBindData == null)
+                {
+                    string key = $"{ServerHost}:{ServerPort}/9";
+                    _DB_UserBindData = CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                }
+                return _DB_UserBindData;
             }
         }
 
+        private static CSRedis.RedisClient _DB_UserBlogData;
         /// <summary>
         /// 用户博客数据
         /// </summary>
@@ -267,11 +311,16 @@ deserialize: (data, type) => Newtonsoft.Json.JsonConvert.DeserializeObject(data,
         {
             get
             {
-                string key = $"{ServerHost}:{ServerPort}/10";
-                return CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                if (_DB_UserBlogData == null)
+                {
+                    string key = $"{ServerHost}:{ServerPort}/10";
+                    _DB_UserBlogData = CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                }
+                return _DB_UserBlogData;
             }
         }
 
+        private static CSRedis.RedisClient _DB_SchemeDetail;
         /// <summary>
         /// 订单详细数据
         /// </summary>
@@ -279,11 +328,16 @@ deserialize: (data, type) => Newtonsoft.Json.JsonConvert.DeserializeObject(data,
         {
             get
             {
-                string key = $"{ServerHost}:{ServerPort}/11";
-                return CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                if (_DB_SchemeDetail == null)
+                {
+                    string key = $"{ServerHost}:{ServerPort}/11";
+                    _DB_SchemeDetail = CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                }
+                return _DB_SchemeDetail;
             }
         }
 
+        private static CSRedis.RedisClient _DB_UserBalance;
         /// <summary>
         /// 用户余额
         /// </summary>
@@ -291,11 +345,15 @@ deserialize: (data, type) => Newtonsoft.Json.JsonConvert.DeserializeObject(data,
         {
             get
             {
-                string key = $"{ServerHost}:{ServerPort}/12";
-                return CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                if (_DB_UserBalance == null)
+                {
+                    string key = $"{ServerHost}:{ServerPort}/12";
+                    _DB_UserBalance = CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                }
+                return _DB_UserBalance;
             }
         }
-
+        private static CSRedis.RedisClient _DB_Other;
         /// <summary>
         /// 其它
         /// </summary>
@@ -303,8 +361,12 @@ deserialize: (data, type) => Newtonsoft.Json.JsonConvert.DeserializeObject(data,
         {
             get
             {
-                string key = $"{ServerHost}:{ServerPort}/13";
-                return CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                if (_DB_Other == null)
+                {
+                    string key = $"{ServerHost}:{ServerPort}/13";
+                    _DB_Other = CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
+                }
+                return _DB_Other;
             }
         }
 
