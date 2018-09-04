@@ -3523,8 +3523,8 @@ namespace KaSon.FrameWork.ORM.Helper
                 orderDT = watch.ElapsedMilliseconds;
              //   
                 
-                try
-                {
+                //try
+                //{
 
                   
                     //kason 批量录入录入订单信息
@@ -3611,16 +3611,17 @@ namespace KaSon.FrameWork.ORM.Helper
                     //扣款录入订单用时间
                     businessDT = watch.ElapsedMilliseconds;
                   //  
-                }
-                catch (Exception ex1)
-                {
-                    DB.Rollback();
-                    throw ex1;
-                }
+                //}
+                //catch (Exception ex1)
+                //{
+                    
+                //    throw ex1;
+                //}
             }
             catch (Exception ex)
             {
                 // DB.Rollback();
+                DB.Rollback();
                 watch.Stop();
                 throw ex;
             }
