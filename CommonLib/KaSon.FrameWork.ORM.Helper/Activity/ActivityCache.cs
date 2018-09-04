@@ -44,39 +44,39 @@ namespace KaSon.FrameWork.ORM.Helper
         //    return _activityConfigCache;
         //}
 
-        /// <summary>
-        /// 清空活动配置
-        /// </summary>
-        public static void ClearActivityConfig()
-        {
-            var _activityConfigCache = new A20150919Manager().QueryActivityConfig();
-            RedisHelper.DB_Other.Del(_activityConfigCache.Select(b => b.ConfigValue).ToArray());
-            //foreach (var item in _activityConfigCache)
-            //{
-            //    var flag = RedisHelper.KeyExists(item.ConfigValue);
-            //    if (flag)
-            //    {
-            //        RedisHelper.KeyDelete(item.ConfigValue);
-            //    }
-            //}
+        ///// <summary>
+        ///// 清空活动配置
+        ///// </summary>
+        //public static void ClearActivityConfig()
+        //{
+        //    var _activityConfigCache = new A20150919Manager().QueryActivityConfig();
+
+        //    foreach (var item in _activityConfigCache)
+        //    {
+        //        var flag = RedisHelper.KeyExists(item.ConfigValue);
+        //        if (flag)
+        //        {
+        //            RedisHelper.KeyDelete(item.ConfigValue);
+        //        }
+        //    }
 
 
-        }
+        //}
 
-        /// <summary>
-        /// 更新网站活动配置
-        /// </summary>
-        public static void UpdateActivityConfig(string key, string value)
-        {
-            var manager = new A20150919Manager();
-            var config = manager.QueryActivityConfig(key);
-            if (config == null)
-                return;
+        ///// <summary>
+        ///// 更新网站活动配置
+        ///// </summary>
+        //public static void UpdateActivityConfig(string key, string value)
+        //{
+        //    var manager = new A20150919Manager();
+        //    var config = manager.QueryActivityConfig(key);
+        //    if (config == null)
+        //        return;
 
-            config.ConfigValue = value;
-            manager.UpdateActivityConfig(config);
-            //清空缓存
-            ClearActivityConfig();
-        }
+        //    config.ConfigValue = value;
+        //    manager.UpdateActivityConfig(config);
+        //    //清空缓存
+        //    ClearActivityConfig();
+        //}
     }
 }
