@@ -352,6 +352,28 @@ deserialize: (data, type) => Newtonsoft.Json.JsonConvert.DeserializeObject(data,
             }
             return list;
         }
+        /// <summary>
+        /// 插入到集合最后一条
+        /// </summary>
+        /// <param name="cache"></param>
+        /// <param name="key"></param>
+        /// <param name="obj"></param>
+        public static void SetRPush(this CSRedis.RedisClient cache, string key, object obj)
+        {
+            cache.RPush(key, obj);
+        }
+        /// <summary>
+        /// 插入到集合第一条
+        /// </summary>
+        /// <param name="cache"></param>
+        /// <param name="key"></param>
+        /// <param name="obj"></param>
+        public static void SetLPush(this CSRedis.RedisClient cache, string key, object obj)
+        {
+            cache.RPush(key, obj);
+        }
+
+
 
         static byte[] Serialize(object o)
         {

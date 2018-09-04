@@ -1198,20 +1198,20 @@ namespace Lottery.Api.Controllers
             var db = RedisHelper.DB_CoreCacheData;
             var redisKey_TogetherList = RedisKeys.Key_Core_Togegher_OrderList;
             //生成列表
-            var list = new List<Sports_TogetherSchemeQueryInfo>();
-            var redisList = db.GetRange<string>(redisKey_TogetherList);
-            foreach (var item in redisList)
-            {
-                try
-                {
-                    if (string.IsNullOrEmpty(item)) continue;
-                    var t = JsonHelper.Deserialize<Sports_TogetherSchemeQueryInfo>(item.ToString());
-                    list.Add(t);
-                }
-                catch (Exception)
-                {
-                }
-            }
+          //  var list = new List<Sports_TogetherSchemeQueryInfo>();
+            var list = db.GetRange<Sports_TogetherSchemeQueryInfo>(redisKey_TogetherList);
+            //foreach (var item in redisList)
+            //{
+            //    try
+            //    {
+            //        if (string.IsNullOrEmpty(item.Value)) continue;
+            //        var t = JsonHelper.Deserialize<Sports_TogetherSchemeQueryInfo>(item.ToString());
+            //        list.Add(t);
+            //    }
+            //    catch (Exception)
+            //    {
+            //    }
+            //}
 
             try
             {
