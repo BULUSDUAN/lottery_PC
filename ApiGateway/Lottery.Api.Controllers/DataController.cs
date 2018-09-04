@@ -889,6 +889,10 @@ namespace Lottery.Api.Controllers
                             RedisHelper.DB_CoreCacheData.SetObj(cacheKey, aList, TimeSpan.FromMinutes(10));
                         }
                     }
+                    else
+                    {
+                        aList = obj;
+                    }
                 }
                 if (aList != null && aList.ArticleList.Count > 0)
                 {
