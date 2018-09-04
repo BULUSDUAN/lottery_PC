@@ -146,6 +146,7 @@ deserialize: (data, type) => Newtonsoft.Json.JsonConvert.DeserializeObject(data,
         {
             get
             {
+               // CsRedisCode.RedisHelper.Instance.S
                 string key = $"{ServerHost}:{ServerPort}/0";
                 return CsRedisCode.RedisHelper.ClusterNodes[key].GetConnection().Client;
             }
