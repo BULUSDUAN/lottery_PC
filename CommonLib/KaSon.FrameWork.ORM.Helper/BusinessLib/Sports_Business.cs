@@ -3375,8 +3375,8 @@ namespace KaSon.FrameWork.ORM.Helper
             //using (var biz = new GameBizBusinessManagement())
             //{
             var gameInfo = BusinessHelper.QueryLotteryGame(info.GameCode);
-            var schemeManager = new SchemeManager();
-            var sportsManager = new Sports_Manager();
+            //   var schemeManager = new SchemeManager();
+            // var sportsManager = new Sports_Manager();
             if (string.IsNullOrEmpty(keyLine))
                 keyLine = info.IssuseNumberList.Count > 1 ? BusinessHelper.GetChaseLotterySchemeKeyLine(info.GameCode) : string.Empty;
             var orderIndex = 1;
@@ -3400,11 +3400,12 @@ namespace KaSon.FrameWork.ORM.Helper
             //期号处理用时
              IssuseDT = watch.ElapsedMilliseconds;
             //  
-            DB.Begin();
             try
             {
+                var anteCodeList = new List<C_Sports_AnteCode>();
                 IList<C_Sports_Order_Running> Order_Running_List = new List<C_Sports_Order_Running>();
                 IList<C_OrderDetail> OrderDetail_List = new List<C_OrderDetail>();
+                IList<C_Lottery_Scheme> Scheme_List = new List<C_Lottery_Scheme>();
                 foreach (var issuse in info.IssuseNumberList)
                 {
                     //var IsEnableLimitBetAmount = Convert.ToBoolean(new CacheDataBusiness().QueryCoreConfigByKey("IsEnableLimitBetAmount").ConfigValue);
@@ -3436,7 +3437,7 @@ namespace KaSon.FrameWork.ORM.Helper
                             schemeId = keyLine;
                     }
 
-                        var anteCodeList = new List<C_Sports_AnteCode>();
+                        
                         var gameTypeList = new List<GameTypeInfo>();
                         foreach (var item in info.AnteCodeList)
                         {
@@ -3455,7 +3456,7 @@ namespace KaSon.FrameWork.ORM.Helper
                                 SchemeId = schemeId,
                             };
                             anteCodeList.Add(codeEntity);
-                            sportsManager.AddSports_AnteCode(codeEntity);
+                            //sportsManager.AddSports_AnteCode(codeEntity);
                             //var gameType = lotteryManager.QueryGameType(info.GameCode, item.GameType);
                             var gameType = gameTypes.FirstOrDefault(a => a.Game.GameCode == info.GameCode && a.GameType == item.GameType.ToUpper());
                             if (gameType != null && !gameTypeList.Contains(gameType))
@@ -3480,7 +3481,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         }
                         else
                         {
-                            sportsManager.AddLotteryScheme(new C_Lottery_Scheme
+                        Scheme_List.Add(new C_Lottery_Scheme
                             {
                                 OrderIndex = orderIndex,
                                 KeyLine = keyLine,
@@ -3521,12 +3522,13 @@ namespace KaSon.FrameWork.ORM.Helper
 
                 //订单构建用时
                 orderDT = watch.ElapsedMilliseconds;
-             //   
-                
-                //try
-                //{
+                //   
+                DB.Begin();
+                try
+                {
+                    DB.GetDal<C_Sports_AnteCode>().BulkAdd(anteCodeList);
 
-                  
+                    DB.GetDal<C_Lottery_Scheme>().BulkAdd(Scheme_List);
                     //kason 批量录入录入订单信息
                     DB.GetDal<C_OrderDetail>().BulkAdd(OrderDetail_List);
 
@@ -3611,17 +3613,16 @@ namespace KaSon.FrameWork.ORM.Helper
                     //扣款录入订单用时间
                     businessDT = watch.ElapsedMilliseconds;
                   //  
-                //}
-                //catch (Exception ex1)
-                //{
-                    
-                //    throw ex1;
-                //}
+                }
+                catch (Exception ex1)
+                {
+                    DB.Rollback();
+                    throw ex1;
+                }
             }
             catch (Exception ex)
             {
                 // DB.Rollback();
-                DB.Rollback();
                 watch.Stop();
                 throw ex;
             }

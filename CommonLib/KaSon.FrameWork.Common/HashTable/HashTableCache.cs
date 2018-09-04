@@ -19,8 +19,8 @@ namespace KaSon.FrameWork.Common
         //public static System.Collections.Hashtable _JCLQHt = System.Collections.Hashtable.Synchronized(new Hashtable());
 
         public static string[] _CTZQType = { "T14C", "T4CJQ", "TR9", "T6BQC" };
-        public static string[] _JCZQType = { "SPF", "BRQSPF", "ZJQ", "BF", "BQC", "HHDG" };
-        public static string[] _JCLQType = { "SF", "RFSF", "DXF", "SFC", "HHDG" };
+        public static string[] _JCZQType = { "SPF", "BRQSPF", "ZJQ", "BF", "BQC", "HHDG","HH" };
+        public static string[] _JCLQType = { "SF", "RFSF", "DXF", "SFC", "HHDG", "HH" };
         public static string[] _BJDCType = { "SPF" };
 
         //public static void Set_Issuse_QueryInfo(Issuse_QueryInfoEX ex)
