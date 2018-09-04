@@ -105,7 +105,7 @@ namespace CSRedis {
 					conn.Pool = this;
 					var ips = Dns.GetHostAddresses(_ip);
 					if (ips.Length == 0) throw new Exception($"无法解析“{_ip}”");
-					conn.Client = new RedisClient(new IPEndPoint(ips[0], _port), _ssl, 1000, _writebuffer);
+					conn.Client = new RedisClient(new IPEndPoint(ips[0], _port), _ssl,2000, _writebuffer);
 					conn.Client.Connected += Connected;
 				}
 			}
