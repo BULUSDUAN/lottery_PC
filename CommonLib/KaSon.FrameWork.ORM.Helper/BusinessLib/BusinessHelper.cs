@@ -302,7 +302,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 var fund = new LocalLoginBusiness();
                 var userBalance = fund.QueryUserBalance(userId);
                 var json = JsonHelper.Serialize(userBalance);
-                db.StringSetAsync(key, json, TimeSpan.FromSeconds(60 * 2));
+                db.SetAsync(key, json, TimeSpan.FromSeconds(60 * 2));
             }
             catch (Exception ex)
             {
@@ -1014,12 +1014,12 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             var RedisKeyH = "CoreConfig_";
             var RedisKey = RedisKeyH + gameCode;
-            var flag = RedisHelper.KeyExists(gameCode);
-            var v = "";
+          //  var flag = RedisHelper.KeyExists(gameCode);
+            var v = RedisHelper.DB_Other.Get(gameCode);
             var Game = new LotteryGame();
-            if (flag)
+            if (!string.IsNullOrEmpty(v))
             {
-                v = RedisHelper.StringGet(gameCode);
+               // v = RedisHelper.StringGet(gameCode);
                 Game.GameCode = v;
             }
           
@@ -1029,7 +1029,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 v = LotteryGame.GameCode;
                 if (LotteryGame != null)
                 {
-                    RedisHelper.StringSet(RedisKey, v, 3 * 60);
+                    RedisHelper.DB_Other.Set(RedisKey, v, 3 * 60);
                 }
             }
           
