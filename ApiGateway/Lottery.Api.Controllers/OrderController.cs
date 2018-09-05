@@ -1235,12 +1235,13 @@ namespace Lottery.Api.Controllers
                 {"schemeId",schemeId }
             };
                 var schemeInfo = await _serviceProxyProvider.Invoke<Sports_TogetherSchemeQueryInfo>(param, "api/Order/QuerySportsTogetherDetail");
-                param.Clear();
+                
                 string userid = string.Empty;
                 //var userInfo = new LoginInfo();
                 var flag = false;
                 if (!string.IsNullOrEmpty(userToken))
                 {
+                    param.Clear();
                     //param.Add("userToken", userToken);
                     //userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
                     userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
