@@ -2809,7 +2809,9 @@ namespace Lottery.Api.Controllers
             var entitys = await _serviceProxyProvider.Invoke<GameWinNumber_InfoCollection>(param, "api/Order/QueryAllGameNewWinNumber");
             foreach (var item in entitys.List)
             {
+                //读取文件信息
                 var poolInfo = BettingHelper.GetPoolInfo(item.GameCode, item.IssuseNumber);
+
                 list.Add(new KaiJiang()
                 {
                     result = item.WinNumber,
