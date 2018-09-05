@@ -150,8 +150,6 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
                         list[list.Count - 1].type = "任选9";
                     }
                     RedisHelperEx.DB_Match.SetObj(key, list, TimeSpan.FromSeconds(30 * 60));
-
-
                 }
                 catch (Exception ex)
                 {

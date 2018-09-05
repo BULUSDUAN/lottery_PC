@@ -1664,6 +1664,7 @@ namespace EntityModel.LotteryJsonInfo
     /// <summary>
     /// 开奖接口
     /// </summary>
+    [Serializable]
     public class KaiJiang
     {
         public string result { get; set; }
