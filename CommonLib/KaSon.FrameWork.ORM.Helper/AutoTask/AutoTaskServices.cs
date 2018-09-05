@@ -1,5 +1,8 @@
-﻿using KaSon.FrameWork.Common;
+﻿using EntityModel.LotteryJsonInfo;
+using KaSon.FrameWork.Common;
 using KaSon.FrameWork.Common.Redis;
+using KaSon.FrameWork.Common.Sport;
+using KaSon.FrameWork.Common.Utilities;
 using KaSon.FrameWork.ORM.Helper.BusinessLib;
 using System;
 using System.Collections.Generic;
@@ -35,7 +38,7 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
                     {
                         HashTableCache.Init_CTZQ_Issuse_Data();
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         //获取期号出错
 
@@ -123,14 +126,38 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
                     var orderService = new OrderQuery();
                     var gameString = "JX11X5|GD11X5|SD11X5|CQSSC|SSQ|DLT|FC3D|PL3|CTZQ_T14C|CTZQ_T6BQC|CTZQ_T4CJQ|CTZQ_TR9";
                     var result = orderService.QueryAllGameNewWinNumber(gameString);
-                    RedisHelperEx.DB_Match.SetObj(key, result, TimeSpan.FromSeconds(30 * 60));
+                    var list = new List<KaiJiang>();
+                    if (result != null && result.List.Count > 0)
+                    {
+                        foreach (var item in result.List)
+                        {
+                            var poolInfo = BettingHelper.GetPoolInfo(item.GameCode, item.IssuseNumber);
+                            list.Add(new KaiJiang()
+                            {
+                                result = item.WinNumber,
+                                prizepool = poolInfo != null ? poolInfo.TotalPrizePoolMoney.ToString("###,##0.00") : "",
+                                nums = ConvertHelper.Getnums(poolInfo),
+                                name = item.GameCode.ToUpper() == "CTZQ" ? item.GameType : item.GameCode,
+                                termNo = item.IssuseNumber,
+                                ver = "1",
+                                grades = ConvertHelper.Getgrades(poolInfo),
+                                date = item.CreateTime.ToString("yyyy-MM-dd"),
+                                type = ConvertHelper.GetGameName(item.GameCode, item.GameType),
+                                sale = poolInfo != null ? poolInfo.TotalSellMoney.ToString("###,##0.00") : ""
+                            });
+                        }
+                        list[list.Count - 1].name = "TR9";
+                        list[list.Count - 1].type = "任选9";
+                    }
+                    RedisHelperEx.DB_Match.SetObj(key, list, TimeSpan.FromSeconds(30 * 60));
+
 
                 }
                 catch (Exception ex)
                 {
-                   
+
                 }
-                await Task.Delay(30*1000);
+                await Task.Delay(60 * 1000);
             }
         }
     }

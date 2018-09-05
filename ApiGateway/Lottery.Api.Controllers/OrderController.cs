@@ -793,7 +793,8 @@ namespace Lottery.Api.Controllers
                             StrBonusStatus = ConvertHelper.BonusStatusName(item.BonusStatus),
                             StrOrderStateName = ConvertHelper.GetOrderStatusName(item.SchemeType, item.ProgressStatus, item.TicketStatus, item.BonusStatus, true, true, false),
                             TotalMoney = item.TotalMoney,
-                            CreateTime = item.CreateTime
+                            CreateTime = item.CreateTime,
+                            JoinMoney=item.JoinMoney
                         });
                     }
                 }
@@ -825,7 +826,8 @@ namespace Lottery.Api.Controllers
                             StrBonusStatus = ConvertHelper.BonusStatusName(item.BonusStatus),
                             StrOrderStateName = ConvertHelper.GetOrderStatusName(item.SchemeType, item.ProgressStatus, item.TicketStatus, item.BonusStatus, true, true, false),
                             TotalMoney = item.TotalMoney,
-                            CreateTime = item.CreateTime
+                            CreateTime = item.CreateTime,
+                            JoinMoney=item.JoinMoney
                         });
                     }
                 }
@@ -1235,12 +1237,13 @@ namespace Lottery.Api.Controllers
                 {"schemeId",schemeId }
             };
                 var schemeInfo = await _serviceProxyProvider.Invoke<Sports_TogetherSchemeQueryInfo>(param, "api/Order/QuerySportsTogetherDetail");
-                param.Clear();
+                
                 string userid = string.Empty;
                 //var userInfo = new LoginInfo();
                 var flag = false;
                 if (!string.IsNullOrEmpty(userToken))
                 {
+                    param.Clear();
                     //param.Add("userToken", userToken);
                     //userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/LoginByUserToken");
                     userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
@@ -2792,17 +2795,18 @@ namespace Lottery.Api.Controllers
         private async Task<List<KaiJiang>> GetRedisList([FromServices]IServiceProxyProvider _serviceProxyProvider)
         {
 
-            var list = new List<KaiJiang>();
+            //var list = new List<KaiJiang>();
             string redisKey = EntityModel.Redis.RedisKeys.KaiJiang_Key;
-            var entitys = RedisHelperEx.DB_Match.GetObj<GameWinNumber_InfoCollection>(redisKey);
-            if (entitys == null)
+            var list = RedisHelperEx.DB_Match.GetObjs<KaiJiang>(redisKey);
+            if (list != null && list.Count > 0)
             {
-                Dictionary<string, object> param = new Dictionary<string, object>()
+                return list;
+            }
+            Dictionary<string, object> param = new Dictionary<string, object>()
                 {
                     { "gameString","JX11X5|GD11X5|SD11X5|CQSSC|SSQ|DLT|FC3D|PL3|CTZQ_T14C|CTZQ_T6BQC|CTZQ_T4CJQ|CTZQ_TR9"}
                 };
-                entitys = await _serviceProxyProvider.Invoke<GameWinNumber_InfoCollection>(param, "api/Order/QueryAllGameNewWinNumber");
-            }
+            var entitys = await _serviceProxyProvider.Invoke<GameWinNumber_InfoCollection>(param, "api/Order/QueryAllGameNewWinNumber");
             foreach (var item in entitys.List)
             {
                 //读取文件信息
