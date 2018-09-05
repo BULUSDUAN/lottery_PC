@@ -7,6 +7,7 @@ using System.Text;
 
 namespace EntityModel.Domain.Entities
 {
+    [Serializable]
     [Entity("C_Lottery_Game", Type = EntityType.Table)]
     public class LotteryGame
     {

@@ -58,8 +58,8 @@ namespace Lottery.ApiGateway
                 .UseApplicationInsights()
                 .Build();
 
-            if (!bool.Parse(ISConsoleLog)) ConsoleHelper.Clear();
-          
+            ConsoleHelper.Clear();
+
             host.Run();
             
             
