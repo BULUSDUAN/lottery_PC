@@ -2795,17 +2795,18 @@ namespace Lottery.Api.Controllers
         private async Task<List<KaiJiang>> GetRedisList([FromServices]IServiceProxyProvider _serviceProxyProvider)
         {
 
-            var list = new List<KaiJiang>();
+            //var list = new List<KaiJiang>();
             string redisKey = EntityModel.Redis.RedisKeys.KaiJiang_Key;
-            var entitys = RedisHelperEx.DB_Match.GetObj<GameWinNumber_InfoCollection>(redisKey);
-            if (entitys == null)
+            var list = RedisHelperEx.DB_Match.GetObjs<KaiJiang>(redisKey);
+            if (list != null && list.Count > 0)
             {
-                Dictionary<string, object> param = new Dictionary<string, object>()
+                return list;
+            }
+            Dictionary<string, object> param = new Dictionary<string, object>()
                 {
                     { "gameString","JX11X5|GD11X5|SD11X5|CQSSC|SSQ|DLT|FC3D|PL3|CTZQ_T14C|CTZQ_T6BQC|CTZQ_T4CJQ|CTZQ_TR9"}
                 };
-                entitys = await _serviceProxyProvider.Invoke<GameWinNumber_InfoCollection>(param, "api/Order/QueryAllGameNewWinNumber");
-            }
+            var entitys = await _serviceProxyProvider.Invoke<GameWinNumber_InfoCollection>(param, "api/Order/QueryAllGameNewWinNumber");
             foreach (var item in entitys.List)
             {
                 var poolInfo = BettingHelper.GetPoolInfo(item.GameCode, item.IssuseNumber);
