@@ -793,7 +793,8 @@ namespace Lottery.Api.Controllers
                             StrBonusStatus = ConvertHelper.BonusStatusName(item.BonusStatus),
                             StrOrderStateName = ConvertHelper.GetOrderStatusName(item.SchemeType, item.ProgressStatus, item.TicketStatus, item.BonusStatus, true, true, false),
                             TotalMoney = item.TotalMoney,
-                            CreateTime = item.CreateTime
+                            CreateTime = item.CreateTime,
+                            JoinMoney=item.JoinMoney
                         });
                     }
                 }
@@ -825,7 +826,8 @@ namespace Lottery.Api.Controllers
                             StrBonusStatus = ConvertHelper.BonusStatusName(item.BonusStatus),
                             StrOrderStateName = ConvertHelper.GetOrderStatusName(item.SchemeType, item.ProgressStatus, item.TicketStatus, item.BonusStatus, true, true, false),
                             TotalMoney = item.TotalMoney,
-                            CreateTime = item.CreateTime
+                            CreateTime = item.CreateTime,
+                            JoinMoney=item.JoinMoney
                         });
                     }
                 }
