@@ -2805,7 +2805,9 @@ namespace Lottery.Api.Controllers
             }
             foreach (var item in entitys.List)
             {
+                //读取文件信息
                 var poolInfo = BettingHelper.GetPoolInfo(item.GameCode, item.IssuseNumber);
+
                 list.Add(new KaiJiang()
                 {
                     result = item.WinNumber,
