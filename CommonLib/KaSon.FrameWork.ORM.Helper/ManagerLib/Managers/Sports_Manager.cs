@@ -330,7 +330,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public void AddSports_TogetherJoin(C_Sports_TogetherJoin entity)
         {
-            DB.GetDal<C_Sports_TogetherJoin>().Add(entity);
+            DB.GetDal<C_Sports_TogetherJoin>().Add(entity,true);
         }
 
         public List<C_Together_FollowerRule> QuerySportsTogetherFollowerList(string createrUserId, string gameCode, string gameType)
