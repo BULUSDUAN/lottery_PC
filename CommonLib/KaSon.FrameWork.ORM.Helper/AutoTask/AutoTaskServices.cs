@@ -338,62 +338,65 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
                     List<string> listRange = new List<string>();
                     var orderService = new Sports_Manager();
                     var list = orderService.QueryAllRunningOrder_dp();
-                    var max = RedisOrderBusiness.Max_PrizeListCount;
-                    //var ctzqlist = from p in list
-                    //               where p.GameCode == "CTZQ" || p.GameCode == "OZB" || p.GameCode == "SJB"
-                    //               group p by new { p.GameCode, p.IssuseNumber, p.GameType } into g
-                    //               select new
-                    //               {
-                    //                   g.Key
-                    //               };
-                    var ctzqlist = list.Where(p => p.GameCode == "CTZQ").GroupBy(p => new { p.GameCode, p.IssuseNumber, p.GameType }).Select(a => a.Key).ToList();
-                    foreach (var item in ctzqlist)
+                    if (list.Count > 0)
                     {
-                        var ctzq = GetRedisList_dp(item.GameCode, item.IssuseNumber, max, item.GameType);
-                        if (ctzq != null)
-                            listRange.AddRange(ctzq);
-                    }
-                    var ssqlist = list.Where(p => p.GameCode == "SSQ").GroupBy(p => new { p.GameCode, p.IssuseNumber }).Select(a => a.Key).ToList();
-                    foreach (var item in ssqlist)
-                    {
-                        var ssq = GetRedisList_dp(item.GameCode, item.IssuseNumber, max);
-                        if (ssq != null)
-                            listRange.AddRange(ssq);
-                    }
-                    var dltlist = list.Where(p => p.GameCode == "DLT").GroupBy(p => new { p.GameCode, p.IssuseNumber }).Select(a => a.Key).ToList();
-                    foreach (var item in dltlist)
-                    {
-                        var dlt = GetRedisList_dp(item.GameCode, item.IssuseNumber, max);
-                        if (dlt != null)
-                            listRange.AddRange(dlt);
-                    }
-                    var fc3dlist = list.Where(p => p.GameCode == "FC3D").GroupBy(p => new { p.GameCode, p.IssuseNumber }).Select(a => a.Key).ToList();
-                    foreach (var item in fc3dlist)
-                    {
-                        var fc3d = GetRedisList_dp(item.GameCode, item.IssuseNumber, max);
-                        if (fc3d != null)
-                            listRange.AddRange(fc3d);
-                    }
-                    var PL3list = list.Where(p => p.GameCode == "PL3").GroupBy(p => new { p.GameCode, p.IssuseNumber }).Select(a => a.Key).ToList();
-                    foreach (var item in fc3dlist)
-                    {
-                        var PL3 = GetRedisList_dp(item.GameCode, item.IssuseNumber, max);
-                        if (PL3 != null)
-                            listRange.AddRange(PL3);
-                    }
-                    foreach (var order in list)
-                    {
-                        if (listRange.Count(a => a.Contains(order.SchemeId)) == 0)
-                            BusinessHelper.AddToRunningOrder(order);
-                        //var flag = GetRedisOrKey(order, Max_PrizeListCount);
-                        //if (flag)
-                        //{
-                        //    var count = orderInfoList.Count(a => a.SchemeId == order.SchemeId);
-                        //    if (count == 0)
-                        //        flag = true;
-                        //    BusinessHelper.AddToRunningOrder(order);
-                        //}
+                        var max = RedisOrderBusiness.Max_PrizeListCount;
+                        //var ctzqlist = from p in list
+                        //               where p.GameCode == "CTZQ" || p.GameCode == "OZB" || p.GameCode == "SJB"
+                        //               group p by new { p.GameCode, p.IssuseNumber, p.GameType } into g
+                        //               select new
+                        //               {
+                        //                   g.Key
+                        //               };
+                        var ctzqlist = list.Where(p => p.GameCode == "CTZQ").GroupBy(p => new { p.GameCode, p.IssuseNumber, p.GameType }).Select(a => a.Key).ToList();
+                        foreach (var item in ctzqlist)
+                        {
+                            var ctzq = GetRedisList_dp(item.GameCode, item.IssuseNumber, max, item.GameType);
+                            if (ctzq != null)
+                                listRange.AddRange(ctzq);
+                        }
+                        var ssqlist = list.Where(p => p.GameCode == "SSQ").GroupBy(p => new { p.GameCode, p.IssuseNumber }).Select(a => a.Key).ToList();
+                        foreach (var item in ssqlist)
+                        {
+                            var ssq = GetRedisList_dp(item.GameCode, item.IssuseNumber, max);
+                            if (ssq != null)
+                                listRange.AddRange(ssq);
+                        }
+                        var dltlist = list.Where(p => p.GameCode == "DLT").GroupBy(p => new { p.GameCode, p.IssuseNumber }).Select(a => a.Key).ToList();
+                        foreach (var item in dltlist)
+                        {
+                            var dlt = GetRedisList_dp(item.GameCode, item.IssuseNumber, max);
+                            if (dlt != null)
+                                listRange.AddRange(dlt);
+                        }
+                        var fc3dlist = list.Where(p => p.GameCode == "FC3D").GroupBy(p => new { p.GameCode, p.IssuseNumber }).Select(a => a.Key).ToList();
+                        foreach (var item in fc3dlist)
+                        {
+                            var fc3d = GetRedisList_dp(item.GameCode, item.IssuseNumber, max);
+                            if (fc3d != null)
+                                listRange.AddRange(fc3d);
+                        }
+                        var PL3list = list.Where(p => p.GameCode == "PL3").GroupBy(p => new { p.GameCode, p.IssuseNumber }).Select(a => a.Key).ToList();
+                        foreach (var item in fc3dlist)
+                        {
+                            var PL3 = GetRedisList_dp(item.GameCode, item.IssuseNumber, max);
+                            if (PL3 != null)
+                                listRange.AddRange(PL3);
+                        }
+                        foreach (var order in list)
+                        {
+                            if (listRange.Count(a => a.Contains(order.SchemeId)) == 0)
+                                BusinessHelper.AddToRunningOrder(order);
+                            //var flag = GetRedisOrKey(order, Max_PrizeListCount);
+                            //if (flag)
+                            //{
+                            //    var count = orderInfoList.Count(a => a.SchemeId == order.SchemeId);
+                            //    if (count == 0)
+                            //        flag = true;
+                            //    BusinessHelper.AddToRunningOrder(order);
+                            //}
 
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -413,50 +416,53 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
                     List<string> listRange = new List<string>();
                     var orderService = new Sports_Manager();
                     var list = orderService.QueryAllRunningOrder_gp();
-                    var max = RedisOrderBusiness.Max_PrizeListCount;
-                    //var ctzqlist = from p in list
-                    //               where p.GameCode == "CTZQ" || p.GameCode == "OZB" || p.GameCode == "SJB"
-                    //               group p by new { p.GameCode, p.IssuseNumber, p.GameType } into g
-                    //               select new
-                    //               {
-                    //                   g.Key
-                    //               };//"CQSSC", "JX11X5", "SD11X5", "GD11X5", "GDKLSF", "JSKS", "SDKLPK3"
-                    var gpclist = list.Where(p => p.GameCode == "CQSSC" || p.GameCode == "JX11X5" || p.GameCode == "SD11X5" ||
-                                                   p.GameCode == "GD11X5" || p.GameCode == "GDKLSF" || p.GameCode == "JSKS" || p.GameCode == "SDKLPK3")
-                        .GroupBy(p => new { p.GameCode, p.IssuseNumber }).Select(a => a.Key).ToList();
-                    foreach (var item in gpclist)
+                    if (list.Count > 0)
                     {
-                        var gpc = GetRedisList_gp(item.GameCode, item.IssuseNumber, max);
-                        if (gpc != null)
-                            listRange.AddRange(gpc);
-                    }
-                    var BJDClist = list.Where(p => p.GameCode == "BJDC").GroupBy(p => new { p.GameCode, p.IssuseNumber }).Select(a => a.Key).ToList();
-                    foreach (var item in BJDClist)
-                    {
-                        var BJDC = GetRedisList_gp(item.GameCode, item.IssuseNumber, max);
-                        if (BJDC != null)
-                            listRange.AddRange(BJDC);
-                    }
-                    var jclist = list.Where(p => p.GameCode == "JCZQ" || p.GameCode == "JCLQ").GroupBy(p => new { p.GameCode, p.IssuseNumber }).Select(a => a.Key).ToList();
-                    foreach (var item in jclist)
-                    {
-                        var jc = GetRedisList_gp(item.GameCode, item.IssuseNumber, max);
-                        if (jc != null)
-                            listRange.AddRange(jc);
-                    }
-                    foreach (var order in list)
-                    {
-                        if (listRange.Count(a => a.Contains(order.SchemeId)) == 0)
-                            BusinessHelper.AddToRunningOrder(order);
-                        //var flag = GetRedisOrKey(order, Max_PrizeListCount);
-                        //if (flag)
-                        //{
-                        //    var count = orderInfoList.Count(a => a.SchemeId == order.SchemeId);
-                        //    if (count == 0)
-                        //        flag = true;
-                        //    BusinessHelper.AddToRunningOrder(order);
-                        //}
+                        var max = RedisOrderBusiness.Max_PrizeListCount;
+                        //var ctzqlist = from p in list
+                        //               where p.GameCode == "CTZQ" || p.GameCode == "OZB" || p.GameCode == "SJB"
+                        //               group p by new { p.GameCode, p.IssuseNumber, p.GameType } into g
+                        //               select new
+                        //               {
+                        //                   g.Key
+                        //               };//"CQSSC", "JX11X5", "SD11X5", "GD11X5", "GDKLSF", "JSKS", "SDKLPK3"
+                        var gpclist = list.Where(p => p.GameCode == "CQSSC" || p.GameCode == "JX11X5" || p.GameCode == "SD11X5" ||
+                                                       p.GameCode == "GD11X5" || p.GameCode == "GDKLSF" || p.GameCode == "JSKS" || p.GameCode == "SDKLPK3")
+                            .GroupBy(p => new { p.GameCode, p.IssuseNumber }).Select(a => a.Key).ToList();
+                        foreach (var item in gpclist)
+                        {
+                            var gpc = GetRedisList_gp(item.GameCode, item.IssuseNumber, max);
+                            if (gpc != null)
+                                listRange.AddRange(gpc);
+                        }
+                        var BJDClist = list.Where(p => p.GameCode == "BJDC").GroupBy(p => new { p.GameCode, p.IssuseNumber }).Select(a => a.Key).ToList();
+                        foreach (var item in BJDClist)
+                        {
+                            var BJDC = GetRedisList_gp(item.GameCode, item.IssuseNumber, max);
+                            if (BJDC != null)
+                                listRange.AddRange(BJDC);
+                        }
+                        var jclist = list.Where(p => p.GameCode == "JCZQ" || p.GameCode == "JCLQ").GroupBy(p => new { p.GameCode, p.IssuseNumber }).Select(a => a.Key).ToList();
+                        foreach (var item in jclist)
+                        {
+                            var jc = GetRedisList_gp(item.GameCode, item.IssuseNumber, max);
+                            if (jc != null)
+                                listRange.AddRange(jc);
+                        }
+                        foreach (var order in list)
+                        {
+                            if (listRange.Count(a => a.Contains(order.SchemeId)) == 0)
+                                BusinessHelper.AddToRunningOrder(order);
+                            //var flag = GetRedisOrKey(order, Max_PrizeListCount);
+                            //if (flag)
+                            //{
+                            //    var count = orderInfoList.Count(a => a.SchemeId == order.SchemeId);
+                            //    if (count == 0)
+                            //        flag = true;
+                            //    BusinessHelper.AddToRunningOrder(order);
+                            //}
 
+                        }
                     }
                 }
                 catch (Exception ex)
