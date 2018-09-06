@@ -480,9 +480,7 @@ namespace KaSon.FrameWork.ORM.Helper
         {
 
             var query = from o in DB.CreateQuery<C_Sports_Order_Running>()
-                        where o.IsPayRebate == false
-                        && o.CanChase == true
-                        && o.TicketStatus == (int)TicketStatus.Ticketed
+                        where o.TicketStatus == (int)TicketStatus.Ticketed
                         && o.IsVirtualOrder == false
                         orderby o.CreateTime ascending
                         select o;

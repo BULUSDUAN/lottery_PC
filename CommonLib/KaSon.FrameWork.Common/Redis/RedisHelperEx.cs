@@ -349,6 +349,7 @@ namespace KaSon.FrameWork.Common.Redis
 
     public static class SampleStackExchangeRedisExtensions
     {
+
         public static T GetObj<T>(this CSRedis.CSRedisClient cache, string key)
         {
             return Deserialize<T>(cache.GetBytes(key));
@@ -362,6 +363,24 @@ namespace KaSon.FrameWork.Common.Redis
         public static object GetObj(this CSRedis.CSRedisClient cache, string key)
         {
             return Deserialize<object>(cache.GetBytes(key));
+        }
+
+        public static string GetString(this CSRedis.CSRedisClient cache, string key)
+        {
+            return cache.Get(key);
+        }
+
+        public static void SetString(this CSRedis.CSRedisClient cache, string key, string value)
+        {
+            cache.Set(key, value);
+            //var result = cache.Set(key, value);
+            //if (!result)
+            //    Log4Log.Info($"{key}插入失败,value={value}");
+        }
+
+        public static void SetString(this CSRedis.CSRedisClient cache, string key, string value, TimeSpan timeSpan)
+        {
+            cache.Set(key, value, (int)timeSpan.TotalSeconds);
         }
 
         public static void SetObj(this CSRedis.CSRedisClient cache, string key, object value)
