@@ -22,6 +22,7 @@ using KaSon.FrameWork.Common.Redis;
 using EntityModel.Redis;
 using Microsoft.Extensions.Caching.Distributed;
 using CSRedis;
+using KaSon.FrameWork.Common.Net;
 
 namespace Lottery.Api.Controllers
 {

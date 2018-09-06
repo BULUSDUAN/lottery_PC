@@ -108,12 +108,26 @@ namespace BettingLottery.Service.Host
                 .Build();
 
 
-          
+
             //var list = JsonHelper.Deserialize<List<KaSon.FrameWork.ORM.OrmConfigInfo>>(ORMSettings.ToString());
             //DbProvider.InitConfigJson(list);
+          
+            // InitConfigInfo.logFactory = ServiceLocator.GetService<ILoggerProvider>();
+          
+
+            //Log4Log.Info("测试测试测试");
+            //Log4Log.Info("测试测试测试");
+            //Log4Log.Info("测试测试测试");
+            //Log4Log.Info("测试测试测试");
+            //Log4Log.Info("测试测试测试");
 
             using (host.Run())
             {
+                #region 初始化配置
+                InitConfigInfo.logFactory  = ServiceLocator.GetService<ILoggerFactory>();
+               
+                #endregion
+
                 Console.WriteLine($"服务端启动成功，{DateTime.Now}。");
                 AutoTaskServices.AutoCaheData(int.Parse(Sports_SchemeJobSeconds));
             }

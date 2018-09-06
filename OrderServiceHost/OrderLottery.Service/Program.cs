@@ -107,6 +107,10 @@ namespace OrderLottery.Service.Host
 
             using (host.Run())
             {
+                #region 初始化配置
+                InitConfigInfo.logFactory = ServiceLocator.GetService<ILoggerFactory>();
+
+                #endregion
                 Console.WriteLine($"服务端启动成功，{DateTime.Now}。");
             }
         }

@@ -33,6 +33,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.AspNetCore.Http;
 using KaSon.FrameWork.Common.Net;
 using Kason.Sg.Core.Log4net;
+using KaSon.FrameWork.Common;
 
 namespace Lottery.ApiGateway
 {
@@ -130,6 +131,8 @@ namespace Lottery.ApiGateway
          //   var log = new Log4NetProvider("Config/log4net.config");
          
             loggerFactory.AddProvider(new Log4NetProvider("Config/log4net.config"));
+
+            InitConfigInfo.logFactory = loggerFactory;
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

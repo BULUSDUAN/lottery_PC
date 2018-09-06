@@ -4,10 +4,8 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
-using Common.Communication;
-using Common.JSON;
-using Common.Net;
-using Common.Utilities;
+using KaSon.FrameWork.Common;
+using KaSon.FrameWork.Common.Net;
 using log4net;
 
 namespace Lottery.CrawGetters
@@ -21,10 +19,10 @@ namespace Lottery.CrawGetters
         /// <summary>
         ///     采集地址
         /// </summary>
-        private static readonly string API_URL = AppSettingsHelper.GetString("SZC_OPEN_URL")
+        private static readonly string API_URL = InitConfigInfo.SZC_OPEN_URL;
             ; //  "http://c.apiplus.cn/newly.do?token=f9e18eb66b794d91&code={0}&format=json&random={1}";
 
-        private static readonly string API_URL_DAY = AppSettingsHelper.GetString("SZC_OPEN_URL_DAY")
+        private static readonly string API_URL_DAY = InitConfigInfo.SZC_OPEN_URL_DAY; //AppSettingsHelper.GetString("SZC_OPEN_URL_DAY")
             ; //"http://c.apiplus.cn/daily.do?token=f9e18eb66b794d91&code={0}&format=json&random={1}&date={2}";
 
         private static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);

@@ -129,7 +129,8 @@ namespace KaSon.FrameWork.Common
             {
                 infologger = InitConfigInfo.logFactory.CreateLogger("Log4Log_Info");//.Fatal(message, exception);
             }
-            infologger.LogTrace(message, exception);
+            infologger.LogInformation(message, exception);
+            //infologger.
         }
         public static void Warn(string message = "", Exception exception = null)
         {
@@ -138,7 +139,7 @@ namespace KaSon.FrameWork.Common
             {
                 warninglogger = InitConfigInfo.logFactory.CreateLogger("Log4Log_Warn");//.Fatal(message, exception);
             }
-            warninglogger.LogTrace(message, exception);
+            warninglogger.LogWarning(message, exception);
         }
         public static void Debug(string message = "", Exception exception = null)
         {
@@ -147,7 +148,7 @@ namespace KaSon.FrameWork.Common
             {
                 debuglogger = InitConfigInfo.logFactory.CreateLogger("Log4Log_Debug");//.Fatal(message, exception);
             }
-            debuglogger.LogTrace(message, exception);
+            debuglogger.LogDebug(message, exception);
         }
         public static void Error(string message = "", Exception exception = null)
         {
@@ -156,7 +157,7 @@ namespace KaSon.FrameWork.Common
             {
                 errorlogger = InitConfigInfo.logFactory.CreateLogger("Log4Log_error");//.Fatal(message, exception);
             }
-            errorlogger.LogTrace(message, exception);
+            errorlogger.LogError(message, exception);
         }
 
         //public static void LogEX(KLogLevel lev, string name, object info=null)
