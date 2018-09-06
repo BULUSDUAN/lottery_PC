@@ -57,12 +57,17 @@ namespace SystemManage.Host
                         .AddRelateService()
                         .AddConfigurationWatch()
                         //option.UseZooKeeperManager(new ConfigInfo("127.0.0.1:2181"));
-                        .UseConsulManager(new ConfigInfo(consul, reloadOnChange: true))
+                        .UseConsulManager(new ConfigInfo(consul,
+                    "MagCraw/serviceRoutes/",
+                    "MagCraw/serviceSubscribers/",
+                    "MagCraw/serviceCommands/",
+                    "MagCraw/serviceCaches/")
+                        { ReloadOnChange = true })
                         .UseDotNettyTransport()
                         .UseRabbitMQTransport()
                         .AddRabbitMQAdapt()
 
-                       // .AddCache()
+                        // .AddCache()
                         //.UseKafkaMQTransport(kafkaOption =>
                         //{
                         //    kafkaOption.Servers = "127.0.0.1";

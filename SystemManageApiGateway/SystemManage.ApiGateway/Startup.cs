@@ -112,11 +112,12 @@ namespace Lottery.ApiGateway
             //    string cachePath = "services/serviceCaches/", bool reloadOnChange = false);
 
                 option.AddClientIntercepted(typeof(CacheProviderInterceptor));
-                option.UseConsulManager(new ConfigInfo(registerConfig.Address, 
-                    "Craw/serviceRoutes/",
-                    "Craw/serviceSubscribers/",
-                    "Craw/serviceCommands/",
-                    "Craw/serviceCaches/"));
+                option.UseConsulManager(new ConfigInfo(registerConfig.Address,
+                    "MagCraw/serviceRoutes/",
+                    "MagCraw/serviceSubscribers/",
+                    "MagCraw/serviceCommands/",
+                    "MagCraw/serviceCaches/")
+                { ReloadOnChange=true });
                 //option.UseZooKeeperManager(new ConfigInfo("127.0.0.1:2181"));
                 // if (registerConfig.Provider == RegisterProvider.Consul)
                 //else if (registerConfig.Provider == RegisterProvider.Zookeeper)
