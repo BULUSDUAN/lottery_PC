@@ -484,7 +484,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         where o.TicketStatus == (int)TicketStatus.Ticketed
                         && o.IsVirtualOrder == false
                         //&& o.CreateTime < DateTime.Now.AddMinutes(-2)
-                        && o.StopTime > DateTime.Now
+                        && o.StopTime < DateTime.Now
                         && (o.GameCode== "CTZQ"|| o.GameCode == "SSQ" || o.GameCode == "DLT" || o.GameCode == "FC3D" || o.GameCode == "PL3")
                         orderby o.CreateTime ascending
                         select o;
@@ -498,7 +498,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         where o.TicketStatus == (int)TicketStatus.Ticketed
                         && o.IsVirtualOrder == false
                         //&& o.CreateTime < DateTime.Now.AddMinutes(-2)
-                        && o.StopTime > DateTime.Now
+                        && o.StopTime < DateTime.Now
                         && (o.GameCode == "CQSSC" || o.GameCode == "JX11X5" || o.GameCode == "SD11X5" || o.GameCode == "GD11X5" || o.GameCode == "GDKLSF"
                             || o.GameCode == "JSKS" || o.GameCode == "SDKLPK3" || o.GameCode == "BJDC" || o.GameCode == "JCZQ" || o.GameCode == "JCLQ")
                         orderby o.CreateTime ascending
