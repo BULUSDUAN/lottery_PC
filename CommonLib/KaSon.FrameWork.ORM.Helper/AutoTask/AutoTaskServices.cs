@@ -364,19 +364,19 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
             string gameCode = order.GameCode.ToUpper();
             if (gameCode == "CTZQ" || gameCode == "OZB" || gameCode == "SJB")
             {
-                key = (gameCode == "CTZQ" || gameCode == "OZB" || gameCode == "SJB") ? string.Format("{0}_{1}_{2}_{3}", order.GameCode, order.GameType, RedisKeys.Key_Running_Order_List, runningItem.IssuseNumber) :
+                key = (gameCode == "CTZQ" || gameCode == "OZB" || gameCode == "SJB") ? string.Format("{0}_{1}_{2}_{3}", order.GameCode, order.GameType, RedisKeys.Key_Running_Order_List, order.IssuseNumber) :
                                                   string.Format("{0}_{1}_{2}", order.GameCode, RedisKeys.Key_Running_Order_List, order.IssuseNumber);
                 db = RedisHelperEx.DB_Running_Order_CTZQ;
             }
             else if (new string[] { "SSQ", "DLT", "FC3D", "PL3" }.Contains(gameCode))
             {
-                key = (gameCode == "CTZQ" || gameCode == "OZB" || gameCode == "SJB") ? string.Format("{0}_{1}_{2}_{3}", order.GameCode, order.GameType, RedisKeys.Key_Running_Order_List, runningItem.IssuseNumber) :
+                key = (gameCode == "CTZQ" || gameCode == "OZB" || gameCode == "SJB") ? string.Format("{0}_{1}_{2}_{3}", order.GameCode, order.GameType, RedisKeys.Key_Running_Order_List, order.IssuseNumber) :
                                                   string.Format("{0}_{1}_{2}", order.GameCode, RedisKeys.Key_Running_Order_List, order.IssuseNumber);
                 db = RedisHelperEx.DB_Running_Order_SCZ_DP;
             }
             if (new string[] { "CQSSC", "JX11X5", "SD11X5", "GD11X5", "GDKLSF", "JSKS", "SDKLPK3" }.Contains(gameCode))
             {
-                key = (gameCode == "CTZQ" || gameCode == "OZB" || gameCode == "SJB") ? string.Format("{0}_{1}_{2}_{3}", order.GameCode, order.GameType, RedisKeys.Key_Running_Order_List, runningItem.IssuseNumber) :
+                key = (gameCode == "CTZQ" || gameCode == "OZB" || gameCode == "SJB") ? string.Format("{0}_{1}_{2}_{3}", order.GameCode, order.GameType, RedisKeys.Key_Running_Order_List, order.IssuseNumber) :
                                                  string.Format("{0}_{1}_{2}", order.GameCode, RedisKeys.Key_Running_Order_List, order.IssuseNumber);
                 db = RedisHelperEx.DB_Running_Order_SCZ_GP;
             }

@@ -108,9 +108,13 @@ namespace BettingLottery.Service.Host
                 .Build();
 
 
-          
+
             //var list = JsonHelper.Deserialize<List<KaSon.FrameWork.ORM.OrmConfigInfo>>(ORMSettings.ToString());
             //DbProvider.InitConfigJson(list);
+            #region 初始化配置
+            InitConfigInfo.logFactory = ServiceLocator.GetService<ILoggerFactory>();
+            #endregion
+
 
             using (host.Run())
             {
