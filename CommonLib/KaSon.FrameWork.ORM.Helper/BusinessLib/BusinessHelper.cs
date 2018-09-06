@@ -302,7 +302,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 var fund = new LocalLoginBusiness();
                 var userBalance = fund.QueryUserBalance(userId);
                 var json = JsonHelper.Serialize(userBalance);
-                db.SetAsync(key, json, 60 * 2);
+                db.Set(key, json, 60 * 2);
             }
             catch (Exception ex)
             {
