@@ -409,6 +409,18 @@ namespace KaSon.FrameWork.Common.Redis
             }
             return list;
         }
+
+        public static List<T> GetRange<T>(this CSRedis.CSRedisClient cache, string key, int start, int end)
+        {
+            var array = cache.LRang(key, start, end);
+            List<T> list = new List<T>();
+            foreach (var item in array)
+            {
+                list.Add(JsonHelper.Deserialize<T>(item.ToString()));
+            }
+            return list;
+        }
+
         public static string[] GetRangeArr(this CSRedis.CSRedisClient cache, string key)
         {
             var index = cache.LLen(key);
