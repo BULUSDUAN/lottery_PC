@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Redis\**" />
+    <EmbeddedResource Remove="Redis\**" />
+    <None Remove="Redis\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\CommonLib\csredis-master\CSRedisCore.csproj" />
+    <ProjectReference Include="..\..\CommonLib\EntityModel\EntityModel.csproj" />
+    <ProjectReference Include="..\..\CommonLib\KaSon.FrameWork.Analyzer\KaSon.FrameWork.Analyzer.csproj" />
+    <ProjectReference Include="..\SystemManage.Api.Filter\SystemManage.Api.Filter.csproj" />
+    <ProjectReference Include="..\SystemManage.ApiGateway.Model\SystemManage.ApiGateway.Model.csproj" />
+    <ProjectReference Include="..\SystemManage.base.Controllers\SystemManage.Base.Controllers.csproj" />
+ 
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Kason.Sg.Core.ApiGateWay">
+      <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.ApiGateWay.dll</HintPath>
+    </Reference>
+    <Reference Include="Kason.Sg.Core.CPlatform">
+      <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.CPlatform.dll</HintPath>
+    </Reference>
+    <Reference Include="Kason.Sg.Core.ProxyGenerator">
+      <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.ProxyGenerator.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp">
+      <HintPath>C:\Windows\Microsoft.NET\Framework\v4.0.30319\Microsoft.CSharp.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
+
+</Project>

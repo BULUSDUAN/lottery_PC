@@ -62,7 +62,7 @@ namespace BettingLottery.Service.Host
                         .UseRabbitMQTransport()
                         .AddRabbitMQAdapt()
 
-                        .AddCache()
+                       // .AddCache()
                         //.UseKafkaMQTransport(kafkaOption =>
                         //{
                         //    kafkaOption.Servers = "127.0.0.1";
@@ -97,8 +97,8 @@ namespace BettingLottery.Service.Host
                 // .UseServiceCache()
                 .Configure(build =>
                 build.AddEventBusJson(RebbitMqSettings))
-                .Configure(build =>
-                build.AddCacheFile("cacheSettings.json", optional: false, reloadOnChange: true))
+                //.Configure(build =>
+                //build.AddCacheFile("cacheSettings.json", optional: false, reloadOnChange: true))
                   .Configure(build =>
                 build.AddCPlatformJSON(HostSettings))
                 .UseProxy()
