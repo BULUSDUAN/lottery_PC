@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EntityModel.CoreModel;
+using KaSon.FrameWork.Common.Net;
 
 namespace KaSon.FrameWork.Common.Sport
 {

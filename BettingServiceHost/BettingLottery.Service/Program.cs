@@ -50,6 +50,7 @@ namespace BettingLottery.Service.Host
             //JToken ORMSettings = ConfigHelper.AllConfigInfo["ORMSettings"];
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             var host = new ServiceHostBuilder()
+               // .CaptureStartupErrors(true),
                 .RegisterServices(builder =>
                 {
                     builder.AddMicroService(option =>
@@ -107,9 +108,13 @@ namespace BettingLottery.Service.Host
                 .Build();
 
 
-          
+
             //var list = JsonHelper.Deserialize<List<KaSon.FrameWork.ORM.OrmConfigInfo>>(ORMSettings.ToString());
             //DbProvider.InitConfigJson(list);
+            #region 初始化配置
+            InitConfigInfo.logFactory = ServiceLocator.GetService<ILoggerFactory>();
+            #endregion
+
 
             using (host.Run())
             {

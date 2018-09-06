@@ -23,7 +23,7 @@ using SystemManage.Api.Filter;
 
 namespace SystemManage.Craw.Controllers
 {
-    [Area("Manage")]
+    [Area("Craw")]
     [ReusltFilter]
     public class UserController : BaseController
     {

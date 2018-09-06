@@ -2673,6 +2673,13 @@ namespace KaSon.FrameWork.ORM.Helper
                 UpdateTime = b.s.UpdateTime,
             }).ToList();
             return collection;
-        }        
+        }
+
+
+        //public List<C_Sports_Order_Running> QueryRunningSportsOrderList()
+        //{
+        //    var sql = "SELECT * FROM C_Sports_Order_Running WHERE StopTime<=getdate() ORDER BY CreateTime desc";
+        //    return DB.CreateSQLQuery(sql).List<C_Sports_Order_Running>().ToList();
+        //}
     }
 }
