@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KaSon.FrameWork.Common.Net;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -26,7 +27,7 @@ namespace Lottery.CrawGetters
             if (string.IsNullOrEmpty(url))
                 return dic;
 
-            var html = CrawTool.Net.PostManagerWithProxy.Post(url, string.Empty, Encoding.Default, null);
+            var html =PostManagerWithProxy.Post(url, string.Empty, Encoding.Default, null);
             if (string.IsNullOrEmpty(html))
                 return dic;
             return SplitHtml(html, gameCode.ToUpper(), lastIssuseCount);

@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-using Common.Net;
+
+using KaSon.FrameWork.Common.Net;
 
 namespace Lottery.CrawGetters
 {

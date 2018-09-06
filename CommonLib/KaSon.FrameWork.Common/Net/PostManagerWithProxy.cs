@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Web;
 
-namespace Lottery.CrawTool.Net
+namespace KaSon.FrameWork.Common.Net
 {
     public class PostManagerWithProxy
     {

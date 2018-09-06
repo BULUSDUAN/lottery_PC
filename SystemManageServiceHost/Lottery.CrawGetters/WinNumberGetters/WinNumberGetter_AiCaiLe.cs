@@ -1,4 +1,5 @@
-﻿using Lottery.CrawTool.Net;
+﻿using KaSon.FrameWork.Common.Net;
+
 using System;
 using System.Collections.Generic;
 using System.Text;

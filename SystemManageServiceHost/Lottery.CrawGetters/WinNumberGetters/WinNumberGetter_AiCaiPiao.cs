@@ -1,6 +1,6 @@
 ﻿using KaSon.FrameWork.Common;
 using KaSon.FrameWork.Common.Net;
-using Lottery.CrawTool.Net;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;

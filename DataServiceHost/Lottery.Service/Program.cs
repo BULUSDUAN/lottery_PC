@@ -106,6 +106,10 @@ namespace Lottery.Service.Host
 
             using (host.Run())
             {
+                #region 初始化配置
+                InitConfigInfo.logFactory = ServiceLocator.GetService<ILoggerFactory>();
+
+                #endregion
                 System.Threading.Tasks.Task.Factory.StartNew(() =>
                 {
                     testAsync();
