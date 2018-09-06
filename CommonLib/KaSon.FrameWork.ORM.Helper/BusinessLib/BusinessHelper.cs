@@ -2210,16 +2210,12 @@ namespace KaSon.FrameWork.ORM.Helper
             balanceManager.PayToUserBalance(userId, payDetailList.ToArray());
         }
 
-        public static string AddToRunningOrder(string schemeId)
+        public static bool AddToRunningOrder(C_Sports_Order_Running order)
         {
-            var logList = new List<string>();
             try
             {
-                logList.Add(string.Format("开始处理订单{0}", schemeId));
                 var manager = new Sports_Manager();
-                var order = manager.QuerySports_Order_Running(schemeId);
-                if (order == null)
-                    throw new Exception("订单数据为空");
+                string schemeId = order.SchemeId;
                 var ticketList = manager.QueryTicketList(schemeId);
                 if (ticketList == null && ticketList.Count <= 0)
                     throw new Exception("订单无票数据");
@@ -2281,13 +2277,13 @@ namespace KaSon.FrameWork.ORM.Helper
                     }
                     RedisOrderBusiness.AddToRunningOrder_SZC((SchemeType)order.SchemeType, order.GameCode, order.GameType, schemeId, keyLine, stopAfterBonus, order.IssuseNumber, redisTicketList);
                 }
-                logList.Add("添加成功");
+                return true;
             }
-            catch (Exception ex)
+            catch
             {
-                logList.Add(ex.Message);
+                
             }
-            return string.Join(Environment.NewLine, logList);
+            return false;
         }
     }
 }
