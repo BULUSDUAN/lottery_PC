@@ -1184,7 +1184,7 @@ namespace Lottery.Api.Controllers
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "服务器内部错误，请联系接口提供商",
+                    Message = ex.ToGetMessage(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage(),
                 });

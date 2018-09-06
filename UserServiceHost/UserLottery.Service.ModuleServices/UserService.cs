@@ -1245,6 +1245,11 @@ namespace UserLottery.Service.ModuleServices
 
                 var biz = new RealNameAuthenticationBusiness();
                 BettingHelper.CheckUserRealName(IdCardNumber);
+
+                if (!BettingHelper.CheckIDCard18(IdCardNumber)) {
+
+                    throw new LogicException("请输入正确的身份证号码");
+                }
                 var realName = biz.GetAuthenticatedRealName(userId);
                 if (realName != null)
                 {
