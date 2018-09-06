@@ -16,6 +16,7 @@ using KaSon.FrameWork.Common.Sport;
 using KaSon.FrameWork.Analyzer.AnalyzerFactory;
 using EntityModel.CoreModel;
 using System.Threading.Tasks;
+using EntityModel.Redis;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
@@ -2207,6 +2208,86 @@ namespace KaSon.FrameWork.ORM.Helper
             //user.CurrentDouDou += doudou;
             //balanceManager.UpdateUserBalance(user);
             balanceManager.PayToUserBalance(userId, payDetailList.ToArray());
+        }
+
+        public static string AddToRunningOrder(string schemeId)
+        {
+            var logList = new List<string>();
+            try
+            {
+                logList.Add(string.Format("开始处理订单{0}", schemeId));
+                var manager = new Sports_Manager();
+                var order = manager.QuerySports_Order_Running(schemeId);
+                if (order == null)
+                    throw new Exception("订单数据为空");
+                var ticketList = manager.QueryTicketList(schemeId);
+                if (ticketList == null && ticketList.Count <= 0)
+                    throw new Exception("订单无票数据");
+                //取比赛编号，Redis票对象
+                var matchIdList = new List<string>();
+                var redisTicketList = new List<RedisTicketInfo>();
+                foreach (var ticket in ticketList)
+                {
+                    if (!string.IsNullOrEmpty(ticket.MatchIdList))
+                        matchIdList.AddRange(ticket.MatchIdList.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries));
+                    redisTicketList.Add(new RedisTicketInfo
+                    {
+                        AfterBonusMoney = ticket.AfterTaxBonusMoney,
+                        Amount = ticket.Amount,
+                        BetContent = ticket.BetContent,
+                        BetMoney = ticket.BetMoney,
+                        BetUnits = ticket.BetUnits,
+                        BonusStatus = (BonusStatus)ticket.BonusStatus,
+                        GameCode = ticket.GameCode,
+                        GameType = ticket.GameType,
+                        IsAppend = ticket.IsAppend,
+                        IssuseNumber = ticket.IssuseNumber,
+                        LocOdds = ticket.LocOdds,
+                        MatchIdList = ticket.MatchIdList,
+                        PlayType = ticket.PlayType,
+                        PreBonusMoney = ticket.PreTaxBonusMoney,
+                        SchemeId = ticket.SchemeId,
+                        TicketId = ticket.TicketId,
+                    });
+                }
+                var matchIdArray = matchIdList.Distinct().ToArray();
+                //竞彩或北单
+                if (order.GameCode == "BJDC")
+                {
+                    //北单
+                    RedisOrderBusiness.AddToRunningOrder_BJDC(schemeId, matchIdArray, redisTicketList);
+                }
+                else if (new string[] { "JCZQ", "JCLQ" }.Contains(order.GameCode))
+                {
+                    //竞彩
+                    RedisOrderBusiness.AddToRunningOrder_JC(order.GameCode, schemeId, matchIdArray, redisTicketList);
+                }
+                else
+                {
+                    //传统足球或数字彩
+                    var keyLine = schemeId;
+                    var stopAfterBonus = true;
+                    if ((SchemeType)order.SchemeType == SchemeType.ChaseBetting)
+                    {
+                        var scheme = manager.QueryLotteryScheme(schemeId);
+                        if (scheme == null)
+                            throw new Exception("LotteryScheme数据为空");
+                        keyLine = scheme.KeyLine;
+
+                        var detail = new SchemeManager().QueryOrderDetail(schemeId);
+                        if (detail == null)
+                            throw new Exception("OrderDetail数据为空");
+                        stopAfterBonus = detail.StopAfterBonus;
+                    }
+                    RedisOrderBusiness.AddToRunningOrder_SZC((SchemeType)order.SchemeType, order.GameCode, order.GameType, schemeId, keyLine, stopAfterBonus, order.IssuseNumber, redisTicketList);
+                }
+                logList.Add("添加成功");
+            }
+            catch (Exception ex)
+            {
+                logList.Add(ex.Message);
+            }
+            return string.Join(Environment.NewLine, logList);
         }
     }
 }
