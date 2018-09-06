@@ -27,7 +27,8 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
                         JCZQ(),
                         StartTaskByWriteChaseOrderToDb(seconds),
                         Init_Pool_Data(),
-                        Repair_SZCAddToRedis()
+                        Repair_SZCAddToRedis_dp(),
+                        Repair_SZCAddToRedis_gp()
             });
         }
 
@@ -328,22 +329,125 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
 
 
 
-        public static async Task Repair_SZCAddToRedis()
+        public static async Task Repair_SZCAddToRedis_dp()
         {
             while (true)
             {
                 try
                 {
+                    List<string> listRange = new List<string>();
                     var orderService = new Sports_Manager();
-                    var list = orderService.QueryAllRunningOrder();
-                    var Max_PrizeListCount = RedisOrderBusiness.Max_PrizeListCount;
+                    var list = orderService.QueryAllRunningOrder_dp();
+                    var max = RedisOrderBusiness.Max_PrizeListCount;
+                    //var ctzqlist = from p in list
+                    //               where p.GameCode == "CTZQ" || p.GameCode == "OZB" || p.GameCode == "SJB"
+                    //               group p by new { p.GameCode, p.IssuseNumber, p.GameType } into g
+                    //               select new
+                    //               {
+                    //                   g.Key
+                    //               };
+                    var ctzqlist = list.Where(p => p.GameCode == "CTZQ").GroupBy(p => new { p.GameCode, p.IssuseNumber, p.GameType }).Select(a => a.Key).ToList();
+                    foreach (var item in ctzqlist)
+                    {
+                        var ctzq = GetRedisList_dp(item.GameCode, item.IssuseNumber, max, item.GameType);
+                        listRange.AddRange(ctzq);
+                    }
+                    var ssqlist = list.Where(p => p.GameCode == "SSQ").GroupBy(p => new { p.GameCode, p.IssuseNumber }).Select(a => a.Key).ToList();
+                    foreach (var item in ssqlist)
+                    {
+                        var ssq = GetRedisList_dp(item.GameCode, item.IssuseNumber, max);
+                        listRange.AddRange(ssq);
+                    }
+                    var dltlist = list.Where(p => p.GameCode == "DLT").GroupBy(p => new { p.GameCode, p.IssuseNumber }).Select(a => a.Key).ToList();
+                    foreach (var item in dltlist)
+                    {
+                        var dlt = GetRedisList_dp(item.GameCode, item.IssuseNumber, max);
+                        listRange.AddRange(dlt);
+                    }
+                    var fc3dlist = list.Where(p => p.GameCode == "FC3D").GroupBy(p => new { p.GameCode, p.IssuseNumber }).Select(a => a.Key).ToList();
+                    foreach (var item in fc3dlist)
+                    {
+                        var fc3d = GetRedisList_dp(item.GameCode, item.IssuseNumber, max);
+                        listRange.AddRange(fc3d);
+                    }
+                    var PL3list = list.Where(p => p.GameCode == "PL3").GroupBy(p => new { p.GameCode, p.IssuseNumber }).Select(a => a.Key).ToList();
+                    foreach (var item in fc3dlist)
+                    {
+                        var PL3 = GetRedisList_dp(item.GameCode, item.IssuseNumber, max);
+                        listRange.AddRange(PL3);
+                    }
                     foreach (var order in list)
                     {
-                        var flag = GetRedisOrKey(order, Max_PrizeListCount);
-                        if (flag)
-                        {
+                        if (listRange.Count(a => a.Contains(order.SchemeId)) == 0)
                             BusinessHelper.AddToRunningOrder(order);
-                        }
+                        //var flag = GetRedisOrKey(order, Max_PrizeListCount);
+                        //if (flag)
+                        //{
+                        //    var count = orderInfoList.Count(a => a.SchemeId == order.SchemeId);
+                        //    if (count == 0)
+                        //        flag = true;
+                        //    BusinessHelper.AddToRunningOrder(order);
+                        //}
+
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }
+                await Task.Delay(1 * 60 * 60 * 1000);
+            }
+        }
+
+        public static async Task Repair_SZCAddToRedis_gp()
+        {
+            while (true)
+            {
+                try
+                {
+                    List<string> listRange = new List<string>();
+                    var orderService = new Sports_Manager();
+                    var list = orderService.QueryAllRunningOrder_gp();
+                    var max = RedisOrderBusiness.Max_PrizeListCount;
+                    //var ctzqlist = from p in list
+                    //               where p.GameCode == "CTZQ" || p.GameCode == "OZB" || p.GameCode == "SJB"
+                    //               group p by new { p.GameCode, p.IssuseNumber, p.GameType } into g
+                    //               select new
+                    //               {
+                    //                   g.Key
+                    //               };//"CQSSC", "JX11X5", "SD11X5", "GD11X5", "GDKLSF", "JSKS", "SDKLPK3"
+                    var gpclist = list.Where(p => p.GameCode == "CQSSC"||p.GameCode== "JX11X5" || p.GameCode == "SD11X5"||
+                                                   p.GameCode == "GD11X5" || p.GameCode == "GDKLSF" || p.GameCode == "JSKS" || p.GameCode == "SDKLPK3")
+                        .GroupBy(p => new { p.GameCode, p.IssuseNumber }).Select(a => a.Key).ToList();
+                    foreach (var item in gpclist)
+                    {
+                        var gpc = GetRedisList_gp(item.GameCode, item.IssuseNumber, max);
+                        listRange.AddRange(gpc);
+                    }
+                    var BJDClist = list.Where(p => p.GameCode == "BJDC").GroupBy(p => new { p.GameCode, p.IssuseNumber }).Select(a => a.Key).ToList();
+                    foreach (var item in BJDClist)
+                    {
+                        var BJDC = GetRedisList_gp(item.GameCode, item.IssuseNumber, max);
+                        listRange.AddRange(BJDC);
+                    }
+                    var jclist = list.Where(p => p.GameCode == "JCZQ"|| p.GameCode == "JCLQ").GroupBy(p => new { p.GameCode, p.IssuseNumber }).Select(a => a.Key).ToList();
+                    foreach (var item in jclist)
+                    {
+                        var jc = GetRedisList_gp(item.GameCode, item.IssuseNumber, max);
+                        listRange.AddRange(jc);
+                    }
+                    foreach (var order in list)
+                    {
+                        if (listRange.Count(a => a.Contains(order.SchemeId)) == 0)
+                            BusinessHelper.AddToRunningOrder(order);
+                        //var flag = GetRedisOrKey(order, Max_PrizeListCount);
+                        //if (flag)
+                        //{
+                        //    var count = orderInfoList.Count(a => a.SchemeId == order.SchemeId);
+                        //    if (count == 0)
+                        //        flag = true;
+                        //    BusinessHelper.AddToRunningOrder(order);
+                        //}
 
                     }
                 }
@@ -356,28 +460,132 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
         }
 
 
-        private static bool GetRedisOrKey(C_Sports_Order_Running order, int max)
+
+        private static List<string> GetRedisList_dp(string gameCode, string issuseNumber, int max, string gameType = "")
         {
             CSRedis.CSRedisClient db = null;
             string key = string.Empty;
-            bool flag = false;
-            string gameCode = order.GameCode.ToUpper();
             if (gameCode == "CTZQ" || gameCode == "OZB" || gameCode == "SJB")
             {
-                key = (gameCode == "CTZQ" || gameCode == "OZB" || gameCode == "SJB") ? string.Format("{0}_{1}_{2}_{3}", order.GameCode, order.GameType, RedisKeys.Key_Running_Order_List, runningItem.IssuseNumber) :
-                                                  string.Format("{0}_{1}_{2}", order.GameCode, RedisKeys.Key_Running_Order_List, order.IssuseNumber);
+                key = string.Format("{0}_{1}_{2}_{3}", gameCode, gameType, RedisKeys.Key_Running_Order_List, issuseNumber);
                 db = RedisHelperEx.DB_Running_Order_CTZQ;
             }
             else if (new string[] { "SSQ", "DLT", "FC3D", "PL3" }.Contains(gameCode))
             {
-                key = (gameCode == "CTZQ" || gameCode == "OZB" || gameCode == "SJB") ? string.Format("{0}_{1}_{2}_{3}", order.GameCode, order.GameType, RedisKeys.Key_Running_Order_List, runningItem.IssuseNumber) :
-                                                  string.Format("{0}_{1}_{2}", order.GameCode, RedisKeys.Key_Running_Order_List, order.IssuseNumber);
+                key = string.Format("{0}_{1}_{2}", gameCode, RedisKeys.Key_Running_Order_List, issuseNumber);
+                db = RedisHelperEx.DB_Running_Order_SCZ_DP;
+            }
+            //if (new string[] { "CQSSC", "JX11X5", "SD11X5", "GD11X5", "GDKLSF", "JSKS", "SDKLPK3" }.Contains(gameCode))
+            //{
+            //    key = string.Format("{0}_{1}_{2}", gameCode, RedisKeys.Key_Running_Order_List, issuseNumber);
+            //    db = RedisHelperEx.DB_Running_Order_SCZ_GP;
+            //}
+            //if (gameCode == "BJDC")
+            //{
+            //    key = string.Format("{0}_{1}_{2}", "BJDC", RedisKeys.Key_Running_Order_List, issuseNumber);
+            //    db = RedisHelperEx.DB_Running_Order_BJDC;
+            //}
+            //if (gameCode == "JCZQ" || gameCode == "JCLQ")
+            //{
+            //    var fullKeyNew = string.Format("{0}_{1}", gameCode, RedisKeys.Key_Running_Order_List);
+            //    db = RedisHelperEx.DB_Running_Order_JC;
+            //}
+            if (db != null && !string.IsNullOrEmpty(key))
+            {
+                var orderInfoList = new List<string>();
+                if (gameCode == "JCZQ" || gameCode == "JCLQ")
+                {
+                    for (int i = 0; i < max; i++)
+                    {
+                        var fullKey = $"{key}_{i}";
+                        var list = db.LRang(fullKey, 0, -1);
+                        if (list.Length > 0)
+                            orderInfoList.AddRange(list);
+                    }
+                    return orderInfoList;
+                }
+                else
+                {
+                    var list = db.LRang(key, 0, -1);
+                    orderInfoList.AddRange(list);
+                    return orderInfoList;
+                }
+            }
+            return null;
+        }
+
+        private static List<string> GetRedisList_gp(string gameCode, string issuseNumber, int max, string gameType = "")
+        {
+            CSRedis.CSRedisClient db = null;
+            string key = string.Empty;
+            //if (gameCode == "CTZQ" || gameCode == "OZB" || gameCode == "SJB")
+            //{
+            //    key = string.Format("{0}_{1}_{2}_{3}", gameCode, gameType, RedisKeys.Key_Running_Order_List, issuseNumber);
+            //    db = RedisHelperEx.DB_Running_Order_CTZQ;
+            //}
+            //else if (new string[] { "SSQ", "DLT", "FC3D", "PL3" }.Contains(gameCode))
+            //{
+            //    key = string.Format("{0}_{1}_{2}", gameCode, RedisKeys.Key_Running_Order_List, issuseNumber);
+            //    db = RedisHelperEx.DB_Running_Order_SCZ_DP;
+            //}
+            if (new string[] { "CQSSC", "JX11X5", "SD11X5", "GD11X5", "GDKLSF", "JSKS", "SDKLPK3" }.Contains(gameCode))
+            {
+                key = string.Format("{0}_{1}_{2}", gameCode, RedisKeys.Key_Running_Order_List, issuseNumber);
+                db = RedisHelperEx.DB_Running_Order_SCZ_GP;
+            }
+            if (gameCode == "BJDC")
+            {
+                key = string.Format("{0}_{1}_{2}", "BJDC", RedisKeys.Key_Running_Order_List, issuseNumber);
+                db = RedisHelperEx.DB_Running_Order_BJDC;
+            }
+            if (gameCode == "JCZQ" || gameCode == "JCLQ")
+            {
+                var fullKeyNew = string.Format("{0}_{1}", gameCode, RedisKeys.Key_Running_Order_List);
+                db = RedisHelperEx.DB_Running_Order_JC;
+            }
+            if (db != null && !string.IsNullOrEmpty(key))
+            {
+                var orderInfoList = new List<string>();
+                if (gameCode == "JCZQ" || gameCode == "JCLQ")
+                {
+                    for (int i = 0; i < max; i++)
+                    {
+                        var fullKey = $"{key}_{i}";
+                        var list = db.LRang(fullKey, 0, -1);
+                        if (list.Length > 0)
+                            orderInfoList.AddRange(list);
+                    }
+                    return orderInfoList;
+                }
+                else
+                {
+                    var list = db.LRang(key, 0, -1);
+                    orderInfoList.AddRange(list);
+                    return orderInfoList;
+                }
+            }
+            return null;
+        }
+
+
+        private static List<string> GetRedisList(C_Sports_Order_Running order, int max)
+        {
+            CSRedis.CSRedisClient db = null;
+            string key = string.Empty;
+            string gameCode = order.GameCode.ToUpper();
+            if (gameCode == "CTZQ" || gameCode == "OZB" || gameCode == "SJB")
+            {
+                key = string.Format("{0}_{1}_{2}_{3}", order.GameCode, order.GameType, RedisKeys.Key_Running_Order_List, order.IssuseNumber);
+                db = RedisHelperEx.DB_Running_Order_CTZQ;
+            }
+            else if (new string[] { "SSQ", "DLT", "FC3D", "PL3" }.Contains(gameCode))
+            {
+                key = string.Format("{0}_{1}_{2}", order.GameCode, RedisKeys.Key_Running_Order_List, order.IssuseNumber);
                 db = RedisHelperEx.DB_Running_Order_SCZ_DP;
             }
             if (new string[] { "CQSSC", "JX11X5", "SD11X5", "GD11X5", "GDKLSF", "JSKS", "SDKLPK3" }.Contains(gameCode))
             {
-                key = (gameCode == "CTZQ" || gameCode == "OZB" || gameCode == "SJB") ? string.Format("{0}_{1}_{2}_{3}", order.GameCode, order.GameType, RedisKeys.Key_Running_Order_List, runningItem.IssuseNumber) :
-                                                 string.Format("{0}_{1}_{2}", order.GameCode, RedisKeys.Key_Running_Order_List, order.IssuseNumber);
+                key = order.GameCode, RedisKeys.Key_Running_Order_List, order.IssuseNumber);
                 db = RedisHelperEx.DB_Running_Order_SCZ_GP;
             }
             if (gameCode == "BJDC")
@@ -392,29 +600,26 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
             }
             if (db != null && !string.IsNullOrEmpty(key))
             {
-                var orderInfoList = new List<RedisOrderInfo>();
+                var orderInfoList = new List<string>();
                 if (gameCode == "JCZQ" || gameCode == "JCLQ")
                 {
                     for (int i = 0; i < max; i++)
                     {
                         var fullKey = $"{key}_{i}";
-                        var list = db.GetRange<RedisOrderInfo>(fullKey, 0, -1);
-                        if (list.Count > 0)
+                        var list = db.LRang(fullKey, 0, -1);
+                        if (list.Length > 0)
                             orderInfoList.AddRange(list);
                     }
-                    var count = orderInfoList.Count(a => a.SchemeId == order.SchemeId);
-                    if (count == 0)
-                        flag = true;
+                    return orderInfoList;
                 }
                 else
                 {
-                    var list = db.GetRange<RedisOrderInfo>(key, 0, -1);
-                    var count = list.Count(a => a.SchemeId == order.SchemeId);
-                    if (count == 0)
-                        flag = true;
+                    var list = db.LRang(key, 0, -1);
+                    orderInfoList.AddRange(list);
+                    return orderInfoList;
                 }
             }
-            return flag;
+            return null;
         }
 
 

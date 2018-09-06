@@ -8,11 +8,11 @@ using System.Text;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
-    public class Sports_Manager:DBbase
+    public class Sports_Manager : DBbase
     {
         public T_SingleScheme_Order QuerySingleSchemeOrder(string schemeId)
         {
-          //  Session.Clear();
+            //  Session.Clear();
             return this.DB.CreateQuery<T_SingleScheme_Order>().Where(p => p.OrderId == schemeId).FirstOrDefault();
         }
 
@@ -23,7 +23,7 @@ namespace KaSon.FrameWork.ORM.Helper
         }
         public C_Sports_Order_Running QuerySports_Order_Running(string schemeId)
         {
-           // Session.Clear();
+            // Session.Clear();
             return this.DB.CreateQuery<C_Sports_Order_Running>().Where(p => p.SchemeId == schemeId).FirstOrDefault();
         }
         public void AddSports_Order_Running(C_Sports_Order_Running entity)
@@ -69,7 +69,7 @@ namespace KaSon.FrameWork.ORM.Helper
             if (list == null || list.Count <= 0)
                 list = (from b in this.DB.CreateQuery<C_Sports_AnteCode_History>()
                         where b.SchemeId == schemeId
-                        select b).ToList().Select(a=> new C_Sports_AnteCode
+                        select b).ToList().Select(a => new C_Sports_AnteCode
                         {
                             AnteCode = a.AnteCode,
                             BonusStatus = a.BonusStatus,
@@ -93,7 +93,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <returns></returns>
         public List<Cache_JCZQ_MatchInfo> QueryJCZQ_Current_CacheMatchList()
         {
-           // Session.Clear();
+            // Session.Clear();
             var query = from m in DB.CreateQuery<C_JCZQ_Match>()
                         where m.FSStopBettingTime > DateTime.Now
                         select new Cache_JCZQ_MatchInfo
@@ -132,7 +132,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <returns></returns>
         public List<Cache_BJDC_MatchInfo> QueryBJDC_Current_CacheMatchList()
         {
-           // Session.Clear();
+            // Session.Clear();
             var query = from m in DB.CreateQuery<C_BJDC_Match>()   //this.Session.Query<C_BJDC_Match>()
                         where m.LocalStopTime > DateTime.Now
                         select new Cache_BJDC_MatchInfo
@@ -156,7 +156,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <returns></returns>
         public List<Cache_JCLQ_MatchInfo> QueryJCLQ_Current_CacheMatchList()
         {
-          //  Session.Clear();
+            //  Session.Clear();
             var query = from m in DB.CreateQuery<C_JCLQ_Match>()
                         where m.FSStopBettingTime > DateTime.Now
                         select new Cache_JCLQ_MatchInfo
@@ -200,7 +200,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             else
             {
-                query = query.Where(p => p.UserId == userId && p.GameCode == gameCode &&  p.GameType == gameType);
+                query = query.Where(p => p.UserId == userId && p.GameCode == gameCode && p.GameType == gameType);
             }
             return query.FirstOrDefault();
         }
@@ -209,7 +209,8 @@ namespace KaSon.FrameWork.ORM.Helper
         /// 初始化用户战绩
         /// </summary>
         /// <param name="UserBeedings"></param>
-        public void AddUserBeedings(C_User_Beedings UserBeedings) {
+        public void AddUserBeedings(C_User_Beedings UserBeedings)
+        {
 
             DB.GetDal<C_User_Beedings>().Add(UserBeedings);
         }
@@ -267,7 +268,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public List<C_JCLQ_Match> QueryJCLQSaleMatchCount(string[] matchIdArray)
         {
-           // Session.Clear();
+            // Session.Clear();
             var query = from m in this.DB.CreateQuery<C_JCLQ_Match>()
                         where matchIdArray.Contains(m.MatchId)
                         && m.FSStopBettingTime > DateTime.Now
@@ -277,7 +278,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public List<C_JCLQ_MatchResult> QueryJCLQMatchResult(string[] matchIdArray)
         {
-           // Session.Clear();
+            // Session.Clear();
             var query = from m in this.DB.CreateQuery<C_JCLQ_MatchResult>()
                         where matchIdArray.Contains(m.MatchId)
                         select m;
@@ -419,13 +420,13 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public C_Sports_Order_Complate QuerySports_Order_Complate(string schemeId)
         {
-         
+
             return DB.CreateQuery<C_Sports_Order_Complate>().Where(p => p.SchemeId == schemeId).FirstOrDefault();
         }
 
         public List<C_Sports_Ticket> QueryTicketList(string gameCode, string issuse)
         {
-           
+
             return DB.CreateQuery<C_Sports_Ticket>().Where(p => p.GameCode == gameCode && p.IssuseNumber == issuse
                         && p.BonusStatus == (int)BonusStatus.Waitting
                         && p.TicketStatus == (int)TicketStatus.Ticketed).ToList();
@@ -433,7 +434,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public List<C_Sports_Ticket> QueryTicketList(string schemeId)
         {
-          
+
             return DB.CreateQuery<C_Sports_Ticket>().Where(p => p.SchemeId == schemeId).ToList();
         }
 
@@ -444,7 +445,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public decimal GetUserMaxBonusMoney(string userId)
         {
-           
+
             string strSql = "select isnull(max(AfterTaxBonusMoney),0) maxBonusMoney from C_Sports_Order_Complate where UserId=:UserId and BonusStatus=20 and IsVirtualOrder=0";
             var maxBonusMoney = DB.CreateSQLQuery(strSql).SetString("UserId", userId).First<decimal>();
 
@@ -453,19 +454,19 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public C_OrderDetail QueryOrderDetailBySchemeId(string schemeId)
         {
-           
+
             return DB.CreateQuery<C_OrderDetail>().Where(s => s.SchemeId == schemeId).FirstOrDefault();
         }
 
         public C_Sports_Ticket QueryTicket(string ticketId)
         {
-         
+
             return DB.CreateQuery<C_Sports_Ticket>().Where(p => p.TicketId == ticketId).FirstOrDefault();
         }
 
         public List<string> QueryWaitPayRebateRunningOrder()
         {
-           
+
             var query = from o in DB.CreateQuery<C_Sports_Order_Running>()
                         where o.IsPayRebate == false
                         && o.CanChase == true
@@ -476,12 +477,30 @@ namespace KaSon.FrameWork.ORM.Helper
             return query.ToList();
         }
 
-        public List<C_Sports_Order_Running> QueryAllRunningOrder()
+        public List<C_Sports_Order_Running> QueryAllRunningOrder_dp()
         {
 
             var query = from o in DB.CreateQuery<C_Sports_Order_Running>()
                         where o.TicketStatus == (int)TicketStatus.Ticketed
                         && o.IsVirtualOrder == false
+                        //&& o.CreateTime < DateTime.Now.AddMinutes(-2)
+                        && o.StopTime > DateTime.Now
+                        && (o.GameCode== "CTZQ"|| o.GameCode == "SSQ" || o.GameCode == "DLT" || o.GameCode == "FC3D" || o.GameCode == "PL3")
+                        orderby o.CreateTime ascending
+                        select o;
+            return query.ToList();
+        }
+
+        public List<C_Sports_Order_Running> QueryAllRunningOrder_gp()
+        {
+
+            var query = from o in DB.CreateQuery<C_Sports_Order_Running>()
+                        where o.TicketStatus == (int)TicketStatus.Ticketed
+                        && o.IsVirtualOrder == false
+                        //&& o.CreateTime < DateTime.Now.AddMinutes(-2)
+                        && o.StopTime > DateTime.Now
+                        && (o.GameCode == "CQSSC" || o.GameCode == "JX11X5" || o.GameCode == "SD11X5" || o.GameCode == "GD11X5" || o.GameCode == "GDKLSF"
+                            || o.GameCode == "JSKS" || o.GameCode == "SDKLPK3" || o.GameCode == "BJDC" || o.GameCode == "JCZQ" || o.GameCode == "JCLQ")
                         orderby o.CreateTime ascending
                         select o;
             return query.ToList();
@@ -490,7 +509,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public List<string> QueryWaitPayRebateComplateOrder()
         {
-           
+
             var query = from o in DB.CreateQuery<C_Sports_Order_Complate>()
                         where o.IsPayRebate == false
                         && o.CanChase == true
@@ -504,39 +523,39 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public C_UserSaveOrder QuerySaveOrder(string schemeId)
         {
-           
+
             return DB.CreateQuery<C_UserSaveOrder>().Where(p => p.SchemeId == schemeId).FirstOrDefault();
         }
 
         public C_BJDC_Match QueryBJDC_Match(string id)
         {
-          
+
             return DB.CreateQuery<C_BJDC_Match>().Where(p => p.Id == id).FirstOrDefault();
         }
         public C_BJDC_MatchResult QueryBJDC_MatchResult(string id)
         {
-           
+
             return DB.CreateQuery<C_BJDC_MatchResult>().Where(p => p.Id == id).FirstOrDefault();
         }
 
         public C_JCZQ_Match QueryJCZQ_Match(string matchId)
         {
-          
+
             return DB.CreateQuery<C_JCZQ_Match>().Where(p => p.MatchId == matchId).FirstOrDefault();
         }
         public C_JCZQ_MatchResult QueryJCZQ_MatchResult(string matchId)
         {
-         
+
             return DB.CreateQuery<C_JCZQ_MatchResult>().Where(p => p.MatchId == matchId).FirstOrDefault();
         }
         public C_JCLQ_Match QueryJCLQ_Match(string matchId)
         {
-          
+
             return DB.CreateQuery<C_JCLQ_Match>().Where(p => p.MatchId == matchId).FirstOrDefault();
         }
         public C_JCLQ_MatchResult QueryJCLQ_MatchResult(string matchId)
         {
-           
+
             return DB.CreateQuery<C_JCLQ_MatchResult>().Where(p => p.MatchId == matchId).FirstOrDefault();
         }
         /// <summary>
@@ -548,12 +567,12 @@ namespace KaSon.FrameWork.ORM.Helper
         {
 
             return DB.CreateQuery<C_Lottery_Scheme>().Where(p => p.KeyLine == keyLine).OrderBy(p => p.OrderIndex).ToList();
-           // return this.Session.Query<C_Lottery_Scheme>().Where(p => p.KeyLine == keyLine).OrderBy(p => p.OrderIndex).ToList();
+            // return this.Session.Query<C_Lottery_Scheme>().Where(p => p.KeyLine == keyLine).OrderBy(p => p.OrderIndex).ToList();
         }
 
         public List<C_Sports_Order_Running> QueryOrderRunningBySchemeIdArray(string[] schemeIdArray)
         {
-          //  Session.Clear();
+            //  Session.Clear();
             return DB.CreateQuery<C_Sports_Order_Running>().Where(p => schemeIdArray.Contains(p.SchemeId)).ToList();
         }
         public List<C_Sports_Order_Complate> QueryOrderComplateBySchemeIdArray(string[] schemeIdArray)
