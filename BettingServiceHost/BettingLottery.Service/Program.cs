@@ -50,6 +50,7 @@ namespace BettingLottery.Service.Host
             //JToken ORMSettings = ConfigHelper.AllConfigInfo["ORMSettings"];
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             var host = new ServiceHostBuilder()
+               // .CaptureStartupErrors(true),
                 .RegisterServices(builder =>
                 {
                     builder.AddMicroService(option =>
