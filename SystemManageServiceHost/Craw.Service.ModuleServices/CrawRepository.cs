@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Extensions.Logging;
 using Kason.Sg.Core.Nlog;
 
-namespace CrawMatch.Service.ModuleServices
+namespace Craw.Service.ModuleServices
 {
     /// <summary>
     /// 采集服务

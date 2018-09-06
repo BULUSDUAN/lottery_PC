@@ -19,7 +19,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace CrawMatch.Service.IModuleServices
+namespace Craw.Service.IModuleServices
 {
     /// <summary>
     /// 采集服务

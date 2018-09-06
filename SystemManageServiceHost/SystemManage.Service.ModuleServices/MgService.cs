@@ -18,6 +18,7 @@ using SystemManage.Service.ModuleServices;
 using SystemManage.Service.IModuleServices;
 using Kason.Sg.Core.ProxyGenerator;
 using Microsoft.Extensions.Logging;
+using SystemManage.ModuleBaseServices;
 
 namespace SystemManage.Service.ModuleServices
 {
@@ -25,7 +26,7 @@ namespace SystemManage.Service.ModuleServices
     /// 管理系统服务
     /// </summary>
     [ModuleName("mg")]
-    public class MgService : ProxyServiceBase, IMgService
+    public class MgService : KgBaseService, IMgService
     {
 
         //IKgLog log = null;

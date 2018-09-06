@@ -6,7 +6,7 @@ using Kason.Sg.Core.Caching.Configurations;
 using Kason.Sg.Core.CPlatform.Utilities;
 using Kason.Sg.Core.EventBusKafka.Configurations;
 
-namespace BettingLottery.Service.Host
+namespace SystemManage.Host
 {
     public class Startup
     {

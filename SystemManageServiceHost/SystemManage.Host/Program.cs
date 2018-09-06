@@ -32,7 +32,7 @@ using KaSon.FrameWork.ORM.Provider;
 using KaSon.FrameWork.ORM.Helper;
 using KaSon.FrameWork.ORM.Helper.AutoTask;
 
-namespace BettingLottery.Service.Host
+namespace SystemManage.Host
 {
 
     public class Program

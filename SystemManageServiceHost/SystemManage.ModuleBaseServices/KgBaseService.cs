@@ -17,7 +17,7 @@ using Kason.Sg.Core.System.Intercept;
 using System.Threading.Tasks;
 using KaSon.FrameWork.Common;
 
-namespace Services.ModuleBaseServices
+namespace SystemManage.ModuleBaseServices
 {
     public class KgBaseService: ProxyServiceBase, IIntegrationEventHandler<EventModel>
     {

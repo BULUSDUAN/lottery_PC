@@ -1,8 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <OutputType>Library</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <ApplicationIcon />
+    <StartupObject />
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,13 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\CommonLib\EntityModel\EntityModel.csproj" />
+    <ProjectReference Include="..\..\CommonLib\KaSon.FrameWork.Common\KaSon.FrameWork.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Kason.Sg.Core.Caching">
-      <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.Caching.dll</HintPath>
-    </Reference>
     <Reference Include="Kason.Sg.Core.CPlatform">
       <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.CPlatform.dll</HintPath>
     </Reference>

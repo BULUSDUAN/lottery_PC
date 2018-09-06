@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Services.Model
+namespace SystemManage.Model
 {
     [ProtoContract]
     public class AuthenticationRequestData

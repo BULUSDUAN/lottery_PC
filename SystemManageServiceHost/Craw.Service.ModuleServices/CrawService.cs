@@ -10,14 +10,15 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Text;
 
-using CrawMatch.Service.IModuleServices;
+using Craw.Service.IModuleServices;
 using Kason.Sg.Core.ProxyGenerator;
 using Microsoft.Extensions.Logging;
+using SystemManage.ModuleBaseServices;
 
-namespace CrawMatch.Service.ModuleServices
+namespace Craw.Service.ModuleServices
 {
     [ModuleName("creaw")]
-    public class CrawService : ProxyServiceBase, ICrawService
+    public class CrawService : KgBaseService, ICrawService
     {
 
         //IKgLog log = null;

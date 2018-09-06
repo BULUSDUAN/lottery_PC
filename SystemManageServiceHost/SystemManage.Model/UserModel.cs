@@ -2,7 +2,7 @@
 using ProtoBuf;
 using Kason.Sg.Core.System.Intercept;
 
-namespace Services.Model
+namespace SystemManage.Model
 { 
     [ProtoContract]
     public class UserModel

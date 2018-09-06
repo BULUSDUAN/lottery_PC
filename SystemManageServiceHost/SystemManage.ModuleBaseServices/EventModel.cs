@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Services.ModuleBaseServices
+namespace SystemManage.ModuleBaseServices
 {
    public class EventModel : IntegrationEvent
     {

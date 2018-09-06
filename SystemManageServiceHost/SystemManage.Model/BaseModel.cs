@@ -1,14 +1,15 @@
 ﻿using ProtoBuf;
+using Kason.Sg.Core.System.Intercept;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Services.Model
+namespace SystemManage.Model
 {
     [ProtoContract]
-    public class RoteModel
+    public class BaseModel
     {
         [ProtoMember(1)]
-        public string ServiceId { get; set; }
+        public Guid Id => Guid.NewGuid();
     }
 }
