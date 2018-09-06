@@ -38,5 +38,25 @@ namespace Craw.Service.ModuleServices
         {
             throw new NotImplementedException();
         }
+        /// <summary>
+        /// 数字彩采集开奖号
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public Task<string> NumLettory_WinNumber(string name)
+        {
+            switch (name)
+            {
+                //重庆时时彩
+                case "CQSSC":
+
+                break;
+                default:
+                    break;
+            }
+
+            throw new NotImplementedException();
+        }
+        //WinNumber
     }
 }

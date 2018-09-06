@@ -2,6 +2,7 @@
 using log4net;
 using log4net.Config;
 using log4net.Repository;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,23 +25,29 @@ namespace KaSon.FrameWork.Common
     }
     public class Log4Log : IKgLog
     {
-        private static log4net.ILog errorlogger = null;//LogManager.GetLogger(typeof(Log4Log));
-        private static log4net.ILog infologger = null;
-        private static log4net.ILog apiLogerror = null;
-        private static log4net.ILog logWarning = null;
+        //private static log4net.ILog errorlogger = null;//LogManager.GetLogger(typeof(Log4Log));
+        //private static log4net.ILog infologger = null;
+        //private static log4net.ILog apiLogerror = null;
+        //private static log4net.ILog logWarning = null;
 
-        private static log4net.ILog timeInfoLog = null;
-        private static log4net.ILog sevTimeInfo = null;
-        private static log4net.ILog redisTimeInfoLog = null;
+        //private static log4net.ILog timeInfoLog = null;
+        //private static log4net.ILog sevTimeInfo = null;
+        //private static log4net.ILog redisTimeInfoLog = null;
 
-        private static log4net.ILog iLog = null;
+        //private static log4net.ILog iLog = null;
+
+        public static ILogger infologger = null;
+        public static ILogger errorlogger = null;
+        public static ILogger warninglogger = null;
+        public static ILogger debuglogger = null;
+        public static ILogger fatellogger = null;
 
         private static ILoggerRepository repository { get; set; }
         //ILog log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         static XmlElement log4netEle = null;
         static XmlDocument log4netConfig = null;
         static Log4Log() {
-            Init();
+         //   Init();
         }
         static void Init()
         {
@@ -92,49 +99,64 @@ namespace KaSon.FrameWork.Common
         public void Log(string name, Exception ex)
         {
 
-            if (errorlogger == null)
-            {
-                errorlogger = LogManager.GetLogger(repository.Name, "logerror");
-            }
-            errorlogger.Error(name, ex);
+            //if (errorlogger == null)
+            //{
+            //    errorlogger = LogManager.GetLogger(repository.Name, "logerror");
+            //}
+            //errorlogger.Error(name, ex);
         }
-        /// <summary>
-        /// 创建日志工具
-        /// </summary>
-        /// <param name="ClassName"></param>
-        public static ILog CreateLog(string ClassName= "ClassName") {
+        ///// <summary>
+        ///// 创建日志工具
+        ///// </summary>
+        ///// <param name="ClassName"></param>
+        //public static ILog CreateLog(string ClassName= "ClassName") {
 
-            return LogManager.GetLogger(repository.Name, ClassName);
-        }
+        //    return InitConfigInfo.logFactory.CreateLogger<Log4Log>(); //LogManager.GetLogger(repository.Name, ClassName);
+        //}
 
         public static void Fatal(string message="",Exception exception=null) {
             if (exception == null) exception= new Exception("");
-            if (iLog == null) Init();
-            LogManager.GetLogger(repository.Name, "ClassName").Fatal(message, exception);
+            if (fatellogger == null) {
+                fatellogger = InitConfigInfo.logFactory.CreateLogger("Log4Log_Fatal");//.Fatal(message, exception);
+            }
+            fatellogger.LogTrace(message, exception);
         }
         public static void Info(string message = "", Exception exception = null)
         {
             if (exception == null) exception = new Exception("");
-            if (iLog == null) Init();
-            iLog.Info(message, exception);
+            //if (iLog == null) Init();
+            if (infologger == null)
+            {
+                infologger = InitConfigInfo.logFactory.CreateLogger("Log4Log_Info");//.Fatal(message, exception);
+            }
+            infologger.LogTrace(message, exception);
         }
         public static void Warn(string message = "", Exception exception = null)
         {
             if (exception == null) exception = new Exception("");
-            if (iLog == null) Init();
-            iLog.Warn(message, exception);
+            if (warninglogger == null)
+            {
+                warninglogger = InitConfigInfo.logFactory.CreateLogger("Log4Log_Warn");//.Fatal(message, exception);
+            }
+            warninglogger.LogTrace(message, exception);
         }
         public static void Debug(string message = "", Exception exception = null)
         {
             if (exception == null) exception = new Exception("");
-            if (iLog == null) Init();
-            iLog.Debug(message, exception);
+            if (debuglogger == null)
+            {
+                debuglogger = InitConfigInfo.logFactory.CreateLogger("Log4Log_Debug");//.Fatal(message, exception);
+            }
+            debuglogger.LogTrace(message, exception);
         }
         public static void Error(string message = "", Exception exception = null)
         {
             if (exception == null) exception = new Exception("");
-            if (iLog == null) Init();
-            iLog.Error(message, exception);
+            if (errorlogger == null)
+            {
+                errorlogger = InitConfigInfo.logFactory.CreateLogger("Log4Log_error");//.Fatal(message, exception);
+            }
+            errorlogger.LogTrace(message, exception);
         }
 
         //public static void LogEX(KLogLevel lev, string name, object info=null)
@@ -247,11 +269,11 @@ namespace KaSon.FrameWork.Common
         /// <param name="msg">调试信息字符串</param>
         public void Log(string msg)
         {
-            if (infologger == null)
-            {
-                infologger = LogManager.GetLogger(repository.Name, "loginfo");
-            }
-            infologger.Info(msg);
+            //if (infologger == null)
+            //{
+            //    infologger = LogManager.GetLogger(repository.Name, "loginfo");
+            //}
+            //infologger.Info(msg);
 
         }
 
