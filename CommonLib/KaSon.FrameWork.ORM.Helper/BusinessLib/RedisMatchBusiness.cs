@@ -136,7 +136,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 var json = JsonHelper.Serialize(matchList);
                 var fullKey = string.Format("{0}_{1}", "JCZQ", RedisKeys.Key_Running_Match_List);
                 var db = RedisHelperEx.DB_Match;
-                db.SetAsync(fullKey, json);
+                db.Set(fullKey, json);
             }
             catch (Exception)
             {
@@ -177,7 +177,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 var json = JsonHelper.Serialize(matchList);
                 var fullKey = string.Format("{0}_{1}", "JCLQ", RedisKeys.Key_Running_Match_List);
                 var db = RedisHelperEx.DB_Match;
-                db.SetAsync(fullKey, json);
+                db.Set(fullKey, json);
             }
             catch (Exception)
             {
@@ -219,7 +219,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var json = JsonHelper.Serialize<List<EntityModel.C_JCZQ_MatchResult>>(resultList);
             var db = RedisHelperEx.DB_Match;
             var fullKey = string.Format("{0}_{1}", "JCZQ", RedisKeys.Key_MatchResult_List);
-            db.SetAsync(fullKey, json);
+            db.Set(fullKey, json);
         }
 
         /// <summary>
@@ -258,7 +258,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var json = JsonHelper.Serialize<List<EntityModel.C_JCLQ_MatchResult>>(resultList);
             var db = RedisHelperEx.DB_Match;
             var fullKey = string.Format("{0}_{1}", "JCLQ", RedisKeys.Key_MatchResult_List);
-            db.SetAsync(fullKey, json);
+            db.Set(fullKey, json);
         }
 
         /// <summary>
@@ -298,7 +298,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var json = JsonHelper.Serialize<List<EntityModel.C_BJDC_MatchResult_Prize>>(resultList);
             var db = RedisHelperEx.DB_Match;
             var fullKey = string.Format("{0}_{1}", "BJDC", RedisKeys.Key_MatchResult_List);
-            db.SetAsync(fullKey, json);
+            db.Set(fullKey, json);
         }
 
         /// <summary>
@@ -341,7 +341,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 var json = JsonHelper.Serialize<List<EntityModel.T_Ticket_BonusPool>>(poolList);
                 var db = RedisHelperEx.DB_Match;
                 var fullKey = string.Format("CTZQ_{0}_{1}", gameType, RedisKeys.Key_MatchResult_List);
-                db.SetAsync(fullKey, json);
+                db.Set(fullKey, json);
             }
         }
 
@@ -385,7 +385,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 var json = JsonHelper.Serialize<List<EntityModel.T_Ticket_BonusPool>>(poolList);
                 var db = RedisHelperEx.DB_Match;
                 var fullKey = string.Format("{0}_{1}", gameCode, RedisKeys.Key_SZC_BonusPool);
-                db.SetAsync(fullKey, json);
+                db.Set(fullKey, json);
             }
         }
 
@@ -429,7 +429,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var json = JsonHelper.Serialize<List<C_Bonus_Rule>>(list);
             var db = RedisHelperEx.DB_Match;
             var fullKey = "SZC_Bonus_Rule_List";
-            db.SetAsync(fullKey, json);
+            db.Set(fullKey, json);
         }
 
         /// <summary>
@@ -662,7 +662,7 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                 string key = string.Format("{0}_ByOfficialStopTime_{1}", RedisKeys.Key_CurrentIssuse, item.GameCode);
                 var json = JsonHelper.Serialize(item);
-                db.SetAsync(key, json);
+                db.Set(key, json);
             }
         }
 
@@ -694,7 +694,7 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                 string key = string.Format("{0}_ByLocalStopTime_{1}", RedisKeys.Key_CurrentIssuse, item.GameCode);
                 var json = JsonHelper.Serialize(item);
-                db.SetAsync(key, json);
+                db.Set(key, json);
             }
         }
 
