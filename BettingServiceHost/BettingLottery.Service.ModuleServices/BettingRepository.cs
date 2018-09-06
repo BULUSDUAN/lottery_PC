@@ -10,13 +10,13 @@ namespace UserLottery.Service.ModuleServices
     public class BettingRepository : BaseRepository
     {
         ILogger<BettingRepository> _Log;
-        ILoggerFactory logfactory;
+      //  ILoggerFactory logfactory;
       //  public NLogger UserNLog;
         public BettingRepository(ILogger<BettingRepository> log) {
             _Log = log;
 
             // _LogFactory.CreateLogger
-            logfactory.CreateLogger<BettingRepository>();
+            //     logfactory.CreateLogger<BettingRepository>();
             //UserNLog = (NLogger)_LogFactory.CreateLogger("User");
         }
     }
