@@ -56,7 +56,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 SchemeType = schemeType,
             };
             var json = JsonHelper.Serialize<RedisOrderInfo>(orderInfo);
-            db.RPushAsync(fullKey, json);
+            db.RPush(fullKey, json);
         }
         public static void AddOrderToRedis(string gameCode, RedisWaitTicketOrder order)
         {

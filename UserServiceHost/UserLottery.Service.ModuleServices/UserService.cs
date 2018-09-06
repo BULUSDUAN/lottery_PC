@@ -135,7 +135,7 @@ namespace UserLottery.Service.ModuleServices
                     AgentId = loginEntity.Register.AgentId,
                     IsAgent = loginEntity.Register.IsAgent,
                     HideDisplayNameCount = loginEntity.Register.HideDisplayNameCount,
-                    MaxLevelName= MaxLevelName,
+                    MaxLevelName = MaxLevelName,
                     IsUserType = loginEntity.Register.UserType == 1 ? true : false
                 });
             }
@@ -345,7 +345,7 @@ namespace UserLottery.Service.ModuleServices
                 var content = JsonHelper.Serialize<UserBindInfos>(info);
                 var fullKey = string.Format("{0}_{1}", RedisKeys.Key_UserBind, userId);
                 var db = RedisHelperEx.DB_UserBindData;
-                db.SetAsync(fullKey, content, 24*60*60);
+                db.Set(fullKey, content, 24 * 60 * 60);
             }
             catch (Exception ex)
             {
@@ -362,7 +362,8 @@ namespace UserLottery.Service.ModuleServices
             {
                 var fullKey = string.Format("{0}_{1}", RedisKeys.Key_UserBind, userId);
                 var db = RedisHelperEx.DB_UserBindData;
-                db.Del(fullKey);
+                if (!db.Exists(fullKey))
+                    db.Del(fullKey);
             }
             catch (Exception ex)
             {
@@ -623,7 +624,7 @@ namespace UserLottery.Service.ModuleServices
                     //manager.UpdateUserMobile(entity);
                 }
             }
-        
+
             catch (Exception ex)
             {
 
@@ -697,10 +698,10 @@ namespace UserLottery.Service.ModuleServices
 
                 #endregion
 
-              
+
                 //! 执行扩展功能代码 - 提交事务后
                 BusinessHelper.ExecPlugin<IResponseAuthentication_AfterTranCommit>(new object[] { userId, "Mobile", mobileNumber, source });
-            
+
                 return Task.FromResult(new CommonActionResult(true, "手机认证成功。"));
             }
             catch (LogicException ex)
@@ -1116,7 +1117,7 @@ namespace UserLottery.Service.ModuleServices
             {
                 var biz = new FundBusiness();
                 var loginBiz = new LocalLoginBusiness();
-                var result= loginBiz.CheckIsSame2LoginPassword(userId, newPassword);
+                var result = loginBiz.CheckIsSame2LoginPassword(userId, newPassword);
                 var flag = false;
                 if (result.HasValue)
                 {
