@@ -476,6 +476,18 @@ namespace KaSon.FrameWork.ORM.Helper
             return query.ToList();
         }
 
+        public List<C_Sports_Order_Running> QueryAllRunningOrder()
+        {
+
+            var query = from o in DB.CreateQuery<C_Sports_Order_Running>()
+                        where o.TicketStatus == (int)TicketStatus.Ticketed
+                        && o.IsVirtualOrder == false
+                        orderby o.CreateTime ascending
+                        select o;
+            return query.ToList();
+        }
+
+
         public List<string> QueryWaitPayRebateComplateOrder()
         {
            
