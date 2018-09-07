@@ -1,8 +1,9 @@
-﻿using System;
+﻿using EntityModel.ExceptionExtend;
+using KaSon.FrameWork.Common.Net;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Common.Communication;
-using Common.Net;
+
 
 namespace Lottery.CrawGetters
 {
