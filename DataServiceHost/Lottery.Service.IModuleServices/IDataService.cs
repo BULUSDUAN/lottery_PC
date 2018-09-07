@@ -3,6 +3,7 @@ using EntityModel;
 using EntityModel.Communication;
 using EntityModel.CoreModel;
 using EntityModel.Enum;
+using EntityModel.LotteryJsonInfo;
 using Kason.Sg.Core.Caching;
 using Kason.Sg.Core.CPlatform;
 using Kason.Sg.Core.CPlatform.EventBus.Events;
@@ -125,5 +126,23 @@ namespace Lottery.Service.IModuleServices
 
         [Service(Date = "2018-7-15", Director = "lidi", Name = "日志")]
         Task<string> ReadSqlTimeLog(string FileName);
+
+        [Service(Date = "2018-9-7", Director = "lidi", Name = "根据Key获取传统足球场次redis")]
+        Task<List<CtzqIssuesWeb>> GetCTZQIssuseList_ByRedis(string Key);
+
+        [Service(Date = "2018-9-7", Director = "lidi", Name = "根据Key获取传统足球比赛redis")]
+        Task<List<CTZQ_MatchInfo_WEB>> GetCTZQMatchOddsList_ByRedis(string Key);
+
+        [Service(Date = "2018-9-7", Director = "lidi", Name = "根据Key获取北京单场比赛redis")]
+        Task<List<BJDC_MatchInfo_WEB>> GetBJDCMatchOddsLis_ByRedis(string Key);
+
+        [Service(Date = "2018-9-7", Director = "lidi", Name = "根据Key获取竞彩足球比赛redis")]
+        Task<List<JCZQ_MatchInfo_WEB>> GetJCZQMatchOddsList_ByRedis(string Key);
+
+        [Service(Date = "2018-9-7", Director = "lidi", Name = "根据Key获取竞彩篮球比赛redis")]
+        Task<List<JCLQ_MatchInfo_WEB>> GetJCLQMatchOddsList_ByRedis(string Key);
+
+        [Service(Date = "2018-9-7", Director = "lidi", Name = "根据Key获取开奖结果列表")]
+        Task<List<KaiJiang>> GetKaiJiangList_ByRedis();
     }
 }

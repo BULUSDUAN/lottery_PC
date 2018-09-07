@@ -879,21 +879,21 @@ namespace Lottery.Api.Controllers
 
                 if (param.Count > 0)
                 {
-                    var Key = RedisKeys.ArticleListKey;
-                    string cacheKey = string.Format("{0}_{1}_{2}_{3}_{4}", Key, param["category"].ToString(), param["gameCode"].ToString(), pageIndex, pageSize);
-                    var obj = RedisHelperEx.DB_CoreCacheData.GetObj<ArticleInfo_QueryCollection>(cacheKey);
-                    if (obj == null)
-                    {
+                    //var Key = RedisKeys.ArticleListKey;
+                    //string cacheKey = string.Format("{0}_{1}_{2}_{3}_{4}", Key, param["category"].ToString(), param["gameCode"].ToString(), pageIndex, pageSize);
+                    //var obj = RedisHelperEx.DB_CoreCacheData.GetObj<ArticleInfo_QueryCollection>(cacheKey);
+                    //if (obj == null)
+                    //{
                         aList = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_YouHua");
-                        if (aList != null)
-                        {
-                            RedisHelperEx.DB_CoreCacheData.SetObj(cacheKey, aList, TimeSpan.FromMinutes(10));
-                        }
-                    }
-                    else
-                    {
-                        aList = obj;
-                    }
+                        //if (aList != null)
+                        //{
+                        //    RedisHelperEx.DB_CoreCacheData.SetObj(cacheKey, aList, TimeSpan.FromMinutes(10));
+                        //}
+                    //}
+                    //else
+                    //{
+                    //    aList = obj;
+                    //}
                 }
                 if (aList != null && aList.ArticleList.Count > 0)
                 {
@@ -2330,6 +2330,7 @@ namespace Lottery.Api.Controllers
                     throw new LogicException("期号不能为空");
 
                 var matchDataList = new List<object>();
+                var param = new Dictionary<string, object>();
                 //object mlist = null;
                 string key = "";
                 switch (gameCode)
@@ -2340,7 +2341,9 @@ namespace Lottery.Api.Controllers
                         //cache 获取
                         //var _issuse = HashTableCache._IssuseCTZQHt[gameType] ?? Json_CTZQ.IssuseList(gameType);
                         key = $"{EntityModel.Redis.RedisKeys.Key_CTZQ_Issuse_List}_{gameType}";
-                        var issuse = RedisHelperEx.DB_Match.GetObjs<CtzqIssuesWeb>(key);
+                        //var issuse = RedisHelperEx.DB_Match.GetObjs<CtzqIssuesWeb>(key);
+                        param.Add("Key", key);
+                        var issuse = await _serviceProxyProvider.Invoke<List<CtzqIssuesWeb>>(param, "api/Data/GetCTZQIssuseList_ByRedis");
                         if (issuse == null)
                         {
                             issuse = Json_CTZQ.IssuseList(gameType);
@@ -2351,7 +2354,10 @@ namespace Lottery.Api.Controllers
                             var now = DateTime.Now;
                             if (Convert.ToDateTime(theissuse.StartTime) > now) break;
                             key = $"{EntityModel.Redis.RedisKeys.Key_CTZQ_Match_Odds_List}_{gameType}_{theissuse.IssuseNumber}";
-                            var oddlist_ctzq = RedisHelperEx.DB_Match.GetObjs<CTZQ_MatchInfo_WEB>(key);
+                            param.Clear();
+                            param.Add("Key", key);
+                            //var oddlist_ctzq = RedisHelperEx.DB_Match.GetObjs<CTZQ_MatchInfo_WEB>(key);
+                            var oddlist_ctzq= await _serviceProxyProvider.Invoke<List<CTZQ_MatchInfo_WEB>>(param, "api/Data/GetCTZQMatchOddsList_ByRedis");
                             if (oddlist_ctzq == null)
                             {
                                 oddlist_ctzq = Json_CTZQ.MatchList_WEB(issuseNumber, gameType); ;
@@ -2361,7 +2367,9 @@ namespace Lottery.Api.Controllers
                         break;
                     case "BJDC":
                         key = $"{EntityModel.Redis.RedisKeys.Key_BJDC_Match_Odds_List}_{gameType}_{issuseNumber}";
-                        var oddlist_bjdc = RedisHelperEx.DB_Match.GetObjs<BJDC_MatchInfo_WEB>(key);
+                        param.Add("Key", key);
+                        //var oddlist_bjdc = RedisHelperEx.DB_Match.GetObjs<BJDC_MatchInfo_WEB>(key);
+                        var oddlist_bjdc = await _serviceProxyProvider.Invoke<List<BJDC_MatchInfo_WEB>>(param, "api/Data/GetBJDCMatchOddsLis_ByRedis");
                         if (oddlist_bjdc == null)
                         {
                             oddlist_bjdc = Json_BJDC.MatchList_WEB(issuseNumber, gameType);
@@ -2372,7 +2380,9 @@ namespace Lottery.Api.Controllers
                     case "JCZQ":
                         key = EntityModel.Redis.RedisKeys.Key_JCZQ_Match_Odds_List;
                         string reidskey = key + "_" + gameType + (newVerType == null ? "" : newVerType);
-                        var oddlist_jczq = RedisHelperEx.DB_Match.GetObjs<JCZQ_MatchInfo_WEB>(reidskey);
+                        param.Add("Key", reidskey);
+                        var oddlist_jczq = await _serviceProxyProvider.Invoke<List<JCZQ_MatchInfo_WEB>>(param, "api/Data/GetJCZQMatchOddsList_ByRedis");
+                        //var oddlist_jczq = RedisHelperEx.DB_Match.GetObjs<JCZQ_MatchInfo_WEB>(reidskey);
                         if (oddlist_jczq == null)
                         {
                             if (gameType.ToLower() == "hhdg")
@@ -2384,7 +2394,9 @@ namespace Lottery.Api.Controllers
                         break;
                     case "JCLQ":
                         key = $"{EntityModel.Redis.RedisKeys.Key_JCLQ_Match_Odds_List}_{gameType}";
-                        var oddlist_jclq = RedisHelperEx.DB_Match.GetObjs<JCLQ_MatchInfo_WEB>(key);
+                        param.Add("Key", key);
+                        var oddlist_jclq = await _serviceProxyProvider.Invoke<List<JCLQ_MatchInfo_WEB>>(param, "api/Data/GetJCLQMatchOddsList_ByRedis");
+                        //var oddlist_jclq = RedisHelperEx.DB_Match.GetObjs<JCLQ_MatchInfo_WEB>(key);
                         if (oddlist_jclq == null)
                         {
                             if (gameType.ToLower() == "hhdg")
@@ -2714,10 +2726,10 @@ namespace Lottery.Api.Controllers
             {
                 var p = JsonHelper.Decode(entity.Param);
                 int PageSize = p.PageSize;
-                var RedisKey = RedisKeys.IndexNewsFocus + PageSize;
-                var IndexNewsFocusValue = RedisHelperEx.DB_Other.Get(RedisKey);
-                if (string.IsNullOrEmpty(IndexNewsFocusValue))
-                {
+                //var RedisKey = RedisKeys.IndexNewsFocus + PageSize;
+                //var IndexNewsFocusValue = RedisHelperEx.DB_Other.Get(RedisKey);
+                //if (string.IsNullOrEmpty(IndexNewsFocusValue))
+                //{
                     //1.去获取公告
                     var GGCount = 3;
                     int Surplus = PageSize - GGCount >= 0 ? PageSize - GGCount : 0;
@@ -2774,7 +2786,7 @@ namespace Lottery.Api.Controllers
                             }
                         }
                     }
-                    RedisHelperEx.DB_Other.Set(RedisKey, JsonHelper.Serialize(ReturnList), 3 * 60);
+                    //RedisHelperEx.DB_Other.Set(RedisKey, JsonHelper.Serialize(ReturnList), 3 * 60);
                     return Json(new LotteryServiceResponse
                     {
                         Code = ResponseCode.成功,
@@ -2782,18 +2794,18 @@ namespace Lottery.Api.Controllers
                         MsgId = entity.MsgId,
                         Value = ReturnList,
                     });
-                }
-                else
-                {
-                    var list = JsonHelper.Deserialize<List<IndexNewsFocusModel>>(IndexNewsFocusValue);
-                    return Json(new LotteryServiceResponse
-                    {
-                        Code = ResponseCode.成功,
-                        Message = "查询成功",
-                        MsgId = entity.MsgId,
-                        Value = list,
-                    });
-                }
+                //}
+                //else
+                //{
+                //    var list = JsonHelper.Deserialize<List<IndexNewsFocusModel>>(IndexNewsFocusValue);
+                //    return Json(new LotteryServiceResponse
+                //    {
+                //        Code = ResponseCode.成功,
+                //        Message = "查询成功",
+                //        MsgId = entity.MsgId,
+                //        Value = list,
+                //    });
+                //}
             }
             catch (Exception ex)
             {
@@ -2909,23 +2921,25 @@ namespace Lottery.Api.Controllers
                 //1.从redis中取
                 //2.取不到则在sql中取
                 //3.不为空则存入redis中，3分钟缓存
-                var v = RedisHelperEx.DB_Other.Get(key);
-                if (string.IsNullOrEmpty(v))
-                {
+                //var v = RedisHelperEx.DB_Other.Get(key);
+                //if (string.IsNullOrEmpty(v))
+                //{
+                //var v = string.Empty;
                     var param = new Dictionary<string, object>();
                     param.Add("key", key);
                     var config = await _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/Data/QueryCoreConfigByKey");
                     if (config != null)
-                    {
-                        v = config.ConfigValue;
-                        RedisHelperEx.DB_Other.Set(key, config.ConfigValue, 3 * 60);
+                    {    
+                    return config.ConfigValue;
+                    //RedisHelperEx.DB_Other.Set(key, config.ConfigValue, 3 * 60);
                     }
-                    if (string.IsNullOrEmpty(v))
-                    {
-                        return defalutValue;
-                    }
-                }
-                return v;
+                    return defalutValue;
+                //if (string.IsNullOrEmpty(v))
+                //{
+                //    return defalutValue;
+                //}
+                //}
+                //return v;
             }
             catch (Exception)
             {

@@ -82,5 +82,7 @@ namespace BettingLottery.Service.IModuleServices
         [Service(Date = "2018-7-15", Director = "kason", Name = "日志")]
         Task<string> ReadLog(string DicName,string ApiDicTypeName);
 
+        [Service(Date = "2018-9-7", Director = "lidi", Name = "查询合买大厅")]
+        Task<List<Sports_TogetherSchemeQueryInfo>> QueryTogetherHall();
     }
 }
