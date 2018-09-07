@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Common.Communication;
+
 using Common.Lottery.Gateway.Liangcai;
+using EntityModel.ExceptionExtend;
 
 namespace Lottery.CrawGetters
 {

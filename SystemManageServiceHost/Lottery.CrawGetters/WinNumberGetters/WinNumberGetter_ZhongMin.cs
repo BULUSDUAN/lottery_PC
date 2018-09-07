@@ -1,7 +1,8 @@
-﻿using System;
+﻿using KaSon.FrameWork.Common.Gateway;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
-using Common.Lottery.Gateway.ZhongMin;
+
 
 namespace Lottery.CrawGetters
 {
@@ -17,10 +18,10 @@ namespace Lottery.CrawGetters
             var dic = new Dictionary<string, string>();
 
             //"http://121.12.168.124:661/ticketinterface.aspx";
-            GatewayHandler.ServiceUrl = ConfigurationManager.AppSettings["ZHM_ServiceUrl"];
-            GatewayHandler.Key = ConfigurationManager.AppSettings["ZHM_Key"];
-            GatewayHandler.PartnerId = ConfigurationManager.AppSettings["ZHM_PartnerId"];
-            GatewayHandler.Version = ConfigurationManager.AppSettings["ZHM_Version"];
+            GatewayHandler.ServiceUrl = InitConfigInfo.ZHM_ServiceUrl;
+            GatewayHandler.Key = InitConfigInfo.ZHM_Key;
+            GatewayHandler.PartnerId = InitConfigInfo.ZHM_PartnerId;
+            GatewayHandler.Version = InitConfigInfo.ZHM_Version;
 
             var issuseNumberZM = GetZMIssuse(gameCode, issuseNumber);
 

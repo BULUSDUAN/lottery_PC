@@ -20,10 +20,10 @@ namespace Lottery.CrawGetters
         ///     采集地址
         /// </summary>
         private static readonly string API_URL = InitConfigInfo.SZC_OPEN_URL;
-            ; //  "http://c.apiplus.cn/newly.do?token=f9e18eb66b794d91&code={0}&format=json&random={1}";
+             //  "http://c.apiplus.cn/newly.do?token=f9e18eb66b794d91&code={0}&format=json&random={1}";
 
         private static readonly string API_URL_DAY = InitConfigInfo.SZC_OPEN_URL_DAY; //AppSettingsHelper.GetString("SZC_OPEN_URL_DAY")
-            ; //"http://c.apiplus.cn/daily.do?token=f9e18eb66b794d91&code={0}&format=json&random={1}&date={2}";
+            //"http://c.apiplus.cn/daily.do?token=f9e18eb66b794d91&code={0}&format=json&random={1}&date={2}";
 
         private static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -33,7 +33,7 @@ namespace Lottery.CrawGetters
         private static readonly object lockObject = new object();
 
 
-        private static Cache cache => HttpWcfClient.DefaultCache;
+       // private static Cache cache => HttpWcfClient.DefaultCache;
 
 
         private int Parse(string gameCode, string json, Dictionary<string, string> dic)
@@ -83,8 +83,8 @@ namespace Lottery.CrawGetters
             if (Parse(gameCode, PostManagerWithProxy.Get(url, Encoding.UTF8), dic) == 0)
                 return dic;
             //21分钟采集一次
-            if (cache.ExistKey(gameCode, TimeSpan.FromMinutes(49))) //, TimeSpan.FromMinutes(49), 0))
-                return dic;
+            //if (cache.ExistKey(gameCode, TimeSpan.FromMinutes(49))) //, TimeSpan.FromMinutes(49), 0))
+            //    return dic;
             var succeed = true;
             //自动补3天的数据
             foreach (var dt in new[]
@@ -99,8 +99,8 @@ namespace Lottery.CrawGetters
                 if (Parse(gameCode, PostManagerWithProxy.Get(url, Encoding.UTF8), dic) == 0)
                     succeed = false;
             }
-            if (succeed)
-                cache.SetKey(gameCode, TimeSpan.FromMinutes(49), 0);
+            //if (succeed)
+            //    cache.SetKey(gameCode, TimeSpan.FromMinutes(49), 0);
             return dic;
         }
 

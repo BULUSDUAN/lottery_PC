@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using KaSon.FrameWork.Common.JSON;
+using KaSon.FrameWork.Common.Net;
+using System.Collections.Generic;
 using System.Text;
-using Common.JSON;
-using Common.Net;
+
 
 namespace Lottery.CrawGetters
 {
