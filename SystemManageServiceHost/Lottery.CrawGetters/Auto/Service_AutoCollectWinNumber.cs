@@ -162,6 +162,7 @@ namespace Lottery.CrawGetters.Auto
         //// private readonly ConcurrentDictionary<string, string> succeedWinNumber = new ConcurrentDictionary<string, string>();
         //private Thread thread = null;
 
+        public string Key="";
 
         private Task thread=null;
         public void Start(string gameName)
@@ -184,7 +185,7 @@ namespace Lottery.CrawGetters.Auto
                     }
                     catch (Exception ex)
                     {
-                       // logger.Error("", ex);
+                        _log.LogError("", ex);
                     }
                     finally
                     {
@@ -197,19 +198,18 @@ namespace Lottery.CrawGetters.Auto
 
         }
 
-        //public void Stop()
-        //{
-        //    Interlocked.Exchange(ref BeStop, 1);
+        public void Stop()
+        {
+            Interlocked.Exchange(ref BeStop, 1);
 
-        //    if (thread != null)
-        //    {
+            if (thread != null)
+            {
+               
+                thread = null;
+            }
 
-        //        thread.Abort();
-        //        thread = null;
-        //    }
 
-
-        //}
+        }
         //private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         //public void WriteLog(string log)
