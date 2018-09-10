@@ -1939,5 +1939,14 @@ namespace KaSon.FrameWork.Common.Sport
             return TeamName.Substring(0, 4);
         }
 
+
+        public static string GetGameTypeDisplayName(string GameTypeName)
+        {
+          return  GameTypeName==null?"": GameTypeName.Replace("任选一", "前一直选")
+    .Replace("胜负任9", "任选9")
+    .Replace("14场胜负", "胜负14场")
+    .Replace("6场半全场", "六场半全场")
+    .Replace("4场进球", "四场进球彩");
+        }
     }
 }
