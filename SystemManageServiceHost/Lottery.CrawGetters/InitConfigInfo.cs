@@ -19,6 +19,8 @@ namespace Lottery.CrawGetters
         public static string ZHM_PartnerId { get; set; }
         public static string ZHM_Version { get; set; }
 
+        public static string SZC_OPEN_MIRROR_URL { get; set; }
+
         public static ILoggerFactory logFactory { get; set; }
     }
 }

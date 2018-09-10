@@ -14,6 +14,9 @@ using Craw.Service.IModuleServices;
 using Kason.Sg.Core.ProxyGenerator;
 using Microsoft.Extensions.Logging;
 using SystemManage.ModuleBaseServices;
+using EntityModel.ExceptionExtend;
+using System.Threading;
+using System.Collections.Concurrent;
 
 namespace Craw.Service.ModuleServices
 {
@@ -34,8 +37,16 @@ namespace Craw.Service.ModuleServices
          //   this._rep = repository;
         }
 
-        public Task<string> Login(string name)
+        public Task<string> CrawService_Start(string name)
         {
+            switch (name)
+            {
+                case "CQSSC": //重庆时时彩
+
+                    break;
+                default:
+                    break;
+            }
             throw new NotImplementedException();
         }
         /// <summary>
@@ -57,6 +68,8 @@ namespace Craw.Service.ModuleServices
 
             throw new NotImplementedException();
         }
+
+    
         //WinNumber
     }
 }
