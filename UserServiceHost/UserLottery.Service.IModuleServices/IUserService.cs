@@ -127,5 +127,10 @@ namespace UserLottery.Service.IModuleServices
 
         //[Service(Date = "2018-8-25", Director = "lidi", Name = "根据token获取UserId")]
         //Task<string> GetUserIdByUserToken(string UserToken);
+        [Service(Date = "2018-9-7", Director = "lidi", Name = "根据rediskey得到value")]
+        Task<string> GetRedisByOtherDbKey(string Key);
+
+        [Service(Date = "2018-9-7", Director = "lidi", Name = "设置RedisKey")]
+        Task<bool> SetRedisOtherDbKey(string Key, string RValue, int TotalSeconds);
     }
 }

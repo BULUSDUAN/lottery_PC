@@ -558,7 +558,10 @@ namespace Lottery.Api.Controllers
                 }
                 //redis 获取验证码
                 string key = "R_" + MsgId;
-                string codeValue = KaSon.FrameWork.Common.Redis.RedisHelperEx.DB_Other.Get(key);
+                //string codeValue = KaSon.FrameWork.Common.Redis.RedisHelperEx.DB_Other.Get(key);
+                var codeParam = new Dictionary<string, object>();
+                codeParam.Add("Key", key);
+                var codeValue= await _serviceProxyProvider.Invoke<string>(codeParam, "api/user/GetRedisByOtherDbKey");
                 if (codeValue != verifyCode)
                 {
                     returnResult.Code = ResponseCode.ValiteCodeError;
@@ -649,7 +652,7 @@ namespace Lottery.Api.Controllers
         //    //return vlimg;
         //}
 
-        public IActionResult CreateValidateCode(string MsgId)
+        public async Task<IActionResult> CreateValidateCode([FromServices]IServiceProxyProvider _serviceProxyProvider, string MsgId)
         {
             try
             {
@@ -689,8 +692,12 @@ namespace Lottery.Api.Controllers
                         key = MsgId;
                     }
 
-                    KaSon.FrameWork.Common.Redis.RedisHelperEx.DB_Other.Set(key, num.ToString(), 60 * 10);
-
+                    //KaSon.FrameWork.Common.Redis.RedisHelperEx.DB_Other.Set(key, num.ToString(), 60 * 10);
+                    var param = new Dictionary<string, object>();
+                    param.Add("Key", key);
+                    param.Add("RValue", num.ToString());
+                    param.Add("TotalSeconds", 60 * 10);
+                    var flag= await _serviceProxyProvider.Invoke<bool>(param, "api/user/SetRedisOtherDbKey"); 
                     string base64 = Convert.ToBase64String(img);
                     //data:image/gif;base64,
                     if (!base64.StartsWith("data:image"))

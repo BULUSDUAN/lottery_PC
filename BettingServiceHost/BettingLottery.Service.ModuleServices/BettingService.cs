@@ -16,6 +16,8 @@ using System.IO;
 using System.Text;
 using EntityModel.ExceptionExtend;
 using UserLottery.Service.ModuleServices;
+using KaSon.FrameWork.Common.Redis;
+using EntityModel.Redis;
 
 namespace BettingLottery.Service.ModuleServices
 {
@@ -1259,6 +1261,27 @@ namespace BettingLottery.Service.ModuleServices
             }
         }
 
+        /// <summary>
+        /// 获取合买大厅数据
+        /// </summary>
+        /// <returns></returns>
+        public Task<List<Sports_TogetherSchemeQueryInfo>> QueryTogetherHall()
+        {
+            try
+            {
+                var db = RedisHelperEx.DB_CoreCacheData;
+                var redisKey_TogetherList = RedisKeys.Key_Core_Togegher_OrderList;
+                //生成列表
+                //var list = new List<Sports_TogetherSchemeQueryInfo>();
+                var list = db.GetRange<Sports_TogetherSchemeQueryInfo>(redisKey_TogetherList);
+                if (list == null) list = new List<Sports_TogetherSchemeQueryInfo>();
+                return Task.FromResult(list);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("获取合买大厅数据失败 ", ex);
+            }
+        }
 
         public Task<string> ReadSqlTimeLog(string FileName)
         {

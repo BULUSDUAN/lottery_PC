@@ -2796,8 +2796,9 @@ namespace Lottery.Api.Controllers
         {
 
             //var list = new List<KaiJiang>();
-            string redisKey = EntityModel.Redis.RedisKeys.KaiJiang_Key;
-            var list = RedisHelperEx.DB_Match.GetObjs<KaiJiang>(redisKey);
+            //string redisKey = EntityModel.Redis.RedisKeys.KaiJiang_Key;
+            //var list = RedisHelperEx.DB_Match.GetObjs<KaiJiang>(redisKey);
+            var list = await _serviceProxyProvider.Invoke<List<KaiJiang>>(new Dictionary<string,object>(), "api/Data/GetKaiJiangList_ByRedis");
             if (list != null && list.Count > 0)
             {
                 return list;

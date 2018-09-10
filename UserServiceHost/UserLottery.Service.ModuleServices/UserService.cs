@@ -1479,6 +1479,39 @@ namespace UserLottery.Service.ModuleServices
 
             return Task.FromResult(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\" + FileName, "LogTime_"));
         }
+
+        /// <summary>
+        /// 获取redisvalue
+        /// </summary>
+        /// <param name="Key"></param>
+        /// <returns></returns>
+        public Task<string> GetRedisByOtherDbKey(string Key)
+        {
+            try
+            {
+                var db = RedisHelperEx.DB_Other;
+                return Task.FromResult(db.Get(Key));
+            }
+            catch (Exception ex)
+            {   
+                throw new Exception("获取失败",ex);
+            }
+        }
+
+        public Task<bool> SetRedisOtherDbKey(string Key,string RValue,int TotalSeconds)
+        {
+            try
+            {
+                var db = RedisHelperEx.DB_Other;
+                var flag= db.Set(Key, RValue, TotalSeconds);
+                return Task.FromResult(flag);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("设置失败", ex);
+            }
+        }
+
         //public Task<string> ReadSevTimeLog(string FileName)
         //{
         //    if (string.IsNullOrEmpty(FileName)) FileName = "SQLInfo";//SevTimeIoginfo 服务时间

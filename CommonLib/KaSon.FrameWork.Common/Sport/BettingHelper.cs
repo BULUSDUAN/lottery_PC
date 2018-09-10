@@ -779,7 +779,7 @@ namespace KaSon.FrameWork.Common.Sport
                     switch (gameType)
                     {
                         case "RX1":
-                            return "任选一";
+                            return "前一直选";
                         case "RX2":
                             return "任选二";
                         case "RX3":

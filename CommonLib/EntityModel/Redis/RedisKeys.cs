@@ -138,5 +138,7 @@ namespace EntityModel.Redis
         public const string ArticleListKey = "APP_ArticleList";
 
         public const string IndexNewsFocus = "Index_NewsFocus";
+
+        public const string BulletinList = "Bulletin_List";
     }
 }

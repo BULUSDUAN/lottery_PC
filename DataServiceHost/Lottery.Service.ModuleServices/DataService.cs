@@ -3,6 +3,8 @@ using EntityModel.Communication;
 using EntityModel.CoreModel;
 using EntityModel.Enum;
 using EntityModel.ExceptionExtend;
+using EntityModel.LotteryJsonInfo;
+using EntityModel.Redis;
 using Kason.Sg.Core.CPlatform.Ioc;
 using KaSon.FrameWork.Common;
 using KaSon.FrameWork.Common.Redis;
@@ -150,8 +152,16 @@ namespace Lottery.Service.ModuleServices
             try
             {
                 // 验证用户身份及权限
-                ///var userId = new UserAuthentication().ValidateUserAuthentication(userToken);
-                return Task.FromResult(new DataQuery().QueryDisplayBulletins(agent, pageIndex, pageSize));
+                //var userId = new UserAuthentication().ValidateUserAuthentication(userToken);
+                var key =$"{RedisKeys.BulletinList}_{agent}_{pageIndex}_{pageSize}";
+                var obj= RedisHelperEx.DB_Other.GetObj<BulletinInfo_Collection>(key);
+                if (obj != null)
+                {
+                    return Task.FromResult(obj);
+                }
+                var result= new DataQuery().QueryDisplayBulletins(agent, pageIndex, pageSize);
+                RedisHelperEx.DB_Other.SetObj(key, result,TimeSpan.FromMinutes(5));
+                return Task.FromResult(result);
             }
             catch (Exception ex)
             {
@@ -453,14 +463,25 @@ namespace Lottery.Service.ModuleServices
                 //}
                 //else
                 //{
-                    if (string.IsNullOrEmpty(category))
-                        throw new LogicException("未查询到文章类别");
-                    var array = category.Split('|');
-                    var gameCodeArray = gameCode.Split('|');
-                    result = new DataQuery().QueryArticleList_YouHua(array, gameCodeArray, pageIndex, pageSize);
-                    //if (!_articleCollection.ContainsKey(cacheKey))
-                    //    _articleCollection.Add(cacheKey, result);
+                if (string.IsNullOrEmpty(category))
+                    throw new LogicException("未查询到文章类别");
+                var Key = RedisKeys.ArticleListKey;
+                string cacheKey = string.Format("{0}_{1}_{2}_{3}_{4}", Key, category, gameCode, pageIndex, pageSize);
+                var obj = RedisHelperEx.DB_CoreCacheData.GetObj<ArticleInfo_QueryCollection>(cacheKey);
+                if (obj != null)
+                {
+                    return Task.FromResult(obj);
+                }
+                var array = category.Split('|');
+                var gameCodeArray = gameCode.Split('|');
+                result = new DataQuery().QueryArticleList_YouHua(array, gameCodeArray, pageIndex, pageSize);
+                //if (!_articleCollection.ContainsKey(cacheKey))
+                //    _articleCollection.Add(cacheKey, result);
                 //}
+                if (result != null)
+                {
+                    RedisHelperEx.DB_CoreCacheData.SetObj(cacheKey, result, TimeSpan.FromMinutes(5));
+                }
                 return Task.FromResult(result);
             }
             catch (LogicException ex)
@@ -471,7 +492,7 @@ namespace Lottery.Service.ModuleServices
             {
                 throw new Exception(ex.Message, ex);
             }
-        } 
+        }
         #endregion
 
         #region 查询fxid活动下所有邀请
@@ -674,6 +695,79 @@ namespace Lottery.Service.ModuleServices
         public Task<string> ReadSqlTimeLog(string FileName)
         {
             return Task.FromResult(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\SQLInfo", "LogTime_"));
+        }
+
+        public Task<List<CtzqIssuesWeb>> GetCTZQIssuseList_ByRedis(string Key)
+        {
+            try
+            {
+                return Task.FromResult(RedisHelperEx.DB_Match.GetObjs<CtzqIssuesWeb>(Key));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("获取出错",ex);
+            }
+        }
+
+        public Task<List<CTZQ_MatchInfo_WEB>> GetCTZQMatchOddsList_ByRedis(string Key)
+        {
+            try
+            {
+                return Task.FromResult(RedisHelperEx.DB_Match.GetObjs<CTZQ_MatchInfo_WEB>(Key));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("获取出错", ex);
+            }
+        }
+
+        public Task<List<BJDC_MatchInfo_WEB>> GetBJDCMatchOddsLis_ByRedis(string Key)
+        {
+            try
+            {
+                return Task.FromResult(RedisHelperEx.DB_Match.GetObjs<BJDC_MatchInfo_WEB>(Key));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("获取出错", ex);
+            }
+        }
+
+        public Task<List<JCZQ_MatchInfo_WEB>> GetJCZQMatchOddsList_ByRedis(string Key)
+        {
+            try
+            {
+                return Task.FromResult(RedisHelperEx.DB_Match.GetObjs<JCZQ_MatchInfo_WEB>(Key));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("获取出错", ex);
+            }
+        }
+
+        public Task<List<JCLQ_MatchInfo_WEB>> GetJCLQMatchOddsList_ByRedis(string Key)
+        {
+            try
+            {
+                return Task.FromResult(RedisHelperEx.DB_Match.GetObjs<JCLQ_MatchInfo_WEB>(Key));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("获取出错", ex);
+            }
+        }
+
+        public Task<List<KaiJiang>> GetKaiJiangList_ByRedis()
+        {
+            try
+            {
+                string redisKey = EntityModel.Redis.RedisKeys.KaiJiang_Key;
+                return Task.FromResult(RedisHelperEx.DB_Match.GetObjs<KaiJiang>(redisKey));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("获取出错", ex);
+            }
         }
     }
 
