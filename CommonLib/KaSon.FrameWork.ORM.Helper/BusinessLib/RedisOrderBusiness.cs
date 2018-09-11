@@ -483,8 +483,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //var fullKey = string.Format("{0}_{1}_{2}", RedisKeys.Key_Waiting_Order_List, "General", order.RunningOrder.GameCode.ToUpper());
             var fullKey = GetWaitingOrderUsableKey(order.RunningOrder.GameCode);
             var json = JsonHelper.Serialize<RedisWaitTicketOrder>(order);
-            var db = RedisHelperEx.DB_NoTicket_Order;
-            db.RPush(fullKey, json);
+            var result = RedisHelperEx.DB_NoTicket_Order.RPush(fullKey, json);
         }
 
         /// <summary>
