@@ -22,7 +22,7 @@ namespace KaSon.FrameWork.ORM.Helper
     /// </summary>
     public static class RedisOrderBusiness
     {
-        private static Log4Log writerLog =  new Log4Log();
+        private static Log4Log writerLog = new Log4Log();
 
         /// <summary>
         /// 拆票后,保存数字彩订单到Redis库中
@@ -61,7 +61,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public static void AddOrderToRedis(string gameCode, RedisWaitTicketOrder order)
         {
             //读取配置文件
-           
+
             if (BettingHelper.CanRequestBet(gameCode))
             {
                 //可以拆票
@@ -330,9 +330,9 @@ namespace KaSon.FrameWork.ORM.Helper
             catch (Exception exp)
             {
 
-                Log4Log.Error("追号订单自动拆票任务-DoSplitOrderTicket" , exp);
+                Log4Log.Error("追号订单自动拆票任务-DoSplitOrderTicket", exp);
                 // writerLog("Redis_DoSplitOrderTicket-DoSplitOrderTicketWithThread", ex);
-              //  writerLog.WriteLog("追号订单自动拆票任务", "DoSplitOrderTicket",(int) LogType.Information, "追号订单自动拆票任务日志", exp.Message);
+                //  writerLog.WriteLog("追号订单自动拆票任务", "DoSplitOrderTicket",(int) LogType.Information, "追号订单自动拆票任务日志", exp.Message);
 
             }
         }
@@ -346,7 +346,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 try
                 {
                     //ConfigurationManager.AppSettings["Max_PrizeListCount"]
-                   
+
                     string _Max_PrizeListCount = ConfigHelper.AllConfigInfo["Max_PrizeListCount"].ToString();
 
                     return int.Parse(_Max_PrizeListCount);
@@ -433,22 +433,19 @@ namespace KaSon.FrameWork.ORM.Helper
             db.Set(orderId, json);
         }
 
-     
+
         private static string GetWaitingOrderUsableKey(string gameCode)
         {
             try
             {
-                //    ConfigurationManager.AppSettings["WaitingOrderListCount"]
-             
-                string WaitingOrderListCount = ConfigHelper.AllConfigInfo["WaitingOrderListCount"].ToString();// DBbase.GlobalConfig["WaitingOrderListCount"].ToString();
-
-                var count = int.Parse(WaitingOrderListCount);
+                var jobject = ConfigHelper.AllConfigInfo["WaitingOrderListCount"];
+                var count = jobject == null ? 10 : int.Parse(jobject.ToString());
                 var db = RedisHelperEx.DB_NoTicket_Order;
                 var key = string.Format("{0}_{1}_{2}", RedisKeys.Key_Waiting_Order_List, "General", gameCode.ToUpper());
                 var currentIndexKey = string.Format("{0}_Current", key);
-                var indexValue = db.GetAsync(currentIndexKey).Result;
+                var indexValue = db.Get(currentIndexKey);
                 var index = 0;
-                if (string.IsNullOrEmpty(indexValue))
+                if (!string.IsNullOrEmpty(indexValue))
                 {
                     //获取索引
                     index = int.Parse(indexValue.ToString());
