@@ -72,6 +72,7 @@ namespace KaSon.FrameWork.Common.Expansion
             if (target == null) return "";
             JsonSerializerSettings jsSettings = new JsonSerializerSettings();
             jsSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            //jsSettings.DateFormatHandling = DateFormatHandling.MicrosoftDateFormat;
             jsSettings.Converters.Add(new IsoDateTimeConverter
             {
                 DateTimeFormat = "yyyy-MM-dd HH:mm:ss"
@@ -81,6 +82,23 @@ namespace KaSon.FrameWork.Common.Expansion
             var result = JsonConvert.SerializeObject(target, Formatting.None, jsSettings);
             if (isConvertSingleQuotes)
                 result = result.Replace("\"", "'");
+            return result;
+        }
+
+        /// <summary>
+        /// 将对象转换为Json字符串
+        /// </summary>
+        /// <param name="target">目标对象</param>
+        /// <param name="isMicrosoftDateFormat">是否格式化成</param>
+        public static string ToJsonDataFormat(this object target, bool isMicrosoftDateFormat = false)
+        {
+            if (target == null) return "";
+            JsonSerializerSettings jsSettings = new JsonSerializerSettings();
+            jsSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            jsSettings.DateFormatHandling = DateFormatHandling.MicrosoftDateFormat;
+            //忽略空值
+            jsSettings.NullValueHandling = NullValueHandling.Ignore;
+            var result = JsonConvert.SerializeObject(target, Formatting.None, jsSettings);
             return result;
         }
 

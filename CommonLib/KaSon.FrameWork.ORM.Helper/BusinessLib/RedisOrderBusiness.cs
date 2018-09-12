@@ -440,7 +440,8 @@ namespace KaSon.FrameWork.ORM.Helper
             try
             {
                 var jobject = ConfigHelper.AllConfigInfo["WaitingOrderListCount"];
-                var count = jobject == null ? 10 : int.Parse(jobject.ToString());
+                var count = jobject == null ? 9 : int.Parse(jobject.ToString());
+                count = count >= 10 ? 9 : count;
                 var db = RedisHelperEx.DB_NoTicket_Order;
                 var key = string.Format("{0}_{1}_{2}", RedisKeys.Key_Waiting_Order_List, "General", gameCode.ToUpper());
                 var currentIndexKey = string.Format("{0}_Current", key);
@@ -484,7 +485,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //var fullKey = string.Format("{0}_{1}_{2}", RedisKeys.Key_Waiting_Order_List, "General", order.RunningOrder.GameCode.ToUpper());
             var fullKey = GetWaitingOrderUsableKey(order.RunningOrder.GameCode);
             //var json = JsonHelper.SerializeToJson<RedisWaitTicketOrder>(order);
-            var json = order.ToJson();
+            var json = order.ToJsonDataFormat();
             var result = RedisHelperEx.DB_NoTicket_Order.RPush(fullKey, json);
         }
 
