@@ -884,11 +884,11 @@ namespace Lottery.Api.Controllers
                     //var obj = RedisHelperEx.DB_CoreCacheData.GetObj<ArticleInfo_QueryCollection>(cacheKey);
                     //if (obj == null)
                     //{
-                        aList = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_YouHua");
-                        //if (aList != null)
-                        //{
-                        //    RedisHelperEx.DB_CoreCacheData.SetObj(cacheKey, aList, TimeSpan.FromMinutes(10));
-                        //}
+                    aList = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(param, "api/Data/QueryArticleList_YouHua");
+                    //if (aList != null)
+                    //{
+                    //    RedisHelperEx.DB_CoreCacheData.SetObj(cacheKey, aList, TimeSpan.FromMinutes(10));
+                    //}
                     //}
                     //else
                     //{
@@ -2357,7 +2357,7 @@ namespace Lottery.Api.Controllers
                             param.Clear();
                             param.Add("Key", key);
                             //var oddlist_ctzq = RedisHelperEx.DB_Match.GetObjs<CTZQ_MatchInfo_WEB>(key);
-                            var oddlist_ctzq= await _serviceProxyProvider.Invoke<List<CTZQ_MatchInfo_WEB>>(param, "api/Data/GetCTZQMatchOddsList_ByRedis");
+                            var oddlist_ctzq = await _serviceProxyProvider.Invoke<List<CTZQ_MatchInfo_WEB>>(param, "api/Data/GetCTZQMatchOddsList_ByRedis");
                             if (oddlist_ctzq == null)
                             {
                                 oddlist_ctzq = Json_CTZQ.MatchList_WEB(issuseNumber, gameType); ;
@@ -2730,70 +2730,70 @@ namespace Lottery.Api.Controllers
                 //var IndexNewsFocusValue = RedisHelperEx.DB_Other.Get(RedisKey);
                 //if (string.IsNullOrEmpty(IndexNewsFocusValue))
                 //{
-                    //1.去获取公告
-                    var GGCount = 3;
-                    int Surplus = PageSize - GGCount >= 0 ? PageSize - GGCount : 0;
-                    GGCount = Surplus == 0 ? PageSize : GGCount;
-                    Dictionary<string, object> param = new Dictionary<string, object>();
-                    param.Add("pageIndex", 0);
-                    param.Add("pageSize", GGCount);
-                    param.Add("agent", (int)BulletinAgent.Local);
-                    var noticeList = await _serviceProxyProvider.Invoke<BulletinInfo_Collection>(param, "api/Data/QueryDisplayBulletinCollection");
-                    var ReturnList = new List<IndexNewsFocusModel>();
-                    if (noticeList != null && noticeList.BulletinList != null)
+                //1.去获取公告
+                var GGCount = 3;
+                int Surplus = PageSize - GGCount >= 0 ? PageSize - GGCount : 0;
+                GGCount = Surplus == 0 ? PageSize : GGCount;
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param.Add("pageIndex", 0);
+                param.Add("pageSize", GGCount);
+                param.Add("agent", (int)BulletinAgent.Local);
+                var noticeList = await _serviceProxyProvider.Invoke<BulletinInfo_Collection>(param, "api/Data/QueryDisplayBulletinCollection");
+                var ReturnList = new List<IndexNewsFocusModel>();
+                if (noticeList != null && noticeList.BulletinList != null)
+                {
+                    foreach (var item in noticeList.BulletinList)
                     {
-                        foreach (var item in noticeList.BulletinList)
+                        var additem = new IndexNewsFocusModel()
+                        {
+                            Category = "GG",
+                            CreateTime = item.CreateTime,
+                            Id = item.Id.ToString(),
+                            IsRedTitle = true,
+                            Title = item.Title
+                        };
+                        ReturnList.Add(additem);
+                    }
+                    GGCount = noticeList.BulletinList.Count;
+                    Surplus = PageSize - GGCount >= 0 ? PageSize - GGCount : 0;
+                }
+                else
+                {
+                    Surplus = PageSize;
+                }
+                //2.获取焦点新闻
+                if (Surplus > 0)
+                {
+                    Dictionary<string, object> focusParam = new Dictionary<string, object>();
+                    focusParam.Add("pageIndex", 0);
+                    focusParam.Add("pageSize", Surplus);
+                    focusParam.Add("category", "FocusCMS");
+                    focusParam.Add("gameCode", "");
+                    ArticleInfo_QueryCollection aList = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(focusParam, "api/Data/QueryArticleList_YouHua");
+                    if (aList != null && aList.ArticleList != null)
+                    {
+                        foreach (var item in aList.ArticleList)
                         {
                             var additem = new IndexNewsFocusModel()
                             {
-                                Category = "GG",
+                                Category = "FocusCMS",
                                 CreateTime = item.CreateTime,
                                 Id = item.Id.ToString(),
-                                IsRedTitle = true,
+                                IsRedTitle = item.IsRedTitle,
                                 Title = item.Title
                             };
                             ReturnList.Add(additem);
                         }
-                        GGCount = noticeList.BulletinList.Count;
-                        Surplus = PageSize - GGCount >= 0 ? PageSize - GGCount : 0;
                     }
-                    else
-                    {
-                        Surplus = PageSize;
-                    }
-                    //2.获取焦点新闻
-                    if (Surplus > 0)
-                    {
-                        Dictionary<string, object> focusParam = new Dictionary<string, object>();
-                        focusParam.Add("pageIndex", 0);
-                        focusParam.Add("pageSize", Surplus);
-                        focusParam.Add("category", "FocusCMS");
-                        focusParam.Add("gameCode", "");
-                        ArticleInfo_QueryCollection aList = await _serviceProxyProvider.Invoke<ArticleInfo_QueryCollection>(focusParam, "api/Data/QueryArticleList_YouHua");
-                        if (aList != null && aList.ArticleList != null)
-                        {
-                            foreach (var item in aList.ArticleList)
-                            {
-                                var additem = new IndexNewsFocusModel()
-                                {
-                                    Category = "FocusCMS",
-                                    CreateTime = item.CreateTime,
-                                    Id = item.Id.ToString(),
-                                    IsRedTitle = item.IsRedTitle,
-                                    Title = item.Title
-                                };
-                                ReturnList.Add(additem);
-                            }
-                        }
-                    }
-                    //RedisHelperEx.DB_Other.Set(RedisKey, JsonHelper.Serialize(ReturnList), 3 * 60);
-                    return Json(new LotteryServiceResponse
-                    {
-                        Code = ResponseCode.成功,
-                        Message = "查询成功",
-                        MsgId = entity.MsgId,
-                        Value = ReturnList,
-                    });
+                }
+                //RedisHelperEx.DB_Other.Set(RedisKey, JsonHelper.Serialize(ReturnList), 3 * 60);
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询成功",
+                    MsgId = entity.MsgId,
+                    Value = ReturnList,
+                });
                 //}
                 //else
                 //{
@@ -2925,15 +2925,15 @@ namespace Lottery.Api.Controllers
                 //if (string.IsNullOrEmpty(v))
                 //{
                 //var v = string.Empty;
-                    var param = new Dictionary<string, object>();
-                    param.Add("key", key);
-                    var config = await _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/Data/QueryCoreConfigByKey");
-                    if (config != null)
-                    {    
+                var param = new Dictionary<string, object>();
+                param.Add("key", key);
+                var config = await _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/Data/QueryCoreConfigByKey");
+                if (config != null)
+                {
                     return config.ConfigValue;
                     //RedisHelperEx.DB_Other.Set(key, config.ConfigValue, 3 * 60);
-                    }
-                    return defalutValue;
+                }
+                return defalutValue;
                 //if (string.IsNullOrEmpty(v))
                 //{
                 //    return defalutValue;
@@ -2947,5 +2947,77 @@ namespace Lottery.Api.Controllers
             }
         }
 
+
+        #region 查找首页可单关的竞彩足球比赛（最多20场）
+        public async Task<IActionResult> QueryQuickBuyJCZQ([FromServices]IServiceProxyProvider _serviceProxyProvider)
+        {
+            try
+            {
+                var key = EntityModel.Redis.RedisKeys.Key_JCZQ_Match_Odds_List;
+                string reidskey = $"{key}_HHDG1";
+                var param = new Dictionary<string, object>();
+                param.Add("Key", reidskey);
+                var oddlist_jczq = await _serviceProxyProvider.Invoke<List<JCZQ_MatchInfo_WEB>>(param, "api/Data/GetJCZQMatchOddsList_ByRedis");
+                //var oddlist_jczq = RedisHelperEx.DB_Match.GetObjs<JCZQ_MatchInfo_WEB>(reidskey);
+                if (oddlist_jczq == null)
+                {
+                    oddlist_jczq = Json_JCZQ.GetJCZQHHDGList();
+                }
+                var result_jczq = new List<JCZQ_MatchInfo_WEB>();
+                if (oddlist_jczq != null && oddlist_jczq.Count > 0)
+                {
+                    var now = DateTime.Now;
+                    foreach (var item in oddlist_jczq)
+                    {
+                        if (item.State_HHDG.Contains("2") && Convert.ToDateTime(item.FSStopBettingTime) > now &&item.NoSaleState_BRQSPF=="0")
+                        {
+                            result_jczq.Add(item);
+                        }
+                    }
+                }
+                if (result_jczq.Count > 20) result_jczq = result_jczq.Take(20).ToList();
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询成功",
+                    MsgId = "",
+                    Value = result_jczq.Select(p => new
+                    {
+                        MatcheDateTime = p.MatcheDateTime,
+                        MatchData = p.MatchData,
+                        MatchId = p.MatchId,
+                        MatchNumber = p.MatchNumber,
+                        FSStopBettingTime = p.FSStopBettingTime,
+                        GuestTeamName = p.GuestTeamName,
+                        HomeTeamName = p.HomeTeamName,
+                        LeagueColor = p.LeagueColor,
+                        LeagueName = p.LeagueName,
+                        //LetBall = p.LetBall,
+                        MatchIdName = p.MatchIdName,
+                        StartDateTime = p.StartDateTime,
+                        //FXId = p.FXId,
+                        //MatchStopDesc = p.MatchStopDesc,
+                        PrivilegesType = p.PrivilegesType,
+                        SP_Flat_Odds_BRQ = p.SP_Flat_Odds_BRQ,
+                        SP_Lose_Odds_BRQ = p.SP_Lose_Odds_BRQ,
+                        SP_Win_Odds_BRQ = p.SP_Win_Odds_BRQ,
+                        //State_HHDG = p.State_HHDG
+                    }).ToList(),
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "获取失败" + "●" + ex.ToString(),
+                    MsgId = "",
+                    Value = ex.ToGetMessage(),
+                });
+            }
+
+        }
+
+        #endregion
     }
 }
