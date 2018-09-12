@@ -56,7 +56,8 @@ namespace KaSon.FrameWork.ORM.Helper
                 TicketList = ticketList,
                 SchemeType = schemeType,
             };
-            var json = JsonHelper.Serialize<RedisOrderInfo>(orderInfo);
+            //var json = JsonHelper.Serialize<RedisOrderInfo>(orderInfo);
+            var json = orderInfo.ToJsonDataFormat(true);
             db.RPush(fullKey, json);
         }
         public static void AddOrderToRedis(string gameCode, RedisWaitTicketOrder order)
@@ -405,7 +406,8 @@ namespace KaSon.FrameWork.ORM.Helper
                 SchemeId = orderId,
                 TicketList = ticketList,
             };
-            var json = JsonHelper.Serialize<RedisOrderInfo>(orderInfo);
+            //var json = JsonHelper.Serialize<RedisOrderInfo>(orderInfo);
+            var json= orderInfo.ToJsonDataFormat(true);
             //以订单号为key 订单内容为value保存
             db.Set(orderId, json);
         }
@@ -429,7 +431,8 @@ namespace KaSon.FrameWork.ORM.Helper
                 SchemeId = orderId,
                 TicketList = ticketList,
             };
-            var json = JsonHelper.Serialize<RedisOrderInfo>(orderInfo);
+            //var json = JsonHelper.Serialize<RedisOrderInfo>(orderInfo);
+            var json = orderInfo.ToJsonDataFormat(true);
             //以订单号为key 订单内容为value保存
             db.Set(orderId, json);
         }
@@ -485,7 +488,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //var fullKey = string.Format("{0}_{1}_{2}", RedisKeys.Key_Waiting_Order_List, "General", order.RunningOrder.GameCode.ToUpper());
             var fullKey = GetWaitingOrderUsableKey(order.RunningOrder.GameCode);
             //var json = JsonHelper.SerializeToJson<RedisWaitTicketOrder>(order);
-            var json = order.ToJsonDataFormat();
+            var json = order.ToJsonDataFormat(true);
             var result = RedisHelperEx.DB_NoTicket_Order.RPush(fullKey, json);
         }
 
@@ -629,7 +632,8 @@ namespace KaSon.FrameWork.ORM.Helper
             var db = RedisHelperEx.DB_Chase_Order;
             foreach (var item in orderList.OrderList)
             {
-                var json = JsonHelper.Serialize<RedisWaitTicketOrder>(item);
+                //var json = JsonHelper.Serialize<RedisWaitTicketOrder>(item);
+                var json = item.ToJsonDataFormat(true);
                 db.RPush(orderList.KeyLine, json);
             }
             //把keyline存入Waiting_Chase_Order_List
@@ -645,7 +649,8 @@ namespace KaSon.FrameWork.ORM.Helper
                 return;
 
             var fullKey = string.Format("{0}_{1}_{2}", RedisKeys.Key_Waiting_Order_List, "Single", order.RunningOrder.GameCode.ToUpper());
-            var json = JsonHelper.Serialize<RedisWaitTicketOrderSingle>(order);
+            //var json = JsonHelper.Serialize<RedisWaitTicketOrderSingle>(order);
+            var json = order.ToJsonDataFormat(true);
             var db = RedisHelperEx.DB_NoTicket_Order;
             db.RPush(fullKey, json);
         }
