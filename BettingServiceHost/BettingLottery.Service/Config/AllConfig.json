@@ -1,7 +1,7 @@
 {
   "RedisConfig": {
     "EnableRedis": true,
-    "RedisHost": "127.0.0.1",
+    "RedisHost": "10.0.3.6",
     "RedisPost": 6379,
     "RedisPassword": "redis123"
 
@@ -52,7 +52,7 @@
   },
   //必须配置  RebbitMq 启动地址
   "RebbitMqSettings": {
-    "EventBusConnection": "10.0.3.27",
+    "EventBusConnection": "127.0.0.1",
     "EventBusUserName": "guest",
     "EventBusPassword": "guest",
     "VirtualHost": "/",
@@ -61,7 +61,7 @@
   },
   //必须配置 服务发现配置
   "ConsulSettings": {
-    "IpAddrs": "10.0.3.27:8501" //服务启动IP
+    "IpAddrs": "127.0.0.1:8500" //服务启动IP
   }
 
 

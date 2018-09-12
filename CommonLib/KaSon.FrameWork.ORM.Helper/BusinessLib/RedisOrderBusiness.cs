@@ -14,6 +14,7 @@ using System.Threading;
 using EntityModel.Ticket;
 using System.IO;
 using KaSon.FrameWork.Common.Sport;
+using KaSon.FrameWork.Common.Expansion;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
@@ -482,7 +483,8 @@ namespace KaSon.FrameWork.ORM.Helper
 
             //var fullKey = string.Format("{0}_{1}_{2}", RedisKeys.Key_Waiting_Order_List, "General", order.RunningOrder.GameCode.ToUpper());
             var fullKey = GetWaitingOrderUsableKey(order.RunningOrder.GameCode);
-            var json = JsonHelper.Serialize<RedisWaitTicketOrder>(order);
+            //var json = JsonHelper.SerializeToJson<RedisWaitTicketOrder>(order);
+            var json = order.ToJson();
             var result = RedisHelperEx.DB_NoTicket_Order.RPush(fullKey, json);
         }
 
