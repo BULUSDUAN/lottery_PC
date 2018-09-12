@@ -230,7 +230,21 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                BannerType bannerType = BannerType.APP;
+                var p = WebHelper.Decode(entity.Param);
+                SchemeSource schemeSource = entity.SourceCode;
+                BannerType bannerType = new BannerType();
+                switch (schemeSource)
+                {
+                    case SchemeSource.NewAndroid:
+                        bannerType= BannerType.APP;
+                        break;
+                    case SchemeSource.NewIphone:
+                        bannerType = BannerType.APP;
+                        break;
+                    case SchemeSource.Wap:
+                        bannerType = BannerType.Touch_Index;
+                        break;
+                }               
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param.Add("bannerType", (int)bannerType);
                 param.Add("returnRecord", 10);
