@@ -14,6 +14,7 @@ using System.Threading;
 using EntityModel.Ticket;
 using System.IO;
 using KaSon.FrameWork.Common.Sport;
+using KaSon.FrameWork.Common.Expansion;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
@@ -22,7 +23,7 @@ namespace KaSon.FrameWork.ORM.Helper
     /// </summary>
     public static class RedisOrderBusiness
     {
-        private static Log4Log writerLog =  new Log4Log();
+        private static Log4Log writerLog = new Log4Log();
 
         /// <summary>
         /// 拆票后,保存数字彩订单到Redis库中
@@ -55,13 +56,14 @@ namespace KaSon.FrameWork.ORM.Helper
                 TicketList = ticketList,
                 SchemeType = schemeType,
             };
-            var json = JsonHelper.Serialize<RedisOrderInfo>(orderInfo);
+            //var json = JsonHelper.Serialize<RedisOrderInfo>(orderInfo);
+            var json = orderInfo.ToJsonDataFormat(true);
             db.RPush(fullKey, json);
         }
         public static void AddOrderToRedis(string gameCode, RedisWaitTicketOrder order)
         {
             //读取配置文件
-           
+
             if (BettingHelper.CanRequestBet(gameCode))
             {
                 //可以拆票
@@ -330,9 +332,9 @@ namespace KaSon.FrameWork.ORM.Helper
             catch (Exception exp)
             {
 
-                Log4Log.Error("追号订单自动拆票任务-DoSplitOrderTicket" , exp);
+                Log4Log.Error("追号订单自动拆票任务-DoSplitOrderTicket", exp);
                 // writerLog("Redis_DoSplitOrderTicket-DoSplitOrderTicketWithThread", ex);
-              //  writerLog.WriteLog("追号订单自动拆票任务", "DoSplitOrderTicket",(int) LogType.Information, "追号订单自动拆票任务日志", exp.Message);
+                //  writerLog.WriteLog("追号订单自动拆票任务", "DoSplitOrderTicket",(int) LogType.Information, "追号订单自动拆票任务日志", exp.Message);
 
             }
         }
@@ -346,7 +348,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 try
                 {
                     //ConfigurationManager.AppSettings["Max_PrizeListCount"]
-                   
+
                     string _Max_PrizeListCount = ConfigHelper.AllConfigInfo["Max_PrizeListCount"].ToString();
 
                     return int.Parse(_Max_PrizeListCount);
@@ -404,7 +406,8 @@ namespace KaSon.FrameWork.ORM.Helper
                 SchemeId = orderId,
                 TicketList = ticketList,
             };
-            var json = JsonHelper.Serialize<RedisOrderInfo>(orderInfo);
+            //var json = JsonHelper.Serialize<RedisOrderInfo>(orderInfo);
+            var json= orderInfo.ToJsonDataFormat(true);
             //以订单号为key 订单内容为value保存
             db.Set(orderId, json);
         }
@@ -428,27 +431,26 @@ namespace KaSon.FrameWork.ORM.Helper
                 SchemeId = orderId,
                 TicketList = ticketList,
             };
-            var json = JsonHelper.Serialize<RedisOrderInfo>(orderInfo);
+            //var json = JsonHelper.Serialize<RedisOrderInfo>(orderInfo);
+            var json = orderInfo.ToJsonDataFormat(true);
             //以订单号为key 订单内容为value保存
             db.Set(orderId, json);
         }
 
-     
+
         private static string GetWaitingOrderUsableKey(string gameCode)
         {
             try
             {
-                //    ConfigurationManager.AppSettings["WaitingOrderListCount"]
-             
-                string WaitingOrderListCount = ConfigHelper.AllConfigInfo["WaitingOrderListCount"].ToString();// DBbase.GlobalConfig["WaitingOrderListCount"].ToString();
-
-                var count = int.Parse(WaitingOrderListCount);
+                var jobject = ConfigHelper.AllConfigInfo["WaitingOrderListCount"];
+                var count = jobject == null ? 9 : int.Parse(jobject.ToString());
+                count = count >= 10 ? 9 : count;
                 var db = RedisHelperEx.DB_NoTicket_Order;
                 var key = string.Format("{0}_{1}_{2}", RedisKeys.Key_Waiting_Order_List, "General", gameCode.ToUpper());
                 var currentIndexKey = string.Format("{0}_Current", key);
-                var indexValue = db.GetAsync(currentIndexKey).Result;
+                var indexValue = db.Get(currentIndexKey);
                 var index = 0;
-                if (string.IsNullOrEmpty(indexValue))
+                if (!string.IsNullOrEmpty(indexValue))
                 {
                     //获取索引
                     index = int.Parse(indexValue.ToString());
@@ -485,9 +487,9 @@ namespace KaSon.FrameWork.ORM.Helper
 
             //var fullKey = string.Format("{0}_{1}_{2}", RedisKeys.Key_Waiting_Order_List, "General", order.RunningOrder.GameCode.ToUpper());
             var fullKey = GetWaitingOrderUsableKey(order.RunningOrder.GameCode);
-            var json = JsonHelper.Serialize<RedisWaitTicketOrder>(order);
-            var db = RedisHelperEx.DB_NoTicket_Order;
-            db.RPush(fullKey, json);
+            //var json = JsonHelper.SerializeToJson<RedisWaitTicketOrder>(order);
+            var json = order.ToJsonDataFormat(true);
+            var result = RedisHelperEx.DB_NoTicket_Order.RPush(fullKey, json);
         }
 
         /// <summary>
@@ -630,7 +632,8 @@ namespace KaSon.FrameWork.ORM.Helper
             var db = RedisHelperEx.DB_Chase_Order;
             foreach (var item in orderList.OrderList)
             {
-                var json = JsonHelper.Serialize<RedisWaitTicketOrder>(item);
+                //var json = JsonHelper.Serialize<RedisWaitTicketOrder>(item);
+                var json = item.ToJsonDataFormat(true);
                 db.RPush(orderList.KeyLine, json);
             }
             //把keyline存入Waiting_Chase_Order_List
@@ -646,7 +649,8 @@ namespace KaSon.FrameWork.ORM.Helper
                 return;
 
             var fullKey = string.Format("{0}_{1}_{2}", RedisKeys.Key_Waiting_Order_List, "Single", order.RunningOrder.GameCode.ToUpper());
-            var json = JsonHelper.Serialize<RedisWaitTicketOrderSingle>(order);
+            //var json = JsonHelper.Serialize<RedisWaitTicketOrderSingle>(order);
+            var json = order.ToJsonDataFormat(true);
             var db = RedisHelperEx.DB_NoTicket_Order;
             db.RPush(fullKey, json);
         }

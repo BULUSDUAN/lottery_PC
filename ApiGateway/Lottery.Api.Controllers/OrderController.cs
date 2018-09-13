@@ -922,7 +922,7 @@ namespace Lottery.Api.Controllers
                             GameCode = item.GameCode,
                             GameDisplayName = item.GameDisplayName,
                             GameType = item.GameType,
-                            GameTypeDisplayName = item.GameTypeDisplayName,
+                            GameTypeDisplayName = BettingHelper.GetGameTypeDisplayName(item.GameTypeDisplayName),
                             PlayType = item.PlayType,
                             StopTime = item.StopTime,
                             TotalMatchCount = item.TotalMatchCount,
@@ -1178,7 +1178,7 @@ namespace Lottery.Api.Controllers
                     CurrSchemeId = firstIssuse.SchemeId,
                     GameCode = firstIssuse.GameCode,
                     GameDisplayName = firstIssuse.GameName,
-                    GameTypeDisplayName = firstIssuse.GameTypeName,
+                    GameTypeDisplayName = BettingHelper.GetGameTypeDisplayName(firstIssuse.GameTypeName),
                     UserId = firstIssuse.UserId,
                     UserDisplayName = firstIssuse.CreatorDisplayName,
                     HideDisplayNameCount = firstIssuse.HideDisplayNameCount,
@@ -1270,7 +1270,7 @@ namespace Lottery.Api.Controllers
                     GameCode = schemeInfo.GameCode,
                     GameDisplayName = schemeInfo.GameDisplayName,
                     GameType = schemeInfo.GameType,
-                    GameTypeDisplayName = schemeInfo.GameTypeDisplayName,
+                    GameTypeDisplayName = BettingHelper.GetGameTypeDisplayName(schemeInfo.GameTypeDisplayName),
                     UserId = schemeInfo.CreateUserId,
                     UserDisplayName = schemeInfo.CreaterDisplayName,
                     HideDisplayNameCount = schemeInfo.CreaterHideDisplayNameCount,
@@ -1397,18 +1397,14 @@ namespace Lottery.Api.Controllers
                 //{
 
                 //}
-                var GameTypeDisplayName = string.IsNullOrEmpty(schemeInfo.GameTypeDisplayName) ? "" : schemeInfo.GameTypeDisplayName
-                    .Replace("胜负任9", "任选9")
-                    .Replace("14场胜负", "胜负14场")
-                    .Replace("6场半全场", "六场半全场")
-                    .Replace("4场进球", "四场进球彩");
+             
                 var result = new
                 {
                     SchemeId = schemeInfo.SchemeId,
                     GameCode = schemeInfo.GameCode,
                     GameDisplayName = schemeInfo.GameDisplayName,
                     GameType = schemeInfo.GameType,
-                    GameTypeDisplayName = GameTypeDisplayName,
+                    GameTypeDisplayName = BettingHelper.GetGameTypeDisplayName(schemeInfo.GameTypeDisplayName),
                     GameName = ConvertHelper.GameName(schemeInfo.GameCode, schemeInfo.GameType),
                     UserId = schemeInfo.UserId,
                     UserDisplayName = ConvertHelper.HideUserName(schemeInfo.UserDisplayName, schemeInfo.HideDisplayNameCount),
