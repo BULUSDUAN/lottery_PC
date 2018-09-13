@@ -39,10 +39,17 @@ namespace UserLottery.Service.Host
         {
 
             string consul = ConfigHelper.AllConfigInfo["ConsulSettings"]["IpAddrs"].ToString();
-
+            string Token = ConfigHelper.AllConfigInfo["ConsulSettings"]["Token"].ToString();
             JToken RebbitMqSettings = ConfigHelper.AllConfigInfo["RebbitMqSettings"];
             JToken HostSettings = ConfigHelper.AllConfigInfo["HostSettings"];
-
+            //public ConfigInfo(string connectionString,
+            //    string routePath = "services/serviceRoutes/", string subscriberPath = "services/serviceSubscribers/", 
+            //    string commandPath = "services/serviceCommands/", string cachePath = "services/serviceCaches/", bool reloadOnChange = false);
+            //var config = new ConfigInfo(consul, "TEST/serviceRoutes/", "TEST/serviceSubscribers/",
+            //    "TEST/serviceCommands/", "TEST/serviceCaches/",
+            //    reloadOnChange: true);
+            var config = new ConfigInfo(consul, reloadOnChange: true);
+            config.Token = Token;
           //  JToken ORMSettings = ConfigHelper.AllConfigInfo["ORMSettings"];
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             var host = new ServiceHostBuilder()
@@ -54,7 +61,7 @@ namespace UserLottery.Service.Host
                         .AddRelateService()
                         .AddConfigurationWatch()
                         //option.UseZooKeeperManager(new ConfigInfo("127.0.0.1:2181"));
-                        .UseConsulManager(new ConfigInfo(consul, reloadOnChange: true))
+                        .UseConsulManager(config)
                         .UseDotNettyTransport()
                         .UseRabbitMQTransport()
                         .AddRabbitMQAdapt()
