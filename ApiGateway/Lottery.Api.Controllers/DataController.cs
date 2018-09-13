@@ -230,7 +230,6 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
                 SchemeSource schemeSource = entity.SourceCode;
                 BannerType bannerType = new BannerType();
                 switch (schemeSource)
