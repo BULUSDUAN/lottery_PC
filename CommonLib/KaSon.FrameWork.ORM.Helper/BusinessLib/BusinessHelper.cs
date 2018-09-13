@@ -1013,29 +1013,28 @@ namespace KaSon.FrameWork.ORM.Helper
         /// </summary>
         public static LotteryGame QueryLotteryGame(string gameCode)
         {
-            var RedisKeyH = "CoreConfig_";
-            var RedisKey = RedisKeyH + gameCode;
-            //var flag = RedisHelperEx.KeyExists(gameCode);
-            //var v = "";
-            var Game = new LotteryGame();
-            var db = RedisHelperEx.DB_Other;
-            //if (flag)
+            //var RedisKeyH = "CoreConfig_";
+            //var RedisKey = RedisKeyH + gameCode;
+            ////var flag = RedisHelperEx.KeyExists(gameCode);
+            ////var v = "";
+            //var Game = new LotteryGame();
+            //var db = RedisHelperEx.DB_Other;
+            ////if (flag)
+            ////{
+            //Game = db.GetObj<LotteryGame>(RedisKey);
+            //    //Game.GameCode = v;
+            ////}
+            //if (Game==null)
             //{
-            Game = db.GetObj<LotteryGame>(gameCode);
-                //Game.GameCode = v;
+            var LotteryGame = SDB.CreateQuery<LotteryGame>().Where(p => p.GameCode == gameCode).FirstOrDefault();
+            //    Game = LotteryGame;
+            //    if (LotteryGame != null)
+            //    {
+            //        db.SetObj(RedisKey, LotteryGame,TimeSpan.FromMinutes(3));
+            //    }
             //}
-          
-            if (Game==null)
-            {
-                var LotteryGame = SDB.CreateQuery<LotteryGame>().Where(p => p.GameCode == gameCode).FirstOrDefault();
-                Game = LotteryGame;
-                if (LotteryGame != null)
-                {
-                    db.SetObj(RedisKey, LotteryGame,TimeSpan.FromMinutes(3));                }
-            }
-          
-        
-            return Game;
+            //return Game;
+            return LotteryGame;
         }
 
         #endregion
