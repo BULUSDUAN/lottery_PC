@@ -112,16 +112,34 @@ namespace Lottery.Api.Controllers
         /// <returns></returns>
         public async Task<IActionResult> GameInfoIndex([FromServices]IServiceProxyProvider _serviceProxyProvider)
         {
-            var APP_Advertising_Key = "APP_Advertising_V2";
-            var APP_Advertising_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_Advertising_Key);
-            return Json(new LotteryServiceResponse
+            //var APP_Advertising_Key = "APP_Advertising_V2";
+            //var APP_Advertising_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_Advertising_Key);
+            //if (string.IsNullOrEmpty(APP_Advertising_Value))
+            //{
+            //    var APP_AdList = JsonHelper.Deserialize<APP_Advertising>(APP_Advertising_Value);
+            //    var 
+            //}
+            try
             {
-                Code = ResponseCode.成功,
-                Message = "查询按钮广告成功",
-                MsgId = "",
-                Value = JsonHelper.Deserialize<object>(APP_Advertising_Value)
-            });
-
+                var GameAdList = await _serviceProxyProvider.Invoke<List<APP_Advertising>>(new Dictionary<string, object>(), "api/Data/GetGameInfoIndex");
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询按钮广告成功",
+                    MsgId = "",
+                    Value = GameAdList
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "查询按钮广告失败" + "●" + ex.ToString(),
+                    MsgId = "",
+                    Value = ex.ToGetMessage()
+                });
+            }
         }
         #endregion
 
@@ -161,7 +179,7 @@ namespace Lottery.Api.Controllers
             {
                 return Json(new LotteryServiceResponse
                 {
-                    Code = ResponseCode.成功,
+                    Code = ResponseCode.失败,
                     Message = "查询配置失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage()
@@ -204,7 +222,7 @@ namespace Lottery.Api.Controllers
             {
                 return Json(new LotteryServiceResponse
                 {
-                    Code = ResponseCode.成功,
+                    Code = ResponseCode.失败,
                     Message = "查询配置失败" + "●" + ex.ToString(),
                     MsgId = entity.MsgId,
                     Value = ex.ToGetMessage()

@@ -153,14 +153,14 @@ namespace Lottery.Service.ModuleServices
             {
                 // 验证用户身份及权限
                 //var userId = new UserAuthentication().ValidateUserAuthentication(userToken);
-                var key =$"{RedisKeys.BulletinList}_{agent}_{pageIndex}_{pageSize}";
-                var obj= RedisHelperEx.DB_Other.GetObj<BulletinInfo_Collection>(key);
+                var key = $"{RedisKeys.BulletinList}_{agent}_{pageIndex}_{pageSize}";
+                var obj = RedisHelperEx.DB_Other.GetObj<BulletinInfo_Collection>(key);
                 if (obj != null)
                 {
                     return Task.FromResult(obj);
                 }
-                var result= new DataQuery().QueryDisplayBulletins(agent, pageIndex, pageSize);
-                RedisHelperEx.DB_Other.SetObj(key, result,TimeSpan.FromMinutes(5));
+                var result = new DataQuery().QueryDisplayBulletins(agent, pageIndex, pageSize);
+                RedisHelperEx.DB_Other.SetObj(key, result, TimeSpan.FromMinutes(5));
                 return Task.FromResult(result);
             }
             catch (Exception ex)
@@ -705,7 +705,7 @@ namespace Lottery.Service.ModuleServices
             }
             catch (Exception ex)
             {
-                throw new Exception("获取出错",ex);
+                throw new Exception("获取出错", ex);
             }
         }
 
@@ -763,6 +763,88 @@ namespace Lottery.Service.ModuleServices
             {
                 string redisKey = EntityModel.Redis.RedisKeys.KaiJiang_Key;
                 return Task.FromResult(RedisHelperEx.DB_Match.GetObjs<KaiJiang>(redisKey));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("获取出错", ex);
+            }
+        }
+
+        public Task<List<APP_Advertising>> GetGameInfoIndex()
+        {
+            try
+            {
+                var Key = EntityModel.Redis.RedisKeys.APP_Advertising_V2;
+                var RedisValue = RedisHelperEx.DB_Other.GetObjs<APP_Advertising>(Key);
+                if (RedisValue == null)
+                {
+                    var Business = new CacheDataBusiness();
+                    var Config = Business.QueryCoreConfigByKey(Key);
+                    Record_AppAd AppAd = null;
+                    List<APP_Advertising> AdList = null;
+                    if (Config != null && !string.IsNullOrEmpty(Config.ConfigValue))
+                    {
+                        //.Replace("\r","").Replace("\n","").Replace("\t","")
+                        AppAd = JsonHelper.Deserialize<Record_AppAd>(Config.ConfigValue);
+                    }
+                    if (AppAd == null || AppAd.records == null) AdList = new List<APP_Advertising>();
+                    else AdList = AppAd.records;
+                    var AllGame = Business.QueryLotteryAllGame();
+                    var RetuenAdList = new List<APP_Advertising>();
+                    foreach (var item in AllGame)
+                    {
+                        if (item.GameCode.ToLower() == "ctzq")
+                        {
+                            var ctzqgametype = new List<string>() { "tr9", "t14c", "t4cjq", "t6bqc" };
+                            foreach (var gametype in ctzqgametype)
+                            {
+                                var tempitem = AdList.FirstOrDefault(p => p.name == gametype);
+                                if (tempitem == null)
+                                {
+                                    RetuenAdList.Add(new APP_Advertising() { name = gametype, desc = item.EnableStatus == 0 ? "欢迎购彩" : "暂未开售", flag = item.EnableStatus == 0 ? "1" : "0" });
+                                }
+                            }
+                        }
+                        else if (item.GameCode.ToLower() == "sjb")
+                        {
+                            var gyjitem = AdList.FirstOrDefault(p => p.name.ToLower() == "gyj");
+                            if (gyjitem == null)
+                            {
+                                RetuenAdList.Add(new APP_Advertising() { name = "gyj", desc = item.EnableStatus == 0 ? "欢迎购彩" : "暂未开售", flag = item.EnableStatus == 0 ? "1" : "0" });
+                            }
+                            var gjitem = AdList.FirstOrDefault(p => p.name == "gj");
+                            if (gjitem == null)
+                            {
+                                RetuenAdList.Add(new APP_Advertising() { name = "gj", desc = item.EnableStatus == 0 ? "欢迎购彩" : "暂未开售", flag = item.EnableStatus == 0 ? "1" : "0" });
+                            }
+                        }
+                        else
+                        {
+                            var templist = AdList.Where(p => p.name.ToLower().StartsWith(item.GameCode.ToLower())).ToList();
+                            if (templist != null && templist.Count > 0)
+                            {
+                                var list = templist.Select(p => new APP_Advertising()
+                                {
+                                    name = p.name,
+                                    desc = item.EnableStatus == 0 ? p.desc : "暂未开售",
+                                    flag = item.EnableStatus == 0 ? "1" : "0"
+                                });
+                                RetuenAdList.AddRange(list);
+                            }
+                            else
+                            {
+                                RetuenAdList.Add(new APP_Advertising() { name = item.GameCode.ToLower(), desc = item.EnableStatus == 0 ? "欢迎购彩" : "暂未开售", flag = item.EnableStatus == 0 ? "1" : "0" });
+                            }
+                        }
+                    }
+                    RedisHelperEx.DB_Other.SetObj(Key, RetuenAdList, TimeSpan.FromMinutes(5));
+                    return Task.FromResult(RetuenAdList);
+                }
+                else
+                {
+                    return Task.FromResult(RedisValue);
+                }
+                
             }
             catch (Exception ex)
             {

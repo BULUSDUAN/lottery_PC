@@ -290,7 +290,10 @@ namespace KaSon.FrameWork.ORM.Helper
         }
         #endregion
 
-
+        public List<C_Lottery_Game> QueryLotteryAllGame()
+        {
+            return DB.CreateQuery<C_Lottery_Game>().ToList();
+        }
 
     }
 }

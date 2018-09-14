@@ -144,5 +144,8 @@ namespace Lottery.Service.IModuleServices
 
         [Service(Date = "2018-9-7", Director = "lidi", Name = "根据Key获取开奖结果列表")]
         Task<List<KaiJiang>> GetKaiJiangList_ByRedis();
+
+        [Service(Date = "2018-9-13", Director = "lidi", Name = "获取首页按钮广告列表")]
+        Task<List<APP_Advertising>> GetGameInfoIndex();
     }
 }
