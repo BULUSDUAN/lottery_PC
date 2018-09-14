@@ -111,6 +111,11 @@ namespace Craw.Service.ModuleServices
             throw new NotImplementedException();
         }
 
+        public Task<string> Login(string name)
+        {
+            throw new NotImplementedException();
+        }
+
         //WinNumber
     }
 }
