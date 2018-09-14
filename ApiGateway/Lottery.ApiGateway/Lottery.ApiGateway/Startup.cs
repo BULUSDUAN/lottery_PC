@@ -90,6 +90,13 @@ namespace Lottery.ApiGateway
         private IServiceProvider RegisterAutofac(IServiceCollection services)
         {
             var registerConfig = ApiGateWayConfig.Register;
+            string consul = ConfigHelper.AllConfigInfo["ConsulSettings"]["IpAddrs"].ToString();
+            string Token = ConfigHelper.AllConfigInfo["ConsulSettings"]["Token"] != null ? ConfigHelper.AllConfigInfo["ConsulSettings"]["Token"].ToString() : "";
+
+
+            var config = new ConfigInfo(consul, reloadOnChange: true);
+            config.Token = Token;
+
             services.AddMvc(options =>
             {
                 options.Filters.Add(typeof(CustomExceptionFilterAttribute));
@@ -109,7 +116,7 @@ namespace Lottery.ApiGateway
                 //  option.AddCache();
                
                 option.AddClientIntercepted(typeof(CacheProviderInterceptor));
-                option.UseConsulManager(new ConfigInfo(registerConfig.Address));
+                option.UseConsulManager(config);
                 //option.UseZooKeeperManager(new ConfigInfo("127.0.0.1:2181"));
                 // if (registerConfig.Provider == RegisterProvider.Consul)
                 //else if (registerConfig.Provider == RegisterProvider.Zookeeper)

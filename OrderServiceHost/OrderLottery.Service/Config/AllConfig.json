@@ -38,82 +38,7 @@
 
   "QueryUserFundDetailFromCache": false,
 
-  //缓存配置文件，暂时没用到默认
-  "CachingSettings": [
-    {
-      "Id": "ddlCache",
-      "Class": "Kason.Sg.Core.Caching.RedisCache.RedisContext,Kason.Sg.Core.Caching",
-      "InitMethod": "",
-      "Maps": null,
-      "Properties": [
-        {
-          "Name": "appRuleFile",
-          "Ref": "rule",
-          "Value": "",
-          "Maps": null
-        },
-        {
-          "Name": "dataContextPool",
-          "Ref": "ddls_sample",
-          "Value": "",
-          "Maps": [
-            {
-              "Name": "Redis",
-              "Properties": [
-                {
-                  "Name": null,
-                  "Ref": null,
-                  "Value": "127.0.0.1:7000::1",
-                  "Maps": null
-                },
-                {
-                  "Name": null,
-                  "Ref": null,
-                  "Value": "127.0.0.1:6379::1",
-                  "Maps": null
-                },
 
-                {
-                  "Name": null,
-                  "Ref": null,
-                  "Value": "127.0.0.1:7005::1",
-                  "Maps": null
-                }
-              ]
-            },
-            {
-              "Name": "MemoryCache",
-              "Properties": null
-            }
-          ]
-        },
-        {
-          "Name": "defaultExpireTime",
-          "Ref": "",
-          "Value": "120",
-          "Maps": null
-        },
-        {
-          "Name": "connectTimeout",
-          "Ref": "",
-          "Value": "120",
-          "Maps": null
-        },
-        {
-          "Name": "minSize",
-          "Ref": "",
-          "Value": "1",
-          "Maps": null
-        },
-        {
-          "Name": "maxSize",
-          "Ref": "",
-          "Value": "10",
-          "Maps": null
-        }
-      ]
-    }
-  ],
   //必须配置
   "HostSettings": {
     "Ip": "127.0.0.1", //服务启动IP
@@ -133,34 +58,8 @@
   },
   //必须配置 服务发现配置
   "ConsulSettings": {
-    "IpAddrs": "10.0.3.27:8501" //服务启动IP
-  },
-  //必须配置 连接数据配置
-  "ORMSettings": [
-    {
-      "DbKey": "SqlServer.Default",
-      "ConnectionString": "Data Source=10.0.3.6;Initial Catalog=ECP_Core_New;User ID=sa;Password=x123456789;Connection Timeout=10;",
-      "Provider": "SqlServer",
-      "CommandTimeout": 300,
-      "FactoryType": "KaSon.ORM.Factory.SQLServerFactory"
-
-    },
-    {
-      "DbKey": "MySql.Default",
-      "ConnectionString": "server=10.0.3.17;user=sa;database=ECP_Core;port=3306;password=x123456789;SSL Mode=none",
-      "Provider": "MySql",
-      "CommandTimeout": 300,
-      "FactoryType": "KaSon.ORM.Factory.MySqlFactory"
-
-    },
-
-    {
-      "DbKey": "SqlServer.ECP_LottertData",
-      "ConnectionString": "Data Source=10.0.3.6;Initial Catalog=ECP_LotteryData;User ID=sa;Password=x123456789;Connection Timeout=10;",
-      "Provider": "SqlServer",
-      "CommandTimeout": 30000,
-      "FactoryType": "KaSon.ORM.Factory.SQLServerFactory"
-    }
-  ]
+    "IpAddrs": "10.0.3.27:8501", //服务启动IP 10.0.3.27:8501
+    "Token": "16c5413b-276c-45ab-9b0e-9664126f1163"
+  }
 
 }
