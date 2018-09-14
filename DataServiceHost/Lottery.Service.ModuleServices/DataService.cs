@@ -803,6 +803,10 @@ namespace Lottery.Service.ModuleServices
                                 {
                                     RetuenAdList.Add(new APP_Advertising() { name = gametype, desc = item.EnableStatus == 0 ? "欢迎购彩" : "暂未开售", flag = item.EnableStatus == 0 ? "1" : "0" });
                                 }
+                                else
+                                {
+                                    RetuenAdList.Add(new APP_Advertising() { name = gametype, desc = item.EnableStatus == 0 ? tempitem.desc : "暂未开售", flag = item.EnableStatus == 0 ? "1" : "0" });
+                                }
                             }
                         }
                         else if (item.GameCode.ToLower() == "sjb")
