@@ -91,8 +91,9 @@ namespace Lottery.ApiGateway
         {
             var registerConfig = ApiGateWayConfig.Register;
             string consul = ConfigHelper.AllConfigInfo["ConsulSettings"]["IpAddrs"].ToString();
-            string Token = ConfigHelper.AllConfigInfo["ConsulSettings"]["Token"].ToString();
-        
+            string Token = ConfigHelper.AllConfigInfo["ConsulSettings"]["Token"] != null ? ConfigHelper.AllConfigInfo["ConsulSettings"]["Token"].ToString() : "";
+
+
             var config = new ConfigInfo(consul, reloadOnChange: true);
             config.Token = Token;
 
