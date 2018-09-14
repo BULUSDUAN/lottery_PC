@@ -7,11 +7,7 @@
     <CommandTimeout>300</CommandTimeout>
     <FactoryType>KaSon.ORM.Factory.SQLServerFactory</FactoryType>
     <OpenMinLink>true</OpenMinLink>
-    <smstemplate>
-      <Reg>115541377</Reg>
-      <ForGet>115541377</ForGet>
-      <Other>115556353</Other>
-    </smstemplate>
+  
   </OrmConfigInfo>
   <OrmConfigInfo>
     <DbKey>SqlServer.ECP_LottertData</DbKey>
