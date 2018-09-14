@@ -6,6 +6,7 @@
     <Provider>SqlServer</Provider>
     <CommandTimeout>300</CommandTimeout>
     <FactoryType>KaSon.ORM.Factory.SQLServerFactory</FactoryType>
+    <OpenMinLink>true</OpenMinLink>
     <smstemplate>
       <Reg>115541377</Reg>
       <ForGet>115541377</ForGet>
@@ -18,6 +19,7 @@
     <Provider>SqlServer</Provider>
     <CommandTimeout>300</CommandTimeout>
     <FactoryType>KaSon.ORM.Factory.SQLServerFactory</FactoryType>
+    <OpenMinLink>true</OpenMinLink>
     <smstemplate>
     </smstemplate>
   </OrmConfigInfo>
@@ -27,5 +29,6 @@
 	<Provider>MySql</Provider>
 	<CommandTimeout>300</CommandTimeout>
 	<FactoryType>KaSon.ORM.Factory.MySqlFactory</FactoryType>
+    <OpenMinLink>true</OpenMinLink>
 </OrmConfigInfo>
 </ArrayOfOrmConfigInfo>
