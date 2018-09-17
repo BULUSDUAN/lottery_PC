@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\CommonLib\EntityModel\EntityModel.csproj" />
+    <ProjectReference Include="..\..\CommonLib\KaSon.FrameWork.ORM.Helper\KaSon.FrameWork.ORM.Helper.csproj" />
     <ProjectReference Include="..\Craw.Service.IModuleServices\Craw.Service.IModuleServices.csproj" />
     <ProjectReference Include="..\Lottery.CrawGetters\Lottery.CrawGetters.csproj" />
     <ProjectReference Include="..\SystemManage.ModuleBaseServices\SystemManage.ModuleBaseServices.csproj" />

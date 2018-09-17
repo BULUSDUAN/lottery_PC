@@ -42,6 +42,8 @@ namespace SystemManage.Host
 
             string consul = ConfigHelper.AllConfigInfo["ConsulSettings"]["IpAddrs"].ToString();
 
+            JToken CrawSettings = ConfigHelper.AllConfigInfo["CrawSettings"];
+
             JToken RebbitMqSettings = ConfigHelper.AllConfigInfo["RebbitMqSettings"];
             JToken HostSettings = ConfigHelper.AllConfigInfo["HostSettings"];
             string Sports_SchemeJobSeconds = ConfigHelper.AllConfigInfo["Sports_SchemeJobSeconds"].ToString();
@@ -118,7 +120,12 @@ namespace SystemManage.Host
             using (host.Run())
             {
                 Console.WriteLine($"管理、采集，开奖服务端启动成功，{DateTime.Now}。");
-               // AutoTaskServices.AutoCaheData(int.Parse(Sports_SchemeJobSeconds));
+
+             
+                Lottery.CrawGetters.InitConfigInfo.Init(CrawSettings);
+                Lottery.CrawGetters.InitConfigInfo.logFactory = ServiceLocator.GetService<ILoggerFactory>();
+                KaSon.FrameWork.Common.InitConfigInfo.logFactory = ServiceLocator.GetService<ILoggerFactory>();
+                // AutoTaskServices.AutoCaheData(int.Parse(Sports_SchemeJobSeconds));
             }
             //初始化内存期号 k_todo，可用彩种类型,执行一次
            // LotteryGameManager lotGm = new LotteryGameManager();

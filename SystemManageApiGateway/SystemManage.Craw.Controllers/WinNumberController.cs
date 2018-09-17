@@ -23,16 +23,19 @@ using SystemManage.Api.Filter;
 
 namespace SystemManage.Craw.Controllers
 {
-    [Area("Craw")]
+    [Area("CrawApi")]
     [ReusltFilter]
-    public class UserController : BaseController
+    public class WinNumberController : BaseController
     {
 
-        public async Task<IActionResult> GetAddress([FromServices]IServiceDiscoveryProvider serviceDiscoveryProvider, string address, string queryParam)
+        public async Task<IActionResult> NumLettory_WinNumber_Start([FromServices]IServiceProxyProvider _serviceProxyProvider, string address, string queryParam)
         {
-         
-         
-            return Json(new {  });
+
+            var param = new Dictionary<string, object>();
+            param.Add("gameName", "CQSSC");
+            var config = await _serviceProxyProvider.Invoke<string>(param, "creawser/craw/numlettory_winnumber_start");
+
+            return Json(new { config= config });
         }
 
         

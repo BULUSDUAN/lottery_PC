@@ -68,7 +68,7 @@ namespace SystemManage.Api.Filter
                 }
             }
 
-        }
+         }
 
         public string[] AllowSites { get; set; }
         void IActionFilter.OnActionExecuting(ActionExecutingContext context)

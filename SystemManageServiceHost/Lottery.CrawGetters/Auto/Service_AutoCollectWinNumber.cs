@@ -108,7 +108,7 @@ namespace Lottery.CrawGetters.Auto
 
 
         //private ConcurrentDictionary<string, string> all = new ConcurrentDictionary<string, string>();//<string, Dictionary<string, string>>();
-        private bool Process(string gameCode, ConcurrentDictionary<string, string> all, ISZCWinNumberCrawler[] array)
+        private Dictionary<string, string> Process(string gameCode, ConcurrentDictionary<string, string> all, ISZCWinNumberCrawler[] array)
         {
             Dictionary<string, string> dict = null;
             for (int i = 0; i < array.Length; i++)
@@ -128,19 +128,14 @@ namespace Lottery.CrawGetters.Auto
             }
             if (dict == null || dict.Count == 0)
             {
-                return false;
+               // return false;
             }
-            var query = from q in dict where !all.ContainsKey(q.Key) select q;
-            if (query.Count() > 0)
-            {
-               // 采集到数据
-               // Publish(gameCode, dict.Max((p) => p.Key), dict);
-            }
+           
             foreach (var item in dict)
             {
                 all.TryAdd(item.Key, item.Value);
             }
-            return true;
+            return dict;
 
         }
         //private static Dictionary<string, string> CheckIssuseNumber(string gameCode, Dictionary<string, string> dict)
@@ -165,7 +160,7 @@ namespace Lottery.CrawGetters.Auto
         public string Key="";
 
         private Task thread=null;
-        public void Start(string gameName)
+        public void Start(string gameName, Func<string, ConcurrentDictionary<string, string>, Dictionary<string, string>, bool> fn)
         {
             if (thread != null)
             {
@@ -173,15 +168,21 @@ namespace Lottery.CrawGetters.Auto
             }
             gameName = gameName.ToUpper();
             BeStop = 0;
-            thread =Task.Factory.StartNew (() =>
+           // fn("",null);
+            thread =Task.Factory.StartNew ((Fn) =>
             {
                 ConcurrentDictionary<string, string> all = new ConcurrentDictionary<string, string>();
+                Dictionary<string, string> dic = null;
                 while (Interlocked.Read(ref BeStop) == 0)
                 {
                     ////TODO：销售期间，暂停采集
                     try
                     {
-                        Process(gameName, all, new ISZCWinNumberCrawler[] { new SZCWinNumberCommercial(), new SZCWinNumberQCW() });
+                        dic= Process(gameName, all, new ISZCWinNumberCrawler[] { new SZCWinNumberCommercial(), new SZCWinNumberQCW() });
+                        var Nfn = Fn as Func<string, ConcurrentDictionary<string, string>, Dictionary<string, string>, bool>;
+
+                        Nfn(gameName, all, dic);
+                      
                     }
                     catch (Exception ex)
                     {
@@ -192,8 +193,8 @@ namespace Lottery.CrawGetters.Auto
                         Thread.Sleep(sleep);
                     }
                 }
-            });
-            thread.Start();
+            },fn);
+          //  thread.Start();
 
 
         }

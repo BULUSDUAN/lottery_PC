@@ -47,6 +47,19 @@
     "Token": "true",
     "RequestCacheEnabled": false
   },
+//"数字彩开奖配置"
+  "CrawSettings": {
+
+    "SZC_OPEN_URL": "http://101.37.126.96:5633/newly.do?token=f9e18eb66b794d91&code={0}&format=json&random={1}",
+    "SZC_OPEN_URL_DAY": "http://101.37.126.96:5633/daily.do?token=f9e18eb66b794d91&code={0}&format=json&random={1}&date={2}",
+
+    "SZC_OPEN_MIRROR_URL": "http://www.jiang.com/jsonData/lottery_new_open_list_{0}.json?t={1}",
+    //中民开采网
+    "ZHM_ServiceUrl": "",
+    "ZHM_Key": "",
+    "ZHM_PartnerId": "",
+    "ZHM_Version": ""
+  },
   //必须配置  RebbitMq 启动地址
   "RebbitMqSettings": {
     "EventBusConnection": "10.0.3.27",

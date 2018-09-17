@@ -24,13 +24,21 @@ namespace Craw.Service.IModuleServices
     /// <summary>
     /// 采集服务
     /// </summary>
-    [ServiceBundle("creaw/{Service}")]
+    [ServiceBundle("creawSer/{Service}")]
     public interface ICrawService: IServiceKey
     {
-      
+
 
         [Service(Date = "2018-9-3", Director = "kason", Name = "采集，开奖等登陆服务")]
         Task<string> Login(string name);
+
+        [Service(Date = "2018-9-17", Director = "kason", Name = "采集，开奖服务")]
+
+        Task<string> NumLettory_WinNumber_Start(string gameName);
+
+        [Service(Date = "2018-9-17", Director = "kason", Name = "采集，开奖服务")]
+
+        Task<string> NumLettory_WinNumber_Stop(string gameName);
 
     }
 }

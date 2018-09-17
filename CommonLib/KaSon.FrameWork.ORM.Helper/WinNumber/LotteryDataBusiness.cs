@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using EntityModel.CoreModel;
+using EntityModel.Communication;
 
 namespace KaSon.FrameWork.ORM.Helper.WinNumber
 {
@@ -113,6 +114,113 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
                 }
             }
         }
+
+        public static ILotteryDataBusiness GetTypeImport(string gameCode)
+        {
+            ILotteryDataBusiness biz = null;
+            try
+            {
+             
+                
+                    switch (gameCode)
+                    {
+                        case "SSQ":
+                            biz = new LotteryDataBusiness_SSQ();
+                            break;
+                        case "DLT":
+                            biz = new LotteryDataBusiness_DLT();
+                            break;
+                        case "FC3D":
+                            biz = new LotteryDataBusiness_FC3D();
+                            break;
+                        case "PL3":
+                            biz = new LotteryDataBusiness_PL3();
+                            break;
+                        case "CQSSC":
+                            biz = new LotteryDataBusiness_CQSSC();
+                            break;
+                        case "JX11X5":
+                            biz = new LotteryDataBusiness_JX11X5();
+                            break;
+                        case "CQ11X5":
+                            biz = new LotteryDataBusiness_CQ11X5();
+                            break;
+                        case "CQKLSF":
+                            biz = new LotteryDataBusiness_CQKLSF();
+                            break;
+                        case "DF6J1":
+                            biz = new LotteryDataBusiness_DF6_1();
+                            break;
+                        case "GD11X5":
+                            biz = new LotteryDataBusiness_GD11X5();
+                            break;
+                        case "GDKLSF":
+                            biz = new LotteryDataBusiness_GDKLSF();
+                            break;
+                        case "HBK3":
+                            biz = new LotteryDataBusiness_HBK3();
+                            break;
+                        case "HC1":
+                            biz = new LotteryDataBusiness_HC1();
+                            break;
+                        case "HD15X5":
+                            biz = new LotteryDataBusiness_HD15X5();
+                            break;
+                        case "HNKLSF":
+                            biz = new LotteryDataBusiness_HNKLSF();
+                            break;
+                        case "JLK3":
+                            biz = new LotteryDataBusiness_JLK3();
+                            break;
+                        case "JSKS":
+                            biz = new LotteryDataBusiness_JSK3();
+                            break;
+                        case "JXSSC":
+                            biz = new LotteryDataBusiness_JXSSC();
+                            break;
+                        case "LN11X5":
+                            biz = new LotteryDataBusiness_LN11X5();
+                            break;
+                        case "PL5":
+                            biz = new LotteryDataBusiness_PL5();
+                            break;
+                        case "QLC":
+                            biz = new LotteryDataBusiness_QLC();
+                            break;
+                        case "QXC":
+                            biz = new LotteryDataBusiness_QXC();
+                            break;
+                        case "SDQYH":
+                            biz = new LotteryDataBusiness_SDQYH();
+                            break;
+                        case "SD11X5":
+                            biz = new LotteryDataBusiness_YDJ11();
+                            break;
+                        case "SDKLPK3":
+                            biz = new LotteryDataBusiness_SDKLPK3();
+                            break;
+                        case "CTZQ_T14C":
+                        case "CTZQ_TR9":
+                        case "CTZQ_T6BQC":
+                        case "CTZQ_T4CJQ":
+                            biz = new LotteryDataBusiness_CTZQ(gameCode);
+                            break;
+                        default:
+                            throw new Exception(string.Format("未找到匹配的接口：{0}", gameCode));
+                    
+                    
+                }
+              //  biz.ImportWinNumber(issuseNumber, winNumber);
+              //  return new CommonActionResult(true, "导入成功");
+            }
+            catch (Exception ex)
+            {
+               // return new CommonActionResult(false, "导入失败 " + ex.ToString());
+            }
+
+            return biz;
+        }
+
     }
 
     public interface ILotteryDataBusiness

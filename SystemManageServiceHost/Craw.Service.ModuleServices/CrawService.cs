@@ -53,21 +53,21 @@ namespace Craw.Service.ModuleServices
         /// <summary>
         /// 数字彩采集开奖号-开始服务
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="gameName"></param>
         /// <returns></returns>
-        public Task<string> NumLettory_WinNumber_Start(string name)
+        public Task<string> NumLettory_WinNumber_Start(string gameName)
         {
             lock (aotoCollectList) {
-                switch (name)
+                switch (gameName)
                 {
                     //重庆时时彩
                     case "CQSSC":
-                        var p = aotoCollectList.Where(b => b.Key == name).FirstOrDefault();
+                        var p = aotoCollectList.Where(b => b.Key == gameName).FirstOrDefault();
                         if (p == null)
                         {
                             //执行任务
                             Service_AutoCollectWinNumber auto = new Service_AutoCollectWinNumber(TimeSpan.FromSeconds(20));
-                            auto.Start(name);
+                            auto.Start(gameName,new CrawORMService().Start);
                             aotoCollectList.Add(auto);
                         }
                         break;
@@ -75,9 +75,9 @@ namespace Craw.Service.ModuleServices
                         break;
                 }
             }
-          
 
-            throw new NotImplementedException();
+
+            return Task.FromResult( "数字彩采集开奖号-开始服务");
         }
         /// <summary>
         /// 停止服务
@@ -100,6 +100,7 @@ namespace Craw.Service.ModuleServices
                             //Service_AutoCollectWinNumber auto = new Service_AutoCollectWinNumber(TimeSpan.FromSeconds(20));
                             //auto.Start(name);
                             //aotoCollectList.Add(auto);
+
                         }
                         break;
                     default:
