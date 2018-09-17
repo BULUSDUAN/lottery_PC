@@ -26,10 +26,10 @@ namespace CSRedis
         /// <param name="list"></param>
         public CSRedisClient(IList<CSRedisConfig> list)
         {
-            _clusterRule = null;
-            if (_clusterRule == null) _clusterRule = key => {
+            ClusterRule = null;
+            if (ClusterRule == null) ClusterRule = key => {
                 var idx = Math.Abs(string.Concat(key).GetHashCode()) % ClusterNodes.Count;
-                return idx < 0 || idx >= _clusterKeys.Count ? _clusterKeys.First() : _clusterKeys[idx];
+                return idx < 0 || idx >= ClusterKeys.Count ? ClusterKeys.First() : ClusterKeys[idx];
             };
 
             //if (connectionStrings == null || connectionStrings.Any() == false) throw new Exception("Redis ConnectionString 未设置");
@@ -43,7 +43,7 @@ namespace CSRedis
                 if (ClusterNodes.ContainsKey(pool.ClusterKey)) throw new Exception($"ClusterName: {pool.ClusterKey} 重复，请检查");
                 ClusterNodes.Add(pool.ClusterKey, pool);
             }
-            _clusterKeys = ClusterNodes.Keys.ToList();
+            ClusterKeys = ClusterNodes.Keys.ToList();
             //_clusterKeys = ClusterNodes.Keys.ToList();
             ////   if (connectionStrings == null || connectionStrings.Any() == false) throw new Exception("Redis ConnectionString 未设置");
             //var pool = new ConnectionPool();
@@ -59,10 +59,10 @@ namespace CSRedis
 
         public CSRedisClient(CSRedisConfig cSRedisConfig)
         {
-            _clusterRule = null;
-            if (_clusterRule == null) _clusterRule = key => {
+            ClusterRule = null;
+            if (ClusterRule == null) ClusterRule = key => {
                 var idx = Math.Abs(string.Concat(key).GetHashCode()) % ClusterNodes.Count;
-                return idx < 0 || idx >= _clusterKeys.Count ? _clusterKeys.First() : _clusterKeys[idx];
+                return idx < 0 || idx >= ClusterKeys.Count ? ClusterKeys.First() : ClusterKeys[idx];
             };
             var pool = new ConnectionPool();
             pool.ConnectionStringEx(cSRedisConfig.C_IP, cSRedisConfig.C_Post, cSRedisConfig.C_Password,
@@ -73,7 +73,7 @@ namespace CSRedis
             };
             if (ClusterNodes.ContainsKey(pool.ClusterKey)) throw new Exception($"ClusterName: {pool.ClusterKey} 重复，请检查");
             ClusterNodes.Add(pool.ClusterKey, pool);
-            _clusterKeys = ClusterNodes.Keys.ToList();
+            ClusterKeys = ClusterNodes.Keys.ToList();
         }
 
         /// <summary>
