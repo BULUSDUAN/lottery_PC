@@ -723,7 +723,7 @@ namespace UserLottery.Service.ModuleServices
         /// <param name="source"></param>
         /// <param name="info"></param>
         /// <returns></returns>
-        public Task<CommonActionResult> RegisterResponseMobile(string validateCode, string mobile, SchemeSource source, RegisterInfo_Local info, string fxid)
+        public Task<CommonActionResult> RegisterResponseMobile(string validateCode, string mobile, SchemeSource source, RegisterInfo_Local info, string fxid, string yqid)
         {
             try
             {
@@ -744,9 +744,10 @@ namespace UserLottery.Service.ModuleServices
                 {
                     throw new LogicException("验证码输入不正确。");
                 }
-                info.Referrer = fxid == "0" ? "mobile_regist" : "fxid_regist";
+                info.Referrer = fxid == "" ? "mobile_regist" : "fxid_regist";
+                info.Referrer = yqid == "" ? info.Referrer : "yqid_regist";
                 //注册
-                var userResult = RegisterLoacal(info, fxid);
+                var userResult = RegisterLoacal(info, fxid, yqid);
                 if (userResult == null || string.IsNullOrEmpty(userResult.ReturnValue))
                     throw new Exception("注册失败,请重新注册");
                 string mobileNumber;
@@ -782,7 +783,7 @@ namespace UserLottery.Service.ModuleServices
         /// <summary>
         /// 本地 注册账号
         /// </summary>
-        public CommonActionResult RegisterLoacal(RegisterInfo_Local regInfo, string fxid)
+        public CommonActionResult RegisterLoacal(RegisterInfo_Local regInfo, string fxid, string yqid)
         {
             try
             {
@@ -812,7 +813,14 @@ namespace UserLottery.Service.ModuleServices
                         fxid = string.Empty;
                     }
                 }
-
+                if (!string.IsNullOrEmpty(yqid))
+                {
+                    var userEntity = new LocalLoginBusiness().QueryUserRegisterByUserId(yqid);
+                    if (userEntity == null)
+                    {
+                        yqid = string.Empty;
+                    }
+                }
 
                 regInfo.LoginName = regInfo.LoginName.Trim();
                 //if (!Common.Utilities.UsefullHelper.IsInTest)
@@ -830,7 +838,7 @@ namespace UserLottery.Service.ModuleServices
 
 
 
-                var success = new RegisterBusiness().UserRegister(regInfo, fxid);
+                var success = new RegisterBusiness().UserRegister(regInfo, fxid, yqid);
 
 
                 //! 执行扩展功能代码 - 提交事务后
@@ -1246,7 +1254,8 @@ namespace UserLottery.Service.ModuleServices
                 var biz = new RealNameAuthenticationBusiness();
                 BettingHelper.CheckUserRealName(IdCardNumber);
 
-                if (!BettingHelper.CheckIDCard18(IdCardNumber)) {
+                if (!BettingHelper.CheckIDCard18(IdCardNumber))
+                {
 
                     throw new LogicException("请输入正确的身份证号码");
                 }
@@ -1493,17 +1502,17 @@ namespace UserLottery.Service.ModuleServices
                 return Task.FromResult(db.Get(Key));
             }
             catch (Exception ex)
-            {   
-                throw new Exception("获取失败",ex);
+            {
+                throw new Exception("获取失败", ex);
             }
         }
 
-        public Task<bool> SetRedisOtherDbKey(string Key,string RValue,int TotalSeconds)
+        public Task<bool> SetRedisOtherDbKey(string Key, string RValue, int TotalSeconds)
         {
             try
             {
                 var db = RedisHelperEx.DB_Other;
-                var flag= db.Set(Key, RValue, TotalSeconds);
+                var flag = db.Set(Key, RValue, TotalSeconds);
                 return Task.FromResult(flag);
             }
             catch (Exception ex)

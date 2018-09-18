@@ -24,7 +24,7 @@ namespace BettingLottery.Service.ModuleServices
     [ModuleName("Betting")]
     public class BettingService : KgBaseService, IBettingService
     {
-       
+
         //IKgLog log = null;
         //public BettingService()
         //{
@@ -44,7 +44,7 @@ namespace BettingLottery.Service.ModuleServices
         public object Betting(string Param, SchemeSource SourceCode, string MsgId)
         {
 
-           var p= JsonHelper.Decode(Param);
+            var p = JsonHelper.Decode(Param);
             string userToken = p.UserToken;
             string balancePassword = p.BalancePassword;
             string gameCode = p.GameCode.ToUpper();
@@ -130,7 +130,7 @@ namespace BettingLottery.Service.ModuleServices
                                     ActivityType = ActivityType.NoParticipate,
                                     IsRepeat = p.IsRepeat == null ? false : p.IsRepeat,
                                 };
-                                var result =new GameBizSportsBettion().Sports_Betting(info, balancePassword, redBagMoney, userid);
+                                var result = new GameBizSportsBettion().Sports_Betting(info, balancePassword, redBagMoney, userid);
                                 //if (!result.IsSuccess)
                                 //    throw new Exception(result.Message);
                                 if (result.IsSuccess)
@@ -159,7 +159,7 @@ namespace BettingLottery.Service.ModuleServices
                         }
                         else if (successCount > 0 && successCount != codeCount)
                         {
-                            return new 
+                            return new
                             {
                                 Code = ResponseCode.成功,
                                 Message = "您本次投注成功" + successCount + "笔，失败" + (codeCount - successCount) + "笔。",
@@ -211,7 +211,7 @@ namespace BettingLottery.Service.ModuleServices
                         CurrentBetTime = DateTime.Now
                     };
                     var bettion = new GameBizSportsBettion();
-                   
+
                     var result = IsSaveOrder == "0" ? bettion.Sports_Betting(info, balancePassword, redBagMoney, userid) : bettion.SaveOrderSportsBettingByResult(info, userid);
                     if (!result.IsSuccess)
                         throw new Exception(result.Message);
@@ -511,13 +511,13 @@ namespace BettingLottery.Service.ModuleServices
 
         #region 北单、竞彩投注
 
-        public Task<CommonActionResult> Sports_Betting(Sports_BetingInfo info , string password, decimal redBagMoney, string userid)
+        public Task<CommonActionResult> Sports_Betting(Sports_BetingInfo info, string password, decimal redBagMoney, string userid)
         {
             try
             {
-              //  Sports_BetingInfo info = new Sports_BetingInfo();
-                   //检查彩种是否暂停销售
-                   BusinessHelper.CheckGameEnable(info.GameCode.ToUpper());
+                //  Sports_BetingInfo info = new Sports_BetingInfo();
+                //检查彩种是否暂停销售
+                BusinessHelper.CheckGameEnable(info.GameCode.ToUpper());
                 BettingHelper.CheckGameCodeAndType(info.GameCode, info.GameType);
                 // 验证用户身份及权限
                 //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
@@ -621,7 +621,7 @@ namespace BettingLottery.Service.ModuleServices
             {
                 var isSuceess = true;
                 //info,
-                var t = this.Sports_Betting(info,password, redBagMoney, userid);
+                var t = this.Sports_Betting(info, password, redBagMoney, userid);
                 isSuceess = t.Result.IsSuccess;
                 var schemeId = string.Empty;
                 var money = 0M;
@@ -639,7 +639,7 @@ namespace BettingLottery.Service.ModuleServices
             }
             catch (AggregateException ex)
             {
-                throw new AggregateException(ex.Message,ex);
+                throw new AggregateException(ex.Message, ex);
             }
             catch (Exception ex)
             {
@@ -1054,7 +1054,7 @@ namespace BettingLottery.Service.ModuleServices
             }
             catch (AggregateException ex)
             {
-                throw new AggregateException(ex.Message,ex);
+                throw new AggregateException(ex.Message, ex);
             }
             //catch (LogicException ex)
             //{
@@ -1205,7 +1205,7 @@ namespace BettingLottery.Service.ModuleServices
             }
             catch (AggregateException ex)
             {
-                throw new AggregateException(ex.Message,ex);
+                throw new AggregateException(ex.Message, ex);
             }
             //catch (LogicException ex)
             //{
@@ -1249,7 +1249,7 @@ namespace BettingLottery.Service.ModuleServices
             }
             catch (AggregateException ex)
             {
-                throw new AggregateException(ex.Message,ex);
+                throw new AggregateException(ex.Message, ex);
             }
             //catch (LogicException ex)
             //{
@@ -1283,11 +1283,34 @@ namespace BettingLottery.Service.ModuleServices
             }
         }
 
+        #region 获取首页合买大厅数据 PC
+        /// <summary>
+        /// 获取首页合买大厅数据 PC
+        /// </summary>
+        /// <returns></returns>
+        public Task<List<TogetherHotUserInfo>> QueryTogetherHallLoad()
+        {
+            try
+            {
+                var db = RedisHelperEx.DB_CoreCacheData;
+                var redisKey_TogetherList = RedisKeys.Key_Core_Togegher_SupperUser;
+                //生成列表
+                //var list = new List<Sports_TogetherSchemeQueryInfo>();
+                var list = db.GetRange<TogetherHotUserInfo>(redisKey_TogetherList);
+                if (list == null) list = new List<TogetherHotUserInfo>();
+                return Task.FromResult(list);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("获取合买大厅数据失败 ", ex);
+            }
+        }
+        #endregion
         public Task<string> ReadSqlTimeLog(string FileName)
         {
-           return Task.FromResult(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\SQLInfo", "LogTime_"));
+            return Task.FromResult(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\SQLInfo", "LogTime_"));
         }
-        public Task<string> ReadLog(string DicName= "SQLInfo",string ApiDicTypeName= "Fatal")
+        public Task<string> ReadLog(string DicName = "SQLInfo", string ApiDicTypeName = "Fatal")
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\" + DicName, "LogTime_"));
@@ -1300,5 +1323,25 @@ namespace BettingLottery.Service.ModuleServices
             return Task.FromResult(sb.ToString());
         }
         //   Task<string> ReadLog(string DicName);
+
+        public Task<string> QueryCurrentUserInfo(string userToken)
+        {
+            string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+            var RedisKey = "CurrentUser" + userId;
+            var v = RedisHelperEx.DB_Other.Get(RedisKey);
+
+            if (string.IsNullOrEmpty(v))
+            {
+                var user = new LocalLoginBusiness().GetRegisterById(userId);
+                v = user.DisplayName;
+                if (user != null)
+                {
+                    RedisHelperEx.DB_Other.Set(RedisKey, v, 3 * 60);
+                }
+
+            }
+
+            return Task.FromResult(v);
+        }
     }
 }
