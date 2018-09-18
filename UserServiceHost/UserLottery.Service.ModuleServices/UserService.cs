@@ -723,7 +723,7 @@ namespace UserLottery.Service.ModuleServices
         /// <param name="source"></param>
         /// <param name="info"></param>
         /// <returns></returns>
-        public Task<CommonActionResult> RegisterResponseMobile(string validateCode, string mobile, SchemeSource source, RegisterInfo_Local info, string fxid,string yqid)
+        public Task<CommonActionResult> RegisterResponseMobile(string validateCode, string mobile, SchemeSource source, RegisterInfo_Local info, string fxid)
         {
             try
             {
@@ -744,10 +744,9 @@ namespace UserLottery.Service.ModuleServices
                 {
                     throw new LogicException("验证码输入不正确。");
                 }
-                info.Referrer = fxid == "" ? "mobile_regist" : "fxid_regist";
-                info.Referrer = yqid == "" ? info.Referrer : "yqid_regist";
+                info.Referrer = fxid == "0" ? "mobile_regist" : "fxid_regist";
                 //注册
-                var userResult = RegisterLoacal(info, fxid, yqid);
+                var userResult = RegisterLoacal(info, fxid);
                 if (userResult == null || string.IsNullOrEmpty(userResult.ReturnValue))
                     throw new Exception("注册失败,请重新注册");
                 string mobileNumber;
@@ -783,7 +782,7 @@ namespace UserLottery.Service.ModuleServices
         /// <summary>
         /// 本地 注册账号
         /// </summary>
-        public CommonActionResult RegisterLoacal(RegisterInfo_Local regInfo, string fxid,string yqid)
+        public CommonActionResult RegisterLoacal(RegisterInfo_Local regInfo, string fxid)
         {
             try
             {
@@ -813,14 +812,7 @@ namespace UserLottery.Service.ModuleServices
                         fxid = string.Empty;
                     }
                 }
-                if (!string.IsNullOrEmpty(yqid))
-                {
-                    var userEntity = new LocalLoginBusiness().QueryUserRegisterByUserId(yqid);
-                    if (userEntity == null)
-                    {
-                        yqid = string.Empty;
-                    }
-                }
+
 
                 regInfo.LoginName = regInfo.LoginName.Trim();
                 //if (!Common.Utilities.UsefullHelper.IsInTest)
@@ -838,7 +830,7 @@ namespace UserLottery.Service.ModuleServices
 
 
 
-                var success = new RegisterBusiness().UserRegister(regInfo, fxid,yqid);
+                var success = new RegisterBusiness().UserRegister(regInfo, fxid);
 
 
                 //! 执行扩展功能代码 - 提交事务后

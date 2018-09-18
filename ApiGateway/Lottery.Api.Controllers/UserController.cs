@@ -387,7 +387,6 @@ namespace Lottery.Api.Controllers
                 //string cfrom = "";
                 string pid = p.pid;
                 string fxid = p.fxid;
-                string yqid= p.yqid;
                 string schemeId = p.schemeId;
                 SchemeSource schemeSource = entity.SourceCode;
                 //if (!string.IsNullOrEmpty(cfrom) && cfrom == "ios")
@@ -426,8 +425,7 @@ namespace Lottery.Api.Controllers
                 {
                     userInfo.AgentId = pid;
                 }
-                param["fxid"] = string.IsNullOrEmpty(fxid) ? "" : fxid;
-                param["yqid"] = string.IsNullOrEmpty(yqid) ? "" : yqid;
+                param["fxid"] = string.IsNullOrEmpty(fxid) ? "0" : fxid;
                 var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/User/RegisterResponseMobile");
                 param.Clear();
                 if (result.Message.Contains("手机认证成功") || result.Message.Contains("恭喜您注册成功"))

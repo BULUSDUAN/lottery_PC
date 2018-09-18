@@ -4,12 +4,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using EntityModel.CoreModel;
 using KaSon.FrameWork.Common;
 using KaSon.FrameWork.Common.Net;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+
 
 namespace Lottery.Base.Controllers
 {
@@ -66,25 +64,5 @@ namespace Lottery.Base.Controllers
             }
         }
 
-        //public static void Set<T>(this ISession session, string key, T value)
-        //{
-        //    session.SetString(key, JsonConvert.SerializeObject(value));
-        //}
-        /// <summary>
-        /// 当前用户对象，在Models里定义好属性，再在这里赋值
-        /// </summary>
-        protected CurrentUserInfo CurrentUserInfo()
-        {
-          
-                if (HttpContext.Session.GetString("CurrentUserInfo") == null)
-                {
-                    return null;
-                }            
-                object SessionUser= HttpContext.Session.GetString("CurrentUserInfo");
-                var currentuser = new CurrentUserInfo();
-                currentuser = (CurrentUserInfo)SessionUser;            
-                return currentuser;                  
-        }
-     
     }
 }
