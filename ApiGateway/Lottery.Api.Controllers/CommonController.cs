@@ -32,6 +32,85 @@ namespace Lottery.Api.Controllers
     [ReusltFilter]
     public class CommonController : BaseController
     {
+        //#region 合买
+        //public async Task<IActionResult> Chipped([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        //{
+        //    try
+        //    {
+        //        ViewBag.User = CurrentUser;
+        //        ViewBag.Game = string.IsNullOrEmpty(id) ? "" : id;
+        //        ViewBag.GameType = string.IsNullOrEmpty(Request["PlayType"]) ? "" : Request["PlayType"];
+        //        ViewBag.IsMine = string.IsNullOrEmpty(Request["isMine"]) ? "false" : Request["isMine"];
+        //        ViewBag.issuseNumber = string.IsNullOrEmpty(Request["issuseNumber"]) ? "" : Request["issuseNumber"];
+        //        //最低金额-最大金额
+        //        ViewBag.minMoney = string.IsNullOrEmpty(Request["minMoney"]) ? -1 : decimal.Parse(Request["minMoney"]);
+        //        ViewBag.maxMoney = string.IsNullOrEmpty(Request["maxMoney"]) ? -1 : decimal.Parse(Request["maxMoney"]);
+        //        //最小进度-最大进度
+        //        ViewBag.minProgress = string.IsNullOrEmpty(Request["minProgress"]) ? -1 : decimal.Parse(Request["minProgress"]);
+        //        ViewBag.maxProgress = string.IsNullOrEmpty(Request["maxProgress"]) ? -1 : decimal.Parse(Request["maxProgress"]);
+        //        //合买方案保密性 0未知
+        //        ViewBag.SchemeSecurity = string.IsNullOrEmpty(Request["SchemeSecurity"]) ? null : (TogetherSchemeSecurity?)int.Parse(Request["SchemeSecurity"]);
+        //        //方案投注类别 0普通
+        //        ViewBag.SchemeBetting = string.IsNullOrEmpty(Request["SchemeBetting"]) ? null : (SchemeBettingCategory?)int.Parse(Request["SchemeBetting"]);
+        //        //合买方案进度
+        //        ViewBag.SchemeProgress = string.IsNullOrEmpty(Request["SchemeProgress"]) ? null : (TogetherSchemeProgress?)int.Parse(Request["SchemeProgress"]);
+        //        //排序
+        //        //ViewBag.orderBy = string.IsNullOrEmpty(Request["orderBy"]) ? "" : Request["orderBy"];
+        //        ViewBag.orderByName = string.IsNullOrEmpty(Request["orderByName"]) ? "" : Request["orderByName"];
+        //        ViewBag.orderBySort = string.IsNullOrEmpty(Request["orderBySort"]) ? "" : Request["orderBySort"];
+        //        //保底和进度
+        //        var orderBy = "";
+        //        //if (ViewBag.orderByName == "0")
+        //        //    orderBy = "ISTOP DESC,ProgressStatus ASC, Progress " + ViewBag.orderBySort + ",TotalMoney DESC";
+        //        //else if (ViewBag.orderByName == "1")
+        //        //    orderBy = "ISTOP DESC,ProgressStatus ASC,TotalMoney " + ViewBag.orderBySort + ", Progress DESC";
+
+        //        if (ViewBag.orderByName == "0")
+        //            orderBy = "ManYuan desc,ISTOP DESC,Progress " + ViewBag.orderBySort + ",TotalMoney DESC";
+        //        else if (ViewBag.orderByName == "1")
+        //            orderBy = "ManYuan desc,ISTOP DESC,TotalMoney " + ViewBag.orderBySort + ", Progress DESC";
+        //        //关键字
+        //        var searchKey = string.IsNullOrEmpty(Request["key"]) ? "" : Request["key"];
+        //        if (ViewBag.IsMine == "true" && CurrentUser != null)
+        //        {
+        //            searchKey = CurrentUser.LoginInfo.DisplayName;
+        //        }
+        //        ViewBag.key = searchKey;
+        //        ViewBag.pageNo = string.IsNullOrEmpty(Request.QueryString["pageNo"]) ? 0 : int.Parse(Request.QueryString["pageNo"]);
+        //        ViewBag.PageSize = string.IsNullOrEmpty(Request.QueryString["pageSize"]) ? 30 : int.Parse(Request.QueryString["pageSize"]);
+        //        string userId = string.Empty;
+        //        if (CurrentUser != null)
+        //            userId = CurrentUser.LoginInfo.UserId;
+
+        //        //ViewBag.SuperList = new TogetherHotUserInfoCollection();
+        //        //ViewBag.TogList = new Sports_TogetherSchemeQueryInfoCollection();
+
+        //        //从SQL数据库查询
+        //        //ViewBag.SuperList = WCFClients.GameClient.QueryHotUserTogetherOrderList(userId);
+        //        //ViewBag.TogList = WCFClients.GameClient.QuerySportsTogetherList(searchKey, ViewBag.issuseNumber, ViewBag.Game, ViewBag.GameType, ViewBag.SchemeSecurity,
+        //        //    ViewBag.SchemeBetting, ViewBag.SchemeProgress, ViewBag.minMoney, ViewBag.maxMoney, ViewBag.minProgress,
+        //        //    ViewBag.maxProgress, orderBy, ViewBag.pageNo, ViewBag.PageSize, userId);
+
+        //        //从缓存文件查询
+        //        //ViewBag.SuperList = this.QueryHotUserTogetherOrderList();
+        //        //ViewBag.TogList = QuerySportsTogetherList(searchKey, ViewBag.issuseNumber, ViewBag.Game, ViewBag.GameType, ViewBag.SchemeSecurity,
+        //        //  ViewBag.SchemeBetting, ViewBag.SchemeProgress, ViewBag.minMoney, ViewBag.maxMoney, ViewBag.minProgress,
+        //        //  ViewBag.maxProgress, orderBy, ViewBag.pageNo, ViewBag.PageSize);
+
+        //        //从Redis库查询
+        //        ViewBag.SuperList = WebRedisHelper.QueryHotTogetherUserListFromRedis();
+        //        ViewBag.TogList = WebRedisHelper.QuerySportsTogetherListFromRedis(searchKey, ViewBag.issuseNumber, ViewBag.Game, ViewBag.GameType, ViewBag.SchemeSecurity,
+        //          ViewBag.SchemeBetting, ViewBag.SchemeProgress, ViewBag.minMoney, ViewBag.maxMoney, ViewBag.minProgress,
+        //          ViewBag.maxProgress, orderBy, ViewBag.pageNo, ViewBag.PageSize);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ViewBag.TogList = new Sports_TogetherSchemeQueryInfoCollection();
+        //    }
+        //    return View();
+        //}
+      
+        //#endregion
         public async Task<IActionResult> GetAppendBettingDate([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try

@@ -1283,6 +1283,29 @@ namespace BettingLottery.Service.ModuleServices
             }
         }
 
+      #region 获取首页合买大厅数据 PC
+        /// <summary>
+        /// 获取首页合买大厅数据 PC
+        /// </summary>
+        /// <returns></returns>
+        public Task<List<TogetherHotUserInfo>> QueryTogetherHallLoad()
+        {
+            try
+            {
+                var db = RedisHelperEx.DB_CoreCacheData;
+                var redisKey_TogetherList = RedisKeys.Key_Core_Togegher_SupperUser;
+                //生成列表
+                //var list = new List<Sports_TogetherSchemeQueryInfo>();
+                var list = db.GetRange<TogetherHotUserInfo>(redisKey_TogetherList);
+                if (list == null) list = new List<TogetherHotUserInfo>();
+                return Task.FromResult(list);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("获取合买大厅数据失败 ", ex);
+            }
+        }
+        #endregion
         public Task<string> ReadSqlTimeLog(string FileName)
         {
            return Task.FromResult(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\SQLInfo", "LogTime_"));
@@ -1300,5 +1323,25 @@ namespace BettingLottery.Service.ModuleServices
             return Task.FromResult(sb.ToString());
         }
         //   Task<string> ReadLog(string DicName);
+
+        public Task<string> QueryCurrentUserInfo(string userToken)
+        {
+            string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+            var RedisKey = "CurrentUser" + userId;
+            var v = RedisHelperEx.DB_Other.Get(RedisKey);
+            
+            if (string.IsNullOrEmpty(v))
+            {
+                var user = new LocalLoginBusiness().GetRegisterById(userId);
+                v = user.DisplayName;
+                if (user != null)
+                {
+                    RedisHelperEx.DB_Other.Set(RedisKey, v, 3 * 60);
+                }
+
+            }
+
+            return Task.FromResult(v);
+        }
     }
 }

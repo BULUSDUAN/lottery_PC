@@ -223,7 +223,7 @@ namespace KaSon.FrameWork.ORM.Helper
             return DB.CreateQuery<E_TaskList>().Where(p => p.UserId == userId && p.TaskCategory == (int)taskCategory).FirstOrDefault();
         }
 
-        public CommonActionResult UserRegister(RegisterInfo_Local regInfo,string fxid)
+        public CommonActionResult UserRegister(RegisterInfo_Local regInfo,string fxid,string yqid)
         {
             DB.Begin();
             try
@@ -312,7 +312,26 @@ namespace KaSon.FrameWork.ORM.Helper
                     });
                 }
                 #endregion
-
+                #region 普通用户推广数据
+                if (!string.IsNullOrEmpty(yqid))
+                {
+                    var manager = new BlogManager();
+                    manager.AddBlog_UserSpread(new E_Blog_UserSpread
+                    {
+                        UserId = userId,
+                        AgentId = yqid,
+                        userName = regInfo.LoginName,
+                        CrateTime = DateTime.Now,
+                        CTZQ = 0,
+                        BJDC = 0,
+                        JCZQ = 0,
+                        JCLQ = 0,
+                        SZC = 0,
+                        GPC = 0,
+                        UpdateTime = DateTime.Now
+                    });
+                }
+                #endregion
                 DB.Commit();
 
                 return new CommonActionResult

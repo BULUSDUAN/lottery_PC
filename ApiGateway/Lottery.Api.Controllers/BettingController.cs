@@ -1277,6 +1277,8 @@ namespace Lottery.Api.Controllers
                 });
             }
         }
+        #region
+
         //private static string _cacheRedisHost = string.Empty;
         ///// <summary>
         ///// 缓存Redis的ip
@@ -1343,7 +1345,129 @@ namespace Lottery.Api.Controllers
         //    }
         //}
         #endregion
+        #endregion
+
+        #region PC接口
+        public async Task<IActionResult> QueryTogetherHall_PC([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+
+                string id = p.id;
+                string PlayType = p.PlayType;
+                string isMine = p.isMine;
+                string issuse = p.issuseNumber;
+                string minMY = p.minMoney;
+                string maxMY = p.maxMoney;
+                string minP = p.minProgress;
+                string maxP = p.maxProgress;
+                string strSchemeSecurity = p.SchemeSecurity;
+                string schemeBetting = p.SchemeBetting;
+                string schemeProgress = p.SchemeProgress;
+                string orderByName = p.orderByName;
+                string orderBySort = p.orderByName;
+                string userToken = p.userToken;
+                string key = p.key;
+                string pageNo = p.pageNo;
+                string pageSize = p.pageSize;
 
 
+                string Game = string.IsNullOrEmpty(id) ? "" : id;
+                string GameType = string.IsNullOrEmpty(PlayType) ? "" : PlayType;
+                string IsMine = string.IsNullOrEmpty(isMine) ? "false" : isMine;
+                Dictionary<string, object> param = new Dictionary<string, object>();
+
+                string issuseNumber = string.IsNullOrEmpty(issuse) ? "" : issuse;
+                //最低金额-最大金额
+                decimal minMoney = string.IsNullOrEmpty(minMY) ? -1 : decimal.Parse(minMY);
+                decimal maxMoney = string.IsNullOrEmpty(maxMY) ? -1 : decimal.Parse(maxMY);
+                //最小进度-最大进度
+                decimal minProgress = string.IsNullOrEmpty(minP) ? -1 : decimal.Parse(minP);
+                decimal maxProgress = string.IsNullOrEmpty(maxP) ? -1 : decimal.Parse(maxP);
+                //合买方案保密性 0未知
+                TogetherSchemeSecurity? SchemeSecurity = string.IsNullOrEmpty(strSchemeSecurity) ? null : (TogetherSchemeSecurity?)int.Parse(strSchemeSecurity);
+                //方案投注类别 0普通
+                SchemeBettingCategory? SchemeBetting = string.IsNullOrEmpty(schemeBetting) ? null : (SchemeBettingCategory?)int.Parse(schemeBetting);
+                //合买方案进度
+                TogetherSchemeProgress? SchemeProgress = string.IsNullOrEmpty(schemeProgress) ? null : (TogetherSchemeProgress?)int.Parse(schemeProgress);
+                //排序
+
+                string OrderByName = string.IsNullOrEmpty(orderByName) ? "" : orderByName;
+                string OrderBySort = string.IsNullOrEmpty(orderBySort) ? "" : orderBySort;
+
+                //保底和进度
+                var orderBy = "";
+
+                if (ViewBag.orderByName == "0")
+                    orderBy = "ManYuan desc,ISTOP DESC,Progress " + ViewBag.orderBySort + ",TotalMoney DESC";
+                else if (ViewBag.orderByName == "1")
+                    orderBy = "ManYuan desc,ISTOP DESC,TotalMoney " + ViewBag.orderBySort + ", Progress DESC";
+
+                //关键字
+                var searchKey = string.IsNullOrEmpty(key) ? "" : key;
+                if (IsMine == "true")
+                {
+                    param.Add("userToken", userToken);
+                    var result = await _serviceProxyProvider.Invoke<string>(param, "api/Betting/QueryCurrentUserInfo");
+                    searchKey = result;
+                }
+                int PageNo = string.IsNullOrEmpty(pageNo) ? 0 : int.Parse(pageNo);
+                int PageSize = string.IsNullOrEmpty(pageSize) ? 30 : int.Parse(pageSize);
+
+                var list = await _serviceProxyProvider.Invoke<List<Sports_TogetherSchemeQueryInfo>>(new Dictionary<string, object>(), "api/Betting/QueryTogetherHall");
+
+                //查询列表
+                var seC = !SchemeSecurity.HasValue ? -1 : (int)SchemeSecurity.Value;
+                var betC = !SchemeBetting.HasValue ? -1 : (int)SchemeBetting.Value;
+                var strPro = !SchemeProgress.HasValue ? "10|20|30" : ((int)SchemeProgress.Value).ToString();
+                var arrProg = strPro.Split('|');
+                if (!string.IsNullOrEmpty(issuseNumber))
+                    issuseNumber = issuseNumber.ToUpper();
+                if (!string.IsNullOrEmpty(GameType))
+                    GameType = GameType.ToUpper();
+                var cache = new Sports_TogetherSchemeQueryInfoCollection();
+                var query = from s in list
+                            where arrProg.Contains(Convert.ToInt32(s.ProgressStatus).ToString())
+                              && (betC == -1 || Convert.ToInt32(s.SchemeBettingCategory) == betC)
+                              && (issuseNumber == string.Empty || s.IssuseNumber == issuseNumber)
+                              && (s.StopTime >= DateTime.Now)
+                              && (issuseNumber == string.Empty || s.GameCode == issuseNumber)
+                              && (GameType == string.Empty || s.GameType == GameType)
+                              && (minMoney == -1 || s.TotalMoney >= minMoney)
+                              && (maxMoney == -1 || s.TotalMoney <= maxMoney)
+                              && (minProgress == -1 || s.Progress >= minProgress)
+                              && (maxProgress == -1 || s.Progress <= maxProgress)
+                              && (seC == -1 || Convert.ToInt32(s.Security) == seC)
+                              && (searchKey == string.Empty || s.CreateUserId == searchKey || s.SchemeId == searchKey || s.CreaterDisplayName == searchKey)
+                            select s;
+                cache.TotalCount = query.Count();
+                cache.List = query.Skip(PageNo * PageSize).Take(PageSize).ToList();
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询订单明细成功",
+                    MsgId = entity.MsgId,
+                    Value = cache,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "获取失败" + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = "获取失败",
+                });
+            }
+        
+        }
+
+        public async Task<IActionResult> QueryTogetherHallLoad_PC([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            var list = await _serviceProxyProvider.Invoke<List<Sports_TogetherSchemeQueryInfo>>(new Dictionary<string, object>(), "api/Betting/QueryTogetherHallLoad");
+        }
+        #endregion
     }
 }
