@@ -44,6 +44,8 @@ namespace Lottery.Api.Controllers
                 decimal redBagMoney = p.RedBagMoney;
                 if (redBagMoney <= 0)
                     redBagMoney = 0;
+                bool? isExy = p.IsExy;
+                bool? isAppend = p.IsAppend;
 
                 string _issuseList = p.IssuseList;
                 string _code = p.CodeList;
@@ -98,14 +100,14 @@ namespace Lottery.Api.Controllers
                                     {
                                         AnteCodeList = codeList,
                                         Amount = amount,
-                                        BettingCategory = SchemeBettingCategory.GeneralBetting,
+                                        BettingCategory = isExy==true? SchemeBettingCategory.ErXuanYi:SchemeBettingCategory.GeneralBetting,
                                         GameCode = gameCode,
                                         GameType = gameType,
                                         PlayType = playType,
                                         SchemeSource = entity.SourceCode,
                                         Security = (TogetherSchemeSecurity)security,
                                         TotalMoney = item.CurrentMoney,
-                                        TotalMatchCount = (int)codeList.Count,
+                                        TotalMatchCount = codeList.GroupBy(a=>a.MatchId).ToList().Count,
                                         IssuseNumber = _theissuseList[0].IssuseNumber,
                                         SchemeProgress = TogetherSchemeProgress.Finish,
                                         ActivityType = ActivityType.NoParticipate,
@@ -197,14 +199,14 @@ namespace Lottery.Api.Controllers
                         {
                             AnteCodeList = codeList,
                             Amount = _theissuseList[0].Amount,
-                            BettingCategory = SchemeBettingCategory.GeneralBetting,
+                            BettingCategory = isExy==true? SchemeBettingCategory.ErXuanYi: SchemeBettingCategory.GeneralBetting,
                             GameCode = gameCode,
                             GameType = gameType,
                             PlayType = playType,
                             SchemeSource = entity.SourceCode,
                             Security = (TogetherSchemeSecurity)security,
                             TotalMoney = totalMoney,
-                            TotalMatchCount = (int)totalMoney,
+                            TotalMatchCount = codeList.GroupBy(a => a.MatchId).ToList().Count,
                             IssuseNumber = _theissuseList[0].IssuseNumber,
                             SchemeProgress = TogetherSchemeProgress.Finish,
                             ActivityType = ActivityType.NoParticipate,
@@ -275,7 +277,8 @@ namespace Lottery.Api.Controllers
                         IssuseNumberList = issuseList,
                         ActivityType = ActivityType.NoParticipate,
                         IsRepeat = p.IsRepeat == null ? false : p.IsRepeat,
-                        CurrentBetTime = DateTime.Now
+                        CurrentBetTime = DateTime.Now,
+                        IsAppend= isAppend==true?true:false
                     };
                     var param = new Dictionary<string, object>();
                     param.Add("info", info);
@@ -475,7 +478,7 @@ namespace Lottery.Api.Controllers
                 int subscription = p.Subscription;//认购
                 string title = p.Title;
                 string description = p.Description;
-
+                bool? isExy = p.IsExy;
                 //如果为1 则为保存订单，用于ios
                 string isSaveOrder = p.SavaOrder;
                 //if (entity.SourceCode == SchemeSource.New_Android || string.IsNullOrEmpty(isSaveOrder))//注意：安卓最新版本发布后，此处判断可以去掉
@@ -562,6 +565,7 @@ namespace Lottery.Api.Controllers
                             Subscription = subscription,
                             ActivityType = ActivityType.NoParticipate,
                             IsRepeat = p.IsRepeat == null ? false : p.IsRepeat,
+                            BettingCategory= isExy==true ? SchemeBettingCategory.ErXuanYi : SchemeBettingCategory.GeneralBetting,
                         };
                         var param = new Dictionary<string, object>();
                         param.Add("info", togInfo);
