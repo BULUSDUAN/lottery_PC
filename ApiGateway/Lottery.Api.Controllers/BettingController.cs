@@ -25,7 +25,7 @@ namespace Lottery.Api.Controllers
     {
         #region 普通投注,世界杯投注(104,210)
         /// <summary>
-        /// 普通投注_104
+        /// 普通投注_104（兼容PC）
         /// </summary>
         public async Task<IActionResult> Betting([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
