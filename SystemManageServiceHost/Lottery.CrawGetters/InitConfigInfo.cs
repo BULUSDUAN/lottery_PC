@@ -25,6 +25,11 @@ namespace Lottery.CrawGetters
 
         public static ILoggerFactory logFactory { get; set; }
 
+        /// <summary>
+        /// 通知站点构建静态数据
+        /// </summary>
+        public static string BuildStaticFileSendUrl { get; set; }
+
         public static void Init(JToken cf) {
 
             SZC_OPEN_URL=cf["SZC_OPEN_URL"] == null ? "" : cf["SZC_OPEN_URL"].ToString();
