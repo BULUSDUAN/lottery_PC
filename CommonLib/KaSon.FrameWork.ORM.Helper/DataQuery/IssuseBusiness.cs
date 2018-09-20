@@ -9,9 +9,9 @@ namespace KaSon.FrameWork.ORM.Helper
 {
     public class IssuseBusiness:DBbase
     {
-        public C_CTZQ_GameIssuse QueryWinNumberByIssuseNumber(string gameCode, string gameType, string issuseNumber)
+        public C_Game_Issuse QueryWinNumberByIssuseNumber(string gameCode, string gameType, string issuseNumber)
         {
-            var query = from b in DB.CreateQuery<C_CTZQ_GameIssuse>()
+            var query = from b in DB.CreateQuery<C_Game_Issuse>()
                         where b.GameCode == gameCode
                         && (gameType==null||gameType=="" || b.GameType == gameType)
                         && b.IssuseNumber == issuseNumber
