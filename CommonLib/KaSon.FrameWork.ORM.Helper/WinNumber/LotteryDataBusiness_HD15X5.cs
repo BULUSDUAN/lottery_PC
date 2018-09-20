@@ -30,7 +30,6 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             //AnalyzerFactory.GetWinNumberAnalyzer(this.CurrentGameCode).CheckWinNumber(winNumber, out msg);
             //if (!string.IsNullOrEmpty(msg))
             //    throw new Exception(msg);
-
             //开启事务
             using (LottertDataDB)
             {

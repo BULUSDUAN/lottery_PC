@@ -828,6 +828,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
                 {
                     //处理info里面有，页entity里面没有的属性
                     //info.WinNumber = entity.WinNumber;
+
                 });
             collection.TotalCount = totalCount;
             collection.List.AddRange(infoList);

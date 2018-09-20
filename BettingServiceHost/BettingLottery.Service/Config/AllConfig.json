@@ -46,7 +46,7 @@
   "HostSettings": {
     "Ip": "127.0.0.1", //服务启动IP
     "WatchInterval": 30,
-    "Port": 10108, //服务启动端口
+    "Port": 10109, //服务启动端口
     "Token": "true",
     "RequestCacheEnabled": false
   },
@@ -62,8 +62,8 @@
   //必须配置 服务发现配置
   "ConsulSettings": {
 
-    "IpAddrs": "10.0.3.27:8501", //服务启动IP 10.0.3.27:8501
-    "Token": "16c5413b-276c-45ab-9b0e-9664126f1163"
+    "IpAddrs": "127.0.0.1:8500", //服务启动IP 10.0.3.27:8501
+    "Token": "16c5413b-276c-45ab-9b0e-9664126f1162"
 
   }
 
