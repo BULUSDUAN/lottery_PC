@@ -855,6 +855,25 @@ namespace Lottery.Service.ModuleServices
                 throw new Exception("获取出错", ex);
             }
         }
+
+
+        public Task<WinNumber_QueryInfo> GetWinNumber(string gameCode, string gameType, string issuseNumber)
+        {
+            try
+            {
+                var entity = new IssuseBusiness().QueryWinNumberByIssuseNumber(gameCode, gameType, issuseNumber);
+                return Task.FromResult(new WinNumber_QueryInfo
+                {
+                    GameCode = gameCode,
+                    IssuseNumber = issuseNumber,
+                    WinNumber = entity == null ? string.Empty : entity.WinNumber,
+                });
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("获取出错", ex);
+            }
+        }
     }
 
 
