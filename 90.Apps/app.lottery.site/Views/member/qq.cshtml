@@ -1,0 +1,72 @@
+﻿@using app.lottery.site.Models;
+@{
+    ViewBag.Title = "QQ绑定 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "QQ绑定, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var user = ViewBag.User as app.lottery.site.Models.CurrentUserInfo;
+    Layout = null;
+}
+<div class="info_tt">
+    QQ绑定</div>
+<div class="xgmm_main">
+    @if (user.QQNumber != null)
+    {
+        <div class="info_zl_ico">
+            <span class="member-safe member_safe_y safe_maggin"></span><span class="ml10" style="color: #8ecc33">
+                已绑定QQ</span>
+        </div>
+        <div class="info_wxts">
+            <div class="info_wxts_show">
+                <span>当前绑定QQ：
+                    <label style="color: #7CBC0E;">@(SiteString.EncodeQQNumber(user.QQNumber))
+                    </label>
+                </span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="info_zl_ico">
+            <span class="member-safe member_safe_w safe_maggin"></span><span style="color: #ff5c00"
+                class="ml10">未绑定QQ</span>
+        </div>
+        <div class="info_wxts">
+            @*  <div class="info_wxts_show">
+            <span><em style="color: Red">*</em>1.绑定QQ后，安全等级可提升；</span> <span><em style="color: Red">
+                *</em>2.绑定QQ后，如果您忘记账户密码，就可以通过认证QQ找回密码。 </span><span><em style="color: Red">*</em>3.绑定QQ后，如有账户后台的信息都可以通过QQ及时收到信息。</span>
+        </div>*@
+            <ul class="userinfo_list">
+                <li><em style="color: Red">*</em><label for="qq_number" style="font-size: 12px">
+                    请输入您要绑定的QQ号：</label>
+                    <input type="text" id="qq_number" class="reg_in_text" onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" /><span
+                        id="message_show"></span><br />
+                </li>
+                <li style="margin-top: 22px;"><span class="sp120" style="margin-left: 47px;"></span>
+                    <input type="button" id="qq_bind_sure" class="btn-pwd-submit" value="确&nbsp;&nbsp认"
+                        data-flag="0" />
+                </li>
+            </ul>
+        </div>
+    }
+</div>
+<div class="clearfix">
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("#qq_bind_sure").click(function () {
+            var qqNumber = $("#qq_number").val();
+            if (qqNumber == "" || qqNumber == null) {
+                $("#message_show").html("请输入QQ号码");
+                return;
+            }
+            $.post("/member/qq_bind", { qqNumber: qqNumber }, function (flag) {
+                if (flag.Succuss) {
+                    alertTip("QQ绑定成功！");
+                    window.location.href = "/member/safe";
+                }
+                else {
+                    alertTip("QQ未绑定成功！");
+                }
+            });
+        })
+    });
+</script>

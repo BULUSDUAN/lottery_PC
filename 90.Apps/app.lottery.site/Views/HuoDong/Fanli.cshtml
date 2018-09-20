@@ -1,0 +1,216 @@
+﻿@{
+    ViewBag.Title = "买彩票得返利";
+    Layout = "../Shared/_HuoDong.cshtml";
+}
+<div id="Fanli">
+    <div class="fl_content">
+        <div class="title r">
+            活动时间：&nbsp;&nbsp;2014年9月28日0:00至10月31日24:00</div>
+        <div class="title r">
+            活动对象：&nbsp;&nbsp;@(SiteString.getHZSiteName(Request))所有注册用户</div>
+        <div class="title g">
+            活动规则如下</div>
+        <div class="fl_box">
+            <p>
+                1、参与对象必须是@(SiteString.getHZSiteName(Request))实名认证、手机绑定的注册用户</p>
+            <p>
+                2、本活动仅限竞彩足球、北京单场成功出票的方案（不限自购或合买）</p>
+            <p>
+                3、网站保底方案均不参与返利活动，返利优惠不与网站其他购彩优惠同享</p>
+            <p>
+                4、合买返利只奖励给发单人，跟单人不享受返利优惠</p>
+            <p>
+                5、返利使用不受限制、可自由提取或购买彩票</p>
+            <p>
+                6、在法律许可范围内，@(SiteString.getHZSiteName(Request))保留本次活动的解释权</p>
+            <span class="book"></span>
+        </div>
+        <div class="title r">
+            活动内容：&nbsp;&nbsp;只要满足购彩返利活动的方案根据所购买的方案金额进行相应的返利派送。</div>
+        <div class="title g">
+            竞彩足球</div>
+        <table>
+            <tr>
+                <td style="border: none;">
+                    方案金额范围
+                </td>
+                <td style="border: none;">
+                    返现金额
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    100-199.99
+                </td>
+                <td class="red">
+                    ￥7
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    200-299.99
+                </td>
+                <td class="red">
+                    ￥15
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    300-399.99
+                </td>
+                <td class="red">
+                    ￥23
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    400-499.99
+                </td>
+                <td class="red">
+                    ￥33
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    500-599.99
+                </td>
+                <td class="red">
+                    ￥43
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    600-699.99
+                </td>
+                <td class="red">
+                    ￥53
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    700-799.99
+                </td>
+                <td class="red">
+                    ￥63
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    800-899.99
+                </td>
+                <td class="red">
+                    ￥73
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    900-999.99
+                </td>
+                <td class="red">
+                    ￥83
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    1000及以上
+                </td>
+                <td class="red">
+                    ￥100
+                </td>
+            </tr>
+        </table>
+        <div class="title g">
+            北京单场</div>
+        <table>
+            <tr>
+                <td style="border: none;">
+                    方案金额范围
+                </td>
+                <td style="border: none;">
+                    返现金额
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    100-199.99
+                </td>
+                <td class="red">
+                    ￥4
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    200-299.99
+                </td>
+                <td class="red">
+                    ￥8
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    300-399.99
+                </td>
+                <td class="red">
+                    ￥13
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    400-499.99
+                </td>
+                <td class="red">
+                    ￥18
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    500-599.99
+                </td>
+                <td class="red">
+                    ￥25
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    600-699.99
+                </td>
+                <td class="red">
+                    ￥33
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    700-799.99
+                </td>
+                <td class="red">
+                    ￥43
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    800-899.99
+                </td>
+                <td class="red">
+                    ￥50
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    900-999.99
+                </td>
+                <td class="red">
+                    ￥58
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    1000及以上
+                </td>
+                <td class="red">
+                    ￥68
+                </td>
+            </tr>
+        </table>
+    </div>
+    @{Html.RenderAction("Footer", "HuoDong");}
+</div>

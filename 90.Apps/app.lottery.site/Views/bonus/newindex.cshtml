@@ -1,0 +1,93 @@
+﻿@{
+   
+    ViewBag.Title = " 中奖排行榜 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "中奖排行榜, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+    @UserHelper.css("bonus.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>中奖排行榜</li>
+    </ul>
+</div>
+<div class="bonus_top mt10">
+    <div class="select_cz">
+        <select id="dropDownListAllCPType" name="dropDownListAllCPType" onchange="reloadSocerByGameCode(0,30)">
+            <option value="jczq" selected="selected">竞彩足球</option>
+            <option value="jclq">竞彩篮球</option>
+            <option value="bjdc">北京单场</option>
+            <option value="ctzq|t14c">14场胜负彩 </option>
+            <option value="ctzq|tr9">胜负任选九场</option>
+            <option value="ctzq|t6bqc">六场半全场</option>
+            <option value="ctzq|t4cjq">四场进球彩</option>
+            <option value="ssq|">双色球</option>
+            <option value="dlt|">大乐透</option>
+            <option value="pl3|">排列3</option>
+            <option value="fc3d|">福彩3D </option>
+        </select>
+    </div>
+</div>
+<div class="mymenu mt10">
+    <input type="hidden" value="@(string.IsNullOrEmpty(ViewBag.Type) ? "ljzj" : ViewBag.Type)" id="BonusType" />
+    <a href="javascript:void(0);" type="fdyl">发单盈利</a> <a href="javascript:void(0);"
+        type="gdyl">跟单盈利</a> <a href="javascript:void(0);" type="hmrq">合买人气</a> <a href="javascript:void(0);"
+            type="zdgd">自动跟单</a> <a href="javascript:void(0);" type="cgzj">成功战绩</a>
+    <a href="javascript:void(0);" type="ljzj">累计中奖</a> <a href="javascript:void(0);"
+        type="djph">大奖排行</a>
+</div>
+<div class="sub_nav_in">
+    <label>
+        <input type="radio" name="type" value="7" checked="checked" onclick="reloadSocerByGameCode(0,30)" />周榜</label>
+    <label>
+        <input type="radio" name="type" value="30" onclick="reloadSocerByGameCode(0,30)" />月榜</label>
+    <label>
+        <input type="radio" name="type" value="90" onclick="reloadSocerByGameCode(0,30)" />总榜</label>
+</div>
+<div id="div_middle_ifr">
+</div>
+<script type="text/javascript">
+    $(function () {
+        menu(".mymenu")
+        reloadSocerByGameCode(0, 30);
+        $(".mymenu>a").click(function () {
+            $(".load-bs").show();
+            $(this).attr("class", "on").siblings().removeClass("on");
+            var type = $(this).attr("type");
+            $("#BonusType").attr("value", type);
+            reloadSocerByGameCode(0, 30)
+        });
+    });
+    function menu(contaniorCss) {
+        var type = $("#BonusType").attr("value");
+        $.each($(contaniorCss + " a"), function (k, v) {
+            var a = $(v);
+            if (a.attr("type") != "") {
+                if (type == a.attr("type")) {
+                    $(contaniorCss + "a").removeClass("on");
+                    a.addClass("on");
+                } else {
+                    a.removeClass("on");
+                }
+            }
+        });
+    }
+    function reloadSocerByGameCode(pageindex, pagesiz) {
+        $("#div_middle_ifr").html("<div class=\"load-bs\">正在加载中,请稍等...</div>");
+        var type = $("#BonusType").attr("value");
+        var date = $(':radio[name="type"]:checked').val(); //时间
+        var key = $("select option:selected").val().split('|');
+        var gamecode = "";
+        if (key[0] != null && key[0] != "") {
+            gamecode = key[0];
+        }
+        var gametype = "";
+        if (key[1] != null && key[1] != "") {
+            gametype = key[1];
+        }
+        var href = "/bonus/newdetail/" + type + "?gamecode=" + gamecode + "&gametype=" + gametype + "&date=" + date + "&pageIndex=" + pageindex + "&pageSize=" + pagesiz;
+        $("#div_middle_ifr").load(href);
+    }
+</script>

@@ -1,0 +1,420 @@
+﻿@{
+    Layout = "~/Views/lotteryTrend/_Layout.cshtml";
+    var pageSize = Request["pageSize"];
+    if (pageSize != "" && pageSize != null)
+    {
+        ViewBag.Title = "江西时时彩三星跨度走势图近" + pageSize + "期" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "江西时时彩三星跨度走势图近" + pageSize + "期";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "江西时时彩三星跨度走势图近" + pageSize + "期,查看更多江西时时彩三星跨度走势图请登录" + SiteString.getHZSiteName(Request) + "彩票网.";
+    }
+    else
+    {
+        ViewBag.Title = "江西时时彩三星跨度走势图-" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "江西时时彩三星跨度走势图";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "彩票网提供最新的江西时时彩三星跨度走势图, 其中包括前三位开奖号码中最大号和最小号之间的跨度分布走势,让彩民朋友更直观的分析江西时时彩三星跨度走势图.";
+    }
+    var s3kd = ViewBag.DataList as LotteryData.Core.JXSSC_3X_KD_InfoCollection;
+    var a = 0;  
+}
+@{Html.RenderAction("ThendLink", "lotteryTrend");}
+<div id="container">
+    <div class="cont_box" style="width: 1003px;">
+        <table width="100%" cellspacing="1" cellpadding="0" border="0" class="table_box"
+            style="width: 1002px;" id="chartsTable">
+            <tbody>
+                <tr>
+                    <td align="center" class="tab_top" colspan="16">
+                        标注形式选择：
+                        <input type="checkbox" checked="checked" id="c_yl">
+                        <label for="c_yl">
+                            遗漏</label>
+                        <input type="checkbox" checked="checked" id="has_line">
+                        <label for="has_line">
+                            折线</label>
+                        <input type="checkbox" checked="checked" id="help_line">
+                        <label for="help_line">
+                            分隔线</label>
+                        <input type="checkbox" id="yl_zhu">
+                        <label for="yl_zhu">
+                            遗漏分层</label>
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td class="line_r" rowspan="2" width="100">
+                        日期
+                    </td>
+                    <td class="line_r" rowspan="2" width="100">
+                        期号
+                    </td>
+                    <td width="90" class="line_r" rowspan="2" colspan="3">
+                        开奖号码
+                    </td>
+                    <td colspan="11">
+                        三星跨度分布
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td width="60">
+                        跨度
+                    </td>
+                    <td>
+                        0
+                    </td>
+                    <td>
+                        1
+                    </td>
+                    <td>
+                        2
+                    </td>
+                    <td>
+                        3
+                    </td>
+                    <td>
+                        4
+                    </td>
+                    <td>
+                        5
+                    </td>
+                    <td>
+                        6
+                    </td>
+                    <td>
+                        7
+                    </td>
+                    <td>
+                        8
+                    </td>
+                    <td>
+                        9
+                    </td>
+                </tr>
+            </tbody>
+            <tbody id="tdata">
+                @foreach (var item in s3kd)
+                {
+                    a++;
+                    if (a % 5 == 0)
+                    {
+                    <tr class="tdbck">
+                        <td colspan="16">
+                        </td>
+                    </tr>
+                    }
+                    <tr>
+                        <td class="line_r">
+                            @item.CreateTime.ToString("yyyy-MM-dd")
+                        </td>
+                        <td class="line_r">
+                            @item.IssuseNumber
+                        </td>
+                        <td width="23" class="hot12">
+                            @item.RedBall1
+                        </td>
+                        <td width="23" class="hot12">
+                            @item.RedBall2
+                        </td>
+                        <td width="23" class="hot12 line_r">
+                            @item.RedBall3
+                        </td>
+                        <td class="cblue">
+                            @item.KuaDu
+                        </td>
+                        <td class="@(item.KD_0 == 0 ? "cbg big" : "y101")">
+                            @(item.KD_0 == 0 ? "0" : item.KD_0.ToString())
+                        </td>
+                        <td class="@(item.KD_1 == 0 ? "cbg big" : "y101")">
+                            @(item.KD_1 == 0 ? "1" : item.KD_1.ToString())
+                        </td>
+                        <td class="@(item.KD_2 == 0 ? "cbg big" : "y101")">
+                            @(item.KD_2 == 0 ? "2" : item.KD_2.ToString())
+                        </td>
+                        <td class="@(item.KD_3 == 0 ? "cbg big" : "y101")">
+                            @(item.KD_3 == 0 ? "3" : item.KD_3.ToString())
+                        </td>
+                        <td class="@(item.KD_4 == 0 ? "cbg big" : "y101")">
+                            @(item.KD_4 == 0 ? "4" : item.KD_4.ToString())
+                        </td>
+                        <td class="@(item.KD_5 == 0 ? "cbg big" : "y101")">
+                            @(item.KD_5 == 0 ? "5" : item.KD_5.ToString())
+                        </td>
+                        <td class="@(item.KD_6 == 0 ? "cbg big" : "y101")">
+                            @(item.KD_6 == 0 ? "6" : item.KD_6.ToString())
+                        </td>
+                        <td class="@(item.KD_7 == 0 ? "cbg big" : "y101")">
+                            @(item.KD_7 == 0 ? "7" : item.KD_7.ToString())
+                        </td>
+                        <td class="@(item.KD_8 == 0 ? "cbg big" : "y101")">
+                            @(item.KD_8 == 0 ? "8" : item.KD_8.ToString())
+                        </td>
+                        <td class="@(item.KD_9 == 0 ? "cbg big" : "y101")">
+                            @(item.KD_9 == 0 ? "9" : item.KD_9.ToString())
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tbody>
+                <tr>
+                    <td align="center" class="bdtop line_r">
+                        出现次数
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                        @(s3kd.Count(p => p.KD_0 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(s3kd.Count(p => p.KD_1 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(s3kd.Count(p => p.KD_2 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(s3kd.Count(p => p.KD_3 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(s3kd.Count(p => p.KD_4 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(s3kd.Count(p => p.KD_5 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(s3kd.Count(p => p.KD_6 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(s3kd.Count(p => p.KD_7 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(s3kd.Count(p => p.KD_8 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(s3kd.Count(p => p.KD_9 == 0))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        平均遗漏
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                        @(s3kd.Sum(p => p.KD_0) / s3kd.Count)
+                    </td>
+                    <td class="">
+                        @(s3kd.Sum(p => p.KD_1) / s3kd.Count)
+                    </td>
+                    <td>
+                        @(s3kd.Sum(p => p.KD_2) / s3kd.Count)
+                    </td>
+                    <td class="">
+                        @(s3kd.Sum(p => p.KD_3) / s3kd.Count)
+                    </td>
+                    <td>
+                        @(s3kd.Sum(p => p.KD_4) / s3kd.Count)
+                    </td>
+                    <td class="">
+                        @(s3kd.Sum(p => p.KD_5) / s3kd.Count)
+                    </td>
+                    <td>
+                        @(s3kd.Sum(p => p.KD_6) / s3kd.Count)
+                    </td>
+                    <td>
+                        @(s3kd.Sum(p => p.KD_7) / s3kd.Count)
+                    </td>
+                    <td>
+                        @(s3kd.Sum(p => p.KD_8) / s3kd.Count)
+                    </td>
+                    <td class="line_r">
+                        @(s3kd.Sum(p => p.KD_9) / s3kd.Count)
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        最大遗漏
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                        @(s3kd.Max(p => p.KD_0))
+                    </td>
+                    <td class="">
+                        @(s3kd.Max(p => p.KD_1))
+                    </td>
+                    <td>
+                        @(s3kd.Max(p => p.KD_2))
+                    </td>
+                    <td class="">
+                        @(s3kd.Max(p => p.KD_3))
+                    </td>
+                    <td>
+                        @(s3kd.Max(p => p.KD_4))
+                    </td>
+                    <td class="">
+                        @(s3kd.Max(p => p.KD_5))
+                    </td>
+                    <td>
+                        @(s3kd.Max(p => p.KD_6))
+                    </td>
+                    <td>
+                        @(s3kd.Max(p => p.KD_7))
+                    </td>
+                    <td>
+                        @(s3kd.Max(p => p.KD_8))
+                    </td>
+                    <td class="line_r">
+                        @(s3kd.Max(p => p.KD_9))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        当前遗漏
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                    </td>
+                    <td valign="bottom">
+                        @(s3kd[s3kd.Count - 1].KD_0)<br>
+                        <img width="8px" height="@(s3kd[s3kd.Count - 1].KD_0)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(s3kd[s3kd.Count - 1].KD_1)<br>
+                        <img width="8px" height="@(s3kd[s3kd.Count - 1].KD_1)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(s3kd[s3kd.Count - 1].KD_2)<br>
+                        <img width="8px" height="@(s3kd[s3kd.Count - 1].KD_2)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(s3kd[s3kd.Count - 1].KD_3)<br>
+                        <img width="8px" height="@(s3kd[s3kd.Count - 1].KD_3)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(s3kd[s3kd.Count - 1].KD_4)<br>
+                        <img width="8px" height="@(s3kd[s3kd.Count - 1].KD_4)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(s3kd[s3kd.Count - 1].KD_5)<br>
+                        <img width="8px" height="@(s3kd[s3kd.Count - 1].KD_5)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(s3kd[s3kd.Count - 1].KD_6)<br>
+                        <img width="8px" height="@(s3kd[s3kd.Count - 1].KD_6)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(s3kd[s3kd.Count - 1].KD_7)<br>
+                        <img width="8px" height="@(s3kd[s3kd.Count - 1].KD_7)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(s3kd[s3kd.Count - 1].KD_8)<br>
+                        <img width="8px" height="@(s3kd[s3kd.Count - 1].KD_8)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(s3kd[s3kd.Count - 1].KD_9)<br>
+                        <img width="8px" height="@(s3kd[s3kd.Count - 1].KD_9)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr class="tabbg">
+                    <td rowspan="2" class="line_r">
+                        日期
+                    </td>
+                    <td width="58" rowspan="2" class="line_r">
+                        期号
+                    </td>
+                    <td width="58" rowspan="2" class="line_r" colspan="3">
+                        开奖号码
+                    </td>
+                    <td>
+                        跨度
+                    </td>
+                    <td>
+                        0
+                    </td>
+                    <td>
+                        1
+                    </td>
+                    <td>
+                        2
+                    </td>
+                    <td>
+                        3
+                    </td>
+                    <td>
+                        4
+                    </td>
+                    <td>
+                        5
+                    </td>
+                    <td>
+                        6
+                    </td>
+                    <td>
+                        7
+                    </td>
+                    <td>
+                        8
+                    </td>
+                    <td>
+                        9
+                    </td>
+                </tr>
+                <tr class="tabbg">
+                    <td colspan="11">
+                        三星跨度分布
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $(function () {
+
+        var allLines = new Array();
+        allLines.push({ line: $(".big"), color: "red" });
+        var line = new XTLine();
+        for (i = 0; i < allLines.length; i++) {
+            var l = allLines[i];
+
+            line.color = l.color;
+            line.arrayBalls = l.line;
+            line.showrect();
+        }
+
+
+        $("#has_line").click(function () {
+            line.display(this.checked);
+        })
+    })
+</script>

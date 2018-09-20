@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script type="text/javascript" src="http://res.wancai.com/share/js/share.min.js"></script>
+   <head>
+<title>网站维护中</title>
+ <style>
+body{    background-color:#f9fbff;  font: 12px/1.5 arial,"宋体",tahoma,helvetica }
+.hh-nav img{ border: none;z-index: -1;position: absolute;}
+.tip3{ z-index: 9999;margin-left: 968px;padding-top: 576px;width: 76px;height: 24px}
+.service_online{   background-color: #FFFFDB;
+    border-radius: 3px;
+    display: inline-block;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    width: 76px;
+    color: #FD3017
+    }
+
+
+.underline,.underline:hover{ text-decoration: none;}
+</style>
+</head>
+<body  style="overflow-x:hidden;overflow-y:hidden">
+
+    <div class="hh-nav clearfix" id="lay_bg">
+         <img src="sj-02.png" id="lay_bg_img"/>
+        <div class="tel tip3 clearfix" id="kf_div">
+          <a class="xg service_online underline" target="_blank" href="http://kefu.qycn.com/vclient/chat/?websiteid=101778&clienturl=http%3A%2F%2F" + SiteString.getHZSiteUrl(Request)>在线客服</a>
+            <br/>
+        </div>
+    </div>
+
+</body>
+</html>
+<!--<script type="text/javascript">
+
+    var oldwidth = window.innerWidth;
+    var oldheight = window.innerHeight;
+    var resizeBackground = function () {
+        var bg = document.getElementById("lay_bg"),
+            bg_img = document.getElementById("lay_bg_img"),
+            kf = document.getElementById("kf_div"),
+            kw =76,
+            kh = 24,
+            kl = kf.offsetLeft,
+            kt=kf.offsetTop,
+            cw = window.innerWidth,
+            ch = window.innerHeight,
+            iw = bg_img.width,
+            ih = bg_img.height;
+        bg.style.width = cw + "px";
+        bg.style.height = ch + "px";
+   
+
+        //if (oldwidth != cw) {
+       // console.log(oldwidth + "---" + cw+"--"+kw);
+        var curw =  Math.abs(oldwidth - cw) ;
+        kf.style.marginLeft = oldwidth != cw ? (kl - curw / 2+kw) + "px" : ((oldwidth+kw) / 2) + "px";
+        oldwidth = cw;
+        var curh = oldheight != ch ? Math.abs(oldheight - cw) : 0;
+        kf.style.marginTop = oldheight != ch ? (kt - curh / 2+kh) + "px" : (oldheight / 2+kh) + "px";
+        oldheight = ch;
+
+        if (cw / ch > iw / ih) {
+            var new_h = cw * ih / iw,
+                imgTop = (ch - new_h) / 2;
+            bg_img.style.width = cw + "px";
+            bg_img.style.height = new_h + "px";
+            bg_img.style.left = "0";
+            bg_img.style.top = "0";
+        } else {
+            var new_w = ch * iw / ih,
+             imgLeft = (cw - new_w) / 2;
+            bg_img.style.width = new_w + "px";
+            bg_img.style.height = ch + "px";
+            bg_img.style.left = "0";
+            bg_img.style.top = "0";
+        }
+    };
+    window.onresize = function() {
+        resizeBackground();
+        //voidShaking();
+    };
+    window.onload = function() {
+        resizeBackground();
+       // voidShaking();
+       
+    };-->
+<!--</script>-->

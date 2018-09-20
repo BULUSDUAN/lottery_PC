@@ -1,0 +1,43 @@
+﻿<!--进度提示框 开始-->
+<div id="bet_progress" style="display: none;">
+        <table>
+        <tr>
+            <td class="itd-top-left"></td>
+            <td class="itd-top-center"></td>
+            <td class="itd-top-right"></td>
+        </tr>
+        <tr>
+            <td class="itd-mid-left"></td>
+            <td class="itd-mid-center">
+                <div class="dialogContent">
+      <h3 class="pop-comm-top">操作进度提示</h3>
+    <div class="pop-comm-middle">
+        <i class="icon-loading"></i>
+        <span id="bet_progress_message" class="message" style="float: none;font-size: 14px;"></span>
+    </div>
+                </div>
+            </td>
+            <td class="itd-mid-right"></td> 
+        </tr>
+        <tr>
+            <td class="itd-bot-left"></td>
+            <td class="itd-bot-center"></td>
+            <td class="itd-bot-right"></td>
+        </tr>
+    </table>
+   
+</div>
+<script type="text/javascript">
+    var progressLightBox = new LightBox("bet_progress");
+
+    //执行进度函数
+    var progress = function(message) {
+        $("#bet_progress_message").text(message);
+        progressLightBox.Show();
+    };
+    //关闭进度提示
+    function endprogress() {
+        progressLightBox.Close();
+    }
+</script>
+<!--进度提示框 结束-->

@@ -1,0 +1,92 @@
+﻿@using app.lottery.site.Models;
+@using GameBiz.Core;
+@{
+    Layout = "../Shared/_Layout.cshtml";
+    string game = ViewBag.GameCode;
+    var gameName = SiteConvert.GameName(game);
+    CurrentUserInfo CurrentUser = ViewBag.CurrentUser;
+    int red = 5, blue = 0;
+    var url = "/szc_fb/" + game;
+
+    switch (game)
+    {
+        case "PL3":
+            ViewBag.Title = "排列3投注-排列三机选-排列3玩法-" + SiteString.getHZSiteName(Request);
+            ViewBag.KeyWords = "排列3投注,排列三机选,排列3玩法";
+            ViewBag.Description = SiteString.getHZSiteName(Request) + "数字彩频道提供排列3投注,并提供排列三机选和排列3玩法介绍,网上购买排列三就上" + SiteString.getHZSiteName(Request) + "彩票网.【" + SiteString.getHZSiteName(Request) + "彩票网-专业、安全的网上购彩平台】";
+            break;
+        case "CQSSC":
+            ViewBag.Title = "网上购买时时彩投注-重庆时时彩机选-重庆时时彩开奖视频-" + SiteString.getHZSiteName(Request);
+            ViewBag.KeyWords = "时时彩投注,网上购买重庆时时彩,重庆时时彩机选,重庆时时彩开奖视频";
+            ViewBag.Description = "网上购买时时彩就上" + SiteString.getHZSiteName(Request) + "彩票网," + SiteString.getHZSiteName(Request) + "彩票网提供重庆时时彩投注、重庆时时彩机选和实时的重庆时时彩开奖视频," + SiteString.getHZSiteName(Request) + "彩票网欢迎您的加入.【" + SiteString.getHZSiteName(Request) + "彩票网-专业、安全的网上购彩平台】";
+            break;
+        case "JX11X5":
+            ViewBag.Title = "网上购买11选5投注-江西十一选五机选-江西11选5直播-" + SiteString.getHZSiteName(Request);
+            ViewBag.KeyWords = "11选5投注,网上购买11选5,江西十一选五机选,江西11选5直播";
+            ViewBag.Description = SiteString.getHZSiteName(Request) + "高频彩频道提供江西11选5投注,还有更多江西十一选五机选和江西11选5开奖直播,网上购买江西十一选五就上" + SiteString.getHZSiteName(Request) + "彩票网.【" + SiteString.getHZSiteName(Request) + "彩票网-专业、安全的网上购彩平台】";
+            break;
+
+        case "SD11X5":
+            ViewBag.Title = "网上购买11选5投注-山东十一选五机选-山东11选5直播-" + SiteString.getHZSiteName(Request);
+            ViewBag.KeyWords = "11选5投注,网上购买11选5,山东十一选五机选,山东11选5直播";
+            ViewBag.Description = SiteString.getHZSiteName(Request) + "高频彩频道提供山东11选5投注,还有更多山东十一选五机选和山东11选5开奖直播,网上购买山东十一选五就上" + SiteString.getHZSiteName(Request) + "彩票网.【" + SiteString.getHZSiteName(Request) + "彩票网-专业、安全的网上购彩平台】";
+            break;
+        case "GD11X5":
+            ViewBag.Title = "网上购买11选5投注-广东十一选五机选-广东11选5直播-" + SiteString.getHZSiteName(Request);
+            ViewBag.KeyWords = "11选5投注,网上购买11选5,广东十一选五机选,广东11选5直播";
+            ViewBag.Description = SiteString.getHZSiteName(Request) + "高频彩频道提供广东11选5投注,还有更多广东十一选五机选和广东11选5开奖直播,网上购买广东十一选五就上" + SiteString.getHZSiteName(Request) + "彩票网.【" + SiteString.getHZSiteName(Request) + "彩票网-专业、安全的网上购彩平台】";
+            break;
+        case "GDKLSF":
+            ViewBag.Title = "网上购买广东快乐十分投注-广东快乐十分机选-广东快乐十分直播-" + SiteString.getHZSiteName(Request);
+            ViewBag.KeyWords = "广东快乐十分投注,网上购买广东快乐十分机选,广东快乐十分直播";
+            ViewBag.Description = SiteString.getHZSiteName(Request) + "高频彩频道提供广东快乐十分投注,还有更多广东快乐十分机选和广东快乐十分开奖直播,网上购买广东快乐十分就上" + SiteString.getHZSiteName(Request) + "彩票网.【" + SiteString.getHZSiteName(Request) + "彩票网-专业、安全的网上购彩平台】";
+            red = 8;
+            break;
+        case "JSKS":
+            ViewBag.Title = "网上购买江苏快三投注-江苏快三机选-江苏快三直播-" + SiteString.getHZSiteName(Request);
+            ViewBag.KeyWords = "江苏快三投注,网上购买江苏快三,江苏快三选五机选,江苏快三直播";
+            ViewBag.Description = SiteString.getHZSiteName(Request) + "高频彩频道提供江苏快三投注,还有更多江苏快三机选和江苏快三开奖直播,网上购买江苏快三就上" + SiteString.getHZSiteName(Request) + "彩票网.【" + SiteString.getHZSiteName(Request) + "彩票网-专业、安全的网上购彩平台】";
+            red = 3;
+            break;
+        case "SDKLPK3":
+            ViewBag.Title = "网上购买山东快乐扑克3投注-山东快乐扑克3机选-山东快乐扑克3直播-" + SiteString.getHZSiteName(Request);
+            ViewBag.KeyWords = "山东快乐扑克3投注,网上购买山东快乐扑克3,山东快乐扑克3机选,山东快乐扑克3直播";
+            ViewBag.Description = SiteString.getHZSiteName(Request) + "高频彩频道提供山东快乐扑克3投注,还有更多山东快乐扑克3机选和山东快乐扑克3开奖直播,网上购买山东快乐扑克3就上" + SiteString.getHZSiteName(Request) + "彩票网.【" + SiteString.getHZSiteName(Request) + "彩票网-专业、安全的网上购彩平台】";
+            break;
+            
+        case "FC3D":
+            ViewBag.Title = "福彩3d投注-福彩3D机选-福彩3d玩法-" + SiteString.getHZSiteName(Request);
+            ViewBag.KeyWords = "福彩3d投注,福彩3D机选,福彩3d玩法";
+            ViewBag.Description = SiteString.getHZSiteName(Request) + "数字彩频道提供福彩3d投注,并提供福彩3D机选和福彩3d玩法介绍,网上购买福彩3D就上" + SiteString.getHZSiteName(Request) + "彩票网.【" + SiteString.getHZSiteName(Request) + "彩票网-专业、安全的网上购彩平台】";
+            break;
+        case "SSQ":
+            ViewBag.Title = "双色球投注-福彩双色球机选-福利彩票双色球胆拖-" + SiteString.getHZSiteName(Request);
+            ViewBag.KeyWords = "双色球投注,福彩双色球机选,福利彩票双色球胆拖";
+            ViewBag.Description = SiteString.getHZSiteName(Request) + "数字彩频道提供双色球投注,还有更多福彩双色球机选和福利彩票双色球胆拖投注,网上购买双色球就上" + SiteString.getHZSiteName(Request) + "彩票网.【" + SiteString.getHZSiteName(Request) + "彩票网-专业、安全的网上购彩平台】";
+            red = 6;
+            blue = 1;
+            break;
+        case "DLT":
+            ViewBag.Title = "大乐透投注-大乐透机选-大乐透胆拖-" + SiteString.getHZSiteName(Request);
+            ViewBag.KeyWords = "大乐透投注,大乐透机选,大乐透胆拖";
+            ViewBag.Description = SiteString.getHZSiteName(Request) + "数字彩频道提供大乐透投注,并提供更多大乐透机选和大乐透胆拖投注,网上购买大乐透就上" + SiteString.getHZSiteName(Request) + "彩票网.【" + SiteString.getHZSiteName(Request) + "彩票网-专业、安全的网上购彩平台】";
+            blue = 2;
+            break;
+        default:
+            red = 5;
+            blue = 0;
+            break;
+    }
+    
+}
+@section css{@UserHelper.csscdn("szc.css", "0122")}
+<div id="szcpage">
+</div>
+<script type="text/javascript">
+
+    $(function () {
+        $("#szcpage").html("<div class=\"sk-three-bounce\">\<div class=\"sk-child sk-bounce1\"></div><div class=\"sk-child sk-bounce2\"></div><div class=\"sk-child sk-bounce3\"></div></div>");
+        $("#szcpage").load("@url", function () { });
+    });
+
+</script>

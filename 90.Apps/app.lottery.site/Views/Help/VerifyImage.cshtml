@@ -1,0 +1,75 @@
+﻿@{
+    var Title = "我看不到验证码的图片，怎么办？";
+    ViewBag.Title = Title + " - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+   @ViewHelpers.css("help.css")
+} 
+  <div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">玩彩网</a> > </li>
+        <li><a href="/help/index">&nbsp;帮助中心</a> > </li>
+        <li>&nbsp;我看不到验证码的图片，怎么办？</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type = "account", name = "administrator" });}
+<div class="help_r">
+         
+         <div class="det_box">
+            	<h2>我看不到验证码的图片，怎么办？</h2>
+                <div class="det_c"><p>如果您看不到验证码图片，请您刷新页面或者调整您的IE浏览器设置。</p>
+<p>调整浏览器设置请到"工具"</p>
+<p><img width="415" height="187" border="0" src="@ViewHelpers.img(string.Format("/help/VerifyImage1.jpg"))" alt=""></p>
+<p>&nbsp;-&gt;"Internet选项" -&gt;"常规"</p>
+<p><img width="415" height="519" border="0" src="@ViewHelpers.img(string.Format("/help/VerifyImage2.jpg"))" alt=""></p>
+<p>选择"删除Internet的临时文(cookie )"并且选择"删除历史记录"。</p>
+<p><img width="392" height="444" border="0" src="@ViewHelpers.img(string.Format("/help/VerifyImage3.jpg"))" alt=""></p>
+<p>清理完历史记录后，请关闭网页，重新登陆操作即可。</p>                </div>
+                
+             @*   <div class="det_a feedback">
+                <div>以上内容是否解决了您的问题呢？</div>
+                              
+                <div>
+                <a id="btn_a_yes" class="btn"><span class="feedback_yes">是，已经解决。</span></a> <a class="btn" id="btn_a_no" href="javascript:void(0);"><span class="feedback_no">否，尚未解决。</span></a>
+                    <div style="display:none;" class="feedback_form clearfix" id="feed_div">                  
+                    <a id="fclose" class="feedback-close" href="javascript:void(0);">关闭</a>     
+                    <span style="display:none;" id="feed_detail"> 
+	                    <form method="post" name="feed_dtl" id="feed_dtlf">             
+		                    <span class="fb-input"><input type="radio" value="1" name="nodtl"> 描述不清晰</span>
+		                    <span class="fb-input"><input type="radio" value="2" name="nodtl"> 字太多，不想看</span>
+		                    <span class="fb-input"><input type="radio" value="3" name="nodtl"> 太复杂，看不懂</span>
+		                    <span class="fb-input"><input type="button" value="提交" name="fsbmt"></span>
+		                </form>    
+	                </span>
+                    <div style="display:none;" class="feedback-suc l" id="feed_result">您的反馈信息已经提交，谢谢您的反馈。</div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                  
+                </script>                                           
+                </div>
+                
+                <div class="det_a">
+                	<div class="det_a_l">相关问题：</div>
+                    <div class="det_a_r">
+                    	<ul>
+                        	                    	</ul>    
+                    </div>
+                </div>*@
+            </div>
+
+
+        </div>
+         </div>
+<div class="clearfix"></div>
+
+ @ViewHelpers.js("help.js")
+
+
+
+
+
+

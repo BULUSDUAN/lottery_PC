@@ -1,0 +1,130 @@
+﻿@using app.lottery.site.Models;
+@using External.Core.Celebritys;
+@{
+    Layout = "../Shared/_ArtistsLayout.cshtml";
+    ViewBag.Title = SiteString.getHZSiteName(Request) + "名家平台";
+    var user = ViewBag.CurrentUser as CurrentUserInfo;
+    var bidding = ViewBag.bidding as WinnerModelBidding_Collection;
+}
+<div class="main_top">
+    <div class="top_left">
+        <a href="@(user != null?"/artists/mycenter/"+user.LoginInfo.UserId:"")" class="aritsts_icon @(user != null ? user.LoginInfo.IsExperter ? "cer_rz" : "cer_no_rz" : "cer_logo") ">
+        </a>
+    </div>
+    <div class="top_center clearfix fl ">
+        <div class="my_arits">
+            <span class="aritsts_icon my_arits_logo"></span><span class="my_arits_txt">我的名家</span></div>
+        <div>
+            <ul>
+                <a href="/artists/my" target="_blank">
+                    <li class="green"><i class="aritsts_icon"></i>我的购买 </li>
+                </a><a href="/artists/my?from=fav" target="_blank">
+                        <li class="orange"><i class="aritsts_icon"></i>我的收藏</li>
+                    </a><a href="/artists/my?from=create" target="_blank">
+                            <li class="blue"><i class="aritsts_icon"></i>我的模型</li>
+                        </a><a href="/artists/mynavigate" target="_blank">
+                                <li class="purple"><i class="aritsts_icon"></i>创建模型</li>
+                            </a>
+            </ul>
+        </div>
+    </div>
+    <div class="top_right">
+        <div class="my_account">
+            <span class="aritsts_icon my_account_icon"></span><span class="my_account_txt">我的账户</span></div>
+        <div class="login_div">
+            @if (user != null)
+            { 
+                <div class="login_con">
+                    <h5>
+                        欢迎您，<b>@user.LoginInfo.DisplayName</b>！<a class="loginout" href="javascript:user.logOut()">[退出]</a></h5>
+                    <p>
+                        <a href="/member/safe" target="_blank">我的账户</a> <a href="/member/pay" target="_blank">
+                                                                            充值</a> <a href="/member/betorder" target="_blank">投注记录</a> <a href="/member/fetch_bank"
+                                                                                                                                          target="_blank">提款</a>
+                    </p>
+                </div>
+            }
+            else
+            {
+                <a id="login" class="aritsts_icon btn_login" href="javascript:void 0"></a>
+                <a class="aritsts_icon btn_register" href="/statichtml/register.html" target="_blank"></a> 
+            }
+        </div>
+    </div>
+</div>
+<div class="main_middle mt10">
+    <div class="bd">
+        <ul>
+            @{
+                int j = 0;
+                var count = 4;
+                var array = new string[] { "green", "darkRed", "blue", "purple" };
+                if (bidding.TotalCount > 0)
+                {
+                    foreach (var item in bidding.ModelBidList)
+                    {
+                        j++;
+                      
+                <li class="@(array[j - 1])"><span class="fa_name">@item.ModelName</span>
+                    <br />
+                    <span class="fa_author">作者：@item.UserDisplayName</span> </li>
+                                        
+                    }
+                }
+                for (int i = 0, ilen = count - bidding.TotalCount; i < ilen; i++)
+                {
+                    j++;
+                    <li class="@(array[j - 1])"><span class="fa_name">正在竞价中...</span>
+                        <br />
+                        <span class="fa_author"></span> </li>
+                }
+            }
+        </ul>
+    </div>
+</div>
+<div class="newLobby mt10">
+    <div class="modelTop">
+        <div class="modelRank clearfix">
+            <a href="javascript:void(0);" class="sortMxObj w1 on">全部</a>
+            <a href="javascript:void(0);" class="sortMxObj" data-v="TotalReportRatio">总回报率<span class="arrow iconNew"></span></a>
+            <a href="javascript:void(0);" class="sortMxObj" data-v="TotalBettingIssuseCount">投注期数<span class="arrow  iconNew"></span></a> 
+            <a href="javascript:void(0);" class="sortMxObj" data-v="TotalBonusMoney">累计奖金<span class="arrow  iconNew"></span></a>
+            <a href="javascript:void(0);"class="sortMxObj" data-v="TotalBuyCount">购买人次<span class="arrow iconNew"></span></a>
+            <div class="sortCon">
+                <a id="moreSortObj" class="more" href="javascript:void(0);">更多排序 <em class="more_arrow"></em></a>
+                <span id="sortConObj" style="display: none;">
+                    <a href="javascript:void(0);" data-v="LossRatio">先行赔付比例</a> 
+                    <a href="javascript:void(0);" data-v="BonusFrequency">中奖率</a>
+                    <a href="javascript:void(0);" data-v="TotalNotBonusIssuseCount">遗漏</a> 
+                </span>
+            </div>
+        </div>
+        <div class="modelFilter">
+            <div class="fl wd">
+                <span class="fl">筛选：</span> <span class="fl filterCon"><a class="mxTypeObj" id="chk_ShowEnableBuy"
+                    href="javascript:void(0);"><b class="iconNew"></b>当前可购买</a> <a class="mxTypeObj"
+                        id="chk_mjmodel" href="javascript:void(0);"><b class="iconNew"></b>名家模型</a>
+                    <a class="mxTypeObj" id="chk_riskshare" href="javascript:void(0);"><b class="iconNew">
+                    </b>先行赔付</a> </span>
+            </div>
+            <div class="fr">
+                <span class="search_btn"><span id="subUpdateMxNameObj" class="aritsts_icon srh_submit">
+                </span>
+                    <input type="text" placeholder="搜索模型名称" id="mxNameObj" />
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="modelList mt5 ">
+        <div class="mymodelList clearfix">
+        </div>
+        <div id="waitObj" class="newLoading" style="display: block;">
+            <img src="@ViewHelpers.img("/aritists/loading.gif")">
+            加载中...
+        </div>
+    </div>
+    <div class="pager3 clearfix" style="text-align: center"></div>
+</div>
+<script type="text/javascript">
+    getData();
+</script>

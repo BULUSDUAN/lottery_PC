@@ -1,0 +1,10 @@
+[0][2018-06-19 15:51:34] 获取IP出错 - IP:::1;JSON结果:
+    System.Exception: 获取IP出错 - IP:::1;JSON结果: ---> System.Runtime.Serialization.SerializationException: Expecting element 'root' from namespace ''.. Encountered 'None'  with name '', namespace ''. 
+   at System.Runtime.Serialization.Json.DataContractJsonSerializer.InternalReadObject(XmlReaderDelegator xmlReader, Boolean verifyObjectName)
+   at System.Runtime.Serialization.XmlObjectSerializer.ReadObjectHandleExceptions(XmlReaderDelegator reader, Boolean verifyObjectName, DataContractResolver dataContractResolver)
+   at System.Runtime.Serialization.Json.DataContractJsonSerializer.ReadObject(XmlDictionaryReader reader)
+   at Common.JSON.JsonSerializer.Deserialize[T](String jsonString)
+   at Common.Net.IpManager.GetIpDisplayname_Sina(String ip)
+   --- End of inner exception stack trace ---
+    ----------------------------------------------------------------------------
+

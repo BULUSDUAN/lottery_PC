@@ -1,0 +1,44 @@
+﻿@using GameBiz.Core;
+@{
+    var historyList = ViewBag.NumberHistoryList as WinNumber_QueryInfoCollection;
+    var i = 0;
+    foreach (var item in historyList.List)
+    {
+    <p@(i % 2 == 1 ? " class=gray" : "") issue="@item.IssuseNumber" awardt="@item.AwardTime.Value.ToString("yyyy-MM-dd HH:mm:ss")" number="@item.WinNumber.Replace("|", ",")">
+        <span class="r_border">@item.IssuseNumber</span> <span class="qihao">
+            @{
+        if (item.GameCode == "SSQ" || item.GameCode == "DLT")
+        {
+            var arr = item.WinNumber.Split('|');
+            if (arr.Count() == 2)
+            {
+                var red = arr[0].Split(',');
+                foreach (var r in red)
+                {
+                <em class="red">@r</em>
+                }
+                var blue = arr[1].Split(',');
+                foreach (var b in blue)
+                {
+                <em class="blue">@b</em>
+                }
+            }
+            else
+            {
+                var red = arr[0].Split(',');
+                foreach (var r in red)
+                {
+                <em class="red">@r</em>
+                }
+            }
+        }
+        else
+        {
+                @item.WinNumber
+        }
+            }
+        </span>
+    </p>
+        i++;
+    }
+}

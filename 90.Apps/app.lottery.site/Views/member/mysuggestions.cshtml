@@ -1,0 +1,113 @@
+﻿@using External.Core.SiteMessage;
+@{
+    ViewBag.Title = "我的意见建议 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "我的意见建议, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var UserIdea = ViewBag.UserIdea as UserIdeaInfo_QueryCollection;
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>我的意见建议</li>
+    </ul>
+</div>
+<div class="center mt10">
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mune_safe">
+        <div class="account_menu clearfix">
+            <a href="/member/innermail">站内消息</a> <a href="/member/suggestions" class="select">我的建议</a>
+          
+        </div>
+        <div class="account_con">
+            <div class="betorder_top">
+                <ul>
+                    <li class="betorder_topSelected"><a href="/member/mysuggestions">
+                        <i></i>我的意见建议</a></li>
+                    <li><a href="/help/suggest" target="blank"><i></i>填写意见建议</a></li>
+                </ul>
+            </div>
+            <table class="account_box">
+                <thead>
+                    <tr>
+                        <td>
+                            时间
+                        </td>
+                        <td>
+                            分类
+                        </td>
+                        <td>
+                            手机
+                        </td>
+                        <td>
+                            内容
+                        </td>
+                        <td>
+                            状态
+                        </td>
+                        <td>
+                            回复
+                        </td>
+                    </tr>
+                </thead>
+                @foreach (var item in UserIdea.UserIdeaList)
+                {
+                    <tr class="@(UserIdea.UserIdeaList.IndexOf(item) % 2 == 0 ? "" : "betorder_table_tr")">
+                        <td>@item.CreateTime
+                        </td>
+                        <td>
+                            @item.Category
+                        </td>
+                        <td>
+                            @item.CreateUserMoibile
+                        </td>
+                        <td title="@item.Description">
+                            <a title="@item.Description" class="tooltip">@(item.Description.Length > 15 ? item.Description.Substring(0, 15) + "…" : item.Description)</a>
+                        </td>
+                        <td>
+                            <label style="color: #ff3d00;">
+                                @SiteConvert.FeebStatus(item.Status)</label>
+                        </td>
+                        <td title="@item.ManageReply">
+                            @(string.IsNullOrEmpty(item.ManageReply) ? "" : (item.ManageReply.Length > 15 ? item.ManageReply.Substring(0, 15) + "…" : item.ManageReply))
+                        </td>
+                    </tr>
+                }
+            </table>
+            <div class="account_page  clearfix">
+                @ViewHelpers.Pager4("getBetOrder", ViewBag.PageIndex, ViewBag.PageSize, UserIdea.TotalCount == null ? 0 : UserIdea.TotalCount)
+            </div>
+        </div></div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+<script type="text/javascript">
+    $(function () {
+        var x = 10;
+        var y = 20;
+        $("a.tooltip").mouseover(function (e) {
+            this.myTitle = this.title;
+            this.title = "";
+            var tooltip = "<div id='tooltip'>" + this.myTitle + "<\/div>"; //创建 div 元素 文字提示
+            $("body").append(tooltip); //把它追加到文档中
+            $("#tooltip")
+                .css({
+                    "top": (e.pageY + y) + "px",
+                    "left": (e.pageX + x) + "px"
+                }).show("fast"); //设置x坐标和y坐标，并且显示
+        }).mouseout(function () {
+            this.title = this.myTitle;
+            $("#tooltip").remove(); //移除 
+        }).mousemove(function (e) {
+            $("#tooltip")
+                .css({
+                    "top": (e.pageY + y) + "px",
+                    "left": (e.pageX + x) + "px"
+                });
+        });
+    });
+</script>

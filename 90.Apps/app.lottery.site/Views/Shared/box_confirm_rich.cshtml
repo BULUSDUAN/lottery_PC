@@ -1,0 +1,56 @@
+﻿<div id="bet_confirm" class="bet_confirm">
+    <h3 id="drag_confirm">
+        <span class="close" id="btn_confirm_close">×关闭</span>系统提示</h3>
+    <span id="confirm_icon" class="confirm_ok"></span>
+    <span id="bet_confirm_content" class="bet_confirm_content"></span>
+    <div class="buttonrow">
+        <input type="button" class="btn_tz_silver" value="确定" id="btn_confirm_yes" />
+        <input type="button" class="btn_tz_silver" value="取消" id="btn_confirm_no" />
+    </div>
+</div>
+<script type="text/javascript">
+    var bet_confirm = new Drag("bet_confirm", { Handle: "drag_confirm", Limit: true });
+    var confirmLightBox = new LightBox("bet_confirm");
+    //重写confirm函数
+    var richConfirm = function (message, func1, func2, func3, text1, text2, icon) {
+        var confirm_yes_Event = function () {
+            confirmLightBox.Close();
+            func1();
+        };
+        var confirm_no_Event = function () {
+            confirmLightBox.Close();
+            func2();
+        }
+        var confirm_close_Event = function () {
+            confirmLightBox.Close();
+            func3();
+        }
+        if (null != icon && icon == "warning") {
+            $("#confirm_icon").removeClass("confirm_ok").addClass("confirm_no");
+        }
+        if (text1 == "") {
+            document.getElementById("btn_confirm_yes").style.display = "none";
+        }
+        else {
+            document.getElementById("btn_confirm_yes").style.display = "inline";
+        }
+        if (text2 == "") {
+            document.getElementById("btn_confirm_no").style.display = "none";
+        }
+        else {
+            document.getElementById("btn_confirm_no").style.display = "inline";
+        }
+        document.getElementById("btn_confirm_yes").onclick = confirm_yes_Event;
+        document.getElementById("btn_confirm_no").onclick = confirm_no_Event;
+        document.getElementById("btn_confirm_close").onclick = confirm_close_Event;
+        document.getElementById("bet_confirm_content").innerHTML = message;
+
+        if (text1 != undefined && text1 != "")
+            document.getElementById("btn_confirm_yes").value = text1;
+        if (text2 != undefined && text2 != "")
+            document.getElementById("btn_confirm_no").value = text2;
+
+        confirmLightBox.Show();
+        $("#btn_confirm_yes").focus();
+    }
+</script>

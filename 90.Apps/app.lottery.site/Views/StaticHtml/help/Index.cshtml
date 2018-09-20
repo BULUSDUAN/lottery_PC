@@ -1,0 +1,200 @@
+﻿@{
+    ViewBag.Title = SiteString.getHZSiteName(Request) + "－买彩票，就上" + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "彩票开奖,网上彩票中大奖查询,福彩,体彩,足彩,竞彩,快开彩," + SiteString.getHZSiteName(Request);
+    ViewBag.Description = "网上购买彩票，网上彩票中奖查询,网上彩票开奖查询，购买彩票中奖500W，购买彩票以及查询有没有中大奖请到" + SiteString.getHZSiteName(Request) + "查询。";
+}
+@section css{
+    @ViewHelpers.css("help.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>&nbsp;帮助中心</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help");}
+    <div class="help_r">
+        @* <div class="help_pro">
+            	<div class="pro_t clearfix">
+                	<h2><span>新手入门</span></h2>
+                   	<a title="观看购彩演示" href="/Demo/index" target="_blank" id="link116">观看购彩演示&gt;&gt;</a>
+                </div>
+                <div class="pro_m">
+                	<ul>
+                    	<li style=" margin-left:5px;"><a title="注册登录" href="/Demo/index" target="_blank" id="link117">注册登录</a></li>
+                        <li><a title="网上充值" href="/Demo/advance" target="_blank" id="link118">网上充值</a></li>
+                        <li><a title="购买彩票" href="/Demo/lotto" target="_blank" id="link119">购买彩票</a></li>
+                        <li><a title="账户查询" href="/Demo/Account" target="_blank" id="link120">账户查询</a></li>
+                        <li><a title="中奖查询" href="/Demo/Winning" target="_blank" id="link121">中奖查询</a></li>
+                        <li><a class="last_a" title="兑奖提款" href="/Demo/Withdraw" target="_blank" id="link122">兑奖提款</a></li>
+                    </ul>
+                </div>
+            </div>  *@
+        <script type="text/javascript">
+            var $ = jQuery;
+            $(function () {
+                $('#common_btn').find('a').click(function () {
+                    $('#common_btn>a').removeClass('cur');
+                    $(this).addClass('cur');
+                    $('#common_all>div.tabs_block').hide(); //end().eq(i).show();   
+                    $('#s' + $(this).attr('n')).show();
+                });
+            });          
+        </script>
+        <div class="common" id="common_all">
+            <div class="h_pub_t">
+                <b class="t_l"></b>
+                <div class="t_m">
+                    <span class="c_tabs l" id="common_btn"><a id="link121" n="1" href="javascript:void(0);"
+                        class="cur">热点问题</a> <a id="link122" n="2" href="javascript:void(0);">注册登录</a> <a
+                            id="link123" n="3" href="javascript:void(0);">我的账户</a> <a id="link124" n="4" href="javascript:void(0);">
+                                交易规则</a> <a id="link125" n="5" href="javascript:void(0);">彩种玩法</a> </span>
+                </div>
+                <b class="t_r" style="width: 1px;"></b>
+            </div>
+            <div id="s1" class="h_pub_m clearfix tabs_block">
+                <ul>
+                    <li><a id="link126" href="/staticHtml/help/zjtzzh.html">“中奖后停止追号功能”的风险提醒</a></li>
+                    <li><a id="link127" href="/staticHtml/help/zjsmshpj.html">中奖了什么时候派奖</a></li>
+                    <li><a id="link128" href="/staticHtml/help/azjjwsmzyly.html">单注奖金怎么只有2元（单关）</a></li>
+                    <li><a id="link130" href="/staticHtml/help/jjzmjs.html">奖金怎么计算</a></li>
+                    <li><a id="link131" href="/staticHtml/help/safety/serviceAgreement1.html">用户服务协议</a></li>
+                    <li><a id="link132" href="/staticHtml/help/safety/betNotice1.html">竞彩投注风险须知</a></li>
+                    <!--2014-06-17 12:25:03-->
+                </ul>
+            </div>
+            <div id="s2" class="h_pub_m clearfix tabs_block" style="display: none;">
+                <ul>
+                    <li><a id="link133" href="/staticHtml/help/isokregister.html">个人可以注册多个帐号吗？</a></li>
+                    <li><a id="link135" href="/staticHtml/help/chippedBonus.html">合买中奖后的奖金怎么分配？</a></li>
+                    <!--2014-05-25 10:49:45-->
+                </ul>
+            </div>
+            <div id="s3" class="h_pub_m clearfix tabs_block" style="display: none;">
+                <ul>
+                    <li><a id="link136" href="/staticHtml/help/chongzhi/EbanksDredge.html">如何开通网上银行？</a></li>
+                    <li><a id="link137" href="/staticHtml/help/chippedBonus.html">合买中奖后的奖金怎么分配？</a></li>
+                    <!--2014-05-25 10:49:46-->
+                </ul>
+            </div>
+            <div id="s4" class="h_pub_m clearfix tabs_block" style="display: none;">
+                <ul>
+                    <li><a id="link138" href="/staticHtml/help/chippedBonus.html">合买中奖后的奖金怎么分配？</a></li>
+                    <!--2014-05-25 10:49:47-->
+                </ul>
+            </div>
+            <div id="s5" class="h_pub_m clearfix tabs_block" style="display: none;">
+                <ul>
+                    <li><a id="link139" href="/staticHtml/help/playRules/dlt1.html">大乐透玩法介绍</a></li>
+                    <li><a id="link140" href="/staticHtml/help/playRules/bjdc1.html">北京单场玩法介绍</a></li>
+                    <li><a id="link141" href="/staticHtml/help/playRules/zcsfc1.html">胜负彩玩法介绍</a></li>
+                    <!--2014-05-25 10:49:47-->
+                </ul>
+            </div>
+        </div>
+        <div class="buy_help">
+            <div class="h_pub_t">
+                <b class="t_l"></b>
+                <div class="t_m">
+                    <h2>
+                        功能索引</h2>
+                </div>
+                <b class="t_r"></b>
+            </div>
+            <div class="h_pub_m ">
+                <table width="100%">
+                    <tbody>
+                        <tr>
+                            <td width="49%">
+                                <h3>
+                                    注册</h3>
+                                <p>
+                                    <a id="link142" href="/staticHtml/help/login.html" target="_blank">如何注册</a><!--2014-04-08 12:24:07--></p>
+                            </td>
+                            <td width="49%">
+                                <h3>
+                                    充值</h3>
+                                <p>
+                                    <a id="link143" target="_blank" href="/staticHtml/help/chongzhi/payintroduce.html">充值介绍</a> <a id="link145"
+                                        target="_blank" href="/staticHtml/help/chongzhi/EbanksPay.html">网上银行充值</a> <a id="link146" target="_blank"
+                                            href="/staticHtml/help/chongzhi/Alipay.html">支付宝</a> <a id="link144" target="_blank" href="/staticHtml/help/chongzhi/Quickpayment.html">
+                                                快捷支付</a>
+                                                <a id="link145" target="_blank" href="/staticHtml/help/chongzhi/weixin.html">
+                                                微信充值</a>
+                                    <!--2014-04-08 12:24:07-->
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="49%">
+                                <h3>
+                                    我的账户</h3>
+                                <p>
+                                    <a id="link149" href="/staticHtml/help/myAccount/Approve.html" target="_blank">实名认证</a>&nbsp; <a id="link150"
+                                        href="/staticHtml/help/myAccount/administrator.html" target="_blank">账户密码</a>&nbsp; <a id="link153" href="/staticHtml/help/myAccount/AccountSecurity.html"
+                                            target="_blank">账户安全</a> &nbsp; <a id="link151" href="/staticHtml/help/myAccount/Ebank.html" target="_blank">网银充值订单查询</a>&nbsp;
+                                    <a id="link154" href="/staticHtml/help/myAccount/privacySet.html">隐私设置</a>&nbsp; <a id="link152" href="/staticHtml/help/myAccount/Redpackets.html"
+                                        target="_blank">红包</a><!--2014-04-08 12:24:08--></p>
+                            </td>
+                            <td>
+                                <h3>
+                                    购买彩票</h3>
+                                <p>
+                                    <a id="link155" href="/staticHtml/help/goucai/ForTheColor.html" target="_blank">如何购彩</a>&nbsp; <a id="link156"
+                                        href="/staticHtml/help/goucai/ShoppingService.html" target="_blank">合买</a>&nbsp;&nbsp; <a id="link157" href="/staticHtml/help/goucai/animationDocumentary.html"
+                                            target="_blank">自动跟单</a>&nbsp; <a id="link158" href="/staticHtml/help/goucai/Revoke.html" target="_blank">撤单</a>&nbsp;
+                                    </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <h3>
+                                    兑奖提款</h3>
+                                <p>
+                                    <a id="link160" href="/staticHtml/help/drawMoney/bonusGet.html" target="_blank">奖金领取</a>&nbsp; <a id="link161"
+                                        href="/staticHtml/help/drawMoney/drawing.html" target="_blank">提款</a>&nbsp; <a id="link162" href="/staticHtml/help/drawMoney/poundage.html"
+                                            target="_blank">提款手续费</a>&nbsp; <a id="link163" href="/staticHtml/help/drawMoney/poundageTime.html" target="_blank">
+                                                提款到账时间</a><!--2014-04-08 12:24:09--></p>
+                            </td>
+                            <td>
+                                <h3>
+                                    交易规则</h3>
+                                <p>
+                                    <a id="link164" href="/staticHtml/help/tradeRules/bonusAllot.html" target="_blank">合买奖金分配</a> <a id="link165"
+                                        href="/staticHtml/help/tradeRules/customizeDocumentary.html" target="_blank">自动跟单</a> <a id="link166" href="/staticHtml/help/tradeRules/website.html"
+                                            target="_blank">保底</a> <a id="link167" href="/staticHtml/help/tradeRules/recordRule.html" target="_blank">战绩规则</a><!--2014-04-08 12:27:06--></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="last">
+                                <h3>
+                                    彩种玩法</h3>
+                                <p>
+                                    <a id="link168" href="/staticHtml/help/playRules/playRules/dlt.html" target="_blank">大乐透</a>&nbsp; <a id="link169" href="/staticHtml/help/playRules/zcsfc.html"
+                                        target="_blank">胜负彩</a>&nbsp; <a id="link171" href="/staticHtml/help/playRules/jczq.html" target="_blank">竞彩足球</a>&nbsp;
+                                    <a id="link170" href="/staticHtml/help/playRules/jclq.html" target="_blank">竞彩篮球</a>&nbsp; 
+                                    <a id="link172" href="/staticHtml/help/playRules/jx11x5.html" target="_blank">江西十一选五</a>&nbsp; 
+                                    <a id="link173" href="/staticHtml/help/playRules/bjdc.html" target="_blank">北京单场</a><!--2014-04-08 12:24:11--></p>
+                            </td>
+                            <td class="last">
+                                <h3>
+                                    手机购彩</h3>
+                                <p>
+                                    <span style="font-family: 'Calibri','sans-serif'; font-size: 10.5pt; mso-bidi-font-family: 'Times New Roman';
+                                        mso-bidi-font-size: 11.0pt; mso-ascii-theme-font: minor-latin; mso-fareast-font-family: 宋体;
+                                        mso-fareast-theme-font: minor-fareast; mso-hansi-theme-font: minor-latin; mso-bidi-theme-font: minor-bidi;
+                                        mso-ansi-language: EN-US; mso-fareast-language: ZH-CN; mso-bidi-language: AR-SA;">
+                                        <a id="link175" href="/staticHtml/help/phoneBuy/phoneForTheColor.html" target="_blank">彩票客户端购彩</a></span><!--2014-04-08 12:24:12--></p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+@ViewHelpers.js("help.js")

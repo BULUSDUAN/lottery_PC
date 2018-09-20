@@ -1,0 +1,120 @@
+﻿@using app.lottery.site.Models;
+@{
+    ViewBag.Title = "用户反馈-" + SiteString.getHZSiteName(Request) + "帮助中心";
+    ViewBag.Keywords = "用户反馈";
+    ViewBag.Description = SiteString.getHZSiteName(Request) + "帮助中心为您介绍“用户反馈”,如果想查看更多关于网上购买彩票的注意事项，请登录" + SiteString.getHZSiteName(Request) + "彩票网.";
+    var user = ViewBag.User as CurrentUserInfo;
+}
+@section css{
+    @ViewHelpers.css("help.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>&nbsp;意见反馈</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help");}
+    <div class="help_r">
+        <div class="feedback_l">
+            <p class="f_p">
+                亲爱的用户，您遇到什么困难？有什么想法和建议？请尽情告诉我们吧！</p>
+            <div class="f_conment_con" id="f_conment_con">
+                <div class="f_conment">
+                    <textarea id="comment_text" class="input_con"></textarea>
+                    <div id="pl_loginbf" class="f_login" style="display: @(user == null ? "block" : "none");">
+                        <a id="pl_login" href="javascript:void(0)">登录</a> | <a id="link99" href="/statichtml/register.html">
+                            注册</a>
+                    </div>
+                    <div class="putCode" id="putCode">
+                        <span class="reg_label">
+                            <label for="Captcha">
+                                验证码：</label></span>
+                        <input type="text" maxlength="4" autocomplete="off" name="verifycode" style="ime-mode: disabled"
+                            id="verifycode" class="reg_in_text">
+                        <div class="reg_captcha" style="display: inline-block; margin-left: 6px;">
+                            <img onclick="refreshVerify()" alt="点击刷新" id="CheckCode" src="/user/createvalidatecode"
+                                style="vertical-align: -8px;">
+                            看不清？<a href="javascript:refreshVerify()" href="#" style="line-height: 34px">换一张</a></div>
+                        @*<span id="verifycodeTip" class="onShow"><b>请输入验证码</b></span>*@
+                    </div>
+                    <div id="comment_tip" class="f_login_bf tip" style="display: none;">
+                    </div>
+                    <input type="hidden" id="hduser" name="hduser" value="@(user == null ? "" : user.LoginInfo.UserId)"/>
+                    <a id="comment_btn" class="btn_orange btn_orange_h45 btn_yahei f_submit" style="width: 120px;
+                        height: 45px;" href="javascript:;">发表评论</a>
+                </div>
+            </div>
+            <div class="f_appraise">
+                <h3>
+                    对“@(SiteString.getHZSiteName(Request))彩票网首页”的各个方面,您的满意程度如何？ <span>写文字太麻烦？我们玩个简单的评分吧！</span>
+                </h3>
+                <div class="shop-rating" style="margin-top: 10px;">
+                    <span class="title">页面打开速度</span>
+                    <ul id="stars1" class="rating-level">
+                        <li><a href="#" star:value="1" class="one-star">20</a></li>
+                        <li><a href="#" star:value="2" class="two-stars">40</a></li>
+                        <li><a href="#" star:value="3" class="three-stars">60</a></li>
+                        <li><a href="#" star:value="4" class="four-stars">80</a></li>
+                        <li><a href="#" star:value="5" class="five-stars">100</a></li>
+                    </ul>
+                    <span id="stars1-tips" class="result"></span>
+                    <input type="hidden" size="2" value="1" name="a" id="stars1-input">
+                </div>
+                <div class="shop-rating">
+                    <span class="title">界面设计美观</span>
+                    <ul id="stars2" class="rating-level">
+                        <li><a href="#" star:value="1" class="one-star">20</a></li>
+                        <li><a href="#" star:value="2" class="two-stars">40</a></li>
+                        <li><a href="#" star:value="3" class="three-stars">60</a></li>
+                        <li><a href="#" star:value="4" class="four-stars">80</a></li>
+                        <li><a href="#" star:value="5" class="five-stars">100</a></li>
+                    </ul>
+                    <span id="stars2-tips" class="result"></span>
+                    <input type="hidden" size="2" value="1" name="a" id="stars2-input">
+                </div>
+                <div class="shop-rating">
+                    <span class="title">排版展示合理</span>
+                    <ul id="stars3" class="rating-level">
+                        <li><a href="#" star:value="1" class="one-star">20</a></li>
+                        <li><a href="#" star:value="2" class="two-stars">40</a></li>
+                        <li><a href="#" star:value="3" class="three-stars">60</a></li>
+                        <li><a href="#" star:value="4" class="four-stars">80</a></li>
+                        <li><a href="#" star:value="5" class="five-stars">100</a></li>
+                    </ul>
+                    <span id="stars3-tips" class="result"></span>
+                    <input type="hidden" size="2" value="1" name="a" id="stars3-input">
+                </div>
+                <div class="shop-rating">
+                    <span class="title">操作过程合理</span>
+                    <ul id="stars4" class="rating-level">
+                        <li><a href="#" star:value="1" class="one-star">20</a></li>
+                        <li><a href="#" star:value="2" class="two-stars">40</a></li>
+                        <li><a href="#" star:value="3" class="three-stars">60</a></li>
+                        <li><a href="#" star:value="4" class="four-stars">80</a></li>
+                        <li><a href="#" star:value="5" class="five-stars">100</a></li>
+                    </ul>
+                    <span id="stars4-tips" class="result"></span>
+                    <input type="hidden" size="2" value="1" name="a" id="stars4-input">
+                </div>
+                <div class="shop-rating">
+                    <span class="title">内容传达清晰</span>
+                    <ul id="stars5" class="rating-level">
+                        <li><a href="#" star:value="1" class="one-star">20</a></li>
+                        <li><a href="#" star:value="2" class="two-stars">40</a></li>
+                        <li><a href="#" star:value="3" class="three-stars">60</a></li>
+                        <li><a href="#" star:value="4" class="four-stars">80</a></li>
+                        <li><a href="#" star:value="5" class="five-stars">100</a></li>
+                    </ul>
+                    <span id="stars5-tips" class="result"></span>
+                    <input type="hidden" size="2" value="1" name="a" id="stars5-input">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+@ViewHelpers.js("help.js")

@@ -1,0 +1,52 @@
+﻿@{
+    var mail = ViewBag.InnerMail as GameBiz.Core.InnerMailInfo_Query;
+    ViewBag.Title = mail.Title + " - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = mail.Title + ", 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>站内短信</li>
+    </ul>
+</div>
+<div class="center mt10">
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mune_safe">
+        <div class="account_menu clearfix">
+            <a href="/member/innermail"   class="select">站内消息</a>
+            <a href="/member/mysuggestions">我的建议</a>
+        </div>
+        <div class="account_con">
+            <div class="betorder_top">
+                <ul>
+                    <li class="betorder_topSelected"><a href="innermail"><i></i>站内消息</a> </li>
+                </ul>
+            </div>
+            <div class="center_con mail-content ">
+                <div class="mail-content-tip">
+                    <h1>@mail.Title</h1>
+                    <h4>
+                        <em style=" color:#e5701a">更新时间：</em><em style=" color:#e5701a">@mail.SendTime.ToString("yyyy-MM-dd HH:mm:ss")</em> 
+                        <em style=" color:#e5701a">作者：</em> <em style=" color:#e5701a">@(SiteString.getHZSiteName(Request))</em></h4>
+                </div>
+          
+                <p class="content"> @Html.Raw(mail.Content)</p>
+                <div class="mail-content-fotter">
+                    <p>@(SiteString.getHZSiteName(Request))彩票网</p>
+                    <p style="margin-top: -6px;">@SiteString.getHZSiteUrl(Request)</p>
+                </div>
+            </div>
+
+  </div>
+  </div>
+    </div>
+</div>
+<script type="text/javascript">
+    member.now = "innermail";
+</script>
+<div class="clearfix"></div>

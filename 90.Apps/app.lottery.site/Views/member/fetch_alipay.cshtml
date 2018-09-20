@@ -1,0 +1,122 @@
+﻿@using app.lottery.site.Models;
+@{
+    ViewBag.Title = "支付宝提款 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "支付宝提款, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var user = ViewBag.CurrentUser as CurrentUserInfo;
+    var balance = ViewBag.CurrentUserBalance as GameBiz.Core.UserBalanceInfo;
+}
+@section css{
+    @UserHelper.csscdn("mycenter.css","1215")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>支付宝提款</li>
+    </ul>
+</div>
+<div class="center mt10">
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mune_safe">
+            <div class="account_menu clearfix" >
+            <a href="/member/accountdetail"  >账户明细</a>
+            <a href="/member/redBagList">红包明细</a>
+            <a href="/member/paywizzard" >账户充值</a>
+            <a href="/member/drawingsguide" class="select">账户提款</a>
+        </div>
+        <div class="account_con">
+        <div class="betorder_top">
+            <ul>
+                <li><a href="/member/drawingsguide">提款向导</a></li>
+                <li><a  href="/member/fetch_bank">银行提款</a></li>
+                <li class="betorder_topSelected"><a  href="/member/fetch_alipay">
+                    支付宝提现</a></li>
+                <li><a href="/member/drawingsrecordall">提款记录</a></li>
+            </ul>
+        </div>
+        @if (user.IsAuthenticationRealName && user.IsAuthenticationMobile&&user.AlipayInfo!=null)
+        {
+            <div class="alipay-content">
+                <div class="tip2">
+                    <i></i>温馨提示：提款前请仔细阅读&nbsp;&nbsp;<a href="/staticHtml/help/myAccount/safety.html" class="blue">@(SiteString.getHZSiteName(Request))资金风险控制规则>></a>
+                </div>
+                <form action="/member/fetchvalidate" method="post" onsubmit="return checkInput();">
+                <div class="alipay-info2">
+                    <ul>
+                        <li><span class="sp120">真实姓名：</span>@user.RealNameInfo.RealName</li>
+                        <li><span class="sp120">支付宝账号：</span>@user.AlipayInfo
+                            <input type="hidden" name="alipayaccount" id="alipayaccount" class="login_input_1" maxlength="30" size="25" value="@user.AlipayInfo"/>
+                        </li>
+                        <li><span class="sp120">账户余额：</span><b class="red">@balance.GetTotalCashMoney().ToString("f")</b>
+                            元</li>
+                        <li><span class="sp120">提款金额：</span><input type="text" id="money" name="money" maxlength="8"
+                            value="10" class="fillmoney" size="10" onkeydown="number_check(this,event)" />元
+                            <em class="gray">(单笔提款金额不得低于10元)</em> </li>
+                        <li><span class="sp120">&nbsp;</span>
+                        <input type="hidden" name="fetchType" value="alipay" />
+                        <input type="hidden" name="backurl" value="@Request.Url.AbsoluteUri.Split('?')[0]" />
+                        <input type="submit" value="下一步" class="btn_next" />
+                        </li>
+                        <li><span class="sp120">&nbsp;</span><span class="error-box" id="errbox"><i class="err-icon"></i><span
+                            class="msg" id="errMsgFetch"></span></span> </li>
+                    </ul>
+                </div>
+                </form>
+                <script type="text/javascript">
+                    var msg = '@Request["errMsg"]';
+                    showMsg_alipay(msg);
+                    function showMsg_alipay(msg) {
+                        if (msg.length > 0) {
+                            $("#errbox").show();
+                            $("#errMsgFetch").text(msg);
+                        }
+                        else {
+                            $("#errMsgFetch").text("");
+                            $("#errbox").hide();
+                        }
+                    }
+                    function checkInput() {
+                        msg = '';
+                        var money = $.trim($("#money").val());
+                        if (money && Tool.isNumber(money) && parseInt(money, 10) >= 10) {
+                            msg = '';
+                        }
+                        else {
+                            msg = '请输入正确的提现金额(提款金额不能小于10元)';
+                            $("#money").focus();
+                        }
+                        showMsg_alipay(msg);
+                        return !msg.length > 0;
+                    }
+                </script>
+            </div>
+        }
+        else if (!user.IsAuthenticationRealName)
+        { 
+            <div class="tip2">
+                <i></i><b class="leftdesc">温馨提示：</b><span class="desc red">为保障您的账户安全，提款前请填写您的真实身份信息、银行卡信息、手机信息！</span>
+            </div>
+            @UserHelper.AuthRealName()
+        }
+        else if (!user.IsAuthenticationMobile)
+        {
+
+            External.Core.Authentication.UserMobileRequestInfo requestInfo = ViewBag.MobileRequestInfo;
+            <div class="alipay-content2" style="border: none;">
+                <div class="tip2" style="border: 1px solid #f49d40">
+                    <i></i><b class="leftdesc">温馨提示：</b><span class="desc red">为保障您的账户安全，提款前请填写您的真实身份信息、银行卡信息、手机信息。</span>
+                </div>
+              @UserHelper.AuthMobile_Submit(requestInfo)
+            </div>
+        }
+        else if (user.AlipayInfo == null)
+        {
+            { Html.RenderAction("AliPay"); }
+        }
+        </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>

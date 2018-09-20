@@ -1,0 +1,328 @@
+﻿@{
+    var gateWayArray = ((string)ViewBag.EnableGateWary).Split('|');
+}
+@*合付宝begin*@
+@if (gateWayArray.Contains("hfb_bank"))
+{
+    <li><a href="javascript:void 0;" data-v="hfb_bank">网银充值</a></li>
+}
+@if (gateWayArray.Contains("hfb_express"))
+{
+    <li><a href="javascript:void 0;" data-v="hfb_express">快捷充值</a></li>
+}
+@*合付宝end*@
+@if (gateWayArray.Contains("YS_Bank"))
+{
+    <li><a href="javascript:void 0;" data-v="ys_bank" style="width: 110px;">网银充值(银盛)</a></li>
+}
+@if (gateWayArray.Contains("yespay_bank"))
+{
+    <li><a href="javascript:void 0;" data-v="yespay_bank">网银充值</a></li>
+}
+@if (gateWayArray.Contains("HC_Bank"))
+{
+    <li><a href="javascript:void 0;" data-v="hc_bank" style="width: 110px;">网银充值(汇潮)</a></li>
+}
+@if (gateWayArray.Contains("HC_NoCard"))
+{
+    <li><a href="javascript:void 0;" data-v="hc_quik" style="width: 60px;">快捷支付</a></li>
+}
+@if (gateWayArray.Contains("ZF_Bank"))
+{
+    <li><a href="javascript:void 0;" data-v="zf_bank" style="width: 110px;">网银充值(智付)</a></li>
+}
+@if (gateWayArray.Contains("IPS_Bank"))
+{
+    <li><a href="javascript:void 0;" data-v="ips_bank" style="width: 110px;">网银充值(环迅)</a></li>
+}
+@if (gateWayArray.Contains("IPS"))
+{
+    <li><a href="javascript:void 0;" data-v="ips" style="width: 190px;">信用卡充值（环迅在线充值）</a></li>
+}
+@if (gateWayArray.Contains("ZT_Bank"))
+{
+    <li><a href="javascript:void 0;" data-v="zt_bank">网银充值</a></li>
+}
+@if (gateWayArray.Contains("HW_Bank"))
+{
+    <li><a href="javascript:void 0;" data-v="hw_bank" style="width: 110px;">网银充值(汇旺)</a></li>
+}
+@if (gateWayArray.Contains("ka101_bank"))
+{
+    <li><a href="javascript:void 0;" data-v="ka101_bank">网银充值</a></li>
+}
+@if (gateWayArray.Contains("duobao_bank"))
+{
+    <li><a href="javascript:void 0;" data-v="duobao_bank">网银充值</a></li>
+}
+@if (gateWayArray.Contains("duodebao_bank"))
+{
+    <li><a href="javascript:void 0;" data-v="duodebao_bank">网银充值</a></li>
+}
+@if (gateWayArray.Contains("slf_bank"))
+{
+    <li><a href="javascript:void 0;" data-v="slf_bank">网银充值</a></li>
+}
+@if (gateWayArray.Contains("ka101_express"))
+{
+    <li><a href="javascript:void 0;" data-v="ka101_express">快捷支付</a></li>
+}
+@if (gateWayArray.Contains("slf_express"))
+{
+    <li><a href="javascript:void 0;" data-v="slf_express">快捷支付</a></li>
+}
+@if (gateWayArray.Contains("txf_bank"))
+{
+    <li><a href="javascript:void 0;" data-v="txf_bank">网银充值</a></li>
+}
+@if (gateWayArray.Contains("sfb_bank"))
+{
+    <li><a href="javascript:void 0;" data-v="sfb_bank">网银充值</a></li>
+}
+@if (gateWayArray.Contains("haio_bank"))
+{
+    <li><a href="javascript:void 0;" data-v="haio_bank">网银充值</a></li>
+}
+                        
+@*多宝begin*@
+@if (gateWayArray.Contains("duobao_alipay"))
+{
+    <li><a href="javascript:void 0;" data-v="duobao_alipay">支付宝(扫码)</a></li>
+}
+@if (gateWayArray.Contains("duobao_weixin"))
+{
+    <li><a href="javascript:void 0;" data-v="duobao_weixin">微信(扫码)</a></li>
+}
+@*多宝end*@
+@*银盛begin*@
+@if (gateWayArray.Contains("yespay_express"))
+{
+    <li><a href="javascript:void 0;" data-v="yespay_express">快捷支付</a></li>
+}
+@if (gateWayArray.Contains("yespay_alipay"))
+{
+    <li><a href="javascript:void 0;" data-v="yespay_alipay">支付宝(扫码)</a></li>
+}
+@if (gateWayArray.Contains("yespay_weixin"))
+{
+    <li><a href="javascript:void 0;" data-v="yespay_weixin">微信(扫码)</a></li>
+}
+@*银盛end*@
+@*摩宝begin*@
+@if (gateWayArray.Contains("mobao_express"))
+{
+    <li><a href="javascript:void 0;" data-v="mobao_express">快捷支付</a></li>
+}       
+@*摩宝end*@
+@*金海哲begin*@
+@if (gateWayArray.Contains("jhz_bank"))
+{
+    <li><a href="javascript:void 0;" data-v="jhz_bank">网银充值</a></li>
+}
+@if (gateWayArray.Contains("jhz_alipay"))
+{
+    <li><a href="javascript:void 0;" data-v="jhz_alipay">支付宝(扫码)</a></li>
+}
+@if (gateWayArray.Contains("jhz_weixin"))
+{
+    <li><a href="javascript:void 0;" data-v="jhz_weixin">微信(扫码)</a></li>
+}
+@*金海哲end*@
+@*杉德begin*@
+@if (gateWayArray.Contains("sandpay_bank"))
+{
+    <li><a href="javascript:void 0;" data-v="sandpay_bank">网银充值</a></li>
+}
+@if (gateWayArray.Contains("sandpay_express"))
+{
+    <li><a href="javascript:void 0;" data-v="sandpay_express">快捷支付</a></li>
+}
+@if (gateWayArray.Contains("sandpay_alipay"))
+{
+    <li><a href="javascript:void 0;" data-v="sandpay_alipay">支付宝(扫码)</a></li>
+}
+@if (gateWayArray.Contains("sandpay_weixin"))
+{
+    <li><a href="javascript:void 0;" data-v="sandpay_weixin">微信(扫码)</a></li>
+}
+@*杉德end*@
+@*华势begin*@
+@if (gateWayArray.Contains("payworth_bank"))
+{
+    <li><a href="javascript:void 0;" data-v="payworth_bank">网银充值</a></li>
+}
+@if (gateWayArray.Contains("payworth_alipay"))
+{
+    <li><a href="javascript:void 0;" data-v="payworth_alipay">支付宝(扫码)</a></li>
+}
+@if (gateWayArray.Contains("payworth_weixin"))
+{
+    <li><a href="javascript:void 0;" data-v="payworth_weixin">微信(扫码)</a></li>
+}
+@*华势end*@
+@*多的宝begin*@
+@if (gateWayArray.Contains("duodebao_alipay"))
+{
+    <li><a href="javascript:void 0;" data-v="duodebao_alipay">支付宝(扫码)</a></li>
+}
+@if (gateWayArray.Contains("duodebao_weixin"))
+{
+    <li><a href="javascript:void 0;" data-v="duodebao_weixin">微信(扫码)</a></li>
+}
+@if (gateWayArray.Contains("duodebao_qq"))
+{
+    <li><a href="javascript:void 0;" data-v="duodebao_qq">QQ(扫码)</a></li>
+}
+@*多的宝end*@
+                            
+@*天宝付begin*@
+@if (gateWayArray.Contains("txf_alipay"))
+{
+    <li><a href="javascript:void 0;" data-v="txf_alipay">支付宝(扫码)</a></li>
+}
+@if (gateWayArray.Contains("txf_weixin"))
+{
+    <li><a href="javascript:void 0;" data-v="txf_weixin">微信(扫码)</a></li>
+}
+@if (gateWayArray.Contains("txf_qq"))
+{
+    <li><a href="javascript:void 0;" data-v="txf_qq">QQ(扫码)</a></li>
+}
+@if (gateWayArray.Contains("txf_upay"))
+{
+    <li><a href="javascript:void 0;" data-v="txf_upay">银联(扫码)</a></li>
+}
+@*天宝付end*@  
+@*速汇宝begin*@
+@if (gateWayArray.Contains("sfb_alipay"))
+{
+    <li><a href="javascript:void 0;" data-v="sfb_alipay">支付宝(扫码)</a></li>
+}
+@if (gateWayArray.Contains("sfb_weixin"))
+{
+    <li><a href="javascript:void 0;" data-v="sfb_weixin">微信(扫码)</a></li>
+}
+@if (gateWayArray.Contains("sfb_qq"))
+{
+    <li><a href="javascript:void 0;" data-v="sfb_qq">QQ(扫码)</a></li>
+}
+@*速汇宝end*@   
+@*海鸥begin*@
+@if (gateWayArray.Contains("haio_alipay"))
+{
+    <li><a href="javascript:void 0;" data-v="haio_alipay">支付宝(扫码)</a></li>
+}
+@if (gateWayArray.Contains("haio_weixin"))
+{
+    <li><a href="javascript:void 0;" data-v="haio_weixin">微信(扫码)</a></li>
+}
+@if (gateWayArray.Contains("haio_qq"))
+{
+    <li><a href="javascript:void 0;" data-v="haio_qq">QQ(扫码)</a></li>
+}
+@*海鸥end*@   
+@*艾付begin*@
+@if (gateWayArray.Contains("af_bank"))
+{
+    <li><a href="javascript:void(0);" data-v="af_bank">网银充值</a></li>
+}
+@if (gateWayArray.Contains("af_upay"))
+{
+    <li><a href="javascript:void(0);" data-v="af_upay">银联扫码</a></li>
+}
+@if (gateWayArray.Contains("af_weixin"))
+{
+    <li><a href="javascript:void(0);" data-v="af_weixin">微信扫码</a></li>
+}
+@if (gateWayArray.Contains("af_alipay"))
+{
+    <li><a href="javascript:void(0);" data-v="af_alipay">支付宝扫码</a></li>
+}
+@if (gateWayArray.Contains("af_qq"))
+{
+    <li><a href="javascript:void(0);" data-v="af_qq">QQ扫码</a></li>
+}
+@*艾付end*@
+@*好易begin*@
+@if (gateWayArray.Contains("haoyi_weixin"))
+{
+    <li><a href="javascript:void(0);" data-v="haoyi_weixin">微信扫码</a></li>
+}
+@if (gateWayArray.Contains("haoyi_alipay"))
+{
+    <li><a href="javascript:void(0);" data-v="haoyi_alipay">支付宝扫码</a></li>
+}
+@*好易end*@ @*新付begin*@
+@if (gateWayArray.Contains("xinfu_bank"))
+{
+    <li><a href="javascript:void 0;" data-v="xinfu_bank">网银充值</a></li>
+}
+@if (gateWayArray.Contains("xinfu_express"))
+{
+    <li><a href="javascript:void 0;" data-v="xinfu_express">快捷支付</a></li>
+}
+@if (gateWayArray.Contains("xinfu_weixin"))
+{
+    <li><a href="javascript:void 0;" data-v="xinfu_weixin">微信扫码</a></li>
+}
+@*新付end*@
+@if (gateWayArray.Contains("ka101_weixin"))
+{
+    <li><a href="javascript:void 0;" data-v="ka101_weixin">微信扫码</a></li>
+}
+@if (gateWayArray.Contains("ka101_alipay"))
+{
+    <li><a href="javascript:void 0;" data-v="ka101_alipay">支付宝(扫码)</a></li>
+}
+@if (gateWayArray.Contains("WXPay"))
+{
+    <li><a href="javascript:void 0;" data-v="wxpay">微信支付</a></li>
+}
+@if (gateWayArray.Contains("YF_WEIXIN"))
+{
+    <li><a href="javascript:void 0;" data-v="yf_weixin">微信充值</a></li>
+}
+@if (gateWayArray.Contains("ZTPay"))
+{
+    <li><a href="javascript:void 0;" data-v="ztpay">微信(扫码)</a></li>
+}
+@*  @if (gateWayArray.Contains("slf_weixin"))
+                        {
+                            <li><a href="javascript:void 0;" data-v="slf_weixin">微信(扫码)</a></li>
+                        }*@
+@if (gateWayArray.Contains("HWWeixin"))
+{
+    <li><a href="javascript:void 0;" data-v="hw_weixin">微信(扫码)</a></li>
+}
+@if (gateWayArray.Contains("HWAlipay"))
+{
+    <li><a href="javascript:void 0;" data-v="hw_alipay">支付宝(扫码)</a></li>
+}
+@if (gateWayArray.Contains("slf_alipay"))
+{
+    <li><a href="javascript:void 0;" data-v="slf_alipay">支付宝(扫码)</a></li>
+}
+@if (gateWayArray.Contains("slf_qq"))
+{
+    <li><a href="javascript:void 0;" data-v="slf_qq">QQ(扫码)</a></li>
+}
+@if (gateWayArray.Contains("slf_upay"))
+{
+    <li><a href="javascript:void 0;" data-v="slf_upay">银联(扫码)</a></li>
+}
+@if (gateWayArray.Contains("Alipay"))
+{
+    <li><a href="javascript:void 0;" data-v="alipay">支付宝(转账)</a></li>
+}
+@if (gateWayArray.Contains("ZTAlipay"))
+{
+    <li><a href="javascript:void 0;" data-v="ztalipay">支付宝(扫码)</a></li>
+}
+@if (gateWayArray.Contains("ZT_qq"))
+{
+    <li><a href="javascript:void 0;" data-v="zt_qq">QQ(扫码)</a></li>
+}
+@if (gateWayArray.Contains("rgcz"))
+{
+    <li><a href="javascript:void 0;" data-v="rgcz">人工充值</a></li>
+}

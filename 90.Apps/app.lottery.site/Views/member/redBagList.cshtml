@@ -1,0 +1,127 @@
+﻿@{
+    ViewBag.Title = "红包明细 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "红包明细, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var redbag = ViewBag.RedBag as GameBiz.Core.UserFundDetailCollection;
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>红包明细</li>
+    </ul>
+</div>
+<div class="center mt10">
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mune_safe" >
+          <div class="account_menu clearfix">
+           <a href="/member/accountdetail" >账户明细</a>
+            <a href="/member/redBagList"  class="select">红包明细</a>
+            <a href="/member/paywizzard">账户充值</a>
+            <a href="/member/drawingsguide">账户提款</a>
+        </div>
+        <div class="account_con">
+             <div class="betorder_top">
+            <ul>
+                <li class="betorder_topSelected"><a href="javascript:void(0)"><i></i>红包明细</a></li>
+            </ul>
+        </div>
+        <div class="search_tab">
+            @*查询 @GameHelper.TimeFrame(ViewBag.Time)*@ 查询：<select id="timeFrame" name="timeFrame">
+                <option value="30" @(ViewBag.Time == 30 ? "selected=selected" : "")>最近一个月 </option>
+                <option @(ViewBag.Time == 7 ? "selected=selected" : "") value="7">最近七天 </option>
+            </select>
+            &nbsp;&nbsp;<input type="button" value="查&nbsp;&nbsp;询" onclick="getFollow(0,10)" class="search_btn"/>
+        </div>
+            <table class="account_box">
+                <thead>
+                    <tr >
+                        <td width="5%" >
+                            序号
+                        </td>
+                        <td width="15%">
+                            进/出
+                        </td>
+                        <td width="10%">
+                            交易类型
+                        </td>
+                        <td width="10%">
+                            金额
+                        </td>
+                        <td width="15%">
+                            红包余额
+                        </td>
+                        <td>
+                            时间
+                        </td>
+                        <td align="left" width="30%" style="padding-left: 20px">
+                            备注
+                        </td>
+                    </tr>
+                </thead>
+                @if (redbag != null && redbag.FundDetailList.Count > 0)
+                {
+                    foreach (var item in redbag.FundDetailList)
+                    {
+                        <tr >
+                            <td>@(redbag.FundDetailList.IndexOf(item) + 1)
+                            </td>
+                            <td class="@(item.PayType == Common.PayType.Payout?"zc":"ye") fszie">@(item.PayType == Common.PayType.Payout ? "支出" : "收入")
+                            </td>
+                            <td class="zc fszie">@item.Category
+                            </td>
+                            <td class="ye fszie blod ">@item.PayMoney.ToString("N2")
+                            </td>
+                            <td class="ye blod fszie">@item.AfterBalance.ToString("N2")
+                            </td>
+                            <td>@item.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")
+                            </td>
+                            <td align="left" style="padding-left: 20px;">@item.Summary
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7" >
+                            暂时没有您要的数据哦
+                        </td>
+                    </tr>
+                   
+                }
+            
+            </table>
+                   <div class="combined clearfix">
+                <div class="fl">
+                    <span><b class="b1"></b>收入：<strong class="zc blod fszie">@redbag.TotalPayinCount&nbsp;笔</strong></span>
+                    <span><b class="b2"></b>收入总金额：<strong class="srje blod fszie">@redbag.TotalPayinMoney.ToString("N2")&nbsp;元</strong></span>
+                    <span><b class="b3"></b>支出：<strong class="zcjy blod fszie">@redbag.TotalPayoutCount&nbsp;笔</strong></span>
+                    <span><b class="b4"></b>支出总金额：<strong class="ye blod fszie">@redbag.TotalPayoutMoney.ToString("N2")元</strong></span>
+                </div>
+                <div class="fr">
+                    <em class="xh">*</em>注意：红包明细最多可查询一个月数据
+                </div>
+                
+            </div>
+            <div class="account_page  clearfix">
+                @ViewHelpers.Pager4("getFollow", ViewBag.pageNo, ViewBag.PageSize, (redbag.TotalPayinCount + redbag.TotalPayoutCount))
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+<script type="text/javascript">
+    $(function() {
+        $(".account_box tr:even:gt(0)").css("backgroundColor", "#F9F9F9");
+    });
+    function getFollow(pageNo, pageSize) {
+        var time = $("#timeFrame").find("option:selected").val();
+        location.search = "time=" + time + "&pageNo=" + pageNo + "&pageSize=" + pageSize + "&r=" + Math.random().toFixed(5);
+    }
+</script>

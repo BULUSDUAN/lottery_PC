@@ -1,0 +1,31 @@
+﻿@{
+    var Title = "快捷支付目前支持哪些银行的银行卡";
+    ViewBag.Title = Title + " - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+    @ViewHelpers.css("help.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">玩彩网</a> > </li>
+        <li><a href="/staticHtml/help/index.html">&nbsp;帮助中心</a> > </li>
+        <li>&nbsp;快捷支付目前支持哪些银行的银行卡</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type = "pay", name = "Quickpayment" });}
+    <div class="help_r">
+        <div class="det_box">
+            <h2>
+                快捷支付目前支持哪些银行的银行卡</h2>
+            <div class="det_c">
+              <img src="@ViewHelpers.img("help/kjyh.png")" />  
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+@ViewHelpers.js("help.js")

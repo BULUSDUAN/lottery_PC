@@ -1,0 +1,18 @@
+﻿@using app.lottery.site.Models;
+@{
+    var user = ViewBag.CurrentUser as CurrentUserInfo;
+}
+<div class="buylist">
+   <div class="mymodelList">
+    </div>
+    <div id="waitObj" class="newLoading" style="display: block;">
+        <img src="@ViewHelpers.img("/aritists/loading.gif")">
+        加载中...
+    </div>
+     <div class="pager3 clearfix" style="text-align:right"></div>
+</div>
+<script type="text/javascript">
+    var isFav = true;
+    var userId = "@user.LoginInfo.UserId";
+    getData();
+</script>

@@ -1,0 +1,129 @@
+﻿@using External.Core
+@using External.Core.SampleTicket
+@{
+    ViewBag.Title = "我的票样 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "我的票样, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var collection = ViewBag.AllRequestSampleTicketCollection as SampleTicketInfoCollection;
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>我的票样</li>
+    </ul>
+</div>
+<div class="center mt10">
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mune_safe">
+        <div class="account_menu clearfix">
+            <a href="/member/innermail">站内消息</a> <a href="/member/mysuggestions">我的建议</a> <a
+                href="/member/mysampleticket" class="select">票样申请</a> <a href="/member/noteremind">短信提醒</a>
+        </div>
+        <div class="account_con">
+            <div class="betorder_top">
+                <ul>
+                    <li class="betorder_topSelected"><a href="javascript:;"><i></i>我的票样</a></li>
+                </ul>
+            </div>
+            <form action="/member/MySampleTicket" method="get">
+            <div class="search_tab">
+                日期 @ControlHelper.Calendar("begin", ViewBag.StartTime)至 @ControlHelper.Calendar("end", ViewBag.EndTime)
+                @GameHelper.GameSelector(ViewBag.GameType)
+                <select name="state">
+                    <option value="">全部进行状态</option>
+                    <option value="0" @(ViewBag.ApplyState == "0" ? "selected=selected" : "")>申请中</option>
+                    <option value="1" @(ViewBag.ApplyState == "1" ? "selected=selected" : "")>派送中</option>
+                    <option value="2" @(ViewBag.ApplyState == "2" ? "selected=selected" : "")>已派送</option>
+                    <option value="3" @(ViewBag.ApplyState == "3" ? "selected=selected" : "")>已拒绝</option>
+                </select>
+                <input type="submit" value="查询" class="search_btn" />
+            </div>
+            </form>
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="account_box">
+                <thead>
+                    <tr>
+                        <td width="100px" align="center">
+                            订单编号
+                        </td>
+                        <td width="120px" align="center">
+                            申请时间
+                        </td>
+                        <td width="100px" align="center">
+                            彩种类型
+                        </td>
+                        <td width="80px" align="center">
+                            方案编码
+                        </td>
+                        <td width="100px" align="center">
+                            处理状态
+                        </td>
+                        <td width="100px" align="left">
+                            处理意见
+                        </td>
+                        <td width="100px" align="center">
+                            详情
+                        </td>
+                    </tr>
+                </thead>
+                @if (collection != null && collection.List.Count > 0)
+                {
+                    foreach (var item in collection.List)
+                    {
+                    <tr>
+                        <td width="100px" align="center" class="top">
+                            @item.OrderFormCode
+                        </td>
+                        <td width="120px" align="center" class="top">
+                            @item.CreateTime
+                        </td>
+                        <td width="100px" align="center" class="top">
+                            @SiteConvert.GameName(item.GameType, item.PlayType)
+                        </td>
+                        <td width="80px" align="center" class="top">
+                            @item.SchemeCode
+                        </td>
+                        <td width="100px" align="center" class="top">
+                            <i class="@(item.ApplyState == ApplyState.Pending ? "" : (item.ApplyState == ApplyState.Refusal ? "red" : (item.ApplyState == ApplyState.SendCarryout ? "green" : (item.ApplyState == ApplyState.Sending ? "blue" : ""))))">
+                                @ViewHelpers.ConvertApplyState(item.ApplyState)
+                            </i>
+                        </td>
+                        <td width="100px" align="left" class="top">
+                            @item.Description
+                        </td>
+                        <td>
+                            <a href="/user/scheme/@item.SchemeCode" target="_blank" class="blue">查看</a>
+                        </td>
+                    </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7">
+                            暂时没有找到你要的数据哦
+                        </td>
+                    </tr>
+                }
+            </table>
+            <div class="account_page  clearfix">
+                @ViewHelpers.Pager4("QueryAllRequestSampleTicket", ViewBag.PageIndex, ViewBag.PageSize, collection.TotalCount)
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(".account_box tr:even:gt(0)").css("backgroundColor", "#f9f9f9");
+    });
+    function QueryAllRequestSampleTicket(pageIndex, pageSize) {
+        var url = $.format("/member/MySampleTicket?pageIndex={0}&pageSize={1}", pageIndex, pageSize);
+        location.href = encodeURI(url);
+    }
+</script>

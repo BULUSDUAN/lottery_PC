@@ -1,0 +1,91 @@
+﻿@{
+    ViewBag.Title = "细则说明, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "细则说明, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+    @UserHelper.css("commissio.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>我的提成</li>
+    </ul>
+</div>
+<div class="center mt10">
+    @{Html.RenderAction("menu", "Member");}
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mycommenu">
+            <a href="javascript:void(0);" checklg="/commissio/myTc" class="up">我的提成</a> <a href="javascript:void(0);"
+                checklg="/commissio/generalizeUser">推广用户</a> <a href="javascript:void(0);" checklg="/commissio/CommissionRecord">
+                    返点结算</a> <a href="javascript:void(0);" checklg="/commissio/StatisticsQuery">统计查询</a>
+            <a href="javascript:void(0);" checklg="/commissio/SchemeManage">方案管理</a>
+        </div>
+        <div class="scheme">
+            <div class="scheme-show" style="margin-left: 10px;">
+                <a href="javascript:void(0)" checklg="/commissio/myTc">我的返点</a>
+            </div>
+            <div class="scheme-show  xzscheme">
+                <a href="javascript:void(0)" checklg="/commissio/detaileddescription">细则说明</a>
+            </div>
+        </div>
+        <div class="xzsm">
+            <span class="xzsm-bt">一.推客是什么? </span>
+            <br />
+            <div class="xzsm-ml">
+                <span class="xzsm-bt">推客 </span>是是@(SiteString.getHZSiteName(Request))（@SiteString.getHZSiteUrl(Request)）宣传推广的合作伙伴，负责参与、协助网站的宣传与推广工作；他们享受着网站给予的购彩返利权益，他们有权为自己发展的会员对相关彩种的购彩返利点数进行设置。
+                <br />
+            </div>
+            <span class="xzsm-bt">二.推客应该注意什么? </span>
+            <br />
+            <div class="xzsm-ml">
+                1.不能以任何方式发展近六个月内已在@(SiteString.getHZSiteName(Request))有购彩记录的老用户为自己下级会员；<br />
+                （网站会通过排查用户的ip、购彩习惯、归属地、用户举报等方式分析作弊行为的推客推广人员，一经发现予以严惩）。<br />
+                2.推客需满足每月购彩满足大于100元的用户数必须达10个及以上；<br />
+                3.不能在方案宣传、论坛、网站等任意页面留任何联系方式信息；<br />
+                4.不能公开透露自己的推广比例给别人；<br />
+                5.不能在任何即时通讯工具、网站、论坛公开@(SiteString.getHZSiteName(Request))的推客相关事项；
+                <label style="color: Red;">
+                    （如违反上述注意事项，网站有权采取降低推广费比例、暂停合作、单方终止合作等措施并通知相关推客；欢迎各位推客互相监督，如有疑问可以咨询QQ1939591430，我们会在1至2个工作日内给予回复。）</label>
+                <br />
+                6.网站赠送的红包不能被用户或推广人享受购彩返点；<br />
+                7.推客或推客所发展的用户可以选择享受返点或选择享受网站活动（如：加奖、购彩等量返 利等），但是二者只能选其一，如果选择网站活动，那么推客或推客所发展的用户将不再
+                获得既有的返点。<br />
+                8.涉及网站保底的方案将不再获得该方案的返点。
+                <br />
+            </div>
+            <span class="xzsm-bt">三. 推客相关功能：</span>
+            <br />
+            <div class="xzsm-ml">
+                1.进入用户中心->推广管理->推广用户，在页面点击“推广链接”就可以查看复制你的推客链接，然后粘贴到与别人聊天窗口或者论坛等其他地方，即可进行推广。<br />
+                2.设置推广比例步骤：“推广用户”->“下级代理”栏目下点“配置”--输入数值（返点比例3%只需设定为3即可）。<br />
+                3.未实名认证（基本要求为同时绑定姓名与身份证、绑定手机号码）的用户不能设置返点比例，需填写实名信息后即可设置。<br />
+                4.给会员的返点比例可以随个人意愿设置（不能高于你的推广比例、只能增加不能减少）。<br />
+                5.查看自己推广比例步骤：“用户中心-推广管理-我的提成”查看各彩种返点比例。<br />
+                6.销量与返利：<br />
+                你或者你下面的会员发起的单子出票并满员了，<label style="color: Red;">涉及网站保底的方案将不获得返点</label>，不论发起人购买多少金额，系统会按方案总金额<label
+                    style="color: Red;">（方案金额减去参与的红包金额）</label>对应彩种的返点比例统计到你的“返点结算”明细中；可以通过“统计查询”查看所有用户的销量与充值情况。
+                推广费只针对本推客下级会员所发起的合买与代购的方案，所推广用户参与其他非本推客下级的用户方案没有推广费。<br />
+                7.推广费为每天即时结算，可自由购彩、提款，提款标准按用户提款标准执行。<br />
+            </div>
+            <span class="xzsm-bt">四、会员信息事项</span><br />
+            <div class="xzsm-ml">
+                1.一个真实姓名与身份证只允许绑定网站上的一个用户名。<br />
+                2.会员需进行实名认证、手机绑定方可进行享受网站活动、提款等操作。<br />
+                3.若推客之间发生恶意争抢会员，我们将首先保护该当事会员的初始发展人的利益，后者的直接处罚后果转为对前者的奖励。<br />
+                4.无意间的会员竞争每个月每个推客成员只允许出现2次，超过2次视情节严惩。
+                <br />
+            </div>
+            <span class="xzsm-bt">五、其他事项</span>
+            <br />
+            <div class="xzsm-ml">
+                1.我们着力于保障推客权益网站不开发每位推客线下用户为网站下级推客。<br />
+                2.用户当日内注册2个小时内，推客凭有效证明是自己发展的用户，可将用户转移至该推客名下。但用户必须是非其他推客发展的用户性质。<br />
+                3.推客发展的用户如需更换用户名，也只能将他新注册的用户移转到原推客线下。<br />
+            </div>
+        </div>
+    </div>
+    <div class="clearfix">
+    </div>

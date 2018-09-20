@@ -1,0 +1,36 @@
+﻿@using GameBiz.Core;
+@using MatchBiz.Core;
+@{
+    string type = ViewBag.Type;
+    var issusenumber = Request["issusenumber"];
+    if (string.IsNullOrEmpty(issusenumber))
+    {
+        ViewBag.Title = "足彩" + SiteConvert.GameName("ctzq", type) + "第" + issusenumber + "期开奖结果-" + SiteString.getHZSiteName(Request);
+        ViewBag.keywords = "足彩" + SiteConvert.GameName("ctzq", type) + "第" + issusenumber + "期开奖结果";
+        ViewBag.Description = SiteConvert.GameName("ctzq", type) + "第" + issusenumber + "期开奖结果,更多" + SiteConvert.GameName("ctzq", type) + "开奖结果请登录" + SiteString.getHZSiteName() + "彩票网进行查看.";
+    }
+    else
+    {
+        ViewBag.Title = "足彩" + SiteConvert.GameName("ctzq", type) + "开奖号码-" + SiteConvert.GameName("ctzq", type) + "开奖结果-" + SiteConvert.GameName("ctzq", type) + "开奖详情-" + SiteString.getHZSiteName(Request);
+        ViewBag.keywords = "足彩" + SiteConvert.GameName("ctzq", type) + "开奖号码-" + SiteConvert.GameName("ctzq", type) + "开奖结果-" + SiteConvert.GameName("ctzq", type) + "开奖详情";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "开奖公告为您提供足彩" + SiteConvert.GameName("ctzq", type) + "开奖查询,最快的" + SiteConvert.GameName("ctzq", type) + "开奖结果,最全的" + SiteConvert.GameName("ctzq", type) + "开奖详情,查询足彩" + SiteConvert.GameName("ctzq", type) + "开奖号码就上" + SiteString.getHZSiteName() + "彩票网.";
+    }
+    //var prizedIssuse = WCFService.StoppedIssuseList("ctzq", type, 20);
+    //var issuseNum = prizedIssuse.FirstOrDefault();
+}
+@section css{
+    @UserHelper.css("newlottery.css")
+}
+<script type="text/javascript">
+    var issues = '@ViewBag.CurrentIssuse';
+    var type = '@type';
+    var gamecode = 'ctzq';
+    var res = '@ViewHelpers.jsonres()';
+    //var resS = '@ViewHelpers.jsonres()/iqucai';
+</script>
+<div class="lo_box" id="myload_ctzq">
+@*@{Html.RenderAction("newctzqmatchlist", "lottery", new { id = ViewBag.GameCode });} *@
+</div>
+<div class="clear">
+</div>
+@UserHelper.js("bjdcbous.js")

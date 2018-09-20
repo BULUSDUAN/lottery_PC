@@ -1,0 +1,480 @@
+﻿<div id="FC3D_FS" style="display:none;">
+<div class="bet_snav">
+    <label><input type="radio" name="gametype" url="FS" value="FS"  data-t="FS"/>标准选号</label>
+    @*<label><input type="radio" name="gametype" url="DT" value="FS" way="2" data-t="DT" />胆拖选号</label>*@
+    <label><input type="radio" name="gametype" url="HZ" value="HZ" way="3" data-t="HZ" />和值</label>
+    <label><input type="radio" name="gametype" url="FSSG" value="FS" way="4" data-t="FS" />手工录入</label>
+</div>
+
+<div id="FC3D_FS_FS" class="playtype">
+<h1 class="playprompt">
+    <em class="red">玩法提示：</em>每位至少选择一个号码，按位置全部命中开奖号码即中奖！奖金：
+    <em class="fred">1040</em>元！
+    <a href="javascript:" class="szc_notice">
+        <strong class="sl">示例</strong>
+        <span>选号：<b class="slnum">1</b> <b class="slnum">2</b> <b class="slnum">3</b> <br/>开奖：<strong class="red"><b class="slnum">1</b> <b class="slnum">2</b> <b class="slnum">3</b></strong><br>奖金：1000元。</span>
+    </a> 
+</h1>
+@{Html.RenderPartial("AwardDescription");}
+<div class="bet_balls clear">
+    <div class="dan_con"><strong>选号区</strong> &nbsp;每位至少选择<em class="c_ba1d21">1</em>个号码</div>
+    <div class="balls_con">
+        <div class="bet_text"><b class="c_ba1d21">百位</b> <div class="szc_yilou pr">
+        <cite title="指该号码自上次开出之后到当前期没有出现的次数" val="yl">遗漏</cite><em style="display: none;"><a title="指该号码自上次开出之后到当前期没有出现的次数" val="lr" href="#">冷热</a><a title="隐藏" val="hd" href="#">隐藏</a></em></div>
+        </div>
+        <div class="red_balls ball">
+            <ul class="clearfix">
+                <li class="numbers"><b>0</b><span></span></li>
+                <li class="numbers"><b>1</b><span></span></li>
+                <li class="numbers"><b>2</b><span></span></li>
+                <li class="numbers"><b>3</b><span></span></li>
+                <li class="numbers"><b>4</b><span></span></li>
+                <li class="numbers"><b>5</b><span></span></li>
+                <li class="numbers"><b>6</b><span></span></li>
+                <li class="numbers"><b>7</b><span></span></li>
+                <li class="numbers"><b>8</b><span></span></li>
+                <li class="numbers"><b>9</b><span></span></li>
+            </ul>
+        </div>
+        <div class="help_div">
+            <ul class="ballsfilter">
+                <li style="cursor: pointer;"><a href="javascript:;" val="all">全</a></li>
+                <li style="cursor: pointer;"><a href="javascript:;" val="big">大</a></li>
+                <li style="cursor: pointer;"><a href="javascript:;" val="small">小</a></li>
+                <li style="cursor: pointer;"><a href="javascript:;" val="odd">奇</a></li>
+                <li style="cursor: pointer;"><a href="javascript:;" val="even">偶</a></li>
+                <li style="cursor: pointer;"><a href="javascript:;" val="clear">清</a></li>
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="balls_con">
+        <div class="bet_text"><b class="c_ba1d21">十位</b></div>
+        <div class="red_balls ball">
+            <ul class="clearfix">
+                <li class="numbers"><b>0</b><span></span></li>
+                <li class="numbers"><b>1</b><span></span></li>
+                <li class="numbers"><b>2</b><span></span></li>
+                <li class="numbers"><b>3</b><span></span></li>
+                <li class="numbers"><b>4</b><span></span></li>
+                <li class="numbers"><b>5</b><span></span></li>
+                <li class="numbers"><b>6</b><span></span></li>
+                <li class="numbers"><b>7</b><span></span></li>
+                <li class="numbers"><b>8</b><span></span></li>
+                <li class="numbers"><b>9</b><span></span></li>
+            </ul>
+        </div>
+        <div class="help_div">
+            <ul class="ballsfilter">
+                <li style="cursor: pointer;"><a href="javascript:;" val="all">全</a></li>
+                <li style="cursor: pointer;"><a href="javascript:;" val="big">大</a></li>
+                <li style="cursor: pointer;"><a href="javascript:;" val="small">小</a></li>
+                <li style="cursor: pointer;"><a href="javascript:;" val="odd">奇</a></li>
+                <li style="cursor: pointer;"><a href="javascript:;" val="even">偶</a></li>
+                <li style="cursor: pointer;"><a href="javascript:;" val="clear">清</a></li>
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="balls_con">
+           <div class="bet_text"><b class="c_ba1d21">个位</b></div>
+           <div class="red_balls ball">
+               <ul class="clearfix">
+                   <li class="numbers"><b>0</b><span></span></li>
+                   <li class="numbers"><b>1</b><span></span></li>
+                   <li class="numbers"><b>2</b><span></span></li>
+                   <li class="numbers"><b>3</b><span></span></li>
+                   <li class="numbers"><b>4</b><span></span></li>
+                   <li class="numbers"><b>5</b><span></span></li>
+                   <li class="numbers"><b>6</b><span></span></li>
+                   <li class="numbers"><b>7</b><span></span></li>
+                   <li class="numbers"><b>8</b><span></span></li>
+                   <li class="numbers"><b>9</b><span></span></li>
+               </ul>
+           </div>
+           <div class="help_div">
+               <ul class="ballsfilter">
+                <li style="cursor: pointer;"><a href="javascript:;" val="all">全</a></li>
+                <li style="cursor: pointer;"><a href="javascript:;" val="big">大</a></li>
+                <li style="cursor: pointer;"><a href="javascript:;" val="small">小</a></li>
+                <li style="cursor: pointer;"><a href="javascript:;" val="odd">奇</a></li>
+                <li style="cursor: pointer;"><a href="javascript:;" val="even">偶</a></li>
+                <li style="cursor: pointer;"><a href="javascript:;" val="clear">清</a></li>
+               </ul>
+           </div>
+       </div>
+</div>
+</div>
+
+<div id="FC3D_FS_DT" class="playtype">
+<h1 class="playprompt">
+    <em class="red">单式：</em>所选号码与开奖号码相同（且顺序一致），奖金：
+    <em class="fred">1040</em>元！
+</h1>
+
+<div class="bet_balls clear">
+    <div class="dan_con"><strong>选号区</strong> &nbsp;每位至少选择<em class="c_ba1d21">1</em>个号码</div>
+    <div class="balls_con">
+        <div class="bet_text"><b class="c_ba1d21">胆码</b> 
+            @*    <div class="szc_yilou pr">
+                <cite title="指该号码自上次开出之后到当前期没有出现的次数" val="yl">遗漏</cite><em style="display: none;"><a title="指该号码自上次开出之后到当前期没有出现的次数" val="lr" href="#">冷热</a><a title="隐藏" val="hd" href="#">隐藏</a></em>
+            </div>*@
+        </div>
+        <div class="red_balls danma">
+            <ul class="clearfix">
+                <li class="numbers"><b>0</b><span></span></li>
+                <li class="numbers"><b>1</b><span></span></li>
+                <li class="numbers"><b>2</b><span></span></li>
+                <li class="numbers"><b>3</b><span></span></li>
+                <li class="numbers"><b>4</b><span></span></li>
+                <li class="numbers"><b>5</b><span></span></li>
+                <li class="numbers"><b>6</b><span></span></li>
+                <li class="numbers"><b>7</b><span></span></li>
+                <li class="numbers"><b>8</b><span></span></li>
+                <li class="numbers"><b>9</b><span></span></li>
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="balls_con">
+        <div class="bet_text"><b class="c_ba1d21">拖码</b> 
+        </div>
+        <div class="red_balls tuoma">
+            <ul class="clearfix">
+                <li class="numbers"><b>0</b><span></span></li>
+                <li class="numbers"><b>1</b><span></span></li>
+                <li class="numbers"><b>2</b><span></span></li>
+                <li class="numbers"><b>3</b><span></span></li>
+                <li class="numbers"><b>4</b><span></span></li>
+                <li class="numbers"><b>5</b><span></span></li>
+                <li class="numbers"><b>6</b><span></span></li>
+                <li class="numbers"><b>7</b><span></span></li>
+                <li class="numbers"><b>8</b><span></span></li>
+                <li class="numbers"><b>9</b><span></span></li>
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+</div>
+
+<div id="FC3D_FS_HZ" class="playtype">
+
+<h1 class="playprompt">
+    <em class="red">玩法提示：</em>至少选择1个和值进行投注，所选和值与开奖号码和值一致即中奖，奖金：<em class="fred">1040</em>元！ <a href="javascript:" class="szc_notice"><strong class="sl">示例</strong><span>选号：6 <br>
+                                                                                                                                                                                    开奖：<strong class="red"><b class="slnum">1</b> <b class="slnum">2</b> <b class="slnum">3</b></strong><br>奖金：1000元。</span></a>
+</h1>
+<div class="bet_balls clear">
+    <div class="dan_con"><strong>和值区</strong> &nbsp;至少选择<em class="c_ba1d21">1</em>个号码</div>
+    <div class="balls_con">
+        <div class="bet_text"><b class="c_ba1d21">选择号码</b></div>
+        <div style="width: 610px" class="red_balls ball">
+            <ul class="clearfix">
+                <li class="numbers"><b>0</b></li>
+                <li class="numbers"><b>1</b></li>
+                <li class="numbers"><b>2</b></li>
+                <li class="numbers"><b>3</b></li>
+                <li class="numbers"><b>4</b></li>
+                <li class="numbers"><b>5</b></li>
+                <li class="numbers"><b>6</b></li>
+                <li class="numbers"><b>7</b></li>
+                <li class="numbers"><b>8</b></li>
+                <li class="numbers"><b>9</b></li>
+                <li class="numbers"><b>10</b></li>
+                <li class="numbers"><b>11</b></li>
+                <li class="numbers"><b>12</b></li>
+                <li class="numbers"><b>13</b></li>
+                <li class="numbers"><b>14</b></li>
+                <li class="numbers"><b>15</b></li>
+                <li class="numbers"><b>16</b></li>
+                <li class="numbers"><b>17</b></li>
+                <li class="numbers"><b>18</b></li>
+                <li class="numbers"><b>19</b></li>
+                <li class="numbers"><b>20</b></li>
+                <li class="numbers"><b>21</b></li>
+                <li class="numbers"><b>22</b></li>
+                <li class="numbers"><b>23</b></li>
+                <li class="numbers"><b>24</b></li>
+                <li class="numbers"><b>25</b></li>
+                <li class="numbers"><b>26</b></li>
+                <li class="numbers"><b>27</b></li>
+            </ul>
+        </div>
+    </div>
+</div>
+</div>
+
+<div id="FC3D_FS_FSSG" class="playtype">
+<div class="game-ballsmain">
+    <h1 class="playprompt"><b>复式：</b>所选号码与开奖号码相同（且顺序一致），奖金<b class="red">1040</b>元</h1>
+    @GameHelper.ImportNumberArea("1,2,3 或 1.2.3 或 1+2+3 或 123")
+</div>
+</div>
+</div>
+
+<div id="FC3D_ZX3" style="display:none;">
+<div class="bet_snav">
+    <label><input type="radio" name="gametype" url="ZX3DS" value="ZX3DS"/>组三单式</label>
+    <label><input type="radio" name="gametype" url="ZX3FS" value="ZX3FS" />组三复式</label>
+    <label><input type="radio" name="gametype" url="ZX3HZ" value="ZX3DS" way="3"/>组三和值</label>
+    <label><input type="radio" name="gametype" url="ZX3SG" value="ZX3DS" way="4" />手工录入</label>
+</div>
+
+<div id="FC3D_ZX3_ZX3DS" class="playtype">
+<h1 class="playprompt">
+    <em class="red">组选三：</em>所选号码与开奖号码相同（顺序不限）,且有任意两位相同，奖金：
+    <em class="fred">346</em>元！
+</h1>
+<div class="bet_balls clear">
+    <div class="dan_con"><strong>选号区</strong> &nbsp;每位至少选择<em class="c_ba1d21">1</em>个号码</div>
+    <div class="balls_con">
+        <div class="bet_text"><b class="c_ba1d21">组三单式</b> 
+            @*    <div class="szc_yilou pr">
+                <cite title="指该号码自上次开出之后到当前期没有出现的次数" val="yl">遗漏</cite><em style="display: none;"><a title="指该号码自上次开出之后到当前期没有出现的次数" val="lr" href="#">冷热</a><a title="隐藏" val="hd" href="#">隐藏</a></em>
+            </div>*@
+        </div>
+        <div class="red_balls">
+            <ul class="clearfix ball">
+                <li class="numbers"><b>0</b><span></span></li>
+                <li class="numbers"><b>1</b><span></span></li>
+                <li class="numbers"><b>2</b><span></span></li>
+                <li class="numbers"><b>3</b><span></span></li>
+                <li class="numbers"><b>4</b><span></span></li>
+                <li class="numbers"><b>5</b><span></span></li>
+                <li class="numbers"><b>6</b><span></span></li>
+                <li class="numbers"><b>7</b><span></span></li>
+                <li class="numbers"><b>8</b><span></span></li>
+                <li class="numbers"><b>9</b><span></span></li>
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="balls_con">
+        <div class="bet_text"><b class="c_ba1d21">组三单式</b> 
+        </div>
+        <div class="red_balls">
+            <ul class="clearfix ball">
+                <li class="numbers"><b>0</b><span></span></li>
+                <li class="numbers"><b>1</b><span></span></li>
+                <li class="numbers"><b>2</b><span></span></li>
+                <li class="numbers"><b>3</b><span></span></li>
+                <li class="numbers"><b>4</b><span></span></li>
+                <li class="numbers"><b>5</b><span></span></li>
+                <li class="numbers"><b>6</b><span></span></li>
+                <li class="numbers"><b>7</b><span></span></li>
+                <li class="numbers"><b>8</b><span></span></li>
+                <li class="numbers"><b>9</b><span></span></li>
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="balls_con">
+        <div class="bet_text"><b class="c_ba1d21">组三单式</b> 
+        </div>
+        <div class="red_balls">
+            <ul class="clearfix ball">
+                <li class="numbers"><b>0</b><span></span></li>
+                <li class="numbers"><b>1</b><span></span></li>
+                <li class="numbers"><b>2</b><span></span></li>
+                <li class="numbers"><b>3</b><span></span></li>
+                <li class="numbers"><b>4</b><span></span></li>
+                <li class="numbers"><b>5</b><span></span></li>
+                <li class="numbers"><b>6</b><span></span></li>
+                <li class="numbers"><b>7</b><span></span></li>
+                <li class="numbers"><b>8</b><span></span></li>
+                <li class="numbers"><b>9</b><span></span></li>
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+</div>
+
+<div id="FC3D_ZX3_ZX3FS" class="playtype">
+<h1 class="playprompt">
+    <em class="red">玩法提示：</em>
+    每位各选1个或多个号码投注，命中全部开奖号码即中奖！奖金：<em class="fred">346</em>元！
+    <a href="javascript:" class="szc_notice"><strong class="sl">示例</strong>
+    <span>选号：1 1 2<br/>开奖：<strong class="red">1 2 1</strong><br/>
+        奖金：320元。</span></a></h1>
+<div class="bet_balls clear">
+    <div class="dan_con"><strong>选号区</strong> &nbsp;请至少选择<em class="c_cb0505">2</em>个号码</div>
+    <div class="balls_con">
+        <div class="bet_text"><b class="c_ba1d21">选择号码</b>
+            @*<div class="szc_yilou pr">
+                <cite title="指该号码自上次开出之后到当前期没有出现的次数" val="yl">遗漏</cite><em style="display: none;"><a title="指该号码自上次开出之后到当前期没有出现的次数" val="lr" href="#">冷热</a><a title="隐藏" val="hd" href="#">隐藏</a></em></div>*@
+        </div>
+        <div class="red_balls ball">
+            <ul class="clearfix">
+                <li class="numbers"><b>0</b><span></span></li>
+                <li class="numbers"><b>1</b><span></span></li>
+                <li class="numbers"><b>2</b><span></span></li>
+                <li class="numbers"><b>3</b><span></span></li>
+                <li class="numbers"><b>4</b><span></span></li>
+                <li class="numbers"><b>5</b><span></span></li>
+                <li class="numbers"><b>6</b><span></span></li>
+                <li class="numbers"><b>7</b><span></span></li>
+                <li class="numbers"><b>8</b><span></span></li>
+                <li class="numbers"><b>9</b><span></span></li>
+            </ul>
+        </div>
+        <div class="help_div">
+            <ul class="clearfix ballsfilter">
+                <li style="cursor: pointer;"><a href="javascript:;" val="all">全</a></li>
+                <li style="cursor: pointer;"><a href="javascript:;" val="big">大</a></li>
+                <li style="cursor: pointer;"><a href="javascript:;" val="small">小</a></li>
+                <li style="cursor: pointer;"><a href="javascript:;" val="odd">奇</a></li>
+                <li style="cursor: pointer;"><a href="javascript:;" val="even">偶</a></li>
+                <li style="cursor: pointer;"><a href="javascript:;" val="clear">清</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+</div>
+
+<div id="FC3D_ZX3_ZX3HZ" class="playtype">
+<h1 class="playprompt">
+    <em class="red">组选三：</em>所选号码与开奖号码相同（顺序不限）,且有任意两位相同，奖金：<em class="fred">346</em>元！ 
+</h1>
+<div class="bet_balls clear">
+    <div class="dan_con"><strong>和值区</strong> &nbsp;至少选择<em class="c_ba1d21">1</em>个号码</div>
+    <div class="balls_con">
+        <div class="bet_text"><b class="c_ba1d21">选择号码</b></div>
+        <div style="width: 610px" class="red_balls ball">
+            <ul class="clearfix">
+                <li class="numbers"><b count="1">1</b></li>
+                <li class="numbers"><b count="2">2</b></li>
+                <li class="numbers"><b count="1">3</b></li>
+                <li class="numbers"><b count="3">4</b></li>
+                <li class="numbers"><b count="3">5</b></li>
+                <li class="numbers"><b count="3">6</b></li>
+                <li class="numbers"><b count="4">7</b></li>
+                <li class="numbers"><b count="5">8</b></li>
+                <li class="numbers"><b count="4">9</b></li>
+                <li class="numbers"><b count="5">10</b></li>
+                <li class="numbers"><b count="5">11</b></li>
+                <li class="numbers"><b count="4">12</b></li>
+                <li class="numbers"><b count="5">13</b></li>
+                <li class="numbers"><b count="5">14</b></li>
+                <li class="numbers"><b count="4">15</b></li>
+                <li class="numbers"><b count="5">16</b></li>
+                <li class="numbers"><b count="5">17</b></li>
+                <li class="numbers"><b count="4">18</b></li>
+                <li class="numbers"><b count="5">19</b></li>
+                <li class="numbers"><b count="4">20</b></li>
+                <li class="numbers"><b count="3">21</b></li>
+                <li class="numbers"><b count="3">22</b></li>
+                <li class="numbers"><b count="3">23</b></li>
+                <li class="numbers"><b count="1">24</b></li>
+                <li class="numbers"><b count="2">25</b></li>
+                <li class="numbers"><b count="1">26</b></li>
+            </ul>
+        </div>
+    </div>
+</div>
+</div>
+
+<div id="FC3D_ZX3_ZX3SG" class="playtype">
+<div class="game-ballsmain">
+    <h1 class="playprompt"><b>组选三：</b>所选号码与开奖号码相同（顺序不限）,且有任意两位相同，奖金<b class="red">346</b>元</h1>
+    @GameHelper.ImportNumberArea("1,2,2 或 1.2.2 或 1+2+2 或 122")
+</div>
+
+</div>
+</div>
+
+<div id="FC3D_ZX6" style="display:none;">
+<div class="bet_snav">
+    <label><input type="radio" name="gametype" url="ZX6" value="ZX6"/>常规选号</label>
+    <label><input type="radio" name="gametype" url="ZX6HZ" value="ZX6" way="3"/>组六和值</label>
+    <label><input type="radio" name="gametype" url="ZX6SG" value="ZX6" way="4" />手工录入</label>
+</div>
+
+<div id="FC3D_ZX6_ZX6" class="playtype">
+<h1 class="playprompt">
+    <em class="red">组选六：</em>所选号码与开奖号码相同（顺序不限）,奖金：
+    <em class="fred">173</em>元！
+</h1>
+<div class="bet_balls clear">
+    <div class="dan_con"><strong>选号区</strong> &nbsp;每位至少选择<em class="c_ba1d21">3</em>个号码</div>
+    <div class="balls_con">
+        <div class="bet_text"><b class="c_ba1d21">个位</b> 
+            @*    <div class="szc_yilou pr">
+                <cite title="指该号码自上次开出之后到当前期没有出现的次数" val="yl">遗漏</cite><em style="display: none;"><a title="指该号码自上次开出之后到当前期没有出现的次数" val="lr" href="#">冷热</a><a title="隐藏" val="hd" href="#">隐藏</a></em>
+            </div>*@
+        </div>
+        <div class="red_balls ball">
+            <ul class="clearfix">
+                <li class="numbers"><b>0</b><span></span></li>
+                <li class="numbers"><b>1</b><span></span></li>
+                <li class="numbers"><b>2</b><span></span></li>
+                <li class="numbers"><b>3</b><span></span></li>
+                <li class="numbers"><b>4</b><span></span></li>
+                <li class="numbers"><b>5</b><span></span></li>
+                <li class="numbers"><b>6</b><span></span></li>
+                <li class="numbers"><b>7</b><span></span></li>
+                <li class="numbers"><b>8</b><span></span></li>
+                <li class="numbers"><b>9</b><span></span></li>
+            </ul>
+        </div>
+        <div class="help_div">
+            <ul class="clearfix ballsfilter">
+                <li style="cursor: pointer;"><a href="javascript:;" val="all">全</a></li>
+                <li style="cursor: pointer;"><a href="javascript:;" val="big">大</a></li>
+                <li style="cursor: pointer;"><a href="javascript:;" val="small">小</a></li>
+                <li style="cursor: pointer;"><a href="javascript:;" val="odd">奇</a></li>
+                <li style="cursor: pointer;"><a href="javascript:;" val="even">偶</a></li>
+                <li style="cursor: pointer;"><a href="javascript:;" val="clear">清</a></li>
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+</div>
+
+<div id="FC3D_ZX6_ZX6HZ" class="playtype">
+<h1 class="playprompt">
+    <em class="red">组选三：</em>所选号码与开奖号码相同（顺序不限）,且有任意两位相同，奖金：<em class="fred">173</em>元！ 
+</h1>
+<div class="bet_balls clear">
+    <div class="dan_con"><strong>和值区</strong> &nbsp;至少选择<em class="c_ba1d21">1</em>个号码</div>
+    <div class="balls_con">
+        <div class="bet_text"><b class="c_ba1d21">和值</b></div>
+        <div style="width: 610px" class="red_balls ball">
+            <ul class="clearfix">
+                <li class="numbers"><b count="10">3</b></li>
+                <li class="numbers"><b count="1">4</b></li>
+                <li class="numbers"><b count="2">5</b></li>
+                <li class="numbers"><b count="3">6</b></li>
+                <li class="numbers"><b count="4">7</b></li>
+                <li class="numbers"><b count="5">8</b></li>
+                <li class="numbers"><b count="7">9</b></li>
+                <li class="numbers"><b count="8">10</b></li>
+                <li class="numbers"><b count="9">11</b></li>
+                <li class="numbers"><b count="10">12</b></li>
+                <li class="numbers"><b count="10">13</b></li>
+                <li class="numbers"><b count="10">14</b></li>
+                <li class="numbers"><b count="10">15</b></li>
+                <li class="numbers"><b count="9">16</b></li>
+                <li class="numbers"><b count="8">17</b></li>
+                <li class="numbers"><b count="7">18</b></li>
+                <li class="numbers"><b count="5">19</b></li>
+                <li class="numbers"><b count="4">20</b></li>
+                <li class="numbers"><b count="3">21</b></li>
+                <li class="numbers"><b count="2">22</b></li>
+                <li class="numbers"><b count="1">23</b></li>
+                <li class="numbers"><b count="1">24</b></li>
+            </ul>
+        </div>
+    </div>
+</div>
+</div>
+
+<div id="FC3D_ZX6_ZX6SG" class="playtype">
+<div class="game-ballsmain">
+    <h1 class="playprompt"><b>组选六：</b>所选号码与开奖号码相同（顺序不限），奖金<b class="red">173</b>元</h1>
+    @GameHelper.ImportNumberArea("1,2,3 或 1.2.3 或 1+2+3 或 123")
+</div>
+
+</div>
+</div>

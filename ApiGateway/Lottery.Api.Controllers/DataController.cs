@@ -3032,5 +3032,64 @@ namespace Lottery.Api.Controllers
         }
 
         #endregion
+
+        #region PC端快速购买（足球数据从redis获取）
+        public async Task<IActionResult> QuickBuy_PC([FromServices]IServiceProxyProvider _serviceProxyProvider)
+        {
+            try
+            {
+                var GameCodeArray = new List<string> { "SSQ", "DLT", "FC3D", "JX11X5" };
+                var param = new Dictionary<string, object>();
+                param.Add("GameCodeList", GameCodeArray);
+                var model = await _serviceProxyProvider.Invoke<QuickBuyModel>(param, "api/Data/GetQuickBuy_PC");
+                var now = DateTime.Now;
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询成功",
+                    MsgId = "",
+                    Value = new
+                    {
+                        SZCList = model.SZCList.Select(p => new
+                        {
+                            CurrIssuseNumber = p.IssuseNumber,
+                            LocalStopTime = p.LocalStopTime,
+                            OfficialStopTime = p.OfficialStopTime,
+                            ServiceTime = now,
+                            GameCode=p.Game.GameCode
+                        }).ToList(),
+                        JCZQList = model.JCZQList.Select(p => new
+                        {
+                            MatcheDateTime = p.MatcheDateTime,
+                            MatchData = p.MatchData,
+                            MatchId = p.MatchId,
+                            MatchNumber = p.MatchNumber,
+                            FSStopBettingTime = p.FSStopBettingTime,
+                            GuestTeamName = p.GuestTeamName,
+                            HomeTeamName = p.HomeTeamName,
+                            LeagueColor = p.LeagueColor,
+                            LeagueName = p.LeagueName,
+                            MatchIdName = p.MatchIdName,
+                            StartDateTime = p.StartDateTime,
+                            PrivilegesType = p.PrivilegesType,
+                            SP_Flat_Odds_BRQ = p.SP_Flat_Odds_BRQ,
+                            SP_Lose_Odds_BRQ = p.SP_Lose_Odds_BRQ,
+                            SP_Win_Odds_BRQ = p.SP_Win_Odds_BRQ,
+                        }).ToList()
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "获取失败" + "●" + ex.ToString(),
+                    MsgId = "",
+                    Value = ex.ToGetMessage(),
+                });
+            }
+        }
+        #endregion
     }
 }

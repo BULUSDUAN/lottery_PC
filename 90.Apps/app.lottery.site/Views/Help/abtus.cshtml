@@ -1,0 +1,41 @@
+﻿@{
+    ViewBag.Here = "关于我们";
+
+    ViewBag.Title = "关于我们 - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "关于我们, 帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+   @ViewHelpers.css("help.css")
+}
+
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">帮助中心</a> > </li>
+        <li>代购</li>
+    </ul>
+</div>
+<div class="center mt10">
+    @{Html.RenderAction("left", "help");}
+    <div class="new_buy_right">
+<div class="help-content f_r">
+    <div class="help-list">
+        <div class="help-cont">
+            <h1 class="hp-title">关于我们</h1>
+            <h3>关于@(SiteString.getHZSiteName(Request))</h3>
+            <p class="indet">
+                @(SiteString.getHZSiteName(Request))（www.wancai.com）是由深圳市金详如科技有限公司推出的领先的彩票代购平台，立足于互联网在线彩票资讯、游戏等项目。依托公司强大的实体销售平台和品牌网络，以强大的技术实力和丰富的运营经验，为全国彩票爱好者提供最专业、最优质的资讯、交易、移动化服务，给全国彩票爱好者一个最权威的彩票数据中心、最方便的彩票服务中心、最完美的彩票娱乐中心、最可靠的彩票理财中心。  
+            </p>
+            <h3>公司优势和目标</h3>
+            <p class="indet">
+                公司成立以来，一直致力于彩票运营服务，先后在重庆、江苏、山东、广东、江西开设了数十家福彩、体彩销售门店，成为国内领先的彩票运营连锁公司。公司拥有庞大的技术研发团队，在互联网、手机领域创建过成熟的产品平台，为国内多家彩票公司和中心提供后端技术服务。
+            </p>
+            <p class="indet">
+                未来，@(SiteString.getHZSiteName(Request))将联手强大的合作伙伴，为广大彩民提供最专业、最优质的彩票服务，与广大彩民共同努力，促进中国彩票行业的高速发展。 
+            </p>
+        </div>
+    </div>
+</div>
+        </div>
+</div>
+<div class="clearfix"></div>

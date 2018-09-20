@@ -1,0 +1,32 @@
+﻿@{
+    var nr = (string)ViewBag.dayNR;
+    Layout = null;
+    var nrArray = new string[] { };
+    if (!string.IsNullOrEmpty(nr))
+    {
+        nrArray = nr.Split('%');
+    }
+}
+@section css
+{
+    @UserHelper.css("redan.css")
+}
+ @if (nrArray != null && nrArray.Length > 0)
+ {      
+    foreach (var item in nrArray)
+    {
+        var strA = item.Split('|');
+        if (strA != null && strA.Length ==1)
+        {
+            <span class="ml15" style=" margin-left:15px;">@strA[1]</span>
+            <a target="_blank" href="/baodan/redanauthorhome/@(SiteString.HideUserName(strA[0]))"><span class="tubiao"></span></a>
+        break;
+        }
+
+    }
+ }
+ else
+ { 
+     <span class="ml15">暂无数据 没有牛人</span>
+     <a href=""><span class="tubiao"></span></a>
+ }

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <meta name="keywords" content="@ViewBag.KeyWords" />
+    <meta name="description" content="@ViewBag.Description" />
+    <title>@ViewBag.Title</title>
+    <meta name="baidu-site-verification" content="G3yjx3dBmE" />
+    <meta property="qc:admins" content="14240177776773116375" />
+    <meta name="360-site-verification" content="5fc59d0c2b686ee3ea83e35da560e3de" />
+    @UserHelper.css("main.min.css")
+    @UserHelper.css("jc.min.css")
+    @UserHelper.css("onefix.css")
+    @RenderSection("css", false)
+    @UserHelper.js_share("share.min.js")
+    @UserHelper.js("user.min.js")
+    @UserHelper.js("nav.js")
+    @ViewHelpers.js("onlinePhone.js")
+    @RenderSection("js", false)
+</head>
+<body class="intro-start">
+    <script type="text/javascript">
+        var ires = "@ViewHelpers.res()/images/";
+        var dres = "@ViewHelpers.jsonres()/matchdata/";
+    </script>
+    @*<div class="buylottery hidetrans">
+        @{Html.RenderAction("fixheader", "onefix");}
+    </div>*@
+    <div class="wrapper">
+        @RenderBody()
+    </div>
+    @{Html.RenderPartial("box_doc");}
+    @{Html.RenderPartial("box_login");}
+    @{Html.RenderPartial("box_confirm");}
+    @{Html.RenderPartial("box_progress");}
+    @{Html.RenderPartial("box_alert");}
+</body>
+</html>

@@ -1,0 +1,21 @@
+[0][2018-06-18 16:33:32] 过程或函数 'P_Agent_QueryAgentDetail' 需要参数 '@isRecharge'，但未提供该参数。
+    System.Data.SqlClient.SqlException (0x80131904): 过程或函数 'P_Agent_QueryAgentDetail' 需要参数 '@isRecharge'，但未提供该参数。
+   at Common.Communication.WcfService.DoWork(WcfInvokeInfo invokeInfo)
+ClientConnectionId:edb097b6-1805-46a0-87d5-352e8c62d04e
+Error Number:201,State:4,Class:16
+    ----------------------------------------------------------------------------
+
+[0][2018-06-18 16:33:40] 过程或函数 'P_Agent_QueryAgentDetail' 需要参数 '@isRecharge'，但未提供该参数。
+    System.Data.SqlClient.SqlException (0x80131904): 过程或函数 'P_Agent_QueryAgentDetail' 需要参数 '@isRecharge'，但未提供该参数。
+   at Common.Communication.WcfService.DoWork(WcfInvokeInfo invokeInfo)
+ClientConnectionId:90d00187-922e-49fc-8669-9c12b18c2447
+Error Number:201,State:4,Class:16
+    ----------------------------------------------------------------------------
+
+[0][2018-06-18 16:45:04] 必须声明标量变量 "@@isRecharge"。
+    System.Data.SqlClient.SqlException (0x80131904): 必须声明标量变量 "@@isRecharge"。
+   at Common.Communication.WcfService.DoWork(WcfInvokeInfo invokeInfo)
+ClientConnectionId:7351fad2-f882-4f16-9101-ea5f9afa986c
+Error Number:137,State:2,Class:15
+    ----------------------------------------------------------------------------
+

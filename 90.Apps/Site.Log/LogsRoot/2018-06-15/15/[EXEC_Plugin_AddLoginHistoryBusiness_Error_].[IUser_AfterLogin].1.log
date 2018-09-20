@@ -1,0 +1,7 @@
+[0][2018-06-15 15:12:25] Object reference not set to an instance of an object.
+    System.NullReferenceException: Object reference not set to an instance of an object.
+   at GameBiz.Business.BusinessHelper.Payin_UserGrowth(String category, String orderId, String userId, Int32 userGrowth, String summary)
+   at External.Business.LoginHistoryBusiness.User_AfterLogin(String userId, String loginFrom, String loginIp, DateTime loginTime)
+   at External.Business.LoginHistoryBusiness.ExecPlugin(String type, Object inputParam)
+    ----------------------------------------------------------------------------
+

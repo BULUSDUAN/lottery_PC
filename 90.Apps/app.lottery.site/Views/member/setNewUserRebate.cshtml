@@ -1,0 +1,394 @@
+﻿@using External.Core.Agnet
+@using GameBiz.Core
+@{
+    Layout = "../Shared/_LayoutFoud.cshtml";
+    ViewBag.Title = "设置新用户返点";
+    ViewBag.keywords = "设置新用户返点";
+    var userRebate = ViewBag.InItNewUserRebate as OCAgentRebateInfoCollection;
+    var agenttype = ViewBag.AgentType as OCAgentType;
+}
+<style type="text/css">
+    .dg_span
+    {
+        float: left;
+        padding-top: 5px;
+        font-weight: bold;
+        color: #01B3F7;
+    }
+    .cg_span
+    {
+        float: left;
+        padding-top: 5px;
+        font-weight: bold;
+        color: #FE4635;
+    }
+    .cg_div
+    {
+        float: left;
+        padding-top: 2px;
+    }
+</style>
+<div class="center mt10">
+    @{Html.RenderPartial("Mycommenu", "Member");}
+    @{Html.RenderPartial("toptipFoud", "Member");}
+    <div class="new_buy_right">
+        <div class="betorder_top">
+            <ul>
+                @*<li><a href="/member/myTc" checklg="/member/myTc">我的返点</a></li>*@
+                <li class="betorder_topSelected"><a href="/member/generalizeUser">
+                    返点用户</a> </li>
+                <li><a href="/member/CommissionRecord">返点结算</a></li>
+                <li><a href="/member/StatisticsQuery">统计查询</a></li>
+                <li><a href="/member/SchemeManage">方案管理</a></li>
+            </ul>
+        </div>
+        <div class="betorder_con clearfix">
+            <div class="scheme">
+                @if (agenttype != null && agenttype.OCAgentCategory != OCAgentCategory.SportLotterySubAgent)
+                {
+                    <div class="scheme-show" style="margin-left: 10px;">
+                        <a href="/member/generalizeUser">下级代理</a>
+                    </div>
+                }
+                <div class="scheme-show">
+                    <a href="/member/subordinateuser">下级用户</a>
+                </div>
+                @if (agenttype != null && agenttype.OCAgentCategory != OCAgentCategory.SportLotterySubAgent && ViewBag.IsAddAgent)
+                {
+                    <div class="scheme-show">
+                        <a href="/member/dealerMsg">添加代理</a>
+                    </div>
+                }
+                <div class="scheme-show xzscheme">
+                    <a href="/member/setNewUserRebate"><i></i>设置新用户返点</a>
+                </div>
+                <div class="scheme-show">
+                    <a href="/member/popularizeLink">推广链接</a>
+                </div>
+            </div>
+            @{
+                //足球串关
+                var jczq_brqspf = userRebate.FirstOrDefault(p => p.GameCode == "JCZQ" && p.GameType == "BRQSPF" && p.RebateType == 0);
+                var jczq_spf = userRebate.FirstOrDefault(p => p.GameCode == "JCZQ" && p.GameType == "SPF" && p.RebateType == 0);
+                var jczq_bf = userRebate.FirstOrDefault(p => p.GameCode == "JCZQ" && p.GameType == "BF" && p.RebateType == 0);
+                var jczq_zjq = userRebate.FirstOrDefault(p => p.GameCode == "JCZQ" && p.GameType == "ZJQ" && p.RebateType == 0);
+                var jczq_bqc = userRebate.FirstOrDefault(p => p.GameCode == "JCZQ" && p.GameType == "BQC" && p.RebateType == 0);
+                var jczq_hh = userRebate.FirstOrDefault(p => p.GameCode == "JCZQ" && p.GameType == "HH" && p.RebateType == 0);
+                //足球单关
+                var jczq_brqspf_dg = userRebate.FirstOrDefault(p => p.GameCode == "JCZQ" && p.GameType == "BRQSPF" && p.RebateType == 1);
+                var jczq_spf_dg = userRebate.FirstOrDefault(p => p.GameCode == "JCZQ" && p.GameType == "SPF" && p.RebateType == 1);
+                var jczq_bf_dg = userRebate.FirstOrDefault(p => p.GameCode == "JCZQ" && p.GameType == "BF" && p.RebateType == 1);
+                var jczq_zjq_dg = userRebate.FirstOrDefault(p => p.GameCode == "JCZQ" && p.GameType == "ZJQ" && p.RebateType == 1);
+                var jczq_bqc_dg = userRebate.FirstOrDefault(p => p.GameCode == "JCZQ" && p.GameType == "BQC" && p.RebateType == 1);
+                var jczq_hh_dg = userRebate.FirstOrDefault(p => p.GameCode == "JCZQ" && p.GameType == "HH" && p.RebateType == 1);
+
+
+                //北单串关
+                var bjdc_spf = userRebate.FirstOrDefault(p => p.GameCode == "BJDC" && p.GameType == "SPF" && p.RebateType == 0);
+                var bjdc_zjq = userRebate.FirstOrDefault(p => p.GameCode == "BJDC" && p.GameType == "ZJQ" && p.RebateType == 0);
+                var bjdc_sxds = userRebate.FirstOrDefault(p => p.GameCode == "BJDC" && p.GameType == "SXDS" && p.RebateType == 0);
+                var bjdc_bf = userRebate.FirstOrDefault(p => p.GameCode == "BJDC" && p.GameType == "BF" && p.RebateType == 0);
+                var bjdc_bqc = userRebate.FirstOrDefault(p => p.GameCode == "BJDC" && p.GameType == "BQC" && p.RebateType == 0);
+                //北单单关
+                var bjdc_spf_dg = userRebate.FirstOrDefault(p => p.GameCode == "BJDC" && p.GameType == "SPF" && p.RebateType == 1);
+                var bjdc_zjq_dg = userRebate.FirstOrDefault(p => p.GameCode == "BJDC" && p.GameType == "ZJQ" && p.RebateType == 1);
+                var bjdc_sxds_dg = userRebate.FirstOrDefault(p => p.GameCode == "BJDC" && p.GameType == "SXDS" && p.RebateType == 1);
+                var bjdc_bf_dg = userRebate.FirstOrDefault(p => p.GameCode == "BJDC" && p.GameType == "BF" && p.RebateType == 1);
+                var bjdc_bqc_dg = userRebate.FirstOrDefault(p => p.GameCode == "BJDC" && p.GameType == "BQC" && p.RebateType == 1);
+                //篮球串关
+                var jclq_sf = userRebate.FirstOrDefault(p => p.GameCode == "JCLQ" && p.GameType == "SF" && p.RebateType == 0);
+                var jclq_rfsf = userRebate.FirstOrDefault(p => p.GameCode == "JCLQ" && p.GameType == "RFSF" && p.RebateType == 0);
+                var jclq_sfc = userRebate.FirstOrDefault(p => p.GameCode == "JCLQ" && p.GameType == "SFC" && p.RebateType == 0);
+                var jclq_dxf = userRebate.FirstOrDefault(p => p.GameCode == "JCLQ" && p.GameType == "DXF" && p.RebateType == 0);
+                var jclq_hh = userRebate.FirstOrDefault(p => p.GameCode == "JCLQ" && p.GameType == "HH" && p.RebateType == 0);
+                //篮球单关
+                var jclq_sf_dg = userRebate.FirstOrDefault(p => p.GameCode == "JCLQ" && p.GameType == "SF" && p.RebateType == 1);
+                var jclq_rfsf_dg = userRebate.FirstOrDefault(p => p.GameCode == "JCLQ" && p.GameType == "RFSF" && p.RebateType == 1);
+                var jclq_sfc_dg = userRebate.FirstOrDefault(p => p.GameCode == "JCLQ" && p.GameType == "SFC" && p.RebateType == 1);
+                var jclq_dxf_dg = userRebate.FirstOrDefault(p => p.GameCode == "JCLQ" && p.GameType == "DXF" && p.RebateType == 1);
+                var jclq_hh_dg = userRebate.FirstOrDefault(p => p.GameCode == "JCLQ" && p.GameType == "HH" && p.RebateType == 1);
+
+                var ctzq_t14c = userRebate.FirstOrDefault(p => p.GameCode == "CTZQ" && p.GameType == "T14C");
+                var ctzq_tr9 = userRebate.FirstOrDefault(p => p.GameCode == "CTZQ" && p.GameType == "TR9");
+                var ctzq_t6bqc = userRebate.FirstOrDefault(p => p.GameCode == "CTZQ" && p.GameType == "T6BQC");
+                var ctzq_t4cjq = userRebate.FirstOrDefault(p => p.GameCode == "CTZQ" && p.GameType == "T4CJQ");
+
+                var tycp_dlt = userRebate.FirstOrDefault(p => p.GameCode == "DLT" && p.GameType == "");
+                var tycp_pl3 = userRebate.FirstOrDefault(p => p.GameCode == "PL3" && p.GameType == "");
+
+                var fc3d = userRebate.FirstOrDefault(p => p.GameCode == "FC3D" && p.GameType == "");
+                var ssq = userRebate.FirstOrDefault(p => p.GameCode == "SSQ" && p.GameType == "");
+
+                var gpc_cqssc = userRebate.FirstOrDefault(p => p.GameCode == "CQSSC" && p.GameType == "");
+                var gpc_jx11x5 = userRebate.FirstOrDefault(p => p.GameCode == "JX11X5" && p.GameType == "");
+                var gpc_sd11x5 = userRebate.FirstOrDefault(p => p.GameCode == "SD11X5" && p.GameType == "");
+                var gpc_gd11x5 = userRebate.FirstOrDefault(p => p.GameCode == "GD11X5" && p.GameType == "");
+                var gpc_gdklsf = userRebate.FirstOrDefault(p => p.GameCode == "GDKLSF" && p.GameType == "");
+                var gpc_jsks = userRebate.FirstOrDefault(p => p.GameCode == "JSKS" && p.GameType == "");
+                var gpc_sdklpk3 = userRebate.FirstOrDefault(p => p.GameCode == "SDKLPK3" && p.GameType == "");
+            }
+            <table border="0" cellpadding="0" cellspacing="0" class="betorder_table tab_c">
+                <tr class="s-t-tr1">
+                    <td width="210">
+                        <i class="jczq"></i>竞彩足球返点
+                    </td>
+                    <td class="unfoldorfold">
+                        <input type="text" value="" autocomplete="off" maxlength="6" id="txtjczq" data-v="txtjczq" />
+                        <a href="javascript:void(0)" class="toggleshow">+ 展开</a>
+                    </td>
+                </tr>
+                <tr class="show">
+                    <td width="210" colspan="2">
+                        <span class="dg_span">单关：</span><ul>
+                            <li>让球胜平负：<label><input type="text" class="txtjczq" gameList="JCZQ:SPF" rebatetype="1"  name="txtxt"  autocomplete="off" atomicselection="false"  value="@(jczq_spf_dg != null ? jczq_spf_dg.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                            <li>胜平负：<label><input type="text" class="txtjczq" gameList="JCZQ:BRQSPF" rebatetype="1"  name="txtxt" value="@(jczq_brqspf_dg != null ? jczq_brqspf_dg.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                            <li>比分：<label><input type="text" class="txtjczq" gameList="JCZQ:BF" rebatetype="1"  name="txtxt" value="@(jczq_bf_dg != null ? jczq_bf_dg.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                            <li>进球数：<label><input type="text" class="txtjczq" gameList="JCZQ:ZJQ" rebatetype="1"   name="txtxt" value="@(jczq_zjq_dg != null ? jczq_zjq_dg.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                            <li>半全场：<label><input type="text" class="txtjczq" gameList="JCZQ:BQC" rebatetype="1"  name="txtxt" value="@(jczq_bqc_dg != null ? jczq_bqc_dg.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                            <li>混合过关：<label><input type="text" class="txtjczq" gameList="JCZQ:HH" rebatetype="1"  name="txtxt" value="@(jczq_hh_dg != null ? jczq_hh_dg.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                        </ul>
+                        <div class="cg_div">
+                            <span class="cg_span">串关：</span><ul>
+                                <li>让球胜平负：<label><input type="text" class="txtjczq" gameList="JCZQ:SPF" rebatetype="0" name="txtxt"  autocomplete="off" atomicselection="false"  value="@(jczq_spf != null ? jczq_spf.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                                <li>胜平负：<label><input type="text" class="txtjczq" gameList="JCZQ:BRQSPF" rebatetype="0" name="txtxt" value="@(jczq_brqspf != null ? jczq_brqspf.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                                <li>比分：<label><input type="text" class="txtjczq" gameList="JCZQ:BF" rebatetype="0" name="txtxt" value="@(jczq_bf != null ? jczq_bf.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                                <li>进球数：<label><input type="text" class="txtjczq" gameList="JCZQ:ZJQ" rebatetype="0"  name="txtxt" value="@(jczq_zjq != null ? jczq_zjq.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                                <li>半全场：<label><input type="text" class="txtjczq" gameList="JCZQ:BQC" rebatetype="0" name="txtxt" value="@(jczq_bqc != null ? jczq_bqc.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                                <li>混合过关：<label><input type="text" class="txtjczq" gameList="JCZQ:HH" rebatetype="0" name="txtxt" value="@(jczq_hh != null ? jczq_hh.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="s-t-tr1">
+                    <td width="210">
+                        <i class="bjdc"></i>北京单场
+                    </td>
+                    <td class="unfoldorfold">
+                        <input type="text" value="" autocomplete="off" maxlength="6" id="txtbjdc" data-v="txtbjdc" />
+                        <a href="javascript:void(0)" class="toggleshow">+ 展开</a>
+                    </td>
+                </tr>
+                <tr class="show">
+                    <td width="210" colspan="2">
+                        <span class="dg_span">单关：</span>
+                        <ul>
+                            <li>胜平负：<label><input type="text" class="txtbjdc" gameList="BJDC:SPF" rebatetype="1"  name="txtxt" value="@(bjdc_spf_dg != null ? bjdc_spf_dg.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                            <li>进球数：<label><input type="text" class="txtbjdc" gameList="BJDC:ZJQ" rebatetype="1"   name="txtxt" value="@(bjdc_zjq_dg != null ? bjdc_zjq_dg.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                            <li>上下单双：<label><input type="text" class="txtbjdc" gameList="BJDC:SXDS" rebatetype="1"  name="txtxt" value="@(bjdc_sxds_dg != null ? bjdc_sxds_dg.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                            <li>比分：<label><input type="text" class="txtbjdc" gameList="BJDC:BF" rebatetype="1"  name="txtxt" value="@(bjdc_bf_dg != null ? bjdc_bf_dg.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                            <li>半全场：<label><input type="text" class="txtbjdc" gameList="BJDC:BQC" rebatetype="1"  name="txtxt" value="@(bjdc_bqc_dg != null ? bjdc_bqc_dg.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                        </ul>
+                        <div class="cg_div">
+                            <span class="cg_span">串关：</span>
+                            <ul>
+                                <li>胜平负：<label><input type="text" class="txtbjdc" gameList="BJDC:SPF" rebatetype="0"  name="txtxt" value="@(bjdc_spf != null ? bjdc_spf.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                                <li>进球数：<label><input type="text" class="txtbjdc" gameList="BJDC:ZJQ" rebatetype="0"  name="txtxt" value="@(bjdc_zjq != null ? bjdc_zjq.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                                <li>上下单双：<label><input type="text" class="txtbjdc" gameList="BJDC:SXDS" rebatetype="0" name="txtxt" value="@(bjdc_sxds != null ? bjdc_sxds.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                                <li>比分：<label><input type="text" class="txtbjdc" gameList="BJDC:BF" rebatetype="0" name="txtxt" value="@(bjdc_bf != null ? bjdc_bf.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                                <li>半全场：<label><input type="text" class="txtbjdc" gameList="BJDC:BQC" rebatetype="0" name="txtxt" value="@(bjdc_bqc != null ? bjdc_bqc.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="s-t-tr1">
+                    <td width="210">
+                        <i class="jclq"></i>竞彩篮球
+                    </td>
+                    <td class="unfoldorfold">
+                        <input type="text" value="" autocomplete="off" maxlength="6" id="txtjclq" data-v="txtjclq" />
+                        <a href="javascript:void(0)" class="toggleshow">+ 展开</a>
+                    </td>
+                </tr>
+                <tr class="show">
+                    <td width="210" colspan="2">
+                        <span class="dg_span">单关：</span>
+                        <ul>
+                            <li>胜负：<label><input type="text" class="txtjclq" gameList="JCLQ:SF" rebatetype="1"  name="txtxt" value="@(jclq_sf_dg != null ? jclq_sf_dg.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                            <li>让分胜负：<label><input type="text"  class="txtjclq" gameList="JCLQ:RFSF" rebatetype="1"  name="txtxt" value="@(jclq_rfsf_dg != null ? jclq_rfsf_dg.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                            <li>胜负差：<label><input type="text" class="txtjclq" gameList="JCLQ:SFC" rebatetype="1"  name="txtxt" value="@(jclq_sfc_dg != null ? jclq_sfc_dg.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                            <li>大小分：<label><input type="text" class="txtjclq" gameList="JCLQ:DXF" rebatetype="1"  name="txtxt" value="@(jclq_dxf_dg != null ? jclq_dxf_dg.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                            <li>混合过关：<label><input type="text" class="txtjclq" gameList="JCLQ:HH" rebatetype="1"  name="txtxt" value="@(jclq_hh_dg != null ? jclq_hh_dg.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                        </ul>
+                        <div class="cg_div">
+                            <span class="cg_span">串关：</span>
+                            <ul>
+                                <li>胜负：<label><input type="text" class="txtjclq" gameList="JCLQ:SF"  rebatetype="0"name="txtxt" value="@(jclq_sf != null ? jclq_sf.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                                <li>让分胜负：<label><input type="text"  class="txtjclq" gameList="JCLQ:RFSF" rebatetype="0" name="txtxt" value="@(jclq_rfsf != null ? jclq_rfsf.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                                <li>胜负差：<label><input type="text" class="txtjclq" gameList="JCLQ:SFC" rebatetype="0" name="txtxt" value="@(jclq_sfc != null ? jclq_sfc.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                                <li>大小分：<label><input type="text" class="txtjclq" gameList="JCLQ:DXF" rebatetype="0" name="txtxt" value="@(jclq_dxf != null ? jclq_dxf.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                                <li>混合过关：<label><input type="text" class="txtjclq" gameList="JCLQ:HH" rebatetype="0" name="txtxt" value="@(jclq_hh != null ? jclq_hh.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="s-t-tr1">
+                    <td width="210">
+                        <i class="ctzq"></i>传统足球
+                    </td>
+                    <td class="unfoldorfold">
+                        <input type="text" value="" autocomplete="off" maxlength="6" id="txtctzq" data-v="txtctzq" />
+                        <a href="javascript:void(0)" class="toggleshow">+ 展开</a>
+                    </td>
+                </tr>
+                <tr class="show">
+                    <td width="210" colspan="2">
+                        <ul>
+                            <li>14场胜负：<label><input type="text" class="txtctzq" gameList="CTZQ:T14C" name="txtxt" value="@(ctzq_t14c != null ? ctzq_t14c.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                            <li>胜负任9：<label><input type="text" class="txtctzq" gameList="CTZQ:TR9" name="txtxt" value="@(ctzq_tr9 != null ? ctzq_tr9.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                            <li>6场半全：<label><input type="text" class="txtctzq" gameList="CTZQ:T6BQC"  name="txtxt" value="@(ctzq_t6bqc != null ? ctzq_t6bqc.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                            <li>4场进球：<label><input type="text" class="txtctzq" gameList="CTZQ:T4CJQ"  name="txtxt" value="@(ctzq_t4cjq != null ? ctzq_t4cjq.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr class="s-t-tr1">
+                    <td width="210">
+                        <i class="tycp"></i>体育彩票
+                    </td>
+                    <td class="unfoldorfold">
+                        <input type="text" value="" autocomplete="off" maxlength="6" id="txttycp" data-v="txttycp" />
+                        <a href="javascript:void(0)" class="toggleshow">+ 展开</a>
+                    </td>
+                </tr>
+                <tr class="show">
+                    <td width="210" colspan="2">
+                        <ul>
+                            <li>大乐透：<label><input type="text" class="txttycp" gameList="DLT:" name="txtxt" value="@(tycp_dlt != null ? tycp_dlt.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                            <li>排列三：<label><input type="text" class="txttycp" gameList="PL3:" name="txtxt" value="@(tycp_pl3 != null ? tycp_pl3.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr class="s-t-tr1">
+                    <td width="210">
+                        <i class="fc"></i>福彩
+                    </td>
+                    <td class="unfoldorfold">
+                        <input type="text" value="" autocomplete="off" maxlength="6" id="txtfc" data-v="txtfc" />
+                        <a href="javascript:void(0)" class="toggleshow">+ 展开</a>
+                    </td>
+                </tr>
+                <tr class="show">
+                    <td width="210" colspan="2">
+                        <ul>
+                            <li>双色球：<label><input type="text" class="txtfc" gameList="SSQ:" name="txtxt" value="@(ssq != null ? ssq.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                            <li>福彩3D：<label><input type="text"  class="txtfc" gameList="FC3D:" name="txtxt" value="@(fc3d != null ? fc3d.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr class="s-t-tr1">
+                    <td width="210">
+                        <i class="gpc"></i>高频彩
+                    </td>
+                    <td class="unfoldorfold">
+                        <input type="text" value="" maxlength="6" id="txtgpc" data-v="txtgpc" />
+                        <a href="javascript:void(0)" class="toggleshow">+ 展开</a>
+                    </td>
+                </tr>
+                <tr class="show">
+                    <td width="210" colspan="2">
+                        <ul>
+                            <li>重庆时时彩：<label><input type="text" class="txtgpc"  gameList="CQSSC:" name="txtxt" value="@(gpc_cqssc != null ? gpc_cqssc.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                            <li>江西11选5：<label><input type="text" class="txtgpc" gamelist="JX11X5:" name="txtxt" value="@(gpc_jx11x5 != null ? gpc_jx11x5.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                            <li>山东11选5：<label><input type="text" class="txtgpc" gamelist="SD11X5:" name="txtxt" value="@(gpc_sd11x5 != null ? gpc_sd11x5.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                            <li>广东11选5：<label><input type="text" class="txtgpc" gamelist="GD11X5:" name="txtxt" value="@(gpc_gd11x5 != null ? gpc_gd11x5.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                            <li>广东快乐十分：<label><input type="text" class="txtgpc" gamelist="GDKLSF:" name="txtxt" value="@(gpc_gdklsf != null ? gpc_gdklsf.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                            <li>江苏快三：<label><input type="text" class="txtgpc" gamelist="JSKS:" name="txtxt" value="@(gpc_jsks != null ? gpc_jsks.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                            <li>山东快乐扑克3：<label><input type="text" class="txtgpc" gamelist="SDKLPK3:" name="txtxt" value="@(gpc_sdklpk3 != null ? gpc_sdklpk3.SubUserRebate.ToString("N2") : "0.00")" /></label></li>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+            <div class="dealer-save">
+                <input type="button" value="保&nbsp;&nbsp;存" class="saveDealer btn_next" />
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    $(function () {
+        $("input[name='txtxt']:text").attr("atomicselection", "false");
+        var error = 0;
+        $("input:text").blur(function () {
+            var val = $(this).attr("value");
+            if (val == "") {
+                $(this).attr("value", "0.00");
+            } else {
+                if (val < 0) {
+                    $(this).val(0);
+                } else if (val > 100) {
+                    $(this).val(100);
+                }
+            }
+        }).keyup(function () {
+            var a = $(this).val();
+            $(this).val(a.replace(/[^0-9.]/g, ''));
+        });
+
+        $(".saveDealer").click(function () {
+            if (!confirm("是否保存?")) {
+                return false;
+            }
+            var _this = $(this);
+            var dataArr = new Array();
+            $("input[name='txtxt']:text").each(function () {
+                var id = $(this).attr("gameList");
+                var v = $(this).val();
+                var reabateType = $(this).attr("rebatetype");
+                if (reabateType) {
+                    dataArr.push(id + ":" + v + ":" + reabateType);
+                }
+                else {
+                    dataArr.push(id + ":" + v + ":0");
+                }
+            });
+            var dataStr = dataArr.join("|");
+            $.post("/member/SaveSNUR", { dataStr: dataStr }, function (data) {
+                if (data.IsSuccess) {
+                    alert(data.Message);
+                    location.href = location.href;
+                } else {
+                    alert(data.Message);
+                    location.href = location.href;
+                }
+            });
+        });
+        //文本框输入设置返点
+        $("input[data-v]").blur(function () {
+            var gamecode = $(this).attr("data-v");
+            var v = $(this).val();
+            applyData(gamecode, v);
+        }).keyup(function () {
+            var gamecode = $(this).attr("data-v");
+            var v = $(this).val();
+            applyData(gamecode, v);
+        });
+        function applyData(gameCode, value) {
+            $("." + gameCode + "").val(value);
+        }
+        //验证是否是input元素
+        var checkEvent = function (e, tarName) {
+            var e = e || window.event;
+            var target = e.srcElement || e.target;
+            if (target.tagName != tarName) {
+                return true;
+            } else {
+                return false;
+            }
+        };
+        $(".s-t-tr1").bind("click", function (e) {
+            var aObj = checkEvent(e, "INPUT");
+            if (!aObj) {
+                return;
+            }
+            var tr = $(this).next(".show:first");
+            if (tr.is(":visible")) {
+                tr.hide(200);
+                $(this).find(".toggleshow").text("+ 展开");
+            } else {
+                tr.show(300);
+                $(this).find(".toggleshow").text("- 隐藏");
+            }
+        });
+
+    });    
+</script>

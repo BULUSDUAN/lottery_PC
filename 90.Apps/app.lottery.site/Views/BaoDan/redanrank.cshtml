@@ -1,0 +1,187 @@
+﻿@using app.lottery.site.Models
+@using GameBiz.Core
+@{
+    ViewBag.Title = "宝单排行榜-宝单盈利排行-宝单高手排行榜";
+    ViewBag.KeyWords = "宝单排行榜,宝单盈利排行,宝单高手排行榜";
+    ViewBag.Description = "宝单高手排行榜为广大提供各位宝单大神的盈利数据,彩民朋友可根据其数据进行对比,然后抄单。";
+    var ranklist = ViewBag.RankList as BDFXGSRank_Collection;
+    var nowWeek = ViewBag.NowWeek;
+    var upnowWeek = ViewBag.UpNowWeek;
+    var user = ViewBag.User as CurrentUserInfo;
+}
+@section css
+{
+    @UserHelper.css("redan.css")
+    <style>
+        .redan_head
+        {
+            width: 805px;
+        }
+    </style>
+}
+@section js{
+    @UserHelper.jscdn("redan.js", "1102")
+}
+<script type="text/javascript">
+    var issues = '@Request["week"]';
+</script>
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="http://www.caibb.com">首页</a>&nbsp;&gt; &nbsp;</li>
+        <li>高手排行</li>
+    </ul>
+</div>
+<div class="rank contentmain">
+    <div class="baodanleft">
+        @{ Html.RenderAction("nrandrecommend", "baodan");}
+    </div>
+    <div class="baodanright">
+        <div class="redan_head">
+            <div class="redan_btn">
+                <a href="/baodan/redantoday">今日神单</a> <a class="rd_active" href="/baodan/redanrank">
+                    高手排行</a> <a checklg="/baodan/redanmyattention" href="javascript:void(0)">我的关注</a>
+                <a checklg="/baodan/redanmy" href="javascript:void(0)">我的神单</a><a checklg="/baodan/redanauthorhome"
+                    href="javascript:void(0)">我的主页</a>
+            </div>
+            <div class="head_r">
+                <a class="head_rbtn" target="_blank" href="/jingcai">我要分享</a>
+            </div>
+            <div class="clearfloat">
+            </div>
+        </div>
+        <div class="rank_head">
+            <div class="rank_title">
+                周榜 TOP50</div>
+            <select id="week" onchange="javascript:location.href='/baodan/redanrank/?week='+this.value;">
+                <option  @(Request["week"] == nowWeek ? "selected=selected" : "") value="@nowWeek">@nowWeek</option>
+                <option @(Request["week"] == upnowWeek ? "selected=selected" : "")   value="@upnowWeek">@upnowWeek</option>
+            </select>
+            <div class="rank_option">
+                <a class="sel" href="javascript:void(0);">盈利率</a>
+            </div>
+        </div>
+        <table class="rank_table" cellspacing="0" cellpadding="0" border="0">
+            <tbody>
+                <tr>
+                    <th width="10%">
+                        <span>排行</span>
+                    </th>
+                    <th width="27%">
+                        宝单作者
+                    </th>
+                    <th width="12%">
+                        <span>粉丝数</span>
+                    </th>
+                    <th width="12%">
+                        <span>周宝单数</span>
+                    </th>
+                    <th width="15%">
+                        <span>周盈利率</span>
+                    </th>
+                    <th width="12%">
+                        <span>上周排行</span>
+                    </th>
+                    <th width="12%">
+                        最新宝单
+                    </th>
+                </tr>
+            </tbody>
+            <tbody id="bodyCount">
+                @if (ranklist != null)
+                {
+                    var href = string.Empty;
+                    foreach (var item in ranklist.RankList)
+                    {
+                        //href = "?uimg=" + HttpUtility.HtmlEncode(item.UserCustomerImgUrl) + "&ulvl=" + item.MaxLevelName;
+                        var uname = SiteString.HideUserName(item.UserName);
+                    <tr uid="@item.UserId" class=" @((ranklist.RankList.IndexOf(item) + 1) % 2 == 0 ? "rank_bg" : "")">
+                        @if (item.RankNumber <= 3 && item.RankNumber != 0)
+                        {
+                            <td class="bornotop">
+                                <span class="ico_no_top ico_no_@(item.RankNumber)"></span>
+                            </td>
+             
+                        }
+                        else
+                        {
+                            <td class="bornotop">
+                                <span class="ico_no">@(item.RankNumber)</span>
+                            </td>
+             
+                        }
+                        <td style="position: relative;" class="bornotop">
+                            <a style="float: left; margin-left: 40%;" target="_blank" href="/baodan/redanauthorhome/@item.UserId@href">
+                                @*<span style="top: 0px; _top: 7px;" class="user_logo"></span>*@ @*@ViewHelpers.bdusericon(item.UserCustomerImgUrl, item.MaxLevelName)*@
+                                <span class="rank_name" style="display: initial;">@uname</span> </a>@* @if (user == null || (user != null && user.LoginInfo.UserId != item.UserId))
+                        {
+                        <a class="guanzhu @(item.IsGZ ? "qxgz" : "jiagz")" href="javascript:void(0);">
+                            @(item.IsGZ ? "取消关注" : "+关注")
+                        </a>
+                        }*@
+                            <div class="usercard usercard2" style="display: none;">
+                                <h3 style="text-align: left;">
+                                    <a target="_blank" href="/baodan/redanauthorhome/@item.UserId@href">@*<span class="user_logo"></span>*@
+                                        @*@ViewHelpers.bdusericon(item.UserCustomerImgUrl, item.MaxLevelName)*@ <span class="nm">@item.UserName</span>
+                                    </a><a class="guanzhu jiagz" href="javascript:void(0);">+关注</a>
+                                </h3>
+                                <div class="card_list">
+                                    关注<span class="gz">0</span> <em>|</em> 粉丝 <span class="fs">0</span> <em>|</em> 宝单
+                                    <span class="sd">0</span>
+                                </div>
+                                <div class="card_bottom">
+                                    <div class="card_txt">
+                                        近盈七利天率</div>
+                                    <div class="card_charts">
+                                    </div>
+                                    <div class="paiming">
+                                        上周排名 <span class="spm"></span>
+                                    </div>
+                                    <div class="clearfloat">
+                                    </div>
+                                    <span class="sanjiao"></span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            @item.BeConcernedUserCount.ToString("N0")
+                        </td>
+                        <td>
+                            @item.SingleTreasureCount
+                        </td>
+                        <td>
+                            <label class="font_red">@((item.CurrProfitRate * 100).ToString("F2"))%</label>
+                        </td>
+                        <td>
+                            @item.LastweekRank
+                        </td>
+                        <td class="borno">
+                            @if (!string.IsNullOrEmpty(item.SchemeId))
+                            {
+                                <a class="dsa dsa1" href="javascript:xdDetail('/baodan/bddetailsbody?userid=@item.UserId&SchemeId=@item.SchemeId');void(0);">
+                                    查看</a>
+                            }
+                            else
+                            {
+                                <label>
+                                    暂无
+                                </label>
+                            }
+                        </td>
+                    </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<script type="text/javascript">
+    function weekList() {
+        //期号
+        var week = "";
+        if (document.getElementById("week")) {
+            week = document.getElementById("week").value;
+        }
+        location.search = "week=" + week;
+    }
+</script>

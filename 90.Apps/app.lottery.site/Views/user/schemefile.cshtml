@@ -1,0 +1,237 @@
+@using System.Activities.Statements
+@using System.Text
+@using GameBiz.Core;
+@{
+    ViewBag.Title = "单式方案详情-" + SiteString.getHZSiteName(Request) + "-专业彩票代购网站|网上投注|福彩|体彩|高频彩";
+
+    var singleInfo = ViewBag.SingleInfo as OrderSingleSchemeCollection;
+    var gameCode = Request["gamecode"];
+    var playType = singleInfo == null ? "" : singleInfo.AnteCodeList[0].PlayType;
+    var gameType = singleInfo == null ? "" : singleInfo.AnteCodeList[0].GameType;
+    var buferstr = singleInfo == null || singleInfo.AnteCodeList == null || singleInfo.AnteCodeList.Count == 0 ? "" : Encoding.UTF8.GetString(singleInfo.AnteCodeList[0].FileBuffer).ToString();
+    var codeArr = buferstr.Split(new string[] { "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+    var ContainsMatchId = singleInfo == null || singleInfo.AnteCodeList == null || singleInfo.AnteCodeList.Count == 0 ? false : singleInfo.AnteCodeList[0].ContainsMatchId;
+    List<string> formatList = ContainsMatchId ? codeArr.ToList() : SiteString.CheckSingleSchemeAnteCode(codeArr, gameType, gameCode);
+    var errorstr = ViewBag.Message;
+
+}
+@UserHelper.css("user.css")
+@if (string.IsNullOrEmpty(errorstr))
+{
+    <div class="crumb">
+        <ul>
+            <li class="a">您当前的位置：</li>
+            <li><a href="/">首页</a> > </li>
+            <li>单式方案明细</li>
+        </ul>
+    </div>
+    <div class="mingxi" style="margin: 0 auto">
+        <h3>
+            单式方案明细</h3>
+        <span class="de_title">投注方案：</span>
+        <table class="mingxilook_table" cellspacing="0" cellpadding="0" border="0">
+            <colgroup>
+                <col width="100" />
+                <col width="280" />
+                <col width="130" />
+                <col />
+                <col width="100" />
+            </colgroup>
+            <tr>
+                <th>
+                    赛事编号
+                </th>
+                <th>
+                    (主)赛事对阵(客)
+                </th>
+                <th>
+                    让球
+                </th>
+                <th>
+                    您投注的玩法
+                </th>
+                <th>
+                    彩果
+                </th>
+            </tr>
+            @if (singleInfo != null)
+            {
+                for (int j = 0; j < singleInfo.AnteCodeList.Count; j++)
+                {
+                    var hList = new List<string>();
+                    var item = singleInfo.AnteCodeList[j];
+                    //var CodeList = new List<string>();
+                    ////上传文件流包含matchid
+                    //if (ContainsMatchId)
+                    //{
+                    //    foreach (var codes in formatList)
+                    //    {
+                    //        var itemcodes = codes.Split('→');
+                    //        if (itemcodes.Length == 2)
+                    //        {
+                    //            string antecode = itemcodes[1];
+                    //            if (antecode.Contains("*"))
+                    //            {
+                    //                continue;
+                    //            }
+                    //            else
+                    //            {
+                    //                if (!CodeList.Contains(antecode))
+                    //                {
+                    //                    CodeList.Add(antecode);
+                    //                    var sp = SiteString.CheckSp(antecode, item.CurrentSp);
+                    //                    antecode = item.GameType.ToLower() == "sxds" ? SiteString.ChangeAnteCode(antecode) : antecode;
+                    //                    var spstr = sp == 0 ? "" : sp.ToString("#0.00");
+                    //                    hList.Add("<span>" + SiteString.ANTECODES_NAME(item.GameType, antecode) + ":[" + spstr + "]</span>");
+                    //                }
+                    //            }
+                    //        }
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    foreach (var codes in formatList)
+                    //    {
+                    //        var code = codes.Split(',')[j];
+                    //        if (code.Contains("*"))
+                    //        {
+                    //            continue;
+                    //        }
+                    //        else
+                    //        {
+                    //            var sp = SiteString.CheckSp(code, item.CurrentSp);
+                    //            var spstr = sp == 0 ? "" : sp.ToString("#0.00");
+                    //            if (!CodeList.Contains(code))
+                    //            {
+                    //                CodeList.Add(code);
+                    //                code = item.GameType.ToLower() == "sxds" ? SiteString.ChangeAnteCode(code) : code;
+                    //                hList.Add("<span>" + SiteString.ANTECODES_NAME(item.GameType, code) + ":[" + spstr + "]</span>");
+                    //            }
+                    //        }
+
+                    //    }
+                    //}
+
+                    //if (hList == null || hList.Count <= 0)
+                    //{
+                    //    continue;
+                    //}
+
+                    var name = gameCode.ToLower() == "bjdc" ? item.MatchId : item.MatchIdName;
+                <tr @(singleInfo.AnteCodeList.IndexOf(item) % 2 == 0 ? "" : "class=n2")>
+                    <td>
+                        @name
+                    </td>
+                    <td>@item.HomeTeamName VS @item.GuestTeamName
+                    </td>
+                    <td>
+                        @(item.GameType.ToLower() == "brqspf" ? "" : item.LetBall.ToString())
+                    </td>
+                    <td>
+                        @SiteString.GameType_NAME(gameCode, item.GameType) @*：@Html.Raw(string.Join("", hList))*@
+                    </td>
+                    <td class="red">
+                        @SiteString.ANTECODES_NAME(item.GameType, item.MatchResult)
+                    </td>
+                </tr>
+
+                }
+                <tr>
+                    <td colspan="5">
+                        过关方式：@(string.IsNullOrEmpty(playType) ? "" : playType.Replace("_", "串"))
+                    </td>
+                </tr>
+            }
+        </table>
+        <div class="tzllb">
+            <h2>
+                单式列表</h2>
+            <label>
+                <input type="checkbox" />&nbsp;仅看存活单注</label>
+        </div>
+        <table class="mingxilook_table" cellspacing="0" cellpadding="0" border="0">
+            <colgroup>
+                <col width="100" />
+                <col />
+                <col width="150" />
+                <col width="150" />
+            </colgroup>
+            <tr>
+                <th>
+                    序号
+                </th>
+                <th>
+                    场次
+                </th>
+                <th>
+                    注数
+                </th>
+                <th>
+                    过关方式
+                </th>
+            </tr>
+            @{
+            for (int i = 0; i < formatList.Count; i++)
+            {
+                var codes = formatList[i].Split(',');
+
+                <tr @(i % 2 == 0 ? "" : "class=n2")>
+                    <td>@(i + 1)
+                    </td>
+                    <td>
+                        @for (int j = 0; j < codes.Length; j++)
+                        {
+                            if (codes[j].Contains("*"))
+                            {
+                                continue;
+                            }
+                            else
+                            {
+                                var code = codes[j].ToString();
+                                var item = new OrderSingleScheme();
+                                if (ContainsMatchId)
+                                {
+                                    var idx = code.Split('→')[0];
+                                    item = singleInfo.AnteCodeList.Where(p => p.MatchId == idx).FirstOrDefault();
+                                }
+                                else
+                                {
+                                    item = singleInfo.AnteCodeList[j];
+                                }
+
+                                var result = item.MatchResult;
+
+                                code = SiteString.CheckContainsMatch(code);
+                                code = item.GameType.ToLower() == "sxds" ? SiteString.ChangeAnteCode(code) : code;
+                                var color = string.IsNullOrEmpty(result) || result == code ? "cc_red" : "cc_gray";
+                                var name = gameCode.ToLower() == "bjdc" ? item.MatchId : item.MatchIdName;
+                            <span class="@color">@name->@SiteString.ANTECODES_NAME(item.GameType, code) </span>
+                            <em @(item.GameType.ToLower() == "spf" && item.LetBall > 0 ? "class=red" : "class=green")>@(item.GameType.ToLower() == "spf" ? item.LetBall > 0 ? "+" + item.LetBall.ToString() : item.LetBall.ToString() : "")</em>
+                            }
+                        }
+                    </td>
+                    <td>
+                        1
+                    </td>
+                    <td>@playType.Replace('_', '串')
+                    </td>
+                </tr>
+            }
+            }
+        </table>
+        <br />
+    </div>
+    <script type="text/javascript">
+
+        $(".tzllb input:checkbox").click(function () {
+            var flag = $(this).attr("checked");
+            var tbobj = $(this).parents("div.tzllb").next();
+            if (flag) {
+                tbobj.find(".cc_gray").parents("tr").hide();
+
+            } else {
+                tbobj.find(".cc_gray").parents("tr").show();
+            }
+        });
+    </script>
+}

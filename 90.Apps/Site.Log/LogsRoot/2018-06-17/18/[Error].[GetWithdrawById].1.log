@@ -1,0 +1,13 @@
+[0][2018-06-17 18:22:51] 查询提现记录列表 - 数据数组长度不满足要求，不能转换成此Withdraw_QueryInfo对象，传入数组为22。MWD1001002212228880658256, 15820704625, 11856, LOCAL, , , 90, 重庆, 惠州, , 中国工商银行, 吉隆支行, 6212262008018976267, 1.0000, 6/17/2018 10:22:12 AM, 1, 1.0000, , , 陈传妹, 15820704625, 
+Parameter name: dataArray
+    System.Exception: 查询提现记录列表 - 数据数组长度不满足要求，不能转换成此Withdraw_QueryInfo对象，传入数组为22。MWD1001002212228880658256, 15820704625, 11856, LOCAL, , , 90, 重庆, 惠州, , 中国工商银行, 吉隆支行, 6212262008018976267, 1.0000, 6/17/2018 10:22:12 AM, 1, 1.0000, , , 陈传妹, 15820704625, 
+Parameter name: dataArray ---> System.ArgumentException: 数据数组长度不满足要求，不能转换成此Withdraw_QueryInfo对象，传入数组为22。MWD1001002212228880658256, 15820704625, 11856, LOCAL, , , 90, 重庆, 惠州, , 中国工商银行, 吉隆支行, 6212262008018976267, 1.0000, 6/17/2018 10:22:12 AM, 1, 1.0000, , , 陈传妹, 15820704625, 
+Parameter name: dataArray
+   at GameBiz.Core.Withdraw_QueryInfo.LoadArray(Object[] dataArray)
+   at GameBiz.Domain.Managers.SqlQueryManager.GetWithdrawById(String orderId)
+   at GameBiz.Business.FundBusiness.GetWithdrawById(String orderId)
+   at GameBiz.Service.GameBizWcfService_Fund.GetWithdrawById(String orderId, String userToken)
+   --- End of inner exception stack trace ---
+   at Common.Communication.WcfService.DoWork(WcfInvokeInfo invokeInfo)
+    ----------------------------------------------------------------------------
+

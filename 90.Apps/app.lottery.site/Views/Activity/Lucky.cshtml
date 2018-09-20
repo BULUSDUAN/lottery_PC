@@ -1,0 +1,808 @@
+﻿@using System.Web.UI.WebControls
+@using app.lottery.site.Models;
+@{
+    ViewBag.Title = "幸运抽奖 - 活动中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "幸运抽奖, 活动中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    Layout = "../Shared/_HuoDong.cshtml";
+    CurrentUserInfo CurrentUser = ViewBag.CurrentUser;
+    var JoinLuckDraw = ViewBag.QueryJoinLuckDraw as Activity.Core.A20150120_JoinLuckyDraw_Collection;
+}
+@section css{
+    @ViewHelpers.css("buylottery.css")
+    @UserHelper.css("user.css")
+}
+@section js{
+    @UserHelper.js("reg_new.js")
+    @ViewHelpers.js("jQueryRotate.js")
+    @UserHelper.js("formValidator-4-1-3.js")
+    @UserHelper.js("formValidatorRegex.js")
+}
+<div class="lucyk-main">
+    <div style="width: 1000px; margin: 0 auto;">
+        <div class="lk-left">
+            <div id="disk">
+                <img src="@ViewHelpers.img("/buylottery/disk_1.png")" id="diskimg" />
+                <input type="hidden" name="hdimgurl" id="hdimgurl" value="@ViewHelpers.img("/buylottery/disk_2.gif")" />
+                <input type="hidden" name="hdimgurl2" id="hdimgurl2" value="@ViewHelpers.img("/buylottery/disk_1.png")" />
+            </div>
+            <div id="start">
+                <img class="starimg" id="startbtn" width="70px" height="105px" src="@ViewHelpers.img("/buylottery/ch-2.png")">
+            </div>
+        </div>
+        <div class="lk-right">
+            <div class="lk-usershow">
+                <div class="lk-explain">
+                    <div class="lk-cjjh">
+                        <span class="lk-cjjhimg"></span>
+                        <h3>
+                            抽奖机会如何来？</h3>
+                        <div style="clear: both;">
+                        </div>
+                        <label>
+                            <em></em>用户登录后输入抽奖码即可参与抽奖</label>
+                        <label>
+                            <em></em>用户须绑定手机，认证身份信息</label>
+                        <div id="lucyk_setuserinfo">
+                            @if (CurrentUser != null)
+                            {
+                                <label>
+                                    <span style="display: block; margin-top: 26px; font-size: 14px;">欢迎您！<i style="color: #37C608">"@CurrentUser.LoginInfo.DisplayName"!</i>
+                                    </span>
+                                </label>
+                    
+                            }
+                            else
+                            {
+                                <span class="lk-regandlongin"><a class="lk-register" id="lk-register">轻松注册</a><a
+                                    class="lk-login" id="lk-login">立即登录</a></span>
+                            }
+                        </div>
+                    </div>
+                    <div class="lk-tips">
+                        <span class="lk-tipsimg"></span>
+                        <h3>
+                            奖品发放TIPS:</h3>
+                        <div style="clear: both;">
+                        </div>
+                        <label>
+                            <em></em>每次抽奖100%中奖</label>
+                        <label>
+                            <em></em>抽中奖品即时到帐，请前往用户中心查看拥有抽奖码用户每人限一次抽奖机会</label>
+                    </div>
+                    <div style="clear: both;">
+                    </div>
+                </div>
+                <div>
+                    <table border="0" cellpadding="0" cellspacing="1" class="lk-lucykuser">
+                        <tr style="background-color: #FDFF06; font-size: 16px; color: red; font-weight: bold;">
+                            <td colspan="2">
+                                获奖名单
+                            </td>
+                        </tr>
+                        <tr style="font-size: 14px; color: #fff; font-weight: bold;">
+                            <td width="50%" style="background-color: #5871FC;">
+                                获奖用户名
+                            </td>
+                            <td width="50%" style="background-color: #EE4905;">
+                                所中奖项
+                            </td>
+                        </tr>
+                        @if (JoinLuckDraw != null)
+                        {
+                            foreach (var item in JoinLuckDraw.JoinLuckyDrawList)
+                            {
+                            <tr style="background-color: #fff; font-size: 14px; color: #333; font-weight: bold;">
+                                <td width="50%">
+                                    @item.LoginName
+                                </td>
+                                <td width="50%">
+                                    @if (item.PrizeType != null && item.PrizeType == "赠送彩票")
+                                    {
+                                        if (item.OrderId.StartsWith("SSQ"))
+                                        {
+                                        <label>
+                                            双色球彩票一注</label>
+                                        }
+                                        if (item.OrderId.StartsWith("CQSSC"))
+                                        {
+                                        <label>
+                                            时时彩彩票一注</label>
+                                        }
+                                    }
+                                    @if (item.OrderId == null && item.PrizeMoney > 0)
+                                    {
+                                        <label>
+                                            喜中彩金 @item.PrizeMoney.ToString("N")元
+                                        </label>
+                                        
+                                    }
+                                </td>
+                            </tr>
+                            }
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div style="clear: both;">
+        </div>
+    </div>
+</div>
+<div class="buy_lottery">
+    @{Html.RenderAction("footer", "activity");}
+</div>
+<!-- 完善资料送彩金 -->
+<div style="display: none; width: 605px; height: 382px;" id="box_user_info">
+    <div id="box_user_info_div" class="box">
+        <form onsubmit=" return false " autocomplete="off" id="form_for_user" method="post">
+        <h3>
+            <a class="fr" onclick=" hideBox() " href="javascript:void 0;">关闭</a>温馨提示：</h3>
+        <div class="margincont">
+            <div style="height: 35px; border-radius: 6px;" class="tz" id="insertHtml">
+                <p style="height: 30px; line-height: 30px; text-align: center">
+                    <label id="dispalyName_">
+                    </label>
+                    ：您好,本站完善资料即可获赠<span class="red"> 3 </span>元彩金.
+                </p>
+            </div>
+            <dl>
+                <dt>真实姓名：</dt>
+                <dd>
+                    <label>
+                        <input type="text" onblur=" checkRealNameId('form_for_user') " class="text_input2"
+                            size="11" id="realName" name="infoForm.realName">
+                        <span class="com_tip onShow">领奖和提款的凭证，提交后不能修改</span>
+                    </label>
+                </dd>
+                <dt>身份证号：</dt>
+                <dd>
+                    <label>
+                        <input type="text" onblur=" checkRealNameId('form_for_user') " class="text_input2"
+                            size="18" id="idCard" name="infoForm.idCard">
+                        <span class="com_tip onShow">领奖和提款的凭证，需与真实姓名一致</span>
+                    </label>
+                </dd>
+                <dt>手机号码：</dt>
+                <dd>
+                    <label>
+                        <input type="text" onblur=" checkMobileNum('phoneNumber') " onkeyup=" return isMobileBinded('phoneNumber', 'getMessage'); "
+                            onpaste="return false;" class="text_input2" size="13" id="phoneNumber" name="phoneNumber">
+                        <span class="com_tip onShow">用于找回密码、修改信息</span>
+                    </label>
+                </dd>
+                <div id="ismobile_">
+                    <dt>获取验证：</dt>
+                    <dd>
+                        <div style="width: 380px; margin-top: 0" class="code_sender">
+                            <label>
+                                <input type="text" class="text_input2" id="codeNumber" name="codeNumber" style="width: 50px;" />
+                                <input type="button" class="getBtn" onclick=" getTelRall(this, 'phoneNumber') " value="免费获取"
+                                    id="answer2" name="answer2">
+                            </label>
+                        </div>
+                    </dd>
+                </div>
+            </dl>
+            <div class="cont_center layerbtns">
+                <label>
+                    <input type="button" value="确 定" title="确定" class="layer_a" id="submit_btn"></label>
+                <label>
+                    <input type="button" onclick=" hideBox() " value="取 消" title="取消" class="layer_b"></label>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+<!-- 注册 -->
+<div id="box_userReg_info_div" style="display: none">
+    <div style="margin: 160px 54px;">
+        <form name="regform" id="regform" method="post" onsubmit="return checkForm();">
+        <h3>
+            <a class="fr" onclick=" hideBox() " href="javascript:void 0;"></a>
+        </h3>
+        <ul class="loginBox">
+            <li><span class="li-short">用户名：</span> <span class="li-center">
+                <input type="text" id="username" value="" class="normal" name="username" /></span>
+                <span class="li-tip" id="username_tip"></span>
+                <div class="error red" id="username_err">
+                </div>
+            </li>
+            <li><span class="li-short">登录密码：</span> <span class="li-center">
+                <input type="password" id="password" class="normal" name="password" /></span> <span
+                    class="li-tip" id="password_tip"></span>
+                <div class="error red" id="password_err">
+                </div>
+            </li>
+            <li><span class="li-short">确认密码：</span> <span class="li-center">
+                <input type="password" id="password2" name="password2" /></span> <span class="li-tip"
+                    id="password2_tip"></span>
+                <div class="error red" id="password2_err">
+                </div>
+            </li>
+            <li><span class="li-short">验证码：</span> <span class="li-center">
+                <input type="text" class="validateCode" id="verifycode" name="verifycode" maxlength="4"
+                    style="width: 60px; height: 26px; line-height: 26px;" />
+                <img src="/user/createvalidatecode" class="code-img" id="CheckCode" width="80" height="32"
+                    alt="点击刷新" onclick="refreshVerify()" />看不清?<a href="javascript:refreshVerify()" style="color: #7c030c;
+                        margin-left: 5px;">换一张</a></span> <span class="li-tip" id="verifycode_tip">
+                </span>
+                <div class="error red" id="verifycode_err">
+                </div>
+            </li>
+            <li style="text-align: center"><span class="li-center" style="text-align: center !important;
+                font-size: 12px; font-weight: bold;">
+                <label>
+                    <input type="checkbox" id="checkyears" checked="checked" />我已年满18周岁并同意<a href="/help/serviceAgreement1"
+                        class="red" target="_blank">《@SiteString.getHZSiteName(Request)用户购彩协议》</a></label>
+            </span></li>
+            <li class="li-submit" style="text-align: center">
+                <input type="submit" value="立即注册" class="register-submit" />
+                <input type="button" class="login-submit" value="立即登录" />
+            </li>
+            @* <li style="text-align: center">
+                <span style="margin-left: -100px;">   我已经注册？<a href="javascript:void(0);" id="loginbtn_new"
+                         style="color: #7c030c">马上登录</a></span>
+             
+            </li>*@
+        </ul>
+        </form>
+    </div>
+</div>
+<!-- 注册成功 -->
+<div id="box_userRegWin_info_div" style="display: none;">
+    <div style="margin: 125px 54px; text-align: center;">
+        <h3>
+            <a class="fr" onclick=" hideBox() " href="javascript:void 0;"></a>
+        </h3>
+        <span class="regwin-ts"><em></em>
+            <h2>
+                恭喜您，注册成功！</h2>
+        </span><span class="regwin-msg">请牢记您的昵称:<label class="red"></label>
+                   您的账户余额：<label class="red">0元</label></span> <span class="regwin-cyjj"><a href="javascript:"
+                                                                                            id="lucky_">参与抽奖</a></span> <span class="regwin-usercount mt10">您已经成为本站第<label class="orange"></label>位会员！</span>
+    </div>
+</div>
+<!-- 输入抽奖码 -->
+<div id="lucyk_show" style="display: none">
+    <div class="lk-cjmain">
+        <h3>
+            <a class="fr" onclick=" hideBox() " href="javascript:void 0;"></a>
+        </h3>
+        <span>请输入抽奖码:
+            <input type="text" name="cjtext" id="cjtext" class="cjtext" />
+            <a class="cjbtn" id="cjbtn">抽奖</a> </span>
+    </div>
+</div>
+<!-- 领取奖品 -->
+<div id="lucyk_jplq" style="display: none;">
+    <div class="lucyk_lqmain">
+         <h3>
+            <a class="fr" onclick=" hideBox() " href="javascript:void 0;"></a>
+        </h3>
+        <div><em></em><span id="jp_show"></span></div>
+        <div style="clear: both;"></div>
+        <div ><a class="lq_btn" href="/member/safe" target="_blank">领取</a></div>
+    </div>
+</div>
+<!-- 认证js -->
+<script type="text/javascript">
+    //new Drag("box_userReg_info",{ Handle: "regform", Limit: true });
+    var box_user_info = new LightBox("box_user_info");//完善资料
+    var box_userReg_info_div = new LightBox("box_userReg_info_div");//注册
+    var box_userRegWin_info_div = new LightBox("box_userRegWin_info_div");//注册成功
+    var lucyk_show = new LightBox("lucyk_show");//抽奖码
+    var lucyk_jplq = new LightBox("lucyk_jplq");//领取奖品
+     var hdimgurl = $("#hdimgurl").val();
+     var hdimgurl2 = $("#hdimgurl2").val();
+
+     function rotateFunc(awards,angle,text){  //awards:奖项，angle:奖项对应的角度
+	        lucyk_show.Close();  
+          document.getElementById("diskimg").src = hdimgurl;
+		$('#startbtn').stopRotate();
+		$("#startbtn").rotate({
+			angle:0, 
+			duration: 5000, 
+			animateTo: angle+1440, //angle是图片上各奖项对应的角度，1440是我要让指针旋转4圈。
+            easing: $.easing.easeOutSine,
+			callback:function() {
+			   document.getElementById("diskimg").src = hdimgurl2;
+			    //alertTip(text);
+			    $("#jp_show").text(text);
+                   lucyk_jplq.Show();
+			}
+		}); 
+	};
+	
+    
+
+    //抽奖
+    $("#cjbtn").click(function() {
+        var lkcode = $("#cjtext").val();
+        if (lkcode==null || lkcode == "") {
+            alertTip('请输入您的抽奖码！');
+            return;
+        }
+        $.post("/activity/Rotate",{code:lkcode},function(res) {
+            if (res.IsSuccess) {//关闭窗体   执行动画
+                var resultinfo = res.result.JoinLuckyDrawList[1];
+              
+                if (resultinfo.PrizeType != null && resultinfo.PrizeType == "赠送彩票") {
+                    if (resultinfo.OrderId != null ) {
+                        if (resultinfo.OrderId.indexOf("SSQ") ==0 ) {
+                             rotateFunc("彩票一注", 23, "恭喜您抽中双色球彩票一注！");
+                             return;
+                        }
+                         if (resultinfo.OrderId.indexOf("CQSSC") == 0) {
+                             rotateFunc("彩票一注", -72, "恭喜您抽中重庆时时彩彩票一注！");
+                             return;
+                        }
+                    }
+                }
+                if (resultinfo.PrizeMoney > 0) {
+                    if (resultinfo.PrizeMoney > 0 && resultinfo.PrizeMoney <= 3) {
+                        rotateFunc("彩金3", -34, "恭喜您抽中3元彩金！");
+                        return;
+                    }
+                    if (resultinfo.PrizeMoney > 3 && resultinfo.PrizeMoney <= 5) {
+                        rotateFunc("彩金5", 87, "恭喜您抽中5元彩金！");
+                        return;
+                    }
+                    if (resultinfo.PrizeMoney > 5 && resultinfo.PrizeMoney <= 88) {
+                        rotateFunc("彩金88", 165, "恭喜您抽中88元彩金！");
+                        return;
+                    }
+                     if (resultinfo.PrizeMoney > 88 && resultinfo.PrizeMoney <= 888) {
+                        rotateFunc("彩金888", 247, "恭喜您抽中888元彩金！");
+                        return;
+                    }
+                }
+
+            } else {
+                alertTip(res.Msg);
+                return;
+            }
+        });
+    });
+
+    //注册
+    $("#lk-register").click(function () {
+        box_userReg_info_div.Show();
+        
+    });
+    //参与抽奖
+    $("#lucky_").click(function() {
+        $.post("/user/Info",function(res) {
+            if (res.IsSuccess) {
+                box_userRegWin_info_div.Close();
+                if (res.isAuthentication == true && res.isAuthenticationMobile == true) {//认证完成
+                 //显示抽奖码
+                      lucyk_show.Show();
+                } else {//认证
+                    $("#dispalyName_").text(res.user.LoginInfo.DisplayName);
+                    if (res.isAuthentication == true) {
+                        $("#realName").val(res.user.RealNameInfo.RealName).attr("disabled","disabled");
+                        $("#idCard").val(res.user.RealNameInfo.IdCardNumber).attr("disabled","disabled");
+                    }
+                    if (res.isAuthenticationMobile == true) {
+                         $("#phoneNumber").val(res.user.MobileInfo.Mobile).attr("disabled","disabled");
+                          $("#ismobile_").hide();
+                    }     
+                    box_user_info.Show();
+                }
+            } else {
+                alert(res.Message);
+                return;
+            }
+        });
+    });
+    //隐藏
+    function hideBox() {
+        box_user_info.Close();
+        box_userReg_info_div.Close();
+        box_userRegWin_info_div.Close();
+        lucyk_show.Close();
+        lucyk_jplq.Close();
+    }
+
+    function checkRealNameId(fid){
+        var name = $("#realName"),idCard = $("#idCard");
+        //$('#'+fid+' input').next('span.com_tip').remove();
+        name.next('.com_tip').remove();
+        //idCard.next('.com_tip').remove();
+        if(name.val() == ""){
+            name.focus().after('<span class="com_tip onShow">领奖和提款的凭证，提交后不能修改</span>');
+            return false;
+        }
+        if(!/^[\u4E00-\u9FA5·a-zA-Z]+$/.test(name.val().trim())){
+            name.after('<span class="com_tip onShow">请输入汉字、字母或间隔符</span>');
+            return false;
+        }
+        idCard.next('.com_tip').remove();
+        if(idCard.val().trim() == ""){
+            idCard.after('<span class="com_tip onShow">领奖和提款的凭证，需与真实姓名一致</span>');
+            return false;
+        }
+        if(!/^(\d{14}|\d{17})(\d|[xX])$/.test(idCard.val())){
+            idCard.after('<span class="com_tip onError">身份证号格式输入有误</span>');
+            return false;
+        }
+        var error = isIdCardNo && isIdCardNo(idCard.val());
+        if(error){
+            idCard.after('<span class="com_tip onError">'+error+'</span>');
+            return false;
+        }
+        return true;
+    }
+    function checkMobileNum(mid) {
+        var mobile = $('#' + mid), val = mobile.val();
+        var tip = mobile.next('span.com_tip');
+        if (!tip[0]) tip = $('<span class="com_tip"></span>').insertAfter(mobile);
+        if (val == "") {
+            tip.addClass('onShow').html('用于找回密码、修改信息');
+            return false;
+        } else if (!/^\d{11}$/.test(val)) {
+            tip.addClass('onError').html('手机号码输入有误');
+            return false;
+        }
+        //tip.attr('class', 'com_tip onCorrect').html('&nbsp;');
+        return true;
+    }
+    function isMobileBinded(mid,gid){
+        var t = $("#"+mid),g = $("#"+gid),number = t.val().trim();
+        t.next('.com_tip').remove();
+        if(number.length != 11){
+            return false;
+        }else{
+            if(!checkMobileNum(mid)) return false;
+            t.next('.com_tip').addClass('onShow').html('正在检验手机号码是否被使用');
+            $.ajax({
+                type:'POST',
+                url:'/user/isMobileBinded',
+                data:{mobile: number},
+                success:function(res) {
+                    if(res.code == true){
+                        t.next('.com_tip').remove();
+                        t.after('<span class="com_tip onError">'+res.Msg+'</span>');
+                    }else{
+                        t.next('.com_tip').addClass('onCorrect').html('此手机号码可用');
+                    }
+                }
+            });
+            return false;
+        }
+    }
+    function checkPhoneRandom(){
+        var ran = $('#phoneRandomNum');
+        var getBtn = $('#getMessage');
+        var random = ran.val().trim();
+        getBtn.next('.com_tip').remove();
+        if(random == "" || random == null){
+            getBtn.after('<span class="com_tip onShow">请输入短信验证码</span>');
+            return false;
+        }
+        return true;
+    }
+
+    var isSend = 0;
+    function senPhoneRandom(num,gid) {
+        if (isSend == 1) {
+            $.alert("刚下发短信，请耐心等待。");
+            return;
+        }
+        isSend = 1;
+        var input = $("#"+gid);//.hide();
+        input.removeClass('getBtn').addClass('getBtn_des').unbind();
+        $.ajax({
+            type: "POST",
+            url: '/user/getTelCode',
+            dataType: 'json',
+            data: { bindMobile: num },
+            success: function(msg) {
+                var content = $('#timer_content_user');
+                //content.html('<span id="timer_text">发送中</span>(<span id="timer">120</span>)秒');
+                input.val('倒计时(60)');
+                if (msg.msg == '下发成功' || msg.success) {
+                    //$("#timer_text").html('下发成功，倒计时');
+                    var timeCtr = setInterval(function() {
+                        var sec = +input.val().match(/\d+/)[0];
+                        if (sec > 0) {
+                            input.val('倒计时(' + (sec - 1) + ')');
+                        } else {
+                            clearInterval(timeCtr);
+                            input.val('获取短信');
+                            input.removeClass('getBtn_des').addClass('getBtn').click(function() { senPhoneRandom(num, gid) });
+                            isSend = 0;
+                            //input.show();
+                        }
+                    }, 1000);
+                } else {
+                    input.val('获取短信');
+                    input.removeClass('getBtn_des').addClass('getBtn').click(function() { senPhoneRandom(num, gid) });
+                    isSend = 0;
+                    //input.show();
+                    $.alert('下发失败，请重试');
+                }
+            }
+        });
+    }
+
+    function isIdCardNo(num){
+        num = num.toUpperCase();
+        if (!(/(^\d{15}$)|(^\d{17}([0-9]|X)$)/.test(num))){
+            return '输入的身份证号有误，或者不符合规定';
+            //'输入的身份证号长度不对，或者号码不符合规定！/n15位号码应全为数字，18位号码末位可以为数字或X。';
+        }
+        var len, re;
+        len = num.length;
+        if (len == 15){
+            re = new RegExp(/^(\d{6})(\d{2})(\d{2})(\d{2})(\d{3})$/);
+            var arrSplit = num.match(re);
+            var dtmBirth = new Date('19' + arrSplit[2] + '/' + arrSplit[3] + '/' + arrSplit[4]);
+            var bGoodDay;
+            bGoodDay = (dtmBirth.getYear() == Number(arrSplit[2])) && ((dtmBirth.getMonth() + 1) == Number(arrSplit[3])) && (dtmBirth.getDate() == Number(arrSplit[4]));
+            if (!bGoodDay){
+                return '输入的身份证号里出生日期不对！';
+            }else{
+                var arrInt = new Array(7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2);
+                var arrCh = new Array('1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2');
+                var nTemp = 0, i;
+                num = num.substr(0, 6) + '19' + num.substr(6, num.length - 6);
+                for(i = 0; i < 17; i ++){
+                    nTemp += num.substr(i, 1) * arrInt[i];
+                }
+                num += arrCh[nTemp % 11];
+            }
+        }
+        if (len == 18){
+            re = new RegExp(/^(\d{6})(\d{4})(\d{2})(\d{2})(\d{3})([0-9]|X)$/);
+            var arrSplit = num.match(re);
+            var dtmBirth = new Date(arrSplit[2] + "/" + arrSplit[3] + "/" + arrSplit[4]);
+            var bGoodDay;
+            bGoodDay = (dtmBirth.getFullYear() == Number(arrSplit[2])) && ((dtmBirth.getMonth() + 1) == Number(arrSplit[3])) && (dtmBirth.getDate() == Number(arrSplit[4]));
+            if (!bGoodDay){
+                return '输入的身份证号里出生日期不对！';
+            }else{
+                var valnum;
+                var arrInt = new Array(7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2);
+                var arrCh = new Array('1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2');
+                var nTemp = 0, i;
+                for(i = 0; i < 17; i ++){
+                    nTemp += num.substr(i, 1) * arrInt[i];
+                }
+                valnum = arrCh[nTemp % 11];
+                if (valnum != num.substr(17, 1)){
+                    return '身份证号码输入有误';
+                }
+            }
+            <!--判断年龄是否已满18周岁或者超过80周岁-->
+            var isLegal = filter18(num);
+            if(isLegal){
+                return isLegal;
+            }else {
+                isLegal = filter80(num);
+                if(isLegal) return isLegal;
+            }
+            <!--end-->
+        }
+        return false;
+    }
+    function filter18(num){
+        var birthY = +num.slice(6,10),birthM = +num.slice(10,12),birthD = +num.slice(12,14),today = new Date();
+        var thisY = today.getFullYear(),thisM = today.getMonth()+ 1,thisD = today.getDate();
+        if(birthY + 18 > thisY){
+            return '未满18周岁不能参与该活动';
+        }else if(birthY + 18 == thisY){
+            if(birthM > thisM){
+                return '未满18周岁不能参与该活动';
+            }else if(birthM == thisM){
+                if(birthD > thisD){
+                    return '未满18周岁不能参与该活动';
+                }else{
+                    return false;
+                }
+            }else {
+                return false;
+            }
+        }else{
+            return false;
+        }
+    }
+    function filter80(num){
+        var birthY = +num.slice(6,10),birthM = +num.slice(10,12),birthD = +num.slice(12,14),today = new Date();
+        var thisY = today.getFullYear(),thisM = today.getMonth()+ 1,thisD = today.getDate();
+        if(birthY + 80 < thisY){
+            return '超过80周岁不能参与该活动';
+        }else if(birthY + 80 == thisY){
+            if(birthM < thisM){
+                return '超过80周岁不能参与该活动';
+            }else if(birthM == thisM){
+                if(birthD <= thisD){
+                    return '超过80周岁不能参与该活动';
+                }else{
+                    return false;
+                }
+            }else {
+                return false;
+            }
+        }else{
+            return false;
+        }
+    }
+    function showUserInfoPanel(obj,index) {
+        $.ajax({
+            type:"post",
+            url:"/user/Info",
+            success:function(res){
+                if(res.IsSuccess == true && res.isAuthentication==true && res.isAuthenticationMobile ==true ) {
+                    alertTip("您的信息已完善");
+                }else{
+                    $('#box_user_info').show();
+                    Shader.show();
+                    Shader.adjustPostion(document.getElementById('box_user_info_div'));
+                    if (index==1) {
+                        var insertText = ' <p style="height: 30px; line-height: 30px; text-align: center">'+res.displayName+'：您好,本站完善资料即可参加充值送彩金活动.<a href="/activity/register" style="color:#3C0EFF;" target="_blank"> 活动详情 </a></p>';
+                        document.getElementById("insertHtml").innerHTML = insertText; 
+                    } else {
+                        var insertText = ' <p style="height: 30px; line-height: 30px; text-align: center">'+res.displayName+'：您好,本站完善资料即可获赠<span class="red"> 3 </span>元彩金.</p>';
+                        document.getElementById("insertHtml").innerHTML = insertText; 
+                    }
+                }
+            }
+        });
+    }
+    
+    function checkRealNameId(fid){
+        var name = $("#realName"),idCard = $("#idCard");
+        var name_tip = name.next('.com_tip');
+        if (!/^[\u4E00-\u9FA5·a-zA-Z]+$/.test(name.val())) {
+            name_tip.attr('class', 'com_tip onError').html('请输入汉字、字母或间隔符');
+            setTimeout(function () {
+                name_tip.attr('class', 'com_tip onShow').html('领奖和提款的凭证，提交后不能修改');
+            }, 2000);
+            return false;
+        }else{
+            name_tip.attr('class', 'com_tip onCorrect').html('输入的姓名正确。');
+        }
+        var id_tip = idCard.next('.com_tip'), id_error = '';
+        if (!/^(\d{14}|\d{17})(\d|[xX])$/.test(idCard.val())) {
+            id_error = '身份证号格式输入有误';
+        }
+        var error = isIdCardNo && isIdCardNo(idCard.val());
+        if (error) id_error = error;
+        if (id_error) {
+            id_tip.attr('class', 'com_tip onError').html(id_error);
+            setTimeout(function () {
+                id_tip.attr('class', 'com_tip onShow').html('领奖和提款的凭证，需与真实姓名一致');
+            }, 2000);
+            return false;
+        } else {
+            id_tip.attr('class', 'com_tip onCorrect').html('输入的身份证号码正确。');
+        }
+        return true;
+    }
+
+    function getTelRall(obj, phoneId) {
+        phoneId = phoneId || 'bindMobile';
+        var input = $(obj), form = input.closest('form'),inputP = input.parent();
+        var bindVal = $('#' + phoneId, form);
+        if (phoneId == 'phoneNumber') {
+            if (!checkRealNameId('form_for_user')) return false;
+        }
+        if (!checkMobileNum(phoneId)) {
+            bindVal.focus();
+            return false;
+        }
+
+        if(bindVal.next(".onError").length) return false;
+        if(!bindVal.next(".onCorrect").length) return false;
+        var mobile = bindVal.val(), tet = form.serialize(), surebtn = form.find('.layer_a:last').prev(':button');
+        if (phoneId == 'phoneNumber') tet = tet.replace(/phoneNumber/i, 'bindMobile');
+        $.post('/user/getTelCode', tet, function (msg) {
+            if (msg.code ==true) {
+                time();
+            } else {
+                input.val('获取失败').attr('disabled', 0);
+            }
+        });
+    }
+
+    var wait = 60; //时间 
+    function time() { 
+        var again = $("#answer2");
+        if (wait == 0) {
+            again.removeAttr("disabled");
+            again.removeClass("layer_b");
+            again.val("免费获取"); //改变按钮中value的值 
+            wait = 60;
+        } else {
+            again.addClass("layer_b");
+            again.attr("disabled", true); //倒计时过程中禁止点击按钮 
+            again.val(wait + "秒后重获"); //改变按钮中value的值 
+            wait--;
+            setTimeout(function() {
+                time(); //循环调用 
+            }, 1000);
+        }
+    }
+    //提交
+    $("#submit_btn").click(function() {
+        var bindVal = $("#phoneNumber"), codeNumer = $('#codeNumber').val(), realName = $("#realName").val(), idCard = $("#idCard").val();
+        var iscodeNumer = $("#verifycode").is(':hidden');//    
+        if(!checkRealNameId('form_for_user')) return;
+        if(!checkMobileNum('phoneNumber')) return ;
+        if(bindVal.next(".onError").length) return ;
+        if ( codeNumer == '' && iscodeNumer == false ) {
+            alertTip('请输入验证码！');
+            return ;
+        }
+        $.post("/user/bindMobileOrRealname",{mobileCode:codeNumer,realName:realName,idCardNumber:idCard},function(res) {
+            if (res.code == true) {
+                alertTip(res.Msg);
+                $("#boxAlertOkButton").click(function() {
+                    box_user_info.Close();
+                    lucyk_show.Show();
+                });
+            } else {
+                alertTip(res.Msg);
+                return;
+            }
+        });
+
+    });
+ 
+    $("#lk-login").live("click", function () {
+        isLogin();
+    });
+  
+   
+    $("#startbtn").click(function () {
+         user.isLogin(function (islogin) {
+            if (!islogin) {
+                loginDialog.Show();
+                $("#userName").focus();
+                user.LoginCallBack = function () {
+                    window.location.href = window.location.href;
+                };
+            } else {
+               
+                $.post("/user/Info",function(res) {
+                    if (res.IsSuccess) {
+                     $("#dispalyName_").text(res.user.LoginInfo.DisplayName);
+                        if (res.isAuthentication == true && res.isAuthenticationMobile == true) {
+                            lucyk_show.Show();
+                            return;
+                        }
+                         if (res.isAuthentication == true) {
+                        $("#realName").val(res.user.RealNameInfo.RealName).attr("disabled",1);
+                        $("#idCard").val(res.user.RealNameInfo.IdCardNumber).attr("disabled",1);
+                        }
+                        if (res.isAuthenticationMobile == true) {
+                             $("#phoneNumber").val(res.user.MobileInfo.Mobile).attr("disabled",1);
+                            $("#ismobile_").hide();
+                        }     
+                    box_user_info.Show();
+                        return;
+                    } else {
+                        alertTipe(res.Message);
+                        return;
+                    }
+                });
+            }
+        });
+    });
+    function isLogin() {
+        user.isLogin(function (islogin) {
+            if (!islogin) {
+                loginDialog.Show();
+                $("#userName").focus();
+                user.LoginCallBack = function () {
+                    window.location.href = window.location.href;
+                };
+            }
+        });
+        return false;
+    }
+</script>
+<script type="text/javascript">
+    initInput();
+</script>

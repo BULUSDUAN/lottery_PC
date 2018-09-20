@@ -1,0 +1,1312 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DNA.Client</name>
+    </assembly>
+    <members>
+        <member name="M:DNA.Client.Util.MD5(System.String)">
+            <summary>
+            用md5加密
+            </summary>
+            <param name="Sourcein">输入的数据</param>
+            <returns></returns>
+        </member>
+        <member name="T:Dnapay.Ca.ICA">
+            <summary>
+            CA证书接口
+            </summary>
+        </member>
+        <member name="M:Dnapay.Ca.ICA.Sign(System.String,System.String)">
+            <summary>
+            对字符串数据进行数字签名加密.
+            </summary>
+            <param name="cert">服务器证书公钥</param>
+            <param name="src">需要签名加密的内容</param>
+            <returns>签名加密的内容</returns>
+        </member>
+        <member name="M:Dnapay.Ca.ICA.Verify(System.String)">
+            <summary>
+            对签名加密数据进行验签解密。
+            </summary>
+            <param name="sign">对签名加密数据进行验签解密。</param>
+            <returns>签名加密的原文</returns>
+        </member>
+        <member name="M:Dnapay.Ca.ICA.GetServerCert">
+            <summary>
+            获取本地服务器证书
+            </summary>
+            <returns>本地服务器证书</returns>
+        </member>
+        <member name="M:Dnapay.Ca.ICA.GetCertInfo(System.String,System.Int32)">
+            <summary>
+            获取证书信息
+            </summary>
+            <param name="cert">Base64编码的X.509数字证书</param>
+            <param name="type">
+            type	意义
+            1	证书版本
+            2	证书序列号
+            8	证书发放者通用名
+            11	证书有效期起始
+            12	证书有效期截止
+            13	用户国家名
+            14	用户组织名
+            15	用户部门名
+            16	用户省州名
+            17	用户通用名
+            18	用户城市名
+            19	用户EMAIL地址
+            20	证书颁发者DN
+            21	证书主题（DN）
+            23	用户国家名(备用名C)
+            24	用户组织名(备用名O)
+            25	用户部门名(备用名OU)
+            26	用户省州名(备用名S)
+            27	用户通用名(备用名CN)
+            28	用户城市名(备用名L)
+            29	用户EMAIL地址(备用名E)
+            30	证书公钥（base64） 
+            </param>
+            <returns>CertInfo</returns>
+        </member>
+        <member name="T:Dnapay.Service.Client.XmlMessage">
+            <summary>
+            银联语音支付接口参数封装类，参数说明请参照《银联语音支付平台接口规范》文档。
+            </summary>
+        </member>
+        <member name="T:Dnapay.Service.Client.PosMessage">
+            <summary>
+            银联语音支付接口参数封装类，参数说明请参照《银联语音支付平台接口规范》文档。
+            </summary>
+        </member>
+        <member name="M:Dnapay.Service.Client.PosMessage.#ctor(System.String)">
+            <summary>
+            通过请求码实例化PosMessage实例，并且初始化BitMap属性
+            </summary>
+            <param name="procCode">请求码</param>
+        </member>
+        <member name="M:Dnapay.Service.Client.PosMessage.#ctor">
+            <summary>
+            创建PosMessage实例，并初始化BitMap属性
+            </summary>
+        </member>
+        <member name="M:Dnapay.Service.Client.PosMessage.#ctor(System.Byte[])">
+            <summary>
+            将字节数组的值赋值给PosMessage属性来实例化
+            </summary>
+            <param name="bytes">PosMessage字节数组</param>
+        </member>
+        <member name="M:Dnapay.Service.Client.PosMessage.GenerateMac">
+            <summary>
+            生成MD5编码可用字符串
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dnapay.Service.Client.PosMessage.ToString">
+            <summary>
+            转换成字符串
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dnapay.Service.Client.PosMessage.ToXml">
+            <summary>
+            格式化成XML格式
+            </summary>
+            <returns>返回XML格式字符串</returns>
+        </member>
+        <member name="P:Dnapay.Service.Client.PosMessage.ProcCode">
+            <summary>
+            交易代码	ProcCode	Char	4	M	M	4001
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.PosMessage.AccountNum">
+            <summary>
+            用户账号	a..2000(LLLLVAR) 	M	M 	填写手机号
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.PosMessage.ProcessCode">
+            <summary>
+            处理码	N6 	M 	M 	“190000”
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.PosMessage.Amount">
+            <summary>
+            交易金额	N12 	M 	M 
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.PosMessage.CurCode">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.PosMessage.TransDatetime">
+            <summary>
+            传输日期和时间	N10(MMDDhhmmss) 	M 	M  
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.PosMessage.AcqSsn">
+            <summary>
+            系统跟踪号(流水号)	n6	M	M
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.PosMessage.Ltime">
+            <summary>
+            本地交易时间	n6(hhmmss)	M	M
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.PosMessage.Ldate">
+            <summary>
+            本地交易日期	n4(MMDD)	M	M
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.PosMessage.SettleDate">
+            <summary>
+            清算日期	N4 		M+ 
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.PosMessage.UpsNo">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.PosMessage.TsNo">
+            <summary>
+            时间戳
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.PosMessage.Reference">
+            <summary>
+            引用地址
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.PosMessage.ReturnAddress">
+            <summary>
+            返回地址
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.PosMessage.RespCode">
+            <summary>
+            响应码	An2		M
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.PosMessage.Remark">
+            <summary>
+            备注	ans…200(LLLVAR)		C	
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.PosMessage.TerminalNo">
+            <summary>
+            受卡机终端标识码	Ans8	M	M
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.PosMessage.MerchantNo">
+            <summary>
+            受卡方标识码	ans17 	M 	M 	商户类型（2）+填写商户号	（15）
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.PosMessage.OrderNo">
+            <summary>
+            订单编号	ans40	M	M	类型（n2）+订单编号
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.PosMessage.OrderState">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.PosMessage.Description">
+            <summary>
+            Description	ans…200(LLLVAR)		C	
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.PosMessage.ValidTime">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.PosMessage.OrderType">
+            <summary>
+            订单类型
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.PosMessage.TransData">
+            <summary>
+            交换数据	ans…200(LLLVAR)		C	当39域为“00”时必选
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.PosMessage.Pin">
+            <summary>
+            个人密码	an32 	M 
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.PosMessage.LoginPin">
+            <summary>
+            登陆密码	B64 	M 
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.PosMessage.Mac">
+            <summary>
+            MAC 	an32 	M 	M  
+            </summary>
+        </member>
+        <member name="M:Dnapay.Service.Client.XmlMessage.#ctor">
+            <summary>
+            实例化XmlMessage
+            </summary>
+        </member>
+        <member name="M:Dnapay.Service.Client.XmlMessage.#ctor(System.String)">
+            <summary>
+            将XML格式字符串实例化成XmlMessage
+            </summary>
+            <param name="xml">XML格式字符串</param>
+        </member>
+        <member name="M:Dnapay.Service.Client.XmlMessage.ToString">
+            <summary>
+            转换成XML格式字符串
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Dnapay.Service.Client.XmlMessage.CustName">
+            <summary>
+            客户名
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.XmlMessage.CustId">
+            <summary>
+            客户ID
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.XmlMessage.BankName">
+            <summary>
+            银行名
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.XmlMessage.CustAddress">
+            <summary>
+            客户地址
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.XmlMessage.BankAddress">
+            <summary>
+            银行地址
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.XmlMessage.Beneficiary">
+            <summary>
+            受益人
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.XmlMessage.CustIp">
+            <summary>
+            客户IP
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.XmlMessage.BindCode">
+            <summary>
+            绑定码
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.XmlMessage.CustPhoto">
+            <summary>
+            客户图片
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.XmlMessage.CustCert">
+            <summary>
+            客户证书
+            </summary>
+        </member>
+        <member name="T:Dnapay.Ca.CAProvider">
+            <summary>
+            CA数字证书生成类, 系统具体默认使用北京数字证书认证中心CA证书.
+            服务器证书公钥可通过app.config文件的SERVER_CERT参数获取.
+            调用商户证书可通过app.config文件的BJCA_INSTANCE_NAME指定配置.
+            商户证书具体配置内容位于在C:/BJCAROOT(windows), /usr/BJCAROOT(linux)目录下BJCA_ServerConfig.xml文件中
+            </summary>
+        </member>
+        <member name="M:Dnapay.Ca.CAProvider.Sign(System.String,System.String)">
+            <summary>
+            CA数字证书签名加密
+            </summary>
+            <param name="cert">服务器证书公钥</param>
+            <param name="value">需要签名加密的内容</param>
+            <returns>签名加密的内容</returns>
+        </member>
+        <member name="M:Dnapay.Ca.CAProvider.Verify(System.String)">
+            <summary>
+            对签名加密数据进行验签。
+            </summary>
+            <param name="value">签名加密的内容</param>
+            <returns>签名加密的原文</returns>
+            <exception cref="T:System.Exception">throws Exception</exception>
+        </member>
+        <member name="P:Dnapay.Ca.CAProvider.CfCa">
+            <summary>
+            调用商户证书, 通过systemsetting.properties文件的BJCA_INSTANCE_NAME指定配置.
+            </summary>
+        </member>
+        <member name="T:Dnapay.Service.Client.TransactionClient">
+            <summary>
+            银联语音支付商户接入客户端，支持WebService, XML,XML CA三种接入方式。
+            具体说明请参照《银联语音支付平台接口规范.doc》
+            </summary>
+        </member>
+        <member name="M:Dnapay.Service.Client.TransactionClient.#ctor(System.String,System.String,Dnapay.Service.Client.TransactionType)">
+            <summary>
+            建立一个银联语音支付客户端实例,  可以设置TransactionType修改连接方式。
+            交易超时时间默认是120000
+            服务端CA证书公钥默认是"";
+            </summary>
+            <param name="url">Url 地址</param>
+            <param name="nameSpace">WebService 命名空间, 其他连接方式填空</param>
+            <param name="transactionType">渠道接入方式</param>
+        </member>
+        <member name="M:Dnapay.Service.Client.TransactionClient.#ctor(System.String,Dnapay.Service.Client.TransactionType)">
+            <summary>
+            为WebService方式之外的其他方式使用的构造函数
+            </summary>
+            <param name="url">Url 地址</param>
+            <param name="transactionType">渠道接入方式</param>
+        </member>
+        <member name="M:Dnapay.Service.Client.TransactionClient.ConnectionTest(System.String)">
+            <summary>
+            测试连接是否正常
+            </summary>
+            <param name="acqSsn">系统跟踪号</param>
+            <returns>根据39域(RespCode)响应码, 0000表示正常</returns>
+            <exception cref="T:System.Xml.XmlException">客户端输入不合法系统跟踪号将导致Xml异常</exception>
+            <exception cref="T:System.Exception">抛出Exception异常</exception>
+        </member>
+        <member name="M:Dnapay.Service.Client.TransactionClient.AccountQuery(System.String,System.String,System.String)">
+            <summary>
+            帐户查询，返回交易帐号在银联语音支付的注册情况
+            </summary>
+            <param name="acqSsn">系统跟踪号</param>
+            <param name="accountNum">
+            持卡人帐号，前两位标明类型，暂时支持 14，21格式
+            “01“	借记卡号
+            “02”	信用卡号
+            “04”	手机号
+            “05”	身份证号
+            “14”	手机号码+银行卡号(举例："14"+"手机号"+"|"+"银行卡号")
+            “21”	手机号码+信用卡号(举例："14"+"手机号"+"|"+"信用卡号")
+            </param>
+            <param name="transData">业务交换数据</param>
+            <returns>
+            根据39域(RespCode)响应码, 判断5.4订单支付48域(TransData)需要填写的内容.
+            0000：（白名单）系统受信任卡，5.4节48域无需提供持卡人信息；
+            T437：（新用户）系统未交易过的新卡，5.4节48域需提供持卡人信息包括开户姓名，开户证件号，开户银行所在省市，开户证件号码类型；
+            T438：（灰名单）系统交易过但未加入白名单的卡，交易时按新用户处理，并要求本人消费；
+            T436：该卡交易时间受限，拒绝交易；
+            T432：（黑名单）黑名单银行卡号，拒绝交易；
+            T404：系统不支持的银行卡号，拒绝交易。
+            第4域(Amount)返回该用户当日交易金额上限。
+            </returns>
+            <exception cref="T:System.Exception">返回结果MAC校验失败</exception>
+        </member>
+        <member name="M:Dnapay.Service.Client.TransactionClient.OrderQuery(System.String,System.String,System.String)">
+            <summary>
+            订单查询
+            </summary>
+            <param name="acqSsn">系统跟踪号</param>
+            <param name="accountNum">
+            持卡人帐号，可为空，暂时支持 14，21格式
+            “01“	借记卡号
+             “02”	信用卡号
+            “04”	手机号
+            “05”	身份证号
+            “14”	手机号码+银行卡号(举例："14"+"手机号"+"|"+"银行卡号")
+            “21”	手机号码+信用卡号(举例："14"+"手机号"+"|"+"信用卡号")
+            </param>
+            <param name="orderNo">
+            订单编号，前两位标明类型， 订单查询建议提供“01”DNA订单编号
+            “01”	银联手机支付(DNA)订单编号
+            “02”	商户订单编号，网页自助下单（WEB）
+            “03”	商户订单编号，客服电话下单（CallCenter）
+            “04”	商户订单编号，电话自助下单（IVR）
+            “05”	商户订单编号，手机自助下单（WAP）
+            “12”	商户订单编号（WEB）+‘|’+DNA订单编号
+            “13”	商户订单编号（CallCenter）+‘|’+DNA订单编号
+            “14”	商户订单编号（IVR）+‘|’+DNA订单编号
+            “15”	商户订单编号（WAP）+‘|’+DNA订单编号
+            </param>
+            <returns>RespCode 0000 表示查询成功, 其他错误码请参照“银联语音支付平台错误码列表”</returns>
+            <exception cref="T:System.Exception">返回结果MAC校验失败（常见原因：商户密码错误）</exception>
+        </member>
+        <member name="M:Dnapay.Service.Client.TransactionClient.OrderPay(System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            非即时支付订单发起支付
+            </summary>
+            <param name="acqSsn">系统跟踪号</param>
+            <param name="accountNum">
+             持卡人帐号，可为空，暂时支持 14，21格式
+            “01“	借记卡号
+            “02”	信用卡号
+            “04”	手机号
+            “05”	身份证号
+            “14”	手机号码+银行卡号(举例："14"+"手机号"+"|"+"银行卡号")
+            “21”	手机号码+信用卡号(举例："14"+"手机号"+"|"+"信用卡号")
+            </param>
+            <param name="orderNo">
+            订单编号，前两位标明类型， 商户提交商户订单编号，同一个商户订单编号只能支付成功一次，交易返回时银联语音支付加上DNA订单编号
+            “01”	银联手机支付(DNA)订单编号
+            “02”	商户订单编号，网页自助下单（WEB）
+            “03”	商户订单编号，客服电话下单（CallCenter）
+            “04”	商户订单编号，电话自助下单（IVR）
+            “05”	商户订单编号，手机自助下单（WAP）
+            “12”	商户订单编号（WEB）+‘|’+DNA订单编号
+            “13”	商户订单编号（CallCenter）+‘|’+DNA订单编号
+            “14”	商户订单编号（IVR）+‘|’+DNA订单编号
+            “15”	商户订单编号（WAP）+‘|’+DNA订单编号
+            </param>
+            <param name="pin">交易密码，语音插件模式需要填，语音外呼模式填空，需用UPOP公钥加密， 算法请参照《银联语音支付平台接口规范》说明</param>
+            <param name="reference">系统参考号， 原值返回。</param>
+            <returns>RespCode 0000 表示支付成功, 其他错误码请参照《银联语音支付平台错误码列表》</returns>
+            <exception cref="T:System.Exception">返回结果MAC校验失败</exception>
+        </member>
+        <member name="M:Dnapay.Service.Client.TransactionClient.Pay(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Boolean,System.String,System.String)">
+            <summary>
+            订单支付
+            商户在调用5.4订单支付接口前可以先调用5.2帐户查询（处理码300002）接口， 根据5.2帐户查询查询结果正确填写48域(TransData)内容。
+            </summary>
+            <param name="acqSsn">系统跟踪号</param>
+            <param name="accountNum">
+            持卡人帐号，可为空，暂时支持 14，21格式
+            “01“	借记卡号
+            “02”	信用卡号
+            “04”	手机号
+            “05”	身份证号
+            “14”	手机号码+银行卡号(举例："14"+"手机号"+"|"+"银行卡号")
+            “21”	手机号码+信用卡号(举例："14"+"手机号"+"|"+"信用卡号")
+            </param>
+            <param name="pin">交易密码，语音插件模式需要填，语音外呼模式填空，需用UPOP公钥加密， 算法请参照《银联语音支付平台接口规范》说明</param>
+            <param name="amount">订单金额</param>
+            <param name="orderNo">
+            订单编号， 商户提交商户订单编号，前两位标明类型，同一个商户订单编号只能支付成功一次，交易返回时银联语音支付加上DNA订单编号
+            “01”	银联手机支付(DNA)订单编号
+            “02”	商户订单编号，网页自助下单（WEB）
+            “03”	商户订单编号，客服电话下单（CallCenter）
+            “04”	商户订单编号，电话自助下单（IVR）
+            “05”	商户订单编号，手机自助下单（WAP）
+            “12”	商户订单编号（WEB）+‘|’+DNA订单编号
+            “13”	商户订单编号（CallCenter）+‘|’+DNA订单编号
+            “14”	商户订单编号（IVR）+‘|’+DNA订单编号
+            “15”	商户订单编号（WAP）+‘|’+DNA订单编号
+            </param>
+            <param name="reference">系统参考号， 原值返回。</param>
+            <param name="description">
+            订单描述, 长度不要超过50个字，前两位可以配置语音合成类型。
+            “00”	中文
+            “01”	粤语
+            “02”	英文
+            </param>
+            <param name="remark">订单备注</param>
+            <param name="payNow">是否及时支付</param>
+            <param name="returnUrl">
+            订单支付结果异步返回地址，前两位标明地址类型，同步交易请填空。
+            如果该域非空, 手机支付返回交易结果（参照6.2）到该地址, 
+            商户收到结果后返回确认信息（参照5.8），如果返回地址为Servlet地址，
+            则直接返回“0000”代表商户接收结果成功，无需返回页面.
+            任何正常页面返回均表示接收结果成功。
+            
+            “01”	Socket异步返回接收地址(暂不支持) 内容格式：[IP|PORT]
+            “02”	Http异步返回接收地址 内容格式：[URL]
+            “03”	WebService异步返回接收地址,内容格式：[URL|NAMESPACE]
+            “04”	Http同步/异步返回接收地址,内容格式：[URL|URL]
+            “05”	CA签名XML异步返回接收地址, 内容格式[URL]
+            “06”	XML异步返回接收地址, 内容格式[URL]
+            </param>
+            <param name="transData">
+            提供业务交换数据包括银行开户姓名，开户证件，开户银行所在省市，开户证件类型等，字段之间以‘|’分割, 无用留空即可
+            1	开户姓名            银行卡开户姓名
+            2	开户证件号码        银行卡开户证件号码
+            3	开户银行所在省市    省市已逗号分割，比如“广东省，深圳市”, ‘北京市’
+            4	开户证件类型        银行卡开户证件类型，参照7.2说明
+            5	订单受益人姓名      如机票乘机人, 多个受益人以逗号分割,对于受益人较多的情况,至少填两个,如果受益人包括开户人,需包含在内.
+            6	持卡人IP地址        持卡人登陆商户网站的IP地址
+            7	开户证件地址        开户证件地址不需全部提供,截取至街道即可,常见街道关键字包括：路/街道/街/胡同/道/条/里/镇/乡/村/庄/弄/巷/宅/邨/屯/巷/寨/组/队/园/院
+            8	行业风控数据        具体内容由系统调试时指定
+            </param>
+            <returns>RespCode 0000 表示支付成功, 其他错误码请参照《银联语音支付平台错误码列表》</returns>
+        </member>
+        <member name="M:Dnapay.Service.Client.TransactionClient.Refund(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            订单撤销，拨打持卡人手机完成交易撤销授权
+            </summary>
+            <param name="acqSsn">系统跟踪号</param>
+            <param name="accountNum">
+            持卡人帐号，可为空，暂时支持 14，21格式
+            “01“	借记卡号
+            “02”	信用卡号
+            “04”	手机号
+            “05”	身份证号
+            “14”	手机号码+银行卡号(举例："14"+"手机号"+"|"+"银行卡号")
+            “21”	手机号码+信用卡号(举例："14"+"手机号"+"|"+"信用卡号")
+            </param>
+            <param name="pin">交易密码，语音插件模式需要填，语音外呼模式填空，需用UPOP公钥加密， 算法请参照《银联语音支付平台接口规范》说明</param>
+            <param name="amount">订单金额</param>
+            <param name="orderNo">
+            订单编号， 商户提交DNA订单编号/商户订单编号，前两位标明类型.
+            “01”	银联手机支付(DNA)订单编号
+            “02”	商户订单编号，网页自助下单（WEB）
+            “03”	商户订单编号，客服电话下单（CallCenter）
+            “04”	商户订单编号，电话自助下单（IVR）
+            “05”	商户订单编号，手机自助下单（WAP）
+            “12”	商户订单编号（WEB）+‘|’+DNA订单编号
+            “13”	商户订单编号（CallCenter）+‘|’+DNA订单编号
+            “14”	商户订单编号（IVR）+‘|’+DNA订单编号
+            “15”	商户订单编号（WAP）+‘|’+DNA订单编号
+            </param>
+            <param name="reference">系统参考号， 原值返回。</param>
+            <param name="remark">订单撤销备注</param>
+            <param name="returnUrl">订单支付结果异步返回地址，前两位标明地址类型，同步交易请填空。
+            如果该域非空, 手机支付返回交易结果（参照6.2）到该地址, 
+            商户收到结果后返回确认信息（参照5.8），如果返回地址为Servlet地址，
+            则直接返回“0000”代表商户接收结果成功，无需返回页面.
+            任何正常页面返回均表示接收结果成功。
+            “01”	Socket异步返回接收地址(暂不支持) 内容格式：[IP|PORT]
+            “02”	Http异步返回接收地址 内容格式：[URL]
+            “03”	WebService异步返回接收地址,内容格式：[URL|NAMESPACE]
+            “04”	Http同步/异步返回接收地址,内容格式：[URL|URL]
+            “05”	CA签名XML异步返回接收地址, 内容格式[URL]
+            “06”	XML异步返回接收地址, 内容格式[URL]
+            </param>
+            <returns>RespCode 0000 表示撤销成功, 其他错误码请参照《银联语音支付平台错误码列表》</returns>
+        </member>
+        <member name="M:Dnapay.Service.Client.TransactionClient.Quash(System.String,System.String,System.String,System.String)">
+            <summary>
+            订单缴费冲正，无需拨打持卡人手机完成交易授权【此方法已经废弃】
+            </summary>
+            <param name="acqSsn">原交易系统跟踪号</param>
+            <param name="transDatetime">原交易传输日期</param>
+            <param name="orderNo">
+            订单编号, 商户提交DNA订单编号/商户订单编号，前两位标明类型.
+            “01”	银联手机支付(DNA)订单编号
+            “02”	商户订单编号，网页自助下单（WEB）
+            “03”	商户订单编号，客服电话下单（CallCenter）
+            “04”	商户订单编号，电话自助下单（IVR）
+            “05”	商户订单编号，手机自助下单（WAP）
+            “12”	商户订单编号（WEB）+‘|’+DNA订单编号
+            “13”	商户订单编号（CallCenter）+‘|’+DNA订单编号
+            “14”	商户订单编号（IVR）+‘|’+DNA订单编号
+            “15”	商户订单编号（WAP）+‘|’+DNA订单编号
+            </param>
+            <param name="remark">订单撤销备注</param>
+            <returns>RespCode 0000 表示冲正交易成功, 其他错误码请参照《银联语音支付平台错误码列表》</returns>
+        </member>
+        <member name="M:Dnapay.Service.Client.TransactionClient.Quash(System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            订单冲正，,交易不需要持卡人手机确认。
+            </summary>
+            <param name="acqSsn">系统跟踪号</param>
+            <param name="transDatetime">交易日期</param>
+            <param name="accountNum">用户号码</param>
+            <param name="amount">金额</param>
+            <param name="orderNo">订单编号</param>
+            <param name="remark">订单备注</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dnapay.Service.Client.TransactionClient.AdjustApply(System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            调账退货申请,清算日期之外的全额退货或清算日期之内部分退货申请，调帐退货在申请当日可以登录银联手机认证支付后退取消申请，隔日系统将自动处理。
+            </summary>
+            <param name="acqSsn">系统跟踪号</param>
+            <param name="orderNo">
+            订单编号， 商户提交DNA订单编号/商户订单编号，前两位标明类型.
+            “01”	银联手机支付(DNA)订单编号
+            “02”	商户订单编号，网页自助下单（WEB）
+            “03”	商户订单编号，客服电话下单（CallCenter）
+            “04”	商户订单编号，电话自助下单（IVR）
+            “05”	商户订单编号，手机自助下单（WAP）
+            “12”	商户订单编号（WEB）+‘|’+DNA订单编号
+            “13”	商户订单编号（CallCenter）+‘|’+DNA订单编号
+            “14”	商户订单编号（IVR）+‘|’+DNA订单编号
+            “15”	商户订单编号（WAP）+‘|’+DNA订单编号
+            </param>
+            <param name="remark">订单调帐备注</param>
+            <param name="transData">持卡人开户名称+“|”+持卡人开户银行, 如果为空，DNA自动读取系统记录信息.</param>
+            <param name="amount">订单金额</param>
+            <returns>RespCode 0000 表示申请成功, 其他错误码请参照《银联语音支付平台错误码列表》</returns>
+        </member>
+        <member name="M:Dnapay.Service.Client.TransactionClient.AdjustQuery(System.String,System.String,System.String)">
+            <summary>
+            调账退货查询
+            </summary>
+            <param name="acqSsn">申请时的系统跟踪号</param>
+            <param name="transDateTime">申请时的传输日期和时间</param>
+            <param name="orderNo">
+            订单编号， 商户提交DNA订单编号/商户订单编号，前两位标明类型.
+            “01”	银联手机支付(DNA)订单编号
+            “02”	商户订单编号，网页自助下单（WEB）
+            “03”	商户订单编号，客服电话下单（CallCenter）
+            “04”	商户订单编号，电话自助下单（IVR）
+            “05”	商户订单编号，手机自助下单（WAP）
+            “12”	商户订单编号（WEB）+‘|’+DNA订单编号
+            “13”	商户订单编号（CallCenter）+‘|’+DNA订单编号
+            “14”	商户订单编号（IVR）+‘|’+DNA订单编号
+            “15”	商户订单编号（WAP）+‘|’+DNA订单编号
+            </param>
+            <returns>RespCode 0000 表示查询成功, 其他错误码请参照《银联语音支付平台错误码列表》</returns>
+        </member>
+        <member name="M:Dnapay.Service.Client.TransactionClient.InitPosMessage(Dnapay.Service.Client.PosMessage)">
+            <summary>
+            初始化PosMessage实体中的transDatetime、ltime、ldate、terminalNo、merchantNo、curCode
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:Dnapay.Service.Client.TransactionClient.Transact(Dnapay.Service.Client.PosMessage)">
+            <summary>
+            交易处理, 根据TransactionType访问相应的服务接口,并返回处理结果.
+            </summary>
+            <param name="request">请求参数, 请参照《银联语音支付平台接口规范》, 4.1交易参数说明.</param>
+            <returns>请参照《银联语音支付平台接口规范》, 第5章交易报文说明.</returns>
+        </member>
+        <member name="M:Dnapay.Service.Client.TransactionClient.TransactWebService(Dnapay.Service.Client.PosMessage)">
+            <summary>
+            银联语音支付WebService第三方交易接口请求方法
+            </summary>
+            <param name="request">请参照《银联语音支付平台接口规范.doc》</param>
+            <returns>请参照《银联语音支付平台接口规范.doc》</returns>
+        </member>
+        <member name="M:Dnapay.Service.Client.TransactionClient.TransactXmlService(Dnapay.Service.Client.PosMessage)">
+            <summary>
+            银联语音支付XML第三方交易接口请求方法
+            </summary>
+            <param name="request">请参照《银联语音支付平台接口规范.doc》</param>
+            <returns>请参照《银联语音支付平台接口规范.doc》</returns>
+        </member>
+        <member name="M:Dnapay.Service.Client.TransactionClient.TransactCaService(Dnapay.Service.Client.PosMessage)">
+            <summary>
+            银联语音支付XML CA签名第三方交易接口请求方法
+            </summary>
+            <param name="request">请参照《银联语音支付平台接口规范.doc》</param>
+            <returns>请参照《银联语音支付平台接口规范.doc》</returns>
+        </member>
+        <member name="P:Dnapay.Service.Client.TransactionClient.NameSpace">
+            <summary>
+            服务命名空间, 只针对WebService接入
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.TransactionClient.Url">
+            <summary>
+            服务器连接地址
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.TransactionClient.CerFilePath">
+            <summary>
+            证书路径
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.TransactionClient.TransactionType">
+            <summary>
+            服务接入方式, 暂时包括WebService, XML, CA
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.TransactionClient.TimeOut">
+            <summary>
+            交易超时时间,单位:秒,默认是120000
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.TransactionClient.ServerCert">
+            <summary>
+            服务端CA证书公钥，默认是"";
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.TransactionClient.MerchantNo">
+            <summary>
+            商户编号, 商户编号由银联语音支付平台在商户注册成功后分配 格式如下:
+            “01”	商户编号+子商户编号（例如："01"+"商户编号"+"|"+"子商户编号", 暂不支持）
+            “02”	商户编号 (例如："02"+""+"|"+"")
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.TransactionClient.TerminalNo">
+            <summary>
+            商户终端编号，由银联语音支付平台在商户注册成功后分配
+            </summary>
+        </member>
+        <member name="P:Dnapay.Service.Client.TransactionClient.MerchantPassword">
+            <summary>
+            商户密钥， 商户密钥由银联语音支付平台在商户注册成功后分配
+            </summary>
+        </member>
+        <member name="T:Dnapay.Common.Strings">
+            <summary>
+            字符串扩展类
+            </summary>
+        </member>
+        <member name="M:Dnapay.Common.Strings.IsNullOrEmpty(System.Object)">
+            <summary>
+            判断对象是否为空或者空字符串
+            </summary>
+            <param name="str">可转换成字符串对象</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dnapay.Common.Strings.FormatPassword(System.String,System.Int32,System.Int32)">
+            <summary>
+            格式化密码
+            </summary>
+            <param name="pan">明文密码字符串</param>
+            <param name="showStartLen">格式化起始位置</param>
+            <param name="showEndLen">格式化结束位置</param>
+            <returns>返回格式化后的字符串</returns>
+        </member>
+        <member name="M:Dnapay.Common.Strings.IsValidIdCard(System.String)">
+            <summary>
+            检测身份证号码合法性
+            </summary>
+            <param name="idNo">身份证号</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dnapay.Common.Strings.GetMd5Hash(System.String)">
+            <summary>
+            根据输入的字符串生成MD5哈希值，并且以大写的16进制格式返回字符串。
+            </summary>
+            <param name="input">需要转换成MD5哈希值的字符串</param>
+            <returns>大写的16进制格式返回字符串</returns>
+        </member>
+        <member name="M:Dnapay.Common.Strings.ToPosMessage(System.String)">
+            <summary>
+            将字符串转换成PosMessage类型
+            </summary>
+            <param name="xml">xml格式字符串</param>
+            <returns>PosMessage类型或null</returns>
+        </member>
+        <member name="T:Dnapay.Common.Encrypt.RSA">
+            <summary>
+            RSA 加密辅助类
+            </summary>
+        </member>
+        <member name="T:Dnapay.Common.Encrypt.MD5">
+            <summary>
+            MD5算法类，从Java版本迁移过来，已经废弃。
+            </summary>
+        </member>
+        <member name="T:Dnapay.WebReference.OrderServerWSService">
+            <remarks/>
+        </member>
+        <member name="M:Dnapay.WebReference.OrderServerWSService.#ctor">
+            <remarks/>
+        </member>
+        <member name="M:Dnapay.WebReference.OrderServerWSService.transact(Dnapay.WebReference.posMessage)">
+            <remarks/>
+        </member>
+        <member name="M:Dnapay.WebReference.OrderServerWSService.transactAsync(Dnapay.WebReference.posMessage)">
+            <remarks/>
+        </member>
+        <member name="M:Dnapay.WebReference.OrderServerWSService.transactAsync(Dnapay.WebReference.posMessage,System.Object)">
+            <remarks/>
+        </member>
+        <member name="M:Dnapay.WebReference.OrderServerWSService.CancelAsync(System.Object)">
+            <remarks/>
+        </member>
+        <member name="E:Dnapay.WebReference.OrderServerWSService.transactCompleted">
+            <remarks/>
+        </member>
+        <member name="T:Dnapay.WebReference.posMessage">
+            <remarks/>
+        </member>
+        <member name="P:Dnapay.WebReference.posMessage.accountNum">
+            <remarks/>
+        </member>
+        <member name="P:Dnapay.WebReference.posMessage.acqSsn">
+            <remarks/>
+        </member>
+        <member name="P:Dnapay.WebReference.posMessage.amount">
+            <remarks/>
+        </member>
+        <member name="P:Dnapay.WebReference.posMessage.bitMap">
+            <remarks/>
+        </member>
+        <member name="P:Dnapay.WebReference.posMessage.curCode">
+            <remarks/>
+        </member>
+        <member name="P:Dnapay.WebReference.posMessage.description">
+            <remarks/>
+        </member>
+        <member name="P:Dnapay.WebReference.posMessage.ldate">
+            <remarks/>
+        </member>
+        <member name="P:Dnapay.WebReference.posMessage.loginPin">
+            <remarks/>
+        </member>
+        <member name="P:Dnapay.WebReference.posMessage.ltime">
+            <remarks/>
+        </member>
+        <member name="P:Dnapay.WebReference.posMessage.mac">
+            <remarks/>
+        </member>
+        <member name="P:Dnapay.WebReference.posMessage.merchantNo">
+            <remarks/>
+        </member>
+        <member name="P:Dnapay.WebReference.posMessage.orderNo">
+            <remarks/>
+        </member>
+        <member name="P:Dnapay.WebReference.posMessage.orderState">
+            <remarks/>
+        </member>
+        <member name="P:Dnapay.WebReference.posMessage.orderType">
+            <remarks/>
+        </member>
+        <member name="P:Dnapay.WebReference.posMessage.pin">
+            <remarks/>
+        </member>
+        <member name="P:Dnapay.WebReference.posMessage.procCode">
+            <remarks/>
+        </member>
+        <member name="P:Dnapay.WebReference.posMessage.processCode">
+            <remarks/>
+        </member>
+        <member name="P:Dnapay.WebReference.posMessage.reference">
+            <remarks/>
+        </member>
+        <member name="P:Dnapay.WebReference.posMessage.remark">
+            <remarks/>
+        </member>
+        <member name="P:Dnapay.WebReference.posMessage.respCode">
+            <remarks/>
+        </member>
+        <member name="P:Dnapay.WebReference.posMessage.returnAddress">
+            <remarks/>
+        </member>
+        <member name="P:Dnapay.WebReference.posMessage.settleDate">
+            <remarks/>
+        </member>
+        <member name="P:Dnapay.WebReference.posMessage.terminalNo">
+            <remarks/>
+        </member>
+        <member name="P:Dnapay.WebReference.posMessage.transData">
+            <remarks/>
+        </member>
+        <member name="P:Dnapay.WebReference.posMessage.transDatetime">
+            <remarks/>
+        </member>
+        <member name="P:Dnapay.WebReference.posMessage.tsNo">
+            <remarks/>
+        </member>
+        <member name="P:Dnapay.WebReference.posMessage.upsNo">
+            <remarks/>
+        </member>
+        <member name="P:Dnapay.WebReference.posMessage.validTime">
+            <remarks/>
+        </member>
+        <member name="T:Dnapay.WebReference.transactCompletedEventHandler">
+            <remarks/>
+        </member>
+        <member name="T:Dnapay.WebReference.transactCompletedEventArgs">
+            <remarks/>
+        </member>
+        <member name="P:Dnapay.WebReference.transactCompletedEventArgs.Result">
+            <remarks/>
+        </member>
+        <member name="T:Dnapay.Service.Client.TransactionType">
+            <summary>
+            渠道接入方式
+            </summary>
+        </member>
+        <member name="T:Dnapay.Common.Formatter">
+            <summary>
+            格式转换工具类
+            </summary>
+        </member>
+        <member name="M:Dnapay.Common.Formatter.FormatBytes(System.Collections.Generic.IEnumerable{System.Byte})">
+            <summary>
+            将字节数组格式化成字符串
+            </summary>
+            <param name="bts">源数组</param>
+            <returns>格式化后的字符串</returns>
+        </member>
+        <member name="M:DNA.Client.XmlClient.Authenticate(System.String)">
+            <summary>
+            定制查询
+            </summary>
+            <param name="accountNum">持卡人绑定用户号</param>
+            <returns></returns>
+        </member>
+        <member name="M:DNA.Client.XmlClient.CheckBankCard(System.String)">
+            <summary>
+            银行卡号查询
+            </summary>
+            <param name="accountNum">持卡人交易银行卡号</param>
+            <returns></returns>
+        </member>
+        <member name="M:DNA.Client.XmlClient.AuthenticateSMS(System.String)">
+            <summary>
+            申请短信确认码
+            </summary>
+            <param name="accountNum">持卡人申请账号</param>
+            <returns></returns>
+        </member>
+        <member name="M:DNA.Client.XmlClient.OrderQuery(System.String,System.String,System.Boolean)">
+            <summary>
+            订单查询
+            </summary>
+            <param name="accountNum">用户号码</param>
+            <param name="orderNo">订单号码</param>
+            <param name="isPay">是否支付</param>
+            <returns></returns>
+        </member>
+        <member name="M:DNA.Client.XmlClient.pay(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Boolean,System.String)">
+            <summary>
+            订单支付
+            </summary>
+            <param name="acqSsn">系统跟踪号</param>
+            <param name="transDatetime">交易日期</param>
+            <param name="accountNum">用户号码</param>
+            <param name="pin">交易密码</param>
+            <param name="amount">金额</param>
+            <param name="orderNo">订单编号</param>
+            <param name="description">订单描述</param>
+            <param name="remark">订单备注</param>
+            <param name="payNow">是否支付</param>
+            <param name="returnUrl">异步返回地址</param>
+            <returns></returns>
+        </member>
+        <member name="M:DNA.Client.XmlClient.refund(System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            订单退款,交易需要持卡人手机确认。
+            </summary>
+            <param name="acqSsn">系统跟踪号</param>
+            <param name="transDatetime">交易日期</param>
+            <param name="accountNum">用户号码</param>
+            <param name="pin">交易密码</param>
+            <param name="amount">金额</param>
+            <param name="orderNo">订单编号</param>
+            <param name="remark">订单备注</param>
+            <param name="returnUrl">异步返回地址</param>
+            <returns></returns>
+        </member>
+        <member name="M:DNA.Client.XmlClient.quash(System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            订单冲正，,交易不需要持卡人手机确认。
+            </summary>
+            <param name="acqSsn">系统跟踪号</param>
+            <param name="transDatetime">交易日期</param>
+            <param name="accountNum">用户号码</param>
+            <param name="pin">交易密码</param>
+            <param name="amount">金额</param>
+            <param name="orderNo">订单编号</param>
+            <param name="remark">订单备注</param>
+            <param name="returnUrl">异步返回地址</param>
+            <returns></returns>
+        </member>
+        <member name="P:DNA.Client.XmlClient.MerchantNo">
+            <summary>
+            商户编号
+            </summary>
+        </member>
+        <member name="P:DNA.Client.XmlClient.PassWD">
+            <summary>
+            商户秘钥
+            </summary>
+        </member>
+        <member name="P:DNA.Client.XmlClient.TerminalNo">
+            <summary>
+            商户终端编号
+            </summary>
+        </member>
+        <!-- 对于成员“P:DNA.Client.XmlClient.ReturnAddress”忽略有格式错误的 XML 注释 -->
+        <member name="P:DNA.Client.XmlClient.CertificateFile">
+            <summary>
+            Cer文件路径
+            </summary>
+        </member>
+        <member name="P:DNA.Client.XmlClient.ServerUrl">
+            <summary>
+            Cer文件路径
+            </summary>
+        </member>
+        <member name="T:Dnapay.Common.Encrypt.BASE64Encoder">
+            <summary>
+            将字节数组转换成64位字符串
+            </summary>
+        </member>
+        <member name="T:Dnapay.Common.LogLevel">
+            <summary>
+            日志级别
+            </summary>
+        </member>
+        <member name="T:Dnapay.Service.Client.TransactionUtil">
+            <summary>
+            银联语音支付平台交易服务接口工具类
+            </summary>
+        </member>
+        <member name="M:Dnapay.Service.Client.TransactionUtil.Translate(Dnapay.Service.Client.PosMessage)">
+            <summary>
+            将SocketMessage 转成 WebService Message
+            </summary>
+            <param name="request">SocketMessage</param>
+            <returns>WebService Message</returns>
+        </member>
+        <member name="M:Dnapay.Service.Client.TransactionUtil.Translate(Dnapay.WebReference.posMessage)">
+            <summary>
+            将WebService Message 转成 SocketMessage
+            </summary>
+            <param name="request">WebService Message</param>
+            <returns>SocketMessage</returns>
+        </member>
+        <member name="M:Dnapay.Service.Client.TransactionUtil.EncryptPin(System.String,System.String,System.String)">
+            <summary>
+            银联UPOP密钥加密算法
+            </summary>
+            <param name="account">帐号</param>
+            <param name="passwd">密码</param>
+            <param name="keyPath">证书公钥文件路径</param>
+            <returns>加密后的密文</returns>
+        </member>
+        <member name="M:Dnapay.Service.Client.TransactionUtil.Str2Bcd(System.String,System.Boolean)">
+            <summary>
+            10进制串转为BCD码(字节数组)，输入：0123456789，输出：00000001 00100011 01000101 01100111 10001001
+            输入的必须是0-9 a-f A-F这22个字符
+            如果不是左补‘0’，就是右补‘F’
+            </summary>
+            <param name="str"></param>
+            <param name="leftAdd0"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dnapay.Service.Client.TransactionUtil.GetCertFromFile(System.String)">
+            <summary>
+            从公钥证书文件读取公钥
+            </summary>
+            <param name="certPath">证书路径</param>
+            <returns></returns>
+        </member>
+        <member name="T:Dnapay.Common.ToolKit">
+            <summary>
+            系统工具类，包括日志,配置,监控等。
+            </summary>
+        </member>
+        <member name="M:Dnapay.Common.ToolKit.WriteLog(Dnapay.Common.LogLevel,System.String,System.String,System.String)">
+            <summary>
+            记录指定级别的日志信息
+            </summary>
+            <param name="logLevel">日志记录级别</param>
+            <param name="processName">程序名称</param>
+            <param name="threadName">线程名称</param>
+            <param name="eventMessage">异常信息</param>
+        </member>
+        <member name="M:Dnapay.Common.ToolKit.WriteLog(System.String,System.String,System.String,System.Exception)">
+            <summary>
+            记录Exception级别的日志信息
+            </summary>
+            <param name="processName">程序名称</param>
+            <param name="threadName">线程名称</param>
+            <param name="message">附加消息</param>
+            <param name="eventMessage">异常信息</param>
+        </member>
+        <member name="M:Dnapay.Common.ToolKit.WriteLog(System.String,System.String,System.Exception)">
+            <summary>
+            记录Exception级别的日志信息
+            </summary>
+            <param name="processName">程序名称</param>
+            <param name="message">附加消息</param>
+            <param name="eventMessage">异常信息</param>
+        </member>
+        <member name="M:Dnapay.Common.ToolKit.WriteLog(Dnapay.Common.LogLevel,System.String,System.String)">
+            <summary>
+            记录指定级别的日志信息
+            </summary>
+            <param name="logLevel">日志记录级别</param>
+            <param name="processName">程序名称</param>
+            <param name="eventMessage">异常信息</param>
+        </member>
+        <member name="M:Dnapay.Common.ToolKit.WriteLog(System.String,System.String)">
+            <summary>
+            记录Info级别的日志信息
+            </summary>
+            <param name="processName">程序名称</param>
+            <param name="eventMessage">异常信息</param>
+        </member>
+        <member name="M:Dnapay.Common.ToolKit.WriteLog(System.String,System.String,System.String)">
+            <summary>
+            记录Info级别的日志信息
+            </summary>
+            <param name="processName">程序名称</param>
+            <param name="threadName">线程名称</param>
+            <param name="eventMessage">异常信息</param>
+        </member>
+        <member name="M:Dnapay.Common.ToolKit.ToInt32(Dnapay.Common.LogLevel)">
+            <summary>
+            将LogLevel转成Int32类型
+            </summary>
+            <param name="level">日志级别</param>
+            <returns></returns>
+        </member>
+        <member name="T:Dnapay.Ca.SZCA">
+            <summary>
+            北京数字证书中心, 深圳分公司提供的CA证书实现.
+            </summary>
+        </member>
+        <member name="M:Dnapay.Ca.SZCA.Sign(System.String,System.String)">
+            <summary>
+            对字符串数据进行数字签名加密.签名格式为Pkcs7
+            </summary>
+            <param name="cert">服务器证书公钥</param>
+            <param name="src">需要签名加密的内容</param>
+            <returns>签名加密的内容</returns>
+        </member>
+        <member name="M:Dnapay.Ca.SZCA.Verify(System.String)">
+            <summary>
+            对签名加密数据进行验签解密。
+            </summary>
+            <param name="sign">对签名加密数据进行验签解密。</param>
+            <returns>签名加密的原文</returns>
+        </member>
+        <member name="M:Dnapay.Ca.SZCA.GetServerCert(System.Int32)">
+            <summary>
+            获取本地服务器证书
+            </summary>
+            <param name="usage">//获取证书,1代表获取加密证书，2代表签名证书。</param>
+            <returns>本地服务器证书</returns>
+        </member>
+        <member name="M:Dnapay.Ca.SZCA.GetServerCert">
+            <summary>
+            获取本地服务器证书,默认获取加密证书
+            </summary>
+            <returns>本地服务器证书</returns>
+        </member>
+        <member name="M:Dnapay.Ca.SZCA.GetCertInfo(System.String,System.Int32)">
+            <summary>
+            获取证书信息
+            </summary>
+            <param name="cert">Base64编码的X.509数字证书</param>
+            <param name="type">
+            type	意义
+            1	证书版本
+            2	证书序列号
+            8	证书发放者通用名
+            11	证书有效期起始
+            12	证书有效期截止
+            13	用户国家名
+            14	用户组织名
+            15	用户部门名
+            16	用户省州名
+            17	用户通用名
+            18	用户城市名
+            19	用户EMAIL地址
+            20	证书颁发者DN
+            21	证书主题（DN）
+            23	用户国家名(备用名C)
+            24	用户组织名(备用名O)
+            25	用户部门名(备用名OU)
+            26	用户省州名(备用名S)
+            27	用户通用名(备用名CN)
+            28	用户城市名(备用名L)
+            29	用户EMAIL地址(备用名E)
+            30	证书公钥（base64） 
+            </param>
+            <returns>CertInfo</returns>
+        </member>
+        <member name="T:Dnapay.Common.SecurityUtil">
+            <summary>
+            安全工具类。
+            </summary>
+        </member>
+        <member name="M:Dnapay.Common.SecurityUtil.CaSign(System.String,System.String)">
+            <summary>
+            公钥加密，私钥签名
+            </summary>
+            <param name="cert">证书公钥</param>
+            <param name="value">需签名加密内容</param>
+            <returns>签名加密后内容</returns>
+            <exception cref="T:System.Exception">抛出所有异常</exception>
+        </member>
+        <member name="M:Dnapay.Common.SecurityUtil.CaVerify(System.String)">
+            <summary>
+            公钥验签，私钥解密
+            </summary>
+            <param name="value">签名加密后内容</param>
+            <returns>签名加密前内容</returns>
+            <exception cref="T:System.Exception">抛出所有异常</exception>
+        </member>
+        <member name="T:Dnapay.Common.Encrypt.IPosDes">
+            <summary>
+            POS机加密算法接口
+            </summary>
+        </member>
+        <member name="M:Dnapay.Common.Encrypt.IPosDes.SetKeys(System.Byte[])">
+            <summary>
+            生成PIK/MAK
+            </summary>
+            <param name="key"></param>
+        </member>
+        <member name="M:Dnapay.Common.Encrypt.IPosDes.EncryptPin(System.Byte[])">
+            <summary>
+            Pin加密
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dnapay.Common.Encrypt.IPosDes.DecryptPin(System.Byte[])">
+            <summary>
+            Pin解密
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dnapay.Common.Encrypt.IPosDes.EncryptMac(System.Byte[])">
+            <summary>
+            Mac加密
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dnapay.Common.Encrypt.IPosDes.DecryptMac(System.Byte[])">
+            <summary>
+            Mac解密
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Dnapay.Common.Utilities">
+            <summary>
+            类型转换工具类
+            </summary>
+        </member>
+        <member name="M:Dnapay.Common.Utilities.ChangeByteToString(System.Byte[])">
+            <summary>
+            将字节数组转换成ASCII编码的字符串
+            </summary>
+            <param name="bytes">字节数组</param>
+            <returns>ASCII字符串</returns>
+        </member>
+        <member name="M:Dnapay.Common.Utilities.ChangeByteToString(System.Byte[],System.String)">
+            <summary>
+            将字节数组转换成指定名称编码的字符串
+            </summary>
+            <param name="bytes">字节数组</param>
+            <param name="charsetname">编码名称</param>
+            <returns>指定编码的字符串</returns>
+        </member>
+        <member name="M:Dnapay.Common.Utilities.BinBytes2AscBytes(System.Byte[])">
+            <summary>
+            输入：1001(4bits)，输出：00000001 00000000 00000000 00000001(4bytes)
+            </summary>
+            <param name="bin">bits数组</param>
+            <returns>bytes数组</returns>
+        </member>
+        <member name="M:Dnapay.Common.Utilities.XmlDocToString(System.Xml.XmlDocument)">
+            <summary>
+            将Xml文档转换成字符串,并且用4个空格缩进来格式化
+            </summary>
+            <param name="doc">XML文档</param>
+            <returns>Xml格式字符串</returns>
+        </member>
+        <member name="M:Dnapay.Common.Utilities.AppendChild(System.Xml.XmlDocument,System.Xml.XmlNode,System.String,System.String)">
+            <summary>
+            向指定文档的指定节点追加子节点
+            </summary>
+            <param name="doc">整个XML文档</param>
+            <param name="root">父节点</param>
+            <param name="name">子节点元素名</param>
+            <param name="value">子节点元素值</param>
+        </member>
+        <member name="M:Dnapay.Common.Utilities.GetElementValue(System.String,System.Xml.XmlDocument)">
+            <summary>
+            按元素名取得元素值
+            </summary>
+            <param name="tagName">元素名</param>
+            <param name="doc">整个XML文档</param>
+            <returns>元素值</returns>
+        </member>
+    </members>
+</doc>

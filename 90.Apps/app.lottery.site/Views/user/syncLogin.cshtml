@@ -1,0 +1,26 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>syncLogin</title>
+    @Html.Raw(ViewBag.Html)
+    @UserHelper.js_share("jquery-1.5.2.min.js")
+</head>
+<body>
+    <form id="bbs_login" action="@ViewBag.BBS/member.php?mod=logging&action=login&loginsubmit=yes&infloat=yes&lssubmit=yes"
+    method="post">
+    <input type="hidden" name="fastloginfield" value="username" />
+    <input type="hidden" name="username" value="@ViewBag.LoginName" />
+    <input type="hidden" name="password" value="@ViewBag.Password" />
+    <input type="hidden" name="quickforward" value="yes" />
+    <input type="hidden" name="handlekey" value="ls" />
+    </form>
+    <script>
+        $(function () {
+            $("#bbs_login").submit();
+        })
+    </script>
+</body>
+</html>

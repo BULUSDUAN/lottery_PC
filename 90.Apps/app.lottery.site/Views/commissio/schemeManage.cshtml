@@ -1,0 +1,142 @@
+﻿@using app.lottery.site.Models
+@{
+    ViewBag.Title = "方案管理, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "方案管理, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var list = ViewBag.JuniorCreateTogether as External.Core.Agnet.SubUserNoPayRebateOrderInfoCollection;
+    CurrentUserInfo currentUser = ViewBag.CurrentUser;
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+    @UserHelper.css("commissio.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>方案管理</li>
+    </ul>
+</div>
+<div class="center mt10">
+    @{Html.RenderAction("menu", "Member");}
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mycommenu">
+            <a href="javascript:void(0);" checklg="/commissio/myTc">我的提成</a>
+            @if (currentUser.LoginInfo.OCAgentType == GameBiz.Core.OCAgentCategory.SportLotterySubAgent)
+            {
+                <a href="javascript:void(0);" checklg="/commissio/subordinateuser">推广用户</a> 
+            }
+            else
+            {
+                <a href="javascript:void(0);" checklg="/commissio/generalizeUser">推广用户</a> 
+            }
+            <a href="javascript:void(0);" checklg="/commissio/CommissionRecord">返点结算</a> <a href="javascript:void(0);"
+                checklg="/commissio/StatisticsQuery">统计查询</a> <a href="javascript:void(0);" checklg="/commissio/SchemeManage"
+                    class="up">方案管理</a>
+        </div>
+        <div class="scheme">
+            <div class="scheme-show xzscheme" style="margin-left: 10px;">
+                <a href="javascript:void(0)" checklg="/commissio/SchemeManage">发起中方案</a>
+            </div>
+            <div class="scheme-show">
+                <a href="javascript:void(0)" checklg="/commissio/winScheme">已返点方案</a>
+            </div>
+            <div class="scheme-show">
+                <a href="javascript:void(0)" checklg="/commissio/PjScheme">未返点方案</a>
+            </div>
+        </div>
+        <div class="scheme-titile">
+            <span class="bgimg"></span>
+            <label class="lbfa">
+                发起中方案</label><label class="lbtxt">人数：@(list == null ? 0 : list.UserCount)
+                    订单数：@(list == null ? 0 : list.TotalCount)
+                    订单额：@(list == null ? "" : list.TotalMoney.ToString("N2"))
+                </label>
+        </div>
+        <table border="0" cellpadding="0" cellspacing="0" class="scheme-table">
+            <tr class="t-tr1">
+                <td colspan="7">
+                    <div style="width: 620px !important 540px; float: left; height: 40px; line-height: 40px;">
+                        &nbsp;&nbsp;&nbsp;&nbsp;用户：<input type="text" name="txtKey"  value="@(ViewBag.Key == null ? string.Empty : ViewBag.Key)"  id="txtKey" />
+                        日期 @ControlHelper.Calendar("begin", ViewBag.Begin)至 @ControlHelper.Calendar("end", ViewBag.End)
+                    </div>
+                    <div style="width: 60px; float: left; height: 40px;">
+                        &nbsp;&nbsp;<a class="Query" href="javascript:void(0)" onclick="getJuniorCreateTogether(0,10)"></a>
+                    </div>
+                </td>
+            </tr>
+            <tr class="t-tr2">
+                <td width="130">
+                    详细 <span class="commissionM-table-sx"></span>
+                </td>
+                <td width="135">
+                    时间 <span class="commissionM-table-sx"></span>
+                </td>
+                <td width="145">
+                    用户 <span class="commissionM-table-sx"></span>
+                </td>
+                <td width="136">
+                    彩种 <span class="commissionM-table-sx"></span>
+                </td>
+                <td width="131">
+                    进度 <span class="commissionM-table-sx"></span>
+                </td>
+                <td width="131">
+                    方案金额 <span class="commissionM-table-sx"></span>
+                </td>
+            </tr>
+            @if (list != null)
+            {
+                foreach (var item in list.List)
+                {
+                <tr class="t-tr-even">
+                    <td width="130" class="fc">
+                        <a href="javascript:void(0)" checklg="/user/scheme/@item.SchemeId">详细</a>
+                    </td>
+                    <td width="135">
+                        @item.CreateTime
+                    </td>
+                    <td width="145">
+                        @SiteString.HideUserName(item.DisplayName, item.HideDisplayNameCount)
+                    </td>
+                    <td width="136">
+                        @SiteConvert.GameName(item.GameCode)
+                    </td>
+                    <td width="131">
+                        @item.Progress.ToString("N2")
+                    </td>
+                    <td width="131">
+                        @item.TotalMonery.ToString("N2")
+                    </td>
+                </tr>
+                }
+            }
+                <tr > <td colspan="7" class="betorder_number_money" style="background-color: #fff" >
+                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注意:发起中方案最多可查询一个月数据
+                 </td> </tr>
+            <tr>
+                <td colspan="7">
+                    @ViewHelpers.Pager4("getJuniorCreateTogether", ViewBag.pageNo, ViewBag.pageSize, list == null ? 0 : list.TotalCount)
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(".scheme-table tr:odd:gt(0)").css("backgroundColor", "#f7f7f7");
+    })
+
+    function getJuniorCreateTogether(pageNo, pageSize) {
+        var begin = $("#begin").val();
+        var end = $("#end").val();
+        var key = $("#txtKey").val();
+        var search = "pageNo=" + pageNo + "&pageSize=" + pageSize + "&begin=" + begin + "&end=" + end + "&r=" + Math.random().toFixed(5);
+        if (key != null) {
+            search = search + "&key=" + key;
+        }
+        location.search = search;
+    }   
+</script>
+<div class="clearfix">
+</div>

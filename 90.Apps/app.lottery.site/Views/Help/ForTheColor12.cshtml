@@ -1,0 +1,79 @@
+﻿@{
+    var Title = "追号有哪些规则？";
+    ViewBag.Title = Title + " - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+   @ViewHelpers.css("help.css")
+} 
+  <div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">玩彩网</a> > </li>
+        <li><a href="/help/index">&nbsp;帮助中心</a> > </li>
+        <li>&nbsp;追号有哪些规则？</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type = "buylottery", name = "ForTheColor" });}
+<div class="help_r">
+         
+
+         <div class="det_box">
+            	<h2>追号有哪些规则？</h2>
+                <div class="det_c"><div class="det_c">
+<p>1、用户可以随时发起追号任务；用户进行追号的同时，不影响其他彩票的代购合买；</p>
+<p>2、发起追号任务订单，账户余额不满足开始期的购买时，任务将不予发起。</p>
+<p>3、追号任务订单发起后，系统将于每期开售时自动执行该期的追号任务，并按所追彩种开售的当期来扣取购买金额，剩余期追号任务则在每期开售后按期扣款执行；</p>
+<p>4、在执行追号任务订单中，用户账户余额不足时</p>
+<p></p>
+<p>&nbsp;&nbsp;&nbsp;a、只有一个彩种，用户账户余额小于当期追号所需购买金额时，当期所追彩种将不予购买（即当期的追号失败）；</p>
+<p>&nbsp;&nbsp;&nbsp;b、一个彩种的多个追号任务，账户余额不能满足当期多个方案的购买，则以用户发起追号任务的时间顺序来依次进行购买，发起时间早且账户余额满足所追的一个方案将优先购买；</p>
+<p>&nbsp;&nbsp;&nbsp;c、多个彩种追号任务，账户余额不能满足当期所有方案的购买但能满足个别方案购买，则以彩种的开售时间顺序来依次进行购买；追号任务包含彩种的开售时间相同时，本网站将按超级大乐透、数字排列、七星彩、七乐彩的购买顺序来完成当期的追号方案；</p>
+<p>5、追号任务在开售的当期追号方案失败时，用户充值且账户余额能满足下一期追号方案，则追号任务在一下期继续执行；</p>
+<p>6、用户可以随时取消任一期的代购任务或者终于整个追号任务；</p>
+</div>                </div>
+                
+               @* <div class="det_a feedback">
+                <div>以上内容是否解决了您的问题呢？</div>
+                              
+                <div>
+                <a id="btn_a_yes" class="btn"><span class="feedback_yes">是，已经解决。</span></a> <a class="btn" id="btn_a_no" href="javascript:void(0);"><span class="feedback_no">否，尚未解决。</span></a>
+                    <div style="display:none;" class="feedback_form clearfix" id="feed_div">                  
+                    <a id="fclose" class="feedback-close" href="javascript:void(0);">关闭</a>     
+                    <span style="display:none;" id="feed_detail"> 
+	                    <form method="post" name="feed_dtl" id="feed_dtlf">             
+		                    <span class="fb-input"><input type="radio" value="1" name="nodtl"> 描述不清晰</span>
+		                    <span class="fb-input"><input type="radio" value="2" name="nodtl"> 字太多，不想看</span>
+		                    <span class="fb-input"><input type="radio" value="3" name="nodtl"> 太复杂，看不懂</span>
+		                    <span class="fb-input"><input type="button" value="提交" name="fsbmt"></span>
+		                </form>    
+	                </span>
+                    <div style="display:none;" class="feedback-suc l" id="feed_result">您的反馈信息已经提交，谢谢您的反馈。</div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                  
+                </script>                                           
+                </div>
+                
+                <div class="det_a">
+                	<div class="det_a_l">相关问题：</div>
+                    <div class="det_a_r">
+                    	<ul>
+                        	                    	</ul>    
+                    </div>
+                </div>*@
+            </div>
+
+        </div>
+         </div>
+<div class="clearfix"></div>
+
+ @ViewHelpers.js("help.js")
+
+
+
+
+
+

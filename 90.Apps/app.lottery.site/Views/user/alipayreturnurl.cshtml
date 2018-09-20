@@ -1,0 +1,88 @@
+@{
+    ViewBag.Title = "支付宝充值 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "支付宝充值, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    ViewBag.Here = "支付宝充值";    
+    @ViewHelpers.css("user.css")
+}
+<div id="fullbg">
+</div>
+<div class="wrap_s pad10">
+    <div class="crumb">
+        <ul>
+            <li class="a">您当前的位置：</li>
+            <li><a href="/">首页</a> > </li>
+            <li>充值</li>
+        </ul>
+    </div>
+    <div class="pad10">
+        <div class="top_bor">
+            @if (ViewBag.IsSuccess)
+            {
+                <div class="pay_win">
+                    恭喜您，充值成功！</div>
+                <div class="pay_box">
+                    <div class="pay_font">
+                        您已成功充值<span style="color: Red;">&nbsp;@ViewBag.TotalMoney</span>元。您的订单号为：@ViewBag.OrderNum<a></a></div>
+                    <div class="top20">
+                        如对此次充值有任何疑问可以凭以上订单号与我们的客服联系，祝您购彩愉快！
+                    </div>
+                    <div class="top20" >
+                        客服联系电话：<span style="color: Red;">@SiteString.tel</span>
+                    </div>
+                    <div class="top20">
+                        <a  href="javascript:void(0)" data="@SiteString.kefuUrl" class="link_kefu" title="点击联系在线客服"></a>
+                    </div>
+                    <div class="top20">
+                        您可以在“<a class="a" href="/member/safe">个人中心</a>&nbsp;&nbsp;>&nbsp;&nbsp;<a class="a" href="/member/accountdetail">账户明细</a>”里面查询到您所有的充值记录！
+                    </div>
+                    <div class="top20">
+                        或查看一些热销彩种：<a class="a" href="/buy/szc/ssq">双色球</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+                            class="a" href="/buy/szc/dlt">大乐透</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+                                class="a" href="/buy/jingcai/spf/">竞彩足球</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+                                    class="a" href="/buy/danchang/spf">足球单场</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+                                        class="a" href="/buy/toto/t14c">14场胜负</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+                                            class="a" href="/buy/toto/tr9">任选九场</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+                                                class="a" href="/buy/szc/jx11x5">11选5</a>
+                    </div>
+                    <div class="pay_aa top20">
+                        <a class="pay_a mr" href="/member/pay">继续充值</a><a class="pay_a" href="/buy/jingcai/spf/">立即购彩</a>
+                    </div>
+                </div> 
+            }
+            else
+            {
+                <div class="pay_lose">
+                    充值失败，请重新充值！</div>
+                <div class="pay_box">
+                    <div class="pay_font">
+                        充值失败。您的订单号为：@ViewBag.OrderNum<a></a></div>
+                    <div class="top20">
+                        如对此次充值有任何疑问可以凭以上订单号与我们的客服联系，祝您购彩愉快！
+                    </div>
+                    <div class="top20">
+                        客服联系电话：<span style="color: Red;">@SiteString.tel</span>
+                    </div>
+                    <div class="top20" >
+                        <a  href="javascript:void(0)" data="@SiteString.kefuUrl" class="link_kefu" title="点击联系在线客服"></a>
+                    </div>
+                    <div class="top20">
+                        您可以在“<a class="a" href="/member/safe">个人中心</a>&nbsp;&nbsp;>&nbsp;&nbsp;<a class="a"
+                            href="/member/accountdetail">账户明细</a>”里面查询到您所有的充值记录！
+                    </div>
+                    <div class="top20">
+                        或查看一些热销彩种：<a class="a" href="/buy/szc/ssq">双色球</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+                            class="a" href="/buy/szc/dlt">大乐透</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+                                class="a" href="/buy/jingcai/spf/">竞彩足球</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+                                    class="a" href="/buy/danchang/spf">足球单场</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+                                        class="a" href="/buy/toto/t14c">14场胜负</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+                                            class="a" href="/buy/toto/tr9">任选九场</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+                                                class="a" href="/buy/szc/jx11x5">11选5</a>
+                    </div>
+                    <div class="pay_aa top20">
+                        <a class="pay_a mr" href="/member/pay">继续充值</a><a class="pay_a" href="/buy/jingcai/spf/">立即购彩</a>
+                    </div>
+                </div> 
+            }
+        </div>
+    </div>
+</div>

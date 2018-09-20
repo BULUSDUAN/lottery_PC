@@ -1,0 +1,196 @@
+﻿@using GameBiz.Core;
+@using app.lottery.site.Models;
+@{
+    ViewBag.Title = "购彩方案 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "购彩方案, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var orders = ViewBag.Orders as GameBiz.Core.MyBettingOrderInfoCollection;
+    var user = ViewBag.CurrentUser as CurrentUserInfo;
+    var bonusStatus = ViewBag.BonusStatus as BonusStatus?;
+    var count = 0;
+    var buy = 0;
+    var bonus = 0;
+}
+@section css{
+    @ViewHelpers.css("mycenter.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>购彩方案</li>
+    </ul>
+</div>
+<div class="center mt10">
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mune_safe">
+            <div class="account_menu clearfix">
+                <a href="/member/betorder" class="select">投注记录</a><a href="/member/mycreatetogether">发起的合买</a>
+                <a href="/member/myjointogether">参与的合买</a><a href="/member/saveProgram">保存方案</a>
+                <a href="/member/chaseorder">追号记录</a> <a href="/member/autofollow">自动跟单</a>
+            </div>
+            <div class="account_con">
+                <div class="betorder_top">
+                    <ul>
+                        <li class="betorder_topSelected"><a href="betorder"><i></i>我的投注</a></li>
+                        <li><a href="/member/mycreatetogether"><i></i>发起的合买</a></li>
+                        <li><a href="/member/myjointogether"><i></i>参与的合买</a></li>
+                    </ul>
+                </div>
+                <div class="search_tab">
+                    日期：@ControlHelper.Calendar("begin", ViewBag.Begin)至 @ControlHelper.Calendar("end", ViewBag.End)
+                    @GameHelper.GameSelector(ViewBag.GameCode)
+                    @*@GameHelper.ProgressStatusSelector("select_status", ViewBag.ProgressStatus)*@
+                    @* <select id="drpAllBuyType">
+                    <option value="" @(queryType == null ? "selected=selected" : string.Empty)>购买类型</option>
+                    <option value="1" @(queryType == OrderQueryType.Betting ? "selected=selected" : string.Empty)>
+                        代购</option>
+                    <option value="2" @(queryType == OrderQueryType.CreateTogether ? "selected=selected" : string.Empty)>
+                        发起合买 </option>
+                    <option value="3" @(queryType == OrderQueryType.JoinTogether ? "selected=selected" : string.Empty)>
+                        参与合买 </option>
+                </select>*@
+                    <input type="button" value="查&nbsp;&nbsp;询" onclick="getBetOrder(0, 10)" class="search_btn" />
+                    <label @(bonusStatus == BonusStatus.Win ? "class='red'" : string.Empty)>
+                        <input id="chkShowWin" type="checkbox" @(bonusStatus == BonusStatus.Win ? "checked='checked'" : string.Empty) name="chkShowWin" class="check" onchange="getBetOrder(0, 10);" />只显示中奖</label>
+                </div>
+                <table class="account_box">
+                    <thead>
+                        <tr>
+                            <td>
+                                标识
+                            </td>
+                            <td>
+                                彩种
+                            </td>
+                            <td>
+                                期号
+                            </td>
+                            @*<td>
+                            发起人
+                        </td>*@
+                            <td>
+                                认购金额
+                            </td>
+                            <td>
+                                奖金
+                            </td>
+                            <td>
+                                认购时间
+                            </td>
+                            <td>
+                                状态
+                            </td>
+                            <td class="last_th">
+                                详情
+                            </td>
+                        </tr>
+                    </thead>
+                    @{
+                        if (orders != null && orders.OrderList.Count > 0)
+                        {
+
+                            foreach (var item in orders.OrderList)
+                            {
+                        <tr>
+                            <td>
+                                @{
+                                if (item.UserId == user.LoginInfo.UserId && item.SchemeType == SchemeType.TogetherBetting)
+                                {
+                                    <i class="st" title="由本人发起的合买方案">合买</i>
+                                }
+                                else if (item.SchemeType == SchemeType.TogetherBetting)
+                                {
+                                    <i class="cy" title="参与合买">参与</i>
+                                }
+                                else if (item.SchemeType == SchemeType.SingleCopy)
+                                {
+                                    <i class="cy" title="抄单">抄单</i>
+                                }
+                                else
+                                {
+                                    <i class="dg" title="代购方案">代购</i>
+                                }
+                                }
+                            </td>
+                            <td>
+                                @if (SchemeSource.WX_GiveLottery == item.SchemeSource || SchemeSource.Web_GiveLottery == item.SchemeSource)
+                                {
+                                    <spam class="song"></spam>
+                                }
+                                @SiteConvert.GameName(item.GameCode)/ @(item.GameTypeName)
+                            </td>
+                            <td>
+                                @item.IssuseNumber
+                            </td>
+                            @* <td>
+                            <a href="/blog/standings/@item.UserId" target="_blank" class="orderId">@SiteString.HideUserName(item.CreatorDisplayName, item.HideDisplayNameCount)</a>
+                        </td>*@
+                            <td class="ye blod fszie">
+                                @item.BuyMoney.ToString("f")
+                            </td>
+                            <td class="ye blod fszie">
+                                @{if ((item.AfterTaxBonusMoney + item.AddMoney) > 0)
+                                  {<p>
+                              ￥@((item.AfterTaxBonusMoney + item.AddMoney).ToString("f"))
+                              @(item.AddMoney > 0M ? string.Format("(加{0:f})", item.AddMoney) : "")</p>}}
+                            </td>
+                            <td>
+                                @item.BuyTime.ToString("yyyy-MM-dd HH:mm")
+                            </td>
+                            <td>
+                                @OrderManager.OrderStatusName(item.SchemeType, item.ProgressStatus, item.TicketStatus, item.BonusStatus, false, (item.UserId == user.LoginInfo.UserId), item.IsVirtualOrder)
+                            </td>
+                            <td class="last_td" title="@OrderManager.SchemeCategoryName(item.SchemeBettingCategory)">
+                                <a href="/user/scheme/@item.SchemeId" target="_blank" class="orderId">查看</a>
+                            </td>
+                        </tr>
+                                                 buy = buy + Convert.ToInt32(item.BuyMoney);
+                                                 bonus = bonus + Convert.ToInt32(item.AfterTaxBonusMoney);
+                                                 count++;
+                            }
+                        }
+                        else
+                        {
+                        <tr>
+                            <td colspan="9">
+                                暂时没有找到你要的数据哦
+                            </td>
+                        </tr>
+                        }
+                    }
+                </table>
+                <div class="combined clearfix">
+                    <div class="fl">
+                        <span><b class="b1"></b>方案数量：<strong class="zc blod fszie">@count&nbsp;个</strong></span>
+                        <span><b class="b2"></b>认购总金额：<strong class="srje blod fszie">@buy.ToString("0.00")&nbsp;元</strong></span>
+                        <span><b class="b4"></b>中奖金额：<strong class="ye blod fszie">@bonus.ToString("0.00")&nbsp;元</strong></span>
+                    </div>
+                    <div class="fr">
+                        <em class="xh">*</em>注意：投注记录最多可查询一个月数据
+                    </div>
+                </div>
+                <div class="account_page  clearfix">
+                    @ViewHelpers.Pager4("getBetOrder", ViewBag.pageNo, ViewBag.PageSize, orders == null ? 0 : orders.TotalCount)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(".account_box tr:even:gt(0)").css("backgroundColor", "#f9f9f9");
+    });
+    var getBetOrder = function (pageNo, pageSize) {
+        var begin = $("#begin").val();
+        var end = $("#end").val();
+        var game = $.trim($("#game option:selected").val());
+        var bonus = document.getElementById("chkShowWin").checked;
+        var search = "pageNo=" + pageNo + "&pageSize=" + pageSize + "&begin=" + begin + "&end=" + end + "&r=" + Math.random().toFixed(5);
+        search = game ? search + "&gameCode=" + game : search;
+        search = bonus ? search + "&bonusStatus=" + 20 : search;
+        location.search = search;
+    }
+</script>

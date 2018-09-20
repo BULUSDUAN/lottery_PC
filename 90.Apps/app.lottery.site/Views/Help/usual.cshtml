@@ -1,0 +1,127 @@
+﻿@{
+    ViewBag.Here = "常见问题";
+
+    ViewBag.Title = "常见问题 - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "常见问题, 帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+   @ViewHelpers.css("help.css")
+   @ViewHelpers.js("share/js/jquery-1.5.2.min.js")
+   @ViewHelpers.js("help.js")
+ 
+}
+
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">帮助中心</a> > </li>
+        <li>常见问题</li>
+    </ul>
+</div>
+<div class="center mt10">
+    @{Html.RenderAction("left", "help");}
+    <div class="new_buy_right">
+    <div class="help-content f_r">
+    <div class="help-list">
+        <h1 class="hp-title">常见问题</h1>
+        <h3>1. 如何注册@(SiteString.getHZSiteName(Request))帐户？</h3>
+        <div class="list">
+            1) 登录@(SiteString.root(Request)) 首页左上角点击免费注册。<br />
+            2) 填写用户名、密码、验证码<br />
+            3) 账号注册成功，按提示完善个人资料，如真实姓名、身份证<br />
+            4）登陆账号，进入我的帐户，安全中心完成手机、邮箱、银行卡等信息绑定<br />
+            5) 点击帐户充值，按提示操作后，即可充值成功 
+        </div>
+        <h3>2. 注册会员要收费吗？
+        </h3>
+        <div class="list">
+            在@(SiteString.getHZSiteName(Request))注册是完全免费的，不会收取任何费用。
+        </div>
+        <h3>3. 怎么充值和提款？？
+        </h3>
+        <div class="list">
+            充值：使用支付宝、快钱充值，方便，安全，快捷。<br />
+            用户登陆@(SiteString.getHZSiteName(Request))个人帐户后，在首页顶部点击“帐户充值”链接即可进行充值。<br />
+            提款：用户登录后点击首页顶部的“我的帐户”进入个人中心页面，在帐户管理选择帐户提款，输入提款银行卡号及提款金额并确认。<br />
+            注：<br />
+            1.为保障您的账户安全，提款前请填写您的真实身份信息、银行卡信息、手机信息；<br />
+            2.请尽量填写您将长期使用的银行借记卡号；<br />
+            3.绑定的银行卡是您提款的唯一用卡。<br />
+            4.支付宝和银行卡提款暂时不收取手续费，从通用账户提款收取1%的手续费。
+
+        </div>
+        <h3>4. @(SiteString.getHZSiteName(Request))充值和提款要不要收取手续费？
+        </h3>
+        <div class="list">
+            在@(SiteString.getHZSiteName(Request))充值免收手续费。<br />
+            用户申请提款到支付宝帐户、银行卡帐户需要交纳每笔0.5元人民币的手续费（活动期间）
+        </div>
+        <h3>5. 提款多久可以到帐？
+        </h3>
+        <div class="list">
+            周一至周五工作日（9：00-18：00），银行卡、支付宝提款通过审核后半个小时内到账（最迟3小时内到账）。<br />
+            周末，银行卡、支付宝提款通过审核后24小时内到账。
+        </div>
+        <h3>6. 在哪里查询自己有没有中奖？
+        </h3>
+        <div class="list">
+            用户登录后进入“我的账户”，点击“账户明细”->“中奖记录”，即可查看中奖记录。<br />
+        </div>
+        <h3>7. 怎样发起合买？
+        </h3>
+        <div class="list">
+            用户登录并选择投注彩种并进入该彩种的选号页面，确认选号后勾选“发起合买”，填写发起方案的相关信息，并提交方案。系统返回发起方案信息，用户确认方案信息，合买发起成功。
+        </div>
+        <h3>8.如何参与合买？
+        </h3>
+        <div class="list">
+            登录后点击首页的“合买中心”，进入合买中心。 在左侧导航选择需要进行合买的彩种，进入该玩法合买认购页面， 在要合买方案的“认购（元）”字段的文本框内输入认购的金额，点击购买，系统返回合买跟单信息，用户确认合买跟单信息，即参与合买成功。
+        </div>
+        <h3>9.哪里可以查询到已参加的合买记录？
+        </h3>
+        <div class="list">
+            用户登录后点击进入“购彩记录”， 在“购彩记录” 页面左侧导航选择合买记录可查询到所有发起合买和参与合买记录及明细
+        </div>
+        <h3>10.中奖后是如何返奖的？
+        </h3>
+        <div class="list">
+            无论您是中5元还是500万，我们都会在开奖后及时将您的税后奖金派发到您网站帐户，您可以随时提款到自己的银行卡。
+        </div>
+        <h3>11.网络购彩有什么好处或者说是优势？
+        </h3>
+        <div class="list">
+            以互联网为载体，通过第三方委托投注的购彩方式，被称为网络购彩。<br />
+            网络购彩具有足不出户，购买简单，彩种集中，资讯丰富等特点，以及根据互联网特色所开发的追号，合买等购买方式，大大提高了购彩的便利和乐趣。
+        </div>
+        <h3>12.在@(SiteString.getHZSiteName(Request))购票有什么凭证？
+        </h3>
+        <div class="list">
+            您的每一笔购彩，交易系统都会自动生成投注记录和帐户资金明细，您可以在购彩后<br />
+            进入账户管理的 “帐户明细”中查看投注详情和收支情况，投注记录和帐户收支互为校验，充分保证您的权益。
+        </div>
+        <h3>13.在网上购彩怎样保护自己的利益？
+        </h3>
+        <div class="list">
+            身份认证：彩票中心是“凭证找人、凭证兑奖”。这里所讲的“证”即彩民的个人身份证件。网上投注做到了彩票中心卖出的每一 注彩票都对应一个身份证号码，有了身份证，彩票中心就知道每一注彩票的归属。
+                    <br />
+            自动返奖：小奖自动返还至用户的投注账户，大奖采用人工通知并自动返还至用户的投注账户，确保彩民利益。
+                    <br />
+            公开查询：用户可以在网站查询自己的投注记录、中奖记录以及资金明细记录，一切做到有据可查，数据公开。
+                    <br />
+            数据安全：@(SiteString.getHZSiteName(Request))投注平台数据直接传送给彩票中心中央管理系统，投注数据及相关资料时时备份，且都归集到彩票中心系统数据库中，网络系统独立设置、隔离并安装有大型硬、软防火墙，安全级别高，确保数据绝对安全。
+        </div>
+        <h3>14.在@(SiteString.getHZSiteName(Request))购彩安全吗？
+        </h3>
+        <div class="list">
+            @(SiteString.getHZSiteName(Request))是福彩中心与体彩中心授权的合法的网上投注平台，所售彩票都是福彩中心与体彩中心正规发行的彩票。 @(SiteString.getHZSiteName(Request))已在工信部备案，是真实有效合法的网上投注平台。
+        </div>
+    </div>
+</div>
+
+        </div>
+</div>
+<div class="clearfix"></div>
+<script type="text/javascript">
+    setShow();
+</script>
+

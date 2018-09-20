@@ -1,0 +1,46 @@
+﻿@{
+    var Title = "竞彩投注风险须知";
+    ViewBag.Title = Title + " - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+   @ViewHelpers.css("help.css")
+} 
+  <div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">玩彩网</a> > </li>
+        <li><a href="/staticHtml/help/index.html">&nbsp;帮助中心</a> > </li>
+        <li>&nbsp;竞彩投注风险须知</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type = "safety", name = "betNotice" });}
+<div class="help_r">
+         
+
+       <div class="list_box">
+            	<div class="h_pub_t">
+                	<b class="t_l"></b>
+                    <div class="t_m"><h2>竞彩投注风险须知</h2></div>
+                    <b class="t_r"></b>
+                </div>
+                <div class="h_pub_m">
+                	<ul>
+                    <li><a href="/staticHtml/help/safety/betNotice1.html" id="link151">竞彩投注风险须知</a></li>
+				            </ul>
+                </div>
+            </div>
+
+
+        </div>
+         </div>
+<div class="clearfix"></div>
+
+ @ViewHelpers.js("help.js")
+
+
+
+
+
+

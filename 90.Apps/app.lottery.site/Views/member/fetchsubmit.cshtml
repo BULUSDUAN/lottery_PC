@@ -1,0 +1,106 @@
+﻿@using app.lottery.site.Models;
+@{
+    var fetchTypeDis = "银行卡提款";
+    if (ViewBag.FetchType == "alipay")
+    {
+        fetchTypeDis = "支付宝提款";
+    }
+    ViewBag.Title = fetchTypeDis + " - " + SiteString.getHZSiteName(Request) + "-专业彩票代购网站|网上投注|福彩|体彩|高频彩";
+    CurrentUserInfo CurrentUser = ViewBag.CurrentUser;
+    var balance = ViewBag.CurrentUserBalance as GameBiz.Core.UserBalanceInfo;
+
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>@fetchTypeDis</li>
+    </ul>
+</div>
+<div class="center mt10">
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mune_safe">
+        <div class="account_menu clearfix">
+            <a href="/member/accountdetail" >账户明细</a>
+            <a href="/member/redBagList">红包明细</a>
+            <a href="/member/paywizzard" >账户充值</a>
+            <a href="/member/drawingsguide" class="select">账户提款</a>
+        </div>
+        <div class="account_con">
+            <div class="betorder_top">
+                <ul>
+                    <li><a href="/member/drawingsguide"><i></i>提款向导</a></li>
+                    @if (fetchTypeDis == "支付宝提款")
+                    {
+                        <li><a href="/member/fetch_bank"><i></i>银行提款</a></li>
+                        <li class="betorder_topSelected"><a  href="/member/fetch_alipay"><i></i>支付宝提现</a></li>
+                    }
+                    else
+                    {
+                        <li class="betorder_topSelected"><a href="/member/fetch_bank"> <i></i>银行提款</a></li>
+                   @* <li><a checklg="/member/fetch_alipay" href="javascript:void(0)">支付宝提现</a></li>*@
+                    }
+                    <li><a href="/member/drawingsrecordall"><i></i>提款记录</a></li>
+                </ul>
+            </div>
+        @{
+            if (ViewBag.IsSuccess)
+            {        
+            <div class="points-success">
+                <i class="suc"></i>
+                <div class="res-content">
+                    <h3>
+                        申请提款成功。</h3>
+                    <p>
+                        提款类型：@fetchTypeDis @(ViewBag.FetchType == "alipay" ? "支付宝" : CurrentUser.BankCardInfo.BankName)<br />
+                        提款金额：<span class="ye blod fszie">@ViewBag.Money</span> 元<br />
+                        提款账号：@(ViewBag.FetchType == "bank" ? SiteString.EncodeBankCardNumber(ViewBag.FetchAccount) : SiteString.EncodeEmail(ViewBag.FetchAccount))<br />
+                        预计到账：@DateTime.Now.AddDays(1).ToString("yyyy年MM月dd日 HH时mm分")
+                    </p>
+                    <span class="morelink">您可能需要：<a href="/member/@(ViewBag.FetchType == "alipay" ? "fetch_alipay" : "fetch_bank")">
+                        继续提款</a> | <a href="/member/drawingsrecordall   ">查看提款状态</a> | <a target="_blank" href="/member/Pay">
+                            充值</a></span>
+                </div>
+                <div class="clear">
+                </div>
+            </div>      
+            }
+            else
+            {
+            <div class="points-success" style="background: #FCEFE9;">
+                <i class="fail"></i>
+                <div class="res-content">
+                    <h3>
+                        申请提款失败。</h3>
+                    <p>
+                        @ViewBag.Message
+                    </p>
+                    <span class="morelink">您可能需要：<a href="@(Request.UrlReferrer == null ? SiteString.root(Request) : Request.UrlReferrer.ToString())" onclick="history.go(-1);return false;">返回上一页</a>
+                        | <a href="/member/@(ViewBag.FetchType == "alipay" ? "fetch_alipay" : "fetch_bank")">
+                            继续提款</a> </span>
+                    <h4>
+                        您可以尝试以下方法：</h4>
+                    <p>
+                        - 请检查您的手机号码是否正确<br />
+                        - 请检查您绑定的银行卡信息是否正确<br />
+                        - 请检查您输入的提款账号是否正确<br />
+                        @{if (balance.CheckIsNeedPassword("Withdraw"))
+                          {<span>- 请检查您输入的资金密码是否正确</span>}}
+                    </p>
+                </div>
+                <div class="clear">
+                </div>
+            </div>        
+            }
+        }
+        </div>
+        </div>
+
+    </div>
+</div>
+<div class="clearfix">
+</div>

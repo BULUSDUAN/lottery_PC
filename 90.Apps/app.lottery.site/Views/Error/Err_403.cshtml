@@ -1,0 +1,10 @@
+﻿@{
+    var error = Server.GetLastError();
+    if (error != null)
+    {
+    @error.ToString()
+    }
+    else{
+    @("禁止访问!")
+    }
+}

@@ -1,0 +1,120 @@
+﻿@{
+    ViewBag.Title = "会员注册 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "会员注册, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var state = SiteString.GetWebIsOpen();
+    var verifyCode = ViewBag.VerifyCode;
+    //   var state = ViewBag.State;
+}
+@section css{
+    @UserHelper.css("user.css")
+}
+@section js{
+    @UserHelper.js("reg_new.js")
+    @UserHelper.js("formValidator-4-1-3.js")
+    @UserHelper.js("formValidatorRegex.js")
+}
+<script src="http://static.geetest.com/static/tools/gt.js"></script>
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>注册</li>
+    </ul>
+</div>
+<div class="user_reg_d">
+    <div style="width: 95%" class="formtitle">
+        <h1>
+            免费注册</h1>
+    </div>
+    <div class="user_reg_body">
+        <form id="CreateForm" method="post" onsubmit="return checkFormNew();">
+        <div class="user_reg_item">
+            <span class="reg_label">
+                <label for="NickName">
+                    用户名：</label></span>
+            <input type="text" style="ime-mode: auto" value="" name="userName" id="NickName"
+                class="reg_in_text" maxlength="20">
+            <span id="NickNameTip" class="onShow"><b>请输入6-18位密码</b></span>
+        </div>
+        <div class="user_reg_item">
+            <span class="reg_label">
+                <label for="Pwd">
+                    登录密码：</label></span>
+            <input type="password" autocomplete="off" onpaste="return  false" style="ime-mode: disabled;"
+                name="password" id="Pwd" class="reg_in_text" maxlength="18">
+            <span id="PwdTip" class="onShow"><b>密码小于6位字符，请重新输入！</b></span>
+            <div id="PwdStrength" class="reg_pw_strength">
+                <div class="reg_pw_bar">
+                </div>
+                <div class="reg_pw_letter">
+                    <span>弱</span><span>中</span><span>强</span></div>
+            </div>
+        </div>
+        <div class="user_reg_item">
+            <span class="reg_label">
+                <label for="PwdC2">
+                    确认密码：</label></span>
+            <input type="password" autocomplete="off" onpaste="return  false" name="confirmPassword"
+                id="PwdC2" class="reg_in_text" maxlength="18">
+            <span id="PwdC2Tip" class="onShow"><b>请再次输入密码</b></span>
+        </div>
+        @if (verifyCode == "Geetest")
+        {
+            <div class="user_reg_item user_reg_caps">
+                <span class="reg_label">
+                    <label for="Captcha">
+                        滑动完成验证:</label></span>
+                <div class="reg_captcha">
+                    <div id="captcha">
+                    </div>
+                    <span id="verifycodeTip" class="onShow" style="display: none;"><b>请拖动验证滑块到正确位置!</b></span>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="user_reg_item user_reg_caps">
+                <span class="reg_label">
+                    <label for="Captcha">
+                        验证码:</label></span>
+                <input type="text" maxlength="4" autocomplete="off" name="verifycode" style="ime-mode: disabled"
+                    id="verifycode" class="reg_in_text">
+                <div class="reg_captcha">
+                    <img onclick="refreshVerify()" alt="点击刷新" id="CheckCode" src="/user/createvalidatecode">
+                    看不清？<a href="javascript:refreshVerify()" href="#">换一张</a></div>
+                <span id="verifycodeTip" class="onShow"><b>请输入验证码</b></span>
+            </div>
+        }
+        <div class="user_reg_item">
+            <label class="user_reg_agent" for="regAgent">
+                <input type="checkbox" checked="checked" autocomplete="off" id="regAgent" name="regAgent">
+                我已年满18周岁并同意<a target="_blank" href="/help/serviceAgreement1">《@(SiteString.getHZSiteName(Request))用户购彩协议》</a>
+            </label>
+            <div class="clear">
+            </div>
+        </div>
+        <div style="display: none;" id="RegisterLoading" class="user_reg_item reging">
+            <span>正在提交注册信息，请稍等...</span>
+        </div>
+        <div class="user_reg_bigitem">
+            @if (state != 0)
+            {
+                <input type="button" value="立即注册" title="立即注册" id="SubmitBtn" class="user_reg_btn_disabled" />
+            }
+            else
+            {
+                <input type="submit" value="立即注册" title="立即注册" id="SubmitBtn" class="user_reg_btn" />
+            }
+            <span class="user_reg_tp">我已经注册？<a href="javascript:void(0);" id="loginbtn_new">马上登录</a></span>
+        </div>
+        <input id="hidVerifycode" type="hidden" />
+        <input id="hidGeetest" type="hidden" value='@verifyCode' />
+        </form>
+    </div>
+</div>
+@*<script type="text/javascript">
+    //停售通知
+    //    $(".user_reg_btn_disabled").click(function() {
+    //        return alertTip( SiteString.getHZSiteName(Request) + "暂不能注册", "err");
+    //    });
+</script>*@ 

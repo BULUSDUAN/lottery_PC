@@ -1,0 +1,87 @@
+﻿@using System.Text.RegularExpressions
+@{
+    var url = Request.Url.Host.ToString();
+    Regex reg = new Regex("\\d+", RegexOptions.IgnoreCase);
+}
+@{Html.RenderAction("headerTop", "home");}
+<div class="clearfix">
+</div>
+<div class="header_box_con" style="display: block;">
+    <div class="header_box">
+        <a title="@(SiteString.getHZSiteName(Request))" class="@(url.IndexOf("114cai") > -1 ? "xg_114" : "xg") logo" href="/">@(SiteString.getHZSiteName(Request))</a>
+       @* <div class="header_right">
+            <div class="tel">
+               <a class="xg service_online" href="@SiteString.kefuUrl" target="_blank">
+                </a>
+            </div> 
+        </div>*@
+         <ul class="customerService-plus">
+            <li><i class="icon-i"></i>TEL:@SiteString.tel &nbsp;</li>
+            <li>
+            <a class="link_kefu" href="javascript:void(0)" data="@SiteString.kefuUrl" title="点击联系在线客服" style=" margin-right:10px;"></a></li>
+          <li class="online_service"><a class="colorRed kf-top" target="_blank" href="/staticHtml/help/index.html" style=" color:#666">帮助中心</a>
+                <a class="colorRed kf-top" target="_blank" href="/staticHtml/help/login.html"  style=" color:#666">如何注册</a> </li>
+        </ul>
+    </div>
+    <div class="clearfix"></div>
+</div>
+<div class="hh-nav clearfix">
+    <div class="nav">
+        <!--竞彩-->
+ @*       <div class="nav_left">
+            <div class="navtoptitle nav_hoverico">
+                <i class="home_icon xzcz"></i>
+                <a href="javascript:void 0">选择彩种</a>
+                <a href="/help/ForTheColor" class="tip">【如何购彩】</a>
+                <a href="/help/bonusGet" class="tip">【兑奖】</a>
+            </div>
+            @{Html.RenderPartial("gamemenuo");}
+        </div>*@
+          <div class="nav_left">
+              <div class="navtoptitle nav_hoverico">
+                  全部彩种 （共30种）
+              </div>
+                @{Html.RenderPartial("gamemenuo");}
+        </div>
+        <!--twonav_left-->
+        <ul class="nav_right" id="home_menus">
+            @*           <li class="expert"><a class="zhuanti" target="_blank" href="/huodong/family">公益基金</a></li>*@
+            <li class="on"><a target="_blank" href="/" style="margin-left: 22px;"><i class="home_icon sy"></i> 首页</a></li>
+          @*  <li><a href="/staticHtml/baodan/index.html" >趣味神单</a></li>*@
+          @*  <li><a href="/baodan/redantoday" >玩味神单</a></li>*@
+            <li><a target="_blank" href="/chipped">合买大厅</a></li>
+            <li><a href="/staticHtml/lottery/index.html">开奖结果</a></li>
+            <li><a href="/staticHtml/bonus/index.html">中奖排行榜</a></li>
+            <li class="dropdown-nav" data-cls="data-down">
+                <a class="dropdown-desc" href="javascript://">数据图表<i class="icon-i"></i></a>
+                <ul class="dropdown-ul" style=" display:none;">
+                    <li><a class="live" href="/soccer">过关统计</a></li>
+                    <li><a class="football" href="http://live.wancai.com/">比分直播</a></li>
+                    <li><a class="baskeball" href="http://odds.wancai.com/">足球数据</a></li>
+                    <li><a href="http://info.wancai.com/">联赛专题</a></li>
+                    <li><a href="/staticHtml/lotterytrend/index.html">走势图</a></li>
+                </ul>
+            </li>
+            <li><a target="_blank" href="/staticHtml/zixun/index.html">资讯</a></li>
+        </ul>
+        <ul class="nav-act">
+            <li class="phone-click" style="position: relative">
+                <a title="手机购彩" href="/staticHtml/phonebuy/index.html">手机购彩</a>
+                <i style="display: none;" class="icon-i"></i>
+                <div style="display: none;" class="mobile-box">
+                    <div class="mobile-text">安全、便捷、随时随地购彩</div>
+                    <div class="mobile-code-img code-icon-i"></div>
+                    <!--<div class="send clearfix"><input type="text" placeholder="输入手机号获取链接" class="jc-put"/><span class="jc-btn">免费发送</span></div>-->
+                </div>
+            </li>
+            <li>⋅</li>
+            <li><a target="_blank" href="/staticHtml/bulletin/detail/28.html">活动</a></li>
+            <li>⋅</li>
+            <li><a title="会员中心" class="help-nav" target="_blank" href="/staticHtml/vip/index.html">会员</a></li>
+        </ul>
+        <!--nav_right-->
+    </div>
+</div>
+<script type="text/javascript">
+    setMenuClass3(".nav_right");
+</script>

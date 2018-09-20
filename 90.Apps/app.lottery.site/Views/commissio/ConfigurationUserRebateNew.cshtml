@@ -1,0 +1,484 @@
+﻿@using External.Core.Agnet;
+@{
+    var userRebate = ViewBag.SetNewUserRebate as OCAgentRebateInfoCollection;    
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+    @UserHelper.css("commissio.css")
+}
+<div id="bet_confirm_show" style="position: fixed; z-index: 1002; left: 50%; top: 50%;
+    margin-top: -171px; margin-left: -299.5px;">
+    <h3 class="pop-comm-top_show" id="drag_confirm_show">
+        <span class="bet-confirm-title_show">设置返点</span> <a id="btn_confirm_close"
+            class="close" onclick="closeBg();">关闭</a>
+    </h3>
+    <div class="pop-comm-middle_show">
+        <div id="bet_confirm_content">
+            <div class="">
+                <div class="" style="width: 580px;">
+                    @{
+                        var jczq_brqspf = userRebate.FirstOrDefault(p => p.GameCode == "JCZQ" && p.GameType == "BRQSPF");
+                        var jczq_spf = userRebate.FirstOrDefault(p => p.GameCode == "JCZQ" && p.GameType == "SPF");
+                        var jczq_bf = userRebate.FirstOrDefault(p => p.GameCode == "JCZQ" && p.GameType == "BF");
+                        var jczq_zjq = userRebate.FirstOrDefault(p => p.GameCode == "JCZQ" && p.GameType == "ZJQ");
+                        var jczq_bqc = userRebate.FirstOrDefault(p => p.GameCode == "JCZQ" && p.GameType == "BQC");
+                        var jczq_hh = userRebate.FirstOrDefault(p => p.GameCode == "JCZQ" && p.GameType == "HH");
+                    }
+                    @{
+                        var bjdc_spf = userRebate.FirstOrDefault(p => p.GameCode == "BJDC" && p.GameType == "SPF");
+                        var bjdc_zjq = userRebate.FirstOrDefault(p => p.GameCode == "BJDC" && p.GameType == "ZJQ");
+                        var bjdc_sxds = userRebate.FirstOrDefault(p => p.GameCode == "BJDC" && p.GameType == "SXDS");
+                        var bjdc_bf = userRebate.FirstOrDefault(p => p.GameCode == "BJDC" && p.GameType == "BF");
+                        var bjdc_bqc = userRebate.FirstOrDefault(p => p.GameCode == "BJDC" && p.GameType == "BQC");
+                    }
+                    @{
+                        var cclq_sf = userRebate.FirstOrDefault(p => p.GameCode == "JCLQ" && p.GameType == "SF");
+                        var cclq_rfsf = userRebate.FirstOrDefault(p => p.GameCode == "JCLQ" && p.GameType == "RFSF");
+                        var cclq_sfc = userRebate.FirstOrDefault(p => p.GameCode == "JCLQ" && p.GameType == "SFC");
+                        var cclq_dxf = userRebate.FirstOrDefault(p => p.GameCode == "JCLQ" && p.GameType == "DXF");
+                        var cclq_hh = userRebate.FirstOrDefault(p => p.GameCode == "JCLQ" && p.GameType == "HH");                
+                    }
+                    @{
+                        var ctzq_t14c = userRebate.FirstOrDefault(p => p.GameCode == "CTZQ" && p.GameType == "T14C");
+                        var ctzq_tr9 = userRebate.FirstOrDefault(p => p.GameCode == "CTZQ" && p.GameType == "TR9");
+                        var ctzq_t6bqc = userRebate.FirstOrDefault(p => p.GameCode == "CTZQ" && p.GameType == "T6BQC");
+                        var ctzq_t4cjq = userRebate.FirstOrDefault(p => p.GameCode == "CTZQ" && p.GameType == "T4CJQ"); 
+                               
+                    }
+                    @{
+                        var tycp_dlt = userRebate.FirstOrDefault(p => p.GameCode == "DLT" && p.GameType == "");
+                        var tycp_pl3 = userRebate.FirstOrDefault(p => p.GameCode == "PL3" && p.GameType == "");
+                    }
+                    @{
+                        var fc3d = userRebate.FirstOrDefault(p => p.GameCode == "FC3D" && p.GameType == "");
+                        var ssq = userRebate.FirstOrDefault(p => p.GameCode == "SSQ" && p.GameType == "");
+                    }
+                    @{               
+                        var gpc_cqssc = userRebate.FirstOrDefault(p => p.GameCode == "CQSSC" && p.GameType == "");
+                        var gpc_jxssc = userRebate.FirstOrDefault(p => p.GameCode == "XSSC" && p.GameType == "");
+                        var gpc_sd11x5 = userRebate.FirstOrDefault(p => p.GameCode == "SD11X5" && p.GameType == "");
+                        var gpc_gd11x5 = userRebate.FirstOrDefault(p => p.GameCode == "X11X5" && p.GameType == "");
+                        var gpc_jx11x5 = userRebate.FirstOrDefault(p => p.GameCode == "JX11X5" && p.GameType == "");
+                    }
+                    @if (userRebate.FirstOrDefault() != null)
+                    {       
+                        <div>
+                            <div class="con-userRebateNew-title">
+                                @if (@ViewBag.TypeName == "下级代理")
+                                {
+                                    <label>
+                                        下级代理：</label>@ViewBag.DisplayName
+                                }
+                                else
+                                {
+                                    <label>
+                                        下级用户：</label>@ViewBag.DisplayName
+                                }
+                            </div>
+                            <div class="ctzq bor">
+                                <div style="float: left;" class="pl">
+                                    传统足球:</div>
+                                <div style="float: right; width: 490px;">
+                                    <div class="con_input mr">
+                                        <span><span class="cai">14场胜负:</span>
+                                            <input type="text" name="txtxt" id="CTZQ:T14C" value="@ctzq_t14c.Rebate.ToString("N2")" /></span></div>
+                                    <div class="con_input mr">
+                                        <span><span class="cai">任9场:</span><input type="text" name="txtxt" id="CTZQ:TR9" value="@ctzq_tr9.Rebate.ToString("N2")" /></span></div>
+                                    <div class="con_input mr">
+                                        <span><span class="cai">6场半全:</span>
+                                            <input type="text" name="txtxt" id="CTZQ:T6BQC" value="@ctzq_t6bqc.Rebate.ToString("N2")" /></span></div>
+                                    <div class="con_input">
+                                        <span><span class="cai">4场进球:</span><input type="text" name="txtxt" id="CTZQ:T4CJQ" value="@ctzq_t4cjq.Rebate.ToString("N2")" /></span></div>
+                                </div>
+                                <div style="clear: both">
+                                </div>
+                            </div>
+                            <div class="bjdz bor">
+                                <div class="lh pl">
+                                    北京单场:</div>
+                                <div style="float: right; width: 490px;">
+                                    <div class="con_input mr">
+                                        <span><span class="cai">胜平负:</span>
+                                            <input type="text" name="txtxt" id="BJDC:SPF" value="@bjdc_spf.Rebate.ToString("N2")" /></span></div>
+                                    <div class="con_input mr">
+                                        <span><span class="cai">上下单双:</span><input type="text" name="txtxt" id="BJDC:SXDS" value="@bjdc_sxds.Rebate.ToString("N2")" /></span></div>
+                                    <div class="con_input mr">
+                                        <span><span class="cai">比&nbsp;&nbsp;分:</span>
+                                            <input type="text" name="txtxt" id="BJDC:BF" value="@bjdc_bf.Rebate.ToString("N2")" /></span></div>
+                                    <div class="con_input">
+                                        <span><span class="cai">总进球:</span><input type="text" name="txtxt" id="BJDC:ZJQ" value="@bjdc_zjq.Rebate.ToString("N2")" /></span></div>
+                                    <div class="con_input">
+                                        <span><span class="cai">半全场:</span>
+                                            <input type="text" name="txtxt" id="BJDC:BQC" value="@bjdc_bqc.Rebate.ToString("N2")" /></span></div>
+                                </div>
+                                <div style="clear: both">
+                                </div>
+                            </div>
+                            <div class="bjdz bor">
+                                <div class="lh pl">
+                                    竞彩足球:</div>
+                                <div style="float: right; width: 490px;">
+                                    <div class="con_input mr">
+                                        <span><span class="cai">胜平负:</span>
+                                            <input type="text" name="txtxt" id="JCZQ:BRQSPF" value="@jczq_brqspf.Rebate.ToString("N2")" /></span></div>
+                                    <div class="con_input mr">
+                                        <span><span class="cai">让球胜平负:</span>
+                                            <input type="text" name="txtxt" id="JCZQ:SPF" value="@jczq_spf.Rebate.ToString("N2")" /></span></div>
+                                    <div class="con_input mr">
+                                        <span><span class="cai">比&nbsp;&nbsp;分:</span>
+                                            <input type="text" name="txtxt" id="JCZQ:BF" value="@jczq_bf.Rebate.ToString("N2")" /></span></div>
+                                    <div class="con_input">
+                                        <span><span class="cai">总进球:</span><input type="text" name="txtxt" id="JCZQ:ZJQ" value="@jczq_zjq.Rebate.ToString("N2")" /></span></div>
+                                    <div class="con_input mr">
+                                        <span><span class="cai">半全场:</span>
+                                            <input type="text" name="txtxt" id="JCZQ:BQC" value="@jczq_bqc.Rebate.ToString("N2")" /></span></div>
+                                    <div class="con_input">
+                                        <span><span class="cai">混合过关:</span>
+                                            <input type="text" name="txtxt" id="JCZQ:HH" value="@(jczq_hh != null ? jczq_hh.Rebate.ToString("N2") : "0.00")" /></span></div>
+                                </div>
+                                <div style="clear: both">
+                                </div>
+                            </div>
+                            <div class="bjdz bor">
+                                <div class="lh pl">
+                                    竞彩篮球:</div>
+                                <div style="float: right; width: 490px;">
+                                    <div class="con_input mr">
+                                        <span><span class="cai">胜&nbsp;&nbsp;负:</span>
+                                            <input type="text" name="txtxt" id="JCLQ:SF" value="@cclq_sf.Rebate.ToString("N2")" /></span></div>
+                                    <div class="con_input mr">
+                                        <span><span class="cai">让分胜负:</span>
+                                            <input type="text" name="txtxt" id="JCLQ:RFSF" value="@cclq_rfsf.Rebate.ToString("N2")" /></span></div>
+                                    <div class="con_input mr">
+                                        <span><span class="cai">胜分差:</span>
+                                            <input type="text" name="txtxt" id="JCLQ:SFC" value="@cclq_sfc.Rebate.ToString("N2")" /></span></div>
+                                    <div class="con_input">
+                                        <span><span class="cai">大小分:</span><input type="text" name="txtxt" id="JCLQ:DXF" value="@cclq_dxf.Rebate.ToString("N2")" /></span></div>
+                                    <div class="con_input mr">
+                                        <span><span class="cai">混合过关:</span>
+                                            <input type="text" name="txtxt" id="JCLQ:HH" value="@cclq_hh.Rebate.ToString("N2")" /></span></div>
+                                </div>
+                                <div style="clear: both">
+                                </div>
+                            </div>
+                            <div class="ctzq bor">
+                                <div style="float: left;" class="pl">
+                                    数字彩:</div>
+                                <div style="float: right; width: 490px;">
+                                    <div class="con_input mr">
+                                        <span><span class="cai">双色球:</span>
+                                            <input type="text" name="txtxt" id="SSQ:" value="@ssq.Rebate.ToString("N2")" /></span></div>
+                                    <div class="con_input mr">
+                                        <span><span class="cai">福彩3D:</span><input type="text" name="txtxt" id="FC3D:" value="@fc3d.Rebate.ToString("N2")" /></span></div>
+                                    <div class="con_input mr">
+                                        <span><span class="cai">大乐透:</span>
+                                            <input type="text" name="txtxt" id="DLT:" value="@tycp_dlt.Rebate.ToString("N2")" /></span></div>
+                                    <div class="con_input">
+                                        <span><span class="cai">排列3:</span>
+                                            <input type="text" name="txtxt" id="PL3:" value="@tycp_pl3.Rebate.ToString("N2")" /></span></div>
+                                </div>
+                                <div style="clear: both">
+                                </div>
+                            </div>
+                            <div class="ctzq bor">
+                                <div style="float: left;" class="pl">
+                                    高频彩:</div>
+                                <div style="float: right; width: 490px;">
+                                    <div class="con_input mr">
+                                        <span><span class="cai">重庆时时彩:</span>
+                                            <input type="text" name="txtxt" id="CQSSC:" value="@gpc_cqssc.Rebate.ToString("N2")" /></span></div>
+                                    <div class="con_input mr">
+                                        <span><span class="cai">江西11选5:</span>
+                                            <input type="text" name="txtxt" id="JX11X5:" value="@gpc_jx11x5.Rebate.ToString("N2")" /></span></div>
+                                </div>
+                                <div style="clear: both">
+                                </div>
+                            </div>
+                        </div>  
+                    }
+                    else
+                    {
+                        <table border="0" cellpadding="0" cellspacing="0" class="pjtable">
+                            <tr>
+                                <td colspan="13" class="title_daili">
+                                    @if (@ViewBag.TypeName == "下级代理")
+                                    {
+                                        <label>
+                                            下级代理：</label>@ViewBag.DisplayName
+                                    }
+                                    else
+                                    {
+                                        <label>
+                                            下级用户：</label>@ViewBag.DisplayName
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    传统足球:
+                                </td>
+                                <td>
+                                    14场胜负:
+                                </td>
+                                <td>
+                                    <input type="text" name="txtxt" id="CTZQ:T14C" value="" />
+                                </td>
+                                <td>
+                                    任9场:
+                                </td>
+                                <td>
+                                    <input type="text" name="txtxt" id="CTZQ:TR9" value="" />
+                                </td>
+                                <td>
+                                    6场半全:
+                                </td>
+                                <td>
+                                    <input type="text" name="txtxt" id="CTZQ:T6BQC" value="" />
+                                </td>
+                                <td>
+                                    4场进球:
+                                </td>
+                                <td>
+                                    <input type="text" name="txtxt" id="CTZQ:T4CJQ" value="" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    北京单场:
+                                </td>
+                                <td>
+                                    胜平负:
+                                </td>
+                                <td>
+                                    <input type="text" name="txtxt" id="BJDC:SPF" value="" />
+                                </td>
+                                <td>
+                                    上下单双:
+                                </td>
+                                <td>
+                                    <input type="text" name="txtxt" id="BJDC:SXDS" value="" />
+                                </td>
+                                <td>
+                                    比&nbsp;&nbsp;分:
+                                </td>
+                                <td>
+                                    <input type="text" name="txtxt" id="BJDC:BF" value="" />
+                                </td>
+                                <td>
+                                    总进球:
+                                </td>
+                                <td>
+                                    <input type="text" name="txtxt" id="BJDC:ZJQ" value="" />
+                                </td>
+                                <td>
+                                    半全场:
+                                </td>
+                                <td>
+                                    <input type="text" name="txtxt" id="BJDC:BQC" value="" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    竞彩足球:
+                                </td>
+                                <td>
+                                    胜平负:
+                                </td>
+                                <td>
+                                    <input type="text" name="txtxt" id="JCZQ:BRQSPF" value="" />
+                                </td>
+                                <td>
+                                    让球胜平负:
+                                </td>
+                                <td>
+                                    <input type="text" name="txtxt" id="JCZQ:SPF" value="" />
+                                </td>
+                                <td>
+                                    比&nbsp;&nbsp;分:
+                                </td>
+                                <td>
+                                    <input type="text" name="txtxt" id="JCZQ:BF" value="" />
+                                </td>
+                                <td>
+                                    总进球:
+                                </td>
+                                <td>
+                                    <input type="text" name="txtxt" id="JCZQ:ZJQ" value="" />
+                                </td>
+                                <td>
+                                    混合过关:
+                                </td>
+                                <td>
+                                    <input type="text" name="txtxt" id="JCZQ:HH" value="" />
+                                </td>
+                                <td>
+                                    半全场:
+                                </td>
+                                <td>
+                                    <input type="text" name="txtxt" id="JCZQ:BQC" value="" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    竞彩篮球:
+                                </td>
+                                <td>
+                                    胜&nbsp;&nbsp;负:
+                                </td>
+                                <td>
+                                    <input type="text" name="txtxt" id="JCLQ:SF" value="" />
+                                </td>
+                                <td>
+                                    让分胜负:
+                                </td>
+                                <td>
+                                    <input type="text" name="txtxt" id="JCLQ:RFSF" value="" />
+                                </td>
+                                <td>
+                                    胜分差:
+                                </td>
+                                <td>
+                                    <input type="text" name="txtxt" id="JCLQ:SFC" value="" />
+                                </td>
+                                <td>
+                                    大小分:
+                                </td>
+                                <td>
+                                    <input type="text" name="txtxt" id="JCLQ:DXF" value="" />
+                                </td>
+                                <td>
+                                    混合过关:
+                                </td>
+                                <td>
+                                    <input type="text" name="txtxt" id="JCLQ:HH" value="" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    数字彩:
+                                </td>
+                                <td>
+                                    双色球:
+                                </td>
+                                <td>
+                                    <input type="text" name="txtxt" id="SSQ:" value="" />
+                                </td>
+                                <td>
+                                    福彩3D:
+                                </td>
+                                <td>
+                                    <input type="text" name="txtxt" id="FC3D:" value="" />
+                                </td>
+                                <td>
+                                    大乐透:
+                                </td>
+                                <td>
+                                    <input type="text" name="txtxt" id="DLT:" value="" />
+                                </td>
+                                <td>
+                                    排列3:
+                                </td>
+                                <td>
+                                    <input type="text" name="txtxt" id="PL3:" value="" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    高频彩:
+                                </td>
+                                <td>
+                                    重庆时时彩:
+                                </td>
+                                <td>
+                                    <input type="text" name="txtxt" id="CQSSC:" value="" />
+                                </td>
+                                <td>
+                                    江西11选5:
+                                </td>
+                                <td>
+                                    <input type="text" name="txtxt" id="JX11X5:" value="" />
+                                </td>
+                            </tr>
+                        </table>
+                    }
+                    <input type="hidden" name="hdId" value="@ViewBag.Id" id="hdId" />
+                </div>
+            </div>
+        </div>
+        <div class="buttonrow_show">
+            <input type="button" class="dialogBtn" value="保存" id="saveDealer" />
+            <input type="button" class="dialogBtn focusBtn" value="取消" onclick="closeBg();" id="btn_confirm_no" />
+        </div>
+    </div>
+    <div class="pop-comm-bottom_show">
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("input[name='txtxt']:text").attr("atomicselection", "false");
+        var vs = $("input[name='txtxt']:text").val();
+        if (vs == "") {
+            $("input[name='txtxt']:text").val("0.00");
+        }
+        var error = 0;
+        $("input[name='txtxt']:text").blur(function () {
+            var val = $(this).attr("value");
+            var reg = /^[0-9]+(\.[0-9]+)?$/;
+            if (val == "") { $(this).attr("value", "0.00"); }
+            if (val != "" && !reg.test(val)) {
+                error++;
+                alert('只能输入数字！');
+                $(this).css("color", "red");
+                return false;
+            } else {
+                if (val < 1) {
+                    error++;
+                    alert('设置的返点必须是大于或者等于1且小于100的小数');
+                    $(this).css("color", "red");
+                    return false;
+                }
+                else if (val > 100) {
+                    error++;
+                    alert('设置的返点必须是大于或者等于0且小于100的小数');
+                    $(this).css("color", "red");
+                    return false;
+                }
+                else {
+                    error = 0;
+                    $(this).css("color", "");
+                }
+            }
+        });
+
+        $("#saveDealer").click(function () {
+            if (error != 0) {
+                alert("设置的返点必须是大于或者等于0且小于100的小数");
+                return false;
+            }
+            if (!confirm("是否保存?")) {
+                return false;
+            }
+            var _this = $(this);
+            var dataArr = new Array();
+            $("input[name='txtxt']:text").each(function () {
+                var id = $(this).attr("id");
+                var v = $(this).val();
+                dataArr.push(id + ":" + v);
+            })
+            var dataStr = dataArr.join("|");
+            var _id = $("#hdId").val();
+            $.post("/commissio/savePZSNUR", { dataStr: dataStr, _id: _id }, function (data) {
+                if (data.IsSuccess) {
+                    alert(data.Msg);
+                    location.href = location.href;
+                }
+                else {
+                    alert(data.Msg);
+                    return;
+                }
+            })
+        });
+    });    
+</script>
+<div class="clearfix">
+</div>

@@ -1,0 +1,117 @@
+﻿@using GameBiz.Core
+@{
+    ViewBag.Title = "转移充值";
+    var fund = ViewBag.FundDetails as GameBiz.Core.UserFundDetailCollection;
+    var user = ViewBag.CurrentUser as app.lottery.site.Models.CurrentUserInfo;
+
+    GameBiz.Core.FillMoneyQueryInfoCollection FillMoneyCollection = ViewBag.FillMoneyCollection;
+
+    var count = 0;
+    var Money = 0;
+    var Nocount = 0;
+    var NoMoney = 0;
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>转移充值记录</li>
+    </ul>
+</div>
+<div class="center mt10">
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mune_safe">
+        <div class="account_menu clearfix">
+          <a href="/member/TransferFillMoney"  class="select">转移充值</a>
+            <a href="/member/TransferFillMoneyList">充值记录</a>
+        </div>
+        <div class="account_con">
+             <ul class="userinfo_list">
+                <li><span class="sp120"><select id="nameType">  
+                    <option value="uName" >用户名</option>
+                    <option value="uId">用户id</option></select></span><input type="text" autocomplete="off" class="expressfillmoney" size="15"  value="" name="userId" id="userId"/></li>
+                @*<li><span class="sp120">账户类型：</span><select id="payTypes"> <option value="">请选择账户类型</option>
+                    <option value="50" >充值账户</option>
+                    <option value="70">红包账户</option></select> </li>*@
+                    <li><span class="sp120">账户类型：</span><select id="payType">
+                                    <option value="50" >充值账户</option></select> </li>
+                <li><span class="sp120">输入充值金额：</span><input type="text" autocomplete="off" class="expressfillmoney" size="15"  value="" name="payMoney" id="payMoney"/></li>
+             </ul>
+              <div style="padding-left: 100px; margin-top: 20px;">
+                 <input type="submit" value="立即充值" class="btn_pay" id="btn_pay"/> 
+              </div>
+        </div>       
+        </div>       
+    </div>
+</div>
+<div class="clearfix">
+</div>
+<script type="text/javascript">
+    $("#btn_pay").click(function () {
+        var userId = $("#userId").val();
+        var payMoney = $("#payMoney").val();
+        var payType = $("#payType").val();
+        var nameType = $("#nameType").val();
+        if (nameType == "") {
+            alert("请选择用户名或者用户id！"); return false;
+        }
+        if (userId == "") {
+            alert("用户名或者用户id不能为空！"); return false;
+        }
+        if (payType == "" || payType != 50) {
+            alert("账户类型不对或者不能为空！"); return false;
+        }
+        if (payMoney == "" || payMoney <= 0) {
+            alert("充值金额不能为空且不能小于等于0！"); return false;
+        }
+        var url = "/Member/TransferFillMoneyPay?userId=" + userId + "&nameType=" + nameType + "&payType=" + payType + "&payMoney=" + payMoney + "&r=" + Math.random();
+        $.getJSON(url, function (json) {
+            if (json.IsSuccess) {
+                alert(json.Message);
+                $("#userId").val("");
+                $("#payType").val('');
+                $("#payMoney").val("");
+                return;
+            } else {
+                alert(json.Message);
+            }
+        });
+    })
+</script>
+<script type="text/javascript">
+    $("#btn_paysss").click(function () {
+        var userId = $("#userId").val();
+        var payMoney = $("#payMoney").val();
+        var payType = $("#payType").val();
+        var nameType = $("#nameType").val();
+        if (nameType == "") {
+            alert("请选择用户名或者用户id！"); return false;
+        }
+        if (userId == "") {
+            alert("用户名或者用户id不能为空！"); return false;
+        }
+        if (payType == "") {
+            alert("账户类型不能为空！"); return false;
+        }
+        if (payMoney == "" || payMoney <= 0) {
+            alert("充值金额不能为空且不能小于等于0！"); return false;
+        }
+        var url = "/Member/TransferFillMoneyPay?userId=" + userId + "&nameType=" + nameType + "&payType=" + payType + "&payMoney=" + payMoney + "&r=" + Math.random();
+        $.getJSON(url, function (json) {
+            if (json.IsSuccess) {
+                alert(json.Message);
+                $("#userId").val("");
+                $("#payType").val('');
+                $("#payMoney").val("");
+                return;
+            } else {
+                alert(json.Message);
+            }
+        });
+    })
+</script>
+

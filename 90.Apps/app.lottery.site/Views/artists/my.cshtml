@@ -1,0 +1,29 @@
+﻿@{
+    Layout = "../Shared/_ArtistsLayout.cshtml";
+    var type = string.IsNullOrEmpty(Request["from"]) ? "buy" : Request["from"];
+    ViewBag.Title = "我的购买";
+}
+
+<div class="other_con">
+    <div class="other_tab clearfix">
+        <ul>
+            <a href="/artists/my?from=buy" data-type="my">
+                <li class="@(type=="buy"?"on":"")">我的购买</li>
+            </a>
+            <a href="/artists/my?from=fav" data-type="my">
+                <li class="@(type == "fav" ? "on" : "")">我的收藏</li>
+            </a>
+            <a href="/artists/my?from=att" data-type="my">
+                <li class="@(type == "att" ? "on" : "")">我的关注</li>
+            </a>
+            <a href="/artists/my?from=create" data-type="my">
+                <li class="@(type == "create" ? "on" : "")">我创建的模型</li>
+            </a>
+        </ul>
+        <div class="fr"><a href="/artists/mynavigate"  target="_blank" id="create_n" class="bg2 create_n">创建新模型</a></div>
+    </div>
+    <div class="other_box">
+        @{Html.RenderAction(type,"Artists");}
+    </div>
+</div>
+

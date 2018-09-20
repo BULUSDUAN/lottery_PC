@@ -1,0 +1,977 @@
+﻿@using app.lottery.site.Models;
+@using External.Core.SiteMessage
+@using GameBiz.Core
+@{
+    var sitename = SiteString.getHZSiteName(Request);
+    ViewBag.Title = "玩彩网_像玩游戏一样轻松_赚钱娱乐两不误的首选安全彩票网站";
+    ViewBag.KeyWords = "玩彩网,网上买彩票,网上购彩,网上彩票投注,互联网彩票,彩票合买,竞彩足球,竞彩篮球,重庆时时彩";
+    ViewBag.Description = "玩彩网是一家专业从事网上彩票投注合买的交易平台,提供竞彩、单场、足彩、篮彩、体彩、福彩等国家合法彩票购买服务,具备最全面的彩票中奖查询、历史号码、走势图、图表与遗漏等号码走势分析查询资讯。玩彩网是最安全可靠的网上购彩平台！";
+    Layout = "../Shared/_LayoutIndex.cshtml";
+    var currentUser = ViewBag.CurrentUser as CurrentUserInfo;
+    var noticeList = WCFService.GetNoticeList(5);
+
+    var hot = ViewBag.Cphot as ArticleInfo_QueryCollection;
+    var gpc = ViewBag.Gpc as ArticleInfo_QueryCollection;
+    var szc = ViewBag.Scz as ArticleInfo_QueryCollection;
+    var jjc = ViewBag.Jjc as ArticleInfo_QueryCollection;
+    var ranklist = ViewBag.RankList as BDFXGSRank_Collection;
+    var focusCMS = ViewBag.FocusCMS as ArticleInfo_QueryCollection;
+    var bonusCMS = ViewBag.BonusCMS as ArticleInfo_QueryCollection;
+    var monthTotalRank = ViewBag.mRankList as RankReportCollection_BettingProfit_Sport;
+    var totalRank = ViewBag.tRankList as RankReportCollection_BettingProfit_Sport;
+    var lotteryBonus = ViewBag.LotteryBonus as LotteryNewBonusInfoCollection;
+
+    var ctzqiss = WCFService.PrizedIssuseList("CTZQ", "T14C", 1);
+    var winnum = WCFService.QueryWinNumber("CTZQ", ctzqiss[0], "T14C");
+    var ctzqisst4 = WCFService.PrizedIssuseList("CTZQ", "T4CJQ", 1);
+    var winnumt4 = WCFService.QueryWinNumber("CTZQ", ctzqisst4[0], "T4CJQ");
+    var ctzqisst6 = WCFService.PrizedIssuseList("CTZQ", "T6BQC", 1);
+    var winnumt6 = WCFService.QueryWinNumber("CTZQ", ctzqisst6[0], "T6BQC");
+    var articleCite = string.Empty;
+    //var zqbetcount = ViewBag.Ctzq as HitMatchInfo;
+    //var apkurl = SiteString.getApk_Url();
+    //var iosUrl = SiteString.getIOS_Url();
+}
+@section css
+{@UserHelper.csscdn("index.min.css", "1211")
+@UserHelper.csscdn("/duilian/duilian1.css", "01211")
+}
+<a href="/worldcup" target="_blank" style="display: block;position: fixed;left: 9%;top: 34%;z-index: 9999">
+<img src="@ViewHelpers.img("worldcup/wc-cup.png")">
+</a>
+
+
+<div class="first">
+    <div class="left">
+        @{Html.RenderPartial("gamemenuo");}
+    </div>
+    <div class="center">
+        @{ Html.RenderAction("SlideBox", "Home"); }
+        <div id="cz_news">
+            <div class="quick-tpis">
+                <i class="icon-lb"></i><b>最新中奖：</b>
+                <div id="scroll" class="quick-list">
+                    <ul class="claearfix">
+                        @foreach (var b in bonusCMS.ArticleList)
+                        {
+                            <li><a target="_blank" title="@b.Title"
+                                   href="@string.Format("/staticHtml/zixun/details/{0}/{1}.html", b.CreateTime.ToString("yyyyMMdd"), b.Id)">@b.Title</a></li>      
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="clearfix">
+            </div>
+            <div class="quick-buy">
+                <ul class="quick-tab-list">
+                    <li class="hot">热销彩种</li>
+                    <li class="on" data-type="jczq" value="0"><a href="javascript:void(0)">竞彩足球</a></li>
+                    <li data-type="ssq" value="1"><a href="javascript:void(0)">双色球</a></li>
+                    <li data-type="dlt" value="2"><a href="javascript:void(0)">大乐透</a></li>
+                    <li data-type="jx11x5" value="3"><a href="javascript:void(0)">11选5</a></li>
+                    <li data-type="fc3d" value="4"><a href="javascript:void(0)">福彩3D</a></li>
+                </ul>
+                <div class="qb-box-list">
+                    <!--快速购彩-jczq-->
+                    <div id="qb_jczq" class="qb">
+                        <div id="match_dg" class="quick-buy-athletics">
+                            <div class="dg-box">
+                                <div class="dg-game-box">
+                                    <div class="dg-game-info clearfix">
+                                        <p id="match_dg_info">
+                                            <span></span>
+                                        </p>
+                                        <p class="more-game">
+                                            <a target="_blank" href="/jingcai">更多比赛</a>
+                                        </p>
+                                    </div>
+                                    <div class="dg-game">
+                                        <div class="dl-box dl-box-on">
+                                            <dl class="dg-l clearfix">
+                                                <dt>
+                                                    <img width="38" height="38" src="@ViewHelpers.img("home/none_team.gif")" id="match_dg_himg" alt=""/></dt>
+                                                <dd>
+                                                    <strong id="match_dg_home"></strong><span style="margin-left: 10px">胜</span><br />
+                                                    <span class="dg-sp-win sp" id="match_dg_win_sp" data-key="3" data-desc="胜">0.00</span><em
+                                                        class="rq" id="leftBall"></em></dd>
+                                            </dl>
+                                            <span class="true-box"><i class="icon-i"></i></span>
+                                        </div>
+                                        <div class="dl-box">
+                                            <dl class="dg-m">
+                                                <dt><strong>平局</strong></dt>
+                                                <dd>
+                                                    <span class="dg-sp-ping sp" id="match_dg_flat_sp" data-key="1" data-desc="平">0.00</span></dd>
+                                            </dl>
+                                            <span class="true-box"><i class="icon-i"></i></span>
+                                        </div>
+                                        <div class="dl-box dl-box-r">
+                                            <dl class="dg-r clearfix">
+                                                <dt>
+                                                    <img width="38" height="38" src="@ViewHelpers.img("home/none_team.gif")" id="match_dg_gimg" alt=""/></dt>
+                                                <dd>
+                                                    <strong id="match_dg_guest"></strong><span style="margin-left: 10px">胜</span><br />
+                                                    <span class="dg-sp-lost sp" id="match_dg_lose_sp" data-key="0" data-desc="负">0.00</span></dd>
+                                            </dl>
+                                            <span class="true-box"><i class="icon-i"></i></span>
+                                        </div>
+                                        <input type="hidden" id="dgmatchid" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--快速购彩 ssq-->
+                    <div id="qb_ssq" class="qb" style="display: none;">
+                        <ul class="qb-info clearfix">
+                            <li>第<span id="ssq_issue">0000000</span>期 截止：<span class="sale_end_timer" id="cd_ssq"><strong
+                                class="red">00</strong>小时<strong class="red">00</strong>分<strong class="red">00</strong>秒</span></li>
+                            <li class="bztz clearfi"><a target="_blank" href="/szc/ssq">手动选号</a> | <a target="_blank"
+                                href="/statichtml/lotterytrend/ssq/jbzs30.html">走势图</a> </li>
+                        </ul>
+                        <div style="position: relative" class="qb-selectnumber">
+                            <ul id="qb_ssq_select" class="qb-selectnum clearfix">
+                                <li class="qb-red icon-i lot_sn_red">
+                                    <input type="text" value="00" maxlength="2" /></li>
+                                <li class="qb-red icon-i lot_sn_red">
+                                    <input type="text" value="00" maxlength="2" /></li>
+                                <li class="qb-red icon-i lot_sn_red">
+                                    <input type="text" value="00" maxlength="2" /></li>
+                                <li class="qb-red icon-i lot_sn_red">
+                                    <input type="text" value="00" maxlength="2" /></li>
+                                <li class="qb-red icon-i lot_sn_red">
+                                    <input type="text" value="00" maxlength="2" /></li>
+                                <li class="qb-red icon-i lot_sn_red mr30">
+                                    <input type="text" value="00" maxlength="2" /></li>
+                                <li class="qb-blue icon-i lot_sn_blue">
+                                    <input type="text" value="00" maxlength="2" /></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!--快速购彩-dlt-->
+                    <div style="display: none;" id="qb_dlt" class="qb">
+                        <ul class="qb-info clearfix">
+                            <li>第<span id="dlt_issue">00000</span>期 截止：<span class="sale_end_timer" id="cd_dlt"><strong
+                                class="red">2</strong>天<strong class="red">4</strong>小时<strong class="red">48</strong>分<strong
+                                    class="red">13</strong>秒</span></li>
+                            <li class="bztz"><a target="_blank" href="/szc/dlt">手动选号</a> | <a target="_blank"
+                                href="/statichtml/lotterytrend/dlt/jbzs30.html">走势图</a> </li>
+                        </ul>
+                        <div class="qb-selectnumber">
+                            <ul id="qb_dlt_select" class="qb-selectnum clearfix qb_dlt_select">
+                                <li class="qb-red icon-i lot_sn_red">
+                                    <input type="text" maxlength="2" /></li>
+                                <li class="qb-red icon-i lot_sn_red">
+                                    <input type="text" maxlength="2" /></li>
+                                <li class="qb-red icon-i lot_sn_red">
+                                    <input type="text" maxlength="2" /></li>
+                                <li class="qb-red icon-i lot_sn_red">
+                                    <input type="text" maxlength="2" /></li>
+                                <li class="qb-red icon-i lot_sn_red mr30">
+                                    <input type="text" maxlength="2" /></li>
+                                <li class="qb-blue icon-i lot_sn_blue">
+                                    <input type="text" maxlength="2" /></li>
+                                <li class="qb-blue icon-i lot_sn_blue">
+                                    <input type="text" maxlength="2" /></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!--快速购彩-11x5-->
+                    <div style="display: none" id="qb_jx11x5" class="qb">
+                        <ul class="qb-info clearfix">
+                            <li>第<span id="jx11x5_issue"></span>期 截止：<span class="sale_end_timer" id="cd_jx11x5"></span></li>
+                            <li class="bztz"><a target="_blank" href="/szc/jx11x5">手动选号</a> | <a target="_blank"
+                                href="/statichtml/lotterytrend/jx11x5/rxjbzs30.html">走势图</a> </li>
+                        </ul>
+                        <div class="qb-selectnumber">
+                            <ul style="padding-left: 10px; width: 280px;" id="qb_jx11x5_select" class="qb-selectnum clearfix">
+                                <li class="qb-red icon-i lot_sn_red">
+                                    <input type="text" maxlength="2" /></li>
+                                <li class="qb-red icon-i lot_sn_red">
+                                    <input type="text" maxlength="2" /></li>
+                                <li class="qb-red icon-i lot_sn_red">
+                                    <input type="text" maxlength="2" /></li>
+                                <li class="qb-red icon-i lot_sn_red">
+                                    <input type="text" maxlength="2" /></li>
+                                <li class="qb-red icon-i lot_sn_red">
+                                    <input type="text" maxlength="2" /></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!--快速购彩-fc3d-->
+                    <div style="display: none" id="qb_fc3d" class="qb">
+                        <ul class="qb-info clearfix">
+                            <li>第<span id="fc3d_issue"></span>期 截止：<span class="sale_end_timer" id="cd_fc3d"></span></li>
+                            <li class="bztz"><a target="_blank" href="/szc/fc3d">手动选号</a> | <a target="_blank"
+                                href="/statichtml/lotterytrend/fc3d/zxzs30.html">走势图</a> </li>
+                        </ul>
+                        <div class="qb-selectnumber">
+                            <ul style="padding-left: 10px; width: 280px;" id="qb_fc3d_select" class="qb-selectnum clearfix">
+                                <li class="qb-red icon-i lot_sn_red">
+                                    <input type="text" maxlength="2" /></li>
+                                <li class="qb-red icon-i lot_sn_red">
+                                    <input type="text" maxlength="2" /></li>
+                                <li class="qb-red icon-i lot_sn_red">
+                                    <input type="text" maxlength="2" /></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="qb-tz-box clearfix">
+                        <span class="fl-l bei-box"><a class="tz_bei_sub" href="javascript:;">−</a>
+                            <input type="text" data-type="jczq" maxlength="3" name="input" id="jczq_multiple"
+                                class="multiple" value="1" />
+                            <a class="tz_bei_add" href="javascript:;">+</a> <span class="mr10">倍</span>共 <strong
+                                id="jczq_amount" class="money colorRed">2</strong> 元&nbsp; </span><span class="prize-box">
+                                    最大奖金:<strong class="prize colorRed" id="jczq_prize_money">0</strong>元</span>
+                        <span class="dg-btn-box"><a class="icon-i mac_sel hyz" href="javascript:void(0)"
+                            data-crt="-1" data-rdmax="-1"></a><a class="icon-i dg-tz-btn" href="javascript:void(0)"
+                                data-flag="dg"></a><a class="icon-i dg-tz-btn" href="javascript:void(0)" style="display: none;"
+                                    data-flag="szc"></a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="right">
+        <div id="user_account">
+            @{
+                var userleve = 1;
+                var username = string.Empty;
+                var flag = currentUser != null;
+                if (flag)
+                {
+                    username = SiteString.HideUserName(currentUser.LoginInfo.DisplayName, currentUser.LoginInfo.HideDisplayNameCount);
+                    if (currentUser.LoginInfo.MaxLevelName == "彩民")
+                    {
+                        userleve = 1;
+                    }
+                    if (currentUser.LoginInfo.MaxLevelName == "百元")
+                    {
+                        userleve = 10;
+                    }
+                    if (currentUser.LoginInfo.MaxLevelName == "千元")
+                    {
+                        userleve = 2;
+                    }
+                    if (currentUser.LoginInfo.MaxLevelName == "万元")
+                    {
+                        userleve = 3;
+                    }
+                    if (currentUser.LoginInfo.MaxLevelName == "十万")
+                    {
+                        userleve = 4;
+                    }
+                    if (currentUser.LoginInfo.MaxLevelName == "百万")
+                    {
+                        userleve = 5;
+                    }
+                    if (currentUser.LoginInfo.MaxLevelName == "千万" || currentUser.LoginInfo.MaxLevelName == "亿元")
+                    {
+                        userleve = 7;
+                    }
+                }
+            }
+            <div class="index_logined" id="login_middle" style="display: @(flag ? "block" : "none")">
+                <div class="head_img">
+                    <a class="hmmr hmmr_leve@(userleve)" style="border-radius: 28px; float:left; margin-left:10px;" target="_blank" href="/member/safe" id="login_middle_img">
+                    </a>
+                    <div style="margin-left: 70px; margin-top: 10px; text-align: left;">
+                        <span style="color: #0e3c94;">欢迎您！</span><span style="color: #0e3c94;" id="login_middle_username">@username</span><a
+                            class="loginout" style="margin-right: 15px; float: right;" href="javascript:user.logOut(true);">退出</a>
+                    </div>
+                    <div style="margin-left: 70px; margin-top: 10px; text-align: left;">
+                        用户等级:<span id="login_middle_vipLevel">@(flag ? currentUser.LoginInfo.VipLevel : 0)</span>
+                    </div>
+                    @*
+                    <a class="loginout" href="javascript:user.logOut(true);">退出</a>
+                    <p class="f14">
+                        hi,<span id="login_middle_username">@username</span></p>
+                        *@
+                </div>
+                <div class="login_con">
+                    <p>
+                        <a class="ye" href="javascript:void(0)" data-sh="0">点击查看账户余额</a><a class="cz" target="_blank"
+                            href="/member/Pay">充值</a></p>
+                    <p class="login-con-p2">
+                        <a target="_blank" href="/member/fetch_bank" data-cls="af-login"><span class="icon-i tk">
+                        </span>提款</a> <a target="_blank" href="/member/safe" data-cls="af-login"><span class="icon-i zh">
+                        </span>我的账户</a> <a class="nbder" target="_blank" href="/member/betorder" data-cls="af-login">
+                            <span class="icon-i tz"></span>投注记录</a>
+                    </p>
+                </div>
+            </div>
+            <div class="index_login" id="not_login_middle"style="display: @(flag ? "none" : "block")">
+                @*<span class="public_ad">@ViewBag.TotalUserCount</span>*@ <span class="public_ad">23618</span>
+                <span class="people">人</span>
+                <p>
+                    已加入 @SiteString.getHZSiteName()</p>
+                <div class="no_logined">
+                    <p  style="margin:5px 0px">
+                        <a href="/statichtml/register.html" style="width:115px" class="btn_register">免费注册</a>
+                        <a href="http://localhost:7999" style="width:115px;background:red" class="btn_register">免费试玩</a>
+                    </p>
+                    <p style="text-align: right">
+                        <a href="/user/forget">忘记密码</a>&nbsp;&nbsp; <a id="login" class="btn_login" href="javascript:void 0"
+                            style="color: #ff910e;">马上登录</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="public web_guide">
+            <div id="cpNotice" class="cp_slide">
+                <div class="cp_slide_nav">
+                    <ul>
+                        <li class="on" value="0"><a href="javascript:void 0">网站公告</a></li>
+                        <li value="1"><a href="javascript:void 0">新手引导</a></li>
+                    </ul>
+                </div>
+                <div class="cp_slide_body">
+                    <div>
+                        <ul class="cp_notice_list" style="display: block;">
+                            @{
+                                foreach (var item in noticeList)
+                                {
+                                <li><span>@(item.CreateTime.ToString("MM.dd"))</span> <a target="_blank" href="@string.Format("/staticHtml/bulletin/detail/{0}.html", item.Id)" class="@(item.IsPutTop == 1 ? "fred" : string.Empty)">@(SiteString.EncodeString(item.Title, 20, item.Title.Length, 3, "."))</a>
+                                </li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                    <div class="cp_guide_banner" style="display: none;">
+                        <p style="margin: 10px 8px;">
+                            免费注册<span>&nbsp;</span>充值购彩<span>&nbsp;</span>中奖提款</p>
+                        <div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cp_slide lottery-latest-award" id="lottery-latestAward">
+                <div class="cp_slide_nav">
+                    <ul>
+                        <li class="on" value="0" style="text-align: left;"><a href="javascript:void 0" style="background-color: #fffaf4;">
+                            最新中奖</a></li>
+                    </ul>
+                </div>
+                <div class="box">
+                    <div class="lottery-latestAward-box">
+                        <div class="lottery-list lottery-latestAward-list" id="latestAwardList">
+                            @{
+                                if (lotteryBonus != null && lotteryBonus.Count > 0)
+                                {
+                                    foreach (var item in lotteryBonus.OrderByDescending(p => p.AfterTaxBonusMoney).ToList())
+                                    {
+                                <dl>
+                                    <dt class="ntitle"><b class="cr">【@SiteConvert.GameName(item.GameCode)】</b><a  target="_blank" href="/user/scheme/@item.SchemeId">@SiteString.HideUserName(item.UserDisplayName, item.HideUserDisplayNameCount)</a></dt>
+                                    <dd class="time">
+                                        <a  target="_blank" href="/user/scheme/@item.SchemeId">@(item.AfterTaxBonusMoney.ToString("f"))元</a>
+                                    </dd>
+                                </dl>
+                                    }
+                                }
+                            }
+                        </div>
+                        <div class="lottery-list lottery-latestAward-list" id="latestAwardList">
+                            @{
+                                if (lotteryBonus != null && lotteryBonus.Count > 0)
+                                {
+                                    foreach (var item in lotteryBonus.OrderByDescending(p => p.AfterTaxBonusMoney).ToList())
+                                    {
+                                <dl>
+                                    <dt class="ntitle"><b class="cr">【@SiteConvert.GameName(item.GameCode)】</b><a  target="_blank" href="/user/scheme/@item.SchemeId">@SiteString.HideUserName(item.UserDisplayName, item.HideUserDisplayNameCount)</a></dt>
+                                    <dd class="time">
+                                        <a  target="_blank" href="/user/scheme/@item.SchemeId">@(item.AfterTaxBonusMoney.ToString("f"))元</a>
+                                    </dd>
+                                </dl>
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="wechat" style="display: none;">
+                <div class="fl we-left">
+                    <p class="p-top">
+                        <span class="icon-i ophone"></span><span class="yellow f18 spn1">扫一扫有惊喜</span> <span
+                            class="green f13 spn2">更多精彩,购彩体验</span>
+                    </p>
+                    <p class="f14 color666 p-bottom">
+                        优惠 快捷 保障 专业</p>
+                </div>
+                <div class="fr we-right">
+                    @*  <img style=" width:77px; height:77px;" src="@ViewHelpers.img("home/test-ewm.jpg")"alt=""/>
+                    <span class="f14 color666">微信公众号</span>*@
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            var p = $("#lottery-latestAward");
+            var box = p.find(".lottery-latestAward-box");
+            var timer;
+            var _st = p.find(".lottery-list").eq(1).position().top;
+            var len = $("#latestAwardList:eq(0) dl").length;
+
+            auto();
+            function auto() {
+                timer = setInterval(onTimer, 50);
+            }
+            function onTimer() {
+
+                var t = box.position().top - 1;
+                if (_st <= -t) {
+                    t = 0;
+                }
+                box.css({ top: t });
+            }
+            box.hover(function () {
+                clearInterval(timer);
+            }, function () {
+                auto();
+            });
+        });
+        function setRankShow3(index) {
+            $("#rank_tb_3 li:eq(" + index + ")").addClass("on").siblings("li").removeClass("on");
+            $(".rankTop_3:eq(" + index + ")").show().siblings(".rankTop_3").hide();
+        }
+    </script>
+</div>
+<ul id="tip-weixin" class="wx_up_btn">
+    @*<li><a id="xiaowu" class="service_btn" target="_blank" href="../activity/buylottery">
+    </a></li>*@
+    <li><a id="btn-weixin" class="ewm_btn " href="javascript:void(0)"></a>
+        <ul id="box-weixin" class="weixin" style="display: none;">
+            @*  <li id="weixin_li"><span class="khd_img"></span>
+                <h3>
+                    @(sitename)微信</h3>
+                <p>
+                    扫一扫，获取更多资讯和服务</p>
+            </li>*@
+            <li id="kehuduan_li"><a id="link579" class="khd_img" href="/staticHtml/phonebuy/index.html"
+                target="_blank"></a>
+                <h3 style="padding-top: 2px;">
+                    @(sitename)客户端</h3>
+                <p>
+                    扫一扫，轻松快乐购彩很简单</p>
+            </li>
+        </ul>
+    </li>
+    <li><a id="link580" class="feedback_btn" target="_blank" href="../help/suggest"></a>
+    </li>
+    <li>@*<a href="javascript:void(0)" data="http://v88.live800.com/live800/chatClient/chatbox.jsp?companyID=596578&amp;configID=48&amp;jid=8695563791" class="link_kefu1" title="点击联系在线客服"></a>*@
+        <a href="javascript:void(0)" data="https://kf1.learnsaas.com/chat/chatClient/chatbox.jsp?companyID=86699&configID=67510&jid=7529895607&s=1"
+            class="link_kefu1" title="点击联系在线客服"></a></li>
+</ul>
+<div class="second clearfix">
+    <a target="_blank" href="/jingcai">
+        <div class="second-img">
+        </div>
+    </a>
+</div>
+<div class="new-add clearfix">
+    <div class="left">
+        <div class="public mobile_client">
+            <h4 class="public_banner">
+                <label>
+                    手机购彩</label>
+                <a href="/staticHtml/phonebuy/index.html" class="dmore">详情<s class="icon-i more"></s></a>
+            </h4>
+            <div class="phome-main">
+                <img width="207" height="200" src="@ViewHelpers.img("home/phone-ewm.jpg")" alt="扫一扫，有惊喜"/>
+            </div>
+        </div>
+        <span class="clearfix icon-i bd"></span>
+    </div>
+    <div id="lots_banner" class="center hot_cz">
+        <h4 id="lots_menu" class="public_banner">
+            @{
+                var f_first_title = "";
+                var f_isRed = false;
+                var f = new ArticleInfo_Query();
+                if (focusCMS != null && focusCMS.ArticleList != null)
+                {
+                    var f_t = focusCMS.ArticleList.FirstOrDefault();
+                    if (f_t != null)
+                    {
+                        f_first_title = f_t.Title;
+                        f_isRed = f_t.IsRedTitle;
+                        f = f_t;
+                    }
+                } 
+            }
+            <a title="@f_first_title" target="_blank" href="@string.Format("/staticHtml/zixun/details/{0}/{1}.html", f.CreateTime.ToString("yyyyMMdd"), f.Id)">
+                <span class="fnews @(f_isRed ? "red" : "")">@f_first_title</span></a> <a href="/staticHtml/zixun/index.html"
+                    class="dmore">更多<s class="icon-i more"></s></a>
+        </h4>
+        <div style="height: 289px;">
+            <ul class="secon clearfix">
+                @foreach (var item in focusCMS.ArticleList.Skip(1))
+                {
+                    <li><a class="@(item.IsRedTitle ? "red" : "")" href="@string.Format("/staticHtml/zixun/details/{0}/{1}.html", item.CreateTime.ToString("yyyyMMdd"), item.Id)" target="_blank">@SiteString.EncodeString(item.Title, 32, item.Title.Length, 3, ".")</a><span
+                        class="date">@item.CreateTime.ToString("yyyy.MM.dd")</span></li>
+                }
+            </ul>
+        </div>
+    </div>
+    <div class="right public web_kj">
+        <div class="cp_slide" id="cpPrize">
+            <div class="cp_slide_nav_2">
+                <label class="cp_slide_tip">
+                    最新开奖</label>
+                <ul>
+                    <li class="on" value="0" data-type="t14c"><a href="javascript:void 0">足彩</a></li>
+                    <li id="nav_number" class="no_bg" value="1" data-type="ssq"><a href="javascript:void 0">
+                        数字</a></li>
+                </ul>
+                <a href="/staticHtml/lottery/index.html" class="dmore" target="_blank">更多<s class="icon more"></s></a>
+            </div>
+            <div class="cp_slide_body_2">
+                <div class="cp_slide_con" id="kj_zc">
+                    <div class="zxkj_zc">
+                        <p class="kj_title">
+                            <span class="fr"><a href="/staticHtml/lottery/detail_t14c.html" target="_blank">详情<s
+                                class="icon-i more"></s></a></span><span class="bold">胜负彩</span><span>第<em class="">@(string.IsNullOrEmpty(ctzqiss[0]) ? "--" : ctzqiss[0])</em>期</span></p>
+                        <p class="redboldfont">
+                            <em>@(winnum.WinNumber == null ? "" : winnum.WinNumber.Replace(",", ""))</em></p>
+                        <p class="p1" grade="1">
+                            <a href="../toto/t14c">我要投注<s class="icon-i more"></s></a>一等奖：<strong>0</strong>注<strong>0</strong>元</p>
+                        <p class="p1" grade="2">
+                            <a href="../soccer/ctzq?gametype=t14c">过关统计<s class="icon-i more"></s></a>二等奖：<strong>0</strong>注<strong>0</strong>元</p>
+                        <p class="p1" gamecode="rx9">
+                            <a href="../soccer/ctzq?gametype=tr9">任选过关<s class="icon-i more"></s></a>任选九：<strong>0</strong>注<strong>0</strong>元</p>
+                    </div>
+                    @*<div style="color: #555; margin-left: 10px;">
+                        本站中出：一等奖 <em class="orange">@(zqbetcount != null && zqbetcount.HitMatch_14 > 0 ? zqbetcount.HitMatch_14
+                            : 0)</em> 注
+                        <p style="float: right; margin-right: 10px; *margin-top: -18px;">
+                            任选九 <em class="orange">@(zqbetcount != null && zqbetcount.HitMatch_R9 > 0 ? zqbetcount.HitMatch_R9
+                                : 0)</em> 注</p>
+                    </div>*@
+                    <p class="kj_title t4-kj">
+                        <span class="fr"><a href="/staticHtml/lottery/detail_t4cjq.html" target="_blank">详情<s
+                            class="icon-i more"></s></a></span><span class="bold">4场进球</span> <span>第<em class="">@(string.IsNullOrEmpty(ctzqisst4[0]) ? "--" : ctzqisst4[0])</em>期</span>
+                    </p>
+                    <p class="t-number">
+                        <em>@(winnumt4.WinNumber == null ? "" : winnumt4.WinNumber.Replace(",", ""))</em>
+                    </p>
+                    <p class="kj_title t6-kj">
+                        <span class="fr"><a href="/staticHtml/lottery/detail_t6bqc.html" target="_blank">详情<s
+                            class="icon-i more"></s></a></span><span class="bold">6场半全场</span> <span>第<em class="">@(string.IsNullOrEmpty(ctzqisst6[0]) ? "--" : ctzqisst6[0])</em>期</span>
+                    </p>
+                    <p class="t-number">
+                        <em>@(winnumt6.WinNumber == null ? "" : winnumt6.WinNumber.Replace(",", ""))</em>
+                    </p>
+                </div>
+                <div id="kj_number" class="cp_slide_con" style="display: none">
+                    <div class="zxkj_zc kj-ssq">
+                        <p class="kj_title">
+                            <span class="fr"><a href="/staticHtml/lottery/detail_ssq.html" target="_blank">详情<s
+                                class="more"></s></a></span><span>双色球</span><span>第<em class="">--</em>期</span></p>
+                        <p class="redboldfont">
+                            <strong><span class="red bold">0 0 0 0 0 0 </span>&nbsp;&nbsp;<span class="blue bold">0</span>
+                            </strong>
+                        </p>
+                        <p class="p1" grade="1">
+                            <a target="_blank" href="/szc/ssq/">我要投注<s class="more"></s></a>一等奖：<strong>0</strong>注<strong>0</strong>元</p>
+                        <p class="p1" grade="2">
+                            二等奖：<strong>0</strong>注<strong>0</strong>元</p>
+                        <p class="p1">
+                            奖池滚存： <em class="orange">0</em> 元</p>
+                    </div>
+                    <div class="zxkj_zc kj-dlt">
+                        <p class="kj_title">
+                            <span class="fr"><a href="/staticHtml/lottery/detail_dlt.html" target="_blank">详情<s
+                                class="more"></s></a></span><span>大乐透</span><span>第<em class="">--</em>期</span></p>
+                        <p class="redboldfont">
+                            <strong><span class="red bold">0 0 0 0 0 0 </span>&nbsp;&nbsp;<span class="blue bold">0</span>
+                            </strong>
+                        </p>
+                        <p class="p1" grade="1">
+                            <a target="_blank" href="/szc/ssq/">我要投注<s class="more"></s></a>一等奖：<strong>0</strong>注<strong>0</strong>元</p>
+                        <p class="p1" grade="2">
+                            二等奖：<strong>0</strong>注<strong>0</strong>元</p>
+                        <p class="p1">
+                            奖池滚存： <em class="orange">0</em> 元</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="third clearfix">
+    <div class="left">
+        <div class="menu" style="border-bottom: none;">
+            <ol class="sd_menu">
+                <li class="btn_li" style="margin-left: -7px">
+                    <h2>
+                        红人月榜</h2>
+                </li>
+                <li>
+                    <h2>
+                        红人总榜</h2>
+                </li>
+            </ol>
+        </div>
+        <div class="con">
+            <div class="category clearfix">
+                <span class="tab-title_dp on" style="width: 80px;">会员名称&nbsp;</span> <span class="tab-title_dp"
+                    style="text-align: center; width: 80px;">金额&nbsp;</span> <span class="tab-title_dp"
+                        style="text-align: center; width: 44px;">跟单</span>
+            </div>
+            <ul class="zx clearfix" id="zqall">
+                @{
+                    if (monthTotalRank != null && monthTotalRank.RankInfoList != null)
+                    {
+                        for (var i = 0; i < monthTotalRank.RankInfoList.Count; i++)
+                        {
+                            if (monthTotalRank.RankInfoList[i].UserDisplayName == "laofan01" || monthTotalRank.RankInfoList[i].UserDisplayName == "laofan02")
+                            {
+                                continue; 
+                            }
+                    <li>
+                        @if (i <= 2)
+                        {<span class="icon-i new@(i)"></span>}
+                        else
+                        {<span class="rank4">@(i + 1)</span>}
+                        <span class="author" style="width: 65px;"><a href="/blog/standings/@monthTotalRank.RankInfoList[i].UserId?gameCode=SZC&gameType=SSQ" target="_blank" style="color:#ff8128 !important" title="@SiteString.HideUserName(monthTotalRank.RankInfoList[i].UserDisplayName, monthTotalRank.RankInfoList[i].UserHideDisplayNameCount)">@SiteString.HideUserName(monthTotalRank.RankInfoList[i].UserDisplayName, monthTotalRank.RankInfoList[i].UserHideDisplayNameCount)</a></span><span
+                            class="rank" style=" width:80px;" title="@((int)monthTotalRank.RankInfoList[i].BonusMoney)元">@((int)monthTotalRank.RankInfoList[i].BonusMoney)元</span><span
+                                class="profit" style="width: 35px;"><a target="_blank" href="/blog/custombill/@monthTotalRank.RankInfoList[i].UserId" style="width: 35px;color:#ff8128 !important" title="跟单">跟单</a></span>
+                    </li>
+                        }
+                    }
+                }
+            </ul>
+            <ul class="zx clearfix" id="zongbang" style="display: none">
+                @{
+                    if (totalRank != null && totalRank.RankInfoList != null)
+                    {
+                        for (var i = 0; i < totalRank.RankInfoList.Count; i++)
+                        {
+                            if (totalRank.RankInfoList[i].UserDisplayName == "laofan01" || totalRank.RankInfoList[i].UserDisplayName == "laofan02")
+                            {
+                                continue;
+                            }
+                    <li>
+                        @if (i <= 2)
+                        {<span class="icon-i new@(i)"></span>}
+                        else
+                        {<span class="rank4">@(i + 1)</span>}
+                        <span class="author" style="width: 65px;"><a href="/blog/standings/@totalRank.RankInfoList[i].UserId?gameCode=SZC&gameType=SSQ" target="_blank" style="color:#ff8128 !important" title="@SiteString.HideUserName(totalRank.RankInfoList[i].UserDisplayName, totalRank.RankInfoList[i].UserHideDisplayNameCount)">@SiteString.HideUserName(totalRank.RankInfoList[i].UserDisplayName, totalRank.RankInfoList[i].UserHideDisplayNameCount)</a></span><span
+                            class="rank" style=" width:80px;" title="@((int)totalRank.RankInfoList[i].BonusMoney)元">@((int)totalRank.RankInfoList[i].BonusMoney)元</span><span
+                                class="profit" style="width: 35px;"><a target="_blank" 
+                                href="/blog/custombill/@totalRank.RankInfoList[i].UserId" style="color:#ff8128 !important" title="跟单">跟单</a></span>
+                    </li>
+                        }
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+    <div class="right">
+        <div class="menu">
+            <h2>
+                彩票资讯</h2>
+            <span class="extra">热门资讯：<a target="_blank" href="/staticHtml/zixun/szczx/szczx_0.html">双色球</a>&nbsp;&nbsp;<a
+                target="_blank" href="/staticHtml/zixun/szczx/szczx_0.html">大乐透</a>&nbsp;&nbsp;<a
+                    target="_blank" href="/staticHtml/zixun/szczx/szczx_0.html">福彩3D</a></span>
+        </div>
+        <div class="con">
+            <div class="clearfix">
+                <div class="fl con-left">
+                    @{
+                        var h_first_title = "";
+                        var h_f = new ArticleInfo_Query();
+                        if (hot != null && hot.ArticleList != null)
+                        {
+                            var h_f_t = hot.ArticleList.FirstOrDefault();
+                            if (h_f_t != null)
+                            {
+                                h_first_title = h_f_t.Title;
+                                h_f = h_f_t;
+                            }
+                        }
+                    }
+                    <p class="f16 big-title">
+                        今日热点</p>
+                    <ul class="zx clearfix">
+                        @if (hot != null)
+                        {
+                            foreach (var item in hot.ArticleList)
+                            {
+                            <li><a target="_blank" href="/staticHtml/zixun/jdxw/jdxw_0.html"><cite>[ 焦 点 ]</cite></a><a target="_blank" @(item.IsRedTitle ? "class='red'" : "") href="@string.Format("/staticHtml/zixun/details/{0}/{1}.html", item.CreateTime.ToString("yyyyMMdd"), item.Id)">
+                                @SiteString.EncodeString(item.Title, 27, item.Title.Length, 3, ".")</a> </li>
+                            }
+                        }
+                    </ul>
+                </div>
+                <div class="fr con-right">
+                    <span class="f16 big-title" style="padding-left: 0 !important">高频彩</span>
+                    <ul class="zx clearfix">
+                        @if (gpc != null)
+                        {
+                            foreach (var item in gpc.ArticleList)
+                            {
+                                if (item.GameCode == "JX11X5")
+                                {
+                                    articleCite = "江西11选5";
+                                }
+                                if (item.GameCode == "CQSSC")
+                                {
+                                    articleCite = "重庆时时彩";
+                                }
+                            <li><a target="_blank" href="/staticHtml/zixun/gpczx/gpczx_0.html"><cite>[ @articleCite
+                                ]</cite></a> <a target="_blank" @(item.IsRedTitle ? "class='red'" : "") href="@string.Format("/staticHtml/zixun/details/{0}/{1}.html", item.CreateTime.ToString("yyyyMMdd"), item.Id)">
+                                    @SiteString.EncodeString(item.Title, 25, item.Title.Length, 3, ".")</a>
+                            </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="clearfix" style="margin-top: 5px;">
+                <div class="fl con-left">
+                    @{
+                        var s_first_title = "";
+                        var s_f = new ArticleInfo_Query();
+                        if (szc != null && szc.ArticleList != null)
+                        {
+                            var s_f_t = szc.ArticleList.FirstOrDefault();
+                            if (s_f_t != null)
+                            {
+                                s_first_title = s_f_t.Title;
+                                s_f = s_f_t;
+                            }
+
+                        }
+                        
+                    }
+                    <p class="f16 big-title">
+                        数字彩</p>
+                    <ul class="zx clearfix">
+                        @if (szc != null)
+                        {
+                            foreach (var item in szc.ArticleList)
+                            {
+                                if (item.GameCode == "SSQ")
+                                {
+                                    articleCite = "双色球";
+                                }
+                                if (item.GameCode == "DLT")
+                                {
+                                    articleCite = "大乐透";
+                                }
+                                if (item.GameCode == "PL3")
+                                {
+                                    articleCite = "排列三";
+                                }
+                                if (item.GameCode == "FC3D")
+                                {
+                                    articleCite = "福彩3D";
+                                }
+                            <li><a target="_blank" href="/staticHtml/zixun/ssq_dlt/ssq_dlt_0.html"><cite>[ @articleCite
+                                ]</cite></a> <a target="_blank" @(item.IsRedTitle ? "class='red'" : "") href="@string.Format("/staticHtml/zixun/details/{0}/{1}.html", item.CreateTime.ToString("yyyyMMdd"), item.Id)">
+                                    @SiteString.EncodeString(item.Title, 25, item.Title.Length, 3, ".")</a>
+                            </li>
+                            }
+                        }
+                    </ul>
+                </div>
+                <div class="fr con-right">
+                    <span class="f16 big-title" style="padding-left: 0 !important">竞技彩</span>
+                    <ul class="zx clearfix">
+                        @if (jjc != null)
+                        {
+                            foreach (var item in jjc.ArticleList)
+                            {
+                                if (item.GameCode == "JCZQ")
+                                {
+                                    articleCite = "竞彩足球";
+                                }
+                                if (item.GameCode == "JCLQ")
+                                {
+                                    articleCite = "竞彩篮球";
+                                }
+                                if (item.GameCode == "BJDC")
+                                {
+                                    articleCite = "北京单场";
+                                }
+                            <li><a target="_blank" href="/staticHtml/zixun/jjczx/jjczx_0.html"><cite>[ @articleCite
+                                ]</cite></a> <a target="_blank"  @(item.IsRedTitle ? "class='red'" : "") href="@string.Format("/staticHtml/zixun/details/{0}/{1}.html", item.CreateTime.ToString("yyyyMMdd"), item.Id)">
+                                    @SiteString.EncodeString(item.Title, 25, item.Title.Length, 3, ".")</a>
+                            </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="clearfix">
+            </div>
+        </div>
+        <a href="/chipped" target="_blank">
+            <img src="@ViewHelpers.img("home/zx-banner.png")" alt="" width="771px" style="margin-top: 3px;"/></a>
+    </div>
+</div>
+<script type="text/javascript">
+
+    $(function () {
+        //在线客服打开控制
+        $(".link_kefu1").click(function () {
+            var link = $(this).attr("data");
+            this.newWindow = window.open(link, 'kefutalk', 'toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=1,width=570,height=424');
+            this.newWindow.focus();
+            this.newWindow.opener = window;
+
+            return false
+        })
+    })
+
+    $(".index_left").live("click", function () {
+        $("#avtivityBox").css("display", "block");
+        $("#avtivityBox1").css("display", "none");
+        $(".boxdetails").css("display", "block");
+        $(".boxcen").css("display", "none");
+        $(".boxtit").find("span").removeClass("on");
+        $(".boxtit").find("span").eq(0).addClass("on");
+        $(".boxdetails1").css("display", "block");
+        $(".boxcen").css("display", "none");
+        $("#bg").css({
+            display: "block", height: $(document).height()
+        });
+    });
+    $(".index_right").live("click", function () {
+        $("#avtivityBox1").css("display", "block");
+        $("#avtivityBox").css("display", "none");
+        $("#bg").css({
+            display: "block", height: $(document).height()
+        });
+    });
+    $("#btn-weixin").mousemove(function () {
+        $("#box-weixin").fadeIn();
+    });
+    var hideTimer = "";
+    $("#btn-weixin").mouseout(function () {//鼠标移开0.1秒钟元素消失
+        hideTimer = setInterval(function () {
+            $("#box-weixin").fadeOut();
+            clearTimeout(hideTimer);
+        }, 100);
+    });
+    $("#box-weixin").mousemove(function () {//鼠标进去元素区域，元素不消失
+        $("#box-weixin").fadeIn();
+        clearTimeout(hideTimer); //清除计时器
+    }).mouseout(function () {
+        hideTimer = setInterval(function () {
+            $("#box-weixin").fadeOut();
+            clearTimeout(hideTimer);
+        }, 100);
+    });
+    $(".sd_menu li").click(function () {
+        var self = $(this);
+        self.addClass("btn_li");
+        self.siblings().removeClass("btn_li");
+    });
+    $(".sd_menu li:eq(1)").click(function () {
+        $("#zongbang").show();
+        $("#zqall").hide();
+    });
+    $(".sd_menu li:eq(0)").click(function () {
+        $("#zongbang").hide();
+        $("#zqall").show();
+    });
+
+
+    var getQueryString = function (name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]); return "";
+    }
+    //读取cookies
+    function getCookie(name) {
+        var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+        if (arr = document.cookie.match(reg))
+            return (arr[2]);
+        else
+            return null;
+    }
+    function QsetCookie(name, value) {
+        var strsec = 1 * 6 * 60 * 60 * 1000;
+        var exp = new Date();
+        exp.setTime(exp.getTime() + strsec * 1);
+        document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString() + "path=/;";
+    }
+
+    function setCookie(name, value, exdays) {
+        var strsec = 1 * 6 * 60 * 60 * 1000;
+        var exp = new Date();
+        exp.setTime(exp.getTime() + strsec * 1 * exdays);
+        document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString() + "path=/;";
+    }
+
+    function jump() {
+        var mobileAgent = new Array("iphone", "ipod", "ipad", "android", "mobile", "blackberry", "webos", "incognito", "webmate", "bada", "nokia", "lg", "ucweb", "skyfire");
+        var browser = navigator.userAgent.toLowerCase();
+        var isMobile = false;
+        for (var i = 0; i < mobileAgent.length; i++) {
+            if (browser.indexOf(mobileAgent[i]) != -1) {
+                isMobile = true;
+                var pc = getQueryString("type");
+                if (getCookie("is_clickpc") != "yes") {
+                    url = window.location;
+                    url = url.toString();
+                    //url = url.replace("www.", "m.");
+                    var mobi = url.replace("www.", "m.");
+                    //var host = url.split('.');
+                    if (pc == "pc") {
+                        setCookie("is_clickpc", "yes", 1);
+                    }
+                    else {
+                        location.href = mobi;
+                    }
+                    return;
+                    //                    if (pc == "pc") {
+                    //                        setCookie("pctomb", "", -1);
+                    //                        location.href = url + "index_app.html?mobi=" + mobi + "&pc=" + url;
+                    //                    }
+                    //                    else {
+                    //                        if (getCookie("pctomb") == "1") {
+                    //                            location.href = mobi;
+                    //                        }
+                    //                        else if (getCookie("pctomb") == "2") {
+                    //                            //location.href = url;
+                    //                        }
+                    //                        else {
+                    //                            location.href = url + "index_app.html?mobi=" + mobi + "&pc=" + url;
+                    //                            //location.href = url + "index_app.html?mobi=http://m.wancai.com&pc=http://www.wancai.com";
+                    //                        }
+                    //                    }
+                }
+                break;
+            }
+        }
+    }
+    jump();
+</script>
+@UserHelper.csscdn("duilian/duilian.css", "0120")
+@*<div class="hongbao1">
+    <a id="close_hongbao1"></a><a href="/statichtml/register.html">
+        <img src="@ViewHelpers.img("duilian/180x350left.gif")" />
+    </a>
+</div>
+<div class="hongbao2">
+    <a id="close_hongbao2"></a><a href="/szc/cqssc/">
+        <img src="@ViewHelpers.img("duilian/180x350right.gif")" />
+    </a>
+</div>*@
+@UserHelper.csscdn("hongbao_100/hongbao_100.css","0120")
+<div class="worldcupMask_1" style="display: block;"></div>
+@*<div class="worldcupBig_1" style="display: block;">*@
+<div class="worldcupPop_1" style="display: block;">
+        <i class="worldCup-close_1"></i>
+        <a class="worldCup-img_1" href="/statichtml/register.html">
+        </a>
+    </div>
+@*</div>*@
+@UserHelper.js("hongbao_100/hongbao_100.js")
+@UserHelper.js("duilian/duilian.js")
+@UserHelper.jscdn("index.min.js", "1211")
+@{Html.RenderPartial("box_confirm_gg");}

@@ -1,0 +1,814 @@
+﻿@{
+    Layout = "~/Views/lotteryTrend/_Layout.cshtml";
+    var pageSize = Request["pageSize"];
+    if (pageSize != "" && pageSize != null)
+    {
+        ViewBag.Title = "双色球首尾跨度走势图近" + pageSize + "期" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "双色球首尾跨度走势图近" + pageSize + "期";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "双色球首尾跨度走势图近" + pageSize + "期,查看更多双色球首尾跨度走势图请登录" + SiteString.getHZSiteName(Request) + "彩票网.";
+    }
+    else
+    {
+        ViewBag.Title = "双色球首尾跨度走势图-" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "双色球首尾跨度走势图";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "彩票网为您提供专业的双色球首尾跨度走势图,包括双色球红球第一个号码和最后一个号码的跨度值带坐标和连线的走势图表,让彩民朋友更直观的分析双色球首尾跨度走势.";
+    }
+    var KuaDu_SW = ViewBag.DataList as LotteryData.Core.SSQ_KuaDu_SW_InfoCollection;
+    var a = 0;  
+}
+@{Html.RenderAction("ThendLink", "lotteryTrend");}
+<div id="container">
+    <div class="cont_box" style="width: 1002px;">
+        <table width="100%" cellspacing="1" cellpadding="0" border="0" align="center" class="table_box"
+            style="width: 1002px;" id="chartsTable">
+            <tbody>
+                <tr>
+                    <td align="center" class="tab_top" colspan="35">
+                        标注形式选择：
+                        <input type="checkbox" checked="checked" id="c_yl">
+                        <label for="c_yl">
+                            遗漏</label>
+                        <input type="checkbox" checked="checked" id="has_line">
+                        <label for="has_line">
+                            折线</label>
+                        <input type="checkbox" checked="checked" id="help_line">
+                        <label for="help_line">
+                            分隔线</label>
+                        <input type="checkbox" id="yl_zhu">
+                        <label for="yl_zhu">
+                            遗漏分层</label>
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td align="center" width="75" rowspan="2">
+                        期号
+                        <img src="@ViewHelpers.img("../images/trend/up.png")" id="sortImg" alt="" />
+                    </td>
+                    <td align="center" rowspan="2" class="tred" colspan="6">
+                        红球
+                    </td>
+                    <td align="center" colspan="67">
+                        跨度走势
+                    </td>
+                </tr>
+                <tr class="tabbg weight" id="menuitem">
+                    <td class="line_tdl">
+                        5
+                    </td>
+                    <td>
+                        6
+                    </td>
+                    <td>
+                        7
+                    </td>
+                    <td>
+                        8
+                    </td>
+                    <td>
+                        9
+                    </td>
+                    <td>
+                        10
+                    </td>
+                    <td>
+                        11
+                    </td>
+                    <td>
+                        12
+                    </td>
+                    <td>
+                        13
+                    </td>
+                    <td>
+                        14
+                    </td>
+                    <td>
+                        15
+                    </td>
+                    <td>
+                        16
+                    </td>
+                    <td>
+                        17
+                    </td>
+                    <td>
+                        18
+                    </td>
+                    <td>
+                        19
+                    </td>
+                    <td>
+                        20
+                    </td>
+                    <td>
+                        21
+                    </td>
+                    <td>
+                        22
+                    </td>
+                    <td>
+                        23
+                    </td>
+                    <td>
+                        24
+                    </td>
+                    <td>
+                        25
+                    </td>
+                    <td>
+                        26
+                    </td>
+                    <td>
+                        27
+                    </td>
+                    <td>
+                        28
+                    </td>
+                    <td>
+                        29
+                    </td>
+                    <td>
+                        30
+                    </td>
+                    <td>
+                        31
+                    </td>
+                    <td>
+                        32
+                    </td>
+                </tr>
+            </tbody>
+            <tbody id="tdata" style="font-size: 12px; font-family: '宋体',Tahoma,Consolas,Arial,Simsun;">
+                @foreach (var item in KuaDu_SW)
+                {
+                    a++;
+                    if (a % 5 == 0)
+                    {
+                    <tr class="tdbck">
+                        <td colspan="35">
+                        </td>
+                    </tr>
+                    }
+                    <tr>
+                        <td align="center">
+                            @item.IssuseNumber
+                        </td>
+                        <td class="hot12">
+                            @item.RedLotteryNumber.Split(',')[0]
+                        </td>
+                        <td class="hot12">
+                            @item.RedLotteryNumber.Split(',')[1]
+                        </td>
+                        <td class="hot12">
+                            @item.RedLotteryNumber.Split(',')[2]
+                        </td>
+                        <td class="hot12">
+                            @item.RedLotteryNumber.Split(',')[3]
+                        </td>
+                        <td class="hot12">
+                            @item.RedLotteryNumber.Split(',')[4]
+                        </td>
+                        <td class="hot12 line_rd">
+                            @item.RedLotteryNumber.Split(',')[5]
+                        </td>
+                        <td class="@(item.KD_5 == 0 ? "big" : "y101 stat_font_c3")">
+                            @(item.KD_5 == 0 ? item.KuaDu : item.KD_5)
+                        </td>
+                        <td class="@(item.KD_6 == 0 ? "big" : "y101 stat_font_c3")">
+                            @(item.KD_6 == 0 ? item.KuaDu : item.KD_6)
+                        </td>
+                        <td class="@(item.KD_7 == 0 ? "big" : "y101 stat_font_c3")">
+                            @(item.KD_7 == 0 ? item.KuaDu : item.KD_7)
+                        </td>
+                        <td class="@(item.KD_8 == 0 ? "big" : "y101 stat_font_c3")">
+                            @(item.KD_8 == 0 ? item.KuaDu : item.KD_8)
+                        </td>
+                        <td class="@(item.KD_9 == 0 ? "big" : "y101 stat_font_c3")">
+                            @(item.KD_9 == 0 ? item.KuaDu : item.KD_9)
+                        </td>
+                        <td class="@(item.KD_10 == 0 ? "big" : "y101 stat_font_c3")">
+                            @(item.KD_10 == 0 ? item.KuaDu : item.KD_10)
+                        </td>
+                        <td class="@(item.KD_11 == 0 ? "big" : "y101 stat_font_c3")">
+                            @(item.KD_11 == 0 ? item.KuaDu : item.KD_11)
+                        </td>
+                        <td class="@(item.KD_12 == 0 ? "big" : "y101 stat_font_c3")">
+                            @(item.KD_12 == 0 ? item.KuaDu : item.KD_12)
+                        </td>
+                        <td class="@(item.KD_13 == 0 ? "big" : "y101 stat_font_c3")">
+                            @(item.KD_13 == 0 ? item.KuaDu : item.KD_13)
+                        </td>
+                        <td class="@(item.KD_14 == 0 ? "big" : "y101 stat_font_c3")">
+                            @(item.KD_14 == 0 ? item.KuaDu : item.KD_14)
+                        </td>
+                        <td class="@(item.KD_15 == 0 ? "big" : "y101 stat_font_c3")">
+                            @(item.KD_15 == 0 ? item.KuaDu : item.KD_15)
+                        </td>
+                        <td class="@(item.KD_16 == 0 ? "big" : "y101 stat_font_c3")">
+                            @(item.KD_16 == 0 ? item.KuaDu : item.KD_16)
+                        </td>
+                        <td class="@(item.KD_17 == 0 ? "big" : "y101 stat_font_c3")">
+                            @(item.KD_17 == 0 ? item.KuaDu : item.KD_17)
+                        </td>
+                        <td class="@(item.KD_18 == 0 ? "big" : "y101 stat_font_c3")">
+                            @(item.KD_18 == 0 ? item.KuaDu : item.KD_18)
+                        </td>
+                        <td class="@(item.KD_19 == 0 ? "big" : "y101 stat_font_c3")">
+                            @(item.KD_19 == 0 ? item.KuaDu : item.KD_19)
+                        </td>
+                        <td class="@(item.KD_20 == 0 ? "big" : "y101 stat_font_c3")">
+                            @(item.KD_20 == 0 ? item.KuaDu : item.KD_20)
+                        </td>
+                        <td class="@(item.KD_21 == 0 ? "big" : "y101 stat_font_c3")">
+                            @(item.KD_21 == 0 ? item.KuaDu : item.KD_21)
+                        </td>
+                        <td class="@(item.KD_22 == 0 ? "big" : "y101 stat_font_c3")">
+                            @(item.KD_22 == 0 ? item.KuaDu : item.KD_22)
+                        </td>
+                        <td class="@(item.KD_23 == 0 ? "big" : "y101 stat_font_c3")">
+                            @(item.KD_23 == 0 ? item.KuaDu : item.KD_23)
+                        </td>
+                        <td class="@(item.KD_24 == 0 ? "big" : "y101 stat_font_c3")">
+                            @(item.KD_24 == 0 ? item.KuaDu : item.KD_24)
+                        </td>
+                        <td class="@(item.KD_25 == 0 ? "big" : "y101 stat_font_c3")">
+                            @(item.KD_25 == 0 ? item.KuaDu : item.KD_25)
+                        </td>
+                        <td class="@(item.KD_26 == 0 ? "big" : "y101 stat_font_c3")">
+                            @(item.KD_26 == 0 ? item.KuaDu : item.KD_26)
+                        </td>
+                        <td class="@(item.KD_27 == 0 ? "big" : "y101 stat_font_c3")">
+                            @(item.KD_27 == 0 ? item.KuaDu : item.KD_27)
+                        </td>
+                        <td class="@(item.KD_28 == 0 ? "big" : "y101 stat_font_c3")">
+                            @(item.KD_28 == 0 ? item.KuaDu : item.KD_28)
+                        </td>
+                        <td class="@(item.KD_29 == 0 ? "big" : "y101 stat_font_c3")">
+                            @(item.KD_29 == 0 ? item.KuaDu : item.KD_29)
+                        </td>
+                        <td class="@(item.KD_30 == 0 ? "big" : "y101 stat_font_c3")">
+                            @(item.KD_30 == 0 ? item.KuaDu : item.KD_30)
+                        </td>
+                        <td class="@(item.KD_31 == 0 ? "big" : "y101 stat_font_c3")">
+                            @(item.KD_31 == 0 ? item.KuaDu : item.KD_31)
+                        </td>
+                        <td class="@(item.KD_32 == 0 ? "big" : "y101 stat_font_c3")">
+                            @(item.KD_32 == 0 ? item.KuaDu : item.KD_32)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tbody>
+                <tr>
+                    <td align="center" class="bdtop line_r">
+                        出现次数
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_SW.Count(p => p.KD_5 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_SW.Count(p => p.KD_6 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_SW.Count(p => p.KD_7 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_SW.Count(p => p.KD_8 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_SW.Count(p => p.KD_9 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_SW.Count(p => p.KD_10 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_SW.Count(p => p.KD_11 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_SW.Count(p => p.KD_12 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_SW.Count(p => p.KD_13 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_SW.Count(p => p.KD_14 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_SW.Count(p => p.KD_15 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_SW.Count(p => p.KD_16 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_SW.Count(p => p.KD_17 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_SW.Count(p => p.KD_18 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_SW.Count(p => p.KD_19 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_SW.Count(p => p.KD_20 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_SW.Count(p => p.KD_21 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_SW.Count(p => p.KD_22 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_SW.Count(p => p.KD_23 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_SW.Count(p => p.KD_24 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_SW.Count(p => p.KD_25 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_SW.Count(p => p.KD_26 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_SW.Count(p => p.KD_27 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_SW.Count(p => p.KD_28 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_SW.Count(p => p.KD_29 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_SW.Count(p => p.KD_30 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_SW.Count(p => p.KD_31 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(KuaDu_SW.Count(p => p.KD_32 == 0))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        平均遗漏
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Sum(p => p.KD_5) / KuaDu_SW.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Sum(p => p.KD_6) / KuaDu_SW.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Sum(p => p.KD_7) / KuaDu_SW.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Sum(p => p.KD_8) / KuaDu_SW.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Sum(p => p.KD_9) / KuaDu_SW.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Sum(p => p.KD_10) / KuaDu_SW.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Sum(p => p.KD_11) / KuaDu_SW.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Sum(p => p.KD_12) / KuaDu_SW.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Sum(p => p.KD_13) / KuaDu_SW.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Sum(p => p.KD_14) / KuaDu_SW.Count)
+                    </td>
+                    <td class="">
+                        @(KuaDu_SW.Sum(p => p.KD_15) / KuaDu_SW.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Sum(p => p.KD_16) / KuaDu_SW.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Sum(p => p.KD_17) / KuaDu_SW.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Sum(p => p.KD_18) / KuaDu_SW.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Sum(p => p.KD_19) / KuaDu_SW.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Sum(p => p.KD_20) / KuaDu_SW.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Sum(p => p.KD_21) / KuaDu_SW.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Sum(p => p.KD_22) / KuaDu_SW.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Sum(p => p.KD_23) / KuaDu_SW.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Sum(p => p.KD_24) / KuaDu_SW.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Sum(p => p.KD_25) / KuaDu_SW.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Sum(p => p.KD_26) / KuaDu_SW.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Sum(p => p.KD_27) / KuaDu_SW.Count)
+                    </td>
+                    <td class="">
+                        @(KuaDu_SW.Sum(p => p.KD_28) / KuaDu_SW.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Sum(p => p.KD_29) / KuaDu_SW.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Sum(p => p.KD_30) / KuaDu_SW.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Sum(p => p.KD_31) / KuaDu_SW.Count)
+                    </td>
+                    <td class="line_r">
+                        @(KuaDu_SW.Sum(p => p.KD_32) / KuaDu_SW.Count)
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        最大遗漏
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Max(p => p.KD_5))
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Max(p => p.KD_6))
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Max(p => p.KD_7))
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Max(p => p.KD_8))
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Max(p => p.KD_9))
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Max(p => p.KD_10))
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Max(p => p.KD_11))
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Max(p => p.KD_12))
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Max(p => p.KD_13))
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Max(p => p.KD_14))
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Max(p => p.KD_15))
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Max(p => p.KD_16))
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Max(p => p.KD_17))
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Max(p => p.KD_18))
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Max(p => p.KD_19))
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Max(p => p.KD_20))
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Max(p => p.KD_21))
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Max(p => p.KD_22))
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Max(p => p.KD_23))
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Max(p => p.KD_24))
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Max(p => p.KD_25))
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Max(p => p.KD_26))
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Max(p => p.KD_27))
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Max(p => p.KD_28))
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Max(p => p.KD_29))
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Max(p => p.KD_30))
+                    </td>
+                    <td>
+                        @(KuaDu_SW.Max(p => p.KD_31))
+                    </td>
+                    <td class="line_r">
+                        @(KuaDu_SW.Max(p => p.KD_32))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        当前遗漏
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_SW[KuaDu_SW.Count - 1].KD_5)<br>
+                        <img width="8px" height="@(KuaDu_SW[KuaDu_SW.Count - 1].KD_5)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_SW[KuaDu_SW.Count - 1].KD_6)<br>
+                        <img width="8px" height="@(KuaDu_SW[KuaDu_SW.Count - 1].KD_6)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_SW[KuaDu_SW.Count - 1].KD_7)<br>
+                        <img width="8px" height="@(KuaDu_SW[KuaDu_SW.Count - 1].KD_7)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_SW[KuaDu_SW.Count - 1].KD_8)<br>
+                        <img width="8px" height="@(KuaDu_SW[KuaDu_SW.Count - 1].KD_8)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_SW[KuaDu_SW.Count - 1].KD_9)<br>
+                        <img width="8px" height="@(KuaDu_SW[KuaDu_SW.Count - 1].KD_9)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_SW[KuaDu_SW.Count - 1].KD_10)<br>
+                        <img width="8px" height="@(KuaDu_SW[KuaDu_SW.Count - 1].KD_10)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_SW[KuaDu_SW.Count - 1].KD_11)<br>
+                        <img width="8px" height="@(KuaDu_SW[KuaDu_SW.Count - 1].KD_11)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_SW[KuaDu_SW.Count - 1].KD_12)<br>
+                        <img width="8px" height="@(KuaDu_SW[KuaDu_SW.Count - 1].KD_12)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_SW[KuaDu_SW.Count - 1].KD_13)<br>
+                        <img width="8px" height="@(KuaDu_SW[KuaDu_SW.Count - 1].KD_13)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_SW[KuaDu_SW.Count - 1].KD_14)<br>
+                        <img width="8px" height="@(KuaDu_SW[KuaDu_SW.Count - 1].KD_14)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_SW[KuaDu_SW.Count - 1].KD_15)<br>
+                        <img width="8px" height="@(KuaDu_SW[KuaDu_SW.Count - 1].KD_15)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_SW[KuaDu_SW.Count - 1].KD_16)<br>
+                        <img width="8px" height="@(KuaDu_SW[KuaDu_SW.Count - 1].KD_16)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_SW[KuaDu_SW.Count - 1].KD_17)<br>
+                        <img width="8px" height="@(KuaDu_SW[KuaDu_SW.Count - 1].KD_17)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_SW[KuaDu_SW.Count - 1].KD_18)<br>
+                        <img width="8px" height="@(KuaDu_SW[KuaDu_SW.Count - 1].KD_18)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_SW[KuaDu_SW.Count - 1].KD_19)<br>
+                        <img width="8px" height="@(KuaDu_SW[KuaDu_SW.Count - 1].KD_19)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_SW[KuaDu_SW.Count - 1].KD_20)<br>
+                        <img width="8px" height="@(KuaDu_SW[KuaDu_SW.Count - 1].KD_20)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_SW[KuaDu_SW.Count - 1].KD_21)<br>
+                        <img width="8px" height="@(KuaDu_SW[KuaDu_SW.Count - 1].KD_21)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_SW[KuaDu_SW.Count - 1].KD_22)<br>
+                        <img width="8px" height="@(KuaDu_SW[KuaDu_SW.Count - 1].KD_22)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_SW[KuaDu_SW.Count - 1].KD_23)<br>
+                        <img width="8px" height="@(KuaDu_SW[KuaDu_SW.Count - 1].KD_23)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_SW[KuaDu_SW.Count - 1].KD_24)<br>
+                        <img width="8px" height="@(KuaDu_SW[KuaDu_SW.Count - 1].KD_24)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_SW[KuaDu_SW.Count - 1].KD_25)<br>
+                        <img width="8px" height="@(KuaDu_SW[KuaDu_SW.Count - 1].KD_25)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_SW[KuaDu_SW.Count - 1].KD_26)<br>
+                        <img width="8px" height="@(KuaDu_SW[KuaDu_SW.Count - 1].KD_26)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_SW[KuaDu_SW.Count - 1].KD_27)<br>
+                        <img width="8px" height="@(KuaDu_SW[KuaDu_SW.Count - 1].KD_27)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_SW[KuaDu_SW.Count - 1].KD_28)<br>
+                        <img width="8px" height="@(KuaDu_SW[KuaDu_SW.Count - 1].KD_28)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_SW[KuaDu_SW.Count - 1].KD_29)<br>
+                        <img width="8px" height="@(KuaDu_SW[KuaDu_SW.Count - 1].KD_29)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_SW[KuaDu_SW.Count - 1].KD_30)<br>
+                        <img width="8px" height="@(KuaDu_SW[KuaDu_SW.Count - 1].KD_30)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_SW[KuaDu_SW.Count - 1].KD_31)<br>
+                        <img width="8px" height="@(KuaDu_SW[KuaDu_SW.Count - 1].KD_31)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(KuaDu_SW[KuaDu_SW.Count - 1].KD_32)<br>
+                        <img width="8px" height="@(KuaDu_SW[KuaDu_SW.Count - 1].KD_32)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr class="tabbg weight">
+                    <td align="center" rowspan="2" class="tred" colspan="7">
+                        红球
+                    </td>
+                    <td>
+                        5
+                    </td>
+                    <td>
+                        6
+                    </td>
+                    <td>
+                        7
+                    </td>
+                    <td>
+                        8
+                    </td>
+                    <td>
+                        9
+                    </td>
+                    <td>
+                        10
+                    </td>
+                    <td>
+                        11
+                    </td>
+                    <td>
+                        12
+                    </td>
+                    <td>
+                        13
+                    </td>
+                    <td>
+                        14
+                    </td>
+                    <td>
+                        15
+                    </td>
+                    <td>
+                        16
+                    </td>
+                    <td>
+                        17
+                    </td>
+                    <td>
+                        18
+                    </td>
+                    <td>
+                        19
+                    </td>
+                    <td>
+                        20
+                    </td>
+                    <td>
+                        21
+                    </td>
+                    <td>
+                        22
+                    </td>
+                    <td>
+                        23
+                    </td>
+                    <td>
+                        24
+                    </td>
+                    <td>
+                        25
+                    </td>
+                    <td>
+                        26
+                    </td>
+                    <td>
+                        27
+                    </td>
+                    <td>
+                        28
+                    </td>
+                    <td>
+                        29
+                    </td>
+                    <td>
+                        30
+                    </td>
+                    <td>
+                        31
+                    </td>
+                    <td>
+                        32
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td colspan="28">
+                        跨度走势
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $(function () {
+
+        var allLines = new Array();
+        allLines.push({ line: $(".big"), color: "#CE7B00" });
+
+        var line = new XTLine();
+        for (i = 0; i < allLines.length; i++) {
+            var l = allLines[i];
+
+            line.color = l.color;
+            line.arrayBalls = l.line;
+            line.showrect();
+        }
+
+
+        $("#has_line").click(function () {
+            line.display(this.checked);
+        })
+    })
+</script>

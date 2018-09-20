@@ -1,0 +1,73 @@
+﻿@using app.lottery.site.Models;
+@{
+    ViewBag.Title = "网上支付 - " + SiteString.getHZSiteName(Request) + "-专业彩票代购网站|网上投注|福彩|体彩|高频彩";
+    CurrentUserInfo CurrentUser = ViewBag.CurrentUser;
+}
+@section css{
+    @ViewHelpers.css("mycenter.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>网上充值</li>
+    </ul>
+</div>
+<div class="center mt10">
+<div class="new_buy_right">
+    @{Html.RenderAction("toptip", "member");}
+    <div class="mune_safe">
+     <div class="account_menu clearfix">
+            <a href="/member/accountdetail"  >账户明细</a>
+            <a href="/member/redBagList">红包明细</a>
+            <a href="/member/paywizzard" class="select">账户充值</a>
+            <a href="/member/drawingsguide">账户提款</a>
+        </div>
+    <div class="account_con">
+    <div class="betorder_top">
+        <ul>
+            
+            <li><a href="paywizzard">充值向导</a></li>
+            <li class="betorder_topSelected"><a href="pay"><i></i>账户充值</a></li> 
+            <li><a href="payrecord">充值记录</a></li>
+        </ul>
+    </div>
+        <div class="payDiv">
+            @{
+                if (ViewBag.IsSuccess)
+                {        
+                    <div class="points-success">
+                        <i class="suc"></i>
+                        <div class="res-content">
+                            <h3>
+                                正在跳转到充值接口...</h3>
+                            <p>
+                                您本次充值金额为 <b class="green">@ViewBag.Message</b> 元。
+                            </p>
+                        </div>
+                    </div>      
+                }
+                else
+                {
+                    <div class="points-success" style="background: #FCEFE9;">
+                        <i class="fail"></i>
+                        <div class="res-content">
+                            <h3>
+                                抱歉，充值失败。</h3>
+                            <p>
+                                @ViewBag.Message
+                            </p>
+                            <span class="morelink" style=" float:left;"><span style=" float:left;">您可能需要：</span> <a href="/member/pay" style=" float:left; margin-right:10px;">继续充值 </a><span style=" float:left; margin-right:10px;">|</span>
+                            <a  href="javascript:void(0)" data="@SiteString.kefuUrl" class="link_kefu" title="点击联系在线客服" style=" float:left; margin-top:8px;"></a> <span style=" float:left; margin-right:10px;">|</span><a href="@SiteString.root(Request)" style=" float:left;">返回首页</a> </span>
+                        </div>
+                        <div class="clear">
+                        </div>
+                    </div>        
+                }
+            }
+        </div>
+        </div>
+        </div>
+</div>
+</div>
+

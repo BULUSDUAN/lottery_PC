@@ -1,0 +1,114 @@
+﻿@using app.lottery.site.Models
+@using GameBiz.Core
+@{    
+    Layout = "../Shared/_LayoutFoud.cshtml";
+    ViewBag.Title = "返点用户";
+    ViewBag.keywords = "返点用户";
+    var user = ViewBag.CurrentUser as app.lottery.site.Models.CurrentUserInfo;
+}
+<div class="center mt10">
+    @{Html.RenderPartial("Mycommenu", "Member");}
+    @{Html.RenderPartial("toptipFoud", "Member");}
+    <div class="new_buy_right">
+        <div class="betorder_top">
+            <ul>
+                @if (user.LoginInfo.IsAgent)
+                {
+                    <li class="betorder_topSelected"><a href="/member/generalizeUser">返点用户</a></li>
+                    <li><a href="/member/CommissionRecord">返点结算</a></li>
+                    <li><a href="/member/StatisticsQuery">统计查询</a></li>
+                    <li><a href="/member/SchemeManage">方案管理</a></li> 
+                }
+            </ul>
+        </div>
+        <div class="betorder_con clearfix">
+            <div class="scheme">
+                <div class="scheme-show" style="margin-left: 10px;">
+                    <a href="/member/generalizeUser">下级代理</a>
+                </div>
+                <div class="scheme-show">
+                    <a href="/member/subordinateuser">下级用户</a>
+                </div>
+                @if (ViewBag.IsAddAgent)
+                {
+                    <div class="scheme-show xzscheme">
+                        <a href="/member/dealerMsg"><i></i>添加代理</a>
+                    </div>
+                }
+                <div class="scheme-show">
+                    <a href="/member/setNewUserRebate">设置新用户返点</a>
+                </div>
+                <div class="scheme-show">
+                    <a href="/member/popularizeLink">推广链接</a>
+                </div>
+            </div>
+            <div class="add-agent clearfix">
+                <ul>
+                    <li class="li1"><span class="sp_120"><i></i>现有用户名：</span> <span>
+                        <input type="text" class="txt_input" id="txtDealerId" /></span> <span>
+                            <input type="button" class="search_btn" value="查询" onclick="QueryDealer();" /></span>
+                    </li>
+                    <li><span class="sp_120">用户编号：</span> <span>
+                        <input type="text" class="txt_input" id="txtUserId" /></span> </li>
+                    <li><span class="sp_120">用户名称：</span> <span>
+                        <input type="text" class="txt_input" id="txtName" /></span> </li>
+                    <li><span class="sp_120">真实姓名：</span> <span>
+                        <input type="text" class="txt_input" id="txtTrueName" /></span> </li>
+                    <li><span class="sp_120">认证手机：</span> <span>
+                        <input type="text" class="txt_input" id="txtAuthenticationPhone" /></span> </li>
+                    <li class="lil"><span class="sp_120"></span><span style="text-align: center">
+                        <input type="button" class="btn_next" onclick="saveDaler();" value="添加代理" /></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function saveDaler() {
+        // return alert("暂时停止添加代理");
+        var isaddagent = "@ViewBag.IsAddAgent";
+        if (isaddagent == "False" || isaddagent == "false") {
+            return alert("暂时停止添加代理");
+        }
+        var txtUserId = $("#txtUserId").val();
+        if (txtUserId == null) {
+            alert("用户编号不能为空");
+            return false;
+        }
+        $.post("/member/AddOCAgent", { txtId: txtUserId }, function (data) {
+            if (data.IsSuccess) {
+                alert(data.Message);
+                location.href = location.href;
+            } else {
+                alert(data.Msg);
+                return false;
+            }
+        });
+    }
+    function QueryDealer() {
+        var txtDealerId = $("#txtDealerId").val();
+        $.post("/member/QueryUser", { txtDealerId: txtDealerId }, function (data) {
+            if (data.IsSuccess) {
+                $("#txtUserId").val(data.UserShow.UserId);
+                $("#txtName").val(data.UserShow.DisplayName);
+                if (data.UserShow.RealName != null && data.UserShow.RealName != "") {
+                    $("#txtTrueName").val("*");
+                } else {
+                    $("#txtTrueName").val("无");
+                }
+                if (data.UserShow.Mobile != null && data.UserShow.Mobile != "") {
+                    $("#txtAuthenticationPhone").val("*");
+                }
+                else {
+                    $("#txtAuthenticationPhone").val("无");
+                }
+            }
+            else {
+                alert(data.Msg);
+            }
+        });
+    }
+</script>
+<div class="clearfix">
+</div>

@@ -1,0 +1,54 @@
+﻿@{
+    ViewBag.Here = "任九场胜负彩玩法介绍";
+    ViewBag.Title = "任九场胜负彩玩法介绍 - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "任九场胜负彩玩法介绍, 帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+   @ViewHelpers.css("help.css")
+}
+
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">帮助中心</a> > </li>
+        <li>任九场胜负彩玩法介绍</li>
+    </ul>
+</div>
+<div class="center mt10">
+    @{Html.RenderAction("left", "help");}
+    <div class="new_buy_right">
+<div class="help-content f_r">
+    <div class="help-cont">
+        <h1 class="hp-title">任九场胜负彩玩法介绍</h1>
+        <h3>一、玩法说明</h3>
+        <div class="help_box">
+            胜负彩任选9场玩法竞猜规定的14场比赛中任意9场比赛90分钟内(含伤停补时)的胜平负结果。<br>
+            <p>
+                <strong>1、标准投注<br>
+                </strong>从14场比赛中任意选择9场比赛，每场比赛选择1种比赛结果为1注，每场比赛最多可选3种结果，单注最高奖金500万元！标准投注时可选择1～8场比赛结果作为胆码，其它比赛场次结果作为拖码进行胆拖投注，单注最高奖金500万元！<br>
+                <strong>2、单式上传<br>
+                </strong>将固定格式的单式号码统一上传给系统进行投注。此投注方式对于将过滤软件过滤出的单式号码统一投注十分方便。在进行单式上传投注时，可以先发起合买方案让其它用户认购，发起人在投注截止时间前上传方案即可。
+            </p>
+        </div>
+        <h3>二、设奖及中奖</h3>
+        <div class="help_box">
+            <table border="1" cellspacing="1" cellpadding="0" width="100%" bgcolor="#cccccc" bordercolor="#d3d3d3">
+                <tr>
+                    <td bgcolor="#efefef" height="25" align="center">奖级</td>
+                    <td bgcolor="#efefef" height="25" align="center">中奖条件</td>
+                    <td bgcolor="#efefef" height="25" align="center">单注奖金</td>
+                </tr>
+                <tr>
+                    <td bgcolor="#ffffff" height="25" align="center">一等奖</td>
+                    <td bgcolor="#ffffff" height="25" align="center">9场比赛胜平负结果全中</td>
+                    <td bgcolor="#ffffff" height="25" align="center">奖金总额的100%与奖池奖金之和除以中奖注数。</td>
+                </tr>
+            </table>
+            注：单注奖金封顶500万元。&nbsp;
+        </div>
+        官方玩法说明：<font face="宋体"><a target="_blank" href="http://www.bjlot.com/help/help_index.shtml">http://www.bjlot.com/help/help_index.shtml</a></font>
+    </div>
+</div>
+</div>
+</div>
+<div class="clearfix"></div>

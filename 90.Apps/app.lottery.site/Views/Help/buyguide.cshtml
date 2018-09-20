@@ -1,0 +1,55 @@
+﻿@{
+    ViewBag.Here = "购彩帮助";
+
+    ViewBag.Title = "购彩帮助 - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "购彩帮助, 帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+   @ViewHelpers.css("help.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">帮助中心</a> > </li>
+        <li>购彩帮助</li>
+    </ul>
+</div>
+<div class="center mt10">
+    @{Html.RenderAction("left", "help");}
+    <div class="new_buy_right">
+
+<div class="help-content f_r">
+    <div class="help-list">
+        <h1 class="hp-title">购彩帮助</h1>
+        <div class="map-typeitem mt10">
+            <h3>竞技彩</h3>
+            <div class="links">
+                <a href="/help/w_bjdc" target="_blank">北京单场玩法</a> <a href="/help/w_jczq" target="_blank">竞彩足球玩法</a> <a href="/help/w_jclq" target="_blank">竞彩篮球玩法</a> <a href="/help/w_t14c" target="_blank">十四场胜负彩玩法</a>
+                <a href="/help/w_tr9" target="_blank">任九场胜负彩玩法</a> <a href="/help/w_t6bqc" target="_blank">六场半全场玩法</a> <a href="/help/w_t4cjq" target="_blank">四场进球彩玩法</a>
+            </div>
+        </div>
+        <div class="map-typeitem mt10">
+            <h3>福彩</h3>
+            <div class="links">
+                <a href="/help/w_ssq" target="_blank">双色球</a> <a href="/help/w_fc3d" target="_blank">福彩3D</a>
+            </div>
+        </div>
+        <div class="map-typeitem mt10">
+            <h3>体彩</h3>
+            <div class="links">
+                <a href="/help/w_pl3" target="_blank">排列三</a> <a href="/help/w_dlt" target="_blank">大乐透</a>
+            </div>
+        </div>
+        <div class="map-typeitem mt10">
+            <h3>快开彩</h3>
+            <div class="links">
+                <a href="/help/w_sd11x5" target="_blank">老11选5</a> <a href="/help/w_gd11x5" target="_blank">新11选5</a> <a href="/help/w_jx11x5"
+                    target="_blank">11选5</a> <a href="/help/w_sdqyh" target="_blank">群英会</a>  <a href="/help/w_cqssc" target="_blank">时时彩</a> <a href="/help/w_jxssc"
+                        target="_blank">新时时彩</a> <a href="/help/w_gdklsf" target="_blank">快乐十分</a> <a href="/help/w_jsks" target="_blank">江苏快3</a>
+            </div>
+        </div>
+    </div>
+</div>
+        </div>
+</div>
+<div class="clearfix"></div>

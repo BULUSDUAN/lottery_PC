@@ -1,0 +1,148 @@
+﻿@using app.lottery.site.Controllers
+@using app.lottery.site.jsonManager
+@{
+    var match = ViewBag.Matches as List<CTZQ_MatchInfo_WEB>;
+    var issuse = ViewBag.CurrentIssue;
+    var stoptime = Convert.ToDateTime(ViewBag.StopTime);
+
+
+    if (match != null && match.Count > 0)
+    {
+        var orderid = 0;
+        var index = 0;
+        string[] averageOdds;
+        string[] ypsw;
+        var homeScore = -1;
+        var guestScore = -1;
+        foreach (var item in match)
+        {
+            var starttime = item.MatchStartTime;
+            orderid = item.OrderNumber;
+            averageOdds = !string.IsNullOrEmpty(item.AverageOdds) ? item.AverageOdds.Split(new[] {'|'}) : new[] {"---", "---", "---"};
+            ypsw = !string.IsNullOrEmpty(item.YPSW) ? item.YPSW.Split(new[] {'|'}) : new[] {"---", "---", "---"};
+            homeScore = item.HomeTeamScore;
+            guestScore = item.GuestTeamScore;
+            <tr id="tr@(item.OrderNumber)">
+                @*<td class="sfc_num">@item.OrderNumber</td>*@
+                <td class="ls">@item.OrderNumber&nbsp;&nbsp;
+                    <a style="background-color: @item.Color" @SiteString.GetLeagueHref(item.MatchId) class="white">@item.MatchName</a>
+                </td>
+                <td>
+                    <span class="b_time" title="开赛时间:@starttime.ToString("yyyy-MM-dd HH:mm")">@starttime.ToString("MM-dd HH:mm")</span>
+                    <span class="e_time hide" title="截止时间:@stoptime.ToString("yyyy-MM-dd HH:mm")">@stoptime.ToString("MM-dd HH:mm")</span>
+                </td>
+                <td class="team t4cjq">
+                    <a @(string.IsNullOrEmpty(item.HomeTeamId) ? "href=javascript:void(0)" : SiteString.GetTeamHref(Convert.ToInt32(item.HomeTeamId)))><sub>[@item.HomeTeamStanding]</sub><span>@Html.Raw(item.HomeTeamName)</span>
+                        @{
+                            if (homeScore >= 0 && guestScore >= 0)
+                            {
+                                <span style="color: #ff3d00; font-weight: bold;"><b>@homeScore</b>:<b>@guestScore</b></span>
+                            }
+                        }
+                    </a>
+                    <a @(string.IsNullOrEmpty(item.GuestTeamId) ? "href=javascript:void(0)" : SiteString.GetTeamHref(Convert.ToInt32(item.GuestTeamId)))><span>@Html.Raw(item.GuestTeamName)</span><sub>[@item.GuestTeamStanding]</sub><sup></sup></a>
+                </td>
+                <td class="etr">
+                    @if (issuse == item.IssuseNumber)
+                    {
+                        <p>
+                            <a style="width: 86px" id="p_@(orderid)_0_1" href="javascript:ctzqpage.input_.selectAt(0,@(index),@(orderid),1)" class="p"><span>0</span></a>
+                            <a style="width: 86px" id="p_@(orderid)_1_1" href="javascript:ctzqpage.input_.selectAt(1,@(index),@(orderid),1)" class="p"><span>1</span></a>
+                            <a style="width: 86px" id="p_@(orderid)_2_1" href="javascript:ctzqpage.input_.selectAt(2,@(index),@(orderid),1)" class="p"><span>2</span></a>
+                            <a style="width: 86px" id="p_@(orderid)_3_1" href="javascript:ctzqpage.input_.selectAt(3,@(index),@(orderid),1)" class="p"><span>3+</span></a>
+                            <a style="width: 49px" title="全" id="all_@(index)_1" href="javascript:ctzqpage.input_.selectAll(@(index),1)" class="all"></a>
+                        </p>
+                        <p style="clear: both">
+                            <a style="width: 86px" id="p_@(orderid)_0_2" href="javascript:ctzqpage.input_.selectAt(0,@(index),@(orderid),2)" class="p"><span>0</span></a>
+                            <a style="width: 86px" id="p_@(orderid)_1_2" href="javascript:ctzqpage.input_.selectAt(1,@(index),@(orderid),2)" class="p"><span>1</span></a>
+                            <a style="width: 86px" id="p_@(orderid)_2_2" href="javascript:ctzqpage.input_.selectAt(2,@(index),@(orderid),2)" class="p"><span>2</span></a>
+                            <a style="width: 86px" id="p_@(orderid)_3_2" href="javascript:ctzqpage.input_.selectAt(3,@(index),@(orderid),2)" class="p"><span>3+</span></a>
+                            <a style="width: 49px" title="全" id="all_@(index)_2" href="javascript:ctzqpage.input_.selectAll(@(index),2)" class="all"></a>
+                        </p>
+                    }
+                    else
+                    {
+                        <p>
+                            <label class="bold" style="width: 44px; color: #ff3d00">@(homeScore != -1 ? homeScore.ToString() : "")</label>
+                            <a style="width: 86px" href="javascript:void(0)" class="s"><span>0</span>
+                                @if (0 == homeScore)
+                                {
+                                    <span class="result"></span>
+                                }
+                            </a>
+                            <a style="width: 86px" href="javascript:void(0)" class="s"><span>1</span>
+                                @if (1 == homeScore)
+                                {
+                                    <span class="result"></span>
+                                }</a>
+                            <a style="width: 86px" href="javascript:void(0)" class="s"><span>2</span>
+                                @if (2 == homeScore)
+                                {
+                                    <span class="result"></span>
+                                }</a>
+                            <a style="width: 86px; border-right: none;" href="javascript:void(0)" class="s"><span>3+</span>
+                                @if (3 == homeScore)
+                                {
+                                    <span class="result"></span>
+                                }</a>
+                        </p>
+                        <p style="clear: both">
+                            <label class="bold" style="width: 44px; color: #ff3d00">@(guestScore != -1 ? guestScore.ToString() : "")</label>
+                            <a style="width: 86px" href="javascript:void(0)" class="s"><span>0</span>
+                                @if (0 == guestScore)
+                                {
+                                    <span class="result"></span>
+                                }
+                            </a>
+                            <a style="width: 86px" href="javascript:void(0)" class="s"><span>1</span>
+                                @if (1 == guestScore)
+                                {
+                                    <span class="result"></span>
+                                }</a>
+                            <a style="width: 86px" href="javascript:void(0)" class="s"><span>2</span>
+                                @if (2 == guestScore)
+                                {
+                                    <span class="result"></span>
+                                }</a>
+                            <a style="width: 86px; border-right: none;" href="javascript:void(0)" class="s"><span>3+</span>
+                                @if (3 == guestScore)
+                                {
+                                    <span class="result"></span>
+                                }</a>
+                        </p>
+                    }
+                </td>
+                <td>
+                    @ViewHelpers.yox(item.FXId, 3)
+                </td>
+                <td class="datasp nrb">
+                    <div class="data-op">
+                        <span id="op[@orderid].win">@(averageOdds.Count() == 3 ? averageOdds[0] : "--")</span>
+                        <span id="op[@orderid].draw">@(averageOdds.Count() == 3 ? averageOdds[1] : "--")</span>
+                        <span id="op[@orderid].guestwin">@(averageOdds.Count() == 3 ? averageOdds[2] : "--")</span>
+                    </div>
+                    <div class="data-yp" style="display: none;">
+                        <span id="yp[@orderid].win" style="width: 23px">@(ypsw.Count() == 3 ? ypsw[0] : "--")</span>
+                        <span id="yp[@orderid].draw" style="width: 75px">@(ypsw.Count() == 3 ? ypsw[1] : "--")</span>
+                        <span id="yp[@orderid].guestwin" style="width: 23px">@(ypsw.Count() == 3 ? ypsw[2] : "--")</span>
+                    </div>
+                    <div class="data-kl" style="display: none;">
+                        <span id="kl[@orderid].win">@item.KLWin</span>
+                        <span id="kl[@orderid].draw">@item.KLFlat</span>
+                        <span id="kl[@orderid].guestwin">@item.KLLose</span>
+                    </div>
+                    <div class="data-ls" style="display: none;">
+                        <span id="ls[@orderid].win">@item.LSWin</span>
+                        <span id="ls[@orderid].draw">@item.LSFlat</span>
+                        <span id="ls[@orderid].guestwin">@item.LSLose</span>
+                    </div>
+                </td>
+            </tr>
+            index++;
+        }
+    }
+    else
+    {
+        <tr><td colspan="6" class="red">当前无开售赛事，请等待官方公布新赛程！</td></tr>
+    }
+}

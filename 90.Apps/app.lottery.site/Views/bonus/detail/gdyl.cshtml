@@ -1,0 +1,44 @@
+﻿@{
+    var gdlist = ViewBag.FDList as GameBiz.Core.RankReportCollection_BettingProfit_Sport;
+    var game = ViewBag.Game;
+    }
+<div class="tabcon mt10">
+    <ul class="tabtitle">
+        <li class="li-short">排名</li>
+        <li class="li_middle">发起人</li>
+        <li class="li_middle">跟单数</li>
+        <li class="li_middle">方案总金额</li>
+        <li class="li_middle">中奖总金额</li>
+        <li class="li_middle">方案盈利</li>
+        <li class="li_middle">当前期方案</li>
+        <li class="li_middle nobg">自动跟单</li>
+    </ul>
+    @if (gdlist != null && gdlist.TotalCount > 0)
+    {
+        foreach (var item in gdlist.RankInfoList)
+        {
+            <ul class="tabcontent @(gdlist.RankInfoList.IndexOf(item)%2==0?"ni2":"")">
+       @if (gdlist.RankInfoList.IndexOf(item) < 3)
+            {
+                <li class="li-short ico_no_top ico_no_@(gdlist.RankInfoList.IndexOf(item) + 1)">
+                </li>
+            }
+            else
+            {
+                <li class="li-short ico_no">@(gdlist.RankInfoList.IndexOf(item)+1)</li>
+            }
+        <li class="li_middle"><a href="/blog/standings/@item.UserId">@SiteString.HideUserName( item.UserDisplayName,item.UserHideDisplayNameCount)</a></li>
+        <li class="li_middle">@item.TotalOrderCount</li>
+        <li class="li_middle">@item.TotalMoney.ToString("N2")</li>
+        <li class="li_middle">@item.BonusMoney.ToString("N2")</li>
+        <li class="li_middle">@item.ProfitMoney.ToString("N2")</li>
+        <li class="li_middle"><a href="/blog/current/@item.UserId">查看</a></li>
+        <li class="li_middle"><a href="/blog/custombill/@item.UserId" class="btn-dz" >定制</a></li>
+    </ul>
+        }
+    }
+    else { 
+    <div class="no_result">
+            <span>暂无记录</span></div>
+    }
+</div>

@@ -1,0 +1,451 @@
+﻿@using app.lottery.site.Models
+@using GameBiz.Core
+@{
+    Layout = "~/Views/baodan/_Layout.cshtml";
+    var BdDetails = ViewBag.BdDetails as BDFXOrderDetailInfo;
+    //当前用户
+    var user = ViewBag.user as CurrentUserInfo;
+    
+}
+@section css
+{
+    @UserHelper.css("redan.css")
+    @UserHelper.css("redanbdxq.css")
+}
+@section js{
+    @UserHelper.js("redan.js")
+    @UserHelper.js("redandetail.js")
+}
+<div class="body_po">
+    <div class="xdbox" id="xdbox">
+        <a class="close touzpng" id="closeWindow"></a>
+        <div style=" margin-top:38px;">
+            <span class="user_logo user_detail touxiang blog-lv lv1 uic"></span><br /><span class="user_name" style=" color:#0386d1; font-size:14px; margin-top:10px;">@SiteString.HideUserName(BdDetails.UserName)</span>
+        </div>
+        <div class="xdhead">
+                 <span class="float_l" style=" margin-left: 100px;">
+                    <i style=" color:#f03231">@BdDetails.TotalBuyCount.ToString("N0")</i>人购买，总投注金额
+                    <i style=" color:#f03231">@BdDetails.TotalBuyMoney.ToString("N0")</i>元
+                </span>
+                <br />
+            <div class="xdbo">
+            <span style=" color:#66b4dd;margin-top: 35px;" class="float_l">分享给大家：</span>
+            <span class="zuotu"></span>
+                <div class="float_l xdbo_1">                    
+                  <textarea disabled="disabled" class="xdmk" id="editDeclaration" def="@BdDetails.SingleTreasureDeclaration">@BdDetails.SingleTreasureDeclaration</textarea>
+                </div>
+                 <div class="xdlk">
+                    @if (BdDetails.FirstMatchStopTime < DateTime.Now && BdDetails.IsComplate)
+                    {
+
+                        <div class="float_l xdlkl">
+                            宝<br>
+                            单<br>
+                            战<br>
+                            绩
+                        </div>
+                        <div class="float_r xdnbvj">
+                            <div class="xdnbj_1">
+                                <div style="text-align: center">
+                                    <span class="float_l" style="text-align: right">奖金</span> <span class="float_r" style="text-align: right">
+                                        <i class="font_bold" style="color: #ed7e2c;">@BdDetails.AfterTaxBonusMoney.ToString("F2")</i>&nbsp;元</span>
+                                </div>
+                            </div>
+                            <div class="xdknj">
+                                <div style="text-align: center">
+                                    <span class="float_l" style="text-align: left">盈利</span> <span class="float_r" style="text-align: right">
+                                        <i class="font_bold" style="color: #3874CC;">@((BdDetails.CurrProfitRate * 100).ToString("F0"))</i>&nbsp;%</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else  if (BdDetails.FirstMatchStopTime > DateTime.Now && !BdDetails.IsComplate)
+                    {
+                        <div class="float_l xdlkl">
+                            我<br>
+                            要<br>
+                            购<br>
+                            买</div>
+                        <div class="float_r xdnbvj">
+                            <div class="xdnbj_1">
+                                <div>
+                                    <input type="text" value="1" id="beishu"><i class="float_l" style=" margin-top:7px;">倍</i> <a class="float_l"
+                                        id="goumai">抄单</a>
+                                </div>
+                            </div>
+                            <div class="xdknj">
+                                <div>
+                                    投入<i id="touru" class="font_red">@BdDetails.CurrentBetMoney.ToString("F0")</i>元，最高奖金<i
+                                        id="jiangjin" class="font_red">@BdDetails.ExpectedBonusMoney.ToString("F2")</i>元</div>
+                            </div>
+                            @{
+                                                                  var playtype = "";
+                                                                  var codelist = "";
+                                                                  var TotalMatchCount = BdDetails.AnteCodeList.Where(p => p.SchemeId == BdDetails.SchemeId).Count();
+
+                                                                  foreach (var code in BdDetails.AnteCodeList.Where(p => p.SchemeId == BdDetails.SchemeId))
+                                                                  {
+                                                                      playtype = code.PlayType;
+                                                                      codelist += code.IsDan + "|" + code.MatchId + "|" + code.AnteCode + "|" + code.GameType.ToLower() + "#";
+
+                                                                  }
+                                                                  codelist = codelist.Substring(0, codelist.Length - 1);
+                     
+                            }
+                            <form action="/baodan/redanbuyconfirm" method="post" target="_blank" id="payForm">
+                            <input type="hidden" name="WagerMultiple" value="1" />
+                            <input type="hidden" value="@BdDetails.GameType" name="GameType" />
+                            <input type="hidden" value="@playtype" name="playType" />
+                            <input type="hidden" value="@BdDetails.IssuseNumber" name="IssuseNumber" />
+                            <input type="hidden" value="@BdDetails.BetCount" name="Amount" />
+                            <input type="hidden" value="@BdDetails.CurrentBetMoney" name="TotalMoney" />
+                            <input type="hidden" value="@TotalMatchCount" name="TotalMatchCount" />
+                            <input type="hidden" value="@codelist" name="AnteCodeList" />
+                            <input type="hidden" value="@BdDetails.GameCode" name="Game" />
+                            <input type="hidden" value="@BdDetails.Security" name="Security" />
+                            <input type="hidden" value="@BdDetails.Commission" name="Commission" />
+                            <input type="hidden" value="@BdDetails.SingleTreasureDeclaration" name="SingleTreasureDeclaration" />
+                            <input type="hidden" value="@BdDetails.SchemeId" name="SchemeId"/>
+                            </form>
+                        </div>
+                    }
+                    else if (BdDetails.LastMatchStopTime > DateTime.Now)
+                    {
+                        <div class="float_l xdlkl">
+                            我<br>
+                            要<br>
+                            购<br>
+                            买</div>
+                        <div class="float_r xdnbvj">
+                            <div class="xdnbj_1">
+                                <div style="text-align: center">
+                                    未开奖</div>
+                            </div>
+                            <div class="xdknj">
+                                <div style="text-align: center">
+                                    距离开奖:
+                                    <label timer="@SiteString.ConvertDateTimeInt(BdDetails.LastMatchStopTime)" id="kaijiangdjs">
+                                        <i class="font_red">0</i>天<i class="font_red">0</i>小时<i class="font_red">0</i>分<i
+                                            class="font_red">0</i>秒</label></div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div style="position: relative; width: 1000px; margin: 0 auto;">
+            <div class="xqmain">
+                @if (BdDetails.Security == TogetherSchemeSecurity.FirstMatchStopPublic && BdDetails.FirstMatchStopTime > DateTime.Now && (user == null || (user != null && BdDetails.UserId != user.LoginInfo.UserId)))
+                {
+                   <div style=" padding-top:20px; padding-left:30px; padding-right:40px;">
+                    <div style=" float:left; width:350px;">
+                           <div class=" float_l"> <span class="user_logo user_detail touxiang blog-lv lv1 uic"></span></div>
+                           <div style=" float:left;">
+                            <span class="user_name" style=" color:#0386d1; font-size:14px; margin-top:10px;">@SiteString.HideUserName(BdDetails.UserName)</span> <br />
+                            <span>@SiteConvert.GameName(BdDetails.GameCode, BdDetails.GameType)@(BdDetails.IssuseNumber)期&nbsp;</span>
+                            <span class="qsdf">@(BdDetails.BetCount)注</span> <em class="chzshtml"></em>
+                         </div>
+                         </div>
+                    <div class="center">
+                      <i style="margin-right: 56px;" class="float_r">上周排行：<i class="szphclass" style="color: white;">@BdDetails.RankNumber.ToString("N0")</i></i>
+                      <br />
+                      <span class="float_l">预计最高回报：<em class="fff">@BdDetails.ExpectedReturnRate.ToString("N2")</em>倍</span>  
+                    </div>
+                    <div style=" float:right;">
+                        <div style="border-bottom: none" class="qwe">
+                        <div class="float_l as">
+                            近 7 天盈利率</div>
+                        <div class="float_l as1" id="card_charts"  uid="@BdDetails.UserId">
+                        </div>
+                    </div>
+                    </div></div>
+                     <div class="new_xqmainL ">
+                        <div class="new_xqmainC" style="min-height: 17px;font-size: 14px; color:red; height: 100px; line-height: 100px; padding-left: 16px; margin-left: -12px; width:940px; margin-top: 0px; background-color:White;text-align: center;">
+                           很抱歉，该神单为截止公开，暂时不能查看方案详情！
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div style=" padding-top:20px; padding-left:30px; padding-right:40px;">
+                    <div style=" float:left; width:350px;">
+                           <div class=" float_l"> <span class="user_logo user_detail touxiang blog-lv lv1 uic"></span></div>
+                           <div style=" float:left;">
+                            <span class="user_name" style=" color:#0386d1; font-size:14px; margin-top:10px;">@SiteString.HideUserName(BdDetails.UserName)</span> <br />
+                            <span>@SiteConvert.GameName(BdDetails.GameCode, BdDetails.GameType)@(BdDetails.IssuseNumber)期&nbsp;</span>
+                            <span class="qsdf">@(BdDetails.BetCount)注</span> <em class="chzshtml"></em>
+                            </div>
+                         </div>
+                    <div class="center">
+                      <i style="margin-right: 24px;" class="float_r">上周排行：<i class="szphclass" style="color: white;">@BdDetails.RankNumber.ToString("N0")</i></i>
+                      <br />
+                      <span class="float_l">预计最高回报：<em class="fff">@BdDetails.ExpectedReturnRate.ToString("N2")</em>倍</span>  
+                    </div>
+                    <div style=" float:right;">
+                        <div style="border-bottom: none" class="qwe">
+                        <div class="float_l as">
+                            近 7 天盈利率</div>
+                        <div class="float_l as1" id="card_charts"  uid="@BdDetails.UserId">
+                        </div>
+                    </div>
+                    </div></div>
+                    <div class="new_xqmainL ">
+                        <div class="new_xqmainC">
+                           
+                            <div class="Clear">
+                            </div>
+                            <div>
+                                <div class="baomi sndj">
+                                    <div class="OpenType" id="OpenType">
+                                        <span class="font_bold float_l">原始单</span> <span class="float_l">@(BdDetails.TotalMatchCount)场&nbsp;@SiteConvert.PlayTypeName(BdDetails.PlayType)</span>
+                                        @{
+                                                                                                                                       var serIndex = 1;
+                                                                                                                                       switch (BdDetails.Security)
+                                                                                                                                       {
+                                                                                                                                           case TogetherSchemeSecurity.Unkown:
+                                                                                                                                           case TogetherSchemeSecurity.Public:
+                                                                                                                                               serIndex = 1;
+                                                                                                                                               break;
+                                                                                                                                           case TogetherSchemeSecurity.FirstMatchStopPublic:
+                                                                                                                                               serIndex = 6;
+                                                                                                                                               break;
+                                                                                                                                           default:
+                                                                                                                                               serIndex = 1;
+                                                                                                                                               break;
+                                                                                                                                       }
+                                        }
+                                        @if (BdDetails != null && user != null && BdDetails.UserId == user.LoginInfo.UserId)
+                                        {
+                                            <div class="changeState">
+                                                <p title="@OrderManager.SecurityName(BdDetails.Security)" class="nr touzpng @(serIndex == 1 ? "gk" : "timek")">
+                                                </p>
+                                            </div>
+                                            <span class="size">@OrderManager.SecurityName(BdDetails.Security)</span>
+                                        }
+                                        else
+                                        {
+                                            <div class="changeState">
+                                                <p title="@OrderManager.SecurityName(BdDetails.Security)" class="nr touzpng @(serIndex == 1 ? "gk" : "timek")">
+                                                </p>
+                                            </div>
+                                            <span class="size">@OrderManager.SecurityName(BdDetails.Security)</span>
+                                        }
+                                    </div>
+                                </div>
+                                <table width="100%" cellspacing="0" cellpadding="0" border="0" class="mtable">
+                                    <tbody>
+                                        <tr class="thbg">
+                                            <th width="10%" style=" background:#edfafe">
+                                                序号
+                                            </th>
+                                            <th width="13%" style=" background:#edfafe">
+                                                时间
+                                            </th>
+                                            <th width="24%" style=" background:#edfafe">
+                                                比赛(主队vs客队)
+                                            </th>
+                                            <th width="43%" style=" background:#edfafe">
+                                                投注选项<span style="font-weight: normal;">(最新奖金指数)</span>
+                                            </th>
+                                            <th width="11%" style=" background:#edfafe">
+                                                彩果
+                                            </th>
+                                        </tr>
+                                        @if (BdDetails.AnteCodeCollection != null && BdDetails.AnteCodeCollection.Count() > 0)
+                                        {
+                                            foreach (var item in BdDetails.AnteCodeCollection)
+                                            {
+                                                var matres = "";
+                                                if (item != null)
+                                                {
+                                                    if (!string.IsNullOrEmpty(item.MatchResult) && item.MatchResult.IndexOf("-1") < 0)
+                                                    {
+                                                        if (item.GameType == "dxf")
+                                                        {
+                                                            var zfs = item.FullResult.Split(new string[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
+                                                            var czf = OrderManager.SpliteSPList(item.CurrentSp).Count <= 0 ? "0" : OrderManager.SpliteSPList(item.CurrentSp)["YSZF"];
+                                                            if (zfs.Length > 1)
+                                                            {
+                                                                var zf = zfs.Select(a => float.Parse(a)).Sum();
+                                                                if (zf > float.Parse(czf))
+                                                                { matres = "3"; }
+                                                                else
+                                                                {
+                                                                    matres = "0";
+                                                                }
+                                                            }
+                                                        }
+                                                        else if (item.GameType == "rfsf")
+                                                        {
+                                                            var bfs = item.FullResult.Split(new string[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
+                                                            //if(string.IsNullOrEmpty(OrderManager.SpliteSPList(item.CurrentSp)))
+                                                            var rf = "0";
+                                                            if (OrderManager.SpliteSPList(item.CurrentSp).ContainsKey("RF"))
+                                                            {
+                                                                rf = OrderManager.SpliteSPList(item.CurrentSp).Count <= 0 ? "0" : OrderManager.SpliteSPList(item.CurrentSp)["RF"];
+                                                            }
+                                                            // ["RF"];
+                                                            if (bfs.Length > 1)
+                                                            {
+                                                                var zf = float.Parse(bfs[0]) + float.Parse(rf);
+                                                                var ff = float.Parse(bfs[1]);
+                                                                if (zf > ff)
+                                                                { matres = "3"; }
+                                                                else
+                                                                {
+                                                                    matres = "0";
+                                                                }
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            matres = item.MatchResult;
+                                                        }
+                                                    }
+                                                }
+                                            <tr>
+                                                <td>
+                                                    @item.MatchIdName
+                                                </td>
+                                                <td>
+                                                    @item.StartTime.ToString("MM-dd HH:mm")
+                                                </td>
+                                                <td class="zzhud">
+                                                    <a><span style="">@item.HomeTeamName</span>
+                                                        @{
+                                                                 var matchstate = "";
+                                                                 switch (BdDetails.GameCode.ToLower())
+                                                                 {
+                                                                     case "jczq":
+                                                                     case "jclq":
+                                                                         switch (item.MatchState)
+                                                                         {
+                                                                             case "3":
+                                                                                 matchstate = "取消";
+                                                                                 break;
+                                                                             case "4":
+                                                                                 matchstate = "推迟";
+                                                                                 break;
+                                                                             default:
+                                                                                 matchstate = item.FullResult;
+                                                                                 break;
+                                                                         }
+                                                                         break;
+                                                                     case "bjdc":
+                                                                         switch (item.MatchState)
+                                                                         {
+                                                                             case "Cancel":
+                                                                                 matchstate = "取消";
+                                                                                 break;
+                                                                             case "Late":
+                                                                                 matchstate = "推迟";
+                                                                                 break;
+                                                                             default:
+                                                                                 matchstate = item.FullResult;
+                                                                                 break;
+                                                                         }
+                                                                         break;
+                                                                     default:
+                                                                         matchstate = "";
+                                                                         break;
+                                                                 }
+                                                        }
+                                                        <i class="font_red">
+                                                            @(matchstate == "" ? "vs" : matchstate)
+                                                        </i><span>@item.GuestTeamName</span> </a>
+                                                </td>
+                                                <td>
+                                                    @if (BdDetails.SchemeBettingCategory == SchemeBettingCategory.GeneralBetting || BdDetails.SchemeBettingCategory == SchemeBettingCategory.FilterBetting)
+                                                    {
+                                                        foreach (var code in item.AnteCode.Split(','))
+                                                        {
+                                                        <div class="touzhu @(string.IsNullOrEmpty(matres) ? "zhong" : code == matres ? "zhong" : "weizhong")">
+                                                            <span>@(BdDetails.GameCode.ToLower() == "jclq" && item.GameType.ToLower() == "rfsf" ? "让分" : (BdDetails.GameCode.ToLower() == "jczq" && item.GameType.ToLower() == "spf" ? "让球" : ""))@SiteString.ANTECODES_NAME(item.GameType.ToLower(), code)</span>
+                                                            @if (!string.IsNullOrEmpty(item.CurrentSp))
+                                                            {
+                                                                if (OrderManager.SpliteSPList(item.CurrentSp).ContainsKey(code))
+                                                                {
+                                                                    var sp = string.IsNullOrEmpty(OrderManager.SpliteSPList(item.CurrentSp)[code]) ? "0.000" : double.Parse(OrderManager.SpliteSPList(item.CurrentSp)[code]).ToString("0.000");
+                                                                    var inxsp = sp.Substring(0, sp.IndexOf('.') + 3);
+                                                                <i odds=" @(OrderManager.SpliteSPList(item.CurrentSp)[code])">@inxsp</i>
+                                                                }
+                                                            }
+                                                        </div>
+                                                        }
+                                                    }
+                                                    else if (BdDetails.SchemeBettingCategory == SchemeBettingCategory.ErXuanYi)
+                                                    {
+                                                        foreach (var code in item.AnteCode.Split(','))
+                                                        {
+                                                        <div class="touzhu @(string.IsNullOrEmpty(matres) ? "zhong" : code == matres ? "zhong" : "weizhong")">
+                                                            <span>@(item.LetBall <0 && code == "3" ? "主胜" : item.LetBall <0 && code == "0" ? "客不败" : (item.LetBall >0 && code == "3" ? "主不败" : "客胜"))</span>
+                                                            @if (!string.IsNullOrEmpty(item.CurrentSp))
+                                                            {
+                                                                if (OrderManager.SpliteSPList(item.CurrentSp).ContainsKey(code))
+                                                                {
+                                                                    // var sp = OrderManager.SpliteSPList(item.CurrentSp)[code];
+                                                                    var sp = string.IsNullOrEmpty(OrderManager.SpliteSPList(item.CurrentSp)[code]) ? "0.000" : double.Parse(OrderManager.SpliteSPList(item.CurrentSp)[code]).ToString("0.000");
+                                                                    var inxsp = sp.Substring(0, sp.IndexOf('.') + 3);
+                                                                <i odds=" @(OrderManager.SpliteSPList(item.CurrentSp)[code])">@inxsp</i>
+                                                                }
+
+                                                            }
+                                                        </div>
+                                                        }
+                                                    }
+                                                </td>
+                                                <td style=" color:#66b964 !important">
+                                                    @{
+                                                       var result = SiteString.ANTECODES_NAME(item.GameType, matres);
+                                                    }
+                                                    @if (!string.IsNullOrEmpty(result))
+                                                    {
+                                                        <span class="cg">
+                                                            @(item.GameType.ToLower() == "jclq" && item.GameType.ToLower() == "rfsf" ? "让分" : (item.GameType.ToLower() == "jczq" && item.GameType.ToLower() == "spf" ? "让球" : ""))@result
+                                                        </span>
+                                                        
+                                                    }
+                                                </td>
+                                            </tr>
+  
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="Clear">
+                            </div>
+                        </div>
+                        <div class="dibu">
+                            <div class="tzllb" id="chakantouzhu">
+                                <span class="touzpngnew"></span><i style=" color:#2495d4">查看投注列表</i></div>
+                            <!-- 神单明细 -->
+                            <div style="display: none;" class="dzmx _pop_" id="chakantouzhus">
+                                <h4 style=" color:#118dd0 !important;">单注列表</h4>
+                                <label id="colsedetail">
+                                    <input style="display: none;" type="checkbox" disabled="disabled">关闭
+                                </label>
+                                <div class="xialasaz">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="Clear">
+                </div>
+            </div>
+        </div>
+        <div class="Clear">
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("#chakantouzhu").click(function () {
+            $("#chakantouzhus").show();
+        $(".xialasaz").html("<div class=\"load-bs\">正在加载中,请稍等...</div>");
+        $(".xialasaz").load("/baodan/sportsticket", { SchemeId: "@(BdDetails == null ? "" : BdDetails.SchemeId)", userId: "@(BdDetails == null ? "" : BdDetails.UserId)", schemeStatus: "@(BdDetails.TicketStatus)", Amount: @(BdDetails == null ? 1 : BdDetails.Amount) ,GameCode: "@(BdDetails == null ? "" : BdDetails.GameCode)"});
+        });
+         $(".xialasaz").load("/baodan/sportsticket", { SchemeId: "@(BdDetails == null ? "" : BdDetails.SchemeId)", userId: "@(BdDetails == null ? "" : BdDetails.UserId)", schemeStatus: "@(BdDetails.TicketStatus)", Amount: @(BdDetails == null ? 1 : BdDetails.Amount),GameCode: "@(BdDetails == null ? "" : BdDetails.GameCode)" });
+    });
+</script>

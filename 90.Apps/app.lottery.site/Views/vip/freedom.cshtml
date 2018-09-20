@@ -1,0 +1,52 @@
+﻿@{
+    ViewBag.Title = "会员中心 - 我的成长-体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    Layout = "~/Views/vip/_Layout.cshtml";
+    var CompleteTask = ViewBag.CompleteTask as GameBiz.Core.UserGrowthDetailInfoCollection;
+}
+@section css{
+    @ViewHelpers.css("vip.css")
+}
+<div class="main_v">
+    @{Html.RenderAction("menu", "vip");}
+    <div class="right_con">
+        <div class="list_p">
+            <h2 class="p_r">
+                我的成长明细
+                <ul class="time_list">
+                    <li class="cur">最近一个月</li></ul>
+            </h2>
+            <h3 class="pt_20">@(DateTime.Now.Year)年</h3>
+            <div class="detail_con border_style1 p_r" id="detail_list">
+                <ul class="work_list clearfix" id="detail_list2014">
+                    @foreach (var item in CompleteTask.List)
+                    {
+                        <li><span class="times">@item.CreateTime.ToString("MM-dd")</span>
+                            <div class="worked hy_image">
+                                <span class="tip_ico3 hy_image"></span><span class="smrz_ico1 hy_image"></span>
+                                <h4 class="p_r">
+                                    @item.Category<span class="add_value">+@(Convert.ToInt32(item.PayMoney))点</span></h4>
+                                <p>
+                                    恭喜您完成了&nbsp;@(item.Category)&nbsp;任务，获得@(Convert.ToInt32(item.PayMoney))点成长值</p>
+                                <span class="time_now">@(item.CreateTime.ToString("HH:mm"))</span>
+                            </div>
+                        </li>
+                    }
+                </ul>
+                <ul class="work_list clearfix" id="js_loaddetail" style="display: none;">
+                    <li>
+                        <div style="width: 80px; margin: 0px auto;">
+                            <img src="@ViewHelpers.img("vip/loading.gif")">
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(".nav_v li:contains(我的成长)").addClass("cur").siblings().removeClass("cur");
+    });
+</script>

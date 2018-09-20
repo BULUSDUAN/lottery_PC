@@ -1,0 +1,59 @@
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" class="sfc_table" id="sfcList">
+        <colgroup>
+            <col width="45"/>
+            <col width="80"/>
+            <col width="90"/>
+            <col width="307"/>
+            <col width="39"/>
+            <col width="50"/>
+            <col width="50"/>
+            <col width="50"/>
+            @*<col width="33"/>*@
+            <col width="35"/>
+            <col width="156"/>
+            <col width=""/>
+        </colgroup>
+        <thead>
+            <tr>
+                <th>场次</th>
+                <th>赛事</th>
+		        <th><p name="endtime" class="dropdown timeselect">
+		                <cite val="b_time" class="tselect">比赛时间</cite> <em style="display: none;"> <a val="e_time" href="javascript:">截止时间
+		                                                                                         </a> </em>
+		            </p></th>
+                <th>[排名]主队<em>vs</em>客队[排名]</th>
+                <th>半/全</th>
+                <th>胜(3)</th>
+                <th>平(1)</th>
+                <th>负(0)</th>
+                <th>全</th>
+                @*<th>胆</th>*@
+                <th class="sf_time">
+                    <p id="oddsSel" name="odds" class="dropdown oddsselect">
+                        <cite val="op" class="oselect">平均欧赔</cite> 
+                         <em style="display: none;" class="none">
+                            <a val="yp" href="javascript:">亚&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;盘</a>
+                            <a val="kl" href="javascript:">凯利指数</a>
+                            <a val="ls" href="javascript:">离散指数</a>
+                        </em>
+                        @*<select name="opSelect" id="opSelect" onchange="ctzqpage.html.ctzq_chnageOP(this.options[this.selectedIndex].value)">
+                    <option value="0">平均欧赔</option>
+                    <option value="1">亚&nbsp;&nbsp;盘</option>
+                    <option value="2">凯利指数</option>
+                    <option value="3">离散指数</option>
+                </select>*@
+                    </p>
+                    <dl id="oddsTips" class="bet_tips">
+                        <dd>胜</dd>
+                        <dd>平</dd>
+                        <dd class="nrb">负</dd>
+                    </dl>
+                </th>
+                <th>分析</th>
+            </tr>
+        </thead>
+        <tbody id="lots">
+        
+
+        </tbody>
+    </table>

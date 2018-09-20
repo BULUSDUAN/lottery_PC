@@ -1,0 +1,45 @@
+.mbBox {
+	height:120px;
+	color:#fff;
+	font-size:16px;
+	position:fixed;
+	bottom:0;
+	_position:absolute;
+	z-index:1000;
+	width:100%;
+	display:none;
+}
+.mbBox .opcity {
+	background-color:#F74221;
+	opacity:.9;
+	filter:Alpha(Opacity=80);
+	height:120px;
+	width:100%;
+}
+.mbBox .contBox {
+	margin-top:-120px;
+	position:relative;
+}
+.mbBox .cont {
+	width:980px;
+	height:120px;
+	margin:0 auto;
+	background:url(/duilian/bottom_bg.png) no-repeat center;
+	position:relative;
+	overflow:hidden;
+}
+.mbBox .cont a {
+	width:980px;
+	height:120px;
+	display:block;
+}
+.cont .di_close {
+	width:34px;
+	height:34px;
+	display:inline-block;
+	background:url(/duilian/bottom_close.png) no-repeat;
+	position:absolute;
+	right:0;
+	top:10px;
+	cursor:pointer;
+}

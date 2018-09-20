@@ -1,0 +1,183 @@
+﻿@{
+    ViewBag.Title = "站内短信 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "站内短信, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+
+    //var totallist = ViewBag.TotalList as GameBiz.Core.InnerMailInfo_QueryCollection;
+    //var totalcount = 0;// totallist.TotalCount;//所有的
+
+    var totalcount = ViewBag.TotalCount;
+
+    var mailList = ViewBag.InnerMailList as GameBiz.Core.SiteMessageInnerMailListNew_Collection;//根据条件查
+
+    var unreday = mailList.MailList.Where(p => p.HandleType == GameBiz.Core.InnerMailHandleType.UnRead).OrderByDescending(p => p.SendTime);
+    var reday = mailList.MailList.Where(p => p.HandleType != GameBiz.Core.InnerMailHandleType.UnRead).OrderByDescending(p => p.SendTime);
+    var status = string.IsNullOrEmpty(Request["status"]) ? 3 : int.Parse(Request["status"]);
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>站内短信</li>
+    </ul>
+</div>
+<div class="center mt10">
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mune_safe">
+        <div class="account_menu clearfix">
+            <a href="/member/innermail" class="select">站内消息</a> <a href="/member/mysuggestions">
+                我的建议</a>
+        </div>
+        <div class="account_con">
+            <div class="betorder_top">
+                <ul>
+                    <li class="betorder_topSelected"><a href="innermail"><i></i>站内消息</a> </li>
+                </ul>
+            </div>
+            <div class="search_tab  innermail">
+                <label for="all">
+                    <input id="all" type="checkbox" value="checkbox" name="checkbox">
+                    全选
+                </label>
+                <a id="btn_deleteall" href="javascript:">删除</a> <a href="/member/innermail">全部( <em>@totalcount</em>
+                    ) </a><a href="/member/innermail?status=0">未读( <em id="red">@ViewBag.UnReadMail</em>
+                        ) </a><a href="/member/innermail?status=1">已读( <em id="red">@(totalcount - ViewBag.UnReadMail)</em>
+                            ) </a>
+            </div>
+            <table class="account_box">
+                <thead>
+                    <tr>
+                        <td>
+                            选择
+                        </td>
+                        <td>
+                            内容简介
+                        </td>
+                        <td>
+                            发布时间
+                        </td>
+                        <td>
+                            操作
+                        </td>
+                    </tr>
+                </thead>
+                @if (mailList.TotalCount > 0)
+                {
+                    foreach (var item in unreday)
+                    {
+                    <tr data-v="@item.MailId">
+                        <td>
+                            <input type="checkbox" value="@item.MailId" name="delLetterId">
+                        </td>
+                        <td>
+                            <a href="/member/innermailcontent?MailId=@Url.Encode(item.MailId)" target="_blank" class="orderId blod">@item.Title</a>
+                        </td>
+                        <td>
+                            @item.SendTime.ToString("yyyy-MM-dd HH:mm")
+                        </td>
+                        <td>
+                            <a class="ye" onclick=" delMail('@item.MailId') " href="javascript:void(0)" title="删除本条站内信">
+                                删除</a>
+                        </td>
+                    </tr>
+                    }
+                    foreach (var item2 in reday)
+                    {
+                    <tr data-v="@item2.MailId">
+                        <td>
+                            <input type="checkbox" value="@item2.MailId" name="delLetterId">
+                        </td>
+                        <td>
+                            <a href="/member/innermailcontent?MailId=@Url.Encode(item2.MailId)" target="_blank" class="blue">@item2.Title</a>
+                        </td>
+                        <td>
+                            @item2.SendTime.ToString("yyyy-MM-dd HH:mm")
+                        </td>
+                        <td>
+                            <a class="red" onclick=" delMail('@item2.MailId') " href="javascript:void(0)" title="删除本条站内信">
+                                删除</a>
+                        </td>
+                    </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4">
+                            暂时没有找到你要的数据哦
+                        </td>
+                    </tr>
+                }
+            </table>
+            <div class="account_page  clearfix">
+                @ViewHelpers.Pager4("getInnerMailList", ViewBag.pageNo, ViewBag.PageSize, mailList.TotalCount)
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(".account_box tr:even:gt(0)").css("backgroundColor", "#f9f9f9");
+        $("input[type='checkbox']").removeAttr("checked");
+    });
+    var getInnerMailList = function (pageNo, pageSize) {
+        var status = @status;
+        if (status != 3)
+            location.search = "pageNo=" + pageNo + "&pageSize=" + pageSize + "&status=" + status + "&r=" + Math.random();
+        else
+            location.search = "pageNo=" + pageNo + "&pageSize=" + pageSize + "&r=" + Math.random();
+    }
+    var confTxt = "<div style='text-align:center;line-height:50px;font-size:14px'>确定删除当前选择的信息吗？</div>";
+    $("#btn_deleteall").click(function () {
+        var mailid = getallmailId();
+        if (mailid.length <= 0) {
+            alertTip("请选择所要删除的信息!", "ok");
+            return false;
+        };
+        confirmTip(confTxt, function() {
+           
+            deleteinnermail(mailid.join(","));
+        }, function() {});
+
+    });
+    $("#all").click(function() {
+        var checked = $(this).attr("checked");
+        $("input[type='checkbox']").attr("checked", checked);
+
+    });
+    
+    function getallmailId() {
+        var mailIdarr = [];
+        $(".account_box tr[data-v]").each(function () {
+            if ($(this).find("input[type='checkbox']").is(":checked")) {
+                var v = $(this).attr("data-v");
+                mailIdarr.push(v);
+            }
+        });
+        return mailIdarr;
+    }
+    function delMail(mailId) {
+        deleteinnermail(mailId);
+    }
+    function deleteinnermail(mailId) {
+        $.post("/member/Deleteinnermail", { MailId: mailId }, function (result) {
+            if (result.IsSuccess) {
+                alertTip(result.Message,"ok");
+                document.getElementById("boxAlertOkButton").onclick = function () {
+                    window.location.href = "/member/innermail";
+                };
+            }
+            else {
+                alertTip(result.Message,"err");
+                return false;
+            }
+        });
+    }
+
+</script>

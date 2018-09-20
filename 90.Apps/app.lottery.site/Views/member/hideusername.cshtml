@@ -1,0 +1,56 @@
+﻿@using app.lottery.site.Models;
+@{
+    CurrentUserInfo user = ViewBag.CurrentUser;
+}
+
+        <div class="info_tt">
+            隐藏用户名</div>
+        <div class="xgmm_main">
+            <div class="info_zl_ico">
+                <span class="member-safe @(user.LoginInfo.HideDisplayNameCount > 0 ? "member_safe_y" : "member_safe_w") safe_maggin" ></span>
+                <span class="ml10 @(user.LoginInfo.HideDisplayNameCount > 0 ? "member_hideusername_y" : "member_hideusername_w")"></span>
+             </div>
+          <ul style=" margin-left:100px;">
+              <li>
+                  <span class="sp120"><em style="color: Red">*</em>隐藏长度：</span>
+                  <input name="txtLen" type="text" value="@(user.LoginInfo.HideDisplayNameCount)" id="txtLen" class="input_text" onkeyup="value=value.replace(/[^\d]/g,'')" style="height: 18px; width: 40px;">
+              </li>
+               <li>
+                  <span class="sp120" style=" color: #ff3d00"><em>*</em>注意：</span><span style=" color: #ff3d00">隐藏的长度不能超过用户名的长度。</span>
+              </li>
+              <li>
+                  <input type="submit" class="btn-pwd-submit" onclick="setHideLen()" value="确&nbsp;&nbsp认" />
+                  @*<input type="button" class="btn-pwd-back" id="btnback_hide" value="返&nbsp;&nbsp回">*@
+              </li>
+             </ul>
+        </div>
+<div class="clearfix">
+</div>
+
+<script type="text/javascript">
+
+    function setHideLen() {
+        var len = isNaN(parseInt(document.getElementById("txtLen").value)) ? 0 : parseInt(document.getElementById("txtLen").value);
+        $.post("/Member/setHideLen", { hideLen: len }, function (result) {
+            if (result.IsSuccess) {
+                alertTip(result.Message);
+                location.href = location.href;
+            }
+            else {
+                alertTip(result.Message);
+                return false;
+            }
+        });
+    }
+    $(function () {
+        $("#btnback_hide").click(function () {
+            //window.location.href = "javascript:history.go(-1)";
+            $(".member_safe_Next").hide();
+            $(".member_safe").show();
+        });
+
+        $(".member_hideusername_y").text("已设置隐藏用户名").css("color", "#8ecc33");
+    $(".member_hideusername_w").text("隐藏用户名").css("color", "#ff5c00");
+        
+    });
+</script>

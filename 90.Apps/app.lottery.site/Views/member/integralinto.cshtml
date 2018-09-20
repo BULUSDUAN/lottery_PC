@@ -1,0 +1,38 @@
+﻿@using app.lottery.site.Models
+@{
+    Layout = "../Shared/_LayoutFoud.cshtml";
+    ViewBag.Title = "返点转入";
+    ViewBag.keywords = "返点转入" ;
+    var user = ViewBag.CurrentUser as CurrentUserInfo;
+}
+<div class="center mt10">
+    @{Html.RenderAction("menuFoud", "Member");}
+    @{Html.RenderAction("toptipFoud", "Member");}
+    <div class="new_buy_right">
+        <div class="betorder_top">
+            <ul>
+                <li ><a href="/member/integraldetail">返点明细</a></li>
+                <li ><a href="/member/integralextract">返点提取</a></li>
+                <li><a href="/member/drawingsrecordfoud">提款记录</a></li>
+                   <li class="betorder_topSelected"><a href="/member/integralinto">返点转入</a></li>
+                 <li><a href="/member/integralintodetail">转入记录</a></li>
+                 <li><a href="/member/jf">我的返点</a></li>
+            </ul>
+        </div>
+        <div class="betorder_con clearfix">
+            <div class="alipay-content2 clearfix" style="padding: 30px 0">
+                <form action="/member/IntegralIntoSubmit" method="post"  autocomplete="off">
+                        <ul class="userinfo_list">
+                    <li><b class="tkmoney"></b><span class="sp120">转入返点：</span><input type="text" class="fillmoney" name="money" size="15" maxlength="8"/></li>
+                    <li style="margin-top: 20px;"><input type="submit" value="下一步" class="btn_next" id="btn_into"/>
+                        @*    <input type="button" value="下一步" class="btn_next btn_next_disabled" id="btn_into"/>*@
+                    </li>
+                </ul>
+                </form>
+            
+            </div>
+        </div>
+          
+        
+        </div>
+</div>

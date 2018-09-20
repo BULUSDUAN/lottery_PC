@@ -1,0 +1,6 @@
+[0][2018-07-27 23:07:47] Object reference not set to an instance of an object.
+    System.NullReferenceException: Object reference not set to an instance of an object.
+   at Common.Lottery.Redis.RedisHelper.get_DB_UserBindData()
+   at External.Service.ExternalService.SaveUserBindInfoCache(String userId, UserBindInfos info)
+    ----------------------------------------------------------------------------
+

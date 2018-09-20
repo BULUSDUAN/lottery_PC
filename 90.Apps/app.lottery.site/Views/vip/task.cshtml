@@ -1,0 +1,565 @@
+﻿@using External.Core.Task;
+@{
+    ViewBag.Title = "会员中心 - 我的任务-体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    Layout = "~/Views/vip/_Layout.cshtml";
+    //推荐任务
+    var task = ViewBag.CompleteTask as TaskListInfoCollection;
+    //累计行任务
+    var Progress = ViewBag.TaskProgress as TaskHotCumulativeInfoCollection;
+    var Win100Count = Progress.List.Where(p => p.TaskCategory.ToString() == "Win100Count").FirstOrDefault();
+    var JCWin100Count = Progress.List.Where(p => p.TaskCategory.ToString() == "JCWin100Count").FirstOrDefault();
+    var Win1000Yuan = Progress.List.Where(p => p.TaskCategory.ToString() == "Win1000Yuan").FirstOrDefault();
+    List<string> list = new List<string>();
+    foreach (var item in task.List)
+    {
+        list.Add(item.TaskCategory.ToString());
+    }
+    var user = ViewBag.User as app.lottery.site.Models.CurrentUserInfo;
+}
+@section css{
+    @ViewHelpers.css("vip.css")
+}
+<div class="main_v">
+    @{Html.RenderAction("menu", "vip");}
+    <div style="height: auto;" class="right_con">
+        <div class="p_rw_con tjrw_con  pt_15">
+            <h1 class="h1_p p_r">
+                推荐任务<span>任务自用户首次登录会员中心起算</span><a id="link86" href="javasript:;" onclick="showMoreTask('newtask_more',this);return false;">查看更多&gt;&gt;</a></h1>
+            <div style="margin-top: 16px">
+                <ul class="ul_p clearfix taskList">
+                    <li class="">
+                        <div class="tima1 big_ico hy_image">
+                        </div>
+                        <h3>
+                            <span class="Tvip_1 hy_image vip_common"></span><a id="link95" href="/member/safe" target="_blank">实名认证</a></h3>
+                        <p class="infoTask info_task">
+                            <span>完成实名认证可获得200点成长值</span></p>
+                        <p class="last">
+                            成长值奖励<span class="f14 f_ms f_red1">+200点</span></p>
+                        @if (list.IndexOf("RealName") > -1)
+                        {  <span href="" class="done_btn  hy_image tjrw_common">已完成</span> }
+                        else
+                        {<a id="link90" href="/member/safe" target="_blank" class="do_btn  hy_image tjrw_common tjrw_common"
+                            realname="true">做任务</a> }
+                    </li>
+                    <li class="">
+                        <div class="tima2 big_ico hy_image">
+                        </div>
+                        <h3>
+                            <span class="Tvip_1 hy_image vip_common"></span><a id="link93" href="/member/safe" target="_blank">绑定手机号</a></h3>
+                        <p class="infoTask info_task">
+                            <span style="left: 0px;">完成手机号绑定可获得100点成长值</span></p>
+                        <p class="last">
+                            成长值奖励<span class="f14 f_ms f_red1">+100点</span></p>
+                        @if (list.IndexOf("MobilBinding") > -1)
+                        {
+                            <span href="" class="done_btn  hy_image tjrw_common">已完成</span>
+                        }
+                        else
+                        { 
+                            <a id="link90" href="/member/safe" target="_blank" class="do_btn  hy_image tjrw_common tjrw_common">
+                                做任务</a>
+                        }
+                    </li>
+                    <li class="">
+                        <div class="tima3 big_ico hy_image">
+                        </div>
+                        <h3>
+                            <span class="Tvip_1 hy_image vip_common"></span><a id="link92" href="/member/safe" target="_blank">绑定银行卡</a></h3>
+                        <p class="infoTask info_task">
+                            <span style="left: 0px;">首次添加银行卡成功可获得100点成长值</span></p>
+                        <p class="last">
+                            成长值奖励<span class="f14 f_ms f_red1">+100点</span></p>
+                        @if (list.IndexOf("BankCar") > -1)
+                        {
+                            <span href="" class="done_btn  hy_image tjrw_common">已完成</span>
+                        }
+                        else
+                        { 
+                            <a id="link90" href="/member/safe" target="_blank" class="do_btn  hy_image tjrw_common">
+                                做任务</a>
+                        }
+                    </li>
+                   @* <li class="">
+                        <div class="tima4 big_ico hy_image">
+                        </div>
+                        <h3>
+                            <span class="Tvip_1 hy_image vip_common"></span><a id="link91" href="/member/safe" target="_blank">邮箱绑定</a></h3>
+                        <p class="infoTask info_task">
+                            <span style="left: 0px;">完成邮箱绑定可获得50点成长值</span></p>
+                        <p class="last">
+                            成长值奖励<span class="f14 f_ms f_red1">+50点</span></p>
+                        @if (list.IndexOf("EmailBinding") > -1)
+                        {
+                            <span href="" class="done_btn  hy_image tjrw_common">已完成</span>}
+                        else
+                        { 
+                            <a id="link90" href="/member/safe" target="_blank" class="do_btn  hy_image tjrw_common tjrw_common">
+                                做任务</a>
+                        }
+                    </li>*@
+                    <li class="">
+                        <div class="tima5 big_ico hy_image">
+                        </div>
+                        <h3>
+                            <span class="Tvip_1 hy_image vip_common"></span><a id="link94" href="/member/safe" target="_blank">设置资金密码</a></h3>
+                        <p class="infoTask info_task">
+                            <span style="left: 0px;">完成首次资金密码设置可获得50点成长值</span></p>
+                        <p class="last">
+                            成长值奖励<span class="f14 f_ms f_red1">+50点</span></p>
+                        @if (list.IndexOf("SetBalancePassword") > -1)
+                        {<span href="" class="done_btn  hy_image tjrw_common">已完成</span> }
+                        else
+                        {
+                            <a id="link90" href="/member/safe" target="_blank" class="do_btn  hy_image tjrw_common tjrw_common">
+                                做任务 </a>
+                        }
+                    </li>
+                    <li class="">
+                        <div class="tima6 big_ico hy_image">
+                        </div>
+                        <h3>
+                            <span class="Tvip_1 hy_image vip_common"></span><a id="link97" href="/member/pay" target="_blank">首次充值</a></h3>
+                        <p class="infoTask info_task">
+                            <span>首次充值成功可获得300点成长值</span></p>
+                        <p class="last">
+                            成长值奖励<span class="f14 f_ms f_red1">+300点</span></p>
+                        @if (list.IndexOf("FistTopUp") > -1)
+                        {
+                            <span href="" class="done_btn  hy_image tjrw_common">已完成</span>
+                        }
+                        else
+                        {
+                            <a id="link90" href="/member/pay" target="_blank" class="do_btn  hy_image tjrw_common">
+                                做任务</a>
+                        }
+                    </li>
+                </ul>
+                <div id="newtask_more" style="display: none;">
+                    <ul class="ul_p clearfix taskList">
+                        <li class="">
+                            <div class="tima7 big_ico hy_image">
+                            </div>
+                            <h3>
+                                <span class="Tvip_2 hy_image vip_common"></span><a id="link98" href="/jingcai/hh" target="_blank">首次购买彩票</a></h3>
+                            <p class="infoTask info_task">
+                                <span>首次购彩可获得50点成长值</span></p>
+                            <p class="last">
+                                成长值奖励<span class="f14 f_ms f_red1">+50点</span></p>
+                            @if (list.IndexOf("FistBuyLottery") > -1)
+                            {
+                                <span href="" class="done_btn  hy_image tjrw_common">已完成</span>
+                            }
+                            else
+                            { 
+                                <a id="link90" href="/jingcai/hh" target="_blank" class="do_btn  hy_image tjrw_common">
+                                    做任务</a>
+                            }
+                        </li>
+                        <li class="">
+                            <div class="tima8 big_ico hy_image">
+                            </div>
+                            <h3>
+                                <span class="Tvip_2 hy_image vip_common"></span><a id="link99" href="/jingcai/hh" target="_blank">累计购彩满10元</a></h3>
+                            <p class="infoTask info_task">
+                                <span>购彩满10元 @*第2天结算*@</span></p>
+                            <p class="last">
+                                成长值奖励<span class="f14 f_ms f_red1">+50点</span></p>
+                            @if (list.IndexOf("FistConsumptionTenYuan") > -1)
+                            {
+                                <span href="" class="done_btn  hy_image tjrw_common">已完成</span>
+                            }
+                            else
+                            { 
+                                <a id="link90" href="/jingcai/hh" target="_blank" class="do_btn  hy_image tjrw_common">
+                                    做任务</a>
+                            }
+                        </li>
+                        <li class="">
+                            <div class="tima9 big_ico hy_image">
+                            </div>
+                            <h3>
+                                <span class="Tvip_3 hy_image vip_common"></span><a id="link87" href="/jingcai/hh" target="_blank">购买竞彩2串1</a></h3>
+                            <p class="infoTask info_task">
+                                <span style="left: 0px;">首次购买竞足或竞篮两场比赛2串1玩法可获得100点成长值</span></p>
+                            <p class="last">
+                                成长值奖励<span class="f14 f_ms f_red1">+100点</span></p>
+                            @if (list.IndexOf("FistJingcaiP2_1") > -1)
+                            { 
+                                <span href="" class="done_btn  hy_image tjrw_common">已完成</span>
+                            }
+                            else
+                            {
+                                <a id="link88" href="/jingcai/hh" target="_blank" class="do_btn  hy_image tjrw_common">
+                                    做任务</a>
+                            }
+                        </li>
+                        <li class="">
+                            <div class="tima10 big_ico hy_image">
+                            </div>
+                            <h3>
+                                <span class="Tvip_3 hy_image vip_common"></span><a id="link100" href="/jingcai/hh" target="_blank">购买混投2串1</a></h3>
+                            <p class="infoTask info_task">
+                                <span>首次购买竞足或竞篮两场比赛混投2串1玩法可获得100点成长值</span></p>
+                            <p class="last">
+                                成长值奖励<span class="f14 f_ms f_red1">+100点</span></p>
+                            @if (list.IndexOf("FistHHP2_1") > -1)
+                            {
+                                <span href="" class="done_btn  hy_image tjrw_common">已完成</span>
+                            }
+                            else
+                            { 
+                                <a id="link88" href="/jingcai/hh" target="_blank" class="do_btn  hy_image tjrw_common">
+                                    做任务</a>
+                            }
+                        </li>
+                        <li class="">
+                            <div class="tima11 big_ico hy_image">
+                            </div>
+                            <h3>
+                                <span class="Tvip_3 hy_image vip_common"></span><a id="link108" href="/jingcai/hh" target="_blank">购买竞彩2串1满5次</a></h3>
+                            <p class="infoTask info_task">
+                                <span>成功购买竞彩2串1满5次 @*第2天结算*@</span></p>
+                            <p class="last">
+                                成长值奖励<span class="f14 f_ms f_red1">+100点</span></p>
+                            @if (ViewBag.JingcaiP2_1Totle5)
+                            {   <span href="" class="done_btn  hy_image tjrw_common">已完成</span>}
+                            else
+                            { 
+                                <a id="link88" href="/jingcai/hh" target="_blank" class="do_btn  hy_image tjrw_common">
+                                    做任务</a>
+                            }
+                        </li>
+                        <li class="">
+                            <div class="tima12 big_ico hy_image">
+                            </div>
+                            <h3>
+                                <span class="Tvip_3 hy_image vip_common"></span><a id="link110" href="/jingcai/hh" target="_blank">奖金优化投注满5次</a></h3>
+                            <p class="infoTask info_task">
+                                <span>成功使用奖金优化投注满5次@*（第2天结算）*@</span></p>
+                            <p class="last">
+                                成长值奖励<span class="f14 f_ms f_red1">+100点</span></p>
+                            @if (ViewBag.BonusBuyLotteryTotle5)
+                            { 
+                                <span href="javascript:void 0" class="done_btn  hy_image tjrw_common">已完成</span>
+                            }
+                            else
+                            { 
+                                <a id="link88" href="/jingcai/hh" target="_blank" class="do_btn  hy_image tjrw_common">
+                                    做任务</a>
+                            }
+                        </li>
+                        <li class="">
+                            <div class="tima13 big_ico hy_image">
+                            </div>
+                            <h3>
+                                <span class="Tvip_3 hy_image vip_common"></span><a id="link101" href="/jingcai/hh" target="_blank">竞彩首次中奖</a></h3>
+                            <p class="infoTask info_task">
+                                <span>认购的竞彩方案首次中奖可获得100点成长值</span></p>
+                            <p class="last">
+                                成长值奖励<span class="f14 f_ms f_red1">+100点</span></p>
+                            @if (list.IndexOf("JingcaiFistWin") > -1)
+                            { 
+                                <span href="" class="done_btn  hy_image tjrw_common">已完成</span>
+                            }
+                            else
+                            { 
+                                <a id="link88" href="/jingcai/hh" target="_blank" class="do_btn  hy_image tjrw_common">
+                                    做任务</a>
+                            }
+                        </li>
+                        <li class="">
+                            <div class="tima14 big_ico hy_image">
+                            </div>
+                            <h3>
+                                <span class="Tvip_3 hy_image vip_common"></span><a id="link106" href="/szc/ssq" target="_blank">首次追号投注</a></h3>
+                            <p class="infoTask info_task">
+                                <span>首次完成追号投注可获得100点成长值</span></p>
+                            <p class="last">
+                                成长值奖励<span class="f14 f_ms f_red1">+100点</span></p>
+                            @if (list.IndexOf("FistZhuihaoBuy") > -1)
+                            {
+                                <span href="" class="done_btn  hy_image tjrw_common">已完成</span>
+                            }
+                            else
+                            {
+                                <a id="link88" href="/szc/ssq" target="_blank" class="do_btn  hy_image tjrw_common">
+                                    做任务</a>
+                            }
+                        </li>
+                        <li class="">
+                            <div class="tima15 big_ico hy_image">
+                            </div>
+                            <h3>
+                                <span class="Tvip_3 hy_image vip_common"></span><a id="link105" href="/chipped" target="_blank">首次参与合买</a></h3>
+                            <p class="infoTask info_task">
+                                <span>首次参与合买可获得50点成长值</span></p>
+                            <p class="last">
+                                成长值奖励<span class="f14 f_ms f_red1">+50点</span></p>
+                            @if (list.IndexOf("FistHeMai") > -1)
+                            {
+                                <span href="" class="done_btn  hy_image tjrw_common">已完成</span>
+                            }
+                            else
+                            { 
+                                <a id="link88" href="/chipped" target="_blank" class="do_btn  hy_image tjrw_common">
+                                    做任务</a>
+                            }
+                        </li>
+                        <li class="">
+                            <div class="tima16 big_ico hy_image">
+                            </div>
+                            <h3>
+                                <span class="Tvip_3 hy_image vip_common"></span><a id="link107" href="/chipped" target="_blank">关注彩友</a></h3>
+                            <p class="infoTask info_task">
+                                <span>首次成功关注任一彩友可获得50点成长值</span></p>
+                            <p class="last">
+                                成长值奖励<span class="f14 f_ms f_red1">+50点</span></p>
+                            @if (list.IndexOf("FistFocusOnFriend") > -1)
+                            {
+                                <span href="" class="done_btn  hy_image tjrw_common">已完成</span>
+                            }
+                            else
+                            { 
+                                <a id="link88" href="/chipped" target="_blank" class="do_btn  hy_image tjrw_common">
+                                    做任务</a>
+                            }
+                        </li>
+                        <li class="">
+                            <div class="tima17 big_ico hy_image">
+                            </div>
+                            <h3>
+                                <span class="Tvip_4 hy_image vip_common"></span><a id="link89" href="/jingcai/hh" target="_blank">每日购彩≥50元</a></h3>
+                            <p class="infoTask info_task">
+                                <span style="left: 0px;">每日购彩≥50元可获得50点成长值</span></p>
+                            <p class="last">
+                                成长值奖励<span class="f14 f_ms f_red1">+50点</span></p>
+                            @if (ViewBag.EverDayBuyLottery)
+                            {
+                                <span href="" class="done_btn  hy_image tjrw_common">已完成</span> 
+                            }
+                            else
+                            {
+                                <a id="link90" href="/jingcai/hh" target="_blank" class="do_btn  hy_image tjrw_common">
+                                    做任务</a>
+                            }
+                        </li>
+                        <li class="">
+                            <div class="tima18 big_ico hy_image">
+                            </div>
+                            <h3>
+                                <span class="Tvip_4 hy_image vip_common"></span><a id="link110" href="/jingcai/hh" target="_blank">使用奖金优化购彩</a></h3>
+                            <p class="infoTask info_task">
+                                <span>首次使用奖金优化购彩可获得200点成长值</span></p>
+                            <p class="last">
+                                成长值奖励<span class="f14 f_ms f_red1">+200点</span></p>
+                            @if (list.IndexOf("BonusOptimize") > -1)
+                            {
+                                <span href="javascript:void 0;" class="done_btn  hy_image tjrw_common">已完成</span>
+                            }
+                            else
+                            {
+                                <a id="link88" href="/jingcai/hh" target="_blank" class="do_btn  hy_image tjrw_common">
+                                    做任务</a>
+                            }
+                        </li>
+                        <li class="">
+                            <div class="tima19 big_ico hy_image">
+                            </div>
+                            <h3>
+                                <span class="Tvip_4 hy_image vip_common"></span><a id="link113" href="javascript:void(0)" onclick="alertTip('正在开发中...','ok')">使用在线过滤购彩</a></h3>
+                            <p class="infoTask info_task">
+                                <span>首次使用在线过滤购彩可获得200点成长值</span></p>
+                            <p class="last">
+                                成长值奖励<span class="f14 f_ms f_red1">+200点</span></p>
+                            @if (list.IndexOf("OnlineFilter") > -1)
+                            {
+                                <span href="" class="done_btn  hy_image tjrw_common">已完成</span>
+                            }
+                            else
+                            { 
+                                <a id="link88" href="javascript:void(0)" onclick="alertTip('正在开发中...','ok')" class="do_btn  hy_image tjrw_common">
+                                    做任务 </a>
+                            }
+                        </li>
+                        <li class="">
+                            <div class="tima20 big_ico hy_image">
+                            </div>
+                            <h3>
+                                <span class="Tvip_4 hy_image vip_common"></span><a id="link111" href="/jingcai/hh" target="_blank">特别中奖奖励</a></h3>
+                            <p class="infoTask info_task">
+                                <span>使用奖金优化或在线过滤首次中奖可获得特别奖励</span></p>
+                            <p class="last">
+                                成长值奖励<span class="f14 f_ms f_red1">+100点</span></p>
+                            @if (list.IndexOf("SpecialWinReward") > -1)
+                            {
+                                <span href="javascript:void(0)" class="done_btn  hy_image tjrw_common">已完成</span>
+                            }
+                            else
+                            { 
+                                <a id="link88" href="/jingcai/hh" target="_blank" class="do_btn  hy_image tjrw_common">
+                                    做任务</a>
+                            }
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="p_rw_con rmrw_con pt_20">
+            <h1 class="h1_p p_r" style="background: #fffbf3; border-bottom: 2px solid #f89998;">
+                热门任务<span>累计型任务自2014年1月1号起算</span><a href="javascript:;" onclick="">查看更多&gt;&gt;</a></h1>
+            <div>
+                <ul class="ul_p clearfix tasklist taskList" style="margin-top: 15px !important">
+                    <li class="">
+                        <h3 class="f_18">
+                            <a id="link114" href="/jingcai/hh" target="_blank">中奖次数</a><span class="zhongj_ico"></span></h3>
+                        <p class="infoTask info_task">
+                            <span style="left: 0px;">中奖次数达到100次&nbsp;第2天结算</span></p>
+                        <p class="money_bar">
+                            <span class="money"><span class="bar" style="width: @(Win100Count != null ? Win100Count.Count >= 100 ? 148 : Win100Count.Count * 1.48 : 0)px">
+                            </span></span><span class="f_red f_thm">
+                                @(Win100Count != null ? Win100Count.Count : 0)/100次</span></p>
+                        <p class="last">
+                            成长值奖励<span class="f14 f_ms f_red1">+100点</span></p>
+                        @if (Win100Count != null && Win100Count.Count >= 100)
+                        {
+                            <span class="done_btn  hy_image tjrw_common" href="javascript:void(0);">已完成</span>
+                        }
+                        else
+                        {
+                            <a id="link115" href="/jingcai/hh" class="do_btn  hy_image tjrw_common" target="_blank">
+                                做任务</a>
+                        }
+                    </li>
+                    <li class="">
+                        <h3 class="f_18">
+                            <a id="link116" href="/jingcai/hh" target="_blank">竞彩2串1中奖次数</a><span class="zhongj_ico"></span></h3>
+                        <p class="infoTask info_task">
+                            <span style="left: 0px;">竞彩2串1中奖次数达到100次&nbsp;第2天结算</span></p>
+                        <p class="money_bar">
+                            <span class="money"><span class="bar" style="width: @(JCWin100Count != null ? JCWin100Count.Count >= 100 ? 148 : JCWin100Count.Count * 1.48 : 0)px">
+                            </span></span><span class="f_red f_thm">
+                                @(JCWin100Count != null ? JCWin100Count.Count : 0)/100次</span></p>
+                        <p class="last">
+                            成长值奖励<span class="f14 f_ms f_red1">+100点</span></p>
+                        @if (JCWin100Count != null && JCWin100Count.Count >= 100)
+                        {
+                            <span class="done_btn  hy_image tjrw_common" href="javascript:void(0);">已完成</span>
+                        }
+                        else
+                        {
+                            <a id="link117" href="/jingcai/hh" class="do_btn  hy_image tjrw_common" target="_blank">
+                                做任务</a>
+                        }
+                    </li>
+                    <li class="">
+                        <h3 class="f_18">
+                            <a id="link118" href="/jingcai/hh" target="_blank">中奖金额</a><span class="zhongj_ico"></span></h3>
+                        <p class="infoTask info_task">
+                            <span style="left: 0px;">中奖金额达到1000元&nbsp;第2天结算</span></p>
+                        <p class="money_bar">
+                            <span class="money"><span class="bar" style="width: @(Win1000Yuan != null ? Win1000Yuan.WinMonery >= 1000 ? 148 : Convert.ToDouble(Win1000Yuan.WinMonery) * 0.148 : 0)px">
+                            </span></span><span class="f_red f_thm">
+                                @(Win1000Yuan != null ? Convert.ToInt32(Win1000Yuan.WinMonery) : 0)/1000元</span></p>
+                        <p class="last">
+                            成长值奖励<span class="f14 f_ms f_red1">+500点</span></p>
+                        @if (Win1000Yuan != null && Win1000Yuan.WinMonery >= 1000)
+                        { 
+                            <span class="done_btn  hy_image tjrw_common" href="javascript:void(0);">已完成</span>
+                        }
+                        else
+                        {
+                            <a id="link119" href="/jingcai/hh" class="do_btn  hy_image tjrw_common" target="_blank">
+                                做任务</a>
+                        }
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(".tjrw_con li,.rmrw_con li").hover(function () {
+            $(this).addClass("hover");
+            $(this).find(".btn_pp").stop().animate({ opacity: "1" }, 200);
+        }, function () {
+            $(this).removeClass("hover");
+            $(this).find(".btn_pp").stop().animate({ opacity: "0" }, 200)
+        });
+
+        $(".nav_v li:contains(我的任务)").addClass("cur").siblings().removeClass("cur");
+        changeLeftHeight();
+    });
+    function changeLeftHeight() {
+        var rheight = $(".right_con").height();
+        var lheight = $(".left_con").height();
+        if (rheight < lheight) {
+            $(".right_con").css("height", lheight);
+        }
+    }
+    function showMoreTask(id, o) {
+        var obj = $("#" + id);
+        if (obj.css("display") == 'none') {
+            obj.show();
+            o.innerHTML = '隐藏<<';
+            $(".right_con").css("height", 'auto');
+        } else {
+            o.innerHTML = '查看更多>>';
+            obj.hide();
+            changeLeftHeight();
+        }
+    }
+
+    $(function () {
+        $(".tjrw_con li,.rmrw_con li").hover(function () {
+            $(this).addClass("hover");
+        }, function () {
+            $(this).removeClass("hover");
+        })
+        //向左滑动规则文字
+        var spanW = 0;
+        $('.taskList li').each(function (index, element) {
+            $(this).hover(function () {
+                spanW = $(this).find('.infoTask').find('span').width() - 250;
+                if (spanW > 0) {
+                    $(this).find('.infoTask').find('span').stop().animate({ left: -spanW }, 2000);
+                    return false;
+                }
+            }, function () {
+                $(this).find('.infoTask').find('span').stop().animate({ left: '0' }, 200);
+                return false;
+            })
+        });
+        //上滑动更新框
+        $('.updateBn').each(function (index, element) {
+            $(this).hover(function () {
+                $(this).parents('li').find('.updateBox').stop().animate({ bottom: 0 }, 500);
+            }, function () {
+                $(this).parents('li').find('.updateBox').stop().animate({ bottom: '-80px' }, 500);
+            })
+        });
+        var IsRealName = "@user.IsAuthenticationRealName";
+        var curlevel = "@(user.LoginInfo.VipLevel)";
+        $(".do_btn  hy_image tjrw_common").click(function () {
+            if ($(this).attr("href") != "/member/realnameauth") {
+                if (IsRealName == "False") {
+                    alertTip("请激活VIP", "ok");
+                    return false;
+                } else {
+                    var a = $(this).parent().find("span").first();
+                    var neddvip = $(a).attr("class").split('_')[1];
+                    if (neddvip != "ico" && curlevel < neddvip) {
+                        alertTip("当前等级不足，请先升级。", "err");
+                        return false;
+                    }
+                }
+            }
+
+        });
+
+    }) 
+
+</script>

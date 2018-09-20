@@ -1,0 +1,667 @@
+﻿@using GameBiz.Core;
+@{
+    var game = ViewBag.GameCode;
+    var type = ViewBag.GameType;
+    var pageIndex = Request["pageIndex"];
+    var schemeType = Request["schemeType"];
+    var isVirtualOrder = Request["isVirtualOrder"];
+    var gameType = Request["gameType"];
+    var issuseNumber = Request["issuseNumber"];
+    var gameName = SiteConvert.GameName(game, gameType);
+    if (game != null && game != "")
+    {
+        if (schemeType != null && schemeType != "" || isVirtualOrder != null && isVirtualOrder != "" && isVirtualOrder != "False")
+        {
+            var schemeName = "";
+            if (schemeType == "1")
+            {
+                schemeName = "单式";
+            }
+            if (schemeType == "0")
+            {
+                schemeName = "复式";
+            }
+            if (isVirtualOrder != null && isVirtualOrder != "")
+            {
+                if (isVirtualOrder.ToLower() == "true")
+                {
+                    schemeName = "撤单";
+                }
+            }
+            if (game == "ctzq")
+            {
+                if (pageIndex != null && pageIndex != "" && int.Parse(pageIndex) > 0)
+                {
+                    ViewBag.Title = "足彩" + gameName + "过关统计" + schemeName + "方案第" + (int.Parse(pageIndex) + 1) + "页-" + SiteString.getHZSiteName(Request);
+                    ViewBag.Keywords = "足彩" + gameName + "过关统计" + schemeName + "方案第" + (int.Parse(pageIndex) + 1) + "页";
+                    ViewBag.Description = SiteString.getHZSiteName(Request) + "足彩" + gameName + "过关统计" + schemeName + "方案第" + (int.Parse(pageIndex) + 1) + "页,更多足彩" + gameName + "过关统计请登录" + SiteString.getHZSiteName(Request) + "彩票网进行查询.";
+                }
+                else
+                {
+                    if (issuseNumber != null && issuseNumber != "")
+                    {
+                        ViewBag.Title = "足彩" + gameName + "过关统计" + schemeName + "方案第" + issuseNumber + "期-" + SiteString.getHZSiteName(Request);
+                        ViewBag.Keywords = "足彩" + gameName + "过关统计" + schemeName + "方案第" + issuseNumber + "期";
+                        ViewBag.Description = SiteString.getHZSiteName(Request) + "足彩" + gameName + "过关统计" + schemeName + "方案第" + issuseNumber + "期,更多足彩" + gameName + "过关统计请登录" + SiteString.getHZSiteName(Request) + "彩票网进行查询.";
+                    }
+                    else
+                    {
+                        ViewBag.Title = "足彩" + gameName + "过关统计" + schemeName + "方案-" + SiteString.getHZSiteName(Request);
+                        ViewBag.Keywords = "足彩" + gameName + "过关统计" + schemeName + "方案";
+                        ViewBag.Description = SiteString.getHZSiteName(Request) + "彩票网为彩民朋友提供足彩" + gameName + "过关统计撤单方案查询,极大的方便了彩民朋友对足彩" + gameName + "历史中奖纪录的查询.";
+                    }
+                }
+            }
+            else
+            {
+                if (pageIndex != null && pageIndex != "" && int.Parse(pageIndex) > 0)
+                {
+                    ViewBag.Title = SiteConvert.GameName(game, Request["type"]) + "过关统计" + schemeName + "方案第" + (int.Parse(pageIndex) + 1) + "页-" + SiteString.getHZSiteName(Request);
+                    ViewBag.Keywords = SiteConvert.GameName(game, Request["type"]) + "过关统计" + schemeName + "方案第" + (int.Parse(pageIndex) + 1) + "页";
+                    ViewBag.Description = SiteString.getHZSiteName(Request) + SiteConvert.GameName(game, Request["type"]) + "彩票过关统计" + schemeName + "方案第" + (int.Parse(pageIndex) + 1) + "页,更多" + SiteConvert.GameName(game, Request["type"]) + "过关统计请登录" + SiteString.getHZSiteName(Request) + "彩票网进行查询.";
+                }
+                else
+                {
+                    if (issuseNumber != null && issuseNumber != "")
+                    {
+                        ViewBag.Title = SiteConvert.GameName(game, Request["type"]) + "过关统计" + schemeName + "方案第" + issuseNumber + "期-" + SiteString.getHZSiteName(Request);
+                        ViewBag.Keywords = SiteConvert.GameName(game, Request["type"]) + "过关统计" + schemeName + "方案第" + issuseNumber + "期";
+                        ViewBag.Description = SiteString.getHZSiteName(Request) + SiteConvert.GameName(game, Request["type"]) + "彩票过关统计" + schemeName + "方案第" + issuseNumber + "期,更多" + SiteConvert.GameName(game, Request["type"]) + "过关统计请登录" + SiteString.getHZSiteName(Request) + "彩票网进行查询.";
+                    }
+                    else
+                    {
+                        ViewBag.Title = SiteConvert.GameName(game, Request["type"]) + "过关统计" + schemeName + "方案-" + SiteString.getHZSiteName(Request);
+                        ViewBag.Keywords = SiteConvert.GameName(game, Request["type"]) + "过关统计" + schemeName + "方案";
+                        ViewBag.Description = SiteString.getHZSiteName(Request) + "彩票网为彩民朋友提供" + SiteConvert.GameName(game, Request["type"]) + "过关统计撤单方案查询,极大的方便了彩民朋友对" + SiteConvert.GameName(game, Request["type"]) + "历史中奖纪录的查询.";
+                    }
+                }
+            }
+        }
+        else
+        {
+            if (game == "ctzq")
+            {
+                if (pageIndex != null && pageIndex != "" && int.Parse(pageIndex) > 0)
+                {
+                    ViewBag.Title = "足彩" + gameName + "过关统计第" + (int.Parse(pageIndex) + 1) + "页-" + SiteString.getHZSiteName(Request);
+                    ViewBag.Keywords = "足彩" + gameName + "过关统计第" + (int.Parse(pageIndex) + 1) + "页";
+                    ViewBag.Description = SiteString.getHZSiteName(Request) + "足彩" + gameName + "过关统计第" + (int.Parse(pageIndex) + 1) + "页,更多足彩" + gameName + "过关统计请登录" + SiteString.getHZSiteName(Request) + "彩票网进行查询.";
+                }
+                else
+                {
+                    if (issuseNumber != null && issuseNumber != "")
+                    {
+                        ViewBag.Title = "足彩" + gameName + "过关统计第" + issuseNumber + "期-" + SiteString.getHZSiteName(Request);
+                        ViewBag.Keywords = "足彩" + gameName + "过关统第" + issuseNumber + "期";
+                        ViewBag.Description = SiteString.getHZSiteName(Request) + "足彩" + gameName + "过关统计第" + issuseNumber + "期,更多足彩" + gameName + "过关统计请登录" + SiteString.getHZSiteName(Request) + "彩票网进行查询.";
+                    }
+                    else
+                    {
+                        ViewBag.Title = "足彩" + gameName + "过关统计-足彩" + gameName + "历史中奖纪录-" + SiteString.getHZSiteName(Request);
+                        ViewBag.Keywords = "足彩" + gameName + "过关统计,足彩" + gameName + "历史中奖纪录";
+                        ViewBag.Description = SiteString.getHZSiteName(Request) + "彩票网足彩" + gameName + "过关统计为您提供足彩" + gameName + "历史中奖纪录查询,方便彩民朋友分析各种足彩" + gameName + "中奖方案,从而提高足彩" + gameName + "中奖机会.";
+                    }
+                }
+            }
+            else
+            {
+                if (pageIndex != null && pageIndex != "" && int.Parse(pageIndex) > 0)
+                {
+                    ViewBag.Title = SiteConvert.GameName(game, Request["type"]) + "过关统计第" + (int.Parse(pageIndex) + 1) + "页-" + SiteString.getHZSiteName(Request);
+                    ViewBag.Keywords = SiteConvert.GameName(game, Request["type"]) + "过关统计第" + (int.Parse(pageIndex) + 1) + "页";
+                    ViewBag.Description = SiteString.getHZSiteName(Request) + SiteConvert.GameName(game, Request["type"]) + "彩票过关统计第" + (int.Parse(pageIndex) + 1) + "页,更多" + SiteConvert.GameName(game, Request["type"]) + "过关统计请登录" + SiteString.getHZSiteName(Request) + "彩票网进行查询.";
+                }
+                else
+                {
+                    if (issuseNumber != null && issuseNumber != "")
+                    {
+                        ViewBag.Title = SiteConvert.GameName(game, Request["type"]) + "过关统计第" + issuseNumber + "期-" + SiteString.getHZSiteName(Request);
+                        ViewBag.Keywords = SiteConvert.GameName(game, Request["type"]) + "过关统计第" + issuseNumber + "期";
+                        ViewBag.Description = SiteString.getHZSiteName(Request) + SiteConvert.GameName(game, Request["type"]) + "彩票过关统计第" + issuseNumber + "期,更多" + SiteConvert.GameName(game, Request["type"]) + "过关统计请登录" + SiteString.getHZSiteName(Request) + "彩票网进行查询.";
+                    }
+                    else
+                    {
+                        ViewBag.Title = SiteConvert.GameName(game, Request["type"]) + "过关统计-" + SiteConvert.GameName(game, Request["type"]) + "历史中奖纪录-" + SiteString.getHZSiteName(Request);
+                        ViewBag.Keywords = SiteConvert.GameName(game, Request["type"]) + "过关统计," + SiteConvert.GameName(game, Request["type"]) + "历史中奖纪录";
+                        ViewBag.Description = SiteString.getHZSiteName(Request) + "彩票网" + SiteConvert.GameName(game, Request["type"]) + "过关统计为您提供" + SiteConvert.GameName(game, Request["type"]) + "历史中奖纪录查询,方便彩民朋友分析各种" + SiteConvert.GameName(game, Request["type"]) + "中奖方案,从而提高" + SiteConvert.GameName(game, Request["type"]) + "中奖机会.";
+                    }
+                }
+            }
+        }
+    }
+    else
+    {
+        if (pageIndex != null && pageIndex != "" && int.Parse(pageIndex) > 0)
+        {
+            ViewBag.Title = "彩票过关统计-第" + (int.Parse(pageIndex) + 1) + "页-" + SiteString.getHZSiteName(Request);
+            ViewBag.Keywords = "彩票过关统计-第" + (int.Parse(pageIndex) + 1) + "页";
+            ViewBag.Description = SiteString.getHZSiteName(Request) + "彩票网彩票过关统计第" + (int.Parse(pageIndex) + 1) + "页,更多彩票过关统计请登录" + SiteString.getHZSiteName(Request) + "彩票网进行查询.";
+        }
+        else
+        {
+            if (issuseNumber != null && issuseNumber != "")
+            {
+                ViewBag.Title = "彩票过关统计-第" + issuseNumber + "期-" + SiteString.getHZSiteName(Request);
+                ViewBag.Keywords = "彩票过关统计-第" + issuseNumber + "期";
+                ViewBag.Description = SiteString.getHZSiteName(Request) + "彩票网彩票过关统计单式方案第" + issuseNumber + "期,更多足彩" + gameName + "过关统计请登录" + SiteString.getHZSiteName(Request) + "彩票网进行查询.";
+            }
+            else
+            {
+                ViewBag.Title = "彩票过关统计-彩票历史中奖纪录-" + SiteString.getHZSiteName(Request);
+                ViewBag.Keywords = "彩票过关统计,彩票历史中奖纪录";
+                ViewBag.Description = SiteString.getHZSiteName(Request) + "彩票网彩票过关统计为您提供彩票历史中奖纪录查询,方便彩民朋友分析各种彩票中奖方案,从而提高彩票中奖机会.";
+            }
+        }
+    }
+    var user = ViewBag.User as app.lottery.site.Models.CurrentUserInfo;
+    var tjlist = ViewBag.TojiList as SportsOrder_GuoGuanInfoCollection;
+    //数字彩期号
+    var prizedIssuse = WCFService.PrizedIssuseList(game, "", 20);
+    List<DateTime> list = new List<DateTime>();
+    list.Add(DateTime.Today);
+    for (int i = 1; i <= 7; i++)
+    {
+        list.Add(DateTime.Today.AddDays(-i));
+    }
+}
+@section css{
+    @UserHelper.css("soccer.css")
+    @UserHelper.css("hemai.css")
+}
+<script type="text/javascript">
+    var res = '@ViewHelpers.jsonres()';
+    var gamecode = '@game';
+    var gametype = '@type';
+    var issues = '@Request["issuseNumber"]';
+</script>
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>过关统计</li>
+    </ul>
+</div>
+<div id="side-menu">
+    <div class="hm-cz">
+        过关统计</div>
+    <ul class="myyon">
+        @*<li><span class="hm-logo-cz hm-w-logo logo-all"></span><a href="/soccer">全部彩种</a></li>*@
+        <li><span class="hm-logo-cz hm-w-logo hm-logo-jczq"></span><a href="/soccer/jczq">竞彩足球</a>
+        </li>
+        <li><span class="hm-logo-cz hm-w-logo hm-logo-jclq"></span><a href="/soccer/jclq">竞彩篮球</a></li>
+        <li><span class="hm-logo-cz hm-w-logo hm-logo-bjdc"></span><a href="/soccer/bjdc">北京单场</a></li>
+        <li><span class="hm-logo-cz hm-w-logo hm-logo-t14c"></span><a href="/soccer/ctzq?gametype=t14c">
+            14场胜负</a></li>
+        <li><span class="hm-logo-cz hm-w-logo hm-logo-tr9"></span><a href="/soccer/ctzq?gametype=tr9">
+            任选9</a></li>
+        <li><span class="hm-logo-cz hm-w-logo hm-logo-t4cjq"></span><a href="/soccer/ctzq?gametype=t4cjq">
+            四场进球彩</a></li>
+        <li><span class="hm-logo-cz hm-w-logo hm-logo-t6bqc"></span><a href="/soccer/ctzq?gametype=t6bqc">
+            六场半全场</a></li>
+    </ul>
+</div>
+<div class="soccer-right">
+    <div class="soccer-top">
+        <div class="fl">
+            @if (game != "")
+            {
+                <span class="soccer_icon @(game != "ctzq" ? game : game + "-" + type)">@SiteConvert.GameName(game, Request["type"])</span>
+            }
+            else
+            {
+                <span>全部彩种</span>
+            }
+        </div>
+        @if (game == "ctzq" || game == "bjdc")
+        {
+            
+            <div class="fr">
+                过关统计
+                <select id="dropIssue" onchange="reloadSoccerList(0,20)">
+                    <option></option>
+                </select>
+            </div>
+        }
+        else
+        {
+          
+            <div class="fr">
+                过关统计
+                <select id="dropIssue" onchange="reloadSoccerList(0,20)">
+                    <option value="">请选择期号</option>
+                    @foreach (var item in list)
+                    {
+                        <option  @(Request["issuseNumber"] == item.Date.ToString("yyyy-MM-dd") ? "selected=selected" : "")>@item.Date.ToString("yyyy-MM-dd")</option>
+                    }
+                </select>
+            </div>
+        }
+    </div>
+    <div class="soccer-div2 clearfix @(game != "ctzq" ? "hide" : "")" >
+        <div class="divtable dl fl" id="matchlist">
+            <a id="toggleMore" class="open_up" href="javascript:;">显示详细对阵</a>
+            <table>
+                <thead>
+                    <tr class="td-on">
+                        <th>
+                            场次
+                        </th>
+                        <td>
+                            1
+                        </td>
+                        <td>
+                            2
+                        </td>
+                        <td>
+                            3
+                        </td>
+                        <td>
+                            4
+                        </td>
+                        <td>
+                            5
+                        </td>
+                        <td>
+                            6
+                        </td>
+                        <td>
+                            7
+                        </td>
+                        <td>
+                            8
+                        </td>
+                        <td>
+                            9
+                        </td>
+                        <td>
+                            10
+                        </td>
+                        <td>
+                            11
+                        </td>
+                        <td>
+                            12
+                        </td>
+                        <td>
+                            13
+                        </td>
+                        <td>
+                            14
+                        </td>
+                    </tr>
+                    <tr class="tr_teams">
+                        <th>
+                            主队
+                        </th>
+                        <td>
+                            <code>法尔肯</code>
+                        </td>
+                        <td>
+                            <code>耶夫勒</code>
+                        </td>
+                        <td>
+                            <code>卡尔马</code>
+                        </td>
+                        <td>
+                            <code>厄勒布</code>
+                        </td>
+                        <td>
+                            <code>布鲁马</code>
+                        </td>
+                        <td>
+                            <code>哥德堡</code>
+                        </td>
+                        <td>
+                            <code>奥特维</code>
+                        </td>
+                        <td>
+                            <code>法尔肯</code>
+                        </td>
+                        <td>
+                            <code>耶夫勒</code>
+                        </td>
+                        <td>
+                            <code>卡尔马</code>
+                        </td>
+                        <td>
+                            <code>厄勒布</code>
+                        </td>
+                        <td>
+                            <code>布鲁马</code>
+                        </td>
+                        <td>
+                            <code>哥德堡</code>
+                        </td>
+                        <td>
+                            <code>奥特维</code>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody style="display: none;">
+                    <tr class="td-on">
+                        <th>
+                            比分
+                        </th>
+                        <td>
+                            1:1
+                        </td>
+                        <td>
+                            4:1
+                        </td>
+                        <td>
+                            1:0
+                        </td>
+                        <td>
+                            0:0
+                        </td>
+                        <td>
+                            0:0
+                        </td>
+                        <td>
+                            4:0
+                        </td>
+                        <td>
+                            1:1
+                        </td>
+                        <td>
+                            0:1
+                        </td>
+                        <td>
+                            0:2
+                        </td>
+                        <td>
+                            0:1
+                        </td>
+                        <td>
+                            0:1
+                        </td>
+                        <td>
+                            2:2
+                        </td>
+                        <td>
+                            1:2
+                        </td>
+                        <td>
+                            0:0
+                        </td>
+                    </tr>
+                    <tr class="tr_teams">
+                        <th>
+                            客队
+                        </th>
+                        <td>
+                            <code>圣约翰 </code>
+                        </td>
+                        <td>
+                            <code>戈里察 </code>
+                        </td>
+                        <td>
+                            <code>索尔纳 </code>
+                        </td>
+                        <td>
+                            <code>格罗宁 </code>
+                        </td>
+                        <td>
+                            <code>萨奇海 </code>
+                        </td>
+                        <td>
+                            <code>十字军 </code>
+                        </td>
+                        <td>
+                            <code>基希纳 </code>
+                        </td>
+                        <td>
+                            <code>索矿工 </code>
+                        </td>
+                        <td>
+                            <code>海杜克 </code>
+                        </td>
+                        <td>
+                            <code>海于松 </code>
+                        </td>
+                        <td>
+                            <code>国巴库 </code>
+                        </td>
+                        <td>
+                            <code>加尔扎 </code>
+                        </td>
+                        <td>
+                            <code>斯莱戈 </code>
+                        </td>
+                        <td>
+                            <code>特罗姆 </code>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="td-on">
+                        <th>
+                            彩果
+                        </th>
+                        <td>
+                            3
+                        </td>
+                        <td>
+                            1
+                        </td>
+                        <td>
+                            1
+                        </td>
+                        <td>
+                            1
+                        </td>
+                        <td>
+                            1
+                        </td>
+                        <td>
+                            0
+                        </td>
+                        <td>
+                            1
+                        </td>
+                        <td>
+                            0
+                        </td>
+                        <td>
+                            1
+                        </td>
+                        <td>
+                            1
+                        </td>
+                        <td>
+                            1
+                        </td>
+                        <td>
+                            0
+                        </td>
+                        <td>
+                            1
+                        </td>
+                        <td>
+                            0
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="divtable fr" id="bonuslist">
+            <ul>
+                <li>一等奖：<em>0</em> 注,每注奖金<em> 0</em> 元</li>
+                <li>二等奖：<em>0</em> 注,每注奖金<em> 0</em> 元</li>
+                <li style="margin-top: 20px;">全国销量：<em>0</em> 元</li>
+                <li class="last-tr">奖池滚存：<em> 0</em> 元</li>
+            </ul>
+        </div>
+    </div>
+    <div class="soccer-content">
+        <div class="mymenu">
+            <a href="/soccer/@game@(string.IsNullOrEmpty(type) ? "" : "?gameType=" + @type + "")" class="@(string.IsNullOrEmpty(ViewBag.SchemeType) && ViewBag.isVirtualOrder == false && ViewBag.IsShowMine == false ? "on1" : string.Empty)">
+                全部成功</a><a href="javascript:ShowMine()" class="@(ViewBag.IsShowMine == true ? "on1" : string.Empty)">
+                    我的过关</a><a href="/soccer/@game@(string.IsNullOrEmpty(type) ? "?schemeType=1" : "?gameType=" + @type + "&schemeType=1")" class="@(!string.IsNullOrEmpty(ViewBag.SchemeType) && ViewBag.SchemeType == "1" ? "on1" : string.Empty)">
+                        单式方案</a><a  href="/soccer/@game@(string.IsNullOrEmpty(type) ? "?schemeType=0" : "?gameType=" + @type + "&schemeType=0")" class="@(!string.IsNullOrEmpty(ViewBag.SchemeType) && ViewBag.SchemeType == "0" ? "on1" : string.Empty)">
+                            复式方案</a><a  href="/soccer/@game@(string.IsNullOrEmpty(type) ? "?isVirtualOrder=true" : "?gameType=" + @type + "&isVirtualOrder=true")" class="@(ViewBag.isVirtualOrder == true ? "on1" : string.Empty)">
+                                撤单方案</a>
+            <input type="text" id="search" value="@(string.IsNullOrEmpty(ViewBag.key) ? "输入用户名或方案号" : ViewBag.Key)"  onblur="oblur(this)" onfocus="ofocus(this)" />
+            <input type="button" id="btn-search1" value="搜索" onclick="reloadSoccerList(0,20)" />
+            <input type="hidden" id="IsShowMine" value="@(ViewBag.IsShowMine == false ? false : true)" />
+        </div>
+        <div class="guoguanList">
+            <table style="width: 100%">
+                <thead>
+                    <tr>
+                        <th>
+                            方案号
+                        </th>
+                        <th>
+                            发起人
+                        </th>
+                        <th>
+                            类型
+                        </th>
+                        <th>
+                            方案注数
+                        </th>
+                        <th>
+                            全对注数
+                        </th>
+                        <th>
+                            错一注数
+                        </th>
+                        <th>
+                            正确场次
+                        </th>
+                        <th>
+                            中奖金额
+                        </th>
+                        <th class="tb-short">
+                            详情
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (tjlist != null && tjlist.TotalCount > 0)
+                    {
+                        foreach (var item in tjlist.ReportItemList)
+                        {
+                        <tr class="@(tjlist.ReportItemList.IndexOf(item) % 2 == 0 ? "" : "ni4") gaybtn">
+                            <td class="tb-long">
+                                <a href="/user/scheme/@item.SchemeId" class="blue">@item.SchemeId</a>
+                            </td>
+                            <td>
+                                <a href="javascript:void(0);">@SiteString.HideUserName(item.UserDisplayName, item.UserHideDisplayNameCount)</a>
+                            </td>
+                            <td>
+                                @OrderManager.SchemeTypeName(item.SchemeType)
+                            </td>
+                            <td>
+                                @item.BetCount
+                            </td>
+                            <td>
+                                @(item.RightCount > 0 ? item.RightCount.ToString() : string.Empty)
+                            </td>
+                            <td>
+                                @(item.Error1Count > 0 ? item.Error1Count.ToString() : string.Empty)
+                            </td>
+                            <td class="@(item.HitMatchCount > 10 ? "red" : "")">
+                                @(item.HitMatchCount > 0 ? item.HitMatchCount.ToString() : string.Empty)
+                            </td>
+                            <td class="orange">
+                                @(item.BonusMoney > 0 ? item.BonusMoney.ToString("0") : string.Empty)
+                            </td>
+                            <td>
+                                <a href="/user/scheme/@item.SchemeId" class="blue">查看</a>
+                            </td>
+                        </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr class="gaybtn">
+                            <td colspan="9">
+                                @ViewHelpers.Pager3("reloadSoccerList", ViewBag.PageIndex, ViewBag.PageSize, tjlist.TotalCount)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @if (tjlist != null && tjlist.TotalCount > 0)
+            {
+                <div class="pager">
+                    @ViewHelpers.Pager3("reloadSoccerList", ViewBag.PageIndex, ViewBag.PageSize, tjlist == null ? 0 : tjlist.TotalCount)
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+@if (game == "ctzq" || game == "bjdc")
+{
+    @UserHelper.js("soccer.js")
+}
+<script type="text/javascript">
+    setMenuClass3(".myyon");
+    setMenuClass(".mymenu>a");
+    $(function () {
+
+        $("#toggleMore").live("click", function () {
+            var text = $(this).text();
+            if (text == "显示详细对阵") {
+                $(this).text("隐藏详细对阵");
+            } else {
+                $(this).text("显示详细对阵");
+            }
+            $(".divtable>table>tbody").toggle();
+        });
+    });
+    function ofocus(obj) {
+        if (obj.value == '输入用户名或方案号') {
+            obj.value = '';
+            obj.style.color = "#000";
+        }
+    }
+    function oblur(obj) {
+        if (obj.value == '') {
+            obj.value = '输入用户名或方案号';
+            obj.style.color = "#999";
+        }
+    }
+    function ShowMine() {
+        //投注前判断登录状态
+        user.isLogin(function (isLogin) {
+            if (!isLogin) {
+                user.LoginCallBack = function () {
+                    document.getElementById("IsShowMine").value = "true";
+                    reloadSoccerList(0, 30);
+                };
+                loginDialog.Show();
+                $("#userName").focus();
+                return false;
+            } else {
+                //                document.getElementById("userId").value = "@(user == null ? "" : user.LoginInfo.UserId)";
+                document.getElementById("IsShowMine").value = "true";
+                reloadSoccerList(0, 20);
+            }
+        });
+    }
+
+    function reloadSoccerList(pageIndex, pageSize) {
+        //期号
+        var dopval = "";
+        if (document.getElementById("dropIssue")) {
+            dopval = document.getElementById("dropIssue").value;
+        }
+
+        var key = document.getElementById("search").value;
+        key = key == "输入用户名或方案号" ? "" : key;
+
+        var showmine = document.getElementById("IsShowMine").value;
+        var schemeType = "", isVirtualOrder = "";
+        if (showmine != "true" && showmine != "True") {
+            schemeType = "@ViewBag.SchemeType";
+            isVirtualOrder = "@ViewBag.isVirtualOrder";
+        }
+        location.search = "gametype=@type&schemeType=" + schemeType + "&issuseNumber=" + dopval + "&isVirtualOrder=" + isVirtualOrder + "&key=" + key + "&IsShowMine=" + showmine + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize;
+    }
+
+</script>

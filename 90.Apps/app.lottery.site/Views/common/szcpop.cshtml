@@ -1,0 +1,77 @@
+﻿@{
+    var needPassword = ViewBag.NeedPassword;
+    var bonus = ViewBag.Bonus;
+    var bonusRatio = ViewBag.BonusRatio;
+}
+<div class="order-list-container">
+    <ul class="confirmList">
+    </ul>
+</div>
+<ul class="list">
+    <li>总计：<b class="yellow" id="n_zhu">0</b> 注 金额：<b class="yellow" id="n_yuan">0</b> 元</li><li>
+        起始期号：<b class="yellow" id="n_issue">0000-000</b> 期数：<b class="yellow" id="n_qshu">0</b>
+        总金额：<b class="red" id="c_zje">0</b> 元</li>
+</ul>
+@{
+    if (needPassword)
+    {
+    <div style='padding: 10px 7px; border: 1px dotted #d3d3d3; border-width: 1px 0;'>
+        <span >请输入资金密码：</span><input type='password' class='balancepwd'
+            size='20' id='bet_balancepwd' /></div>
+    }
+    if (bonus > 0 && bonusRatio > 0)
+    {
+       @* <div id="rgspn" style="padding-left: 8px;">
+        <span style="margin-right: 15px;">使用红包金额:<em id="maxbanlance" style="color:red;font-size: 20px;margin:10px;" data-ratio="@bonusRatio">0</em>元</span>
+        
+            <input type="radio" name="useRedBag" value="1" checked="checked" />是
+            <input type="radio" name="useRedBag" value="0" />否
+            <input type="text" style="display:none" id="kybanlance" value="">
+            <span>(红包<em id="ttbanlance" style="color:red;">@bonus.ToString("0.00")</em>元,订单最大可使用红包<em id="maxRedBag" style="color:red;">0</em>)</span>
+        
+            </div>*@
+    <div id="rgspn" style="padding-left: 8px;">
+        使用红包金额：<input type="text" onkeyup="checkRb(this)" onafterpaste="checkRb(this)" class="balancepwd"
+                      id="kybanlance" style="width: 50px"/>
+    &nbsp;(红包&nbsp;<em id="ttbanlance" class="yellow">@bonus.ToString("0.00")</em>&nbsp;元，最大可使用红包&nbsp;
+    <em id="maxbanlance" class="yellow" data-ratio="@bonusRatio">0</em>&nbsp;元)</div>
+    }
+}
+<script type="text/javascript">
+    function checkRb(obj) {
+        var ttbanlance = $("#ttbanlance");
+        var maxbanlance = $("#maxbanlance").html();
+        var kybanlance = obj.value;
+        obj.value = kybanlance.replace(/[^\d.]/g, '');
+        kybanlance = obj.value;
+        if (parseFloat(kybanlance) > parseFloat(maxbanlance)) {
+            obj.value = maxbanlance;
+        }
+
+        if (parseFloat(obj.value) > parseFloat(ttbanlance.text())) {
+            obj.value = ttbanlance.text();
+        }
+    }
+//    $("input[type=radio][name=useRedBag]").change(function () {
+//        if (this.value == 1) {
+//            var maxbanlance = $("#maxbanlance");
+//            var ttbanlance = $("#ttbanlance").text();
+//            var ratio = maxbanlance.attr("data-ratio");
+//            var bonusMoney = checkFixed((bet.sumcount * ballBox.cur.radix * bet.amount) * ratio);
+//            
+//            //$("#kybanlance").val(bonusMoney);
+//            if (Number(ttbanlance) > Number(bonusMoney)) {
+//                maxbanlance.html(bonusMoney);
+//                $("#kybanlance").val(bonusMoney);
+//            } else {
+//                maxbanlance.html(ttbanlance);
+//                $("#kybanlance").val(ttbanlance);
+//            }   
+//        }
+//        else {
+//            $("#maxbanlance").html(0);
+//            $("#kybanlance").val(0);
+//        }
+//    });
+</script>
+<!--信息确认框 结束-->

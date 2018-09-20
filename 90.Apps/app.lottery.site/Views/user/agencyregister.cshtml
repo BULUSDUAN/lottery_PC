@@ -1,0 +1,55 @@
+﻿@{
+    ViewBag.Title = "免费注册";
+    Layout = "";
+    @UserHelper.js_share("jquery-1.5.2.min.js")
+}
+@ViewHelpers.css("agencyregister.css")
+<input type="hidden" value="@ViewBag.Error" id="error" name="error" />
+<section>
+	<article id="content_home" class="gray" >
+	    <header class="tzHeader">
+    	    <section class="buyHeader">
+    		    <h1 id="titel_">免费注册</h1>
+    	    </section>
+        </header>
+        <form action="/user/AgencyRegister" method="post" enctype="multipart/form-data" name="register" >
+        <div class="pdLfrt09 pdTop06">
+    	    <div class="s1 relative">
+                <em class="admi"></em>
+                <input id="iName" name="iName" placeholder="请输入4-16位字符" type="text">
+                <em class="error" style="display:none;"></em>
+            </div>
+    	    <div class="s1 relative">
+                <em class="password"></em>
+                <input id="iCode" name="iCode" placeholder="填写6-20位字母数字组合" type="text">
+                <em class="zhuceOpen" style="display: block;">***</em>
+                <em style="display: none;" class="zhuceOpen2">123</em>
+            </div>
+            <p class="pact clearfix"><em class="left check"></em>我已阅读并同意《用户购彩服务协议》</p>
+            <a href="javascript:;" class="payment" id="bott_">立即注册</a>
+            <p class="draw">注册@(SiteString.getHZSiteName(Request))账号领取一注双色球彩票没准就中500万哦~~</p>
+            <p class="approve">注册后请进行实名认证和手机认证</p>
+        </div>
+        </form>
+    </article>
+</section>
+<script type="text/javascript">
+
+    $(function () {
+        var error = $("#error").val();
+        if (error != "" && error != null) {
+            alert(error);
+            return false;
+        }
+
+        $(".payment").click(function () {
+            if ($("#iName").val() == '' || $("#iCode").val() == '') {
+                alert("请将信息输入完整");
+                return false;
+            }
+            else {
+                document.register.submit();
+            }
+        });
+    })
+</script>

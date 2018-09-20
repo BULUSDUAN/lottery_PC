@@ -1,0 +1,106 @@
+﻿@using External.Core.Celebritys;
+@using GameBiz.Core;
+@using app.lottery.site.Models;
+@{
+    Layout = "../Shared/_ArtistsLayout.cshtml";
+    ViewBag.Title = "排行榜";
+    var rank = ViewBag.rankList as WinnerModelRank_Collection;
+    var att = ViewBag.AttList as UserAttentionSummaryInfoCollection;
+    var user = ViewBag.CurrentUser as CurrentUserInfo;
+}
+<div class="rank_con">
+    <div class="other_tab rank_tab  clearfix">
+        <ul class="fr">
+            <a href="/artists/ranklist?querydate=90">
+                <li @(ViewBag.querydate == 90 ? "class=on" : "") data-t="90">总榜</li></a> <a href="/artists/ranklist?querydate=30">
+                    <li @(ViewBag.querydate == 30 ? "class=on" : "") data-t="30">近30天</li></a>
+            <a href="/artists/ranklist?querydate=7">
+                <li @(ViewBag.querydate == 7 ? "class=on" : "") data-t="7">近7天</li></a>
+        </ul>
+        <span><em class="bg3 top100"></em>TOP100 </span>
+    </div>
+    <div class="rank_box other_box">
+        <table>
+            <thead>
+                <tr>
+                    <th width="100px">
+                        排行
+                    </th>
+                    <th width="276px">
+                        模型作者
+                    </th>
+                    <th width="100px">
+                        粉丝数
+                    </th>
+                    <th width="100px">
+                        模型数量
+                    </th>
+                    <th width="150px">
+                        被购买人次
+                    </th>
+                    <th width="150px">
+                        被购买金额
+                    </th>
+                    <th width="100px">
+                        推荐模型
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (rank != null && rank.TotalCount > 0)
+                {
+                    foreach (var item in rank.ModelRankList)
+                    {
+                        var idx = rank.ModelRankList.IndexOf(item);
+
+                    <tr class="@(idx % 2 != 0 ? "n2" : "")">
+                        <td>
+                            @if (rank.ModelRankList.IndexOf(item) < 3)
+                            {
+                                <span class="bg3 liw_short ico0@(idx + 1)"></span>
+                            }
+                            else
+                            {
+                                @(idx + 1)
+                            }
+                        </td>
+                        <td style="padding-left: 15px;">
+                            <div style="text-align: left">
+                            <i class="bg3 big_author_icon @( item.IsExperter ? "rz_author_icon" : "nrz_author_icon")"></i>
+                            <a class="author" href="/artists/mycenter/@item.UserId">@item.UserDisplayName</a> 
+                            @if (user == null || att == null || (att.List.Where(p => p.UserId == item.UserId).ToList().Count < 0))
+                            {
+                                <a href="javascript:void 0" class="bg3 btn btn-gz" onclick="user.attentionLogin('true','@item.UserId')">+ 关注</a>
+                            }
+                            else
+                            {
+                                <a href="javascript:void 0" class="bg3 btn btn-qxgz" onclick="user.cancelAttentionUser('false','@item.UserId')"> 已关注</a>
+                            }
+                            </div>
+                        </td>
+                        <td class="money">
+                            @(item.TotalAttentionCount)个
+                        </td>
+                        <td class="blue">
+                            @item.TotalModelCount
+                        </td>
+                        <td>
+                            @item.TotalBuyCount
+                        </td>
+                        <td>
+                            @item.TotalBuyMoney.ToString("0")
+                        </td>
+                        <td>
+                            <a href="/artists/info?mid=@item.ModelId" class="blue">查看</a>
+                        </td>
+                    </tr>
+                    }
+
+                }
+            </tbody>
+        </table>
+        <div class="pager" style="text-align: right">
+            @ViewHelpers.Pager3("reloadList", ViewBag.pageIndex, ViewBag.pageSize, (rank != null && rank.TotalCount > 0 ? rank.TotalCount : 0))
+        </div>
+    </div>
+</div>

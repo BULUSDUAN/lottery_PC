@@ -1,0 +1,64 @@
+﻿@using GameBiz.Core
+@{
+    var needPassword = ViewBag.NeedPassword;
+    var BDFXMaxCommission = ViewBag.BDFXMaxCommission as CoreConfigInfo;
+}
+<div class="mask_state mask_content">
+    <div class="project_cont">
+        <dl>
+            <dt>方案属性：</dt>
+            <dd class="project_attr">
+                该方案总共<em id="ggcount">0</em>注，<em id="ggmutiply">0</em>倍，共 ￥<em id="ggmoney">0</em>元<span
+                    class="project_cont_tip">温馨提醒：神单分享只能投注1倍。</span></dd>
+            <dt id="serType">保密类型：</dt>
+            <dd id="serType_dd">
+                <p id="secrecy_dg" class="secrecy_lab">
+                    <label for="rad1">
+                        <input type="radio" checked="checked" value="1" id="rad1" name="Secret" />公开
+                    </label>
+                    <label for="rad6">
+                        <input type="radio" value="6" id="rad6" name="Secret" />截止公开
+                    </label>
+                </p>
+            </dd>
+            <dt id="serType">中将提成：</dt>
+            <dd>
+                <label for="Deduct">
+                    <select id="Deduct" class="p_deduct">
+                        <option value="0" selected="selected">无提成</option>
+                        @for (int i = 1; i <= int.Parse(BDFXMaxCommission.ConfigValue); i++)
+                        {
+                            <option value="@i">@(i)%</option>
+                        }
+                    </select>
+                    %
+                </label>
+                <span class="project_cont_tip">盈利提成 = (税后奖金 - 方案金额) x 提成比例</span>
+            </dd>
+            <dt>神单宣言：</dt>
+            <dd>
+                <textarea maxlength="100" title="分享自己的神单，让别人中奖去吧！" onblur="onblr(this)" onkeyup="hemai.leftword(this,'project_description_left',100)" class="p_description " id="project_description">分享自己的神单，让别人中奖去吧！</textarea>
+                <span class="p_description_tip">
+                    <label><em id="project_description_left">84</em>个字可以输入</label>
+                    <label style="margin-top: -10px;color: red;display: block">勿带广告或恶俗用语</label>
+                </span>
+            </dd>
+            @{
+                if (needPassword && ViewBag.Kind != 6)
+                {
+                <dt>资金密码：</dt><dd><input type="password" id="balancepwd" class="balancepwd" /></dd>
+                }
+            }
+        </dl>
+    </div>
+</div>
+@*<script type="text/javascript">
+    $(function () {
+        if ($("#balancepwd").length == 0) {
+            if (user.info.isNeedBetPwd) {
+                $(".project_cont dl").append("<dt>资金密码：</dt><dt><input type=\"password\" id=\"balancepwd\" class=\"balancepwd\"/></dt>");
+            }
+        }
+    });
+</script>
+*@

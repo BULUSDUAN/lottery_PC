@@ -1,0 +1,83 @@
+﻿@{
+    var url = Request.Url.Host;
+}
+<div class="con clearfix">
+    <div class="guide">
+        <div class="foot_block foot_block01">
+            <h4>
+                <img src="@ViewHelpers.img("home/xg.png")" class="logo-index-hd"/></h4>
+            <div class="we-right">
+                @*<img style=" width:90px;height:90px; margin-left:45px;" src="@ViewHelpers.img("home/test-ewm.jpg")"alt=""/>
+                <span class="f14 color666" style="margin-left: 50px;">微信公众号</span>*@
+            </div>
+        </div>
+        <div class="foot_block foot_block01">
+            <h4>
+                账户相关</h4>
+            <ul>
+                <li><a href="/staticHtml/help/login.html">如何注册账号</a></li>
+                <li><a href="/staticHtml/help/myAccount/password.html">怎么找回登录密码</a></li>
+                <li><a href="/staticHtml/help/myAccount/password.html">怎么找回支付密码</a></li>
+                <li><a href="/staticHtml/help/myAccount/NotbindingPhone.html">如何修改手机号码</a></li>
+            </ul>
+        </div>
+        <div class="foot_block foot_block01">
+            <h4>
+                充值购彩</h4>
+            <ul>
+                <li><a href="/staticHtml/help/chongzhi/payintroduce.html">如何进行充值</a></li>
+                <li><a href="/staticHtml/help/goucai/ForTheColor.html">如何购买彩票</a></li>
+                <li><a href="/staticHtml/help/goucai/ForTheColor1.html">如何查询购彩记录</a></li>
+                <li><a href="/staticHtml/help/chongzhi/payNotAccount.html">充值没到账怎么办</a></li>
+            </ul>
+        </div>
+        <div class="foot_block foot_block02">
+            <h4>
+                兑奖提款</h4>
+            <ul>
+                <li><a href="/staticHtml/help/drawMoney/bonusGet1.html">怎样进行兑奖</a></li>
+                <li><a href="/staticHtml/help/drawMoney/drawing6.html">如何进行提款</a></li>
+                <li><a href="/staticHtml/help/drawMoney/poundageTime.html">提款多久到账</a></li>
+                <li><a href="/staticHtml/help/drawMoney/bonusGet4.html">领奖是否收手续费</a></li>
+            </ul>
+        </div>
+        <div class="foot_block foot_block03">
+            <h4>
+                在线客服</h4>
+            <ul>
+                <li style=" height:44px ! important"><a  href="javascript:void(0)" data="@SiteString.kefuUrl" class="link_kefu" title="点击联系在线客服"></a></li>
+                <li><a href="javascript:void(0)">TEL:@SiteString.tel</a></li>
+                <li><a href="javascript:void(0)">工作时间:早08:30-凌晨00:30</a></li>
+               @* <li><a href="#">投诉邮箱:tousu@qq.com</a></li>*@
+            </ul>
+        </div>
+        <div class="clearfix">
+        </div>
+    </div>
+    <div class="website">
+        @*<span class="fl">企业定位语</span>
+        <span class="fl f16 safe">安全诚信网站：</span>
+        <a href="/help/gswj" target="_blank"><img src="@ViewHelpers.img("/home/wzba.jpg")"/></a>
+                    <a href="http://net.china.com.cn/index.htm" target="_blank" rel="nofollow"><img src="@ViewHelpers.img("/home/blxx.jpg")"/></a>
+        <a href="http://www.lottery.gov.cn" target="_blank" rel="nofollow"><img src="@ViewHelpers.img("/home/tczx.jpg")"/></a>
+        <a href="http://www.cwl.gov.cn" target="_blank" rel="nofollow"><img src="@ViewHelpers.img("/home/fczx.jpg")"/></a>
+        <a href="https://ss.knet.cn/verifyseal.dll?sn=e14122550010357020fcgq000000&ct=df&a=1&pa=0.09965953300707042" target="_blank" rel="nofollow"><img src="@ViewHelpers.img("/home/kxwz.jpg")"/></a>
+                    <a href="http://www.anquan.org/authenticate/cert/?site=" + SiteString.getHZSiteUrl(Request) + "&at=realname" target="_blank" rel="nofollow"><img src="@ViewHelpers.img("/home/aqlm.jpg")"/></a>*@
+        
+        
+        <div class="foot_kuai">
+            <a target="_blank" href="http://61.144.227.239:9003/webrecord/form_query.jsp" rel="nofollow"
+                class="securityA">公共信息网络安全</a> <a target="_blank" href="http://www.szga.gov.cn/"
+                    rel="nofollow" class="securityB">广东深圳网络警察</a> <a target="_blank"  rel="nofollow"
+                        class="securityC" href="http://www.szcredit.com.cn/">经营性网站备案信息</a> <a target="_blank" href="http://net.china.com.cn/index.htm"
+                            rel="nofollow" class="securityD">不良信息举报中心</a> <a target="_blank" href="http://www.itrust.org.cn/home/index/wx_certifi/wm/WX2017022801.html" rel="nofollow"
+                                class="securityE">网信认证</a> <a target="_blank" href="http://www.lottery.gov.cn/"
+                                    rel="nofollow" class="securityF">网上交易保障中心</a> <a target="_blank" href="http://t.knet.cn/index_new.jsp"
+                                        rel="nofollow" class="securityG">可信网站身份验证</a> <a logo_type="realname" logo_size="124x47"
+                                            href="http://www.itrust.org.cn/home/index/wx_certifi/wm/WX2017022801.html" target="_blank"
+                                            key="521c8ed724306332d312c42a" class="securityH">
+            </a>
+        </div>
+    </div>
+</div>
+@{Html.RenderPartial("footerBottom");}

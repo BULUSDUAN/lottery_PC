@@ -1,0 +1,156 @@
+﻿@{  
+    ViewBag.Title = "提款向导 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>提款向导</li>
+    </ul>
+</div>
+<div class="center mt10">
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mune_safe">
+            <div class="account_menu clearfix">
+                <a href="/member/accountdetail">账户明细</a> <a href="/member/redBagList">红包明细</a> <a
+                    href="/member/paywizzard">账户充值</a> <a href="/member/drawingsguide" class="select">账户提款</a>
+            </div>
+            <div class="account_con">
+                <div class="betorder_top">
+                    <ul>
+                        <li class="betorder_topSelected"><a href="/member/drawingsguide"><i></i>提款向导</a></li>
+                        <li><a href="/member/fetch_bank"><i></i>银行提款</a></li>
+                     @*   <li><a href="/member/fetch_alipay"><i></i>支付宝提款</a></li>*@
+                        <li><a href="/member/drawingsrecordall"><i></i>提款记录</a></li>
+                    </ul>
+                </div>
+                <div class="yh-show">
+                    <div class="table-img">
+                    </div>
+                    <table border="0" cellpadding="0" cellspacing="0" class="account_box">
+                        <thead>
+                            <tr>
+                                <td colspan="5" class="tkxd_title">
+                                    <b></b>正常提款
+                                </td>
+                            </tr>
+                        </thead>
+                        <tr class="ntd ">
+                            <td width="100">
+                                提款条件
+                            </td>
+                            <td width="190">
+                                提款时间
+                            </td>
+                            <td width="200">
+                                到账时间
+                            </td>
+                            <td>
+                                提款方式
+                            </td>
+                            <td width="100">
+                                提款手续费
+                            </td>
+                        </tr>
+                        <tr class="pd">
+                            <td rowspan="2" align="center">
+                                <em class="ye">30元起</em><br />
+                                <br />
+                                （低于30元清账提款请联系客服）
+                            </td>
+                            <td align="left">
+                                早上9:00到凌晨1:00的提现
+                            </td>
+                            <td align="left">
+                                最快<em class="ye">5分钟至2小时内到账</em>， 所有提款24小时内到账（周一至周日都办理提款）
+                            </td>
+                            <td align="left">
+                                支付宝以及国内各大银行（外资银行由于没有实时到账系统，在工作日才能到账）
+                            </td>
+                            <td rowspan="2">
+                                0手续费
+                            </td>
+                        </tr>
+                        <tr class="pd">
+                            <td align="left">
+                                凌晨1:00到早上9:00的提现
+                            </td>
+                            <td align="left">
+                                早上9：00后会处理，2小时之内到账，所有提款24小时内到账（周一至周日都办理提款）
+                            </td>
+                            <td>
+                                支付宝以及国内各大银行（外资银行由于没有实时到账系统，在工作日才能到账）
+                            </td>
+                        </tr>
+                    </table>
+                    <table border="0" cellpadding="0" cellspacing="0" class="account_box" style="margin-top: 10px;">
+                        <thead>
+                            <tr>
+                                <td colspan="5" class="tkxd_title">
+                                    <b class="yc"></b>异常提款
+                                </td>
+                            </tr>
+                        </thead>
+                        <tr class="ntd">
+                            <td>
+                                提款条件
+                            </td>
+                            <td>
+                                提款时间
+                            </td>
+                            <td>
+                                到账时间
+                            </td>
+                            <td>
+                                提款方式
+                            </td>
+                            <td width="150">
+                                提款手续费
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                不限金额
+                            </td>
+                            <td>
+                                不限时间
+                            </td>
+                            <td>
+                                申请之日起15日后到账
+                            </td>
+                            <td>
+                                国内银行或支付宝
+                            </td>
+                            <td>
+                                提款金额<em class="ye">10%</em>手续费
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="wxtx">
+                        <div class="wxtx_title">
+                            <b></b>温馨提示：</div>
+                        <p>
+                            <span class="li1"><i></i></span>1. 周一至周日每天处理提款申请，正常提款最快1分钟至2小时内到账，一般24小时内即可到账。办理大额提款（提款金额≥10万元），大额提款需提供有效证件正反两面的复印件。在早上9点到凌晨1点申请提现，一般会在2小时内到账。每日最多可提现3次。其余时间申请提现的会在工作时间进行处理。</p>
+                        <p>
+                            <span class="li1"><i></i></span>2. 信用卡暂不支持提款，信用卡充值以及手机充值卡、卡密充值的不能直接正常提款（为异常提款）。</p>
+                        <p>
+                            <span class="li1"><i></i></span>3. 您在注册时提交的信息如果与您的实际身份不符，将导致无法提现。</p>
+                        <p>
+                            <span class="li1"><i></i></span>4. 为了防止少数用户利用本站进行套现和洗钱行为，为保护正常用户的资金安全，本站特针对提款做出如下规定：
+                            奖金余额，返点余额提现不收取任何手续费，若超出奖金余额+返点余额，充值余额部分提现需要收取10%手续费。</p>
+                        <p>
+                            <span class="li1"><i></i></span>5. 正常提款若24小时内款项还没有划到您的账户上，请及时联系本站在线客服人员。</p>
+                        <p>
+                            <span class="li1"><i></i></span>6. 当添加一张银行卡时，系统自动设置为默认银行卡，默认银行卡不可删除不可编辑（支付宝帐号也同样）；如需更改请联系在线客服人员。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>

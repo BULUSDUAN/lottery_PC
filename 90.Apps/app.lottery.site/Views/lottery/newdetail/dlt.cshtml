@@ -1,0 +1,57 @@
+﻿@using GameBiz.Core;
+@{
+    var award = ViewBag.Award as LotteryData.Core.GameWinNumber_Info;
+    var issues = ViewBag.CurIssuse as Issuse_QueryInfo;
+}
+<div class="lo_box" style="padding-bottom:25px;">
+    <div class="details_box">
+        <span class="icon_game dlt"></span>
+        @GameHelper.LotteryHeaderViewNew(issues, award, award == null || award.Id == 0 ? "DLT" : award.GameCode)
+        @GameHelper.LotteryDescViewNew(award == null || award.Id == 0 ? "DLT" : award.GameCode)
+    </div>
+    <div class="award">
+        <div class="awardgrade">
+            <div class="grade_title">
+                大乐透奖级设置</div>
+            <div>
+                <span style="width: 15%">一等奖</span><span style="width: 55%">5前区+2后区</span><span style="width: 27%">500万</span>
+            </div>
+            <div class="bgay">
+                <span style="width: 15%">二等奖</span><span style="width: 55%">5前区+1后区</span><span style="width: 27%">固定奖总额后的20%</span>
+            </div>
+            <div>
+                <span style="width: 15%">三等奖</span><span style="width: 55%">5前区</span><span style="width: 27%">
+                    固定奖总额后的5%</span>
+            </div>
+            <div class="bgay">
+                <span style="width: 15%">四等奖</span><span style="width: 55%">4前区+2后区</span><span style="width: 27%">3000元</span>
+            </div>
+            <div>
+                <span style="width: 15%">五等奖</span><span style="width: 55%">4前区+1后区</span><span style="width: 27%">600元</span>
+            </div>
+            <div class="bgay">
+                <span style="width: 15%">六等奖</span><span style="width: 55%">4前区3前区+2后区</span><span
+                    style="width: 27%">100元</span>
+            </div>
+            <div>
+                <span style="width: 15%">七等奖</span><span style="width: 55%">3前区+1后区或2前区+2后区</span><span
+                    style="width: 27%">10元</span>
+            </div>
+            <div class="bgay">
+                <span style="width: 15%">八等奖</span><span style="width: 55%">3前区或1前区+2后区或2前区+1后区或2后区</span><span
+                    style="width: 27%">5元</span>
+            </div>
+        </div>
+        <div class="details_list">
+            <div class="list_title">
+                开奖详情</div>
+            <div id="lottery_details">
+                <div>
+                    <span style="width: 100%">暂无信息数据</span>
+                </div>
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+</div>

@@ -1,0 +1,52 @@
+﻿<div id="box_discontinued"  >
+    <table>
+        <tr>
+            <td class="itd-top-left"></td>
+            <td class="itd-top-center"></td>
+            <td class="itd-top-right"></td>
+        </tr>
+        <tr>
+            <td class="itd-mid-left"></td>
+            <td class="itd-mid-center">
+                <div class="dialogContent">
+                       <h3 id="drag_alert" class="pop-comm-top">
+                          @(SiteString.getHZSiteName(Request))提醒您
+    </h3>
+                    <div class="pop-comm-middle" >
+                        <div style="text-align: center; padding:80px 0;line-height: 40px;">
+                            很抱歉，该彩种暂时停售，您可以选择其他彩种进行投注哦。
+                            <br/>
+                        我要去&nbsp;<a href="/" class="blue">首页</a>&nbsp;还是去&nbsp;<a href="/statichtml/buy/index.html" class="blue">购彩大厅</a>&nbsp;吧
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td class="itd-mid-right"></td> 
+        </tr>
+        <tr>
+            <td class="itd-bot-left"></td>
+            <td class="itd-bot-center"></td>
+            <td class="itd-bot-right"></td>
+        </tr>
+    </table>
+</div>
+<script type="text/javascript">
+   // new Drag("box_discontinued", { Handle: "drag_alert", Limit: true });
+    var box_discontinued = new LightBox("box_discontinued");
+
+    function box_dis_show() {
+        box_discontinued.Show();
+    }
+    //重写系统alert函数
+    //var alert = function (message, icon) {
+    //    if (null != icon) {
+    //        var cs = "icon-err";
+    //        if (icon == "err") { cs = "icon-err"; }
+    //        $("#alertBoxDiv i").attr("class", cs);
+    //    }
+    //    $("#alert_message").html(message);
+    //    alertBox.Show();
+    //}
+
+
+</script>

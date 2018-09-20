@@ -1,0 +1,157 @@
+﻿@using app.lottery.site.Models
+@{
+    ViewBag.Title = "统计查询, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "统计查询, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var list = ViewBag.AgentLotto as External.Core.Agnet.AgentLottoTopCollection;
+    CurrentUserInfo currentUser = ViewBag.CurrentUser;
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+    @UserHelper.css("commissio.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>统计查询</li>
+    </ul>
+</div>
+<div class="center mt10">
+    @{Html.RenderAction("menu", "Member");}
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mycommenu">
+            <a href="javascript:void(0);" checklg="/commissio/myTc">我的提成</a>
+            @if (currentUser.LoginInfo.OCAgentType == GameBiz.Core.OCAgentCategory.SportLotterySubAgent)
+            {
+                <a href="javascript:void(0);" checklg="/commissio/subordinateuser">推广用户</a> 
+            }
+            else
+            {
+                <a href="javascript:void(0);" checklg="/commissio/generalizeUser">推广用户</a> 
+            }
+            <a href="javascript:void(0);" checklg="/commissio/CommissionRecord">返点结算</a> <a href="javascript:void(0);"
+                checklg="/commissio/StatisticsQuery" class="up">统计查询</a> <a href="javascript:void(0);"
+                    checklg="/commissio/SchemeManage">方案管理</a>
+        </div>
+        <div class="scheme">
+            <div class="scheme-show xzscheme" style="margin-left: 10px;">
+                <a href="javascript:void(0)" checklg="/commissio/StatisticsQuery">用户购彩</a>
+            </div>
+            <div class="scheme-show">
+                <a href="javascript:void(0)" checklg="/commissio/PaySeniority">充值排行</a>
+            </div>
+            <div class="scheme-show">
+                <a href="javascript:void(0)" checklg="/commissio/agentsales">代理销量</a>
+            </div>
+        </div>
+        <div class="scheme-titile">
+            <span class="bgimg"></span>
+            <label class="lbfa">
+                购彩排行</label>
+        </div>
+        <table border="0" cellpadding="0" cellspacing="0" class="scheme-table">
+            <tr class="t-tr1">
+                <td colspan="9">
+                    <div style="width: 620px !important 540px; float: left; height: 40px; line-height: 40px;">
+                        &nbsp;&nbsp;&nbsp;&nbsp;用户名：<input type="text" name="txtKey" id="txtKey" />
+                        日期 @ControlHelper.Calendar("begin", ViewBag.Begin)至 @ControlHelper.Calendar("end", ViewBag.End)
+                    </div>
+                    <div style="width: 60px; float: left; height: 40px;">
+                        &nbsp;&nbsp;<a class="Query" href="javascript:void(0)" onclick="getAgentLotto(0,10)"></a>
+                    </div>
+                </td>
+            </tr>
+            <tr class="zcph-t-tr2_new">
+                <td width="102">
+                    用户编号 <span class="commissionM-table-sx"></span>
+                </td>
+                <td width="67">
+                    用户名 <span class="commissionM-table-sx"></span>
+                </td>
+                <td width="90">
+                    常规足球 <span class="commissionM-table-sx"></span>
+                </td>
+                <td width="75">
+                    北京单场 <span class="commissionM-table-sx"></span>
+                </td>
+                <td width="85">
+                    竞彩足球 <span class="commissionM-table-sx"></span>
+                </td>
+                <td width="78">
+                    竞彩篮球 <span class="commissionM-table-sx"></span>
+                </td>
+                <td width="75">
+                    数字彩 <span class="commissionM-table-sx"></span>
+                </td>
+                <td width="90">
+                    高频彩 <span class="commissionM-table-sx"></span>
+                </td>
+                <td width="120">
+                    购彩总金额
+                </td>
+            </tr>
+            @if (list != null)
+            {
+                foreach (var item in list.AgentLottoTopList)
+                {
+                <tr>
+                    <td width="102">
+                        @item.UserId
+                    </td>
+                    <td width="67">
+                        @item.DisplayName
+                    </td>
+                    <td width="90">
+                        @item.CTZQ.ToString("N2")
+                    </td>
+                    <td width="75">
+                        @item.BJDC.ToString("N2")
+                    </td>
+                    <td width="85">
+                        @item.JCZQ.ToString("N2")
+                    </td>
+                    <td width="78">
+                        @item.JCLQ.ToString("N2")
+                    </td>
+                    <td width="75">
+                        @item.SZC.ToString("N2")
+                    </td>
+                    <td width="90">
+                        @item.GPC.ToString("N2")
+                    </td>
+                    <td width="120">
+                        @item.TotalMoney.ToString("N2")
+                    </td>
+                </tr>  
+                }
+            }
+                <tr > <td colspan="9" class="betorder_number_money" style="background-color: #fff" >
+                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注意:购彩排行最多可查询一个月数据
+                 </td> </tr>
+            <tr>
+                <td colspan="9">
+                    @ViewHelpers.Pager4("getAgentLotto", ViewBag.pageNo, ViewBag.pageSize, list == null ? 0 : list.TotalCount)
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(".scheme-table tr:even:gt(0)").css("backgroundColor", "#f7f7f7");
+
+    })
+    function getAgentLotto(pageNo, pageSize) {
+        var begin = $("#begin").val();
+        var end = $("#end").val();
+        var key = $("#txtKey").val();
+        var search = "pageNo=" + pageNo + "&pageSize=" + pageSize + "&begin=" + begin + "&end=" + end + "&r=" + Math.random().toFixed(5);
+        if (key != null) {
+            search = search + "&key=" + key;
+        }
+        location.search = search;
+    }   
+</script>
+<div class="clearfix">
+</div>

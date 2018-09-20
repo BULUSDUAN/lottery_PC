@@ -1,0 +1,58 @@
+﻿@using app.lottery.site.Models;
+@using External.Core.Task
+@{
+    CurrentUserInfo CurrentUser = ViewBag.CurrentUser;
+    ViewBag.Title = "会员注册 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "会员注册, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+    @UserHelper.css("user.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>注册</li>
+    </ul>
+</div>
+
+@*<div class="user-register-box mt10 suc">
+    <div class="suc-box">
+        <img src="@ViewHelpers.img("user/4.png")" />
+    <span class="vipcount">&nbsp;&nbsp;&nbsp;&nbsp;您已成为本站第<em>@(ViewBag.UserRegister + 10000)</em>位会员!</span>
+    <div class="suc-name">
+        请记牢您的昵称：<em>@CurrentUser.LoginInfo.DisplayName</em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        立即<a href="/member/safe"  >实名认证</a>，获得<em>100.00元</em>红包 
+    </div>
+        <div class="suc-newbtn">
+           <a href="/member/safe">绑定信息送现金</a> 
+           <a href="/" class="suc-c" style="color: White">@(SiteString.getHZSiteName(Request))首页</a>
+            <a href="/member/safe">账户安全</a>
+            </div>
+        <div class="mt10 " style="margin-left:250px;">
+            热销彩种：<a href="/jingcai">竞彩足球</a> <a href="/jingcaibasket">竞彩篮球</a> <a href="/toto">14场胜负</a>
+            <a href="/toto/tr9">任选九场</a> <a href="/szc/dlt">大乐透</a> <a href="/szc/pl3">排列三</a>
+            <a href="/danchang">足球单场</a>
+        </div>
+    </div>
+</div>*@
+
+<div class="user-register-box mt10 suc" style="height: 432px;">
+    <div class="suc-box" style="margin-top: 0;">
+        <img src="@ViewHelpers.img("user/4.png")" />
+    <span class="vipcount">&nbsp;&nbsp;&nbsp;&nbsp;请记牢您的昵称：<em>@CurrentUser.LoginInfo.DisplayName</em></span>
+    <div class="suc-name" style="margin-top: 50px;margin-left: 320px;">
+        您已获得<em>100.00元</em>红包
+  @*  <span style="color:#5a72d1;">(</span><a href="/statichtml/help/myAccount/Redpackets2.html" style="text-decoration:underline;margin:0">红包使用规则</a><span style="color:#5a72d1;">)</span>*@
+
+       <a href="/member/safe"  ><img src="@ViewHelpers.img("users/icon.png")" style="margin: 0 auto;" /></a>
+    </div>
+
+    
+
+        <div class="suc-newbtn" style="margin-top: 58px;">
+           <img src="@ViewHelpers.img("users/newregister.png")" style="width:100%;margin: 0 auto;"/>
+            </div>
+    </div>
+</div>
+

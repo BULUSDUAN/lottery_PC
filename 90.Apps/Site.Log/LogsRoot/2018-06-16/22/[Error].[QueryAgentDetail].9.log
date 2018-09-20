@@ -1,0 +1,5 @@
+[0][2018-06-16 22:53:40] Column 'TotalBuyMoney' does not belong to table Table1.
+    System.ArgumentException: Column 'TotalBuyMoney' does not belong to table Table1.
+   at Common.Communication.WcfService.DoWork(WcfInvokeInfo invokeInfo)
+    ----------------------------------------------------------------------------
+

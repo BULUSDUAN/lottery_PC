@@ -1,0 +1,60 @@
+﻿@{
+    var Title = "如何购彩";
+    ViewBag.Title = Title + " - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+   @ViewHelpers.css("help.css")
+} 
+  <div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">玩彩网</a> > </li>
+        <li><a href="/staticHtml/help/index.html">&nbsp;帮助中心</a> > </li>
+        <li>&nbsp;如何购彩</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type = "buylottery", name = "ForTheColor" });}
+<div class="help_r">
+         
+
+       <div class="list_box">
+            	<div class="h_pub_t">
+                	<b class="t_l"></b>
+                    <div class="t_m"><h2>如何购彩</h2></div>
+                    <b class="t_r"></b>
+                </div>
+                <div class="h_pub_m">
+                	<ul>
+                    
+                            <li><a href="/staticHtml/help/goucai/ForTheColor1.html" id="link151">如何查看购彩记录？</a></li>
+                            <li><a href="/staticHtml/help/goucai/ForTheColor2.html" id="link151">什么是代购？</a></li>
+                            <li><a href="/staticHtml/help/goucai/ForTheColor3.html" id="link151">什么是机选？</a></li>
+                            <li><a href="/staticHtml/help/goucai/ForTheColor4.html" id="link151">什么是胆拖？</a></li>
+                            <li><a href="/staticHtml/help/goucai/ForTheColor5.html" id="link151">什么是直选？组三？组六？</a></li>
+                            <li><a href="/staticHtml/help/goucai/ForTheColor6.html" id="link151">什么是单式上传</a></li>
+                            <li><a href="/staticHtml/help/goucai/ForTheColor7.html" id="link151">什么是限号？</a></li>
+                            <li><a href="/staticHtml/help/goucai/ForTheColor8.html" id="link151">彩票有没有时间限制？</a></li>
+                            <li><a href="/staticHtml/help/goucai/ForTheColor9.html" id="link151">什么是和值？</a></li>
+                            <li><a href="/staticHtml/help/goucai/ForTheColor10.html" id="link151">什么是追号？</a></li>
+                            <li><a href="/staticHtml/help/goucai/ForTheColor11.html" id="link151">追号有哪些方式？</a></li>
+                            <li><a href="/staticHtml/help/goucai/ForTheColor12.html" id="link151">追号有哪些规则</a></li>
+                            <li><a href="/staticHtml/help/goucai/ForTheColor13.html" id="link151">什么是复式投注？</a></li>
+                            <li><a href="/staticHtml/help/goucai/ForTheColor14.html" id="link151">什么是单式投注？</a></li>
+				            </ul>
+                </div>
+            </div>
+
+
+        </div>
+         </div>
+<div class="clearfix"></div>
+
+ @ViewHelpers.js("help.js")
+
+
+
+
+
+

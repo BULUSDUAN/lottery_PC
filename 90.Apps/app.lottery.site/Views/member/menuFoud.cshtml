@@ -1,0 +1,17 @@
+﻿
+<div class="new_buy_top clearfix" >
+    <div class="zh-center fl clearfix" id="PlaneAccount" style=" margin-top:-10px !important;">
+        <a href="/member/integraldetail" target="_blank" class="on" >推广管理</a>
+        @{
+            var user = ViewBag.CurrentUser as app.lottery.site.Models.CurrentUserInfo;
+            if (user!=null)
+            {
+                if (user.LoginInfo.IsAgent)
+                {
+                     <a href="/member/generalizeUser">推广合作</a>
+                }
+            }
+        }
+    </div>
+    @UserHelper.js("/My97DatePicker/WdatePicker.js")
+</div>

@@ -1,0 +1,155 @@
+﻿@using GameBiz.Core;
+@{
+    var award = ViewBag.Award as LotteryData.Core.GameWinNumber_Info;
+    var issues = ViewBag.CurIssuse as Issuse_QueryInfo;
+}
+@GameHelper.LotteryHeaderView(issues, award, award == null || award.Id == 0 ? "JX11X5" : award.GameCode)
+@GameHelper.LotteryDescView(award == null||award.Id==0 ? "JX11X5" : award.GameCode)
+<div class="lot-con-l">
+    <h2 class="sctitle">
+        <span class="der2"></span><b>11选5奖级设置</b></h2>
+    <div class="td_div2">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="sg">
+            <tbody>
+                <tr>
+                    <td>
+                        任选一
+                    </td>
+                    <td class="td1">
+                        中号码第一位
+                    </td>
+                    <td>
+                        13元
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        任选二
+                    </td>
+                    <td class="td1">
+                        任意中两位
+                    </td>
+                    <td>
+                        6元
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        任选三
+                    </td>
+                    <td class="td1">
+                        任意中三位
+                    </td>
+                    <td>
+                        19元
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        任选四
+                    </td>
+                    <td class="td1">
+                        任意中四位
+                    </td>
+                    <td>
+                        78元
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        任选五
+                    </td>
+                    <td class="td1">
+                        不定位中五个号
+                    </td>
+                    <td>
+                        540元
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        任选六
+                    </td>
+                    <td class="td1">
+                        不定位中五个号
+                    </td>
+                    <td>
+                        90元
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        任选七
+                    </td>
+                    <td class="td1">
+                        不定位中五个号
+                    </td>
+                    <td>
+                        26元
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        任选八
+                    </td>
+                    <td class="td1">
+                        不定位中五个号
+                    </td>
+                    <td>
+                        9元
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        前二直选
+                    </td>
+                    <td class="td1">
+                        定位中前两位
+                    </td>
+                    <td>
+                        130元
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        前二组选
+                    </td>
+                    <td class="td1">
+                        不定位中前两位
+                    </td>
+                    <td>
+                        65元
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        前三直选
+                    </td>
+                    <td class="td1">
+                        定位中前三位
+                    </td>
+                    <td>
+                        1170元
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        前三组选
+                    </td>
+                    <td class="td1">
+                        不定位中前三位
+                    </td>
+                    <td>
+                        195元
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="lot-con-r">
+    <h2 class="sctitle">
+        <span class="der3"></span><b>11选5资讯</b></h2>
+    @{Html.RenderAction("LotteryConsulting", "buy", new { id = "JX11X5" });}
+</div>
+<div class="clearfix"></div>

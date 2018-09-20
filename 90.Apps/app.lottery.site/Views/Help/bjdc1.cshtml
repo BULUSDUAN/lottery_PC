@@ -1,0 +1,146 @@
+﻿@{
+    var Title = "北京单场";
+    ViewBag.Title = Title + " - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+   @ViewHelpers.css("help.css")
+} 
+  <div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">玩彩网</a> > </li>
+        <li><a href="/help/index">&nbsp;帮助中心</a> > </li>
+        <li>&nbsp;北京单场</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type = "howToPlay", name = "bjdc" });}
+<div class="help_r">
+         
+         <div class="det_box">
+            	<h2>北京单场规则</h2>
+                <div class="det_c">
+<span style="color:#333333;font-family:宋体, tahoma;font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;letter-spacing:normal;line-height:24px;orphans:2;text-align:-webkit-auto;text-indent:0px;text-transform:none;white-space:normal;widows:2;word-spacing:0px;-webkit-text-decorations-in-effect:none;-webkit-text-size-adjust:auto;-webkit-text-stroke-width:0px;" class="Apple-style-span"><h3 style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">第一章 总则</h3>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">第一条 根据财政部《彩票发行与销售管理暂行规定》和《中国足球彩票发行与销售管理办法》(以下简称《管理办法》)，制定本游戏规则。</p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">第二条 中国足球彩票单场竞猜胜平负游戏（以下简称“单场胜平负游戏”）由国家体育总局体育彩票管理中心（以下简称“中体彩中心”）负责组织管理工作。 </p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">第三条 “单场胜平负游戏”实行自愿购买，凡购买该彩票者即被视为同意并遵守本规则。</p>
+<h3 style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">第二章 游戏方法</h3>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">第四条 单场胜平负游戏以中体彩中心选定的足球比赛为游戏媒介，由购票人对指定的比赛在90分钟比赛（含伤情补时）主队与客队的胜负结果进行投注。选择1场比赛为单场过关，选择多场比赛为多场过关。 </p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">第五条 单场胜平负游戏竞猜的足球比赛，在意大利足球甲级联赛、英国足球超级联赛、西班牙足球甲级联赛、德国足球甲级联赛、法国足球甲级联赛以及世界重大足球比赛中选定。当期比赛赛程于第一场比赛开赛前7天在公开媒介上公告，公告4天后开始销售，每场比赛开赛前5-30分钟停止销售。 </p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">第六条 每一场比赛共有3种预测结果： </p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">“3”：表示主队胜，客队负； </p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">“1”：表示主队与客队平； </p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">“0”：表示主队负，客队胜。 </p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">第七条 当比赛的两只球队强弱悬殊比较大时，采用让球的方式确定胜平负关系。</p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">主队让1球：</p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">    “3”主队比分减去客队比分大于1时，主队胜，客队负； </p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">    “1” 主队比分减去客队比分等于1时，主队与客队平； </p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">    “0” 主队比分减去客队比分小于1时，主队负，客队胜。</p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">客队让1球：</p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">    “3” 客队比分减去主队比分小于1时，主队胜，客队负； </p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">    “1” 客队比分减去主队比分等于1时，主队与客队平； </p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">    “0” 客队比分减去主队比分大于1时，主队负，客队胜。 </p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">主队让2球：</p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">    “3”主队比分减去客队比分大于2时，主队胜，客队负； </p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">    “1” 主队比分减去客队比分等于2时，主队与客队平； </p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">    “0” 主队比分减去客队比分小于2时，主队负，客队胜。 </p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">客队让2球：</p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">    “3” 客队比分减去主队比分小于2时，主队胜，客队负； </p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">    “1” 客队比分减去主队比分等于2时，主队与客队平； </p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">    “0” 客队比分减去主队比分大于2时，主队负，客队胜。 </p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">主队让3球：</p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">    “3”主队比分减去客队比分大于3时，主队胜，客队负； </p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">    “1” 主队比分减去客队比分等于3时，主队与客队平； </p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">    “0” 主队比分减去客队比分小于3时，主队负，客队胜。 </p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">客队让3球：</p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">    “3” 客队比分减去主队比分小于3时，主队胜，客队负； </p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">    “1” 客队比分减去主队比分等于3时，主队与客队平； </p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">    “0” 客队比分减去主队比分大于3时，主队负，客队胜。 </p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">具体让球数量根据实际比赛的情况酌情而定。</p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">第八条 购票人投注时，对指定竞猜场次的比赛结果作两种或两种以上的选择，构成复式投注，单张彩票购买数量不得超过10000注。购买者可对“单场胜平负游戏”的结果进行多倍投注，投注倍数范围为2—99倍。 </p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">第九条 单场胜平负游戏每注2元。彩票不记名、不挂失，不返还本金，不流通使用。</p>
+<h3 style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">第三章 投注</h3>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">第十条 购票人可以直接在“单场胜平负游戏”销售终端直接投注，也可利用“单场胜平负游戏”销售终端提供的投注单辅助投注。 </p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">第十一条 投注单投注：</p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">（一）投注单有3个供购票人填写的独立区域，分别为“过关方式”区、“场次”区、“倍投”区。</p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">“过关方式”区的格式为：“选择竞猜场次数量 * 购买彩票注数”，购票人必须且只能选择1种过关方式，不选或多选均为无效投注。 具体投注注数的分配如下表：</p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;"><img src="@ViewHelpers.img("/help/bjdc.jpg")" /></p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">“场次”区：购票人对所选择的竞猜场次的比赛结果进行预测，选择1个以上的结果即构成复式投注。所选择的场次数量应与“过关方式”区中所选择的竞猜场次数量一致，否则为无效投注。</p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">   “倍投”区：此区域如不做出选择即为没有加倍投注；选择“2”为2倍投注，选择“1”＋“30”为31倍投注，选择“9”＋“90”为99倍投注。</p>
+<p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">   （二）销售人员按购票人填写的投注单确定投注数量和需缴纳金额，收款后打印彩票。</p>
+    <p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;"> 第十二条 销售终端打印出的彩票为单场胜平负游戏唯一兑奖凭证。投注单只用于辅助购票者投注，不作为兑奖凭证，也不作为购票者投注结果的间接证明。 </p>
+    <p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;"> 第十三条 销售过程中，如遇以下情形则特别规定如下：</p>
+   <p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;"> （一）在当期单场胜平负游戏销售前，部分或全部场次因故发生变化，则更改相应变化场次。</p>
+   <p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;"> （二）在当期单场胜平负游戏销售后，如果部分场次因故提前进行，则该场比赛销售时间相应提前结束，其余场次销售时间不变；如果部分场次因故延期，超过原定开奖时间12小时，则该场比赛在过关投注中的所有选项均视为选中，SP值按1计算，单场投注按退票处理；未超过12小时的，按实际比赛结果计奖。</p>
+
+    <h3 style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">第四章 中 奖</h3>
+
+    <p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;"> 第十四条 每期单场胜平负游戏销售收入按以下比例分配：返奖奖金为销售总额的65%；公益金为销售总额的22%；发行经费为销售总额的13%。 </p>
+    <p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;"> 第十五条 购票人投注结果与实际比赛结果相一致即为中奖。如遇特别情形，按第十二条规定处理。</p>
+    <p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;"> 第十六条 在竞猜单场胜平负游戏时，每场比赛须计算出SP值，并以此为依据计算各竞猜场次的单注奖金。 SP=单场总投注金额/中奖彩票的总投注金额 在竞猜的n场比赛中，各场次SP值分别为SP1、SP2、SP3……SPn。 </p>
+    <p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;"> 第十七条 奖金分配如下：</p>
+   <p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;"> （一）选择单场过关时，设一个奖级，为浮动奖。 单注奖金=2元×SP×65% </p>
+   <p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;"> （二）当选择2关及2关以上时，设一个奖级，为浮动奖： 单注奖金=2元×所选场次的SP值连乘×65%。 </p>
+    <p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;"> 第十八条 单注彩票中奖奖金最高限额为500万元。 </p>
+    <p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;"> 第十九条 在竞猜单场胜平负游戏时，进行单场投注中，如中奖奖金低于投注本金时，按投注本金进行返奖，不足部分由调节基金补足，调节基金不足时由发行费列支。 </p>
+    <p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;"> 第二十条 单场胜平负游戏设立调节基金，由弃奖收入、浮动奖奖金取整后余额以及逾期未退票的票款等三部分组成，专项用于设置特别奖，支付不可预见情况下的奖金支出风险。</p>
+
+    <h3 style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">第五章 兑 奖</h3>
+
+    <p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;"> 第二十一条 “单场胜平负游戏”兑奖当期有效。每期自计奖次日起28天为兑奖期，逾期未兑，视为弃奖。 </p>
+    <p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;"> 第二十二条 单张彩票中奖金额在5000元（含）以下的，在任意销售终端兑付；中奖金额在5000元以上的，到彩票机构指定地点兑付。 </p>
+    <p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;"> 第二十三条 兑奖机构有权查验中奖者的中奖彩票及有效身份证件，兑奖者应予配合。</p> 
+    <p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;"> 第二十四条 凡伪造、涂改中奖彩票，冒领奖金者，送交司法机关追究法律责任。</p>
+
+    <h3 style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">第六章 附 则　</h3>
+
+    <p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;"> 第二十五条 本规则执行中，有关重大事项的通告将在彩票机构指定的报刊上登载，并在彩票销售终端予以公布，销售者不再承担直接通知购票人的责任，购票人须自行知晓。 </p>
+    <p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;"> 第二十六条 本规则由中体彩中心解释。 </p>
+    <p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;"> 特别备注：按照2009年正式实施的《彩票管理条例》有关要求，关于弃奖和兑奖期限的条款相应调整，其中弃奖进入公益金，兑奖期限为开奖之日起的60个自然日。</p>
+</span>                </div>
+                
+            @*    <div class="det_a feedback">
+                <div>以上内容是否解决了您的问题呢？</div>
+                              
+                <div>
+                <a id="btn_a_yes" class="btn"><span class="feedback_yes">是，已经解决。</span></a> <a class="btn" id="btn_a_no" href="javascript:void(0);"><span class="feedback_no">否，尚未解决。</span></a>
+                    <div style="display:none;" class="feedback_form clearfix" id="feed_div">                  
+                    <a id="fclose" class="feedback-close" href="javascript:void(0);">关闭</a>     
+                    <span style="display:none;" id="feed_detail"> 
+	                    <form method="post" name="feed_dtl" id="feed_dtlf">             
+		                    <span class="fb-input"><input type="radio" value="1" name="nodtl"> 描述不清晰</span>
+		                    <span class="fb-input"><input type="radio" value="2" name="nodtl"> 字太多，不想看</span>
+		                    <span class="fb-input"><input type="radio" value="3" name="nodtl"> 太复杂，看不懂</span>
+		                    <span class="fb-input"><input type="button" value="提交" name="fsbmt"></span>
+		                </form>    
+	                </span>
+                    <div style="display:none;" class="feedback-suc l" id="feed_result">您的反馈信息已经提交，谢谢您的反馈。</div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                  
+                </script>                                           
+                </div>
+                
+                <div class="det_a">
+                	<div class="det_a_l">相关问题：</div>
+                    <div class="det_a_r">
+                    	<ul>
+                        	                    	</ul>    
+                    </div>
+                </div>*@
+            </div>
+
+
+        </div>
+         </div>
+<div class="clearfix"></div>
+
+ @ViewHelpers.js("help.js")
+
+
+
+
+
+

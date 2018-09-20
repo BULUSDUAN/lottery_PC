@@ -1,0 +1,138 @@
+﻿@using app.lottery.site.Models
+@{
+    ViewBag.Title = "推广链接, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "推广链接, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    CurrentUserInfo currentUser = ViewBag.CurrentUser;
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+    @UserHelper.css("commissio.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>推广链接</li>
+    </ul>
+</div>
+<div class="center mt10">
+    @{Html.RenderAction("menu", "Member");}
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mycommenu">
+            <a href="javascript:void(0);" checklg="/commissio/myTc">我的提成</a>
+            @if (currentUser.LoginInfo.OCAgentType == GameBiz.Core.OCAgentCategory.SportLotterySubAgent)
+            {
+                <a href="javascript:void(0);" checklg="/commissio/subordinateuser" class="up">推广用户</a> 
+            }
+            else
+            {
+                <a href="javascript:void(0);" checklg="/commissio/generalizeUser" class="up">推广用户</a> 
+            }
+            <a href="javascript:void(0);" checklg="/commissio/CommissionRecord">返点结算</a> <a href="javascript:void(0);"
+                checklg="/commissio/StatisticsQuery">统计查询</a> <a href="javascript:void(0);" checklg="/commissio/SchemeManage">
+                    方案管理</a>
+        </div>
+        <div class="scheme">
+            @if (currentUser.LoginInfo.OCAgentType != GameBiz.Core.OCAgentCategory.SportLotterySubAgent)
+            {
+                <div class="scheme-show" style="margin-left: 10px;">
+                    <a href="javascript:void(0)" checklg="/commissio/generalizeUser">下级代理</a>
+                </div>
+            }
+            <div class="scheme-show">
+                <a href="javascript:void(0)" checklg="/commissio/subordinateuser">下级用户</a>
+            </div>
+            @if (currentUser.LoginInfo.OCAgentType != GameBiz.Core.OCAgentCategory.SportLotterySubAgent)
+            {
+                <div class="scheme-show">
+                    <a href="javascript:void(0)" checklg="/commissio/dealerMsg">添加代理</a>
+                </div>
+            }
+            <div class="scheme-show" style="width: 130px;">
+                <a href="javascript:void(0)" checklg="/commissio/setNewUserRebate">设置新用户返点</a>
+            </div>
+            <div class="scheme-show xzscheme">
+                <a href="javascript:void(0)" checklg="/commissio/popularizeLink">推广链接</a>
+            </div>
+            @if (currentUser.LoginInfo.OCAgentType == GameBiz.Core.OCAgentCategory.SportLotteryAgent)
+            {
+                <div class="scheme-show">
+                    <a href="javascript:void(0)" checklg="/commissio/registernewagency">注册新代理</a>
+                </div>
+                <div class="scheme-show">
+                    <a href="javascript:void(0)" checklg="/commissio/newagencylist">店铺代理</a>
+                </div>
+            }
+        </div>
+        <div class="scheme-titile" style="margin-top: 5px;">
+            &nbsp;&nbsp; <span class="bgimg"></span>
+            <label class="lbfa">
+                推广链接</label>
+            <div class="tgLink" style="text-decoration: none;">
+                <a href="@ViewBag.Url" class="tglz_url" target="_blank">@ViewBag.Url</a> <span class="tglj_bg">
+                    点击复制链接</span>
+            </div>
+            @if (currentUser.LoginInfo.OCAgentType != GameBiz.Core.OCAgentCategory.SportLotterySubAgent)
+            {
+                <fieldset style="border: 1px solid #c4c4c4; padding-left: 15px;">
+                    <legend>自定义推广链接</legend>
+                    @if (string.IsNullOrEmpty(ViewBag.CustomerUrl))
+                    {
+                        <span>地址确认后不可修改，如果没想好，可以以后再填写</span><span style="margin-left: 50px;">可以是3-16位小写字母与数字的组合，不支持纯数字</span>
+                        <div>
+                            <span style="font-size: 15px;">http://</span><input type="text" value="" size="26"
+                                maxlength="16" id="txt_customerDomain">
+                            <span style="font-size: 15px;">.vip.wancai.com</span><input type="button" id="save_customer_domain"
+                                value="保存" />
+                        </div>
+                    }
+                    else
+                    {
+                        <div style="text-decoration: none; float: right; margin: 20px;" class="tgLink">
+                            <a target="_blank" class="tglz_url_customer" href="@ViewBag.CustomerUrl">@ViewBag.CustomerUrl</a>
+                            <span class="tglj_bg_customer">点击复制链接</span>
+                        </div>
+                    }
+                </fieldset>
+            }
+            <div class="clearfix">
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(".tglj_bg").click(function (obj) {
+            var _url = $(".tglz_url").text();
+            Tool.CopyText(_url);
+        });
+        $(".tglj_bg_customer").click(function (obj) {
+            var _url = $(".tglz_url_customer").attr("href");
+            Tool.CopyText(_url);
+        });
+        $("#save_customer_domain").click(function () {
+            var domain = $.trim($("#txt_customerDomain").val());
+            if (!domain) {
+                alert("自定义推广链接不能为空");
+                return false;
+            }
+
+            var temp = $.format("http://{0}.vip.wancai.com", domain);
+            if (window.confirm($.format("您确认自定义推广链接为：{0}？设置后不可修改。", temp))) {
+                var url = "/Commissio/SaveCustomerDomain";
+                $.post(url, { customerDomain: domain }, function (json) {
+                    alert(json.Msg)
+                    if (!json.IsSuccess) {
+                        $("#txt_customerDomain").val("");
+                    }
+                    else {
+                        window.location.href = window.location.href;
+                    }
+                })
+            }
+        })
+    });    
+</script>
+<div class="clearfix">
+</div>

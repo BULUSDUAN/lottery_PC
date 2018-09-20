@@ -1,0 +1,78 @@
+﻿@{
+    var Title = "单式上传支持哪些格式？";
+    ViewBag.Title = Title + " - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+   @ViewHelpers.css("help.css")
+} 
+  <div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">玩彩网</a> > </li>
+        <li><a href="/staticHtml/help/index.html">&nbsp;帮助中心</a> > </li>
+        <li>&nbsp;单式上传支持哪些格式？</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type = "buylottery", name = "ShoppingService" });}
+<div class="help_r">
+         
+         <div class="det_box">
+            	<h2>单式上传支持哪些格式？</h2>
+                <div class="det_c">
+<p align="left" class="MsoNormal" style="text-align:left;line-height:18pt;margin:11.25pt 0cm;mso-pagination:widow-orphan;"><span lang="EN-US" style="font-family:'ˎ̥','serif';color:#333333;mso-bidi-font-size:10.5pt;mso-bidi-font-family:宋体;mso-font-kerning:0pt;mso-fareast-font-family:宋体;">1</span><span style="font-family:宋体;color:#333333;mso-bidi-font-size:10.5pt;mso-ascii-font-family:ˎ̥;mso-hansi-font-family:ˎ̥;mso-bidi-font-family:宋体;mso-font-kerning:0pt;">、本合买区只接受后缀为".txt"的记事本文本文</span></p>
+<p align="left" class="MsoNormal" style="text-align:left;line-height:18pt;margin:11.25pt 0cm;mso-pagination:widow-orphan;"><span lang="EN-US" style="font-family:'ˎ̥','serif';color:#333333;mso-bidi-font-size:10.5pt;mso-bidi-font-family:宋体;mso-font-kerning:0pt;mso-fareast-font-family:宋体;">2</span><span style="font-family:宋体;color:#333333;mso-bidi-font-size:10.5pt;mso-ascii-font-family:ˎ̥;mso-hansi-font-family:ˎ̥;mso-bidi-font-family:宋体;mso-font-kerning:0pt;">、胜负彩单式方案标准格式：一行一注，投注号码不要以空格隔开，文本内除投注号码不允许出现其他文字、号码及符号；特别注意不要有序号。例：胜负彩单式方案：33300010301103</span></p>
+<p align="left" class="MsoNormal" style="text-align:left;line-height:18pt;margin:11.25pt 0cm;mso-pagination:widow-orphan;"><span lang="EN-US" style="font-family:'ˎ̥','serif';color:#333333;mso-bidi-font-size:10.5pt;mso-bidi-font-family:宋体;mso-font-kerning:0pt;mso-fareast-font-family:宋体;">3</span><span style="font-family:宋体;color:#333333;mso-bidi-font-size:10.5pt;mso-ascii-font-family:ˎ̥;mso-hansi-font-family:ˎ̥;mso-bidi-font-family:宋体;mso-font-kerning:0pt;">、进球彩单式方案标准格式：一行一注，投注号码不要以空格隔开，文本内除投注号码外不允许出现其他文字、号码及符号；特别注意不要有序号。例：进球彩单式方案：320110130112</span></p>
+<p align="left" class="MsoNormal" style="text-align:left;line-height:18pt;margin:11.25pt 0cm;mso-pagination:widow-orphan;"><span lang="EN-US" style="font-family:'ˎ̥','serif';color:#333333;mso-bidi-font-size:10.5pt;mso-bidi-font-family:宋体;mso-font-kerning:0pt;mso-fareast-font-family:宋体;">4</span><span style="font-family:宋体;color:#333333;mso-bidi-font-size:10.5pt;mso-ascii-font-family:ˎ̥;mso-hansi-font-family:ˎ̥;mso-bidi-font-family:宋体;mso-font-kerning:0pt;">、任选九场单式方案标准格式：一行一注，投注号码不要以空格隔开，文本内除投注号码、"*"外不允许出现其他文字、号码及符号；特别注意不要有序号。  例：九场单式方案：13*0*1*13*30*1</span></p>
+<p align="left" class="MsoNormal" style="text-align:left;line-height:18pt;margin:11.25pt 0cm;mso-pagination:widow-orphan;"><span lang="EN-US" style="font-family:'ˎ̥','serif';color:#333333;mso-bidi-font-size:10.5pt;mso-bidi-font-family:宋体;mso-font-kerning:0pt;mso-fareast-font-family:宋体;">5</span><span style="font-family:宋体;color:#333333;mso-bidi-font-size:10.5pt;mso-ascii-font-family:ˎ̥;mso-hansi-font-family:ˎ̥;mso-bidi-font-family:宋体;mso-font-kerning:0pt;">、双色球单式方案标准格式：一行一注，特别注意投注号之间以空格隔开，红蓝球之间也以空格区别，红蓝球个位数前都必须 加0，文本内除投注号码、空格外不允许出现其他任何文字、号码及符号；特别注意不要有序号。  例：双色球单式方案：04 12 14 25 28 33 08</span></p>
+<p align="left" class="MsoNormal" style="text-align:left;line-height:18pt;margin:11.25pt 0cm;mso-pagination:widow-orphan;"><span lang="EN-US" style="font-family:'ˎ̥','serif';color:#333333;mso-bidi-font-size:10.5pt;mso-bidi-font-family:宋体;mso-font-kerning:0pt;mso-fareast-font-family:宋体;">6</span><span style="font-family:宋体;color:#333333;mso-bidi-font-size:10.5pt;mso-ascii-font-family:ˎ̥;mso-hansi-font-family:ˎ̥;mso-bidi-font-family:宋体;mso-font-kerning:0pt;">、数字排列单式方案标准格式：一行一注，投注号码不要以空格隔开，文本内除投注号码以外不允许出现其他任何文字、号码及符号；特别注意不要有序号。  例：排列3单式方案：184   排列5单式方案：18456</span></p>
+<p align="left" class="MsoNormal" style="text-align:left;line-height:18pt;margin:11.25pt 0cm;mso-pagination:widow-orphan;"><span lang="EN-US" style="font-family:'ˎ̥','serif';color:#333333;mso-bidi-font-size:10.5pt;mso-bidi-font-family:宋体;mso-font-kerning:0pt;mso-fareast-font-family:宋体;">7</span><span style="font-family:宋体;color:#333333;mso-bidi-font-size:10.5pt;mso-ascii-font-family:ˎ̥;mso-hansi-font-family:ˎ̥;mso-bidi-font-family:宋体;mso-font-kerning:0pt;">、福彩3D单式方案标准格式：一行一注，投注号码不要以空格隔开，文本内除投注号码以外不允许出现其他任何文字、号码及符号；特别注意不要有序号。  例：福彩3D单式方案：286</span></p>
+<p align="left" class="MsoNormal" style="text-align:left;line-height:18pt;margin:11.25pt 0cm;mso-pagination:widow-orphan;"><span lang="EN-US" style="font-family:'ˎ̥','serif';color:#333333;mso-bidi-font-size:10.5pt;mso-bidi-font-family:宋体;mso-font-kerning:0pt;mso-fareast-font-family:宋体;">8</span><span style="font-family:宋体;color:#333333;mso-bidi-font-size:10.5pt;mso-ascii-font-family:ˎ̥;mso-hansi-font-family:ˎ̥;mso-bidi-font-family:宋体;mso-font-kerning:0pt;">、七星彩单式方案标准格式：一行一注，特别注意七星排列投注号码不要以空格隔开，否则过关软件不能正确区别。文本内除投注号码以外不允许出现其他任何文字、号码及符号；特别注意不要有序号。  例：七星彩单式方案：5834662</span></p>
+
+                
+                   </div>
+                
+            @*    <div class="det_a feedback">
+                <div>以上内容是否解决了您的问题呢？</div>
+                              
+                <div>
+                <a id="btn_a_yes" class="btn"><span class="feedback_yes">是，已经解决。</span></a> <a class="btn" id="btn_a_no" href="javascript:void(0);"><span class="feedback_no">否，尚未解决。</span></a>
+                    <div style="display:none;" class="feedback_form clearfix" id="feed_div">                  
+                    <a id="fclose" class="feedback-close" href="javascript:void(0);">关闭</a>     
+                    <span style="display:none;" id="feed_detail"> 
+	                    <form method="post" name="feed_dtl" id="feed_dtlf">             
+		                    <span class="fb-input"><input type="radio" value="1" name="nodtl"> 描述不清晰</span>
+		                    <span class="fb-input"><input type="radio" value="2" name="nodtl"> 字太多，不想看</span>
+		                    <span class="fb-input"><input type="radio" value="3" name="nodtl"> 太复杂，看不懂</span>
+		                    <span class="fb-input"><input type="button" value="提交" name="fsbmt"></span>
+		                </form>    
+	                </span>
+                    <div style="display:none;" class="feedback-suc l" id="feed_result">您的反馈信息已经提交，谢谢您的反馈。</div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                  
+                </script>                                           
+                </div>
+                
+                <div class="det_a">
+                	<div class="det_a_l">相关问题：</div>
+                    <div class="det_a_r">
+                    	<ul>
+                        	                    	</ul>    
+                    </div>
+                </div>*@
+            </div>
+
+        </div>
+         </div>
+<div class="clearfix"></div>
+
+ @ViewHelpers.js("help.js")
+
+
+
+
+
+

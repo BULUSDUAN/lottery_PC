@@ -1,0 +1,541 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutBlog.cshtml";
+}
+@using GameBiz.Core;
+@{
+    var prouser = ViewBag.UserInfo as ProfileUserInfo;
+
+    if (prouser == null)
+    {
+        ViewBag.Title = "404,没有查询到这个用户！";
+    }
+    else
+    {
+        ViewBag.Title = SiteString.HideUserName(prouser.UserDisplayName, prouser.HideNameCount) + "的个人空间-" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = SiteString.HideUserName(prouser.UserDisplayName, prouser.HideNameCount) + "的个人空间";
+        ViewBag.Descriptio = SiteString.HideUserName(prouser.UserDisplayName, prouser.HideNameCount) + "个人空间,查看更多个人空间请登录" + SiteString.getHZSiteName(Request) + "彩票网.";
+    }
+    var visitList = ViewBag.VisitList as ProfileVisitHistoryCollection;
+    var dynamicList = ViewBag.DynamicList as ProfileDynamicCollection;
+    var beedings = ViewBag.StandingList as UserBeedingListInfoCollection;
+    var attention = ViewBag.Attention as UserAttentionSummaryInfoCollection;
+    var greatetog = ViewBag.CreateTog as TogetherOrderInfoCollection;
+    var jointog = ViewBag.JoinTog as TogetherOrderInfoCollection;
+    var comment = ViewBag.UserComment as External.Core.Login.TeamCommentInfoColltion;
+}
+@section css{
+    @ViewHelpers.css("blog.css")
+}
+@{Html.RenderAction("left", "Blog", new { name = "index" });}
+@if (prouser == null)
+{
+    <p style="text-align: center; font-weight: bold; font-size: 18px;">
+        很抱歉，该用户不存在或者个人中心暂不能访问...<a href="/">返回主页</a>>></p>
+}
+else
+{
+    <div style="width: 750px; float: right; margin-top: 10px;">
+        <div style="width: 550px; float: left; margin-left: -15px;">
+            <p style="float: left; width: 180px; height: 40px; line-height: 30px;">
+                <i class="index_photo index_time"><span id="Retime" class="common_limage" style="margin-left: 0px;">
+                </span></i>注册时期：<e style="font-size: 12px;">@prouser.CreateTime.ToString("yyyy-MM-dd")</e>
+            </p>
+            <p style="height: 40px; line-height: 50px; margin-top: -10px; margin-left: 175px;">
+                <i class="index_photo index_sc"><span id="Caizhong1" class="common_limage" style="margin-left: -20px;">
+                </span></i><span>最擅长彩种：</span>
+                @if (beedings.List != null)
+                {
+                    var gameCode = string.Empty;
+                    for (var i = 0; i < beedings.List.Count; i++)
+                    {
+                        gameCode = beedings.List[i].GameCode.ToLower();
+                        if (i > 0)
+                        {
+                            if (beedings.List[i - 1].GameCode != beedings.List[i].GameCode)
+                            {
+                                if ("ctzq" == gameCode)
+                                {
+                    <a style="color: #4775B1;" href="/hemai/index/ctzq?PlayType=t14c">、@SiteConvert.GameName(beedings.List[i].GameCode, "")</a>
+                                }
+                                else
+                                {
+                    <a style="color: #4775B1;" href="/hemai/index/@gameCode">、@SiteConvert.GameName(beedings.List[i].GameCode, "")</a>
+                                }
+
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            if ("ctzq" == gameCode)
+                            {
+                            
+                    <a style="color: #4775B1;" href="/hemai/index/ctzq?PlayType=t14c">@SiteConvert.GameName(beedings.List[i].GameCode, "")</a>
+                            }
+                            else
+                            {
+                    <a style="color: #4775B1;" href="/hemai/index/@gameCode">@SiteConvert.GameName(beedings.List[i].GameCode, "")</a>
+                            }
+                        }
+
+                    }
+                }
+                else
+                { 
+                    <e style="color: #4775B1;">无</e>
+                }</p>
+            <div style="border-bottom: 1px dashed #C4C4C4;">
+            </div>
+            <script type="text/javascript">
+                window.onload = function () {
+
+                }
+            </script>
+            <div class="blog_index_bt">
+                <ul>
+                    @*<li style="width: 20px;"></li>*@
+                    <li class="blog_index_bt_li fq"><a style="display: block; margin-top: -1px;">他发起的方案</a></li>
+                    <li class="rg"><a style="display: block; margin-top: -1px;">他认购的方案</a></li>
+                    <li style="float: right; text-align: right;"><a style=" font-weight:normal;color:#4775B1;" href="/blog/current/@prouser.UserId">
+                        更多>></a></li>
+                </ul>
+            </div>
+            <script type="text/javascript">
+                $(function () {
+                    $(".fq").click(function () {
+                        $(".rg").removeClass("blog_index_bt_li");
+                        $(this).addClass("blog_index_bt_li");
+                        $(".rgsj").hide();
+                        $(".fqsj").show();
+                    })
+                    $(".rg").click(function () {
+                        $(".fq").removeClass("blog_index_bt_li");
+                        $(this).addClass("blog_index_bt_li");
+                        $(".fqsj").css("display", "none");
+                        $(".rgsj").show();
+                    })
+                })
+            </script>
+            <table class="fqsj index_table" style="display: inline-block; margin-bottom: 11px;"
+                cellspacing="0" cellpadding="2">
+                <tr class="index_table_tr">
+                    @*彩种 期号 玩法 方案金额 每份金额 进度 合买*@
+                    <td width="40px" style="border-top: 2px solid #F19070; color: black;">
+                        序
+                    </td>
+                    <td width="120px" style="border-top: 2px solid #F19070; color: black;">
+                        彩种
+                    </td>
+                    <td width="150px" style="border-top: 2px solid #F19070; color: black;">
+                        期号
+                    </td>
+                    <td width="90px;" style="border-top: 2px solid #F19070; color: black;">
+                        方案金额
+                    </td>
+                    <td width="80px;" style="border-top: 2px solid #F19070; color: black;">
+                        进度
+                    </td>
+                    <td width="70px;" style="border-top: 2px solid #F19070; color: black;">
+                        合买
+                    </td>
+                </tr>
+                @{
+                if (greatetog != null)
+                {
+                    var lists = greatetog.OrderList.Take(5);
+                    if (lists.Count() > 0)
+                    {
+                        foreach (var item in lists)
+                        {
+                    <tr>
+                        <td>
+                            @(greatetog.OrderList.IndexOf(item) + 1)
+                        </td>
+                        <td style="color: #1A4385;">@(item.SchemeBettingCategory == SchemeBettingCategory.ErXuanYi ? "竞彩主客二选一" : SiteConvert.GameName(item.GameCode, item.GameType))
+                        </td>
+                        <td>@item.IssuseNumber
+                        </td>
+                        <td style="color: #FE3C00;">
+                            ￥@item.TotalMoney.ToString("f")
+                        </td>
+                        <td>@((item.Progress * 100).ToString("f"))%
+                        </td>
+                        <td>
+                            <a href="/user/scheme/@item.SchemeId" target="_blank">@OrderManager.TogetherProgressName(item.TogetherSchemeProgress, item.TicketStatus, item.BonusStatus, item.IsPrizeMoney)</a>
+                        </td>
+                    </tr>
+                        }
+                    }
+                    else
+                    {
+                    <tr>
+                        <td colspan="6" style="text-align: center; border: 1px solid #E9E9E9;">
+                            暂时没有发起记录
+                        </td>
+                    </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" style="text-align: center; border: 1px solid #E9E9E9;">
+                            暂时没有发起记录
+                        </td>
+                    </tr>
+                }
+                }
+            </table>
+            <table class="rgsj index_table" cellspacing="0" cellpadding="2">
+                <tbody id="tbody1">
+                    <tr class="index_table_tr">
+                        <td width="40px" style="border-top: 2px solid #F19070; color: black;">
+                            序
+                        </td>
+                        <td width="120px" style="border-top: 2px solid #F19070; color: black;">
+                            发起人
+                        </td>
+                        <td width="110px" style="border-top: 2px solid #F19070; color: black;">
+                            彩种
+                        </td>
+                        <td width="90px;" style="border-top: 2px solid #F19070; color: black;">
+                            期号
+                        </td>
+                        <td width="80px" style="border-top: 2px solid #F19070; color: black;">
+                            金额
+                        </td>
+                        <td width="70px" style="border-top: 2px solid #F19070; color: black;">
+                            进度
+                        </td>
+                        <td width="70px" style="border-top: 2px solid #F19070; color: black;">
+                            合买
+                        </td>
+                    </tr>
+                    @{if (jointog != null)
+                      {
+                          foreach (var item in jointog.OrderList.Take(5))
+                          {
+                        <tr>
+                            <td>@(jointog.OrderList.IndexOf(item) + 1)
+                            </td>
+                            <td>@SiteString.HideUserName(item.CreatorDisplayName, item.HideDisplayNameCount)
+                            </td>
+                            <td>@(item.SchemeBettingCategory == SchemeBettingCategory.ErXuanYi ? "竞彩主客二选一" : SiteConvert.GameName(item.GameCode, item.GameType))
+                            </td>
+                            <td>@item.IssuseNumber
+                            </td>
+                            <td>
+                                ￥@item.TotalMoney.ToString("f")
+                            </td>
+                            <td>@((item.Progress * 100).ToString("f"))%
+                            </td>
+                            <td>
+                                <a href="/user/scheme/@item.SchemeId" target="_blank">@OrderManager.TogetherProgressName(item.TogetherSchemeProgress, item.TicketStatus, item.BonusStatus, item.IsPrizeMoney)</a>
+                            </td>
+                        </tr>
+                          }
+                      }
+                      else
+                      {
+                        <tr>
+                            <td colspan="8">
+                                暂无数据
+                            </td>
+                        </tr>
+                      }}
+                </tbody>
+            </table>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#tbody1 tr:odd').filter(':gt(0)').addClass('odd'); $('#tbody1 tr:even').filter(':gt(0)').addClass('even');
+                })
+            </script>
+            <br />
+            @*<p style=" font-size: 14px;background-color:#F4F4F4;height:31px;border-top:2px solid #FE3C00;border-bottom:2px solid #D7D7D7;border-left:1px solid #D7D7D7;border-right:1px solid #D7D7D7;padding-top:8px;">&nbsp;<span id="dynamic1" style="padding-left:4px;">&nbsp;&nbsp; </span>
+                最新动态 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;<span style="float:right;margin-top:-17px"><span style="font-size:30px;color:#ADADAD;margin-bottom:10px;">·</span><a style="color: black; text-decoration: none; font-size: 12px; line-height: 20px;
+                height: 20px;" href="javascript:void(0)">投注意见</a></span></p>*@ @*<div style="border-bottom: 1px solid #d7cabb; height: 5px;">
+            </div>*@ @*    <div style="border-bottom: 1px dotted  #000000; height: 10px;">
+            </div>*@
+            @if (dynamicList != null)
+            {     
+                 
+                <p class="dynamic">
+                    <span id="dynamic2" class="common_limage" style="margin-left: 8px; margin-top: 11px;">
+                    </span><span style="font-size: 14px; color: black; line-height: 36px; margin-left: 5px;
+                        float: left; margin-top: 2px;">最新动态:</span> <span style="font-size: 25px; color: #ADADAD;
+                            margin-left: 210px; padding-top: 5px;">@*·*@</span> <span style="color: Black; font-size: 12px;
+                                display: block; margin-top: -28px; margin-left: 325px;">@*投注速成班：*@</span>
+                    <a style="color: #FD4811; text-decoration: none; font-size: 12px; float: right; margin-right: 5px;
+                        margin-top: -18px;" href="javascript:void(0)"><span>@*如何运用赔注来指导投注？*@</span></a></p>
+                <br />
+                foreach (var item in dynamicList.List)
+                {
+                    if (item.DynamicType.Contains("关注"))
+                    { 
+                <div class=" bolg_center oo " style="height: 20px; border: 1px solid #e8e8e8;">
+                    <i class="index_gz"></i><a>@SiteString.HideUserName(item.UserDisplayName, item.HideDisplayNameCount)</a>
+                    设置了 @item.DynamicType <a>@SiteString.HideUserName(item.User2DisplayName, item.User2HideDisplayNameCount)</a>
+                </div>
+                      
+                
+                <p style="text-align: right; margin-top: 10px; font-size: 12px; font-weight: normal;">@item.CreateTime.ToString("MM-dd hh:mm")<a
+                        style="color: #0F3F94;" href="/blog/fans/@prouser.UserId" @*href="/blog/attention/@prouser.UserId"*@>他的粉丝&gt;&gt;</a></p>
+@* <div style="border-bottom: 1px dotted  #000000; height: 10px;">*@
+@*  </div>*@
+                    }
+                    else
+                    {   
+                <div class="bolg_center" style="border: 1px solid #E8E8E8; background-color: #F9F9F9;">
+                    <i class="index_jinbi"></i><a>@SiteString.HideUserName(item.UserDisplayName, item.HideDisplayNameCount)</a>
+                    认购了 <a>@SiteConvert.GameName(item.GameCode, "")</a> ￥<span style="color: #FF3C02;">@item.TotalMonery.ToString("f")</span>
+                    元方案。
+                    <table class=" bolg_table" cellspacing="0" cellpadding="0">
+                        <tr style="background-color: #FFFFFF;">
+                            <td style="border-right: none;">
+                                总金额
+                            </td>
+                            <td style="border-left: none; border-right: none;">
+                                份数
+                            </td>
+                            <td style="border-left: none; border-right: none;">
+                                每份
+                            </td>
+                            <td style="border-left: none; border-right: none;">
+                                保底金额
+                            </td>
+                            <td style="border-left: none;">
+                                购买进度
+                            </td>
+                        </tr>
+                        <tr style="background-color: #FFFFFF;">
+                            <td style="border-right: none;">
+                                <p style="color: Red;">
+                                    ￥@item.TotalMonery.ToString("f")</p>
+                            </td>
+                            <td style="border-left: none; border-right: none;">
+                                @if (item.Price == 0)
+                                {
+                                    <b>0份</b> 
+                                
+                                }
+                                else
+                                {
+                                    <b>@(item.TotalMonery / item.Price)
+                                        份</b> 
+                                }
+                            </td>
+                            <td style="border-left: none; border-right: none;">
+                                ￥@item.Price.ToString("f") 元
+                            </td>
+                            @{
+                                var bfb = (double.Parse(item.Price.ToString("f")) * item.Guarantees / double.Parse(item.TotalMonery.ToString("f")) * 100).ToString("f");
+                            }
+                            <td style="border-left: none; border-right: none;">@(double.Parse(item.Price.ToString("f")) * item.Guarantees)元(<e
+                                style="color: Red;"> @(bfb) %</e>)@*@(double.Parse(bfb)*100)*@
+                            </td>
+                            <td style="border-left: none;">
+                                <p style="color: Red;">@((item.Progress * 100).ToString("f"))%</p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <p style="text-align: right; margin-top: 10px; font-size: 12px; font-weight: normal;">@item.CreateTime.ToString("MM-dd hh:mm")<a
+                        style="color: #0F3F94;" href="/user/scheme/@item.SchemeId">去看看他的方案&gt;&gt;</a></p>
+@*  <div style="border-bottom: 1px dotted  #000000; height: 10px;">
+                </div>*@
+                    }
+                <br />
+                }
+            }
+            else
+            { 
+                <p class="dynamic">
+                    <span id="dynamic1" class="common_limage" style="margin-left: 8px; margin-top: 11px;">
+                    </span><span style="font-size: 14px; color: black; margin-bottom: 5px; line-height: 36px;
+                        margin-left: 5px; float: left; margin-top: 2px;">最新动态:</span> <span style="font-size: 25px;
+                            color: #ADADAD; margin-left: 367px; padding-top: 5px;">@*·*@</span> <a style="color: black;
+                                text-decoration: none; font-size: 12px; float: right; padding-top: 10px; margin-right: 12px;"
+                                href="javascript:void(0)">@*投注意见*@</a>
+                </p>
+                <br />
+            }
+            <div style="text-align: center;">
+                @ViewHelpers.Pager3("getPayRecord", ViewBag.pageIndex, ViewBag.pageSize, dynamicList.TotalCount == null ? 0 : dynamicList.TotalCount)
+            </div>
+        </div>
+        <!--右栏内容 -->
+        <div style="width: 195px; float: right;">
+            <h2 class="blog_right_h2">
+                <span id="honor" class="lb_limage" style="margin-top: 7px;"></span><span style="margin-left: 8px;">
+                    历史战绩</span></h2>
+            <div class="blog_right">
+                <ul>
+                    @if (beedings.List.Count != 0)
+                    {
+                        var userBeedingList = beedings.List.Take(3);
+                        foreach (var item in userBeedingList)
+                        {
+                        <li class="honor11"><b style="text-align: left; color: #0F3F94; font-size: 12px;">@SiteConvert.GameName(item.GameCode, ""):@*@{ Dictionary<string, int> items = new Dictionary<string, int>();
+                                                                                                                                       items.Add("GoldStarCount", item.GoldStarCount);
+                                                                                                                                       items.Add("GoldDiamondsCount", item.GoldDiamondsCount);
+                                                                                                                                       items.Add("GoldCupCount", item.GoldCupCount);
+                                                                                                                                       items.Add("GoldCrownCount", item.GoldCrownCount);
+                                                                                                                                       items.Add("SilverCrownCount", item.SilverCrownCount);
+                                                                                                                                       items.Add("SilverCupCount", item.SilverCupCount);
+                                                                                                                                       items.Add("SilverDiamondsCount", item.SilverDiamondsCount);
+                                                                                                                                       items.Add("SilverStarCount", item.SilverStarCount);
+                        }
+                            @GameHelper.GetZj(items)*@ </b>
+                            <br />
+                            <span style="color: Black;">发单中奖次数：</span><e style="color: Black;">@item.TotalBonusTimes</e>
+                            <a style=" float:right;color:#0F3F94;" href="/blog/standings/@ViewBag.UserId?gameCode=@item.GameCode&gameType=@item.GameType">
+                                详情&gt;&gt;</a>
+                            <br />
+                            <span style="color: Black;">总奖金：</span><b class="u_red">@item.TotalBonusMoney.ToString("f")</b>
+                            <span style="color: Black;">元</span>
+                            <div class="honor123">
+                            </div>
+                        </li> 
+                        }
+                    }
+                    else
+                    { 
+                        <li style="text-align: left;">暂无历史战绩
+                            <div style="border-bottom: 1px dotted  #666666; width: 100%;">
+                            </div>
+                        </li>
+                    }
+                    @* <li style="height: 20px;"></li>*@
+                </ul>
+            </div>
+            <div class="clearfix">
+            </div>
+            <h2 class="blog_right_h2_w">
+                <a target="_blank" style=" line-height:30px;color:#2962A9;" href="/blog/attention/@ViewBag.UserId">
+                    <span style="font-size: 12px; float: right;">更多&gt;&gt;</span></a> <span id="watched"
+                        class="lb_limage" style="margin-top: 7px;"></span><span style="margin-left: 8px;">他关注的人</span>
+            </h2>
+            <div style="padding: 3px 7px; margin-top: -7px;">
+                <div class="blog_right_attention">
+                    @* <ul>*@
+                    <div>
+                        @if (attention.List.Count != 0)
+                        {
+                            foreach (var item in attention.List)
+                            {
+                                var userleve = 1;
+                                switch (item.MaxLevelName)
+                                {
+                                    case "百元":
+                                        userleve = 10;
+                                        break;
+                                    case "彩民":
+                                        userleve = 1;
+                                        break;
+                                    case "千元":
+                                        userleve = 2;
+                                        break;
+                                    case "万元":
+                                        userleve = 3;
+                                        break;
+                                    case "十万":
+                                        userleve = 4;
+                                        break;
+                                    case "百万":
+                                        userleve = 5;
+                                        break;
+                                    case "亿元":
+                                    case "千万":
+                                        userleve = 7;
+                                        break;
+                                }
+
+@*  <li><a  href="/blog/standings/@item.UserId">
+                            <i class="touxiang blog-lv lv@(item.MaxLevelName == "百元" ? "100" : item.MaxLevelName == "千元" ? "1000" : item.MaxLevelName == "万元" ? "10000" : item.MaxLevelName == "十万" ? "100000" : item.MaxLevelName == "百万" ? "1000000" : item.MaxLevelName == "千万元" ? "10000000" : "0")">
+                            </i></a>
+                            <a href="/blog/standings/@item.UserId">@SiteString.HideUserName(item.UserDisplayName, item.HideDisplayNameCount)</a>
+                                <br />
+                                <b>@item.MaxLevelName</b> </li>*@
+                         
+                            <div class="watch11">
+                                <div style="float: left;">
+                                    <a  href="/blog/standings/@item.UserId"><i class="touxiang hmmr_leve@(userleve)"></i>
+                                    </a>
+                                </div>
+                                <p style="height: 50px;">
+                                </p>
+                                <div style="padding-left: 74px; margin-top: -40px;">
+                                    <span><a href="/blog/standings/@item.UserId";style="color:#396AAF;">@SiteString.HideUserName(item.UserDisplayName, item.HideDisplayNameCount)</a>
+                                        <br />
+                                        <b style="color: #FE3C00;">@item.MaxLevelName</b> </span>
+                                </div>
+                                <p style="height: 15px;">
+                                </p>
+                                <div class="watch123">
+                                </div>
+                                <p style="height: 20px;">
+                                </p>
+                            </div>
+                        
+                            }
+                        }
+                        else
+                        { 
+                            <span style="text-align: left; width: 100%; height: 30px; color: #999999; margin-left: -5px;">
+                                暂时没有任何人关注你</span>
+                            <div style="border-bottom: 1px dotted  #666666; width: 100%;">
+                            </div>
+                        }
+                    </div>
+                    @*  </ul>*@
+                </div>
+            </div>
+            <div class="clearfix">
+            </div>
+            <h2 class="blog_right_h2_v">
+                <span id="visitor" class="lb_limage" style="margin-top: 7px;"></span><span style="margin-left: 8px;">
+                    最近访客</span></h2>
+            <div class="blog_right">
+                <ul>
+                    @if (visitList.Count > 0)
+                    {
+                        foreach (var item in visitList)
+                        {
+                        <li style="margin-bottom: -5px;"><span style="color: black;">[@item.MaxLevelName]</span>
+                            <a style="color: #0F3F94;" href="/blog/standings/@item.VisitUserId" target="_blank">@(item.VisitorUserDisplayName.Length > 5 ? item.VisitorUserDisplayName.Substring(0, 5) + "..." : item.VisitorUserDisplayName)</a>
+                            <span style="color: black; float: right;">@item.CreateTime.ToString("MM-dd")</span></li>  
+                        }
+                    }
+                    else
+                    { 
+                        <li>暂时无人访问你
+                            <div style="border-bottom: 1px dotted  #666666; width: 100%;">
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix">
+    </div>
+    <script type="text/javascript">
+        function getPayRecord(pageIndex, pageSize) {
+            var begin = $("#begin").val();
+            var end = $("#end").val();
+            var search = "pageIndex=" + pageIndex + "&pageSize=" + pageSize + "&begin=" + begin + "&end=" + end;
+            var status = $("#status option:selected").val();
+            if (status) {
+                search = search + "&status=" + status;
+            }
+            location.search = search;
+        }
+
+        $(function () {
+            $(".honor11").children(":last").hide("honor123");
+            $(".watch11").children(":last").hide("watch123");
+            $(".oo:odd").addClass("ni2");
+        });
+    </script>
+    <div class="clearfix">
+    </div>
+}

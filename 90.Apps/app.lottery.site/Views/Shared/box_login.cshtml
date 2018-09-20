@@ -1,0 +1,169 @@
+﻿@*<script src="http://static.geetest.com/static/tools/gt.js"></script>
+@UserHelper.js("geetest.js?v=2016050701")*@
+<div id="loginLay" class="pop-comm login_pop" style="display: none;">
+    <div class="iDialog_dlkuang">
+        <div class="iDialogHead">
+            <h1>
+                账号登录</h1>
+        </div>
+        <a href="javascript:void(0)" onclick="loginDialog.Close();" id="DialogClose" hidefocus="true"
+            class="iDialogClose"></a>
+        <div class="iDialogBody">
+            <div class="iDialogMain">
+                <ul>
+                    <li><span class="mcInputBoxUser">
+                        <input type="text" name="u" id="lu" tabindex="1" placeholder="输入用户名或手机号" autocomplete="off"
+                            class="loginInput" />
+                    </span><a id="toRegster" href="/statichtml/register.html" target="_blank">免费注册</a>
+                    </li>
+                    <li><span class="mcInputBoxPass">
+                        <input type="password" name="p" id="lp" tabindex="2" placeholder="密码" autocomplete="off"
+                            class="loginInput" />
+                    </span><a target="_blank" href="/user/forget">忘记密码</a> </li>
+                    <li>
+                        <div id="login_captcha">
+                        </div>
+                        <span id="verifycodeTip" class="onShow" style="display: none;"><b>请拖动验证滑块到正确位置!</b></span>
+                        <br />
+                    </li>
+                    <li class="errAndSaveLi">
+                        <div style="display: none;" id="error_tips" class="dl_tips">
+                            您输入的账户名和密码不匹配，请重新输入。
+                        </div>
+                        <a id="link_go_activity" style="display: none;">去激活</a> </li>
+                    <li class="leftLi"><a tabindex="3" id="floginbtn" class="iDialogBtn" href="javascript:void(0)">
+                        <span>登 录</span></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    //login_getcaptcha();
+
+    //new Drag("loginLay", { Handle: "drag_poplogin", Limit: true });
+    var loginDialog = new LightBox("loginLay", { onShow: initLoginBox });
+
+    function initLoginBox() {
+
+        $("#error_tips").html("").hide();
+        if ($.cookie("remember") == "true") {
+            $("#remember").attr("checked", true);
+            $("#lu").val($.cookie("userName"));
+            $("#lp").val($.cookie("userPwd"));
+        } else {
+            $("#remember").removeAttr("checked");
+            $("#lu").val("").focus();
+            $("#lp").val("");
+        }
+    }
+
+    function setLoginButton(isShow) {
+        if (isShow) {
+            document.getElementById("login_table").style.display = "";
+            document.getElementById("login_progress").style.display = "none";
+            document.getElementById("login_table").disabled = false;
+        } else {
+            $("#error_tips").html("").hide();
+            document.getElementById("login_table").disabled = true;
+            document.getElementById("login_table").style.display = "none";
+            document.getElementById("login_progress").style.display = "block";
+        }
+    }
+    function saveUserInfo() {
+        if ($("#remember").is(":checked")) {
+            var userName = $("#lu").val();
+            var userPwd = $("#lp").val();
+            $.cookie("remember", "true", { expires: 7 });
+            $.cookie("userName", userName, { expires: 7 });
+            $.cookie("userPwd", userPwd, { expires: 7 });
+        } else {
+            $.cookie("remember", "false", { expires: -1 });
+            $.cookie("userName", '', { expires: -1 });
+            $.cookie("userPwd", '', { expires: 7 });
+        }
+    }
+
+    $("#floginbtn").live("click", function () {
+        var userName = $("#lu").val();
+        var passWord = $("#lp").val();
+
+        if (!userName) {
+            $("#error_tips").html("请输入您的登录账号").show();
+            $("#lu").focus();
+            return false;
+        }
+        if (!passWord) {
+            $("#error_tips").html("请输入正确的密码").show();
+            $("#lp").focus();
+            return false;
+        }
+        //        if (!GT_status) {
+        //            $("#error_tips").html("请拖动验证滑块到正确位置").show();
+        //            $("#lp").focus();
+        //            return false;
+        //        }
+        //        var geetest_challenge = $("[name='geetest_challenge']").val();
+        //        if (!geetest_challenge && $("[name='geetest_challenge']").length == 2) {
+        //            geetest_challenge = $("[name='geetest_challenge']")[1].value;
+        //        }
+        //        var geetest_validate = $("[name='geetest_validate']").val();
+        //        if (!geetest_validate && $("[name='geetest_validate']").length == 2) {
+        //            geetest_validate = $("[name='geetest_validate']")[1].value;
+        //        }
+        //        var geetest_seccode = $("[name='geetest_seccode']").val();
+        //        if (!geetest_seccode && $("[name='geetest_seccode']").length == 2) {
+        //            geetest_seccode = $("[name='geetest_seccode']")[1].value;
+        //        }
+        var url = "/user/loginuser123";
+        //        var data = { userName: userName, passWord: passWord, geetest_challenge: geetest_challenge, geetest_validate: geetest_validate, geetest_seccode: geetest_seccode };
+        var data = { userName: userName, passWord: passWord };
+        var success = function (result) {
+            if (result.IsSuccess) {
+                //setLoginButton(true);
+                loginDialog.Close();
+                saveUserInfo();
+                $("#lu").val("");
+                $("#lp").val("");
+                $("#error_tips").html("").hide();
+                $(".hongbao3").css("display", "none");
+                user.refresh(user.LoginCallBack);
+                //alert("你的账户有异常，为了确保你的资金安全，请修改你的登录密码，如果已修改过，请忽略该提示！");
+                //window.location.href= = "/member/safe";
+                return false;
+            } else {
+                //setLoginButton(true);
+                //$("#error_tips").html(result.Message).show();
+                //                console.warn(result.UserId)
+                //                if (result.UserId) {
+                //                    $("#link_go_activity").attr("href", "/user/registervalidamobile?userid=" + result.UserId).show();
+                //                }
+                if (result.Message == "用户未激活") {
+                    alert("您的账户存在异常行为，为了保障您的资金安全，暂停登录，请联系在线客服处理");
+                    //alert("账户存在异常行为，请联系在线客服处理解封");
+                }
+                else {
+                    $("#error_tips").html(result.Message).show();
+                }
+                return false;
+            }
+        };
+        $.post(url, data, success);
+        return false;
+    });
+    $("#floginreset").die().live("click", function () {
+        $("#loginForm")[0].reset();
+    });
+    $("body").keydown(function (e) {
+        if (e.which == 13) {
+            if (!user.isLogin(function () { }) && $("#loginLay").is(":visible")) {
+                $("#floginbtn").click();
+            }
+        }
+    });
+    //刷新验证码
+    function refreshCode() {
+        $("#yzmtext").val("").focus();
+        $("#yzmimg").css("display", "inline-block").attr("src", "/user/createvalidatecode?r=" + Math.random().toFixed(5));
+    }
+</script>

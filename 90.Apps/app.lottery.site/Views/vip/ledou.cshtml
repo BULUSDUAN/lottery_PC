@@ -1,0 +1,231 @@
+﻿@{
+    ViewBag.Title = "会员中心 - 豆豆兑换-体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    Layout = "~/Views/vip/_Layout.cshtml";
+    var user = ViewBag.User as app.lottery.site.Models.CurrentUserInfo;
+    var balance = ViewBag.CurrentUserBalance as GameBiz.Core.UserBalanceInfo;
+
+    var isNeeddoudou = user == null ? false : balance.CheckIsNeedPassword("ExchangeDouDou");
+    var time = DateTime.Now;
+    var time2 = DateTime.Parse("2015-12-31");
+    var ispass = false;
+    if (time > time2)
+    {
+        ispass = true;
+    }
+}
+@section css{
+    @ViewHelpers.css("vip.css")
+}
+<div class="main_v">
+    @{Html.RenderAction("menu", "vip");}
+    <div class="right_con">
+        @if (user != null)
+        {
+            Html.RenderAction("ledoutoptip", "vip");
+        }
+        <div class="list_p">
+            <div class="list_p_tit clearfix">
+                <h3>
+                    豆豆兑换</h3>
+                <span>@*每天0:00-24:00准时开抢*@</span></div>
+            <table class="duih_tb" border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="duih_box">
+                                <div class="duih_l">
+                                    <img src="@ViewHelpers.img("vip/hongbao01.png")" height="160" width="110">
+                                </div>
+                                <ul class="duih_r">
+                                    <li class="duih_r_t">【会员专享】50元购彩红包 </li>
+                                    <li class="duih_money">1000豆豆+45元</li>
+                                    <li><span class="@(ispass?"no-notic":"notic")">@(ispass ? "活动已截止" : "活动进行中")</span> <a  href="javascript:void(0);" class=" dh " value="1000" money="45" style="@(ispass ? "display:none" : "")">兑换</a> </li>
+                                </ul>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="duih_box">
+                                <div class="duih_l">
+                                    <img src="@ViewHelpers.img("vip/hongbao02.png")" height="160" width="110">
+                                </div>
+                                <ul class="duih_r">
+                                    <li class="duih_r_t">【会员专享】100元购彩红包 </li>
+                                    <li class="duih_money">1800豆豆+90元</li>
+                                    <li><span class="@(ispass?"no-notic":"notic")">@(ispass ? "活动已截止" : "活动进行中")</span> <a  href="javascript:void(0);" class=" dh " value="1800" money="90" style="@(ispass ? "display:none" : "")">兑换</a> </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="duih_box">
+                                <div class="duih_l">
+                                    <img src="@ViewHelpers.img("vip/hongbao03.png")" height="160" width="110">
+                                </div>
+                                <ul class="duih_r">
+                                    <li class="duih_r_t">【会员专享】1000元购彩红包 </li>
+                                    <li class="duih_money">15000豆豆+900元</li>
+                                   <li><span class="@(ispass?"no-notic":"notic")">@(ispass ? "活动已截止" : "活动进行中")</span> <a  href="javascript:void(0);" class=" dh " value="15000" money="900" style="@(ispass ? "display:none" : "")">兑换</a> </li>
+                                </ul>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="duih_box">
+                                <div class="duih_l">
+                                    <img src="@ViewHelpers.img("vip/hongbao03.png")" height="160" width="110">
+                                </div>
+                                <ul class="duih_r">
+                                    <li class="duih_r_t">【会员专享】1000元购彩红包 </li>
+                                    <li class="duih_money">150000豆豆</li>
+                                    <li><span class="@(ispass?"no-notic":"notic")">@(ispass ? "活动已截止" : "活动进行中")</span> <a  href="javascript:void(0);" class=" dh " value="150000"  style="@(ispass ? "display:none" : "")">兑换</a> </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="duih_box">
+                                <div class="duih_l">
+                                    <img src="@ViewHelpers.img("vip/hongbao04.png")" height="160" width="110">
+                                </div>
+                                <ul class="duih_r">
+                                    <li class="duih_r_t">【会员专享】2000元购彩红包 </li>
+                                    <li class="duih_money">280000豆豆</li>
+                                     <li><span class="@(ispass?"no-notic":"notic")">@(ispass ? "活动已截止" : "活动进行中")</span> <a  href="javascript:void(0);" class=" dh " value="280000"  style="@(ispass ? "display:none" : "")">兑换</a> </li>
+                                </ul>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="duih_box">
+                                <div class="duih_l">
+                                    <img src="@ViewHelpers.img("vip/Ipad.png")" height="160" width="110">
+                                </div>
+                                <ul class="duih_r">
+                                    <li class="duih_r_t">【会员专享】IPAD </li>
+                                    <li class="duih_money">500000豆豆</li>
+                                     <li><span class="@(ispass?"no-notic":"notic")">@(ispass ? "活动已截止" : "活动进行中")</span> <a  href="javascript:void(0);" class=" dh " value="500000"  style="@(ispass ? "display:none" : "")">兑换</a> </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="duih_box">
+                                <div class="duih_l">
+                                    <img src="@ViewHelpers.img("vip/computer.png")" height="160" width="110">
+                                </div>
+                                <ul class="duih_r">
+                                    <li class="duih_r_t">【会员专享】Mac Book Air </li>
+                                    <li class="duih_money">1000000豆豆</li>
+                                    <li><span class="@(ispass?"no-notic":"notic")">@(ispass ? "活动已截止" : "活动进行中")</span> <a  href="javascript:void(0);" class=" dh " value="1000000"  style="@(ispass ? "display:none" : "")">兑换</a> </li>
+                                </ul>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="duih_box">
+                                <div class="duih_l">
+                                    <img src="@ViewHelpers.img("vip/car1.png")" height="160" width="110">
+                                </div>
+                                <ul class="duih_r">
+                                    <li class="duih_r_t">【会员专享】奇瑞QQ </li>
+                                    <li class="duih_money">5000000豆豆</li>
+                                     <li><span class="@(ispass?"no-notic":"notic")">@(ispass ? "活动已截止" : "活动进行中")</span> <a  href="javascript:void(0);" class=" dh " value="5000000"  style="@(ispass ? "display:none" : "")">兑换</a> </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border-right: none">
+                            <div class="duih_box">
+                                <div class="duih_l">
+                                    <img src="@ViewHelpers.img("vip/car2.png")" height="182" width="301">
+                                </div>
+                            </div>
+                        </td>
+                        <td style="border-left: none">
+                            <div class="duih_box">
+                                <ul class="duih_r">
+                                    <li class="duih_r_t">【会员专享】比亚迪</li>
+                                    <li class="duih_money">10000000豆豆</li>
+                                     <li><span class="@(ispass?"no-notic":"notic")">@(ispass ? "活动已截止" : "活动进行中")</span> <a  href="javascript:void(0);" class=" dh " value="10000000"  style="@(ispass ? "display:none" : "")">兑换</a> </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="ledou_guize">
+            <h3>
+                活动规则：</h3>
+            <p>
+                1、1月1-1月31日，每天00：00-24：00开启豆豆兑换服务，仅限激活会员兑换。<br/>
+                2、实物礼品将在活动结束后由@(SiteString.getHZSiteName(Request))统一邮寄；<br/>
+                3、活动最终解释权归@(SiteString.getHZSiteName(Request))所有。
+            </p>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+<script type="text/javascript">
+    var confTxt = "";
+    $(".dh").click(function () {
+        confTxt = "<div style='text-align:center'>即将推出兑换服务！</div>";
+        alertTip(confTxt);
+        return false;
+
+
+
+        //是否需要资金密码
+        var isneeddoudou = "@isNeeddoudou";
+        var _self = this;
+        user.isLogin(function (islogin) {
+            if (!islogin) {
+                loginDialog.Show();
+                $("#userName").focus();
+                user.LoginCallBack = function () {
+                    $(".bet-confirm-title").text("豆豆兑换");
+                    confirmTip(confTxt, function () {
+                        $(".bet-confirm-title").text("资金密码");
+                        if (isneeddoudou == "True") {
+                            var confTxt2 = "<div class='mt10' style='text-align:center;border:1px dotted #d3d3d3;border-width:1px 0;padding:10px 0;padding-left:10px;text-align:center;'><span class='blue bold'>请输入资金密码：</span><input type='password' value='' id='balancepwd' class='balancepwd'/></div>";
+                            confirmTip(confTxt2, function () { dh(user.info.userId, $(_self).attr("value"), $("#balancepwd").val()) }, function () { });
+                        } else {
+                            dh(user.info.userId, $(_self).attr("value"), "");
+                        }
+                    }, function () { });
+                };
+            } else {
+                $(".bet-confirm-title").text("豆豆兑换");
+                confirmTip(confTxt, function () {
+                    $(".bet-confirm-title").text("资金密码");
+                    if (isneeddoudou == "True") {
+                        var confTxt2 = "<div class='mt10' style='text-align:center; border:1px dotted #d3d3d3;border-width:1px 0;padding:10px 0;padding-left:10px;text-align:center;'><span class='blue bold'>请输入资金密码：</span><input type='password' value='' id='balancepwd' class='balancepwd'/></div>";
+                        confirmTip(confTxt2, function () { dh(user.info.userId, $(_self).attr("value"), $("#balancepwd").val()) }, function () { });
+                    } else {
+                        dh(user.info.userId, $(_self).attr("value"), "");
+                    }
+
+                }, function () { });
+            }
+        });
+    });
+    function dh(userId, doudou, pwd) {
+        var url = "/vip/Lddh";
+        var userId = userId;
+        var doudou = doudou;
+        $.post(url, { userId: userId, doudou: doudou, bpwd: pwd }, function (data) {
+            if (data.IsSucess) {
+                alertTip(data.Msg, "ok");
+                $("#boxAlertOkButton").click(function() {
+                    window.location.href = window.location.href;
+                });
+               
+            } else {
+                alertTip(data.Msg, "err");
+                return false;
+            }
+        });
+    }
+</script>

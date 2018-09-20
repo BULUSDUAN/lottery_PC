@@ -1,0 +1,85 @@
+﻿@{
+    var Title = "为什么我的提款不成功？";
+    ViewBag.Title = Title + " - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+   @ViewHelpers.css("help.css")
+} 
+  <div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">玩彩网</a> > </li>
+        <li><a href="/staticHtml/help/index.html">&nbsp;帮助中心</a> > </li>
+        <li>&nbsp;为什么我的提款不成功？</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type = "drawMoney", name = "drawing" });}
+<div class="help_r">
+         
+
+     <div class="det_box">
+            	<h2>为什么我的提款不成功？</h2>
+                <div class="det_c"><div class="det_c">
+<p>提款未按时到账或失败可能有以下几点原因：</p>
+<p>1、卡片状态不正常：银行卡为无效卡或银行卡状态异常，请联系银行卡背面的客服热线，寻求帮助<br>
+&nbsp;&nbsp;&nbsp; 2、账户控制状态不允许存入：该卡号不允许存入资金<br>
+&nbsp;&nbsp; &nbsp;3、非法卡：银行卡已经注销</p>
+<p>4、户名错误、姓名填写有误、请核对卡号与姓名是否相符：银行卡开卡的真实姓名与玩彩网账户中的真实姓名不一致导致无法提款成功；玩彩网账户中的真实姓名填写有误（如注册的名字有繁体字或者有分隔符）、用户的姓名中含有生僻字，银行开户时以同音字或其他符号代替）</p>
+<p><strong style=" font-size:16px; font-weight:bold;">温馨提醒：以上情况，请联系银行卡背面的客服热线，确认银行卡相应信息准确无误后，直接联系玩彩网客服</strong></p>
+<p>5、非法卡：银行卡已经注销。<br>
+&nbsp;&nbsp;&nbsp; 6、非本地卡易、您的银行卡为异地卡：银行卡开户地与账户资料中的开户地不符  。&nbsp;&nbsp;</p>
+<p>7、收方账号长度非法：账号位数有误（如工行账号一般为16,19位，招行账号为12,14,15或者16位)<br>
+&nbsp;&nbsp;&nbsp; 8、对方账号校验错 ：银行账号有误<br>
+&nbsp;&nbsp;&nbsp; 9、您的银行卡发卡银行选择有误：用户选择的开户行名称与卡号不符</p>
+<p><strong style=" font-size:16px;font-weight:bold;">温馨提醒：温馨提醒：出现以上情况，请访问“ 账户安全首页 ”自行修改或申请修改，谢谢。</strong></p>
+<p>10、系统繁忙，请重试：您的开户行银行系统繁忙或者正在升级，您可以重新申请。</p>
+<p>11、参加活动所赠送的彩金不可提现。</p>
+<p>12、其他情况（您的账户异常情况）。</p>
+</div>                </div>
+                
+                @*<div class="det_a feedback">
+                <div>以上内容是否解决了您的问题呢？</div>
+                              
+                <div>
+                <a id="btn_a_yes" class="btn"><span class="feedback_yes">是，已经解决。</span></a> <a class="btn" id="btn_a_no" href="javascript:void(0);"><span class="feedback_no">否，尚未解决。</span></a>
+                    <div style="display:none;" class="feedback_form clearfix" id="feed_div">                  
+                    <a id="fclose" class="feedback-close" href="javascript:void(0);">关闭</a>     
+                    <span style="display:none;" id="feed_detail"> 
+	                    <form method="post" name="feed_dtl" id="feed_dtlf">             
+		                    <span class="fb-input"><input type="radio" value="1" name="nodtl"> 描述不清晰</span>
+		                    <span class="fb-input"><input type="radio" value="2" name="nodtl"> 字太多，不想看</span>
+		                    <span class="fb-input"><input type="radio" value="3" name="nodtl"> 太复杂，看不懂</span>
+		                    <span class="fb-input"><input type="button" value="提交" name="fsbmt"></span>
+		                </form>    
+	                </span>
+                    <div style="display:none;" class="feedback-suc l" id="feed_result">您的反馈信息已经提交，谢谢您的反馈。</div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                  
+                </script>                                           
+                </div>
+                
+                <div class="det_a">
+                	<div class="det_a_l">相关问题：</div>
+                    <div class="det_a_r">
+                    	<ul>
+                        	                    	</ul>    
+                    </div>
+                </div>*@
+            </div>
+
+
+        </div>
+         </div>
+<div class="clearfix"></div>
+
+ @ViewHelpers.js("help.js")
+
+
+
+
+
+

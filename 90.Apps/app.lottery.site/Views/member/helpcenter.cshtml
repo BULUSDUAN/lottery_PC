@@ -1,0 +1,169 @@
+﻿@{
+    ViewBag.Title = "helpcenter";
+}
+@section css{
+    @ViewHelpers.css("mycenter.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>帮助中心</li>
+    </ul>
+</div>
+<div class="center mt10">
+    <img src="@ViewHelpers.img(string.Format("/member/help.png"))" />
+    <div class="new_buy_left">
+    <div id="PlaneAccount">
+    <div style=" background-color:#D7D7D7;">
+        <div style=" background-color:#FDFDFD;">
+        <div class="zh-center" style=" height:70px;background-color:#FDFDFD;">
+        <img style=" float:left; margin-top:20px; margin-right:10px; margin-left:20px;" src="@ViewHelpers.img(string.Format("/member/phone.png"))" />
+        <p style="color:Black; height:30px; font-size:18px;">客服热线</p>
+        <e style=" font-size:16px; height:10px; color:#FD7D00;">@SiteString.tel</e>
+        </div>
+            <e style=" padding-top:-20px; color:Black; margin-left:20px; font-size:14px;">服务时间：9:00-22:00</e>
+            </div>
+
+        <div style=" background-color:#FDFDFD;">
+        <div class="zh-center" style=" height:50px;background-color:#FDFDFD;">
+        <img style=" float:left; margin-top:20px; margin-right:10px; margin-left:20px;" src="@ViewHelpers.img(string.Format("/member/people.png"))" />
+        <p style=" height:20px; color:Black; font-size:18px;"><input style=" height:30px; line-height:10px; color:#1D4C94; font-weight:bold; margin-top:20px;" type="button" value="在线客服"  /></p>
+        </div>
+            <e style=" padding-top:-20px; color:Black; margin-left:20px; font-size:14px;">服务时间：9:00-00:30</e>
+            </div>
+        </div>
+         <div class="div-menu" style=" font-size:18px; margin-top:20px;"><span class="menu-icon_help"></span> 购彩帮助</div>
+        <ul class="myyon">
+            <li><a checklg="/member/accountdetail" href="javascript:void(0)">新版演示 &nbsp;&nbsp; ></a></li>
+            <li><a checklg="/member/redBagList" href="javascript:void(0)">账户 &nbsp;&nbsp; ></a></li>
+            <li><a checklg="/member/paywizzard" href="javascript:void(0)">兑奖 &nbsp;&nbsp; ></a></li>
+            <li><a checklg="/member/drawingsguide" href="javascript:void(0)">充值提款 &nbsp;&nbsp; ></a></li>
+            <li><a checklg="/member/accountdetail" href="javascript:void(0)">自购 &nbsp;&nbsp; ></a></li>
+            <li><a checklg="/member/redBagList" href="javascript:void(0)">合买 &nbsp;&nbsp; ></a></li>
+            <li><a checklg="/member/paywizzard" href="javascript:void(0)">红包 &nbsp;&nbsp; ></a></li>
+            <li><a checklg="/member/drawingsguide" href="javascript:void(0)">工具下载 &nbsp;&nbsp; ></a></li>
+            
+        </ul>
+        <div class="div-menu" style=" font-size:18px;"><span class="menu-icon_help "></span> 安全保障</div>
+        <ul class="myyon">
+            <li><a checklg="/member/betorder" href="javascript:void(0)">购彩安全 &nbsp;&nbsp; ></a></li>
+            <li><a checklg="/member/chaseorder" href="javascript:void(0)">业务资质 &nbsp;&nbsp; ></a></li>
+            <li><a checklg="/member/saveProgram" href="javascript:void(0)">购彩优势 &nbsp;&nbsp; ></a></li>
+            <li><a checklg="/member/autofollow" href="javascript:void(0)">用户服务协议 &nbsp;&nbsp; ></a></li>
+          
+        </ul>
+         <div class="div-menu" style=" font-size:18px;"><span class="menu-icon_help "></span> 关于@(SiteString.getHZSiteName(Request))</div>
+        <ul class="myyon">
+            <li><a  checklg="" href="javascript:void(0)">公司简介 &nbsp;&nbsp; ></a></li>
+            <li><a checklg="" href="javascript:void(0)">加盟合作 &nbsp;&nbsp; ></a></li>
+             <li><a checklg="/member/accountdetail" href="javascript:void(0)">网站地图 &nbsp;&nbsp; ></a></li>
+            <li><a checklg="/member/redBagList" href="javascript:void(0)">友情连接 &nbsp;&nbsp; ></a></li>
+        </ul>
+    </div>
+</div>
+  <div class="new_buy_right">
+    <div class="help_pro">
+            	<div class="pro_t clearfix">
+                	<h2><span>新手入门</span></h2>
+                   	<a title="观看购彩演示" href="register01.shtml" target="_blank" id="link110">观看购彩演示&gt;&gt;</a>
+                </div>
+                <div class="pro_m">
+                	<ul>
+                    	<li><a title="注册登录" href="register01.shtml" target="_blank" id="link111">注册登录</a></li>
+                        <li><a title="网上充值" href="value02.shtml" target="_blank" id="link112">网上充值</a></li>
+                        <li><a title="购买彩票" href="gmcp01.shtml" target="_blank" id="link113">购买彩票</a></li>
+                        <li><a title="账户查询" href="zhcx01.shtml" target="_blank" id="link114">账户查询</a></li>
+                        <li><a title="中奖查询" href="zjcx01.shtml" target="_blank" id="link115">中奖查询</a></li>
+                        <li><a class="last_a" title="兑奖提款" href="tqxj01.shtml" target="_blank" id="link116">兑奖提款</a></li>
+                    </ul>
+                </div>
+            </div>
+
+    <div class="betorder_top">
+        <ul>
+          <a href="paywizzard"><li   class="betorder_topSelected">充值向导</li></a>
+            <a href="pay"><li>账户充值</li></a>
+            <a href="payrecord"><li>充值记录</li></a>
+        </ul>
+    </div>
+    <div class="filter_s betorder_top_data" style="     background-color: #ffffff;    height: 570px;">
+
+
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" class="my_tbl recadd">
+        <tr>
+            <th style="  background-color:#FEE8BE;">
+                <b>充值方式</b>
+            </th>
+            <th style="  background-color:#FEE8BE;">
+                <b>适合的人群</b>
+            </th>
+            <th style="  background-color:#FEE8BE;">
+                <b>特点</b>
+            </th>
+        </tr>
+        <tr>
+            <td>
+                <span style="color: #36C">网上银行</span>
+            </td>
+            <td>
+                开通了网上银行的用户
+            </td>
+            <td>
+                可以使用各支付平台进行充值
+            </td>
+        </tr>
+        <tr>
+            <td style="background-color:#F3F3F3;">
+                <span style="color: #090;">银行转账</span>
+            </td>
+            <td style="background-color:#F3F3F3;">
+                不方便使用以上方式的用户
+            </td>
+            <td style="background-color:#F3F3F3;">
+                需要到银行柜台或ATM进行转账
+            </td>
+        </tr>
+        </table>
+        <table width="100%" style=" margin-top:20px;" cellspacing="0" cellpadding="0" border="0" class="my_tbl recadd">
+        <tr>
+            <td style="padding:20px 30px;" class="tl" colspan="3">
+                <strong>网上银行充值说明</strong><br/>
+                <p style="padding-top: 5px;">
+                    一、网上银行充值手续费由本站支付，用户无须支付任何网银手续费。一般从支付完毕到资金进入本站账户只需几秒钟。
+                    <br>
+                    二、网上银行充值需要您已经开通对应银行卡的网上银行业务。（具体可到各相应银行营业点咨询）<br>
+                    1、在银行柜台办理开通网上支付业务，需提供如下资料：申请人本人有效身份证件、所需注册的本地银行卡；
+                    <br>
+                    2、银行经办员审核上述资料无误后，将与客户签署《网上银行个人客户服务协议》，办理注册资料录入、设置网上银行密码等注册手续。<br>
+                    3、下一银行工作日客户即可使用个人网上银行系统。<br>
+                    三、各银行官方网站
+                    <br>
+                </p>
+                <p class="bank_ant">
+                    工商银行网上银行官方网站：<a href="http://www.icbc.com.cn" target="_blank">http://www.icbc.com.cn</a><br>
+                    建设银行网上银行官方网站：<a href="http://www.ccb.cn" target="_blank">http://www.ccb.cn</a><br>
+                    农业银行网上银行官方网站：<a href="http://www.95599.cn" target="_blank">http://www.95599.cn </a>
+                    <br>
+                    中国银行网上银行官方网站：<a href="http://www.boc.cn" target="_blank">http://www.boc.cn</a><br>
+                    招商银行网上银行官方网站：<a href="http://www.cmbchina.com" target="_blank">http://www.cmbchina.com</a><br>
+                    交通银行网上银行官方网站：<a href="http://www.bankcomm.com" target="_blank">http://www.bankcomm.com</a><br>
+                    民生银行网上银行官方网站：<a href="http://www.cmbc.com.cn" target="_blank">http://www.cmbc.com.cn</a>
+                </p>
+                <p>
+                </p>
+                <br>
+                <strong>银行汇款说明</strong><br>
+                <p style="padding-top: 5px;">
+                    一、目前国内大部分银行都支持实时到款。请您仔细核对汇款账户、收款人和开户行。<br>
+                    汇款时请增加角分零头，比如169.89元，便于客服快速核实处理，您的汇款会更快速到账。<br>
+                    二、汇款后请务必使用客服系统，<a href="http://chat.5251.net/client.jsp?companyId=32513&amp;style=66203" target="_blank">通知客服</a>
+                </p>
+            </td>
+        </tr>
+    </table>
+    </div>
+    </div>
+ </div>   
+ <div class="clearfix"></div>
+

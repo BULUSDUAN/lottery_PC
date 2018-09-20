@@ -1,0 +1,110 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutBlog.cshtml";
+}
+@using GameBiz.Core;
+@using app.lottery.site.Models;
+@{
+    var user = ViewBag.User as CurrentUserInfo;
+    var prouser = ViewBag.UserInfo as ProfileUserInfo;
+    if (prouser == null)
+    {
+        ViewBag.Title = "404,没有查询到这个用户！";
+    }
+    else
+    {
+        ViewBag.Title = SiteString.HideUserName(prouser.UserDisplayName, prouser.HideNameCount) + "的定制跟单-" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = SiteString.HideUserName(prouser.UserDisplayName, prouser.HideNameCount) + "的定制跟单";
+        ViewBag.Descriptio = SiteString.HideUserName(prouser.UserDisplayName, prouser.HideNameCount) + "的定制跟单,查看更多个人定制跟单请登录" + SiteString.getHZSiteName(Request) + "彩票网.";
+    }
+    var billList = ViewBag.BillList as UserBeedingListInfoCollection;
+}
+<div class="custombill_str">
+    <div class="custombill_center">
+        <div class="standings_caizhong">
+            <ul class="B_H">
+                <li class=" custombill_center_history_li"><a href="/blog/standings/@ViewBag.UserId?gameCode=SZC&gameType=SSQ">
+                    数字彩</a></li>
+                <li class=" custombill_center_history_li"><a href="/blog/standings/@ViewBag.UserId?gameCode=CTZQ&gameType=T14C">
+                    足彩</a></li>
+                <li class=" custombill_center_history_li"><a href="/blog/standings/@ViewBag.UserId?gameCode=BJDC&gameType=SPF">
+                    北京单场</a></li>
+                <li class=" custombill_center_history_li"><a href="/blog/standings/@ViewBag.UserId?gameCode=JCZQ&gameType=SPF">
+                    竞彩足球</a></li>
+                <li class=" custombill_center_history_li"><a href="/blog/standings/@ViewBag.UserId?gameCode=JCLQ&gameType=SF">
+                    竞彩篮球</a></li>
+                <li class="standings_caizhong_li" id="dzgd"><a href="/blog/custombill/@ViewBag.UserId">
+                    定制跟单</a></li>
+            </ul>
+        </div>
+        <table width="100%" align="center" class="custombill_table" style="border-top: 1px solid #fd693b;
+            border-bottom: 1px solid #dadada;">
+            <tr class="ttis fqbuy" style="border-bottom: 1px solid #dadada">
+                <td class="custombill_table_td" style="border-left: 1px solid #dadada;">
+                    彩种
+                </td>
+                <td class="custombill_table_td">
+                    战绩
+                </td>
+                <td class="custombill_table_td">
+                    累计中奖
+                </td>
+                <td class="custombill_table_td">
+                    已定制人数
+                </td>
+                <td class="custombill_table_td" style="border-right: 1px solid #dadada;">
+                    定制跟单
+                </td>
+            </tr>
+            @{if (billList.List.Count > 0)
+              {
+                  var lists = billList.List.Where(o => o.GameCode != "CQSSC" && o.GameCode != "JX11X5");
+                  if (lists.Count() > 0)
+                  {
+                      foreach (var item in lists)
+                      {
+                <tr class="@(billList.List.IndexOf(item) % 2 == 0 ? "ni" : "ni2") us_po2" >
+                    <td width="30%" align="left" style="padding-left: 45px; color: #000000; border-left: 1px solid #dadada;">
+                        <i class="cailogo @item.GameCode.ToLower()"></i><b style="line-height: 45px;">@(SiteConvert.GameName(item.GameCode, item.GameType))</b>
+                    </td>
+                    <td width="9%" height="60" align="center" style="color: #000000">
+                        <a  href="/blog/standings/@ViewBag.UserId">@(UserHelper.UserBeeding(item.TotalBonusMoney, 0))</a>
+                    </td>
+                    <td align="center">
+                        <b @*class="red"*@ style="color:#ff3b00;" >@item.TotalBonusMoney.ToString("f")</b>
+                    </td>
+                    <td width="18%" align="center" style="color: Black;">@item.BeFollowerUserCount
+                    </td>
+                    <td align="center" style="border-right: 1px solid #dadada;">
+                        @{if (user == null || user.LoginInfo.UserId != item.UserId)
+                          { <div class="custombill_table_btn2 custombill_order_dz" style="text-align: center;">
+                                  <a class="under " style=" color:White !important;" onclick="docBox.init({
+                                  userName:'@SiteString.HideUserName(item.UserDisplayName, item.UserHideDisplayNameCount)',
+                          userId:'@item.UserId',
+                          gameCode:'@item.GameCode.ToLower()',
+                          gameName:'@SiteConvert.GameName(item.GameCode.ToLower(), item.GameType.ToLower())',
+                          gameType:'@item.GameType.ToLower()'});" href="javascript:;">我要定制</a></div>}}
+                    </td>
+                </tr> 
+                      }
+                  }
+                  else
+                  {
+                <tr>
+                    <td colspan="5" class="custombill_table_td_data">
+                        暂无数据
+                    </td>
+                </tr>
+                  }
+              }
+              else
+              {
+                <tr>
+                    <td colspan="5" class="custombill_table_td_data">
+                        暂无数据
+                    </td>
+                </tr>
+              }
+            }
+        </table>
+    </div>
+</div>

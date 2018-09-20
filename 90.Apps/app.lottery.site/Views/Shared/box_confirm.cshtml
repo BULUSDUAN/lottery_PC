@@ -1,0 +1,77 @@
+﻿<!--信息确认框 开始-->
+<div id="bet_confirm">
+  
+     <table>
+        <tr>
+            <td class="itd-top-left"></td>
+            <td class="itd-top-center"></td>
+            <td class="itd-top-right"></td>
+        </tr>
+        <tr>
+            <td class="itd-mid-left"></td>
+            <td class="itd-mid-center">
+                <div class="dialogContent">
+      
+    <h3 id="drag_confirm" class="pop-comm-top">
+       投注内容
+        <a class="close" id="btn_confirm_close">关闭</a>
+    </h3>
+    <div class="pop-comm-middle">
+        <div id="bet_confirm_content">
+        </div>
+        <div class="buttonrow">
+            <input type="button" id="btn_confirm_yes" value="确定" class="dialogBtn"/>
+            <input type="button" id="btn_confirm_no" value="取消" class="dialogBtn focusBtn"/>
+        </div>
+    </div>
+                </div>
+            </td>
+            <td class="itd-mid-right"></td> 
+        </tr>
+        <tr>
+            <td class="itd-bot-left"></td>
+            <td class="itd-bot-center"></td>
+            <td class="itd-bot-right"></td>
+        </tr>
+    </table>
+</div>
+<script type="text/javascript">
+    //new Drag("bet_confirm", { Handle: "drag_confirm", Limit: true });
+    var confirmLightBox = new LightBox("bet_confirm");
+
+    function confirmTip(message, func1, func2) {
+        var confirm_yes_Event = function () {
+            confirmLightBox.Close();
+            func1();
+            document.getElementById("bet_confirm_content").innerHTML = "";
+        };
+        var confirm_no_Event = function() {
+            confirmLightBox.Close();
+            func2();
+            document.getElementById("bet_confirm_content").innerHTML = "";
+        };
+        document.getElementById("bet_confirm_content").innerHTML = message;
+        document.getElementById("btn_confirm_yes").onclick = confirm_yes_Event;
+        document.getElementById("btn_confirm_no").onclick = confirm_no_Event;
+        document.getElementById("btn_confirm_close").onclick = confirm_no_Event;
+        confirmLightBox.Show();
+        $("#btn_confirm_yes").focus();
+    } 
+    function confirmTipx(message, func1, func2) {
+        var confirm_yes_Event = function () {
+            func1();
+        };
+        var confirm_no_Event = function () {
+            confirmLightBox.Close();
+            func2();
+            document.getElementById("bet_confirm_content").innerHTML = "";
+        };
+        document.getElementById("bet_confirm_content").innerHTML = message;
+        document.getElementById("btn_confirm_yes").onclick = confirm_yes_Event;
+        document.getElementById("btn_confirm_no").onclick = confirm_no_Event;
+        document.getElementById("btn_confirm_close").onclick = confirm_no_Event;
+        confirmLightBox.Show();
+        $("#btn_confirm_yes").focus();
+    }
+</script>
+<!--信息确认框 结束-->

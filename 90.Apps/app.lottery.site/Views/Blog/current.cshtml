@@ -1,0 +1,166 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutBlog.cshtml";
+}
+@using GameBiz.Core;
+@{
+    var prouser = ViewBag.UserInfo as ProfileUserInfo;
+    if (prouser == null)
+    {
+        ViewBag.Title = "404,没有查询到这个用户！";
+    }
+    else{
+        ViewBag.Title = SiteString.HideUserName(prouser.UserDisplayName, prouser.HideNameCount) + "的合买方案-" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = SiteString.HideUserName(prouser.UserDisplayName, prouser.HideNameCount) + "的合买方案";
+        ViewBag.Descriptio = SiteString.HideUserName(prouser.UserDisplayName, prouser.HideNameCount) + "的合买方案,查看更多个人合买方案请登录" + SiteString.getHZSiteName(Request) + "彩票网.";
+    }
+    var orders = ViewBag.CurrentOrder as UserCurrentOrderInfoCollection;
+    var tog = ViewBag.Together as UserCurrentOrderInfoCollection;
+    var isShowData = Convert.ToBoolean(ViewBag.IsShowData);
+    if(!isShowData)
+    {
+        orders.TotalCount = 0;
+        tog.TotalCount = 0;
+    }
+}
+@section css{
+    @ViewHelpers.css("blog.css")
+    }
+@{Html.RenderAction("left", "Blog", new { name = "current" });}
+@if (prouser == null)
+{
+		 <p style=" text-align:center; font-weight:bold; font-size:18px;">很抱歉，该用户不存在或者个人中心暂不能访问...<a href="/">返回主页</a>>></p>
+}
+else
+{
+<div  class="custombill_str">
+<div  class="custombill_center">
+    <h2 style="margin-top:5px; margin-bottom:10px; width:100%">
+    <span id="custombill_fqbuy" class="custombill_bg custombill_fqbuy"> </span>
+    <b class="user_info">他发起的合买方案</b></h2>
+   @* <div style="border-bottom:1px solid #e5701a; width:100%; height:10px;"></div>*@
+    <table width="100%" class="custombill_table " style="border-top:1px solid #fd693b; border-bottom:1px solid #dadada;border-right:1px solid #dadada;border-left:1px solid #dadada">
+        <tr class="fqbuy"   >
+            <td width="20%" class="custombill_table_td">订单编号
+            </td>
+            <td width="13%" class="custombill_table_td">发起人
+            </td>
+            <td width="19%" class="custombill_table_td">彩种
+            </td>
+            <td width="12%" class="custombill_table_td">期号
+            </td>
+            <td width="13%" class="custombill_table_td">玩法
+            </td>
+            <td width="10%" class="custombill_table_td">方案金额
+            </td>
+            <td width="10%" class="custombill_table_td" >进度
+            </td>
+        </tr>
+         @{
+    if (orders != null&&isShowData)
+    {
+        //var i = 0;
+        foreach (var item in orders.List)
+        {
+            <tr class="@(orders.List.IndexOf(item) % 2 == 0 ? "ni" : "ni2") " style=" border-top:1px solid #dadada">@*class="@(bonusList.BonusOrderList.IndexOf(item) % 2 == 0 ? "ni" : "ni2")"*@
+                <td class="custombill_table_td_border">
+                <a target="_blank" href="/user/scheme/@item.SchemeId" class="under" style=" color:#1a4383;">@item.SchemeId</a></td>
+                <td class="custombill_table_td_border ">
+                    <a class="under custombill_table_td_colorb" href="/blog/standings/@item.UserId" >@SiteString.HideUserName(item.UserDisplayName, item.HideDisplayNameCount)</a>
+                </td>
+                <td class="custombill_table_td_border custombill_table_td_colorb">@SiteConvert.GameName(item.GameCodeName, item.GameTypeName)
+                </td>
+                <td class="custombill_table_td_border custombill_table_td_colorb">@item.IssuseNumber
+                </td>
+                <td class="custombill_table_td_border custombill_table_td_colorb">@OrderManager.SchemeTypeName(item.SchemeType)
+                </td>
+                <td class="custombill_table_td_border"><span  style=" color:#ff3d00;">@item.TotalMoney.ToString("0")元</span>
+                </td>
+                <td class="custombill_table_td_border custombill_table_td_colorb" >@((item.Progress * 100).ToString("f"))%
+                </td>
+            </tr> 
+        }
+    }
+    else
+    {
+                <tr><td colspan="7"  style=" height:30px; color:#686868"> 暂无数据</td></tr>
+    }
+             }
+       @* <tr class="pager">
+          <td colspan="7" class="tr" style=" text-align:center; color:#525252 !important;border-right:1px solid #dadada;border-left:1px solid #dadada">@ViewHelpers.Pager3("ReloadListorders", ViewBag.PageIndexc, ViewBag.PageSizec, orders.TotalCount == null ? 0 : orders.TotalCount)
+            </td>
+            </tr>*@
+    </table>
+</div>
+<div  class="custombill_center">
+    <h2  style=" margin-top:20px; width:100%; margin-bottom:10px;">
+    <span  class="custombill_bg custombill_fqbuy"></span>
+    <b class="user_info">他认购的合买方案</b></h2>
+    @*<div style="border-bottom:1px solid #e5701a; width:100%; height:10px;"></div>*@
+    <table width="100%" class="custombill_table" style="border-top:1px solid #fd693b; border-bottom:1px solid #dadada;border-right:1px solid #dadada;border-left:1px solid #dadada">
+        <tr class="fqbuy">
+             <td width="20%" class="custombill_table_td">订单编号
+            </td>
+            <td width="13%" class="custombill_table_td">发起人
+            </td>
+            <td width="19%" class="custombill_table_td">彩种
+            </td>
+            <td width="12%" class="custombill_table_td">期号
+            </td>
+            <td width="13%" class="custombill_table_td">玩法
+            </td>
+            <td width="10%" class="custombill_table_td">方案金额
+            </td>
+            <td width="10%" class="custombill_table_td">进度
+            </td>
+        </tr>
+    @{
+    if (tog != null&&isShowData)
+    {
+        //var s = 0;
+        foreach (var item in tog.List)
+        {
+        <tr class="@(tog.List.IndexOf(item) % 2 == 0 ? "ni" : "ni2")" style=" border-bottom:1px solid #dadada">
+        <td class="custombill_table_td_border custombill_table_td_colorb" ><a target="_blank" href="/user/scheme/@item.SchemeId" class="under" style=" color:#1a4383;">@item.SchemeId</a></td>
+        <td class="custombill_table_td_border custombill_table_td_colorb">
+            <a class="under" href="/blog/standings/@item.UserId" >@SiteString.HideUserName(item.UserDisplayName, item.HideDisplayNameCount)</a>
+        </td>
+        <td class="custombill_table_td_border custombill_table_td_colorb" >@SiteConvert.GameName(item.GameCodeName, item.GameTypeName)
+        </td>
+        <td class="custombill_table_td_border custombill_table_td_colorb" >@item.IssuseNumber
+        </td>
+        <td  class="custombill_table_td_border custombill_table_td_colorb">@OrderManager.SchemeTypeName(item.SchemeType)
+        </td>
+        <td class="custombill_table_td_border"><span style=" color:#ff3d00;">@item.TotalMoney.ToString("0")元</span>
+        </td>
+        <td class="custombill_table_td_border custombill_table_td_colorb" >@((item.Progress * 100).ToString("f"))%
+        </td>
+</tr>
+        }
+    }
+    else
+    {
+        <tr><td colspan="7"  style=" height:30px; color:#686868"> 暂无数据</td></tr>
+   }
+}@*
+         <tr class="pager" >
+            <td colspan="7" style=" text-align:center; " class="tr">@ViewHelpers.Pager3("getPayRecordtog", ViewBag.PageIndex, ViewBag.PageSize, tog.TotalCount == null ? 0 : tog.TotalCount)
+            </td>
+            </tr>*@
+    </table>
+</div>
+</div>
+<div class="clearfix"></div>
+<script type="text/ecmascript">
+    function reloadList(createGame, joinGame, isCreateUser) {
+        location.search = "IsCreateUser=" + isCreateUser + "&joingame=" + joinGame + "&creategame=" + createGame;
+    }
+</script>
+<script type="text/javascript">
+    function ReloadListorders(pageIndexc, pageSizec) {
+        location.search = "pageIndexc=" + pageIndexc + "&pageSizec=" + pageSizec ;
+    }
+    function getPayRecordtog(pageIndex, pageSize) {
+        location.search = "pageIndex=" + pageIndex + "&pageSize=" + pageSize ;
+    }
+</script>
+}

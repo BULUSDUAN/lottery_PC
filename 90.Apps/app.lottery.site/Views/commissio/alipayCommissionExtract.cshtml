@@ -1,0 +1,88 @@
+﻿@{
+    ViewBag.Title = "支付宝返点提取, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "支付宝返点提取, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+    @UserHelper.css("commissio.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>支付宝返点提取</li>
+    </ul>
+</div>
+<div class="center mt10">
+    @{Html.RenderAction("menu", "Member");}
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mycommenu">
+            <a href="javascript:void(0);" checklg="/commissio/myTc">我的提成</a> <a href="javascript:void(0);"
+                checklg="/commissio/generalizeUser">推广用户</a> <a href="javascript:void(0);" checklg="/commissio/CommissionManage"
+                    class="up">返点结算</a> <a href="javascript:void(0);" checklg="/commissio/StatisticsQuery">
+                        统计查询</a> <a href="javascript:void(0);" checklg="/commissio/SchemeManage">方案管理</a>
+        </div>
+        <div class="scheme">
+            <div class="scheme-show">
+                <a href="javascript:void(0)" checklg="/commissio/CommissionManage">结算明细</a>
+            </div>
+            <div class="scheme-show">
+                <a href="javascript:void(0)" checklg="/commissio/CommissionRecord">返点记录</a>
+            </div>
+        </div>
+        <div class="filter_s betorder_top_data betorder_top_data_backgroundimage" style="margin-top: 10px;">
+            <ul>
+                <li style="width: 120px;">
+                    <p id="alipy" style="height: 10px;">
+                        银行卡提现
+                    </p>
+                </li>
+                <li>|</li>
+                <li class="betorder_top_data_li">
+                    <p style="height: 10px;" id="bank">
+                        支付宝提现
+                    </p>
+                </li>
+            </ul>
+        </div>
+        <table border="1" cellpadding="0" cellspacing="0" class="bctx-table">
+            <tr>
+                <td width="145">
+                    支付宝帐号：
+                </td>
+                <td class="txtL">
+                </td>
+            </tr>
+            <tr>
+                <td width="145">
+                    确认支付宝帐号：
+                </td>
+                <td class="txtL">
+                    (/)
+                </td>
+            </tr>
+            <tr>
+                <td width="145">
+                    返点余额（整额）：
+                </td>
+                <td class="txtL">
+                    ￥121200
+                </td>
+            </tr>
+            <tr>
+                <td width="145" style="height: 37px;">
+                    转入金额：
+                </td>
+                <td class="txtL">
+                    ￥<input type="text" name="name" value="" width="80" />只能提取整额的返点
+                </td>
+            </tr>
+        </table>
+        <div class="dealer-save">
+            <a class="saveDealer" href="#">保存经销商</a>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>

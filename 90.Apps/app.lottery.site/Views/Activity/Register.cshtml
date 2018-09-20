@@ -1,0 +1,54 @@
+﻿@{
+    ViewBag.Title = "注册送、充值送";
+    Layout = "../Shared/_HuoDong.cshtml";
+}
+<div class="register_body">
+    <div style=" height:1900px; margin:0px auto">
+    <div class="register_objcet">
+        <p>活动时间：2015年1月1日至2015年1月31日</p>
+        <p>活动对象：@SiteString.getHZSiteName(Request)所有注册用户</p>
+    </div>
+    <div class="register_div_01">
+        <p>
+            1、参与对象必须是 @SiteString.getHZSiteName(Request)实名认证、手机绑定的注册用户</p>
+        <p>
+            2、身份信息未完善的用户：用户在完善手机认证和实名认证后即可参加活动，本活动只可参加一次；</p>
+        <p>
+            3、身份信息已完善的用户：不参加本次活动，用户在1月1日12点-1月31日24点期间，<span class="a_background_01 div">充值20元</span> 以上（包含20元）即可参加，本活动只可参加一次；</p>
+        <p>
+            4、每个身份信息绑定用户只能参与一次，对于使用各种软件或其他方式作弊的用户，将不予赠送；对已赠送的，有权要求用户返还；</p>
+        <p>
+            5、用户首次充值金额及充值后赠送的彩金红包均只能用于购彩不能提现；</p>
+        <p>
+            6、在法律许可范围内，@SiteString.getHZSiteName(Request)网保留本次活动的解释权。</p>
+    </div>
+    <div class="register_div_02">
+        <p>
+            1、用户注册绑定身份信息手机绑定后获得<span>3元彩金券；</span></p>
+        <p>
+            2、用户首次<span class="a_background_01 div">充值20元</span>（20至100元以内）即可获得网站赠送的<span>10元彩金券</span></p>
+        <p>
+            3、用户首次<span class="a_background_02 div">充值100元</span>（100元及以上）即可获得网站赠送的<span>100元彩金券</span></p>
+        <p style=" margin-left:30px;">
+            <span>（网站首先送出20元，赠送之日起用户累计购彩金额满1000元后系统再派送80元彩金券）</span></p>
+        <p>
+            4、充值20送、充值100送活动只能二选一；</p>
+    </div>
+    </div>
+    <div>
+        @{Html.RenderAction("footer", "activity");}
+    </div>
+</div>
+<script type="text/javascript">
+    $("span.div").click(function () {
+
+        user.isLogin(function (islogin) {
+            if (!islogin) {
+                loginDialog.Show();
+                $("#userName").focus();
+            } else {
+                window.location.href = "/member/pay";
+            }
+        });
+    });
+</script>

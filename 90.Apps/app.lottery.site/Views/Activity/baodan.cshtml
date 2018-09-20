@@ -1,0 +1,151 @@
+﻿@{
+    ViewBag.Title = "神单";
+    Layout = "../Shared/_HuoDong.cshtml";
+}
+<div class="baodan">
+    <div id="mian" style=" margin">
+        <div class="b_icon" id="b_icon">
+            <a onmouseover="moveIn_l()" onmouseout="moveOut()"></a><a onmouseover="moveIn_r()"
+                onmouseout="moveOut()"></a>
+        </div>
+    </div>
+    <div class="b_top">
+        <a href="/" class="b_abox"></a>
+    </div>
+    <div class="vexed b_box">
+        <div>
+            <div class="b_left vexed_icon">
+            </div>
+            <div class="b_right vexed_font">
+                <div class="font40">
+                    竞彩老不中，心情很郁闷</div>
+                <div class="font18 mt_10">
+                    Race color old miss, the mood is very depressed</div>
+                <div class="font20 mt15">
+                    看似简单，实则变幻莫测，被三个选项玩得体无完肤</div>
+            </div>
+        </div>
+    </div>
+    <div class="envy b_box">
+        <div>
+            <div class="b_left envy_font">
+                <div class="font40">
+                    朋友常红单，羡慕嫉妒恨</div>
+                <div class="font18 mt_10">
+                    Friends Chang Gong list, envy jealous of hate</div>
+                <div class="font20 mt15">
+                    周围的朋友怎么串怎么红，自己信心满满却总是失望而归</div>
+            </div>
+            <div class="b_right envy_icon">
+            </div>
+        </div>
+    </div>
+    <div class="copy b_box">
+        <div>
+            <div class="b_left copy_icon">
+            </div>
+            <div class="b_right copy_font">
+                <div class="font40">
+                    神奇的法宝，万能抄单法</div>
+                <div class="font18 mt_10">
+                    Magic magic weapon, universal copy single method</div>
+                <div class="font20 mt15">
+                    听说大家都在用神单，抄单功能的神奇使大家轻松购彩</div>
+            </div>
+        </div>
+    </div>
+    <div class="winning b_box">
+        <div>
+            <div class="b_left winning_font">
+                <div class="font40">
+                    神单在手中，中奖很轻松</div>
+                <div class="font18 mt_10">
+                    Treasure in hand, winning is easy</div>
+                <div class="font20 mt15">
+                    跟着抄单竞彩2串1，一觉醒来盈利率达到95%</div>
+            </div>
+            <div class="b_right winning_icon">
+            </div>
+        </div>
+    </div>
+    <div class="computer b_box">
+        <div>
+            <div class="b_left computer_font">
+                <div class="bb_icon com_top">
+                </div>
+                <div class="com_1">
+                    <span class="bb_icon com_icon1"></span>
+                    <div>
+                        打开浏览器</div>
+                    <div>
+                        登录：<b>http://@(SiteString.getHZSiteUrl(Request)) </b>
+                    </div>
+                </div>
+                <div class="com_1">
+                    <span class="bb_icon com_icon2"></span>
+                    <div>
+                        导航栏目</div>
+                    <div>
+                        点击导航栏目一行的<b>“神单分享”</b>即可进入</div>
+                </div>
+                <div class="com_1">
+                    <span class="bb_icon com_icon3"></span>
+                    <div>
+                        首页幻灯片</div>
+                    <div>
+                        点击<b>“首页神单图片”</b>即可进入</div>
+                </div>
+            </div>
+            <div class="b_right computer_icon">
+            </div>
+        </div>
+    </div>
+    <div class="phone b_box">
+        <div>
+            <div class="b_left phone_font">
+                <div class="bb_icon phone_top">
+                </div>
+                <div class="com_1">
+                    <span class="bb_icon phone_icon1"></span>
+                    <div>
+                        打开手机浏览器</div>
+                    <div>
+                        登录： <b>http://m.wancai.com </b>
+                    </div>
+                </div>
+                <div class="com_1">
+                    <span class="bb_icon phone_icon2"></span>
+                    <div>
+                        更多功能菜单</div>
+                    <div>
+                        更多菜单选项下面的<b>“神单分享”</b>即可进入</div>
+                </div>
+                <div class="com_1">
+                    <span class="bb_icon phone_icon3"></span>
+                    <div>
+                        手机首页幻灯片</div>
+                    <div>
+                        点击<b>“手机首页神单图片”</b>即可进入</div>
+                </div>
+            </div>
+            <div class="b_right phone_icon">
+            </div>
+            <div class="clear">
+            </div>
+        </div>
+    </div>
+    <div class="b_bottom">
+    </div>
+</div>
+<script type="text/javascript">
+    function moveIn_l() {
+        $(".b_icon").stop().animate({ top: '20', left: '49.5%' });
+    }
+    function moveOut() {
+        $(".b_icon").stop().animate({ top: '30', left: '50%' });
+    }
+    function moveIn_r() {
+        $(".b_icon").stop().animate({ top: '40', left: '50.5%' });
+    }
+    
+</script>

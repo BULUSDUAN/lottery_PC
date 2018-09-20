@@ -1,0 +1,37 @@
+﻿@{
+    Layout = null;
+    @UserHelper.css("main.min.css")
+ }
+<!DOCTYPE html>
+<html>
+<head>
+<title>网站维护中</title>
+</head>
+<style>
+body{    background-color:#F7F5F6;   }
+</style>
+<body>
+  
+<div class="clearfix">
+</div>
+<div class="header_box_con" style="display: block;">
+    <div class="header_box">
+        <a title="@(SiteString.getHZSiteName(Request))" class="xg logo">@(SiteString.getHZSiteName(Request))</a>
+        <div class="header_right">
+            <div class="tel">
+                <span class="tel_nums">@SiteString.tel</span> 
+                <a class="xg service_online link_kefu" href="javascript:void(0)" data="@SiteString.kefuUrl" title="点击联系在线客服"></a>
+            </div>
+            <div class="clear"></div>
+                       
+        </div>
+          
+
+    </div>
+  @ViewHelpers.js("onlinePhone.js")
+</div>
+   <div class="hh-nav clearfix">
+    <center><img src="@ViewHelpers.img("/home/wzwhym.jpg")" /></center> </div>
+
+</body>
+</html>

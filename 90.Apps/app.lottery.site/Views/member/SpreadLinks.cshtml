@@ -1,0 +1,114 @@
+﻿@using app.lottery.site.Models;
+@{
+    ViewBag.Title = "推广管理 - 推广链接 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "推广管理, 推广链接, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    CurrentUserInfo user = ViewBag.CurrentUser;
+    var balance = ViewBag.CurrentUserBalance as GameBiz.Core.UserBalanceInfo;
+
+    var level = 0;
+    if (balance.IsSetPwd) { level++; }
+    if (user.IsAuthenticationRealName) { level++; }
+    if (user.IsAuthenticationMobile) { level++; }
+    if (user.QQNumber != null && user.IsBindBank) { level++; }
+    if (user.AlipayInfo != null) { level++; }
+    Dictionary<int, string> ret = new Dictionary<int, string>();
+    ret.Add(0, "很低");
+    ret.Add(1, "低");
+    ret.Add(2, "中");
+    ret.Add(3, "中");
+    ret.Add(4, "高");
+}
+@section css{
+    @ViewHelpers.css("mycenter.css")
+}
+@section js{
+    @UserHelper.js("formValidator-4-1-3.js")
+    @UserHelper.js("formValidatorRegex.js")
+    @UserHelper.js("CheckPwd.js")
+    @UserHelper.js("email_bind.js")
+    @UserHelper.js("mycenter_safe.js")
+}
+<style type="text/css">
+.tglz_url {
+    margin-right: 5px;
+    padding: 3px 5px;
+    border: 1px solid #E5E5E5;
+    width: 400px;
+    color: #000;
+    background: none repeat scroll 0% 0% #FFF;
+}
+input.tglj_bg_customer {
+    background: none repeat scroll 0% 0% #A0C841;
+    text-align: center;
+    border: medium none;
+    padding: 2px 5px;
+    color: #FFF;
+    cursor: pointer;
+    border-radius: 2px;
+}
+.bgimg {
+    border-radius: 10px;
+    display: inline-block;
+    height: 15px;
+    line-height: 15px;
+    text-align: center;
+    width: 15px;
+    color: #FFF;
+    background: none repeat scroll 0% 0% #3B73CC;
+    margin-right: 5px;
+}
+</style>
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>推广链接</li>
+    </ul>
+</div>
+<div class="center mt10">
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="info_zl">
+            推广链接</div>
+        <div class="safe_center">
+             <div class="scheme-link">
+                <div>
+                    <span class="bgimg">1</span>网页版推广链接：
+                    <p>
+                        <input type="text" value="@ViewBag.Url_1" class="tglz_url" disabled=""/><input type="button" class="tglj_bg_customer"  value="点击复制链接" onclick="Tool.CopyText('@ViewBag.Url_1');" />
+                    </p>
+                </div>
+                <div style="margin-top: 20px;">
+                    <span class="bgimg">2</span>手机版推广链接：
+                    <p>
+                        <input type="text" value="@ViewBag.Url_2" class="tglz_url" disabled=""/><input type="button" class="tglj_bg_customer"  value="点击复制链接" onclick="Tool.CopyText('@ViewBag.Url_2');" />
+                    </p>
+                </div>
+              
+                </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            //$(".mem-memberinfo").show();
+            $(".member_safe").show();
+            $(".member_safe_Next").hide();
+
+            $(".ok_y").text("已设置").css("color", "#8ecc33").addClass("td_yseOrno");
+            $(".no_w").text("未设置").css("color", "#ff5c00").addClass("td_yseOrno");
+
+            $("span.save_info_list").click(function () {
+                var self = $(this);
+                self.parents(".member_safe").next("tr").show();
+                self.parents(".member_safe").hide();
+                var siblings = self.parents(".member_safe").next("tr").siblings("tr.member_safe_Next");
+                var siblings_parent = self.parents(".member_safe").siblings("tr.member_safe");
+                siblings_parent.show();
+                siblings.hide();
+            });
+        })
+            
+    </script>
+</div>
+<div class="clearfix">
+</div>

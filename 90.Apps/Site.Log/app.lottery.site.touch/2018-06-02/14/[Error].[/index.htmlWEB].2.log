@@ -1,0 +1,16 @@
+[0][2018-06-02 14:16:48] No connection is available to service this operation: EVAL
+    StackExchange.Redis.RedisConnectionException: No connection is available to service this operation: EVAL
+   at StackExchange.Redis.ConnectionMultiplexer.ExecuteSyncImpl[T](Message message, ResultProcessor`1 processor, ServerEndPoint server) in c:\TeamCity\buildAgent\work\3ae0647004edff78\StackExchange.Redis\StackExchange\Redis\ConnectionMultiplexer.cs:line 1872
+   at StackExchange.Redis.RedisBase.ExecuteSync[T](Message message, ResultProcessor`1 processor, ServerEndPoint server) in c:\TeamCity\buildAgent\work\3ae0647004edff78\StackExchange.Redis\StackExchange\Redis\RedisBase.cs:line 80
+   at StackExchange.Redis.RedisDatabase.ScriptEvaluate(String script, RedisKey[] keys, RedisValue[] values, CommandFlags flags) in c:\TeamCity\buildAgent\work\3ae0647004edff78\StackExchange.Redis\StackExchange\Redis\RedisDatabase.cs:line 886
+   at Microsoft.Web.Redis.StackExchangeClientConnection.<>c__DisplayClass4.<Eval>b__3() in d:\TeamCityBuildAgent\work\f55792526e6d9089\src\Shared\StackExchangeClientConnection.cs:line 117
+   at Microsoft.Web.Redis.StackExchangeClientConnection.RetryForScriptNotFound(Func`1 redisOperation) in d:\TeamCityBuildAgent\work\f55792526e6d9089\src\Shared\StackExchangeClientConnection.cs:line 133
+   at Microsoft.Web.Redis.StackExchangeClientConnection.RetryLogic(Func`1 redisOperation) in d:\TeamCityBuildAgent\work\f55792526e6d9089\src\Shared\StackExchangeClientConnection.cs:line 159
+   at Microsoft.Web.Redis.StackExchangeClientConnection.Eval(String script, String[] keyArgs, Object[] valueArgs) in d:\TeamCityBuildAgent\work\f55792526e6d9089\src\Shared\StackExchangeClientConnection.cs:line 117
+   at Microsoft.Web.Redis.RedisSessionStateProvider.ResetItemTimeout(HttpContext context, String id) in d:\TeamCityBuildAgent\work\f55792526e6d9089\src\RedisSessionStateProvider\RedisSessionStateProvider.cs:line 294
+   at System.Web.SessionState.SessionStateModule.BeginAcquireState(Object source, EventArgs e, AsyncCallback cb, Object extraData)
+   at System.Web.HttpApplication.AsyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+    ----------------------------------------------------------------------------
+

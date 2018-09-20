@@ -1,0 +1,275 @@
+﻿@using app.lottery.site.Models
+@using External.Core.Popularity;
+@{
+    ViewBag.Title = "【竞彩篮球单关专场】竞彩足球单关固赔_竞彩单关投注";
+    Layout = "../Shared/_OneFix.cshtml";
+    string type = ViewBag.Type;
+    var oddstype = string.IsNullOrEmpty(Request["oddstype"]) ? 2 : int.Parse(Request["oddstype"]);
+    var isYt = string.IsNullOrEmpty(Request["isYt"]) ? false : Convert.ToBoolean(int.Parse(Request["isYt"]));
+    var userId = ViewBag.UserId;
+    var yt = isYt ? "true" : "false";
+    var money = ViewBag.Money;
+    var schemeId = ViewBag.SchemeId;
+    var popularity = ViewBag.Result as PopularitysInfoCollection;
+    CurrentUserInfo currentUser = ViewBag.CurrentUser; 
+    var balance = ViewBag.CurrentUserBalance as GameBiz.Core.UserBalanceInfo;
+
+}
+<header class="siof_header">
+	<div class="siof_siofbox">
+    	<span class="hedspan">您好，欢迎您！</span>
+        @if (currentUser != null)
+        {
+        <div class="siof_hedld" id="top_user_info">
+            <span class="hedld_sp2"><a href="javascript:void(0)" target="_blank" id="top_username">@SiteString.HideUserName(currentUser.LoginInfo.DisplayName, currentUser.LoginInfo.HideDisplayNameCount)</a></span>
+            <div class="hedld_sp3 cm_my_account" id="headaccount">
+                    <i>账户金额</i><i class="hedld_jtd siof_account_cs"></i>
+                    <aside class="hedld_open cm_my_account_open" style=" display:none;">
+                    <sub class="siof_openjt"></sub>
+                    <p>可用资金：<em id="money">￥@balance.GetTotalCashMoney().ToString("f")</em>元</p>
+                    <p>红包余额：<em id="redmoney">￥@balance.RedBagBalance.ToString("f")</em>元</p>
+                    </aside>
+            </div>
+            <span class="hedld_sp2"><a href="javascript:user.logOut();" id="logoutLink">退出</a></span>
+        </div>
+        }
+        else
+        {
+        <div class="siof_hedl" id="nologin_info">请<a href="javascript:void(0)" id="loginbtn_new">登录</a></div>
+        }
+        <nav class="siof_hedr">
+            <a title="' + SiteString.getHZSiteName(Request) + ' 彩票网首页" target="_blank" href="/">首页</a>｜<a href="/buy/jingcai/spf" target="_blank">购买彩票</a>｜<a href="/chipped" target="_blank">合买中心</a>｜
+            <a href="/staticHtml/lottery/index.html" target="_blank">开奖结果</a>｜<a href="/soccer" target="_blank">过关统计</a>｜<a href="/live/index.html" target="_blank">比分直播</a>｜
+            <a href="/staticHtml/phonebuy/index.html" target="_blank">手机购彩</a>
+        </nav>
+    </div>
+</header>
+<nav class="siof_nav">
+	<div class="siof_siofbox">
+        <h1>单关专场</h1>
+        <div class="siof_nava">
+            <a class="zqc" href="/onefix/jcdgzt">足球-新手场</a>
+            <a class="zqc" href="/onefix/jcdg">足球-高手场</a>
+            <a class="lqcon" href="/onefix/lcdg">篮球</a>
+        </div>
+    </div>
+</nav>
+<article style="height: 1110px;" class="siof_box" id="siofbox">
+    <section class="siof_left" id="siofleft">
+        <div class="siof_ltop">
+            <h2>
+                <span>在售<em id="zscount" style="color:#FFDF1B">8</em>场
+                    <em style="font-size: 12px; color: rgb(187, 187, 187); cursor: pointer; padding-left: 3px; display: none;" id="hiddendz">(显示隐藏的0场 )</em>
+                </span>
+                <a id="sxbtn" class="siof_sx siof_sxon" href="javascript:void(0)">收起</a>
+            </h2>
+            <div style="display: none;" tabindex="0" id="siofsxbox" class="siof_sxbox">
+                <div class="siof_find">
+                    <input type="text" id="sxtext">
+                    <a id="findbtn" class="siof_findbtn" href="javascript:void(0)">查找</a>
+                </div>
+                <div class="siof_check">
+                    <h3><span>联赛筛选</span>
+                        <a value="0" class="sssxkj" href="javascript:void(0)">全选</a>
+                        <a value="1" class="sssxkj" href="javascript:void(0)">全清</a>
+                        <a value="2" class="sssxkj" href="javascript:void(0)">反选</a>
+                    </h3>
+                    <ul id="sssxdz">
+                        <li><input type="checkbox" mname="NBA" checked="checked">NBA<em>(8)</em></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="siof_lcenter leftdzwjz">
+            <h3 class="dztitles"><span>2015-04-18</span><span>星期六</span><span>共4场</span><i class="siof_jtdown"></i></h3>
+            <table class="siof_lctable dztables" style="display: bolck;">
+                <tbody>
+                    <tr mid="66460" isale="1" gn="奇才" hn="猛龙" mname="NBA" zid="150418301" class="tron">
+                        <td class="td0 dztzs">&nbsp;</td>
+                        <td class="td1 dztzs">NBA</td>
+                        <td htime="00:30" title="开赛时间：2015-04-19 00:30" class="td2 dztzs dzbftimes">23:30</td>
+                        <td class="td3 dztzs">奇才</td>
+                        <td class="td4 dztzs">猛龙</td>
+                        <td class="td5 dztzs"><a target="_blank" href="http://odds.9188.com/bmatch/analysis/151135">析</a></td>
+                    </tr>
+                    <tr mid="66461" isale="1" gn="鹈鹕" hn="勇士" mname="NBA" zid="150418302">
+                        <td class="td0 dztzs">&nbsp;</td>
+                        <td class="td1 dztzs">NBA</td>
+                        <td htime="03:30" title="开赛时间：2015-04-19 03:30" class="td2 dztzs dzbftimes">00:00</td>
+                        <td class="td3 dztzs">鹈鹕</td>
+                        <td class="td4 dztzs">勇士</td>
+                        <td class="td5 dztzs"><a target="_blank" href="http://odds.9188.com/bmatch/analysis/151136">析</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="siof_lfoot leftdzyjz">
+            <h2>已停售场次</h2>
+            <h3 class="dztitles"><span>2015-04-17</span><span>星期五</span><span>共2场</span><i class="siof_jtdown"></i></h3>
+            <table style="display:bolck" class="siof_lftable dztables">
+                <tbody>
+                    <tr mid="66280" gn="伊斯坦布尔" hn="皇家马德里" mname="欧洲篮" zid="150417301">
+                        <td class="td0 dztzs">&nbsp;</td>
+                        <td class="td1 dztzs">欧洲篮</td>
+                        <td ehmtime="23:00" htime="01:00" title="开赛时间：2015-04-18 01:00" class="td2 dztzs dzbftimes">23:00</td>
+                        <td class="td3 dztzs">伊斯坦布尔</td>
+                        <td class="td5 dztzs td_ls dzbfrzs">85:90</td>
+                        <td class="td4 dztzs">皇家马德里</td>
+                    </tr>
+                    <tr mid="66281" gn="奥林匹亚科" hn="巴塞罗那" mname="欧洲篮" zid="150417302">
+                        <td class="td0 dztzs">&nbsp;</td>
+                        <td class="td1 dztzs">欧洲篮</td>
+                        <td ehmtime="23:00" htime="03:00" title="开赛时间：2015-04-18 03:00" class="td2 dztzs dzbftimes">23:00</td>
+                        <td class="td3 dztzs">奥林匹亚科</td>
+                        <td class="td5 dztzs td_ls dzbfrzs">76:63</td>
+                        <td class="td4 dztzs">巴塞罗那</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3 class="dztitles"><span>2015-04-16</span><span>星期四</span><span>共2场</span><i class="siof_jtdown"></i></h3>
+            <table style="display:bolck" class="siof_lftable dztables">
+                <tbody>
+                    <tr mid="66246" gn="帕纳辛纳科" hn="莫斯科中央" mname="欧洲篮" zid="150416301">
+                        <td class="td0 dztzs">&nbsp;</td>
+                        <td class="td1 dztzs">欧洲篮</td>
+                        <td ehmtime="23:00" htime="01:00" title="开赛时间：2015-04-17 01:00" class="td2 dztzs dzbftimes">23:00</td>
+                        <td class="td3 dztzs">帕纳辛纳科</td>
+                        <td class="td5 dztzs td_ls dzbfrzs">80:100</td>
+                        <td class="td4 dztzs">莫斯科中央</td>
+                    </tr>
+                    <tr mid="66247" gn="特拉维夫马" hn="费内巴切" mname="欧洲篮" zid="150416302">
+                        <td class="td0 dztzs">&nbsp;</td>
+                        <td class="td1 dztzs">欧洲篮</td>
+                        <td ehmtime="23:00" htime="02:00" title="开赛时间：2015-04-17 02:00" class="td2 dztzs dzbftimes">23:00</td>
+                        <td class="td3 dztzs">特拉维夫马</td>
+                        <td class="td5 dztzs td_ls dzbfrzs">67:82</td>
+                        <td class="td4 dztzs">费内巴切</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+    <section id="siofarticle" class="siof_article">
+        <div class="siof_centerlq" id="siofcenter" zid="150418303" hn="公牛" gn="雄鹿" mname="NBA" etimes="1429372800000" closer="-7.5" btimes="04-19  07:00">
+            <div class="siof_bannerboxlq">
+                <div class="siof_banner">
+                    <p>
+                        <span class="siof_banpl">周六303</span>
+                        <a href="http://odds.9188.com/bmatch/analysis/151137" target="_blank" class="siof_banpr">赛事分析</a>
+                    </p>
+                    <ul>
+                        <li class="siof_banli1"><span><i></i>雄鹿</span><em></em></li>
+                        <li class="siof_banli2"><em>NBA</em><span>04-19  07:00开赛</span></li>
+                        <li class="siof_banli3"><span class="siof_banspan">公牛<strong class="siof_banrzd">主队</strong><i></i></span><em></em></li>
+                    </ul>
+                </div>
+                <div class="siof_bannerw" style="display:none;">暂无比赛</div>
+            </div>
+            <div dtype="rfsf" class="siof_crflq">
+                <h2 class="tztitles">
+                    <span class="h2lspan">猜让分胜负</span>
+                    <span class="h2cspan">（包含加时赛，下同）</span>
+                    <span class="h2rspan"><strong>收起</strong><i class="siof_jtlup"></i></span>
+                </h2>
+                <ul>
+                    <li class="siof_csflqli">
+                        <a sp="1.80" value="0" href="javascript:void(0)"><strong>客胜</strong><span>0%支持</span></a>
+                        <em>赔率1.80</em>
+                    </li>
+                    <li class="siof_csflqli zdrqli">
+                        <a sp="1.69" value="3" href="javascript:void(0)"><strong>主胜</strong><span>0%支持</span></a>
+                        <em>1.69</em><p title="主队让7.50分" class="zdrq"><em>-7.50分</em></p>
+                    </li>
+                </ul>
+            </div>
+            <div dtype="dxf" class="siof_czflq">
+                <h2 class="tztitles"><span class="h2lspan">猜总分</span><span class="h2rspan"><strong>收起</strong><i class="siof_jtlup"></i></span></h2>
+                <ul>
+                    <li class="siof_csflqli">
+                        <a sp="1.69" value="3" href="javascript:void(0)"><strong>总分 &gt; 185.5分</strong><span>0%支持</span></a>
+                        <em>赔率1.69</em>
+                    </li>
+                    <li class="siof_csflqli">
+                        <a sp="1.80" value="0" href="javascript:void(0)"><strong>总分 &lt; 185.5分</strong><span>0%支持</span></a>
+                        <em>1.80</em>
+                    </li>
+                </ul>
+            </div>
+            <div dtype="sfc" class="siof_cjflq">
+                <h2 class="tztitles">
+                    <span class="h2lspan">猜赢几分</span><span class="h2rspan"><strong>展开</strong><i class="siof_jtldown"></i></span>
+                </h2>
+                <div style="display:none" class="siof_cjflqbox">
+                    <dl>
+                        <dt><span>雄鹿</span>胜</dt>
+                        <dd><a sp="5.85" value="11" href="javascript:void(0)">1-5 分</a><em>5.85</em></dd>
+                        <dd><a sp="7.70" value="12" href="javascript:void(0)">6-10 分</a><em>7.70</em></dd>
+                        <dd><a sp="15.00" value="13" href="javascript:void(0)">11-15 分</a><em>15.00</em></dd>
+                        <dd><a sp="35.00" value="14" href="javascript:void(0)">16-20 分</a><em>35.00</em></dd>
+                        <dd><a sp="75.00" value="15" href="javascript:void(0)">21-25 分</a><em>75.00</em></dd>
+                        <dd><a sp="120.00" value="16" href="javascript:void(0)">26+ 分</a><em>120.00</em></dd>
+                    </dl>
+                    <dl>
+                        <dt><span>公牛</span>胜</dt>
+                        <dd><a sp="4.40" value="01" href="javascript:void(0)">1-5 分</a><em>4.40</em></dd>
+                        <dd><a sp="3.30" value="02" href="javascript:void(0)">6-10 分</a><em>3.30</em></dd>
+                        <dd><a sp="4.40" value="03" href="javascript:void(0)">11-15 分</a><em>4.40</em></dd>
+                        <dd><a sp="6.80" value="04" href="javascript:void(0)">16-20 分</a><em>6.80</em></dd>
+                        <dd><a sp="10.00" value="05" href="javascript:void(0)">21-25 分</a><em>10.00</em></dd>
+                        <dd><a sp="13.00" value="06" href="javascript:void(0)">26+ 分</a><em>13.00</em></dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="siofright" class="siof_right">
+        <h2>投注单</h2>
+        <div id="chooselist" class="siof_rtzbox">
+            <h3><span>主队<i>vs</i>客队</span><span>投注金额</span><em>预计奖金</em></h3> 
+            <div id="codemsg" class="siof_rtzw">请至少选择一个选项进行投注！</div>
+        </div>
+        <form target="_blank" action="/optimize" method="post" id="optimize">
+            <input type="hidden" value="0" name="optimizeForm.multiple" id="op_multiple" />
+            <input type="hidden" value="" name="optimizeForm.periodId" id="op_period" />
+            <input type="hidden" value="0" name="optimizeForm.units" id="op_units" />
+            <input type="hidden" value="0" name="optimizeForm.schemeCost" id="op_schemecost" />
+            <input type="hidden" value="" name="optimizeForm.passContent" id="op_pass" />
+            <input type="hidden" value="0" name="optimizeForm.itemsContent" id="op_items" />
+            <input type="hidden" value="HT" name="playType" id="op_playtype" />
+        </form>
+        <input type="hidden" value="2" name="activityType" id="activityType" />
+        <div class="siof_rhj">
+            <h2>
+                <b id="scheme_betUnits" class="red" style=" display:none;">0</b>
+                <span class="siof_sp1">合计</span><span class="siof_sp2"><i id="scheme_betCost">￥0</i>元</span><span id="prizeDetail" class="siof_sp3"><b id="PrizeForecast1" value="0">￥0</b>&nbsp;~&nbsp;<b id="PrizeForecast2" value="0">0</b></span>
+            </h2>
+            <span id="betNormalPassmode" class="labels" style=" display:none;"><span class="noguoguan" id="noguoguan">请至少选择@(oddstype == 2 ? "两" : "一")场比赛</span></span>
+            <div style="display:none" class="siof_mxgm" id="plgmdiv"><label>每项都买</label><input type="text" id="tzmoney">元</div>
+            <div class="siof_rhja">
+                投注倍数：
+                <input type="text" class="mul_input" onmouseover="this.select();" id="multiple" size="4" maxlength="5" class="tzm" 
+                       onkeyup="Tool.tonumber(this,1,99999);jcpage.dymanic_.changeMutiple();" value="1" oncontextmenu="return false;" />
+                @*@if(type == "spf"){<a id="optimization" href="javascript:void(0)" class="siof_rhjayh">奖金优化</a>}*@
+            </div>
+            <div class="siof_rhjbtn">
+                <a id="single" accesskey="9" style="background-color:#848383;" href="javascript:void(0)" class="siof_btnnow">立即购买</a>
+                <a id="hemai" accesskey="0" href="javascript:void(0)" class="siof_btnhm">发起合买</a>
+            </div>
+            <p>注：预计奖金是根据当前选择时的赔率计算，实际中奖奖金按<span class="siof_hs">出票赔率</span>来计算。</p>
+        </div>
+    </section>
+</article>
+<script type="text/javascript">
+    var gameCode = "jclq";
+    var gameName = "竞彩篮球";
+    var play = "@type";
+    var oddstype = @oddstype;
+    var nowtime;
+    $.get("/home/getServerTime", function (t) {
+        if (t.servertime != null && t.servertime != "") {
+            nowtime = t.servertime;
+        }
+    });
+</script>
+@UserHelper.js("global.min.js")
+@UserHelper.js("jclqdg.js")

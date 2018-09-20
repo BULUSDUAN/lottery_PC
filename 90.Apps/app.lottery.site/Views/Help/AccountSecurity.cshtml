@@ -1,0 +1,58 @@
+﻿@{
+    var Title = "账户安全";
+    ViewBag.Title = Title + " - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+   @ViewHelpers.css("help.css")
+} 
+  <div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">玩彩网</a> > </li>
+        <li><a href="/help/index">&nbsp;帮助中心</a> > </li>
+        <li>&nbsp;账户安全</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type = "account", name = "AccountSecurity" });}
+<div class="help_r">
+         
+
+       <div class="list_box">
+            	<div class="h_pub_t">
+                	<b class="t_l"></b>
+                    <div class="t_m"><h2>账户安全</h2></div>
+                    <b class="t_r"></b>
+                </div>
+                <div class="h_pub_m">
+                	<ul>
+                    
+                            <li><a href="/help/safety" id="link151">如何确保账户资金安全？</a></li>		
+                        	<li><a href="/help/bindingPhone" id="link151">如何绑定手机？</a></li>		
+                            <li><a href="/help/astrict" id="link151">未成年人购彩限制的说明</a></li>
+                            <li><a href="/help/Email" id="link151">邮箱未收到投注信息的邮件？</a></li>
+                            @*<li><a href="/help/notification" id="link151">手机收不到开奖通知？</a></li>*@
+                            <li><a href="/help/NotbindingPhone" id="link151">如何修改及取消绑定的手机号码？</a></li>		
+                            <li><a href="/help/bindingBank" id="link151">如何修改已绑定的银行卡（未绑定手机）？</a></li>
+                            <li><a href="/help/bindingBankNotPhone" id="link151">如何修改已绑定的银行卡（有绑定手机）？</a></li>
+                            @*<li><a href="/help/personalData" id="link151">如何修改个人基本资料？</a></li>*@
+                            	
+				            </ul>
+                </div>
+                <div class="page"><a class="h_l" href="index.shtml" id="pfirst" hidefocus="true">首页</a><a title="上一页" href="#" class="preno" hidefocus="true" id="link153"></a><a href="index" hidefocus="true" class="curpage" id="link154">1</a><a hidefocus="true" href="#" class="nextno" title="下一页" id="link155">下一页</a><a class="h_l" href="index" id="plast" hidefocus="true">尾页</a><span id="totalpage" class="gray">共1页</span>
+            </div>
+            </div>
+
+
+        </div>
+         </div>
+<div class="clearfix"></div>
+
+ @ViewHelpers.js("help.js")
+
+
+
+
+
+

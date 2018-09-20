@@ -1,0 +1,60 @@
+﻿@{
+    ViewBag.Title = "支付宝登录 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "支付宝登录, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    ViewBag.Here = "支付宝登录账号绑定";
+}
+@UserHelper.css("otherlogin.css")
+@{if (ViewBag.IsSuccess)
+  {
+    <div class="crumb">
+        <ul>
+            <li class="a">您当前的位置：</li>
+            <li><a href="/">首页</a> > </li>
+            <li>绑定新注册的用户名</li>
+        </ul>
+    </div>
+    <div class="other-lg-tip">
+        <span class="other-text">支付宝登录</span>
+    </div>
+    <div class="other-lg-box">
+        <div class="other-u0">
+            <i class="u0-img"></i>
+            <div class="u0-text">
+                @(SiteString.getHZSiteName(Request))账户基本信息设置</div>
+        </div>
+        <div class="box-fr">
+            @{Html.RenderPartial("loginmenu");}
+        </div>
+        <div class="box-fl">
+            <div class="other-u1">
+                <p>
+                    1、首次通过"支付宝登录"需绑定一个用户名，以后直接登录即可。</p>
+                <br />
+                <p>
+                    2、一个支付宝帐号只能绑定一个@(SiteString.getHZSiteName(Request))用户名，且不能修改此用户名。</p>
+            </div>
+            <div class="other-u2">
+                <a href="/user/alipatloginfirst" class="other-login-btn" id="btn-old">绑定已注册的用户名</a>
+                <a href="/user/alipayloginsecond" class="other-login-btn" id="btn-new">绑定新注册的用户名</a>
+            </div>
+            <br />
+        </div>
+    </div>
+  }
+  else
+  {
+    <div class="points-success" style="background: #FCEFE9;">
+        <i class="fail"></i>
+        <div class="res-content">
+            <h3>
+                支付宝登录失败。</h3>
+            <p>
+                @ViewBag.Message
+            </p>
+            <span class="morelink">您可能需要：<a href="/user/alipaylogin">重新登录</a> | <a href="@SiteString.root(Request)">
+                网站首页</a> </span>
+        </div>
+        <div class="clear">
+        </div>
+    </div>  
+  }}

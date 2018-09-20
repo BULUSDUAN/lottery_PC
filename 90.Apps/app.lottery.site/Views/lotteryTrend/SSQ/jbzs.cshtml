@@ -1,0 +1,1181 @@
+﻿@{
+    Layout = "~/Views/lotteryTrend/_Layout.cshtml";
+    var pageSize = Request["pageSize"];
+    if (pageSize != "" && pageSize != null)
+    {
+        ViewBag.Title = "双色球走势图近"+pageSize+"期" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "双色球走势图近" + pageSize + "期";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "" + SiteString.getHZSiteName(Request) + "双色球基本走势图近" + pageSize + "期,查看更多双色球基本走势图请登录" + SiteString.getHZSiteName(Request) + "彩票网.";
+    }
+    else{
+        ViewBag.Title = "双色球走势图-双色球基本走势图-双色球走势图带连线-双色球开奖走势图-" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "双色球走势图,双色球基本走势图,双色球走势图带连线,双色球开奖走势图";
+        ViewBag.Description = "查看双色球走势图就上" + SiteString.getHZSiteName(Request) + "彩票网," + SiteString.getHZSiteName(Request) + "彩票网双色球开奖走势图频道提供最新的双色球基本走势图和双色球走势图带连线的红球、篮球分布图,方便广大彩民朋友更好的分析双色球走势.";
+    }
+    var JiBenZouSi = ViewBag.DataList as LotteryData.Core.SSQ_JiBenZouSi_InfoCollection;
+    var a = 0;  
+}
+@{Html.RenderAction("ThendLink", "lotteryTrend");}
+<div id="container">
+    <div class="cont_box" style="width: 1003px;">
+        <table width="100%" cellspacing="1" cellpadding="0" border="0" class="table_box"
+            style="width: 1003px;" id="chartsTable">
+            <tbody>
+                <tr>
+                    <td align="center" class="tab_top" colspan="50">
+                        标注形式选择：
+                        <input type="checkbox" checked="checked" id="c_yl">
+                        <label for="c_yl">
+                            遗漏</label>
+                        <input type="checkbox" checked="checked" id="has_line">
+                        <label for="has_line">
+                            折线</label>
+                        <input type="checkbox" checked="checked" id="help_line">
+                        <label for="help_line">
+                            分隔线</label>
+                        <input type="checkbox" id="yl_zhu">
+                        <label for="yl_zhu">
+                            遗漏分层</label>
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td width="95" align="center" class="up_img" rowspan="3">
+                        <strong>期号</strong><img src="@ViewHelpers.img("../images/trend/up.png")" id="sortImg" alt="" />
+                    </td>
+                    <td colspan="33" class="line_r">
+                        红球
+                    </td>
+                    <td colspan="17">
+                        篮球
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td colspan="11">
+                        一区
+                    </td>
+                    <td colspan="11">
+                        二区
+                    </td>
+                    <td colspan="11" class="line_r">
+                        三区
+                    </td>
+                    <td colspan="8">
+                        一区
+                    </td>
+                    <td colspan="8">
+                        二区
+                    </td>
+                </tr>
+                <tr class="tabbg weight" id="menuitem">
+                    <td class="wdh">
+                        01
+                    </td>
+                    <td class="wdh">
+                        02
+                    </td>
+                    <td class="wdh">
+                        03
+                    </td>
+                    <td class="wdh">
+                        04
+                    </td>
+                    <td class="wdh">
+                        05
+                    </td>
+                    <td class="wdh">
+                        06
+                    </td>
+                    <td class="wdh">
+                        07
+                    </td>
+                    <td class="wdh">
+                        08
+                    </td>
+                    <td class="wdh">
+                        09
+                    </td>
+                    <td class="wdh">
+                        10
+                    </td>
+                    <td class="wdh">
+                        11
+                    </td>
+                    <td class="wdh">
+                        12
+                    </td>
+                    <td class="wdh">
+                        13
+                    </td>
+                    <td class="wdh">
+                        14
+                    </td>
+                    <td class="wdh">
+                        15
+                    </td>
+                    <td class="wdh">
+                        16
+                    </td>
+                    <td class="wdh">
+                        17
+                    </td>
+                    <td class="wdh">
+                        18
+                    </td>
+                    <td class="wdh">
+                        19
+                    </td>
+                    <td class="wdh">
+                        20
+                    </td>
+                    <td class="wdh">
+                        21
+                    </td>
+                    <td class="wdh">
+                        22
+                    </td>
+                    <td class="wdh">
+                        23
+                    </td>
+                    <td class="wdh">
+                        24
+                    </td>
+                    <td class="wdh">
+                        25
+                    </td>
+                    <td class="wdh">
+                        26
+                    </td>
+                    <td class="wdh">
+                        27
+                    </td>
+                    <td class="wdh">
+                        28
+                    </td>
+                    <td class="wdh">
+                        29
+                    </td>
+                    <td class="wdh">
+                        30
+                    </td>
+                    <td class="wdh">
+                        31
+                    </td>
+                    <td class="wdh">
+                        32
+                    </td>
+                    <td class="wdh line_r">
+                        33
+                    </td>
+                    <td class="wdh">
+                        01
+                    </td>
+                    <td class="wdh">
+                        02
+                    </td>
+                    <td class="wdh">
+                        03
+                    </td>
+                    <td class="wdh">
+                        04
+                    </td>
+                    <td class="wdh">
+                        05
+                    </td>
+                    <td class="wdh">
+                        06
+                    </td>
+                    <td class="wdh">
+                        07
+                    </td>
+                    <td class="wdh">
+                        08
+                    </td>
+                    <td class="wdh">
+                        09
+                    </td>
+                    <td class="wdh">
+                        10
+                    </td>
+                    <td class="wdh">
+                        11
+                    </td>
+                    <td class="wdh">
+                        12
+                    </td>
+                    <td class="wdh">
+                        13
+                    </td>
+                    <td class="wdh">
+                        14
+                    </td>
+                    <td class="wdh">
+                        15
+                    </td>
+                    <td class="wdh">
+                        16
+                    </td>
+                </tr>
+            </tbody>
+            <tbody id="tdata" style="font-size: 12px; font-family: '宋体',Tahoma,Consolas,Arial,Simsun;">
+                @foreach (var item in JiBenZouSi)
+                {
+                    a++;
+                    if (a % 5 == 0)
+                    {
+                    <tr class="tdbck">
+                        <td colspan="50">
+                        </td>
+                    </tr>
+                    }
+                    <tr>
+                        <td align="center">@item.IssuseNumber
+                        </td>
+                        <td style="background-color: #FEFFEF;" @(item.Red01 == 0 ? "class=chartBall01" : "class=y101")>@(item.Red01 == 0 ? 01 : item.Red01)
+                        </td>
+                        <td style="background-color: #FEFFEF;" @(item.Red02 == 0 ? "class=chartBall01" : "class=y101")>@(item.Red02 == 0 ? 02 : item.Red02)
+                        </td>
+                        <td style="background-color: #FEFFEF;" @(item.Red03 == 0 ? "class=chartBall01" : "class=y101")>@(item.Red03 == 0 ? 03 : item.Red03)
+                        </td>
+                        <td style="background-color: #FEFFEF;" @(item.Red04 == 0 ? "class=chartBall01" : "class=y101")>@(item.Red04 == 0 ? 04 : item.Red04)
+                        </td>
+                        <td style="background-color: #FEFFEF;" @(item.Red05 == 0 ? "class=chartBall01" : "class=y101")>@(item.Red05 == 0 ? 05 : item.Red05)
+                        </td>
+                        <td style="background-color: #FEFFEF;" @(item.Red06 == 0 ? "class=chartBall01" : "class=y101")>@(item.Red06 == 0 ? 06 : item.Red06)
+                        </td>
+                        <td style="background-color: #FEFFEF;" @(item.Red07 == 0 ? "class=chartBall01" : "class=y101")>@(item.Red07 == 0 ? 07 : item.Red07)
+                        </td>
+                        <td style="background-color: #FEFFEF;" @(item.Red08 == 0 ? "class=chartBall01" : "class=y101")>@(item.Red08 == 0 ? 08 : item.Red08)
+                        </td>
+                        <td style="background-color: #FEFFEF;" @(item.Red09 == 0 ? "class=chartBall01" : "class=y101")>@(item.Red09 == 0 ? 09 : item.Red09)
+                        </td>
+                        <td style="background-color: #FEFFEF;" @(item.Red10 == 0 ? "class=chartBall01" : "class=y101")>@(item.Red10 == 0 ? 10 : item.Red10)
+                        </td>
+                        <td style="background-color: #FCFEFD;" @(item.Red11 == 0 ? "class=chartBall01" : "class=y101")>@(item.Red11 == 0 ? 11 : item.Red11)
+                        </td>
+                        <td style="background-color: #FCFEFD;" @(item.Red12 == 0 ? "class=chartBall01" : "class=y101")>@(item.Red12 == 0 ? 12 : item.Red12)
+                        </td>
+                        <td style="background-color: #FCFEFD;" @(item.Red13 == 0 ? "class=chartBall01" : "class=y101")>@(item.Red13 == 0 ? 13 : item.Red13)
+                        </td>
+                        <td style="background-color: #FCFEFD;" @(item.Red14 == 0 ? "class=chartBall01" : "class=y101")>@(item.Red14 == 0 ? 14 : item.Red14)
+                        </td>
+                        <td style="background-color: #FCFEFD;" @(item.Red15 == 0 ? "class=chartBall01" : "class=y101")>@(item.Red15 == 0 ? 15 : item.Red15)
+                        </td>
+                        <td style="background-color: #FCFEFD;" @(item.Red16 == 0 ? "class=chartBall01" : "class=y101")>@(item.Red16 == 0 ? 16 : item.Red16)
+                        </td>
+                        <td style="background-color: #FCFEFD;" @(item.Red17 == 0 ? "class=chartBall01" : "class=y101")>@(item.Red17 == 0 ? 17 : item.Red17)
+                        </td>
+                        <td style="background-color: #FCFEFD;" @(item.Red18 == 0 ? "class=chartBall01" : "class=y101")>@(item.Red18 == 0 ? 18 : item.Red18)
+                        </td>
+                        <td style="background-color: #FCFEFD;" @(item.Red19 == 0 ? "class=chartBall01" : "class=y101")>@(item.Red19 == 0 ? 19 : item.Red19)
+                        </td>
+                        <td style="background-color: #FCFEFD;" @(item.Red20 == 0 ? "class=chartBall01" : "class=y101")>@(item.Red20 == 0 ? 20 : item.Red20)
+                        </td>
+                        <td style="background-color: #FCFEFD;" @(item.Red21 == 0 ? "class=chartBall01" : "class=y101")>@(item.Red21 == 0 ? 21 : item.Red21)
+                        </td>
+                        <td style="background-color: #FCFEFD;" @(item.Red22 == 0 ? "class=chartBall01" : "class=y101")>@(item.Red22 == 0 ? 22 : item.Red22)
+                        </td>
+                        <td style="background-color: #FEFFEF;" @(item.Red23 == 0 ? "class=chartBall01" : "class=y101")>@(item.Red23 == 0 ? 23 : item.Red23)
+                        </td>
+                        <td style="background-color: #FEFFEF;" @(item.Red24 == 0 ? "class=chartBall01" : "class=y101")>@(item.Red24 == 0 ? 24 : item.Red24)
+                        </td>
+                        <td style="background-color: #FEFFEF;" @(item.Red25 == 0 ? "class=chartBall01" : "class=y101")>@(item.Red25 == 0 ? 25 : item.Red25)
+                        </td>
+                        <td style="background-color: #FEFFEF;" @(item.Red26 == 0 ? "class=chartBall01" : "class=y101")>@(item.Red26 == 0 ? 26 : item.Red26)
+                        </td>
+                        <td style="background-color: #FEFFEF;" @(item.Red27 == 0 ? "class=chartBall01" : "class=y101")>@(item.Red27 == 0 ? 27 : item.Red27)
+                        </td>
+                        <td style="background-color: #FEFFEF;" @(item.Red28 == 0 ? "class=chartBall01" : "class=y101")>@(item.Red28 == 0 ? 28 : item.Red28)
+                        </td>
+                        <td style="background-color: #FEFFEF;" @(item.Red29 == 0 ? "class=chartBall01" : "class=y101")>@(item.Red29 == 0 ? 29 : item.Red29)
+                        </td>
+                        <td style="background-color: #FEFFEF;" @(item.Red30 == 0 ? "class=chartBall01" : "class=y101")>@(item.Red30 == 0 ? 30 : item.Red30)
+                        </td>
+                        <td style="background-color: #FEFFEF;" @(item.Red31 == 0 ? "class=chartBall01" : "class=y101")>@(item.Red31 == 0 ? 31 : item.Red31)
+                        </td>
+                        <td style="background-color: #FEFFEF;" @(item.Red32 == 0 ? "class=chartBall01" : "class=y101")>@(item.Red32 == 0 ? 32 : item.Red32)
+                        </td>
+                        <td style="background-color: #FEFFEF;" class="@(item.Red33 == 0 ? "chartBall01 line_r" : "y101 line_r")">@(item.Red33 == 0 ? 33 : item.Red33)
+                        </td>
+                        <td style="background-color: #EEF5FD;" @(item.Blue01 == 0 ? "class=hot03" : "class=y101")>@(item.Blue01 == 0 ? 01 : item.Blue01)
+                        </td>
+                        <td style="background-color: #EEF5FD;" @(item.Blue02 == 0 ? "class=hot03" : "class=y101")>@(item.Blue02 == 0 ? 02 : item.Blue02)
+                        </td>
+                        <td style="background-color: #EEF5FD;" @(item.Blue03 == 0 ? "class=hot03" : "class=y101")>@(item.Blue03 == 0 ? 03 : item.Blue03)
+                        </td>
+                        <td style="background-color: #EEF5FD;" @(item.Blue04 == 0 ? "class=hot03" : "class=y101")>@(item.Blue04 == 0 ? 04 : item.Blue04)
+                        </td>
+                        <td style="background-color: #EEF5FD;" @(item.Blue05 == 0 ? "class=hot03" : "class=y101")>@(item.Blue05 == 0 ? 05 : item.Blue05)
+                        </td>
+                        <td style="background-color: #EEF5FD;" @(item.Blue06 == 0 ? "class=hot03" : "class=y101")>@(item.Blue06 == 0 ? 06 : item.Blue06)
+                        </td>
+                        <td style="background-color: #EEF5FD;" @(item.Blue07 == 0 ? "class=hot03" : "class=y101")>@(item.Blue07 == 0 ? 07 : item.Blue07)
+                        </td>
+                        <td style="background-color: #EEF5FD;" @(item.Blue08 == 0 ? "class=hot03" : "class=y101")>@(item.Blue08 == 0 ? 08 : item.Blue08)
+                        </td>
+                        <td style="background-color: #ECEDFF;" @(item.Blue09 == 0 ? "class=hot03" : "class=y101")>@(item.Blue09 == 0 ? 09 : item.Blue09)
+                        </td>
+                        <td style="background-color: #ECEDFF;" @(item.Blue10 == 0 ? "class=hot03" : "class=y101")>@(item.Blue10 == 0 ? 10 : item.Blue10)
+                        </td>
+                        <td style="background-color: #ECEDFF;" @(item.Blue11 == 0 ? "class=hot03" : "class=y101")>@(item.Blue11 == 0 ? 11 : item.Blue11)
+                        </td>
+                        <td style="background-color: #ECEDFF;" @(item.Blue12 == 0 ? "class=hot03" : "class=y101")>@(item.Blue12 == 0 ? 12 : item.Blue12)
+                        </td>
+                        <td style="background-color: #ECEDFF;" @(item.Blue13 == 0 ? "class=hot03" : "class=y101")>@(item.Blue13 == 0 ? 13 : item.Blue13)
+                        </td>
+                        <td style="background-color: #ECEDFF;" @(item.Blue14 == 0 ? "class=hot03" : "class=y101")>@(item.Blue14 == 0 ? 14 : item.Blue14)
+                        </td>
+                        <td style="background-color: #ECEDFF;" @(item.Blue15 == 0 ? "class=hot03" : "class=y101")>@(item.Blue15 == 0 ? 15 : item.Blue15)
+                        </td>
+                        <td style="background-color: #ECEDFF;" @(item.Blue16 == 0 ? "class=hot03" : "class=y101")>@(item.Blue16 == 0 ? 16 : item.Blue16)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tbody>
+                <tr>
+                    <td align="center" class="bdtop line_r">
+                        出现次数
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Red01 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Red02 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Red03 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Red04 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Red05 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Red06 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Red07 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Red08 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Red09 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Red10 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Red11 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Red12 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Red13 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Red14 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Red15 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Red16 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Red17 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Red18 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Red19 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Red20 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Red21 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Red22 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Red23 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Red24 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Red25 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Red26 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Red27 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Red28 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Red29 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Red30 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Red31 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Red32 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(JiBenZouSi.Count(p => p.Red33 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Blue01 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Blue02 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Blue03 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Blue04 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Blue05 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Blue06 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Blue07 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Blue08 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Blue09 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Blue10 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Blue11 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Blue12 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Blue13 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Blue14 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(JiBenZouSi.Count(p => p.Blue15 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(JiBenZouSi.Count(p => p.Blue16 == 0))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        平均遗漏
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Red01) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Red02) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Red03) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Red04) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Red05) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Red06) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Red07) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Red08) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Red09) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Red10) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Red11) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Red12) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Red13) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Red14) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Red15) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Red16) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Red17) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Red18) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Red19) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Red20) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Red21) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Red22) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Red23) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Red24) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Red25) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Red26) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Red27) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Red28) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Red29) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Red30) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Red31) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Red32) / JiBenZouSi.Count)
+                    </td>
+                    <td class="line_r">
+                        @(JiBenZouSi.Sum(p => p.Red33) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Blue01) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Blue02) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Blue03) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Blue04) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Blue05) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Blue06) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Blue07) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Blue08) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Blue09) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Blue10) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Blue11) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Blue12) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Blue13) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Blue14) / JiBenZouSi.Count)
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Sum(p => p.Blue15) / JiBenZouSi.Count)
+                    </td>
+                    <td class="line_r">
+                        @(JiBenZouSi.Sum(p => p.Blue16) / JiBenZouSi.Count)
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        最大遗漏
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Red01))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Red02))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Red03))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Red04))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Red05))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Red06))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Red07))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Red08))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Red09))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Red10))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Red11))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Red12))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Red13))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Red14))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Red15))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Red16))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Red17))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Red18))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Red19))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Red20))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Red21))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Red22))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Red23))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Red24))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Red25))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Red26))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Red27))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Red28))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Red29))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Red30))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Red31))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Red32))
+                    </td>
+                    <td class="line_r">
+                        @(JiBenZouSi.Max(p => p.Red33))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Blue01))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Blue02))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Blue03))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Blue04))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Blue05))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Blue06))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Blue07))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Blue08))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Blue09))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Blue10))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Blue11))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Blue12))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Blue13))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Blue14))
+                    </td>
+                    <td>
+                        @(JiBenZouSi.Max(p => p.Blue15))
+                    </td>
+                    <td class="line_r">
+                        @(JiBenZouSi.Max(p => p.Blue16))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        当前遗漏
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Red01)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Red01)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Red02)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Red02)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Red03)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Red03)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Red04)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Red04)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Red05)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Red05)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Red06)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Red06)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Red07)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Red07)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Red08)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Red08)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Red09)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Red09)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Red10)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Red10)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Red11)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Red11)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Red12)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Red12)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Red13)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Red13)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Red14)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Red14)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Red15)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Red15)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Red16)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Red16)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Red17)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Red17)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Red18)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Red18)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Red19)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Red19)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Red20)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Red20)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Red21)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Red21)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Red22)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Red22)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Red23)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Red23)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Red24)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Red24)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Red25)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Red25)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Red26)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Red26)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Red27)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Red27)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Red28)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Red28)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Red29)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Red29)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Red30)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Red30)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Red31)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Red31)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Red32)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Red32)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Red33)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Red33)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Blue01)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Blue01)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Blue02)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Blue02)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Blue03)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Blue03)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Blue04)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Blue04)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Blue05)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Blue05)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Blue06)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Blue06)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Blue07)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Blue07)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Blue08)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Blue08)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Blue09)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Blue09)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Blue10)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Blue10)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Blue11)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Blue11)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Blue12)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Blue12)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Blue13)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Blue13)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Blue14)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Blue14)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Blue15)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Blue15)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(JiBenZouSi[JiBenZouSi.Count - 1].Blue16)<br>
+                        <img width="8px" height="@(JiBenZouSi[JiBenZouSi.Count - 1].Blue16)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr>
+                    <td colspan="51">
+                    </td>
+                </tr>
+                <tr class="tabbg">
+                    <td align="center" rowspan="2">
+                    </td>
+                    <td class="wdh">
+                        01
+                    </td>
+                    <td class="wdh">
+                        02
+                    </td>
+                    <td class="wdh">
+                        03
+                    </td>
+                    <td class="wdh">
+                        04
+                    </td>
+                    <td class="wdh">
+                        05
+                    </td>
+                    <td class="wdh">
+                        06
+                    </td>
+                    <td class="wdh">
+                        07
+                    </td>
+                    <td class="wdh">
+                        08
+                    </td>
+                    <td class="wdh">
+                        09
+                    </td>
+                    <td class="wdh">
+                        10
+                    </td>
+                    <td class="wdh">
+                        11
+                    </td>
+                    <td class="wdh">
+                        12
+                    </td>
+                    <td class="wdh">
+                        13
+                    </td>
+                    <td class="wdh">
+                        14
+                    </td>
+                    <td class="wdh">
+                        15
+                    </td>
+                    <td class="wdh">
+                        16
+                    </td>
+                    <td class="wdh">
+                        17
+                    </td>
+                    <td class="wdh">
+                        18
+                    </td>
+                    <td class="wdh">
+                        19
+                    </td>
+                    <td class="wdh">
+                        20
+                    </td>
+                    <td class="wdh">
+                        21
+                    </td>
+                    <td class="wdh">
+                        22
+                    </td>
+                    <td class="wdh">
+                        23
+                    </td>
+                    <td class="wdh">
+                        24
+                    </td>
+                    <td class="wdh">
+                        25
+                    </td>
+                    <td class="wdh">
+                        26
+                    </td>
+                    <td class="wdh">
+                        27
+                    </td>
+                    <td class="wdh">
+                        28
+                    </td>
+                    <td class="wdh">
+                        29
+                    </td>
+                    <td class="wdh">
+                        30
+                    </td>
+                    <td class="wdh">
+                        31
+                    </td>
+                    <td class="wdh">
+                        32
+                    </td>
+                    <td class="wdh line_r">
+                        33
+                    </td>
+                    <td class="wdh">
+                        01
+                    </td>
+                    <td class="wdh">
+                        02
+                    </td>
+                    <td class="wdh">
+                        03
+                    </td>
+                    <td class="wdh">
+                        04
+                    </td>
+                    <td class="wdh">
+                        05
+                    </td>
+                    <td class="wdh">
+                        06
+                    </td>
+                    <td class="wdh">
+                        07
+                    </td>
+                    <td class="wdh">
+                        08
+                    </td>
+                    <td class="wdh">
+                        09
+                    </td>
+                    <td class="wdh">
+                        10
+                    </td>
+                    <td class="wdh">
+                        11
+                    </td>
+                    <td class="wdh">
+                        12
+                    </td>
+                    <td class="wdh">
+                        13
+                    </td>
+                    <td class="wdh">
+                        14
+                    </td>
+                    <td class="wdh">
+                        15
+                    </td>
+                    <td class="wdh">
+                        16
+                    </td>
+                </tr>
+                <tr class="tabbg">
+                    <td colspan="33" class="line_r">
+                        红球
+                    </td>
+                    <td colspan="16">
+                        蓝球
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $(function () {
+
+        var allLines = new Array();
+        allLines.push({ line: $(".hot03"), color: "#187DBD" });
+
+        var line = new XTLine();
+        for (i = 0; i < allLines.length; i++) {
+            var l = allLines[i];
+
+            line.color = l.color;
+            line.arrayBalls = l.line;
+            line.showrect();
+        }
+
+
+        $("#has_line").click(function () {
+            line.display(this.checked);
+        })
+    })
+</script>

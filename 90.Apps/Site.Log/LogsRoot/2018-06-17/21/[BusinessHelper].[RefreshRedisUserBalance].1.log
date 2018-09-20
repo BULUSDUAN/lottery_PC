@@ -1,0 +1,6 @@
+[0][2018-06-17 21:29:58] Object reference not set to an instance of an object.
+    System.NullReferenceException: Object reference not set to an instance of an object.
+   at Common.Lottery.Redis.RedisHelper.get_DB_UserBalance()
+   at GameBiz.Business.BusinessHelper.RefreshRedisUserBalance(String userId)
+    ----------------------------------------------------------------------------
+

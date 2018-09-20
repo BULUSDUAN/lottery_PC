@@ -1,0 +1,764 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport" content="width=1180" />
+    <title>世界杯</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    @UserHelper.css("main.min.css")
+    @UserHelper.css("njc.min.css")
+    @UserHelper.css("worldcup/lotCss.css")
+    @UserHelper.css("worldcup/global.css")
+    @UserHelper.css("worldcup/navigation.css")
+    @UserHelper.css("worldcup/nav.css")
+    @UserHelper.js("jquery-1.7.min.js")
+    @UserHelper.js_share("share.min.js")
+    @UserHelper.js("user.min.js")
+    @UserHelper.js("nav.js")
+    @ViewHelpers.js("onlinePhone.js")
+    @UserHelper.jscdn("worldcupgyj.js", "180323")
+    @UserHelper.jscdn("worldcupgj.js", "180323")
+    <script type="text/javascript">        //tr行事件
+        $("#wcselgj").live("click", function () {
+            $("#wcgj").show();
+            $("#wcgyj").hide();
+            $("#sel_chp_pan").show();
+            $("#sel_pan").hide();
+            $("#wcselgj").removeClass("sel");
+            $("#wcselgj").addClass("unsel");
+            $("#wcselgyj").removeClass("unsel");
+            $("#wcselgyj").addClass("sel");
+        });
+        $("#wcselgyj").live("click", function () {
+            $("#wcgyj").show();
+            $("#wcgj").hide();
+            $("#sel_chp_pan").hide();
+            $("#sel_pan").show();
+            $("#wcselgyj").removeClass("sel");
+            $("#wcselgyj").addClass("unsel");
+            $("#wcselgj").removeClass("unsel");
+            $("#wcselgj").addClass("sel");
+        });
+        $("#mainTbl tr.listTr").live("mouseenter", function () {
+            $(this).addClass("listTrOver");
+        });
+        $("#mainTbl tr.listTr").live("mouseleave", function () {
+            $(this).removeClass("listTrOver");
+        });
+    </script>
+    <style type="text/css">
+        .beFixed
+        {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            margin-left: -572px;
+        }
+        .gyj_sel
+        {
+            cursor: pointer;
+        }
+        .times
+        {
+            width: 18px;
+            height: 15px;
+            border: solid 1px #CCCCCC;
+            text-align: center;
+        }
+        #sel_chp_pan .subAddBtn
+        {
+            background-color: #FFFFFF;
+            border: solid 1px #CCCCCC;
+            width: 20px;
+            margin: 0;
+            padding: 0;
+            font-size: 12px;
+            font: 14px Arial, "微软雅黑" , "宋体";
+        }
+        #sel_chp_pan
+        {
+            position: fixed;
+            bottom: 0px;
+        }
+        #wcgj .selling
+        {
+            cursor: pointer;
+        }
+        .qiudui_gyj table, .qiudui_gyj, .WorldCup_con_gyj
+        {
+            height: auto;
+        }
+        
+        .bet-btn
+        {
+            float: right;
+            width: 15%;
+        }
+        .bet-btn a
+        {
+            display: block;
+            width: 80%;
+            background-color: #ef0600;
+            border-radius: 6px;
+            text-align: center;
+            color: #fff;
+            margin-left: 20%;
+        }
+        .bet-btn a:hover
+        {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+       @* <div class="toplogoimg">
+        </div>*@
+        <!--[if !IE]>导航开始<![endif]-->
+        <!--[if !IE]>导航结束<![endif]-->
+        <!--[if !IE]>主体开始<![endif]-->
+        <div class="WorldCup_sel" style="position: relative">
+            <div id="wcselgj" class="W_sel unsel FloatL">
+                冠军游戏</div>
+            <div id="wcselgyj" class="W_sel sel FloatL">
+                冠亚军游戏</div>
+            <a href="#" target="_blank">
+                <div class="guess" style="display: none">
+                </div>
+            </a>
+        </div>
+        <!--[if !IE]>冠军游戏----<![endif]-->
+        <div id="wcgj" class="WorldCup_con">
+            <div class="qiudui FloatL">
+                <table id="mainTbl" cellpadding="0" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th width="14%" style="cursor: pointer">
+                                <a class="num_sort" sort="d" type="num" onclick="sort_chp_table(this)" href="javascript:void(0);">
+                                    编号</a><span><img src="@ViewHelpers.img("/football/arrow_up.gif")"></span>
+                            </th>
+                            <th width="37%">
+                                球队
+                            </th>
+                            <th width="14%">
+                                状态
+                            </th>
+                            <th width="18%" style="cursor: pointer">
+                                <a class="odd_sort" sort="r" type="odd" onclick="sort_chp_table(this)" href="javascript:void(0);">
+                                    奖金</a><span><img src="@ViewHelpers.img("/football/arrow_down.gif")" /></span>
+                            </th>
+                            <th width="17%" style="border-right: none">
+                                概率
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="chp_1">
+                    </tbody>
+                </table>
+            </div>
+            <div class="qiudui FloatL" style="margin-left: 18px">
+                <table id="mainTbl" cellpadding="0" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th width="14%" style="cursor: pointer">
+                                <a class="num_sort" sort="d" type="num" onclick="sort_chp_table(this)" href="javascript:void(0);">
+                                    编号</a><span><img src="@ViewHelpers.img("/football/arrow_up.gif")"></span>
+                            </th>
+                            <th width="37%">
+                                球队
+                            </th>
+                            <th width="14%">
+                                状态
+                            </th>
+                            <th width="18%" style="cursor: pointer">
+                                <a class="odd_sort" sort="r" type="odd" onclick="sort_chp_table(this)" href="javascript:void(0);">
+                                    奖金</a><span><img src="@ViewHelpers.img("/football/arrow_down.gif")" /></span>
+                            </th>
+                            <th width="17%" style="border-right: none">
+                                概率
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="chp_2">
+                    </tbody>
+                </table>
+            </div>
+            <div class="qiudui FloatR">
+                <table id="mainTbl" cellpadding="0" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th width="14%" style="cursor: pointer">
+                                <a class="num_sort" sort="d" type="num" onclick="sort_chp_table(this)" href="javascript:void(0);">
+                                    编号</a><span><img src="@ViewHelpers.img("/football/arrow_up.gif")"></span>
+                            </th>
+                            <th width="37%">
+                                球队
+                            </th>
+                            <th width="14%">
+                                状态
+                            </th>
+                            <th width="18%" style="cursor: pointer">
+                                <a class="odd_sort" sort="r" type="odd" onclick="sort_chp_table(this)" href="javascript:void(0);">
+                                    奖金</a><span><img src="@ViewHelpers.img("/football/arrow_down.gif")" /></span>
+                            </th>
+                            <th width="17%" style="border-right: none">
+                                概率
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="chp_3">
+                    </tbody>
+                </table>
+                </table>
+            </div>
+        </div>
+        <!--[if !IE]>冠亚军游戏----<![endif]-->
+        <div id="wcgyj" class="WorldCup_con_gyj" style="display: none">
+            <div class="qdcheck">
+                <form id="screen" autocomplete="off">
+                <input type="checkbox" name="screen" id="德国" />德国&nbsp;&nbsp;<input type="checkbox"
+                    name="screen" id="巴西" />巴西&nbsp;&nbsp;<input type="checkbox" name="screen" id="阿根廷" />阿根廷&nbsp;&nbsp;<input
+                        type="checkbox" name="screen" id="法国" />法国&nbsp;&nbsp;<input type="checkbox" name="screen"
+                            id="西班牙" />西班牙&nbsp;&nbsp;<input type="checkbox" name="screen" id="英格兰" />英格兰&nbsp;&nbsp;<input
+                                type="checkbox" name="screen" id="葡萄牙" />葡萄牙&nbsp;&nbsp;<input type="checkbox" name="screen"
+                                    id="比利时" />比利时&nbsp;&nbsp;<input type="checkbox" name="screen" id="俄罗斯" />俄罗斯&nbsp;&nbsp;<input
+                                        type="checkbox" name="screen" id="乌拉圭" />乌拉圭&nbsp;&nbsp;<input type="checkbox" name="screen"
+                                            id="哥伦比亚" />哥伦比亚&nbsp;&nbsp;<input type="checkbox" name="screen" id="克罗地亚" />克罗地亚&nbsp;&nbsp;</form>
+            </div>
+            <div class="qiudui_gyj FloatL">
+                <table id="mainTbl_gyj" cellpadding="0" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th width="10%" style="cursor: pointer">
+                                <a href="javascript:void(0);" onclick="sortList(this);">编号</a><span><img name='sort'
+                                    src="@ViewHelpers.img("/football/arrow_up.gif")" /></span>
+                            </th>
+                            <th width="53%">
+                                球队
+                            </th>
+                            <th width="11%">
+                                状态
+                            </th>
+                            <th width="13%" style="cursor: pointer">
+                                <a onclick="sortBonus(this);" href="javascript:void(0);">奖金</a><span><img name='bonusSort'
+                                    src="@ViewHelpers.img("/football/arrow_down.gif")" /></span>
+                            </th>
+                            <th width="13%" style="border-right: none">
+                                概率
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="gyj_left">
+                    </tbody>
+                </table>
+            </div>
+            <div class="qiudui_gyj FloatR">
+                <table id="mainTbl_gyj" cellpadding="0" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th width="10%" style="cursor: pointer">
+                                <a href="javascript:void(0);" onclick="sortList(this);">编号</a><span><img name='sort'
+                                    src="@ViewHelpers.img("/football/arrow_up.gif")" /></span>
+                            </th>
+                            <th width="53%">
+                                球队
+                            </th>
+                            <th width="11%">
+                                状态
+                            </th>
+                            <th width="13%" style="cursor: pointer">
+                                <a href="javascript:void(0);" onclick="sortBonus(this);">奖金</a><span><img name='bonusSort'
+                                    src="@ViewHelpers.img("/football/arrow_down.gif")" /></span>
+                            </th>
+                            <th width="13%" style="border-right: none">
+                                概率
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="gyj_right">
+                    </tbody>
+                </table>
+            </div>
+            <div style="clear: both;">
+            </div>
+        </div>
+    </div>
+    <div class="bottom_wrap" id="bw">
+        <div class="cal" id="sel_pan" style="display: none;">
+            <div class="FloatL">
+                投注倍数:</div>
+            <div class="FloatL" style="margin: 0 10px">
+                <input id="subBtn" class="subAddBtn" value="-" type="button" onclick="sub();" style="height: 20px">
+                <input id="beishu" class="times" value="1" type="text" maxlength="2" onblur="EnterPress(this);"
+                    style="height: 18px">
+                <input id="addBtn" class="subAddBtn" value="+" type="button" onclick="add();" style="height: 20px">
+            </div>
+            <div class="FloatL" style="color: #FFF; font-size: 12px">
+                [最高99倍]</div>
+            <div class="FloatL" style="margin-left: 36px">
+                投注金额：<font id="betting" style="color: #FF0; margin: 0 10px">0</font>元</div>
+            <div class="FloatL" style="margin-left: 43px">
+                理论最高奖金：<font id="total" style="color: #FF0; margin: 0 10px">0.00</font>元</div>
+            <div class="bet-btn">
+                <a href="javascript:void(0)" onclick="beting('gyj')">投注</a>
+            </div>
+        </div>
+        <div style="margin: 0 auto; width: 1144px;">
+            <div class="cal" id="sel_chp_pan">
+                <div class="FloatL">
+                    投注倍数:</div>
+                <div class="FloatL" style="margin: 0 10px">
+                    <input id="subBtn" class="subAddBtn" value="-" type="button" style="height: 20px">
+                    <input id="times" value="1" type="text" class="chp_times" maxlength="2" style="height: 18px">
+                    <input id="addBtn" class="subAddBtn" value="+" type="button" style="height: 20px">
+                </div>
+                <div class="FloatL" style="color: #FFF; font-size: 12px">
+                    [最高99倍]</div>
+                <div class="FloatL" style="margin-left: 36px">
+                    投注金额：<font style="color: #FF0; margin: 0 10px"><span id="vote_money">0</span></font>元</div>
+                <div class="FloatL" style="margin-left: 43px">
+                    理论最高奖金：<font style="color: #FF0; margin: 0 10px"><span id="prize_money">0.00</span></font>元</div>
+                @* <div id="QRcode" class="FloatR" style="color: #fff; font-size: 14px; cursor: pointer">
+                    专业购彩者方案尽在竞彩官方<span class="codeLogo"></span>
+                </div>*@
+                <div class="bet-btn">
+                    <a href="javascript:void(0)" onclick="beting('gj')">投注</a>
+                </div>
+            </div>
+        </div>
+        @*<div class="cal_att">
+            提示：<font style="color: #e30000; margin: 0 18px 0 7px">1.冠军、冠亚军游戏兑奖周期较长，请妥善保存您购买的彩票。</font>2.页面中的奖金仅供参考，实际奖金以出票时刻奖金为准。计算器显示的奖金=每1元对应中奖奖金。</div>*@
+    </div>
+    <!--登录框-->
+    <div id="loginLay" class="pop-comm login_pop" style="display: none;">
+        <div class="iDialog_dlkuang">
+            <div class="iDialogHead">
+                <h1>
+                    账号登录</h1>
+            </div>
+            <a href="javascript:void(0)" onclick="loginDialog.Close();" id="DialogClose" hidefocus="true"
+                class="iDialogClose"></a>
+            <div class="iDialogBody">
+                <div class="iDialogMain">
+                    <ul>
+                        <li><span class="mcInputBoxUser">
+                            <input type="text" name="u" id="lu" tabindex="1" placeholder="输入用户名或手机号" autocomplete="off"
+                                class="loginInput" />
+                        </span><a id="toRegster" href="/statichtml/register.html" target="_blank">免费注册</a>
+                        </li>
+                        <li><span class="mcInputBoxPass">
+                            <input type="password" name="p" id="lp" tabindex="2" placeholder="密码" autocomplete="off"
+                                class="loginInput" />
+                        </span><a target="_blank" href="/user/forget">忘记密码</a> </li>
+                        <li>
+                            <div id="login_captcha">
+                            </div>
+                            <span id="verifycodeTip" class="onShow" style="display: none;"><b>请拖动验证滑块到正确位置!</b></span>
+                            <br />
+                        </li>
+                        <li class="errAndSaveLi">
+                            <div style="display: none;" id="error_tips" class="dl_tips">
+                                您输入的账户名和密码不匹配，请重新输入。
+                            </div>
+                            <a id="link_go_activity" style="display: none;">去激活</a> </li>
+                        <li class="leftLi"><a tabindex="3" id="floginbtn" class="iDialogBtn" href="javascript:void(0)">
+                            <span>登 录</span></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        //login_getcaptcha();
+
+        //new Drag("loginLay", { Handle: "drag_poplogin", Limit: true });
+        var loginDialog = new LightBox("loginLay", { onShow: initLoginBox });
+
+        function initLoginBox() {
+
+            $("#error_tips").html("").hide();
+            if ($.cookie("remember") == "true") {
+                $("#remember").attr("checked", true);
+                $("#lu").val($.cookie("userName"));
+                $("#lp").val($.cookie("userPwd"));
+            } else {
+                $("#remember").removeAttr("checked");
+                $("#lu").val("").focus();
+                $("#lp").val("");
+            }
+        }
+
+        function setLoginButton(isShow) {
+            if (isShow) {
+                document.getElementById("login_table").style.display = "";
+                document.getElementById("login_progress").style.display = "none";
+                document.getElementById("login_table").disabled = false;
+            } else {
+                $("#error_tips").html("").hide();
+                document.getElementById("login_table").disabled = true;
+                document.getElementById("login_table").style.display = "none";
+                document.getElementById("login_progress").style.display = "block";
+            }
+        }
+        function saveUserInfo() {
+            if ($("#remember").is(":checked")) {
+                var userName = $("#lu").val();
+                var userPwd = $("#lp").val();
+                $.cookie("remember", "true", { expires: 7 });
+                $.cookie("userName", userName, { expires: 7 });
+                $.cookie("userPwd", userPwd, { expires: 7 });
+            } else {
+                $.cookie("remember", "false", { expires: -1 });
+                $.cookie("userName", '', { expires: -1 });
+                $.cookie("userPwd", '', { expires: 7 });
+            }
+        }
+
+        $("#floginbtn").live("click", function () {
+            var userName = $("#lu").val();
+            var passWord = $("#lp").val();
+
+            if (!userName) {
+                $("#error_tips").html("请输入您的登录账号").show();
+                $("#lu").focus();
+                return false;
+            }
+            if (!passWord) {
+                $("#error_tips").html("请输入正确的密码").show();
+                $("#lp").focus();
+                return false;
+            }
+            //        if (!GT_status) {
+            //            $("#error_tips").html("请拖动验证滑块到正确位置").show();
+            //            $("#lp").focus();
+            //            return false;
+            //        }
+            //        var geetest_challenge = $("[name='geetest_challenge']").val();
+            //        if (!geetest_challenge && $("[name='geetest_challenge']").length == 2) {
+            //            geetest_challenge = $("[name='geetest_challenge']")[1].value;
+            //        }
+            //        var geetest_validate = $("[name='geetest_validate']").val();
+            //        if (!geetest_validate && $("[name='geetest_validate']").length == 2) {
+            //            geetest_validate = $("[name='geetest_validate']")[1].value;
+            //        }
+            //        var geetest_seccode = $("[name='geetest_seccode']").val();
+            //        if (!geetest_seccode && $("[name='geetest_seccode']").length == 2) {
+            //            geetest_seccode = $("[name='geetest_seccode']")[1].value;
+            //        }
+            var url = "/user/loginuser123";
+            //        var data = { userName: userName, passWord: passWord, geetest_challenge: geetest_challenge, geetest_validate: geetest_validate, geetest_seccode: geetest_seccode };
+            var data = { userName: userName, passWord: passWord };
+            var success = function (result) {
+                if (result.IsSuccess) {
+                    //setLoginButton(true);
+                    loginDialog.Close();
+                    saveUserInfo();
+                    $("#lu").val("");
+                    $("#lp").val("");
+                    $("#error_tips").html("").hide();
+                    $(".hongbao3").css("display", "none");
+                    user.refresh(user.LoginCallBack);
+                    //alert("你的账户有异常，为了确保你的资金安全，请修改你的登录密码，如果已修改过，请忽略该提示！");
+                    //window.location.href= = "/member/safe";
+                    return false;
+                } else {
+                    //setLoginButton(true);
+                    //$("#error_tips").html(result.Message).show();
+                    //                console.warn(result.UserId)
+                    //                if (result.UserId) {
+                    //                    $("#link_go_activity").attr("href", "/user/registervalidamobile?userid=" + result.UserId).show();
+                    //                }
+                    if (result.Message == "用户未激活") {
+                        alert("您的账户存在异常行为，为了保障您的资金安全，暂停登录，请联系在线客服处理");
+                        //alert("账户存在异常行为，请联系在线客服处理解封");
+                    }
+                    else {
+                        $("#error_tips").html(result.Message).show();
+                    }
+                    return false;
+                }
+            };
+            $.post(url, data, success);
+            return false;
+        });
+        $("#floginreset").die().live("click", function () {
+            $("#loginForm")[0].reset();
+        });
+        $("body").keydown(function (e) {
+            if (e.which == 13) {
+                if (!user.isLogin(function () { }) && $("#loginLay").is(":visible")) {
+                    $("#floginbtn").click();
+                }
+            }
+        });
+        //刷新验证码
+        function refreshCode() {
+            $("#yzmtext").val("").focus();
+            $("#yzmimg").css("display", "inline-block").attr("src", "/user/createvalidatecode?r=" + Math.random().toFixed(5));
+        }
+    </script>
+    <!--提示框-->
+    <div id="alertBoxDiv" style="display: none;">
+        <table>
+            <tr>
+                <td class="itd-top-left">
+                </td>
+                <td class="itd-top-center">
+                </td>
+                <td class="itd-top-right">
+                </td>
+            </tr>
+            <tr>
+                <td class="itd-mid-left">
+                </td>
+                <td class="itd-mid-center">
+                    <div class="dialogContent">
+                        <h3 id="drag_alert" class="pop-comm-top" style="width: 442px;">
+                            彩票网提醒您 <a class="close" onclick="alertClose();">关闭</a>
+                        </h3>
+                        <div class="pop-comm-middle">
+                            <div class="msg-content">
+                                <i class="dialogStatus ok"></i><span id="alert_message" class="message" style="width: 331px;
+                                    display: block; float: left; padding-left: 6px; font: 15px/1.5 arial,'宋体',tahoma,helvetica;
+                                    position: relative; top: 5px; white-space: normal; word-break: break-all; word-wrap: break-word">
+                                </span>
+                            </div>
+                            <div class="buttonrow">
+                                <input type="button" id="boxAlertOkButton" value="知道了" class="dialogBtn" onclick="alertClose();" />
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td class="itd-mid-right">
+                </td>
+            </tr>
+            <tr>
+                <td class="itd-bot-left">
+                </td>
+                <td class="itd-bot-center">
+                </td>
+                <td class="itd-bot-right">
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script type="text/javascript">
+        new Drag("alertBoxDiv", { Handle: "drag_alert", Limit: true });
+        var alertBox = new LightBox("alertBoxDiv", { onShow: function () { document.getElementById("boxAlertOkButton").focus(); }, onClose: function () { document.getElementById("boxAlertOkButton").blur(); } });
+
+        var $titleSp = $("#drag_alert span");
+        function alertCom(title, message) {
+            $titleSp.html(title);
+            $("#alert_message").prev().hide().end().html(message);
+            alertBox.Show();
+        }
+
+        function alertTip(message, icon) {
+            if (null != icon) {
+                $("#alertBoxDiv i").addClass(icon);
+            }
+            $("#alert_message").html(message);
+            alertBox.Show();
+        }
+
+        function alertClose() {
+            alertBox.Close();
+            $("#alertBoxDiv i").attr("class", "dialogStatus");
+        }
+    </script>
+    <!--信息确认框 开始-->
+    <div id="bet_confirm">
+        <table>
+            <tr>
+                <td class="itd-top-left">
+                </td>
+                <td class="itd-top-center">
+                </td>
+                <td class="itd-top-right">
+                </td>
+            </tr>
+            <tr>
+                <td class="itd-mid-left">
+                </td>
+                <td class="itd-mid-center">
+                    <div class="dialogContent">
+                        <h3 id="drag_confirm" class="pop-comm-top">
+                            投注内容 <a class="close" id="btn_confirm_close">关闭</a>
+                        </h3>
+                        <div class="pop-comm-middle">
+                            <div id="bet_confirm_content">
+                            </div>
+                            <div class="buttonrow">
+                                <input type="button" id="btn_confirm_yes" value="确定" class="dialogBtn" />
+                                <input type="button" id="btn_confirm_no" value="取消" class="dialogBtn focusBtn" />
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td class="itd-mid-right">
+                </td>
+            </tr>
+            <tr>
+                <td class="itd-bot-left">
+                </td>
+                <td class="itd-bot-center">
+                </td>
+                <td class="itd-bot-right">
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script type="text/javascript">
+        //new Drag("bet_confirm", { Handle: "drag_confirm", Limit: true });
+        var confirmLightBox = new LightBox("bet_confirm");
+
+        function confirmTip(message, func1, func2) {
+            var confirm_yes_Event = function () {
+                confirmLightBox.Close();
+                func1();
+                document.getElementById("bet_confirm_content").innerHTML = "";
+            };
+            var confirm_no_Event = function () {
+                confirmLightBox.Close();
+                func2();
+                document.getElementById("bet_confirm_content").innerHTML = "";
+            };
+            document.getElementById("bet_confirm_content").innerHTML = message;
+            document.getElementById("btn_confirm_yes").onclick = confirm_yes_Event;
+            document.getElementById("btn_confirm_no").onclick = confirm_no_Event;
+            document.getElementById("btn_confirm_close").onclick = confirm_no_Event;
+            confirmLightBox.Show();
+            $("#btn_confirm_yes").focus();
+        }
+        function confirmTipx(message, func1, func2) {
+            var confirm_yes_Event = function () {
+                func1();
+            };
+            var confirm_no_Event = function () {
+                confirmLightBox.Close();
+                func2();
+                document.getElementById("bet_confirm_content").innerHTML = "";
+            };
+            document.getElementById("bet_confirm_content").innerHTML = message;
+            document.getElementById("btn_confirm_yes").onclick = confirm_yes_Event;
+            document.getElementById("btn_confirm_no").onclick = confirm_no_Event;
+            document.getElementById("btn_confirm_close").onclick = confirm_no_Event;
+            confirmLightBox.Show();
+            $("#btn_confirm_yes").focus();
+        }
+    </script>
+    <!--信息确认框 结束-->
+    <!--信息确认框投注过关 开始-->
+    <div id="bet_confirm_gg">
+        <table>
+            <tr>
+                <td class="itd-top-left">
+                </td>
+                <td class="itd-top-center">
+                </td>
+                <td class="itd-top-right">
+                </td>
+            </tr>
+            <tr>
+                <td class="itd-mid-left">
+                </td>
+                <td class="itd-mid-center">
+                    <div class="dialogContent">
+                        <h3 id="drag_confirm_gg" class="pop-comm-top">
+                            投注过关 <a class="close" id="btn_confirm_close_gg">关闭</a>
+                        </h3>
+                        <div class="pop-comm-middle">
+                            <div id="bet_confirm_content_gg">
+                            </div>
+                            <div class="buttonrow">
+                                <input type="button" id="btn_confirm_yes_gg" value="确定" class="dialogBtn" />
+                                <input type="button" id="btn_confirm_no_gg" value="取消" class="dialogBtn focusBtn" />
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td class="itd-mid-right">
+                </td>
+            </tr>
+            <tr>
+                <td class="itd-bot-left">
+                </td>
+                <td class="itd-bot-center">
+                </td>
+                <td class="itd-bot-right">
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script type="text/javascript">
+        //new Drag("bet_confirm_gg", { Handle: "drag_confirm_gg", Limit: true });
+        var confirmLightBoxGg = new LightBox("bet_confirm_gg");
+
+        function confirmTipGg(func, func2) {
+            var confirmgg_no_Event = function () {
+                confirmLightBoxGg.Close();
+                func2();
+                document.getElementById("bet_confirm_content_gg").innerHTML = "";
+            };
+            func();
+            document.getElementById("btn_confirm_no_gg").onclick = confirmgg_no_Event;
+            document.getElementById("btn_confirm_close_gg").onclick = confirmgg_no_Event;
+            $("#btn_confirm_yes_gg").focus();
+        }
+    </script>
+    <!--信息确认框 结束-->
+    <!--进度提示框 开始-->
+    <div id="bet_progress" style="display: none;">
+        <table>
+            <tr>
+                <td class="itd-top-left">
+                </td>
+                <td class="itd-top-center">
+                </td>
+                <td class="itd-top-right">
+                </td>
+            </tr>
+            <tr>
+                <td class="itd-mid-left">
+                </td>
+                <td class="itd-mid-center">
+                    <div class="dialogContent">
+                        <h3 class="pop-comm-top">
+                            操作进度提示</h3>
+                        <div class="pop-comm-middle">
+                            <i class="icon-loading"></i><span id="bet_progress_message" class="message" style="float: none;
+                                font-size: 14px;"></span>
+                        </div>
+                    </div>
+                </td>
+                <td class="itd-mid-right">
+                </td>
+            </tr>
+            <tr>
+                <td class="itd-bot-left">
+                </td>
+                <td class="itd-bot-center">
+                </td>
+                <td class="itd-bot-right">
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script type="text/javascript">
+        var progressLightBox = new LightBox("bet_progress");
+
+        //执行进度函数
+        var progress = function (message) {
+            $("#bet_progress_message").text(message);
+            progressLightBox.Show();
+        };
+        //关闭进度提示
+        function endprogress() {
+            progressLightBox.Close();
+        }
+    </script>
+    <!--进度提示框 结束-->
+</body>
+</html>

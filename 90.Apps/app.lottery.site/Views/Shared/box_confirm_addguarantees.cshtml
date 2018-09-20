@@ -1,0 +1,23 @@
+﻿<div id="bet_confirm_addbd">
+    <h3 id="drag_confirm_addbd" class="pop-comm-top">
+        <span class="bet-confirm-title">追加保底</span>
+        <a class="close" id="btn_confirm_close_gg" title="关闭">关闭</a>
+    </h3>
+    <div class="pop-comm-middle">
+        <div id="bet_confirm_content_addbd">
+        </div>
+        <div class="buttonrow">
+            <input type="button" id="btn_confirm_yes_gg" value="确定" class="dialogBtn"/>
+            <input type="button" id="btn_confirm_no_bd" value="取消" class="dialogBtn focusBtn"/>
+        </div>
+    </div>
+    <div class="pop-comm-bottom"></div>
+</div>
+<script>
+    new Drag("bet_confirm_addbd", { Handle: "drag_confirm_addbd", Limit: true });
+    var confirmLightBoxbd = new LightBox("bet_confirm_addbd");
+
+    function confirmaddbd() {
+        confirmLightBoxbd.Show();
+    }
+</script>

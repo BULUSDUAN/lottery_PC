@@ -1,0 +1,59 @@
+﻿@{
+    var Title = "网银充值订单查询";
+    ViewBag.Title = Title + " - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+   @ViewHelpers.css("help.css")
+} 
+  <div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">玩彩网</a> > </li>
+        <li><a href="/staticHtml/help/index.html">&nbsp;帮助中心</a> > </li>
+        <li>&nbsp;网银充值订单查询</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type = "account", name = "Ebank" });}
+<div class="help_r">
+         
+
+       <div class="list_box">
+            	<div class="h_pub_t">
+                	<b class="t_l"></b>
+                    <div class="t_m"><h2>网银充值订单查询</h2></div>
+                    <b class="t_r"></b>
+                </div>
+                <div class="h_pub_m">
+                	<ul>
+                            <li><a href="/staticHtml/help/myAccount/EbankAlipay.html" id="link151">支付宝如何查询充值订单号？</a></li>
+                            @*<li><a href="/help/EbankGDB" id="link151">广东发展银行如何查询订单号?</a></li>
+                            <li><a href="/help/EbankCEB" id="link151">光大银行如何查询订单号?</a></li>
+                            <li><a href="/help/EbankSDB" id="link151">深圳发展银行如何查询订单号?</a></li>
+                            <li><a href="/help/EbankCIB" id="link151">兴业银行如何查询订单号?</a></li>
+                            <li><a href="/help/EbankCITIC" id="link151">中信银行如何查询订单号?</a></li>
+                            <li><a href="/help/EbankPDB" id="link151">浦东发展银行如何查询订单号</a></li>*@
+                            <li><a href="/staticHtml/help/myAccount/EbankBOC.html" id="link151">中国银行如何查询订单号?</a></li>
+                            <li><a href="/staticHtml/help/myAccount/EbankCMBC.html" id="link151">民生银行如何查询订单号?</a></li>
+                            <li><a href="/staticHtml/help/myAccount/EbankBOCOM.html" id="link151">交行如何查询网上支付订单号?</a></li>
+                            <li><a href="/staticHtml/help/myAccount/EbankCCB.html" id="link151">建行如何查询网上支付订单号？</a></li>
+                            <li><a href="/staticHtml/help/myAccount/EbankCMB.html" id="link151">招行如何查询网上支付订单号？</a></li>
+                            <li><a href="/staticHtml/help/myAccount/EbankICBC.html" id="link151">工行如何查询网上支付订单号？</a></li>
+                            <li><a href="/staticHtml/help/myAccount/EbankABC.html" id="link151">农行如何查询网上支付订单号？</a></li>
+				            </ul>
+                </div>
+            </div>
+
+
+        </div>
+         </div>
+<div class="clearfix"></div>
+
+ @ViewHelpers.js("help.js")
+
+
+
+
+
+

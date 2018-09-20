@@ -1,0 +1,50 @@
+﻿@{
+    var Title = "隐私设置";
+    ViewBag.Title = Title + " - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+   @ViewHelpers.css("help.css")
+} 
+  <div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">玩彩网</a> > </li>
+        <li><a href="/staticHtml/help/index.html">&nbsp;帮助中心</a> > </li>
+        <li>&nbsp;隐私设置</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type = "account", name = "privacySet" });}
+<div class="help_r">
+         
+
+       <div class="list_box">
+            	<div class="h_pub_t">
+                	<b class="t_l"></b>
+                    <div class="t_m"><h2>网银充值订单查询</h2></div>
+                    <b class="t_r"></b>
+                </div>
+                <div class="h_pub_m">
+                	<ul>
+                    
+                            <li><a href="/staticHtml/help/myAccount/privacySet1.html" id="link151">什么是隐私设置？</a></li>
+                            <li><a href="/staticHtml/help/myAccount/privacySet2.html" id="link151">怎样设置隐私保护？</a></li>
+                            <li><a href="/staticHtml/help/myAccount/privacySet3.html" id="link151">设置隐私保护应注意些什么？</a></li>
+                            <li><a href="/staticHtml/help/myAccount/privacySet4.html" id="link151">隐私设置后立即生效吗？</a></li>
+				            </ul>
+                </div>
+            </div>
+
+
+        </div>
+         </div>
+<div class="clearfix"></div>
+
+ @ViewHelpers.js("help.js")
+
+
+
+
+
+

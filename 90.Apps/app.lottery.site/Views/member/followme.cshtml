@@ -1,0 +1,165 @@
+﻿@{
+    ViewBag.Title = "自动跟单管理 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "自动跟单管理, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var folloeme = ViewBag.FollowMeList as GameBiz.Core.TogetherFollowerRuleQueryInfoCollection;
+    var game = ViewBag.GameCode;
+    var type = ViewBag.GameType;
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>自动跟单管理</li>
+    </ul>
+</div>
+<div class="center mt10">
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mune_safe">
+        <div class="account_menu clearfix">
+            <a href="/member/betorder"  >投注记录</a>
+            <a href="/member/saveProgram">保存方案</a>
+            <a href="/member/chaseorder">追号记录</a>
+            <a href="/member/autofollow"  class="select">自动跟单</a>
+        </div>
+        <div class="account_con">
+            <div class="betorder_top">
+                <ul>
+                    <li><a href="/member/autofollow"><i></i>我的定制</a></li>
+                    <li class="betorder_topSelected"><a href="/member/followme?gamecode=ctzq&gametype=t14c"><i></i>定制我的</a></li>
+                    <li><a href="/member/followrecord"><i></i>成功定制记录</a></li>
+                </ul>
+            </div>
+            <div class="search_tab">
+                选择彩种类型：@GameHelper.GameSelectGame(ViewBag.GameCode, ViewBag.GameType)
+                &nbsp;&nbsp;<input type="button" value="查&nbsp;&nbsp;询" onclick="getFollowMe(0,10)" class="search_btn" />
+            </div>
+            <table class="account_box">
+                <thead>
+                    <tr>
+                        <td>
+                            序号
+                        </td>
+                        <td>
+                            彩种
+                        </td>
+                        <td>
+                            跟单人
+                        </td>
+                        <td>
+                            投注金额
+                        </td>
+                        <td>
+                            中奖金额
+                        </td>
+                        <td>
+                            中奖率
+                        </td>
+                        <td>
+                            操作
+                        </td>
+                    </tr>
+                </thead>
+                @if (folloeme != null && folloeme.TotalCount > 0)
+                {
+                    foreach (var item in folloeme.List)
+                    {
+                        <tr>
+                            <td>@(ViewBag.pageIndex*ViewBag.PageSize + folloeme.List.IndexOf(item) + 1)
+                            </td>
+                            <td>@SiteConvert.GameName(item.GameCode, item.GameType)
+                            </td>
+                            <td class="orderId">@SiteString.HideUserName(item.UserDisplayName, item.HideDisplayNameCount)
+                            </td>
+                            <td class="ye blod fszie">@item.BuyMoney.ToString("N2")
+                            </td>
+                            <td class="ye blod fszie">@item.BonusMoney.ToString("N2")
+                            </td>
+                            <td class="zc blod fszie">@(((item.BuyMoney <= 0 ? 0 : (item.BonusMoney/item.BuyMoney*100)).ToString("0") + "%"))
+                            </td>
+                            <td>
+                                @{
+                                    if (folloeme.TotalCount > 1)
+                                    {
+                                        if (folloeme.List.IndexOf(item) > 0)
+                                        {
+                                            <input type="button" value="上调↑" class="btn-hm" onclick=" changeIndex('up', '@item.CreaterUserId', '@item.RuleId') " title="上调" />
+                                            if (folloeme.List.IndexOf(item) < folloeme.TotalCount - 1)
+                                            {
+                                                <input type="button" value="下调↓" class="btn-query" onclick=" changeIndex('down', '@item.CreaterUserId', '@item.RuleId') " title="下调"/>
+                                            }
+                                            <input type="button" value="置顶" class="btn-hm" onclick=" changeIndex('top', '@item.CreaterUserId', '@item.RuleId') " title="置顶"/>
+                                        }
+                                        else
+                                        {
+                                            <input type="button" value="下调↓" class="btn-query" onclick=" changeIndex('down', '@item.CreaterUserId', '@item.RuleId') " title="下调"/>
+                                        }
+                                    }
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr >
+                        <td colspan="7">暂时没有找到你要的数据哦</td>
+                    </tr>
+                }
+            </table>
+            <div class="account_page  clearfix">
+                @ViewHelpers.Pager4("getFollowMe", ViewBag.pageIndex, ViewBag.PageSize, folloeme.TotalCount)
+            </div>
+            <div class="tip3 mt10">
+                <h3>
+                    说明：</h3>
+                <p style="text-indent: 20px">
+                    1、定制我的：查看定制自己发起方案的用户，可查看相关的信息，并进行相关的设置。<br></p>
+                <p style="text-indent: 20px">2、通过页面的“设置”功能可以对某彩种的定制跟单人进行自动跟单优先权的设置。
+                </p>
+            </div>
+        </div></div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(".account_box tr:even:gt(0)").css("backgroundColor", "#f9f9f9");
+    });
+    function getFollowMe(pageIndex, pageSize) {
+        var game = "", type = "";
+        var key = $("#dropDownListAllCPType").find("option:selected").val();
+        game = key.split('|')[0];
+
+        type = key.split('|')[1];
+        if (type != "") {
+            location.href = "/member/followme?gamecode=" + game + "&gametype=" + type + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize + "&r=" + Math.random().toFixed(5);
+        } else {
+            location.href = "/member/followme?gamecode=" + game + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize + "&r=" + Math.random().toFixed(5);
+        }
+
+    }
+    function changeIndex(changeType, createUser, ruleId) {
+        var data = {
+            changeType: changeType,
+            game: '@game',
+            type: '@type',
+            createUser: createUser,
+            ruleId: ruleId
+        };
+        var url = "/member/changeFollowIndex";
+        $.post(url, data, function (result) {
+            if (result.IsSuccess) {
+                location.href = location.href;
+            }
+            else {
+                alert(result.Message, "warning");
+                return false;
+            }
+        });
+    }
+</script>

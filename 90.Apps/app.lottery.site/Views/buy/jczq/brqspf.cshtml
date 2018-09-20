@@ -1,0 +1,297 @@
+@using MatchBiz.Core;
+@using app.lottery.site.jsonManager;
+@{var match = ViewBag.Match as List<JCZQ_MatchInfo_WEB>;
+  var oddstype = string.IsNullOrEmpty(Request["oddstype"]) ? 2 : int.Parse(Request["oddstype"]);
+  var salematch = match.Where(p => (oddstype == 2 ? p.FSStopBettingTime : p.DSStopBettingTime) > DateTime.Now).ToList();
+  var stopmatch = match.Where(p => (oddstype == 2 ? p.FSStopBettingTime : p.DSStopBettingTime) <= DateTime.Now).ToList();
+}
+<table width="100%" cellspacing="0" cellpadding="0" class="socai_jc" id="MatchTable">
+    <tr style="height: 18px;" class="ttis">
+        <td width="7%" rowspan="2">场
+        </td>
+        <td width="7%" rowspan="2">赛事
+        </td>
+        <td width="5%" rowspan="2">开赛<br>
+            时间
+        </td>
+        <td width="5%" rowspan="2">截止<br>
+            时间
+        </td>
+        <td width="12%" rowspan="2">主队
+        </td>
+        <td width="4%" rowspan="2">比分
+        </td>
+        <td width="11%" rowspan="2">客队
+        </td>
+        <td width="14%" rowspan="2">
+            <select name="oddsSelect" id="oddsSelect" onchange="load_sp()">
+                <option value="oz">平均欧赔</option>
+                <option value="wlxe">威廉希尔</option>
+                <option value="am">澳门</option>
+                <option value="lb">立博</option>
+                <option value="bet365">Bet365</option>
+                <option value="snai">SNAI</option>
+                <option value="yds">易德胜</option>
+                <option value="wd">韦德</option>
+                <option value="bwin">Bwin</option>
+                <option value="coral">Coral</option>
+                <option value="oddset">oddset</option>
+            </select>
+        </td>
+        <td width="5%" rowspan="2">分析
+        </td>
+        <td align="center" class="itd" colspan="3">投注区 / 参考奖金
+        </td>
+    </tr>
+    <tr style="height: 18px;" class="ttis">
+        <td width="8%" align="center">主胜
+        </td>
+        <td width="8%" align="center">平局
+        </td>
+        <td width="8%" align="center">客胜
+        </td>
+    </tr>
+    @{if (salematch.Count > 0)
+      {
+          var endTime = salematch[0].StartDateTime.Hour < 11 ? Convert.ToDateTime(salematch[0].StartDateTime.ToString("yyyy-MM-dd")).AddHours(11) : Convert.ToDateTime(salematch[0].StartDateTime.AddDays(1).ToString("yyyy-MM-dd")).AddHours(11);
+        <tr class="niDate">
+            <td colspan="16">
+                @endTime.AddDays(-1).ToString("yyyy年MM月dd日") @SiteConvert.Week_CN(endTime.AddDays(-1).DayOfWeek)
+                (11：00--次日11：00)&nbsp;&nbsp;<span class="green">[销售中]</span>&nbsp;&nbsp;<a style="color: blue; font-weight: lighter;"
+                            onclick="isShowSclass('@endTime.AddDays(-1).ToString("yyyy-MM-dd")','none');" href="javascript:" id="ah_@(endTime.AddDays(-1).ToString("yyyy-MM-dd"))">隐藏</a><a
+                                style="display: none; color: blue; font-weight: lighter;" onclick="isShowSclass('@(endTime.AddDays(-1).ToString("yyyy-MM-dd"))','');"
+                                href="javascript:" id="as_@(endTime.AddDays(-1).ToString("yyyy-MM-dd"))">显示</a>
+            </td>
+        </tr>
+          var i = 1;
+          foreach (var item in salematch)
+          {
+              var stopTime = oddstype == 2 ? item.FSStopBettingTime : item.DSStopBettingTime;
+              if (item.StartDateTime >= endTime)
+              {
+                  endTime = endTime.AddDays(1);
+        <tr class="niDate">
+            <td colspan="16">
+                @endTime.AddDays(-1).ToString("yyyy年MM月dd日") @SiteConvert.Week_CN(endTime.AddDays(-1).DayOfWeek)
+                (11：00--次日11：00)&nbsp;&nbsp;<span class="green">[销售中]</span>&nbsp;&nbsp;<a style="color: blue; font-weight: lighter;"
+                            onclick="isShowSclass('@(endTime.AddDays(-1).ToString("yyyy-MM-dd"))','none');" href="javascript:" id="ah_@(endTime.AddDays(-1).ToString("yyyy-MM-dd"))">隐藏</a><a
+                                style="display: none; color: blue; font-weight: lighter;" onclick="isShowSclass('@(endTime.AddDays(-1).ToString("yyyy-MM-dd"))','');"
+                                href="javascript:;" id="as_@(endTime.AddDays(-1).ToString("yyyy-MM-dd"))">显示</a>
+            </td>
+        </tr>
+              }
+              if (oddstype == 2 || item.IsHaveSP_BRQSPF)
+              {
+        <tr name="@(endTime.AddDays(-1).ToString("yyyy-MM-dd"))" matchid="@item.MatchId" polygoal="@item.LetBall" gamename="@item.LeagueName" cansale="true" onmouseout="this.style.backgroundColor='';"
+                        onmouseover="this.style.backgroundColor='#FFE6C5';" class="@(int.Parse(item.MatchNumber) % 2 == 0 ? "ni2" : "ni")" id="row_@(i)" matchtime="@stopTime">
+            <td style="cursor: pointer;" onclick="hideRow('row_@(i)')">
+                <img align="absmiddle" src="@SiteString.img("public/e.gif")">@item.MatchIdName
+            </td>
+            <td style="color: #FFFFFF; background-color: @item.LeagueColor;">
+                  @if (item.LeagueId == 0 || item.FXId == 0)
+                {
+                <a href="javascript:void(0)"  class="white">@item.LeagueName</a>
+                }
+                else
+                {
+                    <a href="/info/?zsurl=/league/index/@item.LeagueId/@item.FXId" target="_blank"  class="white">@item.LeagueName</a>
+                }
+            </td>
+            <td title="开赛时间：@item.StartDateTime.ToString("yyyy-MM-dd HH:mm")">
+                @item.StartDateTime.ToString("HH:mm")
+            </td>
+            <td title="截止时间：@(stopTime.ToString("yyyy-MM-dd HH:mm"))" @(stopTime <= DateTime.Now ? "class=red" : string.Empty)>
+                @(SiteConvert.jc_stoptime(stopTime, item.MatchState))
+            </td>
+            <td align="right">
+                @if (item.HomeTeamId == 0)
+                {
+                    <a href="javascript:void(0)"   class="blue" onmouseover="getMyHTML2('@(endTime.AddDays(-1).ToString("yyMMdd"))_@(item.Hi)','Vs_@(endTime.AddDays(-1).ToString("yyMMdd"))_@(item.Hi)',null);" onmouseout="hide('Vs_@(endTime.AddDays(-1).ToString("yyMMdd"))_@(item.Hi)');">@item.HomeTeamName</a>
+                }
+                else
+                {
+                    <a href="/info/?zsurl=/team/index/@item.HomeTeamId" target="_blank" class="blue" onmouseover="getMyHTML2('@(endTime.AddDays(-1).ToString("yyMMdd"))_@(item.Hi)','Vs_@(endTime.AddDays(-1).ToString("yyMMdd"))_@(item.Hi)',null);" onmouseout="hide('Vs_@(endTime.AddDays(-1).ToString("yyMMdd"))_@(item.Hi)');">@item.HomeTeamName</a>
+                }
+                <div id="Vs_@(endTime.AddDays(-1).ToString("yyMMdd"))_@(item.Hi)"></div>
+            </td>
+            <td class="red">-
+            </td>
+            <td align="left">
+                @if (item.GuestTeamId == 0)
+                {
+                    <a href="javascript:void(0)" class="blue" onmouseover="getMyHTML2('@(endTime.AddDays(-1).ToString("yyMMdd"))_@(item.Gi)','Vs_@(endTime.AddDays(-1).ToString("yyMMdd"))_@(item.Gi)',null);" onmouseout="hide('Vs_@(endTime.AddDays(-1).ToString("yyMMdd"))_@(item.Gi)');">@item.GuestTeamName</a>
+                }
+                else
+                {
+                    <a href="/info/?zsurl=/team/index/@item.GuestTeamId" target="_blank" class="blue" onmouseover="getMyHTML2('@(endTime.AddDays(-1).ToString("yyMMdd"))_@(item.Gi)','Vs_@(endTime.AddDays(-1).ToString("yyMMdd"))_@(item.Gi)',null);" onmouseout="hide('Vs_@(endTime.AddDays(-1).ToString("yyMMdd"))_@(item.Gi)');">@item.GuestTeamName</a>
+                }
+                <div id="Vs_@(endTime.AddDays(-1).ToString("yyMMdd"))_@(item.Gi)"></div>
+            </td>
+            <td id="odd_@(item.MatchId)" oddtype="oz" oddsmid="">
+                <span class="op" id="odd_@(item.MatchId)_1">@item.WinOdds.ToString("f")</span>
+                <span class="op" id="odd_@(item.MatchId)_2">@item.FlatOdds.ToString("f")</span>
+                <span class="op" id="odd_@(item.MatchId)_3">@item.LoseOdds.ToString("f")</span>
+            </td>
+            <td>
+            @if (item.Mid.ToString() == "0")
+            {
+                <a href="javascript:void(0)">亚</a>
+            }
+            else
+            {
+                <a target="_blank" href="/odds/?zsurl=/match/asia/@item.Mid">亚</a>
+            }
+            @if (item.Mid.ToString() == "0")
+            {
+                <a target="_blank" href="javascript:void(0)">欧</a><br />
+            }
+            else
+            {
+                    <a target="_blank" href="/odds/?zsurl=/match/odds/@item.Mid">欧</a>
+            }
+            @if (item.Mid.ToString() == "0")
+            {
+                <a target="_blank" href="javascript:void(0)">析</a><br />
+            }
+            else
+            {
+                <a target="_blank" href="/odds/?zsurl=/match/analysis/@item.Mid">析</a>
+            }
+                <a target="_blank" href="/betPointList/index?gameCode=jczq&matchId=@(item.MatchData + "_" + item.MatchNumber)">评</a>
+            </td>
+            <td id="cell_@(i)_1" class="td_chose" style="border-left: 1px solid #FDA055;padding-left:3px;" title="主胜" onclick="clickAt(@(i),1,'@(stopTime)')" align="left">
+                <input type="checkbox" class="check" id="checkbox_@(i)_1" /><span id="sp_@(i)_1">@item.SP_Win_Odds_BRQ.ToString("0.00")</span>
+            </td>
+            <td id="cell_@(i)_2" class="td_chose" title="平局" style="border-left: 1px solid #ffffff;padding-left:3px;" onclick="clickAt(@(i),2,'@(stopTime)')" align="left" style="padding-left:3px;">
+                <input type="checkbox" class="check" id="checkbox_@(i)_2"/><span id="sp_@(i)_2">@item.SP_Flat_Odds_BRQ.ToString("0.00")</span>
+            </td>
+            <td id="cell_@(i)_3" class="td_chose" title="客胜" style="border-left: 1px solid #ffffff;padding-left:3px;" onclick="clickAt(@(i),3,'@(stopTime)')" align="left" style="padding-left:3px;">
+                <input type="checkbox" class="check" id="checkbox_@(i)_3"/><span id="sp_@(i)_3">@item.SP_Lose_Odds_BRQ.ToString("0.00")</span>
+            </td>
+        </tr>    
+                i++;
+              }
+          }
+      }}
+    @{if (stopmatch.Count > 0)
+      {
+          var endTime = stopmatch[0].StartDateTime.Hour < 11 ? Convert.ToDateTime(stopmatch[0].StartDateTime.ToString("yyyy-MM-dd")).AddHours(11) : Convert.ToDateTime(stopmatch[0].StartDateTime.AddDays(1).ToString("yyyy-MM-dd")).AddHours(11);
+        <tr class="niDate">
+            <td colspan="16">
+                @endTime.AddDays(-1).ToString("yyyy年MM月dd日") @SiteConvert.Week_CN(endTime.AddDays(-1).DayOfWeek)
+                (11：00--次日11：00)&nbsp;&nbsp;<span class="red">[已停售]</span>&nbsp;&nbsp;<a style="color: blue; font-weight: lighter;"
+                            onclick="isShowSclass('stop_@(endTime.AddDays(-1).ToString("yyyy-MM-dd"))','none');" href="javascript:" id="ah_stop_@(endTime.AddDays(-1).ToString("yyyy-MM-dd"))">隐藏</a><a
+                                style="color: blue;display: none; font-weight: lighter;" onclick="isShowSclass('stop_@(endTime.AddDays(-1).ToString("yyyy-MM-dd"))','');"
+                                href="javascript:" id="as_stop_@(endTime.AddDays(-1).ToString("yyyy-MM-dd"))">显示</a>
+            </td>
+        </tr>
+          foreach (var item in stopmatch)
+          {
+              var stopTime = oddstype == 2 ? item.FSStopBettingTime : item.DSStopBettingTime;
+              if (item.StartDateTime >= endTime)
+              {
+                  endTime = endTime.AddDays(1);
+        <tr class="niDate">
+            <td colspan="16">
+                @endTime.AddDays(-1).ToString("yyyy年MM月dd日") @SiteConvert.Week_CN(endTime.AddDays(-1).DayOfWeek)
+                (11：00--次日11：00)&nbsp;&nbsp;<span class="red">[已停售]</span>&nbsp;&nbsp;<a style="display: none;color: blue; font-weight: lighter;"
+                            onclick="isShowSclass('stop_@(endTime.AddDays(-1).ToString("yyyy-MM-dd"))','none');" href="javascript:" id="ah_stop_@(endTime.AddDays(-1).ToString("yyyy-MM-dd"))">隐藏</a><a
+                                style="color: blue; font-weight: lighter;" onclick="isShowSclass('stop_@(endTime.AddDays(-1).ToString("yyyy-MM-dd"))','');"
+                                href="javascript:;" id="as_stop_@(endTime.AddDays(-1).ToString("yyyy-MM-dd"))">显示</a>
+            </td>
+        </tr>
+              }
+              if (oddstype == 2 || item.IsHaveSP_BRQSPF)
+              {
+        <tr name="stop_@(endTime.AddDays(-1).ToString("yyyy-MM-dd"))" matchid="@item.MatchId" polygoal="@item.LetBall" gamename="@item.LeagueName" cansale="false" onmouseout="this.style.backgroundColor='';"
+                        onmouseover="this.style.backgroundColor='#FFE6C5';" class="@(int.Parse(item.MatchNumber) % 2 == 0 ? "ni2" : "ni")" id="row_@(item.MatchId)">
+            <td style="cursor: pointer;" onclick="hideRow('row_@(item.MatchId)')">
+                <img align="absmiddle" src="@SiteString.img("public/e.gif")">@item.MatchIdName
+            </td>
+            <td style="color: #FFFFFF; background-color: @item.LeagueColor;">
+               @if (item.LeagueId == 0 || item.FXId == 0)
+                {
+                <a href="javascript:void(0)"  class="white">@item.LeagueName</a>
+                }
+                else
+                {
+                    <a href="/info/?zsurl=/league/index/@item.LeagueId/@item.FXId" target="_blank"  class="white">@item.LeagueName</a>
+                }
+            </td>
+            <td title="开赛时间：@item.StartDateTime.ToString("yyyy-MM-dd HH:mm")">
+                @item.StartDateTime.ToString("HH:mm")
+            </td>
+            <td title="截止时间：@(stopTime.ToString("yyyy-MM-dd HH:mm"))" @(stopTime <= DateTime.Now ? "class=red" : string.Empty)>
+                @(item.StartDateTime <= DateTime.Now ? "完场" : "截止")
+            </td>
+            <td align="right">
+                @if (item.HomeTeamId == 0)
+                {
+                    <a href="javascript:void(0)" target="_blank" class="blue" onmouseover="getMyHTML2('@(endTime.AddDays(-1).ToString("yyMMdd"))_@(item.Hi)','Vs_@(endTime.AddDays(-1).ToString("yyMMdd"))_@(item.Hi)',null);" onmouseout="hide('Vs_@(endTime.AddDays(-1).ToString("yyMMdd"))_@(item.Hi)');">@item.HomeTeamName</a>
+                }
+                else
+                {
+                    <a href="/info/?zsurl=/team/index/@item.HomeTeamId" target="_blank" class="blue" onmouseover="getMyHTML2('@(endTime.AddDays(-1).ToString("yyMMdd"))_@(item.Hi)','Vs_@(endTime.AddDays(-1).ToString("yyMMdd"))_@(item.Hi)',null);" onmouseout="hide('Vs_@(endTime.AddDays(-1).ToString("yyMMdd"))_@(item.Hi)');">@item.HomeTeamName</a>
+                }
+                <div id="Vs_@(endTime.AddDays(-1).ToString("yyMMdd"))_@(item.Hi)"></div>
+            </td>
+            <td class="red">
+                <b>@(item.FullHomeTeamScore)</b>-<b>@(item.FullGuestTeamScore)</b>
+            </td>
+            <td align="left">
+                @if (item.GuestTeamId == 0)
+                {
+                    <a href="javascript:void(0)" class="blue"  onmouseover="getMyHTML2('@(endTime.AddDays(-1).ToString("yyMMdd"))_@(item.Gi)','Vs_@(endTime.AddDays(-1).ToString("yyMMdd"))_@(item.Gi)',null);" onmouseout="hide('Vs_@(endTime.AddDays(-1).ToString("yyMMdd"))_@(item.Gi)');">@item.GuestTeamName</a>
+                }
+                else
+                {
+                    <a href="/info/?zsurl=/team/index/@item.GuestTeamId" target="_blank" class="blue" onmouseover="getMyHTML2('@(endTime.AddDays(-1).ToString("yyMMdd"))_@(item.Gi)','Vs_@(endTime.AddDays(-1).ToString("yyMMdd"))_@(item.Gi)',null);" onmouseout="hide('Vs_@(endTime.AddDays(-1).ToString("yyMMdd"))_@(item.Gi)');">@item.GuestTeamName</a>
+                }
+                <div id="Vs_@(endTime.AddDays(-1).ToString("yyMMdd"))_@(item.Gi)"></div>
+            </td>
+            <td id="odd_@(item.MatchId)" oddtype="oz" oddsmid="">
+                <span class="op" id="odd_@(item.MatchId)_1">@item.WinOdds.ToString("f")</span>
+                <span class="op" id="odd_@(item.MatchId)_2">@item.FlatOdds.ToString("f")</span>
+                <span class="op" id="odd_@(item.MatchId)_3">@item.LoseOdds.ToString("f")</span>
+            </td>
+            <td>
+            @if (item.Mid.ToString() == "0")
+            {
+                <a href="javascript:void(0)">亚</a>
+            }
+            else
+            {
+                <a target="_blank" href="/odds/?zsurl=/match/asia/@item.Mid">亚</a>
+            }
+            @if (item.Mid.ToString() == "0")
+            {
+                <a target="_blank" href="javascript:void(0)">欧</a><br />
+            }
+            else
+            {
+                    <a target="_blank" href="/odds/?zsurl=/match/odds/@item.Mid">欧</a>
+            }
+            @if (item.Mid.ToString() == "0")
+            {
+                <a target="_blank" href="javascript:void(0)">析</a><br />
+            }
+            else
+            {
+                <a target="_blank" href="/odds/?zsurl=/match/analysis/@item.Mid">析</a>
+            }
+                <a target="_blank" href="/betPointList/index?gameCode=jczq&matchId=@(item.MatchData + "_" + item.MatchNumber)">评</a>
+            </td>
+            <td id="cell_@(item.MatchId)_1" title="主胜" align="left" style="padding-left:3px;">
+                <span id="sp_@(item.MatchId)_1">@item.SP_Win_Odds_BRQ.ToString("f")</span>
+            </td>
+            <td id="cell_@(item.MatchId)_2" title="平局" align="left" style="padding-left:3px;">
+                <span id="sp_@(item.MatchId)_2">@item.SP_Flat_Odds_BRQ.ToString("f")</span>
+            </td>
+            <td id="cell_@(item.MatchId)_3"  title="客胜" align="left" style="padding-left:3px;">
+                <span id="sp_@(item.MatchId)_3">@item.SP_Lose_Odds_BRQ.ToString("f")</span>
+            </td>
+        </tr>    
+              }
+          }
+      }}
+</table>

@@ -1,0 +1,708 @@
+﻿@{
+    Layout = "~/Views/lotteryTrend/_Layout.cshtml";
+    var pageSize = Request["pageSize"];
+    if (pageSize != "" && pageSize != null)
+    {
+        ViewBag.Title = "双色球值和跨度走势图近" + pageSize + "期" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "双色球值和跨度走势图近" + pageSize + "期";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "双色球值和跨度走势图近" + pageSize + "期,查看更多双色球值和跨度走势图请登录" + SiteString.getHZSiteName(Request) + "彩票网.";
+    }
+    else
+    {
+        ViewBag.Title = "双色球值和跨度走势图-" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "双色球值和跨度走势图";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "彩票网为您提供专业的双色球质合走势图,包括双色球各红球的质数和合数分布及所有红球的质合比例,让彩民朋友更直观的分析双色球质合走势.";
+    }
+    var ZhiHe = ViewBag.DataList as LotteryData.Core.SSQ_ZhiHe_InfoCollection;
+    var a = 0;  
+}
+@{Html.RenderAction("ThendLink", "lotteryTrend");}
+<div id="container">
+    <div class="cont_box" style="width: 1003px;">
+        <table width="100%" cellspacing="1" cellpadding="0" border="0" class="table_box"
+            style="width: 1003px;" id="chartsTable">
+            <tbody>
+                <tr>
+                    <td align="center" class="tab_top" colspan="28">
+                        标注形式选择：
+                        <input type="checkbox" checked="checked" id="c_yl">
+                        <label for="c_yl">
+                            遗漏</label>
+                        <input type="checkbox" checked="checked" id="has_line">
+                        <label for="has_line">
+                            折线</label>
+                        <input type="checkbox" checked="checked" id="help_line">
+                        <label for="help_line">
+                            分隔线</label>
+                        <input type="checkbox" id="yl_zhu">
+                        <label for="yl_zhu">
+                            遗漏分层</label>
+                    </td>
+                </tr>
+                <tr class="tabbg weight" id="menuitem">
+                    <td width="75" align="center" rowspan="2">
+                        期号<img src="@ViewHelpers.img("../images/trend/up.png")" id="sortImg" alt="" />
+                    </td>
+                    <td class="cfont1 line_r tred" rowspan="2" colspan="6">
+                        红球
+                    </td>
+                    <td colspan="2" class="line_r">
+                        红一
+                    </td>
+                    <td colspan="2" class="line_r">
+                        红二
+                    </td>
+                    <td colspan="2" class="line_r">
+                        红三
+                    </td>
+                    <td colspan="2" class="line_r">
+                        红四
+                    </td>
+                    <td colspan="2" class="line_r">
+                        红五
+                    </td>
+                    <td colspan="2" class="line_r">
+                        红六
+                    </td>
+                    <td rowspan="2">
+                        质合排位
+                    </td>
+                    <td colspan="8">
+                        质合比例分布
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td class="">
+                        质
+                    </td>
+                    <td class="line_r">
+                        合
+                    </td>
+                    <td class="">
+                        质
+                    </td>
+                    <td class="line_r">
+                        合
+                    </td>
+                    <td class="">
+                        质
+                    </td>
+                    <td class="line_r">
+                        合
+                    </td>
+                    <td class="">
+                        质
+                    </td>
+                    <td class="line_r">
+                        合
+                    </td>
+                    <td class="">
+                        质
+                    </td>
+                    <td class="line_r">
+                        合
+                    </td>
+                    <td class="">
+                        质
+                    </td>
+                    <td class="line_r">
+                        合
+                    </td>
+                    <td>
+                        质合比
+                    </td>
+                    <td>
+                        0：6
+                    </td>
+                    <td>
+                        1：5
+                    </td>
+                    <td>
+                        2：4
+                    </td>
+                    <td>
+                        3：3
+                    </td>
+                    <td>
+                        4：2
+                    </td>
+                    <td>
+                        5：1
+                    </td>
+                    <td>
+                        6：0
+                    </td>
+                </tr>
+            </tbody>
+            <tbody id="tdata" style="font-size: 12px; font-family: '宋体',Tahoma,Consolas,Arial,Simsun;">
+                @foreach (var item in ZhiHe)
+                {
+                    a++;
+                    if (a % 5 == 0)
+                    {
+                    <tr class="tdbck">
+                        <td colspan="28">
+                        </td>
+                    </tr>
+                    }
+                    <tr>
+                        <td align="center">
+                            @item.IssuseNumber
+                        </td>
+                        <td class="hot12">
+                            @item.RedLotteryNumber.Split(',')[0]
+                        </td>
+                        <td class="hot12">
+                            @item.RedLotteryNumber.Split(',')[1]
+                        </td>
+                        <td class="hot12">
+                            @item.RedLotteryNumber.Split(',')[2]
+                        </td>
+                        <td class="hot12">
+                            @item.RedLotteryNumber.Split(',')[3]
+                        </td>
+                        <td class="hot12">
+                            @item.RedLotteryNumber.Split(',')[4]
+                        </td>
+                        <td class="hot12 line_rd">
+                            @item.RedLotteryNumber.Split(',')[5]
+                        </td>
+                        <td class="@(item.O_RedBall1_Z == 0 ? "cbg3 tbg1" : "y101")">
+                            @(item.O_RedBall1_Z == 0 ? "质" : item.O_RedBall1_Z.ToString())
+                        </td>
+                        <td class="@(item.O_RedBall1_H == 0 ? "cbg3 tbg1" : "y101 line_r")">
+                            @(item.O_RedBall1_H == 0 ? "合" : item.O_RedBall1_H.ToString())
+                        </td>
+                        <td class="@(item.O_RedBall2_Z == 0 ? "cbg3 orange1" : "y101")">
+                            @(item.O_RedBall2_Z == 0 ? "质" : item.O_RedBall2_Z.ToString())
+                        </td>
+                        <td class="@(item.O_RedBall2_H == 0 ? "cbg3 orange1" : "y101 line_r")">
+                            @(item.O_RedBall2_H == 0 ? "合" : item.O_RedBall2_H.ToString())
+                        </td>
+                        <td class="@(item.O_RedBall3_Z == 0 ? "cbg3 green1" : "y101")">
+                            @(item.O_RedBall3_Z == 0 ? "质" : item.O_RedBall3_Z.ToString())
+                        </td>
+                        <td class="@(item.O_RedBall3_H == 0 ? "cbg3 green1" : "y101 line_r")">
+                            @(item.O_RedBall3_H == 0 ? "合" : item.O_RedBall3_H.ToString())
+                        </td>
+                        <td class="@(item.O_RedBall4_Z == 0 ? "cbg3 purple1" : "y101")">
+                            @(item.O_RedBall4_Z == 0 ? "质" : item.O_RedBall4_Z.ToString())
+                        </td>
+                        <td class="@(item.O_RedBall4_H == 0 ? "cbg3 purple1" : "y101 line_r")">
+                            @(item.O_RedBall4_H == 0 ? "合" : item.O_RedBall4_H.ToString())
+                        </td>
+                        <td class="@(item.O_RedBall5_Z == 0 ? "cbg3 purple2" : "y101")">
+                            @(item.O_RedBall5_Z == 0 ? "质" : item.O_RedBall5_Z.ToString())
+                        </td>
+                        <td class="@(item.O_RedBall5_H == 0 ? "cbg3 purple2" : "y101 line_r")">
+                            @(item.O_RedBall5_H == 0 ? "合" : item.O_RedBall5_H.ToString())
+                        </td>
+                        <td class="@(item.O_RedBall6_Z == 0 ? "cbg3 gray1" : "y101")">
+                            @(item.O_RedBall6_Z == 0 ? "质" : item.O_RedBall6_Z.ToString())
+                        </td>
+                        <td class="@(item.O_RedBall6_H == 0 ? "cbg3 gray1 line_r" : "y101 line_r")">
+                            @(item.O_RedBall6_H == 0 ? "合" : item.O_RedBall6_H.ToString())
+                        </td>
+                        <td class="cbg3 line_r">
+                            @{
+                    var Zh_Pw = item.ZH_Qualifying.Split(',');
+                    var ZH = string.Empty;
+                    for (int i = 0; i < Zh_Pw.Length; i++)
+                    {
+                        if (Zh_Pw[i] == "质")
+                        {
+                            ZH += "<font class='tblue'>质</font>";
+                        }
+                        if (Zh_Pw[i] == "合")
+                        {
+                            ZH += "<font class='tred'>合</font>";
+                        }
+                    }
+                            }
+                            @Html.Raw(ZH)
+                        </td>
+                        <td class="cbg3 line_r">
+                            @item.ZH_Proportion
+                        </td>
+                        <td class="@(item.O_ZH_Proportion06 == 0 ? "cbg3 big" : "y101")">
+                            @(item.O_ZH_Proportion06 == 0 ? item.ZH_Proportion : item.O_ZH_Proportion06.ToString())
+                        </td>
+                        <td class="@(item.O_ZH_Proportion15 == 0 ? "cbg3 big" : "y101")">
+                            @(item.O_ZH_Proportion15 == 0 ? item.ZH_Proportion : item.O_ZH_Proportion15.ToString())
+                        </td>
+                        <td class="@(item.O_ZH_Proportion24 == 0 ? "cbg3 big" : "y101")">
+                            @(item.O_ZH_Proportion24 == 0 ? item.ZH_Proportion : item.O_ZH_Proportion24.ToString())
+                        </td>
+                        <td class="@(item.O_ZH_Proportion33 == 0 ? "cbg3 big" : "y101")">
+                            @(item.O_ZH_Proportion33 == 0 ? item.ZH_Proportion : item.O_ZH_Proportion33.ToString())
+                        </td>
+                        <td class="@(item.O_ZH_Proportion42 == 0 ? "cbg3 big" : "y101")">
+                            @(item.O_ZH_Proportion42 == 0 ? item.ZH_Proportion : item.O_ZH_Proportion42.ToString())
+                        </td>
+                        <td class="@(item.O_ZH_Proportion51 == 0 ? "cbg3 big" : "y101")">
+                            @(item.O_ZH_Proportion51 == 0 ? item.ZH_Proportion : item.O_ZH_Proportion51.ToString())
+                        </td>
+                        <td class="@(item.O_ZH_Proportion60 == 0 ? "cbg3 big" : "y101")">
+                            @(item.O_ZH_Proportion60 == 0 ? item.ZH_Proportion : item.O_ZH_Proportion60.ToString())
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tbody>
+                <tr>
+                    <td align="center" class="bdtop line_r">
+                        出现次数
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop">
+                        @(ZhiHe.Count(p => p.O_RedBall1_Z == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(ZhiHe.Count(p => p.O_RedBall1_H == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(ZhiHe.Count(p => p.O_RedBall2_Z == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(ZhiHe.Count(p => p.O_RedBall2_H == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(ZhiHe.Count(p => p.O_RedBall3_Z == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(ZhiHe.Count(p => p.O_RedBall3_H == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(ZhiHe.Count(p => p.O_RedBall4_Z == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(ZhiHe.Count(p => p.O_RedBall4_H == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(ZhiHe.Count(p => p.O_RedBall5_Z == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(ZhiHe.Count(p => p.O_RedBall5_H == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(ZhiHe.Count(p => p.O_RedBall6_Z == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(ZhiHe.Count(p => p.O_RedBall6_H == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop">
+                        @(ZhiHe.Count(p => p.O_ZH_Proportion06 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(ZhiHe.Count(p => p.O_ZH_Proportion15 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(ZhiHe.Count(p => p.O_ZH_Proportion24 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(ZhiHe.Count(p => p.O_ZH_Proportion33 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(ZhiHe.Count(p => p.O_ZH_Proportion42 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(ZhiHe.Count(p => p.O_ZH_Proportion51 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(ZhiHe.Count(p => p.O_ZH_Proportion60 == 0))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        平均遗漏
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td class="">
+                        @(ZhiHe.Sum(p => p.O_RedBall1_Z) / ZhiHe.Count)
+                    </td>
+                    <td class="line_r">
+                        @(ZhiHe.Sum(p => p.O_RedBall1_H) / ZhiHe.Count)
+                    </td>
+                    <td class="">
+                        @(ZhiHe.Sum(p => p.O_RedBall2_Z) / ZhiHe.Count)
+                    </td>
+                    <td class="line_r">
+                        @(ZhiHe.Sum(p => p.O_RedBall2_H) / ZhiHe.Count)
+                    </td>
+                    <td class="">
+                        @(ZhiHe.Sum(p => p.O_RedBall3_Z) / ZhiHe.Count)
+                    </td>
+                    <td class="line_r">
+                        @(ZhiHe.Sum(p => p.O_RedBall3_H) / ZhiHe.Count)
+                    </td>
+                    <td class="">
+                        @(ZhiHe.Sum(p => p.O_RedBall4_Z) / ZhiHe.Count)
+                    </td>
+                    <td class="line_r">
+                        @(ZhiHe.Sum(p => p.O_RedBall4_H) / ZhiHe.Count)
+                    </td>
+                    <td class="">
+                        @(ZhiHe.Sum(p => p.O_RedBall5_Z) / ZhiHe.Count)
+                    </td>
+                    <td class="line_r">
+                        @(ZhiHe.Sum(p => p.O_RedBall5_H) / ZhiHe.Count)
+                    </td>
+                    <td class="">
+                        @(ZhiHe.Sum(p => p.O_RedBall6_Z) / ZhiHe.Count)
+                    </td>
+                    <td class="line_r">
+                        @(ZhiHe.Sum(p => p.O_RedBall6_H) / ZhiHe.Count)
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td class="">
+                        @(ZhiHe.Sum(p => p.O_ZH_Proportion06) / ZhiHe.Count)
+                    </td>
+                    <td class="">
+                        @(ZhiHe.Sum(p => p.O_ZH_Proportion15) / ZhiHe.Count)
+                    </td>
+                    <td class="">
+                        @(ZhiHe.Sum(p => p.O_ZH_Proportion24) / ZhiHe.Count)
+                    </td>
+                    <td class="">
+                        @(ZhiHe.Sum(p => p.O_ZH_Proportion33) / ZhiHe.Count)
+                    </td>
+                    <td class="">
+                        @(ZhiHe.Sum(p => p.O_ZH_Proportion42) / ZhiHe.Count)
+                    </td>
+                    <td class="">
+                        @(ZhiHe.Sum(p => p.O_ZH_Proportion51) / ZhiHe.Count)
+                    </td>
+                    <td class="line_r">
+                        @(ZhiHe.Sum(p => p.O_ZH_Proportion60) / ZhiHe.Count)
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        最大遗漏
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                        @(ZhiHe.Max(p => p.O_RedBall1_Z))
+                    </td>
+                    <td class="line_r">
+                        @(ZhiHe.Max(p => p.O_RedBall1_H))
+                    </td>
+                    <td>
+                        @(ZhiHe.Max(p => p.O_RedBall2_Z))
+                    </td>
+                    <td class="line_r">
+                        @(ZhiHe.Max(p => p.O_RedBall2_H))
+                    </td>
+                    <td>
+                        @(ZhiHe.Max(p => p.O_RedBall3_Z))
+                    </td>
+                    <td class="line_r">
+                        @(ZhiHe.Max(p => p.O_RedBall3_H))
+                    </td>
+                    <td>
+                        @(ZhiHe.Max(p => p.O_RedBall4_Z))
+                    </td>
+                    <td class="line_r">
+                        @(ZhiHe.Max(p => p.O_RedBall4_H))
+                    </td>
+                    <td>
+                        @(ZhiHe.Max(p => p.O_RedBall5_Z))
+                    </td>
+                    <td class="line_r">
+                        @(ZhiHe.Max(p => p.O_RedBall5_H))
+                    </td>
+                    <td>
+                        @(ZhiHe.Max(p => p.O_RedBall6_Z))
+                    </td>
+                    <td class="line_r">
+                        @(ZhiHe.Max(p => p.O_RedBall6_H))
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                        @(ZhiHe.Max(p => p.O_ZH_Proportion06))
+                    </td>
+                    <td>
+                        @(ZhiHe.Max(p => p.O_ZH_Proportion15))
+                    </td>
+                    <td>
+                        @(ZhiHe.Max(p => p.O_ZH_Proportion24))
+                    </td>
+                    <td>
+                        @(ZhiHe.Max(p => p.O_ZH_Proportion33))
+                    </td>
+                    <td>
+                        @(ZhiHe.Max(p => p.O_ZH_Proportion42))
+                    </td>
+                    <td>
+                        @(ZhiHe.Max(p => p.O_ZH_Proportion51))
+                    </td>
+                    <td class="line_r">
+                        @(ZhiHe.Max(p => p.O_ZH_Proportion60))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        当前遗漏
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td valign="bottom">
+                        @(ZhiHe[ZhiHe.Count - 1].O_RedBall1_Z)<br>
+                        <img width="8px" height="@(ZhiHe[ZhiHe.Count - 1].O_RedBall1_Z)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(ZhiHe[ZhiHe.Count - 1].O_RedBall1_H)<br>
+                        <img width="8px" height="@(ZhiHe[ZhiHe.Count - 1].O_RedBall1_H)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(ZhiHe[ZhiHe.Count - 1].O_RedBall2_Z)<br>
+                        <img width="8px" height="@(ZhiHe[ZhiHe.Count - 1].O_RedBall2_Z)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(ZhiHe[ZhiHe.Count - 1].O_RedBall2_H)<br>
+                        <img width="8px" height="@(ZhiHe[ZhiHe.Count - 1].O_RedBall2_H)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(ZhiHe[ZhiHe.Count - 1].O_RedBall3_Z)<br>
+                        <img width="8px" height="@(ZhiHe[ZhiHe.Count - 1].O_RedBall3_Z)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(ZhiHe[ZhiHe.Count - 1].O_RedBall3_H)<br>
+                        <img width="8px" height="@(ZhiHe[ZhiHe.Count - 1].O_RedBall3_H)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(ZhiHe[ZhiHe.Count - 1].O_RedBall4_Z)<br>
+                        <img width="8px" height="@(ZhiHe[ZhiHe.Count - 1].O_RedBall4_Z)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(ZhiHe[ZhiHe.Count - 1].O_RedBall4_H)<br>
+                        <img width="8px" height="@(ZhiHe[ZhiHe.Count - 1].O_RedBall4_H)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(ZhiHe[ZhiHe.Count - 1].O_RedBall5_Z)<br>
+                        <img width="8px" height="@(ZhiHe[ZhiHe.Count - 1].O_RedBall5_Z)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(ZhiHe[ZhiHe.Count - 1].O_RedBall5_H)<br>
+                        <img width="8px" height="@(ZhiHe[ZhiHe.Count - 1].O_RedBall5_H)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(ZhiHe[ZhiHe.Count - 1].O_RedBall6_Z)<br>
+                        <img width="8px" height="@(ZhiHe[ZhiHe.Count - 1].O_RedBall6_Z)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(ZhiHe[ZhiHe.Count - 1].O_RedBall6_H)<br>
+                        <img width="8px" height="@(ZhiHe[ZhiHe.Count - 1].O_RedBall6_H)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                    </td>
+                    <td valign="bottom">
+                        @(ZhiHe[ZhiHe.Count - 1].O_ZH_Proportion06)<br>
+                        <img width="8px" height="@(ZhiHe[ZhiHe.Count - 1].O_ZH_Proportion06)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(ZhiHe[ZhiHe.Count - 1].O_ZH_Proportion15)<br>
+                        <img width="8px" height="@(ZhiHe[ZhiHe.Count - 1].O_ZH_Proportion15)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(ZhiHe[ZhiHe.Count - 1].O_ZH_Proportion24)<br>
+                        <img width="8px" height="@(ZhiHe[ZhiHe.Count - 1].O_ZH_Proportion24)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(ZhiHe[ZhiHe.Count - 1].O_ZH_Proportion33)<br>
+                        <img width="8px" height="@(ZhiHe[ZhiHe.Count - 1].O_ZH_Proportion33)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(ZhiHe[ZhiHe.Count - 1].O_ZH_Proportion42)<br>
+                        <img width="8px" height="@(ZhiHe[ZhiHe.Count - 1].O_ZH_Proportion42)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(ZhiHe[ZhiHe.Count - 1].O_ZH_Proportion51)<br>
+                        <img width="8px" height="@(ZhiHe[ZhiHe.Count - 1].O_ZH_Proportion51)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(ZhiHe[ZhiHe.Count - 1].O_ZH_Proportion60)<br>
+                        <img width="8px" height="@(ZhiHe[ZhiHe.Count - 1].O_ZH_Proportion60)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr class="tabbg weight">
+                    <td width="75" align="center" rowspan="2">
+                    </td>
+                    <td rowspan="2" colspan="6" class="cfont1 line_r_1 tred line_r">
+                        红球
+                    </td>
+                    <td class="">
+                        质
+                    </td>
+                    <td class="line_r">
+                        合
+                    </td>
+                    <td class="">
+                        质
+                    </td>
+                    <td class="line_r">
+                        合
+                    </td>
+                    <td class="">
+                        质
+                    </td>
+                    <td class="line_r">
+                        合
+                    </td>
+                    <td class="">
+                        质
+                    </td>
+                    <td class="line_r">
+                        合
+                    </td>
+                    <td class="">
+                        质
+                    </td>
+                    <td class="line_r">
+                        合
+                    </td>
+                    <td class="">
+                        质
+                    </td>
+                    <td class="line_r">
+                        合
+                    </td>
+                    <td rowspan="2">
+                        质合排位
+                    </td>
+                    <td>
+                        质合比
+                    </td>
+                    <td>
+                        0：6
+                    </td>
+                    <td>
+                        1：5
+                    </td>
+                    <td>
+                        2：4
+                    </td>
+                    <td>
+                        3：3
+                    </td>
+                    <td>
+                        4：2
+                    </td>
+                    <td>
+                        5：1
+                    </td>
+                    <td>
+                        6：0
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td colspan="2" class="line_r">
+                        红一
+                    </td>
+                    <td colspan="2" class="line_r">
+                        红二
+                    </td>
+                    <td colspan="2" class="line_r">
+                        红三
+                    </td>
+                    <td colspan="2" class="line_r">
+                        红四
+                    </td>
+                    <td colspan="2" class="line_r">
+                        红五
+                    </td>
+                    <td colspan="2" class="line_r">
+                        红六
+                    </td>
+                    <td colspan="8">
+                        质合比例分布
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $(function () {
+
+        var allLines = new Array();
+        allLines.push({ line: $(".tbg1"), color: "#05650E" });
+        allLines.push({ line: $(".orange1"), color: "#FF590B" });
+        allLines.push({ line: $(".green1"), color: "#004F00" });
+        allLines.push({ line: $(".purple1"), color: "#0000FE" });
+        allLines.push({ line: $(".purple2"), color: "#36006F" });
+        allLines.push({ line: $(".gray1"), color: "#FF590B" });
+        allLines.push({ line: $(".big"), color: "red" });
+
+        var line = new XTLine();
+        for (i = 0; i < allLines.length; i++) {
+            var l = allLines[i];
+
+            line.color = l.color;
+            line.arrayBalls = l.line;
+            line.showrect();
+        }
+
+
+        $("#has_line").click(function () {
+            line.display(this.checked);
+        })
+    })
+</script>

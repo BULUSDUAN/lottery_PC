@@ -1,0 +1,10 @@
+[0][2018-06-02 16:11:38] _sendurl
+    http://106.ihuyi.cn/webservice/sms.php?method=Submit&account=C40517741&password=cddfc1070701043da3be9a6c087e7a57&mobile=13564564564&content=您的验证码是：505999。请不要把验证码泄露给其他人。
+<?xml version="1.0" encoding="utf-8"?>
+<SubmitResult xmlns="http://106.ihuyi.cn/">
+<code>2</code>
+<msg>提交成功</msg>
+<smsid>15279270976124811657</smsid>
+</SubmitResult>
+    ----------------------------------------------------------------------------
+

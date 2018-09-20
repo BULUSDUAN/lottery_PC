@@ -1,0 +1,744 @@
+﻿@using System.Web.Mvc;
+@using System.Configuration;
+@using GameBiz.Core;
+@using External.Core.Authentication;
+@using app.lottery.site.Models;
+@helper js(string scriptName)
+    {  
+    <script src="@SiteString.res/js/@scriptName" type="text/javascript"></script>    }
+@helper jscdn(string scriptName, string version)
+    {  
+    <script src="@(SiteString.res + "/js/" + scriptName + "?v=" + version)" type="text/javascript"></script>    }
+@helper css(string cssName)
+    {        
+    <link href="@SiteString.res/css/@cssName" rel="stylesheet" type="text/css" media="screen" />    }
+@helper csscdn(string cssName, string version)
+    {        
+    <link href="@(SiteString.res + "/css/" + cssName + "?v=" + version)" rel="stylesheet" type="text/css" media="screen" />    }
+@helper js_share(string scriptName)
+    {      
+    <script src="@SiteString.share/js/@scriptName" type="text/javascript"></script>    }
+@helper BindBank(CurrentUserInfo CurrentUser)
+    {//绑定银行卡区域
+    <div style="color: #666">
+        @* <form action="/member/bindbank" method="post" onsubmit="return checkInput_bank();">*@
+        <ul class="userinfo_list">
+            @*<li><span class="sp120">开户人姓名：</span>@SiteString.AllHideUser(CurrentUser.RealNameInfo.RealName)</li>*@
+            <li><span class="sp120">开户人姓名：</span><input id="RealName" name="RealName" type="text"
+                value="" class="login_input_1" size="25" /></li>
+            <li>
+                <span class="sp120">开户银行名称：</span><select id="bankType" name="bankcode" onchange="setBankDisplayName();Tool.changeBank(this.selectedIndex);">
+                    <option value="">请选择银行</option>
+                    <option value="BOC">中国银行</option>
+                    <option value="ICBC">中国工商银行</option>
+                    <option value="CMB">招商银行</option>
+                    <option value="ABC">中国农业银行</option>
+                    <option value="CCB">中国建设银行</option>
+                    <option value="COMM">中国交通银行</option>
+                    <option value="CMBC">中国民生银行</option>
+                    <option value="CEBBANK">中国光大银行</option>
+                    <option value="PSBC">中国邮政储蓄银行</option>
+                    <option value="HXYH">华夏银行</option>
+                    <option value="CIB">兴业银行</option>
+                    <option value="SPAB">平安银行</option>
+                    <option value="CITIC">中信银行</option>
+                    <option value="GDB">广东发展银行</option>
+                    <option value="SPDB">上海浦东发展银行</option>
+                    @* <option value="SDB">深圳发展银行</option>
+            <option value="BJB">北京银行</option>
+            <option value="SHB">上海银行</option>
+            <option value="NBBANK">宁波银行</option>
+            <option value="WZCB">温州银行</option>
+            <option value="CQCB">重庆银行</option>
+            <option value="GDYH">广东银行股份有限公司</option>
+            <option value="NCXYS">农村信用社</option>
+            <option value="NCHZYH">农村合作银行</option>
+            <option value="NCSYYH">农村商业银行</option>
+            <option value="BLYHZG">巴黎银行中国</option>
+            <option value="BSYH">包商银行</option>
+            <option value="BDYH">保定银行</option>
+            <option value="BHYH">渤海银行</option>
+            <option value="CZYH">沧州银行</option>
+            <option value="CSYH">长沙银行</option>
+            <option value="CZYH">长治银行</option>
+            <option value="CSYH">常熟农村商业银行</option>
+            <option value="CHDYH">成都银行</option>
+            <option value="CDYH">承德银行</option>
+            <option value="CZYH">稠州银行</option>
+            <option value="DLYH">大连银行</option>
+            <option value="DQSYYH">大庆商业银行</option>
+            <option value="DTSYEYH">大同市商业银行</option>
+            <option value="DDYH">丹东银行</option>
+            <option value="DYZYH">德意志银行</option>
+            <option value="DGYH">东莞银行</option>
+            <option value="DYYH">东亚银行</option>
+            <option value="EEDSYH">鄂尔多斯银行</option>
+            <option value="FJHXYH">福建海峡银行</option>
+            <option value="FSYH">抚顺银行</option>
+            <option value="GZYH">赣州银行</option>
+            <option value="GZYH">广州银行</option>
+            <option value="GLSYYH">桂林商业银行</option>
+            <option value="HEBYH">哈尔滨银行</option>
+            <option value="HDYH">邯郸银行</option>
+            <option value="HKYH">汉口银行</option>
+            <option value="HZYH">杭州银行</option>
+            <option value="HBYH">河北银行</option>
+            <option value="HFYH">恒丰银行</option>
+            <option value="HSYH">恒生银行</option>
+            <option value="HSSEYH">衡水市商业银行</option>
+            <option value="HZYH">湖州银行</option>
+            <option value="HLDYH">葫芦岛银行</option>
+            <option value="HQYH">花旗银行</option>
+            <option value="HUQYH">华侨银行</option>
+            <option value="WSYH">徽商银行</option>
+            <option value="HFZH">汇丰中国</option>
+            <option value="JLYH">吉林银行</option>
+            <option value="JXYH">嘉兴银行</option>
+            <option value="JSYH">江苏银行</option>
+            <option value="JZYH">锦州银行</option>
+            <option value="JSYH">晋商银行</option>
+            <option value="JZYH">晋中银行</option>
+            <option value="LFYH">廊坊银行</option>
+            <option value="LYYH">辽阳银行</option>
+            <option value="LZSYH">柳州市商业银行</option>
+            <option value="LMGYH">内蒙古银行</option>
+            <option value="NJYH">南京银行</option>
+            <option value="PAYH">平安银行</option>
+            <option value="PFYH">浦发银行</option>
+            <option value="QLYH">齐鲁银行</option>
+            <option value="QDYH">青岛银行</option>
+            <option value="QZYH">泉州银行</option>
+            <option value="SLDJYH">三菱东京日联银行</option>
+            <option value="SHNSH">上海农商行</option>
+            <option value="SXYH">绍兴银行</option>
+            <option value="SZNCYYYH">深圳农村商业银行</option>
+            <option value="SJYH">盛京银行</option>
+            <option value="TZYEYH">台州市商业银行</option>
+            <option value="TNYH">泰隆银行</option>
+            <option value="TSYH">唐山银行</option>
+            <option value="TJYH">天津农商银行</option>
+            <option value="SMGJYH">厦门国际银行</option>
+            <option value="SMYH">厦门银行</option>
+            <option value="YQYH">阳泉银行</option>
+            <option value="YHYH">永亨银行</option>
+            <option value="YLYHZG">友利银行中国</option>
+            <option value="ZDYH">渣打银行</option>
+            <option value="ZJKYH">张家口市商业银行</option>
+            <option value="ZSYH">浙商银行</option>*@
+                </select><input type="hidden" name="bankDisplayName" id="bankDisplayName" value="" />
+                <span>
+                    <select id="province" name="province"
+                            onchange="Tool.changeCityByProvince(this.options[this.selectedIndex].value, 'select_city', 'city')">
+                        <option value="">==请选择==</option>
+                        <option value="北京">北京</option>
+                        <option value="上海">上海</option>
+                        <option value="重庆">重庆</option>
+                        <option value="天津">天津</option>
+                        <option value="广东">广东</option>
+                        <option value="河北">河北</option>
+                        <option value="山西">山西</option>
+                        <option value="内蒙古">内蒙古</option>
+                        <option value="辽宁">辽宁</option>
+                        <option value="吉林">吉林</option>
+                        <option value="黑龙江">黑龙江</option>
+                        <option value="江苏">江苏</option>
+                        <option value="浙江">浙江</option>
+                        <option value="安徽">安徽</option>
+                        <option value="福建">福建</option>
+                        <option value="江西">江西</option>
+                        <option value="山东">山东</option>
+                        <option value="河南">河南</option>
+                        <option value="湖北">湖北</option>
+                        <option value="湖南">湖南</option>
+                        <option value="广西">广西</option>
+                        <option value="海南">海南</option>
+                        <option value="四川">四川</option>
+                        <option value="贵州">贵州</option>
+                        <option value="云南">云南</option>
+                        <option value="西藏">西藏</option>
+                        <option value="陕西">陕西</option>
+                        <option value="甘肃">甘肃</option>
+                        <option value="青海">青海</option>
+                        <option value="宁夏">宁夏</option>
+                        <option value="新疆">新疆</option>
+                    </select>
+                    <span id="select_city">
+                        <select id="city" name="city">
+                            <option value="">==请选择==</option>
+                        </select>
+                    </span>
+                    <span><input name="subBankName" id="subBankName" type="text" value="" class="login_input_1" size="25" placeholder="支行不知道可不填" /></span>
+                </span>
+            </li>
+            @*<li id="banktr" style="display: block;"><span class="sp120">&nbsp;</span>
+                                                    <input name="subBankName" id="subBankName" type="text" value="" class="login_input_1"
+                                                           size="25" />
+                <em class="gray">支行名称,如不知道支行,可直接填银行名称,例:工商银行</em></li>*@
+            <li><span class="sp120">银行卡号码：</span><input type="text" name="cardnumber" id="cardnumber"
+                value="" class="login_input_1" size="25" maxlength="30" />
+                <em class="gray">16-19位数，请填写银行借记卡 </em></li>
+            @*<li><span class="sp120">确认银行卡号：</span><span id="show_cardnumber1"><input type="text"
+                name="cardnumber1" id="cardnumber1" value="" class="login_input_1" size="25"
+                maxlength="30" />
+            </span></li>*@
+            <li style="display: flex;"><span class="sp120">&nbsp;</span>@*<input type="button" class="btn_submit" value="绑定卡号领取现金"
+                onclick="checkInput_bank()" style="width: 126px;" />*@
+                    <input type="button" class="btn_submit" value="免费玩彩票" onclick="checkInput_bank()" style="margin-top:10px;"/>
+              @*  <img src="@ViewHelpers.img("button/btn.png")"  onclick="checkInput_bank()" style="cursor:pointer; height:50px;" />*@
+                <span style="color:red;height:50px;line-height:50px;">&nbsp 绑定卡号随机领取10,20,30元现金,免费购买彩票</span><input type="hidden" value="@Request.Url.AbsoluteUri.Split('?')[0]" name="backurl" />
+                <input type="hidden" value="@CurrentUser.IsBindBank" id="bindType" />
+            </li>
+            <li><span class="sp120">&nbsp;</span><span class="error-box" id="errbox_bank"><i
+                class="err-icon"></i><span class="msg" id="errMsg_bindbank"></span></span> </li>
+        </ul>
+        @*  </form>*@
+    </div>
+
+    <script type="text/javascript">
+       
+        var msg = '@Request["errMsg"]';
+        showMsg_bank(msg);
+
+        function showMsg_bank(msg) {
+            if (msg.length > 0) {
+                $("#errbox_bank").show();
+                $("#errMsg_bindbank").text(msg);
+            }
+            else {
+                $("#errMsg_bindbank").text("");
+                $("#errbox_bank").hide();
+            }
+        }
+        function setBankDisplayName() {
+            var selectBank = $("#bankType option:selected").text();
+            $("#bankDisplayName").val(selectBank);
+        }
+
+        function checkInput_bank() {
+            msg = '';
+            var bankType = $.trim($("#bankType option:selected").val()); //开户银行
+            var province = $.trim($("#province option:selected").val()); //省市
+            var city = $.trim($("#city option:selected").val()); //地区
+            var subBankName = $.trim($("#subBankName").val()); //开户银行支行
+            var cardnumber = $.trim($("#cardnumber").val()); //银行卡号
+            var cardnumber1 = $.trim($("#cardnumber1").val());
+            var bankDisplayName = $.trim($("#bankDisplayName").val());
+            var realname = $.trim($("#RealName").val());
+            debugger
+            var bindType = $("#bindType").val();
+            if (bindType == "False") {
+                bindType = "";
+            }
+            else {
+                bindType = "mod";
+            }
+            if (!realname) {
+                msg = "请输入开户人姓名";
+                $("#RealName").focus();
+            }
+            // alert(bankDisplayName);
+            //if (cardnumber != cardnumber1) {
+            //    msg = "两次输入的银行卡号不一致";
+            //    $("#cardnumber1").focus();
+            //}
+            if (!cardnumber && !Tool.isBankCardNo(cardnumber)) {
+                msg = "请输入正确银行卡号码";
+                $("#cardnumber").focus();
+            }
+//            if (!subBankName) {
+//                msg = "请输入开户银行支行";
+//                $("#subBankName").focus();
+//            }
+            if (!city) {
+                msg = "请选择开户银行所在县市";
+                $("#city").focus();
+            }
+            if (!province) {
+                msg = "请选择开户银行所在省或直辖市、自治区";
+                $("#province").focus();
+            }
+            if (!bankType) {
+                msg = "请选择开户银行";
+                $("#bankType").focus();
+            }
+            //            showMsg_bank(msg);
+            //            return !(msg.length > 0);
+            if (msg.length > 0) {
+                showMsg_bank(msg);
+                return;
+            } else {
+            $.post("/member/bindbank",
+                  { bankcode: bankType, bankDisplayName: bankDisplayName, province: province, city: city, subBankName: subBankName, cardnumber: cardnumber, bindType: bindType, RealName: realname },
+                       function (result) {
+                           if (result.Success) {
+                               SimplePop.alert(result.Msg);
+                             
+                           }
+                           else {
+                               alertTip(result.Msg);
+                           }
+                       }
+              );
+            }
+        }
+       
+    </script>
+}
+@helper AuthRealName()
+    {//实名认证区域Form
+    <div style="color: #868686">
+        <div class="info_wxts">
+            <div class="info_wxts_show">
+                <span><em style="color: Red">*</em>1.暂不支持港澳台身份证，军官证，护照等相关证件进行实名认证。如果您没有中国大陆内地身份证，请咨询客服热线。</span>
+                <span><em style="color: Red">*</em>2.为保证您的实名认证顺利进行，推荐使用IE8、IE6、360安全浏览器进行认证。</span>
+                <span><em style="color: Red">*</em>3.如有任何疑问，请联系网站客服</span>
+            </div>
+        </div>
+        @*  <form action="/member/authrealname" method="post" onsubmit="return checkInput_realnameauth();">*@
+        <ul class="userinfo_list">
+            <li><span class="sp120"><em class="red">*</em> 真实姓名：</span>
+                <input type="text" name="realName" id="txt_realName" maxlength="16" size="26" class="login_input_1" />
+                <span class="safe_tips3 ms_tip" id="safeinfo" onmouseover="Tool.saferemind(this.id,0);"
+                    onmouseout="Tool.saferemind(this.id,1);">
+                    <div class="cnt">
+                    </div>
+                </span></li>
+            <li><span class="sp120"><em class="red">*</em> 身份证号码：</span>
+                <input type="text" id="idCardNumber" name="idCardNumber" class="login_input_1" size="26"
+                    maxlength="18" />
+                <span class="safe_tips3 ms_tip" id="safeinfo2" onmouseover="Tool.saferemind(this.id,0);"
+                    onmouseout="Tool.saferemind(this.id,1);">
+                    <div class="cnt">
+                    </div>
+                </span></li>
+            <li><span class="sp120"><em class="red">*</em> 确认身份证：</span>
+                <input id="idCardNumber2" value="" class="login_input_1" size="26" maxlength="18" /></li>
+            <li><span class="sp120">&nbsp;</span>
+                <input type="button" class="btn_submit" value="实名认证" onclick="checkInput_realnameauth();" />
+                <input type="hidden" value="@Request.Url.AbsoluteUri.Split('?')[0]" name="backurl" /></li>
+            <li><span class="sp120">&nbsp;</span><span class="error-box" id="errbox_realnameauth"><i
+                class="err-icon"></i> <span class="msg" id="authRealNameERR_realnameauth"></span>
+            </span></li>
+        </ul>
+        @* </form>*@
+    </div>
+   
+    <script type="text/javascript">
+        var msg = '@Request["errMsg"]';
+        // showMsg_realnameauth(msg);
+        function showMsg_realnameauth(msg) {
+            if (msg.length > 0) {
+                $("#errbox_realnameauth").show();
+                $("#authRealNameERR_realnameauth").text(msg);
+            }
+            else {
+                $("#authRealNameERR_realnameauth").text("");
+                $("#errbox_realnameauth").hide();
+            }
+        }
+        function checkInput_realnameauth() {
+            var realName = $.trim($("#txt_realName").val());
+            var id1 = $.trim($("#idCardNumber").val());
+            var id2 = $.trim($("#idCardNumber2").val());
+            msg = "";
+            var reg = /^[\u4e00-\u9fa5·]+$/i;
+            if (!Tool.isCardNo(id2) || id1 != id2) {
+                msg = "两次身份证号码不一样";
+                $("#idCardNumber2").focus();
+            }
+            if (!Tool.isCardNo(id1)) {
+                msg = "请输入您的身份证号码";
+                $("#idCardNumber").focus();
+            }
+            if (!reg.test(realName)) {
+                msg = "请输入您的真实姓名";
+                $("#txt_realName").focus();
+            }
+            if (msg.length > 0) {
+                showMsg_realnameauth(msg);
+                return;
+            } else {
+                $.post("/member/authrealname", { realName: realName, idCardNumber: id1 }, function (result) {
+                    if (result.Succuss) {
+                        alertTip(result.Msg);
+                        // window.location.href = "/member/safe";
+                        location.href = location.href;
+
+                    } else {
+                        alertTip(result.Msg);
+                    }
+                }
+            );
+            }
+        }
+
+
+
+    
+    </script>
+}
+@helper AuthMobile_Request()
+    {//请求认证手机区域Form    
+@*<form action="/member/authmobile_request" method="post" onsubmit="return checkInput_mobile();">*@
+    <ul class="userinfo_list" style="padding: 0;">
+        <li><span class="sp120">手机号码：</span><input type="text" name="mobile" id="mobile"
+            value="" class="login_input_1" size="25" maxlength="11" />
+            <input type="button" class="btn_next" value="发送验证码" style="vertical-align: middle;"
+                onclick="checkInput_mobile();" />
+            <input type="hidden" value="@Request.Url.AbsoluteUri.Split('?')[0]" name="backurl" /></li>
+        <li><span class="sp120">&nbsp;</span><span class="error-box" id="errbox_Re_mobile"><i
+            class="err-icon"></i><span class="msg" id="errMsg_authmobile"></span></span>
+        </li>
+    </ul>
+@* </form>*@
+    <script type="text/javascript">
+        var msg = '@Request["errMsg"]';
+        showMsg_mobile(msg);
+        // alert(showMsg_mobile(msg));
+        function showMsg_mobile(msg) {
+            if (msg.length > 0) {
+                $("#errbox_Re_mobile").show();
+                $("#errMsg_authmobile").text(msg);
+            }
+            else {
+                $("#errMsg_authmobile").text("");
+                $("#errbox_Re_mobile").hide();
+            }
+        }
+        function checkInput_mobile() {
+
+            msg = "";
+            var mobile = $.trim($("#mobile").val());
+            if (!mobile || !Tool.isMobile(mobile)) {
+                msg = "请输入正确的手机号码";
+                $("#mobile").focus();
+            }
+            if (msg.length > 0) {
+                showMsg_mobile(msg);
+                return;
+            } else {
+
+                $.post("/member/authmobile_request", { mobile: mobile }, function (result) {
+                    if (result.Success) {
+                        return showMsg_mobile(msg);
+                    }
+                }
+              );
+            }
+        }
+    </script>
+}
+@helper AuthMobile_Submit(UserMobileRequestInfo requestInfo)
+    {
+    <div id="requestForm" style="display: @(requestInfo == null ? "block" : "none")">
+        @*<form action="/member/authmobile_request" method="post" onsubmit="return checkInputRequest_mobile();">*@
+        <ul class="userinfo_list">
+            <li><span class="sp120">手机号码：</span><input type="text" name="mobile" id="mobile_Submit"
+                                                           value="@(requestInfo == null ? "" : requestInfo.Mobile)" class="login_input_1" size="25" maxlength="11" />
+                <input type="button" class="btn_next" value="发送验证码" style="vertical-align: middle;"
+                    onclick="checkInputRequest_mobile()" />
+                <input type="hidden" value="@Request.Url.AbsoluteUri.Split('?')[0]" name="backurl" /></li>
+            <li><span class="sp120">&nbsp;</span><span class="error-box" id="errbox_mobile"><i
+                class="err-icon"></i><span class="msg" id="errMsg_authmobileRequest"></span></span>
+            </li>
+        </ul>
+        <input type="hidden" value="" id="RequestType" name="RequestType" />
+        @*</form>*@
+        <script type="text/javascript">
+            var msg = '@Request["errMsg"]';
+            showMsg_requstMobile(msg);
+            function showMsg_requstMobile(msg) {
+                if (msg.length > 0) {
+                    $("#errbox_mobile").show();
+                    $("#errMsg_authmobileRequest").text(msg);
+                }
+                else {
+                    $("#errMsg_authmobileRequest").text("");
+                    $("#errbox_mobile").hide();
+                }
+            }
+            function checkInputRequest_mobile() {
+                msg = "";
+                var mobile = $.trim($("#mobile_Submit").val());
+                if (!mobile || !Tool.isMobile(mobile)) {
+                    msg = "请输入正确的手机号码";
+                    $("#mobile_Submit").focus();
+                }
+                if (msg.length > 0) {
+                    showMsg_requstMobile(msg);
+                    return;
+                }
+                var requestType = $("#RequestType").val();
+                $.post("/member/authmobile_request", { mobile: mobile, RequestType: requestType }, function (result) {
+                    if (result.Succuss) {
+                        $("#submitForm").show();
+                        $("#mobile_request").html(result.mobile);
+                        $("#requestForm").hide();
+                        alertTip(result.Msg);
+                    } else {
+                        alertTip(result.Msg);
+                    }
+                });
+            }
+        </script>
+    </div>
+    <div id="submitForm" style="display:@(requestInfo == null ? "none" : "block")">
+        <ul class="userinfo_list">
+            <li><span class="sp120">验证手机号：</span><span class="bold yellow" id="mobile_request">@(requestInfo == null ? "" : requestInfo.Mobile)</span></li>
+            <li><span class="sp120">输入验证码：</span><input type="text" name="mobileCode" id="mobileCode"
+                class="login_input_1" size="10" maxlength="6" /></li>
+            <li><span class="sp120">&nbsp;</span><input type="buttom" class="btn_submit" value="确认"
+                onclick="return checkInput_mobile();" />
+                <input type="hidden" value="@Request.Url.AbsoluteUri.Split('?')[0]" name="backurl" /></li>
+            <li><span class="sp120" style="width: 15px;">&nbsp;</span><span class="error-box"
+                id="errboxsubmit_moile"><i class="err-icon"></i><span class="msg" id="errMsg_authsubmit"></span></span>
+            </li>
+        </ul>
+        <div class="tips">
+            <form action="/member/authmobile_request" method="post" id="requestmobileform">
+            <span class="gray">如果很久都没收到可以选择
+                <input type="hidden" name="mobile" value="@(requestInfo == null ? "" : requestInfo.Mobile)"/>
+                <input type="hidden" value="@Request.Url.AbsoluteUri.Split('?')[0]" name="backurl" /><a
+                    class="blue" onclick="$('#submitForm').hide();$('#requestForm').show();$('#mobile_Submit').attr('readonly',true);$('#RequestType').attr('value','1');"
+                    href="javascript:;">重新发送</a>，或者<a class="blue" onclick="$('#submitForm').hide();$('#requestForm').show();$('#mobile_Submit').attr('readonly',false);$('#RequestType').attr('value','1');"
+                        href="javascript:;">换个号码</a>。<br />
+                如果您收到多个验证码，请以最后收到的那条为准。<br />
+                有问题请联系在线客服</span>
+            </form>
+        </div>
+        <script type="text/javascript">
+            var msgSubmit = '@Request["errMsg"]';
+            // showMsgSubmit_mobile(msgSubmit);
+            function showMsgSubmit_mobile(msgSubmit) {
+                if (msgSubmit.length > 0) {
+                    $("#errboxsubmit_moile").show();
+                    $("#errMsg_authsubmit").text(msgSubmit);
+                }
+                else {
+                    $("#errMsg_authsubmit").text("");
+                    $("#errboxsubmit_moile").hide();
+                }
+            }
+            function checkInput_mobile() {
+                msgSubmit = "";
+                var mobileCode = $.trim($("#mobileCode").val());
+                if (!mobileCode || !Tool.isNumber(mobileCode)) {
+                    msgSubmit = "请输入正确的验证码";
+                    $("#mobileCode").focus();
+                }
+                if (msgSubmit.length > 0) {
+                    showMsgSubmit_mobile(msgSubmit);
+                } else {
+                    //                $.ajax({
+                    //                    url: "/member/authmobile_submit", type: "POST", date: { mobileCode: mobileCode }, success: function (result) {
+                    //                        if (result.Succuss) {
+                    //                           window.location.href="/member/safe";
+                    //                        } else {
+                    //                            alertTip(result.Msg);
+                    //                        }
+                    //                    }
+                    //                });
+                    $.post("/member/authmobile_submit", { mobileCode: mobileCode }, function (result) {
+                        if (result.Succuss) {
+                            alertTip(result.Msg);
+                            location.href = location.href;
+                        } else {
+                            alertTip(result.Msg);
+                        }
+                    });
+                }
+
+            }
+        </script>
+    </div>
+}
+@helper AuthEmail_Request(UserEmailRequestInfo requestInfo)
+    {//请求认证邮箱区域Form
+        if (requestInfo == null)
+        { 
+    <form action="/member/authemail_request" method="post" onsubmit="return checkInput_Authemail();">
+    <ul class="userinfo_list">
+        <li><span class="sp120">邮箱地址：</span><input type="text" name="email" id="email" value=""
+            class="login_input" size="25" maxlength="50" />
+            <em class="gray">请输入您的常用邮箱地址，系统会发送激活信到您的邮箱。</em></li>
+        <li><span class="sp120">&nbsp;</span>推荐您使用 <a href="http://email.163.com/" target="_blank"
+            class="blue">网易邮箱</a> 和 <a href="http://mail.qq.com" class="blue">QQ邮箱</a> [<span
+                class="red">无法接收邮件将不能通过验证</span>]</li>
+        <li><span class="sp120">&nbsp;</span><input type="submit" class="btn_next" value="发送激活信" /><input type="hidden" value="@Request.Url.AbsoluteUri.Split('?')[0]" name="backurl" /></li>
+        <li><span class="sp120">&nbsp;</span><span class="error-box" id="errbox_re_email"><i
+            class="err-icon"></i><span class="msg" id="errMsg_arequsetemail"></span></span>
+        </li>
+    </ul>
+    </form>
+    <script type="text/javascript">
+        var msg = '@Request["errMsg"]';
+        showMsg_Authemail(msg);
+        function showMsg_Authemail(msg) {
+            if (msg.length > 0) {
+                $("#errbox_re_email").show();
+                $("#errMsg_arequsetemail").text(msg);
+            }
+            else {
+                $("#errMsg_arequsetemail").text("");
+                $("#errbox_re_email").hide();
+            }
+        }
+
+        function checkInput_Authemail() {
+            msg = "";
+            var email = $.trim($("#email").val());
+            if (!email) {
+                msg = "请输入您的常用邮箱地址";
+                $("#email").focus();
+            }
+            showMsg_Authemail(msg);
+            return !msg.length > 0;
+        }
+    </script>
+        }
+        else
+        {
+    <div class="hide" id="requestForm">
+        <form action="/member/authemail_request" method="post" onsubmit="return checkInputcheck_email();">
+        <ul class="userinfo_list">
+            <li><span class="sp120">邮箱地址：</span><input type="text" name="email" id="email" value=""
+                class="login_input" size="25" maxlength="50" />
+                <em class="gray">请输入您的常用邮箱地址，系统会发送激活信接到您的邮箱。</em></li>
+            <li><span class="sp120">&nbsp;</span>推荐您使用 <a href="http://email.163.com/" target="_blank"
+                class="blue">网易邮箱</a> 和 <a href="http://mail.qq.com" class="blue">QQ邮箱</a> [<span
+                    class="red">无法接收邮件将不能通过验证</span>]</li>
+            <li><span class="sp120">&nbsp;</span><input type="submit" class="btn_next" value="发送激活信" /><input type="hidden" value="@Request.Url.AbsoluteUri.Split('?')[0]" name="backurl" /></li>
+            <li><span class="sp120">&nbsp;</span><em id="errMsg_authemail" class="err1">@(Request["errMsg"])</em></li>
+        </ul>
+        </form>
+        <script type="text/javascript">
+            var msg = '@Request["errMsg"]';
+            showMsgcheck_mobile(msg);
+            function showMsgcheck_mobile(msg) {
+                if (msg.length > 0) {
+                    $("#errbox").show();
+                    $("#errMsg_authemail").text(msg);
+                }
+                else {
+                    $("#errMsg_authemail").text("");
+                    $("#errbox").hide();
+                }
+            }
+
+            function checkInputcheck_email() {
+                msg = "";
+                var email = $.trim($("#email").val());
+                if (!email) {
+                    msg = "请输入您的常用邮箱地址";
+                    $("#email").focus();
+                }
+                showMsgcheck_mobile(msg);
+                return !msg.length > 0;
+            }
+        </script>
+    </div>
+    <div id="submitForm">
+        <ul class="userinfo_list">
+            <li>您的邮箱 <span class="font_hl">@requestInfo.Email</span> 收到一封激活信，请在24小时内验证！<a target="_blank" href="http://mail.@(requestInfo.Email.Split('@')[1])" class="blue">立即激活>></a></li>
+        </ul>
+        <div class="tips">
+            <form action="/member/authemail_request" method="post" id="requestemailform">
+            <span class="desc gray">如果很久都没收到可以选择
+                <input type="hidden" name="email" value="@requestInfo.Email"/>
+                <input type="hidden" value="@Request.Url.AbsoluteUri.Split('?')[0]" name="backurl" /><a
+                    class="blue" onclick="requestemailform.submit();">重新发送</a> ，或者<a class="blue" onclick="submitForm.style.display='none';requestForm.className='';">换个邮箱地址</a>。<br />
+                如果您收到多封激活信，请以最后收到的那封为准。<br />
+                有问题请联系在线客服</span>
+            </form>
+        </div>
+    </div>
+        }
+}
+@helper UserBeeding(decimal successgainmoney, decimal failgainmoney)
+    {
+        var list = OrderManager.CalBeeding((int)successgainmoney, (int)failgainmoney);
+
+        if (list["jx"] > 0)
+        {
+    <i class=" zhanji lv@(list["jx"])"></i>
+        }
+        if (list["jz"] > 0)
+        {
+    <i class=" zhanji lv@(4 + list["jz"])"></i>
+        }
+        if (list["jg"] > 0)
+        {
+    <i class=" zhanji lv@(8 + list["jg"])"></i>
+        }
+        if (list["yx"] > 0)
+        {
+    <i class="zhanji hlv@(list["yx"])"></i>
+        }
+        if (list["yz"] > 0)
+        {
+    <i class="zhanji hlv@(4 + list["yz"])"></i>
+        }
+        if (list["yg"] > 0)
+        {
+    <i class="zhanji hlv@(8 + list["yg"])"></i>
+        }
+@*for (int i = 0; i < list["jx"]; i++)
+    {<i class=" zhanji zj-jhg"></i>}
+    for (int i = 0; i < list["jg"]; i++)
+    {<i class="zj-jg"></i>}
+    for (int i = 0; i < list["jz"]; i++)
+    {<i class="zj-jz"></i>}
+    for (int i = 0; i < list["jx"]; i++)
+    {<i class="zj-jx"></i>}
+    for (int i = 0; i < list["yhg"]; i++)
+    {<i class="zj-yhg"></i>}
+    for (int i = 0; i < list["yg"]; i++)
+    {<i class="zj-yg"></i>}
+    for (int i = 0; i < list["yz"]; i++)
+    {<i class="zj-yz"></i>}
+    for (int i = 0; i < list["yx"]; i++)
+    {<i class="zj-yx"></i>}*@
+}
+@helper html_findzjmm()
+    {
+    <a href="/member/findbalancepwd" target="_blank" class="blue normal" title="找回资金密码">
+        忘记资金密码？</a>
+}
+@helper BindEmail()
+    {
+    <form action="/member/bindemail" method="post" onsubmit="return checkInput_email();">
+    <ul class="userinfo_list">
+        <li><span class="sp120">邮箱：</span>
+            <input type="text" maxlength="30" size="25" class="login_input_1" value="" id="email2"
+                name="email">
+            <em class="gray">格式， XXX@xxx.com </em></li>
+        <li><span class="sp120">确认邮箱：</span><span id="show_cardnumber1">
+            <input type="text" maxlength="30" size="25" class="login_input_1" value="" id="email1"
+                name="email1">
+        </span></li>
+        <li><span class="sp120">&nbsp;</span>
+            <input type="submit" value="确认" class="btn_submit">
+            <input type="hidden" value="@Request.Url.AbsoluteUri.Split('?')[0]" name="backurl" />
+        </li>
+        <li><span class="sp120">&nbsp;</span><span id="errbox_email" class="error-box" style="display: none;"><i
+            class="err-icon"></i><span id="errMsg_authsubmit_email" class="msg"></span></span>
+        </li>
+    </ul>
+    </form>  
+    <script type="text/javascript">
+        var msgSubmit = '@Request["errMsg"]';
+        //  showMsgSubmit_email(msgSubmit);
+        function showMsgSubmit_email(msgSubmit) {
+            if (msgSubmit.length > 0) {
+                $("#errbox_email").show();
+                $("#errMsg_authsubmit_email").text(msgSubmit);
+            }
+            else {
+                $("#errMsg_authsubmit_email").text("");
+                $("#errbox_email").hide();
+            }
+        }
+
+
+    </script>
+}

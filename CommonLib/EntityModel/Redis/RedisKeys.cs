@@ -142,5 +142,7 @@ namespace EntityModel.Redis
         public const string BulletinList = "Bulletin_List";
 
         public const string APP_Advertising_V2 = "APP_Advertising_V2";
+
+        public const string PC_Index_QuickBuy = "PC_Index_QuickBuy";
     }
 }

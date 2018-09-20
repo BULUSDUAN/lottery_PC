@@ -1,0 +1,28 @@
+﻿@{
+    Layout = null;
+    var sitename = SiteString.getHZSiteName(Request);
+}
+@{ Html.RenderAction("HeaderTop", "home");}
+<div class="header_box_con rd-hearder">
+    <div class="header_box">
+        <div style="width: 420px;height: 100%" class="logo-box clearfix">
+            <a href="@SiteString.getHZSiteUrl()" title="@SiteString.getHZSiteName()">
+                <img class="logo-index-hd" src="@ViewHelpers.img("vip/logo.png")" alt="@sitename" title="@sitename" />
+            </a>
+        </div>
+        <ul class="customerService-plus">
+          <li><a class=" link_kefu" href="javascript:void(0)" data="@SiteString.kefuUrl" title="点击联系在线客服"></a></li>
+            <li><i class="icon-t"></i>
+            <li>TEL:@SiteString.tel</li>
+            <li class="online_service">
+                <a class="kf-top" href="/" style=" line-height:14px !important">首页</a>
+                <a>•</a>
+                <a class="kf-top" href="/staticHtml/phonebuy/index.html" style=" line-height:14px !important">手机购彩</a> 
+                <a>•</a>
+                <a class="kf-top" target="_blank" href="/huodong/huodong.html" style=" line-height:14px !important">活动</a>
+                <a>•</a>
+                <a class="kf-top" target="_blank" href="/staticHtml/vip/index.html" style=" line-height:14px !important">会员</a> 
+            </li>
+        </ul>
+    </div>
+</div>

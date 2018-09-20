@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.Title = "ThendLink";
+    var thendLink = ViewBag.thendLink as  app.lottery.site.Models.ThendLinkCollection;
+    var gameType = (string)ViewBag.GameType;
+    var phasseOrder = ViewBag.PhasseOrder;
+}
+<div class="box">
+    <dl class="tred_top">
+        <dt><span class="more2"></span><span class="more2"><a href="?pageSize=30">近30期</a> <a
+            href="?pageSize=50">近50期</a> <a href="?pageSize=100">近100期</a> </span><span class="span">@(thendLink.GameName)热点走势</span>
+        </dt>
+        <dd>
+            <ul class="ps">
+                @for (int i = 0; i < thendLink.LinkList.Count; i++)
+                {
+                    var item = thendLink.LinkList[i];
+                    var urlArray = item.LinkUrl.Split('/');
+                    var type = urlArray[urlArray.Length - 1];
+
+                    if ((string.IsNullOrEmpty(gameType) && i == 0)
+                        || gameType == type.ToLower())
+                    {
+                    <a href="@item.LinkUrl.ToLower()"  class="dqx">@item.LinkName</a>
+                    }
+                    else
+                    {
+                    <a href="@item.LinkUrl.ToLower()" >@item.LinkName</a>
+                    }
+                }
+            </ul>
+        </dd>
+    </dl>
+</div>

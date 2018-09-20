@@ -1,0 +1,544 @@
+﻿@{
+    ViewBag.Title = "会员中心 - 特权与服务-体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    Layout = "~/Views/vip/_Layout.cshtml";
+    var user = ViewBag.User as app.lottery.site.Models.CurrentUserInfo;
+    var balance = ViewBag.CurrentUserBalance as GameBiz.Core.UserBalanceInfo;
+
+    //var leve = 0;
+    var needGrowth = 0;
+    var hb = 0;
+    var flag = user != null;
+    if (flag)
+    {
+        var UserGrowth = balance.UserGrowth;
+        //成长状态
+        if (UserGrowth < 500 && UserGrowth > 0)
+        {
+            // leve = 1;
+            needGrowth = 500 - UserGrowth;
+        }
+        else if (UserGrowth >= 500 && UserGrowth < 1000)
+        {
+            // leve = 2;
+            needGrowth = 1000 - UserGrowth;
+            hb = 2;
+        }
+        else if (UserGrowth >= 1000 && UserGrowth < 2000)
+        {
+            //leve = 3;
+            needGrowth = 2000 - UserGrowth;
+            hb = 10;
+        }
+        else if (UserGrowth >= 2000 && UserGrowth < 4000)
+        {
+            //leve = 4;
+            needGrowth = 4000 - UserGrowth;
+            hb = 20;
+        }
+        else if (UserGrowth >= 4000 && UserGrowth < 8000)
+        {
+            // leve = 5;
+            needGrowth = 8000 - UserGrowth;
+            hb = 88;
+        }
+        else if (UserGrowth >= 8000 && UserGrowth < 12000)
+        {
+            // leve = 6;
+            needGrowth = 12000 - UserGrowth;
+        }
+        else if (UserGrowth >= 12000 && UserGrowth < 16000)
+        {
+            // leve = 7;
+            needGrowth = 16000 - UserGrowth;
+        }
+        else if (UserGrowth >= 16000 && UserGrowth < 20000)
+        {
+
+            //leve = 8;
+            needGrowth = 20000 - UserGrowth;
+        }
+    }
+}
+@section css{
+    @ViewHelpers.css("vip.css")
+}
+<div class="main_v">
+    @{Html.RenderAction("menu2", "vip");}
+    <div class="right_con">
+        <div class="list_p" style="overflow: visible">
+            <h2>
+                晋升奖励<span style="font-size: 14px; font-weight: normal; padding-left: 24px; color: #666;">晋升红包需在激活会员后升级才可获得</span></h2>
+            <div id="cz_not_login" class="v_con p_r border_style1">
+                <span class="v1_ico ico_gray"></span><span class="v2_ico ico_gray ico_r"></span>
+                <div class="v_column v_column_1">
+                </div>
+                <ul class="v_value v_value_1 clearfix">
+                    <li>
+                        <div class="v1-10">
+                            V2</div>
+                        <div class="lines" style="height: 20px;">
+                        </div>
+                    </li>
+                    <li>
+                        <div class="v1-10">
+                            V3</div>
+                        <div class="lines">
+                        </div>
+                        <div class="tequan_hb hy_image">
+                            2元</div>
+                    </li>
+                    <li>
+                        <div class="v1-10">
+                            V4</div>
+                        <div class="lines">
+                        </div>
+                        <div class="tequan_hb hy_image">
+                            10元</div>
+                    </li>
+                    <li>
+                        <div class="v1-10">
+                            V5</div>
+                        <div class="lines">
+                        </div>
+                        <div class="tequan_hb hy_image">
+                            20元</div>
+                    </li>
+                    <li>
+                        <div class="v1-10">
+                            V6</div>
+                        <div class="lines">
+                        </div>
+                        <div class="tequan_hb hy_image">
+                            88元</div>
+                    </li>
+                    <li>
+                        <div class="v1-10">
+                            V7</div>
+                        <div class="lines_1">
+                        </div>
+                    </li>
+                    <li>
+                        <div class="v1-10">
+                            V8</div>
+                    </li>
+                    <li>
+                        <div class="v1-10">
+                            V9</div>
+                    </li>
+                </ul>
+                <div class="bdq_tip">
+                    不定期高等级用户活动</div>
+            </div>
+            <div id="cz_after_login" class="v_con p_r border_style1" style="display:none">
+                <span class="vs_ico"></span><span class="vw_ico" style="left: 671px;"></span>
+                <div class="value_tips1">
+                    <div class="p_r">
+                        目前成长值：<span id="cz_value"></span>点&nbsp;&nbsp;距离LV<span id="next_level"></span>:<span
+                            id="need_growth"></span>点<span class="tip_ico1"></span></div>
+                </div>
+                <div class="v_column">
+                    <div class="column" style="width: 0px; display: block;">
+                    </div>
+                </div>
+                <ul class="v_value">
+                 <li id="min_growth"></li>
+                </ul>
+                <div class="v_bottom p_r clearfix" style="text-align: right;display:none">
+                    晋升至<span class="v1-10">V<span id="n_level" class="v1-10"></span></span>可获得：
+                    <span class="hb_x ico_pp p_r" id="hb_ico"><span class="value_tips vv_200"
+                        style="display: none;left:585px;top:48px;" id="showhbtips"><span class="p_r" id="show_hb" style="line-height: 25px;">
+                            <span class="tip_ico"></span></span></span></span>
+                </div>
+            </div>
+        </div>
+        <div class="list_p" id="js_mypreminum" style="display: none;">
+            <h2 class="p_r">
+                我的优惠</h2>
+            <div class="youhui_list border_style1">
+                <ul class="clearfix" id="js_mypreminum_list">
+                </ul>
+            </div>
+        </div>
+        <div class="list_p">
+            <h2 class="p_r" style="border-bottom: 1px solid #f18987!important; margin-top: 15px !important">
+                特权服务</h2>
+            <div class="tequan_con border_style1 p_r">
+                <table style="border-collapse: collapse;" cellpadding="0" cellspacing="0" width="100%">
+                    <colgroup>
+                        <col width="160">
+                        <col width="55">
+                        <col width="55">
+                        <col width="55">
+                        <col width="55">
+                        <col width="55">
+                        <col width="55">
+                        <col width="55">
+                        <col width="55">
+                        <col width="55">
+                    </colgroup>
+                    <thead>
+                        <tr class="first">
+                            <th style="font-style: normal">
+                                等级
+                            </th>
+                            <th>
+                                V1
+                            </th>
+                            <th>
+                                V2
+                            </th>
+                            <th>
+                                V3
+                            </th>
+                            <th>
+                                V4
+                            </th>
+                            <th>
+                                V5
+                            </th>
+                            <th>
+                                V6
+                            </th>
+                            <th>
+                                V7
+                            </th>
+                            <th>
+                                V8
+                            </th>
+                            <th>
+                                V9
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @*     <tr>
+                            <td class="first">
+                                <span class="icos_con">
+                                    <img src="@ViewHelpers.img("tequan/gc100.png")" height="32" width="32"></span><strong
+                                        style="line-height: 18px;">每购彩100元<br>
+                                        &nbsp;&nbsp;&nbsp;送成长值</strong>
+                            </td>
+                            <td>
+                                20点
+                            </td>
+                            <td>
+                                30点
+                            </td>
+                            <td>
+                                40点
+                            </td>
+                            <td>
+                                50点
+                            </td>
+                            <td>
+                                60点
+                            </td>
+                            <td>
+                                80点
+                            </td>
+                            <td>
+                                100点
+                            </td>
+                            <td>
+                                100点
+                            </td>
+                            <td>
+                                100点
+                            </td>
+                        </tr>*@
+                        <tr>
+                            <td class="first">
+                                <span class="ima1 icos_con hy_image"></span><strong style="line-height: 18px;">每购彩100元<br />
+                                    增加成长值</strong>
+                            </td>
+                            <td>
+                                100点
+                            </td>
+                            <td>
+                                100点
+                            </td>
+                            <td>
+                                100点
+                            </td>
+                            <td>
+                                100点
+                            </td>
+                            <td>
+                                100点
+                            </td>
+                            <td>
+                                100点
+                            </td>
+                            <td>
+                                100点
+                            </td>
+                            <td>
+                                100点
+                            </td>
+                            <td>
+                                100点
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="first tdpr">
+                                <span class="ima2 icos_con hy_image"></span><strong>晋升红包</strong><span id="noteic">
+                                    <s style="margin: 0 0 3px 6px" class="i-qw"></s>
+                                    <div style="margin-top: 30px; width: 360px; top: 5px; left: -5px; display: none;"
+                                        id="hbnote" class="notifyicon tip-4">
+                                        <div class="notifyicon_space">
+                                        </div>
+                                        <div class="notifyicon_arrow">
+                                            <s></s><em></em>
+                                        </div>
+                                        <div class="notifyicon_content">
+                                            <h5 style="background-position: 0pt -48px;">
+                                                晋升红包领取注意</h5>
+                                            <div class="pb15">
+                                                本期晋升红包特权延期至1月1日。<br>
+                                                活动期间，已激活用户升级后可获得对应的红包奖励。</div>
+                                            <div class="red">
+                                                注：晋升红包需在激活会员后方有机会获得，先升级后激活会员的不做补派！</div>
+                                        </div>
+                                    </div>
+                                </span>
+                            </td>
+                            <td>
+                                —
+                            </td>
+                            <td>
+                                —
+                            </td>
+                            <td>
+                                <span class="orange">2元</span>
+                            </td>
+                            <td>
+                                <span class="orange">10元</span>
+                            </td>
+                            <td>
+                                <span class="orange">20元</span>
+                            </td>
+                            <td>
+                                <span class="orange">88元</span>
+                            </td>
+                            <td>
+                                —
+                            </td>
+                            <td>
+                                —
+                            </td>
+                            <td>
+                                —
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="first">
+                                <span class="ima3 icos_con hy_image"></span><strong>提款免手续费</strong>
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="first">
+                                <span class="ima4 icos_con hy_image"></span><strong>提款到账通知</strong>
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="first">
+                                <span class="ima5 icos_con hy_image"></span><strong>账户异动提醒</strong>
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="first">
+                                <span class="ima6 icos_con hy_image"></span><strong>方案中奖通知</strong>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="first">
+                                <span class="ima7 icos_con hy_image"></span><strong>奖金入账通知</strong>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                        </tr>
+                        <tr class="last">
+                            <td class="first">
+                                <span class="ima8 icos_con hy_image"></span><strong>关注人发单通知</strong>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                            <td>
+                                √
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+<script type="text/javascript">
+    $(function () {
+        var viplevel = '@(user != null ? user.LoginInfo.VipLevel : 0)';
+        if (viplevel > 0) {
+            $(".tequan_con table tr").each(function (n, value) {
+                var nowtd = null;
+                if (n == 0) {
+                    nowtd = $(value).find('th')[viplevel];
+                } else {
+                    nowtd = $(value).find('td')[viplevel];
+                }
+                if ($(nowtd).text().trim() != "") { $(nowtd).addClass('pink'); }
+
+            });
+        }
+        //        $('#noteic').hover(function () {
+        //            $(this).find('#hbnote').show()
+        //        }, function () {
+        //            $(this).find('#hbnote').hide()
+        //        });
+    });
+    $('.tequan_con table tr:even').filter(':gt(0)').addClass('tr_color');
+</script>

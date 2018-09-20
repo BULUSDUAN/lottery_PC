@@ -1,0 +1,435 @@
+﻿@using GameBiz.Core;
+@using app.lottery.site.Models;
+@{
+    ViewBag.Title = "个人文章";
+    Layout = "../Shared/_Expert.cshtml";
+    var tucao = ViewBag.Tucao as ExperterCommentsCollection;
+    var user = ViewBag.User as ExperterInfo;
+    var Analyze = ViewBag.Analyze as ExperterAnalyzeSchemeInfo;
+    var Correlation = ViewBag.Correlation as ExperterAnalyzeSchemeInfoCollection;
+    var expertWeek = ViewBag.ExpertWeek as ExperterShootingInfoCollection;
+    var expertMonth = ViewBag.ExpertMonth as ExperterShootingInfoCollection;
+    var expertTotal = ViewBag.ExpertTotal as ExperterShootingInfoCollection;
+    CurrentUserInfo CurrentUser = ViewBag.CurrentUser;
+    var j = 0; var k = 0; var m = 0;
+}
+<script type="text/javascript">
+    function showCount() {
+        var strChar = document.getElementById('txtArea').value;
+
+        var charCount = strChar.length;
+        if (charCount <= 60)
+            document.getElementById('test2').value = 60 - Number(charCount);
+        else {
+            alert('最多输入60个字!');
+            document.getElementById('txtArea').value = strChar.substring(0, 60);
+        }
+    }
+</script>
+<div id="bodybg">
+    <div id="log">
+        <div class="left">
+            <div class="l_wire">
+            </div>
+            <div class="l_img">
+            </div>
+        </div>
+        <div style="clear: both;">
+        </div>
+    </div>
+    <div id="content">
+        <div class="middle">
+            <div class="per_top">
+                足球名家&nbsp;&nbsp;<span style="font-size: 14px;">Football Masters</span> <a href="PersonSpacial?UserId=@user.UserId" class="backbtn" >
+                    返回个人名家主页</a>
+            </div>
+            <div class="person">
+                <div class="per_box">
+                    <div class="perbg">
+                        <div class="per_bbox">
+                            <div class="per_div">
+                                <input type="hidden" id="userid" value="@user.UserId" />
+                                <div class="per_font">
+                                    <div class="per_t" title="@user.DisplayName">
+                                        @{
+                                            byte[] myByte = System.Text.Encoding.Default.GetBytes(user.DisplayName);
+                                            var disname = "";
+                                            if (myByte.Length >= 10 && user.DisplayName.Length > 5 && user.DisplayName.Length <= 10)
+                                            {
+                                                disname = user.DisplayName.Substring(0, 5) + "..";
+                                            }
+                                            else if (user.DisplayName.Length > 10)
+                                            {
+                                                disname = user.DisplayName.Substring(0, 10) + "..";
+                                            }
+                                            else
+                                            {
+                                                disname = user.DisplayName;
+                                            }
+                                        }
+                                        @disname</div>
+                                    @{
+                                        var gamecode = "";
+                                        var game = user.AdeptGameCode;
+                                        switch (game)
+                                        {
+                                            case "JCZQ":
+                                                gamecode = "竞彩足球";
+                                                break;
+                                            case "JCZQ/JCLQ":
+                                                gamecode = "竞彩足球/竞彩篮球";
+                                                break;
+                                            case "JCZQ/BJDC":
+                                                gamecode = "竞彩足球/北京单场";
+                                                break;
+                                            case "JCZQ/CTZQ":
+                                                gamecode = "竞彩足球/传统足球";
+                                                break;
+                                            default:
+                                                gamecode = user.AdeptGameCode;
+                                                break;
+                                        }
+                                    }
+                                    <div class="pertxt">@gamecode</div>
+                                </div>
+                                <div>
+                                    @if (CurrentUser != null)
+                                    {
+                                        if (ViewBag.experterid != CurrentUser.LoginInfo.UserId)
+                                        {
+                                        <input type="button" class="perbtn" value="我要关注支持他" />
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <input type="button" class="perbtn" value="我要关注支持他" />
+                                    }
+                                </div>
+                            </div>
+                            <div style="float: left; position: relative;">
+                                @if (!string.IsNullOrEmpty(user.ExperterHeadImage))
+                                {
+                                    <span class="head_span" style="opacity: 0.2; z-index: 995;">
+                                        <img src="@user.ExperterHeadImage" alt="" width="175" height="225" /></span>
+                                    <span class="head_span" style="margin-left: 55px; opacity: 0.3; z-index: 997;">
+                                        <img src="@user.ExperterHeadImage" alt="" width="175" height="225" /></span>
+                                    <span class="head_span" style="margin-left: 115px; opacity: 0.3; z-index: 999;">
+                                        <img src="@user.ExperterHeadImage" alt="" width="175" height="225" /></span>
+                                    <span class="head_span" style="margin-left: 175px; opacity: 1; z-index: 1000">
+                                        <img src="@user.ExperterHeadImage" alt="" width="175" height="225" /></span>
+                                    <span class="head_span" style="margin-left: 215px; opacity: 0.3; z-index: 990;">
+                                        <img src="@user.ExperterHeadImage" alt="" width="175" height="225" /></span>
+                                    <span class="head_span" style="margin-left: 255px; opacity: 0.3; z-index: 989;">
+                                        <img src="@user.ExperterHeadImage" alt="" width="175" height="225" /></span>
+                                    <span class="head_span" style="margin-left: 288px; opacity: 0.2; z-index: 985;">
+                                        <img src="@user.ExperterHeadImage" alt="" width="175" height="225" /></span>
+                                }
+                                else
+                                {
+                                    <span class="head_span" style="opacity: 0.2; z-index: 995;">
+                                        <img src="@ViewHelpers.img("expert/default_header.jpg")" alt="" width="175" height="225" /></span>
+                                    <span class="head_span" style="margin-left: 55px; opacity: 0.3; z-index: 997;">
+                                        <img src="@ViewHelpers.img("expert/default_header.jpg")" alt="" width="175" height="225" /></span>
+                                    <span class="head_span" style="margin-left: 115px; opacity: 0.3; z-index: 999;">
+                                        <img src="@ViewHelpers.img("expert/default_header.jpg")" alt="" width="175" height="225" /></span>
+                                    <span class="head_span" style="margin-left: 175px; opacity: 1; z-index: 1000">
+                                        <img src="@ViewHelpers.img("expert/default_header.jpg")" alt="" width="175" height="225" /></span>
+                                    <span class="head_span" style="margin-left: 215px; opacity: 0.3; z-index: 990;">
+                                        <img src="@ViewHelpers.img("expert/default_header.jpg")" alt="" width="175" height="225" /></span>
+                                    <span class="head_span" style="margin-left: 255px; opacity: 0.3; z-index: 989;">
+                                        <img src="@ViewHelpers.img("expert/default_header.jpg")" alt="" width="175" height="225" /></span>
+                                    <span class="head_span" style="margin-left: 288px; opacity: 0.2; z-index: 985;">
+                                        <img src="@ViewHelpers.img("expert/default_header.jpg")" alt="" width="175" height="225" /></span>
+                                }
+                            </div>
+                            <div style="clear: both;">
+                            </div>
+                        </div>
+                        <div class="pericon">
+                            <img class="default_header" src="@ViewHelpers.img("../images/expert/pericon.png")" alt="" />
+                            <p class="p" title="@user.ExperterSummary">
+                                @(user.ExperterSummary.Length > 100 ? user.ExperterSummary.Substring(0, 100) + "..." : user.ExperterSummary)</p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="analysis">
+                        分析推荐<span class="span">Analysis keep pushing</span></div>
+                    <div class="analysisbg">
+                        <div class="fontbg shadow">
+                            <input type="hidden" value="@Analyze.AnalyzeId" id="AnalyzeId" />
+                            <h2 style="text-align: center">
+                                @Analyze.Title</h2>
+                            <div class="ana_font">
+                                来源：<a href="/" style="color: Blue">@SiteString.getHZSiteName(Request)</a>&nbsp;&nbsp;@Analyze.CreateTime.ToString("yyyy-MM-dd")<span
+                                    class="span"><span style="color: Red;">评论：@tucao.List.Count</span>条</span></div>
+                            <div style="margin-top: 20px; width: 550px;">
+                                <p>@Html.Raw(Analyze.Content)</p>
+                            </div>
+                            <div style="clear: both;">
+                            </div>
+                            <div class="ana_a">
+                                <a href="/">【@SiteString.getHZSiteName(Request)首页】</a><a href="/buy/jingcaibasket/rfsf">【竞彩投注】</a><a
+                                    href="/buy/jingcai/spf/">【足彩投注】</a><a href="/buy/danchang/spf">【北单投注】</a><a href="/hemai/index">【参与合买】</a><a
+                                        href="/statichtml/register.html">【现在注册】</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="right">
+                <div class="ml_box">
+                    <div class="title">
+                        拍砖吐槽</div>
+                    <div class="ml_textarea shadow" style="overflow: auto;">
+                        <ul>
+                            @foreach (var tu in tucao.List)
+                            {
+                                if (tu.Content != null)
+                                {
+                                <li style="width: 100%;">
+                                    <div class="tucao">
+                                        <span class="tu_p" title="@tu.DisplayName">@(tu.DisplayName.Length > 8 ? tu.DisplayName.Substring(0, 8) + "..." : tu.DisplayName)</span>
+                                        <span class="tu_s">
+                                            @{
+                                    var time = tu.CreateTime;
+                                    var timeNow = DateTime.Now;
+                                    TimeSpan str = timeNow - time;
+                                    var days = str.Days;
+                                    var hours = str.Hours;
+                                    var minute = str.Minutes;
+                                    var second = str.Seconds;
+                                    var createtime = "";
+                                    if (days == 0 && hours == 0 && minute == 0 && second < 60)
+                                    {
+                                        createtime = "刚刚";
+                                    }
+                                    else if (days == 0 && hours == 0 && minute < 60)
+                                    {
+                                        createtime = minute + "分钟前";
+                                    }
+                                    else if (days == 0 && hours < 60)
+                                    {
+                                        createtime = hours + "小时前";
+                                    }
+                                    else if (days < 24)
+                                    {
+                                        createtime = days + "天前";
+                                    }
+                                    else if ((days / 24) > 0)
+                                    {
+                                        createtime = (days / 24) + "月前";
+                                    }
+                                    else if ((days / 24 / 12) > 0)
+                                    {
+                                        createtime = (days / 24 / 12) + "年前";
+                                    }
+                                            }
+                                            @createtime</span>
+                                        <div style="clear: both;">
+                                        </div>
+                                        <div class="chatinfo">
+                                            <span class="tu_span"></span>
+                                            <div>@tu.Content</div>
+                                        </div>
+                                    </div>
+                                </li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                    <div class="ml_s">
+                        <span class="span3">我有话说</span><span class="span4">评论改变个人观点</span>
+                    </div>
+                    <div>
+                        <textarea class="textarea" name="txtArea" id="txtArea" onkeyup="showCount();"></textarea>
+                    </div>
+                    <div class="comment">
+                        <div class="p">
+                            <p class="p1">
+                                还可以输入<input name="test2" id="test2" value="60" />个字</p>
+                            <p style="font-size: 10px; color: Red;">
+                                只限本站用户发表评论</p>
+                        </div>
+                        <a href="javascript:void(0);" class="combtn" id="Comment">评论</a>
+                    </div>
+                </div>
+                <div class="remlog">
+                    <a href="Recommend" target="_blank">
+                        <img src="@ViewHelpers.img("../images/expert/remlog.png")" alt="" /></a></div>
+                <div class="remmaster1">
+                    <div class="mas_title">
+                        <span>推荐名家命中榜</span>
+                        <div class="mas_d">
+                            <span class="zhou redd">周</span><span class="yue">月</span><span class="zong">总</span></div>
+                    </div>
+                    <div class="mas_box1 shadow" style="display: block;" id="zhou">
+                        <ul>
+                            @foreach (var exper in expertWeek.List)
+                            {
+                                if (j % 2 == 0)
+                                {
+                                <li class="mas_d1"><a href="/Expert/PersonSpacial?UserID=@exper.UserId" title="@exper.DisplayName">@(exper.DisplayName.Length > 8 ? exper.DisplayName.Substring(0, 8) + "…" : exper.DisplayName)</a><span
+                                    class="span">
+                                    @{
+                                    var shoot = (Decimal.Parse(exper.Shooting.ToString("N2")) * 100);
+                                    
+                                    }
+                                    @shoot.ToString("N0")% </span></li>
+                                }
+                                else
+                                {
+                                <li class="mas_d2"><a href="/Expert/PersonSpacial?UserID=@exper.UserId" title="@exper.DisplayName">@(exper.DisplayName.Length > 8 ? exper.DisplayName.Substring(0, 8) + "…" : exper.DisplayName)</a><span
+                                    class="span">
+                                    @{
+                                    var shoot = (Decimal.Parse(exper.Shooting.ToString("N2")) * 100);
+                                    }
+                                    @shoot.ToString("N0")% </span></li>
+                                }
+                                j++;
+                            }
+                        </ul>
+                    </div>
+                    <div class="mas_box1 shadow" style="display: none;" id="yue">
+                        <ul>
+                            @foreach (var exper in expertMonth.List)
+                            {
+                                if (k % 2 == 0)
+                                {
+                                <li class="mas_d2"><a href="/Expert/PersonSpacial?UserID=@exper.UserId" title="@exper.DisplayName">@(exper.DisplayName.Length > 8 ? exper.DisplayName.Substring(0, 8) + "…" : exper.DisplayName)</a><span
+                                    class="span">
+                                    @{
+                                    var shoot = (Decimal.Parse(exper.Shooting.ToString("N2")) * 100);
+                                    
+                                    }
+                                    @shoot.ToString("N0")% </span></li>
+                                }
+                                else
+                                {
+                                <li class="mas_d1"><a href="/Expert/PersonSpacial?UserID=@exper.UserId" title="@exper.DisplayName">@(exper.DisplayName.Length > 8 ? exper.DisplayName.Substring(0, 8) + "…" : exper.DisplayName)</a><span
+                                    class="span">
+                                    @{
+                                    var shoot = (Decimal.Parse(exper.Shooting.ToString("N2")) * 100);
+                                    
+                                    }
+                                    @shoot.ToString("N0")% </span></li>
+                                }
+                                k++;
+                            }
+                        </ul>
+                    </div>
+                    <div class="mas_box1 shadow" style="display: none;" id="zong">
+                        <ul>
+                            @foreach (var exper in expertTotal.List)
+                            {
+                                if (m % 2 == 0)
+                                {
+                                <li class="mas_d1"><a href="/Expert/PersonSpacial?UserID=@exper.UserId" title="@exper.DisplayName">@(exper.DisplayName.Length > 8 ? exper.DisplayName.Substring(0, 8) + "…" : exper.DisplayName)</a><span
+                                    class="span">
+                                    @{
+                                    var shoot = (Decimal.Parse(exper.Shooting.ToString("N2")) * 100);
+                                    
+                                    }
+                                    @shoot.ToString("N0")% </span></li>
+                                }
+                                else
+                                {
+                                <li class="mas_d2"><a href="/Expert/PersonSpacial?UserID=@exper.UserId" title="@exper.DisplayName">@(exper.DisplayName.Length > 8 ? exper.DisplayName.Substring(0, 8) + "…" : exper.DisplayName)</a><span
+                                    class="span">
+                                    @{
+                                    var shoot = (Decimal.Parse(exper.Shooting.ToString("N2")) * 100);
+                                    
+                                    }
+                                    @shoot.ToString("N0")% </span></li>
+                                }
+                                m++;
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <div class="remlog1">
+                    <a href="/hemai/index" target="_blank">
+                        <img src="@ViewHelpers.img("../images/expert/niuren.png")" alt="" /></a></div>
+            </div>
+        </div>
+        <div style="clear: both;">
+        </div>
+    </div>
+    <input type="hidden" name="Hdexperterid" id="Hdexperterid" value="@ViewBag.experterid" />
+    <input type="hidden" name="Hdanalyzeid" id="Hdanalyzeid" value="@ViewBag.analyzeid" />
+</div>
+<script type="text/javascript">
+    //周的点击事件，隐藏 总 月
+    $(".zhou").click(function () {
+        $("#yue").hide();
+        $("#zong").hide();
+        $("#zhou").show();
+        $(this).css("color", "red")
+        $(this).siblings().css("color", "black")
+    });
+    $(".yue").click(function () {
+        $("#zhou").hide();
+        $("#zong").hide();
+        $("#yue").show();
+        $(this).css("color", "red")
+        $(this).siblings().css("color", "black")
+    });
+    $(".zong").click(function () {
+        $("#yue").hide();
+        $("#zhou").hide();
+        $("#zong").show();
+        $(this).css("color", "red")
+        $(this).siblings().css("color", "black")
+    })
+
+    $("#Comment").click(function () {
+        user.isLogin(function (islogin) {
+            if (!islogin) {
+                loginDialog.Show();
+                $("#userName").focus();
+            } else {
+                var Content = $("#txtArea").val();
+                var AnalyzeId = $("#AnalyzeId").val();
+                if (Content == "") {
+                    alert("内容不能为空！");
+                    return false;
+                }
+                var commentstpye = "50";
+                $.post("/Expert/AddTucao", { Content: Content, CommentsTpye: commentstpye, AnalyzeId: AnalyzeId }, function (Json) {
+                    if (Json.IsSucess == false) {
+                        alert(Json.Msg);
+                        return false;
+                    }
+                    else {
+                        alert(Json.Msg);
+                        $("#txtArea").val("");
+                    }
+                });
+            }
+        });
+    });
+
+    //添加关注
+    $(".perbtn").click(function () {
+        user.isLogin(function (islogin) {
+            if (!islogin) {
+                loginDialog.Show();
+                $("#userName").focus();
+            } else {
+                var userid = $("#userid").val();
+                var Hdexperterid = $("#Hdexperterid").val();
+                var Hdanalyzeid = $("#Hdanalyzeid").val();
+                $.post("/Expert/AddAttention", { userId: userid }, function (Json) {
+                    if (Json.IsSucess == false) {
+                        alert(Json.Msg);
+                        return false;
+                    }
+                    else {
+                        alert(Json.Msg);
+                        window.location.href = "/Expert/PersonArticle?experterid=" + Hdexperterid + "&AndanalyzeId=" + Hdanalyzeid;
+                    }
+                });
+            }
+        });
+    });
+
+</script>

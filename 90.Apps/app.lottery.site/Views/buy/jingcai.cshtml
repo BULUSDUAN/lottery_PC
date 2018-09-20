@@ -1,0 +1,713 @@
+@using System.Activities.Statements
+@using MatchBiz.Core;
+@using app.lottery.site.Models;
+@{
+    Layout = "../Shared/_Layout.cshtml";
+    string type = ViewBag.Type;
+    var title = string.Empty;
+    var keywords = string.Empty;
+    var desc = string.Empty;
+    var oddstype = string.IsNullOrEmpty(Request["oddstype"]) ? 2 : int.Parse(Request["oddstype"]);
+    switch (type.ToLower())
+    {
+        case "spf":
+            if (oddstype==1)
+            {
+                title = "竞彩足球胜平负单关投注-" + SiteString.getHZSiteName(Request);
+                keywords = "竞彩足球单关投注,竞彩足球胜平负单关,竞彩让球单关购买";
+                desc = SiteString.getHZSiteName(Request)+"彩票网为广大彩民提供竞彩足球胜平负单关投注,极大的丰富了竞彩足球胜平负玩法,更有最新的单关投注赔率资讯.";
+            }
+            else if (oddstype == 3)
+            {
+                title = "竞彩足球胜平负单式上传-" + SiteString.getHZSiteName(Request);
+                keywords = "竞彩足球单式上传,竞彩胜平负单式上传,竞彩不让球单式上传";
+                desc = SiteString.getHZSiteName(Request)+"彩票网为广大彩民提供竞彩足球胜平负单式上传,方便彩民朋友更快捷的进行竞彩足球胜平负单式投注. ";
+            }
+            else
+            {
+                title = "竞彩足球投注-网上购买竞彩足球-竞彩让球胜平负购买-竞彩足球胜平负赔率-" + SiteString.getHZSiteName(Request);
+                keywords = "竞彩足球投注,网上购买竞彩足球,竞彩让球胜平负购买,竞彩足球胜平负赔率";
+                desc = SiteString.getHZSiteName(Request)+"彩票网提供专业的竞彩足球胜平负投注和竞彩足球让球胜平负投注,并提供最新的竞彩足球(让球)胜平负赔率信息,网上购买竞彩足球就上"+SiteString.getHZSiteName(Request)+"彩票网. 【"+SiteString.getHZSiteName(Request)+"彩票网-专业、安全的网上购彩平台】";
+            }
+            break;
+        case "rqspf":
+            if (oddstype == 1)
+            {
+                title = "-" + SiteString.getHZSiteName(Request);
+                keywords = "";
+                desc = "";
+            }
+            else if (oddstype == 3)
+            {
+                title = "竞彩足球让球胜平负单式上传-" + SiteString.getHZSiteName(Request);
+                keywords = "竞彩足球让球胜平负单式上传";
+                desc = SiteString.getHZSiteName(Request)+"彩票网为广大彩民提供竞彩足球让球胜平负单式上传,方便彩民朋友更快捷的进行竞彩足球让球胜平负单式投注.";
+            }
+            else
+            {
+                title = "-" + SiteString.getHZSiteName(Request);
+                keywords = "";
+                desc = "";
+            }
+            break;
+        case "bf":
+            if (oddstype == 1)
+            {
+                title = "竞彩足球比分单关投注-" + SiteString.getHZSiteName(Request);
+                keywords = "竞彩足球比分单关投注,竞彩足球比分单关";
+                desc = SiteString.getHZSiteName(Request)+"彩票网为广大彩民提供竞彩足球比分单关投注,极大的丰富了竞彩足球比分玩法,更有最新的比分单关投注赔率资讯.";
+            }
+            else if (oddstype == 3)
+            {
+                title = "竞彩足球比分单式上传-"+SiteString.getHZSiteName(Request)+"-" + SiteString.getHZSiteName(Request);
+                keywords = "竞彩足球比分单式上传";
+                desc = SiteString.getHZSiteName(Request)+"彩票网为广大彩民提供竞彩足球比分单式上传,方便彩民朋友更快捷的进行竞彩足球比分单式投注.";
+            }
+            else
+            {
+                title = "竞彩足球比分投注-网上购买竞彩足球比分-竞彩比分赔率-" + SiteString.getHZSiteName(Request);
+                keywords = "竞彩足球比分投注,网上购买竞彩足球比分,竞彩比分赔率";
+                desc = SiteString.getHZSiteName(Request)+"彩票网提供专业的竞彩足球比分投注,并提供最新的竞彩足球比分赔率信息,网上购买竞彩足球比分就上"+SiteString.getHZSiteName(Request)+"彩票网.【"+SiteString.getHZSiteName(Request)+"彩票网-专业、安全的网上购彩平台】";
+            }
+            break;
+        case "zjq":
+            if (oddstype == 1)
+            {
+                title = "竞彩足球进球数单关投注-" + SiteString.getHZSiteName(Request);
+                keywords = "竞彩足球进球数单关投注,竞彩足球进球数单关";
+                desc = SiteString.getHZSiteName(Request)+"彩票网为广大彩民提供竞彩足球进球数单关投注,极大的丰富了竞彩足球进球数玩法,更有最新的进球数单关投注赔率资讯.";
+            }
+            else if (oddstype == 3)
+            {
+                title = "竞彩足球进球数单式上传-" + SiteString.getHZSiteName(Request);
+                keywords = "竞彩足球进球数单式上传";
+                desc = SiteString.getHZSiteName(Request)+"彩票网为广大彩民提供竞彩足球进球数单式上传,方便彩民朋友更快捷的进行竞彩足球进球数单式投注.";
+            }
+            else
+            {
+                title = "竞彩足球进球数投注-网上购买竞彩足球进球数-竞彩进球数赔率-" + SiteString.getHZSiteName(Request);
+                keywords = "竞彩足球进球数投注,网上购买竞彩足球进球数,竞彩进球数赔率";
+                desc = SiteString.getHZSiteName(Request)+"彩票网提供专业的竞彩足球进球数投注,并提供最新的竞彩足球进球数赔率信息,网上购买竞彩足球进球数就上"+SiteString.getHZSiteName(Request)+"彩票网. 【"+SiteString.getHZSiteName(Request)+"彩票网-专业、安全的网上购彩平台】";
+            }
+            break;
+        case "bqc":
+            if (oddstype == 1)
+            {
+                title = "竞彩足球半全场单关投注-" + SiteString.getHZSiteName(Request);
+                keywords = "竞彩足球半全场单关投注,竞彩足球半全场单关";
+                desc = SiteString.getHZSiteName(Request)+"彩票网为广大彩民提供竞彩足球半全场单关投注,极大的丰富了竞彩足球半全场玩法,更有最新的半全场单关投注赔率资讯.";
+            }
+            else if (oddstype == 3)
+            {
+                title = "竞彩足球半全场单式上传-" + SiteString.getHZSiteName(Request);
+                keywords = "竞彩足球半全场单式上传";
+                desc = SiteString.getHZSiteName(Request)+"彩票网为广大彩民提供竞彩足球半全场单式上传,方便彩民朋友更快捷的进行竞彩足球半全场单式投注.";
+            }
+            else
+            {
+                title = "竞彩半全场投注-网上购买竞彩半全场-竞彩足球半全场赔率-" + SiteString.getHZSiteName(Request);
+                keywords = "竞彩半全场投注,网上购买竞彩半全场,竞彩足球半全场赔率";
+                desc = SiteString.getHZSiteName(Request) + "彩票网提供专业的竞彩足球半全场投注,并提供最新的竞彩足球半全场赔率信息,网上购买竞彩足球半全场就上" + SiteString.getHZSiteName(Request) + "彩票网. 【" + SiteString.getHZSiteName(Request) + "彩票网-专业、安全的网上购彩平台】";
+            }
+            break;
+        case "hh":
+                title = "竞彩足球混合过关投注-混合过关网上购买-竞彩混合过关赔率-" + SiteString.getHZSiteName(Request);
+                keywords = "竞彩足球混合过关投注,混合过关网上购买,竞彩混合过关赔率";
+                desc = SiteString.getHZSiteName(Request)+"彩票网提供专业的竞彩足球混合过关投注,并提供最新的竞彩足球混合过关赔率信息,网上购买竞彩足球混合过关就上"+SiteString.getHZSiteName(Request)+"彩票网. 【"+SiteString.getHZSiteName(Request)+"彩票网-专业、安全的网上购彩平台】";
+            break;
+        case "exy":
+                title = "主客2选1投注-竞彩主客2选1购买-竞彩足球主客二选一赔率-" + SiteString.getHZSiteName(Request);
+                keywords = "主客2选1投注,竞彩主客2选1购买,竞彩足球主客二选一赔率";
+                desc = SiteString.getHZSiteName(Request) + "彩票网提供专业的竞彩足球主客2选1投注,并提供最新的竞彩足球主客二选一赔率信息,网上购买竞彩足球主客二选一就上" + SiteString.getHZSiteName(Request) + "彩票网. 【" + SiteString.getHZSiteName(Request) + "彩票网-专业、安全的网上购彩平台】";
+            
+            break;
+        default:
+            break;
+    }
+    ViewBag.Title = title;
+    ViewBag.KeyWords = keywords;
+    ViewBag.Description = desc;
+  
+    //排行榜
+    //var weekRank = ViewBag.WeekRank as GameBiz.Core.RankReportCollection_TotalBonus_Sport;
+    //var monthRank = ViewBag.MonthRank as GameBiz.Core.RankReportCollection_TotalBonus_Sport;
+    //var rank = ViewBag.Rank as GameBiz.Core.RankReportCollection_TotalBonus_Sport;
+    var isYt = string.IsNullOrEmpty(Request["isYt"]) ? false : Convert.ToBoolean(int.Parse(Request["isYt"]));
+    var userId = ViewBag.UserId;
+    var yt = isYt ? "true" : "false";
+    var money = ViewBag.Money;
+    var schemeId = ViewBag.SchemeId;
+}
+@section css{@UserHelper.css("jc.min.css")}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a>&nbsp;&gt; &nbsp;</li>
+        <li><a target="_blank" href="#">购彩大厅</a>&nbsp;&gt;&nbsp;</li>
+        <li>竞彩足球</li>
+    </ul>
+</div>
+
+ 
+<div class="nav jczq_banner">
+    <div class="nav_logo">
+    </div>
+    <div class="nav_box">
+        <h3>
+            竞彩足球</h3>
+        <p>
+            复式截止：提前<b class="red">10</b>分钟</p>
+        <p>
+            单式截止：提前<b class="red">10</b>分钟</p>
+    </div>
+    <div class="nav_time">
+        <p>
+            销售时间：每场比赛将在官方销售截止前10分钟停止投注</p>
+        <p>
+            出票时间：周一至周五09:00-23:59 周六日9:00-1:00</p>
+    </div>
+    <div class="nav_menu">
+        <p class="nav_links">
+            <a target="_blank" href="http://" + SiteString.getHZSiteUrl(Request) + "/live/index.html">比赛直播</a>| <a target="_blank"
+                href="/lottery/jczq">开奖公告</a>| <a target="_blank" href="/help/jczq">玩法介绍</a>
+        </p>
+        <div class="clearfix">
+        </div>
+    </div>
+</div>
+<div class="menus">
+    <div class="nav_menu_a">
+        @if (oddstype == 3)
+        {
+            <a href="/jingcai/rqspf?oddstype=3"@(type == "rqspf" ? " class=cur" : "")>让球胜平负</a>
+        }
+        <a style="margin-left: 0px;*margin-left:110px;" href="/jingcai/spf@(oddstype == 2 ? "" : "?oddstype=" + oddstype)"@(type == "spf" ? " class=cur" : "")>
+            胜平负</a> <a href="/jingcai/bf@(oddstype == 2 ? "" : "?oddstype=" + oddstype)"@(type == "bf" ? " class=cur" : "")>
+                比分</a> <a href="/jingcai/zjq@(oddstype == 2 ? "" : "?oddstype=" + oddstype)"@(type == "zjq" ? " class=cur" : "")>
+                    进球数</a> <a href="/jingcai/bqc@(oddstype == 2 ? "" : "?oddstype=" + oddstype)"@(type == "bqc" ? " class=cur" : "")>
+                        半全场</a>
+        @if (oddstype != 3)
+        {
+            <a href="/jingcai/hh"@(type == "hh" ? " class=cur" : "")>混合过关1</a>
+   <a href="/jingcai/exy"@(type == "exy" ? " class=cur" : "")>主客2选1</a>
+        }
+    </div>
+    <div class="sub_nav">
+        <div class="sub_nav_b">
+            <div class="sub_nav_in" id="GameTypeList">
+                <a@(oddstype == 2 ? " class=cur" : "")  href="/jingcai/@(type == "rqspf" ? "spf" : type)">
+                    <span>过关投注</span></a>
+                @{
+                    if (type != "hh" && type != "exy")
+                    {
+                    <a @(oddstype == 1 ? " class=cur" : "") href="/jingcai/@(type == "rqspf" ? "spf" : type)?oddstype=1">
+                        <span>单关投注</span></a>
+                    <a href="/jingcai/@type?oddstype=3" @(oddstype == 3 ? " class=cur" : "") ><span>
+                        单式上传</span></a>
+                    }
+                }
+                <!--<a href="#"><span>一场决胜</span></a>-->
+                <a href="/hemai"><span>参与合买</span></a>
+                <div class="sys_clock">
+                    当前时间：<span id="sysTime">0000-00-00 00:00:00</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="content">
+    @if (oddstype != 3)
+    {
+        <div id="lotteryWrapper" class="content_left jczq">
+            <div class="sub_banner">
+                <p name="issue" class="dropdown fr">
+                    <cite class="issueselect" id="querySelect" data-key=""></cite><em style="display: none">
+                    </em>
+                </p>
+                <span class="fr">赛事回查</span> <a id="filter_switch" class="btn1" href="javascript:">赛事筛选</a>
+                <p class="dropdown showall">
+                    <cite>显示全部</cite> <em style="display: none;" id="hide_list"><b>没有隐藏比赛</b> </em>
+                </p>
+                <div class="fl">
+                    [已隐藏<em id="hideNum" class="red">0</em>场比赛]
+                    @{
+        if (type == "spf")
+        {
+                        <label title="非让球" for="secondul">
+                            <input type="checkbox" id="secondul" value="secondul" name="rq" autocomplete="off"
+                                checked="checked" />胜平负
+                        </label>
+                        <label title="让球" for="firstul">
+                            <input type="checkbox" id="firstul" value="firstul" name="rq" autocomplete="off"
+                                checked="checked" />让球胜平负
+                        </label>
+        }
+                    }
+                    <label for="endmatch">
+                        <input type="checkbox" id="endmatch" name="5macth" autocomplete="off" />显示已结束比赛</label>
+                    (<em id="endNum" class="red">0</em>)场
+                </div>
+                <div id="filter_layer" class="sub_filter">
+                    <div id="filterMatch" class="sub_filter_layer sub_filter_box">
+                        <h2>
+                            赛事名称<a id="filter_close" class="btn2" href="javascript:void 0" style="float: right;
+                                margin-right: 3px;">关闭</a></h2>
+                        <div id="leagues">
+                        </div>
+                        <div class="clearfix">
+                        </div>
+                        <div class="sub_filter_btns">
+                            <a id="filter_all" class="btn2" href="javascript:void 0">全选</a> <a id="filter_rever"
+                                class="btn2" href="javascript:void 0">反选</a> <a class="btn2" id="filter_clear" href="javascript:void 0">
+                                    全清</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="display: none;" id="bet_head" class="bet_head_empty">
+            </div>
+            <div class="bet_head">
+                @*<span class="sort_tips"></span>*@
+                @{ Html.RenderAction("jczq", "buy", new { type });}
+            </div>
+            <div id="lots" class="bet_content@(type == "hh" ? " hh" : "")">
+                
+            </div>
+            <form target="_blank" action="/buy/optimize" method="post" id="optimize">
+            <input type="hidden" value="0" name="optimizeForm.multiple" id="op_multiple" />
+            <input type="hidden" value="" name="optimizeForm.periodId" id="op_period" />
+            <input type="hidden" value="0" name="optimizeForm.units" id="op_units" />
+            <input type="hidden" value="0" name="optimizeForm.schemeCost" id="op_schemecost" />
+            <input type="hidden" value="" name="optimizeForm.passContent" id="op_pass" />
+            <input type="hidden" value="0" name="optimizeForm.itemsContent" id="op_items" />
+            <input type="hidden" value="HT" name="playType" id="op_playtype" />
+            </form>
+            <input type="hidden" value="2" name="activityType" id="activityType" />
+            <div class="bet_controller_empty">
+            </div>
+            <div id="guoGuanArea" class="bet_controller">
+                <div class="gcfc" style="opacity: 1; display: block;">
+                    <div style="display: none" class="gcfc_none">
+                        <div style="display: block;" id="ggIcon" class="icon_tip icon_tip_on">
+                        </div>
+                        <div style="display: block;" class="gcfc_tips gcfc_top">
+                            <label for="gcfc_lab">
+                                <input type="checkbox" checked="checked" value="1" id="gcfc_lab" name="gcfc_lab" />选比赛时自动弹出</label>
+                        </div>
+                    </div>
+                    <div style="display: block;" id="ggMain" class="gcfc_main">
+                        <div id="chuans" class="gcfc_left">
+                            <div class="gcfc_left_a">
+                                <div style="width: auto" class="ggfs">
+                                    <span>过关方式：</span> <span id="betNormalPassmode" class="labels"><span class="noguoguan"
+                                        id="noguoguan">请至少选择@(oddstype == 2 ? "两" : "一")场比赛</span> </span><span style="display: none"
+                                            class="manyLs" id="guoguanMany">
+                                            <div class="layerBg">
+                                                <label>
+                                                    <input type="checkbox" id="guoguanManyInput" value="" autocomplete="off" />更多过关
+                                                </label>
+                                            </div>
+                                            <div class="layer">
+                                                <div class="layer_top">
+                                                    <a id="hideGuoguanManyLayer" href="javascript:void 0">隐藏</a> <a style="text-decoration: none"
+                                                        name="gg">过关方式对照表</a></div>
+                                                <ul id="betMorePassmode" class="others">
+                                                </ul>
+                                            </div>
+                                        </span>
+                                </div>
+                                <div class="ggbs">
+                                    投注倍数：
+                                    <input type="text" onmouseover="this.select();" id="multiple" size="4" maxlength="5"
+                                        onkeyup="Tool.tonumber(this,1,99999);jcpage.dymanic_.changeMutiple();" class="muti_input"
+                                        value="1" oncontextmenu="return false;" />
+                                    <input type="button" title="试试[ALT和+]组合键" accesskey="=" id="beiUp" class="add_btn"
+                                        onclick="jcpage.dymanic_.addMutiple(1);" />
+                                    <input type="button" title="试试[ALT和-]组合键" accesskey="-" id="beiDown" class="sub_btn sub_btn_des"
+                                        onclick="jcpage.dymanic_.addMutiple(-1);" />
+                                    (最高99999倍)
+                                </div>
+                                <div class="ggbs">
+                                    方案注数：<b id="scheme_betUnits" class="red">0</b> 注 金额：<b id="scheme_betCost" class="red">0</b>
+                                    元 奖金范围：<a id="prizeDetail" class="win_more" href="#"> <b id="PrizeForecast1" class="red"
+                                        value="0">0</b>&nbsp;~&nbsp; <b id="PrizeForecast2" class="red" value="0">0</b>
+                                    </a>元</div>
+                            </div>
+                            <div class="gcfc_left_b">
+                                <div id="vbtns">
+                                    @{
+                                        <p class="plc plcnew">
+                                                   @if ((type == "spf" || type == "hh") && (oddstype == 2 || oddstype == 1))
+                                                   {
+                                                          <a id="optimization" href="javascript:void 0">奖金优化</a> @*<a id="filterBtn" href="javascript:void 0">在线过滤</a>*@
+                                                   }
+                                            <a id="save" href="javascript:void 0">免费保存</a>
+                                        </p>                                 
+                                    }
+                                    <div class="buyBtns">
+                                        <input type="button" accesskey="9" title="试试[ALT和9]组合键" value="立即认购" id="single"
+                                            class="dialogBtn" />
+                                        <input type="button" accesskey="0" title="试试[ALT和0]组合键" id="hemai" value="发起合买" class="dialogBtn" />
+                                    </div>
+                                </div>
+                                <div style="display: none" class="prizeBtns" id="pbtns">
+                                    <input type="button" value="奖金计算" title="奖金计算" id="maxPrizeBtn" class="pubBtn" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="gcfc_right">
+                            <a id="gcfc_cc" href="javascript:void 0">已选<strong id="scheme_matchCount">0</strong>场</a>
+                        </div>
+                        <div class="clear">
+                        </div>
+                    </div>
+                    <div class="gcfc_tzd">
+                        <div class="tzd_top">
+                            投注内容<span><a id="clear_box" href="javascript:void(0)">清空列表</a></span>
+                        </div>
+                        <div class="tzd_bottom">
+                            <table width="240" border="0" class="tzd_tab">
+                                <thead>
+                                    <tr>
+                                        @{
+                                                   if (type == "spf")
+                                                   {
+                                            <td width="32" height="25" align="center">
+                                                场次
+                                            </td>
+                                            <td width="66" align="center">
+                                                主队
+                                            </td>
+                                            <td width="30" align="center">
+                                                让球
+                                            </td>
+                                            <td width="72" align="center">
+                                                投注
+                                            </td>
+                                            <td align="center">
+                                                胆
+                                            </td>
+                                                   }
+                                                   else if (type == "hh")
+                                                   {
+                                            <td width="32" height="25" align="center">
+                                                场次
+                                            </td>
+                                            <td width="66" align="center">
+                                                主队
+                                            </td>
+                                            <td width="120" align="center">
+                                                投注
+                                            </td>
+                                            <td align="center">
+                                                胆
+                                            </td>
+                                                   }
+                                                   else if (type == "bf" || type == "zjq" || type == "bqc")
+                                                   {
+                                            <td width="56" height="29" align="center">
+                                                场次
+                                            </td>
+                                            <td width="73" align="center">
+                                                主队
+                                            </td>
+                                            <td width="" align="center">
+                                                投注
+                                            </td>
+                                            <td width="20" align="center">
+                                                胆
+                                            </td>
+                                                   }
+                                                   else if (type == "exy")
+                                                   {
+                                            <td width="32" height="25" align="center">
+                                                场次
+                                            </td>
+                                            <td width="54" align="center">
+                                                主队
+                                            </td>
+                                            <td width="54" align="center">
+                                                客队
+                                            </td>
+                                            <td width="80" align="center">
+                                                投注
+                                            </td>
+                                            <td align="center">
+                                                胆
+                                            </td>
+                                                   }
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody id="floatBox">
+                                </tbody>
+                            </table>
+                            <div class="gcfc_nocc" id="zero_match">
+                                投注单为空！</div>
+                        </div>
+                        <div class="gcfc_piece">
+                        </div>
+                    </div>
+                </div>
+                <div id="gcfc_nav" class="gcfc_nav">
+                    隐藏投注单</div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div id="lotteryWrapper" class="content_left">
+            <div class="conbox">
+                <div class="buy_single jczq">
+                    <div class="single_chk">
+                        <a class="fr" href="javascript:void(0)" target="_blank">上传功能使用帮助>> </a>
+                        <input id="nowup" type="radio" checked="checked" value="0" name="radiobutton">
+                        <label for="nowup">
+                            选择场次</label>
+                        <input id="ccnowup" type="radio" value="0" name="radiobutton">
+                        <label for="ccnowup">
+                            上传包含场次号方案</label>
+                        @if (!isYt)
+                        {
+                            <input id="laterup" type="radio" value="1" name="radiobutton" />
+                            <label for="laterup">
+                                先发起后上传</label>
+                        }
+                    </div>
+                    <div id="nowup_pannel">
+                        <div class="match_step">
+                            <h5>
+                                选择场次</h5>
+                            <span class="step_1"></span>
+                        </div>
+                        <div id="step1">
+                            <div class="match_select">
+                                <span>您已选择比赛（ <em id="betNum">0</em> ）场
+                                    <input id="clearBtn" class="upbtn" type="button" value="清空所选" name="clear">
+                                </span><a id="filter_switch" class="btn1" href="javascript:">赛事筛选</a>
+                                <div id="filter_layer" class="sub_filter">
+                                    <div id="filterMatch" class="sub_filter_layer sub_filter_box">
+                                        <h2>
+                                            赛事名称<a id="filter_close" class="btn2" style="float: right; margin-right: 3px;" href="javascript:void 0">关闭</a></h2>
+                                        <div class="sub_filter_box" id="leagues">
+                                        </div>
+                                        <div class="clearfix">
+                                        </div>
+                                        <div class="sub_filter_btns">
+                                            <a id="filter_all" class="btn2" href="javascript:void 0">全选</a> <a id="filter_rever"
+                                                class="btn2" href="javascript:void 0">反选</a> <a id="filter_clear" class="btn2" href="javascript:void 0">
+                                                    全清</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="matchList" class="match_list">
+                                <dl>
+                                </dl>
+                                <div class="clear">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="match_step">
+                            <span class="step_2"></span>
+                            <h5>
+                                选择过关方式</h5>
+                        </div>
+                        <div id="step2" class="second_step clear">
+                            <label for="radio2">
+                                <input type="radio" name="chuan" disabled="disabled" value="2_1" id="radio2" />2串1</label>
+                            <label for="radio3">
+                                <input type="radio" name="chuan" disabled="disabled" value="3_1" id="radio3" />3串1</label>
+                            <label for="radio4">
+                                <input type="radio" name="chuan" disabled="disabled" value="4_1" id="radio4" />4串1</label>
+                            <label for="radio5">
+                                <input type="radio" name="chuan" disabled="disabled" value="5_1" id="radio5" />5串1</label>
+                            <label for="radio6">
+                                <input type="radio" name="chuan" disabled="disabled" value="6_1" id="radio6" />6串1</label>
+                            <label for="radio7">
+                                <input type="radio" name="chuan" disabled="disabled" value="7_1" id="radio7" />7串1</label>
+                            <label for="radio8">
+                                <input type="radio" name="chuan" disabled="disabled" value="8_1" id="radio8" />8串1</label>
+                        </div>
+                        <div class="match_step">
+                            <span class="step_3"></span>
+                            <h5 class="upload">
+                                上传文件 <a target="_blank" href="/staticHtml/help/goucai/dsgs1.html">上传格式说明</a>
+                            </h5>
+                        </div>
+                        <div id="step3" class="third_step">
+                            <div class="up_description">
+                                @{Html.RenderPartial("jczq/" + (type == "rqspf" ? "spf" : type) + "_des");}
+                            </div>
+                            <div class="up_line">
+                            </div>
+                            <div class="up_body clear">
+                                <span class="single_txt">
+                                    <input id="upFileVal" class="up_text" type="text" value="请选择文件" readonly="readonly"
+                                        name="upFileVal" />
+                                </span>
+                                <form method="post" action="/buy/Upload" enctype="multipart/form-data" id="importCodeForm">
+                                <input id="upFile" class="up_file" type="file" accesskey="text/plain" multiple="true"
+                                    name="upload_file" />
+                                </form>
+                                <label for="upSbutton">
+                                    <input id="upSbutton" class="upbtn" type="button" value="选择文件">
+                                </label>
+                                <input id="upFileBtn" class="upbtn" type="button" style="" value="上传">
+                                <div id="loading" class="loading" style="display: none;">
+                                </div>
+                            </div>
+                            <div id="upFileQueue">
+                            </div>
+                            <p>
+                                1、请严格按照“标准格式样本”格式上传方案，否则网站不保证为您做过关统计以及历史战绩。
+                                <br>
+                                2、文件格式必须是文本文件。
+                                <br>
+                                3、由于上传的文件较大，会导致上传时间较长，请耐心等待。
+                            </p>
+                        </div>
+                        <div class="match_step">
+                            <span class="step_4"></span>
+                            <h5>
+                                选择倍数</h5>
+                        </div>
+                        <div id="step4" class="fourth_setp">
+                            投注倍数：
+                            <input id="bei" class="muti_input" type="text" size="5" value="1">
+                            <input id="beiUp" class="add_btn" type="button" accesskey="=">
+                            <input id="beiDown" class="sub_btn sub_btn_des" type="button" accesskey="-">
+                            (最高99999倍)
+                            <p>
+                                总注数： <em id="items" class="fred">0</em> 注 倍数： <em id="multiple" class="fred">1</em>
+                                倍 金额： <em id="sum" class="fred">0</em> 元
+                                @if (isYt)
+                                {
+                                    <span id="schemeTip" class="scheme_showtip onFocus"><b>该方案上传的浮动金额范围： <i>0</i> ~ <i>
+                                        0</i> 元 </b></span>
+                                }
+                            </p>
+                        </div>
+                    </div>
+                    <div id="laterup_pannel" class="laterup">
+                        <label for="buySum">
+                            设置方案金额：</label>
+                        <input id="buySum" type="text" onkeyup="this.value=this.value.replace(/[^\d]/g,'');if(this.value<0)this.value=2"
+                            placeholder="最少2元" value="2">元 <span  class="schemetip">方案金额浮动范围： <b id="minSum">2</b> ~ <b id="maxSum">2</b> 元 </span>
+                        <dl>
+                            <dt>浮动金额说明：</dt>
+                            <dd>
+                                此功能可有效使用资金，在发起人预投设置金额的基础上，实际上传方案可以上下浮动 <b class="fred">30</b> %，如发起人设置100元的预投，可以上传70-130元间的单式。
+                            </dd>
+                            <dd>
+                                1.上传方案>预计金额时，发起人请注意及时追加保底，此单可以继续参与跟单。</dd>
+                            <dd>
+                                2.上传方案< 预计金额时，发起人在实际上传方案的时候发起金额不能少于该方案当前已认购的总金额。</dd>
+                            <dd>
+                                3.上传方案=预计金额时，认购金额不发生变化。</dd>
+                        </dl>
+                    </div>
+                    <div class="purchasing_sub">
+                        <p>
+                            @if (isYt)
+                            {
+                                <input id="scheme_up_btn" class="dialogBtn" type="button" value="上传方案" />
+                            }
+                            else
+                            {
+                                <input id="single" class="dialogBtn" type="button" title="个人购买" value="个人购买" />
+                                <input id="hemai" class="dialogBtn" type="button" title="发起合买" value="发起合买" /> 
+                            }
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="content_right">
+        <div class="content_pub  web_kj">
+            <div id="cpPrize" class="cp_slide">
+                <div class="cp_slide_nav">
+                    <label class="cp_slide_tip">
+                        中奖榜单</label>
+                    <ul>
+                        <li class="on" value="0"><a href="javascript:void 0">周榜</a></li>
+                        <li class="" value="1"><a href="javascript:void 0">月榜</a></li>
+                        <li class="no_bg" value="2"><a href="javascript:void 0">总榜</a></li>
+                    </ul>
+                </div>
+                <div class="prizer_title">
+                    <span class="col1">排名</span><span class="col2">用户名</span><span class="col3">奖金(元)</span></div>
+                <div class="cp_slide_body">
+                    <div style="" class="cp_slide_con">
+                        <ul>
+                            @{
+                                var i = 1;
+                                foreach (var item in weekRank.RankInfoList)
+                                {
+                                <li><span class="col no@(i)"></span><span class="col2"><a target="_blank" href="/blog/standings/@item.UserId">@item.UserDisplayName</a></span><span
+                                    class="col3">@item.BonusMoney.ToString("0.00")</span></li>
+                                            i++;
+                                }
+                            }
+                        </ul>
+                    </div>
+                    <div class="cp_slide_con" style="display: none;">
+                        <ul>
+                            @{
+                                i = 1;
+                                foreach (var item in monthRank.RankInfoList)
+                                {
+                                <li><span class="col no@(i)"></span><span class="col2"><a target="_blank" href="/blog/standings/@item.UserId">@item.UserDisplayName</a></span><span
+                                    class="col3">@item.BonusMoney.ToString("0.00")</span></li>
+                                            i++;
+                                }
+                            }
+                        </ul>
+                    </div>
+                    <div style="display: none;" class="cp_slide_con">
+                        <ul>
+                            @{
+                                i = 1;
+                                foreach (var item in rank.RankInfoList)
+                                {
+                                <li><span class="col no@(i)"></span><span class="col2"><a target="_blank" href="/blog/standings/@item.UserId">@item.UserDisplayName</a></span><span
+                                    class="col3">@item.BonusMoney.ToString("0.00")</span></li>
+                                            i++;
+                                }
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+<script type="text/javascript">
+    var gameCode = "jczq";
+    var gameName = "竞彩足球";
+    var Ytmoney = "@money";
+    var isYt = @(yt == "false" ? 0 : 1);
+    var play = "@type";
+    var oddstype = @oddstype;
+    var schemeId = "@schemeId";
+    var userId = "@userId";
+    var nowtime;
+    var isexy = play == "exy" ? true : false;
+    $.get("/home/getServerTime", function (t) {
+    if (t.servertime != null && t.servertime != "") {
+        nowtime = t.servertime;
+    }
+    });
+</script>
+@UserHelper.js("global.min.js")
+@if (oddstype == 3)
+{
+    @UserHelper.js("dssc.js")
+}
+else
+{
+    @UserHelper.js("jczq.js")
+}
+@{Html.RenderPartial("box_confirm_gg");}

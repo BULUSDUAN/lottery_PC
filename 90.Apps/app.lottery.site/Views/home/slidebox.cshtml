@@ -1,0 +1,30 @@
+﻿@using GameBiz.Core
+@{
+    var lhlist = ViewBag.Ads as SiteMessageBannerInfo_Collection;
+}
+@if (lhlist != null)
+{
+    <div id="slideBox" class="slideBox">
+        <div class="hd">
+            <ul>
+                @{for (var i = 0; i < lhlist.ListInfo.Count; i++)
+                  {
+                    <li></li> 
+                  }}
+            </ul>
+        </div>
+        <div class="bd">
+            <ul>
+                @{
+                  foreach (var lhitem in lhlist.ListInfo.Where(lhitem => lhitem.IsEnable))
+                  {                      
+                    <li _src="url(@lhitem.ImageUrl)" style="background:#ffffff center 0 no-repeat;"><a target="_blank" href="@lhitem.JumpUrl">
+                        <img src="@lhitem.ImageUrl"  alt="@lhitem.BannerTitle"/></a></li>    
+                  }
+                }
+            </ul>
+        </div>
+        <a class="prev" href="javascript:void(0);" style="display: none;"></a><a class="next"
+            href="javascript:void(0);" style="display: none;"></a>
+    </div>
+}

@@ -1,0 +1,4 @@
+.hongbao1{ left:0;  no-repeat;position: fixed;top: 150px;z-index: 99999;}
+.hongbao2{ right:0; no-repeat;position: fixed;top: 150px;}
+#close_hongbao1{ display:block;position:relative; left:167px; bottom:-8px; width:23px; height:23px; background:url(pic_close_4c91cb3.png);}
+#close_hongbao2{ display:block;position:relative; left:-8px; bottom:-8px; width:23px; height:23px; background:url(pic_close_4c91cb3.png);}

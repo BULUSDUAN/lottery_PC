@@ -1,0 +1,114 @@
+﻿@using External.Core
+@using External.Core.Celebritys;
+@{
+    var curyear =DateTime.Now.Year;
+    var curMonth = DateTime.Now.Month;
+    var selectedmonth = ViewBag.month;
+    var selectedYear = ViewBag.Year;
+    var monthlen = selectedYear == curyear ? DateTime.Now.Month : 12;
+    var minYear = 2014;
+    var buylist = ViewBag.BuyList as WinnerModelSchemeInfo_Collection;
+    var totalmoney =buylist!=null&&buylist.TotalCount>0? buylist.ModelSchemeList.Select(o => o.CompleteIssuseMoney).Sum():0;
+    var bonusmoney =buylist!=null&&buylist.TotalCount>0? buylist.ModelSchemeList.Select(o => o.TotalBonusMoney).Sum():0;
+    
+}
+<div class="buylist">
+    <div class="timetab clearfix">
+        <div class="yearTab">
+            <div id="yearTimeTag" val="@(selectedYear)">@(ViewBag.Year)年</div>
+            <div id="yearTimeList" class="yearlist" style="display: none;">
+                @for (int i = curyear; i >= minYear; i--)
+                {
+                    <a val="@(i)" href="javascript:;">@(i)年</a>
+                }
+            </div>
+        </div>
+        <div class="monthTab">
+            <div id="monthTimeTag" val="@selectedmonth">@(selectedmonth)月</div>
+            <div id="monthTimeList" class="yearlist layerlist" style="display: none;">
+                 @for (int j = 1; j <= monthlen; j++)
+                {
+                    <a val="@j" href="javascript:;">@(j)月</a> 
+                }
+            </div>
+        </div>
+        <div class="btn">
+            <a href="javascript:void(0)" class="bg2 search_btn01" id="btn_buy_search">查询</a>
+        </div>
+        <div class="bztjnum fr">
+            总投入：<b>@(totalmoney == 0 ? "0" : totalmoney.ToString("####"))</b>元&nbsp;&nbsp;累计盈利：<b>@(bonusmoney == 0 ? "0" : bonusmoney.ToString("f2"))</b>元
+        </div>
+    </div>
+    <table id="mymxObj">
+        <thead>
+            <tr>
+                <th width="86">
+                    购买时间
+                </th>
+                <th width="150">
+                    模型名称
+                </th>
+                <th width="90">
+                    金额
+                </th>
+                <th width="100">
+                    当前状态
+                </th>
+                <th width="130"></th>
+                <th width="120">
+                    已购金额
+                </th>
+                <th width="120">
+                    奖金
+                </th>
+                <th width="120">
+                    盈亏
+                </th>
+                <th width="60">
+                    详情
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            @if (buylist != null && buylist.TotalCount > 0)
+            {
+                foreach (var item in buylist.ModelSchemeList.OrderByDescending(p => p.CreateTime))
+                {
+                    <tr>
+                        <td>@(item.CreateTime.ToString("MM-dd HH:mm"))
+                        </td>
+                        <td class="no_center">
+                            <a href="/artists/info/?mid=@item.ModelId.ToLower()">
+                                <div class="clearfix"><span class="name">@item.ModelName</span></div>
+                            </a>
+                        </td>
+                        <td class="red">@(item.TotalMoney.ToString("####"))元</td>
+                        @if (item.SchemeProgressStatus == SchemeProgressStatus.ModelRunning)
+                        {
+                            <td class="blue">执行中</td>
+                        }
+                        else
+                        { 
+                            <td class="blue">执行完毕</td>
+                        }
+                        <td><span class="gray9">总共@(item.TotalChaseIssuseCount)期，已执行@(item.CompleteIssuseCount)期</span></td>
+                        <td class="red">@(item.CompleteIssuseMoney == 0 ? "0" : item.CompleteIssuseMoney.ToString("f2"))元</td>
+                        <td>@(item.TotalBonusMoney == 0 ? "-" : item.TotalBonusMoney.ToString("f2"))</td>
+                        <td>@(item.CurrLossMoney == 0 ? "-" : item.CurrLossMoney.ToString("f2"))</td>
+                        <td>
+                            <a href="/artists/chaseplan/@item.ModelKeyLine.ToLower()" class="blue" target="_blank">查看</a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<div style="text-align: right">
+    @ViewHelpers.Pager3("reloadList", ViewBag.PageIndex, ViewBag.PageSize, buylist != null && buylist.TotalCount > 0 ? buylist.TotalCount : 0)
+</div>
+<script type="text/javascript">
+    var curyear=@curyear;
+    var curmonth=@curMonth;
+</script>

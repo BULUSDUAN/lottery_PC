@@ -1,0 +1,35 @@
+﻿@{    
+    Layout = "../Shared/_LayoutFoud.cshtml";
+    ViewBag.Title = "细则说明";
+    ViewBag.keywords = "细则说明";
+}
+
+<div class="center mt10">
+@{Html.RenderPartial("menuFoud", "Member");}
+@{Html.RenderPartial("toptipFoud", "Member");}
+    <div class="new_buy_center">
+        <div class="betorder_top clearfix">
+            <ul>
+                <li ><a href="/member/integraldetail" >返点明细</a></li>
+@*                <li><a href="/member/integralextract">返点提取</a></li>
+                <li><a href="/member/drawingsrecordfoud">提取记录</a></li>
+                <li><a href="/member/integralinto">返点转入</a></li>
+                 <li><a href="/member/integralintodetail">转入记录</a></li>*@
+                 <li class="betorder_topSelected"><a href="/member/jf">我的返点</a></li>
+            </ul>
+        </div>
+        <div class="betorder_con clearfix">
+            <div class="scheme">
+            <div class="scheme-show " style="margin-left: 10px;">
+                <a href="/member/jf" checklg="/member/myTc">我的返点</a>
+            </div>
+            <div class="scheme-show xzscheme">
+                <a href="/member/jfsm"><i></i>细则说明</a>
+            </div>
+        </div>
+        <div class="xzsm clearfix">
+         
+        </div>
+        </div>
+    </div>
+</div>

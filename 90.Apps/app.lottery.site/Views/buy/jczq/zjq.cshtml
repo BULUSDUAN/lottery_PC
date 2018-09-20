@@ -1,0 +1,175 @@
+@using System.Text
+@using app.lottery.site.cbbao.Models
+@{
+    //var type = ViewBag.Type;
+    var requestDate = ViewBag.Date;
+    DateTime minSaleDate = ViewBag.MinDate;
+    var match = ViewBag.Match as List<JczqWeb>;
+    //联赛信息
+    var leagues = new List<string>();
+    //单关比赛的matchid
+    var dgMatchid = new List<string>();
+    //截止比赛的matchid
+    var endedMatchid = new List<string>();
+    var iscurrent = requestDate != minSaleDate.ToString("yyyy-MM-dd");
+
+    if (match != null && match.Count > 0)
+    {
+        var abbr = string.Empty;
+        var state = string.Empty;
+        var matchid = string.Empty;
+        var ptype = string.Empty;
+        var isDg = 0;
+        var pri = false;
+        var sale = 0;
+        var result = string.Empty;
+        var matchdata = string.Empty;
+        var title = string.Empty;
+        DateTime startTime = DateTime.Now;
+        StringBuilder thead;
+
+        foreach (var item in match)
+        {
+            var stime = Convert.ToDateTime(item.StartDateTime);
+            var stopTime = Convert.ToDateTime(item.FSStopBettingTime);
+            state = item.State;
+            matchid = item.MatchId;
+            ptype = item.PrivilegesType;
+            sale = stopTime > DateTime.Now ? 1 : 0;
+
+            if (sale == 1)
+            {
+                if (!leagues.Contains(item.LeagueName))
+                {
+                    leagues.Add(item.LeagueName);
+                }
+            }
+            else
+            {
+                endedMatchid.Add(matchid);
+            }
+            isDg = state.Contains("1") && !ptype.Contains("3") ? 1 : 0;
+            if (isDg == 1)
+            {
+                dgMatchid.Add(matchid);
+            }
+
+            if (matchdata != item.MatchData)
+            {
+                //上一个table结束
+                if (!string.IsNullOrEmpty(matchdata))
+                {
+                    @(new HtmlString("</tbody></table>"))
+                }
+
+                matchdata = item.MatchData;
+                try
+                {
+                    startTime = Convert.ToDateTime(matchdata.Substring(0, 2) + "-" + matchdata.Substring(2, 2) + "-" + matchdata.Substring(4, 2));
+                }
+                catch (Exception ex)
+                {
+
+
+                }
+                title = startTime.ToString("yyyy年MM月dd日") + " " + SiteConvert.Week_CN(startTime.DayOfWeek);
+
+                //开始新的table    
+                thead = new StringBuilder();
+                thead.Append("<table class=\"lot_con\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><colgroup><col width=\"86\"/><col width=\"54\"/><col width=\"174\"/><col width=\"504\"/><col width=\"47\"/><col width=\"133\"/></colgroup>");
+                thead.Append("<thead><tr><th height=\"32\" colspan=\"6\">");
+                thead.Append("<div title=\"" + title + "\" id=\"a_" + startTime.ToString("yyyyMMdd") + "\" class=\"tps hide_a\">");
+                thead.Append("<span>" + title + "&nbsp;&nbsp;</span><i class=\"line-01\"></i></div></th></tr></thead><tbody>");
+                @(new HtmlString(thead.ToString()))
+            }
+            abbr = item.MatchIdName + "|" + item.HomeTeamName + "|" + item.GuestTeamName + "|" + item.LetBall + "|" + stopTime.ToString("yyyy/MM/dd HH:mm:ss");
+            //var d = new DateTime(endTime.Year, endTime.Month, endTime.Day-1);
+            pri = (ptype.Contains("3") || ptype.Contains("2")) && (ptype.Contains("7") && !state.Contains("5"));
+            <tr state="@state" id="@matchid" abbr="@abbr" name="@startTime.ToString("yyyyMMdd")" league="@item.LeagueName" sale="@sale" stop="undefined" pri="@ptype" class="mtr@(sale == 1 || iscurrent ? "" : " hide_tr")">
+                <td>
+                    <span hover="xulie_h" title="@item.MatchIdName" onclick=" jcpage.dymanic_.ftdClick(@matchid, '@item.MatchIdName') " class="xulie">@item.MatchNumber</span>
+                    <a style="color: #FFFFFF; background-color: @(string.IsNullOrEmpty(item.LeagueColor) ? "ff3d00" : item.LeagueColor)" title="@item.LeagueName" @SiteString.GetLeagueHref(item.LeagueId) class="saiming aochao">@item.ShortLeagueName</a>
+                </td>
+                <td mtime="@Convert.ToDateTime(item.StartDateTime).ToString("HH:mm")" title="截止时间:@stopTime.ToString("yyyy-MM-dd HH:mm")">
+                    @if (sale == 0 && item.FullHomeTeamScore == -1 && item.FullGuestTeamScore == -1)
+                    {
+                        <span style="color: #e70000;">截止</span>
+                        <span class="e_time hide" title="截止时间:@stopTime.ToString("yyyy-MM-dd HH:mm")">@stopTime.ToString("HH:mm")</span>
+                    }
+                    else
+                    {
+                        <span class="e_time" title="截止时间:@stopTime.ToString("yyyy-MM-dd HH:mm")">@stopTime.ToString("HH:mm")</span>
+                    }
+                    <span class="b_time hide" title="开赛时间:@stime.ToString("yyyy-MM-dd HH:mm")">@stime.ToString("HH:mm")</span>
+                </td>
+                <td align="center" class="team">
+                    <a @SiteString.GetTeamHref(item.HomeTeamId) title="@item.HomeTeamName" class="home">@item.ShortHomeTeamName</a>
+                    <i>
+                        @if (sale == 0 && item.FullHomeTeamScore > -1 && item.FullGuestTeamScore > -1)
+                        {
+                            <span style="color: #ff3d00; font-weight: bold;">@item.FullHomeTeamScore:@item.FullGuestTeamScore</span>
+                        }
+                    </i>
+                    <a @SiteString.GetTeamHref(item.GuestTeamId) title="@item.GuestTeamName" class="guest">@item.ShortGuestTeamName</a>
+                </td>
+                <td class="bet_area bet_area_zjq shenpf@(isDg == 1 ? " danguanbor zjqdanguanbor" : "")">
+                    <div class="dg_div">
+                        @{
+                            if (isDg == 1)
+                            {
+                                <div class="zjqdanguan" title="本场比赛该玩法可以投注单关"></div>
+                            }
+                        }
+                        <ul class="firstul_zjq">
+                            @if (sale == 1)
+                            {
+                                @ViewHelpers.ZjqView(matchid, "0", false, pri, item.ZJQ.JinQiu_0_Odds, isDg, "-1")
+                                @ViewHelpers.ZjqView(matchid, "1", false, pri, item.ZJQ.JinQiu_1_Odds, isDg, "-1")
+                                @ViewHelpers.ZjqView(matchid, "2", false, pri, item.ZJQ.JinQiu_2_Odds, isDg, "-1")
+                                @ViewHelpers.ZjqView(matchid, "3", false, pri, item.ZJQ.JinQiu_3_Odds, isDg, "-1")
+                                @ViewHelpers.ZjqView(matchid, "4", false, pri, item.ZJQ.JinQiu_4_Odds, isDg, "-1")
+                                @ViewHelpers.ZjqView(matchid, "5", false, pri, item.ZJQ.JinQiu_5_Odds, isDg, "-1")
+                                @ViewHelpers.ZjqView(matchid, "6", false, pri, item.ZJQ.JinQiu_6_Odds, isDg, "-1")
+                                @ViewHelpers.ZjqView(matchid, "7", false, pri, item.ZJQ.JinQiu_7_Odds, isDg, "-1")
+                            }
+                            else
+                            {
+                                result = item.ZJQ_Result;
+                                @ViewHelpers.ZjqView(matchid, "0", false, pri, item.ZJQ.JinQiu_0_Odds, isDg, result)
+                                @ViewHelpers.ZjqView(matchid, "1", false, pri, item.ZJQ.JinQiu_1_Odds, isDg, result)
+                                @ViewHelpers.ZjqView(matchid, "2", false, pri, item.ZJQ.JinQiu_2_Odds, isDg, result)
+                                @ViewHelpers.ZjqView(matchid, "3", false, pri, item.ZJQ.JinQiu_3_Odds, isDg, result)
+                                @ViewHelpers.ZjqView(matchid, "4", false, pri, item.ZJQ.JinQiu_4_Odds, isDg, result)
+                                @ViewHelpers.ZjqView(matchid, "5", false, pri, item.ZJQ.JinQiu_5_Odds, isDg, result)
+                                @ViewHelpers.ZjqView(matchid, "6", false, pri, item.ZJQ.JinQiu_6_Odds, isDg, result)
+                                @ViewHelpers.ZjqView(matchid, "7", false, pri, item.ZJQ.JinQiu_7_Odds, isDg, result)
+                            }
+                        </ul>
+                    </div>
+                </td>
+                <td class="datas fx_zjq">
+                    @ViewHelpers.yox(item.Mid,6)
+                </td>
+                <td class="odds_data" id="odd_@(matchid)">
+                    <div id="odd_@(matchid)_oz">
+                        <span id="odd_@(matchid)_1" class="op">@item.WinOdds</span>
+                        <span id="odd_@(matchid)_2" class="op">@item.FlatOdds</span>
+                        <span id="odd_@(matchid)_3" class="op">@item.LoseOdds</span>
+                    </div>
+                </td>
+            </tr>
+        }
+        @(new HtmlString("</tbody></table>"))
+    }
+    else
+    {
+        <div class="nords" id="nords"><strong>当前无开售赛事，请等待官方公布新赛程！</strong></div>
+    }
+}
+<script type="text/javascript">
+    var leaguesRelate=@(new HtmlString(Common.JSON.JsonHelper.Serialize(leagues)));
+    var requestDate = "@requestDate";
+    var minSaleDate = new Date("@(minSaleDate.Year)", "@(minSaleDate.Month)", "@(minSaleDate.Day)");
+    var dgMatch = @(new HtmlString(Common.JSON.JsonHelper.Serialize(dgMatchid)));
+    var endMatch = @(new HtmlString(Common.JSON.JsonHelper.Serialize(endedMatchid)));
+</script>

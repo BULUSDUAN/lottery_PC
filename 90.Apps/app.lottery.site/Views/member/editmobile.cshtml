@@ -1,0 +1,379 @@
+﻿@using System.ServiceModel.Description
+@using app.lottery.site.Models;
+@{
+    ViewBag.Title = "手机服务 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "手机服务, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var user = ViewBag.User as app.lottery.site.Models.CurrentUserInfo;
+    Layout = null;
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+}
+    <div class="xgmm_main">
+    @if (user != null && user.IsAuthenticationMobile)
+    {
+        
+            <div class="info_zl_ico">
+                <span class="member-rz rz3_ok" style="margin-top: 15px; margin-left: 50px;"></span>
+                <span  class="ml10 blue " data-t="edit" style="cursor: pointer">修改手机、</span> 
+                <span  class="ml10 blue" data-t="delete" style="cursor: pointer">解除绑定</span>
+            </div>
+            <div class="main_con">
+                <div class="main_con clearfix ">
+                    <div class="edit-progress clearfix" show-type="edit">
+                        <div class="edit_pro1 clearfix">
+                            <div class="speed"><span style="width: 35%"></span></div>
+                            <em class="speed_pro spd1 selected">1</em>
+                            <em class="speed_pro spd2 ">2</em>
+                            <em class="speed_pro spd3">3</em>
+                        </div>
+                        <div class="edit_pro2 clearfix">
+                            <p class="selected">验证原手机号</p>
+                            <p>验证新手机号</p>
+                            <p style="width: 160px;">修改成功</p>
+                        </div>
+                    </div>
+                    <div class=" delete-progress clearfix" show-type="delete" style="display: none">
+                        <div class="edit_pro1 clearfix">
+                            <div class="speed"><span style="width: 50%"></span></div>
+                            <em class="speed_pro spd1 selected">1</em>
+                            <em class="speed_pro spd2 ">2</em>
+                        </div>
+                        <div class="edit_pro2 clearfix">
+                            <p class="selected">验证原手机号</p>
+                            <p >解绑成功</p>
+                        </div>
+                    </div>
+                    <div class="box_con clearfix">
+                        <div class="first_con clearfix">
+                            <ul class="first">
+                                <li style="line-height: 40px">
+                                    <span class="sp_1">原手机号码：</span>
+                                    <span class="sp_2">@(!user.IsAuthenticationMobile ? "" : SiteString.EncodeMobile(user.MobileInfo.Mobile))</span>
+                                    <input type="hidden" id="txt_moblie" value="@user.MobileInfo.Mobile"/>
+                                </li>
+                                <li style="display: none; line-height: 40px" ><span class="sp_1" ></span>
+                                    <span  id="errbox1_mobile" class="err_con"><i class="fail-icon"></i><span class="err-msg" id="moblie_err" ></span></span>
+                                </li>
+                                <li style="line-height: 40px">
+                                    <span class="sp_1">请输入验证码：</span>
+                                    <span class="sp_2"><input type="text" class="code" maxlength="6" id="code" placeholder="验证码为6位数字"/></span>
+                                    <span class="sp_3"><input type="button" value="免费获取验证码" id="Btn_GetvalidationCode" class="validationCode"/></span>
+                                </li>
+                                <li style="display: none; line-height: 40px" ><span class="sp_1" ></span>
+                                    &nbsp;<span  id="errbox1_mobile"  class="err_con"><i class="fail-icon"></i><span class="err-msg" id="code_err" ></span></span>
+                                </li>
+                                <li style="line-height: 40px" show-type="edit">
+                                    <span class="sp_1"></span>
+                                    <span class="sp_2">
+                                        <input class="btn_next" id="btn_qr" type="button" value="确认" />
+                                        <input class="btn_fh" id="btn_fh" type="button" value="返回" onclick="mobile_buttomclick()"/>
+                                
+                                    </span>
+                                </li>
+                                <li style="line-height: 40px; display: none" show-type="delete"  >
+                                    <span class="sp_1"></span>
+                                    <span class="sp_2">
+                                        <input type="button" value="确认解除" class="btn_next"  id="btn_jc" />
+                                    </span>
+                                </li>
+                              
+                            </ul>
+                        </div>
+                        <div class="second_con clearfix"  style="display: none">
+                            <ul class="second">
+                                <li style="line-height: 40px">
+                                    <span class="sp_1">请输入新手机号码：</span>
+                                    <span class="sp_2"><input type="tel" id="new_moblie" class="code"  placeholder="请输入新手机号码" maxlength="11"/></span>
+                                </li>
+                                <li style="display: none; line-height: 40px" ><span class="sp_1" ></span>
+                                    <span id="errbox1_mobile"  class="err_con" style="line-height: 40px;"><i class="fail-icon"></i><span class="err-msg" id="newmoblie_err"></span></span>
+                                </li>
+                                <li style="line-height: 40px">
+                                    <span class="sp_1">请输入验证码：</span>
+                                    <span class="sp_2"><input type="tel" id="new_validationCode" placeholder="请输入验证码" maxlength="6" class="code"/></span>
+                                    <span class="sp_3"><input type="button" value="免费获取验证码" id="Btn_GetNewvalidationCode" class="validationCode"/></span>
+                                </li>
+                                <li style="display: none; line-height: 40px" ><span class="sp_1" ></span>
+                                    &nbsp;<span  id="errbox1_mobile"  class="err_con"><i class="fail-icon"></i><span class="err-msg" id="newcode_err" ></span></span>
+                                </li>
+                                <li>
+                                    <span class="sp_1"></span>
+                                    <span class="sp_2" style="margin-top: 12px;">
+                                        <input class="btn_next" id="btn_next" type="button" value="下一步">
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="third_con clearfix" style="display: none">
+                            <dl class="third">
+                                <dt>您已完成绑定手机</dt>
+                                <dd class="yes">
+                                </dd>
+                                <dd>手机号码用于接收短信验证码、账户异动提醒，掌握安全动态</dd>
+                            </dl>
+                        </div>
+                        <div class="fourth_con" style="display: none">
+                            <dl class="third">
+                                <dt>您已完成解除绑定</dt>
+                                <dd class="yes">
+                                </dd>
+                                <dd>手机号码用于接收短信验证码、账户异动提醒，掌握安全动态，未绑定手机您的账户安全系数将会降低！</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+          
+                <div class="wxts_con" id="wxts_1">
+                    <p>温馨提示：</p>
+                    <p>
+                        1.运营商发送短信可能会有延迟，请您耐心等待几分钟，避免多次重新发送以致输入验证码错误。
+                    </p>
+                    <p>2.若您确认手机无法接收到验证短信，请联系客服@(SiteString.tel),协助您完成身份验证。</p>
+                </div>
+                <div class="wxts_con" style="display: none" id="wxts_2">
+                    <p>温馨提示：</p>
+                    <p>
+                        1.网站所有活动参与资格与条件都需要完成手机绑定，未进行手机绑定的用户名将无法参与网站的活动。
+                    </p>
+                    <p>2.网站如有进行优惠活动，手机绑定后可能会受到由网站发出的短信通知，避免您错过活动。</p>
+                </div>
+            </div>
+    }
+    else
+    {
+        <div style="text-align: center;line-height: 50px;">
+            您当前尚未绑定手机。为保障您的账户安全，请先&nbsp;<a href="/member/safe" class="blue">绑定手机</a>&nbsp;
+        </div>
+    }
+     </div>
+<script type="text/javascript">
+    $(function() {
+        $("input[type='text']").val("");
+    });
+    function mobile_buttomclick() {
+        $(".member_safe_Next").hide();
+        $(".member_safe").show();
+    }
+    $(".info_zl_ico span[data-t]").click(function () {
+        var self = $(this);
+        var type = self.attr("data-t");
+        if (type == "delete") {
+            $.post("/member/QueryBetMoneyByDay", {}, function(result) {
+               if (!result.Succuss) return alertTip(result.Msg, "err");
+                 else showspan();
+            });
+
+        } else {
+            showspan();
+        }
+
+        function showspan() {
+            $(".first_con").show().siblings().hide();
+            self.addClass("blue").siblings().removeClass("blue");
+            $("div[show-type='" + type + "']").show().siblings("div[show-type]").hide();
+            $("li[show-type='" + type + "']").show().siblings("li[show-type]").hide();
+            $("#code").val("");
+            $("#code_err").text("");
+            $("#moblie_err").text("");
+            $("#moblie_err").parents("li").hide();
+            $("#code_err").parents("li").hide();
+        }
+    });
+    //发送验证码
+    $("#Btn_GetvalidationCode, #Btn_GetNewvalidationCode").bind("click", function () {
+       
+        var self = $(this);
+        user.isLogin(function (islogin) {
+            if (!islogin) {
+                
+                user.LoginCallBack = function () {
+                    sendcode(self);
+                };
+                loginDialog.Show();
+                $("#userName").focus();
+                return false;
+            } else {
+                sendcode(self);
+            }
+        });
+    });
+
+    //第一步
+    $("#btn_qr").click(function() {
+
+        user.isLogin(function(islogin) {
+            if (!islogin) {
+                user.LoginCallBack = function() {
+                    callback();
+                };
+                loginDialog.Show();
+                $("#userName").focus();
+                return false;
+            } else {
+                callback();
+            }
+        });
+
+        function callback() {
+            var showobj = $(".second_con");
+            var codeobj = $("#code_err");
+            var code = $("#code").val();
+            var moblieobj = $("#moblie_err");
+            var moblie = $("#txt_moblie").attr("value");
+            if (moblie == "" || moblie == null) return showMsgSubmit_mobile1("请输入手机号码", moblieobj);
+            if (code == "" || code == null) return showMsgSubmit_mobile1("请输入验证码", codeobj);
+            checkcode(code, moblie, codeobj, showobj, function() {
+
+                $(".edit-progress .edit_pro1 .speed span").animate({ width: "70%" }, 200);
+                $(".edit-progress .edit_pro1 em:eq(1)").addClass("selected");
+                $(".edit-progress .edit_pro2 p:eq(1)").addClass("selected");
+            });
+        }
+    });
+    //第二步
+    $("#btn_next").click(function () {
+    
+        user.isLogin(function (islogin) {
+            if (!islogin) {
+                user.LoginCallBack = function () {
+                    callback2();
+                };
+                loginDialog.Show();
+                $("#userName").focus();
+                return false;
+            } else {
+                callback2();
+            }
+        });
+
+        function callback2() {
+            var showobj = $(".third_con");
+            var tel = $("#new_moblie").val();
+            var tel_err = $("#newmoblie_err");
+            var code = $("#new_validationCode").val();
+            var code_err = $("#newcode_err");
+            if (tel == "" || tel == null) return showMsgSubmit_mobile1("请输入新手机号码", tel_err);
+            if (code == "" || code == null) return showMsgSubmit_mobile1("请输入验证码", code_err);
+            $.post("/member/EditMoblie", { mobileCode: code, mobile: tel }, function (result) {
+                if (result.Succuss) {
+                    $(".edit-progress .edit_pro1 .speed span").animate({ width: "100%" }, 200);
+                    $(".edit-progress .edit_pro1 em:eq(2)").addClass("selected");
+                    $(".edit-progress .edit_pro2 p:eq(2)").addClass("selected");
+                    showobj.show().siblings().hide();
+                } else {
+                    return showMsgSubmit_mobile1(result.Msg, code_err);
+                }
+            });
+        }
+    });
+    //解除绑定
+    $("#btn_jc").click(function () {
+        user.isLogin(function (islogin) {
+            if (!islogin) {
+                user.LoginCallBack = function () {
+                    callback3();
+                };
+                loginDialog.Show();
+                $("#userName").focus();
+                return false;
+            } else {
+                callback3();
+            }
+        });
+
+        function callback3() {
+            var showobj = $(".fourth_con");
+            var codeobj = $("#code_err");
+            var code = $("#code").val();
+            var moblieobj = $("#moblie_err");
+            var moblie = $("#txt_moblie").attr("value");
+            if (moblie == "" || moblie == null) return showMsgSubmit_mobile1("请输入手机号码", moblieobj);
+            if (code == "" || code == null) return showMsgSubmit_mobile1("请输入验证码", codeobj);
+            checkcode(code, moblie, codeobj, showobj, function () {
+
+                $.post("/member/LogOffMobileAuthen", {}, function(result) {
+                    if (result.Succuss) {
+                        $(".delete-progress .edit_pro1 .speed span").css("width", "100%");
+                        $(".delete-progress .edit_pro1 em:eq(1)").addClass("selected");
+                        $(".delete-progress .edit_pro2 p:eq(1)").addClass("selected");
+                        $("#wxts_2").show();
+                        $("#wxts_1").hide();
+                    } else {
+                        return showMsgSubmit_mobile1(result.Msg, codeobj);
+                    }
+                });
+            });
+        }
+    });
+    $('#new_moblie').bind({
+        'blur': function() {
+            var obj = $(this), tel_err = $("#newmoblie_err");
+            if (obj.val() == "") return showMsgSubmit_mobile1("请输入新手机号码", tel_err);
+            else if (obj.val() != "" && obj.val().length < 0) return showMsgSubmit_mobile1("请输入正确的手机号码", tel_err);
+            else if (!Tool.isMobile(obj.val())) return showMsgSubmit_mobile1("请输入正确的手机号码", tel_err);
+            else {
+                $.post("/member/CheckMobileIsBind", { moblie: obj.val() }, function(result) {
+                    if (result.Succuss) {
+                        return showMsgSubmit_mobile1("", tel_err);
+                    } else {
+                        return showMsgSubmit_mobile1(result.Msg, tel_err);
+                    }
+                });
+            }
+        },
+        'keyup': function(event) {
+            var obj = $(this);
+            obj.val(obj.val().replace(/\D/g, ''));
+        }
+    });
+
+    function showMsgSubmit_mobile1(msg, obj, css) {
+        var parent = obj.parent(".err_con");
+        if (msg.length > 0) {
+            if (typeof (css) != "undefined" && css.length > 0) obj.prev().addClass(css);
+            else obj.prev().removeClass("ok_icon");
+            parent.show();
+            obj.html(msg);
+            if (parent.parent()[0].tagName == "LI") parent.parent().show();
+        } else {
+            obj.html('');
+            parent.hide();
+            if (parent.parent()[0].tagName == "LI") parent.parent().hide();
+        }
+    }
+
+    function sendcode(obj) {
+        var codeobj = "", type = "", dtype = $(".info_zl_ico span[data-t].blue").attr("data-t");
+      //  alert(codeobj);
+        if (obj.attr("id") == "Btn_GetNewvalidationCode") {
+            codeobj = $("#newcode_err");
+            type = 2;//新绑定手机
+        }
+        else if (obj.attr("id") == "Btn_GetvalidationCode") {
+            codeobj = $("#code_err");
+            type = 1;//验证旧手机
+            if (dtype == "delete") type = 3;//解绑
+        }
+        var moblie = $(".second_con").is(":visible") ? $("#new_moblie").val() : $("#txt_moblie").attr("value");
+        if (moblie == "" || moblie.length < 0) return showMsgSubmit_mobile1("电话号码不能为空");
+        $.post("/member/SendMsg", { moblie: moblie, type: type }, function (result) {
+            if (result.Succuss) {
+                return showMsgSubmit_mobile1("验证码已发送，请注意查收", codeobj, "ok_icon");
+            } else {
+                return showMsgSubmit_mobile1(result.Msg, codeobj);
+            }
+        });
+    }
+
+    function checkcode(code, moblie,codeobj,showobj,callback) {
+        $.post('/member/CheckOldCode', { code: code, moblie: moblie }, function(result) {
+            if (result.Succuss) {
+                showobj.show().siblings().hide();
+                callback();
+            } else {
+                return showMsgSubmit_mobile1(result.Msg, codeobj);
+            }
+        });
+    }
+</script>

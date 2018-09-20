@@ -1,0 +1,196 @@
+﻿@{
+    ViewBag.Title = "新手教学-问题解答-规则介绍-" + SiteString.getHZSiteName(Request) + "帮助中心";
+    ViewBag.Keywords = "新手教学,问题解答,规则介绍";
+    ViewBag.Description = SiteString.getHZSiteName(Request) + "帮助中心为广大彩民朋友解答在购彩过程中遇到的一些常见问题,并有新手教学教程和所有彩种规则介绍,是广大彩民朋友在网上购彩过程中的知识宝典.";
+}
+@section css{
+    @ViewHelpers.css("help.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>&nbsp;帮助中心</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help");}
+    <div class="help_r">
+        <div class="help_pro">
+            <div class="pro_t clearfix">
+                <h2>
+                    <span>新手入门</span></h2>
+                <a title="观看购彩演示" href="/demo/index" target="_blank" id="link116">观看购彩演示&gt;&gt;</a>
+            </div>
+            <div class="pro_m">
+                <ul>
+                    <li style="margin-left: 5px;"><a title="注册登录" href="/demo/index" target="_blank"
+                        id="link117">注册登录</a></li>
+                    <li><a title="网上充值" href="/demo/advance" target="_blank" id="link118">网上充值</a></li>
+                    <li><a title="购买彩票" href="/demo/lotto" target="_blank" id="link119">购买彩票</a></li>
+                    <li><a title="账户查询" href="/demo/account" target="_blank" id="link120">账户查询</a></li>
+                    <li><a title="中奖查询" href="/demo/winning" target="_blank" id="link121">中奖查询</a></li>
+                    <li><a class="last_a" title="兑奖提款" href="/demo/withdraw" target="_blank" id="link122">
+                        兑奖提款</a></li>
+                </ul>
+            </div>
+        </div>
+        <script type="text/javascript">
+            var $ = jQuery;
+            $(function () {
+                $('#common_btn').find('a').click(function () {
+                    $('#common_btn>a').removeClass('cur');
+                    $(this).addClass('cur');
+                    $('#common_all>div.tabs_block').hide(); //end().eq(i).show();   
+                    $('#s' + $(this).attr('n')).show();
+                });
+            });          
+        </script>
+        <div class="common" id="common_all">
+            <div class="h_pub_t">
+                <b class="t_l"></b>
+                <div class="t_m">
+                    <span class="c_tabs l" id="common_btn"><a id="link121" n="1" href="javascript:void(0);"
+                        class="cur">热点问题</a> <a id="link122" n="2" href="javascript:void(0);">注册登录</a> <a
+                            id="link123" n="3" href="javascript:void(0);">我的账户</a> <a id="link124" n="4" href="javascript:void(0);">
+                                交易规则</a> <a id="link125" n="5" href="javascript:void(0);">彩种玩法</a> </span>
+                </div>
+                <b class="t_r" style="width: 1px;"></b>
+            </div>
+            <div id="s1" class="h_pub_m clearfix tabs_block">
+                <ul>
+                    <li><a id="link126" href="/help/zjtzzh">“中奖后停止追号功能”的风险提醒</a></li>
+                    <li><a id="link127" href="/help/zjsmshpj">中奖了什么时候派奖</a></li>
+                    <li><a id="link128" href="/help/azjjwsmzyly">单注奖金怎么只有2元（单关）</a></li>
+                    <li><a id="link130" href="/help/jjzmjs">奖金怎么计算</a></li>
+                    <li><a id="link131" href="/help/serviceAgreement1">用户服务协议</a></li>
+                    <li><a id="link132" href="/help/betNotice1">竞彩投注风险须知</a></li>
+                </ul>
+            </div>
+            <div id="s2" class="h_pub_m clearfix tabs_block" style="display: none;">
+                <ul>
+                    <li><a id="link133" href="/help/isokregister">个人可以注册多个帐号吗？</a></li>
+                    <li><a id="link134" href="/help/cooperation">如何使用支付宝进行注册</a></li>
+                    <li><a id="link135" href="/help/chippedBonus">合买中奖后的奖金怎么分配？</a></li>
+                </ul>
+            </div>
+            <div id="s3" class="h_pub_m clearfix tabs_block" style="display: none;">
+                <ul>
+                    <li><a id="link136" href="/help/ebanksdredge">如何开通网上银行？</a></li>
+                    <li><a id="link137" href="/help/chippedbonus">合买中奖后的奖金怎么分配？</a></li>
+                </ul>
+            </div>
+            <div id="s4" class="h_pub_m clearfix tabs_block" style="display: none;">
+                <ul>
+                    <li><a id="link138" href="/help/chippedbonus">合买中奖后的奖金怎么分配？</a></li>
+                </ul>
+            </div>
+            <div id="s5" class="h_pub_m clearfix tabs_block" style="display: none;">
+                <ul>
+                    <li><a id="link139" href="/help/dlt1">大乐透玩法介绍</a></li>
+                    <li><a id="link140" href="/help/bjdc1">北京单场玩法介绍</a></li>
+                    <li><a id="link141" href="/help/zcsfc1">胜负彩玩法介绍</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="buy_help">
+            <div class="h_pub_t">
+                <b class="t_l"></b>
+                <div class="t_m">
+                    <h2>
+                        功能索引</h2>
+                </div>
+                <b class="t_r"></b>
+            </div>
+            <div class="h_pub_m ">
+                <table width="100%">
+                    <tbody>
+                        <tr>
+                            <td width="49%">
+                                <h3>
+                                    注册</h3>
+                                <p>
+                                    <a id="link142" href="/help/login" target="_blank">如何注册</a></p>
+                            </td>
+                            <td width="49%">
+                                <h3>
+                                    充值</h3>
+                                <p>
+                                    <a id="link143" target="_blank" href="/help/payintroduce">充值介绍</a> <a id="link145"
+                                        target="_blank" href="/help/ebankspay">网上银行充值</a> <a id="link146" target="_blank"
+                                            href="/help/Alipay">支付宝</a> <a id="link144" target="_blank" href="/help/quickpayment">
+                                                快捷支付</a>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="49%">
+                                <h3>
+                                    我的账户</h3>
+                                <p>
+                                    <a id="link149" href="/help/approve" target="_blank">实名认证</a>&nbsp; <a id="link150"
+                                        href="/help/administrator" target="_blank">账户密码</a>&nbsp; <a id="link153" href="/help/accountsecurity"
+                                            target="_blank">账户安全</a> &nbsp; <a id="link151" href="/help/ebank" target="_blank">网银充值订单查询</a>&nbsp;
+                                    <a id="link154" href="/help/privacyset">隐私设置</a>&nbsp; <a id="link152" href="/help/redpackets"
+                                        target="_blank">红包</a></p>
+                            </td>
+                            <td>
+                                <h3>
+                                    购买彩票</h3>
+                                <p>
+                                    <a id="link155" href="/help/ForTheColor" target="_blank">如何购彩</a>&nbsp; <a id="link156"
+                                        href="/help/ShoppingService" target="_blank">合买</a>&nbsp;&nbsp; <a id="link157" href="/help/animationDocumentary"
+                                            target="_blank">自动跟单</a>&nbsp; <a id="link158" href="/help/Revoke" target="_blank">撤单</a>&nbsp;
+                                    <a id="link159" href="/" target="_blank">奖金优化</a></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <h3>
+                                    兑奖提款</h3>
+                                <p>
+                                    <a id="link160" href="/help/bonusGet" target="_blank">奖金领取</a>&nbsp; <a id="link161"
+                                        href="/help/drawing" target="_blank">提款</a>&nbsp; <a id="link162" href="/help/poundage"
+                                            target="_blank">提款手续费</a>&nbsp; <a id="link163" href="/help/poundageTime" target="_blank">
+                                                提款到账时间</a></p>
+                            </td>
+                            <td>
+                                <h3>
+                                    交易规则</h3>
+                                <p>
+                                    <a id="link164" href="/help/bonusAllot" target="_blank">合买奖金分配</a> <a id="link165"
+                                        href="/help/customizeDocumentary" target="_blank">自动跟单</a> <a id="link166" href="/help/website"
+                                            target="_blank">保底</a> <a id="link167" href="/help/recordRule" target="_blank">战绩规则</a></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="last">
+                                <h3>
+                                    彩种玩法</h3>
+                                <p>
+                                    <a id="link168" href="/help/dlt" target="_blank">大乐透</a>&nbsp; <a id="link169" href="/help/zcsfc"
+                                        target="_blank">胜负彩</a>&nbsp; <a id="link171" href="/help/jczq" target="_blank">竞彩足球</a>&nbsp;
+                                    <a id="link170" href="/help/jclq" target="_blank">竞彩篮球</a>&nbsp; <a id="link172"
+                                        href="/help/jx11x5" target="_blank">江西十一选五</a>&nbsp; <a id="link173" href="/help/bjdc"
+                                            target="_blank">北京单场</a></p>
+                            </td>
+                            <td class="last">
+                                <h3>
+                                    手机购彩</h3>
+                                <p>
+                                    <span style="font-family: 'Calibri','sans-serif'; font-size: 10.5pt; mso-bidi-font-family: 'Times New Roman';
+                                        mso-bidi-font-size: 11.0pt; mso-ascii-theme-font: minor-latin; mso-fareast-font-family: 宋体;
+                                        mso-fareast-theme-font: minor-fareast; mso-hansi-theme-font: minor-latin; mso-bidi-theme-font: minor-bidi;
+                                        mso-ansi-language: EN-US; mso-fareast-language: ZH-CN; mso-bidi-language: AR-SA;">
+                                        <a id="link175" href="/help/phoneForTheColor" target="_blank">彩票客户端购彩</a></span></p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+@ViewHelpers.js("help.js")

@@ -1,0 +1,118 @@
+﻿@{
+    ViewBag.Here = "用户协议";
+
+    ViewBag.Title = "用户协议 - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "用户协议, 帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+
+@section css{
+   @ViewHelpers.css("help.css")
+}
+
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">帮助中心</a> > </li>
+        <li>代购</li>
+    </ul>
+</div>
+<div class="center mt10">
+    @{Html.RenderAction("left", "help");}
+    <div class="new_buy_right">
+<div class="help-content f_r">
+    <div class="help-cont">
+        <h1 class="hp-title">用户协议</h1>
+        <p class="indet">
+            @(SiteString.getHZSiteName(Request))根据国家相关法律、法规为用户提供电话委托投注国家电脑型彩票业务。依照本协议以下条款在@(SiteString.getHZSiteName(Request))注册的用户，并同意以下服务条款，方有资格享受@(SiteString.getHZSiteName(Request))提供的电话委托投注国家电脑型彩票务，并受本协议条款的约束。
+        </p>
+        <h3>一、服务范围</h3>
+        <p>
+            本协议服务范围包括：提供电话委托购彩平台；提供彩票相关资讯。<br />
+            本协议服务范围不包括向注册会员提供电脑终端及其附属设备、网络和通信等资源。
+        </p>
+        <h3>二、用户信息的提供</h3>
+        <p>
+            1、为保障用户的合法权益，避免在中奖时因用户注册资料与真实情况不符而发生纠纷，请用户注册时务必按照真实、详细、准确的原则填写。因用户资料不真实、不全面、不准确造成不能兑奖、不能提款等情况，由用户承担全部责任，@(SiteString.getHZSiteName(Request))概不负责，如果用户提供的资料包含有不正确的信息，@(SiteString.getHZSiteName(Request))保留结束该用户享受服务资格的权利。<br />
+            2、年满18周岁的成年人可以在@(SiteString.getHZSiteName(Request))注册登记，成为@(SiteString.getHZSiteName(Request))用户，使用@(SiteString.getHZSiteName(Request))提供的服务。<br />
+            3、禁止未成年人使用@(SiteString.getHZSiteName(Request))服务，如未成年人提供虚假注册信息冒充成年人登记，一经发现，该用户账户将被注销，在@(SiteString.getHZSiteName(Request))进行的一切投注行为将自始无效，由此给@(SiteString.getHZSiteName(Request))及其本人造成的损失均由该未成年人及其法定代理人承担。
+        </p>
+        <h3>三、用户资料的隐私和安全</h3>
+        <p>
+            1、@(SiteString.getHZSiteName(Request))承诺对用户注册之隐私信息绝对保密，未经用户授权或同意，不得擅自将用户资料用于处理用户电话委托投注彩票行为以外的其他活动，涉及相关法律事件除外。<br />
+            2、@(SiteString.getHZSiteName(Request))对用户注册信息提供最大限度的安全保障。同时用户务必对其用户密码、银行账号等信息自行保密，免被盗用或篡改，如发现上述情况可立即与@(SiteString.getHZSiteName(Request))联系。但是因非@(SiteString.getHZSiteName(Request))原因造成的盗用(包括密码、银行账号等)，@(SiteString.getHZSiteName(Request))不承担责任。
+        </p>
+        <h3>四、用户的权利</h3>
+        <p>
+            1、用户有权随时查询用户资料，并可对用户名、用户真实姓名、身份证号码以外的信息进行修改。<br />
+            2、用户可免费使用@(SiteString.getHZSiteName(Request))的电话委托投注彩票系统，进行彩票投注，或查询历史交易情况和账户管理。<br />
+            3、用户通过@(SiteString.getHZSiteName(Request))电话委托彩票投注成功后，有权在@(SiteString.getHZSiteName(Request))查询所代购彩票的状态。<br />
+            4、用户有义务核对电话委托投注成功的电子彩票。<br />
+            5、用户通过@(SiteString.getHZSiteName(Request))委托电话投注彩票成功的，若彩票中奖，用户有权获得相应奖金。<br />
+            6、用户可以随时对资金余额进行核查。<br />
+            7、用户在任何时间都可对自己的可提现余额申请提款，@(SiteString.getHZSiteName(Request))在核对用户资金来源正常的情况下，在收到提款请求3个工作日内将用户需提取的款项转账到用户注册的银行账户上。
+        </p>
+        <h3>五、用户的义务</h3>
+        <p>
+            1、用户有义务全面遵守本协议内容。在注册登记成为@(SiteString.getHZSiteName(Request))用户之前，须认真阅读、理解本协议各条款，一经注册成功即视为同意本协议全部条款，用户有义务全面遵守本协议。<br />
+            2、用户有义务遵守注册规则，一个用户名、一个身份证号、一个用户的真实姓名只能有效注册一次，且三者之间必须一一对应。严禁任何形式的重复注册及多次恶意注册，因此而造成的一切后果，由用户自行承担。同时，用户应保证一个银行卡账号对应一个用户真实姓名，因银行卡账号与用户真实姓名不能一一对应而产生的不利后果，由用户自行承担。<br />
+            3、用户名、用户真实姓名、身份证号码一经注册确认后，不得再行更改。<br />
+            4、用户账户资料包括用户密码、个人账号以及用户账号操作所需的资料。用户务必对其账户资料自行保密，以免账号资料被盗用或篡改。因用户保护不周导致账户资料被盗用或篡改而给用户造成的任何损失及法律责任由用户自行承担。<br />
+            5、用户不得利用@(SiteString.getHZSiteName(Request))危害国家安全、泄露国家秘密，不得侵犯国家社会集体的和公民的合法权益，不得利用@(SiteString.getHZSiteName(Request))制作、复制和传播下列信息：<br />
+            （1）煽动抗拒、破坏宪法和法律、行政法规实施的；<br />
+            （2）煽动颠覆国家政权，推翻社会主义制度的；
+                    <br />
+            （3）煽动分裂国家、破坏国家统一的；<br />
+            （4）煽动民族仇恨、民族歧视，破坏民族团结的；
+                    <br />
+            （5）捏造或者歪曲事实，散布谣言，扰乱社会秩序的；<br />
+            （6）宣扬迷信、淫秽、色情、赌博、暴力、凶杀、恐怖、教唆犯罪的；<br />
+            （7）公然侮辱他人或者捏造事实诽谤他人的，或者进行其他恶意攻击的；<br />
+            （8）损害国家机关信誉的；
+                    <br />
+            （9）其他违反宪法、法律、行政法规、行政规章、地方性法规的行为。<br />
+            6、禁止以任何方式对@(SiteString.getHZSiteName(Request))进行各种破坏行为。<br />
+            7、禁止任何形式的信用卡套现行为，由于用户的上述行为所产生的一切后果，由用户自行承担责任。
+        </p>
+        <h3>六、服务条款的修改和服务修订</h3>
+        <p>
+            @(SiteString.getHZSiteName(Request))有权在必要时修改或调整服务条款，服务条款一旦发生变动，将会在重要页面上提示修改内容。如果不同意所改动的内容，用户可以主动取消获得的服务，如果用户继续享用服务，则视为接受服务条款的变动。@(SiteString.getHZSiteName(Request))保留随时修改或中断服务而无需知照用户的权利。
+        </p>
+        <h3>七、@(SiteString.getHZSiteName(Request))的义务</h3>
+        <p>
+            1、@(SiteString.getHZSiteName(Request))将对用户账户资料提供最大限度的安全保护。
+                    <br />
+            2、@(SiteString.getHZSiteName(Request))有义务及时公布中奖结果，并根据彩票发行部门的兑奖流程进行返奖。
+                    <br />
+            3、@(SiteString.getHZSiteName(Request))有义务为用户提供网上资金明细查询。
+        </p>
+        <h3>八、@(SiteString.getHZSiteName(Request))的权利</h3>
+        <p>
+            1、@(SiteString.getHZSiteName(Request))有权利禁止危害国家安全或危害@(SiteString.getHZSiteName(Request))安全的账号，严重者将移交有关部门进行处理。<br />
+            2、@(SiteString.getHZSiteName(Request))有权利禁止未满18岁的用户使用@(SiteString.getHZSiteName(Request))提供的一切服务。<br />
+            3、@(SiteString.getHZSiteName(Request))有权利拒绝疑似信用卡套现行为的提款申请，并将原款项退回原账户。
+        </p>
+        <h3>九、免责声明</h3>
+        <p>
+            发生下列情况时，@(SiteString.getHZSiteName(Request))不予承担任何法律责任：<br />
+            1、用户资料泄露。由于用户将密码告知他人或与他人共享注册账户，或由于用户的疏忽，由此导致的任何个人资料泄露，以及由此产生的纠纷。无论何种原因导致的用户资料未授权使用、修改，用户密码、个人账号或注册信息被未授权篡改、盗用而产生的一切后果。<br />
+            2、不可抗力及不可预见的情势发生。不可抗力和不可预见情势包括：自然灾害、政府行为、罢工、战争等；黑客攻击、计算机病毒侵入或发作、政府管制、彩票发行和销售机构的原因、彩票出票机或服务的故障、网络故障、国家政策变化、法律法规之变化等。因不可抗力和不可预见情势造成：暂时性关闭，用户资料或电话委托代购指令泄露、丢失、被盗用、被篡改，委托代购、合买失败，@(SiteString.getHZSiteName(Request))未能收到委托指令等，以及由此产生的纠纷。因不可抗力和不可预见的情势造成本协议不能履行的。<br />
+            3、用户原因或第三方原因造成损失。由于用户自身原因、或违反法律法规，以及第三方的原因，造成用户无法使用@(SiteString.getHZSiteName(Request))服务或产生其他损失的。<br />
+            4、用户电话委托代购彩票而产生的损失。用户根据本协议进行电话委托投注而发生的直接、间接、偶然、特殊及继起的损害。<br />
+            5、用户使用链接或下载资料产生的损害。由于使用与@(SiteString.getHZSiteName(Request))链接的其它网站，或者使用通过@(SiteString.getHZSiteName(Request))下载或取得的资料，造成用户资料泄露、用户电脑系统损坏等情况及由此而导致的任何争议和后果。
+        </p>
+        <h3>十、协议的终止</h3>
+        <p>
+            1、任何一方未能履行本协议规定的任何义务，且在收到另一方发出更正通知15日内未能改正错误的，均被视为自动放弃本协议；<br />
+            2、@(SiteString.getHZSiteName(Request))有权通知用户终止本协议，自通知发出之日起15日内本协议终止。@(SiteString.getHZSiteName(Request))会在协议终止后30日内将用户账户内的余额以用户认可的方式退还予用户。<br />
+            3、@(SiteString.getHZSiteName(Request))对任何因用户根据本协议购买彩票而发生的直接、间接、偶然、特殊及继起的损害不负责任。
+        </p>
+        <h3>十一、法律的适用和管辖</h3>
+        <p>
+            @(SiteString.getHZSiteName(Request))服务条款的生效、履行、解释及争议的解决均适用中华人民共和国法律，发生的争议提交重庆仲裁委员会，其仲裁裁决是最终的。
+        </p>
+        <h3>十二、本协议最终解释权归@(SiteString.getHZSiteName(Request))所有</h3>
+    </div>
+</div>
+        </div>
+</div>
+<div class="clearfix"></div>

@@ -1,0 +1,40 @@
+﻿@using GameBiz.Core;
+@{
+    var award = ViewBag.Award as LotteryData.Core.GameWinNumber_Info;
+    var issues = ViewBag.CurIssuse as Issuse_QueryInfo;
+}
+<div class="lo_box" style="padding-bottom:25px;">
+    <div class="details_box">
+        <span class="icon_game pl3"></span>
+        @GameHelper.LotteryHeaderViewNew(issues, award, award == null || award.Id == 0 ? "PL3" : award.GameCode)
+        @GameHelper.LotteryDescViewNew(award == null || award.Id == 0 ? "PL3" : award.GameCode)
+    </div>
+    <div class="award">
+        <div class="awardgrade">
+            <div class="grade_title">
+                大乐透奖级设置</div>
+            <div>
+                <span style="width: 15%">直选</span><span style="width: 55%">号码位置全相符</span><span style="width: 27%">1000元</span>
+            </div>
+            <div class="bgay">
+                <span style="width: 15%">组三</span><span style="width: 55%">号码相符(包含对子)</span><span
+                    style="width: 27%">320元</span>
+            </div>
+            <div>
+                <span style="width: 15%">组六</span><span style="width: 55%">号码相符(不含对子)</span><span
+                    style="width: 27%"> 320元</span>
+            </div>
+        </div>
+        <div class="details_list">
+            <div class="list_title">
+                开奖详情</div>
+            <div id="lottery_details">
+                <div>
+                    <span style="width: 100%">暂无信息数据</span>
+                </div>
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+</div>

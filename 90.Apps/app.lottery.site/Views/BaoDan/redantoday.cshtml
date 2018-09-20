@@ -1,0 +1,344 @@
+﻿@using GameBiz.Core
+@{
+    ViewBag.Title = "最新宝单-宝单方案-玩彩宝单大厅";
+    ViewBag.KeyWords = "最新宝单,宝单方案";
+    ViewBag.Description = "玩彩宝单大厅为广大彩民朋友提供最新、最全的宝单方案,想要了解更多宝单方案，请登录玩彩宝单大厅。";
+    var TodayBdfxList = ViewBag.TodayBdfxList as TotalSingleTreasure_Collection;
+    var follow = ViewBag.Follow;
+    var userName = ViewBag.UserName;
+    var rebatesrate = ViewBag.Rebatesrate;
+    var copyMoneyCount = ViewBag.CopyMoneyCount;
+    var copypeopleCount = ViewBag.CopypeopleCount;
+    //判断是否关注
+
+    //关注列表
+    var attentionlist = ViewBag.AttenList as GameBiz.Core.SingleTreasureAttention_Collection;
+    var cuser = ViewBag.User as app.lottery.site.Models.CurrentUserInfo;
+    var flag = false;
+    //var nr = ViewBag.dayNR as string;
+    //var nrArray = new string[] { };
+    //if (!string.IsNullOrEmpty(nr))
+    //{
+    //    nrArray = nr.Split('%');
+    //}
+    //var nrname = "";
+    //var nrid = "";
+    //if (!string.IsNullOrEmpty(nr))
+    //{
+    //    nrname = nr.Split('|')[1];
+    //    nrid = nr.Split('|')[0];
+    //}
+}
+@section css
+{
+    @UserHelper.csscdn("redan.css","1031")
+}
+@section js{
+    @UserHelper.jscdn("redan.js","1102")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="http://www.wancai.com">首页</a>&nbsp;&gt; &nbsp;</li>
+        <li>今日神单</li>
+    </ul>
+</div>
+<div class="contentmain">
+    <div class="baodanleft">
+        @{ Html.RenderAction("nrandrecommend", "baodan");}
+    </div>
+    <div class="baodanright">
+    <div class="redan_head">
+        <div class="redan_btn">
+            <a class="rd_active" href="/baodan/redantoday">今日神单</a> <a href="/baodan/redanrank">
+                高手排行</a> <a checklg="/baodan/redanmyattention" href="javascript:void(0)">我的关注</a>
+            <a checklg="/baodan/redanmy" href="javascript:void(0)">我的神单</a><a checklg="/baodan/redanauthorhome" href="javascript:void(0)">我的主页</a>
+        </div>
+        <div class="head_r">
+            <a class="head_rbtn" target="_blank" href="/jingcai">我要分享</a>
+        </div>
+        <div class="clearfloat">
+        </div>
+    </div>
+    <div class="redan_search">
+        <div class="search">
+            <input type="text" class="sear_left" value="@ViewBag.UserName" placeholder="搜索用户" />
+            <a class="sear_close" href="javascript:void(0);" style="display: none;"></a><a class="sear_btn"
+                href="javascript:void(0);" id="seachdan"></a>
+            <input type="checkbox" id="onlycare" class="sear_check" />
+            <label class="sear_txt" for="onlycare">
+                只看我关注的</label>
+        </div>
+        <div class="sear_rank">
+            <span>排序：</span> <a href="?Rebatesrate=@(ViewBag.Rebatesrate == "" ? "ExpectedReturnRate|desc" : ViewBag.Rebatesrate == "ExpectedReturnRate|desc" ? "ExpectedReturnRate|asc" : "ExpectedReturnRate|desc")">
+                <span title="回报率" class="rank_btn @(ViewBag.Rebatesrate == "" ? "" : "sel_btn")">回报率<em class="@(ViewBag.Rebatesrate == "" ? "btn_down" : ViewBag.Rebatesrate == "ExpectedReturnRate|desc" ? "btn_seldown" : "btn_selup")"></em>
+                </span></a>@*            <a href="?CopyMoneyCount=@(ViewBag.CopyMoneyCount == "" ? "TotalBuyMoney|desc" : ViewBag.CopyMoneyCount == "TotalBuyMoney|desc" ? "TotalBuyMoney|asc" : "TotalBuyMoney|desc")">
+                <span title="抄单额" class="rank_btn @(ViewBag.CopyMoneyCount == "" ? "" : "sel_btn")">
+                    抄单额 <em class="@(ViewBag.CopyMoneyCount == "" ? "btn_down" : ViewBag.CopyMoneyCount == "TotalBuyMoney|desc" ? "btn_seldown" : "btn_selup")">
+                        </em>
+                </span>
+            </a>
+            <a href="?CopypeopleCount=@(ViewBag.CopypeopleCount == "" ? "TotalBuyCount|desc" : ViewBag.CopypeopleCount == "TotalBuyCount|desc" ? "TotalBuyCount|asc" : "TotalBuyCount|desc")">
+                <span title="抄单人数" class="rank_btn rank_num @(ViewBag.CopypeopleCount == "" ? "" : "sel_btn")">
+                    抄单人数 
+                    <em class="@(ViewBag.CopypeopleCount == "" ? "btn_down" : ViewBag.CopypeopleCount == "TotalBuyCount|desc" ? "btn_seldown" : "btn_selup")">
+                             
+                         </em>
+                </span>
+            </a>*@
+        </div>
+        <div class="clearfloat">
+        </div>
+    </div>
+    <div id="redan_main" class="redan_main">
+        @if (TodayBdfxList != null)
+        {
+            var href = string.Empty;
+            foreach (var item in TodayBdfxList.TotalSingleTreasureList.Where(p => p.FirstMatchStopTime > DateTime.Now))
+            {
+                var ulvl = 1;// SiteConvert.GetUserLevel(item.MaxLevelName);                
+                <div wid="@item.SchemeId" uid="@item.UserId" id="wager_@(item.SchemeId)" class="main_con">
+                    <div class="bd-right">
+                        <div class="con_head">
+                            @if (item.LastweekProfitRate != 0)
+                            {
+                                <div class="paiming">
+                                    <label>
+                                        上周盈利率
+                                    </label>
+                                    <span title="上周盈利率" class="yingli_yellow">@((item.LastweekProfitRate * 100).ToString("F2"))%</span>
+                                </div>
+                           }
+                             <div class="changeState">
+                                @{
+                                    var serIndex = 1;
+                                    switch (item.Security)
+                                    {
+                                        case TogetherSchemeSecurity.Unkown:
+                                        case TogetherSchemeSecurity.Public:
+                                            serIndex = 1;
+                                            break;
+                                        case TogetherSchemeSecurity.FirstMatchStopPublic:
+                                            serIndex = 6;
+                                            break;
+                                        default:
+                                            serIndex = 1;
+                                            break;
+                                    }
+                                }
+                                <p title="@(OrderManager.SecurityName(item.Security))" class="nr touzpng @(serIndex == 1 ? "gk" : "timek")">
+                                </p>
+                                <span class="opencharacter">@OrderManager.SecurityName(item.Security)</span>
+                            </div>
+                            <div class="gmuntil">
+                                购买截止： <span timer="@SiteString.ConvertDateTimeInt(item.FirstMatchStopTime)" class="payend">
+                                          <em>00</em>时<em>00</em>分<em>00</em>秒</span>
+                            </div>
+                        </div>
+                        <div class="con_left">
+                            <div class="head_h4">
+                                @{
+                                    href = "";// "?uimg=" + HttpUtility.HtmlEncode(item.UserCustomerImgUrl) + "&ulvl=" + HttpUtility.HtmlEncode(item.MaxLevelName);
+                                    var uname = SiteString.HideUserName(item.UserName);
+                                    if (item.LastweekProfitRate != 0)
+                                    {
+                                        href += "?LastweekProfitRate=" + item.LastweekProfitRate;
+                                    }
+                                }
+                                <div class="head-img">
+                                    <a target="_blank" href="/baodan/redanauthorhome/@item.UserId@href">
+                                            <span class="touxiang user_logo blog-lv lv@(ulvl) uic"></span>
+
+                                        @*@if (item.UserCustomerImgUrl == null)
+                                        {
+                                            <span class="touxiang user_logo blog-lv lv@(ulvl) uic"></span>
+                                        }
+                                        else
+                                        {
+                                            <img src="@item.UserCustomerImgUrl" class="uic tiny-img-detail" alt=""/>
+                                        }*@
+                                    </a>
+                                </div>
+                                <div class="att_name">
+                                    @if(cuser==null)
+                                    {
+                                        <a href="/baodan/redanauthorhome/@item.UserId@href"><span class="hod">@uname</span> </a>
+                                        <a href="javascript:void(0)" class="attention" data-flag="1" data-fuid="@item.UserId">+关注</a>
+                                    }
+                                    else
+                                    {
+                                        flag = false;
+                                        foreach (var at in attentionlist)
+                                        {
+                                            if (item.UserId == at.BeConcernedUserId && cuser.LoginInfo.UserId == at.ConcernedUserId)
+                                            {
+                                                flag = true;
+                                            }
+                                        }
+                                        if (cuser == null || (cuser != null && cuser.LoginInfo.UserId != item.UserId))
+                                        {
+                                            <a href="/baodan/redanauthorhome/@item.UserId@href"><span class="hod">@uname</span> </a>
+                                            <a href="javascript:void(0)" class="attention @(flag ? "attentionlist" : "")" data-flag="@(flag == true ? "0" : "1")" data-fuid="@item.UserId">@(flag == true ? "取消关注" : "+ 关注")</a>
+                                        }
+                                        else
+                                        {
+                                            <a href="/baodan/redanauthorhome/@item.UserId@href" style=" line-height:80px"><span class="hod">@uname</span> </a>
+                                        }
+                                    }
+                                </div>
+                            
+                            </div>
+                            <div class="right_m">
+                                <div class="left_txt">
+                                    <span>@(item.SingleTreasureDeclaration.Length > 26 ? item.SingleTreasureDeclaration.Substring(0, 26) + "..." : item.SingleTreasureDeclaration)</span>
+                                </div>
+                                <div class="left_blue">
+                                    <div class="right_blue">
+                                        <span>@SiteConvert.GameName(item.GameCode, item.GameType)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;第@(item.IssuseNumber)期</span><span class="blue_zhu">@(item.BetCount)注</span>
+                                    </div> 
+                                    <span class="blue_huibao pr10">预计最高回报：<em>@item.ExpectedReturnRate.ToString("N2")</em>倍</span>
+                                    <span class="greenyellow_huibao pr10">奖金盈利提成：<em>@item.Commission.ToString("N0")%</em></span>
+                            
+                                    @*                        <div class="right_txt">
+                                    <span>@item.TotalBuyCount.ToString("N0")</span>人次购买，投入 <span>@item.TotalBuyMoney.ToString("N0")</span>元
+                                </div>*@
+                                </div>
+                            </div>
+                        </div>
+                        <div class="con_right">
+                            <div class="con_right1">
+                                <div class="right_gm">
+                                    <label>
+                                        <input type="text" value="1" onblur=" if (this.value == '' || parseInt(this.value) <= 0) {this.value = 1;} else {this.value = parseInt(this.value);} " />
+                                        倍
+                                    </label>
+                                    <a class="rgm_btn" href="javascript:void(0);">抄&nbsp;&nbsp;单</a>
+                                </div>
+                                <div class="right_jj">
+                                    投入 <span>@item.CurrentBetMoney.ToString("F0") </span>元，最高奖金 <span>@item.ExpectedBonusMoney.ToString("F")</span>元
+                                </div>
+                            </div>
+                            <div class="clearfloat">
+                            </div>
+                            @{
+                                                                                                 //var playtype = "";
+                                                                                                 //var codelist = "";
+                                                                                                 //var TotalMatchCount = TodayBdfxList.AnteCodeList.Where(p => p.SchemeId == item.SchemeId).Count();
+
+                                                                                                 //foreach (var code in TodayBdfxList.AnteCodeList.Where(p => p.SchemeId == item.SchemeId))
+                                                                                                 //{
+                                                                                                 //    playtype = code.PlayType;
+                                                                                                 //    codelist += code.IsDan + "|" + code.MatchId + "|" + code.AnteCode + "|" + code.GameType.ToLower() + "#";
+
+                                                                                                 //}
+                                                                                                 //codelist = codelist.Substring(0, codelist.Length - 1);
+
+                            }
+                            <form action="/baodan/redanbuyconfirm/" method="post" target="_blank">
+                                <input type="hidden" name="WagerMultiple" value="1" />
+                                <input type="hidden" value="@item.GameType" name="GameType" />
+                                @*<input type="hidden" value="@playtype" name="playType" />*@
+                                <input type="hidden" value="@item.IssuseNumber" name="IssuseNumber" />
+                                <input type="hidden" value="@item.BetCount" name="Amount" />
+                                <input type="hidden" value="@item.TotalBuyMoney" name="TotalMoney" />
+                                @*  <input type="hidden" value="@TotalMatchCount" name="TotalMatchCount" />
+                        <input type="hidden" value="@codelist" name="AnteCodeList" />*@
+                                <input type="hidden" value="@item.GameCode" name="GameCode" />
+                                <input type="hidden" value="@item.Security" name="Security" />
+                                <input type="hidden" value="@item.Commission" name="Commission" />
+                                <input type="hidden" value="@item.SingleTreasureDeclaration" name="SingleTreasureDeclaration" />
+                                <input type="hidden" value="@item.SchemeId" name="SchemeId"/>
+                            </form>
+                        </div>
+                    </div>
+                    <a class="head_detail" href="javascript:xdDetail('/baodan/bddetailsbody?userid=@item.UserId&SchemeId=@item.SchemeId');void(0);">
+                            神<br />
+                            单<br />
+                            详<br />
+                            情
+                    </a>
+                    <div class="clearfloat">
+                    </div>
+                </div>
+            }
+        }
+        <div class="account_page  clearfix">
+            @ViewHelpers.Pager4("TodayBdfxList", ViewBag.pageNo, ViewBag.PageSize, TodayBdfxList == null ? 0 : TodayBdfxList.TotalCount)
+        </div>
+        <input type="hidden"  value="@userName" id="UserName_h"/>
+        <input type="hidden"  value="@rebatesrate" id="Rebatesrate_h"/>
+        <input type="hidden"  value="@copyMoneyCount" id="CopyMoneyCount_h"/>
+        <input type="hidden"  value="@copypeopleCount" id="CopypeopleCount_h"/>
+        <input type="hidden" value="@follow" id="follow_h"/>
+    </div>
+    </div>
+    <script type="text/javascript">
+
+        function TodayBdfxList(pageNo, pageSize) {
+            var UserName = $("#UserName_h").val();
+            var Rebatesrate = $("#Rebatesrate_h").val();
+            var CopyMoneyCount = $("#CopyMoneyCount_h").val();
+            var CopypeopleCount = $("#CopypeopleCount_h").val();
+            var follow = $("#follow_h").val();
+
+            var url = $.format("/baodan/redantoday?pageNo={0}&pageSize={1}", pageNo, pageSize);
+            if (UserName) {
+                url += "&UserName=" + UserName;
+            }
+            if (Rebatesrate) {
+                url += "&Rebatesrate=" + Rebatesrate;
+            }
+            if (CopyMoneyCount) {
+                url += "&CopyMoneyCount=" + CopyMoneyCount;
+            }
+            if (CopypeopleCount) {
+                url += "&CopypeopleCount=" + CopypeopleCount;
+            }
+            if (follow) {
+                url += "&follow=1";
+            }
+            window.location.href = encodeURI(url);
+        }
+        $(function () {
+            $(".attention").live("click", function () {
+                var self = $(this);
+                user.isLogin(function (islogin) {
+                    if (!islogin) {
+                        if (!getVersionbylogin()) {
+                            $("#loginLay").addClass("dialogAniCore dialogAnimate5");
+                            var timer = setInterval(function () {
+                                if (!$("#loginLay").hasClass("dialogAnimate5")) { $("#loginLay").removeClass("dialogAniCore"); clearInterval(timer); }
+                                $("#loginLay").removeClass("dialogAnimate5");
+                            }, 100);
+                        }
+                        loginDialog.Show();
+                        $("#userName").focus();
+                    } else {
+                        $.ajax({
+                            type: 'POST',
+                            url: "/home/setFansOrNot",
+                            data: { flag: self.attr("data-flag"), uid: user.info.userId, fuid: self.attr("data-fuid") },
+                            success: function (response) {
+                                if (response.isSuccess) {
+                                    window.location.href = location.href;
+                                    //                                    if (self.attr("data-flag") == "1") {//取消关注
+                                    //                                        self.addClass("attentionlist");
+                                    //                                        self.text("取消关注");
+                                    //                                        self.attr("data-flag", 0);
+                                    //                                    } else {
+                                    //                                        self.removeClass("attentionlist");
+                                    //                                        self.text("+ 关注");
+                                    //                                        self.attr("data-flag", 1);
+                                    //                                    }
+                                } else {
+                                    alertTip(response.msg);
+
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        })
+    </script>
+</div>

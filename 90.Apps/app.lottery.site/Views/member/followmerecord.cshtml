@@ -1,0 +1,41 @@
+﻿<style>
+    .nbar { height: 30px; text-align: center; font-size: 14px; font-weight: bold; padding-top: 10px; }
+    .nx2 { background-color: #FFF; line-height: 24px; }
+        .nx2 td { border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #F4F5F9; }
+    .outwindos { position: relative; }
+    .dv2 { height: 22px; padding-top: 10px; padding-left: 15px; border-top-width: 1px; border-top-style: solid; border-top-color: #E9E1DA; color: #999; background-color: #FFE; }
+</style>
+
+@using GameBiz.Core;
+@{
+    var followr = ViewBag.FollowRecord as TogetherFollowRecordInfoCollection;
+}
+<div class="nbar"><span style="color: #00e" id="followUserName"></span>的自动跟单认购记录<input type="hidden" id="ruleId" value="" /></div>
+<table cellspacing="0" cellpadding="0" width="100%" align="center" class="my_tbl">
+    <tr>
+        <th>期号</th>
+        <th>方案号</th>
+        <th>方案金额</th>
+        <th>方案奖金</th>
+        <th>跟单金额</th>
+        <th>跟单奖金</th>
+        <th>认购时间</th>
+    </tr>
+    @{foreach (var item in followr.List)
+      {
+        <tr class="nx">
+            <td>@item.IssuseNumber</td>
+            <td><a href="/user/scheme/@item.SchemeId" target="_blank">@item.SchemeId</a></td>
+            <td>@item.SchemeMoney.ToString("f")</td>
+            <td>@item.SchemeBonusMoney.ToString("f")</td>
+            <td>@item.FollowMoney.ToString("f")</td>
+            <td>@item.FollowBonusMoney.ToString("f")</td>
+            <td>@item.CreateTime.ToShortDateString() @item.CreateTime.ToShortTimeString()</td>
+        </tr>
+      }}
+    <tr class="nx">
+        <td colspan="7" class="tr last_td">@ControlHelper.Pager("getFollowRecord", ViewBag.pageIndex, ViewBag.PageSize, followr == null ? 0 : followr.TotalCount)
+        </td>
+    </tr>
+</table>
+

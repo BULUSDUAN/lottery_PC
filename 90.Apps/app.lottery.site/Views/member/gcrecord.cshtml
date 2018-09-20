@@ -1,0 +1,150 @@
+﻿@using app.lottery.site.Models;
+@using GameBiz.Core;
+@{
+    ViewBag.Title = "账户明细 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "账户明细, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+
+    var fund = ViewBag.BettingOrder as GameBiz.Core.MyBettingOrderInfoCollection;
+    var user = ViewBag.CurrentUser as app.lottery.site.Models.CurrentUserInfo;
+    //自定义参数
+    var shouruCount = 0;
+    var zhichuCount = 0;
+    var shouruMoney = 0.0;
+    var zhichuMoney = 0.0;
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+}
+
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>账户明细</li>
+    </ul>
+</div>
+<div class="center mt10">
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mune_safe">
+          <div class="account_menu clearfix">
+           <a href="/member/accountdetail"  class="select">账户明细</a>
+            <a href="/member/redBagList">红包明细</a>
+            <a href="/member/paywizzard">账户充值</a>
+            <a href="/member/drawingsguide">账户提款</a>
+        </div>
+        <div class="account_con">
+            <div class="betorder_top">
+                <ul>
+                    <li><a href="/member/accountdetail"><i></i>账户明细</a></li>
+                    <li><a href="/member/RechargeRecord"><i></i>充值记录</a></li>
+                    <li class="betorder_topSelected"><a href="/member/gcrecord">
+                                                         <i></i>购彩记录</a></li>
+                    <li><a href="/member/WinningRecord"><i></i>中奖记录</a></li>
+                    <li><a href="/member/drawingsrecord"><i></i>提款记录</a></li>
+                </ul>
+            </div>
+        <div class="search_tab" >
+           @*   购买类型：
+          <select id="game" name="game">
+                <option value="" @(ViewBag.OrderType == null ? "selected='selected'" : string.Empty) >
+                    所有类型</option>
+                <option value="1" @(ViewBag.OrderType != null && ViewBag.OrderType == OrderQueryType.Betting ? "selected='selected'" : string.Empty)>
+                    代购</option>
+                <option value="2" @(ViewBag.OrderType != null && ViewBag.OrderType == OrderQueryType.CreateTogether  ? "selected='selected'" : string.Empty)>
+                    发起合买</option>
+                <option value="3" @(ViewBag.OrderType != null && ViewBag.OrderType == OrderQueryType.JoinTogether  ? "selected='selected'" : string.Empty)>
+                    参与合买</option>
+            </select>*@
+            日期：@ControlHelper.Calendar("begin", ViewBag.Begin) 至 @ControlHelper.Calendar("end", ViewBag.End)<input
+                type="button" value="查询" onclick="getFundRecord(0, 10)" class="search_btn" />
+        </div>
+            <table class="account_box">
+                <thead>
+                    <tr >
+                        <td>
+                            序号
+                        </td>
+                        <td>
+                            交易时间
+                        </td>
+                        <td>
+                            订单金额
+                        </td>
+                        <td>
+                            投注方式
+                        </td>
+                        <td>
+                            交易详情
+                        </td>
+                    </tr>
+                </thead>
+                @{
+                    if (fund != null && fund.OrderList.Count > 0)
+                    {
+                        foreach (var item in fund.OrderList)
+                        {
+                            <tr>
+                                <td>
+                                    @(ViewBag.pageNo*ViewBag.PageSize + (fund.OrderList.IndexOf(item) + 1))
+                                </td>
+                                <td>
+                                    @item.BuyTime.ToString("yyyy-MM-dd HH:mm")
+                                </td>
+                                <td class="ye blod fszie">
+                                    @item.BuyMoney.ToString("N2")
+                                </td>
+                                <td class="zc">                      
+                                    @SiteConvert.SchemeBettingCategoryName(item.SchemeBettingCategory)
+                                </td>
+                                <td >
+                                    <a href="/user/scheme/@item.SchemeId" class="orderId" target="_blank">查看</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5">
+                                暂时没有找到你要的数据哦
+                            </td>
+                        </tr>
+                    }
+                }
+
+            </table>
+            <div class="combined clearfix">
+                <div class="fl">
+                    <span><b class="b1"></b>收入交易：<strong class="zc blod fszie">@(fund != null ? fund.TotalCount : 0)&nbsp;笔</strong></span>
+                    <span><b class="b2"></b>认购金额：<strong class="srje blod fszie">@(fund != null ? fund.TotalBuyMoney.ToString("N2") : "")&nbsp元</strong></span>
+                </div>
+                <div class="fr">
+                    <em class="xh">*</em>注意：购彩记录最多可查询一个月数据
+                </div>
+                
+            </div>
+            <div class="account_page  clearfix">
+                @ViewHelpers.Pager4("getFundRecord", ViewBag.pageNo, ViewBag.PageSize, fund == null ? 0 : fund.TotalCount)
+            </div>
+        </div></div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+
+<script type="text/javascript">
+    $(function() {
+        $(".account_box tr:even:gt(0)").css("backgroundColor", "#F9F9F9");
+    });  
+    function getFundRecord(pageNo, pageSize) {
+        var begin = $("#begin").val();
+        var end = $("#end").val();
+        var search = "pageNo=" + pageNo + "&pageSize=" + pageSize + "&begin=" + begin + "&end=" + end;
+        var OrderType = $("#game option:selected").val();
+        if (OrderType) {
+            search = search + "&orderType=" + OrderType;
+        }
+        location.search = search;
+    }
+</script>

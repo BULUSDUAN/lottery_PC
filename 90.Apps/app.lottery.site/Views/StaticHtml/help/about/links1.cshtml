@@ -1,0 +1,82 @@
+﻿@{
+    var Title = "友情链接";
+    ViewBag.Title = Title + " - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+    @ViewHelpers.css("help.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">玩彩网</a> > </li>
+        <li><a href="/help/index">&nbsp;帮助中心</a> > </li>
+        <li>&nbsp;友情链接</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type = "About", name = "Join" });}
+    <div class="help_r">
+        <div class="det_box">
+            <h2>
+                友情链接</h2>
+            <div class="det_c">
+                <br>
+                <h4>
+                    友情链接:</h4>
+                <p>
+                    <a target="_blank" href="http://www.baidu.com/"><span style="color: #3377cc;">百度</span></a>
+                    <a target="_blank" href="http://www.sougou.com/"><span style="color: #3377cc;">搜狗</span></a>
+                    <a target="_blank" href="http://www.114la.com/"><span style="color: #3377cc;">114啦</span></a>
+                    <a target="_blank" href="http://www.sporttery.cn/specs/zixun.html"><span style="color: #3377cc;">
+                        中国竞彩网</span></a> <a target="_blank" href="http://c.spdex.com/"><span style="color: #3377cc;">
+                            必发指数网</span></a> <a target="_blank" href="http://www.zs310.com/"><span style="color: #3377cc;">
+                                智胜彩票</span></a> <a target="_blank" href="http://www.huanhuba.com/"><span style="color: #3377cc;">
+                                    足球魔方</span></a> <a target="_blank" href="http://www.cjcp.com.cn/"><span style="color: #3377cc;">
+                                        彩经网</span></a>
+                </p>
+                <h4>
+                    交换链接:</h4>
+                <p>
+                    与彩票主题相关或互补的网站，Alexa排名在100000以内，PR值≥5，就可以和玩彩网交换友情链接.具体操作流程如下：<br>
+                    1. 将您的资料包括网站名称、网站地址、网站logo、联系人姓名和Email、网站的简介等发Email至kefu@wancai.com<br>
+                    2. 玩彩网的工作人员会在3个工作日内完成对贵站的审核，并会通知贵站是否成为玩彩网的友情链接伙伴。<br>
+                    3. 同时请在您的网站主页加上玩彩网的图片链接或文字链接。
+                </p>
+            </div>
+            @* <div class="det_a feedback">
+                <div>以上内容是否解决了您的问题呢？</div>
+                              
+                <div>
+                <a id="btn_a_yes" class="btn"><span class="feedback_yes">是，已经解决。</span></a> <a class="btn" id="btn_a_no" href="javascript:void(0);"><span class="feedback_no">否，尚未解决。</span></a>
+                    <div style="display:none;" class="feedback_form clearfix" id="feed_div">                  
+                    <a id="fclose" class="feedback-close" href="javascript:void(0);">关闭</a>     
+                    <span style="display:none;" id="feed_detail"> 
+	                    <form method="post" name="feed_dtl" id="feed_dtlf">             
+		                    <span class="fb-input"><input type="radio" value="1" name="nodtl"> 描述不清晰</span>
+		                    <span class="fb-input"><input type="radio" value="2" name="nodtl"> 字太多，不想看</span>
+		                    <span class="fb-input"><input type="radio" value="3" name="nodtl"> 太复杂，看不懂</span>
+		                    <span class="fb-input"><input type="button" value="提交" name="fsbmt"></span>
+		                </form>    
+	                </span>
+                    <div style="display:none;" class="feedback-suc l" id="feed_result">您的反馈信息已经提交，谢谢您的反馈。</div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                  
+                </script>                                           
+                </div>
+                
+                <div class="det_a">
+                	<div class="det_a_l">相关问题：</div>
+                    <div class="det_a_r">
+                    	<ul>
+                        	                    	</ul>    
+                    </div>
+                </div>*@
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+@ViewHelpers.js("help.js")

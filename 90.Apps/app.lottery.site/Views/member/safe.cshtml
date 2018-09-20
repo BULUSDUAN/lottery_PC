@@ -1,0 +1,365 @@
+﻿@using app.lottery.site.Models;
+@{
+    ViewBag.Title = "安全首页 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "安全首页, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    CurrentUserInfo user = ViewBag.CurrentUser;
+    var balance = ViewBag.CurrentUserBalance as GameBiz.Core.UserBalanceInfo;
+
+    var level = 0;
+    if (balance.IsSetPwd) { level++; }
+    if (user.IsAuthenticationRealName) { level++; }
+    if (user.IsAuthenticationMobile) { level++; }
+    if (user.QQNumber != null && user.IsBindBank) { level++; }
+    if (user.AlipayInfo != null) { level++; }
+    Dictionary<int, string> ret = new Dictionary<int, string>();
+    ret.Add(0, "很低");
+    ret.Add(1, "低");
+    ret.Add(2, "中");
+    ret.Add(3, "中");
+    ret.Add(4, "高");
+}
+@section css{
+    @ViewHelpers.css("mycenter.css")
+  @UserHelper.css("simplepop/main.css")
+  @UserHelper.css("simplepop/simplepop.css")
+}
+@section js{
+    @UserHelper.js("formValidator-4-1-3.js")
+    @UserHelper.js("formValidatorRegex.js")
+    @UserHelper.js("CheckPwd.js")
+    @UserHelper.js("email_bind.js")
+    @UserHelper.js("mycenter_safe.js")
+
+    @UserHelper.js("simplepop/simplepop.js")
+   
+}
+
+@UserHelper.csscdn("/duilian/duilian1.css", "01211")
+<div class="hongbao3" style="position:  fixed; right: 10%; top: 28%;clip: rect(0px,70px,200px,0px);z-index: 9999">
+    <a onclick="window.open('/staticHtml/help/myAccount/Redpackets2.html')">
+        <img src="@ViewHelpers.img("duilian/redbag.png")" />
+    </a>
+</div>
+@UserHelper.js("duilian/duilian.js")
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>安全首页</li>
+    </ul>
+</div>
+<div class="center mt10">
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="info_zl">
+            个人资料</div>
+        <div class="safe_center">
+            <table class="safe_table" cellpadding="0" cellspacing="0">
+                @*银行卡绑定*@
+                <tr class="member_safe1" style="display: none;">
+                    <td width="100" class="td_left">
+                        <span class="member-safe @(user.IsBindBank ? "member_safe_y" : "member_safe_w")">
+                        </span><span class="@*member-rz*@ @(user.IsBindBank ? "ok_y" : "no_w")" title="@(user.IsBindBank ? "持卡人：" + SiteString.AllHideUser(user.BankCardInfo.RealName) + "\t\r\n开户行：" + user.BankCardInfo.BankName + "\t\r\n银行卡号：" + SiteString.EncodeBankCardNumber(user.BankCardInfo.BankCardNumber) : "绑定银行卡")">
+                        </span>
+                    </td>
+                    <td width="585" class="td_center">
+                        <e style="color: #545454;">银行卡</e>
+                        <br />
+                        @{if (user.IsBindBank)
+                          {
+                            <e style="color: #989898;">转账、充值、便捷</e>
+                            <e style="margin-left: 20px;">
+                        <label style="color: #7CBC0E;"><i>银行名称：<b>@user.BankCardInfo.BankName</b> 银行卡号：<b>@SiteString.EncodeBankCardNumber(user.BankCardInfo.BankCardNumber)</b>
+                                                            持卡人：<b>@SiteString.AllHideUser(user.BankCardInfo.RealName)</b></i></label>
+                                                            </e>
+                          }
+                          else
+                          {<e style="color: #989898;"> <i>设置绑定您的银行卡，才可正常提款。</i> </e>}}
+                    </td>
+                    <td width="100" class="td_right">
+                        @{
+                            if (user.IsBindBank)
+                            {
+                            <span class="save_info_list bank_xg">查看</span>
+                            }
+                            else
+                            {
+                            <span class="save_info_list">绑定</span> 
+                            }
+                        }
+                    </td>
+                </tr>
+                <tr class="member_safe_Next1">
+                    <td colspan="3" style="border: 1px solid #dadada">
+                        @{Html.RenderAction("bankcard", "member");}
+                    </td>
+                </tr>
+                <tr style="height: 5px; background-color: #FFF; border: 0px !important;">
+                </tr>
+                @*实名认证*@
+                <tr class="member_safe" style="display: none;">
+                    <td width="100" class="td_left">
+                        <span class="member-safe @(user.IsAuthenticationRealName ? "member_safe_y" : "member_safe_w")">
+                        </span><span class="@(user.IsAuthenticationRealName ? "ok_y" : "no_w")" title="@(user.IsAuthenticationRealName ? "姓名：" + SiteString.AllHideUser(user.RealNameInfo.RealName) + "\t\r\n身份证号：" + SiteString.EncodeIdCardNumber(user.RealNameInfo.IdCardNumber) : "实名认证")">
+                        </span>
+                    </td>
+                    <td width="585" class="td_center">
+                        <e style="color: #545454;">实名认证</e>
+                        <br />
+                        @{if (user.IsAuthenticationRealName)
+                          {
+                            <e style="color: #989898;">您身份认证</e>
+                            <e style="margin-left: 20px;">
+                            <label style="color: #7CBC0E;"><i>真实姓名：<b>@(SiteString.AllHideUser(user.RealNameInfo.RealName))</b> 身份证：<b>@SiteString.EncodeIdCardNumber(user.RealNameInfo.IdCardNumber)</b>
+                                                            </i></label> </e>
+                          }
+                          else
+                          {<e style="color: #989898;">
+                            <i>实名认证，用于变更其他保护设置，成为您帐户安全的有效防线。</i>
+                            </e> }}
+                    </td>
+                    <td width="100" class="td_right">
+                        <span class="save_info_list realy_xg">@(user.IsAuthenticationRealName ? "查看" : "认证")</span>
+                    </td>
+                </tr>
+                <tr class="member_safe_Next" style="display: table-row;">
+                    <td colspan="3" style="border: 1px solid #dadada">
+                        @{Html.RenderAction("realnameauth", "member");}
+                    </td>
+                </tr>
+                <tr style="height: 5px; background-color: #FFF; border: 0px !important;">
+                </tr>
+                <tr class="member_safe">
+                    <td width="100" class="td_left">
+                        <span class="member-safe member_safe_y" title="已设置"></span><span style="color: #8ac109;
+                            margin-left: 30px;">已设置</span>
+                    </td>
+                    <td width="585" class="td_center">
+                        <e style="color: #545454;">登录密码</e>
+                        <br />
+                        <e style="color: #989898;">登录网站账户的密码</e>
+                    </td>
+                    <td width="100" class="td_right">
+                        <span class="save_info_list mm_xg">修改</span>
+                    </td>
+                </tr>
+                <tr class="member_safe_Next">
+                    <td colspan="3" style="border: 1px solid #dadada">
+                        @{Html.RenderAction("password", "member");}
+                    </td>
+                </tr>
+                <tr style="height: 5px; background-color: #FFF; border: 0px !important;">
+                </tr>
+                <tr class="member_safe">
+                    <td width="100" class="td_left">
+                        <span class="member-safe @(balance.IsSetPwd ? "member_safe_y" : "member_safe_w")">
+                        </span><span class=" @(balance.IsSetPwd ? "ok_y" : "no_w")"  title="@(balance.IsSetPwd ? "已设置资金密码" : "未设置资金密码")">
+                        </span>
+                    </td>
+                    <td width="585" class="td_center">
+                        <e style="color: #545454;">资金密码</e>
+                        <br />
+                        <e style="color: #989898;">提现、充值账户的密码</e>
+                    </td>
+                    <td width="100" class="td_right">
+                        <span class="save_info_list monery_xg">@(balance.IsSetPwd ? "修改" : "设置")</span>
+                    </td>
+                </tr>
+                <tr class="member_safe_Next">
+                    <td colspan="3" style="border: 1px solid #dadada">
+                        @{Html.RenderPartial("balancepwd");}
+                    </td>
+                </tr>
+                <tr style="height: 5px; background-color: #FFF; border: 0px !important;">
+                </tr>
+                <tr class="member_safe">
+                    <td width="100" class="td_left">
+                        <span class="member-safe @(user.IsAuthenticationMobile ? "member_safe_y" : "member_safe_w")">
+                        </span><span class="@(user.IsAuthenticationMobile ? "ok_y" : "no_w")" title="@(user.IsAuthenticationMobile ? "已绑定手机：" + SiteString.EncodeMobile(user.MobileInfo.Mobile) : "绑定手机")">
+                        </span>
+                    </td>
+                    <td width="585" class="td_center">
+                        <e style="color: #545454;">手机绑定</e>
+                        <br />
+                        @{if (user.IsAuthenticationMobile)
+                          {
+                            <e style="color: #989898;">便捷,账上电脑</e>
+                            <e style="margin-left: 20px;">
+                                <label style="color: #7CBC0E; margin-left:10px;"><i>手机号码：<b>@(SiteString.EncodeMobile(user.MobileInfo.Mobile))</b></i></label>
+                                </e>
+                          }
+                          else
+                          { <e style="color: #989898;">
+                                  <i>设置后用于密码找回，以及接收提款或中奖短信通知。</i>
+                                  </e>
+                          }}
+                    </td>
+                    <td width="100" class="td_right">
+                        @*<span class="save_info_list phone_xg">@(user.IsAuthenticationMobile ? "" : "绑定")</span>*@
+                    </td>
+                </tr>
+                <tr class="member_safe_Next">
+                    @{
+                        if (user.IsAuthenticationMobile)
+                        {
+                        <td colspan="3" style="border: 1px solid #dadada">
+                            @{ Html.RenderAction("editmobile", "member"); }
+                        </td>
+                        }
+                        else
+                        {
+                        <td colspan="3" style="border: 1px solid #dadada">
+                            @{ Html.RenderAction("mobile", "member"); }
+                        </td>
+                        }
+                    }
+                </tr>
+                @*              <tr style="height: 5px; background-color: #FFF; border: 0px !important;">
+                </tr>
+                <tr class="member_safe">
+                    <td width="100">
+                        <span class="member-safe @(user.IsAuthenticationEmail ? "member_safe_y" : "member_safe_w")" style=" margin-left:30px;">
+                        </span><span class="@(user.IsAuthenticationEmail ? "ok_y" : "no_w")" title="@(user.IsAuthenticationEmail ? "已绑定邮箱" + SiteString.EncodeEmail(user.EmailInfo.Email) : "绑定邮箱")">
+                        </span>
+                    </td>
+                    <td width="585">
+                        <e style="color: #545454;">邮箱绑定</e>
+                        <br />
+                            @{if (user.IsAuthenticationEmail)
+                              {
+                                  <e style="color: #989898;">忘记密码可以通过邮箱找回</e>
+                                 <e style=" margin-left:20px;">
+                                <label style="color: #7CBC0E"><i>邮箱绑定：<b>@(SiteString.EncodeEmail(user.EmailInfo.Email))</b></i></label>
+                                </e>
+                              }
+                              else
+                              { <e style="color: #989898;">
+                                  <i>设置后用于密码找回，以及购买方案后接收方案快照通知。</i>
+                                  </e>}}
+                    </td>
+                    <td width="100">
+                      <span class="save_info_list email_xg">@(user.IsAuthenticationEmail ? "查看" : "绑定")</span>
+                    </td>
+                </tr>*@ @*<tr class="member_safe_Next">
+                    <td colspan="3" style=" border:1px solid #dadada">
+                        @{Html.RenderAction("email", "member");}
+                    </td>
+                </tr>*@
+                <tr style="height: 5px; background-color: #FFF; border: 0px !important;">
+                </tr>
+                @*QQ绑定*@
+                @*<tr class="member_safe">
+                    <td width="100" class="td_left">
+                        <span class="member-safe @(user.QQNumber != null ? "member_safe_y" : "member_safe_w")">
+                        </span><span class="@(user.QQNumber != null ? "ok_y" : "no_w")" title="绑定QQ"></span>
+                    </td>
+                    <td width="585" class="td_center">
+                        <e style="color: #545454;">QQ绑定</e>
+                        <br />
+                        @{if (user.QQNumber != null)
+                          {
+                            <e style="color: #989898;">设置后安全等级可提升</e>
+                            <e style="margin-left: 20px;">
+                                <label style="color: #7CBC0E; margin-left:10px;"><i>QQ号码：<b>@(SiteString.EncodeQQNumber(user.QQNumber))</b></i></label>
+                                </e>
+                          }
+                          else
+                          { <e style="color: #989898;">
+                                  <i>绑定您的QQ号，设置后安全等级可提升</i>
+                                  </e>
+                          }}
+                    </td>
+                    <td width="100" class="td_right">
+                        <span class="save_info_list phone_xg">@(user.QQNumber != null ? "查看" : "绑定")</span>
+                    </td>
+                </tr>*@
+                @*<tr class="member_safe_Next">
+                    <td colspan="3" style="border: 1px solid #dadada">
+                        @{Html.RenderAction("qq", "member");}
+                    </td>
+                </tr>
+                <tr style="height: 5px; background-color: #FFF; border: 0px !important;">
+                </tr>*@
+                @*<tr class="member_safe">
+                    <td width="100" class="td_left">
+                        <span class="member-safe @(user.AlipayInfo != null ? "member_safe_y" : "member_safe_w")" >
+                        </span><span class="@(user.AlipayInfo != null ? "ok_y" : "no_w")" title="支付宝绑定">
+                        </span>
+                    </td>
+                    <td width="585" class="td_center">
+                        <e style="color: #545454;">支付宝绑定</e>
+                        <br />
+                        <e style="color: #989898;">只能使用绑定的本支付宝账号提现。</e>
+                    </td>
+                    <td width="100" class="td_right">
+                        <span class="save_info_list hidename_xg">@(user.AlipayInfo != null ? "查看" : "绑定")</span>
+                    </td>
+                </tr>*@
+                @*<tr class="member_safe_Next">
+                    <td colspan="3" style="border: 1px solid #dadada">
+                        @{Html.RenderAction("AliPay");}
+                    </td>
+                </tr>*@
+                @*<tr style="height: 5px; background-color: #FFF; border: 0px !important;">
+                </tr>*@
+                @*<tr class="member_safe">
+                    <td width="100" class="td_left">
+                        <span class="member-safe @(user.LoginInfo.HideDisplayNameCount > 0 ? "member_safe_y" : "member_safe_w")" >
+                        </span><span class="@*member-rz*@ @*@(user.LoginInfo.HideDisplayNameCount > 0 ? "ok_y" : "no_w")" title="设置用户名隐藏">*@
+                       @* </span>
+                    </td>
+                    <td width="585" class="td_center">
+                        <e style="color: #545454;">隐藏用户名</e>
+                        <br />
+                        <e style="color: #989898;">设置后可以隐藏您账户名称后面的指定位数。</e>
+                    </td>
+                    <td width="100" class="td_right">
+                        <span class="save_info_list hidename_xg">@(user.LoginInfo.HideDisplayNameCount > 0 ? "更改" : "设置")</span>
+                    </td>
+                </tr>
+                <tr class="member_safe_Next">
+                    <td colspan="3" style="border: 1px solid #dadada">
+                        @{Html.RenderPartial("hideusername");}
+                    </td>
+                </tr>*@
+                @*<tr style="height: 5px; background-color: #FFF; border: 0px !important;">
+                </tr>*@
+               @* <tr>
+                    <td width="100" class="td_left">
+                        <span class="member-safe member_safe_y"></span><span class="ok_y" title="敏感信息"></span>
+                    </td>
+                    <td width="585" class="td_center">
+                        <e style="color: #545454;">敏感信息</e>
+                        <br />
+                        <e style="color: #989898;">自动隐藏密码、银行卡号码、手机号码以及身份证号码等敏感信息。</e>
+                    </td>
+                    <td width="100" class="td_right">
+                        <span class="save_info_list" style="color: #989898;">默认</span>
+                    </td>
+                </tr>*@
+            </table>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            //$(".mem-memberinfo").show();
+            $(".member_safe").show();
+            $(".member_safe_Next").hide();
+
+            $(".ok_y").text("已设置").css("color", "#8ecc33").addClass("td_yseOrno");
+            $(".no_w").text("未设置").css("color", "#ff5c00").addClass("td_yseOrno");
+
+            $("span.save_info_list").click(function () {
+                var self = $(this);
+                self.parents(".member_safe").next("tr").show();
+                self.parents(".member_safe").hide();
+                var siblings = self.parents(".member_safe").next("tr").siblings("tr.member_safe_Next");
+                var siblings_parent = self.parents(".member_safe").siblings("tr.member_safe");
+                siblings_parent.show();
+                siblings.hide();
+            });
+        })
+    </script>
+</div>
+<div class="clearfix">
+</div>

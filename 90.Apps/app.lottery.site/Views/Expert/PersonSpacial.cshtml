@@ -1,0 +1,1276 @@
+﻿@using GameBiz.Core;
+@using app.lottery.site.Models;
+@using app.lottery.site.Controllers;
+@{
+    ViewBag.Title = "个人专栏";
+    Layout = "../Shared/_Expert.cshtml";
+    var Recommend = ViewBag.Recommend as ExperterAnalyzeInfoCollection;
+    var tucao = ViewBag.Tucao as ExperterCommentsCollection;
+    var ExperterList = ViewBag.ExperterList as ExperterInfoCollection;
+    var Comment = ViewBag.Comment as ExperterSchemeInfoCollection;
+    var user = ViewBag.User as ExperterInfo;
+    var expertWeek = ViewBag.ExpertWeek as ExperterShootingInfoCollection;
+    var expertMonth = ViewBag.ExpertMonth as ExperterShootingInfoCollection;
+    var expertTotal = ViewBag.ExpertTotal as ExperterShootingInfoCollection;
+    CurrentUserInfo currentUser = ViewBag.CurrentUser;
+    var a = 1; var j = 0; var b = 0; var ccc = 0; var n = 0; var mm = 0;
+}
+<script type="text/javascript">
+    function showCount() {
+        var strChar = document.getElementById('txtArea').value;
+
+        var charCount = strChar.length;
+        if (charCount <= 60)
+            document.getElementById('test2').value = 60 - Number(charCount);
+        else {
+            alert('最多输入60个字!');
+            document.getElementById('txtArea').value = strChar.substring(0, 60);
+        }
+    }
+</script>
+<div id="bodyspacial">
+    <div id="log">
+        <div class="left">
+            <div class="l_wire">
+            </div>
+            <div class="l_img">
+            </div>
+        </div>
+        <div class="right">
+            <a href="javascript:void(0)" class="r_a" id="NewV">@ViewBag.Time</a>
+            <input type="hidden" id="hd_time" value="@ViewBag.Time" />
+            <div class="hdSelect">
+                @for (int k = 0; k < 10; k++)
+                {
+                    var str = DateTime.Today.AddDays(-k).ToString("yyyy-MM-dd");
+                    <a class="r_a" txt="@str">@str</a>
+                }
+            </div>
+        </div>
+        <div style="clear: both;">
+        </div>
+    </div>
+    <div id="content">
+        <div class="middle">
+            <div class="rec_top">
+                竞彩推荐方案&nbsp;&nbsp;<span style="font-size: 14px;">SMG recommended solutions</span>
+                <a href="AllExpert" class="backbtn">返回频道</a>
+            </div>
+            <div class="left">
+                <div class="per_box">
+                    <div class="perbg">
+                        <div class="per_bbox">
+                            <div class="per_div">
+                                <input type="hidden" id="userid" value="@user.UserId" />
+                                <div class="per_font">
+                                    <div class="per_t" title="@user.DisplayName">
+                                        @{
+                                            byte[] myByte = System.Text.Encoding.Default.GetBytes(user.DisplayName);
+                                            var disname = "";
+                                            if (myByte.Length >= 10 && user.DisplayName.Length > 5 && user.DisplayName.Length <= 10)
+                                            {
+                                                disname = user.DisplayName.Substring(0, 5) + "..";
+                                            }
+                                            else if (user.DisplayName.Length > 10)
+                                            {
+                                                disname = user.DisplayName.Substring(0, 10) + "..";
+                                            }
+                                            else
+                                            {
+                                                disname = user.DisplayName;
+                                            }
+                                        }
+                                        @disname</div>
+                                    @{
+                                        var gamecode = "";
+                                        var game = user.AdeptGameCode;
+                                        switch (game)
+                                        {
+                                            case "JCZQ":
+                                                gamecode = "竞彩足球";
+                                                break;
+                                            case "JCZQ/JCLQ":
+                                                gamecode = "竞彩足球/竞彩篮球";
+                                                break;
+                                            case "JCZQ/BJDC":
+                                                gamecode = "竞彩足球/北京单场";
+                                                break;
+                                            case "JCZQ/CTZQ":
+                                                gamecode = "竞彩足球/传统足球";
+                                                break;
+                                            default:
+                                                gamecode = user.AdeptGameCode;
+                                                break;
+                                        }
+                                    }
+                                    <div class="pertxt">@gamecode</div>
+                                </div>
+                                <div>
+                                    @if (currentUser != null)
+                                    {
+                                        if (ViewBag.experterid != currentUser.LoginInfo.UserId)
+                                        {
+                                        <input type="button" class="perbtn" value="我要关注支持他" />
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <input type="button" class="perbtn" value="我要关注支持他" />
+                                    }
+                                </div>
+                            </div>
+                            <div style="float: left; position: relative;">
+                                @if (!string.IsNullOrEmpty(user.ExperterHeadImage))
+                                {
+                                    <span class="head_span" style="opacity: 0.2; z-index: 995;">
+                                        <img src="@user.ExperterHeadImage" alt="" width="175" height="225" /></span>
+                                    <span class="head_span" style="margin-left: 55px; opacity: 0.3; z-index: 997;">
+                                        <img src="@user.ExperterHeadImage" alt="" width="175" height="225" /></span>
+                                    <span class="head_span" style="margin-left: 115px; opacity: 0.3; z-index: 999;">
+                                        <img src="@user.ExperterHeadImage" alt="" width="175" height="225" /></span>
+                                    <span class="head_span" style="margin-left: 175px; opacity: 1; z-index: 1000">
+                                        <img src="@user.ExperterHeadImage" alt="" width="175" height="225" /></span>
+                                    <span class="head_span" style="margin-left: 215px; opacity: 0.3; z-index: 990;">
+                                        <img src="@user.ExperterHeadImage" alt="" width="175" height="225" /></span>
+                                    <span class="head_span" style="margin-left: 255px; opacity: 0.3; z-index: 989;">
+                                        <img src="@user.ExperterHeadImage" alt="" width="175" height="225" /></span>
+                                    <span class="head_span" style="margin-left: 288px; opacity: 0.2; z-index: 985;">
+                                        <img src="@user.ExperterHeadImage" alt="" width="175" height="225" /></span>
+                                }
+                                else
+                                {
+                                    <span class="head_span" style="opacity: 0.2; z-index: 995;">
+                                        <img src="@ViewHelpers.img("expert/default_header.jpg")" alt="" width="175" height="225" /></span>
+                                    <span class="head_span" style="margin-left: 55px; opacity: 0.3; z-index: 997;">
+                                        <img src="@ViewHelpers.img("expert/default_header.jpg")" alt="" width="175" height="225" /></span>
+                                    <span class="head_span" style="margin-left: 115px; opacity: 0.3; z-index: 999;">
+                                        <img src="@ViewHelpers.img("expert/default_header.jpg")" alt="" width="175" height="225" /></span>
+                                    <span class="head_span" style="margin-left: 175px; opacity: 1; z-index: 1000">
+                                        <img src="@ViewHelpers.img("expert/default_header.jpg")" alt="" width="175" height="225" /></span>
+                                    <span class="head_span" style="margin-left: 215px; opacity: 0.3; z-index: 990;">
+                                        <img src="@ViewHelpers.img("expert/default_header.jpg")" alt="" width="175" height="225" /></span>
+                                    <span class="head_span" style="margin-left: 255px; opacity: 0.3; z-index: 989;">
+                                        <img src="@ViewHelpers.img("expert/default_header.jpg")" alt="" width="175" height="225" /></span>
+                                    <span class="head_span" style="margin-left: 288px; opacity: 0.2; z-index: 985;">
+                                        <img src="@ViewHelpers.img("expert/default_header.jpg")" alt="" width="175" height="225" /></span>
+                                }
+                            </div>
+                            <div style="clear: both;">
+                            </div>
+                        </div>
+                        <div class="pericon">
+                            <img class="default_header" src="@ViewHelpers.img("../images/expert/pericon.png")" alt="" />
+                            <p class="p" title="@user.ExperterSummary">
+                                @(user.ExperterSummary.Length > 100 ? user.ExperterSummary.Substring(0, 100) + "..." : user.ExperterSummary)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="program" style="margin-top: -10px;">
+                    <ul>
+                        @if (Comment.TotalCount != 0)
+                        {
+                            foreach (var item in Comment.List)
+                            {
+                                Sports_AnteCodeQueryInfoCollection indent = WCFClients.GameClient.QuerySportsOrderAnteCodeList(item.SchemeId, ViewBag.UserToken);
+                            
+                            <li>
+                                <div class="pro_title">
+                                    推荐方案<span class="icon_pro">@a</span></div>
+                                <div class="box">
+                                    @foreach (var inden in indent.Take(2).ToList())
+                                    {
+                                        <div class="pro_d1 top10">
+                                            @{
+                                        //140907 003
+                                        var match = inden.MatchId.Split(',');
+                                        var weeklist = new List<string>();
+                                        var week = "";
+                                        var num = "";
+                                        if (match.Length > 0)
+                                        {
+                                            foreach (var str in match)
+                                            {
+                                                var MatchId = "20" + str.Substring(0, 6);
+                                                var time = DateTime.Parse(MatchId.Substring(0, 4) + "-" + MatchId.Substring(4, 2) + "-" + MatchId.Substring(6, 2)).DayOfWeek;
+                                                switch (time)
+                                                {
+                                                    case DayOfWeek.Friday:
+                                                        week = "周五";
+                                                        break;
+                                                    case DayOfWeek.Monday:
+                                                        week = "周一";
+                                                        break;
+                                                    case DayOfWeek.Saturday:
+                                                        week = "周六";
+                                                        break;
+                                                    case DayOfWeek.Sunday:
+                                                        week = "周日";
+                                                        break;
+                                                    case DayOfWeek.Thursday:
+                                                        week = "周四";
+                                                        break;
+                                                    case DayOfWeek.Tuesday:
+                                                        week = "周二";
+                                                        break;
+                                                    case DayOfWeek.Wednesday:
+                                                        week = "周三";
+                                                        break;
+                                                }
+                                                num = str.Substring(6, 3);
+                                                var list = week + num;
+                                                weeklist.Add(list);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            var MatchId = "20" + inden.MatchId.Substring(0, 6);
+                                            var time = DateTime.Parse(MatchId.Substring(0, 4) + "-" + MatchId.Substring(4, 2) + "-" + MatchId.Substring(6, 2)).DayOfWeek;
+                                            switch (time)
+                                            {
+                                                case DayOfWeek.Friday:
+                                                    week = "周五";
+                                                    break;
+                                                case DayOfWeek.Monday:
+                                                    week = "周一";
+                                                    break;
+                                                case DayOfWeek.Saturday:
+                                                    week = "周六";
+                                                    break;
+                                                case DayOfWeek.Sunday:
+                                                    week = "周日";
+                                                    break;
+                                                case DayOfWeek.Thursday:
+                                                    week = "周四";
+                                                    break;
+                                                case DayOfWeek.Tuesday:
+                                                    week = "周二";
+                                                    break;
+                                                case DayOfWeek.Wednesday:
+                                                    week = "周三";
+                                                    break;
+                                            }
+                                            num = inden.MatchId.Substring(6, 3);
+                                            var list = week + num;
+                                            weeklist.Add(list);
+                                        }
+                                            }
+                                            <span class="tj_time">@Html.Raw(string.Join(",", weeklist.ToArray()))</span><span
+                                                class="jiantou_w"></span> <span class="letball">
+                                                    @if (inden.GameType == "SPF")
+                                                    {
+                                                        @inden.LetBall
+                                                    }</span> <span class="bsdf_a">
+                                                        @{
+                                                    var hometeamname = "";
+                                                    byte[] myBytehome = System.Text.Encoding.Default.GetBytes(inden.HomeTeamName);
+                                                    if (myBytehome.Length > 10 && inden.HomeTeamName.Length < 10)
+                                                    {
+                                                        hometeamname = inden.HomeTeamName.Substring(0, 5);
+                                                    }
+                                                    else { hometeamname = inden.HomeTeamName; }
+                                                        }
+                                                        @hometeamname
+                                                    </span><span class="vs">VS</span><span class="bsdf_b">
+                                                        @{
+                                                    var guestteamname = "";
+                                                    byte[] myByteguest = System.Text.Encoding.Default.GetBytes(inden.GuestTeamName);
+                                                    if (myByteguest.Length > 10 && inden.GuestTeamName.Length < 10)
+                                                    {
+                                                        guestteamname = inden.GuestTeamName.Substring(0, 5);
+                                                    }
+                                                    else { guestteamname = inden.GuestTeamName; }
+                                                        }
+                                                        @guestteamname</span>
+                                        </div>
+                                        <div class="pro_d2 top10">
+                                            @{
+                                                    var codeArray = inden.AnteCode.Split(',');
+                                                    var codeNameList = new List<string>();
+                                                    foreach (var code in codeArray)
+                                                    {
+                                                        var tempName = string.Empty;
+                                                        switch (code)
+                                                        {
+                                                            case "3":
+                                                                tempName = "胜";
+                                                                break;
+                                                            case "1":
+                                                                tempName = "平";
+                                                                break;
+                                                            case "0":
+                                                                tempName = "负";
+                                                                break;
+                                                        }
+                                                        if (inden.GameType == "SPF")
+                                                        { tempName = "让" + tempName; }
+                                                        codeNameList.Add(tempName);
+                                                    }
+                                            }
+                                            <span class="tuijian">推&nbsp;&nbsp;&nbsp;&nbsp;荐：</span><span class="jiantou_b"></span>
+                                            <span style="color: Red; margin-left: 60px; margin-right: 20px;">@Html.Raw(string.Join("&nbsp;&nbsp;", codeNameList.ToArray()))</span></div>
+                                        <div class="div pro_bg top10">
+                                            <span class="tzbl">投注赔率：</span>
+                                            @foreach (var c in new string[] { "3", "1", "0" })
+                                            {
+                                                var cName = string.Empty;
+                                                switch (c)
+                                                {
+                                                    case "3":
+                                                        cName = "胜";
+                                                        break;
+                                                    case "1":
+                                                        cName = "平";
+                                                        break;
+                                                    case "0":
+                                                        cName = "负";
+                                                        break;
+                                                }
+                                                if (inden.GameType == "SPF")
+                                                { cName = "让" + cName; }
+                                                //3|2.70,1|3.40,0|2.16,-1|1
+                                                var spArray = inden.CurrentSp.Split(',');
+                                                var realSp = 0M;
+                                                foreach (var sp in spArray)
+                                                {
+                                                    //3|2.70
+                                                    var sArray = sp.Split('|');
+                                                    if (sArray.Length != 2) { continue; }
+                                                    if (sArray[0] == c)
+                                                    {
+                                                        realSp = decimal.Parse(sArray[1]);
+                                                        break;
+                                                    }
+                                                }
+
+                                                var html = string.Empty;
+                                                if (codeNameList.Contains(cName))
+                                                {
+                                                    //选中
+                                                    html += string.Format("<span data=\"{0}\" class=\"tz tjtz\" value=\"{1}\">{2} {3}</span>"
+                                                        , string.Format("{0}-{1}", c, realSp), realSp, cName, realSp);
+                                                }
+                                                else
+                                                {
+                                                    html += string.Format("<span class=\"tz\">{0} {1}</span>", cName, realSp);
+                                                }
+                                                @Html.Raw(html);
+                                            }
+                                            <span class="fenxi">析</span>
+                                            <input type="hidden" value="@inden.MatchId" name="matchid" />
+                                            <input type="hidden" value="@(week + num)" name="week" />
+                                            <input type="hidden" value="@inden.HomeTeamName" name="host"/>
+                                            <input type="hidden" value="@inden.GuestTeamName" name="visit"/>
+                                            <input type="hidden" value="@inden.LetBall" name="lose"/>
+                                            <input type="hidden" value="@item.StopTime" name="stoptime"/>
+                                            <input type="hidden" value="@inden.GameType" name="play"/>
+                                        </div>
+                                    }
+                                    <div class="pro_com">
+                                        方案支持</div>
+                                    <div class="pro_c_b">
+                                        <div class="czfd">
+                                            <div class="left">
+                                                @{
+                                    var support = item.Support;
+                                    var against = item.Against;
+                                    var sum = support + against;
+                                    var slv = 0M;
+                                    var alv = 0M;
+                                    if (sum == 0)
+                                    {
+                                        slv = 0;
+                                    }
+                                    else
+                                    {
+                                        slv = (decimal)support / sum * 100;
+                                    }
+                                    if (sum == 0)
+                                    {
+                                        alv = 0;
+                                    }
+                                    else
+                                    {
+                                        alv = (decimal)against / sum * 100;
+                                    }
+                                                }
+                                                <div class="zc">
+                                                    <span class="zcl" style=" width:@(slv * 1.6M)px"></span><span class="zclv">@slv.ToString("N0")%</span>
+                                                </div>
+                                                <div class="fd top15">
+                                                    <span class="fdl" style=" width:@(alv * 1.6M)px"></span><span class="fdlv">@alv.ToString("N0")%</span>
+                                                </div>
+                                            </div>
+                                            <div class="right">
+                                                @if (item.StopTime < DateTime.Now || item.BonusStatus == BonusStatus.Win)
+                                                {
+                                                    <span class=" toupiao zc"></span><span class=" toupiao fd"></span>
+                                                }
+                                                else
+                                                {
+                                                    <a class="pro_back toupiao zc" schemeId="@item.SchemeId"></a><a class="pro_oppo toupiao fd" schemeId="@item.SchemeId">
+                                                    </a>
+                                                }
+                                            </div>
+                                            <div style="clear: both;">
+                                            </div>
+                                        </div>
+                                        <div class="fangan top10">
+                                            @{
+                                                var tempList = new List<string>();
+                                                foreach (var oneCode in indent)
+                                                {
+                                                    var codeArray = oneCode.AnteCode.Split(',');
+                                                    var spArray = oneCode.CurrentSp.Split(',');
+                                                    foreach (var code in codeArray)
+                                                    {
+                                                        var sp = (from s in spArray where s.StartsWith(code) select s).FirstOrDefault();
+                                                        tempList.Add(string.Format("{0}_{1}_{2}_{3}", oneCode.MatchId, oneCode.GameType, code, string.IsNullOrEmpty(sp) ? "0" : sp.Split('|')[1]));
+                                                    }
+                                                }
+
+                                                var codeList = new List<string[]>();
+                                                new Common.Algorithms.Combination().Calculate(tempList.ToArray(), 2, (r) =>
+                                                {
+                                                    if (r[0].Split('_')[0] != r[1].Split('_')[0])
+                                                    {
+                                                        codeList.Add(r);
+                                                    }
+                                                });
+
+                                                var codeNameLists = new List<string>();
+                                                var money = new List<Decimal>();
+                                                foreach (var code in codeList)
+                                                {
+                                                    if (code.Length != 2) { continue; }
+
+                                                    var tempNameList = new List<string>();
+                                                    var tempMoney = 1M;
+                                                    foreach (var c in code)
+                                                    {
+                                                        var cArray = c.Split('_');
+                                                        if (cArray.Length != 4) { continue; }
+                                                        var m = indent.FirstOrDefault(p => p.MatchId == cArray[0]);
+                                                        if (m == null) { continue; }
+                                                        var homeName = m.HomeTeamName.Substring(0, 2);
+                                                        var betContent = string.Empty;
+                                                        switch (cArray[2])
+                                                        {
+                                                            case "3":
+                                                                betContent = "胜";
+                                                                break;
+                                                            case "1":
+                                                                betContent = "平";
+                                                                break;
+                                                            case "0":
+                                                                betContent = "负";
+                                                                break;
+                                                        }
+                                                        if (cArray[1] == "SPF")
+                                                        {
+                                                            betContent = "让" + betContent;
+                                                        }
+
+                                                        tempNameList.Add(string.Format("{0}_{1}", homeName, betContent));
+                                                        tempMoney *= decimal.Parse(cArray[3]);
+                                                    }
+                                                    codeNameLists.Add(string.Join("|", tempNameList.ToArray()));
+                                                    money.Add((tempMoney * 2));
+                                                }
+                                            }
+                                            @{var length = codeNameLists.Count >= 2 ? 2 : 1;}
+                                            @for (int ii = 0; ii < length; ii++)
+                                            {
+                                                string codeName = codeNameLists.Count >= 2 ? codeNameLists[ii] : codeNameLists[0];
+                                                var codeArray = codeName.Split('|');
+                                                if (length < 2)
+                                                {
+                                                <div class="pro_cb_b">
+                                                    <span>1.</span>
+                                                    @for (int _i = 0; _i < codeArray.Length; _i++)
+                                                    {
+                                                        var cArray = codeArray[_i].Split('_');
+                                                        <span class="fa" style="float: none;"><span>@cArray[0]</span><span class="@(cArray[1].StartsWith("让") ? "red" : "green")">[@cArray[1]]</span></span> 
+                                                        if (_i == 0)
+                                                        {
+                                                        <span>x</span>
+                                                        }
+                                                    }
+                                                    <span style="margin-left: 20px;">2串1</span><span class="zhushu">1</span><span>注</span>
+                                                </div>
+                                                <div class="pro_cb_b">
+                                                    2.<span class="fa" style="margin-left: 5px;"><span class="green"></span></span>×<span
+                                                        class="fa"><span class="red"></span></span><span style="margin-left: 26px;">2串1</span><span
+                                                            class="zhushu" style="margin-left: 30px;"></span><span>注</span></div>
+                                                
+                                                }
+                                                else
+                                                {
+                                                <div class="pro_cb_b">
+                                                    <span>@((b % 2) + 1).</span>
+                                                    @for (int _i = 0; _i < codeArray.Length; _i++)
+                                                    {
+                                                        var cArray = codeArray[_i].Split('_');
+                                                        <span class="fa" style="float: none;"><span>@cArray[0]</span><span class="@(cArray[1].StartsWith("让") ? "red" : "green")">[@cArray[1]]</span></span> 
+                                                        if (_i == 0)
+                                                        {
+                                                        <span>x</span>
+                                                        }
+                                                    }
+                                                    <span style="margin-left: 20px;">2串1</span><span class="zhushu">1</span><span>注</span>
+                                                </div>
+                                                    b++;
+                                                }
+                                            }
+                                            <div class="pro_cb_b">
+                                                投入：<span class="red">@(length * 2)</span>元&nbsp;&nbsp;理论奖金：<span class="red lxjj lx">
+                                                    @if (money.Count > 1)
+                                                    {
+                                                        @(money[0] < money[1] ? money[0].ToString("N2") : money[1].ToString("N2"))<span>~</span>@(money[0] > money[1] ? money[0].ToString("N2") : money[1].ToString("N2"))
+                                                    }
+                                                    else
+                                                    {
+                                                        @(money[0].ToString("N2"))<span>~</span>@(money[0].ToString("N2"))
+                                                    }
+                                                </span>元</div>
+                                            @{
+                                                    string[] s_spArray = new string[5];
+                                                    foreach (var inden in indent)
+                                                    {
+                                                        s_spArray = inden.CurrentSp.Split(',');
+                                                    }
+                                            }
+                                            <div style="margin-left: 7px; margin-top: 5px;">
+                                                @if (item.StopTime < DateTime.Now || item.BonusStatus == BonusStatus.Win)
+                                                {
+                                                    <span class="touzhu">竞猜投注</span> <span title="抄单投注" class="touzhu">抄单投注</span>
+                                                }
+                                                else
+                                                {
+                                                    <a href="/buy/jingcai/spf/" target="_blank" class="touzhu touzhu_b">竞猜投注</a> 
+                                                    
+                                                    if (s_spArray[0] != "")
+                                                    {
+                                                    <a title="抄单投注" class="touzhu touzhu_o" id="optimization" href="javascript:void
+                                                    0">抄单投注</a>
+                                                    }
+                                                    else
+                                                    {
+                                                    <span title="抄单投注" class="touzhu">抄单投注</span>
+                                                    }
+                                                }
+                                            </div>
+                                            <form target="_blank" action="/buy/optimize" method="post" id="optimize">
+                                            <input type="hidden" value="1" name="optimizeForm.multiple" id="op_multiple" />
+                                            <input type="hidden" value="" name="optimizeForm.periodId" id="op_period" />
+                                            <input type="hidden" value="@length" name="optimizeForm.units" id="op_units" />
+                                            <input type="hidden" value="@(length * 2)" name="optimizeForm.schemeCost" id="op_schemecost" />
+                                            <input type="hidden" value="2_1" name="optimizeForm.passContent" id="op_pass" />
+                                            <input type="hidden" value="" name="optimizeForm.itemsContent" id="op_items" />
+                                            <input type="hidden" value="HT" name="playType" id="op_playtype" />
+                                            <input type="hidden" value="@item.SchemeId" id="SchemeId" />
+                                            <input type="hidden" value="@indent[(a - 1)].LeagueId" id="LeagueId" />
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                @if (item.BonusStatus == BonusStatus.Win)
+                                {
+                                    <div class="yihzongjiang">
+                                    </div>
+                                }
+                            </li>
+                                a++;
+                            }
+                            if (a == 2)
+                            {
+                            <li>
+                                <div class="pro_title">
+                                    推荐方案<span class="icon_pro">@a</span></div>
+                                <div class="box">
+                                    <div class="pro_d1 top10">
+                                        <span class="tj_time"></span><span class="jiantou_w"></span><span class="bsdf_a">
+                                        </span><span class="vs">VS</span><span class="bsdf_b"></span>
+                                    </div>
+                                    <div class="pro_d2 top10">
+                                        <span class="tuijian">推&nbsp;&nbsp;&nbsp;&nbsp;荐：</span><span class="jiantou_b"></span><span
+                                            style="color: Red; margin-left: 60px; margin-right: 20px;"></span><span style="color: Red;
+                                                margin-right: 20px;"></span><span style="color: Red;"></span>
+                                    </div>
+                                    <div class="div1 pro_bg top10">
+                                        <span class="tzbl">投注赔率：</span><span class="tz"></span><span class="tz"></span><span
+                                            class="tz"></span><span class="fenxi">析</span>
+                                    </div>
+                                    <div class="pro_d1 top10">
+                                        <span class="tj_time"></span><span class="jiantou_w"></span><span class="bsdf_a">
+                                        </span><span class="vs">VS</span><span class="bsdf_b"></span>
+                                    </div>
+                                    <div class="pro_d2 top10">
+                                        <span class="tuijian">推&nbsp;&nbsp;&nbsp;&nbsp;荐：</span><span class="jiantou_b"></span><span
+                                            style="color: Red; margin-left: 60px; margin-right: 20px;"></span><span style="color: Red;
+                                                margin-right: 20px;"></span><span style="color: Red;"></span>
+                                    </div>
+                                    <div class="div2 pro_bg top10 ">
+                                        <span class="tzbl">投注赔率：</span><span class="tz"></span><span class="tz"></span><span
+                                            class="tz"></span><span class="fenxi">析</span>
+                                    </div>
+                                    <div class="pro_com">
+                                        方案支持</div>
+                                    <div class="pro_c_b">
+                                        <div class="czfd">
+                                            <div class="left">
+                                                <div class="zc">
+                                                    <span class="zcl" style=" width:@(0 * 1.5)px"></span><span class="zclv">%</span>
+                                                </div>
+                                                <div class="fd top15">
+                                                    <span class="fdl" style=" width:@(0 * 1.5)px"></span><span class="fdlv">%</span>
+                                                </div>
+                                            </div>
+                                            <div class="right">
+                                                <span class=" toupiao zc"></span><span class=" toupiao fd"></span>
+                                            </div>
+                                            <div style="clear: both;">
+                                            </div>
+                                        </div>
+                                        <div class="fangan top10">
+                                            <div class="pro_cb_b">
+                                                1.<span class="fa"><span class="green"></span></span>×<span class="fa"><span class="red"></span></span><span
+                                                    style="margin-left: 20px;">2串1</span><span class="zhushu"></span><span>注</span></div>
+                                            <div class="pro_cb_b">
+                                                2.<span class="fa"><span class="green"></span></span>×<span class="fa"><span class="red"></span></span><span
+                                                    style="margin-left: 20px;">2串1</span><span class="zhushu"></span><span>注</span></div>
+                                            <div class="pro_cb_b">
+                                                投入：<span class="red trzj"></span>元&nbsp;&nbsp;理论奖金：<span class="red lxjj">~</span>元</div>
+                                            <div style="margin-left: 7px; margin-top: 5px;">
+                                                <span class="touzhu">竞猜投注</span><span class="touzhu">抄单投注</span>@*<a title="抄单投注" id="optimization" class="touzhu"
+                                                    href="javascript:void 0">抄单投注</a>*@
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            }
+                        }
+                        else
+                        {
+                            <li>
+                                <div class="pro_title">
+                                    推荐方案<span class="icon_pro">1</span></div>
+                                <div class="box">
+                                    <div class="pro_d1 top10">
+                                        <span class="tj_time"></span><span class="jiantou_w"></span><span class="bsdf_a">
+                                        </span><span class="vs">VS</span><span class="bsdf_b"></span>
+                                    </div>
+                                    <div class="pro_d2 top10">
+                                        <span class="tuijian">推&nbsp;&nbsp;&nbsp;&nbsp;荐：</span><span class="jiantou_b"></span><span
+                                            style="color: Red; margin-left: 60px; margin-right: 20px;"></span><span style="color: Red;
+                                                margin-right: 20px;"></span><span style="color: Red;"></span>
+                                    </div>
+                                    <div class="div1 pro_bg top10">
+                                        <span class="tzbl">投注赔率：</span><span class="tz"></span><span class="tz"></span><span
+                                            class="tz"></span><span class="fenxi">析</span>
+                                    </div>
+                                    <div class="pro_d1 top10">
+                                        <span class="tj_time"></span><span class="jiantou_w"></span><span class="bsdf_a">
+                                        </span><span class="vs">VS</span><span class="bsdf_b"></span>
+                                    </div>
+                                    <div class="pro_d2 top10">
+                                        <span class="tuijian">推&nbsp;&nbsp;&nbsp;&nbsp;荐：</span><span class="jiantou_b"></span><span
+                                            style="color: Red; margin-left: 60px; margin-right: 20px;"></span><span style="color: Red;
+                                                margin-right: 20px;"></span><span style="color: Red;"></span>
+                                    </div>
+                                    <div class="div2 pro_bg top10 ">
+                                        <span class="tzbl">投注赔率：</span><span class="tz"></span><span class="tz"></span><span
+                                            class="tz"></span><span class="fenxi">析</span>
+                                    </div>
+                                    <div class="pro_com">
+                                        方案支持</div>
+                                    <div class="pro_c_b">
+                                        <div class="czfd">
+                                            <div class="left">
+                                                <div class="zc">
+                                                    <span class="zcl" style=" width:@(0 * 1.5)px"></span><span class="zclv">%</span>
+                                                </div>
+                                                <div class="fd top15">
+                                                    <span class="fdl" style=" width:@(0 * 1.5)px"></span><span class="fdlv">%</span>
+                                                </div>
+                                            </div>
+                                            <div class="right">
+                                                <span class=" toupiao zc"></span><span class=" toupiao fd"></span>
+                                            </div>
+                                            <div style="clear: both;">
+                                            </div>
+                                        </div>
+                                        <div class="fangan top10">
+                                            <div class="pro_cb_b">
+                                                1.<span class="fa"><span class="green"></span></span>×<span class="fa"><span class="red"></span></span><span
+                                                    style="margin-left: 20px;">2串1</span><span class="zhushu"></span><span>注</span></div>
+                                            <div class="pro_cb_b">
+                                                2.<span class="fa"><span class="green"></span></span>×<span class="fa"><span class="red"></span></span><span
+                                                    style="margin-left: 20px;">2串1</span><span class="zhushu"></span><span>注</span></div>
+                                            <div class="pro_cb_b">
+                                                投入：<span class="red trzj"></span>元&nbsp;&nbsp;理论奖金：<span class="red lxjj">~</span>元</div>
+                                            <div style="margin-left: 7px; margin-top: 5px;">
+                                                <span class="touzhu">竞猜投注</span><span class="touzhu">抄单投注</span>@*<a title="抄单投注" id="optimization" class="touzhu"
+                                                    href="javascript:void 0">抄单投注</a>*@
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="pro_title">
+                                    推荐方案<span class="icon_pro">2</span></div>
+                                <div class="box">
+                                    <div class="pro_d1 top10">
+                                        <span class="tj_time"></span><span class="jiantou_w"></span><span class="bsdf_a">
+                                        </span><span class="vs">VS</span><span class="bsdf_b"></span>
+                                    </div>
+                                    <div class="pro_d2 top10">
+                                        <span class="tuijian">推&nbsp;&nbsp;&nbsp;&nbsp;荐：</span><span class="jiantou_b"></span><span
+                                            style="color: Red; margin-left: 20px;"></span></div>
+                                    <div class="pro_bg top10">
+                                        <span class="tzbl">投注赔率：</span><span class="tz"></span><span class="tz"></span><span
+                                            class="tz"></span><span class="fenxi">析</span>
+                                    </div>
+                                    <div class="pro_d1 top10">
+                                        <span class="tj_time"></span><span class="jiantou_w"></span><span class="bsdf_a">
+                                        </span><span class="vs">VS</span><span class="bsdf_b"></span>
+                                    </div>
+                                    <div class="pro_d2 top10">
+                                        <span class="tuijian">推&nbsp;&nbsp;&nbsp;&nbsp;荐：</span><span class="jiantou_b"></span><span
+                                            style="color: Red; margin-left: 20px;"></span></div>
+                                    <div class="pro_bg top10">
+                                        <span class="tzbl">投注赔率：</span><span class="tz"></span><span class="tz"></span><span
+                                            class="tz"></span><span class="fenxi">析</span>
+                                    </div>
+                                    <div class="pro_com">
+                                        方案支持</div>
+                                    <div class="pro_c_b">
+                                        <div class="czfd">
+                                            <div class="left">
+                                                <div class="zc">
+                                                    <span class="zcl" style=" width:@(0 * 1.5)px"></span><span class="zclv">%</span>
+                                                </div>
+                                                <div class="fd top15">
+                                                    <span class="fdl" style=" width:@(0 * 1.5)px"></span><span class="fdlv">%</span>
+                                                </div>
+                                            </div>
+                                            <div class="right">
+                                                <span class=" toupiao zc"></span><span class=" toupiao fd"></span>
+                                            </div>
+                                            <div style="clear: both;">
+                                            </div>
+                                        </div>
+                                        <div class="fangan top10">
+                                            <div class="pro_cb_b">
+                                                1.<span class="fa"><span class="green"></span></span>×<span class="fa"><span class="red"></span></span><span
+                                                    style="margin-left: 20px;">2串1</span><span class="zhushu"></span><span>注</span></div>
+                                            <div class="pro_cb_b">
+                                                2.<span class="fa"><span class="green"></span></span>×<span class="fa"><span class="red"></span></span><span
+                                                    style="margin-left: 20px;">2串1</span><span class="zhushu"></span><span>注</span></div>
+                                            <div class="pro_cb_b">
+                                                投入：<span class="red trzj"></span>元&nbsp;&nbsp;理论奖金：<span class="red lxjj">~</span>元</div>
+                                            <div style="margin-left: 7px; margin-top: 5px;">
+                                                <span class="touzhu">竞猜投注</span><span class="touzhu">抄单投注</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li> 
+                        }
+                    </ul>
+                </div>
+                <div style="clear: both;">
+                </div>
+                <div class="column c_column">
+                    <div class="cul_title">
+                        分析推荐方案<span class="en">Analysis Referral Program</span></div>
+                    <div class="cul_box shadow">
+                        <ul>
+                            @if (Recommend != null)
+                            {
+                                foreach (var item in Recommend.List)
+                                {
+                                    if (ccc % 2 == 0)
+                                    {
+                                <li>
+                                    <div class="cul_left_o">
+                                        <span class="span">@(ccc + 1)</span>
+                                        <div class="cul_right">
+                                            <div class="cul_r_f1">
+                                                <a href="javascript:void(0);" title="@item.Title" style="color:Red;" class="t_title" time="@item.CreateTime" aa="@item.AnalyzeId" txt="@item.Price.ToString("N2")">@(item.Title.Length > 20 ? item.Title.Substring(0, 20) + "…" : item.Title)</a></div>
+                                            <div class="cul_time">@item.CreateTime.ToString("yyyy-MM-dd")</div>
+                                            <div class="cul_r_f2">
+                                                <a href="javascript:void(0);" class="a" time="@item.CreateTime" aa="@item.AnalyzeId" txt="@item.Price.ToString("N2")">
+                                                    详情</a></div>
+                                        </div>
+                                    </div>
+                                    <div class="culbox_g">
+                                        <div class="star">
+                                        </div>
+                                        <div class="font">
+                                            售价:<span>@item.Price.ToString("N2") </span>彩金</div>
+                                        <div>
+                                            <a href="javascript:void(0);" class="btn_o" time="@item.CreateTime" aa="@item.AnalyzeId" txt="@item.Price.ToString("N2")">
+                                                点击详情可购买</a></div>
+                                    </div>
+                                </li>
+                                    }
+                                    else
+                                    {
+                                <li>
+                                    <div class="cul_left_g">
+                                        <span class="span">@(ccc + 1)</span>
+                                        <div class="cul_right">
+                                            <div class="cul_r_f1">
+                                                <a href="javascript:void(0);" title="@item.Title" style="color:Red;" class="t_title" time="@item.CreateTime" aa="@item.AnalyzeId" txt="@item.Price.ToString("N2")">@(item.Title.Length > 20 ? item.Title.Substring(0, 20) + "…" : item.Title)</a></div>
+                                            <div class="cul_time">@item.CreateTime.ToString("yyyy-MM-dd")</div>
+                                            <div class="cul_r_f2">
+                                                <a href="javascript:void(0);" class="a" time="@item.CreateTime" aa="@item.AnalyzeId" txt="@item.Price.ToString("N2")">
+                                                    详情</a></div>
+                                        </div>
+                                    </div>
+                                    <div class="culbox_o">
+                                        <div class="star">
+                                        </div>
+                                        <div class="font">
+                                            售价: <span>@item.Price.ToString("N2") </span>彩金</div>
+                                        <div>
+                                            <a href="javascript:void(0);" class="btn_g" time="@item.CreateTime" aa="@item.AnalyzeId" txt="@item.Price.ToString("N2")">
+                                                点击详情可购买</a></div>
+                                    </div>
+                                </li>
+                                    }
+                                    ccc++;
+                                }
+                            }
+                        </ul>
+                        <div class="pager">@ControlHelper.Pager("ReloadList", ViewBag.PageIndex, ViewBag.PageSize, Recommend == null ? 0 : Recommend.TotalCount)</div>
+                    </div>
+                </div>
+            </div>
+            <div class="right">
+                <div class="ml_box1">
+                    <div class="title">
+                        拍砖吐槽</div>
+                    <div class="ml_textarea1 shadow" style="overflow: auto;">
+                        <ul>
+                            @foreach (var tu in tucao.List)
+                            {
+                                if (tu.Content != null)
+                                {
+                                <li style="width: 100%;">
+                                    <div class="tucao">
+                                        <span class="tu_p" title="@tu.DisplayName">@(tu.DisplayName.Length > 8 ? tu.DisplayName.Substring(0, 8) + "..." : tu.DisplayName)</span>
+                                        <span class="tu_s">
+                                            @{
+                                    var time = tu.CreateTime;
+                                    var timeNow = DateTime.Now;
+                                    TimeSpan str = timeNow - time;
+                                    var days = str.Days;
+                                    var hours = str.Hours;
+                                    var minute = str.Minutes;
+                                    var second = str.Seconds;
+                                    var createtime = "";
+                                    if (days == 0 && hours == 0 && minute == 0 && second < 60)
+                                    {
+                                        createtime = "刚刚";
+                                    }
+                                    else if (days == 0 && hours == 0 && minute < 60)
+                                    {
+                                        createtime = minute + "分钟前";
+                                    }
+                                    else if (days == 0 && hours < 60)
+                                    {
+                                        createtime = hours + "小时前";
+                                    }
+                                    else if (days < 24)
+                                    {
+                                        createtime = days + "天前";
+                                    }
+                                    else if ((days / 24) > 0)
+                                    {
+                                        createtime = (days / 24) + "月前";
+                                    }
+                                    else if ((days / 24 / 12) > 0)
+                                    {
+                                        createtime = (days / 24 / 12) + "年前";
+                                    }
+                                            }
+                                            @createtime</span>
+                                        <div style="clear: both;">
+                                        </div>
+                                        <div class="chatinfo">
+                                            <span class="tu_span"></span>
+                                            <div>@tu.Content</div>
+                                        </div>
+                                    </div>
+                                </li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                    <div class="ml_s">
+                        <span class="span3">我有话说</span><span class="span4">评论改变个人观点</span>
+                    </div>
+                    <div>
+                        <textarea class="textarea" name="txtArea" id="txtArea" onkeyup="showCount();"></textarea>
+                    </div>
+                    <div class="comment">
+                        <div class="p">
+                            <p class="p1">
+                                还可以输入<input name="test2" id="test2" value="60" />个字</p>
+                            <p style="font-size: 10px; color: Red;">
+                                只限本站用户发表评论</p>
+                        </div>
+                        <a href="javascript:void(0);" class="combtn" id="Comment">评论</a>
+                    </div>
+                </div>
+                <div class="remlog">
+                    <a href="Recommend" target="_blank">
+                        <img src="@ViewHelpers.img("../images/expert/remlog.png")" alt="" /></a></div>
+                <div class="remmaster1">
+                    <div class="mas_title">
+                        <span>推荐名家命中榜</span>
+                        <div class="mas_d">
+                            <span class="zhou redd">周</span><span class="yue">月</span><span class="zong">总</span></div>
+                    </div>
+                    <div class="mas_box1 shadow" style="display: block;" id="zhou">
+                        <ul>
+                            @foreach (var exper in expertWeek.List)
+                            {
+                                if (j % 2 == 0)
+                                {
+                                <li class="mas_d1"><a href="/Expert/PersonSpacial?UserID=@exper.UserId" title="@exper.DisplayName">@(exper.DisplayName.Length > 8 ? exper.DisplayName.Substring(0, 8) + "…" : exper.DisplayName)</a><span
+                                    class="span">
+                                    @{
+                                    var shoot = (Decimal.Parse(exper.Shooting.ToString("N2")) * 100);
+                                    
+                                    }
+                                    @shoot.ToString("N0")% </span></li>
+                                }
+                                else
+                                {
+                                <li class="mas_d2"><a href="/Expert/PersonSpacial?UserID=@exper.UserId" title="@exper.DisplayName">@(exper.DisplayName.Length > 8 ? exper.DisplayName.Substring(0, 8) + "…" : exper.DisplayName)</a><span
+                                    class="span">
+                                    @{
+                                    var shoot = (Decimal.Parse(exper.Shooting.ToString("N2")) * 100);
+                                    
+                                    }
+                                    @shoot.ToString("N0")% </span></li>
+                                }
+                                j++;
+                            }
+                        </ul>
+                    </div>
+                    <div class="mas_box1 shadow" style="display: none;" id="yue">
+                        <ul>
+                            @foreach (var exper in expertMonth.List)
+                            {
+                                if (n % 2 == 0)
+                                {
+                                <li class="mas_d2"><a href="/Expert/PersonSpacial?UserID=@exper.UserId" title="@exper.DisplayName">@(exper.DisplayName.Length > 8 ? exper.DisplayName.Substring(0, 8) + "…" : exper.DisplayName)</a><span
+                                    class="span">
+                                    @{
+                                    var shoot = (Decimal.Parse(exper.Shooting.ToString("N2")) * 100);
+                                    
+                                    }
+                                    @shoot.ToString("N0")% </span></li>
+                                }
+                                else
+                                {
+                                <li class="mas_d1"><a href="/Expert/PersonSpacial?UserID=@exper.UserId" title="@exper.DisplayName">@(exper.DisplayName.Length > 8 ? exper.DisplayName.Substring(0, 8) + "…" : exper.DisplayName)</a><span
+                                    class="span">
+                                    @{
+                                    var shoot = (Decimal.Parse(exper.Shooting.ToString("N2")) * 100);
+                                    
+                                    }
+                                    @shoot.ToString("N0")% </span></li>
+                                }
+                                n++;
+                            }
+                        </ul>
+                    </div>
+                    <div class="mas_box1 shadow" style="display: none;" id="zong">
+                        <ul>
+                            @foreach (var exper in expertTotal.List)
+                            {
+                                if (mm % 2 == 0)
+                                {
+                                <li class="mas_d1"><a href="/Expert/PersonSpacial?UserID=@exper.UserId" title="@exper.DisplayName">@(exper.DisplayName.Length > 8 ? exper.DisplayName.Substring(0, 8) + "…" : exper.DisplayName)</a><span
+                                    class="span">
+                                    @{
+                                    var shoot = (Decimal.Parse(exper.Shooting.ToString("N2")) * 100);
+                                    
+                                    }
+                                    @shoot.ToString("N0")% </span></li>
+                                }
+                                else
+                                {
+                                <li class="mas_d2"><a href="/Expert/PersonSpacial?UserID=@exper.UserId" title="@exper.DisplayName">@(exper.DisplayName.Length > 8 ? exper.DisplayName.Substring(0, 8) + "…" : exper.DisplayName)</a><span
+                                    class="span">
+                                    @{
+                                    var shoot = (Decimal.Parse(exper.Shooting.ToString("N2")) * 100);
+                                    
+                                    }
+                                    @shoot.ToString("N0")% </span></li>
+                                }
+                                mm++;
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <div class="remlog1">
+                    <a href="/hemai/index" target="_blank">
+                        <img src="@ViewHelpers.img("../images/expert/niuren.png")" alt="" /></a></div>
+            </div>
+        </div>
+        <div style="clear: both;">
+        </div>
+    </div>
+    <input type="hidden" name="Hdexperterid" id="Hdexperterid" value="@ViewBag.experterid" />
+    @if (currentUser != null)
+    {
+        <input type="hidden" name="LoginId" id="LoginId" value="@currentUser.LoginInfo.UserId" />
+    }
+</div>
+<script type="text/javascript">
+    // JSON转换为字符串
+    function JSONstringify(json) {
+        if ($.browser.msie) {
+            if ($.browser.version == "7.0" || $.browser.version == "6.0") {
+                var result = jQuery.parseJSON(json);
+            } else {
+                result = JSON.stringify(json);
+            }
+        } else {
+            result = JSON.stringify(json);
+        }
+        return result;
+    }
+    $(".touzhu_o").click(function () {
+        var id = $("#LeagueId").val();
+        var content = [];
+        var self;
+        $(this).parents(".box").find(".pro_bg").each(function (index, item) {
+            self = $(item);
+            var id = self.find("input[name=matchid]").val();
+            var week = self.find("input[name=week]").val();
+            var host = self.find("input[name=host]").val();
+            var visit = self.find("input[name=visit]").val();
+            var lose = self.find("input[name=lose]").val();
+            var stoptime = self.find("input[name=stoptime]").val();
+            var play = self.find("input[name=play]").val().toLowerCase();
+            var obj = { id: id, dan: false, week: week, host: host, visit: visit, lose: lose, stoptime: stoptime.replace(/\//g, "-") };
+            var code = [];
+            self.find(".tjtz").each(function (i, j) {
+                if (i == 0) {
+                    code.push(play + "^" + $(j).attr("data"));
+                } else {
+                    code.push("," + $(j).attr("data"));
+                }
+            });
+            obj.items = code.join("");
+            content.push(obj);
+        });
+        $(this).parents(".box").find("#op_items").val(JSONstringify(content));
+        $(this).parents(".box").find("#optimize").submit();
+    });
+
+    //周的点击事件，隐藏 总 月
+    $(".zhou").click(function () {
+        $("#yue").hide();
+        $("#zong").hide();
+        $("#zhou").show();
+        $(this).css("color", "red")
+        $(this).siblings().css("color", "black")
+    });
+    $(".yue").click(function () {
+        $("#zhou").hide();
+        $("#zong").hide();
+        $("#yue").show();
+        $(this).css("color", "red")
+        $(this).siblings().css("color", "black")
+    });
+    $(".zong").click(function () {
+        $("#yue").hide();
+        $("#zhou").hide();
+        $("#zong").show();
+        $(this).css("color", "red")
+        $(this).siblings().css("color", "black")
+    })
+
+    $(".r_a").click(function () {
+        var Hdexperterid = $("#Hdexperterid").val();
+        if ($(".hdSelect").is(":visible")) {
+            $(".hdSelect").css("display", "none");
+            var time = $(this).text();
+            $("#NewV").text(time);
+            location.href = "/Expert/PersonSpacial?time=" + time + "&UserId=" + Hdexperterid;
+        }
+        else {
+            $(".hdSelect").css("display", "block");
+        }
+    });
+    $(document).bind('click', function (e) {
+        var e = e || window.event; //浏览器兼容性
+        var elem = e.target || e.srcElement;
+        while (elem) { //循环判断至跟节点，防止点击的是div子元素
+            if (elem.id && elem.id == 'NewV') {
+                return;
+            }
+            elem = elem.parentNode;
+        }
+        $('.hdSelect').css('display', 'none'); //点击的不是div或其子元素
+    });
+
+    $("#Comment").click(function () {
+        user.isLogin(function (islogin) {
+            if (!islogin) {
+                loginDialog.Show();
+                $("#userName").focus();
+            } else {
+                var Content = $("#txtArea").val();
+                var userid = $("#Hdexperterid").val();
+                if (Content == "") {
+                    alert("内容不能为空！");
+                    return false;
+                }
+                var commentstpye = "20";
+                $.post("/Expert/AddTucao", { Content: Content, CommentsTpye: commentstpye, UserId: userid }, function (Json) {
+                    if (Json.IsSucess == false) {
+                        alert(Json.Msg);
+                        return false;
+                    }
+                    else {
+                        alert(Json.Msg);
+                        $("#txtArea").val("");
+                    }
+                });
+            }
+        });
+    });
+
+    //添加关注
+    $(".perbtn").click(function () {
+        user.isLogin(function (islogin) {
+            if (!islogin) {
+                loginDialog.Show();
+                $("#userName").focus();
+            } else {
+                var userid = $("#userid").val();
+                var Hdexperterid = $("#Hdexperterid").val();
+                $.post("/Expert/AddAttention", { userId: userid }, function (Json) {
+                    if (Json.IsSucess == false) {
+                        alert(Json.Msg);
+                        return false;
+                    }
+                    else {
+                        alert(Json.Msg);
+                        window.location.href = "/Expert/PersonSpacial?UserId=" + Hdexperterid;
+                    }
+                });
+            }
+        });
+    });
+
+    //支持
+    $(".pro_back").click(function () {
+        var support = 1;
+        var schemeId = $(this).attr("schemeid");
+        //var SchemeId = $("#SchemeId").val();
+
+        user.isLogin(function (islogin) {
+            if (!islogin) {
+                loginDialog.Show();
+                $("#userName").focus();
+            } else {
+                $.post("/Expert/AddOpposeAndSupport", { Support: support, SchemeId: schemeId }, function (Json) {
+                    if (Json.IsSucess == false) {
+                        alert(Json.Msg);
+                        return false;
+                    }
+                    else {
+                        alert(Json.Msg);
+                        window.location.href = window.location.href;
+                    }
+                });
+            }
+        });
+    });
+
+    //反对
+    $(".pro_oppo").click(function () {
+        var oppose = 2;
+        var schemeId = $(this).attr("schemeid");
+        //var SchemeId = $("#SchemeId").val();
+        user.isLogin(function (islogin) {
+            if (!islogin) {
+                loginDialog.Show();
+                $("#userName").focus();
+            } else {
+                $.post("/Expert/AddOpposeAndSupport", { Oppose: oppose, SchemeId: schemeId }, function (Json) {
+                    if (Json.IsSucess == false) {
+                        alert(Json.Msg);
+                        return false;
+                    }
+                    else {
+                        alert(Json.Msg);
+                        window.location.href = window.location.href;
+                    }
+                });
+            }
+        });
+    });
+
+    //查看分析详情
+    $(".a,.btn_g,.btn_o,.t_title").click(function () {
+        var price = $(this).attr("txt");
+        var analyzeid = $(this).attr("aa");
+        var cretid = $("#Hdexperterid").val();
+        var time = $(this).attr("time");
+        var loginid = $("#LoginId").val();
+        user.isLogin(function (islogin) {
+            if (!islogin) {
+                loginDialog.Show();
+                $("#userName").focus();
+            } else {
+                if (cretid == loginid) {
+                    window.location.href = '/Expert/PersonArticle' + "?experterid=" + cretid + "&AndanalyzeId=" + analyzeid + "&Time" + time;
+                }
+                else {
+                    if (price == 0) {
+                        window.location.href = '/Expert/PersonArticle' + "?experterid=" + cretid + "&AndanalyzeId=" + analyzeid + "&Time" + time;
+                    }
+                    else {
+                        $.post("/Expert/IsBuyProgram", { analyzeid: analyzeid, experterid: user.info.userId }, function (data) {
+                            if (data.IsSuccess) {//已购买
+                                window.location.href = '/Expert/PersonArticle' + "?experterid=" + cretid + "&AndanalyzeId=" + analyzeid + "&Time" + time;
+                                return;
+                            } else {//未购买,提示购买
+                                if (confirm("是否购买此方案？")) {//购买
+                                    $.post("/Expert/BuyProgramDetails", { price: price, analyzeid: analyzeid, experterid: cretid }, function (data) {
+                                        if (data.IsSucess) {
+                                            alert("购买成功！");
+                                            window.location.href = '/Expert/PersonArticle' + "?experterid=" + cretid + "&AndanalyzeId=" + analyzeid + "&Time" + time;
+                                        }
+                                        else {
+                                            alert(data.Msg);
+                                            return false;
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        });
+    });
+
+    function ReloadList(pageIndex, pageSize) {
+        var t = $("#hd_time").val();
+        location.search = "?pageIndex=" + pageIndex + "&pageSize=" + pageSize + "&time=" + t;
+    }
+    
+</script>

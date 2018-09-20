@@ -1,0 +1,702 @@
+﻿@{
+    Layout = "~/Views/lotteryTrend/_Layout.cshtml";
+    var pageSize = Request["pageSize"];
+    if (pageSize != "" && pageSize != null)
+    {
+        ViewBag.Title = "双色球和值走势图近" + pageSize + "期" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "双色球和值走势图近" + pageSize + "期";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "双色球和值走势图近" + pageSize + "期,查看更多双色球和值走势图请登录" + SiteString.getHZSiteName(Request) + "彩票网.";
+    }
+    else
+    {
+        ViewBag.Title = "双色球和值走势图-双色球走势图2-" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "双色球和值走势图,双色球走势图2";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "彩票网为您提供双色球走势图2-双色球和值走势图,主要包括双色球红球的和值分布连线图和和尾分布连线图,帮助彩民朋友更好的分析双色球和值走势.";
+    }
+    var HeZhi = ViewBag.DataList as List<LotteryData.Core.SSQ_HeZhi_Info>;
+    var a = 0;  
+}
+@{Html.RenderAction("ThendLink_2", "lotteryTrend",new{id="HeZhi_ssq"});}
+<div id="container">
+    <div class="cont_box" style="width: 1003px;">
+        <table width="100%" cellspacing="1" cellpadding="0" border="0" class="table_box"
+            style="width: 1003px;" id="chartsTable">
+            <tbody>
+                <tr>
+                    <td align="center" class="tab_top" colspan="30">
+                        标注形式选择：
+                        <input type="checkbox" checked="checked" id="c_yl">
+                        <label for="c_yl">
+                            遗漏</label>
+                        <input type="checkbox" checked="checked" id="has_line">
+                        <label for="has_line">
+                            折线</label>
+                        <input type="checkbox" checked="checked" id="help_line">
+                        <label for="help_line">
+                            分隔线</label>
+                        <input type="checkbox" id="yl_zhu">
+                        <label for="yl_zhu">
+                            遗漏分层</label>
+                    </td>
+                </tr>
+                <tr class="tabbg weight" id="menuitem">
+                    <td width="75" align="center" rowspan="2">
+                        期号<img src="@ViewHelpers.img("../images/trend/up.png")" id="sortImg" alt="" />
+                    </td>
+                    <td rowspan="2" colspan="6" class="tred line_r">
+                        红球
+                    </td>
+                    <td class="line_r" colspan="12">
+                        和值分布
+                    </td>
+                    <td colspan="11">
+                        和尾分布
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td width="50" class="line_r">
+                        和值
+                    </td>
+                    <td class="stat_font_c3">
+                        21-49
+                    </td>
+                    <td class="stat_font_c3">
+                        50-59
+                    </td>
+                    <td class="stat_font_c3">
+                        60-69
+                    </td>
+                    <td class="stat_font_c3">
+                        70-79
+                    </td>
+                    <td class="stat_font_c3">
+                        80-89
+                    </td>
+                    <td class="stat_font_c3">
+                        90-99
+                    </td>
+                    <td class="stat_font_c3">
+                        100-109
+                    </td>
+                    <td class="stat_font_c3">
+                        110-119
+                    </td>
+                    <td class="stat_font_c3">
+                        120-129
+                    </td>
+                    <td class="stat_font_c3">
+                        130-139
+                    </td>
+                    <td class="stat_font_c3 line_r">
+                        140-183
+                    </td>
+                    <td width="50">
+                        和尾
+                    </td>
+                    <td>
+                        0
+                    </td>
+                    <td>
+                        1
+                    </td>
+                    <td>
+                        2
+                    </td>
+                    <td>
+                        3
+                    </td>
+                    <td>
+                        4
+                    </td>
+                    <td>
+                        5
+                    </td>
+                    <td>
+                        6
+                    </td>
+                    <td>
+                        7
+                    </td>
+                    <td>
+                        8
+                    </td>
+                    <td>
+                        9
+                    </td>
+                </tr>
+            </tbody>
+            <tbody id="tdata" style="font-size: 12px; font-family: '宋体',Tahoma,Consolas,Arial,Simsun;">
+                @foreach (var item in HeZhi)
+                {
+                    a++;
+                    if (a % 5 == 0)
+                    {
+                    <tr class="tdbck">
+                        <td colspan="30">
+                        </td>
+                    </tr>
+                    }
+                    <tr>
+                        <td align="center">
+                            @item.IssuseNumber
+                        </td>
+                        <td class="hot12">
+                            @item.Red1
+                        </td>
+                        <td class="hot12">
+                            @item.Red2
+                        </td>
+                        <td class="hot12">
+                            @item.Red3
+                        </td>
+                        <td class="hot12">
+                            @item.Red4
+                        </td>
+                        <td class="hot12">
+                            @item.Red5
+                        </td>
+                        <td class="hot12 line_r">
+                            @item.Red6
+                        </td>
+                        <td class="line_r">
+                            @item.HeZhi
+                        </td>
+                        <td class="@(item.HZ_21_49 == 0 ? "cbg3 big" : "y101")">
+                            @(item.HZ_21_49 == 0 ? item.HeZhi : item.HZ_21_49)
+                        </td>
+                        <td class="@(item.HZ_50_59 == 0 ? "cbg3 big" : "y101")">
+                            @(item.HZ_50_59 == 0 ? item.HeZhi : item.HZ_50_59)
+                        </td>
+                        <td class="@(item.HZ_60_69 == 0 ? "cbg3 big" : "y101")">
+                            @(item.HZ_60_69 == 0 ? item.HeZhi : item.HZ_60_69)
+                        </td>
+                        <td class="@(item.HZ_70_79 == 0 ? "cbg3 big" : "y101")">
+                            @(item.HZ_70_79 == 0 ? item.HeZhi : item.HZ_70_79)
+                        </td>
+                        <td class="@(item.HZ_80_89 == 0 ? "cbg3 big" : "y101")">
+                            @(item.HZ_80_89 == 0 ? item.HeZhi : item.HZ_80_89)
+                        </td>
+                        <td class="@(item.HZ_90_99 == 0 ? "cbg3 big" : "y101")">
+                            @(item.HZ_90_99 == 0 ? item.HeZhi : item.HZ_90_99)
+                        </td>
+                        <td class="@(item.HZ_100_109 == 0 ? "cbg3 big" : "y101")">
+                            @(item.HZ_100_109 == 0 ? item.HeZhi : item.HZ_100_109)
+                        </td>
+                        <td class="@(item.HZ_110_119 == 0 ? "cbg3 big" : "y101")">
+                            @(item.HZ_110_119 == 0 ? item.HeZhi : item.HZ_110_119)
+                        </td>
+                        <td class="@(item.HZ_120_129 == 0 ? "cbg3 big" : "y101")">
+                            @(item.HZ_120_129 == 0 ? item.HeZhi : item.HZ_120_129)
+                        </td>
+                        <td class="@(item.HZ_130_139 == 0 ? "cbg3 big" : "y101")">
+                            @(item.HZ_130_139 == 0 ? item.HeZhi : item.HZ_130_139)
+                        </td>
+                        <td class="@(item.HZ_140_183 == 0 ? "cbg3 big line_r" : "y101 line_r")">
+                            @(item.HZ_140_183 == 0 ? item.HeZhi : item.HZ_140_183)
+                        </td>
+                        <td class="line_r">
+                            @item.HeWei
+                        </td>
+                        <td class="@(item.HW_0 == 0 ? "cbg3 tbg1" : "y101")">
+                            @(item.HW_0 == 0 ? item.HeWei : item.HW_0)
+                        </td>
+                        <td class="@(item.HW_1 == 0 ? "cbg3 tbg1" : "y101")">
+                            @(item.HW_1 == 0 ? item.HeWei : item.HW_1)
+                        </td>
+                        <td class="@(item.HW_2 == 0 ? "cbg3 tbg1" : "y101")">
+                            @(item.HW_2 == 0 ? item.HeWei : item.HW_2)
+                        </td>
+                        <td class="@(item.HW_3 == 0 ? "cbg3 tbg1" : "y101")">
+                            @(item.HW_3 == 0 ? item.HeWei : item.HW_3)
+                        </td>
+                        <td class="@(item.HW_4 == 0 ? "cbg3 tbg1" : "y101")">
+                            @(item.HW_4 == 0 ? item.HeWei : item.HW_4)
+                        </td>
+                        <td class="@(item.HW_5 == 0 ? "cbg3 tbg1" : "y101")">
+                            @(item.HW_5 == 0 ? item.HeWei : item.HW_5)
+                        </td>
+                        <td class="@(item.HW_6 == 0 ? "cbg3 tbg1" : "y101")">
+                            @(item.HW_6 == 0 ? item.HeWei : item.HW_6)
+                        </td>
+                        <td class="@(item.HW_7 == 0 ? "cbg3 tbg1" : "y101")">
+                            @(item.HW_7 == 0 ? item.HeWei : item.HW_7)
+                        </td>
+                        <td class="@(item.HW_8 == 0 ? "cbg3 tbg1" : "y101")">
+                            @(item.HW_8 == 0 ? item.HeWei : item.HW_8)
+                        </td>
+                        <td class="@(item.HW_9 == 0 ? "cbg3 tbg1" : "y101")">
+                            @(item.HW_9 == 0 ? item.HeWei : item.HW_9)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tbody>
+                <tr>
+                    <td align="center" class="bdtop line_r">
+                        出现次数
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop">
+                        @(HeZhi.Count(p => p.HZ_21_49 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(HeZhi.Count(p => p.HZ_50_59 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(HeZhi.Count(p => p.HZ_60_69 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(HeZhi.Count(p => p.HZ_70_79 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(HeZhi.Count(p => p.HZ_80_89 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(HeZhi.Count(p => p.HZ_90_99 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(HeZhi.Count(p => p.HZ_100_109 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(HeZhi.Count(p => p.HZ_110_119 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(HeZhi.Count(p => p.HZ_120_129 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(HeZhi.Count(p => p.HZ_130_139 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(HeZhi.Count(p => p.HZ_140_183 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop">
+                        @(HeZhi.Count(p => p.HW_0 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(HeZhi.Count(p => p.HW_1 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(HeZhi.Count(p => p.HW_2 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(HeZhi.Count(p => p.HW_3 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(HeZhi.Count(p => p.HW_4 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(HeZhi.Count(p => p.HW_5 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(HeZhi.Count(p => p.HW_6 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(HeZhi.Count(p => p.HW_7 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(HeZhi.Count(p => p.HW_8 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(HeZhi.Count(p => p.HW_9 == 0))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        平均遗漏
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                        @(HeZhi.Sum(p => p.HZ_21_49) / HeZhi.Count)
+                    </td>
+                    <td
+                    @(HeZhi.Sum(p => p.HZ_50_59) / HeZhi.Count)
+                    </td>
+                    <td>
+                        @(HeZhi.Sum(p => p.HZ_60_69) / HeZhi.Count)
+                    </td>
+                    <td>
+                        @(HeZhi.Sum(p => p.HZ_70_79) / HeZhi.Count)
+                    </td>
+                    <td>
+                        @(HeZhi.Sum(p => p.HZ_80_89) / HeZhi.Count)
+                    </td>
+                    <td>
+                        @(HeZhi.Sum(p => p.HZ_90_99) / HeZhi.Count)
+                    </td>
+                    <td>
+                        @(HeZhi.Sum(p => p.HZ_100_109) / HeZhi.Count)
+                    </td>
+                    <td>
+                        @(HeZhi.Sum(p => p.HZ_110_119) / HeZhi.Count)
+                    </td>
+                    <td>
+                        @(HeZhi.Sum(p => p.HZ_120_129) / HeZhi.Count)
+                    </td>
+                    <td>
+                        @(HeZhi.Sum(p => p.HZ_130_139) / HeZhi.Count)
+                    </td>
+                    <td class="line_r">
+                        @(HeZhi.Sum(p => p.HZ_140_183) / HeZhi.Count)
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td class="">
+                        @(HeZhi.Sum(p => p.HW_0) / HeZhi.Count)
+                    </td>
+                    <td class="">
+                        @(HeZhi.Sum(p => p.HW_1) / HeZhi.Count)
+                    </td>
+                    <td class="">
+                        @(HeZhi.Sum(p => p.HW_2) / HeZhi.Count)
+                    </td>
+                    <td class="">
+                        @(HeZhi.Sum(p => p.HW_3) / HeZhi.Count)
+                    </td>
+                    <td class="">
+                        @(HeZhi.Sum(p => p.HW_4) / HeZhi.Count)
+                    </td>
+                    <td class="">
+                        @(HeZhi.Sum(p => p.HW_5) / HeZhi.Count)
+                    </td>
+                    <td class="">
+                        @(HeZhi.Sum(p => p.HW_6) / HeZhi.Count)
+                    </td>
+                    <td class="">
+                        @(HeZhi.Sum(p => p.HW_7) / HeZhi.Count)
+                    </td>
+                    <td class="">
+                        @(HeZhi.Sum(p => p.HW_8) / HeZhi.Count)
+                    </td>
+                    <td class="line_r">
+                        @(HeZhi.Sum(p => p.HW_9) / HeZhi.Count)
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        最大遗漏
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                        @(HeZhi.Max(p => p.HZ_21_49))
+                    </td>
+                    <td class="">
+                        @(HeZhi.Max(p => p.HZ_50_59))
+                    </td>
+                    <td>
+                        @(HeZhi.Max(p => p.HZ_60_69))
+                    </td>
+                    <td class="">
+                        @(HeZhi.Max(p => p.HZ_70_79))
+                    </td>
+                    <td>
+                        @(HeZhi.Max(p => p.HZ_80_89))
+                    </td>
+                    <td class="">
+                        @(HeZhi.Max(p => p.HZ_90_99))
+                    </td>
+                    <td>
+                        @(HeZhi.Max(p => p.HZ_100_109))
+                    </td>
+                    <td class="">
+                        @(HeZhi.Max(p => p.HZ_110_119))
+                    </td>
+                    <td>
+                        @(HeZhi.Max(p => p.HZ_120_129))
+                    </td>
+                    <td>
+                        @(HeZhi.Max(p => p.HZ_130_139))
+                    </td>
+                    <td class="line_r">
+                        @(HeZhi.Max(p => p.HZ_140_183))
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                        @(HeZhi.Max(p => p.HW_0))
+                    </td>
+                    <td>
+                        @(HeZhi.Max(p => p.HW_1))
+                    </td>
+                    <td>
+                        @(HeZhi.Max(p => p.HW_2))
+                    </td>
+                    <td>
+                        @(HeZhi.Max(p => p.HW_3))
+                    </td>
+                    <td>
+                        @(HeZhi.Max(p => p.HW_4))
+                    </td>
+                    <td>
+                        @(HeZhi.Max(p => p.HW_5))
+                    </td>
+                    <td>
+                        @(HeZhi.Max(p => p.HW_6))
+                    </td>
+                    <td>
+                        @(HeZhi.Max(p => p.HW_7))
+                    </td>
+                    <td>
+                        @(HeZhi.Max(p => p.HW_8))
+                    </td>
+                    <td class="line_r">
+                        @(HeZhi.Max(p => p.HW_9))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        当前遗漏
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td valign="bottom">
+                        @(HeZhi[HeZhi.Count - 1].HZ_21_49)<br>
+                        <img width="8px" height="@(HeZhi[HeZhi.Count - 1].HZ_21_49)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(HeZhi[HeZhi.Count - 1].HZ_50_59)<br>
+                        <img width="8px" height="@(HeZhi[HeZhi.Count - 1].HZ_50_59)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(HeZhi[HeZhi.Count - 1].HZ_60_69)<br>
+                        <img width="8px" height="@(HeZhi[HeZhi.Count - 1].HZ_60_69)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(HeZhi[HeZhi.Count - 1].HZ_70_79)<br>
+                        <img width="8px" height="@(HeZhi[HeZhi.Count - 1].HZ_70_79)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(HeZhi[HeZhi.Count - 1].HZ_80_89)<br>
+                        <img width="8px" height="@(HeZhi[HeZhi.Count - 1].HZ_80_89)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(HeZhi[HeZhi.Count - 1].HZ_90_99)<br>
+                        <img width="8px" height="@(HeZhi[HeZhi.Count - 1].HZ_90_99)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(HeZhi[HeZhi.Count - 1].HZ_100_109)<br>
+                        <img width="8px" height="@(HeZhi[HeZhi.Count - 1].HZ_100_109)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(HeZhi[HeZhi.Count - 1].HZ_110_119)<br>
+                        <img width="8px" height="@(HeZhi[HeZhi.Count - 1].HZ_110_119)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(HeZhi[HeZhi.Count - 1].HZ_120_129)<br>
+                        <img width="8px" height="@(HeZhi[HeZhi.Count - 1].HZ_120_129)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(HeZhi[HeZhi.Count - 1].HZ_130_139)<br>
+                        <img width="8px" height="@(HeZhi[HeZhi.Count - 1].HZ_130_139)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(HeZhi[HeZhi.Count - 1].HZ_140_183)<br>
+                        <img width="8px" height="@(HeZhi[HeZhi.Count - 1].HZ_140_183)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                    </td>
+                    <td valign="bottom">
+                        @(HeZhi[HeZhi.Count - 1].HW_0)<br>
+                        <img width="8px" height="@(HeZhi[HeZhi.Count - 1].HW_0)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(HeZhi[HeZhi.Count - 1].HW_1)<br>
+                        <img width="8px" height="@(HeZhi[HeZhi.Count - 1].HW_1)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(HeZhi[HeZhi.Count - 1].HW_2)<br>
+                        <img width="8px" height="@(HeZhi[HeZhi.Count - 1].HW_2)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(HeZhi[HeZhi.Count - 1].HW_3)<br>
+                        <img width="8px" height="@(HeZhi[HeZhi.Count - 1].HW_3)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(HeZhi[HeZhi.Count - 1].HW_4)<br>
+                        <img width="8px" height="@(HeZhi[HeZhi.Count - 1].HW_4)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(HeZhi[HeZhi.Count - 1].HW_5)<br>
+                        <img width="8px" height="@(HeZhi[HeZhi.Count - 1].HW_5)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(HeZhi[HeZhi.Count - 1].HW_6)<br>
+                        <img width="8px" height="@(HeZhi[HeZhi.Count - 1].HW_6)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(HeZhi[HeZhi.Count - 1].HW_7)<br>
+                        <img width="8px" height="@(HeZhi[HeZhi.Count - 1].HW_7)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(HeZhi[HeZhi.Count - 1].HW_8)<br>
+                        <img width="8px" height="@(HeZhi[HeZhi.Count - 1].HW_8)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(HeZhi[HeZhi.Count - 1].HW_9)<br>
+                        <img width="8px" height="@(HeZhi[HeZhi.Count - 1].HW_9)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr class="tabbg">
+                    <td width="75" align="center" rowspan="2">
+                    </td>
+                    <td rowspan="2" colspan="6">
+                        红球
+                    </td>
+                    <td>
+                        和值
+                    </td>
+                    <td class="stat_font_c3">
+                        21-49
+                    </td>
+                    <td class="stat_font_c3">
+                        50-59
+                    </td>
+                    <td class="stat_font_c3">
+                        60-69
+                    </td>
+                    <td class="stat_font_c3">
+                        70-79
+                    </td>
+                    <td class="stat_font_c3">
+                        80-89
+                    </td>
+                    <td class="stat_font_c3">
+                        90-99
+                    </td>
+                    <td class="stat_font_c3">
+                        100-109
+                    </td>
+                    <td class="stat_font_c3">
+                        110-119
+                    </td>
+                    <td class="stat_font_c3">
+                        120-129
+                    </td>
+                    <td class="stat_font_c3">
+                        130-139
+                    </td>
+                    <td class="stat_font_c3">
+                        140-183
+                    </td>
+                    <td>
+                        和尾
+                    </td>
+                    <td>
+                        0
+                    </td>
+                    <td>
+                        1
+                    </td>
+                    <td>
+                        2
+                    </td>
+                    <td>
+                        3
+                    </td>
+                    <td>
+                        4
+                    </td>
+                    <td>
+                        5
+                    </td>
+                    <td>
+                        6
+                    </td>
+                    <td>
+                        7
+                    </td>
+                    <td>
+                        8
+                    </td>
+                    <td>
+                        9
+                    </td>
+                </tr>
+                <tr class="tabbg">
+                    <td class="line_r" colspan="12">
+                        和值分布
+                    </td>
+                    <td colspan="11">
+                        和尾分布
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $(function () {
+
+        var allLines = new Array();
+        allLines.push({ line: $(".tbg1"), color: "#05650E" });
+        allLines.push({ line: $(".big"), color: "red" });
+
+        var line = new XTLine();
+        for (i = 0; i < allLines.length; i++) {
+            var l = allLines[i];
+
+            line.color = l.color;
+            line.arrayBalls = l.line;
+            line.showrect();
+        }
+
+
+        $("#has_line").click(function () {
+            line.display(this.checked);
+        })
+    })
+</script>

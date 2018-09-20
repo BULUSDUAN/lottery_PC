@@ -1,0 +1,863 @@
+﻿@{
+    Layout = "~/Views/lotteryTrend/_Layout.cshtml";
+    var pageSize = Request["pageSize"];
+    if (pageSize != "" && pageSize != null)
+    {
+        ViewBag.Title = "好彩一生肖季节方位走势图近" + pageSize + "期" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "好彩一生肖季节方位走势图近" + pageSize + "期";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "好彩一生肖季节方位走势图近" + pageSize + "期,查看更多好彩一生肖季节方位走势图请登录" + SiteString.getHZSiteName(Request) + "彩票网.";
+    }
+    else
+    {
+        ViewBag.Title = "好彩一生肖季节方位走势图-" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "好彩一生肖季节方位走势图";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "彩票网提供最新的好彩一生肖季节方位走势图,其中包括生肖、季节、方位分布走势图,让彩民朋友更直观的分析好彩一生肖季节方位走势图.";
+    }
+    var sxjjfwzs = ViewBag.DataList as List<LotteryData.Core.HC1_SXJJFWZS_Info>;
+    var a = 0;  
+}
+@{Html.RenderAction("ThendLink_2", "lotteryTrend", new { id = "sxjjfwzs_hc1" });}
+<div id="container">
+    <div class="cont_box" style="width: 1003px;">
+        <table width="100%" cellspacing="1" cellpadding="0" border="0" class="table_box"
+            style="width: 1002px;" id="chartsTable">
+            <tbody>
+                <tr>
+                    <td align="center" class="tab_top" colspan="38">
+                        标注形式选择：
+                        <input type="checkbox" checked="checked" id="c_yl">
+                        <label for="c_yl">
+                            遗漏</label>
+                        <input type="checkbox" checked="checked" id="has_line">
+                        <label for="has_line">
+                            折线</label>
+                        <input type="checkbox" checked="checked" id="help_line">
+                        <label for="help_line">
+                            分隔线</label>
+                        <input type="checkbox" id="yl_zhu">
+                        <label for="yl_zhu">
+                            遗漏分层</label>
+                    </td>
+                </tr>
+                <tr class="tabbg">
+                    <th width="86px" rowspan="6" class="line_r">
+                        期号
+                    </th>
+                    <th rowspan="5" colspan="4" class="line_r">
+                        出号
+                    </th>
+                    <th colspan="12" class="line_r">
+                        生肖
+                    </th>
+                    <th colspan="4" class="line_r">
+                        季节
+                    </th>
+                    <th colspan="4" class="line_r">
+                        方位
+                    </th>
+                </tr>
+                <tr class="tabbg">
+                    <td colspan="2">
+                        鼠
+                    </td>
+                    <td colspan="2">
+                        牛
+                    </td>
+                    <td colspan="2">
+                        虎
+                    </td>
+                    <td colspan="2">
+                        兔
+                    </td>
+                    <td colspan="2">
+                        龙
+                    </td>
+                    <td colspan="2" class="line_r">
+                        蛇
+                    </td>
+                    <td colspan="4" class="line_r">
+                        春：01,02,03,04,05,06,07,08,09
+                    </td>
+                    <td colspan="4" class="line_r">
+                        东：01,03,05,07,09,11,13,15,17
+                    </td>
+                </tr>
+                <tr class="tabbg">
+                    <td colspan="2">
+                        01,13,25
+                    </td>
+                    <td colspan="2">
+                        02,14,26
+                    </td>
+                    <td colspan="2">
+                        03,15,27
+                    </td>
+                    <td colspan="2">
+                        04,16,28
+                    </td>
+                    <td colspan="2">
+                        05,17,29
+                    </td>
+                    <td colspan="2" class="line_r">
+                        06,18,30
+                    </td>
+                    <td colspan="4" class="line_r">
+                        夏：10,11,12,13,14,15,16,17,18
+                    </td>
+                    <td colspan="4" class="line_r">
+                        南：02,04,06,08,10,12,14,16,18
+                    </td>
+                </tr>
+                <tr class="tabbg">
+                    <td colspan="2">
+                        马
+                    </td>
+                    <td colspan="2">
+                        羊
+                    </td>
+                    <td colspan="2">
+                        猴
+                    </td>
+                    <td colspan="2">
+                        鸡
+                    </td>
+                    <td colspan="2">
+                        狗
+                    </td>
+                    <td colspan="2" class="line_r">
+                        猪
+                    </td>
+                    <td colspan="4" class="line_r">
+                        秋：19,20,21,22,23,24,25,26,27
+                    </td>
+                    <td colspan="4" class="line_r">
+                        西：19,21,23,25,27,29,31,33,35
+                    </td>
+                </tr>
+                <tr class="tabbg">
+                    <td colspan="2">
+                        07,19,31
+                    </td>
+                    <td colspan="2">
+                        08,20,32
+                    </td>
+                    <td colspan="2">
+                        09,21,33
+                    </td>
+                    <td colspan="2">
+                        10,22,34
+                    </td>
+                    <td colspan="2">
+                        11,23,35
+                    </td>
+                    <td colspan="2" class="line_r">
+                        12,24,36
+                    </td>
+                    <td colspan="4" class="line_r">
+                        冬：28,29,30,31,32,33,34,35,36
+                    </td>
+                    <td colspan="4" class="line_r">
+                        北：20,22,24,26,28,30,32,34,36
+                    </td>
+                </tr>
+                <tr class="tabbg">
+                    <th width="38px">
+                        号码
+                    </th>
+                    <th width="38px">
+                        生肖
+                    </th>
+                    <th width="38px">
+                        季节
+                    </th>
+                    <th width="38px" class="line_r">
+                        方位
+                    </th>
+                    <th width="28px">
+                        鼠
+                    </th>
+                    <th width="28px">
+                        牛
+                    </th>
+                    <th width="28px">
+                        虎
+                    </th>
+                    <th width="28px">
+                        兔
+                    </th>
+                    <th width="28px">
+                        龙
+                    </th>
+                    <th width="28px">
+                        蛇
+                    </th>
+                    <th width="28px">
+                        马
+                    </th>
+                    <th width="28px">
+                        羊
+                    </th>
+                    <th width="28px">
+                        猴
+                    </th>
+                    <th width="28px">
+                        鸡
+                    </th>
+                    <th width="28px">
+                        狗
+                    </th>
+                    <th width="28px" class="line_r">
+                        猪
+                    </th>
+                    <th width="50px">
+                        春
+                    </th>
+                    <th width="50px">
+                        夏
+                    </th>
+                    <th width="50px">
+                        秋
+                    </th>
+                    <th width="50px" class="line_r">
+                        冬
+                    </th>
+                    <th width="50px">
+                        东
+                    </th>
+                    <th width="50px">
+                        南
+                    </th>
+                    <th width="50px">
+                        西
+                    </th>
+                    <th width="50px" class="line_r">
+                        北
+                    </th>
+                </tr>
+            </tbody>
+            <tbody id="tdata" style="font-size: 12px; font-family: '宋体',Tahoma,Consolas,Arial,Simsun;">
+                @foreach (var item in sxjjfwzs)
+                {
+                    a++;
+                    if (a % 5 == 0)
+                    {
+                    <tr class="tdbck">
+                        <td colspan="38">
+                        </td>
+                    </tr>
+                    }
+                    <tr>
+                        <td align="center" class="line_r">
+                            @item.IssuseNumber
+                        </td>
+                        <td class="hot12">
+                            @item.WinNumber
+                        </td>
+                        <td>
+                            @item.ShengX
+                        </td>
+                        <td>
+                            @item.JiJie
+                        </td>
+                        <td class="line_r">
+                            @item.FangWei
+                        </td>
+                        <td class="@(item.SX_shu == 0 ? "cbg tbg1" : "y101")">
+                            @(item.SX_shu == 0 ? "01" : item.SX_shu.ToString())
+                        </td>
+                        <td class="@(item.SX_niu == 0 ? "cbg tbg1" : "y101")">
+                            @(item.SX_niu == 0 ? "牛" : item.SX_niu.ToString())
+                        </td>
+                        <td class="@(item.SX_hu == 0 ? "cbg tbg1" : "y101")">
+                            @(item.SX_hu == 0 ? "虎" : item.SX_hu.ToString())
+                        </td>
+                        <td class="@(item.SX_tu == 0 ? "cbg tbg1" : "y101")">
+                            @(item.SX_tu == 0 ? "兔" : item.SX_tu.ToString())
+                        </td>
+                        <td class="@(item.SX_long == 0 ? "cbg tbg1" : "y101")">
+                            @(item.SX_long == 0 ? "龙" : item.SX_long.ToString())
+                        </td>
+                        <td class="@(item.SX_she == 0 ? "cbg tbg1" : "y101")">
+                            @(item.SX_she == 0 ? "蛇" : item.SX_she.ToString())
+                        </td>
+                        <td class="@(item.SX_ma == 0 ? "cbg tbg1" : "y101")">
+                            @(item.SX_ma == 0 ? "马" : item.SX_ma.ToString())
+                        </td>
+                        <td class="@(item.SX_yang == 0 ? "cbg tbg1" : "y101")">
+                            @(item.SX_yang == 0 ? "羊" : item.SX_yang.ToString())
+                        </td>
+                        <td class="@(item.SX_hou == 0 ? "cbg tbg1" : "y101")">
+                            @(item.SX_hou == 0 ? "猴" : item.SX_hou.ToString())
+                        </td>
+                        <td class="@(item.SX_ji == 0 ? "cbg tbg1" : "y101")">
+                            @(item.SX_ji == 0 ? "鸡" : item.SX_ji.ToString())
+                        </td>
+                        <td class="@(item.SX_gou == 0 ? "cbg tbg1" : "y101")">
+                            @(item.SX_gou == 0 ? "狗" : item.SX_gou.ToString())
+                        </td>
+                        <td class="@(item.SX_zhu == 0 ? "cbg tbg1 line_r" : "y101 line_r")">
+                            @(item.SX_zhu == 0 ? "猪" : item.SX_zhu.ToString())
+                        </td>
+                        <td class="@(item.JJ_chun == 0 ? "cbg orange1" : "y101")">
+                            @(item.JJ_chun == 0 ? "春" : item.JJ_chun.ToString())
+                        </td>
+                        <td class="@(item.JJ_xia == 0 ? "cbg orange1" : "y101")">
+                            @(item.JJ_xia == 0 ? "夏" : item.JJ_xia.ToString())
+                        </td>
+                        <td class="@(item.JJ_qiu == 0 ? "cbg orange1" : "y101")">
+                            @(item.JJ_qiu == 0 ? "秋" : item.JJ_qiu.ToString())
+                        </td>
+                        <td class="@(item.JJ_dong == 0 ? "cbg orange1 line_r" : "y101 line_r")">
+                            @(item.JJ_dong == 0 ? "冬" : item.JJ_dong.ToString())
+                        </td>
+                        <td class="@(item.FW_dong == 0 ? "cbg green1" : "y101")">
+                            @(item.FW_dong == 0 ? "东" : item.FW_dong.ToString())
+                        </td>
+                        <td class="@(item.FW_nan == 0 ? "cbg green1" : "y101")">
+                            @(item.FW_nan == 0 ? "南" : item.FW_nan.ToString())
+                        </td>
+                        <td class="@(item.FW_xi == 0 ? "cbg green1" : "y101")">
+                            @(item.FW_xi == 0 ? "西" : item.FW_xi.ToString())
+                        </td>
+                        <td class="@(item.FW_bei == 0 ? "cbg green1 line_r" : "y101 line_r")">
+                            @(item.FW_bei == 0 ? "北" : item.FW_bei.ToString())
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tbody>
+                <tr>
+                    <td align="center" class="bdtop line_r">
+                        出现次数
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop">
+                        @(sxjjfwzs.Count(p => p.SX_shu == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(sxjjfwzs.Count(p => p.SX_niu == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(sxjjfwzs.Count(p => p.SX_hu == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(sxjjfwzs.Count(p => p.SX_tu == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(sxjjfwzs.Count(p => p.SX_long == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(sxjjfwzs.Count(p => p.SX_she == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(sxjjfwzs.Count(p => p.SX_ma == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(sxjjfwzs.Count(p => p.SX_yang == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(sxjjfwzs.Count(p => p.SX_hou == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(sxjjfwzs.Count(p => p.SX_ji == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(sxjjfwzs.Count(p => p.SX_gou == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(sxjjfwzs.Count(p => p.SX_zhu == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(sxjjfwzs.Count(p => p.JJ_chun == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(sxjjfwzs.Count(p => p.JJ_xia == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(sxjjfwzs.Count(p => p.JJ_qiu == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(sxjjfwzs.Count(p => p.JJ_dong == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(sxjjfwzs.Count(p => p.FW_dong == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(sxjjfwzs.Count(p => p.FW_nan == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(sxjjfwzs.Count(p => p.FW_xi == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(sxjjfwzs.Count(p => p.FW_bei == 0))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        平均遗漏
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                        @(sxjjfwzs.Count==0?0:sxjjfwzs.Sum(p => p.SX_shu) / sxjjfwzs.Count)
+                    </td>
+                    <td>
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Sum(p => p.SX_niu) / sxjjfwzs.Count)
+                    </td>
+                    <td>
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Sum(p => p.SX_hu) / sxjjfwzs.Count)
+                    </td>
+                    <td>
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Sum(p => p.SX_tu) / sxjjfwzs.Count)
+                    </td>
+                    <td>
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Sum(p => p.SX_long) / sxjjfwzs.Count)
+                    </td>
+                    <td>
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Sum(p => p.SX_she) / sxjjfwzs.Count)
+                    </td>
+                    <td>
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Sum(p => p.SX_ma) / sxjjfwzs.Count)
+                    </td>
+                    <td>
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Sum(p => p.SX_yang) / sxjjfwzs.Count)
+                    </td>
+                    <td>
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Sum(p => p.SX_hou) / sxjjfwzs.Count)
+                    </td>
+                    <td>
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Sum(p => p.SX_ji) / sxjjfwzs.Count)
+                    </td>
+                    <td>
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Sum(p => p.SX_gou) / sxjjfwzs.Count)
+                    </td>
+                    <td class="line_r">
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Sum(p => p.SX_zhu) / sxjjfwzs.Count)
+                    </td>
+                    <td>
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Sum(p => p.JJ_chun) / sxjjfwzs.Count)
+                    </td>
+                    <td class="">
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Sum(p => p.JJ_xia) / sxjjfwzs.Count)
+                    </td>
+                    <td>
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Sum(p => p.JJ_qiu) / sxjjfwzs.Count)
+                    </td>
+                    <td class="line_r">
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Sum(p => p.JJ_dong) / sxjjfwzs.Count)
+                    </td>
+                    <td>
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Sum(p => p.FW_dong) / sxjjfwzs.Count)
+                    </td>
+                    <td>
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Sum(p => p.FW_nan) / sxjjfwzs.Count)
+                    </td>
+                    <td>
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Sum(p => p.FW_xi) / sxjjfwzs.Count)
+                    </td>
+                    <td class="line_r">
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Sum(p => p.FW_bei) / sxjjfwzs.Count)
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        最大遗漏
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Max(p => p.SX_shu))
+                    </td>
+                    <td>
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Max(p => p.SX_niu))
+                    </td>
+                    <td>
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Max(p => p.SX_hu))
+                    </td>
+                    <td>
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Max(p => p.SX_tu))
+                    </td>
+                    <td>
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Max(p => p.SX_long))
+                    </td>
+                    <td>
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Max(p => p.SX_she))
+                    </td>
+                    <td>
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Max(p => p.SX_ma))
+                    </td>
+                    <td>
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Max(p => p.SX_yang))
+                    </td>
+                    <td>
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Max(p => p.SX_hou))
+                    </td>
+                    <td>
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Max(p => p.SX_ji))
+                    </td>
+                    <td>
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Max(p => p.SX_gou))
+                    </td>
+                    <td class="line_r">
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Max(p => p.SX_zhu))
+                    </td>
+                    <td>
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Max(p => p.JJ_chun))
+                    </td>
+                    <td class="">
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Max(p => p.JJ_xia))
+                    </td>
+                    <td>
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Max(p => p.JJ_qiu))
+                    </td>
+                    <td class="line_r">
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Max(p => p.JJ_dong))
+                    </td>
+                    <td>
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Max(p => p.FW_dong))
+                    </td>
+                    <td>
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Max(p => p.FW_nan))
+                    </td>
+                    <td>
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Max(p => p.FW_xi))
+                    </td>
+                    <td class="line_r">
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs.Max(p => p.FW_bei))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        当前遗漏
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td valign="bottom">
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].SX_shu)<br>
+                        <img width="8px" height="@(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].SX_shu)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].SX_niu)<br>
+                        <img width="8px" height="@(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].SX_niu)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].SX_hu)<br>
+                        <img width="8px" height="@(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].SX_hu)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].SX_tu)<br>
+                        <img width="8px" height="@(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].SX_tu)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].SX_long)<br>
+                        <img width="8px" height="@(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].SX_long)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].SX_she)<br>
+                        <img width="8px" height="@(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].SX_she)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].SX_ma)<br>
+                        <img width="8px" height="@(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].SX_ma)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].SX_yang)<br>
+                        <img width="8px" height="@(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].SX_yang)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].SX_hou)<br>
+                        <img width="8px" height="@(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].SX_hou)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].SX_ji)<br>
+                        <img width="8px" height="@(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].SX_ji)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].SX_gou)<br>
+                        <img width="8px" height="@(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].SX_gou)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].SX_zhu)<br>
+                        <img width="8px" height="@(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].SX_zhu)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].JJ_chun)<br>
+                        <img width="8px" height="@(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].JJ_chun)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].JJ_xia)<br>
+                        <img width="8px" height="@(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].JJ_xia)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].JJ_qiu)<br>
+                        <img width="8px" height="@(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].JJ_qiu)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].JJ_dong)<br>
+                        <img width="8px" height="@(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].JJ_dong)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].FW_dong)<br>
+                        <img width="8px" height="@(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].FW_dong)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].FW_nan)<br>
+                        <img width="8px" height="@(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].FW_nan)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].FW_xi)<br>
+                        <img width="8px" height="@(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].FW_xi)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].FW_bei)<br>
+                        <img width="8px" height="@(sxjjfwzs.Count == 0 ? 0 : sxjjfwzs[sxjjfwzs.Count - 1].FW_bei)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr class="tabbg">
+                    <th width="86px" rowspan="6" class="line_r">
+                        期号
+                    </th>
+                    <th width="38px">
+                        号码
+                    </th>
+                    <th width="38px">
+                        生肖
+                    </th>
+                    <th width="38px">
+                        季节
+                    </th>
+                    <th width="38px" class="line_r">
+                        方位
+                    </th>
+                    <th width="28px">
+                        鼠
+                    </th>
+                    <th width="28px">
+                        牛
+                    </th>
+                    <th width="28px">
+                        虎
+                    </th>
+                    <th width="28px">
+                        兔
+                    </th>
+                    <th width="28px">
+                        龙
+                    </th>
+                    <th width="28px">
+                        蛇
+                    </th>
+                    <th width="28px">
+                        马
+                    </th>
+                    <th width="28px">
+                        羊
+                    </th>
+                    <th width="28px">
+                        猴
+                    </th>
+                    <th width="28px">
+                        鸡
+                    </th>
+                    <th width="28px">
+                        狗
+                    </th>
+                    <th width="28px" class="line_r">
+                        猪
+                    </th>
+                    <th width="50px">
+                        春
+                    </th>
+                    <th width="50px">
+                        夏
+                    </th>
+                    <th width="50px">
+                        秋
+                    </th>
+                    <th width="50px" class="line_r">
+                        冬
+                    </th>
+                    <th width="50px">
+                        东
+                    </th>
+                    <th width="50px">
+                        南
+                    </th>
+                    <th width="50px">
+                        西
+                    </th>
+                    <th width="50px" class="line_r">
+                        北
+                    </th>
+                </tr>
+                <tr class="tabbg">
+                    <th rowspan="5" colspan="4" class="line_r">
+                        出号
+                    </th>
+                    <td colspan="2">
+                        07,19,31
+                    </td>
+                    <td colspan="2">
+                        08,20,32
+                    </td>
+                    <td colspan="2">
+                        09,21,33
+                    </td>
+                    <td colspan="2">
+                        10,22,34
+                    </td>
+                    <td colspan="2">
+                        11,23,35
+                    </td>
+                    <td colspan="2" class="line_r">
+                        12,24,36
+                    </td>
+                    <td colspan="4" class="line_r">
+                        冬：28,29,30,31,32,33,34,35,36
+                    </td>
+                    <td colspan="4" class="line_r">
+                        北：20,22,24,26,28,30,32,34,36
+                    </td>
+                </tr>
+                <tr class="tabbg">
+                    <td colspan="2">
+                        马
+                    </td>
+                    <td colspan="2">
+                        羊
+                    </td>
+                    <td colspan="2">
+                        猴
+                    </td>
+                    <td colspan="2">
+                        鸡
+                    </td>
+                    <td colspan="2">
+                        狗
+                    </td>
+                    <td colspan="2" class="line_r">
+                        猪
+                    </td>
+                    <td colspan="4" class="line_r">
+                        秋：19,20,21,22,23,24,25,26,27
+                    </td>
+                    <td colspan="4" class="line_r">
+                        西：19,21,23,25,27,29,31,33,35
+                    </td>
+                </tr>
+                <tr class="tabbg">
+                    <td colspan="2">
+                        01,13,25
+                    </td>
+                    <td colspan="2">
+                        02,14,26
+                    </td>
+                    <td colspan="2">
+                        03,15,27
+                    </td>
+                    <td colspan="2">
+                        04,16,28
+                    </td>
+                    <td colspan="2">
+                        05,17,29
+                    </td>
+                    <td colspan="2" class="line_r">
+                        06,18,30
+                    </td>
+                    <td colspan="4" class="line_r">
+                        夏：10,11,12,13,14,15,16,17,18
+                    </td>
+                    <td colspan="4" class="line_r">
+                        南：02,04,06,08,10,12,14,16,18
+                    </td>
+                </tr>
+                <tr class="tabbg">
+                    <td colspan="2">
+                        鼠
+                    </td>
+                    <td colspan="2">
+                        牛
+                    </td>
+                    <td colspan="2">
+                        虎
+                    </td>
+                    <td colspan="2">
+                        兔
+                    </td>
+                    <td colspan="2">
+                        龙
+                    </td>
+                    <td colspan="2" class="line_r">
+                        蛇
+                    </td>
+                    <td colspan="4" class="line_r">
+                        春：01,02,03,04,05,06,07,08,09
+                    </td>
+                    <td colspan="4" class="line_r">
+                        东：01,03,05,07,09,11,13,15,17
+                    </td>
+                </tr>
+                <tr class="tabbg">
+                    <th colspan="12" class="line_r">
+                        生肖
+                    </th>
+                    <th colspan="4" class="line_r">
+                        季节
+                    </th>
+                    <th colspan="4" class="line_r">
+                        方位
+                    </th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $(function () {
+
+        var allLines = new Array();
+        allLines.push({ line: $(".tbg1"), color: "#05650E" });
+        allLines.push({ line: $(".orange1"), color: "#FF590B" });
+        allLines.push({ line: $(".green1"), color: "#004F00" });
+        var line = new XTLine();
+        for (i = 0; i < allLines.length; i++) {
+            var l = allLines[i];
+
+            line.color = l.color;
+            line.arrayBalls = l.line;
+            line.showrect();
+        }
+
+
+        $("#has_line").click(function () {
+            line.display(this.checked);
+        })
+    })
+</script>

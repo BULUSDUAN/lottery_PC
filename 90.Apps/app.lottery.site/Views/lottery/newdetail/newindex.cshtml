@@ -1,0 +1,537 @@
+﻿@{
+    var award = ViewBag.AwardList as LotteryData.Core.GameWinNumber_InfoCollection;
+    var FC3D = award.List.Where(p => p.GameCode.ToUpper() == "FC3D").FirstOrDefault();
+    var SSQ = award.List.Where(p => p.GameCode.ToUpper() == "SSQ").FirstOrDefault();
+    var DLT = award.List.Where(p => p.GameCode.ToUpper() == "DLT").FirstOrDefault();
+    var PL3 = award.List.Where(p => p.GameCode.ToUpper() == "PL3").FirstOrDefault();
+    var T14C = award.List.Where(p => p.GameCode.ToUpper() == "CTZQ" && (p.GameType.ToUpper() == "T14C" || p.GameType.ToUpper() == "TR9")).FirstOrDefault();
+    var TR9 = award.List.Where(p => p.GameCode.ToUpper() == "CTZQ" && (p.GameType.ToUpper() == "TR9" || p.GameType.ToUpper() == "T14C")).FirstOrDefault();
+    var T4CJQ = award.List.Where(p => p.GameCode.ToUpper() == "CTZQ" && p.GameType.ToUpper() == "T4CJQ").FirstOrDefault();
+    var T6BQC = award.List.Where(p => p.GameCode.ToUpper() == "CTZQ" && p.GameType.ToUpper() == "T6BQC").FirstOrDefault();
+    var gameCode = ViewBag.GameCode;
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>开奖结果</li>
+    </ul>
+</div>
+<!--开奖公告-->
+<div class="lottery_notic lo_box mt10">
+    <div class=" clearfix">
+    </div>
+    <span class="lottery_img"></span>
+    <div class="lottery_today">
+        <span>今日开奖：
+            @{foreach (var item in SiteString.gameList("szc"))
+              {
+                  if (OrderManager.isTodayGame(item))
+                  {<em>@SiteConvert.GameName(item)</em>
+                  }
+              }}
+        </span>
+    </div>
+</div>
+<div class="mt10 lottery_title">
+    最新彩票开奖结果</div>
+<div class="mt10 lo_box">
+    <div class="kj_box">
+        <table class="kj_tab" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr class="title">
+                    <td width="88">
+                        彩种
+                    </td>
+                    <td width="80">
+                        期号
+                    </td>
+                    <td width="80">
+                        开奖时间
+                    </td>
+                    <td width="320">
+                        开奖号码
+                    </td>
+                    <td width="120">
+                        奖池滚存(元)
+                    </td>
+                    <td width="78">
+                        开奖日
+                    </td>
+                    <td width="40">
+                        详情
+                    </td>
+                    <td width="40">
+                        走势
+                    </td>
+                    <td width="40">
+                        历史
+                    </td>
+                    <td width="80">
+                        购买彩票
+                    </td>
+                </tr>
+                <tr class="czbgcolor" id="fc_lottery_area">
+                    <td colspan="10">
+                        <h2 class="fc flcp">
+                            福利彩票</h2>
+                    </td>
+                </tr>
+                <tr class="bgcolor">
+                    <td>
+                        <a href="/staticHtml/lottery/detail_ssq.html" target="_blank">双色球</a>
+                    </td>
+                    <td>
+                        <a href="/staticHtml/lottery/detail_ssq.html" target="_blank">@(SSQ == null ? "" : SSQ.IssuseNumber)期</a>
+                    </td>
+                    <td>@(SSQ == null ? "" : SSQ.CreateTime.ToString("yyyy-MM-dd "))
+                    </td>
+                    <td>
+                        <div class="ballbg">
+                            <span class="ball_1">@OrderHelper.WinNumberView(SSQ == null ? "" : SSQ.WinNumber)</span>
+                        </div>
+                    </td>
+                    <td>
+                        --
+                    </td>
+                    <td>@SiteString.lotteryDay(SSQ == null ? "" : SSQ.GameCode)
+                    </td>
+                    <td class="span_img">
+                        <a href="/staticHtml/lottery/detail_ssq.html" target="_blank"><span></span>
+                            <img src="@ViewHelpers.img("hall/details.gif")"></a>
+                    </td>
+                    <td>
+                        <a href="/statichtml/lotterytrend/ssq/jbzs30.html" target="_blank">
+                            <img src="@ViewHelpers.img("hall/zst_01.gif")"></a>
+                    </td>
+                    <td>
+                        <a href="/staticHtml/lottery/history_ssq.html" target="_blank">
+                            <img src="@ViewHelpers.img("hall/history.gif")"></a>
+                    </td>
+                    <td class="b">
+                        <a href="/szc/ssq" class="draw-lottery-btn" target="_blank">投注</a> <a href="/chipped/ssq"
+                            target="_blank">合买</a>
+                    </td>
+                </tr>
+                <tr class="gary">
+                    <td>
+                        <a href="/staticHtml/lottery/detail_fc3d.html" target="_blank">福彩3D</a>
+                    </td>
+                    <td>
+                        <a href="/staticHtml/lottery/detail_fc3d.html" target="_blank">@(FC3D == null ? "" : FC3D.IssuseNumber)
+                            期</a>
+                    </td>
+                    <td>@(FC3D == null ? "" : FC3D.CreateTime.ToString("yyyy-MM-dd "))
+                    </td>
+                    <td>
+                        <div class="ballbg">
+                            <span class="ball_1">@OrderHelper.WinNumberView(FC3D == null ? "" : FC3D.WinNumber)</span>
+                        </div>
+                    </td>
+                    <td>
+                        --
+                    </td>
+                    <td>@SiteString.lotteryDay(FC3D == null ? "" : FC3D.GameCode)
+                    </td>
+                    <td>
+                        <a href="/staticHtml/lottery/detail_fc3d.html" target="_blank">
+                            <img src="@ViewHelpers.img("hall/details.gif")"></a>
+                    </td>
+                    <td>
+                        <a href="/statichtml/lotterytrend/fc3d/zxzs30.html" target="_blank">
+                            <img src="@ViewHelpers.img("hall/zst_01.gif")"></a>
+                    </td>
+                    <td>
+                        <a href="/staticHtml/lottery/history_fc3d.html" target="_blank">
+                            <img src="@ViewHelpers.img("hall/history.gif")"></a>
+                    </td>
+                    <td class="b">
+                        <a href="/szc/fc3d" class="draw-lottery-btn" target="_blank">投注</a> <a href="/chipped/fc3d"
+                            target="_blank">合买</a>
+                    </td>
+                </tr>
+                <tr class="czbgcolor" id="tc_lottery_area">
+                    <td colspan="10">
+                        <h2 class="fc tc ">
+                            体育彩票</h2>
+                    </td>
+                </tr>
+                <tr class="bgcolor">
+                    <td>
+                        <a href="/staticHtml/lottery/detail_dlt.html" target="_blank">大乐透</a>
+                    </td>
+                    <td>
+                        <a href="/staticHtml/lottery/detail_dlt.html" target="_blank">@(DLT == null ? "" : DLT.IssuseNumber)
+                            期</a>
+                    </td>
+                    <td>@(DLT == null ? "" : DLT.CreateTime.ToString("yyyy-MM-dd "))
+                    </td>
+                    <td>
+                        <div class="ballbg">
+                            <span class="ball_2">@OrderHelper.WinNumberView(DLT == null ? "" : DLT.WinNumber)</span></div>
+                    </td>
+                    <td>
+                        --
+                    </td>
+                    <td>@SiteString.lotteryDay(DLT == null ? "" : DLT.GameCode)
+                    </td>
+                    <td>
+                        <a href="/staticHtml/lottery/detail_dlt.html" target="_blank">
+                            <img src="@ViewHelpers.img("hall/details.gif")"></a>
+                    </td>
+                    <td>
+                        <a href="/statichtml/lotterytrend/dlt/jbzs30.html" target="_blank">
+                            <img src="@ViewHelpers.img("hall/zst_01.gif")"></a>
+                    </td>
+                    <td>
+                        <a href="/staticHtml/lottery/history_dlt.html" target="_blank">
+                            <img src="@ViewHelpers.img("hall/history.gif")"></a>
+                    </td>
+                    <td class="b">
+                        <a href="/szc/dlt" class="draw-lottery-btn" target="_blank">投注</a> <a href="/chipped/dlt"
+                            target="_blank">合买</a>
+                    </td>
+                </tr>
+                <tr class="gary">
+                    <td>
+                        <a href="/staticHtml/lottery/detail_pl3.html" target="_blank">排列三</a>
+                    </td>
+                    <td>
+                        <a href="/staticHtml/lottery/detail_pl3.html" target="_blank">@(PL3 == null ? "" : PL3.IssuseNumber)
+                            期</a>
+                    </td>
+                    <td>@(DLT == null ? "" : PL3.CreateTime.ToString("yyyy-MM-dd "))
+                    </td>
+                    <td>
+                        <div class="ballbg">
+                            <span class="ball_1">@OrderHelper.WinNumberView(PL3 == null ? "" : PL3.WinNumber)</span></div>
+                    </td>
+                    <td>
+                        --
+                    </td>
+                    <td>@SiteString.lotteryDay(PL3 == null ? "" : PL3.GameCode)
+                    </td>
+                    <td>
+                        <a href="/staticHtml/lottery/detail_pl3.html" target="_blank">
+                            <img src="@ViewHelpers.img("hall/details.gif")"></a>
+                    </td>
+                    <td>
+                        <a href="/statichtml/lotterytrend/pl3/jbzs30.html" target="_blank">
+                            <img src="@ViewHelpers.img("hall/zst_01.gif")"></a>
+                    </td>
+                    <td>
+                        <a href="/staticHtml/lottery/history_pl3.html" target="_blank">
+                            <img src="@ViewHelpers.img("hall/history.gif")"></a>
+                    </td>
+                    <td class="b">
+                        <a href="/szc/pl3" target="_blank" class="draw-lottery-btn">投注</a> <a href="/chipped/pl3"
+                            target="_blank">合买</a>
+                    </td>
+                </tr>
+                <tr class="bgcolor">
+                    <td>
+                        <a href="/staticHtml/lottery/detail_t14c.html" target="_blank">14场胜负彩</a>
+                    </td>
+                    <td>
+                        <a href="/staticHtml/lottery/detail_t14c.html" target="_blank">@(T14C == null ? "" : T14C.IssuseNumber)
+                            期</a>
+                    </td>
+                    <td>@(T14C == null ? "" : T14C.CreateTime.ToString("yyyy-MM-dd "))
+                    </td>
+                    <td>
+                        <div class="ballbg">
+                            @{
+                                for (var j = 0; j < T14C.WinNumber.Split(',').Length; j++)
+                                {
+                                <span class="ball_3 yellow-ball" style="padding-left: 4px; padding-right: 5px; color: #700505 !important;
+                                    font-weight: bold;">@(T14C == null ? "" : T14C.WinNumber.Split(',')[j])</span>
+                                }
+                            }
+                        </div>
+                    </td>
+                    <td>
+                        --
+                    </td>
+                    <td>@SiteString.lotteryDay(T14C == null ? "" : T14C.GameCode)
+                    </td>
+                    <td>
+                        <a href="/staticHtml/lottery/detail_t14c.html" target="_blank">
+                            <img src="@ViewHelpers.img("hall/details.gif")"></a>
+                    </td>
+                    <td class="b">
+                        *
+                    </td>
+                    <td>
+                        <a href="/staticHtml/lottery/history_ctzq_t14c.html" target="_blank">
+                            <img src="@ViewHelpers.img("hall/history.gif")"></a>
+                    </td>
+                    <td class="b">
+                        <a href="/toto" class="draw-lottery-btn" target="_blank">投注</a> <a href="/chipped/ctzq?PlayType=t14c"
+                            target="_blank">合买</a>
+                    </td>
+                </tr>
+                <tr class="gary">
+                    <td>
+                        <a href="/staticHtml/lottery/detail_tr9.html" target="_blank">任选9场</a>
+                    </td>
+                    <td>
+                        <a href="/staticHtml/lottery/detail_tr9.html" target="_blank">@(TR9 == null ? "" : TR9.IssuseNumber)
+                            期</a>
+                    </td>
+                    <td>@(TR9 == null ? "" : TR9.CreateTime.ToString("yyyy-MM-dd "))
+                    </td>
+                    <td>
+                        <div class="ballbg">
+                            @{
+                                for (var j = 0; j < TR9.WinNumber.Split(',').Length; j++)
+                                {
+                                <span class="ball_3 yellow-ball" style="padding-left: 4px; padding-right: 5px; color: #700505 !important;
+                                    font-weight: bold;">@(TR9 == null ? "" : TR9.WinNumber.Split(',')[j])</span>
+                                }
+                            }
+                        </div>
+                    </td>
+                    <td>
+                        --
+                    </td>
+                    <td>@SiteString.lotteryDay(TR9 == null ? "" : TR9.GameCode)
+                    </td>
+                    <td>
+                        <a href="/staticHtml/lottery/detail_tr9.html" target="_blank">
+                            <img src="@ViewHelpers.img("hall/details.gif")"></a>
+                    </td>
+                    <td class="b">
+                        *
+                    </td>
+                    <td>
+                        <a href="/staticHtml/lottery/history_ctzq_tr9.html" target="_blank">
+                            <img src="@ViewHelpers.img("hall/history.gif")"></a>
+                    </td>
+                    <td class="b">
+                        <a href="/toto/tr9" target="_blank" class="draw-lottery-btn">投注</a> <a href="/chipped/ctzq?PlayType=tr9"
+                            target="_blank">合买</a>
+                    </td>
+                </tr>
+                <tr class="bgcolor">
+                    <td>
+                        <a href="/staticHtml/lottery/detail_t4cjq.html" target="_blank">4场进球彩</a>
+                    </td>
+                    <td>
+                        <a href="/staticHtml/lottery/detail_t4cjq.html" target="_blank">@(T4CJQ == null ? "" : T4CJQ.IssuseNumber)
+                            期</a>
+                    </td>
+                    <td>@(T4CJQ == null ? "" : T4CJQ.CreateTime.ToString("yyyy-MM-dd "))
+                    </td>
+                    <td>
+                        <div class="ballbg">
+                            @{
+                                for (var j = 0; j < T4CJQ.WinNumber.Split(',').Length; j++)
+                                {
+                                <span class="ball_3 yellow-ball" style="padding-left: 4px; padding-right: 5px; color: #700505 !important;
+                                    font-weight: bold;">@(T4CJQ == null ? "" : T4CJQ.WinNumber.Split(',')[j])</span>
+                                }
+                            }
+                        </div>
+                    </td>
+                    <td>
+                        --
+                    </td>
+                    <td>@SiteString.lotteryDay(T4CJQ == null ? "" : T4CJQ.GameCode)
+                    </td>
+                    <td>
+                        <a href="/staticHtml/lottery/detail_t4cjq.html" target="_blank">
+                            <img src="@ViewHelpers.img("hall/details.gif")"></a>
+                    </td>
+                    <td class="b">
+                        *
+                    </td>
+                    <td>
+                        <a href="/staticHtml/lottery/history_ctzq_t4cjq.html" target="_blank">
+                            <img src="@ViewHelpers.img("hall/history.gif")"></a>
+                    </td>
+                    <td class="b">
+                        <a href="/toto/t4cjq" class="draw-lottery-btn" target="_blank">投注</a> <a href="/chipped/ctzq?PlayType=t4cjq"
+                            target="_blank">合买</a>
+                    </td>
+                </tr>
+                <tr class="gary">
+                    <td>
+                        <a href="/staticHtml/lottery/detail_t6bqc.html" target="_blank">6场半全场</a>
+                    </td>
+                    <td>
+                        <a href="/staticHtml/lottery/detail_t6bqc.html" target="_blank">@(T6BQC == null ? "" : T6BQC.IssuseNumber)
+                            期</a>
+                    </td>
+                    <td>@(T6BQC == null ? "" : T6BQC.CreateTime.ToString("yyyy-MM-dd "))
+                    </td>
+                    <td>
+                        <div class="ballbg">
+                            @{
+                                for (var j = 0; j < T6BQC.WinNumber.Split(',').Length; j++)
+                                {
+                                <span class="ball_3 yellow-ball" style="padding-left: 4px; padding-right: 5px; color: #700505 !important;
+                                    font-weight: bold;">@(T6BQC == null ? "" : T6BQC.WinNumber.Split(',')[j])</span> 
+                                }
+                            }
+                        </div>
+                    </td>
+                    <td>
+                        --
+                    </td>
+                    <td>@SiteString.lotteryDay(T6BQC == null ? "" : T6BQC.GameCode)
+                    </td>
+                    <td>
+                        <a href="/staticHtml/lottery/detail_t6bqc.html" target="_blank">
+                            <img src="@ViewHelpers.img("hall/details.gif")"></a>
+                    </td>
+                    <td class="b">
+                        *
+                    </td>
+                    <td>
+                        <a href="/staticHtml/lottery/history_ctzq_t6bqc.html" target="_blank">
+                            <img src="@ViewHelpers.img("hall/history.gif")"></a>
+                    </td>
+                    <td class="b">
+                        <a href="/toto/t6bqc" target="_blank" class="draw-lottery-btn">投注</a> <a href="/chipped/ctzq?PlayType=t6bqc"
+                            target="_blank">合买</a>
+                    </td>
+                </tr>
+                <tr class="bgcolor">
+                    <td>
+                        <a href="/staticHtml/lottery/jczq/detail_jczq_all.html" target="_blank">竞彩足球</a>
+                    </td>
+                    <td style="color: #005AA0">
+                        --
+                    </td>
+                    <td>
+                        --
+                    </td>
+                    <td>
+                        <div class="ballbg">
+                            <a href="/staticHtml/lottery/jczq/detail_jczq_spf.html" target="_blank">让球胜平负</a>
+                            <a href="/staticHtml/lottery/jczq/detail_jczq_brqspf.html" target="_blank">胜平负</a>
+                            <a href="/staticHtml/lottery/jczq/detail_jczq_zjq.html" target="_blank">进球数</a> <a
+                                href="/staticHtml/lottery/jczq/detail_jczq_bf.html" target="_blank">比分</a> <a href="/staticHtml/lottery/jczq/detail_jczq_bqc.html"
+                                    target="_blank">半全场</a>
+                        </div>
+                    </td>
+                    <td>
+                        --
+                    </td>
+                    <td>
+                        每日
+                    </td>
+                    <td>
+                        <a href="/staticHtml/lottery/jczq/detail_jczq_all.html" target="_blank">
+                            <img src="@ViewHelpers.img("hall/details.gif")"></a>
+                    </td>
+                    <td class="b">
+                        *
+                    </td>
+                    <td>
+                        *
+                    </td>
+                    <td class="b">
+                        <a href="/jingcai" class="draw-lottery-btn" target="_blank">投注</a> <a href="/chipped/jczq"
+                            target="_blank">合买</a>
+                    </td>
+                </tr>
+                <tr class="gary">
+                    <td>
+                        <a href="/staticHtml/lottery/jclq/detail_jclq_all.html" target="_blank">竞彩篮球</a>
+                    </td>
+                    <td style="color: #005AA0">
+                        --
+                    </td>
+                    <td>
+                        --
+                    </td>
+                    <td>
+                        <div class="ballbg">
+                            <a href="/staticHtml/lottery/jclq/detail_jclq_sf.html" target="_blank">胜负</a> <a href="/staticHtml/lottery/jclq/detail_jclq_rfsf.html"
+                                target="_blank">让分胜负</a> <a target="_blank" href="/staticHtml/lottery/jclq/detail_jclq_sfc.html">
+                                    胜分差</a> <a href="/staticHtml/lottery/jclq/detail_jclq_dxf.html" target="_blank">大小分</a>
+                        </div>
+                    </td>
+                    <td>
+                        --
+                    </td>
+                    <td>
+                        每日
+                    </td>
+                    <td>
+                        <a href="/staticHtml/lottery/jclq/detail_jclq_all.html" target="_blank">
+                            <img src="@ViewHelpers.img("hall/details.gif")"></a>
+                    </td>
+                    <td class="b">
+                        *
+                    </td>
+                    <td>
+                        *
+                    </td>
+                    <td class="b">
+                        <a href="/jingcaibasket" class="draw-lottery-btn" target="_blank">投注</a> <a href="/chipped/jclq">
+                            合买</a>
+                    </td>
+                </tr>
+                <tr class="bgcolor">
+                    <td>
+                        <a href="/staticHtml/lottery/detail_bjdc_all.html" target="_blank">足球单场</a>
+                    </td>
+                    <td style="color: #005AA0">
+                        --
+                    </td>
+                    <td>
+                        --
+                    </td>
+                    <td>
+                        <div class="ballbg">
+                            <a href="/staticHtml/lottery/detail_bjdc_spf.html" target="_blank">胜平负</a> <a href="/staticHtml/lottery/detail_bjdc_zjq.html"
+                                target="_blank">进球数</a> <a href="/staticHtml/lottery/detail_bjdc_bf.html" target="_blank">
+                                    比分</a> <a href="/staticHtml/lottery/detail_bjdc_bqc.html" target="_blank">半全场</a>
+                            <a target="_blank" href="/staticHtml/lottery/detail_bjdc_sxds.html">上下单双</a>
+                        </div>
+                    </td>
+                    <td>
+                        --
+                    </td>
+                    <td>
+                        每日
+                    </td>
+                    <td>
+                        <a href="/staticHtml/lottery/detail_bjdc_all.html" target="_blank">
+                            <img src="@ViewHelpers.img("hall/details.gif")"></a>
+                    </td>
+                    <td class="b">
+                        *
+                    </td>
+                    <td>
+                        *
+                    </td>
+                    <td class="b">
+                        <a href="/danchang" class="draw-lottery-btn" target="_blank">投注</a> <a href="/chipped/jdc"
+                            target="_blank">合买</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="clear">
+    </div>
+</div>
+<div class="hint">
+    友情提示：数据来源于彩票中心官方网站，请以彩票中心官方网站公布数据为准</div>
+<script type="text/javascript">
+    $(function () {
+        $("#submit_btn").click(function () {
+            var key = $("#dropDownListAllCPType").find("option:selected").val();
+            var game = key.split('|')[0];
+            var type = key.split('|')[1];
+            if (type != "" && type != null) {
+                location.href = "/soccer/" + game + "?gametype=" + type;
+            } else {
+                location.href = "/soccer/" + game;
+            }
+        });
+    });
+</script>

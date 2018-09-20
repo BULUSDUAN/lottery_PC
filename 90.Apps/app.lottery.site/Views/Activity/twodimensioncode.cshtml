@@ -1,0 +1,23 @@
+﻿
+@{
+    ViewBag.Title = "店铺二维码";
+    Layout = "../Shared/_HuoDong.cshtml";
+    //Layout = null;
+    var url = Request.Url.Host.ToString();
+}
+<div class="dimension">
+    <input type="hidden" name="name" id="userId" value="@ViewBag.Url" />
+    <div id="dimension">
+    </div>
+    <span class="di_url">@url</span>
+</div>
+<script type="text/javascript">
+    var centent = $("#userId").val();
+
+    $("#dimension").qrcode({
+        render: "table",
+        text: centent,
+        width: 246,
+        height: 246
+    });
+</script>

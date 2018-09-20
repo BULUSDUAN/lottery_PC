@@ -1,0 +1,117 @@
+﻿@{
+    ViewBag.Title = "名家争霸赛";
+    Layout = "../Shared/_HuoDong.cshtml";
+    var rankinfo = ViewBag.RankingList as GameBiz.Core.ExperterRankingInfoCollection;
+}
+<div id="experPk">
+    <div>
+        <ul class="ul-1">
+            <li class="jqzy-list">
+                <dl>
+                    <dt><i class="experPk-icon pk jqzy"></i></dt>
+                    <dd class="td1">
+                        <span>名家ID</span> <span>盈利率</span> <span>中奖率</span>
+                    </dd>
+                    @foreach (var item in rankinfo.List.Take(1))
+                    {
+                        <dd class="td2">
+                            <span>@SiteString.HideUserName(item.DisplayName, item.HideDisplayNameCount)</span>
+                            <span>@item.Yingli</span> <span>@item.Mizhong</span>
+                        </dd>
+                    }
+                </dl>
+            </li>
+            <li class="jqj-list">
+                <dl>
+                    <dt><i class="experPk-icon pk jqj"></i></dt>
+                    <dd class="td1">
+                        <span>名家ID</span> <span>盈利率</span> <span>中奖率</span>
+                    </dd>
+                    @foreach (var item in rankinfo.List.Skip(1).Take(1))
+                    {
+                        <dd class="td2">
+                            <span>@SiteString.HideUserName(item.DisplayName, item.HideDisplayNameCount)</span>
+                            <span>@item.Yingli</span> <span>@item.Mizhong</span>
+                        </dd>
+                    }
+                </dl>
+            </li>
+            <li class="yqj-list">
+                <dl>
+                    <dt><i class="experPk-icon pk yqj"></i></dt>
+                    <dd class="td1">
+                        <span>名家ID</span> <span>盈利率</span> <span>中奖率</span>
+                    </dd>
+                    @foreach (var item in rankinfo.List.Skip(2).Take(2))
+                    {
+                        <dd class="td2">
+                            <span>@SiteString.HideUserName(item.DisplayName, item.HideDisplayNameCount)</span>
+                            <span>@item.Yingli</span> <span>@item.Mizhong</span>
+                        </dd>
+                    }
+                </dl>
+            </li>
+        </ul>
+        <ul class="ul-2">
+            <li class="tqj-list">
+                <dl>
+                    <dt><i class="experPk-icon pk tqj"></i></dt>
+                    <dd class="td1">
+                        <span>名家ID</span> <span>盈利率</span> <span>中奖率</span>
+                    </dd>
+                    @foreach (var item in rankinfo.List.Skip(4).Take(7))
+                    {
+                        <dd class="td2">
+                            <span>@SiteString.HideUserName(item.DisplayName, item.HideDisplayNameCount)</span>
+                            <span>@item.Yingli</span> <span>@item.Mizhong</span>
+                        </dd>
+                    }
+                </dl>
+            </li>
+        </ul>
+        <div class="clearfix1">
+        </div>
+        <div class="hd-tip">
+            <a href="javascript:void(0)" id="noteic">活动规则</a>
+            <div style="display: none" id="showtip">
+                <div class="notifyicon_arrow">
+                    <s></s><em></em>
+                </div>
+                <div class="notifyicon_content">
+                    <p>
+                        活动时间：2014年10月1日0:00至10月31日24:00</p>
+                    <p>
+                        活动对象：@(SiteString.getHZSiteName(Request))足球名家</p>
+                    <p>
+                        活动规则：</p>
+                    <p>
+                        1、本活动时间内，在个人名家主页累计发起≥30个2串1竞彩推荐方案，方案命中率≥65%；</p>
+                    <p>
+                        2、活动期间内推荐的2串1竞彩方案总回报率≥200%;</p>
+                    <p>
+                        3、关注粉丝达100人以上。</p>
+                    <p>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;满足以上3个条件的名家即可入围参与角逐明家榜。</p>
+                    <p style="margin-top: 20px;">
+                        活动奖项：</p>
+                    <p>
+                        1、金秋状元，方案回报率≥500%且排名第一的名家获得该奖，获得与@(SiteString.getHZSiteName(Request))签订总价值100万的“@(SiteString.getHZSiteName(Request))聘专家”聘用协议(最高可签约20万/年合作费)。</p>
+                    <p>
+                        2、金球奖，方案总回报率排名第一的名家获得该奖，获得5888元彩金红包。</p>
+                    <p>
+                        3、银球奖，方案总回报率排名第二、第三的名家获得该奖，获得2888元彩金红包。</p>
+                    <p>
+                        4、铜球奖、方案总回报率排名第四至第十的名家获得该奖，获得888元彩金红包。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@{Html.RenderAction("Footer", "HuoDong");}
+<script type="text/javascript">
+    $('.hd-tip').hover(function () {
+        $(this).find('#showtip').show()
+    }, function () {
+        $(this).find('#showtip').hide()
+    });
+</script>

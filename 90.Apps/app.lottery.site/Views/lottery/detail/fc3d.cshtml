@@ -1,0 +1,47 @@
+﻿@using GameBiz.Core;
+@{
+    var award = ViewBag.Award as  LotteryData.Core.GameWinNumber_Info;
+    var issues = ViewBag.CurIssuse as Issuse_QueryInfo;
+}
+@GameHelper.LotteryHeaderView(issues, award,award == null||award.Id==0 ? "FC3D" : award.GameCode)
+@GameHelper.LotteryDescView(award == null||award.Id==0 ? "FC3D" : award.GameCode)
+<div class="lot-con-l">
+    <h2 class="sctitle">
+        <span class="der2"></span><b>福彩3D奖级设置</b></h2>
+    <div class="td_div2">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="sg">
+            <tbody>
+                <tr>
+                    <td>直选
+                    </td>
+                    <td>号码位置全相符
+                    </td>
+                    <td>1000元
+                    </td>
+                </tr>
+                <tr>
+                    <td>组三
+                    </td>
+                    <td>号码相符(包含对子)
+                    </td>
+                    <td>320元
+                    </td>
+                </tr>
+                <tr>
+                    <td>组六
+                    </td>
+                    <td>号码相符(不含对子)
+                    </td>
+                    <td>160元
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="lot-con-r">
+    <h2 class="sctitle">
+        <span class="der3"></span><b>福彩3D资讯</b></h2>
+    @{Html.RenderAction("LotteryConsulting", "buy", new { id = "FC3D" });}
+</div>
+<div class="clearfix"></div>

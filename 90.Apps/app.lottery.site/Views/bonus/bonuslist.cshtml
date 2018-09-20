@@ -1,0 +1,229 @@
+﻿@using GameBiz.Core;
+@using app.lottery.site.Models;
+@{
+    var user = ViewBag.User as CurrentUserInfo;
+    string game = ViewBag.Game;
+    string type = ViewBag.Type;
+    var issuseList = ViewBag.IssuseList as List<string>;
+
+    ViewBag.Title = SiteConvert.GameName(game, Request["type"]) + " - 中奖查询 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = SiteConvert.GameName(game, Request["type"]) + ",中奖查询, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    ViewBag.Description = "";
+
+    var bonusList = ViewBag.BonusList as BonusOrderInfoCollection;
+}
+@section css{
+    @UserHelper.css("bonus.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>中奖查询</li>
+    </ul>
+</div>
+<div class="new_buy_right">
+    <div class="iif2">
+        <div class="toptit">
+            <div class="kaigg">
+                <label class="cailogo @game">
+                </label>
+                @SiteConvert.GameName(game, Request["type"])中奖查询
+            </div>
+            <div class="ste22">
+                彩种选择：
+                <select id="dropDownListAllCPType" name="dropDownListAllCPType" onchange="reloadSocerByGameCode()">
+                    <optgroup label="传统足球">
+                        <option value="ctzq|t14c">14场胜负彩 </option>
+                        <option value="ctzq|tr9">胜负任选九场</option>
+                        <option value="ctzq|t6bqc">六场半全场</option>
+                        <option value="ctzq|t4cjq">四场进球彩</option>
+                    </optgroup>
+                    <optgroup label="北京单场">
+                        <option value="bjdc|spf">胜平负</option>
+                        <option value="bjdc|zjq">总进球</option>
+                        <option value="bjdc|sxds">上下单双</option>
+                        <option value="bjdc|bf">比分</option>
+                        <option value="bjdc|bqc">半全场</option>
+                    </optgroup>
+                    <optgroup label="竞彩足球">
+                        <option value="jczq|spf">让球胜平负</option>
+                        <option value="jczq|brqspf">胜平负</option>
+                        <option value="jczq|bf">比分</option>
+                        <option value="jczq|zjq">总进球</option>
+                        <option value="jczq|bqc">半全场</option>
+                    </optgroup>
+                    <optgroup label="竞彩篮球">
+                        <option value="jclq|sf">胜负</option>
+                        <option value="jclq|rfsf">让分胜负</option>
+                        <option value="jclq|sfc">胜分差</option>
+                        <option value="jclq|dxf">大小分</option>
+                    </optgroup>
+                    <optgroup label="数字彩">
+                        <option value="ssq|">双色球</option>
+                        <option value="dlt|">大乐透</option>
+                        <option value="pl3|">排列3</option>
+                        <option value="fc3d|">福彩3D </option>
+                    </optgroup>
+                </select>
+                @{if (game == "jczq" || game == "jclq" || SiteString.gameList("gpc").Contains(game))
+                  {
+                    <span>返奖时间：<select id="dropDay" name="dropDay" onchange="ReloadList(0, 30)">
+                        <option value="" @(ViewBag.CompleteData == "" ? "selected=selected" : string.Empty)>
+                            全部</option>
+                        @{for (DateTime i = DateTime.Today; i > DateTime.Today.AddDays(-7); i = i.AddDays(-1))
+                          {
+                            <option value="@i.ToString("yyyyMMdd")" @(ViewBag.CompleteData == i.ToString("yyyyMMdd") ? "selected=selected" : string.Empty)>@i.ToString("yyyy-MM-dd")</option>
+                          }}
+                    </select></span>
+                  }
+                  else
+                  {
+                    <span>第
+                        <select id="dropIssue" name="dropIssue" onchange="ReloadList(0, 30)">
+                            @if (issuseList != null)
+                            {
+                                {
+                                    foreach (var item in issuseList)
+                                    {
+                                <option value="@item" @(ViewBag.IssuseNum == item ? "selected=selected" : string.Empty)>@item</option> 
+                                    }
+                                }
+                            }
+                        </select>
+                        期</span>}}
+                <input type="text" style="color: #999;" onblur="oblur(this);" onclick="ofocus(this);" class="input_text" size="20" value="@ViewBag.Key" id="txtSearch" name="txtSearch">
+                <input type="button" onmouseover="this.style.cursor='pointer';" onclick="ReloadList(0, 30)"
+                    class="btn2" value=" " name="buttonSearch">
+            </div>
+        </div>
+    </div>
+    <div style="margin-bottom: 8px;" class="td_div">
+        <table width="100%" cellspacing="0" cellpadding="2" bordercolor="#FFFFFF" border="1"
+            align="center" class="socai" style="background: #ffffff; border-collapse: collapse;
+            margin-left: 0px;">
+            <tr class="ttis">
+                <td>
+                    序
+                </td>
+                <td>
+                    用户
+                </td>
+                <td>
+                    方案号
+                </td>
+                <td>
+                    类型
+                </td>
+                <td>
+                    注数
+                </td>
+                <td>
+                    方案金额
+                </td>
+                <td>
+                    税后奖金
+                </td>
+                <td>
+                    状态
+                </td>
+            </tr>
+            @{foreach (var item in bonusList.BonusOrderList)
+              {
+                <tr class="@(bonusList.BonusOrderList.IndexOf(item) % 2 == 0 ? "ni2" : "ni")">
+                    <td>@(bonusList.BonusOrderList.IndexOf(item) + 1)
+                    </td>
+                    <td>
+                        <a class="under" target="_blank" href="/staticHtml/blog/index_@(item.UserId)_SZC_SSQ.html">@(SiteString.HideUserName(item.DisplayName, item.HideDisplayNameCount))</a>
+                    </td>
+                    <td>
+                        <a target="_blank" href="/user/scheme/@item.SchemeId" class="under">@item.SchemeId</a>
+                    </td>
+                    <td>@OrderManager.SchemeTypeName(item.SchemeType)
+                    </td>
+                    <td>@item.BetCount
+                    </td>
+                    <td>@item.TotalMoney.ToString("0")
+                    </td>
+                    <td class="bold red">@item.AfterTaxBonusMoney.ToString("f")
+                    </td>
+                    <td>
+                        <a target="_blank" href="/user/scheme/@item.SchemeId" class="under">@(item.IsPrizeMoney ? "已返奖" : "已开奖")</a>
+                        &nbsp;&nbsp;@{if (user == null || user.LoginInfo.UserId != item.UserId)
+                                      { <a class="under" onclick="docBox.init({
+                                          userName:'@SiteString.HideUserName(item.DisplayName, item.HideDisplayNameCount)',
+                                          userId:'@item.UserId',
+                                          gameCode:'@game',
+                                          gameName:'@SiteConvert.GameName(game, Request["type"])',
+                                          gameType:'@Request["type"]'});" href="javascript:;">我要定制</a>}}
+                    </td>
+                </tr>  
+              }}
+            <tr class="pager">
+                <td colspan="12" class="tr">@ControlHelper.Pager("ReloadList", ViewBag.PageIndex, ViewBag.PageSize, bonusList == null ? 0 : bonusList.TotalCount)
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<script type="text/javascript">
+
+    function ofocus(obj) {
+        if (obj.value == '输入用户名或方案号') {
+            obj.value = '';
+            obj.style.color = "#000";
+        }
+    }
+    function oblur(obj) {
+        if (obj.value == '') {
+            obj.value = '输入用户名或方案号';
+            obj.style.color = "#999";
+        }
+    }
+
+    function ReloadList(pageIndex, pageSize) {
+        var issuse = "";
+        if (document.getElementById("dropIssue")) {
+            issuse = document.getElementById("dropIssue").value;
+        }
+        var dropDay = "";
+        if (document.getElementById("dropDay")) {
+            dropDay = document.getElementById("dropDay").value;
+        }
+        var key = document.getElementById("txtSearch").value;
+
+        var search = "type=" + '@Request["type"]' + "&completeData=" + dropDay + "&issuseNumber=" + issuse + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize + "&r=" + Math.random().toFixed(5);
+        search = (key && key != "输入用户名或方案号") ? search + "&key=" + key : search;
+
+        location.search = search;
+    }
+
+
+    var key = '@(game)|@(type)';
+    var ops = document.getElementById("dropDownListAllCPType").getElementsByTagName("option");
+    for (var i = 0; i < ops.length; i++) {
+        if (ops[i].value == key) {
+            ops[i].selected = true;
+        }
+    }
+
+    function reloadSocerByGameCode() {
+        var codeArray = $("#dropDownListAllCPType option:selected").val().split("|");
+        if (codeArray.length == 2) {
+            if (!codeArray[1]) {
+                //数字彩
+                location.href = "/bonus/bonuslist/" + codeArray[0];
+            }
+            else {
+                //足彩
+                if (codeArray[0] == "ctzq") {
+                    location.href = "/bonus/bonuslist/ctzq?type=" + codeArray[1];
+                }
+                else {
+                    location.href = "/bonus/bonuslist/" + codeArray[0] + "?type=" + codeArray[1];
+                }
+            }
+        }
+    }
+
+</script>

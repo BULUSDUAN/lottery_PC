@@ -1,0 +1,344 @@
+﻿@{var agentLogo = SiteString.getHZSiteLogo(Request);}
+@using app.lottery.site.Models;
+@using GameBiz.Core;
+@{
+    CurrentUserInfo CurrentUser = ViewBag.CurrentUser;
+}
+<div class="clear">
+</div>
+@*<div style="text-align: center;">
+    <a href="/home/activity">
+        <img src="@SiteString.img("activity/TopAdd.jpg")" /></a>
+</div>*@
+<div class="top-menu @agentLogo.ToLower()">
+    <div class="sitelinks">
+        <h1>
+            <a target="_self" class="sitelogo" href="@SiteString.root(Request)" title="@(SiteString.getHZSiteName(Request)) 专业的福利彩票 体育彩票网站">
+            </a>
+        </h1>
+        @if (!string.IsNullOrEmpty(agentLogo) && agentLogo.ToLower() != "sitelogo" && agentLogo.ToLower() != "caipiao114")
+        { 
+            <a target="_blank" class="@agentLogo" href="@SiteString.root(Request)" title="@(SiteString.getHZSiteName(Request))">
+            </a>
+        }
+@*<div class="links" style=" display:none;">
+            <a href="/live/jingcai" class="gray" target="_blank">比分直播</a>
+        </div>*@
+        <div id="top_login_t" style="width: 430px; float: left;">
+            <div class="top-main">
+                <div class="membertool">
+                    <div class="topmenuUser" id="topmenuUser">
+                        @{if (CurrentUser != null)
+                          {
+                              var loginHist = ViewBag.LoginHistory as UserLoginHistoryCollection;
+                              if (CurrentUser.LoginInfo.UserId.Length < 6 && (loginHist == null || loginHist.Count <= 1))
+                              {
+                                  Html.RenderPartial("box_activity");
+                              }
+                            <ul class="info">
+                                <li><i class="wel"></i>欢迎您，@{if (CurrentUser.LoginInfo.LoginFrom == "QQ")
+                                                             {<img src="@CurrentUser.Figureurl" width="16" height="16" title="QQ用户" alt=""/> }
+                                                             else if (CurrentUser.LoginInfo.LoginFrom == "ALIPAY")
+                                                             {<img src="@SiteString.img("public/gold.gif")" width="54" height="16" title="支付宝金账户" alt=""/> }
+                                }
+                                    <a class="blue under" href="/blog/standings/@CurrentUser.LoginInfo.UserId" target="_blank">@(SiteString.HideUserName(CurrentUser.LoginInfo.DisplayName, CurrentUser.LoginInfo.HideDisplayNameCount))</a>
+                                    <a href="/member/innermail" title="您有@(ViewBag.UnReadMail)封未读站内信" class="@(ViewBag.UnReadMail > 0 ? "un-mail" : "mail")">
+                                    </a><a class="red under" href="javascript:;" onclick="user.logOut();">退出</a>
+                                </li>
+                                <li>余额：@*<a class="red bold under" href="/member/fundrecord" title="资金明细" target="_top">@CurrentUser.UserBalance.CommonBalance.ToString("f")元</a>*@
+                                    奖金：@*<a class="under bold red" href="/member/bonuspoint" title="奖金转入" target="_top">@CurrentUser.UserBalance.BonusBalance.ToString("f")元</a>*@
+                                    <div class="turn-tips" style="width: 75px; display: none">
+                                        <div class="turn-tips-space">
+                                        </div>
+                                        <div class="turn-tips-arrow">
+                                            <b></b><i></i>
+                                        </div>
+                                        <div class="turn-tips-content">
+                                            <p>
+                                                奖金转通用
+                                            </p>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                          }
+                          else
+                          {
+                            <form autocomplete="on" onsubmit="return miniLogin();">
+                            <ul class="info">
+                                <li><i class="wel"></i>用户名：<input type="text" size="5" id="head_UserName" class="login_input_s" />
+                                    密码：<input type="password" size="5" id="head_PassWord" class="login_input_s" />
+                                    <input type="submit" class="btn-hm" value="登录" id="head_LoginButton" /></li>
+                                <li class="gray"><a href="/user/alipaylogin" target="_top" class="hzlogin l_alipay"></a>
+                                    <a href="/user/qqlogin" target="_top" class="hzlogin l_qq"></a>
+                                    <a href="/statichtml/register.html" class="red" target="_top">注册</a>|<a href="/user/forget" target="_top" class="gray">忘记密码</a>
+                                </li>
+                            </ul>
+                            </form>
+                          }}
+                    </div>
+                </div>
+            </div>
+            <div id="top_login_h" style="width: 430px; float: left; margin-left: 23px; margin-top: 2px;">
+                <ul class="info_H">
+                    <li><a href="/member/safe" target="_top">安全中心</a>&nbsp; |</li>
+                    <li><a href="/member/fundrecord" target="_top">账户明细</a>&nbsp; |</li>
+                    <li><a href="/member/betorder" target="_top">购彩方案</a>&nbsp; |</li>
+                    <li><a href="/member/GoPay" target="_top">充值</a>&nbsp; |</li>
+                    <li><a href="/member/fetch_bank" target="_top">提款</a>&nbsp; |</li>
+                    <li><a href="/user/lotteryticket" target="_top" class="red">彩金券<i class="ico-news"></i></a></li>
+                </ul>
+            </div>
+        </div>
+        @*<div class="f_r" style="padding-top: 8px; float: right;">
+            <div class="serviceTel">
+                <i class="serviceTel_icon"></i>
+                <div class="serviceTel_tel">
+                    <span>客服热线 <a href="@SiteString.kefuUrl" style="margin-left:20px; font-weight:bold;color:red;font-size:14px;">在线客服</a></span><br>
+                    <strong>@SiteString.tel</strong>
+                </div>
+            </div>
+        </div>*@
+        <div id="top_login_RT" style="float: left; margin-left: 5px; margin-top: 5px;">
+            <ul class="info_H">
+                <li style="margin-right: 8px;"><a href="/syncLogin" target="_blank" style="position: relative;">
+                    论坛</a>
+                    <div class="turn-tips" style="width: 88px; left: auto; top: auto; display: none;">
+                        <div class="turn-tips-space">
+                        </div>
+                        <div class="turn-tips-arrow">
+                            <b></b><i></i>
+                        </div>
+                        <div class="turn-tips-content">
+                            <p>
+                                首次手工登录
+                            </p>
+                        </div>
+                    </div>
+                </li>
+                <li><a href="/home/activity" target="_blank" title="优惠活动"><i class="ico-hui"></i>@(DateTime.Now.Month)月优惠</a></li>
+                <li><a href="/hemai/doclist/jczq?type=spf" target="_top">自动跟单</a></li>
+                <li><a href="/soccer/ctzq?gameType=t14c" target="_top">过关统计</a></li>
+                <li><a href="/bonus/bonuslist/jczq?type=spf" target="_top">中奖查询</a></li>
+                <li><a href="/bonus/bonustop_fd/jczq?type=spf" target="_top">排行榜</a></li>
+                <li>
+                    @{Html.RenderPartial("bd_share");}
+                </li>
+            </ul>
+        </div>
+        <div id="top_login_RH" style="float: right; margin-left: 2px; margin-top: 2px;">
+            <ul class="info_HH">
+                <li><strong>@SiteString.tel</strong> </li>
+                <li><a class="link_kefu" href="javascript:void(0)" data="@SiteString.kefuUrl" title="点击联系在线客服">
+                  @*  <i class="serviceTel_icon" style="width: 82px; height: 24px;"></i>*@</a></li>
+            </ul>
+        </div>
+        <div id="kf_left">
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+    <div class="top-nav">
+        <dl id="page_blank_menu">
+            <dt class="gamechoselist" id="topMenuGameList"><a href="/buy/index" class="chosetitle"
+                target="_blank">选择彩种</a>
+                <div class="l_list_i2" style="padding: 0; border: none; width: 210px;">
+                    <div class="cz_nav_list">
+                        <ul>
+                            <li class="clearfix"><span class="ico jczq">竞彩足彩</span><a href="/buy/jingcai/spf">胜平负</a>
+                                <a href="/buy/jingcai/bf" target="_blank">比分</a> <a href="/buy/jingcai/zjq" target="_blank">
+                                    进球数</a><a href="/buy/jingcai/bqc" target="_blank">半全场</a><a href="/buy/jingcai/hh"
+                                        target="_blank">混合过关</a> @*<a href="/WorldCup/WorldCup" target="_blank">世界杯冠军</a><a href="/WorldCup/WorldCupSecond" style=" margin-left:60px;" target="_blank">世界杯冠亚军</a>*@</li>
+                            <li class="clearfix"><span class="ico jclq">竞彩篮彩</span><a href="/buy/jingcaibasket/sf"
+                                target="_blank">胜负</a><a href="/buy/jingcaibasket/rfsf" target="_blank">让分胜负</a><a
+                                    href="/buy/jingcaibasket/sfc" target="_blank">胜分差</a><a href="/buy/jingcaibasket/dxf"
+                                        target="_blank">大小分</a><a href="/buy/jingcaibasket/hh" target="_blank">混合过关</a></li>
+                            <li class="clearfix"><span class="ico dc">单场</span> <a href="/buy/danchang/spf" target="_blank">
+                                胜平负</a> <a href="/buy/danchang/zjq" target="_blank">进球数</a><a href="/buy/danchang/sxds"
+                                    target="_blank">上下单双</a><a href="/buy/danchang/bf" target="_blank">比分</a><a href="/buy/danchang/bqc"
+                                        target="_blank">半全场</a></li>
+                            <li class="clearfix"><span class="ico zc">足彩</span><a href="/buy/toto/t14c" target="_blank">14场胜负</a>
+                                <a href="/buy/toto/tr9" target="_blank">胜负任9</a><a href="/buy/toto/t6bqc" target="_blank">6场半全</a>
+                                <a href="/buy/toto/t4cjq" target="_blank">4场进球</a></li>
+                            <li class="clearfix"><span class="ico fc">福彩</span><a href="/buy/szc/ssq" target="_blank">双色球</a><a
+                                href="/buy/szc/fc3d" target="_blank">福彩3D<i class="ico-news"></i></a></li>
+                            <li class="clearfix"><span class="ico tc">体彩</span><a target="_blank" href="/buy/szc/dlt">大乐透</a><a
+                                target="_blank" href="/buy/szc/pl3">排列三<i class="ico-news"></i></a></li>
+                            <li class="last clearfix"><span class="ico gp">高频彩</span> <a href="/buy/szc/cqssc"
+                                target="_blank">时时彩<i class="ico-news"></i></a> <a href="/buy/szc/jxssc" target="_blank">
+                                    新时时彩</a><br />
+                                <a href="/buy/szc/sd11x5" target="_blank">老11选5</a><a href="/buy/szc/gd11x5" target="_blank">新11选5</a><br />
+                                <a href="/buy/szc/jx11x5" target="_blank">11选5<i class="ico-news"></i></a></li>
+                        </ul>
+                    </div>
+                    <div class="cz_nav_bottom">
+                    </div>
+                </div>
+            </dt>
+            <dt><a class="m" href="@SiteString.root(Request)" style="margin-left:-41px;" target="_self">
+                @SiteString.getHZSiteName(Request)</a></dt>
+            <dt><i class="hot"></i><a class="m" href="/hemai/index" target="_blank">合买大厅</a>
+                <div class="nav-item-sub sl-shadow" style="display: none;">
+                    <table class="nav-item-table" width="100%">
+                        <thead>
+                            <tr>
+                                <th>
+                                    竞彩足球
+                                </th>
+                                <th>
+                                    竞彩篮球
+                                </th>
+                                <th>
+                                    北京单场
+                                </th>
+                                <th>
+                                    传统足彩
+                                </th>
+                                <th class="last">
+                                    数字彩票
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <a href="/hemai/index/jczq/spf" target="_blank">让球胜平负</a>
+                                </td>
+                                <td>
+                                    <a href="/hemai/index/jclq/sf" target="_blank">胜负</a>
+                                </td>
+                                <td>
+                                    <a href="/hemai/index/bjdc/spf" target="_blank">胜平负</a>
+                                </td>
+                                <td>
+                                    <a href="/hemai/index/ctzq/t14c" target="_blank">14场胜负</a>
+                                </td>
+                                <td class="last">
+                                    <a href="/hemai/index/ssq" target="_blank">双色球</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a href="/hemai/index/jczq/brqspf" target="_blank">胜平负</a>
+                                </td>
+                                <td>
+                                    <a href="/hemai/index/jclq/rfsf" target="_blank">让分胜负</a>
+                                </td>
+                                <td>
+                                    <a href="/hemai/index/bjdc/zjq" target="_blank">进球数</a>
+                                </td>
+                                <td>
+                                    <a href="/hemai/index/ctzq/tr9" target="_blank">胜负任九</a>
+                                </td>
+                                <td class="last">
+                                    <a href="/hemai/index/fc3d" target="_blank">福彩3D</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a href="/hemai/index/jczq/bf" target="_blank">比分</a>
+                                </td>
+                                <td>
+                                    <a href="/hemai/index/jclq/sfc" target="_blank">胜分差</a>
+                                </td>
+                                <td>
+                                    <a href="/hemai/index/bjdc/sxdx" target="_blank">上下单双</a>
+                                </td>
+                                <td>
+                                    <a href="/hemai/index/ctzq/t6bqc" target="_blank">六场半全</a>
+                                </td>
+                                <td class="last">
+                                    <a href="/hemai/index/dlt" target="_blank">大乐透</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a href="/hemai/index/jczq/zjq" target="_blank">进球数</a>
+                                </td>
+                                <td>
+                                    <a href="/hemai/index/jclq/dxf" target="_blank">大小分</a>
+                                </td>
+                                <td>
+                                    <a href="/hemai/index/bjdc/bf" target="_blank">比分</a>
+                                </td>
+                                <td>
+                                    <a href="/hemai/index/ctzq/t4cjq" target="_blank">四场进球</a>
+                                </td>
+                                <td class="last">
+                                    <a href="/hemai/index/pl3" target="_blank">排列3</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a href="/hemai/index/jczq/bqc" target="_blank">半全场</a>
+                                </td>
+                                <td>
+                                    <a href="/hemai/index/jclq/hh" target="_blank">混合过关</a>
+                                </td>
+                                <td>
+                                    <a href="/hemai/index/bjdc/bqc" target="_blank">半全场</a>
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a href="/hemai/index/jczq/hh" target="_blank">混合过关</a>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </dt>
+            <dt><a class="m" href="/lottery/index" target="_blank">开奖结果</a></dt>
+            <dt><a class="m" href="/live/index.html" target="_blank">即时比分</a></dt>
+            <dt><a class="m" href="/lotteryTrend/index" target="_blank">走势图表</a></dt>
+            <dt><a class="m" href="/betPointList/index" target="_blank">赛事点评</a></dt>
+            <dt><a class="m" href="/info/index.html" target="_blank">数据分析</a></dt>
+            <dt><a class="m" href="/zixun/index" target="_blank">彩票资讯</a></dt>
+        </dl>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#page_blank_menu dt").hover(function () {
+        $(this).find("a[class='m']").addClass("move");
+        $(this).find(".nav-item-sub").stop(true, true).show(200);
+    }, function () {
+        $(this).find("a[class='m move']").removeClass("move");
+        $(this).find(".nav-item-sub").stop(true, true).hide();
+    });
+
+    $("#topMenuGameList").hover(function () {
+        $(this).find(".l_list_i2").stop(true, true).slideDown(300);
+    }, function () {
+        $(this).find(".l_list_i2").stop(true, true).hide();
+    })
+    $(function () {
+        var ind = 1;
+        if (location.pathname.indexOf("/lottery/index") >= 0) {
+            ind = 3;
+        }
+        else if (location.pathname.indexOf("/live/jingcai") >= 0) {
+            ind = 4;
+        }
+        else if (location.pathname.indexOf("/hemai/") >= 0) {
+            ind = 2;
+        }
+        else if (location.pathname.indexOf("/#") >= 0) {
+            ind = 5;
+        }
+        else if (location.pathname.indexOf("/betPointList/index") >= 0) {
+            ind = 6;
+        }
+        else if (location.pathname.indexOf("/zixun/index") >= 0) {
+            ind = 8;
+        }
+        $("#page_blank_menu dt:eq(" + ind + ") a:eq(0)").attr("class", "m on").parent().siblings("dt[class!='gamechoselist']").find("a:eq(0)").attr("class", "m");
+    })
+</script>

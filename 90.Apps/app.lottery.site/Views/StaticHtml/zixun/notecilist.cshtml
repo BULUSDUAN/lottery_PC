@@ -1,0 +1,53 @@
+﻿@{
+    ViewBag.Title = "公告列表 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.KeyWords = "公告列表, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var notice = ViewBag.NoticeList as External.Core.SiteMessage.BulletinInfo_Collection;
+    @UserHelper.css("zixun.css")
+}
+<div id="zixun">
+    <input type="hidden" name="hdgameCode" id="hdgameCode" value="@ViewBag.gameCode" />
+    <div class="zx_left">
+        <div class="zx_type">
+            <a href="/zixun/notecilist" class="tab-title_ss on" id="not-all">全部公告</a>
+        </div>
+        <div class="zx_content">
+            <table border="0" cellpadding="0" cellspacing="0" class="zx_table">
+                <tr class="zx_title">
+                    <td width="20%">
+                        编号
+                    </td>
+                    <td width="65%">
+                        标题
+                    </td>
+                    <td width="15%">
+                        发布日期
+                    </td>
+                </tr>
+                @foreach (var item in notice.BulletinList)
+                {
+                    <tr class="zx_con">
+                        <td width="20%">
+                            @item.Id
+                        </td>
+                        <td width="65%">
+                            <a target="_blank" href="@string.Format("/staticHtml/bulletin/detail/{0}.html", item.Id)" class="zx_blue">@(item.Title.Length > 30 ? item.Title.Substring(0, 30) + "…" : item.Title)</a>
+                        </td>
+                        <td width="15%">
+                            @item.CreateTime.ToString("yyyy.MM.dd")
+                        </td>
+                    </tr>
+                }
+                <tr class="last-tr no-bottom">
+                    <td colspan="3">
+                        @ViewHelpers.Pager_static(ViewBag.Url, ViewBag.PageIndex, ViewBag.PageSize, ViewBag.TotalCount)
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="zx_right">
+        @{Html.RenderAction("zixunright", "ZiXun", new { id = "" });}
+    </div>
+</div>
+<div style="clear: both">
+</div>

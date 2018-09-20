@@ -1,0 +1,102 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>微信支付</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   @ViewHelpers.css("wxpay.css")
+} 
+</head>
+<body>
+    <form name="Form1" method="post" action="" id="Form1">
+        <div class="weixintopbg">
+            <div class="weixintop">
+                <div class="weixinlogo">
+                    <a href="#">
+                        <p class="img">
+                            @*<img src="images/logo.png" alt="" name="Image2" width="206" height="80" border="0" id="Image2">*@
+                            </p>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="wxcena">
+            <div class="wxcenb">
+                <h2>微信支付</h2>
+                <span>扫一扫，轻松支付 </span>
+            </div>
+            <div class="wxcenc">
+                <div class="wxcenc2">
+                    <div class="wxcenc21">
+                        <h3>请使用微信“扫一扫”<br>
+                            扫描游戏二维码完成支付</h3>
+                    </div>
+                    <div class="wxcenc22">
+                        <ul>
+                            <li>
+                                <h4>商家名称：</h4>
+                                <p>
+                                    <span id="LabelName" runat="server"></span>
+                                </p>
+                            </li>
+                            <li>
+                                <h4>商家单号：</h4>
+                                <p>
+                                    <span id="LabelOrder" runat="server"></span>
+                                </p>
+                            </li>
+                            <li>
+                                <h4>支付金额：</h4>
+                                <p>
+                                    <span id="LabelAmount" runat="server"></span>
+                                </p>
+                            </li>
+                            <li>
+                                <h4></h4>
+                                <p>&nbsp;
+                                    <input type="button" name="Button1" value="支付成功点击返回" id="Button1">
+                                </p>
+                            </li>
+                            <li>
+                                <h4></h4>
+                                <p>
+                                    <span id="Label5"><font color="Red"></font></span>
+                                </p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="wxcenc3">
+                    <img id="Code" /></div>
+            </div>
+            <div class="wxcend">
+                <p>微信支付说明： 需开通微信支付，开通后用微信的“扫一扫”功能扫描二维码即可进行支付</p>
+            </div>
+        </div>
+    </form>
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script>
+        $(function () {
+            var orderid = '<%=Id %>';
+
+            $('#Button1').click(function () {
+
+                $.get('Check.ashx?id=' + orderid, function (data) {
+
+                    if (data.code == 0) {
+                        window.location.href = '/';
+                    }
+                    else {
+                        alert('支付未成功！');
+                    }
+
+                });
+
+            });
+        });
+    </script>
+</body>
+</html>

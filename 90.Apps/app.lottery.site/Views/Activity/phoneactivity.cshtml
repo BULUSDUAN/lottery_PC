@@ -1,0 +1,41 @@
+﻿@{
+    ViewBag.Title = "手机活动主题";
+    Layout = "../Shared/_HuoDong.cshtml";
+}
+<div class="phone_body">
+    <div style=" height:2520px; width:1300px; margin:0px auto;">
+        <div class="phone_URL">
+            <span>m.wancai.com</span>    
+        </div>
+        <div class="phone_div_01">
+            <p class="phone_p_01">@SiteString.getHZSiteName(Request)手机购彩</p>
+            <p class="phone_p_01">最方便、最快捷的购彩方式</p>
+            <p class="phone_p_02">只要您打开浏览器，登陆<span style=" font-weight:900; font-size:18px;"> m.wancai.com</span></p>
+            <p class="phone_p_02">只需10秒，即可轻松购彩</p>
+        </div>
+        <div class="phone_div_02">
+            <p class="phone_p_01">随时随地购彩，不错过每一彩期</p>
+            <p class="phone_p_02">无论在上班、回家登陆 @SiteString.getHZSiteName(Request)，给你一个实现梦想的机会</p>
+        </div>
+        <div class="phone_div_03">
+            <p class="phone_p_01">涵盖彩种最全</p>
+            <p class="phone_p_01">最快获取开奖信息</p>
+            <p class="phone_p_02">大乐透、时时彩、福彩3D、排列3、双色球等系列彩种，</p>
+            <p class="phone_p_02">让您告别每天守候在电脑前等开奖信息的日子，第一时间</p>
+            <p class="phone_p_02">获知中奖好消息！</p>
+        </div>
+         <div class="phone_div_04">
+            <p class="phone_p_01">购彩工具一应俱全</p>
+            <p class="phone_p_02">足彩赛事分析，竞彩只能倍数</p>
+            <p class="phone_p_02">追号计划</p>
+        </div>
+        <div class="phone_div">
+            <p>建议您使用</p>
+            <p>系统为IOS7.0 或 Android4.0以上的手机</p>
+            <p>通过Safari浏览器、qq浏览器、chrome浏览器 进行访问</p>
+        </div>
+    </div>
+    <div class="phone_fot">
+        @{Html.RenderAction("footer", "activity");}
+    </div>
+</div>

@@ -1,0 +1,288 @@
+﻿@using GameBiz.Core;
+@{
+    string gameType = ViewBag.GameType;
+    gameType = gameType.ToLower();
+    var gameName = SiteConvert.GameName(ViewBag.GameCode, gameType);
+    var queryTime = Request["queryTime"];
+    if (!string.IsNullOrEmpty(gameType))
+    {
+        if (!string.IsNullOrEmpty(queryTime))
+        {
+            ViewBag.Title = "足彩" + gameName + queryTime + "历史开奖结果-" + SiteString.getHZSiteName(Request);
+            ViewBag.keywords = "足彩" + gameName + queryTime + "历史开奖结果";
+            ViewBag.Description = "足彩" + gameName + queryTime + "历史开奖结果,更多足彩" + gameName + "历史开奖结果请登录" + SiteString.getHZSiteName() + "彩票网进行查看.";
+        }
+        else
+        {
+            ViewBag.Title = "足彩" + gameName + "历史开奖-" + gameName + "历史开奖号码-" + gameName + "历史开奖结果" + SiteString.getHZSiteName(Request);
+            ViewBag.keywords = "足彩" + gameName + "历史开奖-" + gameName + "历史开奖号码-" + gameName + "历史开奖结果";
+            ViewBag.Description = SiteString.getHZSiteName(Request) + "彩票网为您提供足彩" + gameName + "历史开奖号码查询,帮助彩民朋友分析" + gameName + "历史开奖结果,希望对大家的" + gameName + "投注有所帮助.";
+        }
+    }
+    else
+    {
+        ViewBag.Title = SiteConvert.GameName(ViewBag.GameCode) + "历史开奖号码-" + SiteConvert.GameName(ViewBag.GameCode) + "历史开奖结果-" + SiteConvert.GameName(ViewBag.GameCode) + "历史开奖查询-" + SiteString.getHZSiteName(Request);
+        ViewBag.keywords = SiteConvert.GameName(ViewBag.GameCode) + "历史开奖号码-" + SiteConvert.GameName(ViewBag.GameCode) + "历史开奖结果-" + SiteConvert.GameName(ViewBag.GameCode) + "历史开奖查询";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "彩票网为您提供" + SiteConvert.GameName(ViewBag.GameCode) + "历史开奖号码查询,帮助彩民朋友分析历史" + SiteConvert.GameName(ViewBag.GameCode) + "开奖结果,希望对大家的" + SiteConvert.GameName(ViewBag.GameCode) + "号码选择有所帮助.";
+    }
+    var historyList = ViewBag.NumberHistoryList as LotteryData.Core.GameWinNumber_InfoCollection;
+    var now = DateTime.Now;
+    var gameCode = ViewBag.GameCode;
+}
+@section css{
+    @UserHelper.css("lottery.css")
+    @UserHelper.js_share("/My97DatePicker/WdatePicker.js")
+}
+<div class="lottery-right">
+    <div class="lottery_notic detail-top his">
+        <span class="lishi_image"></span>
+        <div class="word_search" style="margin-top: 50px;">
+            <span class="lishi_word">开奖历史</span><br />
+        </div>
+        <div class="l_border">
+        </div>
+        @*<div class="l_search">
+            <span class="search_word">历史查询： </span> 
+            <input type="text" class="Wdate" id="queryTime" value="@ViewBag.QueryTime" onFocus="WdatePicker({skin:'whyGreen',minDate:'@now.AddMonths(-1).ToString("yyyy-MM-dd")',maxDate:'#F{$dp.$D(\'queryEndTime\')}'})" size="12"/>
+            <span class="word">至</span>   
+            <input type="text" class="Wdate" id="queryEndTime" value="@ViewBag.QueryEndTime" onFocus="WdatePicker({skin:'whyGreen',minDate:'#F{$dp.$D(\'queryTime\')}',maxDate:'@now.ToString("yyyy-MM-dd")'})" size="12"/> 
+            <span class="word">期</span>     
+            <span id="btn_query" class="btn-query bt_search " style="float: none; margin: 0;">查 询</span>
+            <input type="hidden" value="@(ViewBag.GameType ?? "")" id="hid_GameType" />
+        </div>*@
+        <div class="lottery_today">
+            @{
+                if (gameCode == "SSQ" || gameCode == "DLT" || gameCode == "FC3D" || gameCode == "PL3" || gameCode == "CQSSC" || gameCode == "JX11X5" || gameCode == "SD11X5" || gameCode == "GD11X5" || gameCode == "GDKLSF" || gameCode == "JSKS" || gameCode == "SDKLPK3")
+                {
+                <span><a href="/staticHtml/help/playRules/@(gameCode.ToLower())1.html" target="_blank" style="color: #3a73cb">
+                    玩法介绍</a> </span>
+                <span><a class="quickbet" href="/szc/@gameCode.ToLower()" target="_blank" style="color: #3a73cb">
+                    快速购彩</a></span>
+                }
+                else
+                {
+                    var wf = string.Empty;
+                    var gc = string.Empty;
+                    switch (gameType)
+                    {
+                        case "t14c":
+                            wf = "zcsfc1";
+                            break;
+                        case "tr9":
+                            wf = "tr91";
+                            gc = "/" + gameType;
+                            break;
+                        case "t4cjq":
+                            wf = "zcscjq1";
+                            gc = "/" + gameType;
+                            break;
+                        case "t6bqc":
+                            wf = "zclcbq1";
+                            gc = "/" + gameType;
+                            break;
+                    }
+                <span><a href="/staticHtml/help/playRules/@(wf).html" target="_blank" style="color: #3a73cb">
+                    玩法介绍</a></span>
+                <span><a class="quickbet" href="/toto@(gc)" target="_blank" style="color: #3a73cb">快速购彩</a></span>
+                }
+            }
+        </div>
+        @* <div class="lottery_search">
+            @{
+                //if (ViewBag.GameCode != "SSQ" && ViewBag.GameCode != "DLT" && ViewBag.GameCode != "FC3D" && ViewBag.GameCode != "PL3" && ViewBag.GameCode != "ZCSFC" && ViewBag.GameCode != "W_TR9" && ViewBag.GameCode != "ZCSCJQ" && ViewBag.GameCode != "ZCLCBQ")
+                {
+                @ControlHelper.Calendar("queryTime", ViewBag.QueryTime) <span id="btn_query" class="btn-query"
+                    style="float: none; margin: 0;">查看</span>
+                <input type="hidden" value="@(ViewBag.GameType == null ? "" : ViewBag.GameType)" id="hid_GameType" />
+                }      
+            }
+        </div>*@
+    </div>
+    @if (gameCode == "SSQ" || gameCode == "DLT" || gameCode == "FC3D" || gameCode == "PL3" || gameCode == "CQSSC" || gameCode == "JX11X5" || gameCode == "SD11X5" || gameCode == "GD11X5" || gameCode == "GDKLSF" || gameCode == "JSKS" || gameCode == "SDKLPK3")
+    {
+        <div class="hm_slide_nav mt10">
+            <ul>
+                <li @(gameCode == "SSQ" ? "class=on" : "")><a href="/staticHtml/lottery/history_ssq.html">
+                    双色球</a></li>
+                <li @(gameCode == "DLT" ? "class=on" : "")><a href="/staticHtml/lottery/history_dlt.html">
+                    大乐透</a></li>
+                <li @(gameCode == "FC3D" ? "class=on" : "")><a href="/staticHtml/lottery/history_fc3d.html">
+                    福彩3D</a></li>
+                <li @(gameCode == "PL3" ? "class=on" : "")><a href="/staticHtml/lottery/history_pl3.html">
+                    排列三</a></li>
+                <li @(gameCode == "CQSSC" ? "class=on" : "")><a href="/staticHtml/lottery/history_cqssc.html">
+                    时时彩</a></li>
+                <li @(gameCode == "JX11X5" ? "class=on" : "")><a href="/staticHtml/lottery/history_jx11x5.html">
+                    江西11选5</a></li>
+                <li @(gameCode == "SD11X5" ? "class=on" : "")><a href="/staticHtml/lottery/history_sd11x5.html">
+                    山东11选5</a></li>
+                <li @(gameCode == "GD11X5" ? "class=on" : "")><a href="/staticHtml/lottery/history_gd11x5.html">
+                    广东11选5</a></li>
+                <li @(gameCode == "GDKLSF" ? "class=on" : "")><a href="/staticHtml/lottery/history_gdklsf.html">
+                    快乐十分</a></li>
+                <li @(gameCode == "JSKS" ? "class=on" : "")><a href="/staticHtml/lottery/history_jsks.html">
+                    江苏快三</a></li>
+                <li @(gameCode == "SDKLPK3" ? "class=on" : "")><a href="/staticHtml/lottery/history_sdklpk3.html">
+                    快乐扑克</a></li>
+            </ul>
+        </div>
+    }
+    else if (gameCode == "CTZQ")
+    {
+        <div class="hm_slide_nav mt10">
+            <ul>
+                <li @(gameType == "t14c" ? "class=on" : "")><a href="/staticHtml/lottery/history_ctzq_t14c.html">
+                    14场胜负</a></li>
+                <li @(gameType == "tr9" ? "class=on" : "")><a href="/staticHtml/lottery/history_ctzq_tr9.html">
+                    任9场</a></li>
+                <li @(gameType == "t4cjq" ? "class=on" : "")><a href="/staticHtml/lottery/history_ctzq_t4cjq.html">
+                    4场进球</a></li>
+                <li @(gameType == "t6bqc" ? "class=on" : "")><a href="/staticHtml/lottery/history_ctzq_t6bqc.html">
+                    6场半全</a></li>
+            </ul>
+        </div>
+    }
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" class="my_tbl mt10">
+        <tr class="tabtitle">
+            <th style="border-left: 1px solid #c9e7fe; width: 10%;">
+                序号
+            </th>
+            <th style="width: 15%">
+                期号
+            </th>
+            <th style="width: 30%">
+                开奖时间
+            </th>
+            <th style="border-right: 1px solid #c9e7fe; width: 45%">
+                开奖号码
+            </th>
+        </tr>
+        <tbody class="l_items">
+            @{
+                int i = 0;
+                foreach (var item in historyList.List)
+                {
+                    i++;
+                <tr>
+                    <td align="center" style="border-left: none; border-right: none; height: 40px; line-height: 40px;
+                        color: #595959; border-left: 1px solid #E5E5E5; background: none !important;">
+                        @i
+                    </td>
+                    <td align="center" style="border-left: none; border-right: none; color: #595959;
+                        background: none !important;">
+                        @item.IssuseNumber
+                    </td>
+                    <td align="center" style="border-left: none; border-right: none; color: #595959;
+                        background: none !important;">
+                        @item.CreateTime.ToString("yyyy-MM-dd HH:mm")
+                    </td>
+                    <td align="center" style="border-left: none; color: #595959; border-right: 1px solid #E5E5E5;
+                        background: none !important;">
+                        @{
+                    if (item.GameCode.ToUpper() == "SDKLPK3")
+                    {
+                        var numberArray = item.WinNumber.Split(',');
+                        foreach (var n in numberArray)
+                        {
+                            var s_c = n.Substring(0, 1);
+                            var s = "";
+                            switch (s_c)
+                            {
+                                case "1":
+                                    s = "♠";
+                                    break;
+                                case "2":
+                                    s = "♥";
+                                    break;
+                                case "3":
+                                    s = "♣";
+                                    break;
+                                case "4":
+                                    s = "♦";
+                                    break;
+                            }
+                            var n_c = int.Parse(n.Substring(1));
+                            var ns = "";
+                            switch (n_c)
+                            {
+                                case 1:
+                                    ns = "A";
+                                    break;
+                                case 11:
+                                    ns = "J";
+                                    break;
+                                case 12:
+                                    ns = "Q";
+                                    break;
+                                case 13:
+                                    ns = "K";
+                                    break;
+                                default:
+                                    ns = n_c.ToString();
+                                    break;
+                            }
+
+                            if (s_c == "2" || s_c == "4")
+                            {
+                            <span style="color:red;margin-right:4px;"><em style="font-size:16px;">@s</em>@ns</span>
+                            }
+                            else
+                            {
+                            <span style="color:black;margin-right:4px;"><em style="font-size:16px;">@s</em>@ns</span>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (item.WinNumber.Split('|').Length > 1)
+                        {
+                            var qnum = item.WinNumber.Split('|')[0].Substring(0, item.WinNumber.Split('|')[0].Length);
+                            for (var j = 0; j < qnum.Split(',').Length; j++)
+                            {
+                            <b class='lot-ball redball_c' style="padding-top: 4px">@qnum.Split(',')[j]</b>
+
+                            }
+                            if (item.WinNumber.Split('|')[1].Split(',').Length > 1)
+                            {
+                                for (var j = 0; j < item.WinNumber.Split('|')[1].Split(',').Length; j++)
+                                {
+                            <b class='lot-ball blueball_c' style="padding-top: 4px">@item.WinNumber.Split('|')[1].Split(',')[j]</b>
+                                }
+                            }
+                            else
+                            {
+                            <b class='lot-ball blueball_c' style="padding-top: 4px">@item.WinNumber.Split('|')[1]</b>
+                            }
+                        }
+                        else
+                        {
+                            for (var j = 0; j < item.WinNumber.Split(',').Length; j++)
+                            {
+                            <b class="lot-ball@(gameCode.ToString() != "CTZQ" ? " redball_c" : "") " style="padding-top: 4px; color: #fd4a0f;">@item.WinNumber.Split(',')[j]</b>
+                            }
+                        }
+                    }
+                        }
+                    </td>
+                </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<div class="clear">
+</div>
+<script type="text/javascript">
+    $(function () {
+        $('.l_items tr:odd').addClass('odd');
+        $('.l_items tr:even').addClass('even');
+        //        $(".redball").addClass("redball_c");
+        //        $(".blueball").addClass("blueball_c");
+        //        $("#btn_query").click(function () {
+        //            var querytTime = $.trim($("#queryTime").val());
+        //            var queryEndtTime = $.trim($("#queryEndTime").val());
+        //            var gameType = $("#hid_GameType").val();
+        //            location.href = "?s=" + querytTime + "&e=" + queryEndtTime + "&gameType=" + gameType + "&r=" + Math.random();
+        //        });
+    });
+</script>

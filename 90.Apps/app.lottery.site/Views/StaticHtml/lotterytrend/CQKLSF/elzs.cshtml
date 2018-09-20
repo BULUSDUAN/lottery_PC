@@ -1,0 +1,822 @@
+﻿@{
+    Layout = "~/Views/lotteryTrend/_Layout.cshtml";
+    var pageSize = Request["pageSize"];
+    if (pageSize != "" && pageSize != null)
+    {
+        ViewBag.Title = "重庆快乐十分二连号走势图近" + pageSize + "期" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "重庆快乐十分二连号走势图近" + pageSize + "期";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "重庆快乐十分二连号走势图近" + pageSize + "期,查看更多重庆快乐十分二连号走势图请登录" + SiteString.getHZSiteName(Request) + "彩票网.";
+    }
+    else
+    {
+        ViewBag.Title = "重庆快乐十分二连号走势图-" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "重庆快乐十分二连号走势图";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "彩票网提供最新的重庆快乐十分二连号走势图,其中包括二连号走势和连号对数,让彩民朋友更直观的分析重庆快乐十分二连号走势图.";
+    }
+    var elzs = ViewBag.DataList as List<LotteryData.Core.CQKLSF_2LZS_Info>;
+    var a = 0;  
+}
+@{Html.RenderAction("ThendLink_2", "lotteryTrend", new { id = "elzs_cqklsf" });}
+<div id="container">
+    <div class="cont_box" style="width: 1003px;">
+        <table width="100%" cellspacing="1" cellpadding="0" border="0" class="table_box"
+            style="width: 1003px;" id="chartsTable">
+            <tbody>
+                <tr>
+                    <td align="center" class="tab_top" colspan="37">
+                        标注形式选择：
+                        <input type="checkbox" checked="checked" id="c_yl">
+                        <label for="c_yl">
+                            遗漏</label>
+                        <input type="checkbox" checked="checked" id="has_line">
+                        <label for="has_line">
+                            折线</label>
+                        <input type="checkbox" checked="checked" id="help_line">
+                        <label for="help_line">
+                            分隔线</label>
+                        <input type="checkbox" id="yl_zhu">
+                        <label for="yl_zhu">
+                            遗漏分层</label>
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td rowspan="2" class="line_r">
+                        <strong>期号</strong>
+                    </td>
+                    <td rowspan="2" colspan="8" class="line_r">
+                        开奖号码
+                    </td>
+                    <td colspan="19" class="line_r">
+                        二连号走势
+                    </td>
+                    <td colspan="8" class="line_r">
+                        连号对数
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td style="width: 26px;">
+                        12
+                    </td>
+                    <td style="width: 26px;">
+                        23
+                    </td>
+                    <td style="width: 26px;">
+                        34
+                    </td>
+                    <td style="width: 26px;">
+                        45
+                    </td>
+                    <td style="width: 26px;">
+                        56
+                    </td>
+                    <td style="width: 26px;">
+                        67
+                    </td>
+                    <td style="width: 26px;">
+                        78
+                    </td>
+                    <td style="width: 26px;">
+                        89
+                    </td>
+                    <td style="width: 26px;">
+                        910
+                    </td>
+                    <td style="width: 26px;">
+                        1011
+                    </td>
+                    <td style="width: 26px;">
+                        1112
+                    </td>
+                    <td style="width: 26px;">
+                        1213
+                    </td>
+                    <td style="width: 26px;">
+                        1314
+                    </td>
+                    <td style="width: 26px;">
+                        1415
+                    </td>
+                    <td style="width: 26px;">
+                        1516
+                    </td>
+                    <td style="width: 26px;">
+                        1617
+                    </td>
+                    <td style="width: 26px;">
+                        1718
+                    </td>
+                    <td style="width: 26px;">
+                        1819
+                    </td>
+                    <td style="width: 26px;" class="line_r">
+                        1920
+                    </td>
+                    <td style="width: 26px;">
+                        0
+                    </td>
+                    <td style="width: 26px;">
+                        1
+                    </td>
+                    <td style="width: 26px;">
+                        2
+                    </td>
+                    <td style="width: 26px;">
+                        3
+                    </td>
+                    <td style="width: 26px;">
+                        4
+                    </td>
+                    <td style="width: 26px;">
+                        5
+                    </td>
+                    <td style="width: 26px;">
+                        6
+                    </td>
+                    <td style="width: 26px;" class="line_r">
+                        7
+                    </td>
+                </tr>
+            </tbody>
+            <tbody id="tdata" style="font-size: 12px; font-family: '宋体',Tahoma,Consolas,Arial,Simsun;">
+                @foreach (var item in elzs)
+                {
+                    a++;
+                    if (a % 5 == 0)
+                    {
+                    <tr class="tdbck">
+                        <td colspan="37">
+                        </td>
+                    </tr>
+                    }
+                    <tr>
+                        <td align="center" class="line_r">
+                            @item.IssuseNumber
+                        </td>
+                        <td class="hot12">
+                            @item.WinNumber.Split(',')[0]
+                        </td>
+                        <td class="hot12">
+                            @item.WinNumber.Split(',')[1]
+                        </td>
+                        <td class="hot12">
+                            @item.WinNumber.Split(',')[2]
+                        </td>
+                        <td class="hot12">
+                            @item.WinNumber.Split(',')[3]
+                        </td>
+                        <td class="hot12">
+                            @item.WinNumber.Split(',')[4]
+                        </td>
+                        <td class="hot12">
+                            @item.WinNumber.Split(',')[5]
+                        </td>
+                        <td class="hot12">
+                            @item.WinNumber.Split(',')[6]
+                        </td>
+                        <td class="hot12 line_r">
+                            @item.WinNumber.Split(',')[7]
+                        </td>
+                        <td class="@(item.Red_12 == 0 ? "cbg tbg1" : "y101")">
+                            @(item.Red_12 == 0 ? "12" : item.Red_12.ToString())
+                        </td>
+                        <td class="@(item.Red_23 == 0 ? "cbg tbg1" : "y101")">
+                            @(item.Red_23 == 0 ? "23" : item.Red_23.ToString())
+                        </td>
+                        <td class="@(item.Red_34 == 0 ? "cbg tbg1" : "y101")">
+                            @(item.Red_34 == 0 ? "34" : item.Red_34.ToString())
+                        </td>
+                        <td class="@(item.Red_45 == 0 ? "cbg tbg1" : "y101")">
+                            @(item.Red_45 == 0 ? "45" : item.Red_45.ToString())
+                        </td>
+                        <td class="@(item.Red_56 == 0 ? "cbg tbg1" : "y101")">
+                            @(item.Red_56 == 0 ? "56" : item.Red_56.ToString())
+                        </td>
+                        <td class="@(item.Red_67 == 0 ? "cbg tbg1" : "y101")">
+                            @(item.Red_67 == 0 ? "67" : item.Red_67.ToString())
+                        </td>
+                        <td class="@(item.Red_78 == 0 ? "cbg tbg1" : "y101")">
+                            @(item.Red_78 == 0 ? "78" : item.Red_78.ToString())
+                        </td>
+                        <td class="@(item.Red_89 == 0 ? "cbg tbg1" : "y101")">
+                            @(item.Red_89 == 0 ? "89" : item.Red_89.ToString())
+                        </td>
+                        <td class="@(item.Red_910 == 0 ? "cbg tbg1" : "y101")">
+                            @(item.Red_910 == 0 ? "910" : item.Red_910.ToString())
+                        </td>
+                        <td class="@(item.Red_1011 == 0 ? "cbg tbg1" : "y101")">
+                            @(item.Red_1011 == 0 ? "1011" : item.Red_1011.ToString())
+                        </td>
+                        <td class="@(item.Red_1112 == 0 ? "cbg tbg1" : "y101")">
+                            @(item.Red_1112 == 0 ? "1112" : item.Red_1112.ToString())
+                        </td>
+                        <td class="@(item.Red_1213 == 0 ? "cbg tbg1" : "y101")">
+                            @(item.Red_1213 == 0 ? "1213" : item.Red_1213.ToString())
+                        </td>
+                        <td class="@(item.Red_1314 == 0 ? "cbg tbg1" : "y101")">
+                            @(item.Red_1314 == 0 ? "1314" : item.Red_1314.ToString())
+                        </td>
+                        <td class="@(item.Red_1415 == 0 ? "cbg tbg1" : "y101")">
+                            @(item.Red_1415 == 0 ? "1415" : item.Red_1415.ToString())
+                        </td>
+                        <td class="@(item.Red_1516 == 0 ? "cbg tbg1" : "y101")">
+                            @(item.Red_1516 == 0 ? "1516" : item.Red_1516.ToString())
+                        </td>
+                        <td class="@(item.Red_1617 == 0 ? "cbg tbg1" : "y101")">
+                            @(item.Red_1617 == 0 ? "1617" : item.Red_1617.ToString())
+                        </td>
+                        <td class="@(item.Red_1718 == 0 ? "cbg tbg1" : "y101")">
+                            @(item.Red_1718 == 0 ? "1718" : item.Red_1718.ToString())
+                        </td>
+                        <td class="@(item.Red_1819 == 0 ? "cbg tbg1" : "y101")">
+                            @(item.Red_1819 == 0 ? "1819" : item.Red_1819.ToString())
+                        </td>
+                        <td class="@(item.Red_1920 == 0 ? "cbg tbg1 line_r" : "y101 line_r")">
+                            @(item.Red_1920 == 0 ? "1920" : item.Red_1920.ToString())
+                        </td>
+                        <td class="@(item.GH_0 == 0 ? "cbg hot03" : "y101")">
+                            @(item.GH_0 == 0 ? "0" : item.GH_0.ToString())
+                        </td>
+                        <td class="@(item.GH_1 == 0 ? "cbg hot03" : "y101")">
+                            @(item.GH_1 == 0 ? "1" : item.GH_1.ToString())
+                        </td>
+                        <td class="@(item.GH_2 == 0 ? "cbg hot03" : "y101")">
+                            @(item.GH_2 == 0 ? "2" : item.GH_2.ToString())
+                        </td>
+                        <td class="@(item.GH_3 == 0 ? "cbg hot03" : "y101")">
+                            @(item.GH_3 == 0 ? "3" : item.GH_3.ToString())
+                        </td>
+                        <td class="@(item.GH_4 == 0 ? "cbg hot03" : "y101")">
+                            @(item.GH_4 == 0 ? "4" : item.GH_4.ToString())
+                        </td>
+                        <td class="@(item.GH_5 == 0 ? "cbg hot03" : "y101")">
+                            @(item.GH_5 == 0 ? "5" : item.GH_5.ToString())
+                        </td>
+                        <td class="@(item.GH_6 == 0 ? "cbg hot03" : "y101")">
+                            @(item.GH_6 == 0 ? "6" : item.GH_6.ToString())
+                        </td>
+                        <td class="@(item.GH_7 == 0 ? "cbg hot03 line_r" : "y101 line_r")">
+                            @(item.GH_7 == 0 ? "7" : item.GH_7.ToString())
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tbody>
+                <tr>
+                    <td align="center" class="bdtop line_r">
+                        出现次数
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop">
+                        @(elzs.Count(p => p.Red_12 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(elzs.Count(p => p.Red_23 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(elzs.Count(p => p.Red_34 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(elzs.Count(p => p.Red_45 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(elzs.Count(p => p.Red_56 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(elzs.Count(p => p.Red_67 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(elzs.Count(p => p.Red_78 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(elzs.Count(p => p.Red_89 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(elzs.Count(p => p.Red_910 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(elzs.Count(p => p.Red_1011 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(elzs.Count(p => p.Red_1112 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(elzs.Count(p => p.Red_1213 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(elzs.Count(p => p.Red_1314 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(elzs.Count(p => p.Red_1415 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(elzs.Count(p => p.Red_1516 == 0))
+                    </td>
+                    <td class="bdtop ">
+                        @(elzs.Count(p => p.Red_1617 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(elzs.Count(p => p.Red_1718 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(elzs.Count(p => p.Red_1819 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(elzs.Count(p => p.Red_1920 == 0))
+                    </td>
+                    <td class="bdtop ">
+                        @(elzs.Count(p => p.GH_0 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(elzs.Count(p => p.GH_1 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(elzs.Count(p => p.GH_2 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(elzs.Count(p => p.GH_3 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(elzs.Count(p => p.GH_4 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(elzs.Count(p => p.GH_5 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(elzs.Count(p => p.GH_6 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(elzs.Count(p => p.GH_7 == 0))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        平均遗漏
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                        @(elzs.Sum(p => p.Red_12) / elzs.Count)
+                    </td>
+                    <td>
+                        @(elzs.Sum(p => p.Red_23) / elzs.Count)
+                    </td>
+                    <td>
+                        @(elzs.Sum(p => p.Red_34) / elzs.Count)
+                    </td>
+                    <td>
+                        @(elzs.Sum(p => p.Red_45) / elzs.Count)
+                    </td>
+                    <td>
+                        @(elzs.Sum(p => p.Red_56) / elzs.Count)
+                    </td>
+                    <td>
+                        @(elzs.Sum(p => p.Red_67) / elzs.Count)
+                    </td>
+                    <td>
+                        @(elzs.Sum(p => p.Red_78) / elzs.Count)
+                    </td>
+                    <td>
+                        @(elzs.Sum(p => p.Red_89) / elzs.Count)
+                    </td>
+                    <td>
+                        @(elzs.Sum(p => p.Red_910) / elzs.Count)
+                    </td>
+                    <td>
+                        @(elzs.Sum(p => p.Red_1011) / elzs.Count)
+                    </td>
+                    <td>
+                        @(elzs.Sum(p => p.Red_1112) / elzs.Count)
+                    </td>
+                    <td>
+                        @(elzs.Sum(p => p.Red_1213) / elzs.Count)
+                    </td>
+                    <td>
+                        @(elzs.Sum(p => p.Red_1314) / elzs.Count)
+                    </td>
+                    <td>
+                        @(elzs.Sum(p => p.Red_1415) / elzs.Count)
+                    </td>
+                    <td>
+                        @(elzs.Sum(p => p.Red_1516) / elzs.Count)
+                    </td>
+                    <td>
+                        @(elzs.Sum(p => p.Red_1617) / elzs.Count)
+                    </td>
+                    <td>
+                        @(elzs.Sum(p => p.Red_1718) / elzs.Count)
+                    </td>
+                    <td class="">
+                        @(elzs.Sum(p => p.Red_1819) / elzs.Count)
+                    </td>
+                    <td class="line_r">
+                        @(elzs.Sum(p => p.Red_1920) / elzs.Count)
+                    </td>
+                    <td>
+                        @(elzs.Sum(p => p.GH_0) / elzs.Count)
+                    </td>
+                    <td>
+                        @(elzs.Sum(p => p.GH_1) / elzs.Count)
+                    </td>
+                    <td>
+                        @(elzs.Sum(p => p.GH_2) / elzs.Count)
+                    </td>
+                    <td>
+                        @(elzs.Sum(p => p.GH_3) / elzs.Count)
+                    </td>
+                    <td>
+                        @(elzs.Sum(p => p.GH_4) / elzs.Count)
+                    </td>
+                    <td>
+                        @(elzs.Sum(p => p.GH_5) / elzs.Count)
+                    </td>
+                    <td>
+                        @(elzs.Sum(p => p.GH_6) / elzs.Count)
+                    </td>
+                    <td class="line_r">
+                        @(elzs.Sum(p => p.GH_7) / elzs.Count)
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        最大遗漏
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                        @(elzs.Max(p => p.Red_12))
+                    </td>
+                    <td>
+                        @(elzs.Max(p => p.Red_23))
+                    </td>
+                    <td>
+                        @(elzs.Max(p => p.Red_34))
+                    </td>
+                    <td>
+                        @(elzs.Max(p => p.Red_45))
+                    </td>
+                    <td>
+                        @(elzs.Max(p => p.Red_56))
+                    </td>
+                    <td>
+                        @(elzs.Max(p => p.Red_67))
+                    </td>
+                    <td>
+                        @(elzs.Max(p => p.Red_78))
+                    </td>
+                    <td>
+                        @(elzs.Max(p => p.Red_89))
+                    </td>
+                    <td>
+                        @(elzs.Max(p => p.Red_910))
+                    </td>
+                    <td>
+                        @(elzs.Max(p => p.Red_1011))
+                    </td>
+                    <td>
+                        @(elzs.Max(p => p.Red_1112))
+                    </td>
+                    <td>
+                        @(elzs.Max(p => p.Red_1213))
+                    </td>
+                    <td>
+                        @(elzs.Max(p => p.Red_1314))
+                    </td>
+                    <td>
+                        @(elzs.Max(p => p.Red_1415))
+                    </td>
+                    <td>
+                        @(elzs.Max(p => p.Red_1516))
+                    </td>
+                    <td>
+                        @(elzs.Max(p => p.Red_1617))
+                    </td>
+                    <td>
+                        @(elzs.Max(p => p.Red_1718))
+                    </td>
+                    <td>
+                        @(elzs.Max(p => p.Red_1819))
+                    </td>
+                    <td class="line_r">
+                        @(elzs.Max(p => p.Red_1920))
+                    </td>
+                    <td>
+                        @(elzs.Max(p => p.GH_0))
+                    </td>
+                    <td>
+                        @(elzs.Max(p => p.GH_1))
+                    </td>
+                    <td>
+                        @(elzs.Max(p => p.GH_2))
+                    </td>
+                    <td>
+                        @(elzs.Max(p => p.GH_3))
+                    </td>
+                    <td>
+                        @(elzs.Max(p => p.GH_4))
+                    </td>
+                    <td>
+                        @(elzs.Max(p => p.GH_5))
+                    </td>
+                    <td>
+                        @(elzs.Max(p => p.GH_6))
+                    </td>
+                    <td class="line_r">
+                        @(elzs.Max(p => p.GH_7))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        当前遗漏
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td valign="bottom">
+                        @(elzs[elzs.Count - 1].Red_12)<br>
+                        <img width="8px" height="@(elzs[elzs.Count - 1].Red_12)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(elzs[elzs.Count - 1].Red_23)<br>
+                        <img width="8px" height="@(elzs[elzs.Count - 1].Red_23)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(elzs[elzs.Count - 1].Red_34)<br>
+                        <img width="8px" height="@(elzs[elzs.Count - 1].Red_34)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(elzs[elzs.Count - 1].Red_45)<br>
+                        <img width="8px" height="@(elzs[elzs.Count - 1].Red_45)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(elzs[elzs.Count - 1].Red_56)<br>
+                        <img width="8px" height="@(elzs[elzs.Count - 1].Red_56)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(elzs[elzs.Count - 1].Red_67)<br>
+                        <img width="8px" height="@(elzs[elzs.Count - 1].Red_67)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(elzs[elzs.Count - 1].Red_78)<br>
+                        <img width="8px" height="@(elzs[elzs.Count - 1].Red_78)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(elzs[elzs.Count - 1].Red_89)<br>
+                        <img width="8px" height="@(elzs[elzs.Count - 1].Red_89)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(elzs[elzs.Count - 1].Red_910)<br>
+                        <img width="8px" height="@(elzs[elzs.Count - 1].Red_910)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(elzs[elzs.Count - 1].Red_1011)<br>
+                        <img width="8px" height="@(elzs[elzs.Count - 1].Red_1011)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(elzs[elzs.Count - 1].Red_1112)<br>
+                        <img width="8px" height="@(elzs[elzs.Count - 1].Red_1112)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(elzs[elzs.Count - 1].Red_1213)<br>
+                        <img width="8px" height="@(elzs[elzs.Count - 1].Red_1213)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(elzs[elzs.Count - 1].Red_1314)<br>
+                        <img width="8px" height="@(elzs[elzs.Count - 1].Red_1314)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(elzs[elzs.Count - 1].Red_1415)<br>
+                        <img width="8px" height="@(elzs[elzs.Count - 1].Red_1415)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(elzs[elzs.Count - 1].Red_1516)<br>
+                        <img width="8px" height="@(elzs[elzs.Count - 1].Red_1516)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(elzs[elzs.Count - 1].Red_1617)<br>
+                        <img width="8px" height="@(elzs[elzs.Count - 1].Red_1617)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(elzs[elzs.Count - 1].Red_1718)<br>
+                        <img width="8px" height="@(elzs[elzs.Count - 1].Red_1718)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(elzs[elzs.Count - 1].Red_1819)<br>
+                        <img width="8px" height="@(elzs[elzs.Count - 1].Red_1819)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(elzs[elzs.Count - 1].Red_1920)<br>
+                        <img width="8px" height="@(elzs[elzs.Count - 1].Red_1920)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(elzs[elzs.Count - 1].GH_0)<br>
+                        <img width="8px" height="@(elzs[elzs.Count - 1].GH_0)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(elzs[elzs.Count - 1].GH_1)<br>
+                        <img width="8px" height="@(elzs[elzs.Count - 1].GH_1)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(elzs[elzs.Count - 1].GH_2)<br>
+                        <img width="8px" height="@(elzs[elzs.Count - 1].GH_2)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(elzs[elzs.Count - 1].GH_3)<br>
+                        <img width="8px" height="@(elzs[elzs.Count - 1].GH_3)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(elzs[elzs.Count - 1].GH_4)<br>
+                        <img width="8px" height="@(elzs[elzs.Count - 1].GH_4)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(elzs[elzs.Count - 1].GH_5)<br>
+                        <img width="8px" height="@(elzs[elzs.Count - 1].GH_5)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(elzs[elzs.Count - 1].GH_6)<br>
+                        <img width="8px" height="@(elzs[elzs.Count - 1].GH_6)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(elzs[elzs.Count - 1].GH_7)<br>
+                        <img width="8px" height="@(elzs[elzs.Count - 1].GH_7)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr class="tabbg weight">
+                    <td rowspan="2" class="line_r">
+                        <strong>期号</strong>
+                    </td>
+                    <td rowspan="2" colspan="8" class="line_r">
+                        开奖号码
+                    </td>
+                    <td style="width: 26px;">
+                        12
+                    </td>
+                    <td style="width: 26px;">
+                        23
+                    </td>
+                    <td style="width: 26px;">
+                        34
+                    </td>
+                    <td style="width: 26px;">
+                        45
+                    </td>
+                    <td style="width: 26px;">
+                        56
+                    </td>
+                    <td style="width: 26px;">
+                        67
+                    </td>
+                    <td style="width: 26px;">
+                        78
+                    </td>
+                    <td style="width: 26px;">
+                        89
+                    </td>
+                    <td style="width: 26px;">
+                        910
+                    </td>
+                    <td style="width: 26px;">
+                        1011
+                    </td>
+                    <td style="width: 26px;">
+                        1112
+                    </td>
+                    <td style="width: 26px;">
+                        1213
+                    </td>
+                    <td style="width: 26px;">
+                        1314
+                    </td>
+                    <td style="width: 26px;">
+                        1415
+                    </td>
+                    <td style="width: 26px;">
+                        1516
+                    </td>
+                    <td style="width: 26px;">
+                        1617
+                    </td>
+                    <td style="width: 26px;">
+                        1718
+                    </td>
+                    <td style="width: 26px;">
+                        1819
+                    </td>
+                    <td style="width: 26px;" class="line_r">
+                        1920
+                    </td>
+                    <td style="width: 26px;">
+                        0
+                    </td>
+                    <td style="width: 26px;">
+                        1
+                    </td>
+                    <td style="width: 26px;">
+                        2
+                    </td>
+                    <td style="width: 26px;">
+                        3
+                    </td>
+                    <td style="width: 26px;">
+                        4
+                    </td>
+                    <td style="width: 26px;">
+                        5
+                    </td>
+                    <td style="width: 26px;">
+                        6
+                    </td>
+                    <td style="width: 26px;" class="line_r">
+                        7
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td colspan="19" class="line_r">
+                        二连号走势
+                    </td>
+                    <td colspan="8" class="line_r">
+                        连号对数
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $(function () {
+
+        var allLines = new Array();
+        allLines.push({ line: $(".hot03"), color: "#187DBD" });
+
+        var line = new XTLine();
+        for (i = 0; i < allLines.length; i++) {
+            var l = allLines[i];
+
+            line.color = l.color;
+            line.arrayBalls = l.line;
+            line.showrect();
+        }
+
+
+        $("#has_line").click(function () {
+            line.display(this.checked);
+        })
+    })
+</script>

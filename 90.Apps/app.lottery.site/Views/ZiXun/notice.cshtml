@@ -1,0 +1,46 @@
+﻿@using External.Core.SiteMessage;
+@{
+    var not = ViewBag.Notice as BulletinInfo_Query;
+
+    ViewBag.Title = not.Title + " - " + SiteString.getHZSiteName(Request) + " - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.KeyWords = not.Title + " - " + SiteString.getHZSiteName(Request) + ", 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var notice = ViewBag.NoticeList as External.Core.SiteMessage.BulletinInfo_Collection;
+    @UserHelper.css("zixun.css")
+}
+<div id="zixun">
+    <div class="zx_left">
+        <div class="crumb_">
+            <ul>
+                <li class="a">您当前的位置：</li>
+                <li><a href="/">首页</a> > </li>
+                <li><a href="/zixun/notecilist">公告列表</a>></li>
+                <li>@not.Title</li>
+            </ul>
+        </div>
+        <div class="zx_text">
+            <div class="text_title">
+                <h2>
+                    @not.Title</h2>
+                <div class="text_left">
+                    <span>@not.CreateTime.ToString("yyyy-MM-dd hh:mm")</span>&nbsp;&nbsp;来源：<a href="/"
+                        class="yuan">@(SiteString.getHZSiteName(Request))</a>&nbsp;&nbsp;编辑：<span>@(SiteString.getHZSiteName(Request))</span></div>
+                <div class="text_right">
+                    <div id="bdshare" class="bdshare_t bds_tools get-codes-bdshare">
+                        <a class="bds_qzone"></a><a class="bds_tsina"></a><a class="bds_tqq"></a><a class="bds_renren">
+                        </a><span class="bds_more">更多</span>
+                    </div>
+                </div>
+                <div style="clear: both;">
+                </div>
+            </div>
+            <div class="text_con">
+                @Html.Raw(not.Content)
+            </div>
+        </div>
+    </div>
+    <div class="zx_right">
+        @{Html.RenderAction("zixunright", "ZiXun", new { id = "" });}
+    </div>
+</div>
+<div style="clear: both">
+</div>

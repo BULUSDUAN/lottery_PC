@@ -1,0 +1,250 @@
+﻿@using app.lottery.site.Models;
+@{
+  var user = ViewBag.CurrentUser as CurrentUserInfo;
+  var balance = ViewBag.CurrentUserBalance as GameBiz.Core.UserBalanceInfo;
+
+  var safety = 0;
+  if (balance.IsSetPwd) { safety += 20; }
+  if (user.IsAuthenticationRealName) { safety += 20; }
+  if (user.IsAuthenticationMobile) { safety += 20; }
+  //if (user.IsAuthenticationEmail) { safety += 20; }
+  //if (!string.IsNullOrEmpty(user.AlipayInfo)) { safety += 20; }
+  if (!string.IsNullOrEmpty(user.QQNumber) && !string.IsNullOrEmpty(user.AlipayInfo)) { safety += 20; }
+  if (user.IsBindBank) { safety += 20; }
+  var userleve = 1;
+  if (user.LoginInfo.MaxLevelName == "百元")
+  {
+      userleve = 10;
+  }
+  else if (user.LoginInfo.MaxLevelName == "彩民")
+  {
+      userleve = 1;
+  }
+  else if (user.LoginInfo.MaxLevelName == "千元")
+  {
+      userleve = 2;
+  }
+  else if (user.LoginInfo.MaxLevelName == "万元")
+  {
+      userleve = 3;
+  }
+  else if (user.LoginInfo.MaxLevelName == "十万")
+  {
+      userleve = 4;
+  }
+  else if (user.LoginInfo.MaxLevelName == "百万")
+  {
+      userleve = 5;
+  }
+  else if (user.LoginInfo.MaxLevelName == "千万" || user.LoginInfo.MaxLevelName == "亿元")
+  {
+      userleve = 7;
+  }
+  var level = 0;
+  if (balance.IsSetPwd) { level++; }
+  if (user.IsAuthenticationRealName) { level++; }
+  if (user.IsAuthenticationMobile) { level++; }
+  if (user.QQNumber != null && user.IsBindBank) { level++; }
+  if (user.AlipayInfo != null) { level++; }
+}
+@UserHelper.js_share("/My97DatePicker/WdatePicker.js")
+@UserHelper.js("member.js")
+<div class="tipmenu" id="cb_menu">
+    <h2 style="color: #FFF; background-color: #ee8600; font-size: 16px; line-height: 40px;
+        padding-left: 20px; height: 40px;">
+        账户中心</h2>
+    <ul>
+        <li class="grzxsafe">
+            <h2 class="safe_page">
+                <span class="safe_bg safe_zfaq safe_bg_before"></span>账户安全 <span class="safe_bg safe_safe_after">
+                </span>
+            </h2>
+            <ul class="zf zh_safe" style="display: none;">
+                <li style="display: none;"><a href="/member/">安全中心</a></li>
+                <li><a href="/member/safe">个人资料</a></li>
+            </ul>
+        </li>
+        <li class="grzxsafe">
+            <h2 class="safe_page">
+                <span class="safe_bg safe_zfgl safe_bg_before"></span>账户管理 <span class="safe_bg safe_safe_after">
+                </span>
+            </h2>
+            <ul class="zf zf_detail" style="display: none;">
+                <li><a href="/member/accountdetail">账户明细</a></li>
+                <li><a href="/member/redBagList">红包明细</a></li>
+                <li><a href="/member/paywizzard">账户充值</a></li>
+                <li><a href="/member/drawingsguide">账户提款</a></li>
+            </ul>
+        </li>
+        <li class="grzxsafe">
+            <h2 class="safe_page">
+                <span class="safe_bg safe_zftz safe_bg_before"></span>投注管理 <span class="safe_bg safe_safe_after">
+                </span>
+            </h2>
+            <ul class="zf" style="display: none;">
+                <li><a href="/member/betorder">投注记录</a></li>
+                <li><a href="/member/mycreatetogether">发起的合买</a></li>
+                <li><a href="/member/myjointogether">参与的合买</a></li>
+                <li><a href="/member/saveProgram">保存方案</a></li>
+                <li><a href="/member/chaseorder">追号记录</a></li>
+                <li><a href="/member/autofollow">自动跟单</a></li>
+            </ul>
+        </li>
+        <li class="grzxsafe">
+            <h2 class="safe_page">
+                <span class="safe_bg safe_zffw safe_bg_before"></span>网站服务 <span class="safe_bg safe_safe_after">
+                </span>
+            </h2>
+            <ul class="zf" style="display: none;">
+                <li><a href="/member/innermail">站内消息</a></li>
+                <li><a href="/member/mysuggestions">我的建议</a></li>
+            </ul>
+        </li>
+        @{
+        if (user != null)
+        {
+            if (!user.LoginInfo.IsAgent)
+            {
+
+       <li class="grzxsafe">
+            <h2 class="safe_page">
+                <span class="safe_bg safe_zfjf safe_bg_before"></span>推广管理 <span class="safe_bg safe_safe_after">
+                </span>
+            </h2>
+            <ul class="zf" style="display: none;">
+                <li><a href="/member/SpreadLinks">推广链接</a></li>
+                <li><a href="/member/SporeadUsers">推广用户</a></li>
+@if (user.LoginInfo.IsUserType)
+            { 
+                <li><a href="/member/TransferFillMoney">转移充值</a></li>
+                 
+            }
+            </ul>
+        </li>
+            }
+        }
+    }
+    </ul>
+    <div class=" clearfix">
+    </div>
+    @{
+        if (user != null)
+        {
+            if (user.LoginInfo.IsRebate || user.LoginInfo.IsAgent)
+            {
+
+        <h2 style="height: 45px; text-align: left; line-height: 45px; color: #262621; font-size: 14px;
+            font-weight: normal; border-bottom: 1px solid #ffe9c7; border-top: 1px solid #ffe9c7">
+            <span class="safe_bg safe_zfjf safe_bg_before"></span><a href="/member/integraldetail"
+                target="_blank" style="float: none !important">推广管理</a>
+        </h2>              
+            }  
+        }
+    }
+
+    <div class="clear">
+    </div>
+</div>
+<div class="mem-memberinfo" style="height:130px;">
+    <div class="info-top">
+        <div class="info-top-left">
+            <i class="hmmr hmmr_leve@(userleve)" style=" float:left;"></i>
+            <ul>
+                <li class="li-short" style="width: 250px; font-size: 16px;">欢迎您： <span style="color: #000201 !important">@(SiteString.HideUserName(user.LoginInfo.DisplayName, user.LoginInfo.HideDisplayNameCount))</span><i>(@(user.LoginInfo.UserId))</i></li>
+                <li class="mtfu4" style="width: 200px; margin-top: 2px;">
+                    <div style="width: 210px; float: left;">
+                        <span style="float: left; margin-right: 8px;">安全等级：</span>
+                        <div class="data_wzd" style="">
+                            <span class="my_data_safe" id="pLevel"></span>
+                        </div>
+                        <span style="float: right;">@(safety < 50 ? "低" : "高")</span>
+                        <script type="text/javascript">
+                            $(function () {
+                                $(".my_data_safe").animate({ width: "0" }, 500, function () {
+                                    $(".my_data_safe").animate({ width: "@(safety)%" }, 800, function () {
+
+                                    });
+                                });
+                            });  
+                        </script>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="info-top-center">
+            <ul>
+                <li style="line-height: 20px !important">账户余额： <em style="color: #f44018 !important;
+                    font-size: 14px;">@(balance.GetTotalCashMoney() > 10000 ? (balance.GetTotalCashMoney() / 10000).ToString("N2") + "万" : balance.GetTotalCashMoney().ToString("N2"))</em></li>
+                <li style="line-height: 20px !important"><span>充值余额：<em style="color: #f44018 !important;">@(balance.FillMoneyBalance == 0 ? "0" : balance.FillMoneyBalance.ToString("N2"))</em></span>
+                    <span>奖金余额：<em style="color: #f44018 !important;">@(balance.BonusBalance == 0 ? "0" : balance.BonusBalance.ToString("N2"))</em></span>
+                    <span>返点余额：<em style="color: #f44018 !important;">@(balance.CommissionBalance == 0 ? "0" : balance.CommissionBalance.ToString("N2"))</em></span>
+                </li>
+                <li style="line-height: 20px !important">红包余额：<em style="color: #000203; margin-left: 3px;
+                    color: #333837 !important">@balance.RedBagBalance.ToString("f")</em></li>
+            </ul>
+        </div>
+        <div class="info-top-right">
+            <ul>
+                <li><a class="safe_bg_bgc my_cz " href="/member/pay" checklg="/member/pay">充值</a></li>
+                <li><a class="safe_bg_bgc my_tx" href="/member/fetch_bank" checklg="/member/fetch_bank">
+                    提现</a></li>
+                <li style="width: 150px;">冻结资金： <em class="green">@balance.FreezeBalance.ToString("f")</em></li>
+            </ul>
+        </div>
+    </div>
+    <div class=" info-top-bottom">
+       
+        <div class=" info-top-bottom-right" style="width:700px;">
+            @OrderHelper.GrowthStatus(balance.UserGrowth)
+        </div>
+    </div>
+</div>
+<input id="Hidden1" type="hidden" value="@user.LoginInfo.IsUserType" />
+<script type="text/javascript">
+    $(function () {
+
+        $(".info-top-bottom-left ul li").click(function () {
+            var self = $(this);
+            self.find("").hide();
+            self.find("").show();
+
+        });
+        $("h2.safe_page").click(function () {
+            var self = $(this);
+            self.next("ul.zf").toggle();
+            self.find(".safe_safe_after").toggleClass("safe_safe_after_dj");
+            self.find(".safe_zfaq").toggleClass("safe_zfaq_dj");
+            self.find(".safe_zfgl").toggleClass("safe_zfgl_dj");
+            self.find(".safe_zftz").toggleClass("safe_zftz_dj");
+            self.find(".safe_zffw").toggleClass("safe_zffw_dj");
+        });
+        $(".member-rz").click(function () {
+            var self = $(this).parents("li").index($(this)[1]);
+            var sibling_next = $(".member_safe_Next").siblings("tr.member_safe_Next");
+            var sibling = $(".member_safe").siblings("tr.member_safe");
+            sibling.show();
+            sibling_next.hide();
+            switch (self) {
+                case 0:
+                    $(".member_safe_Next:eq(4)").show();
+                    $(".member_safe:eq(4)").hide();
+                    break;
+                case 1:
+                    $(".member_safe_Next:eq(3)").show();
+                    $(".member_safe:eq(3)").hide();
+                    break;
+                case 2:
+                    $(".member_safe_Next:eq(2)").show();
+                    $(".member_safe:eq(2)").hide();
+                    break;
+                //                 case 3: $(".member_safe_Next:eq(3)").show();   
+                //                     $(".member_safe:eq(3)").hide();   
+                //                     break;   
+                case 3:
+                    $(".member_safe_Next:eq(1)").show();
+                    $(".member_safe:eq(1)").hide();
+                    break;
+            }
+        });
+    })
+</script>

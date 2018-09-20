@@ -1,0 +1,58 @@
+﻿@{
+    var Title = "支付宝支付";
+    ViewBag.Title = Title + " - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+    @ViewHelpers.css("help.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">玩彩网</a> > </li>
+        <li><a href="/staticHtml/help/index.html">&nbsp;帮助中心</a> > </li>
+        <li>&nbsp;支付宝支付</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type = "pay", name = "HWAlipay" });}
+    <div class="help_r">
+        <div class="det_box">
+            <h2>
+                微信支付</h2>           
+            <div class="det_c" id="show_for_mobile">               
+                <div class="det_a feedback">
+                   <p>
+                       第一步：在支付宝（扫码）充值页面的输入框中，输入需要充值的金额，点击立即充值；
+                    </p>
+                    <p>
+                        第二步：打开支付宝手机客户端，点开扫一扫，来扫页面中显示的二维码，然后在支付宝中确认支付即可。</p>
+                      <p>
+                      第三步：若充值未到账，请使用其他充值方式或反复操作几次。
+                      </p>
+                </div>
+            </div>            
+            <p>
+               注：如发现支付成功未及时到帐，请您提供用户名+充值方式+充值金额联系网站在线客服，核实，15分钟后再查看账户余额情况，若未到账，请核实是否成功扣款，若成功扣款，请提供充值流水号再次核实查询。 </p>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("#mobile_pay").click(function () {
+            $("#show_for_mobile").show();
+            $("#show_for_pc").hide();
+            $("#pc_pay").removeClass("selected");
+            $("#mobile_pay").addClass("selected");
+        })
+        $("#pc_pay").click(function () {
+            $("#show_for_pc").show();
+            $("#pc_pay").addClass("selected");
+            $("#mobile_pay").removeClass("selected");
+            $("#show_for_mobile").hide();
+        })
+    });
+</script>
+@ViewHelpers.js("help.js")

@@ -1,0 +1,240 @@
+﻿@{
+    var name = ViewBag.Name;
+    var type = ViewBag.Type;
+    var user = ViewBag.User as app.lottery.site.Models.CurrentUserInfo;
+}
+<div class="help_l">
+    <div style="background-color: #D7D7D7; padding-top: 1px; padding-bottom: 1px;">
+        <div style="background-color: #FDFDFD; margin: 5px;">
+            <div style="height: 55px; background-color: #FDFDFD;" class="zh-center">
+                <img src="@ViewHelpers.img(string.Format("/help/phone.png"))" style=" float:left; margin-top:20px; margin-right:10px; margin-left:10px;">
+                <p style="color: Black; height: 30px; font-size: 18px;">
+                    客服热线</p>
+                <e style="font-size: 16px; height: 10px; color: #FD7D00; font-weight: normal;">@SiteString.tel</e>
+            </div>
+            <e style="padding-top: -20px; color: Black; margin-left: 7px; font-size: 14px;">服务时间：9:30-22:00</e>
+        </div>
+        <div style="background-color: #FDFDFD; margin: 5px;">
+            <div style="height: 50px; background-color: #FDFDFD;" class="zh-center">
+              @*  <img src="@ViewHelpers.img(string.Format("/help/people.png"))" style=" float:left; margin-top:20px; margin-right:10px; margin-left:20px;">*@
+                
+                <p style="height: 20px; color: Black; font-size: 18px; float:left;">
+                    <a class="colorRed kf-top link_kefu" href="javascript:void(0)" data="@SiteString.kefuUrl" title="点击联系在线客服"></a></p>
+            </div>
+            <e style="padding-top: -20px; color: Black; margin-left: 7px; font-size: 14px;">服务时间：9:30-00:00</e>
+        </div>
+    </div>
+    <div class="hl_box" style="margin-top: 10px;">
+        <div class="hl_box_m">
+            <h2>
+                帮助中心</h2>
+            <div id="hl_menu" class="hl_menu">
+                <div class="menu_w">
+                    <h3 style="cursor: pointer;">
+                        <a class="close @(type == "register" ? "open" : "")" title="" href="javascript:void(0);" id="link101">
+                            注册</a></h3>
+                    <!-- 注册 -->
+                    <div style="display: @(type == "register" ? "block" : "none");" class="hsul">
+                        <ul>
+                            <li  class="@(name == "login" ? "cur" : "")"><a href="/staticHtml/help/login.html" id="link102">如何注册</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="menu_w">
+                    <h3 style="cursor: pointer;">
+                        <a class="close @(type == "pay" ? "open" : "")" title="" href="javascript:void(0);" id="link103">
+                            充值</a></h3>
+                    <!-- 充值 -->
+                    <div style="display: @(type == "pay" ? "block" : "none");" class="hsul">
+                        <ul>
+                            <li class="@(name == "payintroduce" ? "cur" : "")"><a href="/staticHtml/help/chongzhi/payintroduce.html" id="link104">
+                                充值介绍</a></li>
+                            <li class="@(name == "EbanksPay" ? "cur" : "")"><a href="/staticHtml/help/chongzhi/EbanksPay.html" id="link105">
+                                网上银行充值</a></li>
+                            <li class="@(name == "Alipay" ? "cur" : "")"><a href="/staticHtml/help/chongzhi/Alipay.html" id="link106">支付宝</a></li>
+                            <li class="@(name == "Quickpayment" ? "cur" : "")"><a href="/staticHtml/help/chongzhi/Quickpayment.html" id="link107">
+                                快捷支付</a></li>
+                                   <li class="@(name == "weixin" ? "cur" : "")"><a href="/staticHtml/help/chongzhi/weixin.html" id="link107">
+                                微信支付</a></li>
+                                   <li class="@(name == "HWAlipay" ? "cur" : "")"><a href="/staticHtml/help/chongzhi/hwalipay.html" id="link107">
+                                支付宝(扫码)支付</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="menu_w">
+                    <h3 style="cursor: pointer;">
+                        <a class="close @(type == "account" ? "open" : "")" title="" href="javascript:void(0);" id="link111">
+                            我的帐户</a></h3>
+                    <!-- 我的账户 -->
+                    <div style="display: @(type == "account" ? "block" : "none");" class="hsul">
+                        <ul>
+                            <li class="@(name == "Approve" ? "cur" : "")"><a href="/staticHtml/help/myAccount/Approve.html" id="link112">实名认证</a></li>
+                            <li class="@(name == "administrator" ? "cur" : "")"><a href="/staticHtml/help/myAccount/administrator.html"
+                                id="link113">账户密码</a></li>
+                            <li class="@(name == "AccountSecurity" ? "cur" : "")"><a href="/staticHtml/help/myAccount/AccountSecurity.html"
+                                id="link114">账户安全</a></li>
+                            <li class="@(name == "Ebank" ? "cur" : "")"><a href="/staticHtml/help/myAccount/Ebank.html" id="link115">网银充值订单查询</a></li>
+                            <li class="@(name == "privacySet" ? "cur" : "")"><a href="/staticHtml/help/myAccount/privacySet.html" id="link116">
+                                隐私设置</a></li>
+                            <li class="@(name == "Redpackets" ? "cur" : "")"><a href="/staticHtml/help/myAccount/Redpackets.html" id="link117">
+                                红包</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="menu_w">
+                    <h3 style="cursor: pointer;">
+                        <a class="close @(type == "buylottery" ? "open" : "")" title="" href="javascript:void(0);" id="link118">
+                            购买彩票</a></h3>
+                    <!-- 购买彩票 -->
+                    <div style="display:@(type == "buylottery" ? "block" : "none");" class="hsul">
+                        <ul>
+                            <li class="@(name == "ForTheColor" ? "cur" : "")"><a href="/staticHtml/help/goucai/ForTheColor.html" id="link119">
+                                如何购彩</a></li>
+                            <li class="@(name == "ShoppingService" ? "cur" : "")"><a href="/staticHtml/help/goucai/ShoppingService.html"
+                                id="link120">合买</a></li>
+                            <li class="@(name == "animationDocumentary" ? "cur" : "")"><a href="/staticHtml/help/goucai/animationDocumentary.html"
+                                id="link121">自动跟单</a></li>
+                            <li class="@(name == "Revoke" ? "cur" : "")"><a href="/staticHtml/help/goucai/Revoke.html" id="link122">撤单</a></li>
+                            <li class="@(name == "dsgs" ? "cur" : "")"><a href="/staticHtml/help/goucai/dsgs.html" id="link150">单式上传格式</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="menu_w">
+                    <h3 style="cursor: pointer;">
+                        <a class="close @(type == "drawMoney" ? "open" : "")" title="" href="javascript:void(0);" id="link123">
+                            兑奖提款</a></h3>
+                    <!-- 兑奖提款 -->
+                    <div style="display:@(type == "drawMoney" ? "block" : "none");" class="hsul">
+                        <ul>
+                            <li class="@(name == "bonusGet" ? "cur" : "")"><a href="/staticHtml/help/drawMoney/bonusGet.html" id="link124">
+                                奖金领取</a></li>
+                            <li class="@(name == "drawing" ? "cur" : "")"><a href="/staticHtml/help/drawMoney/drawing.html" id="link125">提款</a></li>
+                            <li class="@(name == "poundage" ? "cur" : "")"><a href="/staticHtml/help/drawMoney/poundage.html" id="link126">
+                                提款手续费</a></li>
+                            <li class="@(name == "poundageTime" ? "cur" : "")"><a href="/staticHtml/help/drawMoney/poundageTime.html" id="link127">
+                                提款到账时间</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="menu_w">
+                    <h3 style="cursor: pointer;">
+                        <a class="close @(type == "tradeRuls" ? "open" : "")" title="" href="javascript:void(0);" id="link128">
+                            交易规则</a></h3>
+                    <!-- 交易规则 -->
+                    <div style="display:@(type == "tradeRuls" ? "block" : "none");" class="hsul">
+                        <ul>
+                            <li class="@(name == "bonusAllot" ? "cur" : "")"><a href="/staticHtml/help/tradeRules/bonusAllot.html" id="link129">
+                                合买奖金分配</a></li>
+                            <li class="@(name == "customizeDocumentary" ? "cur" : "")"><a href="/staticHtml/help/tradeRules/customizeDocumentary.html"
+                                id="link130">自动跟单</a></li>
+                            <li class="@(name == "website" ? "cur" : "")"><a href="/staticHtml/help/tradeRules/website.html" id="link131">网站保底</a></li>
+                            <li class="@(name == "recordRule" ? "cur" : "")"><a href="/staticHtml/help/tradeRules/recordRule.html" id="link132">
+                                战绩规则</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="menu_w">
+                    <h3 style="cursor: pointer;">
+                        <a class="close @(type == "howToPlay" ? "open" : "")"  title="" href="javascript:void(0);" id="link133">
+                            彩种玩法</a></h3>
+                    <!-- 彩种玩法 -->
+                    <div style="display:@(type == "howToPlay" ? "block" : "none");" class="hsul">
+                        <ul>
+                            <li class="@(name == "zcsfc" ? "cur" : "")"><a href="/staticHtml/help/playRules/zcsfc.html" id="link134">足彩胜负彩</a></li>
+                            <li class="@(name == "zcscjq" ? "cur" : "")"><a href="/staticHtml/help/playRules/zcscjq.html" id="link135">足彩四场进球</a></li>
+                            <li class="@(name == "zclcbq" ? "cur" : "")"><a href="/staticHtml/help/playRules/zclcbq.html" id="link136">足彩六场半全</a></li>
+                            <li class="@(name == "bjdc" ? "cur" : "")"><a href="/staticHtml/help/playRules/bjdc.html" id="link137">北京单场</a></li>
+                            <li class="@(name == "jczq" ? "cur" : "")"><a href="/staticHtml/help/playRules/jczq.html" id="link144">竞彩足球</a></li>
+                            <li class="@(name == "jclq" ? "cur" : "")"><a href="/staticHtml/help/playRules/jclq.html" id="link141">竞彩篮球</a></li>
+                            <li class="@(name == "ssq" ? "cur" : "")"><a href="/staticHtml/help/playRules/ssq.html" id="link146">双色球</a></li>
+                            <li class="@(name == "dlt" ? "cur" : "")"><a href="/staticHtml/help/playRules/dlt.html" id="link147">大乐透</a></li>
+                            <li class="@(name == "fc3d" ? "cur" : "")"><a href="/staticHtml/help/playRules/fc3d.html" id="link147">福彩3D</a></li>
+                            <li class="@(name == "pl3" ? "cur" : "")"><a href="/staticHtml/help/playRules/pl3.html" id="link138">排列三</a></li>
+                            <li class="@(name == "jx11x5" ? "cur" : "")"><a href="/staticHtml/help/playRules/jx11x5.html" id="link143">江西十一选五</a></li>
+
+
+                            <li class="@(name == "sd11x5" ? "cur" : "")"><a href="/statichtml/help/playrules/sd11x5.html" id="link143">山东十一选五</a></li>
+                            <li class="@(name == "gd11x5" ? "cur" : "")"><a href="/statichtml/help/playrules/gd11x5.html" id="link143">广东十一选五</a></li>
+                            <li class="@(name == "gdklsf" ? "cur" : "")"><a href="/statichtml/help/playrules/gdklsf.html" id="link143">广东快乐十分</a></li>
+                            <li class="@(name == "jsks" ? "cur" : "")"><a href="/statichtml/help/playrules/jsks.html" id="link143">江苏快三</a></li>
+                            <li class="@(name == "sdklpk3" ? "cur" : "")"><a href="/statichtml/help/playrules/sdklpk3.html" id="link143">山东快乐扑克3</a></li>
+
+
+
+                            <li class="@(name == "cqssc" ? "cur" : "")"><a href="/staticHtml/help/playRules/cqssc.html" id="link145">重庆时时彩</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="menu_w">
+                    <h3 style="cursor: pointer;">
+                        <a class="close @(type == "phone" ? "open" : "")" title="" href="javascript:void(0);" id="link148">
+                            手机购彩</a></h3>
+                    <!-- 手机购彩 -->
+                    <div style="display:@(type == "phone" ? "block" : "none");" class="hsul">
+                        <ul>
+                            <li class="@(name == "phoneForTheColor" ? "cur" : "")"><a href="/staticHtml/help/phoneBuy/phoneForTheColor.html"
+                                id="link149">彩票客户端购彩</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="menu_w">
+                    <h3 style="cursor: pointer;">
+                        <a class="close @(type == "safety" ? "open" : "")" title="" href="javascript:void(0);" id="link148">
+                            安全保障</a></h3>
+                    <!-- 安全保障 -->
+                    <div style="display:@(type == "safety" ? "block" : "none");" class="hsul">
+                        <ul>
+                            <li class="@(name == "forTheColorSafety" ? "cur" : "")"><a href="/staticHtml/help/safety/forTheColorSafety.html"
+                                id="link149">购彩安全</a></li>
+                            <li class="@(name == "business" ? "cur" : "")"><a href="/staticHtml/help/safety/business.html" id="link149">
+                                业务资质</a></li>
+                            <li class="@(name == "advantage" ? "cur" : "")"><a href="/staticHtml/help/safety/advantage.html" id="link149">
+                                购彩优势</a></li>
+                            <li class="@(name == "betNotice" ? "cur" : "")"><a href="/staticHtml/help/safety/betNotice.html" id="link149">
+                                竞彩投注风险须知</a></li>
+                            <li class="@(name == "serviceAgreement" ? "cur" : "")"><a href="/staticHtml/help/safety/serviceAgreement.html"
+                                id="link149">用户服务协议</a></li>
+                            <li class="@(name == "betpact" ? "cur" : "")"><a href="/staticHtml/help/safety/betpact.html" id="link149">代购协议</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="menu_w">
+                    <h3 style="cursor: pointer;">
+                        <a class="close @(type == "About" ? "open" : "")" title="" href="javascript:void(0);" id="link148">
+                            关于玩彩网</a></h3>
+                    <!-- 关于玩彩网 -->
+                    <div style="display:@(type == "About" ? "block" : "none");" class="hsul">
+                        <ul>
+                            <li class="@(name == "Aboutsite" ? "cur" : "")"><a href="/staticHtml/help/about/Aboutsite.html" id="link149">
+                                公司简介</a></li>
+                            <li class="@(name == "Join" ? "cur" : "")"><a href="/staticHtml/help/about/Join.html" id="link149">加盟合作</a></li>
+                            <li class="@(name == "websiteMap" ? "cur" : "")"><a href="/staticHtml/help/about/websiteMap.html" id="link149">
+                                网站地图</a></li>
+                            <li class="@(name == "links" ? "cur" : "")"><a href="/staticHtml/help/about/links.html" id="link149">友情链接</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="hl_box_m">
+                <h2>
+                    自助服务中心</h2>
+                <div id="diy_login_bf" class="hl_menu_diy clearfix">
+                    <!-- 登陆前 -->
+                    <a class="diy_btn" href="/member/safe" id="link100">修改密码</a> <a class="diy_btn"
+                        href="/member/safe" id="link101">实名认证</a> <a class="diy_btn" href="/user/forget"
+                            id="link102">找回密码</a> <a class="diy_btn" href="/member/safe" id="link103">绑定QQ</a>
+                    <a class="diy_btn" href="/member/safe" id="link104">绑定手机</a> <a class="diy_btn"
+                        href="/member/safe" id="link105">绑定银行卡</a>
+                </div>
+                @* <div style="display:none;" id="diy_login_af" class="hl_menu_diy clearfix"><!-- 登陆后 -->
+				    	<a class="diy_btn" href="httuseraccount/safe/pwd.php" id="link107">修改密码</a>
+                        <a class="diy_btn" href="htaccount/safe/protect.php" id="link108">设置密保</a>
+                        <a class="diy_btn" href="htr/getpwd.php" id="link109">找回密码</a>
+                        <a class="diy_btn" href="htaccount/safe/mail_edit.php" id="link110">修改邮箱</a>
+                        <a class="diy_btn" href="htraccount/safe/phone_edit.php" id="link111">修改手机</a>
+                        <a class="diy_btn" href="htteraccount/userinfo/logout.php" id="link112">注销申请</a>
+				    </div>*@
+            </div>
+        </div>
+    </div>
+</div>

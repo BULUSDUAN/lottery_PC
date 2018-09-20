@@ -1,0 +1,53 @@
+﻿@using app.lottery.site.Models;
+@{
+    ViewBag.Title = "邮箱绑定 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "邮箱绑定, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var user = ViewBag.User as app.lottery.site.Models.CurrentUserInfo;
+    Layout = null;
+}
+@*<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>邮箱绑定</li>
+    </ul>
+</div>
+<div class="center mt10">
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="info_zl">个人资料</div>*@
+        <div class="info_tt">邮箱绑定</div>
+        <div class="xgmm_main">
+             
+            @if (@user.IsAuthenticationEmail)
+            {
+                    <div class="info_zl_ico">
+                    <span class="member-safe member_safe_y" style="margin-top: 10px; margin-left: 25px; color:#8ecc33"></span><span class="ml10">已绑定邮箱</span>
+                </div>
+                 <div class="info_wxts">
+                    <div class="info_wxts_show">
+                        <span> 当前绑定邮箱： <label style="color: #7CBC0E;">@SiteString.EncodeEmail(user.EmailInfo.Email)</label></span>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="info_zl_ico">
+                    <span class="member-safe member_safe_w" style="margin-top: 10px; margin-left: 50px; color:#ff5c00"></span><span class="ml10">未绑定邮箱</span>
+                </div>
+                <div class="info_wxts">
+                    <div class="info_wxts_show">
+                        <span><em style="color: Red">*</em>1.绑定邮箱后，帐号被盗可以找回；</span> 
+                        <span><em style="color: Red">*</em>2.绑定邮箱后，如果您忘记账户密码，就可以通过认证邮箱找回密码。 </span>
+                        <span><em style="color: Red">*</em>3.绑定邮箱后，如有账户后台的信息都可以通过邮箱及时收到信息。</span>
+                        <span><em style="color: Red">*</em>4.绑定邮箱后，购买投注后我们会及时给您发一封方案快照给您。</span>
+                    </div>
+                </div>      
+                @UserHelper.BindEmail()
+                @UserHelper.js("email_bind.js")
+            }
+        </div>
+@*        </div>
+</div>*@
+<div class="clearfix">
+</div>

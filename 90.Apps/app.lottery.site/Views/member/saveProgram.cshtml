@@ -1,0 +1,196 @@
+﻿@using GameBiz.Core;
+@using app.lottery.site.Models;
+@{
+    ViewBag.Title = "保存订单列表 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "保存订单列表, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var orders = ViewBag.Orders as SaveOrder_LotteryBettingInfoCollection;
+}
+@section css{
+    @ViewHelpers.css("mycenter.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>保存方案</li>
+    </ul>
+</div>
+<div class="center mt10">
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mune_safe">
+            <div class="account_menu clearfix">
+                <a href="/member/betorder">投注记录</a><a href="/member/mycreatetogether">发起的合买</a>
+                <a href="/member/myjointogether">参与的合买</a><a href="/member/saveProgram" class="select">保存方案</a>
+                <a href="/member/chaseorder">追号记录</a> <a href="/member/autofollow">自动跟单</a>
+            </div>
+            <div class="account_con">
+                <div class="betorder_top">
+                    <ul>
+                        <li class="betorder_topSelected"><a href="betorder"><i></i>保存方案</a></li>
+                    </ul>
+                </div>
+                <table class="account_box">
+                    <thead>
+                        <tr>
+                            <td>
+                                保存时间
+                            </td>
+                            <td>
+                                彩种
+                            </td>
+                            <td>
+                                期号
+                            </td>
+                            <td>
+                                注数
+                            </td>
+                            <td>
+                                倍数
+                            </td>
+                            <td>
+                                订单金额
+                            </td>
+                            <td>
+                                结束时间
+                            </td>
+                            <td>
+                                订单状态
+                            </td>
+                            <td class="last_th">
+                                购买
+                            </td>
+                        </tr>
+                    </thead>
+                    @{
+                        if (orders != null && orders.Count > 0)
+                        {
+
+                            foreach (var item in orders)
+                            {
+                        <tr>
+                            <td>
+                                @item.CreateTime.ToString("MM-dd HH:mm")
+                            </td>
+                            <td>
+                                @SiteConvert.GameName(item.GameCode, item.GameType)
+                            </td>
+                            <td>
+                                @item.IssuseNumber
+                            </td>
+                            <td>
+                                @item.BetCount 注
+                            </td>
+                            <td>
+                                @item.Amount 倍
+                            </td>
+                            <td class="ye blod fszie">
+                                @item.TotalMoney.ToString("f")
+                            </td>
+                            <td>
+                                @item.StopTime.ToString("MM-dd HH:mm")
+                            </td>
+                            <td class="@(item.StopTime <= DateTime.Now ? "gray" : "green")">
+                                @if (item.StopTime <= DateTime.Now)
+                                {
+                                    @("已过期")
+                                }
+                                else
+                                {
+                                    @OrderManager.OrderStatusName(SchemeType.SaveScheme, item.ProgressStatus)
+                                }
+                            </td>
+                            <td class="last_td" title="@OrderManager.SchemeCategoryName(item.SchemeBettingCategory)">
+                                <a href="/user/scheme/@item.SchemeId" target="_blank" class="orderId">查看</a>
+                                @if (item.StopTime > DateTime.Now && item.SchemeType != SchemeType.SingleTreasure)
+                                {
+                                    <a href="javascript:delbuy('@item.GameCode','@item.BetCount','@item.Amount','@item.TotalMoney.ToString("f")','@item.SchemeId')"  class="yellow" id="buy">
+                                        购买</a>
+
+                                }
+                                <i class="green small">@OrderManager.SchemeCategoryName(item.SchemeBettingCategory, true)</i>
+                            </td>
+                        </tr>
+                            }
+                        }
+                        else
+                        {
+                        <tr>
+                            <td colspan="9">
+                                暂时没有找到你要的数据哦
+                            </td>
+                        </tr>
+                        }
+                    }
+                </table>
+                <div class="combined clearfix">
+                    <div class="fl">
+                        <span><b class="b1"></b>方案数量：<strong class="zc blod fszie">@(orders != null ? orders.Count : 0)&nbsp;个</strong></span>
+                    </div>
+                    <div class="fr">
+                        <em class="xh">*</em>注意：保存方案最多可查询一个月数据
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+@{Html.RenderPartial("box_confirm_gg");}
+<script type="text/javascript">
+    $(function () {
+        $(".account_box tr:even:gt(0)").css("backgroundColor", "#f9f9f9");
+    });
+    var delbuy = function (gameCode, ggcount, multiple, ggmoney, schemeId) {
+        confirmTipGg(function () {
+            $("#bet_confirm_content_gg").load("/single?g=" + gameCode + "&r=" + Math.random(), function (response, status, xhr) {
+                if (status == "success") {
+                    $("#ggcount").html(ggcount); //注数
+                    $("#ggmutiply").html(multiple); //倍数
+                    $("#ggmoney").html(ggmoney); //金额
+
+                    confirmLightBoxGg.Show();
+                    document.getElementById("btn_confirm_yes_gg").onclick = function () {
+                        //先验证是否输入了资金密码
+                        if (user.info.isNeedBetPwd) {
+                            var password = $("#balancepwd");
+                            if (password.val() == "" || password.val().length == 0) {
+                                alertTip("您设置了资金密码，请输入资金密码", "ok");
+                                return;
+                            }
+                        }
+                        buy(schemeId);
+
+                    };
+                }
+            });
+        }, function () { });
+    };
+    //投注
+    var buy = function (schemeId) {
+        if (!$("#userAgent0").is(":checked")) {
+            alertTip("您必须选择“我已阅读了 《用户合买代购协议》 并同意其中条款。”才能继续投注！！");
+            return;
+        }
+        if (!$("#lotteryLimit0").is(":checked")) {
+            alertTip("您必须选中“我已阅读了 《竞彩投注风险须知》 并同意其中条款。”才能继续投注！！");
+            return;
+        }
+        progress("正在出票...");
+        var url = "/save_spotts";
+        var password = $("#balancepwd").val();
+        $.post(url, { bpwd: password, schemeId: schemeId }, function (result) {
+            endprogress();
+            if (result.IsSuccess) {
+                confirmLightBoxGg.Close();
+                alertTip("<b class='big yellow'>您的保存方案已购买成功，祝您好运！</b><br/>方案编号：<a class='blue under' href='/user/scheme/" + schemeId + "' target='_black'>" + schemeId + "</a> <br/><br/><em class='gray'>提示：方案将分配到具有销售资质的投注站出票。</em>", "ok");
+                $("#boxAlertOkButton").click(function () {
+                    window.location.href = window.location.href;
+                });
+            } else {
+                alertTip(result.Message, "err");
+            }
+        });
+    };
+</script>

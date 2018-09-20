@@ -1,0 +1,106 @@
+﻿@using app.lottery.site.Models
+@using GameBiz.Core
+@{
+    Layout = "../Shared/_LayoutFoud.cshtml";
+    ViewBag.Title = "推广链接";
+    ViewBag.keywords = "推广链接";
+}
+<div class="center mt10">
+    @{Html.RenderPartial("Mycommenu", "Member");}
+    @{Html.RenderPartial("toptipFoud", "Member");}
+    <div class="new_buy_right">
+        <div class="betorder_top">
+            <ul>
+                <li class="betorder_topSelected"><a href="/member/generalizeUser">返点用户</a></li>
+                <li><a href="/member/CommissionRecord">返点结算</a></li>
+                <li><a href="/member/StatisticsQuery">统计查询</a></li>
+                <li><a href="/member/SchemeManage">方案管理</a></li>
+            </ul>
+        </div>
+        <div class="betorder_con clearfix">
+            <div class="scheme">
+                <div class="scheme-show" style="margin-left: 10px;">
+                    <a href="/member/generalizeUser">下级代理</a>
+                </div>
+                <div class="scheme-show">
+                    <a href="/member/subordinateuser">下级用户</a>
+                </div>
+                @if (ViewBag.IsAddAgent)
+                {
+                    <div class="scheme-show">
+                        <a href="/member/dealerMsg">添加代理</a>
+                    </div>
+                }
+                <div class="scheme-show">
+                    <a href="/member/setNewUserRebate">设置新用户返点</a>
+                </div>
+                <div class="scheme-show xzscheme">
+                    <a href="/member/popularizeLink"><i></i>推广链接</a>
+                </div>
+            </div>
+            <div class="scheme-link">
+                <div>
+                    <span class="bgimg">1</span>网页版推广链接：
+                    <p>
+                        <input type="text" value="@ViewBag.Url_1" class="tglz_url" disabled=""/><input type="button" class="tglj_bg_customer"  value="点击复制链接" onclick="Tool.CopyText('@ViewBag.Url_1');" />
+                    </p>
+                </div>
+                <div style="margin-top: 20px;">
+                    <span class="bgimg">2</span>手机版推广链接：
+                    <p>
+                        <input type="text" value="@ViewBag.Url_2" class="tglz_url" disabled=""/><input type="button" class="tglj_bg_customer"  value="点击复制链接" onclick="Tool.CopyText('@ViewBag.Url_2');" />
+                    </p>
+                </div>
+                @*<div style="margin-top: 20px;">
+                    <span class="bgimg">2</span>自定义推广链接：
+                        @if (string.IsNullOrEmpty(ViewBag.CustomerUrl))
+                        {
+                        <p>
+                            *地址确认后不可修改，如果没想好，可以以后再填写。*可以是3-16位小写字母与数字的组合，不支持纯数字</p>
+                        <p>
+                            <span>http://</span><input type="text" value="" size="26" maxlength="16" class="txt_cusurl"
+                                id="txt_customerDomain" />
+                            <span style="margin-right: 10px;">.vip.kanbf.com</span><input type="button" id="save_customer_domain"
+                                value="保&nbsp;&nbsp;存" class="btn_next" />
+                        </p>
+                        }
+                        else
+                        {   
+                        <p>
+                            <input type="text" class="tglz_url" disabled="" value="@ViewBag.CustomerUrl"/>
+                            <input type="button" class="tglj_bg_customer" value="点击复制链接" onclick=" Tool.CopyText('@ViewBag.CustomerUrl');" />
+                        </p>
+                           
+                        }
+                </div>*@
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("#save_customer_domain").click(function () {
+            var domain = $.trim($("#txt_customerDomain").val());
+            if (!domain) {
+                alert("自定义推广链接不能为空");
+                return false;
+            }
+
+            var temp = $.format("http://{0}.vip.kanbf.com", domain);
+            if (window.confirm($.format("您确认自定义推广链接为：{0}？设置后不可修改。", temp))) {
+                var url = "/member/SaveCustomerDomain";
+                $.post(url, { customerDomain: domain }, function (json) {
+
+                    if (!json.IsSuccess) {
+                        alert(json.Msg);
+                        $("#txt_customerDomain").val("");
+                    } else {
+                        window.location.href = window.location.href;
+                    }
+                });
+            }
+        });
+    });    
+</script>
+<div class="clearfix">
+</div>

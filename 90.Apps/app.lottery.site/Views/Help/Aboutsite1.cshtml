@@ -1,0 +1,56 @@
+﻿@{
+    var Title = "公司简介";
+    ViewBag.Title = Title + " - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+    @ViewHelpers.css("help.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">玩彩网</a> > </li>
+        <li><a href="/staticHtml/help/index.html">&nbsp;帮助中心</a> > </li>
+        <li>&nbsp;公司简介</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type = "About", name = "Aboutsite" });}
+    <div class="help_r">
+        <div class="det_box">
+            <h2>
+                公司简介</h2>
+            <div class="det_c">
+                <h4>
+                    关于玩彩网</h4>
+                <p>
+                    玩彩网（www.wancai.com）是由深圳市普华利星科技有限公司推出的优秀的彩票O2O平台，为用户免费提供在线彩市新闻、走势图表、即时比分、赛事资讯等服务。</p>
+                <h4>
+                    办公场地</h4>
+                <img style="height:200px;width:340px;" src="@ViewHelpers.img("/about/crd.jpg")"><span
+                    style="padding-right: 2px;"> </span>
+                <img style="height:200px;width:340px;" src="@ViewHelpers.img("/about/office.jpg")">
+                <h4>
+                    玩彩网团队</h4>
+               <p>	玩彩网目前拥有员工50余人，是一支充满朝气的年轻团队，正处于快速扩张时期。
+&nbsp;&nbsp;<br />&nbsp;&nbsp;团队由技术部、产品部、 运营部、客服部、推广部等多部门组成。<br>
+&nbsp;&nbsp;公司以线上提供彩票数据资讯服务，线下连接投注店为用户出票为主营业务，同时经营及开发相关系统、软件业务、网络游戏等多元化的互联网业务，以服务于彩民、宏扬彩票文化为宗旨、努力为中国彩票的健康发展贡献力量。<br>
+&nbsp;&nbsp;自2014年上线以来，经过艰苦努力的奋斗，不断完善我们的服务和技术，以彩民为本，为彩民提供最好和最完善的服务，建立起了一个被广大彩民信赖和好评的彩票020平台，网站资讯全面，操作快速、免费推荐、拥有最完善和最实用的走势分析图和计算工具。15年上线ios和android手机客户端，为用户提供了更为便捷的购彩方式。</p>
+
+		<h4>彩票的公益性质</h4>
+		<p>	“彩票，是指国家为筹集社会公益资金，促进社会公益事业发展而特许发行、依法销售，自然人自愿购买，并按照特定规则获得中奖机会的凭证。”<br>
+&nbsp;&nbsp;目前特许发行的彩票有中国福利彩票和中国体育彩票，分别归口民政部和体育总局系统发行销售。<br>
+&nbsp;&nbsp;以中国福利彩票的拳头产品双色球为例，彩票销售收入的构成比例为：49%返还奖金，1%销售调节基金，15%发行费用，35%公益金。<br>
+&nbsp;&nbsp;其中公益金的用途对于福利彩票而言，主要投入到福利、慈善事业；对于体育彩票而言，主要投入到群众健身设施、奥运项目等等。</p>
+
+		<h4>买彩票的目的</h4>
+		<p>买彩票是支持中国公益事业的善举，买一注彩票2元钱不多，但表达的爱心无限。<br>
+&nbsp;&nbsp;如果试图一定要中大奖，按照彩票的规则设计是不现实的。中大奖主要靠的是运气。<br>
+&nbsp;&nbsp;所以买彩票目的，应该立足于爱心、娱乐、可承受。不应该为了侥幸中得大奖而铤而走险，动用不该动用的资金。</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+@ViewHelpers.js("help.js")

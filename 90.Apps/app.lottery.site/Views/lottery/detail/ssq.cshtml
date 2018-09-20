@@ -1,0 +1,65 @@
+﻿@using GameBiz.Core;
+@{
+    var award = ViewBag.Award as LotteryData.Core.GameWinNumber_Info;
+    var issues = ViewBag.CurIssuse as Issuse_QueryInfo;
+}
+@GameHelper.LotteryHeaderView(issues==null?null:issues, award==null?null:award, award == null || award.Id == 0 ? "SSQ" : award.GameCode)
+@GameHelper.LotteryDescView(award == null||award.Id==0 ? "SSQ" : award.GameCode)
+
+<div class="lot-con-l">
+    <h2 class="sctitle">
+        <span class="der2"></span><b>双色球奖级设置</b></h2>
+    <div class="td_div2">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="sg">
+            <tbody>
+                <tr>
+                    <td>一等奖
+                    </td>
+                    <td class="td1">选6+1中6+1
+                    </td>
+                    <td>500万
+                    </td>
+                </tr>
+                <tr>
+                    <td>二等奖
+                    </td>
+                    <td class="td1">选6+1中6+0
+                    </td>
+                    <td>当期高等奖奖金的30%
+                    </td>
+                </tr>
+                <tr>
+                    <td>三等奖
+                    </td>
+                    <td class="td1">选6+1中5+0或中4+1
+                    </td>
+                    <td>单注奖金额固定为200元
+                    </td>
+                </tr>
+                <tr>
+                    <td>五等奖
+                    </td>
+                    <td class="td1">选6+1中4+0或中3+1
+                    </td>
+                    <td>单注奖金额固定为10元
+                    </td>
+                </tr>
+                <tr>
+                    <td>六等奖
+                    </td>
+                    <td class="td1">选6+1中2+1或中1+1或中0+1
+                    </td>
+                    <td>单注奖金额固定为5元
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="lot-con-r">
+    <h2 class="sctitle">
+        <span class="der3"></span><b>双色球资讯</b></h2>
+    @{Html.RenderAction("LotteryConsulting", "buy", new { id = "SSQ" });}
+</div>
+<div class="clearfix"></div>
+

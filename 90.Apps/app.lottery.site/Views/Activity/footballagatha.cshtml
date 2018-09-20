@@ -1,0 +1,115 @@
+﻿@{
+    ViewBag.Title = "足彩不中奖也有奖";
+    Layout = "../Shared/_HuoDong.cshtml";
+}
+<div class="Center_Div">
+    <div style="height: 1820px; margin: 0px auto;">
+        <div style="width: 700px; margin: auto; padding-left: 40px;">
+            <div class="div_guize">
+                <div class="interval">
+                    <div class="guize_1 interval float">
+                        <span style="line-height: 120px;">活动规则</span><p class="p">
+                            Event rules</p>
+                    </div>
+                    <div class="float">
+                        <p class="interval" style="background-color: #FF5E4A;">
+                            <span class="number_span">1</span> 参与对象必须是 @SiteString.getHZSiteName(Request)实名认证、手机绑定的注册用户</p>
+                        <p class="interval" style="background-color: #86C12B;">
+                            <span class="number_span">2</span> 若过关方案场次出现比赛延期则该方案不享网站任何加奖优惠</p>
+                        <p class="interval" style="background-color: #71ABB7;">
+                            <span class="number_span">3</span> 在法律许可范围内，@SiteString.getHZSiteName(Request)保留本次活动的解释权</p>
+                    </div>
+                    <div class="clear">
+                    </div>
+                </div>
+                <div class="interval guize_div_02">
+                    <span><span class="number_span">4</span> 本活动赠送的彩金红包均只能用于购彩不能提现，在方案开奖后24小时内派送</span>
+                </div>
+                <div>
+                    <div class="interval guize_div_03 float">
+                        <span style="width: 100%;"><span class="number_span">5</span> 合买加奖只奖励给发单人，跟单人不享受本活动优惠</span>
+                    </div>
+                    <div class="interval guize_div_04 float">
+                        <span style="width: 100%;"><span class="number_span">6</span> 本活动仅限传统足球14场、任选9场玩法的成功出票的方案<span
+                            class="span">（不限自购或合买）</span></span>
+                    </div>
+                    <div class="clear">
+                    </div>
+                </div>
+                <div style="margin-top: 10px;">
+                    <div class="guize_div_05 float">
+                        <span style="width: 100%;"><span class="number_span">7</span> 在满足加奖条件的情况下，每名用户每期仅限一个未中奖订单享受加奖</span>
+                    </div>
+                    <div class="guize_div_06 float">
+                        <span style="width: 100%;"><span class="number_span">8</span> 网站保底方案均不参与本活动</span>
+                    </div>
+                    <div class="clear">
+                    </div>
+                </div>
+            </div>
+            <div>
+                <a class="Login_a"></a>
+            </div>
+            <div class="footer_rule">
+                <p>
+                    活动奖励规则</p>
+                <span>Actives Award Rules</span>
+            </div>
+            <div class="table_">
+                <div style="height: 40px;">
+                    <div class="float td_3">
+                        胜负彩一等奖范围</div>
+                    <div class="float td_4">
+                        12场加奖</div>
+                    <div class="float td_3">
+                        任9奖金范围</div>
+                    <div class="float td_4">
+                        任8加奖</div>
+                </div>
+                <div style="clear: both; height: 40px; margin-top: 5px;">
+                    <div class="float td_1">
+                        30000-100000</div>
+                    <div class="float td_2">
+                        ￥18元</div>
+                    <div class="float td_1">
+                        3000-10000</div>
+                    <div class="float td_2">
+                        ￥18元</div>
+                </div>
+                <div style="clear: both; height: 40px; margin-top: 5px;">
+                    <div class="float td_1">
+                        100001-500000</div>
+                    <div class="float td_2">
+                        ￥58元</div>
+                    <div class="float td_1">
+                        10001-50000</div>
+                    <div class="float td_2">
+                        ￥58元</div>
+                </div>
+                <div style="clear: both; height: 40px; margin-top: 5px;">
+                    <div class="float td_1">
+                        500001-4999999</div>
+                    <div class="float td_2">
+                        ￥188元</div>
+                    <div class="float td_1">
+                        50001-999999</div>
+                    <div class="float td_2">
+                        ￥188元</div>
+                </div>
+                <div style="clear: both; height: 40px; margin-top: 5px;">
+                    <div class="float td_1">
+                        1000000元或空缺</div>
+                    <div class="float td_2">
+                        ￥888元</div>
+                    <div class="float td_1">
+                        1000000元或空缺</div>
+                    <div class="float td_2">
+                        ￥888元</div>
+                </div>
+            </div>
+        </div>
+        <div>
+            @{Html.RenderAction("footer", "activity");}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,48 @@
+﻿@{
+    var Title = "快捷支付";
+    ViewBag.Title = Title + " - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+   @ViewHelpers.css("help.css")
+} 
+  <div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">玩彩网</a> > </li>
+        <li><a href="/help/index">&nbsp;帮助中心</a> > </li>
+        <li>&nbsp;快捷支付</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type = "pay", name = "Quickpayment" });}
+<div class="help_r">
+         
+
+       <div class="list_box">
+            	<div class="h_pub_t">
+                	<b class="t_l"></b>
+                    <div class="t_m"><h2>快捷支付</h2></div>
+                    <b class="t_r"></b>
+                </div>
+                <div class="h_pub_m">
+                	<ul>
+                        	<li><a href="/help/QuickpaymentPay" id="link151">快捷支付目前支持哪些银行的银行卡</a></li>			
+				                        </ul>
+                </div>
+                <div class="page"><a class="h_l" href="index.shtml" id="pfirst" hidefocus="true">首页</a><a title="上一页" href="#" class="preno" hidefocus="true" id="link153"></a><a href="index" hidefocus="true" class="curpage" id="link154">1</a><a hidefocus="true" href="#" class="nextno" title="下一页" id="link155">下一页</a><a class="h_l" href="index" id="plast" hidefocus="true">尾页</a><span id="totalpage" class="gray">共1页</span>
+            </div>
+            </div>
+
+
+        </div>
+         </div>
+<div class="clearfix"></div>
+
+ @ViewHelpers.js("help.js")
+
+
+
+
+
+

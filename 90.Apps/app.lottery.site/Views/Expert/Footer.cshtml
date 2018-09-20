@@ -1,0 +1,62 @@
+﻿@{
+    var dpDataSource = ViewBag.DPDataSource as External.Core.SiteMessage.ArticleInfo_QueryCollection;
+    var ssDataSource = ViewBag.SSDataSource as External.Core.SiteMessage.ArticleInfo_QueryCollection;
+    var super = ViewBag.SuperList as GameBiz.Core.TogetherHotUserInfoCollection;
+    var i = 0;
+}
+<div class="footer">
+    <ul>
+        <li>
+            <div class="box1">
+                <div class="font1">
+                    热点赛事</div>
+                <div class="b_ul">
+                    <ul>
+                        @foreach (var item in dpDataSource.ArticleList)
+                        {
+                            <li class="li_list1"><a href="/ZiXun/textpart?Id=@item.Id" target="_blank"><span
+                                style="float: left;">@(item.Title.Length > 20 ? item.Title.Substring(0, 20) + "…" : item.Title)</span></a><span
+                                    style="float: right;">@item.CreateTime.ToString("MM-dd")</span></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="box2">
+                <div class="font2">
+                    最新资讯</div>
+                <div class="b_ul">
+                    <ul>
+                        @foreach (var item in ssDataSource.ArticleList)
+                        {
+                            <li class="li_list2"><a href="/ZiXun/textpart?Id=@item.Id" target="_blank"><span
+                                style="float: left;">@(item.Title.Length > 20 ? item.Title.Substring(0, 20) + "…" : item.Title)</span></a><span
+                                    style="float: right;">@item.CreateTime.ToString("MM-dd")</span></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="box3">
+                <div class="font3">
+                    竞彩合买名家</div>
+                <div class="b_ul shadow">
+                    <ul>
+                        @foreach (var item in super)
+                        {
+                            if (i < 6)
+                            {
+                            <li class="li_list3"><span style="float: left;">@item.DisplayName</span><a href="/blog/custombill/@(item.UserId)" target="_blank" style="float: right;">定制TA</a></li>
+                            }
+                            i++;
+                        }
+                    </ul>
+                </div>
+            </div>
+        </li>
+    </ul>
+    <div style="clear: both;">
+    </div>
+</div>

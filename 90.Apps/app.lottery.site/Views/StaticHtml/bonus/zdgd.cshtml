@@ -1,0 +1,41 @@
+﻿@{
+    Layout = null;
+    var zdgdList = ViewBag.FDList as GameBiz.Core.RankReportCollection_RankInfo_BeFollower;
+    var game = ViewBag.Game;
+}
+<div class="tabcon mt10">
+    <ul class="ultitle">
+        <li class="li-short">排名</li>
+        <li class="li-long">发起人</li>
+        <li class="li-long">被跟单人数</li>
+        <li class="li-long">当前期方案</li>
+        <li class="li-long nobg">自动跟单</li>
+    </ul>
+    @if (zdgdList != null && zdgdList.TotalCount > 0)
+    {
+        foreach (var item in zdgdList.RankInfoList)
+        {
+        
+        <ul class="tabcontent @(zdgdList.RankInfoList.IndexOf(item) % 2 == 0 ? "" : "li_gay")">
+            @if (zdgdList.RankInfoList.IndexOf(item) < 3)
+            {
+                <li class="li-short ico_no_top ico_no_@(zdgdList.RankInfoList.IndexOf(item) + 1)">
+                </li>
+            }
+            else
+            {
+                <li class="li-short ico_no">@(zdgdList.RankInfoList.IndexOf(item) + 1)</li>
+            }
+            <li class="li-long"><a href="/blog/standings/@(item.UserId)">@SiteString.HideUserName(item.UserDisplayName, item.UserHideDisplayNameCount)</a></li>
+            <li class="li-long">@item.BeFollowCount</li>
+            <li class="li-long"><a href="/blog/standings/@(item.UserId)">查看</a></li>
+            <li class="li-long"><a href="/blog/custombill/@(item.UserId)" class="btn_dz" >定制</a></li>
+        </ul>
+        }
+    }
+    else
+    { 
+        <div class="no_result">
+            暂无记录</div>
+    }
+</div>

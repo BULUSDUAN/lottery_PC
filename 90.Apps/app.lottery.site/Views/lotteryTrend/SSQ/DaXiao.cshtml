@@ -1,0 +1,708 @@
+﻿@{
+    Layout = "~/Views/lotteryTrend/_Layout.cshtml";
+    var pageSize = Request["pageSize"];
+    if (pageSize != "" && pageSize != null)
+    {
+        ViewBag.Title = "双色球大小走势图近" + pageSize + "期" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "双色球大小走势图近" + pageSize + "期";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "双色球大小走势图近" + pageSize + "期,查看更多双色球大小走势图请登录" + SiteString.getHZSiteName(Request) + "彩票网.";
+    }
+    else
+    {
+        ViewBag.Title = "双色球大小走势图-双色球走势图表-" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "双色球大小走势图,双色球走势图表";
+        ViewBag.Description = "查看双色球大小走势图就上" + SiteString.getHZSiteName(Request) + "彩票网," + SiteString.getHZSiteName(Request) + "彩票网竭诚为您提供最新的双色球走势图表,包括各位号码的大小号分布情况,更多的双色球大小走势图请登录" + SiteString.getHZSiteName(Request) + "彩票网进行查看.";
+    }
+    var DaXiao = ViewBag.DataList as LotteryData.Core.SSQ_DX_InfoCollection;
+    var a = 0;  
+}
+@{Html.RenderAction("ThendLink", "lotteryTrend");}
+<div id="container">
+    <div class="cont_box" style="width: 1003px;">
+        <table width="100%" cellspacing="1" cellpadding="0" border="0" class="table_box"
+            style="width: 1003px;" id="chartsTable">
+            <tbody>
+                <tr>
+                    <td align="center" class="tab_top" colspan="28">
+                        标注形式选择：
+                        <input type="checkbox" checked="checked" id="c_yl">
+                        <label for="c_yl">
+                            遗漏</label>
+                        <input type="checkbox" checked="checked" id="has_line">
+                        <label for="has_line">
+                            折线</label>
+                        <input type="checkbox" checked="checked" id="help_line">
+                        <label for="help_line">
+                            分隔线</label>
+                        <input type="checkbox" id="yl_zhu">
+                        <label for="yl_zhu">
+                            遗漏分层</label>
+                    </td>
+                </tr>
+                <tr class="tabbg weight" id="menuitem">
+                    <td width="75" align="center" style="cursor: pointer;" rowspan="2">
+                        期号<img src="@ViewHelpers.img("../images/trend/up.png")" id="sortImg" alt="" />
+                    </td>
+                    <td class="cfont1 line_r tred" rowspan="2" colspan="6">
+                        红球
+                    </td>
+                    <td colspan="2" class="line_r">
+                        红一
+                    </td>
+                    <td colspan="2" class="line_r">
+                        红二
+                    </td>
+                    <td colspan="2" class="line_r">
+                        红三
+                    </td>
+                    <td colspan="2" class="line_r">
+                        红四
+                    </td>
+                    <td colspan="2" class="line_r">
+                        红五
+                    </td>
+                    <td colspan="2" class="line_r">
+                        红六
+                    </td>
+                    <td rowspan="2">
+                        大小排位
+                    </td>
+                    <td colspan="8">
+                        大小比例分布
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td class="">
+                        大
+                    </td>
+                    <td class="line_r">
+                        小
+                    </td>
+                    <td class="">
+                        大
+                    </td>
+                    <td class="line_r">
+                        小
+                    </td>
+                    <td class="">
+                        大
+                    </td>
+                    <td class="line_r">
+                        小
+                    </td>
+                    <td class="">
+                        大
+                    </td>
+                    <td class="line_r">
+                        小
+                    </td>
+                    <td class="">
+                        大
+                    </td>
+                    <td class="line_r">
+                        小
+                    </td>
+                    <td class="">
+                        大
+                    </td>
+                    <td class="line_r">
+                        小
+                    </td>
+                    <td>
+                        大小比
+                    </td>
+                    <td>
+                        0：6
+                    </td>
+                    <td>
+                        1：5
+                    </td>
+                    <td>
+                        2：4
+                    </td>
+                    <td>
+                        3：3
+                    </td>
+                    <td>
+                        4：2
+                    </td>
+                    <td>
+                        5：1
+                    </td>
+                    <td>
+                        6：0
+                    </td>
+                </tr>
+            </tbody>
+            <tbody id="tdata" style="font-size: 12px; font-family: '宋体',Tahoma,Consolas,Arial,Simsun;">
+                @foreach (var item in DaXiao)
+                {
+                    a++;
+                    if (a % 5 == 0)
+                    {
+                    <tr class="tdbck">
+                        <td colspan="28">
+                        </td>
+                    </tr>
+                    }
+                    <tr>
+                        <td align="center">
+                            @item.IssuseNumber
+                        </td>
+                        <td class="hot12">
+                            @item.RedBall1
+                        </td>
+                        <td class="hot12">
+                            @item.RedBall2
+                        </td>
+                        <td class="hot12">
+                            @item.RedBall3
+                        </td>
+                        <td class="hot12">
+                            @item.RedBall4
+                        </td>
+                        <td class="hot12">
+                            @item.RedBall5
+                        </td>
+                        <td class="hot12 line_r">
+                            @item.RedBall6
+                        </td>
+                        <td class="@(item.O_RedBall1_D == 0 ? "cbg3 tbg1" : "y101")">
+                            @(item.O_RedBall1_D == 0 ? "大" : item.O_RedBall1_D.ToString())
+                        </td>
+                        <td class="@(item.O_RedBall1_X == 0 ? "cbg3 tbg1" : "y101")">
+                            @(item.O_RedBall1_X == 0 ? "小" : item.O_RedBall1_X.ToString())
+                        </td>
+                        <td class="@(item.O_RedBall2_D == 0 ? "cbg3 orange1" : "y101")">
+                            @(item.O_RedBall2_D == 0 ? "大" : item.O_RedBall2_D.ToString())
+                        </td>
+                        <td class="@(item.O_RedBall2_X == 0 ? "cbg3 orange1" : "y101")">
+                            @(item.O_RedBall2_X == 0 ? "小" : item.O_RedBall2_X.ToString())
+                        </td>
+                        <td class="@(item.O_RedBall3_D == 0 ? "cbg3 green1" : "y101")">
+                            @(item.O_RedBall3_D == 0 ? "大" : item.O_RedBall3_D.ToString())
+                        </td>
+                        <td class="@(item.O_RedBall3_X == 0 ? "cbg3 green1" : "y101")">
+                            @(item.O_RedBall3_X == 0 ? "小" : item.O_RedBall3_X.ToString())
+                        </td>
+                        <td class="@(item.O_RedBall4_D == 0 ? "cbg3 purple1" : "y101")">
+                            @(item.O_RedBall4_D == 0 ? "大" : item.O_RedBall4_D.ToString())
+                        </td>
+                        <td class="@(item.O_RedBall4_X == 0 ? "cbg3 purple1" : "y101")">
+                            @(item.O_RedBall4_X == 0 ? "小" : item.O_RedBall4_X.ToString())
+                        </td>
+                        <td class="@(item.O_RedBall5_D == 0 ? "cbg3 purple2" : "y101")">
+                            @(item.O_RedBall5_D == 0 ? "大" : item.O_RedBall5_D.ToString())
+                        </td>
+                        <td class="@(item.O_RedBall5_X == 0 ? "cbg3 purple2" : "y101")">
+                            @(item.O_RedBall5_X == 0 ? "小" : item.O_RedBall5_X.ToString())
+                        </td>
+                        <td class="@(item.O_RedBall6_D == 0 ? "cbg3 gray1" : "y101")">
+                            @(item.O_RedBall6_D == 0 ? "大" : item.O_RedBall6_D.ToString())
+                        </td>
+                        <td class="@(item.O_RedBall6_X == 0 ? "cbg3 gray1" : "y101")">
+                            @(item.O_RedBall6_X == 0 ? "小" : item.O_RedBall6_X.ToString())
+                        </td>
+                        <td class="cbg3 line_r">
+                            @{
+                    var Dx_Pw = item.DX_Qualifying.Split(',');
+                    var ShuC = string.Empty;
+                    for (int i = 0; i < Dx_Pw.Length; i++)
+                    {
+                        if (Dx_Pw[i] == "小")
+                        {
+                            ShuC += "<font class='tred'>小</font>";
+                        }
+                        if (Dx_Pw[i] == "大")
+                        {
+                            ShuC += "<font class='tblue'>大</font>";
+                        }
+                    }
+                            }
+                            @Html.Raw(ShuC)
+                        </td>
+                        <td class="cbg3 line_r">
+                            @item.DX_Proportion
+                        </td>
+                        <td class="@(item.O_DX_Proportion06 == 0 ? "cbg3 big" : "y101")">
+                            @(item.O_DX_Proportion06 == 0 ? item.DX_Proportion : item.O_DX_Proportion06.ToString())
+                        </td>
+                        <td class="@(item.O_DX_Proportion15 == 0 ? "cbg3 big" : "y101")">
+                            @(item.O_DX_Proportion15 == 0 ? item.DX_Proportion : item.O_DX_Proportion15.ToString())
+                        </td>
+                        <td class="@(item.O_DX_Proportion24 == 0 ? "cbg3 big" : "y101")">
+                            @(item.O_DX_Proportion24 == 0 ? item.DX_Proportion : item.O_DX_Proportion24.ToString())
+                        </td>
+                        <td class="@(item.O_DX_Proportion33 == 0 ? "cbg3 big" : "y101")">
+                            @(item.O_DX_Proportion33 == 0 ? item.DX_Proportion : item.O_DX_Proportion33.ToString())
+                        </td>
+                        <td class="@(item.O_DX_Proportion42 == 0 ? "cbg3 big" : "y101")">
+                            @(item.O_DX_Proportion42 == 0 ? item.DX_Proportion : item.O_DX_Proportion42.ToString())
+                        </td>
+                        <td class="@(item.O_DX_Proportion51 == 0 ? "cbg3 big" : "y101")">
+                            @(item.O_DX_Proportion51 == 0 ? item.DX_Proportion : item.O_DX_Proportion51.ToString())
+                        </td>
+                        <td class="@(item.O_DX_Proportion60 == 0 ? "cbg3 big" : "y101")">
+                            @(item.O_DX_Proportion60 == 0 ? item.DX_Proportion : item.O_DX_Proportion60.ToString())
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tbody>
+                <tr>
+                    <td align="center" class="bdtop line_r">
+                        出现次数
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop">
+                        @(DaXiao.Count(p => p.O_RedBall1_D == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(DaXiao.Count(p => p.O_RedBall1_X == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DaXiao.Count(p => p.O_RedBall2_D == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(DaXiao.Count(p => p.O_RedBall2_X == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DaXiao.Count(p => p.O_RedBall3_D == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(DaXiao.Count(p => p.O_RedBall3_X == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DaXiao.Count(p => p.O_RedBall4_D == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(DaXiao.Count(p => p.O_RedBall4_X == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DaXiao.Count(p => p.O_RedBall5_D == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(DaXiao.Count(p => p.O_RedBall5_X == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DaXiao.Count(p => p.O_RedBall6_D == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(DaXiao.Count(p => p.O_RedBall6_X == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop">
+                        @(DaXiao.Count(p => p.O_DX_Proportion06 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DaXiao.Count(p => p.O_DX_Proportion15 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DaXiao.Count(p => p.O_DX_Proportion24 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DaXiao.Count(p => p.O_DX_Proportion33 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DaXiao.Count(p => p.O_DX_Proportion42 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DaXiao.Count(p => p.O_DX_Proportion51 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(DaXiao.Count(p => p.O_DX_Proportion60 == 0))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        平均遗漏
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td class="">
+                        @(DaXiao.Sum(p => p.O_RedBall1_D) / DaXiao.Count)
+                    </td>
+                    <td class="line_r">
+                        @(DaXiao.Sum(p => p.O_RedBall1_X) / DaXiao.Count)
+                    </td>
+                    <td class="">
+                        @(DaXiao.Sum(p => p.O_RedBall2_D) / DaXiao.Count)
+                    </td>
+                    <td class="line_r">
+                        @(DaXiao.Sum(p => p.O_RedBall2_X) / DaXiao.Count)
+                    </td>
+                    <td class="">
+                        @(DaXiao.Sum(p => p.O_RedBall3_D) / DaXiao.Count)
+                    </td>
+                    <td class="line_r">
+                        @(DaXiao.Sum(p => p.O_RedBall3_X) / DaXiao.Count)
+                    </td>
+                    <td class="">
+                        @(DaXiao.Sum(p => p.O_RedBall4_D) / DaXiao.Count)
+                    </td>
+                    <td class="line_r">
+                        @(DaXiao.Sum(p => p.O_RedBall4_X) / DaXiao.Count)
+                    </td>
+                    <td class="">
+                        @(DaXiao.Sum(p => p.O_RedBall5_D) / DaXiao.Count)
+                    </td>
+                    <td class="line_r">
+                        @(DaXiao.Sum(p => p.O_RedBall5_X) / DaXiao.Count)
+                    </td>
+                    <td class="">
+                        @(DaXiao.Sum(p => p.O_RedBall6_D) / DaXiao.Count)
+                    </td>
+                    <td class="line_r">
+                        @(DaXiao.Sum(p => p.O_RedBall6_X) / DaXiao.Count)
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td class="">
+                        @(DaXiao.Sum(p => p.O_DX_Proportion06) / DaXiao.Count)
+                    </td>
+                    <td class="">
+                        @(DaXiao.Sum(p => p.O_DX_Proportion15) / DaXiao.Count)
+                    </td>
+                    <td class="">
+                        @(DaXiao.Sum(p => p.O_DX_Proportion24) / DaXiao.Count)
+                    </td>
+                    <td class="">
+                        @(DaXiao.Sum(p => p.O_DX_Proportion33) / DaXiao.Count)
+                    </td>
+                    <td class="">
+                        @(DaXiao.Sum(p => p.O_DX_Proportion42) / DaXiao.Count)
+                    </td>
+                    <td class="">
+                        @(DaXiao.Sum(p => p.O_DX_Proportion51) / DaXiao.Count)
+                    </td>
+                    <td class="line_r">
+                        @(DaXiao.Sum(p => p.O_DX_Proportion60) / DaXiao.Count)
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        最大遗漏
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                        @(DaXiao.Max(p => p.O_RedBall1_D))
+                    </td>
+                    <td class="line_r">
+                        @(DaXiao.Max(p => p.O_RedBall1_X))
+                    </td>
+                    <td>
+                        @(DaXiao.Max(p => p.O_RedBall2_D))
+                    </td>
+                    <td class="line_r">
+                        @(DaXiao.Max(p => p.O_RedBall2_X))
+                    </td>
+                    <td>
+                        @(DaXiao.Max(p => p.O_RedBall3_D))
+                    </td>
+                    <td class="line_r">
+                        @(DaXiao.Max(p => p.O_RedBall3_X))
+                    </td>
+                    <td>
+                        @(DaXiao.Max(p => p.O_RedBall4_D))
+                    </td>
+                    <td class="line_r">
+                        @(DaXiao.Max(p => p.O_RedBall4_X))
+                    </td>
+                    <td>
+                        @(DaXiao.Max(p => p.O_RedBall5_D))
+                    </td>
+                    <td class="line_r">
+                        @(DaXiao.Max(p => p.O_RedBall5_X))
+                    </td>
+                    <td>
+                        @(DaXiao.Max(p => p.O_RedBall6_D))
+                    </td>
+                    <td class="line_r">
+                        @(DaXiao.Max(p => p.O_RedBall6_X))
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                        @(DaXiao.Max(p => p.O_DX_Proportion06))
+                    </td>
+                    <td>
+                        @(DaXiao.Max(p => p.O_DX_Proportion15))
+                    </td>
+                    <td>
+                        @(DaXiao.Max(p => p.O_DX_Proportion24))
+                    </td>
+                    <td>
+                        @(DaXiao.Max(p => p.O_DX_Proportion33))
+                    </td>
+                    <td>
+                        @(DaXiao.Max(p => p.O_DX_Proportion42))
+                    </td>
+                    <td>
+                        @(DaXiao.Max(p => p.O_DX_Proportion51))
+                    </td>
+                    <td class="line_r">
+                        @(DaXiao.Max(p => p.O_DX_Proportion60))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        当前遗漏
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td valign="bottom">
+                        @(DaXiao[DaXiao.Count - 1].O_RedBall1_D)<br>
+                        <img width="8px" height="@(DaXiao[DaXiao.Count - 1].O_RedBall1_D)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(DaXiao[DaXiao.Count - 1].O_RedBall1_X)<br>
+                        <img width="8px" height="@(DaXiao[DaXiao.Count - 1].O_RedBall1_X)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(DaXiao[DaXiao.Count - 1].O_RedBall2_D)<br>
+                        <img width="8px" height="@(DaXiao[DaXiao.Count - 1].O_RedBall2_D)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(DaXiao[DaXiao.Count - 1].O_RedBall2_X)<br>
+                        <img width="8px" height="@(DaXiao[DaXiao.Count - 1].O_RedBall2_X)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(DaXiao[DaXiao.Count - 1].O_RedBall3_D)<br>
+                        <img width="8px" height="@(DaXiao[DaXiao.Count - 1].O_RedBall3_D)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(DaXiao[DaXiao.Count - 1].O_RedBall3_X)<br>
+                        <img width="8px" height="@(DaXiao[DaXiao.Count - 1].O_RedBall3_X)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(DaXiao[DaXiao.Count - 1].O_RedBall4_D)<br>
+                        <img width="8px" height="@(DaXiao[DaXiao.Count - 1].O_RedBall4_D)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(DaXiao[DaXiao.Count - 1].O_RedBall4_X)<br>
+                        <img width="8px" height="@(DaXiao[DaXiao.Count - 1].O_RedBall4_X)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(DaXiao[DaXiao.Count - 1].O_RedBall5_D)<br>
+                        <img width="8px" height="@(DaXiao[DaXiao.Count - 1].O_RedBall5_D)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(DaXiao[DaXiao.Count - 1].O_RedBall5_X)<br>
+                        <img width="8px" height="@(DaXiao[DaXiao.Count - 1].O_RedBall5_X)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(DaXiao[DaXiao.Count - 1].O_RedBall6_D)<br>
+                        <img width="8px" height="@(DaXiao[DaXiao.Count - 1].O_RedBall6_D)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(DaXiao[DaXiao.Count - 1].O_RedBall6_X)<br>
+                        <img width="8px" height="@(DaXiao[DaXiao.Count - 1].O_RedBall6_X)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                    </td>
+                    <td valign="bottom">
+                        @(DaXiao[DaXiao.Count - 1].O_DX_Proportion06)<br>
+                        <img width="8px" height="@(DaXiao[DaXiao.Count - 1].O_DX_Proportion06)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(DaXiao[DaXiao.Count - 1].O_DX_Proportion15)<br>
+                        <img width="8px" height="@(DaXiao[DaXiao.Count - 1].O_DX_Proportion15)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(DaXiao[DaXiao.Count - 1].O_DX_Proportion24)<br>
+                        <img width="8px" height="@(DaXiao[DaXiao.Count - 1].O_DX_Proportion24)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(DaXiao[DaXiao.Count - 1].O_DX_Proportion33)<br>
+                        <img width="8px" height="@(DaXiao[DaXiao.Count - 1].O_DX_Proportion33)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(DaXiao[DaXiao.Count - 1].O_DX_Proportion42)<br>
+                        <img width="8px" height="@(DaXiao[DaXiao.Count - 1].O_DX_Proportion42)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(DaXiao[DaXiao.Count - 1].O_DX_Proportion51)<br>
+                        <img width="8px" height="@(DaXiao[DaXiao.Count - 1].O_DX_Proportion51)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(DaXiao[DaXiao.Count - 1].O_DX_Proportion60)<br>
+                        <img width="8px" height="@(DaXiao[DaXiao.Count - 1].O_DX_Proportion60)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr class="tabbg weight">
+                    <td width="75" align="center" rowspan="2">
+                    </td>
+                    <td rowspan="2" colspan="6" class="cfont1 line_r_1 tred line_r">
+                        红球
+                    </td>
+                    <td class="">
+                        大
+                    </td>
+                    <td class="line_r">
+                        小
+                    </td>
+                    <td class="">
+                        大
+                    </td>
+                    <td class="line_r">
+                        小
+                    </td>
+                    <td class="">
+                        大
+                    </td>
+                    <td class="line_r">
+                        小
+                    </td>
+                    <td class="">
+                        大
+                    </td>
+                    <td class="line_r">
+                        小
+                    </td>
+                    <td class="">
+                        大
+                    </td>
+                    <td class="line_r">
+                        小
+                    </td>
+                    <td class="">
+                        大
+                    </td>
+                    <td class="line_r">
+                        小
+                    </td>
+                    <td rowspan="2">
+                        大小排位
+                    </td>
+                    <td>
+                        大小比
+                    </td>
+                    <td>
+                        0：6
+                    </td>
+                    <td>
+                        1：5
+                    </td>
+                    <td>
+                        2：4
+                    </td>
+                    <td>
+                        3：3
+                    </td>
+                    <td>
+                        4：2
+                    </td>
+                    <td>
+                        5：1
+                    </td>
+                    <td>
+                        6：0
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td colspan="2" class="line_r">
+                        红一
+                    </td>
+                    <td colspan="2" class="line_r">
+                        红二
+                    </td>
+                    <td colspan="2" class="line_r">
+                        红三
+                    </td>
+                    <td colspan="2" class="line_r">
+                        红四
+                    </td>
+                    <td colspan="2" class="line_r">
+                        红五
+                    </td>
+                    <td colspan="2" class="line_r">
+                        红六
+                    </td>
+                    <td colspan="8">
+                        大小比例分布
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $(function () {
+
+        var allLines = new Array();
+        allLines.push({ line: $(".tbg1"), color: "#05650E" });
+        allLines.push({ line: $(".orange1"), color: "#FF590B" });
+        allLines.push({ line: $(".green1"), color: "#004F00" });
+        allLines.push({ line: $(".purple1"), color: "#0000FE" });
+        allLines.push({ line: $(".purple2"), color: "#36006F" });
+        allLines.push({ line: $(".gray1"), color: "#FF590B" });
+        allLines.push({ line: $(".big"), color: "red" });
+
+        var line = new XTLine();
+        for (i = 0; i < allLines.length; i++) {
+            var l = allLines[i];
+
+            line.color = l.color;
+            line.arrayBalls = l.line;
+            line.showrect();
+        }
+
+
+        $("#has_line").click(function () {
+            line.display(this.checked);
+        })
+    })
+</script>

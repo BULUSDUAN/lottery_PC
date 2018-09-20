@@ -1,0 +1,150 @@
+﻿@using GameBiz.Core;
+@{
+    ViewBag.Title = "充值记录 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "充值记录, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    FillMoneyQueryInfoCollection FillMoneyCollection = ViewBag.FillMoneyCollection;
+    var count = 0;
+    var Money = 0;
+    var Nocount = 0;
+    var NoMoney = 0;
+}
+@section css{
+    @ViewHelpers.css("mycenter.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>充值记录</li>
+    </ul>
+</div>
+<div class="center mt10">
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mune_safe">
+          <div class="account_menu clearfix">
+          <a href="/member/accountdetail"  >账户明细</a>
+          <a href="/member/redBagList">红包明细</a>
+          <a href="/member/paywizzard" class="select">账户充值</a>
+          <a href="/member/drawingsguide">账户提款</a>
+      </div>
+        <div class="account_con">
+             <div class="betorder_top">
+            <ul>
+                <li><a href="paywizzard"><i></i>充值向导</a> </li>
+                <li><a href="pay"><i></i>账户充值</a> </li>
+                <li class="betorder_topSelected"><a href="payrecord"><i></i>充值记录</a></li>
+            </ul>
+        </div>
+        <div class=" search_tab">
+            日期：@ControlHelper.Calendar("begin", ViewBag.Begin)至 @ControlHelper.Calendar("end", ViewBag.End)
+            <input type="button" onclick="getPayRecord(0, 10)" value="查&nbsp;&nbsp;询" class="search_btn"/>
+        </div>
+            <table class="account_box">
+                <thead>
+                    <tr >
+                        <td>
+                            支付接口
+                        </td>
+                        <td>
+                            流水号
+                        </td>
+                        <td>
+                            充值时间
+                        </td>
+                        <td>
+                            到账时间
+                        </td>
+                        <td>
+                            状态
+                        </td>
+                        <td class="last_td">
+                            充值金额
+                        </td>
+                    </tr>
+                </thead>
+                @{
+                    if (FillMoneyCollection != null && FillMoneyCollection.FillMoneyList.Count>0)
+                    {
+                        foreach (var item in FillMoneyCollection.FillMoneyList)
+                        {
+                            <tr>
+                                <td align="center">
+                                    @SiteConvert.FillAgentName(item.FillMoneyAgent)
+                                </td>
+                                <td align="center" class="orderId  fszie">
+                                    @item.OuterFlowId
+                                </td>
+                                <td align="center">
+                                    @item.RequestTime.ToString("yyyy-MM-dd HH:mm")
+                                </td>
+                                <td align="center">
+                                    @(item.ResponseTime == null ? string.Empty : item.ResponseTime.Value.ToString("yyyy-MM-dd HH:mm"))
+                                </td>
+                                <td align="center" class="zc">
+                                    @SiteConvert.FillMoneyStatusName(item.Status)
+                                </td>
+                                <td align="center" valign="middle" class="ye blod fszie">
+                                    @item.RequestMoney.ToString("N") 元
+                                </td>
+                            </tr>
+                            if (SiteConvert.FillMoneyStatusName(item.Status) == "已成功")
+                            {
+                                count++;
+                                Money = Money + Convert.ToInt32(item.RequestMoney);
+                            }
+                            else if (SiteConvert.FillMoneyStatusName(item.Status) == "已失败")
+                            {
+                                Nocount++;
+                                NoMoney = NoMoney + Convert.ToInt32(item.RequestMoney);
+                            }
+                        }
+                    }
+                    else
+                    { <tr>
+                        <td colspan="6" >
+                            暂时没有您要的数据哦
+                        </td>
+                    </tr>
+                        
+                    }  
+                }
+     
+            </table>
+            
+                 <div class="combined clearfix">
+                <div class="fl">
+                    <span><b class="b1"></b>充值成功：<strong class="zc blod fszie">@count&nbsp;笔</strong></span>
+                    <span><b class="b2"></b>充值金额：<strong class="srje blod fszie">@Money.ToString("N")&nbsp;元</strong></span>
+                    <span><b class="b3"></b>充值失败：<strong class="zcjy blod fszie">@Nocount&nbsp;笔</strong></span>
+                    <span><b class="b4"></b>充值金额：<strong class="ye blod fszie">@NoMoney.ToString("N")元</strong></span>
+                </div>
+                <div class="fr">
+                    <em class="xh">*</em>注意：充值记录最多可查询一个月数据
+                </div>
+                
+            </div>
+            <div class="account_page  clearfix">
+                @ViewHelpers.Pager4("getPayRecord", ViewBag.pageNo, ViewBag.PageSize, FillMoneyCollection == null ? 0 : FillMoneyCollection.TotalCount)
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(".account_box tr:even:gt(0)").css("backgroundColor", "#f9f9f9");
+    });
+    function getPayRecord(pageNo, pageSize) {
+        var begin = $("#begin").val();
+        var end = $("#end").val();
+        var search = "pageNo=" + pageNo + "&pageSize=" + pageSize + "&begin=" + begin + "&end=" + end;
+        var status = $("#status option:selected").val();
+        if (status) {
+            search = search + "&status=" + status;
+        }
+        location.search = search;
+    }
+</script>
+<div class="clearfix">
+</div>

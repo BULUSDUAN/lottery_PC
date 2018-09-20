@@ -1,0 +1,16 @@
+﻿@{Html.RenderAction("headerTop", "Home");}
+<div class="header_nav">
+    <div class="w1000">
+        <a class="iqucai_logo" href="/" title="@SiteString.getHZSiteName(Request)"></a><a class="aritsts_icon mj_logo"></a>
+        <div class="mainnav clearfix">
+            <a class="select" href="/artists/model" data-type="model">模型大厅</a>
+            <a href="/artists/aritscenter" data-type="aritscenter">名家中心</a>
+            <a href="/artists/ranklist" data-type="ranklist">排行榜</a>
+            <a href="javascript:void(0)"  checklg="/artists/my">我的</a>
+        </div>
+        <div class="header-txt">@SiteString.getHZSiteName(Request)名家平台</div>
+    </div>
+</div>
+<script type="text/javascript">
+    setMenu(".mainnav", "select");
+</script>

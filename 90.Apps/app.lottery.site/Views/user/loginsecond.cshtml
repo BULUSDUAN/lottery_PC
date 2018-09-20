@@ -1,0 +1,69 @@
+﻿@{
+    ViewBag.Title = "QQ登录 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "QQ登录, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    ViewBag.Here = "QQ登录";
+    var _dic2 = ViewBag.QQInfoDic as Dictionary<string, string>;
+}
+@UserHelper.css("otherlogin.css")
+@UserHelper.js("otherlogin.js")
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>绑定新注册的用户名</li>
+    </ul>
+</div>
+<div class="other-lg-tip">
+    <span class="other-text">Q Q 登录</span>
+</div>
+<div class="other-lg-box">
+    <div class="other-u0">
+        <i class="u0-img"></i>
+        <div class="u0-text">
+            @(SiteString.getHZSiteName(Request))账户基本信息设置</div>
+    </div>
+    <div class="box-fr">
+        @{Html.RenderPartial("loginmenu");}
+    </div>
+    <div class="box-fl">
+        <form method="post" onsubmit="return checkForm();" name="from1" id="myFormId">
+        <p class="c95">
+            绑定新注册的用户名&nbsp;&nbsp;(<em class="cred">*</em>项为必填)</p>
+        <br />
+        <br />
+        <p class="othername-left">
+            <span class="span-text"><em class="cred">*&nbsp;</em>购彩用户名：</span><input type="text" name="LoginName" maxlength="16" id="LoginName" class=" normal input-text" />
+             <span class="li-tip" id="LoginName_tip"><s></s>用户名为4-16个字符<em class="cred">注册后不能修改</em></span>
+        </p>
+       <div class="error red" id="LoginName_err"></div>
+
+        <br />
+        <p class="othername-left">
+            <span class="span-text"><em class="cred">*&nbsp;</em>登录密码：</span><input type="password" id="LoginPwd" class="normal input-text" name="LoginPwd" />
+  
+          <span class="li-tip" id="LoginPwd_tip"><s></s>请输入6-18位密码</span>
+                </p>
+           <div class="error red" id="LoginPwd_err"></div>
+       
+        <br />
+        <p>
+            <span class="span-text"><em class="cred">*&nbsp;</em>确认密码：</span><input type="password" id="password2" name="password2" class="normal input-text" />
+            <span class="li-tip" id="password2_tip"><s></s>请再次输入密码</span>
+            </p>
+              <div class="error red" id="password2_err"></div>
+        <br />
+        <br />
+        <p style="margin-bottom: 18px;margin-left: 133px;" > <label><input type="checkbox" id="checkyears" />我已年满18周岁并同意<a href="/help/serviceAgreement1" class="red" target="_blank">《@(SiteString.getHZSiteName(Request))用户购彩协议》</a></label></p>
+        @{foreach (var item in _dic2)
+          {
+            <input name="@item.Key" value="@item.Value" type="hidden" />
+          }}
+        <p style="margin-left: 133px;">
+         <input type="submit" value="下一步" class="btn-next-old" />
+            </p>
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+initInput();
+</script>

@@ -1,0 +1,173 @@
+﻿@using GameBiz.Core;
+@{
+    ViewBag.Title = "奖金派送 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "奖金派送, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    UserFundDetailCollection bonus = ViewBag.BonusDetails;
+    if (bonus == null)
+    {
+        bonus = new UserFundDetailCollection();
+    }
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>奖金派送</li>
+    </ul>
+</div>
+<div class="center mt10">
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mune_safe">
+            <div class="account_menu clearfix">
+                <a href="/member/accountdetail" class="select">账户明细</a> <a href="/member/redBagList">
+                    红包明细</a> <a href="/member/paywizzard">账户充值</a> <a href="/member/drawingsguide">账户提款</a>
+            </div>
+            <div class="account_con">
+                <div class="betorder_top">
+                    <ul>
+                        <li><a href="/member/accountdetail"><i></i>账户明细</a></li>
+                        <li><a href="/member/RechargeRecord"><i></i>充值记录</a></li>
+                        <li><a href="/member/gcrecord"><i></i>购彩记录</a></li>
+                        <li class="betorder_topSelected"><a href="/member/WinningRecord"><i></i>中奖记录</a></li>
+                        <li><a href="/member/drawingsrecord"><i></i>提款记录</a></li>
+                    </ul>
+                </div>
+                <div class="search_tab">
+                    日期：@ControlHelper.Calendar("begin", ViewBag.Begin)至 @ControlHelper.Calendar("end", ViewBag.End)
+                    <input type="button" onclick="getFundRecord(0,10)" value="查&nbsp;&nbsp;询" class="search_btn" />
+                    <input type="hidden" id="accountType" value="@ViewBag.AccountType" />
+                </div>
+                <table class="account_box">
+                    <thead>
+                        <tr>
+                            <td width="20%">
+                                订单号
+                            </td>
+                            <td width="15%">
+                                交易时间
+                            </td>
+                            <td width="15%">
+                                收入
+                            </td>
+                            <td width="15%">
+                                余额
+                            </td>
+                            <td width="15%">
+                                交易类型
+                            </td>
+                            <td width="15%">
+                                备注
+                            </td>
+                        </tr>
+                    </thead>
+                    @{
+                        if (bonus != null && bonus.FundDetailList != null && bonus.FundDetailList.Count > 0)
+                        {
+                            foreach (var item in bonus.FundDetailList)
+                            {
+                        <tr class="" visible="false">
+                            <td class="orderId">@item.OrderId
+                            </td>
+                            <td>@item.CreateTime.ToString("yyyy-M-dd HH:mm")
+                            </td>
+                            <td class="ye bold fszie">
+                                @item.PayMoney.ToString("f")
+                            </td>
+                            <td class="ye bold fszie">
+                                @item.AfterBalance.ToString("f")
+                            </td>
+                            <td class="zc fszie">
+                                奖金
+                            </td>
+                            <td>
+                                @if (item.OrderId.IndexOf("_") > 0)
+                                {
+                                    <a href="/user/scheme/@item.KeyLine.Substring(0, item.OrderId.IndexOf("_"))" target="_blank" class="orderId">@item.KeyLine</a>
+                                      
+                                }
+                                else
+                                {
+                                    <a href="/user/scheme/@item.OrderId" class="orderId" target="_blank">查看</a>
+                                }
+                            </td>
+                        </tr>
+                            }
+                        }
+                        else
+                        {
+                        <tr>
+                            <td colspan="6">
+                                暂时没有找到你要的数据哦
+                            </td>
+                        </tr>
+                        }
+                    }
+                </table>
+                <div class="combined clearfix">
+                    <div class="fl">
+                        <span><b class="b1"></b>收入交易：<strong class="zc blod fszie">@(bonus == null ? 0 : bonus.TotalPayinCount)&nbsp;笔</strong></span>
+                        <span><b class="b2"></b>收入金额：<strong class="srje blod fszie">@(bonus == null ? "" : bonus.TotalPayinMoney.ToString("N2"))&nbsp元</strong></span>
+                    </div>
+                    <div class="fr">
+                        <em class="xh">*</em>注意：中奖记录最多可查询一个月数据
+                    </div>
+                </div>
+                <div class="account_page  clearfix">
+                    @ViewHelpers.Pager4("getFundRecord", ViewBag.pageNo, ViewBag.PageSize, bonus == null ? 0 : (bonus.TotalPayinCount + bonus.TotalPayoutCount))
+                </div>
+                <div class="ad-sm">
+                    <span>说明：</span><br />
+                    <p>
+                        1、如果您充值了，银行帐号钱扣了，通用帐号还没有加上，请及时与我们联系<em class="ye blod">@SiteString.tel</em>，我们将第一时间为您处理！</p>
+                    <p>
+                        2、资金冻结的原因：（1）用户取款 （2）保底冻结</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(".account_box tr:even:gt(0)").css("backgroundColor", "#F9F9F9");
+    })
+    //判断复选款是否选中
+    $(function () {
+        var accountType = $("#accountType").val().split("|");
+        for (var i = 0; i < accountType.length; i++) {
+            if (accountType[i] == "10") {
+                $("#jj").attr("checked", true);
+            } if (accountType[i] == "20") {
+                $("#dj").attr("checked", true);
+            } if (accountType[i] == "30") {
+                $("#yj").attr("checked", true);
+            } if (accountType[i] == "50") {
+                $("#cz").attr("checked", true);
+            } if (accountType[i] == "60") {
+                $("#mj").attr("checked", true);
+            } if (accountType[i] == "70") {
+                $("#hb").attr("checked", true);
+            }
+        }
+
+    });
+    function getFundRecord(pageNo, pageSize) {
+        var L_list = $("input[name='accountType']:checked");
+        var accountType = ""; //这个保存取出的值
+        if (L_list.size() != 0) {
+            var array = new Array();
+            for (var i = 0; i < L_list.length; i++) {
+                array.push(L_list.eq(i).attr("value"));
+            }
+            accountType = array.join("|");
+        }
+        var begin = $("#begin").val();
+        var end = $("#end").val();
+        location.search = "pageNo=" + pageNo + "&pageSize=" + pageSize + "&begin=" + begin + "&end=" + end + "&r=" + Math.random().toFixed(5);
+    }
+</script>

@@ -1,0 +1,697 @@
+﻿@{
+    Layout = "~/Views/lotteryTrend/_Layout.cshtml";
+    var pageSize = Request["pageSize"];
+    if (pageSize != "" && pageSize != null)
+    {
+        ViewBag.Title = "江西时时彩三星除3余数走势图近" + pageSize + "期" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "江西时时彩三星除3余数走势图近" + pageSize + "期";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "江西时时彩三星除3余数走势图近" + pageSize + "期,查看更多江西时时彩三星除3余数走势图请登录" + SiteString.getHZSiteName(Request) + "彩票网.";
+    }
+    else
+    {
+        ViewBag.Title = "江西时时彩三星除3余数走势图-" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "江西时时彩三星除3余数走势图";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "彩票网提供最新的江西时时彩三星除3余数走势图, 其中包括前三位开奖号码除3后余数分布走势和余0、余1、余2个数分布,让彩民朋友更直观的分析江西时时彩三星除3余数走势图.";
+    }
+    var s3c3ys = ViewBag.DataList as List<LotteryData.Core.JXSSC_3X_C3YS_Info>;
+    var a = 0;  
+}
+@{Html.RenderAction("ThendLink_2", "lotteryTrend", new { id = "s3c3ys_jxssc" });}
+<div id="container">
+    <div class="cont_box" style="width: 1003px;">
+        <table width="100%" cellspacing="1" cellpadding="0" border="0" class="table_box"
+            style="width: 1009px;" id="chartsTable">
+            <tbody>
+                <tr>
+                    <td align="center" class="tab_top" colspan="27">
+                        标注形式选择：
+                        <input type="checkbox" checked="checked" id="c_yl">
+                        <label for="c_yl">
+                            遗漏</label>
+                        <input type="checkbox" checked="checked" id="has_line">
+                        <label for="has_line">
+                            折线</label>
+                        <input type="checkbox" checked="checked" id="help_line">
+                        <label for="help_line">
+                            分隔线</label>
+                        <input type="checkbox" id="yl_zhu">
+                        <label for="yl_zhu">
+                            遗漏分层</label>
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td width="80" class="line_r" rowspan="2">
+                        日期
+                    </td>
+                    <td width="80" class="line_r" rowspan="2">
+                        期号
+                    </td>
+                    <td class="line_r" rowspan="2" colspan="3">
+                        开奖号码
+                    </td>
+                    <td colspan="3" class="line_r">
+                        第1位
+                    </td>
+                    <td colspan="3" class="line_r">
+                        第2位
+                    </td>
+                    <td colspan="3" class="line_r">
+                        第3位
+                    </td>
+                    <td class="line_r" rowspan="2">
+                        除3余数比
+                    </td>
+                    <td colspan="4" class="line_r">
+                        余0个数
+                    </td>
+                    <td colspan="4" class="line_r">
+                        余1个数
+                    </td>
+                    <td colspan="4">
+                        余2个数
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td>
+                        0
+                    </td>
+                    <td>
+                        1
+                    </td>
+                    <td class="line_r">
+                        2
+                    </td>
+                    <td>
+                        0
+                    </td>
+                    <td>
+                        1
+                    </td>
+                    <td class="line_r">
+                        2
+                    </td>
+                    <td>
+                        0
+                    </td>
+                    <td>
+                        1
+                    </td>
+                    <td class="line_r">
+                        2
+                    </td>
+                    <td>
+                        0
+                    </td>
+                    <td>
+                        1
+                    </td>
+                    <td>
+                        2
+                    </td>
+                    <td class="line_r">
+                        3
+                    </td>
+                    <td>
+                        0
+                    </td>
+                    <td>
+                        1
+                    </td>
+                    <td>
+                        2
+                    </td>
+                    <td class="line_r">
+                        3
+                    </td>
+                    <td>
+                        0
+                    </td>
+                    <td>
+                        1
+                    </td>
+                    <td>
+                        2
+                    </td>
+                    <td>
+                        3
+                    </td>
+                </tr>
+            </tbody>
+            <tbody id="tdata">
+                @foreach (var item in s3c3ys)
+                {
+                    a++;
+                    if (a % 5 == 0)
+                    {
+                    <tr class="tdbck">
+                        <td colspan="27">
+                        </td>
+                    </tr>
+                    }
+                    <tr>
+                        <td class="line_r">
+                            @item.CreateTime.ToString("yyyy-MM-dd")
+                        </td>
+                        <td class="line_r">
+                            @item.IssuseNumber
+                        </td>
+                        <td width="23" class="hot12">
+                            @item.RedBall1
+                        </td>
+                        <td width="23" class="hot12">
+                            @item.RedBall2
+                        </td>
+                        <td width="23" class="hot12 line_r">
+                            @item.RedBall3
+                        </td>
+                        <td class="@(item.O_Red1_0 == 0 ? "cbg tbg1" : "y101")">
+                            @(item.O_Red1_0 == 0 ? "0" : item.O_Red1_0.ToString())
+                        </td>
+                        <td class="@(item.O_Red1_1 == 0 ? "cbg tbg1" : "y101")">
+                            @(item.O_Red1_1 == 0 ? "1" : item.O_Red1_1.ToString())
+                        </td>
+                        <td class="@(item.O_Red1_2 == 0 ? "cbg tbg1 line_r" : "y101 line_r")">
+                            @(item.O_Red1_2 == 0 ? "2" : item.O_Red1_2.ToString())
+                        </td>
+                        <td class="@(item.O_Red2_0 == 0 ? "cbg green1" : "y101")">
+                            @(item.O_Red2_0 == 0 ? "0" : item.O_Red2_0.ToString())
+                        </td>
+                        <td class="@(item.O_Red2_1 == 0 ? "cbg green1" : "y101")">
+                            @(item.O_Red2_1 == 0 ? "1" : item.O_Red2_1.ToString())
+                        </td>
+                        <td class="@(item.O_Red2_2 == 0 ? "cbg green1 line_r" : "y101 line_r")">
+                            @(item.O_Red2_2 == 0 ? "2" : item.O_Red2_2.ToString())
+                        </td>
+                        <td class="@(item.O_Red3_0 == 0 ? "cbg purple2" : "y101")">
+                            @(item.O_Red3_0 == 0 ? "0" : item.O_Red3_0.ToString())
+                        </td>
+                        <td class="@(item.O_Red3_1 == 0 ? "cbg purple2" : "y101")">
+                            @(item.O_Red3_1 == 0 ? "1" : item.O_Red3_1.ToString())
+                        </td>
+                        <td class="@(item.O_Red3_2 == 0 ? "cbg purple2 line_r" : "y101 line_r")">
+                            @(item.O_Red3_2 == 0 ? "2" : item.O_Red3_2.ToString())
+                        </td>
+                        <td class="tred line_r">
+                            @item.YS_Proportion
+                        </td>
+                        <td class="@(item.Y0_Number0 == 0 ? "cbg big" : "y101")">
+                            @(item.Y0_Number0 == 0 ? "0" : item.Y0_Number0.ToString())
+                        </td>
+                        <td class="@(item.Y0_Number1 == 0 ? "cbg big" : "y101")">
+                            @(item.Y0_Number1 == 0 ? "1" : item.Y0_Number1.ToString())
+                        </td>
+                        <td class="@(item.Y0_Number2 == 0 ? "cbg big" : "y101")">
+                            @(item.Y0_Number2 == 0 ? "2" : item.Y0_Number2.ToString())
+                        </td>
+                        <td class="@(item.Y0_Number3 == 0 ? "cbg big line_r" : "y101 line_r")">
+                            @(item.Y0_Number3 == 0 ? "3" : item.Y0_Number3.ToString())
+                        </td>
+                        <td class="@(item.Y1_Number0 == 0 ? "cbg gray1" : "y101")">
+                            @(item.Y1_Number0 == 0 ? "0" : item.Y1_Number0.ToString())
+                        </td>
+                        <td class="@(item.Y1_Number1 == 0 ? "cbg gray1" : "y101")">
+                            @(item.Y1_Number1 == 0 ? "1" : item.Y1_Number1.ToString())
+                        </td>
+                        <td class="@(item.Y1_Number2 == 0 ? "cbg gray1" : "y101")">
+                            @(item.Y1_Number2 == 0 ? "2" : item.Y1_Number2.ToString())
+                        </td>
+                        <td class="@(item.Y1_Number3 == 0 ? "cbg gray1 line_r" : "y101 line_r")">
+                            @(item.Y1_Number3 == 0 ? "3" : item.Y1_Number3.ToString())
+                        </td>
+                        <td class="@(item.Y2_Number0 == 0 ? "cbg orange1" : "y101")">
+                            @(item.Y2_Number0 == 0 ? "0" : item.Y2_Number0.ToString())
+                        </td>
+                        <td class="@(item.Y2_Number1 == 0 ? "cbg orange1" : "y101")">
+                            @(item.Y2_Number1 == 0 ? "1" : item.Y2_Number1.ToString())
+                        </td>
+                        <td class="@(item.Y2_Number2 == 0 ? "cbg orange1" : "y101")">
+                            @(item.Y2_Number2 == 0 ? "2" : item.Y2_Number2.ToString())
+                        </td>
+                        <td class="@(item.Y2_Number3 == 0 ? "cbg orange1" : "y101")">
+                            @(item.Y2_Number3 == 0 ? "3" : item.Y2_Number3.ToString())
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tbody>
+                <tr>
+                    <td align="center" class="bdtop line_r">
+                        出现次数
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop">
+                        @(s3c3ys.Count(p => p.O_Red1_0 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(s3c3ys.Count(p => p.O_Red1_1 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(s3c3ys.Count(p => p.O_Red1_2 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(s3c3ys.Count(p => p.O_Red2_0 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(s3c3ys.Count(p => p.O_Red2_1 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(s3c3ys.Count(p => p.O_Red2_2 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(s3c3ys.Count(p => p.O_Red3_0 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(s3c3ys.Count(p => p.O_Red3_1 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(s3c3ys.Count(p => p.O_Red3_2 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop">
+                        @(s3c3ys.Count(p => p.Y0_Number0 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(s3c3ys.Count(p => p.Y0_Number1 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(s3c3ys.Count(p => p.Y0_Number2 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(s3c3ys.Count(p => p.Y0_Number3 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(s3c3ys.Count(p => p.Y1_Number0 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(s3c3ys.Count(p => p.Y1_Number1 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(s3c3ys.Count(p => p.Y1_Number2 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(s3c3ys.Count(p => p.Y1_Number3 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(s3c3ys.Count(p => p.Y2_Number0 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(s3c3ys.Count(p => p.Y2_Number1 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(s3c3ys.Count(p => p.Y2_Number2 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(s3c3ys.Count(p => p.Y2_Number3 == 0))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        平均遗漏
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                        @(s3c3ys.Sum(p => p.O_Red1_0) / s3c3ys.Count)
+                    </td>
+                    <td>
+                        @(s3c3ys.Sum(p => p.O_Red1_1) / s3c3ys.Count)
+                    </td>
+                    <td class="line_r">
+                        @(s3c3ys.Sum(p => p.O_Red1_2) / s3c3ys.Count)
+                    </td>
+                    <td>
+                        @(s3c3ys.Sum(p => p.O_Red2_0) / s3c3ys.Count)
+                    </td>
+                    <td>
+                        @(s3c3ys.Sum(p => p.O_Red2_1) / s3c3ys.Count)
+                    </td>
+                    <td class="line_r">
+                        @(s3c3ys.Sum(p => p.O_Red2_2) / s3c3ys.Count)
+                    </td>
+                    <td>
+                        @(s3c3ys.Sum(p => p.O_Red3_0) / s3c3ys.Count)
+                    </td>
+                    <td>
+                        @(s3c3ys.Sum(p => p.O_Red3_1) / s3c3ys.Count)
+                    </td>
+                    <td class="line_r">
+                        @(s3c3ys.Sum(p => p.O_Red3_2) / s3c3ys.Count)
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                        @(s3c3ys.Sum(p => p.Y0_Number0) / s3c3ys.Count)
+                    </td>
+                    <td>
+                        @(s3c3ys.Sum(p => p.Y0_Number1) / s3c3ys.Count)
+                    </td>
+                    <td>
+                        @(s3c3ys.Sum(p => p.Y0_Number2) / s3c3ys.Count)
+                    </td>
+                    <td class="line_r">
+                        @(s3c3ys.Sum(p => p.Y0_Number3) / s3c3ys.Count)
+                    </td>
+                    <td>
+                        @(s3c3ys.Sum(p => p.Y1_Number0) / s3c3ys.Count)
+                    </td>
+                    <td>
+                        @(s3c3ys.Sum(p => p.Y1_Number1) / s3c3ys.Count)
+                    </td>
+                    <td>
+                        @(s3c3ys.Sum(p => p.Y1_Number2) / s3c3ys.Count)
+                    </td>
+                    <td class="line_r">
+                        @(s3c3ys.Sum(p => p.Y1_Number3) / s3c3ys.Count)
+                    </td>
+                    <td>
+                        @(s3c3ys.Sum(p => p.Y2_Number0) / s3c3ys.Count)
+                    </td>
+                    <td>
+                        @(s3c3ys.Sum(p => p.Y2_Number1) / s3c3ys.Count)
+                    </td>
+                    <td>
+                        @(s3c3ys.Sum(p => p.Y2_Number2) / s3c3ys.Count)
+                    </td>
+                    <td class="line_r">
+                        @(s3c3ys.Sum(p => p.Y2_Number3) / s3c3ys.Count)
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        最大遗漏
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                        @(s3c3ys.Max(p => p.O_Red1_0))
+                    </td>
+                    <td>
+                        @(s3c3ys.Max(p => p.O_Red1_1))
+                    </td>
+                    <td class="line_r">
+                        @(s3c3ys.Max(p => p.O_Red1_2))
+                    </td>
+                    <td>
+                        @(s3c3ys.Max(p => p.O_Red2_0))
+                    </td>
+                    <td>
+                        @(s3c3ys.Max(p => p.O_Red2_1))
+                    </td>
+                    <td class="line_r">
+                        @(s3c3ys.Max(p => p.O_Red2_2))
+                    </td>
+                    <td>
+                        @(s3c3ys.Max(p => p.O_Red3_0))
+                    </td>
+                    <td>
+                        @(s3c3ys.Max(p => p.O_Red3_1))
+                    </td>
+                    <td class="line_r">
+                        @(s3c3ys.Max(p => p.O_Red3_2))
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                        @(s3c3ys.Max(p => p.Y0_Number0))
+                    </td>
+                    <td>
+                        @(s3c3ys.Max(p => p.Y0_Number1))
+                    </td>
+                    <td>
+                        @(s3c3ys.Max(p => p.Y0_Number2))
+                    </td>
+                    <td class="line_r">
+                        @(s3c3ys.Max(p => p.Y0_Number3))
+                    </td>
+                    <td>
+                        @(s3c3ys.Max(p => p.Y1_Number0))
+                    </td>
+                    <td>
+                        @(s3c3ys.Max(p => p.Y1_Number1))
+                    </td>
+                    <td>
+                        @(s3c3ys.Max(p => p.Y1_Number2))
+                    </td>
+                    <td class="line_r">
+                        @(s3c3ys.Max(p => p.Y1_Number3))
+                    </td>
+                    <td>
+                        @(s3c3ys.Max(p => p.Y2_Number0))
+                    </td>
+                    <td>
+                        @(s3c3ys.Max(p => p.Y2_Number1))
+                    </td>
+                    <td>
+                        @(s3c3ys.Max(p => p.Y2_Number2))
+                    </td>
+                    <td class="line_r">
+                        @(s3c3ys.Max(p => p.Y2_Number3))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        当前遗漏
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td valign="bottom">
+                        @(s3c3ys[s3c3ys.Count - 1].O_Red1_0)<br>
+                        <img width="8px" height="@(s3c3ys[s3c3ys.Count - 1].O_Red1_0)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(s3c3ys[s3c3ys.Count - 1].O_Red1_1)<br>
+                        <img width="8px" height="@(s3c3ys[s3c3ys.Count - 1].O_Red1_1)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(s3c3ys[s3c3ys.Count - 1].O_Red1_2)<br>
+                        <img width="8px" height="@(s3c3ys[s3c3ys.Count - 1].O_Red1_2)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(s3c3ys[s3c3ys.Count - 1].O_Red2_0)<br>
+                        <img width="8px" height="@(s3c3ys[s3c3ys.Count - 1].O_Red2_0)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(s3c3ys[s3c3ys.Count - 1].O_Red2_1)<br>
+                        <img width="8px" height="@(s3c3ys[s3c3ys.Count - 1].O_Red2_1)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(s3c3ys[s3c3ys.Count - 1].O_Red2_2)<br>
+                        <img width="8px" height="@(s3c3ys[s3c3ys.Count - 1].O_Red2_2)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(s3c3ys[s3c3ys.Count - 1].O_Red3_0)<br>
+                        <img width="8px" height="@(s3c3ys[s3c3ys.Count - 1].O_Red3_0)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(s3c3ys[s3c3ys.Count - 1].O_Red3_1)<br>
+                        <img width="8px" height="@(s3c3ys[s3c3ys.Count - 1].O_Red3_1)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(s3c3ys[s3c3ys.Count - 1].O_Red3_2)<br>
+                        <img width="8px" height="@(s3c3ys[s3c3ys.Count - 1].O_Red3_2)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                    </td>
+                    <td valign="bottom">
+                        @(s3c3ys[s3c3ys.Count - 1].Y0_Number0)<br>
+                        <img width="8px" height="@(s3c3ys[s3c3ys.Count - 1].Y0_Number0)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(s3c3ys[s3c3ys.Count - 1].Y0_Number1)<br>
+                        <img width="8px" height="@(s3c3ys[s3c3ys.Count - 1].Y0_Number1)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(s3c3ys[s3c3ys.Count - 1].Y0_Number2)<br>
+                        <img width="8px" height="@(s3c3ys[s3c3ys.Count - 1].Y0_Number2)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(s3c3ys[s3c3ys.Count - 1].Y0_Number3)<br>
+                        <img width="8px" height="@(s3c3ys[s3c3ys.Count - 1].Y0_Number3)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(s3c3ys[s3c3ys.Count - 1].Y1_Number0)<br>
+                        <img width="8px" height="@(s3c3ys[s3c3ys.Count - 1].Y1_Number0)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(s3c3ys[s3c3ys.Count - 1].Y1_Number1)<br>
+                        <img width="8px" height="@(s3c3ys[s3c3ys.Count - 1].Y1_Number1)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(s3c3ys[s3c3ys.Count - 1].Y1_Number2)<br>
+                        <img width="8px" height="@(s3c3ys[s3c3ys.Count - 1].Y1_Number2)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(s3c3ys[s3c3ys.Count - 1].Y1_Number3)<br>
+                        <img width="8px" height="@(s3c3ys[s3c3ys.Count - 1].Y1_Number3)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(s3c3ys[s3c3ys.Count - 1].Y2_Number0)<br>
+                        <img width="8px" height="@(s3c3ys[s3c3ys.Count - 1].Y2_Number0)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(s3c3ys[s3c3ys.Count - 1].Y2_Number1)<br>
+                        <img width="8px" height="@(s3c3ys[s3c3ys.Count - 1].Y2_Number1)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(s3c3ys[s3c3ys.Count - 1].Y2_Number2)<br>
+                        <img width="8px" height="@(s3c3ys[s3c3ys.Count - 1].Y2_Number2)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(s3c3ys[s3c3ys.Count - 1].Y2_Number3)<br>
+                        <img width="8px" height="@(s3c3ys[s3c3ys.Count - 1].Y2_Number3)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr class="tabbg weight">
+                    <td rowspan="2" class="line_r">
+                        日期
+                    </td>
+                    <td rowspan="2" class="line_r">
+                        期号
+                    </td>
+                    <td rowspan="2" class="line_r" colspan="3">
+                        开奖号码
+                    </td>
+                    <td width="26">
+                        0
+                    </td>
+                    <td width="26">
+                        1
+                    </td>
+                    <td width="26" class="line_r">
+                        2
+                    </td>
+                    <td width="26">
+                        0
+                    </td>
+                    <td width="26">
+                        1
+                    </td>
+                    <td width="26" class="line_r">
+                        2
+                    </td>
+                    <td width="26">
+                        0
+                    </td>
+                    <td width="26">
+                        1
+                    </td>
+                    <td width="26" class="line_r">
+                        2
+                    </td>
+                    <td width="26" class="line_r" rowspan="2">
+                        除3余数比
+                    </td>
+                    <td width="26">
+                        0
+                    </td>
+                    <td width="26">
+                        1
+                    </td>
+                    <td width="26">
+                        2
+                    </td>
+                    <td width="26" class="line_r">
+                        3
+                    </td>
+                    <td width="26">
+                        0
+                    </td>
+                    <td width="26">
+                        1
+                    </td>
+                    <td width="26">
+                        2
+                    </td>
+                    <td width="26" class="line_r">
+                        3
+                    </td>
+                    <td width="26">
+                        0
+                    </td>
+                    <td width="26">
+                        1
+                    </td>
+                    <td width="26">
+                        2
+                    </td>
+                    <td width="26">
+                        3
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td colspan="3" class="line_r">
+                        第1位
+                    </td>
+                    <td colspan="3" class="line_r">
+                        第2位
+                    </td>
+                    <td colspan="3" class="line_r">
+                        第3位
+                    </td>
+                    <td colspan="4" class="line_r">
+                        余0个数
+                    </td>
+                    <td class="line_r" colspan="4">
+                        余1个数
+                    </td>
+                    <td colspan="4">
+                        余2个数
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $(function () {
+
+        var allLines = new Array();
+        allLines.push({ line: $(".big"), color: "red" });
+        allLines.push({ line: $(".gray1"), color: "#FF590B" });
+        allLines.push({ line: $(".tbg1"), color: "#05650E" });
+        allLines.push({ line: $(".green1"), color: "#004F00" });
+        allLines.push({ line: $(".purple2"), color: "#36006F" });
+        allLines.push({ line: $(".orange1"), color: "#FF590B" });
+        var line = new XTLine();
+        for (i = 0; i < allLines.length; i++) {
+            var l = allLines[i];
+
+            line.color = l.color;
+            line.arrayBalls = l.line;
+            line.showrect();
+        }
+
+
+        $("#has_line").click(function () {
+            line.display(this.checked);
+        })
+    })
+</script>

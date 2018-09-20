@@ -1,0 +1,160 @@
+﻿@using app.lottery.site.Models;
+@using GameBiz.Core;
+@{
+    ViewBag.Title = "提款记录 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "提款记录, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    Withdraw_QueryInfoCollection WithdrawCollection = ViewBag.WithdrawList;
+    var user = ViewBag.CurrentUser as app.lottery.site.Models.CurrentUserInfo;
+    var balance = ViewBag.CurrentUserBalance as GameBiz.Core.UserBalanceInfo;
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>提款记录</li>
+    </ul>
+</div>
+<div class="center mt10">
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mune_safe">
+            <div class="account_menu clearfix">
+            <a href="/member/accountdetail"  >账户明细</a>
+            <a href="/member/redBagList">红包明细</a>
+            <a href="/member/paywizzard" >账户充值</a>
+            <a href="/member/drawingsguide" class="select">账户提款</a>
+        </div>
+        <div class="account_con">
+            <div class="betorder_top">
+                <ul>
+                    <li><a href="/member/drawingsguide"><i></i>提款向导</a></li>
+                    <li><a href="/member/fetch_bank"><i></i>银行提款</a></li>
+                   @* <li><a href="/member/fetch_alipay"><i></i>支付宝提款</a></li>*@
+                    <li class="betorder_topSelected"><a href="/member/drawingsrecordall"><i></i>提款记录</a></li>
+                </ul>
+            </div>
+            <div class="search_tab">
+                提款状态：
+                <select id="status">
+                    <option value="" @(ViewBag.Status == null ? "selected='selected'" : string.Empty)>全部状态</option>
+                    <option value="1" @(ViewBag.Status != null && ViewBag.Status == WithdrawStatus.Requesting ? "selected='selected'" : string.Empty)>
+                        审核中</option>
+                    <option value="3" @(ViewBag.Status != null && ViewBag.Status == WithdrawStatus.Success ? "selected='selected'" : string.Empty)>
+                        提款成功</option>
+                    <option value="4" @(ViewBag.Status != null && ViewBag.Status == WithdrawStatus.Refused ? "selected='selected'" : string.Empty)>
+                        提款失败</option>
+                </select>
+                &nbsp;&nbsp;日期：@ControlHelper.Calendar("begin", ViewBag.Begin)至 @ControlHelper.Calendar("end", ViewBag.End)
+                &nbsp;&nbsp;<input type="button" value="查&nbsp;&nbsp;询" class="search_btn" onclick="getFetchRecord(0, 10)" />
+            </div>
+            <table class="account_box">
+                <thead>
+                    <tr>
+                        <td width="50">
+                            序号
+                        </td>
+                        <td width="100">
+                            交易时间
+                        </td>
+                        <td width="100">
+                            提款金额(元)
+                        </td>
+                        <td width="100">
+                            余额(元)
+                        </td>
+                        <td width="70">
+                            提款方式
+                        </td>
+                        <td width="100">
+                            提款状态
+                        </td>
+                        <td width="90">
+                            订单号
+                        </td>
+                        <td width="130">
+                            交易详情
+                        </td>
+                    </tr>
+                </thead>
+                @{
+                    if (WithdrawCollection != null && WithdrawCollection.WithdrawList.Count>0)
+                    {
+                        foreach (var item in WithdrawCollection.WithdrawList)
+                        {
+                            <tr>
+                                <td>
+                                    @(ViewBag.pageNo*ViewBag.PageSize + (WithdrawCollection.WithdrawList.IndexOf(item) + 1))
+                                </td>
+                                <td>
+                                    @item.RequestTime.ToString("yyyy-MM-dd HH:mm")
+                                </td>
+                                <td class="ye blod fszie">
+                                    @item.RequestMoney.ToString("N")
+                                </td>
+                                <td class="ye blod fszie">
+                                    @balance.BonusBalance.ToString("N2")
+                                </td>
+                                <td>
+                                    @SiteConvert.WithdrawAgentTypeName(item.WithdrawAgent)
+                                </td>
+                                <td>
+                                    @SiteConvert.WithdrawStatusName(item.Status)
+                                </td>
+                                <td class="orderId bold">
+                                    @item.OrderId
+                                </td>
+                                <td>
+                                    @item.ResponseMessage
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="8">暂时没有找到你要的数据哦</td>
+                        </tr>
+                    }
+                }
+                
+            </table>
+          
+                 <div class="combined clearfix">
+                <div class="fl">
+                    <span><b class="b1"></b>提现成功：<strong class="zc blod fszie">@(WithdrawCollection!=null?WithdrawCollection.TotalCount :0)&nbsp;笔</strong></span>
+                    <span><b class="b2"></b>提现金额：<strong class="srje blod fszie">@(WithdrawCollection != null ? WithdrawCollection.TotalWinMoney.ToString("N2") : "0")&nbsp;元</strong></span>
+                    <span><b class="b3"></b>提现失败：<strong class="zcjy blod fszie">@(WithdrawCollection != null ? WithdrawCollection.RefusedCount : 0)&nbsp;笔</strong></span>
+                    <span><b class="b4"></b>失败金额：<strong class="ye blod fszie">@(WithdrawCollection != null ? WithdrawCollection.TotalRefusedMoney.ToString("N2") : "0")元</strong></span>
+                </div>
+                <div class="fr">
+                    <em class="xh">*</em>注意：提款记录最多可查询一个月数据
+                </div>
+                
+            </div>
+            <div class="account_page  clearfix">
+                @ViewHelpers.Pager4("getFetchRecord", ViewBag.pageNo, ViewBag.PageSize, WithdrawCollection == null ? 0 : WithdrawCollection.TotalCount)
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(".account_box tr:even:gt(0)").css("backgroundColor", "#f9f9f9");
+    });
+    function getFetchRecord(pageNo, pageSize) {
+        var begin = $("#begin").val();
+        var end = $("#end").val();
+        var search = "pageNo=" + pageNo + "&pageSize=" + pageSize + "&begin=" + begin + "&end=" + end;
+        var status = $("#status option:selected").val();
+        if (status) {
+            search = search + "&status=" + status;
+        }
+        location.search = search;
+    }
+</script>

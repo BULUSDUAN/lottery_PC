@@ -1,0 +1,49 @@
+[0][2018-06-18 16:00:34] 过程或函数 'P_Agent_QueryAgentDetail' 需要参数 '@isRecharge'，但未提供该参数。
+    System.Data.SqlClient.SqlException (0x80131904): 过程或函数 'P_Agent_QueryAgentDetail' 需要参数 '@isRecharge'，但未提供该参数。
+   at Common.Communication.WcfService.DoWork(WcfInvokeInfo invokeInfo)
+ClientConnectionId:4dd2c2fd-40fa-4cbe-b0d7-0d071278f9d2
+Error Number:201,State:4,Class:16
+    ----------------------------------------------------------------------------
+
+[0][2018-06-18 16:20:07] 过程或函数 'P_Agent_QueryAgentDetail' 需要参数 '@isRecharge'，但未提供该参数。
+    System.Data.SqlClient.SqlException (0x80131904): 过程或函数 'P_Agent_QueryAgentDetail' 需要参数 '@isRecharge'，但未提供该参数。
+   at Common.Communication.WcfService.DoWork(WcfInvokeInfo invokeInfo)
+ClientConnectionId:0776c434-3f14-4ada-ba4b-662244b4b98a
+Error Number:201,State:4,Class:16
+    ----------------------------------------------------------------------------
+
+[0][2018-06-18 16:24:45] 过程或函数 'P_Agent_QueryAgentDetail' 需要参数 '@isRecharge'，但未提供该参数。
+    System.Data.SqlClient.SqlException (0x80131904): 过程或函数 'P_Agent_QueryAgentDetail' 需要参数 '@isRecharge'，但未提供该参数。
+   at Common.Communication.WcfService.DoWork(WcfInvokeInfo invokeInfo)
+ClientConnectionId:73ed3ce7-3f08-4f83-ab98-6b977d2b4c5b
+Error Number:201,State:4,Class:16
+    ----------------------------------------------------------------------------
+
+[0][2018-06-18 16:33:39] 过程或函数 'P_Agent_QueryAgentDetail' 需要参数 '@isRecharge'，但未提供该参数。
+    System.Data.SqlClient.SqlException (0x80131904): 过程或函数 'P_Agent_QueryAgentDetail' 需要参数 '@isRecharge'，但未提供该参数。
+   at Common.Communication.WcfService.DoWork(WcfInvokeInfo invokeInfo)
+ClientConnectionId:65964016-ca06-471d-b614-2aae98cc90d8
+Error Number:201,State:4,Class:16
+    ----------------------------------------------------------------------------
+
+[0][2018-06-18 16:36:29] 过程或函数 'P_Agent_QueryAgentDetail' 需要参数 '@isRecharge'，但未提供该参数。
+    System.Data.SqlClient.SqlException (0x80131904): 过程或函数 'P_Agent_QueryAgentDetail' 需要参数 '@isRecharge'，但未提供该参数。
+   at Common.Communication.WcfService.DoWork(WcfInvokeInfo invokeInfo)
+ClientConnectionId:31d91744-dbfb-4fbc-994a-8db7d8b50f30
+Error Number:201,State:4,Class:16
+    ----------------------------------------------------------------------------
+
+[0][2018-06-18 16:39:01] 必须声明标量变量 "@@isRecharge"。
+    System.Data.SqlClient.SqlException (0x80131904): 必须声明标量变量 "@@isRecharge"。
+   at Common.Communication.WcfService.DoWork(WcfInvokeInfo invokeInfo)
+ClientConnectionId:a45f18e1-a34f-46d0-b98d-8da1a913e877
+Error Number:137,State:2,Class:15
+    ----------------------------------------------------------------------------
+
+[0][2018-06-18 16:40:54] 必须声明标量变量 "@@isRecharge"。
+    System.Data.SqlClient.SqlException (0x80131904): 必须声明标量变量 "@@isRecharge"。
+   at Common.Communication.WcfService.DoWork(WcfInvokeInfo invokeInfo)
+ClientConnectionId:91f0e1e1-b974-4d99-b4e7-e7c79450026c
+Error Number:137,State:2,Class:15
+    ----------------------------------------------------------------------------
+

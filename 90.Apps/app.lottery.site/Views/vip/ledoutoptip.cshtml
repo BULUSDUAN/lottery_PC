@@ -1,0 +1,30 @@
+﻿@{
+    var user = ViewBag.User as app.lottery.site.Models.CurrentUserInfo;
+    var balance = ViewBag.CurrentUserBalance as GameBiz.Core.UserBalanceInfo;
+
+    }
+ <div class="duih_zq clearfix">
+        <p class="fl" style="width:100%"><strong>我的豆豆数</strong>
+        <a id="link86" class="red" href="/vip/ldlist">@(balance.CurrentDouDou)</a>&nbsp;个
+        @*<span class="yxq" style="width:192px;">(最新获得时间：2015年01月31日)&nbsp;<i class="ld_ico"></i></span>*@
+        <br>
+    @*    <a id="link87" href="javascript:void(0);" class="ld_right_tip" style="float:right;">公测期：LV5会员每消费100元可获得50个豆豆</a>*@
+              </p>
+            @*  <div class="value_tips" id="rule_tips" style="display: none; width: 320px;left: 407px;top: 100px;">
+        <div class="p_r">单笔消费结算，小数点自动舍去。<br>举例：单笔消费2元送1个豆豆，单笔消费5元送2个豆豆。<span class="tip_ico"></span>
+        </div>
+      </div>*@
+            <div class="value_tips" id="date_tips" style="display: none;width: 180px;left: 131px;top: 77px;">
+        @*<div class="p_r">最后一次获得乐豆的日期+180天<span class="tip_ico"></span></div>*@
+      </div>
+            <p></p>     
+      </div>
+<script type="text/javascript">
+    $(function () {
+        $('.ld_right_tip').hover(function () {
+            $('#rule_tips').show();
+        }, function () {
+            $('#rule_tips').hide();
+        });
+    });
+</script>

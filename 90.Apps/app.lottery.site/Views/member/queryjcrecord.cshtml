@@ -1,0 +1,166 @@
+﻿@using GameBiz.Core;
+@{
+    ViewBag.Title = "名家管理 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "名家管理, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var JcRecord = ViewBag.JcRecord as ExperterHistorySchemeInfoCollection;
+    app.lottery.site.Models.CurrentUserInfo user = ViewBag.User;
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>名家分析</li>
+    </ul>
+</div>
+<div class="center mt10">
+    @{Html.RenderAction("menu", "Member");}
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <ul class="mymenu" style="margin-bottom: 5px;">
+            <li><a href="/member/jcplan">发布竞彩推荐</a></li>
+            <li class="myons"><a href="/member/QueryExpertRecord">发布竞彩记录</a></li>
+        </ul>
+        <div id="mjgl">
+            <table class="betorder_table" width="100%">
+                <tr class="jjtb-tr1">
+                    <td width="15%" height="23" class="xian">
+                        时间
+                    </td>
+                    <td width="15%" class="xian">
+                        订单编号
+                    </td>
+                    <td width="30%" class="xian">
+                        场次
+                    </td>
+                    <td width="10%" class="xian">
+                        投注资金
+                    </td>
+                    <td width="10%" class="xian">
+                        中奖金额
+                    </td>
+                    <td width="10%" class="last-td">
+                        查看
+                    </td>
+                </tr>
+                @if (JcRecord != null)
+                {
+                    foreach (var item in JcRecord.List)
+                    {
+                    <tr class="tt">
+                        <td width="15%" height="23">
+                            @item.CreateTime.ToString("yyyy-MM-dd")
+                        </td>
+                        <td width="15%">
+                            <a href="/user/scheme/@item.SchemeId" target="_blank">@item.SchemeId</a>
+                        </td>
+                        <td width="30%">
+                            @{
+                        //140907 003
+                        var match = item.MatchId.Split(',');
+                        var weeklist = new List<string>();
+                        var week = "";
+                        var num = "";
+                        if (match.Length > 0)
+                        {
+                            foreach (var str in match)
+                            {
+                                var MatchId = "20" + str.Substring(0, 6);
+                                var time = DateTime.Parse(MatchId.Substring(0, 4) + "-" + MatchId.Substring(4, 2) + "-" + MatchId.Substring(6, 2)).DayOfWeek;
+                                switch (time)
+                                {
+                                    case DayOfWeek.Friday:
+                                        week = "周五";
+                                        break;
+                                    case DayOfWeek.Monday:
+                                        week = "周一";
+                                        break;
+                                    case DayOfWeek.Saturday:
+                                        week = "周六";
+                                        break;
+                                    case DayOfWeek.Sunday:
+                                        week = "周日";
+                                        break;
+                                    case DayOfWeek.Thursday:
+                                        week = "周四";
+                                        break;
+                                    case DayOfWeek.Tuesday:
+                                        week = "周二";
+                                        break;
+                                    case DayOfWeek.Wednesday:
+                                        week = "周三";
+                                        break;
+                                }
+                                num = str.Substring(6, 3);
+                                var list = week + num;
+                                weeklist.Add(list);
+                            }
+                        }
+                        else
+                        {
+                            var MatchId = "20" + item.MatchId.Substring(0, 6);
+                            var time = DateTime.Parse(MatchId.Substring(0, 4) + "-" + MatchId.Substring(4, 2) + "-" + MatchId.Substring(6, 2)).DayOfWeek;
+                            switch (time)
+                            {
+                                case DayOfWeek.Friday:
+                                    week = "周五";
+                                    break;
+                                case DayOfWeek.Monday:
+                                    week = "周一";
+                                    break;
+                                case DayOfWeek.Saturday:
+                                    week = "周六";
+                                    break;
+                                case DayOfWeek.Sunday:
+                                    week = "周日";
+                                    break;
+                                case DayOfWeek.Thursday:
+                                    week = "周四";
+                                    break;
+                                case DayOfWeek.Tuesday:
+                                    week = "周二";
+                                    break;
+                                case DayOfWeek.Wednesday:
+                                    week = "周三";
+                                    break;
+                            }
+                            num = item.MatchId.Substring(6, 3);
+                            var list = week + num;
+                            weeklist.Add(list);
+                        }
+                            }
+                            @Html.Raw(string.Join(",", weeklist.ToArray()))
+                        </td>
+                        <td width="10%">
+                            @item.TotalMoney.ToString("N2")
+                        </td>                        
+                        <td width="10%" style="color:Red;">
+                            @item.BonusMoney.ToString("N2")
+                        </td>
+                        <td width="10%" class="last-td">
+                            <a href="/Expert/PersonSpacial?UserID=@user.LoginInfo.UserId&time=@item.CreateTime.ToString("yyyy-MM-dd")" target="_blank">查看</a>
+                        </td>
+                    </tr>
+                    }
+                }
+                <tr class="last-tr no-bottom">
+                    <td colspan="7">@ViewHelpers.Pager4("getUserRebate", ViewBag.pageNo, ViewBag.PageSize, JcRecord.TotalCount)
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="clearfix">
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+<script type="text/javascript">
+    var getUserRebate = function (pageNo, pageSize) {
+        var begin = $("#begin").val();
+        var end = $("#end").val();
+        location.search = "pageNo=" + pageNo + "&pageSize=" + pageSize + "&begin=" + begin + "&end=" + end;
+    };
+</script>

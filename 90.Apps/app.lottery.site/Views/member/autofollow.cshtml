@@ -1,0 +1,182 @@
+﻿@{
+    ViewBag.Title = "自动跟单管理 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "自动跟单管理, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var followlist = ViewBag.FollowList as GameBiz.Core.TogetherFollowerRuleQueryInfoCollection;
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>自动跟单管理</li>
+    </ul>
+</div>
+<div class="center mt10">
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mune_safe">
+            <div class="account_menu clearfix">
+                <a href="/member/betorder" >投注记录</a><a href="/member/mycreatetogether">发起的合买</a>
+                <a href="/member/myjointogether">参与的合买</a><a href="/member/saveProgram">保存方案</a>
+                <a href="/member/chaseorder">追号记录</a> <a href="/member/autofollow" class="select">自动跟单</a>
+            </div>
+            <div class="account_con">
+                <div class="betorder_top">
+                    <ul>
+                        <li class="betorder_topSelected"><a href="/member/autofollow"><i></i>我的定制</a></li>
+                        <li><a href="/member/followme?gamecode=ctzq&gametype=t14c"><i></i>定制我的</a></li>
+                        <li><a href="/member/followrecord"><i></i>成功定制记录</a></li>
+                    </ul>
+                </div>
+                <div class="search_tab">
+                    查询：@GameHelper.GameSelectGame(ViewBag.GameCode, ViewBag.GameType)
+                    &nbsp;&nbsp;<input type="button" value="查&nbsp;&nbsp;询" class="search_btn" onclick="getFollow(0,10)" />
+                </div>
+                <table class="account_box">
+                    <thead>
+                        <tr>
+                            <td>
+                                序号
+                            </td>
+                            <td>
+                                发起人
+                            </td>
+                            <td>
+                                彩种
+                            </td>
+                            <td>
+                                在售方案
+                            </td>
+                            <td>
+                                每次认购(元/%)
+                            </td>
+                            <td>
+                                我的投入
+                            </td>
+                            <td>
+                                我的奖金
+                            </td>
+                            <td>
+                                跟单回报率
+                            </td>
+                            <td>
+                                操作
+                            </td>
+                        </tr>
+                    </thead>
+                    @if (followlist.TotalCount > 0)
+                    {
+
+                        foreach (var item in followlist.List)
+                        {
+                        <tr>
+                            <td>@(ViewBag.pageIndex * ViewBag.PageSize + followlist.List.IndexOf(item) + 1)
+                            </td>
+                            <td>
+                                @SiteString.HideUserName(item.UserDisplayName, item.HideDisplayNameCount)
+                            </td>
+                            <td>@SiteConvert.GameName(item.GameCode, item.GameType)
+                            </td>
+                            <td>
+                                <a href="/blog/standings/@item.CreaterUserId" class="orderId">查看</a>
+                            </td>
+                            <td class="ye blod fszie">
+                                @(item.FollowerCount > 0 ? item.FollowerCount + "元" : item.FollowerPercent.ToString("0") + "%")
+                            </td>
+                            <td class="ye blod fszie">
+                                ￥@item.BuyMoney.ToString("f")
+                            </td>
+                            <td class="@(item.BuyMoney > 0 ? "ye blod fszie" : string.Empty)">@(item.BuyMoney > 0 ? item.BonusMoney.ToString("f") : string.Empty)
+                            </td>
+                            <td class="@(item.BuyMoney > 0 ? "zc blod fszie" : string.Empty)">@(item.BuyMoney > 0 ? (item.BonusMoney / item.BuyMoney * 100).ToString("f") + "%" : string.Empty)
+                            </td>
+                            <td>
+                                <a href="javascript:void(0);" class="orderId" 
+                                onclick=" docBox.init({ userName: '@SiteString.HideUserName(item.UserDisplayName)', 
+                                ruleId: '@item.RuleId', isEdite: true, userId: '@item.CreaterUserId',
+                                 gameCode: '@item.GameCode', gameName: '@SiteConvert.GameName(item.GameCode, item.GameType)',
+                                  gameType: '@item.GameType', docType: '@(item.FollowerCount > 0 ? 0 : 1)',  buyCount: '@(item.FollowerCount > 0 ? item.FollowerCount.ToString() : item.FollowerPercent.ToString("0"))', 
+                                  allBuy: '@item.SchemeCount', minMoney: '@item.MinSchemeMoney.ToString("0")',
+                                   maxMoney: '@item.MaxSchemeMoney.ToString("0")', minBalance: '@item.StopFollowerMinBalance.ToString("0")', 
+                                   isBuySchemeMoneyNot: @(item.CancelWhenSurplusNotMatch.ToString().ToLower()), 
+                                   isUsed: @(item.IsEnable.ToString().ToLower()), 
+                                   isAutoStop: @((item.CancelNoBonusSchemeCount >= 0).ToString().ToLower()), 
+                                   autoStopCount: '@item.CancelNoBonusSchemeCount' }); ">编辑</a> /<a href="javascript:void(0)" onclick=" cancelFollow('@item.RuleId'); " class="orderId">取消</a>
+                            </td>
+                        </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="9">
+                                暂时没有找到你要的数据哦
+                            </td>
+                        </tr>
+                    }
+                </table>
+                <div class="account_page  clearfix">
+                    @ViewHelpers.Pager4("getFollow", ViewBag.pageIndex, ViewBag.PageSize, followlist.TotalCount)
+                </div>
+                <div class="tip3 mt10">
+                    <h3>
+                        说明：</h3>
+                    <p style="text-indent: 20px;">
+                        1、我的定制：对已定制跟单的发起人进行自动跟单设置修改，同时可查询相关的自动跟单信息。<br>
+                    </p>
+                    <p style="text-indent: 20px;">
+                        2、点击列表中的 <em class="orderId">“查看”</em> 可以查看发起人当前投注方案。<br>
+                    </p>
+                    <p style="text-indent: 20px;">
+                        3、点击列表中的 <em class="orderId">“编辑、取消”</em> 功能可以对定制自动跟单设置进行修改或取消定制。<br>
+                    </p>
+                    <p style="text-indent: 20px;">
+                        4、自动跟单规则：自动跟单指用户对某个发起人的某彩种方案进行跟单定制，由系统自动执行跟单操作；当该发起人发起该彩种的合买方案时，系统按用户设定的金额自动认购该方案，免去用户守候跟单，跟不到好单的烦恼</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+<script type="text/javascript">
+    //var gamesObj = document.getElementsByName("followGame");
+    $(function () {
+        $(".account_box tr:even:gt(0)").css("backgroundColor", "#f9f9f9");
+    });
+    function getFollow(pageIndex, pageSize) {
+        var game = "", type = "";
+        var key = $("#dropDownListAllCPType").find("option:selected").val();
+        if (key != "all") {
+            game = key.split('|')[0];
+            type = key.split('|')[1];
+        }
+        if (type != "") {
+            location.href = "/member/autofollow/" + game + "?gametype=" + type + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize + "&r=" + Math.random().toFixed(5);
+        } else {
+            location.href = "/member/autofollow/" + game + "?pageIndex=" + pageIndex + "&pageSize=" + pageSize + "&r=" + Math.random().toFixed(5);
+        }
+    }
+    //取消定制
+    function cancelFollow(followId) {
+        confirmTip("<div style='text-align:center;line-height:60px;'>确定取消定制吗？</div>", function () {
+
+            $.post("/doc_cancel/" + followId, function (res) {
+                if (res.IsSuccess) {
+                    alertTip(res.Message, "ok");
+                    $("#boxAlertOkButton").click(function () {
+                        alertClose();
+                        location.href = location.href;
+                    });
+                    //location.href = location.href;
+                } else {
+                    alertTip(res.Message, "warning");
+                    return false;
+                }
+            });
+        }, function () { });
+
+    }
+</script>

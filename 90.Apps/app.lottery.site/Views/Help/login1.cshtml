@@ -1,0 +1,28 @@
+﻿@{
+    var Title = "如何注册玩彩网会员？";
+    ViewBag.Title = Title+" - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+   @ViewHelpers.css("help.css")
+} 
+  <div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">玩彩网</a> > </li>
+        <li><a href="/help/index">帮助中心</a> > </li>
+        <li>&nbsp;如何注册玩彩网会员？</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type="register", name = "login" });}
+<div class="help_r">
+
+
+
+            </div>
+                   </div>
+<div class="clearfix"></div>
+
+ @ViewHelpers.js("help.js")
+

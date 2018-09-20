@@ -1,0 +1,193 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutBlog.cshtml";
+}
+@using GameBiz.Core;
+@{
+
+    var prouser = ViewBag.UserInfo as ProfileUserInfo;
+    var id = ViewBag.UserId;
+    var gz = ViewBag.gz as UserAttentionSummaryInfoCollection;
+    var CurrentUser = ViewBag.CurrentUser as app.lottery.site.Models.CurrentUserInfo;
+    if (prouser == null)
+    {
+        ViewBag.Title = "404,没有查询到这个用户！";
+    }
+    else
+    {
+        ViewBag.Title = SiteString.HideUserName(prouser.UserDisplayName, prouser.HideNameCount) + "的关注-" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = SiteString.HideUserName(prouser.UserDisplayName, prouser.HideNameCount) + "的关注";
+        ViewBag.Descriptio = SiteString.HideUserName(prouser.UserDisplayName, prouser.HideNameCount) + "的关注,查看更多个人关注案请登录" + SiteString.getHZSiteName(Request) + "彩票网.";
+    }
+    var isok = false;
+    var atList = ViewBag.AttentionList as UserAttentionSummaryInfoCollection;
+    
+}
+@section css{
+    @ViewHelpers.css("blog.css")
+}
+@{Html.RenderAction("left", "Blog", new { name = "attention" });}
+@if (prouser == null)
+{
+		 <p style=" text-align:center; font-weight:bold; font-size:18px;">很抱歉，该用户不存在或者个人中心暂不能访问...<a href="/">返回主页</a>>></p>
+}
+else
+{
+<div  class="custombill_str">
+<div  class="custombill_center">
+    <h2  @*style=" margin-top:20px;"*@ style=" margin-top:5px;margin-bottom:10px;">
+    <span  class="custombill_bg custombill_attention"></span>
+    <b class="user_info" style=" /*margin-left:-3px; -webkit-margin-left:-3px;*/">他关注的人</b>
+    <b>(已有<span style=" color:#ff3c02 !important;"> @atList.TotalCount</span>人)</b></h2>
+   @* <div style="border-bottom:1px solid #e5701a; width:100%; height:10px;"></div>*@
+  <ul >
+      @foreach (var item in atList.List)
+      {
+          if (CurrentUser != null && item.UserId == CurrentUser.LoginInfo.UserId)
+          {
+                    <li class="fans_li fans_li_a1" style="  border:1px solid #f4f4f4;">
+                   <a  href="/blog/standings/@item.UserId" class="touxiang  blog-lv lv@(item.MaxLevelName == "百元" ? "100" : item.MaxLevelName == "千元" ? "1000" : item.MaxLevelName == "万元" ? "10000" : item.MaxLevelName == "十万" ? "100000" : item.MaxLevelName == "百万" ? "1000000" : item.MaxLevelName == "千万元" ? "10000000" : "0")" style=" float:left; margin-bottom:10px" target="_blank"></a>
+                 
+                   <div style=" width:150px; margin-left:20px; float:left; margin-top:10px;">
+                   <a href="/blog/standings/@item.UserId" >@SiteString.HideUserName(item.UserDisplayName, item.HideDisplayNameCount)</a>
+                   <br />
+                  <span style=" color:#fe3c00;" > @item.MaxLevelName</span>
+                   </div><a href="/blog/standings/@item.UserId" class="custombill_attention_zg" style=" margin-top:20px;">查看战绩</a>
+                    <br />
+                    <br />
+                   <br />
+                  @* <div style="border-bottom:1px dotted  #666666; width:100%;"></div>*@
+                   </li>
+          }
+          else
+          {
+           <li class=" @*@(atList.List.IndexOf(i) % 2 == 0 ? "ni" : "ni2")*@  fans_li fans_li_a1" style="  border:1px solid #f4f4f4;">
+
+           <a  href="/blog/standings/@item.UserId" class="touxiang  blog-lv lv@(item.MaxLevelName == "百元" ? "100" : item.MaxLevelName == "千元" ? "1000" : item.MaxLevelName == "万元" ? "10000" : item.MaxLevelName == "十万" ? "100000" : item.MaxLevelName == "百万" ? "1000000" : item.MaxLevelName == "千万元" ? "10000000" : "0")" style=" float:left; margin-bottom:10px;" target="_blank"></a>
+            @*<br />*@
+           <div style=" width:150px; margin-left:20px; float:left; margin-top:10px;">
+           <a href="/blog/standings/@item.UserId">@SiteString.HideUserName(item.UserDisplayName, item.HideDisplayNameCount)</a>
+           <br />
+           <span style=" color:#fe3c00;">@item.MaxLevelName</span>&nbsp;&nbsp;&nbsp;&nbsp;
+           </div>
+
+           <div class="custombill_attention_div"> 
+           <a href="/blog/standings/@item.UserId"  class="custombill_attention_zg">查看战绩</a>
+             @if (CurrentUser == null || CurrentUser.LoginInfo.UserId != item.UserId)
+             {
+                 if (gz != null)
+                 {
+                     foreach (var g in gz.List)
+                     {
+                         if (g.UserId == item.UserId)
+                         {
+                             isok = true;
+                             break;
+                         }
+                         else
+                         {
+                             isok = false;
+                         }
+                     }
+                     if (isok == true)
+                     {
+                         <div class="index_quxiao index_quxiao_div" style=" float:right;  margin-right: 10px; margin-left :5px; margin-top:5px;"><i class="gz_ok_ico"></i>
+                             <a href="#" class="ygz" style=" color:White; text-decoration:none;">已关注</a>
+                             <a  id="qxgz" style=" display:none;" href="javascript:void(0)"  class="under" ><i style=" margin-left:10px;"> 取消关注</i></a> 
+                             <div style="top: -80px; display:none;" class="qxgz_box_c">
+                                <p class="clearfix"><span> 确定不再关注 @SiteString.HideUserName(item.UserDisplayName, item.HideDisplayNameCount) ？</span></p>
+                                <p class="btn"><a canclename="HUNt97jmRPrs0nqY" href="javascript:void(0)" onclick="user.cancelAttentionUser('false','@item.UserId')" class="btn_blue_l btn_blue_l_h18 confirmcc">确定</a>
+                                <a href="javascript:void(0)" class="btn_gray btn_gray_h18 cancelcc">取消</a></p>
+                              </div> 
+                         </div>
+                
+
+                     }
+                     else  
+                     { 
+                      <a class="custombill_table_btn" style=" float:right;  margin-right: 10px;margin-left:7px; margin-top:6px;"  onclick="user.attentionLogin('true','@item.UserId')" href="javascript:;">关注他</a>  
+                     }
+                 }
+                  else
+                  {
+                    <a class="custombill_table_btn" style=" float:right;  margin-right: 10px;margin-left:7px; margin-top:6px;"  onclick="user.attentionLogin('true','@item.UserId')" href="javascript:;">关注他</a>  
+                  }
+             }
+             else
+             {
+                 if (CurrentUser.LoginInfo.UserId == id)
+                 {
+                     <div class="index_quxiao index_quxiao_div" style=" float:right;  margin-right: 10px;">
+                     <i class="gz_ok_ico">已关注</i>
+                     <a href="javascript:;"  class="under" style=" display:none;" >取消关注</a> 
+                      <div style="top: -74px; display:none;" class="qxgz_box_c">
+                        <p class="clearfix"><span> 确定不再关注 @item.UserDisplayName ？</span></p>
+                        <p class="btn"><a canclename="HUNt97jmRPrs0nqY" href="javascript:void(0)" onclick="user.cancelAttentionUser('false','@item.UserId')" class="btn_blue_l btn_blue_l_h18 confirmcc">确定</a>
+                        <a href="javascript:void(0)" class="btn_gray btn_gray_h18 cancelcc">取消</a></p>
+                      </div>
+                     </div>
+                 }
+             }
+             </div>
+           <br />
+            <br />
+           <br />
+          @* <div style="border-bottom:1px dotted  #666666; width:100%;"></div>*@
+           </li>
+          }
+      }
+    </ul> 
+
+</div>
+<div class="clearfix"></div>
+   <div style=" text-align:center;line-height: 42px; text-align:right; ">
+      @ViewHelpers.Pager4("getPayRecord", ViewBag.pageIndex, ViewBag.pageSize, atList.TotalCount == null ? 0 : atList.TotalCount)
+    </div>
+</div>
+<div class="clearfix"></div>
+<script type="text/javascript">
+    $(function () {
+    })
+    /**/
+
+    $(function () {
+        $(".fans_li:last-child").removeClass("fans_li_a1");
+        $(".fans_li:odd").addClass("ni2");
+        $(".index_quxiao").mouseover(function () {
+            var self = ($(this));
+            //  $(this).parent().find("#ygz");
+
+            self.find(".ygz").hide();
+            self.find(".under").show().addClass("index_quxiao_ahover");
+            self.removeClass("index_quxiao_div");
+        });
+        $(".index_quxiao").mouseout(function () {
+            var self = ($(this));
+            self.find(".ygz").show();
+            self.find(".under").hide();
+            self.removeClass("index_quxiao_ahover");
+            self.addClass("index_quxiao_div");
+        });
+
+    })
+    function getPayRecord(pageNo, pageSize) {
+        var begin = $("#begin").val();
+        var end = $("#end").val();
+        var search = "pageNo=" + pageNo + "&pageSize=" + pageSize + "&begin=" + begin + "&end=" + end;
+        var status = $("#status option:selected").val();
+        if (status) {
+            search = search + "&status=" + status;
+        }
+        location.search = search;
+    }
+    $(function () {
+        $(".under").click(function () {
+            var edif = $(this).parent().find(".qxgz_box_c");
+            edif.css("display", "block");
+        });
+        $(".btn_gray").click(function () {
+            var edif = $(this).parent().parent().parent().find(".qxgz_box_c");
+            edif.css("display", "none");
+        })
+    })
+</script>
+}

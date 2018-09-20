@@ -1,0 +1,130 @@
+﻿@{ 
+    var follow = ViewBag.FollowList as GameBiz.Core.TogetherFollowerRuleQueryInfoCollection;
+    ViewBag.Title = "我的跟单人列表 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "我的跟单人列表, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+}
+<div id="box_followrecord" class="tips-fetch" style="display: none;">
+    <label class="close" title="关闭" onclick="box_follow.Close();"></label>
+    <div id="followrecord"></div>
+</div>
+<script type="text/javascript">
+    var box_follow = new LightBox("box_followrecord");
+</script>
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>自动跟单管理</li>
+    </ul>
+</div>
+<div class="center mt10">
+    @{Html.RenderAction("menu", "Member");}
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <ul class="mymenu">
+            <li class="myons"><a href="javascript:void">@SiteConvert.GameName(ViewBag.GameCode, Request["type"])</a></li>
+        </ul>
+        <table width="100%" cellspacing="0" cellpadding="2" align="center" class="my_tbl mt10">
+            <tr style="background-color: #F6EBD7;">
+                <td>
+                    排序
+                </td>
+                <td>
+                    认购人
+                </td>
+                <td>
+                    每次认购
+                </td>
+                <td>
+                    定制时间
+                </td>
+                <td>
+                    跟单记录
+                </td>
+                <td>
+                    调整跟单顺序
+                </td>
+            </tr>
+            @{
+                foreach (var item in follow.List)
+                {
+                <tr>
+                <td>@(ViewBag.pageIndex*ViewBag.PageSize+( follow.List.IndexOf(item)+1))
+                </td>
+                <td>@SiteString.HideUserName(item.UserDisplayName, item.HideDisplayNameCount)</td>
+                <td>@(item.FollowerCount > 0 ? item.FollowerCount + "元" : item.FollowerPercent.ToString("0") + "%")</td>
+                <td>@item.CreateTime.ToShortDateString() @item.CreateTime.ToShortTimeString()</td>
+                <td><a href="javascript:;" class="under" onclick="showRecord(0,10,'@item.RuleId','@item.UserDisplayName')">查看</a></td>
+                <td align="left" style=" padding-left:10px;">  
+                @{if (follow.TotalCount > 1)
+                        {
+                            if (follow.List.IndexOf(item) > 0)
+                            { 
+                        <input type="button" value="上调↑" class="btn-hm" onclick="changeIndex('up','@item.CreaterUserId','@item.RuleId')" title="上调" />
+                              if (follow.List.IndexOf(item) < follow.TotalCount - 1)
+                              {
+                        <input type="button" value="下调↓" class="btn-query" onclick="changeIndex('down','@item.CreaterUserId','@item.RuleId')" title="下调"/>
+                              }
+                        <input type="button" value="置顶" class="btn-hm" onclick="changeIndex('top','@item.CreaterUserId','@item.RuleId')" title="置顶"/>
+                            }
+                            else
+                            {
+                        <input type="button" value="下调↓" class="btn-query" onclick="changeIndex('down','@item.CreaterUserId','@item.RuleId')" title="下调"/>
+                            }
+                        }
+                      
+                      }
+                      
+                      </td>
+                </tr>
+                }
+            }
+            <tr class="last-tr">
+            <td colspan="6">
+            @ViewHelpers.Pager4("getFollowMeUser", ViewBag.pageIndex, ViewBag.PageSize, follow.TotalCount)
+            </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="clearfix"></div>
+<script type="text/javascript">
+  function getFollowMeUser(pageIndex, pageSize) {
+        location.href = "/member/followusers/@ViewBag.GameCode?type=@Request["type"]&pageIndex=" + pageIndex + "&pageSize=" + pageSize + "&r=" + Math.random().toFixed(5);
+    }
+    function showRecord(pageIndex, pageSize, ruleId, followUser) {
+        $.get("/member/followmerecord/@ViewBag.GameCode?pageIndex=" + pageIndex + "&pageSize=" + pageSize + "&ruleId=" + ruleId + "&r=" + Math.random().toFixed(5), function (html) {
+            document.getElementById("followrecord").innerHTML = html;
+            document.getElementById("followUserName").innerHTML = followUser;
+            document.getElementById("ruleId").value = ruleId;
+            box_follow.Show();
+        })
+    }
+        function getFollowRecord(pageIndex, pageSize) {
+        $.get("/member/followmerecord/@ViewBag.GameCode?pageIndex=" + pageIndex + "&pageSize=" + pageSize + "&ruleId=" + document.getElementById("ruleId").value + "&r=" + Math.random().toFixed(5), function (html) {
+            document.getElementById("followrecord").innerHTML = html;
+        })
+    }
+    function changeIndex(changeType, createUser, ruleId) {
+        var data = {
+            changeType: changeType,
+            game: '@ViewBag.GameCode',
+            type: '@Request["type"]',
+            createUser: createUser,
+            ruleId: ruleId
+        }
+        var url = "/member/changeFollowIndex";
+        $.post(url, data, function (result) {
+            if (result.IsSuccess) {
+                location.href = location.href;
+            }
+            else {
+                alert(result.Message, "warning");
+                return false;
+            }
+        });
+    }
+</script>

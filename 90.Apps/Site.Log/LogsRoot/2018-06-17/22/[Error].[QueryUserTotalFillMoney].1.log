@@ -1,0 +1,13 @@
+[0][2018-06-17 22:21:17] Could not execute query[SQL: SQL not available]
+    NHibernate.Exceptions.GenericADOException: Could not execute query[SQL: SQL not available] ---> System.ArgumentNullException: Value cannot be null.
+Parameter name: item
+   at System.ThrowHelper.ThrowArgumentNullException(ExceptionArgument argument)
+   at System.ThrowHelper.IfNullAndNullsAreIllegalThenThrow[T](Object value, ExceptionArgument argName)
+   at System.Collections.Generic.List`1.System.Collections.IList.Add(Object item)
+   at NHibernate.Util.ArrayHelper.AddAll(IList to, IList from)
+   at NHibernate.Engine.Query.HQLQueryPlan.PerformList(QueryParameters queryParameters, ISessionImplementor session, IList results)
+   at NHibernate.Impl.SessionImpl.List(IQueryExpression queryExpression, QueryParameters queryParameters, IList results)
+   --- End of inner exception stack trace ---
+   at Common.Communication.WcfService.DoWork(WcfInvokeInfo invokeInfo)
+    ----------------------------------------------------------------------------
+

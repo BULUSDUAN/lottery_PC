@@ -1,0 +1,73 @@
+﻿@{
+    ViewBag.Title = "泰国游";
+    Layout = "../Shared/_HuoDong.cshtml";
+}
+<div class="tgy-main">
+    <div class="sky">
+    </div>
+    <div class="p-show" id="xyz">
+        <div class="project-1">
+            <span class="p-1jia"></span>
+        </div>
+        <div style="display: none" id="p-hidde1" class="rank">
+            <div class="p-1jia-1">
+            </div>
+        </div>
+        <div class="project-2">
+            <span class="p-2jia"></span>
+        </div>
+        <div style="display: none" id="p-hidde2" class="rank">
+            <div class="p-1jia-2">
+            </div>
+        </div>
+        <div class="project-3">
+            <span class="p-3jia"></span>
+        </div>
+        <div style="display: none" id="p-hidde3" class="rank">
+            <div class="p-1jia-3">
+            </div>
+        </div>
+        <div class="project-4">
+            <span class="p-4jia"></span>
+        </div>
+        <div style="display: none" id="p-hidde4" class="rank">
+            <div class="p-1jia-4">
+            </div>
+        </div>
+        <div class="project-5">
+            <span class="p-5jia"></span>
+        </div>
+        <div style="display: none" id="p-hidde5" class="rank">
+            <div class="p-1jia-5">
+            </div>
+        </div>
+        <div class="project-6">
+            <span class="p-6jia"></span>
+        </div>
+        <div style="display: none" id="p-hidde6" class="rank">
+            <div class="p-1jia-6">
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(".p-show span").hover(function () {
+        $(this).toggleClass("rotate");
+    });
+    var divhide = false;
+    //是否隐藏层
+    function dohide() {
+        if (divhide) {
+            $(".rank").hide();
+        }
+    }
+
+    $(".p-show span").hover(function () {
+        divhide = false;
+        $(this).parent().next().show();
+    }, function () {
+        divhide = true;
+        var t = window.setTimeout(dohide(), 5000);
+        window.clearTimeout(t);
+    });
+</script>

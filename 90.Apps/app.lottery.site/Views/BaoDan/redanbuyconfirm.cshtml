@@ -1,0 +1,480 @@
+﻿@using GameBiz.Core
+@{
+    ViewBag.Title = "神单投注确认-"+ SiteString.getHZSiteName(Request)+"";
+    ViewBag.KeyWords = "神单投注确认";
+    ViewBag.Description = "神单投注确认页面,如果您中意此方案,请确认进行抄单购买。";
+    Layout = "../Shared/_Layoutbaodan.cshtml";
+    var bddetail = ViewBag.BdDetails as BDFXOrderDetailInfo; ;
+    var amount = ViewBag.Amount;
+    var totalMoney = ViewBag.TotalMoney;
+    
+}
+@section css
+{
+    @UserHelper.css("redan.css")
+    @UserHelper.css("redanbuyconfirm.css")
+}
+@section js{
+    @UserHelper.js("redan.js")
+    @UserHelper.js("redandetail.js")
+}
+<div>
+    <div align="center" class="Buytitle">
+        <b style="font-size: 20px;">投注确认</b>
+    </div>
+    <div class="table_border">
+    <table width="960" cellspacing="1" cellpadding="0" border="0" align="center" style="margin: 0 auto;"
+        class="BuyContfirmbox">
+        <tbody>
+        <tr class="table_header">
+         <td width="12%" valign="middle">
+                   >> 投注信息
+                </td>
+        </tr>
+            <tr>
+                <td >
+                    <div style=" padding:20px;">
+                        方案倍数 <b>@amount</b> 倍，总金额 <strong class="redtxt2" style=" color:Red;">@totalMoney.ToString("N0")</strong>
+                        元
+                        <input type="checkbox" checked="" id="site_raw" style=" margin-left:70px;">同意《<a target="_blank" href="/staticHtml/help/safety/serviceAgreement1.html">用户合买代购协议</a>》
+                        <a id="buy_bdfx" href="javascript:void(0);" class="orangeBtn77">立即购买</a>
+                    </div>
+                   
+                </td>
+            </tr>
+            <tr style=" height:20px; border:none !important"></tr>
+            <tr class="table_header">
+                     <td width="12%" valign="middle">
+                               >> 购买须知
+                            </td>
+                 </tr>
+            <tr>
+                <td>
+                    <div style="margin-left: 24px; line-height:30px;">
+                        <p>
+                            1、您选择对方案进行抄单购买，就表示您接收该方案内容作为您的投注内容，您接收该方案内容的一切开奖结果。</p>
+                        <p>
+                            2、您接受该投注内容的<b>【奖金盈利提成】</b>，当奖金盈利后按提成比例给予方案作者作为回报，剩余奖金才是您最终所得。</p>
+                        <p>
+                            <label class="red">
+                                *</label>
+                            如果您不同意以上两点，请您放弃本次操作，购买成功将视为同意以上两点条件。</p>
+                    </div>
+                </td>
+            </tr>
+            <tr style=" height:20px; border:none !important"></tr>
+            <tr class="table_header">
+                <td width="12%" valign="middle">
+                        >> 投注对象
+                    </td>
+             </tr>
+            <tr id="trDetails">
+                <td align="center">
+                    <div class="new_xqmainL ">
+                        <div class="new_xqmainC">
+                            <div class="TitleNew">
+                               <div class=" float_l"> <span class="user_logo user_detail touxiang blog-lv lv1 uic"></span></div>
+                                <span class="user_name float_l" style=" color:#0386d1; font-size:14px; margin-top:0px;">@SiteString.HideUserName(bddetail.UserName)</span> <br />
+                               <span class="float_l ">@SiteConvert.GameName(bddetail.GameCode, bddetail.GameType)&nbsp;@bddetail.IssuseNumber
+                                    期&nbsp;</span> <span class="float_l"><span class="qsdf">@bddetail.BetCount </span>注</span> <span class="float_l ">
+                                        预计最高回报：<em class="fff">@bddetail.ExpectedReturnRate.ToString("N2") </em>倍</span>
+                                <span class="float_l ">奖金盈利提成：<em class="fff">@bddetail.Commission.ToString("N0") %</em></span>
+                                @{
+                                    var serIndex = 1;
+                                    switch (bddetail.Security)
+                                    {
+                                        case TogetherSchemeSecurity.Unkown:
+                                        case TogetherSchemeSecurity.Public:
+                                            serIndex = 1;
+                                            break;
+                                        case TogetherSchemeSecurity.FirstMatchStopPublic:
+                                            serIndex = 6;
+                                            break;
+                                        default:
+                                            serIndex = 1;
+                                            break;
+                                    }
+                                }
+                                @if (bddetail.Security == TogetherSchemeSecurity.Public || bddetail.Security == TogetherSchemeSecurity.Unkown)
+                                {
+                                    <span class="ty" id="tzXiangQing" style=" float:right; color:#2493d5 !important">详情</span>
+                                    <script type="text/javascript">
+                                        $('#tzXiangQing').click(function () {
+                                            $(this).find('b').toggleClass('b1');
+                                            $('#tzXiangQing_body').slideToggle('fast');
+                                        });
+                                    </script> 
+                                }
+                                <div class="changeState">
+                                    <p title="@OrderManager.SecurityName(bddetail.Security)" class="nr touzpng @(serIndex == 1 ? "gk" : "timek")">
+                                    </p>
+                                    <p class="fagksm">@OrderManager.SecurityName(bddetail.Security)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="Clear">
+                        </div>
+                        @if (bddetail.Security == TogetherSchemeSecurity.Public || bddetail.Security == TogetherSchemeSecurity.Unkown)
+                        {
+                            <div style="display: none; margin-top:10px;" id="tzXiangQing_body">
+                                <div class="new_xqmainC">
+                                    <div class="NJ">
+                                        <div class="baomi bortop">
+                                            <div class="OpenType" id="OpenType">
+                                                <span class="font_bold float_l">原始单</span> <span class="float_l">@(bddetail.TotalMatchCount)场&nbsp;@SiteConvert.PlayTypeName(bddetail.PlayType)</span>
+                                            </div>
+                                        </div>
+                                        <div style="">
+                                            <table width="100%" cellspacing="0" cellpadding="0" border="0" class="mtable">
+                                                <tbody>
+                                                    <tr class="thbg">
+                                                        <th width="10%" class="borleft">
+                                                            序号
+                                                        </th>
+                                                        <th width="13%">
+                                                            时间
+                                                        </th>
+                                                        <th width="26%">
+                                                            比赛(主队vs客队)
+                                                        </th>
+                                                        <th width="43%" class="borright">
+                                                            投注选项<span class="xuanXTitspan" style="font-weight: normal;">(最新奖金指数)</span>
+                                                        </th>
+                                                    </tr>
+                                                   @if (bddetail.AnteCodeCollection != null && bddetail.AnteCodeCollection.Count() > 0)
+                                                    {
+                                                        foreach (var item in bddetail.AnteCodeCollection)
+                                                        {
+                                                            var matres = "";
+                                                            if (item != null)
+                                                            {
+                                                                if (!string.IsNullOrEmpty(item.MatchResult) && item.MatchResult.IndexOf("-1") < 0)
+                                                                {
+                                                                    if (item.GameType == "dxf")
+                                                                    {
+                                                                        var zfs = item.FullResult.Split(new string[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
+                                                                        var czf = OrderManager.SpliteSPList(item.CurrentSp).Count <= 0 ? "0" : OrderManager.SpliteSPList(item.CurrentSp)["YSZF"];
+                                                                        if (zfs.Length > 1)
+                                                                        {
+                                                                            var zf = zfs.Select(a => float.Parse(a)).Sum();
+                                                                            if (zf > float.Parse(czf))
+                                                                            { matres = "3"; }
+                                                                            else
+                                                                            {
+                                                                                matres = "0";
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    else if (item.GameType == "rfsf")
+                                                                    {
+                                                                        var bfs = item.FullResult.Split(new string[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
+                                                                        //if(string.IsNullOrEmpty(OrderManager.SpliteSPList(item.CurrentSp)))
+                                                                        var rf = "0";
+                                                                        if (OrderManager.SpliteSPList(item.CurrentSp).ContainsKey("RF"))
+                                                                        {
+                                                                            rf = OrderManager.SpliteSPList(item.CurrentSp).Count <= 0 ? "0" : OrderManager.SpliteSPList(item.CurrentSp)["RF"];
+                                                                        }
+                                                                        // ["RF"];
+                                                                        if (bfs.Length > 1)
+                                                                        {
+                                                                            var zf = float.Parse(bfs[0]) + float.Parse(rf);
+                                                                            var ff = float.Parse(bfs[1]);
+                                                                            if (zf > ff)
+                                                                            { matres = "3"; }
+                                                                            else
+                                                                            {
+                                                                                matres = "0";
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        matres = item.MatchResult;
+                                                                    }
+                                                                }
+                                                            }
+                                                        <tr>
+                                                            <td>
+                                                                @item.MatchIdName
+                                                            </td>
+                                                            <td>
+                                                                @item.StartTime.ToString("MM-dd HH:mm")
+                                                            </td>
+                                                            <td class="zzhud">
+                                                                <a><span style="">@item.HomeTeamName</span><i style=" color:#2495d4">vs</i><span>@item.GuestTeamName</span></a>
+                                                            </td>
+                                                            <td>
+                                                                @if (bddetail.SchemeBettingCategory == SchemeBettingCategory.GeneralBetting || bddetail.SchemeBettingCategory == SchemeBettingCategory.FilterBetting)
+                                                                {
+                                                                    foreach (var code in item.AnteCode.Split(','))
+                                                                    {
+                                                                    <div class="touzhu @(string.IsNullOrEmpty(matres) ? "zhong" : code == matres ? "zhong" : "weizhong")">
+                                                                        <span>@(bddetail.GameCode.ToLower() == "jclq" && item.GameType.ToLower() == "rfsf" ? "让分" : (bddetail.GameCode.ToLower() == "jczq" && item.GameType.ToLower() == "spf" ? "让球" : ""))@SiteString.ANTECODES_NAME(item.GameType.ToLower(), code)</span>
+                                                                        @if (!string.IsNullOrEmpty(item.CurrentSp))
+                                                                        {
+                                                                            if (OrderManager.SpliteSPList(item.CurrentSp).ContainsKey(code))
+                                                                            {
+                                                                                var sp = string.IsNullOrEmpty(OrderManager.SpliteSPList(item.CurrentSp)[code]) ? "0.000" : double.Parse(OrderManager.SpliteSPList(item.CurrentSp)[code]).ToString("0.000");
+                                                                                var inxsp = sp.Substring(0, sp.IndexOf('.') + 3);
+                                                                            <i odds=" @(OrderManager.SpliteSPList(item.CurrentSp)[code])">@inxsp</i>
+                                                                            }
+                                                                        }
+                                                                    </div>
+                                                                    }
+                                                                }
+                                                                else if (bddetail.SchemeBettingCategory == SchemeBettingCategory.ErXuanYi)
+                                                                {
+                                                                    foreach (var code in item.AnteCode.Split(','))
+                                                                    {
+                                                                    <div class="touzhu @(string.IsNullOrEmpty(matres) ? "zhong" : code == matres ? "zhong" : "weizhong")">
+                                                                        <span>@(item.LetBall <0 && code == "3" ? "主胜" : item.LetBall <0 && code == "0" ? "客不败" : (item.LetBall >0 && code == "3" ? "主不败" : "客胜"))</span>
+                                                                        @if (!string.IsNullOrEmpty(item.CurrentSp))
+                                                                        {
+                                                                            if (OrderManager.SpliteSPList(item.CurrentSp).ContainsKey(code))
+                                                                            {
+                                                                                // var sp = OrderManager.SpliteSPList(item.CurrentSp)[code];
+                                                                                var sp = string.IsNullOrEmpty(OrderManager.SpliteSPList(item.CurrentSp)[code]) ? "0.000" : double.Parse(OrderManager.SpliteSPList(item.CurrentSp)[code]).ToString("0.000");
+                                                                                var inxsp = sp.Substring(0, sp.IndexOf('.') + 3);
+                                                                            <i odds=" @(OrderManager.SpliteSPList(item.CurrentSp)[code])">@inxsp</i>
+                                                                            }
+
+                                                                        }
+                                                                    </div>
+                                                                    }
+                                                                }
+                                                            </td>
+                                                        </tr>
+  
+                                                        }
+                                                    }
+                                                </tbody>
+                                            </table>
+                                            <div style="display: none;" class="lotterybox_help" id="show_tips">
+                                            </div>
+                                            <div class="lineClear">
+                                            </div>
+                                        </div>
+                                        <div class="Clear">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="padding-bottom: 10px;" class="dibu">
+                                    <div filename="" class="tzllb" id="chakantouzhu">
+                                        <span class="touzpngnew"></span><i style=" color:#2495d4">查看投注列表</i></div>
+                                    <div style="display: none; left: 20px;" class="dzmx _pop_" id="chakantouzhus">
+                                        <h4 style=" color:#118dd0 !important;">单注列表</h4>
+                                        <label id="colsedetail">
+                                            <input style="display: none;" type="checkbox" disabled="disabled">关闭
+                                        </label>
+                                        <div class="xialasaz">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                             
+                        }
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br />
+    @{
+        var playtype = "";
+        var codelist = "";
+        var TotalMatchCount = bddetail.AnteCodeList.Where(p => p.SchemeId == bddetail.SchemeId).Count();
+
+        foreach (var code in bddetail.AnteCodeList.Where(p => p.SchemeId == bddetail.SchemeId))
+        {
+            playtype = code.PlayType;
+            codelist += code.IsDan + "|" + code.MatchId + "|" + code.AnteCode + "|" + code.GameType.ToLower() + "#";
+
+        }
+        codelist = codelist.Substring(0, codelist.Length - 1);
+    }
+    <input type="hidden" name="amount" value="@amount" id="amount"/>
+    <input type="hidden" value="@bddetail.GameCode" name="GameCode" id="GameCode"/>
+    <input type="hidden" value="@bddetail.GameType" name="GameType" id="GameType"/>
+    <input type="hidden" value="@playtype" name="playType" id="playType"/>
+    <input type="hidden" value="@bddetail.IssuseNumber" name="IssuseNumber" id="IssuseNumber"/>
+    <input type="hidden" value="@bddetail.BetCount" name="BetCount" id="BetCount"/>
+    <input type="hidden" value="@totalMoney" name="TotalMoney" id="TotalMoney"/>
+    <input type="hidden" value="@TotalMatchCount" name="TotalMatchCount" id="TotalMatchCount"/>
+    <input type="hidden" value="@codelist" name="AnteCodeList" id="AnteCodeList"/>
+    <input type="hidden" value="@((int)bddetail.Security)" name="Security" id="Security"/>
+    <input type="hidden" value="@bddetail.Commission" name="Commission" id="Commission"/>
+    <input type="hidden" value="@bddetail.SingleTreasureDeclaration" name="SingleTreasureDeclaration" id="SingleTreasureDeclaration"/>
+    <input type="hidden" value="@bddetail.SchemeId" name="SchemeId" id="SchemeId"/>
+    <input type="hidden" value="" name="IsRepeat" id="IsRepeat" />
+    <input type="hidden" value="@(bddetail.SchemeBettingCategory != SchemeBettingCategory.ErXuanYi ? false : true)"  name="IsExy"  id="IsExy"/>
+    <input type="hidden" name="activityType" value="2" id="activityType">
+    </div>
+</div>
+@{Html.RenderPartial("box_buyconfirmBdfx");}
+<script type="text/javascript">
+
+    $(function() {
+        $("#buy_bdfx").click(function() {
+            var nowTime = new Date().getTime();
+            var clickTime = $(this).attr("ctime");
+            if (clickTime != 'undefined' && (nowTime - clickTime < 5000)) {
+                alertTip('操作过于频繁，稍后再试');
+                return;
+            } else {
+                $(this).attr("ctime", nowTime);
+                checkedbuy();
+            }
+        });
+    });
+
+    function checkedbuy() {
+        var istyxy = $("#site_raw").attr("checked");
+        if (!istyxy) {
+            alert("抱歉，您没有勾选同意《用户合买代购协议》，不能购买。");
+            return;
+        }
+        user.isLogin(function(islogin) {
+            if (!islogin) {
+                loginDialog.Show();
+                $("#userName").focus();
+            } else {
+
+                if (user.info.isNeedBetPwd) {
+                    confirmTipbuyGg(function() {
+                        $("#bet_confirm_content_buygg").load("/baodan/buyneedPassword", function(response, status, xhr) {
+                            if (status == "success") {
+                                confirmLightBoxbuyGg.Show();
+                                document.getElementById("btn_confirm_yes_buygg").onclick = function() {
+                                    //先验证是否输入了资金密码
+                                    if (user.info.isNeedBetPwd) {
+                                        var password = $("#balancepwd");
+                                        if (password.val() == "" || password.val().length == 0) {
+                                            alertTip("您设置了资金密码，请输入资金密码", "ok");
+                                            return;
+                                        }
+                                    }
+
+                                    bet();
+                                };
+                            }
+                        });
+                    }, function() {});
+                } else {
+                    bet();
+                }
+            }
+        });
+
+    }
+
+    function bet() {
+        progress("正在出票...");
+        confirmLightBoxbuyGg.Close();
+        var amount = $("#amount").val();
+        var GameCode = $("#GameCode").val();
+        var GameType = $("#GameType").val();
+        var playType = $("#playType").val();
+        var IssuseNumber = $("#IssuseNumber").val();
+        var BetCount = $("#BetCount").val();
+        var TotalMoney = $("#TotalMoney").val();
+        var TotalMatchCount = $("#TotalMatchCount").val();
+        var AnteCodeList = $("#AnteCodeList").val();
+        var Security = $("#Security").val();
+        var Commission = $("#Commission").val();
+        var SingleTreasureDeclaration = $("#SingleTreasureDeclaration").val();
+        var SchemeId = $("#SchemeId").val();
+        var IsRepeat = $("#IsRepeat").val();
+        var isExy = $("#IsExy").val();
+        var activityType = $("#activityType").val();
+        var balancepwd = $("#balancepwd").val();
+        var betObj = {
+            amount: amount,
+            GameCode: GameCode,
+            GameType: GameType,
+            playType: playType,
+            IssuseNumber: IssuseNumber,
+            BetCount: BetCount,
+            TotalMoney: TotalMoney,
+            TotalMatchCount: TotalMatchCount,
+            AnteCodeList: AnteCodeList,
+            Security: Security,
+            SingleTreasureDeclaration: SingleTreasureDeclaration,
+            Commission: Commission,
+            SchemeId: SchemeId,
+            IsRepeat: IsRepeat,
+            IsExy: isExy,
+            activityType: activityType,
+            balancepwd: balancepwd,
+
+        };
+        $.post("/baodan/Sports_BettingAndChase_BDFX", betObj, function(data) {
+            if (data.IsSuccess) {
+                endprogress();
+                alertTip("<b class='big yellow'>您的抄单方案购买成功！</b><br/>方案编号：<a class='blue under' href='/user/scheme/" + data.ReturnValue.split("|")[0] + "' target='_black'>" + data.ReturnValue.split("|")[0] + "</a><br/><br/><em style='color:#999;'>提示：方案将分配到具有销售资质的投注站出票。</em>", "ok");
+                referyu();
+                $("#boxAlertOkButton").click(function() {
+                    window.location.href = '/member/betorder';
+                });
+            } else {
+               endprogress();
+                if (data.Message == "Repeat") {
+                    endprogress();
+                    var msg = "<div style='line-height:60px;text-align:center;font-size:14px'>检测到投注内容重复，您确定要再次购买吗？</div>";
+                    confirmTip(msg, function() {
+                        $.post("/baodan/Sports_BettingAndChase_BDFX", $.extend(betObj, { IsRepeat: true }), function(data2) {
+                            if (data2.IsSuccess) {
+                                alertTip("<b class='big yellow'>您的抄单方案购买成功！</b><br/>方案编号：<a class='blue under' href='/user/scheme/" + data2.ReturnValue.split("|")[0] + "' target='_black'>" + data2.ReturnValue.split("|")[0] + "</a><br/><br/><em style='color:#999;'>提示：方案将分配到具有销售资质的投注站出票。</em>", "ok");
+                                referyu();
+                                $("#boxAlertOkButton").click(function() {
+                                    window.location.href = '/member/betorder';
+                                });
+                            } else {
+                                endprogress();
+                                alertTip(data2.Message);
+                                return;
+                            }
+                        });
+                    }, function() {
+
+                    });
+                } else {
+                    endprogress();
+                    alertTip(data.Message);
+                    return;
+                }
+            }
+        });
+    }
+
+    function referyu() {
+                $.ajax({
+            contentType: "",
+            data: {},
+            dataType: "json",
+            url: "/user/refreshub?r=" + Math.random().toFixed(5),
+            type: "GET",
+            error: function () {
+                alert("error");
+            },
+            success: function (responseData) {
+                if (responseData.fb > 0) {
+                    user.info.balance = responseData.fb;
+                    $("#yemoney").html(user.info.balance > 10000 ? (user.info.balance / 10000).toFixed("2") + "万元" : user.info.balance.toFixed(2) + "元");
+                }
+                if (responseData.rb > 0) {
+                    user.info.rbbalance = responseData.rb;
+                    $("#hbmoney").html(user.info.rbbalance.toFixed(2)+"元");
+                }
+            },
+            timeout: 60 * 1000
+        });
+    }
+
+    $(function() {
+        $("#chakantouzhu").click(function() {
+            $("#chakantouzhus").show();
+            $(".xialasaz").html("<div class=\"load-bs\">正在加载中,请稍等...</div>");
+            $(".xialasaz").load("/baodan/sportsticket", { SchemeId: "@(bddetail == null ? "" : bddetail.SchemeId)", userId: "@(bddetail == null ? "" : bddetail.UserId)", schemeStatus: "@(bddetail.TicketStatus)", Amount: @(bddetail == null ? 1 : bddetail.Amount) });
+        });
+    });
+</script>

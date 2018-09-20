@@ -1,0 +1,88 @@
+﻿@{
+    ViewBag.Title = @SiteString.getHZSiteName(Request)+"会员-VIP您的生活";
+    Layout = "~/Views/vip/_Layout.cshtml";
+}
+@section css{
+    @ViewHelpers.css("vip.css")
+}
+
+<div class="main_v">
+    @{Html.RenderAction("menu1", "vip");}
+     <div class="right_con">
+          <div class="tequan pt_20">
+            <h1 class="h1_p p_r" style="margin-top:15px !important">特权与服务<span style="line-height:38px !important">&nbsp;&nbsp;&nbsp;&nbsp;升级享有更多服务</span></h1>
+            <ul class="clearfix">
+              <li>
+                <a id="link94" class="js_5000" href="/vip/task">
+                  <h2>88元晋升红包</h2>
+                  <p>LV5晋升至LV6可获得88元红包奖励</p>
+                  <span class="js_5000_ima hy_image"></span>
+                </a>
+              </li>
+              <li>
+                <a id="link95" class="js_20" href="/vip/task">
+                  <h2>账号异动通知</h2>
+                  <p>当您的账户提款、修改密码时将自动进行短信提醒</p>
+                  <span class="js_20_ima hy_image"></span>
+                </a>
+              </li>
+              <li class="last">
+                <a id="link96" class="xms" href="/vip/task">
+                  <h2>方案撤单通知</h2>
+                  <p>当您发起的方案被动撤单时将第一时间为您发送通知短信</p>
+                  <span class="xms_ima hy_image"></span>
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="remen pt_25">
+            <h1 class="h1_p p_r">推荐任务</h1>
+            <ul class="clearfix ul_p">
+              <li class="">
+              <span class="smrz_ima hy_image"></span>
+                <a id="link97" href="/vip/task" class="smrz">
+                  <h2>实名认证 &nbsp;成长值奖励：+200点</h2>
+                  <p>官方认证，做有身份的彩民</p>
+                </a>
+              </li>
+              <li class="">
+               <span class="yhk_ima hy_image"></span>
+                <a id="link98" href="/vip/task" class="yhk">
+                  <h2>银行卡绑定 &nbsp;成长值奖励：+100点</h2>
+                  <p>账户资金提取唯一通道，账户安全的终极保镖</p>
+                  
+                </a>
+              </li>
+              <li>
+               <span class="wszl_ima hy_image"></span>
+                <a id="link99" href="/vip/task" class="wszl">
+                  <h2>手机绑定 &nbsp;成长值奖励：+50点</h2>
+                  <p>绑定手机，帐户更安全</p>
+                 
+                </a>
+              </li>
+              <li class="">
+               <span class="mibao_ima hy_image"></span>
+                <a id="link100" href="/vip/task" class="mibao">
+                  <h2>设置资金密码 &nbsp;成长值奖励：+50点</h2>
+                  <p>保护资金安全，提升账户安全等级</p>
+                 
+                </a>
+              </li>
+            </ul>
+          </div>
+       </div>  
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(".remen li").hover(function () {
+            $(this).addClass("hover");
+        }, function () {
+            $(this).removeClass("hover");
+        });
+        $("#slider").show();
+    })
+</script>
+
+
+

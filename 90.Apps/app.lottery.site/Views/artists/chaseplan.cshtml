@@ -1,0 +1,173 @@
+﻿@using app.lottery.site.Models
+@using External.Core
+@using External.Core.Celebritys
+@{
+    ViewBag.Title = "追号计划";
+    Layout = "../Shared/_ArtistsLayout.cshtml";
+    var chaseinfo = ViewBag.ChaseInfo as WinnerModelSchemeInfo;
+    var cahseinfoDetail = ViewBag.ChsseInfoDetail as WinnerModelSchemeDetailInfo_Collection;
+    var keyLine = ViewBag.keyLine;
+    var user = ViewBag.CurrenUser as CurrentUserInfo;
+}
+<div class="chase-title">
+    <span class="chase-bg zhjh1"></span><span class="chase-text">追号计划</span>
+</div>
+<div class="zuihaotop">
+    <div class="topbg">
+        <div class="title">
+            <span class="chase-bg chase-userlog"></span><b class="numfontred">@(user.LoginInfo.DisplayName)</b>&nbsp;的&nbsp;@chaseinfo.ModelName&nbsp;<b
+                class="numfontred">@(chaseinfo.TotalChaseIssuseCount)期</b><span class="chase-bg zhjh2"></span>追号计划
+        </div>
+    </div>
+    <div class="info">
+        <span class="chase-bg zhddh"></span><span>追号订单号：@chaseinfo.ModelKeyLine</span><span
+            class="chase-bg zhfqsj"></span><span>追号发起时间：@chaseinfo.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")</span><span></span>
+    </div>
+</div>
+<div class="zuihaocon">
+    <div class="con_list">
+        <p class="title">
+            追号计划 <span class="zhgz"><a target="_blank" href="javascript:;" class="zhjhsm">追号规则说明</a></span></p>
+        <table width="100%" cellspacing="0" cellpadding="0" border="0" class="tb-list">
+            <tbody>
+                <tr>
+                    <th>
+                        追号期数
+                    </th>
+                    <th>
+                        追号金额
+                    </th>
+                    <th>
+                        已追期数与金额
+                    </th>
+                    <th>
+                        追号计划状态
+                    </th>
+                    <th>
+                        追号停止条件
+                    </th>
+                    <th>
+                        累计奖金
+                    </th>
+                    <th>
+                        操作设置
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        <b class="numfontred">@chaseinfo.TotalChaseIssuseCount</b>期
+                    </td>
+                    <td>
+                        <b class="numfontred">@chaseinfo.TotalMoney.ToString("0")</b>元
+                    </td>
+                    <td>
+                        已追<b class="numfontred">@chaseinfo.CompleteIssuseCount</b>期,<b class="numfontred">@chaseinfo.CompleteIssuseMoney.ToString("0")</b>元
+                        <br>
+                      @(chaseinfo.SchemeProgressStatus == SchemeProgressStatus.ModelRunning?"未完成":"取消") <b class="numfontred">@(chaseinfo.TotalChaseIssuseCount - chaseinfo.CompleteIssuseCount)</b>期,<b
+                            class="numfontred">@((chaseinfo.TotalMoney - chaseinfo.CompleteIssuseMoney).ToString("0"))</b>元
+                    </td>
+                    <td>
+                        @if (chaseinfo.SchemeProgressStatus == SchemeProgressStatus.ModelRunning)
+                        {
+                            <b class="numfontred">执行中</b>
+                        }
+                        else
+                        {
+                            <b class="numfontred">已停止（@chaseinfo.StopDesc）</b>
+                        }
+                    </td>
+                    <td>
+                        <b>@chaseinfo.StopDesc</b>
+                    </td>
+                    <td>
+                        <b class="numfontred">@(chaseinfo.TotalBonusMoney == 0 ? "0" : chaseinfo.TotalBonusMoney.ToString("f2"))</b>元
+                    </td>
+                    <td class="noborder">
+                        @if (chaseinfo.SchemeProgressStatus == SchemeProgressStatus.ModelRunning)
+                        { 
+                             <a class="zhbtn" href="javascript:;" stopurl="javascript:;"id="zhuihao_stop_btn" orderid="@chaseinfo.ModelKeyLine">停止</a>
+                        }
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="con_list">
+        <p class="title">
+            投注内容</p>
+        <table width="100%" cellspacing="0" cellpadding="0" border="0" class="tb-list">
+            <tbody>
+                <tr>
+                    <th>
+                        投注方式
+                    </th>
+                    <th>
+                        投注内容
+                    </th>
+                </tr>
+                <tr>
+                    <td rowspan="1">
+                        名家平台
+                    </td>
+                    <td>
+                        <a href="/artists/info/?mid=@chaseinfo.ModelId.ToLower()" target="_blank">@chaseinfo.ModelName</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="con_list">
+        <p class="title">
+            追号详情</p>
+        <table width="100%" cellspacing="0" cellpadding="0" border="0">
+            <tbody>
+                <tr>
+                    <th>
+                        追号序号
+                    </th>
+                    <th>
+                        对应期号
+                    </th>
+                    <th>
+                        倍数
+                    </th>
+                    <th>
+                        金额
+                    </th>
+                    <th>
+                        税后奖金
+                    </th>
+                    <th>
+                        操作
+                    </th>
+                </tr>
+                @foreach (var item in cahseinfoDetail.ModelSchemeDetailList)
+                {
+                    <tr class="ContentLight">
+                        <td class="BrownRed">
+                            @item.OrderIndex
+                        </td>
+                        <td>
+                            @item.CurrIssuseNumber
+                        </td>
+                        <td>
+                            <b class="numfontred">@item.Amount</b>倍
+                        </td>
+                        <td>
+                            <b class="numfontred">@item.CurrBettingMoney.ToString("0")</b>元
+                        </td>
+                        <td>
+                            @(item.AfterTaxBonusMoney == 0 ? "" : item.AfterTaxBonusMoney.ToString("f2"))
+                        </td>
+                        <td class="noborder">
+                            @if (!string.IsNullOrEmpty(item.SchemeId))
+                            {
+                                     <a class="zhbtn" target="_blank" href="/user/scheme/@item.SchemeId">详情</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,219 @@
+﻿@using GameBiz.Core;
+@{
+    ViewBag.Title = "ctzqmatchlist";
+    var type = ViewBag.Type;
+    var match = ViewBag.match as CTZQMatchInfo_Collection;
+    var issuseNum = ViewBag.issuseNum;
+    var award = WCFService.QueryWinNumber("ctzq", issuseNum, type);
+}
+    @{if (award != null)
+      {
+        <div class="tabletitle">
+           <span style="float: right">
+            开奖日期：@(award.AwardTime!=null ? award.AwardTime.Date.ToLongDateString() : "未开奖")
+            兑奖截止日期：@(award.AwardTime!=null ? award.AwardTime.Date.AddMonths(3).ToLongDateString() : "未开奖")</span>
+            第<b class="red">@issuseNum</b> 期
+        </div> 
+      }}
+    <table style="background: #ffffff; border-collapse: collapse ; color:#444"  cellspacing="0" cellpadding="0" width="100%" align="center" border="1" class="datatable">
+        @if (type.ToLower() == "t14c" || type.ToLower() == "tr9")
+        { 
+        
+        <tr class="tit2">
+                <td width="6%">
+                    场次
+                </td>
+                <td width="10%">
+                    联赛
+                </td>
+                <td width="13%">
+                    时间
+                </td>
+                <td width="23%">
+                    主队
+                </td>
+                <td width="9%">
+                    比分
+                </td>
+                <td width="24%">
+                    客队
+                </td>
+                <td width="6%">
+                    彩果
+                </td>
+            </tr>
+            if (match != null)
+            {
+
+                foreach (var item in match.ListInfo)
+                {
+                        <tr>
+                <td>@(match.ListInfo.IndexOf(item) + 1)
+                </td>
+                <td>@item.MatchName
+                </td>
+                <td>@item.MatchStartTime.ToString("yyyy-MM-dd")
+                </td>
+                <td>@Html.Raw(item.HomeTeamName)
+                </td>
+                <td>@(item.HomeTeamScore)-@(item.GuestTeamScore)
+                </td>
+                <td>@Html.Raw(item.GuestTeamName)
+                </td>
+                <td class="bold red">@item.MatchResult
+                </td>
+            </tr>  
+                }
+            }
+        }
+        else if (type.ToLower() == "t6bqc"){
+        <tr class="tit2">
+                <td>
+                    场次
+                </td>
+                <td>
+                    联赛
+                </td>
+                <td>
+                    时间
+                </td>
+                <td>
+                    主队
+                </td>
+                <td colspan="2">
+                    比分
+                </td>
+                <td>
+                    客队
+                </td>
+                <td>
+                    彩果
+                </td>
+            </tr>
+            if (match != null) {
+                foreach (var item in match.ListInfo)
+                {
+                      <tr>
+                <td rowspan="2">@(match.ListInfo.IndexOf(item) + 1)
+                </td>
+                <td rowspan="2">@item.MatchName
+                </td>
+                <td rowspan="2">@item.MatchStartTime.ToString("yyyy-MM-dd")
+                </td>
+                <td rowspan="2">@Html.Raw(item.HomeTeamName)
+                </td>
+                <td>
+                    半场
+                </td>
+                <td>@(item.HomeTeamHalfScore)-@(item.GuestTeamHalfScore)
+                </td>
+                <td rowspan="2">@Html.Raw(item.GuestTeamName)
+                </td>
+                <td class="bold red">@OrderManager.CTZQ_CG_T6BQC(item.HomeTeamHalfScore, item.GuestTeamHalfScore)
+                </td>
+            </tr>  
+            <tr>
+                <td>
+                    全场
+                </td>
+                <td>@(item.HomeTeamScore)-@(item.GuestTeamScore)
+                </td>
+                <td class="bold red">@OrderManager.CTZQ_CG_T6BQC(item.HomeTeamScore, item.GuestTeamScore)
+                </td>
+            </tr>
+                }
+            }
+        }
+        else if (type.ToLower() == "t4cjq")
+        {
+        <tr class="tit2">
+                <td>
+                    场次
+                </td>
+                <td>
+                    联赛
+                </td>
+                <td>
+                    时间
+                </td>
+                <td>
+                    主队
+                </td>
+                <td>
+                    比分
+                </td>
+                <td>
+                    彩果
+                </td>
+            </tr>
+            if (match != null) {
+
+                foreach (var item in match.ListInfo)
+                {
+                      <tr>
+                <td rowspan="2">@(match.ListInfo.IndexOf(item) + 1)
+                </td>
+                <td rowspan="2">@item.MatchName
+                </td>
+                <td rowspan="2">@item.MatchStartTime.ToString("yyyy-MM-dd")
+                </td>
+                <td>@Html.Raw(item.HomeTeamName)
+                </td>
+                <td>@item.HomeTeamScore
+                </td>
+                <td class="bold red">@OrderManager.CTZQ_CG_T4CJQ(item.HomeTeamScore)
+                </td>
+            </tr>
+            <tr>
+                <td>@Html.Raw(item.GuestTeamName)
+                </td>
+                <td>@item.GuestTeamScore
+                </td>
+                <td class="bold red">@OrderManager.CTZQ_CG_T4CJQ(item.GuestTeamScore)
+                </td>
+            </tr>
+                }
+            }
+        }
+        <tr>
+            <td height="34" colspan="8" align="left" style="padding: 0 10px" id="bonusstr">
+            </td>
+        </tr>
+    </table>
+    <div class="tabletitle" style="  margin-top:10px; border-top:1px solid #D4D4D4; ">
+        <span style="float: right"><b>开奖号码：<span>@(award != null && !string.IsNullOrEmpty(award.WinNumber) ? award.WinNumber.Replace(",", "") : "--")</span></b></span><b>开奖详情：(全国开奖最快)</b></div>
+    <table style="background: #ffffff; border-collapse: collapse" bordercolor="#A8C9FF"
+        cellspacing="0" cellpadding="0" width="100%" align="center" border="1" class="datatable">
+        <tr class="tit2">
+            <td width="22%">
+                奖项
+            </td>
+            <td width="23%">
+                中奖注数
+            </td>
+            <td width="55%">
+                单注奖金(元)
+            </td>
+        </tr>
+        <tbody id="bonuslist">
+            <tr>
+                <td>-</td>
+                 <td>-</td>
+                  <td>-</td>
+            </tr>
+        </tbody>
+        <tr>
+            <td colspan="3" align="left">
+                <span style="font-weight: bold; padding-left: 10px">备注：“--”代表开奖数据统计中，请您稍后查看！</span>
+            </td>
+        </tr>
+    </table>
+    <!--彩种介绍-->
+    @GameHelper.LotteryDescView("ctzq",type)
+    <script type="text/javascript">
+        function LoadPrize() {
+            var issuse = document.getElementById("dropIssueNum").options[document.getElementById("dropIssueNum").selectedIndex].value;
+            location.search = "issusenumber=" + issuse;
+        }
+    </script>
+

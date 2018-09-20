@@ -1,0 +1,131 @@
+﻿@using app.lottery.site.Models
+@{
+    ViewBag.Title = "返点记录, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "返点记录, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var list = ViewBag.OCAgentPayDetail as External.Core.Agnet.OCAgentPayDetailInfoCollection;
+    CurrentUserInfo currentUser = ViewBag.CurrentUser;
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+    @UserHelper.css("commissio.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>返点记录</li>
+    </ul>
+</div>
+<div class="center mt10">
+    @{Html.RenderAction("menu", "Member");}
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mycommenu">
+            <a href="javascript:void(0);" checklg="/commissio/myTc">我的提成</a>
+            @if (currentUser.LoginInfo.OCAgentType == GameBiz.Core.OCAgentCategory.SportLotterySubAgent)
+            {
+                <a href="javascript:void(0);" checklg="/commissio/subordinateuser">推广用户</a> 
+            }
+            else
+            {
+                <a href="javascript:void(0);" checklg="/commissio/generalizeUser">推广用户</a> 
+            }
+            <a href="javascript:void(0);" checklg="/commissio/CommissionRecord" class="up">返点结算</a>
+            <a href="javascript:void(0);" checklg="/commissio/StatisticsQuery">统计查询</a> <a href="javascript:void(0);"
+                checklg="/commissio/SchemeManage">方案管理</a>
+        </div>
+        <div class="scheme">
+        </div>
+        <div class="scheme-titile">
+            <span class="bgimg"></span>
+            <label class="lbfa">
+                我的返点记录</label>
+        </div>
+        <table border="0" cellpadding="0" cellspacing="0" class="commissionR-table">
+            <tr class="t-tr1">
+                <td colspan="7">
+                    <div style="width: 620px !important 540px; float: left; height: 40px; line-height: 40px;">
+                        &nbsp;&nbsp;&nbsp;&nbsp; 日期 @ControlHelper.Calendar("begin", ViewBag.Begin)至 @ControlHelper.Calendar("end", ViewBag.End)
+                    </div>
+                    <div style="width: 60px; float: left; height: 40px;">
+                        &nbsp;&nbsp;<a class="Query" href="javascript:void(0)" onclick="getOCAgentPayDetail(0,10)"></a>
+                    </div>
+                </td>
+            </tr>
+            <tr class="cr-tr1">
+                <td width="88">
+                    时间 <span class="commissionM-table-sx"></span>
+                </td>
+                <td width="125">
+                    交易类型 <span class="commissionM-table-sx"></span>
+                </td>
+                <td width="85">
+                    彩种 <span class="commissionM-table-sx"></span>
+                </td>
+                <td width="60">
+                    玩法 <span class="commissionM-table-sx"></span>
+                </td>
+                <td width="65">
+                    返点 <span class="commissionM-table-sx"></span>
+                </td>
+                <td width="75">
+                    返利金额 <span class="commissionM-table-sx"></span>
+                </td>
+                <td width="110">
+                    备注
+                </td>
+            </tr>
+            @if (list != null)
+            {
+                foreach (var item in list.DetailList)
+                {
+                <tr>
+                    <td width="88">
+                        @item.CreateTime
+                    </td>
+                    <td width="125">
+                        @SiteConvert.SchemeTypeName(item.SchemeType)
+                    </td>
+                    <td width="85">
+                        @SiteConvert.GameName(item.GameCode)
+                    </td>
+                    <td width="60">
+                        @SiteConvert.GameName(item.GameCode, item.GameType)
+                    </td>
+                    <td width="65">
+                        @item.Rebate.ToString("N2")
+                    </td>
+                    <td width="75">
+                        @item.PayMoney.ToString("N2")
+                    </td>
+                    <td width="110">
+                        @item.Remark
+                    </td>
+                </tr>
+                }
+            }
+                <tr > <td colspan="7" class="betorder_number_money" style="background-color: #fff;text-align: left" >
+                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注意:返点结算最多可查询一个月数据
+                 </td> </tr>
+            <tr>
+                <td colspan="7">
+                    @ViewHelpers.Pager4("getOCAgentPayDetail", ViewBag.pageNo, ViewBag.pageSize, list == null ? 0 : list.TotalCount)
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(".commissionR-table tr:odd:gt(0)").css("backgroundColor", "#f7f7f7");
+
+    })
+    function getOCAgentPayDetail(pageNo, pageSize) {
+        var begin = $("#begin").val();
+        var end = $("#end").val();
+        var search = "pageNo=" + pageNo + "&pageSize=" + pageSize + "&begin=" + begin + "&end=" + end + "&r=" + Math.random().toFixed(5);
+        location.search = search;
+    }   
+</script>
+<div class="clearfix">
+</div>

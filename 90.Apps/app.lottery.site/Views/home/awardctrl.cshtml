@@ -1,0 +1,199 @@
+﻿@{
+    var awardList = ViewBag.AwardList as List<GameBiz.Core.WinNumber_QueryInfo>;
+}
+<div class="hd">
+    <h2 class="title">最新开奖</h2>
+</div>
+<div id="kaijiang" class="kj_box" style=" height:400px;">
+    <ul class="tabs-nav ont_tab" id="index_awardlist_tab">
+        <li ttl="0"  class="cur" onclick="swAwardList(0);">足彩</li>
+        <li ttl="1" onclick="swAwardList(1);">数字</li>
+        <li ttl="2" onclick="swAwardList(2);">高频</li>
+    </ul>
+    <div id="scroll_con">
+        <div style="margin-top: 0px;" class="tabs-cnt scroll_box">
+            @{foreach (var item in awardList.Where(i => i.GameCode.ToLower() == "ctzq"))
+              {
+                <dl class="kj_sort">
+                    <dt><a href="/lottery/ctzq/@item.GameType" target="_blank">@SiteConvert.GameName(item.GameCode, item.GameType)@(item.GameType.ToLower() == "t14c" ? "(任九)" : string.Empty)</a>
+                        第<span class="yellow">@item.IssuseNumber</span>期 </dt>
+                    <dd class="kj_num eng">
+                        @{var red = "";
+                          var blue = "";
+                          if (item.WinNumber.Contains('|'))
+                          {
+                              red = item.WinNumber.Split('|')[0];
+                              blue = item.WinNumber.Split('|')[1];
+                          }
+                          else
+                          {
+                              red = item.WinNumber;
+                          }
+                          if (red.Contains(','))
+                          {
+                              foreach (var redI in red.Split(','))
+                              {
+                            <b class="red">@redI</b>
+                              }
+                          }
+                          if (blue.Contains(','))
+                          {
+                              foreach (var blueI in blue.Split(','))
+                              {
+                            <b class="blue">@blueI</b>
+                              }
+                          }
+                        }
+                    </dd>
+                    <dd class="kj_link">
+                        <a href="/buy/toto/@item.GameType.ToLower()" target="_blank">我要投注</a> <span class="gray">| </span><a href="/hemai/index/ctzq/@item.GameType.ToLower()" target="_blank">参与合买 </a>
+                    </dd>
+                </dl>
+              }
+            }
+        </div>
+        <div style="display: none;" class="tabs-cnt scroll_box">
+            @{foreach (var item in awardList.Where(i => SiteString.gameList("szc").Contains(i.GameCode.ToLower())))
+              {
+                <dl class="kj_sort">
+                    <dt><a href="/lottery/index/@item.GameCode.ToLower()" target="_blank">@SiteConvert.GameName(item.GameCode)</a>
+                        第<span class="yellow">@item.IssuseNumber</span>期 </dt>
+                    <dd class="kj_num eng">
+                        @{var red = "";
+                          var blue = "";
+                          if (item.WinNumber.Contains('|'))
+                          {
+                              red = item.WinNumber.Split('|')[0];
+                              blue = item.WinNumber.Split('|')[1];
+                          }
+                          else
+                          {
+                              red = item.WinNumber;
+                          }
+                          foreach (var redI in red.Split(','))
+                          {
+                            <b class="red">@redI</b>
+                          }
+                          foreach (var blueI in blue.Split(','))
+                          {
+                            <b class="blue">@blueI</b>
+                          }
+                        }
+                    </dd>
+                    <dd class="kj_link">
+                        <a href="/buy/szc/@item.GameCode.ToLower()" target="_blank">我要投注</a> <span class="gray">| </span><a href="/hemai/index/@item.GameCode" target="_blank">参与合买 </a>
+                    </dd>
+                </dl>
+              }
+            }
+        </div>
+        <div style="display: none;" class="tabs-cnt scroll_box">
+            @{foreach (var item in awardList.Where(i => SiteString.gameList("gpc").Contains(i.GameCode.ToLower())))
+              {
+                <dl class="kj_sort">
+                    <dt><a href="/lottery/index/@item.GameCode.ToLower()" target="_blank">@SiteConvert.GameName(item.GameCode)</a>
+                        第<span class="yellow">@item.IssuseNumber</span>期 </dt>
+                    <dd class="kj_num eng">
+                        @{var red = "";
+                          var blue = "";
+                          if (item.WinNumber.Contains('|'))
+                          {
+                              red = item.WinNumber.Split('|')[0];
+                              blue = item.WinNumber.Split('|')[1];
+                          }
+                          else
+                          {
+                              red = item.WinNumber;
+                          }
+                          if (red.Contains(','))
+                          {
+                              foreach (var redI in red.Split(','))
+                              {
+                            <b class="red">@redI</b>
+                              }
+                          }
+                          if (blue.Contains(','))
+                          {
+                              foreach (var blueI in blue.Split(','))
+                              {
+                            <b class="blue">@blueI</b>
+                              }
+                          }
+                        }
+                    </dd>
+                    <dd class="kj_link">
+                        <a href="/buy/szc/@item.GameCode.ToLower()" target="_blank">我要投注</a> <span class="gray">| </span><a href="/zixun/articlelist/@item.GameCode" target="_blank">资讯文章 </a>
+                    </dd>
+                </dl>
+              }
+            }
+        </div>
+    </div>
+    @*<div class="scroll_btn">
+        <a class="scroll_up" href="javascript:void(0)" id="scroll_up"><b class="b_sup"></b>
+        </a><a class="scroll_down" href="javascript:void(0)" id="scroll_down"><b class="b_sdown"></b></a>
+    </div>*@
+</div>
+<script type="text/javascript">
+    (function (B, H, s, f, tp) {
+        if (B.mozilla) {
+            f -= 5
+        }
+        if (B.webkit || B.opera) {
+            f -= 5
+        }
+        var ul, li, dl, up, dn, e;
+        $(function () {
+            ul = $('#kaijiang');
+            li = $('li', ul);
+            dl = $('#scroll_con .scroll_box');
+            up = $('#scroll_up');
+            dn = $('#scroll_down');
+            c = dl.eq(2);
+            up.hover(slowUp, clear);
+            dn.hover(slowDn, clear);
+            up.mousedown(fastUp);
+            dn.mousedown(fastDn);
+            up.mouseup(slowUp);
+            dn.mouseup(slowDn)
+        });
+        function clear() {
+            clearTimeout(e)
+        }
+        function set(v, h) {
+            clear();
+            h = H - c.height() - 14;
+            if ((tp < 0 || v > 0) && (tp > h || v < 0)) {
+                tp -= v;
+                if (tp <= 0) {
+                    if (tp < h) {
+                        tp = h;
+                    }
+                }
+                else {
+                    tp = 0
+                }
+                c.css('margin-top', tp);
+                e = setTimeout(function () {
+                    set(v)
+                }, 10)
+            }
+        }
+        function slowDn() {
+            set(s)
+        }
+        function fastDn() {
+            set(f)
+        }
+        function slowUp() {
+            set(-s)
+        }
+        function fastUp() {
+            set(-f)
+        }
+    })($.browser, 235, 1, 10, 0);
+    function swAwardList(i) {
+        $("#index_awardlist_tab li:eq(" + i + ")").attr("class", "cur").siblings("li").attr("class", "");
+        $("#scroll_con .scroll_box:eq(" + i + ")").show().addClass("now").siblings().hide().removeClass("now");
+    }
+</script>

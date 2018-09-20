@@ -1,0 +1,45 @@
+﻿@using GameBiz.Core
+@using app.lottery.site.Models
+@{
+    CurrentUserInfo currentUser = ViewBag.CurrentUser;
+    @UserHelper.css("main.min.css")
+    @UserHelper.js_share("share.min.js")
+    @UserHelper.js("user.min.js")
+    @UserHelper.js("nav.js")
+}
+<div id="state">
+    <div class="box">
+        <div class="left">
+            @if (currentUser != null)
+            {
+                <a href="#" class="state_a"><span>手机版</span></a>
+                <a href="#">@(SiteString.HideUserName(currentUser.LoginInfo.DisplayName, currentUser.LoginInfo.HideDisplayNameCount))</a>
+                <a class="log-out red fr" href="javascript:;" onclick="user.logOut();">
+                    退出</a>
+            }
+            else
+            {
+                <a href="#" class="state_a"><span>手机版</span></a>
+                <span>请<a href="#" class="login">登录</a></span>
+                <a href="/statichtml/register.html" class="register">免费注册</a><span>|</span>
+                <a href="#" class="state_b">合作账号登录</a>
+            }
+        </div>
+        <div class="right">
+            <ul>
+                <li><a href="/" target="_blank">首页</a><span>|</span></li>
+                <li class="tips_li site_li"><s class="vertical_line"></s><a title="彩票购买大厅" class="tips_hd"
+                    href="javascript:void(0);">购买彩票<s class="arrow"></s></a> <span>|</span></li>
+                <li><a href="/vip/index">会员</a><span>|</span></li>
+                <li><a href="/syncLogin">论坛</a><span>|</span></li>
+                <li><a href="/help/index">帮助</a><span>|</span></li>
+                <li><a href="">网站导航</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+@{Html.RenderPartial("box_doc");}
+@{Html.RenderPartial("box_login");}
+@{Html.RenderPartial("box_confirm");}
+@{Html.RenderPartial("box_progress");}
+@{Html.RenderPartial("box_alert");}

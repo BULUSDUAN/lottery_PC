@@ -1,0 +1,73 @@
+﻿@{
+    var Title = "合买提成？";
+    ViewBag.Title = Title + " - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+   @ViewHelpers.css("help.css")
+} 
+  <div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">玩彩网</a> > </li>
+        <li><a href="/staticHtml/help/index.html">&nbsp;帮助中心</a> > </li>
+        <li>&nbsp;合买提成？</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type = "buylottery", name = "ShoppingService" });}
+<div class="help_r">
+         
+         <div class="det_box">
+            	<h2>合买提成？</h2>
+                <div class="det_c"><p align="left" class="MsoNormal" style="text-align:left;line-height:18pt;margin:11.25pt 0cm;mso-pagination:widow-orphan;"><span style="font-family:宋体;color:#333333;mso-bidi-font-size:10.5pt;mso-ascii-font-family:ˎ̥;mso-hansi-font-family:ˎ̥;mso-bidi-font-family:宋体;mso-font-kerning:0pt;">1、什么是合买提成：</span></p>
+<p align="left" class="MsoNormal" style="text-align:left;line-height:18pt;margin:11.25pt 0cm;mso-pagination:widow-orphan;"><span style="font-family:宋体;color:#333333;mso-bidi-font-size:10.5pt;mso-ascii-font-family:ˎ̥;mso-hansi-font-family:ˎ̥;mso-bidi-font-family:宋体;mso-font-kerning:0pt;">提成是发起人设置的中奖返点，在方案中奖后系统会按用户设置的百分比，在中奖的奖金中提成奖励给发起人。当奖金低于投注本金时，发起人是不会得到提成的；只有奖金大于投注本金，有盈利的情况下才可得到提成。发单人可获得的提成</span><span lang="EN-US" style="font-family:'ˎ̥','serif';color:#333333;mso-bidi-font-size:10.5pt;mso-bidi-font-family:宋体;mso-font-kerning:0pt;mso-fareast-font-family:宋体;">=</span><span style="font-family:宋体;color:#333333;mso-bidi-font-size:10.5pt;mso-ascii-font-family:ˎ̥;mso-hansi-font-family:ˎ̥;mso-bidi-font-family:宋体;mso-font-kerning:0pt;">中奖金额</span><span lang="EN-US" style="font-family:'ˎ̥','serif';color:#333333;mso-bidi-font-size:10.5pt;mso-bidi-font-family:宋体;mso-font-kerning:0pt;mso-fareast-font-family:宋体;">*</span><span style="font-family:宋体;color:#333333;mso-bidi-font-size:10.5pt;mso-ascii-font-family:ˎ̥;mso-hansi-font-family:ˎ̥;mso-bidi-font-family:宋体;mso-font-kerning:0pt;">设定的提成比例。</span></p>
+<p align="left" class="MsoNormal" style="text-align:left;line-height:18pt;margin:11.25pt 0cm;mso-pagination:widow-orphan;"><span lang="EN-US" style="font-family:'ˎ̥','serif';color:#333333;mso-bidi-font-size:10.5pt;mso-bidi-font-family:宋体;mso-font-kerning:0pt;mso-fareast-font-family:宋体;"><!--?xml:namespace prefix = o ns = "urn:schemas-microsoft-com:office:office" /--><o:p>@*<img width="731" height="338" border="0" src="http://img.500.com/upimages/new/500/20130221114156_9959.jpg" alt="" style="width:682px;height:338px;">*@</o:p></span></p>
+<p align="left" class="MsoNormal" style="text-align:left;line-height:18pt;margin:11.25pt 0cm;mso-pagination:widow-orphan;"><span lang="EN-US" style="font-family:'ˎ̥','serif';color:#333333;mso-bidi-font-size:10.5pt;mso-bidi-font-family:宋体;mso-font-kerning:0pt;mso-fareast-font-family:宋体;"><o:p>2、提成怎么设置：</o:p></span></p>
+<span lang="EN-US" style="font-family:'ˎ̥','serif';color:#333333;mso-bidi-font-size:10.5pt;mso-bidi-font-family:宋体;mso-font-kerning:0pt;mso-fareast-font-family:宋体;"><o:p> <p align="left" class="MsoNormal" style="text-align:left;line-height:18pt;margin:11.25pt 0cm;mso-pagination:widow-orphan;"><span style="font-family:宋体;color:#333333;mso-bidi-font-size:10.5pt;mso-ascii-font-family:ˎ̥;mso-hansi-font-family:ˎ̥;mso-bidi-font-family:宋体;mso-font-kerning:0pt;">用户可以对自己发起的方案设置提成，提成范围</span><span lang="EN-US" style="font-family:'ˎ̥','serif';color:#333333;mso-bidi-font-size:10.5pt;mso-bidi-font-family:宋体;mso-font-kerning:0pt;mso-fareast-font-family:宋体;">0-8%</span><span style="font-family:宋体;color:#333333;mso-bidi-font-size:10.5pt;mso-ascii-font-family:ˎ̥;mso-hansi-font-family:ˎ̥;mso-bidi-font-family:宋体;mso-font-kerning:0pt;">，也可以不设置提成。</span></p>
+<p align="left" class="MsoNormal" style="text-align:left;line-height:18pt;margin:11.25pt 0cm;mso-pagination:widow-orphan;"><span lang="EN-US" style="font-family:'ˎ̥','serif';color:#333333;mso-bidi-font-size:10.5pt;mso-bidi-font-family:宋体;mso-font-kerning:0pt;mso-fareast-font-family:宋体;"><o:p>@*<img width="729" height="487" border="0" src="htt/upimages/new/500/20130221114205_2604.jpg" alt="" style="width:682px;height:487px;">*@</o:p></span></p>
+</o:p></span> <p align="left" class="MsoNormal" style="text-align:left;line-height:18pt;margin:11.25pt 0cm;mso-pagination:widow-orphan;"><span lang="EN-US" style="font-family:'ˎ̥','serif';color:#333333;mso-bidi-font-size:10.5pt;mso-bidi-font-family:宋体;mso-font-kerning:0pt;mso-fareast-font-family:宋体;"><o:p>&nbsp;&nbsp;&nbsp;&nbsp;</o:p></span></p>                </div>
+                
+             @*   <div class="det_a feedback">
+                <div>以上内容是否解决了您的问题呢？</div>
+                              
+                <div>
+                <a id="btn_a_yes" class="btn"><span class="feedback_yes">是，已经解决。</span></a> <a class="btn" id="btn_a_no" href="javascript:void(0);"><span class="feedback_no">否，尚未解决。</span></a>
+                    <div style="display:none;" class="feedback_form clearfix" id="feed_div">                  
+                    <a id="fclose" class="feedback-close" href="javascript:void(0);">关闭</a>     
+                    <span style="display:none;" id="feed_detail"> 
+	                    <form method="post" name="feed_dtl" id="feed_dtlf">             
+		                    <span class="fb-input"><input type="radio" value="1" name="nodtl"> 描述不清晰</span>
+		                    <span class="fb-input"><input type="radio" value="2" name="nodtl"> 字太多，不想看</span>
+		                    <span class="fb-input"><input type="radio" value="3" name="nodtl"> 太复杂，看不懂</span>
+		                    <span class="fb-input"><input type="button" value="提交" name="fsbmt"></span>
+		                </form>    
+	                </span>
+                    <div style="display:none;" class="feedback-suc l" id="feed_result">您的反馈信息已经提交，谢谢您的反馈。</div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                  
+                </script>                                           
+                </div>
+                
+                <div class="det_a">
+                	<div class="det_a_l">相关问题：</div>
+                    <div class="det_a_r">
+                    	<ul>
+                        	                    	</ul>    
+                    </div>
+                </div>*@
+            </div>
+
+        </div>
+         </div>
+<div class="clearfix"></div>
+
+ @ViewHelpers.js("help.js")
+
+
+
+
+
+

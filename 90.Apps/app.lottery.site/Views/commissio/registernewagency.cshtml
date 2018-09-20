@@ -1,0 +1,242 @@
+﻿@using External.Core;
+@{
+    ViewBag.Title = "注册新代理, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "注册新代理, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var list = ViewBag.GeneralizeUser as External.Core.Agnet.AgentUserInfoCollection;
+    var agenttype = ViewBag.AgentType as External.Core.Agnet.OCAgentType;
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+    @UserHelper.css("commissio.css")
+}
+<div id="bet_confirm_show" style="height: auto">
+</div>
+<div id="fullbg">
+</div>
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>注册新代理</li>
+    </ul>
+</div>
+<div class="center mt10">
+    @{Html.RenderAction("menu", "Member");}
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mycommenu">
+            <a href="javascript:void(0);" checklg="/commissio/myTc">我的提成</a> <a href="javascript:void(0);"
+                checklg="/commissio/generalizeUser" class="up">推广用户</a> <a href="javascript:void(0);"
+                    checklg="/commissio/CommissionRecord">返点结算</a> <a href="javascript:void(0);" checklg="/commissio/StatisticsQuery">
+                        统计查询</a> <a href="javascript:void(0);" checklg="/commissio/SchemeManage">方案管理</a>
+        </div>
+        <div class="scheme">
+            @if (agenttype.OCAgentCategory != GameBiz.Core.OCAgentCategory.SportLotterySubAgent)
+            {
+                <div class="scheme-show" style="margin-left: 10px;">
+                    <a href="javascript:void(0)" checklg="/commissio/generalizeUser">下级代理</a>
+                </div>
+            }
+            <div class="scheme-show">
+                <a href="javascript:void(0)" checklg="/commissio/subordinateuser">下级用户</a>
+            </div>
+            @if (agenttype.OCAgentCategory != GameBiz.Core.OCAgentCategory.SportLotterySubAgent)
+            {
+                <div class="scheme-show">
+                    <a href="javascript:void(0)" checklg="/commissio/dealerMsg">添加代理</a>
+                </div>
+            }
+            <div class="scheme-show" style="width: 130px;">
+                <a href="javascript:void(0)" checklg="/commissio/setNewUserRebate">设置新用户返点</a>
+            </div>
+            <div class="scheme-show">
+                <a href="javascript:void(0)" checklg="/commissio/popularizeLink">推广链接</a>
+            </div>
+            @if (agenttype.OCAgentCategory == GameBiz.Core.OCAgentCategory.SportLotteryAgent)
+            {
+                <div class="scheme-show xzscheme">
+                    <a href="javascript:void(0)" checklg="/commissio/registernewagency">注册新代理</a>
+                </div>
+                <div class="scheme-show">
+                    <a href="javascript:void(0)" checklg="/commissio/newagencylist">店铺代理</a>
+                </div>
+            }
+        </div>
+        <table border="0" cellpadding="0" cellspacing="0" class="newtable">
+            <tr class="newtr1">
+                <td class="newtd1">
+                    用户名称：
+                </td>
+                <td>
+                    <span class="new_name">
+                        <input type="text" name="new_name" id="new_name" /></span> <span class="error" id="name_err"
+                            style="color: #777">请输入4-16位字符</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="newtd1">
+                    用户密码：
+                </td>
+                <td>
+                    <span class="new_pwd">
+                        <input type="password" name="new_pwd" id="new_pwd" /></span> <span class="error"
+                            id="pwd_err" style="color: #777;">请输入6-20位字母数字组合</span>
+                </td>
+            </tr>
+        </table>
+        <a class="addagent" href="javascript:;">添加代理</a>
+    </div>
+    <script type="text/javascript">
+        function getStrLen(str) {
+            var len = 0;
+            var cnstrCount = 0;
+            for (var i = 0; i < str.length; i++) {
+                if (str.charCodeAt(i) > 255)
+                    cnstrCount = cnstrCount + 1;
+            }
+            len = str.length + cnstrCount;
+            return len;
+        }
+        function checkName(user) {
+            if (user == null || user == "" || user == "请输入4-16位字符") {
+                //$("#new_name").val("请输入4-16位字符");
+                $("#name_err").text("请输入用户名！");
+                $("#name_err").removeAttr("style");
+                $("#name_err").removeClass("allright").addClass("error");
+                return false;
+            }
+            var len = getStrLen(user);
+            if (len < 4) {
+                $("#name_err").text("用户名长度至少应该为4个字符！");
+                $("#name_err").removeClass("allright").addClass("error");
+                return false;
+            } else if (len > 16) {
+                $("#name_err").text("用户名长度不能超过16个字符！");
+                $("#name_err").removeClass("allright").addClass("error");
+                return false;
+            }
+            else {
+                $("#name_err").text("");
+                $("#name_err").addClass("allright").removeClass("error");
+                return true;
+            }
+        }
+        function checkPwd(user, pwd) {
+            if (pwd == null || pwd == "" || pwd == "请输入6-20位字母数字组合") {
+                //$("#new_pwd").val("请输入6-20位字母数字组合");
+                $("#pwd_err").text("请输入密码！");
+                $("#pwd_err").removeAttr("style");
+                $("#pwd_err").removeClass("allright").addClass("error");
+                return false;
+            }
+            var cat = /^[\x20-\x7f]+$$/;
+            if (!(cat.test(pwd))) {
+                $("#pwd_err").text("密码不能包含中文！");
+                $("#pwd_err").removeClass("allright").addClass("error");
+                return false;
+            }
+            var len = pwd.length;
+            if (len < 6) {
+                $("#pwd_err").text("密码长度至少为6个字符！");
+                $("#pwd_err").removeClass("allright").addClass("error");
+                return false;
+            } else if (len > 20) {
+                $("#pwd_err").text("密码长度不能超过20个字符！");
+                $("#pwd_err").removeClass("allright").addClass("error");
+                return false;
+            } else if (pwd == user) {
+                $("#pwd_err").text("密码不能够与用户名一致！");
+                $("#pwd_err").removeClass("allright").addClass("error");
+                return false;
+            }
+            else {
+                $("#pwd_err").text("");
+                $("#pwd_err").removeClass("error").addClass("allright");
+                return true;
+            }
+        }
+
+        $("#new_name").focus(function () {
+            if ($("#new_name").val() == "请输入4-16位字符") {
+                $("#new_name").val("");
+            }
+        });
+        $("#new_name").blur(function () {
+            $("#name_err").css("display", "block");
+            var user = $("#new_name").val().trim();
+            var checkuser = checkName(user);
+        });
+        $("#new_pwd").focus(function () {
+            if ($("#new_pwd").val() == "请输入6-20位字母数字组合") {
+                $("#new_pwd").val("");
+            }
+        });
+        $("#new_pwd").blur(function () {
+            $("#pwd_err").css("display", "block");
+            var pwd = $("#new_pwd").val().trim();
+            var user = $("#new_name").val().trim();
+            var checkPwdd = checkPwd(user, pwd);
+        });
+
+        $(".addagent").click(function () {
+            var name = $("#new_name").val().trim();
+            var pwd = $("#new_pwd").val().trim();
+
+            if (name == "请输入4-16位字符" || name == null || name == "") {
+                $("#name_err").text("请输入用户名！");
+                $("#name_err").css("display", "block");
+                return false;
+            }
+            if (pwd == "请输入4-16位字符" || pwd == null || pwd == "") {
+                $("#pwd_err").text("请输入密码！");
+                $("#pwd_err").css("display", "block");
+                return false;
+            }
+
+            if (checkName(name) && checkPwd(name, pwd)) {
+                var url = "/commissio/NewAgency";
+                var data = { userName: name, passWord: pwd };
+                $.post(url, data, function (callback) {
+                    if (callback.IsSuccess) {
+                        alertTip("添加成功");
+                        $("#new_name").val("");
+                        $("#new_pwd").val("")
+                    }
+                    else {
+                        alertTip(callback.Msg);
+                        return false;
+                    }
+                });
+            }
+
+        });
+
+        $(function () {
+            $(".generalizeUser-table tr:odd:gt(0)").css("backgroundColor", "#f7f7f7");
+        })
+        var getUserRebate = function (pageNo, pageSize) {
+            location.search = "pageNo=" + pageNo + "&pageSize" + pageSize;
+        };
+    </script>
+    <script type="text/javascript">
+        //显示灰色 jQuery 遮罩层
+        function showBg(obj) {
+            var id = $(obj).attr("txtid");
+            var name = $(obj).attr("txtName")
+            var typeName = "下级代理";
+            $("#bet_confirm_show").load("/commissio/ConfigurationUserRebateNew", { userId: id, txtName: name, typeName: typeName });
+            $("#bet_confirm_show").css("display", "block");
+            $("#fullbg").css("display", "block");
+            $("#fullbg").width($(document).width());
+            $("#fullbg").height($(document).height());
+            $("#dialog").css("z-index", "1002");
+        }
+        //关闭灰色 jQuery 遮罩
+        function closeBg() {
+            $("#bet_confirm_show").css("display", "none");
+            $("#fullbg").css("display", "none");
+        } 
+    </script>
+</div>
+<div class="clearfix">
+</div>

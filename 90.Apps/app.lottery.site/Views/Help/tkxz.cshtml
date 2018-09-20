@@ -1,0 +1,42 @@
+﻿@{
+    var Title = "提款须知";
+    ViewBag.Title = Title + " - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+   @ViewHelpers.css("help.css")
+} 
+  <div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">玩彩网</a> > </li>
+        <li><a href="/help/index">&nbsp;帮助中心</a> > </li>
+        <li>&nbsp;提款须知</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type = "", name = "" });}
+<div class="help_r">
+         
+         <div class="help_r">
+          <div class="det_box">
+            	<h2>提款须知</h2>
+                <div class="det_c">
+            <p>根据《中华人民共和国反洗钱法》、《中华人民共和国中国人民银行法》、《金融机构反洗钱规定》等法律规定和银行/第三方支付等机构的规定，为了防止洗钱及信用卡套现等违法犯罪行为，保护正常用户的资金安全，本站特针对提款做出如下规定： 奖金余额，返点余额提现不收取任何手续费，若超出奖金余额+返点余额，充值余额部分提现需要收取10%手续费</p>
+            <p>温馨提示：如果有明显洗钱或套现行为的，即使提现不超过奖金余额+返点余额，提款仍按原路退回，到账时间约为15个工作日（受银行处理速度限制可能延长）。</p>
+            </div>
+        </div>
+     
+
+
+        </div>
+         </div>
+<div class="clearfix"></div>
+
+ @ViewHelpers.js("help.js")
+
+
+
+
+
+

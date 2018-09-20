@@ -1,0 +1,54 @@
+﻿<!--信息确认框投注过关 开始-->
+<div id="bet_confirm_fxgg">
+         <table>
+        <tr>
+            <td class="itd-top-left"></td>
+            <td class="itd-top-center"></td>
+            <td class="itd-top-right"></td>
+        </tr>
+        <tr>
+            <td class="itd-mid-left"></td>
+            <td class="itd-mid-center">
+                <div class="dialogContent">
+      
+   <h3 id="drag_confirm_fxgg" class="pop-comm-top">
+        神单分享
+        <a class="close" id="btn_confirm_close_fxgg">关闭</a>
+    </h3>
+    <div class="pop-comm-middle">
+        <div id="bet_confirm_content_fxgg">
+        </div>
+        <div class="buttonrow">
+            <input type="button" id="btn_confirm_yes_fxgg" value="确定" class="dialogBtn"/>
+            <input type="button" id="btn_confirm_no_fxgg" value="取消" class="dialogBtn focusBtn"/>
+        </div>
+    </div>
+                </div>
+            </td>
+            <td class="itd-mid-right"></td> 
+        </tr>
+        <tr>
+            <td class="itd-bot-left"></td>
+            <td class="itd-bot-center"></td>
+            <td class="itd-bot-right"></td>
+        </tr>
+    </table>
+    
+</div>
+<script type="text/javascript">
+    new Drag("bet_confirm_fxgg", { Handle: "drag_confirm_fxgg", Limit: true });
+    var confirmLightBoxFxGg = new LightBox("bet_confirm_fxgg");
+
+    function confirmTipFxGg(func, func2) {
+        var confirmgg_no_Event = function () {
+            confirmLightBoxFxGg.Close();
+            func2();
+            document.getElementById("bet_confirm_content_fxgg").innerHTML = "";
+        };
+        func();
+        document.getElementById("btn_confirm_no_fxgg").onclick = confirmgg_no_Event;
+        document.getElementById("btn_confirm_close_fxgg").onclick = confirmgg_no_Event;
+        $("#btn_confirm_yes_fxgg").focus();
+    }
+</script>
+<!--信息确认框 结束-->

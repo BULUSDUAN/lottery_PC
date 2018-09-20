@@ -1,0 +1,87 @@
+﻿@using GameBiz.Core;
+@{
+    var award = ViewBag.Award as LotteryData.Core.GameWinNumber_Info;
+    var issues = ViewBag.CurIssuse as Issuse_QueryInfo;
+}
+@GameHelper.LotteryHeaderView(issues, award, award == null || award.Id == 0 ? "DLT" : award.GameCode)
+@GameHelper.LotteryDescView(award == null || award.Id == 0 ? "DLT" : award.GameCode)
+<div class="lot-con-l">
+    <h2 class="sctitle">
+        <span class="der2"></span><b>大乐透奖级设置</b></h2>
+    <div class="td_div2">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="sg">
+            <tbody>
+                <tr>
+                    <td>一等奖
+                    </td>
+                    <td class="td1">5前区+2后区
+                    </td>
+                    <td>500万
+                    </td>
+                </tr>
+                <tr>
+                    <td>二等奖
+                    </td>
+                    <td class="td1">5前区+1后区
+                    </td>
+                    <td>固定奖总额后的20%
+                    </td>
+                </tr>
+                <tr>
+                    <td>三等奖
+                    </td>
+                    <td class="td1">5前区
+                    </td>
+                    <td>固定奖总额后的5%
+                    </td>
+                </tr>
+                <tr>
+                    <td>四等奖
+                    </td>
+                    <td class="td1">4前区+2后区
+                    </td>
+                    <td>3000 元
+                    </td>
+                </tr>
+                <tr>
+                    <td>五等奖
+                    </td>
+                    <td class="td1">4前区+1后区
+                    </td>
+                    <td>600 元
+                    </td>
+                </tr>
+                <tr>
+                    <td>六等奖
+                    </td>
+                    <td class="td1">4前区3前区+2后区
+                    </td>
+                    <td>100 元
+                    </td>
+                </tr>
+                <tr>
+                    <td>七等奖
+                    </td>
+                    <td class="td1">3前区+1后区或2前区+2后区
+                    </td>
+                    <td>10元
+                    </td>
+                </tr>
+                <tr>
+                    <td>八等奖
+                    </td>
+                    <td class="td1">3前区或1前区+2后区或2前区+1后区或2后区
+                    </td>
+                    <td>5元
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="lot-con-r">
+    <h2 class="sctitle">
+        <span class="der3"></span><b>大乐透资讯</b></h2>
+    @{Html.RenderAction("LotteryConsulting", "buy", new { id = "DLT" });}
+</div>
+<div class="clearfix"></div>

@@ -1,0 +1,371 @@
+﻿@{
+    string type = ViewBag.Type;
+    if (!string.IsNullOrEmpty(type))
+    {
+        type = type.ToLower();
+    }
+    switch (type)
+    {
+        case "spf":
+            <div class="bet_head">
+                <table width="723" height="40" border="0" id="tb_head" class="tb_head">
+                    <colgroup>
+                        <col width="86"/>
+                        <col width="51"/>
+                        <col width="249"/>
+                        <col width="51"/>
+                        <col width="372"/>
+                        <col width="63"/>
+                        <col width="126"/>
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th class="head_1" id="filterSh" hover="sai">
+                                <div class="hover1">
+                                    <a class="xlbtnsed">
+                                        <p class="float_l sias_p1">
+                                            赛事</p>
+                                        <span class="float_l icon2 hover1_1"></span></a>
+                                    <div id="filter_layer" class="sub_filter">
+                                        <div id="filterMatch" class="sub_filter_layer sub_filter_box">
+                                            <div id="leagues">
+                                            </div>
+                                            <div class="clearfix">
+                                            </div>
+                                            <div class="sub_filter_btns">
+                                                <a id="filter_all" class="btn2" href="javascript:void 0">全选</a> <a id="filter_rever" class="btn2" href="javascript:void 0">反选</a> <a class="btn2" id="filter_clear" href="javascript:void 0">
+                                                                                                                                                                                      全清</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </th>
+                            <th hover="sai" id="selectts" class="head_2">
+                                <div class="hover1">
+                                    <a class="xlbtnsed">
+                                        <p class="float_l sias_p1">停售</p>
+                                        <span class="float_l icon2 hover1_1" style="left: 39px;"></span>
+                                    </a>
+                                    <div style="width: 51px; padding: 0; min-height: 55px;" class="sub_filter">
+                                        <ul>
+                                            <li data-title="停售" data-cls="e_time"><a href="javascript:void(0)">停售时间</a></li>
+                                            <li data-title="开赛" data-cls="b_time"><a href="javascript:void(0)">开赛时间</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </th>
+                            <th>主队vs 客队</th>
+                            <th>让球</th>
+                            <th class="head_3">
+                                <ul>
+                                    <li class="zhu">胜</li>
+                                    <li class="ping">平</li>
+                                    <li class="ke">负</li>
+                                </ul>
+                            </th>
+                            <th class="head_7">
+                                分析
+                            </th>
+                            <th class="head_6 nrb">
+                                <p name="odds" class="dropdown oddsselect">
+                                    <cite val="euro" class="oselect">欧赔</cite> <em style="display: none;"><a value="oz">
+                                                                                                              平均欧赔</a> <a value="wlxe">威廉希尔</a> <a value="am">澳门</a> <a value="lb">立博</a> <a value="bet365">
+                                                                                                                                                                                              Bet365</a> <a value="snai">SNAI</a> <a value="yds">易德胜</a> <a value="wd">韦德</a>
+                                                                                   <a value="bwin">Bwin</a> <a value="coral">Coral</a> <a value="oddset">oddset</a>
+                                                                               </em><i class="line-01"></i>
+                                </p>
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            break;
+        case "zjq":
+            <div class="bet_head">
+                <table height="40" border="0" id="tb_head" class="tb_head">
+                    <colgroup>
+                        <col width="86"/>
+                        <col width="51"/>
+                        <col width="249"/>
+                        <col width="497"/>
+                        <col width="49"/>
+                        <col width="62"/>
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th class="head_1" id="filterSh" hover="sai">
+                                <div class="hover1">
+                                    <a class="xlbtnsed">
+                                        <p class="float_l sias_p1">
+                                            赛事</p>
+                                        <span class="float_l icon2 hover1_1"></span></a>
+                                    <div id="filter_layer" class="sub_filter">
+                                        <div id="filterMatch" class="sub_filter_layer sub_filter_box">
+                                            <div id="leagues">
+                                            </div>
+                                            <div class="clearfix">
+                                            </div>
+                                            <div class="sub_filter_btns">
+                                                <a id="filter_all" class="btn2" href="javascript:void 0">全选</a> <a id="filter_rever"
+                                                                                                                   class="btn2" href="javascript:void 0">反选</a> <a class="btn2" id="filter_clear" href="javascript:void 0">
+                                                                                                                                                                    全清</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </th>
+                            <th hover="sai" id="selectts" class="head_2">
+                                <div class="hover1">
+                                    <a class="xlbtnsed">
+                                        <p class="float_l sias_p1">停售</p>
+                                        <span class="float_l icon2 hover1_1" style="left: 39px;"></span>
+                                    </a>
+                                    <div style="width: 51px; padding: 0; min-height: 55px;" class="sub_filter">
+                                        <ul>
+                                            <li data-title="停售" data-cls="e_time"><a href="javascript:void(0)">停售时间</a></li>
+                                            <li data-title="开赛" data-cls="b_time"><a href="javascript:void(0)">开赛时间</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </th>
+                            <th>主队vs 客队</th>
+                            <th style="vertical-align: top; padding-left: 1px;">
+                                <dl class="bet_area bet_jqs">
+                                    <dt>投注区（即时赔率）</dt>
+                                    <dd class="bet_sel">0</dd>
+                                    <dd class="bet_sel">1</dd>
+                                    <dd class="bet_sel">2</dd>
+                                    <dd class="bet_sel">3</dd>
+                                    <dd class="bet_sel">4</dd>
+                                    <dd class="bet_sel">5</dd>
+                                    <dd class="bet_sel">6</dd>
+                                    <dd class="bet_sel">7+</dd>
+                                </dl>
+                            </th>
+                            <th>全</th>
+                            <th class="head_7 nrb">
+                                分析
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            break;
+        case "sxds":
+            <div class="bet_head">
+                <table height="40" border="0" id="tb_head" class="tb_head">
+                    <colgroup>
+                        <col width="86"/>
+                        <col width="51"/>
+                        <col width="249"/>
+                        <col width="549"/>
+                        <col width="62"/>
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th class="head_1" id="filterSh" hover="sai">
+                                <div class="hover1">
+                                    <a class="xlbtnsed">
+                                        <p class="float_l sias_p1">
+                                            赛事</p>
+                                        <span class="float_l icon2 hover1_1"></span></a>
+                                    <div id="filter_layer" class="sub_filter">
+                                        <div id="filterMatch" class="sub_filter_layer sub_filter_box">
+                                            <div id="leagues">
+                                            </div>
+                                            <div class="clearfix">
+                                            </div>
+                                            <div class="sub_filter_btns">
+                                                <a id="filter_all" class="btn2" href="javascript:void 0">全选</a> <a id="filter_rever"
+                                                                                                                   class="btn2" href="javascript:void 0">反选</a> <a class="btn2" id="filter_clear" href="javascript:void 0">
+                                                                                                                                                                    全清</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </th>
+                            <th hover="sai" id="selectts" class="head_2">
+                                <div class="hover1">
+                                    <a class="xlbtnsed">
+                                        <p class="float_l sias_p1">停售</p>
+                                        <span class="float_l icon2 hover1_1" style="left: 39px;"></span>
+                                    </a>
+                                    <div style="width: 51px; padding: 0; min-height: 55px;" class="sub_filter">
+                                        <ul>
+                                            <li data-title="停售" data-cls="e_time"><a href="javascript:void(0)">停售时间</a></li>
+                                            <li data-title="开赛" data-cls="b_time"><a href="javascript:void(0)">开赛时间</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </th>
+                            <th>主队vs 客队</th>
+                            <th style="vertical-align: top; padding-left: 1px;">
+                                <dl class="bet_area bet_sxds">
+                                    <dt>投注区（即时赔率）</dt>
+                                    <dd class="bet_sel">上+单</dd>
+                                    <dd class="bet_sel">上+双</dd>
+                                    <dd class="bet_sel">下+单</dd>
+                                    <dd class="bet_sel">下+双</dd>
+                                </dl>
+                            </th>
+                            <th class="head_7 nrb">
+                                分析
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            break;
+        case "bf":
+            <div class="bet_head">
+                <table height="40" border="0" id="tb_head" class="tb_head">
+                    <colgroup>
+                        <col width="86"/>
+                        <col width="51"/>
+                        <col width="249"/>
+                        <col width="423"/>
+                        <col width="63"/>
+                        <col width="126"/>
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th class="head_1" id="filterSh" hover="sai">
+                                <div class="hover1">
+                                    <a class="xlbtnsed">
+                                        <p class="float_l sias_p1">
+                                            赛事</p>
+                                        <span class="float_l icon2 hover1_1"></span></a>
+                                    <div id="filter_layer" class="sub_filter">
+                                        <div id="filterMatch" class="sub_filter_layer sub_filter_box">
+                                            <div id="leagues">
+                                            </div>
+                                            <div class="clearfix">
+                                            </div>
+                                            <div class="sub_filter_btns">
+                                                <a id="filter_all" class="btn2" href="javascript:void 0">全选</a> <a id="filter_rever"
+                                                                                                                   class="btn2" href="javascript:void 0">反选</a> <a class="btn2" id="filter_clear" href="javascript:void 0">
+                                                                                                                                                                    全清</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </th>
+                            <th hover="sai" id="selectts" class="head_2">
+                                <div class="hover1">
+                                    <a class="xlbtnsed">
+                                        <p class="float_l sias_p1">停售</p>
+                                        <span class="float_l icon2 hover1_1" style="left: 39px;"></span>
+                                    </a>
+                                    <div style="width: 51px; padding: 0; min-height: 55px;" class="sub_filter">
+                                        <ul>
+                                            <li data-title="停售" data-cls="e_time"><a href="javascript:void(0)">停售时间</a></li>
+                                            <li data-title="开赛" data-cls="b_time"><a href="javascript:void(0)">开赛时间</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </th>
+                            <th>主队vs 客队</th>
+                            <th>投注区（即时赔率）</th>
+                            <th>数据</th>
+                            <th class="tbd nrb">
+                                <p name="odds" style="top: 2px" class="dropdown oddsselect">
+                                    <cite val="euro" class="oselect">欧赔</cite>
+                                    <em style="display: none;">
+                                        <a value="oz">平均欧赔</a>
+                                        <a value="wlxe">威廉希尔</a>
+                                        <a value="am">澳门</a>
+                                        <a value="lb">立博</a>
+                                        <a value="bet365">Bet365</a>
+                                        <a value="snai">SNAI</a>
+                                        <a value="yds">易德胜</a>
+                                        <a value="wd">韦德</a>
+                                        <a value="bwin">Bwin</a>
+                                        <a value="coral">Coral</a>
+                                        <a value="oddset">oddset</a>
+                                    </em>
+                                </p>
+                                <dl class="bet_tips">
+                                    <dd>胜</dd>
+                                    <dd>平</dd>
+                                    <dd class="nrb">负</dd>
+                                </dl>
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            break;
+        case "bqc":
+            <div class="bet_head">
+                <table height="40" border="0" id="tb_head" class="tb_head">
+                    <colgroup>
+                        <col width="86"/>
+                        <col width="51"/>
+                        <col width="249"/>
+                        <col width="497"/>
+                        <col width="49"/>
+                        <col width="62"/>
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th class="head_1" id="filterSh" hover="sai">
+                                <div class="hover1">
+                                    <a class="xlbtnsed">
+                                        <p class="float_l sias_p1">
+                                            赛事</p>
+                                        <span class="float_l icon2 hover1_1"></span></a>
+                                    <div id="filter_layer" class="sub_filter">
+                                        <div id="filterMatch" class="sub_filter_layer sub_filter_box">
+                                            <div id="leagues">
+                                            </div>
+                                            <div class="clearfix">
+                                            </div>
+                                            <div class="sub_filter_btns">
+                                                <a id="filter_all" class="btn2" href="javascript:void 0">全选</a> <a id="filter_rever"
+                                                                                                                   class="btn2" href="javascript:void 0">反选</a> <a class="btn2" id="filter_clear" href="javascript:void 0">
+                                                                                                                                                                    全清</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </th>
+                            <th hover="sai" id="selectts" class="head_2">
+                                <div class="hover1">
+                                    <a class="xlbtnsed">
+                                        <p class="float_l sias_p1">停售</p>
+                                        <span class="float_l icon2 hover1_1" style="left: 39px;"></span>
+                                    </a>
+                                    <div style="width: 51px; padding: 0; min-height: 55px;" class="sub_filter">
+                                        <ul>
+                                            <li data-title="停售" data-cls="e_time"><a href="javascript:void(0)">停售时间</a></li>
+                                            <li data-title="开赛" data-cls="b_time"><a href="javascript:void(0)">开赛时间</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </th>
+                            <th>主队vs 客队</th>
+                            <th style="vertical-align: top; padding-left: 1px;">
+                                <dl class="bet_area bet_bqq">
+                                    <dt>投注区（即时赔率）</dt>
+                                    <dd class="bet_sel">胜-胜</dd>
+                                    <dd class="bet_sel">胜-平</dd>
+                                    <dd class="bet_sel">胜-负</dd>
+                                    <dd class="bet_sel">平-胜</dd>
+                                    <dd class="bet_sel">平-平</dd>
+                                    <dd class="bet_sel">平-负</dd>
+                                    <dd class="bet_sel">负-胜</dd>
+                                    <dd class="bet_sel">负-平</dd>
+                                    <dd class="bet_sel">负-负</dd>
+                                </dl>
+                            </th>
+                            <th>全</th>
+                            <th class="head_7 nrb">
+                                分析
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            break;
+    }
+}

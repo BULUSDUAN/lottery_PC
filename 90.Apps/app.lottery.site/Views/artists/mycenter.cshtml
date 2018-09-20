@@ -1,0 +1,176 @@
+﻿@using External.Core.Celebritys
+@using GameBiz.Core
+@using app.lottery.site.Models
+@{
+    Layout = "../Shared/_ArtistsLayout.cshtml";
+    ViewBag.Title = "个人中心";
+    var modelCenter = ViewBag.ModelCenter as WinnerModelCenterInfo;
+    var user = ViewBag.CurrentUser as CurrentUserInfo;
+    var viewUserId = ViewBag.viewUserId;
+    var attList = ViewBag.AttList as WinnerModelRank_Collection;
+    var att =attList!=null? attList.ModelRankList.Where(p => p.UserId == viewUserId):null;
+}
+@if (modelCenter != null)
+{
+    <div class="middle_top clearfix">
+        <div class="fl my_header_left clearfix">
+            <div class="my_header_con">
+                <dl>
+                    <dt><a href="javascript:void(0)">
+                            @if (string.IsNullOrEmpty(modelCenter.ImgUrl))
+                            {
+                                <img src="@ViewHelpers.img("aritists/edit_img.png")"/>
+                            }
+                            else
+                            {
+                                 <img src="@ViewHelpers.img("aritists/edit_img.png")"/>
+                            }
+                           
+                        </a></dt>
+                    <dd class="clearfix" style="border-bottom: 1px solid #d5d5d5">
+                        <b>@modelCenter.FollowerUserCount</b><br />
+                        <em>关注</em>
+                    </dd>
+                    <dd>
+                        <b>@modelCenter.BeAttentionUserCount</b><br />
+                        <em>粉丝</em>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <div class="fr ml10 my_header_right">
+            <div class="clearfix">
+                <div class="fl">
+                    <i class="bg3 big_author_icon @(modelCenter.DealWithType == DealWithType.HasDealWith ? "rz_author_icon" : "nrz_author_icon")"></i>
+                    <a class="big_author">@modelCenter.UserDisplayName</a>
+                    @if (modelCenter.DealWithType == DealWithType.HasDealWith)
+                    {
+                        <i class="bg3 jv "></i>
+                    }
+                    <a href="###" class="address">http://www.mi.wancai.com/caimj</a>
+                </div>
+                <div class="fr" style="padding-top: 7px;">
+                    @if (user != null && user.LoginInfo.UserId == viewUserId && (modelCenter.DealWithType ==null||modelCenter.DealWithType == DealWithType.NoneThrough))
+                    {
+                        <a href="javascript:void(0)" class="sqrz" id="btn_mjsq">申请认证</a>
+                    }
+                    else if (user != null && user.LoginInfo.UserId == viewUserId && modelCenter.DealWithType == DealWithType.NoneDealWith)
+                    {
+                        <a href="javascript:void(0)" class="sqrz" >正在审核</a>
+                    }
+                    <i class="bg3 @(modelCenter.DealWithType == DealWithType.HasDealWith ? "mjrz_rz" : "mjrz_nrz")"></i>
+                </div>
+            </div>
+            <div>
+                @if (user == null || user.LoginInfo.UserId != viewUserId)
+                {
+                    <a href="javascript:user.attentionLogin(true,'@viewUserId')" class="bg3 btn btn-gz">+ 关注</a>
+                }
+               @* else if()
+                {
+                    <a href="javascript:user.attentionLogin(true,'@viewUserId')" class="bg3 btn btn-gz">取消关注</a>
+                }*@
+                <a href="javascript:void 0" onclick="shareTSina('买彩票能赚钱，#@SiteString.getHZSiteName(Request)赢家平台#的名家“@modelCenter.UserDisplayName”')" class="bg3 share xl">新浪微博</a>
+                <a href="javascript:void 0" onclick="shareToWb('买彩票能赚钱，#@SiteString.getHZSiteName(Request)赢家平台#的名家“@modelCenter.UserDisplayName”')" class="bg3 share tx">腾讯微博</a> 
+               @if (modelCenter.DealWithType == DealWithType.HasDealWith)
+               {
+                      <span class="fr rz_tips">@SiteString.getHZSiteName(Request)签约足球评论分析家</span>
+               }
+            </div>
+            @if (user != null && user.LoginInfo.UserId == viewUserId && modelCenter.DealWithType == DealWithType.HasDealWith)
+            {
+                <textarea placeholder="请输入自我描述" id="person_desc">@modelCenter.Description</textarea>
+                <a class="bg3 save_des" href="javascript:void 0;" id="save_desc">保存</a>
+            }
+            else
+            {
+                <div>@modelCenter.Description</div>
+            }
+          
+        </div>
+    </div>
+    <div class="middle_center mt10 clearfix">
+        <div class="fl my_cen_left clearfix">
+            <div class="lszj_title">
+                <i class="bg3"></i>历史战绩
+            </div>
+            <div class="hbl mt5">
+                <span class="zghbl"><b>@(modelCenter.TotalRateReturn == 0 ? "-" : (modelCenter.TotalRateReturn * 100).ToString("0") + "%")</b>
+                    <br />
+                    <em>最高回报率</em> </span>
+                  <span class="zgzjl"><b>@(modelCenter.TotalBonusFrequency == 0 ? "-" : (modelCenter.TotalBonusFrequency * 100).ToString("0") + "%")</b>
+                     <br />
+                     <em>最高中奖率</em> 
+                  </span>
+            </div>
+            <div class="tj mt5">
+                <ul>
+                    <li><i class="bg3 yymx"></i>拥有模型：@(modelCenter.TotalModelCount)个 </li>
+                    <li><i class="bg3 ylmx"></i>盈利模型：@(modelCenter.ProfiteModelCount)个 </li>
+                    <li><i class="bg3 ljgm"></i>累计购买人次：@(modelCenter.TotalBuyCount)人 </li>
+                    <li><i class="bg3 ljjj"></i>累计奖金：@(modelCenter.TotalBonusMoney)万 </li>
+                    <li><i class="bg3 cjsj"></i>最早创建时间：@modelCenter.CreateTime.ToString("yyyy/MM/dd") </li>
+                </ul>
+            </div>
+        </div>
+        <div class="fr my_cen_right">
+            <div class="mymenu3 clearfix">
+                <ul>
+                    <a href="">
+                        <li class="on">模型方案</li>
+                    </a><a href="">
+                            <li>单场推荐</li>
+                        </a>
+                </ul>
+            </div>
+            <div class="fa_con_box">
+
+                <div class="mymodelList clearfix">
+                    
+                </div>
+                <div id="waitObj" class="newLoading" style="display: block;">
+                    <img src="@ViewHelpers.img("/aritists/loading.gif")">
+                    加载中...
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="middle_bottom mt10 ">
+        <div class="pz_title_tip">
+            <span class="fl">拍砖吐槽 </span>
+            <div class="fr ">
+                <i class="bg3 tjrs"></i>已有<span id="tuskcount">0</span>人发表评论
+            </div>
+        </div>
+        <div class="pz_box">
+            <div class="fl show_msg">
+                <div id="waitObj" class="newLoading" style="display: block;">
+                    <img src="@ViewHelpers.img("/aritists/loading.gif")">
+                    加载中...
+                </div>
+            </div>
+             
+            <div class=" fr ly_con">
+                <ul>
+                    <li><i class="ly_icon bg3"></i><span>我有话说</span> <em class="gray">评论仅代表个人观点</em> </li>
+                    <li>
+                        <textarea placeholder="说说你的看法吧" id="dec"></textarea>
+                    </li>
+                    <li class="gray">
+                        还可以输入<b id="syzf">60</b>个字
+                        <a href="javascript:void 0;" class="fr bg3 pl_btn" id="btn_comments">评&nbsp;&nbsp;论</a>
+                    </li>
+                    <li class="gray">
+                        只限本站用户发表评论
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+}
+@UserHelper.js("modelcenter.js")
+@UserHelper.js("jquery.nicescroll.js")
+<script type="text/javascript">
+    getData();
+    var winnerUserId = "@viewUserId";
+</script>

@@ -1,0 +1,571 @@
+﻿@using System.Web.Script.Serialization;
+@using External.Core;
+@using External.Core.Celebritys;
+@using app.lottery.site.Models;
+@{
+    Layout = "../Shared/_ArtistsLayout.cshtml";
+    ViewBag.Title = "模型详情";
+    var info = ViewBag.ModelInfo as WinnerModelCycleInfo_Collection;
+
+    var modelinfo = info != null ? info.ModelList.FirstOrDefault() : null;
+    var cycleList = info != null ?info.ModelCycleList:null;
+    var user = ViewBag.CurrentUser as CurrentUserInfo;
+    var balance = ViewBag.CurrentUserBalance as GameBiz.Core.UserBalanceInfo;
+    var shoucang = ViewBag.ShouCang as WinnerModelCollectionInfo;
+    var mid = ViewBag.Mid;
+    JavaScriptSerializer serializer = new JavaScriptSerializer();
+    var serializedResult = serializer.Serialize(cycleList);
+
+}
+
+@if (modelinfo != null)
+{
+    <div class="info_new">
+        <div class="model_top">
+            <div class="model_title clearfix">
+                <h2 class="model_name">
+              
+                    @modelinfo.ModelName
+                </h2>
+                <div id="shareObj" class="winner_share model_share fr">
+                    <a class="tsina" href="javascript:void(0);" title="分享到新浪微博" data-v="sinaweibo" onclick="shareTSina('买彩票能赚钱，#@SiteString.getHZSiteName(Request)赢家平台#的模型:“@modelinfo.ModelName”,@((DateTime.Now - modelinfo.CreateTime).Days)天回报率-@(modelinfo.BonusFrequency == 0 ? "-" : (modelinfo.BonusFrequency*100).ToString("####") + "%")')"></a>
+                     
+                    <a class="tqq" href="javascript:void(0);" title="分享到腾讯微博" data-v="qqweibo" onclick="shareToWb('买彩票能赚钱，#@SiteString.getHZSiteName(Request)赢家平台#的模型:“@modelinfo.ModelName”,@((DateTime.Now - modelinfo.CreateTime).Days)天回报率-@(modelinfo.BonusFrequency == 0 ? "-" : (modelinfo.BonusFrequency*100).ToString("####") + "%")')"></a>
+                </div>
+            </div>
+            <div class="model_type clearfix">
+                <i class="aritsts_icon author_icon"></i><a class="author" href="/artists/mycenter/@modelinfo.UserId">@modelinfo.UserDisplayName</a>
+                <a class="newtags" title="自选模型" href="javascript:void(0);"><i></i><b>@SiteConvert.ModelType(modelinfo.ModelType)</b></a>
+                <a id="scObj" class="m_icon fav @(user != null && shoucang != null && !string.IsNullOrEmpty(shoucang.ModelId) ? "selected" : "") " href="javascript:void(0);"><i></i><b>@(user != null && shoucang != null && !string.IsNullOrEmpty(shoucang.ModelId) ? "取消收藏" : "收藏")（@modelinfo.TotalModelCollection）</b></a>
+            </div>
+        </div>
+        <div class="info_mid mt10">
+            <div class="new_lf">
+                <div class="lszj_title">
+                    <i class="bg3"></i>历史战绩
+                </div>
+                <div class="hbl mt5">
+                    <span class="zghbl"><b>@(modelinfo.TotalReportRatio == 0 ? "-" : (modelinfo.TotalReportRatio * 100).ToString("0") + "%")</b>
+                        <br>
+                        <em>最高回报率</em> </span><span class="zgzjl"><b>@(modelinfo.BonusFrequency == 0 ? "-" : (modelinfo.BonusFrequency*100).ToString("0") + "%")</b>
+                                                  <br>
+                                                  <em>最高中奖率</em> </span>
+                </div>
+                <div class="tj mt5">
+                    <ul>
+                        <li><i class="bg3 yymx"></i>投注期数：@(modelinfo.TotalBettingIssuseCount)期 </li>
+                        <li><i class="bg3 ylmx"></i>中奖期数：@(modelinfo.TotalBonusIssuseCount)个 </li>
+                        <li><i class="bg3 ljgm"></i>累计购买人次：@(modelinfo.TotalBuyCount)人 </li>
+                        <li><i class="bg3 ljjj"></i>累计奖金：@(modelinfo.TotalBonusMoney == 0 ? "0" : (modelinfo.TotalBonusMoney/10000).ToString("f2"))万
+                        </li>
+                        <li><i class="bg3 cjsj"></i>创建时间：@(modelinfo.CreateTime.ToString("yyyy-MM-dd"))
+                        </li>
+                        <li><i class="bg3 cjsj"></i>实战盈利比率：@(modelinfo.ActulProfitRatio == 0 ? "0" : modelinfo.ActulProfitRatio.ToString("f2"))%</li>
+                    </ul>
+                </div>
+                @if (user != null && user.LoginInfo.UserId == modelinfo.UserId)
+                {
+                    <div class="lszj_title mt5">
+                        <i class="bg3"></i>模型管理
+                    </div>
+                    <div class="tj mt5">
+                        <ul>
+                            <li><i class="bg3 yymx"></i>累计盈利金额：@(modelinfo.TotalProfitMoney == 0 ? "0" : modelinfo.TotalProfitMoney.ToString("f2"))元
+                            </li>
+                            <li><i class="bg3 ljgm"></i>累计销量：@(modelinfo.TotalSaleMoney == 0 ? "0" : modelinfo.TotalSaleMoney.ToString("f2"))元
+                            </li>
+                            <li><i class="bg3 ljjj"></i>累计奖金：@(modelinfo.TotalBonusMoney == 0 ? "0" : modelinfo.TotalBonusMoney.ToString("f2"))元
+                            </li>
+                        </ul>
+                        <div class="opt_con clearfloat">
+                            <a class="opt add" title="添加" href="/artists/mymanual?mid=@mid.ToLower()">添加</a>
+                            <a class="opt edit" title="编辑" href="/artists/edit/@mid.ToLower()">编辑</a> <a id="deleteModelObj" class="opt del" title="删除" data-v="@mid" href="javascript:void(0);">
+                                                                                                          删除</a>
+                        </div>
+                    </div>
+                    if (modelinfo.IsFirstPayment)
+                    {
+                        <div class="lszj_title xxpf_title mt5">
+                            <i class="xxpf"></i>先行赔付
+                            @if (modelinfo.IsEnableFirstPayment)
+                            {
+
+                                <input type="button" value="暂停" class="open_btn" data-t="out" id="openPfObj"/>
+                            }
+                            else
+                            {
+                                <input type="button" value="开启" class="open_btn" data-t="start" id="openPfObj"/>
+
+                            }
+                        </div>
+                        <div class="tj mt5">
+                            <ul class="pflist">
+                                <li>当前可用<span class="pftxt">@(modelinfo.TotalLoseMoney == 0 ? "0" : modelinfo.TotalLoseMoney.ToString("f2"))元</span>赔付金额
+                                </li>
+                                <li><a id="zrObj" class="pfBtn zr" href="javascript:void(0);">转&nbsp;入</a> <a id="zcObj"
+                                                                                                              class="pfBtn zc" href="javascript:void(0);">转&nbsp;出</a> </li>
+                                <li><i class="ypje"></i>已赔付金额： <strong>@(modelinfo.TotalHaveMoney == 0 ? "0" : modelinfo.TotalHaveMoney.ToString("f2"))</strong>
+                                    元 </li>
+                                <li><i class="wpje"></i>未结束赔付： <strong>@((modelinfo.TotalLoseMoney - modelinfo.TotalHaveMoney) == 0 ? "0" : (modelinfo.TotalLoseMoney - modelinfo.TotalHaveMoney).ToString("f2"))</strong>元
+                                </li>
+                                <li><i class="fxjl"></i>分享奖励： <strong>@(modelinfo.TotalShareBonusMoney == 0 ? "0" : modelinfo.TotalShareBonusMoney.ToString("f2"))</strong>元
+                                </li>
+                                <li><i class="yj"></i>佣金： <strong>@(modelinfo.TotalCommissionMoney == 0 ? "0" : modelinfo.TotalCommissionMoney.ToString("f2"))</strong>
+                                    元 </li>
+                            </ul>
+                        </div>
+                    }
+                }
+            </div>
+            <div class="new_rt">
+                @if (!string.IsNullOrEmpty(modelinfo.ModelDescription))
+                {
+                    <div class="model_des">
+                        <div class="description">
+                            @modelinfo.ModelDescription
+                        </div>
+                    </div>
+                }
+                <div class="other_con count_new">
+                    <div class="other_tab clearfix">
+                        <ul id="dataTypeObj">
+                            <li class="on" data-v="yl">盈利计划</li>
+                            <li class="" data-v="dq">单期购买</li>
+                        </ul>
+                    </div>
+                    <div id="buyJHObj" class="tab_box other_box">
+                        <div class="count_con box2 clearfix" data-v="dq" style="display: none">
+                            当前没有合适的投注内容
+                        </div>
+                        <div data-v="yl" class="count_con box2 clearfix">
+                            <div class="select_plan clearfix">
+                                <a id="zdyObj" class="advanced_setup" style="display: block;" href="javascript:void(0);">
+                                    自定义设置</a> <a id="tjjhObj" class="best_icon" style="display: none;" href="javascript:void(0);">
+                                                  推荐计划</a>
+                            </div>
+                            <div class="c_lf clearfix">
+                                <div id="tjConObj">
+                                    <div id="tjlljhTypeObj" class="plan_level">
+                                        <dl class="item_plan clearfix">
+                                            <dd class="item_dd">
+                                                <a class="item_s uObj selected" data-v="Low" data-t="10" href="javascript:void(0);"><span>低风险</span>
+                                                    <i></i></a><a class="item_s uObj" data-v="Middle" data-t="20" href="javascript:void(0);"><span>适中</span>
+                                                                   <i></i></a>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                    <div class="plan_box clearfix">
+                                        <div class="plan_cycle">
+                                            <span class="t3">@DateTime.Now.ToString("yyyyMMdd") <em class="t6">开始</em> </span>
+                                        </div>
+                                        <div class="best_plan fl planA">
+                                            <div class="capital fl">
+                                                <span class="t1">第一期投入</span> <span id="tjMoneyObj" class="t2">@modelinfo.SchemeMoney.ToString("####")
+                                                                                  <em class="t1">元</em> </span>
+                                            </div>
+                                            <div class="days fl">
+                                                <span id="tjTianobj" class="t2"><em class="t1">最长</em>15<em class="t1">期</em></span>
+                                                <span id="tjzgtrObj" class="t1 mtop">最高投入1200元</span>
+                                            </div>
+                                            <div class="profit fl">
+                                                <span class="t1">预期回报</span> <span id="tjhblObj" class="t2"><em class="t5">实际投入×</em>120%
+                                                                             </span>
+                                            </div>
+                                        </div>
+                                        <div class="ls_box fr">
+                                           @* <a id="chk_IsProfitedStop" class="mxTypeObj" href="javascript:void(0);"><b class="iconNew"></b>盈利后停止</a> *@
+                                            <a id="lijl" class="lsmx lsmxObj" href="javascript:$('#lsmxConObj').loadDialog();"><i></i>历史明细</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="gjConObj" style="display: none">
+                                    <dl class=" clearfix" id="yljhTypeObj">
+                                        <dt class="item_dt">投注模式：</dt>
+                                        <dd class="item_dd">
+                                            <a class="item_s yljhObj selected" data-v="dfxfb" data-t="30" href="javascript:void(0);"><span>低风险翻倍</span><i></i></a>
+                                            <a class="item_s yljhObj" data-v="gdfb" data-t="40" href="javascript:void(0);"><span>固定翻倍率</span>
+                                                <i></i></a><a class="item_s yljhObj" data-v="gdyl" data-t="50" href="javascript:void(0);"><span> 固定盈利率</span> <i></i></a>
+                                        </dd>
+                                    </dl>
+                                    <dl id="gdylsetObj" class="item_plan clearfix" style="display: none" data-v="gdyl">
+                                        <dt class="item_dt">固定盈利率设置：</dt>
+                                        <dd class="item_dd">
+                                            <input type="text" class="beishu" id="gdyllObj"/>&nbsp;%
+                                        </dd>
+                                    </dl>
+                                    <dl id="gdfbsetObj" class="item_plan clearfix" style="display: none" data-v="gdfb">
+                                        <dt class="item_dt">固定翻倍率设置：</dt>
+                                        <dd class="item_dd">
+                                            <input id="gdfbbsObj" class="beishu" type="text" value="1" />&nbsp;倍
+                                        </dd>
+                                    </dl>
+                                    <dl class=" clearfix">
+                                        <dt class="item_dt">连续购买期数：</dt>
+                                        <dd class="item_dd">
+                                            <input id="lxgmObj" class="beishu" type="text" value="1">&nbsp; 期
+                                            <input id="dyqgmbsObj" class="beishu" type="hidden" value="1">
+                                            <input id="pfblObj" type="hidden" value="@(modelinfo.IsFirstPayment && modelinfo.IsEnableFirstPayment ? modelinfo.LossRatio.ToString("f2") : "")">
+                                            <div class="ls_box fr">
+                                                <a id="chk_IsProfitedStop" class="mxTypeObj" href="javascript:void(0);"><b class="iconNew" ></b>盈利后停止</a>
+                                                <a class="lsmx lsmxObj" href="javascript:$('#lsmxConObj').loadDialog();"><i></i>历史明细</a>
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                            <div class="c_rt clearfix">
+                                <p class="bs_mt">
+                                    购买
+                                    <input id="beiDown" class="sub_btn" type="button" accesskey="-" title="试试[ALT和-]组合键"
+                                           data-v="-1">
+                                    <input type="text" id="tjbsObj" class="beishu" value="1">
+                                    <input id="beiUp" class="add_btn" type="button" accesskey="=" title="试试[ALT和+]组合键"
+                                           data-v="1">
+                                    倍 <span id="yjzjeObj" class="txt3" data-v="@modelinfo.SchemeMoney.ToString("####")">@modelinfo.SchemeMoney.ToString("####")</span>
+                                    元
+                                </p>
+                                <a class="zhjh" href="/artists/chaseplanlist?userId=@modelinfo.UserId"><i></i>追号计划</a> <a id="buybpObj" class="plan_btn" href="javascript:void(0);">
+                                                                            购&nbsp;&nbsp;买</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab_datas mt10 clearfix">
+                    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                        <thead>
+                            <tr>
+                                <th width="167">
+                                    时间
+                                </th>
+                                <th width="200">
+                                    历史投入
+                                </th>
+                                <th width="200">
+                                    奖金
+                                </th>
+                                <th>
+                                    回报率
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="matchDataObj">
+                            @if (cycleList != null && cycleList.Count > 0)
+                            {
+                                cycleList = cycleList.OrderByDescending(p => p.CreateTime).ToList();
+                                foreach (var cycleitem in cycleList)
+                                {
+
+                                    <tr class="@(cycleitem.ModelProgressStatus == ModelProgressStatus.Winning && cycleitem.CurrBonusMoney > cycleitem.CurrBettingMoney ? "hit" : "")" data-v="@cycleitem.SchemeId">
+                                        <td>
+                                            <span class="new_pos">
+                                                @cycleitem.CreateTime.ToString("yyyyMMdd")
+                                                @if (cycleList.IndexOf(cycleitem) == 0)
+                                                {
+                                                    <em class="new_icon"></em>
+                                                }
+                                            </span>
+                                        </td>
+                                        <td>@(cycleitem.CurrBettingMoney.ToString("####"))
+                                            元
+                                        </td>
+                                        <td>
+                                            @if (cycleitem.ModelProgressStatus == ModelProgressStatus.NoBonus)
+                                            {
+                                                <span>未中</span>
+                                            }
+                                            else if (cycleitem.ModelProgressStatus == ModelProgressStatus.Winning)
+                                            {
+                                                <span class="hit_num">@(cycleitem.CurrBonusMoney.ToString("f2"))
+                                                    元</span>
+                                            }
+                                            else
+                                            {
+                                                <span>-</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <div class="edit_con">
+                                                @if (cycleitem.ModelProgressStatus == ModelProgressStatus.ModelBuy)
+                                                {
+                                                    <span><a href="javascript:void(0)">认购中 </a></span>
+                                                }
+                                                else if (cycleitem.ModelProgressStatus == ModelProgressStatus.NoBonus)
+                                                {
+                                                    <span><a href="javascript:void(0)">未中 </a></span>
+
+                                                }
+                                                else if (cycleitem.ModelProgressStatus == ModelProgressStatus.Winning)
+                                                {
+                                                    <span class="hit_num">
+                                                        <a href="javascript:void(0)" data-v="20150309_1_SportterySoccerMix" data-t="dq">
+                                                            @(((cycleitem.CurrBonusMoney/cycleitem.CurrBettingMoney)*100).ToString("####"))%
+                                                        </a>
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span><a href="javascript:void(0)">未开奖 </a></span>
+                                                }
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--历史记录-->
+    <div class="tab_datas  dialog_layer clearfix" style="display: none; width: 800px;"
+         id="lsmxConObj">
+        <table cellpadding="0" cellspacing="0" border="0" width="100%" class="fl">
+            <thead>
+                <tr id="dragbox">
+                    <th width="200">
+                        时间
+                    </th>
+                    <th width="200" id="moneyTitleObj" class="tab_border">
+                        <span class="tab_t1">历史投入</span> @*<span class="tab_t2">先行赔付</span>*@
+                    </th>
+                    <th width="200" id="jjTitleObj">
+                        <span class="tab_t1">奖金</span> @*<span class="tab_t2" >佣金</span>*@
+                    </th>
+                    <th>
+                        <span class="layertxt">回报率<a href="javascript:void(0);" class="closelayer" id="closelsObj">关闭</a></span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="matchYLJHDataObj">
+                @*  @{
+
+                dynamic list = null;
+                var strStartIssuseNumber = string.Empty;
+                var strEndIssuseNumber = string.Empty;
+                var totalBettingMoney = 0M;
+                var totalBonusMoney = 0M;
+                var issuseCount = 0;
+                var showBettingMoney = 0M;
+                var showBonusMoney = 0M;
+                var showEndIssuseNumber = string.Empty;
+                var trmoney = 0M;
+                var jemoney = 0M;
+
+                foreach (var item in cycleList.OrderByDescending(p=>p.CreateTime))
+                {
+                    list = new List<object>();
+                    strStartIssuseNumber = item.CurrModelIssuse;
+                    totalBettingMoney = 0M;
+                    totalBonusMoney = 0M;
+                    foreach (var modelCycle in cycleList.Where(p => int.Parse(p.CurrModelIssuse) >= int.Parse(strStartIssuseNumber)).OrderBy(p => p.CreateTime))
+                    {
+                        issuseCount++;
+                        totalBettingMoney += modelCycle.CurrBettingMoney;
+                        totalBonusMoney += modelCycle.CurrBonusMoney;
+                        if (totalBonusMoney >= totalBettingMoney)
+                        {
+                            strEndIssuseNumber = modelCycle.CurrModelIssuse;
+                            showEndIssuseNumber = strEndIssuseNumber;
+                            showBettingMoney = totalBettingMoney;
+                            showBonusMoney = totalBonusMoney;
+                            list.Add(new { Issuse = modelCycle.CurrModelIssuse, bonuseMoney = modelCycle.CurrBonusMoney, bettingMoney = modelCycle.CurrBettingMoney, endIssuse = showEndIssuseNumber });
+                            break;
+                        }
+                        else if (issuseCount == 15)
+                        {
+                            strEndIssuseNumber = "未结束";
+                            showEndIssuseNumber = strEndIssuseNumber;
+                            showBettingMoney = totalBettingMoney;
+                            showBonusMoney = totalBonusMoney;
+                            list.Add(new { Issuse = modelCycle.CurrModelIssuse, bonuseMoney = modelCycle.CurrBonusMoney, bettingMoney = modelCycle.CurrBettingMoney, endIssuse = showEndIssuseNumber });
+                            break;
+                        }
+                        else
+                        {
+                            strEndIssuseNumber = modelCycle.CurrModelIssuse;
+                            showEndIssuseNumber = strEndIssuseNumber;
+                            showBettingMoney = totalBettingMoney;
+                            showBonusMoney = totalBonusMoney;
+                            if (modelCycle.ModelProgressStatus == ModelProgressStatus.ModelBuy)
+                            {
+                                strEndIssuseNumber = "未结束";
+                                showEndIssuseNumber = strEndIssuseNumber;
+                            }
+                            list.Add(new { Issuse = modelCycle.CurrModelIssuse, bonuseMoney = modelCycle.CurrBonusMoney, bettingMoney = modelCycle.CurrBettingMoney, endIssuse = showEndIssuseNumber });
+                        }
+                        
+                        
+                    }
+                    
+                    if (showBonusMoney/showBettingMoney > 1)
+                    {
+                        trmoney += showBettingMoney;
+                        jemoney += jemoney;
+                    }
+                         
+                    <tr class="@(showBonusMoney >= showBettingMoney ? "hit" : "")" data-t="showNext">
+                        <td>
+                            <span class="new_pos">
+                            
+                                @strStartIssuseNumber - @showEndIssuseNumber
+                                <em class=""></em>
+                            </span>
+                        </td>
+                        <td class="tab_border">@showBettingMoney.ToString("####") 元
+                        </td>
+                        @if (showEndIssuseNumber == "未结束")
+                        {
+                            <td>
+                                进行中
+                            </td>
+                        }
+                        else
+                        {
+                            <td>@(showBonusMoney.ToString("f2"))元
+                            </td>
+                        }
+                        <td>
+                            <div class="s_arrow_up">
+                                @if (showEndIssuseNumber == "未结束")
+                                {
+                                    <span class=""><em>进行中</em> </span>
+                                }
+                                else
+                                {
+                                    <span class="hit_num"><em>@(showBettingMoney == 0 || showBonusMoney == 0 ? "0" : ((showBonusMoney / showBettingMoney) * 100).ToString("####"))%</em>
+                                    </span>
+                                }
+                            </div>
+                        </td>
+                    </tr>   
+                    <tr class="second_tr dqTrObj" style="display: none;">
+                        <td colspan="4">
+                            <table class="second_tab" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                <tbody>
+                                   
+                                    @for (int i = list.Count - 1; i >= 0; i--)
+                                    {
+                                        var cycObj = list[i];
+                                        <tr>
+                                            <td width="200">@cycObj.Issuse</td>
+                                            <td class="tab_border" width="200">
+                                                @cycObj.bettingMoney.ToString("####")
+                                                <em class="txt05">元</em>
+                                            </td>
+                                            @if (cycObj.endIssuse == "未结束")
+                                            {
+                                                <td width="200">认购中</td>
+                                            }
+                                            else
+                                            {
+                                                <td width="200"> @cycObj.bonuseMoney.ToString("f2")</td>
+                                            }
+                                           
+                                            <td>
+                                                <span class="hit_num">
+                                                    <a href="javascript:void(0)">
+                                                        @if (cycObj.endIssuse == "未结束")
+                                                        {
+                                                            <em class="txt05">认购中</em>
+                                                        }
+                                                        else
+                                                        {
+                                                            <em class="txt05">@(cycObj.bonuseMoney == 0 || cycObj.bettingMoney == 0 ? "0" : ((cycObj.bonuseMoney / cycObj.bettingMoney) * 100).ToString("f2") + "%")</em>
+                                                        }
+                                       
+                                                    </a>
+                                                </span>
+                                            </td>
+                                        </tr>
+
+                                    }
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>    
+                }
+            }*@
+            </tbody>
+        </table>
+    </div>
+    <!--历史记录end-->
+    <!--保存-->
+    <div class="savebox" id="buyzhConObj" style="display: none;">
+        <div class="box_tit">
+            <span class="fl">确认购买</span>
+            <a href="javascript:void(0);" id="closezhConObj" class="close fr">close</a>
+        </div>
+        <div class="box_con">
+            <ul class="zhuihao">
+                <li class="l1">
+                    <p>选号内容：@( modelinfo.UserDisplayName)-@(modelinfo.ModelName) 追号<b id="zhNumHtmlObj">10</b>期</p>
+                    <div class="buystyle">
+                        <ul class="clearfix" id="buyTypeObj">
+                            <li><label><input type="radio" checked="checked" value="10" val="balance" name="buyTypeInput"/> 分期付款</label></li>
+                            <li><label><input type="radio" name="buyTypeInput" value="20" val="advance"/> 全额付款</label></li>
+                        </ul>
+                        <div class="buystyle_con" id="buyConObj">
+                            <p id="balanceBuyObj">第一期应付金额：<em class="txt3" id="daMoney">80</em>元<span class="deadline">@(modelinfo.CurrSchemeStopTime.ToString("yyyy-MM-dd hh:mm:ss")) 购买截止</span>
+                                <span class="warntip">资金将在每期购买发生时扣除，为了您的利益，请保证账户余额足够扣除。</span>
+                            </p>
+                            <p id="advanceBuyObj" style="display: none;">应付金额：<em class="txt3" id="zhMoney"></em>元
+                                <span class="warntip">资金将一次性扣除。</span>
+                            </p>
+                        </div>
+                    </div>
+                </li>
+                <li class="l2">
+                    <p>账户余额：<span class="txt3" id="usermoney">0</span>元  <a href="/member/pay" class="charge">充值</a></p>
+                    <p>红包余额：<span class="txt3" id="userhb">0</span>元 </p>
+                
+                    <p id="show_bpwd" style="@(user != null && balance.CheckIsNeedPassword("Bet") ? "display:block" : "display:none")">资金密码：<input type="password" class="psw" /></p>
+               
+                </li>
+                <li class="l3">
+                    <a href="javascript:void(0)" id="subzhbuyObj" class=" btn_sure">立即付款</a><a href="javascript:void(0)" id="rezhbuyObj">返回修改</a>
+                </li>
+                <li class="l4">
+                    <input type="checkbox" checked="checked" id="tytkObj"/> 同意《<a target="_blank" href="/help/serviceAgreement1">@SiteString.getHZSiteName(Request)代购协议</a>》&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" checked="checked" id="tyylgzObj" /> 同意 <a target="_blank" href="/model/planrules">盈利计划规则</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!--保存end-->
+    <!-- 先行赔付转入转出start -->
+    <div class="savebox" id="zrzcObj" style="width: 350px; display: none;">
+        <div class="box_tit">
+            <span class="lfloat" id="zrzcTitleObj">转入金额</span>
+            <a href="javascript:void(0);" id="closezrzcObj" class="close rfloat">close</a>
+        </div>
+        <div class="box_con">
+            <ul class="zhuihao">
+                <li class="l1">
+                    <span id="zrzcConValObj">转入金额：</span><input type="text" id="zrzcjeObj" class="pfmoney" value="">
+                </li>
+                <li class="l2" id="userMsgObj">
+                    <p>账户余额：<span class="txt3" id="userzrpfmoney">0</span>元  <a href="/member/pay" class="charge">充值</a></p>
+                    <p>可用彩金：<span class="txt3" id="userzrpfcj">0</span>元 </p>
+                </li>
+                <li class="l3">
+                    <a href="javascript:void(0)" id="subzrzcObj" class="btn btn_sure">确定</a>
+                    <a href="javascript:void(0);" id="resetzrzcObj" class="btn btn_cancel">取消</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- 先行赔付转入转出end -->
+    <input type="hidden" value="@serializedResult" id="hid_cyclelist"/>
+
+    <script type="text/javascript">
+        var datastr = $("#hid_cyclelist").val();
+        var savebox = new LightBox("buyzhConObj");
+        var isOpenFirstPayment = "@(modelinfo.IsEnableFirstPayment ? 1 : 0)";
+        $("#closelsObj").click(function() {
+            $("#lsmxConObj").loadDialog("close");
+        });
+        var modelId = "@mid";
+        var createUserId = "@modelinfo.UserId";
+    </script>
+    @UserHelper.js("modeinfo.js")
+}

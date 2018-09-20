@@ -1,0 +1,18 @@
+[0][2018-06-09 14:52:29] 获取IP出错 - IP:::1;JSON结果:404
+    System.Exception: 获取IP出错 - IP:::1;JSON结果:404 ---> System.Runtime.Serialization.SerializationException: Expecting state 'Element'.. Encountered 'Text'  with name '', namespace ''. 
+   at System.Runtime.Serialization.XmlObjectSerializerReadContext.HandleMemberNotFound(XmlReaderDelegator xmlReader, ExtensionDataObject extensionData, Int32 memberIndex)
+   at System.Runtime.Serialization.Json.XmlObjectSerializerReadContextComplexJson.GetJsonMemberIndex(XmlReaderDelegator xmlReader, XmlDictionaryString[] memberNames, Int32 memberIndex, ExtensionDataObject extensionData)
+   at ReadIpInfoFromJson(XmlReaderDelegator , XmlObjectSerializerReadContextComplexJson , XmlDictionaryString , XmlDictionaryString[] )
+   at System.Runtime.Serialization.Json.JsonClassDataContract.ReadJsonValueCore(XmlReaderDelegator jsonReader, XmlObjectSerializerReadContextComplexJson context)
+   at System.Runtime.Serialization.Json.JsonDataContract.ReadJsonValue(XmlReaderDelegator jsonReader, XmlObjectSerializerReadContextComplexJson context)
+   at System.Runtime.Serialization.Json.XmlObjectSerializerReadContextComplexJson.ReadDataContractValue(DataContract dataContract, XmlReaderDelegator reader)
+   at System.Runtime.Serialization.XmlObjectSerializerReadContext.InternalDeserialize(XmlReaderDelegator reader, String name, String ns, Type declaredType, DataContract& dataContract)
+   at System.Runtime.Serialization.XmlObjectSerializerReadContextComplex.InternalDeserialize(XmlReaderDelegator xmlReader, Type declaredType, DataContract dataContract, String name, String ns)
+   at System.Runtime.Serialization.Json.DataContractJsonSerializer.InternalReadObject(XmlReaderDelegator xmlReader, Boolean verifyObjectName)
+   at System.Runtime.Serialization.XmlObjectSerializer.ReadObjectHandleExceptions(XmlReaderDelegator reader, Boolean verifyObjectName, DataContractResolver dataContractResolver)
+   at System.Runtime.Serialization.Json.DataContractJsonSerializer.ReadObject(XmlDictionaryReader reader)
+   at Common.JSON.JsonSerializer.Deserialize[T](String jsonString)
+   at Common.Net.IpManager.GetIpDisplayname_Sina(String ip)
+   --- End of inner exception stack trace ---
+    ----------------------------------------------------------------------------
+

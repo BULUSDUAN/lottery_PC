@@ -147,5 +147,8 @@ namespace Lottery.Service.IModuleServices
 
         [Service(Date = "2018-9-13", Director = "lidi", Name = "获取首页按钮广告列表")]
         Task<List<APP_Advertising>> GetGameInfoIndex();
+
+        [Service(Date = "2018-9-13", Director = "lidi", Name = "首页快速购买彩种奖期数据")]
+        Task<QuickBuyModel> GetQuickBuy_PC(List<string> GameCodeList);
     }
 }

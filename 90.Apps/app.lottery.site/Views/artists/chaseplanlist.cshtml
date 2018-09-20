@@ -1,0 +1,70 @@
+﻿@using External.Core.Celebritys
+@{
+    ViewBag.Title = "追号计划列表";
+    Layout = "../Shared/_ArtistsLayout.cshtml";
+    var chaselist = ViewBag.ChaseList as WinnerModelSchemeInfo_Collection;
+}
+<div class="chase-title">
+    <span class="chase-bg zhjh1"></span><span class="chase-text">追号计划</span>
+</div>
+<div class="rank_box_chase other_box">
+    <table width="100%">
+        <thead>
+            <tr>
+                <th width="200px">
+                    模型名称
+                </th>
+                <th width="100px">
+                    追号期数
+                </th>
+                <th width="179px">
+                    追号发起时间
+                </th>
+                <th width="150px">
+                    追号订单号
+                </th>
+                <th width="250px">
+                    当前状态
+                </th>
+                <th width="/">
+                    详情
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in chaselist.ModelSchemeList)
+            {
+                <tr>
+                    <td style="text-align: left;padding-left: 20px;">
+                        <div>
+                            <span class="chase-modelname">@item.ModelName</span>
+                        </div>
+                        <i class="bg3 big_author_icon rz_author_icon"></i><a class="author">@item.UserDisplayName</a>
+                    </td>
+                    <td>
+                        <b class="numfontred">@item.TotalChaseIssuseCount</b>期
+                    </td>
+                    <td>
+                        @item.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")
+                    </td>
+                    <td>
+                        @item.ModelKeyLine
+                    </td>
+                    <td>
+                        已追<b class="numfontred">@item.CompleteIssuseCount</b>期,<b class="numfontred">@item.CompleteIssuseMoney.ToString("0")</b>元
+                        <br>
+                        未完成<b class="numfontred">@(item.TotalChaseIssuseCount - item.CompleteIssuseCount)</b>期,<b
+                            class="numfontred">@((item.TotalMoney - item.CompleteIssuseMoney).ToString("0"))</b>元
+                    </td>
+                    <td>
+                        <a href="/artists/chaseplan/@item.ModelKeyLine.ToLower()" class="blue" target="_blank">
+                            查看</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div style="text-align: right">
+    @ViewHelpers.Pager3("chaseReloadList", ViewBag.PageIndex, ViewBag.PaseSize, chaselist != null && chaselist.TotalCount > 0 ? chaselist.TotalCount : 0)
+</div>

@@ -1,0 +1,4 @@
+[0][2018-06-06 15:39:22] 艾付代付回调
+    代付失败,验证sign失败______signstr:{"merchant_no":"155805008498","orders":[{"order_no":"xxx","mer_order_no":"xxx","result":"xxx","amount":"xxx","withdraw_fee":"xxx"},{"order_no":"xxx","mer_order_no":"xxx","result":"xxx","amount":"xxx","withdraw_fee":"xxx"}]}_____sign:xxx_____signLocation:0d878c5d4ebaa85b6cba26dcd447b0a5
+    ----------------------------------------------------------------------------
+

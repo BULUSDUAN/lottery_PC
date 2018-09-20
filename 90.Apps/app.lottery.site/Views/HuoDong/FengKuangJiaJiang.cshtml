@@ -1,0 +1,138 @@
+﻿@{
+    ViewBag.Title = "疯狂加奖高达18%";
+    Layout = "../Shared/_HuoDong.cshtml";
+}
+<div id="fengkuang">
+    <div class="fk_content">
+        <span class="qiqiu1"></span>
+        <div class="titlebg t_c_g">
+            活动时间：&nbsp;&nbsp;2014年10月1日0:00至10月31日24:00</div>
+        <div class="titlebg t_c_g">
+            活动对象：&nbsp;&nbsp;@(SiteString.getHZSiteName(Request))所有注册用户</div>
+        <div class="titlebg t_c_y">
+            活动规则如下</div>
+        <div class="guize">
+            <p class="p">
+                1、参与对象必须是@(SiteString.getHZSiteName(Request))实名认证、手机绑定的注册用户；</p>
+            <p class="p">
+                2、本活动仅限竞彩足球（全玩法两场比赛2串1）、北京单场（不限玩法不限串关）</p>
+            <p>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;成功出票的方案（不限自购或合买）；</p>
+            <p class="p">
+                3、网站保底方案均不参与加奖活动，加奖优惠不与网站其他购彩优惠同享；</p>
+            <p class="p">
+                4、若过关方案场次出现比赛延期，则该方案不享网站任何加奖优惠；</p>
+            <p class="p">
+                5、合买加奖只奖励给发单人，跟单人不享受加奖优惠；</p>
+            <p class="p">
+                6、加奖赠送的彩金红包均只能用于购彩不能提现，在中奖方案开奖后24小时以内派送；</p>
+            <p class="p">
+                7、在法律许可范围内，@(SiteString.getHZSiteName(Request))保留本次活动的解释权。</p>
+            <span class="qiqiu2"></span>
+        </div>
+        <div class="titlebg t_c_g">
+            活动内容：</div>
+        <div class="titlebg t_c_y">
+            竞彩足球（全玩法两场比赛2串1）<span style="color: red">￥8888</span>加奖每人仅限加奖一次</div>
+        <div>
+        </div>
+        <table cellspacing="5">
+            <tr>
+                <td colspan="2" class="div">
+                    中奖税后金额范围 加奖金额（彩金红包）<span class="qianbao"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    300-999.99
+                </td>
+                <td style="color: red">
+                    ￥30
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    1000-3999.99
+                </td>
+                <td style="color: red">
+                    ￥100
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    4000-9999.99
+                </td>
+                <td style="color: red">
+                    ￥400
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    10000-49999.99
+                </td>
+                <td style="color: red">
+                    ￥1000
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    50000及以上
+                </td>
+                <td style="color: red">
+                    ￥8888<span title="每人仅限一次" class="huodong_title"></span>
+                </td>
+            </tr>
+        </table>
+        <div class="titlebg t_c_y">
+            北京单场（不限玩法不限串关）</div>
+        <table>
+            <tr>
+                <td colspan="2" class="div">
+                    中奖税后金额范围 加奖金额（彩金红包）
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    300-999.99
+                </td>
+                <td style="color: red">
+                    ￥15
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    1000-2999.99
+                </td>
+                <td style="color: red">
+                    ￥50
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    3000-5999.99
+                </td>
+                <td style="color: red">
+                    ￥200
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    6000-9999.99
+                </td>
+                <td style="color: red">
+                    ￥500
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    10000及以上
+                </td>
+                <td style="color: red">
+                    ￥1000
+                </td>
+            </tr>
+        </table>
+        <span class="qiqiu3"></span>
+    </div>
+    @{Html.RenderAction("Footer", "HuoDong");}
+</div>

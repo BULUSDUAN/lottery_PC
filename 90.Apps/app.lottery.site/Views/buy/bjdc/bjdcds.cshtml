@@ -1,0 +1,87 @@
+@using System.Text
+@using app.lottery.site.jsonManager
+@{
+    string type = ViewBag.Type;
+    var salematch = ViewBag.Matches as List<BJDC_MatchInfo_WEB>;
+    //salematch = salematch.Where(o => o.LocalStopTime > DateTime.Now && o.MatchStateName != "Cancel" && o.MatchStateName != "Late").ToList();
+    //联赛信息
+    var leagues = new List<string>();
+    var sale = 0;
+    var matchid = 0;
+    var lgname = string.Empty;
+    var clsname = string.Empty;
+    if (salematch.Count > 0)
+    {
+        var index = 0;
+        var endTime = Convert.ToDateTime(salematch[0].MatchStartTime).Hour < 10 ?
+            Convert.ToDateTime(Convert.ToDateTime(salematch[0].MatchStartTime).ToString("yyyy-MM-dd")).AddHours(10) :
+            Convert.ToDateTime(Convert.ToDateTime(salematch[0].MatchStartTime).AddDays(1).ToString("yyyy-MM-dd")).AddHours(10);
+        var week = SiteConvert.Week_CN(endTime.AddDays(-1).DayOfWeek);
+        var htitle = endTime.AddDays(-1).ToString("yyyy年MM月dd日") + " " + week;
+
+        var thead = new StringBuilder();
+
+        thead.Append("<dt><div class=\"tps\"><b>" + htitle + "</b>[10：00--次日10：00]</div><a href=\"javascript:void(0)\" class=\"hide_a\">隐藏</a></dt>");
+
+        @(new HtmlString(thead + "<dd class=\"clearfix\">"))
+
+        foreach (var item in salematch)
+        {
+            index++;
+            var startTime = Convert.ToDateTime(item.MatchStartTime);
+            //sale=true开售false未开售
+            sale = item.LocalStopTime > DateTime.Now && item.MatchStateName != "Cancel" && item.MatchStateName != "Late" ? 1 : 0;
+            matchid = item.MatchOrderId;
+            lgname = item.MatchName;
+            if (!leagues.Contains(lgname))
+            {
+                leagues.Add(lgname);
+            }
+            if (sale == 0)
+            {
+                clsname = "hide";
+            }
+            else
+            {
+                clsname = "p";
+                if (index%2 == 1)
+                {
+                    clsname += " odd";
+                }
+            }
+            if (startTime >= endTime)
+            {
+                //上一个table结束
+                @(new HtmlString("</dd>"))
+
+                endTime = endTime.AddDays(1);
+                week = SiteConvert.Week_CN(endTime.AddDays(-1).DayOfWeek);
+                htitle = endTime.AddDays(-1).ToString("yyyy年MM月dd日") + " " + week;
+
+                //开始新的table    
+                thead = new StringBuilder();
+                thead.Append("<dt><div class=\"tps\"><b>" + htitle + "</b>[10：00--次日10：00]</div><a href=\"javascript:void(0)\" class=\"hide_a\">隐藏</a></dt>");
+                @(new HtmlString(thead + "<dd class=\"clearfix\">"))
+            }
+
+            <a name="@endTime.ToString("yyyyMMdd")" matchid="@matchid" league="@lgname" i="@index" id="p_@(index)" class="@clsname" href="javascript:void(0)" sale="@sale">
+                <label for="@index"><input type="checkbox" id="@index" name="checkbox2" autocomplete="off"@(sale == 0 ? " disabled=disabled" : "")/>
+                    <span title="开始时间:@startTime.ToString("yyyy-MM-dd HH:mm:ss")" class="on">@(matchid + "[" + startTime.ToString("HH:mm") + "]"))</span>
+                    <span title="@lgname" class="match_name">@lgname</span>
+                    <b>@item.HomeTeamName</b>
+                    @if ("spf" == type)
+                    {
+                        <em class="rq@(item.LetBall > 0 ? "green" : "")">@(item.LetBall > 0 ? "+" + item.LetBall : item.LetBall.ToString())</em>
+                    }
+                    <em>vs</em>
+                    <b class="guest">@item.GuestTeamName</b>
+                </label>
+            </a>
+        }
+        @(new HtmlString("</dd>"))
+    }
+}
+<script type="text/javascript">
+    var leaguesDsRelate = @(new HtmlString(Common.JSON.JsonHelper.Serialize(leagues)));
+    var isue = "@ViewBag.CurIssue";
+</script>

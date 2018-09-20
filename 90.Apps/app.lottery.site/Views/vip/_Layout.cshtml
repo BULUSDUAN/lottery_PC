@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <meta name="keywords" content="@ViewBag.KeyWords" />
+    <meta name="description" content="@ViewBag.Description" />
+    <title>@ViewBag.Title</title>
+    <meta name="baidu-site-verification" content="G3yjx3dBmE" />
+    <meta property="qc:admins" content="14240177776773116375" />
+    <meta name="360-site-verification" content="5fc59d0c2b686ee3ea83e35da560e3de" />
+     @UserHelper.css("main.min.css")
+    @RenderSection("css", false)
+    @UserHelper.js_share("share.min.js")
+    @UserHelper.js("user-vip.min.js")
+    @UserHelper.js("nav.js")
+    @UserHelper.js("Xslider_1.js")
+    @RenderSection("js", false)
+</head>
+    <body>
+        <script type="text/javascript">
+            var res = "@ViewHelpers.res()";
+        </script>
+        <div class="header" style="@(Request.Url.ToString().IndexOf("supervip") > -1 ? "z-index:5" : "z-index:6")">
+            @{Html.RenderAction("header", "vip");}
+        </div>
+        <div class="banner_v" id="slider" style="width:100% !important;display:none">
+    <div class="conbox">
+        <div style="display: block;">
+            <a id="link82" style="position: absolute; z-index: 1; opacity: 1;">
+                <img src="@ViewHelpers.img("/vip/VIPbannner.jpg")" alt="" align="middle" height="330" width="2000">
+            </a>
+        </div>
+        <div style="display: block;">
+            <a id="link83" style="position: absolute; z-index: 0; opacity: 0;">
+                <img src="@ViewHelpers.img("/vip/VIPbannner4.png")" alt="" align="middle" height="330" width="2000">
+            </a>
+        </div>
+        <!--2014-08-03 11:07:12-->
+    </div>
+    <div class="switcher">
+        <a id="link84" class="cur" href="javascript:void(0)"></a>
+        <a id="link85" class="" href="javascript:void(0)"></a>
+    </div>
+</div>
+        <script type="text/javascript">
+            //banner轮播
+            $(function () {
+                var len = $(".conbox div").length;
+                var temhtml = '';
+                for (var i = 0; i < len; i++) {
+                    temhtml += '<a class="' + (i == 0 ? 'cur' : '') + '" href="javascript:void(0)"></a>';
+                }
+                $(".switcher").html(temhtml);
+
+                $("#slider").Xslider({
+                    affect: 'fade',
+                    ctag: 'a',
+                    speed: 1500,
+                    space: 6000,
+                    trigger: 'mouseover',
+                    conbox: '.conbox',
+                    switcher: '.switcher',
+                    stag: 'a',
+                    current: 'cur',
+                    rand: false
+                });
+                //首页会员动态滚动
+                function scrollDymic() {
+                    var tab = document.getElementById("js_table_scroll");
+                    var tab1 = document.getElementById("js_table_scroll1");
+                    var tab2 = document.getElementById("js_table_scroll2");
+                    if (tab == null || tab.length == 0 || tab1.length == 0 || tab2.length == 0) return false;
+                    function Marquee() {
+                        if (tab2.offsetHeight - tab.scrollTop <= 0)
+                            tab.scrollTop -= tab1.offsetHeight;
+                        else {
+                            tab.scrollTop++;
+                        }
+                    }
+                    var speed = 30;
+
+                    var MyMar = setInterval(Marquee, speed);
+                    tab.onmouseover = function () { clearInterval(MyMar); };
+                    tab.onmouseout = function () { MyMar = setInterval(Marquee, speed); };
+                }
+                scrollDymic();
+            })
+</script>
+        <div class="wrap">
+            @RenderBody()
+        </div>
+        <div class="clearfix"></div>
+          <div class="footer">
+        @{Html.RenderAction("footer", "home");}
+    </div>
+        @{Html.RenderPartial("box_doc");}
+        @{Html.RenderPartial("box_alert");}
+        @{Html.RenderPartial("box_login");}
+        @{Html.RenderPartial("box_progress");}
+      @*  @{Html.RenderPartial("box_confirm");}*@
+           @{Html.RenderPartial("box_confirm_bpwd");}
+    </body>
+</html>

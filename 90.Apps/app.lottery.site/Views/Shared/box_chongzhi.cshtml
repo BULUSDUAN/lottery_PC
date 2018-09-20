@@ -1,0 +1,78 @@
+﻿<div class="boxbg" style="display: none;" id="avtivityBox1">
+    <div class="boxtop">
+        <span class="">充值100送5元</span><a class="boxdel boxdel1 ">×</a>
+    </div>
+    <div class="boxtit1">
+        <span class="activity_des">活动详情</span>
+    </div>
+    <div class="boxdetails">
+        <div class="actime">
+            @*<span class="time_t">活动时间<cite>Activity time</cite></span><em class="time_e">+</em>
+            <span class="time_s">6月20日~7月31日</span>*@
+        </div>
+        <div class="divdown">
+            <span class="icon1">1</span>
+            <div class="title">
+                活动要求：</div>
+            <ul>
+                <li>1、6月20日~7月31日期间注册的用户</li>
+                <li>2、在“注册送红包”活动页面完成注册</li>
+                <li>3、完成实名信息认证、手机绑定</li>
+            </ul>
+        </div>
+        <div class="divdown1">
+            <span class="icon1">2</span>
+            <div class="title">
+                活动奖励：</div>
+            <ul>
+                <li>满足以上条件每次充值≥100元将获得<span style="color: #ff3c00">"5元红包"</span><br />
+                    <b style="font-weight: bold;">可累计获得10次红包</b></li>
+            </ul>
+        </div>
+        <div>
+            <span class="icon1">3</span>
+            <div class="title">
+                友情提示：</div>
+            <ul>
+                <li style="margin: 0px; background: none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
+                    class="icon"></i>现阶段暂停网上彩票代购，本活动旨在开放网络购彩之日回馈用户；参与该活动的用户如对充值金额进行提款需扣除赠送的相应红包；红包仅限用于购彩不能进行提款。本次活动最终解释权归网站所有。</li>
+            </ul>
+        </div>
+        <span class="icon3"></span>
+        <input type="button" id="promptly" class="promptly" value="立即领取" />
+    </div>
+</div>
+<script type="text/javascript">
+    $(".boxtop a.boxdel1").click(function () {
+        $("#avtivityBox1").css("display", "none");
+        loginDialog.Close();
+        $("#bg").css("display", "none");
+    });
+    $(".promptly").live("click", function () {
+        var g = 0, q = 400;
+        user.isLogin(function (islogin) {
+            if (!islogin) {
+                if (!getVersionbylogin()) {
+                    $("#loginLay").addClass("dialogAniCore dialogAnimate5");
+                    var timer = setInterval(function () {
+                        if (!$("#loginLay").hasClass("dialogAnimate5")) { $("#loginLay").removeClass("dialogAniCore"); clearInterval(timer); }
+                        $("#loginLay").removeClass("dialogAnimate5");
+
+                    }, 100);
+                }
+                loginDialog.Show();
+                $("#userName").focus();
+            }
+            else {
+                $.post("/home/QueryActivityCondition", function (data) {
+                    if (data.IsSucess) {
+                        window.location.href = "/member/pay";
+                    }
+                    else {
+                        alertTip(data.Message);
+                    }
+                });
+            }
+        });
+    });
+</script>

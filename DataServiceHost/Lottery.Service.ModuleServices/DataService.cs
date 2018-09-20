@@ -855,6 +855,73 @@ namespace Lottery.Service.ModuleServices
                 throw new Exception("获取出错", ex);
             }
         }
+        /// <summary>
+        /// 获取快速投注数据，后期可能修改redis
+        /// </summary>
+        /// <param name="GameCodeList"></param>
+        /// <returns></returns>
+        public Task<QuickBuyModel> GetQuickBuy_PC(List<string> GameCodeList)
+        {
+            try
+            {
+                var db = RedisHelperEx.DB_CoreCacheData;
+                var redisKey = RedisKeys.PC_Index_QuickBuy;
+                var redisModel = db.GetObj<QuickBuyModel>(redisKey);
+                var ResultModel = new QuickBuyModel();
+                ResultModel.SZCList = new List<Issuse_QueryInfo>();
+                ResultModel.JCZQList = new List<JCZQ_MatchInfo_WEB>();
+                var now = DateTime.Now;
+                if (redisModel == null)//如果redis中没有则需要一条一条找
+                {
+                    foreach (var item in GameCodeList)
+                    {
+                        var currentGame = QueryCurrentIssuseInfo(item).Result;
+                        if (currentGame != null)
+                        {
+                            ResultModel.SZCList.Add(currentGame);
+                        }
+                    }
+                    var key = EntityModel.Redis.RedisKeys.Key_JCZQ_Match_Odds_List;
+                    string reidskey = $"{key}_HHDG1";
+                    //查找竞彩足球数据
+                    var JczqList = GetJCZQMatchOddsList_ByRedis(reidskey).Result;
+                    if (JczqList != null)
+                    {
+                        ResultModel.JCZQList = JczqList.Where(p => Convert.ToDateTime(p.FSStopBettingTime) > now).ToList();
+                    }
+                }
+                else//如果redis中存在，则把符合条件的数据返回，不符合的再从数据库中查找
+                {
+                    foreach (var item in GameCodeList)
+                    {
+                        var oldmodel = redisModel.SZCList.FirstOrDefault(p => p.Game.GameCode.IndexOf(item, StringComparison.OrdinalIgnoreCase) > -1);
+                        if (oldmodel != null)
+                        {
+                            if (oldmodel.LocalStopTime > now)
+                            {
+                                ResultModel.SZCList.Add(oldmodel);
+                                continue;
+                            }
+
+                        }
+                        var currentGame = QueryCurrentIssuseInfo(item).Result;
+                        if (currentGame != null)
+                        {
+                            ResultModel.SZCList.Add(currentGame);
+                        }
+                    }
+                    if (redisModel.JCZQList != null && redisModel.JCZQList.Count > 0)
+                    {
+                        ResultModel.JCZQList = redisModel.JCZQList.Where(p => Convert.ToDateTime(p.FSStopBettingTime) > now).ToList();
+                    }
+                }
+                return Task.FromResult(ResultModel);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("获取出错", ex);
+            }
+        }
     }
 
 

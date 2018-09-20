@@ -1,0 +1,168 @@
+﻿@using GameBiz.Core
+@{
+    //Layout = "../Shared/_Layoutbaodan.cshtml";
+    Layout = null;
+    var SportsTicket = ViewBag.SportsTicket as Sports_TicketQueryInfoCollection;
+    var userId = ViewBag.UserId;
+    var status = ViewBag.schemeStatus;
+    var schemeId = ViewBag.SchemeId;
+}
+@if (SportsTicket != null && SportsTicket.TotalCount > 0)
+{
+    <table class="mtable" width="100%" cellspacing="0" cellpadding="0" bordercolor="#d3d3d3"
+        border="1" align="center" style="border-collapse: collapse;">
+        <tr class="thbg">
+            <th>
+                序号
+            </th>
+            <th>
+                出票内容
+            </th>
+            <th>
+                倍数
+            </th>
+            <th>
+                过关方式
+            </th>
+        </tr>
+        <tbody>
+            @foreach (var item in SportsTicket.TicketList)
+            {
+
+
+                var str = new List<string>();
+                if (string.IsNullOrEmpty(item.LocOdds))
+                {
+
+                    if (!string.IsNullOrEmpty(item.BetContent))
+                    {
+                        var BetContent = item.BetContent.Split('/');
+                        foreach (var betitem in BetContent)
+                        {
+                            str.Add(betitem + "</br>");
+                        }
+                    }
+                    else
+                    {
+                        str.Add("暂无票数据");
+                    }
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(item.BetContent)) { continue; }
+                    var BetContent = item.BetContent.Split('/');
+                    if (string.IsNullOrEmpty(item.LocOdds)) { continue; }
+                    var LocOdds = item.LocOdds.Split('/');
+                    var oldissues = "";
+                    var type = "";
+                    foreach (var items in BetContent)
+                    {
+                        var Issues = "";
+                        string[] splist;
+
+                        if (items.Split('_').Length > 2)
+                        {
+                            str.Add(SiteConvert.GameName(item.GameCode, items.Split('_')[0]) + (string.IsNullOrEmpty(item.GameCode) ? "" : "->"));
+                            Issues = items.Split('_')[1]; //期号
+                            splist = (items.Split('_')[items.Split('_').Length - 1]).Split(',');
+                            type = items.Split('_')[0];
+                        }
+                        else
+                        {
+                            str.Add(SiteConvert.GameName(item.GameCode, "") + (string.IsNullOrEmpty(item.GameCode) ? "" : "->"));
+                            if (items.Split('_').Length > 0)
+                            {
+
+                                Issues = items.Split('_')[0]; //期号
+                                splist = items.Split('_')[1].Split(',');
+                            }
+                            else
+                            {
+                                continue;
+                            }
+                            type = item.GameType;
+
+                        }
+                        var index = 0;
+                        foreach (var item3 in splist)
+                        {
+                            index++;
+                            foreach (var item2 in LocOdds)
+                            {
+                                if (Issues == item2.Split('_')[0])
+                                {
+                                    var sp = item2.Split('_')[1].Split(',');
+
+                                    if (sp != null)
+                                    {
+                                        foreach (var spitem in sp)
+                                        {
+                                            var x = spitem.Split('|')[0];
+                                            if (item3 == x)
+                                            {
+
+                                                var num = string.IsNullOrEmpty(spitem.Split('|')[1]) ? "0.000" : double.Parse(spitem.Split('|')[1]).ToString("0.000");
+                                                var qz = string.IsNullOrEmpty(item.GameCode) ? "" : (item.GameCode.ToLower() == "jczq" && type.ToLower() == "spf" ? "让球" : item.GameCode.ToLower() == "jclq" && type.ToLower() == "rfsf" ? "让分" : "");
+                                                if (oldissues != Issues)
+                                                {
+                                                    var dt1 = Issues.Substring(0, Issues.Length - 3);
+                                                    var dt = "20" + dt1;
+                                                    DateTime time = DateTime.ParseExact(dt, "yyyyMMdd", System.Globalization.CultureInfo.CurrentCulture);
+
+                                                    string[] weekdays = { "周日", "周一", "周二", "周三", "周四", "周五", "周六" };
+
+                                                    var issuesName = weekdays[Convert.ToInt32(time.DayOfWeek)];
+
+                                                    var matchnum = Issues.Substring(dt1.Length);
+
+                                                    str.Add("<i class='cblue2'>" + issuesName + matchnum + "</i><span class='clue3'>->" + qz + SiteString.ANTECODES_NAME(type, item3) + "[" + num.Substring(0, (num.IndexOf('.') + 3)) + "]</span>");
+                                                }
+                                                else
+                                                {
+                                                    str.Add(",<span class='clue3'>" + qz + SiteString.ANTECODES_NAME(type, item3) + "[" + num.Substring(0, num.IndexOf('.') + 3) + "]</span>");
+                                                }
+                                                // totalMoney *= decimal.Parse(num);
+                                                if (index == splist.Length)
+                                                {
+                                                    str.Add("</br>");
+                                                }
+                                                oldissues = Issues;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                }
+                var playtype = string.IsNullOrEmpty(item.GameCode) ? "" : item.GameCode == "JCZQ" || item.GameCode == "JCLQ" ? item.PlayType.Substring(1, item.PlayType.Length - 1).Replace("_", "串") : WCFService.GameTypeList(item.GameCode, item.GameType);
+                <tr>
+                    <td>
+                        <span class="">@Convert.ToInt32(item.TicketId.Split('|')[1])</span>
+                    </td>
+                    <td style="text-align: left; padding-left: 10px;">
+                        @Html.Raw(string.Join("", str.ToArray()))
+                    </td>
+                    <td class="cblue blod">
+                        @item.Amount
+                    </td>
+                    <td>@(playtype)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div style="text-align: right; padding-right: 10px;">
+        @ViewHelpers.PagerbaodanSportTicket("PagerbaodanSportTicket", ViewBag.PageIndex, ViewBag.PageSize, SportsTicket.TotalCount)
+    </div>
+    <script type="text/javascript">
+        function PagerbaodanSportTicket(pageIndex, pageSize) {
+            var href = "/baodan/SportsTicket?pageIndex=" + pageIndex + "&pageSize=" + pageSize + "&SchemeId=@schemeId";
+            $(".xialasaz").load(href);
+        }
+
+    </script>
+}

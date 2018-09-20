@@ -1,0 +1,62 @@
+﻿@{
+    var Title = "公司简介";
+    ViewBag.Title = Title + " - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+    @ViewHelpers.css("help.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">玩彩网</a> > </li>
+        <li><a href="/staticHtml/help/index.html">&nbsp;帮助中心</a> > </li>
+        <li>&nbsp;公司简介</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type = "About", name = "Aboutsite" });}
+    <div class="help_r">
+        <div class="det_box">
+            <h2>
+                公司简介</h2>
+            <div class="det_c">
+                <h4>
+                    关于玩彩网</h4>
+                <p>
+                    玩彩网(www.wancai.com)是由深圳市德荣邦科技有限公司推出的彩票推荐和O2O代购平台，拥有电脑和手机客户端购彩渠道，同时网站为用户免费提供彩票资讯、赛事推荐、创新玩法等服务。</p>
+                 <p>
+                    深圳市德荣邦科技有限公司成立于2016年，总部位于深圳，注册资金5000万元人民币。
+                 </p>
+                <h4>
+                    办公场地</h4>
+                <img style="height:200px;width:340px;" src="@ViewHelpers.img("/about/crd.jpg")"><span
+                    style="padding-right: 2px;"> </span>
+                <img style="height:200px;width:340px;" src="@ViewHelpers.img("/about/office.jpg")">
+                <h4>
+                    产品服务</h4>
+               <p>	1.彩票资讯——时时提供当下最热门的彩市趣闻以及中奖新闻；<br>
+&nbsp;&nbsp;2.赛事推荐——邀请足彩专业分析师为用户提供赛事提点和盘口分析，帮助彩民朋友选择投注方案；<br>
+&nbsp;&nbsp;3.创新玩法——由玩彩网独创的组合投注方式，可以将彩票产品转变成一种金融理财类产品，实现稳定收益；<br />
+&nbsp;&nbsp;4.彩民互动——为彩民朋友们提供可以交流心得，分享方案的圈子，使大家不再孤军奋战。
+</p>
+
+		<h4>特色功能</h4>
+		<h4>彩票红包：</h4>
+&nbsp;&nbsp;彩票红包是玩彩网专有的支付方式。使用彩票红包购彩，支付快捷，直抵现金，无需网银。<br>
+&nbsp;&nbsp;红包永久有效，并且和现金等值。<br>
+&nbsp;&nbsp;红包获取方式众多，周末福利赠送，节假日免费派送等等。</p>
+
+		<h4>比分直播：</h4>
+		<p>新版比分直播系统，对数据即时性进行了全面升级。比分变化、红黄牌判罚、球队换人等数据，可以实时提示。<br>
+&nbsp;&nbsp;开启赛事提醒，收藏热门比赛等等，让你在百忙之中也可以随时获取赛事的热点信息。</p>
+
+<h4>创新模式：</h4>
+<p>玩彩网与一般的彩票网站不同，它致力于将传统的彩票玩法，打造封装成金融投资理财类产品，实现稳定收益。玩彩网拥有其他平台无法比拟的大数据统计工具，可以对赛事进行时时甄别，判断出历史盘口的相似价值，从而为彩民朋友们省去看盘盯盘的冗余时间，可以腾出更多精力来享受彩票之外的幸福生活。</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+@ViewHelpers.js("help.js")

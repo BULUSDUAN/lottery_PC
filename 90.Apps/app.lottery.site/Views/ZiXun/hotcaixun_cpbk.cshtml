@@ -1,0 +1,93 @@
+﻿@{
+    ViewBag.Title = "热点彩讯 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    var hot = ViewBag.hotDataSource as External.Core.SiteMessage.ArticleInfo_QueryCollection;
+    @UserHelper.css("zixun.css")
+}
+<div class="crumb_">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li><a href="/staticHtml/zixun/index.html">彩票百科</a></li>
+    </ul>
+</div>
+<div id="zixun">
+    <input type="hidden" name="hdcategory" id="hdcategory" value="@ViewBag.category" />
+    <div class="zx_left">
+        <div class="zx_type">
+            <a href="/staticHtml/zixun/index.html" class="tab-title_hot on" id="hot-all" category="">查看全部</a><a
+                href="/zixun/hotcaixun_cpzj" id="hot-cpzj" class="tab-title_hot" category="CPZJ">彩票中奖</a><a
+                    href="/zixun/hotcaixun_hot" class="tab-title_hot" id="hot-rdzx" category="HOT">热点彩讯</a><a
+                        href="/zixun/hotcaixun_cpbk" class="tab-title_cpbk" id="hot-cpbk" category="CPBK">彩票百科</a>
+        </div>
+        <div class="zx_content">
+            <table border="0" cellpadding="0" cellspacing="0" class="zx_table">
+                <tr class="zx_title">
+                    <td width="20%">
+                        类型
+                    </td>
+                    <td width="65%">
+                        标题
+                    </td>
+                    <td width="15%">
+                        发布日期
+                    </td>
+                </tr>
+                <tbody id="cpzx-all">
+                    @foreach (var item in hot.ArticleList)
+                    {
+                        <tr class="zx_con">
+                            <td width="20%">
+                                @SiteConvert.ZX_Category(item.Category)
+                            </td>
+                            <td width="65%">
+                                <a href="/zixun/textpart?Id=@item.Id&type=cpbk" class="zx_blue">@(item.Title.Length > 25 ? item.Title.Substring(0, 25) + "…" : item.Title)</a>
+                            </td>
+                            <td width="15%">
+                                @item.CreateTime.ToString("yyyy.MM.dd")
+                            </td>
+                        </tr>
+                    }
+                    <tr class="last-tr no-bottom">
+                        <td colspan="3">@ViewHelpers.Pager_z(ViewBag.pageNo, ViewBag.PageSize, hot.TotalCount == null ? 0 : hot.TotalCount)
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="zx_right">
+        @{Html.RenderAction("zixunright", "zixun");}
+    </div>
+</div>
+<div style="clear: both">
+</div>
+<script type="text/javascript">
+    $(function () {
+        var category = $("#hdcategory").val();
+        if (category == "CPZJ|HOT|ZDZT") {
+            $("#hot-all").addClass("on");
+            $("#hot-all").siblings().removeClass("on");
+        }
+        if (category == "CPZJ") {
+            $("#hot-cpzj").addClass("on");
+            $("#hot-cpzj").siblings().removeClass("on");
+        }
+        if (category == "HOT") {
+            $("#hot-rdzx").addClass("on");
+            $("#hot-rdzx").siblings().removeClass("on");
+        }
+        if (category == "CPBK") {
+            $("#hot-cpbk").addClass("on");
+            $("#hot-cpbk").siblings().removeClass("on");
+        }
+    });
+    //    $(".tab-title_hot").click(function () {
+    //        var category = $(this).attr("category");
+    //        $(this).addClass("on");
+    //        $(this).siblings().removeClass("on");
+    //        location.search = "pageNo=" + 0 + "&pageSize=" + 25 + "&category=" + category + "&r=" + Math.random().toFixed(5);
+    //    });
+    function getAlldata(pageNo, pageSize) {
+        location.search = "pageNo=" + pageNo + "&pageSize=" + pageSize;
+    }
+</script>

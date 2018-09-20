@@ -1,0 +1,250 @@
+﻿<!--
+    <div class="game-ballsmain">
+        <span class="gray"><b>胆拖投注：</b>至少选择6个红球和一个篮球，最高奖金<b class="red">1000万</b>元</span>
+        <div>
+            <div class="ballrow" style="float: left; margin-top: 30px;">
+                <ul class="balltitle balltitle1">
+                    <li class="desc1">红胆</li>
+                    @*<li hottype="Lose" class="desc1 gray">遗漏 </li>*@
+                </ul>
+                <div class="clear">
+                </div>
+            </div>
+            <fieldset class="redrow-dan danma">
+                <legend><b>红球胆码 我认为必出的红球</b> <em>至少选择1个红球，最多5个</em></legend>
+                <div class="ballrow">
+                    <ul class="ball">
+                        <li class="numbers"><b>01</b><b>02</b><b>03</b><b>04</b><b>05</b><b>06</b><b>07</b><b>08</b><b>09</b><b>10</b><b>11</b><b>12</b><b>13</b><b>14</b><b>15</b><b>16</b><b>17</b><b>18</b></li>
+                    </ul>
+                    <div class="clear">
+                    </div>
+                </div>
+                <div class="ballrow">
+                    <ul class="ball">
+                        <li class="numbers"><b>19</b><b>20</b><b>21</b><b>22</b><b>23</b><b>24</b><b>25</b><b>26</b><b>27</b><b>28</b><b>29</b><b>30</b><b>31</b><b>32</b><b>33</b></li>
+                    </ul>
+                    <div class="clear">
+                    </div>
+                </div>
+            </fieldset>
+            <div class="clear">
+            </div>
+            <div class="ballrow" style="float: left; margin-top: 35px;">
+                <ul class="balltitle balltitle1">
+                    <li class="desc1">红拖</li>
+                    @*<li class="desc1 gray">遗漏 </li>*@
+                </ul>
+                <div class="clear">
+                </div>
+            </div>
+            <fieldset class="redrow redrow-tuo tuoma">
+                <legend><b>红球拖码 我认为可能出的红球</b> <em>至少选择2个</em></legend>
+                <div class="ballrow">
+                    <ul class="ball">
+                        <li class="numbers"><b>01</b><b>02</b><b>03</b><b>04</b><b>05</b><b>06</b><b>07</b><b>08</b><b>09</b><b>10</b><b>11</b><b>12</b><b>13</b><b>14</b><b>15</b><b>16</b><b>17</b><b>18</b></li>
+                    </ul>
+                    <div class="clear">
+                    </div>
+                </div>
+                <div class="ballrow">
+                    <ul class="ball">
+                        <li class="numbers"><b>19</b><b>20</b><b>21</b><b>22</b><b>23</b><b>24</b><b>25</b><b>26</b><b>27</b><b>28</b><b>29</b><b>30</b><b>31</b><b>32</b><b>33</b>
+                            <select id="rand_sel_red">
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                                <option value="16">16</option>
+                            </select>
+                            <input type="button" style="color: #940900; cursor: pointer;" value="机选" onclick="ballBox.rand.red.rand();" /></li>
+                    </ul>
+                    <div class="clear">
+                    </div>
+                </div>
+            </fieldset>
+            <div class="clear">
+            </div>
+            <div class="ballrow" style="float: left; margin-top: 30px;">
+                <ul class="balltitle balltitle1">
+                    <li class="desc1">蓝球</li>
+                    @*<li class="desc1 gray">遗漏 </li>*@
+                </ul>
+                <div class="clear">
+                </div>
+            </div>
+            <fieldset class="bluerow bluerow-dt" id="ssq_dantuo_blue">
+                <legend><b>蓝球区</b> <em>至少选择1个蓝球</em></legend>
+                <div class="ballrow">
+                    <ul class="ball">
+                        <li class="numbers"><b>01</b><b>02</b><b>03</b><b>04</b><b>05</b><b>06</b><b>07</b><b>08</b><b>09</b><b>10</b><b>11</b><b>12</b><b>13</b><b>14</b><b>15</b><b>16</b>
+                            <select id="rand_sel_blue">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                                <option value="16">16</option>
+                            </select>
+                            <input type="button" style="color: #185F94; cursor: pointer;" value="机选" onclick="ballBox.rand.blue.rand();" /></li>
+                    </ul>
+                    <div class="clear">
+                    </div>
+                </div>
+            </fieldset>
+            <div class="clear">
+            </div>
+        </div>
+    </div>-->
+    
+                <h1 class="playprompt">
+                    <em>玩法提示：</em> 选择1-5个你认为必出的红球号码（胆码），2个以上你认为可能会出的红球号码（拖码），至少一个蓝球号码组合进行投注！单注奖金 
+                    <b class="fred">500</b>万元！ 
+                    <a href="javascript:" class="szc_notice ">
+                        <strong class="sl">示例</strong>
+                        <span>选号：[胆]01[拖]02 03 04 05 06 07+01<br />
+                            开奖：<strong class="red"><b class="slnum">01</b> <b class="slnum">02</b> 
+                                   <b class="slnum">03</b> <b class="slnum">04</b> <b class="slnum">05</b> <b class="slnum">06</b>+
+                                   <b class="blnum">01</b></strong><br />
+                            奖金：5000000元。</span> 
+                    </a>
+                </h1>
+                <div class="danma clear">
+                    <div style="top: 95px; *top: 102px;" class="szc_num">
+                        <div class="szc_xuanhao">
+                            选号</div>
+                        <div class="szc_yilou">
+                            <cite title="指该号码自上次开出之后到当前期没有出现的次数" val="yl">遗漏</cite>
+                            <em>
+                                <a title="指该号码自上次开出之后到当前期没有出现的次数" val="lr" href="#">冷热</a>
+                                <a title="隐藏" val="hd" href="#">隐藏</a>
+                            </em>
+                        </div>
+                    </div>
+                    <div class="dan_con">
+                        <strong>胆码区</strong> &nbsp;您认为<em class="c_ba1d21">必出</em>的号码
+                    </div>
+                    <div class="red_balls danma">
+                        <p class="dantuo_title"><strong class="c_ba1d21">红球</strong>至少选择1个，最多5个</p>
+                        <ul class="clearfix ball">
+                            <li class="numbers"><b>01</b><span></span></li>
+                            <li class="numbers"><b>02</b><span></span></li>
+                            <li class="numbers"><b>03</b><span></span></li>
+                            <li class="numbers"><b>04</b><span></span></li>
+                            <li class="numbers"><b>05</b><span></span></li>
+                            <li class="numbers"><b>06</b><span></span></li>
+                            <li class="numbers"><b>07</b><span></span></li>
+                            <li class="numbers"><b>08</b><span></span></li>
+                            <li class="numbers"><b>09</b><span></span></li>
+                            <li class="numbers"><b>10</b><span></span></li>
+                            <li class="numbers"><b>11</b><span></span></li>
+                            <li class="numbers"><b>12</b><span></span></li>
+                            <li class="numbers"><b>13</b><span></span></li>
+                            <li class="numbers"><b>14</b><span></span></li>
+                            <li class="numbers"><b>15</b><span></span></li>
+                            <li class="numbers"><b>16</b><span></span></li>
+                            <li class="numbers"><b>17</b><span></span></li>
+                            <li class="numbers"><b>18</b><span></span></li>
+                            <li class="numbers"><b>19</b><span></span></li>
+                            <li class="numbers"><b>20</b><span></span></li>
+                            <li class="numbers"><b>21</b><span></span></li>
+                            <li class="numbers"><b>22</b><span></span></li>
+                            <li class="numbers"><b>23</b><span></span></li>
+                            <li class="numbers"><b>24</b><span></span></li>
+                            <li class="numbers"><b>25</b><span></span></li>
+                            <li class="numbers"><b>26</b><span></span></li>
+                            <li class="numbers"><b>27</b><span></span></li>
+                            <li class="numbers"><b>28</b><span></span></li>
+                            <li class="numbers"><b>29</b><span></span></li>
+                            <li class="numbers"><b>30</b><span></span></li>
+                            <li class="numbers"><b>31</b><span></span></li>
+                            <li class="numbers"><b>32</b><span></span></li>
+                            <li class="numbers"><b>33</b><span></span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="clear">
+                    <div class="tuo_con">
+                        <strong>拖码区</strong> &nbsp;您认为<em class="c_ba1d21">可能出</em>的号码
+                    </div>
+                    <div class="red_balls tuoma">
+                        <p class="dantuo_title"><strong class="c_ba1d21">红球</strong>至少选择2个</p>
+                        <ul class="clearfix ball">
+                            <li class="numbers"><b>01</b><span></span></li>
+                            <li class="numbers"><b>02</b><span></span></li>
+                            <li class="numbers"><b>03</b><span></span></li>
+                            <li class="numbers"><b>04</b><span></span></li>
+                            <li class="numbers"><b>05</b><span></span></li>
+                            <li class="numbers"><b>06</b><span></span></li>
+                            <li class="numbers"><b>07</b><span></span></li>
+                            <li class="numbers"><b>08</b><span></span></li>
+                            <li class="numbers"><b>09</b><span></span></li>
+                            <li class="numbers"><b>10</b><span></span></li>
+                            <li class="numbers"><b>11</b><span></span></li>
+                            <li class="numbers"><b>12</b><span></span></li>
+                            <li class="numbers"><b>13</b><span></span></li>
+                            <li class="numbers"><b>14</b><span></span></li>
+                            <li class="numbers"><b>15</b><span></span></li>
+                            <li class="numbers"><b>16</b><span></span></li>
+                            <li class="numbers"><b>17</b><span></span></li>
+                            <li class="numbers"><b>18</b><span></span></li>
+                            <li class="numbers"><b>19</b><span></span></li>
+                            <li class="numbers"><b>20</b><span></span></li>
+                            <li class="numbers"><b>21</b><span></span></li>
+                            <li class="numbers"><b>22</b><span></span></li>
+                            <li class="numbers"><b>23</b><span></span></li>
+                            <li class="numbers"><b>24</b><span></span></li>
+                            <li class="numbers"><b>25</b><span></span></li>
+                            <li class="numbers"><b>26</b><span></span></li>
+                            <li class="numbers"><b>27</b><span></span></li>
+                            <li class="numbers"><b>28</b><span></span></li>
+                            <li class="numbers"><b>29</b><span></span></li>
+                            <li class="numbers"><b>30</b><span></span></li>
+                            <li class="numbers"><b>31</b><span></span></li>
+                            <li class="numbers"><b>32</b><span></span></li>
+                            <li class="numbers"><b>33</b><span></span></li>
+                        </ul>
+                    </div>
+                    <div class="blue_balls bluerow" id="ssq_dantuo_blue">
+                        <div class="dantuo_title"><strong class="c_2042a2">蓝球</strong> &nbsp;至少选择1个</div>
+                        <ul class="clearfix ball">
+                            <li class="numbers"><b>01</b> <span>-</span> </li>
+                            <li class="numbers"><b>02</b> <span>-</span> </li>
+                            <li class="numbers"><b>03</b> <span>-</span> </li>
+                            <li class="numbers"><b>04</b> <span>-</span> </li>
+                            <li class="numbers"><b>05</b> <span>-</span> </li>
+                            <li class="numbers"><b>06</b> <span>-</span> </li>
+                            <li class="numbers"><b>07</b> <span>-</span> </li>
+                            <li class="numbers"><b>08</b> <span>-</span> </li>
+                            <li class="numbers"><b>09</b> <span>-</span> </li>
+                            <li class="numbers"><b>10</b> <span>-</span> </li>
+                            <li class="numbers"><b>11</b> <span>-</span> </li>
+                            <li class="numbers"><b>12</b> <span>-</span> </li>
+                            <li class="numbers"><b>13</b> <span>-</span> </li>
+                            <li class="numbers"><b>14</b> <span>-</span> </li>
+                            <li class="numbers"><b>15</b> <span>-</span> </li>
+                            <li class="numbers"><b>16</b> <span>-</span> </li>
+                        </ul>
+                    </div>
+                </div>
+                @*<div class="select_result">
+                    <span>您当前选中了 <b id="redBallNumDt"><em class="fred">0</em>个红球(0个胆码，0个拖码)</b>，<em id="blueBallNumDt"
+                        class="fblue">0</em>个蓝球，共<em id="itemsDt" class="fred">0</em>注，共<em id="sumDt" class="fred">0</em>元
+                    </span>
+                </div>*@

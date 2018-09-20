@@ -1,0 +1,119 @@
+﻿@using app.lottery.site.Models;
+@{
+    var fetchTypeDis = "银行卡提款";
+    if (ViewBag.FetchType == "alipay")
+    {
+        fetchTypeDis = "支付宝提款";
+    }
+    ViewBag.Title = fetchTypeDis + " - " + SiteString.getHZSiteName(Request) + "-专业彩票代购网站|网上投注|福彩|体彩|高频彩";
+    CurrentUserInfo CurrentUser = ViewBag.CurrentUser;
+    var balance = ViewBag.CurrentUserBalance as GameBiz.Core.UserBalanceInfo;
+
+    var RequestWithdraw_1 = ViewBag.RequestWithdraw_1 as GameBiz.Core.CheckWithdrawResult;
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>@fetchTypeDis</li>
+    </ul>
+</div>
+<div class="center mt10">
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mune_safe">
+            <div class="account_menu clearfix">
+            <a href="/member/accountdetail"  >账户明细</a>
+            <a href="/member/redBagList">红包明细</a>
+            <a href="/member/paywizzard" >账户充值</a>
+            <a href="/member/drawingsguide" class="select">账户提款</a>
+        </div>
+        <div class="account_con">
+            <div class="betorder_top">
+            <ul>
+                <li><a href="/member/drawingsguide"><i></i>提款向导</a></li>
+                <li class="@(ViewBag.FetchType == "bank" ? "betorder_topSelected" : string.Empty)"><a href="/member/fetch_bank"><i></i>银行提款</a></li>
+              @*  <li class="@(ViewBag.FetchType == "alipay" ? "betorder_topSelected" : string.Empty)">
+                    <a checklg="/member/fetch_alipay" href="javascript:void(0)">支付宝提现</a></li>*@
+                <li><a href="/member/drawingsrecordall"><i></i>提款记录</a></li>
+            </ul>
+        </div>
+        <div class="center_con">
+@*            <p class="tip2">
+                <i></i>温馨提示：请确认你以下提款信息，无误后点击确定提款。
+            </p>*@
+            <form action="/member/fetchsubmit" method="post" onsubmit="return checkInput();">
+            <input type="hidden" name="fetchType" value="@ViewBag.FetchType" />
+            <input type="hidden" name="money" value="@ViewBag.Money" />
+            <ul class="userinfo_list">
+                <li><span class="sp120">提款类型：</span>@fetchTypeDis</li>
+                <li><span class="sp120">提款账号：</span>@(ViewBag.FetchType == "bank" ? SiteString.EncodeBankCardNumber(ViewBag.FetchAccont) : SiteString.EncodeEmail(ViewBag.FetchAccont))<input type="hidden" name="fetchAccount" value="@ViewBag.FetchAccont"/></li>
+                <li><span class="sp120">申请金额：</span><span class="ye fszie blod">@RequestWithdraw_1.RequestMoney.ToString("N2")</span></li>
+                <li><span class="sp120">到账金额：</span><span class="ye fszie blod">@RequestWithdraw_1.ResponseMoney</span></li>
+                <li><span class="sp120">手续费：</span><span class="ye fszie blod" id="fet-sxf">@(RequestWithdraw_1.RequestMoney - RequestWithdraw_1.ResponseMoney)元</span></li>
+                <li><span class="sp120">提现类别：</span><span>@SiteConvert.WithdrawCategoryName(RequestWithdraw_1.WithdrawCategory)</span></li>
+                <li><span class="sp120" style="display:inline-block;vertical-align:top;width:99px;">描述：</span><span style="display:inline-block;width:516px;">@Html.Raw(RequestWithdraw_1.Summary)</span></li>
+                @*<li><span class="sp120">校验码：</span><input type="text" name="validatecode" value=""
+            maxlength="6" class="login_input" size="10" id="validate" /></li>*@
+                @{if (balance.CheckIsNeedPassword("Withdraw"))
+                  {
+                    <li><span class="sp120 blue">资金密码：</span><input type="password" name="balancepwd"
+                        value="" maxlength="16" style="border-color: #e5e5e5" class="balancepwd" size="9" id="balancepwd" /></li>
+                  }}
+                <li><span class="sp120">&nbsp;</span><input type="submit" value="确认" class="btn_next" />
+                    <a href="@(Request.UrlReferrer == null ? SiteString.root(Request) : Request.UrlReferrer.ToString())" onclick="history.go(-1);return false;" class="my_tx">
+                        返回</a> </li>
+                <li><span class="sp120">&nbsp;</span><span class="error-box" id="errbox"><i class="err-icon"></i><span
+                    class="msg" id="errMsgFetch"></span></span> </li>
+            </ul>
+            <input type="hidden" name="HdWcName" id="HdWcName" value="@SiteConvert.WithdrawCategoryName(RequestWithdraw_1.WithdrawCategory)" />
+            </form>
+            <script type="text/javascript">
+                $(function () {
+                    var balancepwd = $("#balancepwd");
+                    var HdWchName = $("#HdWcName").val();
+                    if (HdWchName != null && HdWchName == "错误的提现") {
+                        $("#fet-sxf").html("");
+                        $(".btn_next").hide();
+                        if (balancepwd.length >= 1) {
+                            balancepwd.val("").focus();
+                        }
+                    }
+                });
+                var msg = location.request("errMsg") ? location.request("errMsg") : "";
+                showMsg(msg);
+                function showMsg(msg) {
+                    if (msg.length > 0) {
+                        $("#errbox").show();
+                        $("#errMsgFetch").text(msg);
+                    }
+                    else {
+                        $("#errMsgFetch").text("");
+                        $("#errbox").hide();
+                    }
+                }
+                function checkInput() {
+                    msg = '';
+                    var balancepwd = $("#balancepwd");
+                    if (document.getElementById("balancepwd")) {
+                        if (!document.getElementById("balancepwd").value) {
+                            msg = "请输入您设置的资金密码。";
+                            if (balancepwd.length >= 1) {
+                                balancepwd.val("").focus();
+                            }
+                        }
+                    }
+                    showMsg(msg);
+                    return !msg.length > 0;
+                }
+            </script>
+        </div>
+        </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>

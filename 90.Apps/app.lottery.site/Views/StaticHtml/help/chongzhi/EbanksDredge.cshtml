@@ -1,0 +1,84 @@
+﻿@{
+    var Title = "如何开通网上银行？";
+    ViewBag.Title = Title + " - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+   @ViewHelpers.css("help.css")
+} 
+  <div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">玩彩网</a> > </li>
+        <li><a href="/staticHtml/help/index.html">&nbsp;帮助中心</a> > </li>
+        <li>&nbsp;如何开通网上银行？</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type = "pay", name = "EbanksPay" });}
+<div class="help_r">
+         
+
+
+<div class="det_box">
+            	<h2>如何开通网上银行？</h2>
+                <div class="det_c"><p>网上银行充值需要您已经开通对应银行卡的网上银行业务。（具体可到各相应银行营业点咨询）</p>
+<p>1、在银行柜台办理开通网上支付业务，需提供如下资料：申请人本人有效身份证件、所需注册的本地银行卡； </p>
+<p>2、银行经办员审核上述资料无误后，将与客户签署《网上银行个人客户服务协议》，办理注册资料录入、设置网上银行密码等注册手续。</p>
+<p sizset="96" sizcache="0"><strong>各银行官方网站</strong><br>
+工商银行网上银行官方网站：<a href="http://www.icbc.com.cn/" id="link151"><span style="color:#0f3f94;">http://www.icbc.com.cn</span></a><br>
+招商银行网上银行官方网站：<a href="http://www.cmbchina.com/" id="link152"><span style="color:#0f3f94;">http://www.cmbchina.com</span></a><br>
+农业银行网上银行官方网站：<a href="http://www.95599.cn/" id="link153"><span style="color:#0f3f94;">http://www.95599.cn</span></a><br>
+建设银行网上银行官方网站：<a href="http://www.ccb.cn/" id="link154"><span style="color:#0f3f94;">http://www.ccb.cn</span></a><br>
+浦发银行网上银行官方网站：<a href="http://www.spdb.com.cn/chpage/c1/" id="link155"><span style="color:#0f3f94;">http://www.spdb.com.cn/chpage/c1/</span></a><br>
+深圳发展银行网上银行官方网站：<a href="http://www.sdb.com.cn/website/page" id="link156"><span style="color:#0f3f94;">http://www.sdb.com.cn/website/page</span></a><br>
+交通银行网上银行官方网站：<a href="http://www.bankcomm.com/" id="link157"><span style="color:#0f3f94;">http://www.bankcomm.com</span></a><br>
+兴业银行网上银行官方网站：<a href="http://www.cib.com.cn/netbank/cn/index.html" id="link158"><span style="color:#0f3f94;">http://www.cib.com.cn/netbank/cn/index.html</span></a><br>
+民生银行网上银行官方网站：<a href="http://www.cmbc.com.cn/" id="link159"><span style="color:#0f3f94;">http://www.cmbc.com.cn</span></a><br>
+光大银行网上银行官方网站：<a href="http://www.cebbank.com/Site/ceb/cn" id="link160"><span style="color:#0f3f94;">http://www.cebbank.com/Site/ceb/cn</span></a><br>
+中信银行网上银行官方网站：<a href="http://www.ecitic.com/bank/" id="link161"><span style="color:#0f3f94;">http://www.ecitic.com/bank/</span></a><br>
+广发银行网上银行官方网站：<a href="http://www.gdb.com.cn/" id="link162"><span style="color:#0f3f94;">http://www.gdb.com.cn/</span></a> </p>                </div>
+                
+               @* <div class="det_a feedback">
+                <div>以上内容是否解决了您的问题呢？</div>
+                              
+                <div>
+                <a id="btn_a_yes" class="btn"><span class="feedback_yes">是，已经解决。</span></a> <a class="btn" id="btn_a_no" href="javascript:void(0);"><span class="feedback_no">否，尚未解决。</span></a>
+                    <div style="display:none;" class="feedback_form clearfix" id="feed_div">                  
+                    <a id="fclose" class="feedback-close" href="javascript:void(0);">关闭</a>     
+                    <span style="display:none;" id="feed_detail"> 
+	                    <form method="post" name="feed_dtl" id="feed_dtlf">             
+		                    <span class="fb-input"><input type="radio" value="1" name="nodtl"> 描述不清晰</span>
+		                    <span class="fb-input"><input type="radio" value="2" name="nodtl"> 字太多，不想看</span>
+		                    <span class="fb-input"><input type="radio" value="3" name="nodtl"> 太复杂，看不懂</span>
+		                    <span class="fb-input"><input type="button" value="提交" name="fsbmt"></span>
+		                </form>    
+	                </span>
+                    <div style="display:none;" class="feedback-suc l" id="feed_result">您的反馈信息已经提交，谢谢您的反馈。</div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                  
+                </script>                                           
+                </div>
+                
+                <div class="det_a">
+                	<div class="det_a_l">相关问题：</div>
+                    <div class="det_a_r">
+                    	<ul>
+                        	                    	</ul>    
+                    </div>
+                </div>*@
+            </div>
+
+        </div>
+         </div>
+<div class="clearfix"></div>
+
+ @ViewHelpers.js("help.js")
+
+
+
+
+
+

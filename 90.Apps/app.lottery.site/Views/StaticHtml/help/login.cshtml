@@ -1,0 +1,41 @@
+﻿@{
+    var Title = "注册";
+    ViewBag.Title = Title + " - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+   @ViewHelpers.css("help.css")
+} 
+  <div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">玩彩网</a> > </li>
+        <li><a href="/staticHtml/help/index.html">帮助中心</a> > </li>
+        <li>&nbsp;注册</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type="register", name = "login" });}
+<div class="help_r">
+            <div class="list_box">
+            	<div class="h_pub_t">
+                	<b class="t_l"></b>
+                    <div class="t_m"><h2>如何注册</h2></div>
+                    <b class="t_r"></b>
+                </div>
+                <div class="h_pub_m">
+                	<ul>
+                        	@*<li><a href="/help/login1" id="link151">如何注册玩彩网会员？</a></li>	*@		
+				                        	<li><a href="/staticHtml/help/notes.html" id="link152">注册玩彩网会员注意事项</a></li>			
+				                        	@*<li><a href="/help/cooperation" id="link153">合作帐号如何注册？</a></li>*@			
+				                        	<li><a href="/staticHtml/help/isokregister.html" id="link154">是否可注册多个帐号？</a></li>			
+				                        	<li><a href="/staticHtml/help/validationMail.html" id="link155">注册未收到验证邮件？</a></li>			
+				                        	<li><a href="/staticHtml/help/validationPhone.html" id="link157">未收到手机验证码怎么办？</a></li>			
+				                        </ul>
+                </div>
+        </div>
+         </div>
+<div class="clearfix"></div>
+
+ @ViewHelpers.js("help.js")
+

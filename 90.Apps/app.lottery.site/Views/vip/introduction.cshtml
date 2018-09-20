@@ -1,0 +1,196 @@
+﻿@{
+    ViewBag.Title = "会员中心 - 会员介绍-体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    Layout = "~/Views/vip/_Layout.cshtml";
+}
+@section css{
+    @ViewHelpers.css("vip.css")
+}
+<style>
+    .list_p
+    {
+        width: auto;
+    }
+</style>
+<div class="main_v main_v1">
+    <div class="list_p">
+        <h2 class="h2_p">
+            @(SiteString.getHZSiteName(Request))会员体系@*<span class="sys_m">最近一个月</span>*@</h2>
+        <p>
+            @(SiteString.getHZSiteName(Request))会员体系服务于网站所有用户，旨在向用户提供更贴心的服务和更丰厚的回馈。</p>
+    </div>
+    <div class="list_p">
+        <h2 class="h2_p">
+            成长等级</h2>
+        <p  style="border-bottom:none !important">
+            成长值是衡量用户成长情况的数值，永久有效。<br>
+            获得成长值越高，对应的等级越高，就越有机会享受更多的服务与优惠。</p>
+        <p class="pt_20 strong"  style="border-top:none !important; border-bottom:none !important">
+            用户等级对应如下：</p>
+        <div class="dengji_con"  style="border-top:none !important">
+            @*<div class="line_v">
+            </div>*@
+            <ul class="dengji_list">
+                <li style="z-index: 5;"><b class="Tvip_9 hy_image vip_common1"></b><span class="column_o"><span class="column_i"
+                    style="width: 100%"></span></span>
+                    <div class="notifyicon" style="left: 546.5px; display: none;">
+                        <div class="notifyicon_content">
+                            <p>
+                                <strong>所需成长值</strong><span class="val24000"></span></p>
+                        </div>
+                        <div class="notifyicon_arrow">
+                            <s></s><em></em>
+                        </div>
+                    </div>
+                </li>
+                <li style="z-index: 5;"><b class="Tvip_8 hy_image vip_common1"></b><span class="column_o"><span class="column_i"
+                    style="width: 83%"></span></span>
+                    <div class="notifyicon" style="left: 49.5px; display: none;">
+                        <div class="notifyicon_content">
+                            <p>
+                                <strong>所需成长值</strong><span class="val20000"></span></p>
+                        </div>
+                        <div class="notifyicon_arrow">
+                            <s></s><em></em>
+                        </div>
+                    </div>
+                </li>
+                <li><b class="Tvip_7 hy_image vip_common1"></b><span class="column_o"><span class="column_i" style="width: 68%">
+                </span></span>
+                    <div class="notifyicon" style="display: none">
+                        <div class="notifyicon_content">
+                            <p>
+                                <strong>所需成长值</strong><span class="val16000"></span></p>
+                        </div>
+                        <div class="notifyicon_arrow">
+                            <s></s><em></em>
+                        </div>
+                    </div>
+                </li>
+                <li class="low"><b class="Tvip_6 hy_image vip_common1"></b><span class="column_o"><span class="column_i"
+                    style="width: 51%"></span></span>
+                    <div class="notifyicon" style="display: none">
+                        <div class="notifyicon_content">
+                            <p>
+                                <strong>所需成长值</strong><span class="val12000"></span></p>
+                        </div>
+                        <div class="notifyicon_arrow">
+                            <s></s><em></em>
+                        </div>
+                    </div>
+                </li>
+                <li class="low"><b class="Tvip_5 hy_image vip_common1"></b><span class="column_o"><span class="column_i"
+                    style="width: 35%"></span></span>
+                    <div class="notifyicon" style="display: none">
+                        <div class="notifyicon_content">
+                            <p>
+                                <strong>所需成长值</strong><span class="val8000"></span></p>
+                        </div>
+                        <div class="notifyicon_arrow">
+                            <s></s><em></em>
+                        </div>
+                    </div>
+                </li>
+                <li style="z-index: 5;" class="low"><b class="Tvip_4 hy_image vip_common1"></b><span class="column_o"><span
+                    class="column_i" style="width: 18%"></span></span>
+                    <div class="notifyicon" style="left: 86.5px; display: none;">
+                        <div class="notifyicon_content">
+                            <p>
+                                <strong>所需成长值</strong><span class="val4000"></span></p>
+                        </div>
+                        <div class="notifyicon_arrow">
+                            <s></s><em></em>
+                        </div>
+                    </div>
+                </li>
+                <li class="low"><b class="Tvip_3 hy_image vip_common1"></b><span class="column_o"><span class="column_i"
+                    style="width: 9%"></span></span>
+                    <div class="notifyicon" style="display: none">
+                        <div class="notifyicon_content">
+                            <p>
+                                <strong>所需成长值</strong><span class="val2000"></span></p>
+                        </div>
+                        <div class="notifyicon_arrow">
+                            <s></s><em></em>
+                        </div>
+                    </div>
+                </li>
+                <li class="low"><b class="Tvip_2 hy_image vip_common1"></b><span class="column_o"><span class="column_i"
+                    style="width: 4%"></span></span>
+                    <div class="notifyicon" style="display: none">
+                        <div class="notifyicon_content">
+                            <p>
+                                <strong>所需成长值</strong><span class="val1000"></span></p>
+                        </div>
+                        <div class="notifyicon_arrow">
+                            <s></s><em></em>
+                        </div>
+                    </div>
+                </li>
+                <li class="low"><b class="Tvip_1 hy_image vip_common1"></b><span class="column_o"><span class="column_i"
+                    style="width: 1%"></span></span>
+                    <div class="notifyicon" style="display: none">
+                        <div class="notifyicon_content">
+                            <p style="font-weight: bold">
+                                完善资料，激活账户</p>
+                        </div>
+                        <div class="notifyicon_arrow">
+                            <s></s><em></em>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <ul class="number_list clearfix">
+                <li class="first">0</li><li class="first">2000</li><li>4000</li><li>8000</li><li>12000</li><li>
+                    16000</li><li>20000</li><li class="big">24000</li>
+            </ul>
+        </div>
+    </div>
+    <div class="list_p">
+        <h2 class="h2_p">
+            成长值和任务</h2>
+        <div class="p_min">
+            <p style="color:#f24c4d">
+                您的登录、购彩等行为均会得到成长值奖励，具体以“我的任务”栏目中的任务为准。 现在，成长任务有推荐任务、热门任务和活跃任务三类，完成它们就可以得到成长值。</p>
+            <p>
+                <span class="strong">推荐任务：</span>我们向不同等级的用户推荐不同的任务，每个任务都有专属等级，旨在帮助您更快地熟悉网站功能，并提高返奖率。<br>
+                <span class="strong">热门任务：</span>热门任务与用户的累计成绩相关，包括中奖金额、中奖次数等。这些数据不仅体现您对网站的贡献，也见证了您的每一步的成长。<br>
+                <span class="strong">活跃任务：</span>登录、购彩等活跃网站行为，所有用户均可参与。购彩一元获得一点成长值，一天最多50点。
+            </p>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(".nav_v li:contains(会员介绍)").addClass("cur").siblings().removeClass("cur");
+
+        //tips提示效果     
+        var floatX, boxX, pageX;
+        var cW = $(".dengji_list li").width();
+        var cL = $(".dengji_list li").offset().left;
+        $(".column_i").hover(function () {
+            var tips = $(this).parent(".column_o").siblings(".notifyicon");
+            $(this).parents("li").css("z-index", "10");
+            $(this).mousemove(function (event) {
+                pageX = event.clientX - cL;
+                boxX = tips.width();
+                if (pageX > cW - 200) {
+                    floatX = pageX - 200;
+                } else {
+                    floatX = pageX;
+                }
+                tips.css("left", floatX + 40);
+                tips.show();
+            });
+        }, function () {
+            var tips = $(this).parent(".column_o").siblings(".notifyicon");
+            tips.hide();
+            $(this).parents("li").css("z-index", "5");
+        })
+
+        $(window).resize(function () {
+            cL = $(".dengji_list li").offset().left;
+        });
+    })
+</script>

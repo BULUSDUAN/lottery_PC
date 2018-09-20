@@ -1,0 +1,94 @@
+﻿@using app.lottery.site.Models;
+@{
+    ViewBag.Title = "支付宝绑定 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "支付宝绑定, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var user = ViewBag.User as app.lottery.site.Models.CurrentUserInfo;
+    Layout = null;
+}
+<div class="info_tt">
+    支付宝绑定</div>
+<div class="xgmm_main">
+    @if (user.AlipayInfo!=null)
+    {
+        <div class="info_zl_ico">
+            <span class="member-safe member_safe_y safe_maggin">
+            </span><span class="ml10" style="color: #8ecc33">已绑定支付宝</span>
+        </div>
+        <div class="info_wxts">
+            <div class="info_wxts_show" style="margin-left: 48px !important">
+                <span>当前绑定支付宝账号：@user.AlipayInfo
+                    <label style="color: #7CBC0E;">
+                    </label>
+                </span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="info_zl_ico">
+            <span class="member-safe member_safe_w safe_maggin" ></span><span style="color: #ff5c00" class="ml10">未绑定支付宝</span>
+        </div>
+        <div class="info_wxts">
+            <ul class="userinfo_list">
+                <li><em style="color: Red">*</em><label for="alipay_number" style="font-size: 12px">
+                    输入支付宝账号：</label>
+                    <input type="text" id="alipay_number" class="reg_in_text"/><br />
+                </li>
+                <li><em style="color: Red">*</em> 
+                <span class="sp120">确认支付宝账号：</span><input type="text" name="alipayaccount" id="alipayaccount"
+                                class="login_input_1" size="25" onpaste="return false" />
+                            </li>
+                <li><span class="sp120">&nbsp;</span>
+                        <span class="error-box" id="errbox_alipay"><i class="err-icon"></i>
+                        <span class="msg" id="alipay_message_show"></span></span> </li>
+                <li style="margin-top: 22px;"><span class="sp120" style="margin-left: 47px;"></span>
+                    <input type="button" id="aliPay_Bind" class="btn-pwd-submit" value="确&nbsp;&nbsp认"
+                        data-flag="0" />
+                </li>
+
+            </ul>
+        </div>
+    }
+</div>
+<div class="clearfix">
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("#aliPay_Bind").click(function () {
+            var alipayNumber = $("#alipay_number").val();
+            var alipayaccount = $("#alipayaccount").val();
+            if (!alipayNumber) {
+                $("#alipay_message_show").html("请输入支付宝号码");
+                $("#errbox_alipay").show();
+                $("#alipay_number").focus();
+                return false;
+            } if (!alipayaccount) {
+                $("#alipay_message_show").html("请再次输入支付宝账号");
+                $("#errbox_alipay").show();
+                $("#alipayaccount").focus();
+                return false;
+            }
+            if (alipayNumber.length > 50) {
+                $("#alipay_message_show").html("支付宝长度最大为50");
+                $("#errbox_alipay").show();
+                $("#alipay_number").focus();
+                return false;
+            } if (alipayaccount != alipayNumber) {
+                $("#alipay_message_show").html("两次输入的支付宝账号不一致");
+                $("#errbox_alipay").show();
+                $("#alipay_number").focus();
+                return false;
+            }else {
+                $.post("/member/AliPay_Bind", { alipayNumber: alipayNumber }, function (flag) {
+                    if (flag.Succuss) {
+                        alertTip("支付宝绑定成功！只能使用本支付宝来提现");
+                        window.location.href = location.href;
+                    }
+                    else {
+                        alertTip(flag.Msg);
+                    }
+                });
+            }
+        })
+    });
+</script>

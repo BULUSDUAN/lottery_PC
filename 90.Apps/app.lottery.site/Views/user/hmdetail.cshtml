@@ -1,0 +1,798 @@
+﻿@using app.lottery.site.Models
+@using GameBiz.Core
+@{
+    ViewBag.Title = "合买订单详情 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "合买订单详情, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var toginfo = ViewBag.Detail as Sports_TogetherSchemeQueryInfo;
+
+    //当前用户
+    var user = ViewBag.user as CurrentUserInfo;
+    var balance = ViewBag.CurrentUserBalance as GameBiz.Core.UserBalanceInfo;
+
+    var schemestatus = toginfo != null ? OrderManager.TogetherProgressName(toginfo.ProgressStatus, toginfo.TicketStatus, toginfo.BonusStatus, toginfo.IsPrizeMoney) : "";
+    //查询足彩订单投注列表
+    var anteList = ViewBag.AnteList as Sports_AnteCodeQueryInfoCollection;
+    //单式上传
+    var singleInfo = ViewBag.SingleInfo as SingleScheme_AnteCodeQueryInfo;
+    //票数据
+    var SportsTicket = ViewBag.SportsTicket as List<Sports_TicketQueryInfo>;
+    var orderDetail = ViewBag.OrderDetail as BettingOrderInfo;
+    //参与合买用户信息
+    var alljoin = ViewBag.JoinAllList as Sports_TogetherJoinInfoCollection;
+    //加奖
+    var AddAwardNum = toginfo == null ? "" : string.IsNullOrEmpty(toginfo.ExtensionOne) ? "" : (toginfo.ExtensionOne.Split('_').Length >= 2) ? toginfo.ExtensionOne.Split('_')[1] : "";
+    //是否是先发起后上传
+    var isYt = toginfo != null && toginfo.SchemeBettingCategory == SchemeBettingCategory.XianFaQiHSC ? 1 : 0;
+    //自购(参与合买)
+    var cyhmlist = alljoin != null ? alljoin.List.Where(p => p.JoinType == TogetherJoinType.Join && p.UserId == toginfo.CreateUserId).ToList() : new List<Sports_TogetherJoinInfo>();
+    //保底总分数
+    var bdlist = alljoin != null ? alljoin.List.Where(p => p.JoinType == TogetherJoinType.Guarantees && p.UserId == toginfo.CreateUserId).ToList() : new List<Sports_TogetherJoinInfo>();
+    //系统保底总分数
+    var sysbdlist = alljoin != null ? alljoin.List.Where(p => p.JoinType == TogetherJoinType.SystemGuarantees).ToList() : new List<Sports_TogetherJoinInfo>();
+    var isbpwd = user != null ? Convert.ToInt32(balance.CheckIsNeedPassword("Bet")) : 0;
+    var sign = Request["sign"];
+}
+@if (toginfo != null)
+{<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>合买订单详情
+            @(toginfo != null ? (toginfo.SchemeBettingCategory == SchemeBettingCategory.YouHua ? "- 奖金优化" : toginfo.SchemeBettingCategory == SchemeBettingCategory.SingleBetting ? "- 单式上传" : toginfo.SchemeBettingCategory == SchemeBettingCategory.FilterBetting ? "- 方案过滤" : toginfo.SchemeBettingCategory == SchemeBettingCategory.HunHeDG ? "单关固定" : "") : "")
+        </li>
+    </ul>
+    </div>
+    <div class="xq_split clearfix">
+        <b></b>
+        <div class="line-01 clearfix">
+            <span>方案信息</span> <i></i>
+        </div>
+    </div>
+    <div class="xqtop clearfix">
+        <div class="xqtitle clearfix">
+            <div class="fl xq_tab">
+                <ul>
+                    <li class="li_0"><span>发&nbsp;&nbsp;起&nbsp;人：</span> <span><a href="/blog/standings/@toginfo.CreateUserId" class="td_blue" target="_blank">
+                        @SiteString.HideUserName(toginfo.CreaterDisplayName, toginfo.CreaterHideDisplayNameCount)</a>
+                        @if (user == null || user.LoginInfo.UserId != toginfo.CreateUserId)
+                        {
+                            <a href="javascript:void(0)" class="btn_gz underline" onclick=" user.attentionLogin(true, '@toginfo.CreateUserId'); ">
+                                关注</a>
+                        }
+                    </span></li>
+                    <li class="li_1"><span class="span_0"><a class="td_blue" onclick=" docBox.init({ userName: '@SiteString.HideUserName(toginfo.CreaterDisplayName, toginfo.CreaterHideDisplayNameCount)', userId: '@toginfo.CreateUserId', gameCode: '@toginfo.GameCode', gameName: '@SiteConvert.GameName(toginfo.GameCode, toginfo.GameType)', gameType: '@toginfo.GameType' }); ">
+                        定制跟单：</a> </span><span>
+                            @(ViewBag.FollowedCount)人 <a class="btn_copy underline" onclick=" Tool.CopyText(location.href); ">
+                                复制方案连接</a> </span></li>
+                    <li class="li_2"><span class="span_0">截止时间：</span> <span class="td_time">
+                        @(toginfo.StopTime.ToString("yyyy-MM-dd HH:mm:ss"))
+                        @if (toginfo.StopTime < DateTime.Now)
+                        {
+                            <em>(已截止)</em>
+                        }
+                    </span></li>
+                </ul>
+                <ul>
+                    <li><span>方案编号：</span> <span class="scheme_span">@toginfo.SchemeId</span> </li>
+                    <li><span class="span_0">彩种期号：</span> <span class="game_issuse">@SiteConvert.GameName(toginfo.GameCode, toginfo.GameType)
+                        &nbsp;&nbsp;&nbsp;第@(toginfo.IssuseNumber)期(合买方案)</span> </li>
+                    <li>
+                        @{
+                        var serIndex = 1;
+                        switch (toginfo.Security)
+                        {
+                            case TogetherSchemeSecurity.Unkown:
+                            case TogetherSchemeSecurity.Public:
+                                serIndex = 1;
+                                break;
+                            case TogetherSchemeSecurity.JoinPublic:
+                                serIndex = 2;
+                                break;
+                            case TogetherSchemeSecurity.CompletePublic:
+                                serIndex = 3;
+                                break;
+                            case TogetherSchemeSecurity.KeepSecrecy:
+                                serIndex = 4;
+                                break;
+                            case TogetherSchemeSecurity.UpLoadSchemePublic:
+                                serIndex = 4;
+                                break;
+                            default:
+                                serIndex = 1;
+                                break;
+                        }
+                        }
+                        <span class="ser ser_@(serIndex)"><i></i><b>@OrderManager.SecurityName(toginfo.Security)</b>
+                        </span></li>
+                    @if (toginfo.SchemeSource == SchemeSource.Android)
+                    {
+                        <li><span class="source_android" title="来自@(SiteString.getHZSiteName(Request))客户端"></span>
+                        </li>
+
+                    }
+                    else if (toginfo.SchemeSource == SchemeSource.Touch)
+                    {
+                        <li><span class="source_touch" title="来自@(SiteString.getHZSiteName(Request))触屏版"></span>
+                        </li>
+                    }
+                    else if (toginfo.SchemeSource == SchemeSource.Iphone)
+                    {
+                        <li><span class="source_iphone"></span></li>
+                    }
+                </ul>
+            </div>
+            <div class="fr">
+                <ul class="tab_ul">
+                    <li class="liw_0"><cite>中</cite> <cite>奖</cite> <cite>信</cite> <cite>息</cite> </li>
+                    <li class="liw_2"><span class="@(toginfo.BonusStatus == BonusStatus.Win ? "bonuswin" : toginfo.BonusStatus == BonusStatus.Waitting ? "watibonuse" : "")">
+                    </span></li>
+                    <li class="liw_3">
+                        @if (OrderManager.IsAward(toginfo.BonusStatus))
+                        {
+                            if (toginfo.BonusStatus == BonusStatus.Win)
+                            {
+                                //var premoney = toginfo.PreTaxBonusMoney > 10000 ? (toginfo.PreTaxBonusMoney / 10000) + "万" : toginfo.PreTaxBonusMoney.ToString("N2");
+                                //var aftermoney = toginfo.AfterTaxBonusMoney > 10000 ? (toginfo.AfterTaxBonusMoney / 10000) + "万" : toginfo.AfterTaxBonusMoney.ToString("N2");
+                                var premoney = toginfo.PreTaxBonusMoney.ToString("N2");
+                                var aftermoney = toginfo.AfterTaxBonusMoney.ToString("N2");
+                            <p>
+                                税前金额：<em>@(premoney)元</em></p>
+                            <p>
+                                税后金额：<em>@(aftermoney)元</em></p>
+                            <p>
+                                加奖金额：<em>@(toginfo.AddMoney.ToString("N2"))元</em></p>
+                            }
+                            else
+                            {
+                            <p style="margin-top: 23px;">
+                                很遗憾，该方案没有中奖哦</p>
+                            }
+                        }
+                        else
+                        {
+                            if ((toginfo.GameCode.ToLower() == "bjdc" || toginfo.GameCode.ToLower() == "jczq" || toginfo.GameCode.ToLower() == "jclq") && (toginfo.MaxBonusMoney > 0M && toginfo.MinBonusMoney > 0M))
+                            {
+                            <p>
+                                <span class="gray">我们在核对赔率后会即时派发奖金</span>
+                            </p>
+                            <p>
+                                <span style="color: #fe8127;">预测奖金：</span> <span style="color: Red; font-weight: bold">@toginfo.MinBonusMoney.ToString("N2")
+                                    ~ @toginfo.MaxBonusMoney.ToString("N2")</span>元
+                            </p>
+                            }
+                            else
+                            {
+                            <p style="margin-top: 23px;">
+                                <span>我们在核对赔率后会即时派发奖金</span></p>
+                            }
+                        }
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="xqname clearfix">
+            <table class="xq_name_tab">
+                <colgroup>
+                    <col width="150" />
+                    <col width="350" />
+                    <col width="150" />
+                    <col width="100" />
+                    <col width="100" />
+                    <col width="200" />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <td>
+                            总金额
+                        </td>
+                        <td>
+                            过关方式
+                        </td>
+                        <td>
+                            发起人提成
+                        </td>
+                        <td>
+                            发起时保底金额
+                        </td>
+                        <td>
+                            方案进度
+                        </td>
+                        <td>
+                            方案状态
+                        </td>
+                    </tr>
+                </thead>
+                <tr>
+                    <td>
+                        ￥<em class="totalmoney">
+                            @toginfo.TotalMoney.ToString("0")
+                        </em>
+                    </td>
+                    <td>@SiteConvert.PlayTypeName(toginfo.PlayType)
+                    </td>
+                    <td>
+                        税后奖金盈利的 <em class="font_red">@(toginfo.BonusDeduct)%</em>
+                    </td>
+                    <td class="font_red">
+                        ￥@(toginfo.Guarantees > 0 ? (toginfo.Price * toginfo.Guarantees).ToString("N2") : "0")
+                    </td>
+                    <td class="font_red">
+                        @(toginfo.Progress > 0 ? (toginfo.Progress * 100).ToString("N2") : "0")%
+                    </td>
+                    <td>
+                        @{
+
+                        if (schemestatus != "撤单" && (toginfo.BonusStatus == BonusStatus.Win || toginfo.BonusStatus == BonusStatus.Lose))
+                        {
+                            <a class="status_btn @(toginfo.BonusStatus == BonusStatus.Win ? "status_win" : "status_lose") " style="cursor: pointer" >
+                                @(toginfo.BonusStatus == BonusStatus.Win ? "已中奖" : "未中奖")
+                            </a>
+                        }
+                        else if (schemestatus == "撤单")
+                        {
+                            <a id="save_buy" class="status_btn status_lose" style="cursor: pointer">@schemestatus</a>
+                        }
+                        else
+                        {
+                            <a  id="save_buy" class="status_btn @(toginfo.ProgressStatus == TogetherSchemeProgress.SalesIn ? "status_win" : "status_waiting")" style="cursor: pointer">@schemestatus</a>
+                        }
+                        }
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="xq_xy_dec">
+            <ul>
+                <li class="xy_title fl"><strong>宣言主题：</strong> <span>@toginfo.Title</span> </li>
+                <li class="xy_desc fr"><strong>宣言口号：</strong> <span>@toginfo.Description</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+                        if (OrderManager.IsCanBuy(toginfo))
+                        {
+    <div class="xq_split clearfix">
+        <b class="gm_icon"></b>
+        <div class="line-01">
+            <span>抢购区</span> <i></i>
+        </div>
+    </div>
+    <div class="buybox clearfix">
+        <div class="schemeinfo">
+            共@(toginfo.TotalCount)份，剩@(toginfo.TotalCount - toginfo.SoldCount)份，我要认购： <a href="javascript:void 0"
+                class="btn_add" onclick=" addMutiple(1) "></a>
+            <input type="text" value="1" class="input_buy_count" id="multiple" onkeyup=" this.value = this.value.replace(/\D/g, '');CountStock(this, @(toginfo != null ? toginfo.TotalCount : 0), @(toginfo != null ? (toginfo.TotalCount - toginfo.SoldCount) : 0), @(toginfo != null ? (toginfo.Price) : 0)); "/>
+            <a href="javascript:void 0" class="btn_sub" onclick=" addMutiple(-1) "></a>份，共
+            <label class="label_buy">
+                <em style="color: #999">￥</em> <span class="inout_buy_money" id="totalmoney">@(Convert.ToInt32(1 * toginfo.Price))</span>元
+            </label>
+            所占比例约：
+            <label class="label_buy label_001">
+                <span class="inout_buy_money" id="stock">@(((1M / toginfo.TotalCount) * 100).ToString("N2"))</span>%
+            </label>
+            <a href="javascript:void 0;" class="go_buy" id="gobuy" onclick=" CheckLogin('@toginfo.SchemeId', @((!string.IsNullOrEmpty(toginfo.JoinPwd)).ToString().ToLower())) ">
+                购买</a>
+            @if (toginfo.SchemeBettingCategory == SchemeBettingCategory.XianFaQiHSC && (user != null && toginfo.CreateUserId == user.LoginInfo.UserId) && (bdlist.Count > 0 ? (bdlist[0].RealBuyCount + toginfo.SoldCount < toginfo.TotalCount) : (toginfo.SoldCount < toginfo.TotalCount)))
+            {
+                <a href="javascript:void(0)" class="zjbd">追加保底</a>
+            }
+        </div>
+        <div class="userinfo">
+            账户信息：@if (user == null)
+                 {
+                <span>您还没有登录，请<a id="checklogin" href="javascript:void 0" style="margin: 0 5px; color: #ff5b01">登录</a>后购买</span>
+                 }
+                 else
+                 {
+                <span>欢迎您，<a href="/blog/standings/@(user.LoginInfo.UserId)" class="name " target="blank">@SiteString.HideUserName(user.LoginInfo.DisplayName, user.LoginInfo.HideDisplayNameCount)</a>&nbsp;&nbsp;&nbsp;
+                    账户余额：￥<em>@balance.GetTotalCashMoney().ToString("N2")</em>元&nbsp;&nbsp;&nbsp;红包余额：￥<em>@balance.RedBagBalance.ToString("N2")</em>元</span>
+                 }
+        </div>
+    </div>
+                        }
+
+    <div class="xq_split clearfix">
+        <b class="fajd_icon"></b>
+        <div class="line-01 clearfix">
+            <span>方案进度</span> <i></i>
+        </div>
+    </div>
+    <div class="ztbox clearfix" style="padding-bottom: 25px;">
+        @if (!string.IsNullOrEmpty(AddAwardNum) && int.Parse(AddAwardNum) == 0)
+        {
+            <div class="ztbox_jj">
+                <span></span>
+            </div>
+        }
+        <div class="ztboxL @(!string.IsNullOrEmpty(AddAwardNum) && int.Parse(AddAwardNum) == 0 ? "jj_show" : "") clearfix">
+            <div style="position: relative; height: 50px; margin: 0 0 6px 0; z-index: 100;" class="hm_pro">
+                @{
+        var atIndex = OrderManager.Progress_StatusIndex(toginfo.ProgressStatus, toginfo.TicketStatus, toginfo.BonusStatus, toginfo.IsPrizeMoney);
+        var totalcount = Convert.ToDecimal(toginfo.TotalCount);
+        var cycount = cyhmlist.Select(p => p.RealBuyCount).Sum(); //自购
+        var zgCount = cycount + toginfo.Subscription;
+        var bdcount = bdlist.Select(p => p.RealBuyCount).Sum(); //保底分数
+        var systembdcount = sysbdlist.Select(p => p.RealBuyCount).Sum(); //系统保底分数
+
+        var zgper = (zgCount / totalcount) * 100; //自购比例
+        //跟单人数小于0，则表示，保底分数没有变化
+        var guarantees = bdcount > toginfo.Guarantees ? toginfo.Guarantees : bdcount;
+        //保底比例
+        var bdper = (Convert.ToDecimal(guarantees) / totalcount) * 100;
+        //系统保底比例
+        var sys = (Convert.ToDecimal(systembdcount) / totalcount) * 100;
+
+        //跟单分数=售出总分数-自购分数-发起人参与合买的分数-用户保底分数-系统保底分数
+        var gdcount = (toginfo.TotalCount - toginfo.SoldCount == 0) ? toginfo.SoldCount - toginfo.Subscription - cycount - guarantees - systembdcount : toginfo.SoldCount - toginfo.Subscription - cycount;
+        //跟单人数  
+        var gd = toginfo.JoinUserCount - 1;
+        var gdper = (gd > 0 ? Convert.ToDecimal(gdcount) / totalcount : 0) * 100;
+
+        //剩余分数（总分数-自购-发起人参与合买-跟单数）(剩下的分数就是保底和系统保底分数)
+        var sycount = totalcount - (toginfo.Subscription + cycount + gdcount);
+        //得到下一个状态
+        var state = OrderManager.NextStatus(atIndex);
+        //var statusname = state.Split('|')[0];
+        //var width = state.Split('|')[1];
+                }
+                <div class="ztboxlist1">
+                    @if (atIndex > 0)
+                    {
+                        if (toginfo.ProgressStatus == TogetherSchemeProgress.Standard)
+                        {
+                        <span style="background-color: #e9f7fb;">自购:@(zgCount)份/约@(zgper.ToString("N2"))%</span>
+
+                            if (gd > 0 && gdcount > 0)
+                            {
+                                <span style="background-color: #ebffe8;">跟单:@(gdcount)份/约@(gdper.ToString("N2"))%,还剩@(sycount)</span>
+                                @*<span style="background-color: #ebffe8;">跟单:@(gd)份/约@(gdcount.ToString("N2"))%,还剩@(sycount)</span>*@
+                            }
+                            if (guarantees > 0)
+                            {
+                        <span style="background-color: #fff7e5;">保底:@(guarantees)份/约@(bdper.ToString("N2"))%</span>
+                            }
+                        }
+                        else
+                        {
+                            if (guarantees > 0)
+                            {
+                        <span style="background-color: #fff7e5;">保底:@(guarantees)份/约@(bdper.ToString("N2"))%</span>
+                            }
+
+                        <span style="background-color: #e9f7fb;">自购:@(zgCount)份/约@(zgper.ToString("N2"))%</span>
+                            if (gd > 0 && gdcount > 0)
+                            {
+                                <span style="background-color: #ebffe8;">跟单:@(gdcount)份/约@(gdper.ToString("N2"))%</span>
+                                @*<span style="background-color: #ebffe8;">跟单:@(gd)份/约@(gdcount.ToString("N2"))%</span>*@
+                            }
+                        }
+                    }
+                </div>
+                <div class="ztboxlist">
+                    <em class="select"></em>
+                    <p style="width: 195px;">
+                        <span style="width: @(zgper + bdper + gdper)%"></span>
+                    </p>
+                    <em @(atIndex >= 2 ? "class=select" : "")></em>
+                    @if (toginfo.ProgressStatus == TogetherSchemeProgress.Standard)
+                    {
+                        <p>
+                            <span style="width: 0%"></span>
+                        </p>
+                        <em></em>
+                    }
+                    else
+                    {
+                        <p>
+                            <span style="width: @( atIndex == 2 ? 50 : atIndex > 2 ? 100 : 0)%"></span>
+                        </p>
+                        <em @(atIndex >= 3 ? "class=select" : "")></em>
+                    }
+                    <p>
+                        <span style="width: @( atIndex == 3 ? 50 : atIndex > 3 ? 100 : 0)%"></span>
+                    </p>
+                    <em @(atIndex >= 4 ? "class=select" : "")></em>
+                    <p>
+                        <span style="width: @( atIndex == 4 || atIndex == 6 ? 50 : atIndex > 4 && atIndex != 6 ? 100 : 0)%">
+                        </span>
+                    </p>
+                    <em @(atIndex == 5 ? "class=select" : "")></em>@*@if (((toginfo.ProgressStatus == TogetherSchemeProgress.Standard && atIndex >= 3) || (toginfo.ProgressStatus != TogetherSchemeProgress.Standard && atIndex > 1)) && atIndex != 5)
+                    {
+                        <div id="jd_cp" class="bar_blue bar_org bar_blue01"  style="width: @(width)px;">
+                            <div class="line_box">
+                                <span class="line" style="@(atIndex == 2 ? "top:30px" : "")"></span><span class="jd_bar_box" style="@(atIndex == 2 ? "top:54px" : "")">
+                                    <span class="jd_bar01">@(statusname)</span> </span>
+                            </div>
+                        </div>
+                    }*@
+                </div>
+                <div class="ztboxlist2">
+                    <p>
+                        @(atIndex == 0 ? "撤单" : "发起方案")
+                        <span class="huitxt">(@toginfo.CreateTime.ToString("MM-dd HH:mm"))</span>
+                    </p>
+                    <p class="hm_p">
+                        @(toginfo.ProgressStatus == TogetherSchemeProgress.Standard ? toginfo.TicketStatus == TicketStatus.PrintTicket ? "已打票" : "出票" : "满员")
+                    </p>
+                    <p>
+                        @(toginfo.ProgressStatus == TogetherSchemeProgress.Standard ? "满员" : toginfo.TicketStatus == TicketStatus.PrintTicket ? "已打票" : "出票")
+                    </p>
+                    <p>
+                        开奖
+                    </p>
+                    <p>
+                        派奖
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="xq_split clearfix">
+        <b class="faxq_icon"></b>
+        <div class="line-01">
+            <span>方案详情</span> <i></i>
+        </div>
+    </div>
+    <div class="xqmain clearfix">
+        @if (((toginfo.SchemeBettingCategory == SchemeBettingCategory.GeneralBetting || toginfo.SchemeBettingCategory == SchemeBettingCategory.ErXuanYi) && anteList != null) || (singleInfo != null && !string.IsNullOrEmpty(singleInfo.SchemeId)))
+        {
+            switch (OrderManager.GameCategory(toginfo.GameCode))
+            {
+                case GameCategory.北单竞彩:
+            @OrderHelper.AnteListView_NewBDJC(toginfo.GameCode, toginfo.GameType, toginfo.BetCount, toginfo.Amount, toginfo.PlayType, anteList, toginfo.SchemeBettingCategory, singleInfo, toginfo.IssuseNumber)
+       break;
+                case GameCategory.传统足球:
+            @OrderHelper.AnteListView_NewCTZQ(toginfo.GameCode, toginfo.GameType, anteList, toginfo.SchemeBettingCategory, singleInfo, toginfo.IssuseNumber)
+       break;
+                case GameCategory.数字彩:
+            @OrderHelper.AnteListView_NewSZC(toginfo.GameCode, anteList, toginfo.Amount, toginfo.IsAppend)
+       break;
+            }
+        }
+        else if ((toginfo.SchemeBettingCategory == SchemeBettingCategory.YouHua || toginfo.SchemeBettingCategory == SchemeBettingCategory.HunHeDG) && anteList != null && !string.IsNullOrEmpty(toginfo.Attach))
+        {
+
+            @OrderHelper.AnteListView_YouHua(anteList, toginfo.PlayType, toginfo.Attach)
+        }
+        else if (toginfo.SchemeBettingCategory == SchemeBettingCategory.XianFaQiHSC && anteList != null && anteList.Count <= 0 && (toginfo.ProgressStatus != TogetherSchemeProgress.Cancel || toginfo.ProgressStatus == TogetherSchemeProgress.AutoStop) && user != null && toginfo.CreateUserId == user.LoginInfo.UserId)
+        {
+
+            @OrderHelper.AnteListView_XFQHSC(toginfo.StopTime, toginfo.GameCode, toginfo.GameType, toginfo.SchemeId)
+        }
+        else
+        {
+            <div style="text-align: center">
+                @OrderManager.SecurityName(toginfo.Security)
+            </div>
+        }
+    </div>
+        
+    <div class="xq_split clearfix">
+        <b class="hmuser_icon"></b>
+        <div class="line-01">
+            <span>合买用户记录</span> <i></i>
+        </div>
+    </div>
+    <div class="hm_main clearfix">
+        <a href="javascript:void 0;" class="user_span on" onclick=" switchJoin('all', this) ">
+            <i></i>全部合买用户</a> <a href="javascript:void 0;" class="user_span" onclick="switchJoin('my', this) ">
+                <i></i>我的认购记录</a>
+        <div class="fr titl001">
+            <table border="0" cellpadding="0" cellspacing="0" style="width: 500px;">
+                <tr>
+                    <td>
+                        <span class="cyhm_usercount"><b></b>参与合买:<em>@(toginfo.JoinUserCount)人</em></span>
+                    </td>
+                    <td>
+                        <span class="cyhm_soldcount"><b></b>总认购分数:<em>@(toginfo.SoldCount)份</em></span>
+                    </td>
+                    <td>
+                        <span class="cyhm_soldmoney"><b></b>总认购金额:<em>@((toginfo.Price * toginfo.SoldCount).ToString("N2"))元</em></span>
+                    </td>
+                </tr>
+                @{
+        var deductMoney = 0M;
+        if (orderDetail.AfterTaxBonusMoney > toginfo.TotalMoney)
+        {
+            deductMoney = ((orderDetail.AfterTaxBonusMoney - toginfo.TotalMoney) * toginfo.BonusDeduct / 100);
+        }
+                }
+                <tr>
+                    <td>
+                        <span class="cyhm_soldmoney"><b></b>订单奖金盈利:<em>@(((orderDetail.AfterTaxBonusMoney - orderDetail.CurrentBettingMoney) < 0 ? 0 : orderDetail.AfterTaxBonusMoney - orderDetail.CurrentBettingMoney).ToString("N2"))元</em></span>
+                    </td>
+                    <td>
+                        <span class="cyhm_soldmoney"><b></b>奖金盈利提成:<em>@(deductMoney.ToString("N2"))元</em></span>
+                    </td>
+                    <td>
+                        <span class="cyhm_soldmoney"><b></b>剩余分配奖金:<em>@((orderDetail.AfterTaxBonusMoney - deductMoney).ToString("N2"))元</em></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="load-joinuserlist" style="margin-top: 10px;">
+        </div>
+    </div>
+        if (anteList != null)
+        {
+            if (toginfo != null && ((toginfo.GameCode.ToLower().IndexOf("jc") >= 0 && anteList != null && toginfo.TicketStatus == TicketStatus.Ticketed && (toginfo.ProgressStatus != TogetherSchemeProgress.AutoStop && toginfo.ProgressStatus != TogetherSchemeProgress.Cancel)) || (SportsTicket != null && SportsTicket.Count > 0)))
+            {
+    <div class="xq_split clearfix">
+        <b class="facf_icon"></b>
+        <div class="line-01">
+            <span>方案拆分明细
+                @if (orderDetail.TotalMoney != orderDetail.CurrentBettingMoney)
+                {
+                    <em class="font_fd6c00">(由于限号或场次停售原因该订单实际出票金额为:@orderDetail.CurrentBettingMoney.ToString("f2")
+                        元)</em>
+                }
+            </span><i></i>
+        </div>
+    </div>
+    <div class="facfbox cl">
+        @if (toginfo.GameCode.ToLower().IndexOf("jc") >= 0 && anteList != null && toginfo.TicketStatus == TicketStatus.Ticketed)
+        {
+            @OrderHelper.SpliteTicketView(anteList, toginfo.GameCode, toginfo.GameType, toginfo.PlayType, toginfo.BetCount, toginfo.Amount, toginfo.TotalMoney, toginfo.AfterTaxBonusMoney, toginfo.SchemeBettingCategory)
+        }
+        <div class="showtick">
+        </div>
+    </div>
+            }
+        }
+}
+else
+{
+    <div id="lay_bg">
+        <div class=" clearfix" id="lay_bg_img">
+            <div class="new_f_top">
+            </div>
+            <a href="/">去@(SiteString.getHZSiteName(Request))首页</a>
+        </div>
+    </div>
+}
+@{Html.RenderPartial("box_confirm_addbd");}
+<script type="text/javascript">
+var createName = "@(toginfo != null ? toginfo.CreaterDisplayName : "")"
+        var progressstatus = "@(toginfo != null ? (int)toginfo.ProgressStatus : (int)TogetherSchemeProgress.Cancel)";
+        var toginmoney = "@(toginfo != null ? toginfo.TotalMoney : 0)";
+        var soldcount = "@(toginfo != null ? toginfo.SoldCount : 0)";
+        var guarantees = "@(toginfo != null ? toginfo.Guarantees : 0)";
+        var schemeid = "@(toginfo != null ? toginfo.SchemeId : "")";
+        var bonusStatus = "@(toginfo != null ? (int)toginfo.BonusStatus : 0)";
+    $(function() {
+        
+        $(".load-joinuserlist").html("<div class=\"load-bs\">正在加载中,请稍等...</div>");
+        $(".load-joinuserlist").load("/user/joinuserlist",{SchemeId:schemeid,TotalMoney:toginmoney,SoldCount:soldcount,Guarantees:guarantees,ProgressStatus:progressstatus,CreaterDisplayName:createName,BonusStatus:bonusStatus});
+        $(".showtick").html("<div class=\"load-bs\">正在加载中,请稍等...</div>");
+        $(".showtick").load("/user/sportsticket", { SchemeId: "@(toginfo == null ? "" : toginfo.SchemeId)", userId: "@(toginfo == null ? "" : toginfo.CreateUserId)", schemeStatus: "@(schemestatus)", Amount: @(toginfo == null ? 1 : toginfo.Amount) });
+        $(".xq_split").click(function() {
+            if ($(this).hasClass("xq_show")) {
+                $(this).next("div").slideDown();
+                $(this).removeClass("xq_show");
+            } else {
+                $(this).next("div").slideUp();
+                $(this).addClass("xq_show");
+            }
+        });
+        $(" #checklogin").click(function() {
+            user.isLogin(function(islogin) {
+                if (!islogin) {
+                    loginDialog.Show();
+                    $("#userName").focus();
+                    user.LoginCallBack = function() {
+                        window.location.href = location.href;
+                    };
+                } else {
+                    window.location.href = location.href;
+                }
+            });
+
+        });
+
+    });
+    $("#multiple").val(1);
+    function switchJoin(tag, obj) {
+        $(obj).addClass("on").siblings().removeClass("on");
+        if (tag == "my") {
+            user.isLogin(function (islogin) {
+                if (!islogin) {
+                    loginDialog.Show();
+                    $("#userName").focus();
+                    user.LoginCallBack = function () {
+                        show(tag, obj);
+                    };
+                } else {
+                    show(tag, obj);
+                }
+            });
+        } else {
+            show(tag, obj);
+        }
+    }
+    function show(tag) {
+        tag == "my" ? $(".pager_hmdetail").hide() : $(".pager_hmdetail").show();
+        var rows = document.getElementById("joinList").rows;
+
+        for (var i = 1; i < rows.length; i++) {
+            if (tag == "my" && rows[i].getAttribute("isid") != user.info.userId) {
+                rows[i].style.display = "none";
+            }
+            else {
+                rows[i].style.display = "";
+            }
+        }
+    }
+    function addMutiple(value) {
+        var multiple = document.getElementById("multiple");
+        var multipleValue = 0;
+        if (multiple.value == "") {
+            multipleValue = 0;
+        } else {
+            multipleValue = parseInt(multiple.value);
+        }
+        multipleValue += value;
+        if (multipleValue <= 0) multipleValue = 1;
+       
+        multiple.value=multipleValue;
+
+        CountStock(multiple, "@(toginfo != null ? toginfo.TotalCount : 0)", "@(toginfo != null ? (toginfo.TotalCount - toginfo.SoldCount) : 0)", "@(toginfo != null ? (toginfo.Price) : 0)");
+    }
+    function CountStock(obj, totalcount, canbecount, price) {
+        var value = obj.value;
+        var percent = 0.00, totalprice = 0.00;
+        if (value.indexOf("0")==0) {
+            value = value.substring(1);
+            obj.value = value;
+        }
+        value= new Number(value);
+        if (value > canbecount) {
+            value = canbecount;
+            obj.value=canbecount;
+            obj.focus();
+        }
+        percent = (value / totalcount * 100).toFixed(2);
+        totalprice = value * price;
+        $("#totalmoney").html(totalprice);
+        $("#stock").html(percent);
+    }
+    function CheckLogin(schemeId, isNeedBuyPwd) {
+        user.isLogin(function(islogin) {
+            if (!islogin) {
+                user.LoginCallBack = function() { showConfirm(schemeId, isNeedBuyPwd, user.info.isNeedBetPwd); };
+                loginDialog.Show();
+                $("#userName").focus();
+                return false;
+            } else {
+                showConfirm(schemeId, isNeedBuyPwd, user.info.isNeedBetPwd);
+            }
+        });
+    }
+    //弹出合买参与信息
+    function showConfirm(schemeId, isNeedBuyPwd, isNeedBetPwd) {
+        var buy = document.getElementById("multiple").value;
+        var price = @(toginfo == null ? 1 : toginfo.Price);
+        if (isNaN(buy) || buy < 1) {
+            alertTip("请输入正确的购买份数。", "err");
+            return false;
+        }
+        var confTxt = "<center style='line-height:50px;'>认购份数：<b class='red'>" + buy + "</b>份(" + buy * price + "元)，确定购买吗？</center>";
+
+        if (isNeedBuyPwd) {
+            confTxt = confTxt + "<div class='mt10' style='border:1px dotted #d3d3d3;border-width:1px 0;padding:10px 0; text-align:center'><span class='blue bold'>请输入认购密码：</span><input type='password' value='' id='joinpwd' class='balancepwd red'/></div>";
+        }
+        if (isNeedBetPwd) {
+            confTxt = confTxt + "<div class='mt10' style='border:1px dotted #d3d3d3;border-width:1px 0;padding:10px 0;text-align:center'><span class='blue bold'>请输入资金密码：</span><input type='password' value='' id='balancepwd' class='balancepwd'/></div>";
+        }
+
+        confirmTip(confTxt, function () {
+            join(schemeId, isNeedBuyPwd, isNeedBetPwd);
+        }, function () { });
+    }
+    //参与合买
+    function join(schemeId, isNeedBuyPwd, isNeedBetPwd) {
+        var isYt = @isYt == 0 ? false : true;
+        var url = "/hemai/join_sports/" + schemeId + "?isYt=" + isYt;
+        var buy = document.getElementById("multiple").value;
+        var jpwd = isNeedBuyPwd ? document.getElementById("joinpwd").value : "";
+        var bpwd = isNeedBetPwd ? document.getElementById("balancepwd").value : "";
+        var data = { buyCount: buy, joinpwd: jpwd, balancepwd: bpwd };
+        $.post(url, data, function (res) {
+            if (res.IsSuccess) {
+                alertTip(res.Message, "ok");
+                $("#boxAlertOkButton").click(function () {
+                    location.href = location.href;
+                });
+            }
+            else {
+                alertTip(res.Message, "err");
+                return false;
+            }
+        });
+    }
+      var sybd = "@(toginfo != null && bdlist.Count > 0 ? toginfo.TotalCount - bdlist[0].RealBuyCount - toginfo.SoldCount : toginfo != null && bdlist.Count <= 0 ? (toginfo.TotalCount - toginfo.SoldCount) : 0)";
+
+    var totalCount = "@(toginfo != null ? toginfo.TotalCount : 0)";
+    //增加保底
+    $(".zjbd").click(function() {
+        confirmTipBd(function() {
+            var curbd = "@(toginfo != null ? toginfo.Guarantees : 0)";
+            var allperbd = (sybd / totalCount * 100).toFixed(2);
+            var curperbd = (curbd / totalCount * 100).toFixed(2);
+            $("#bet_confirm_content_addbd p:eq(0) strong:eq(0)").html(curbd);
+            $("#bet_confirm_content_addbd p:eq(0) strong:eq(1)").html(curperbd);
+            $("#all_amount").html(sybd);
+            $("#all_rate").html(allperbd);
+            $("#some_baodi").click();
+            var needpwd = @(isbpwd);
+            if (needpwd == 1) {
+                var h = "<p id=\"input_pwd\">请输入资金密码：<input id=\"balancepwd\" class=\"in_text1\" type=\"password\" ></p>";
+                $("#bet_confirm_content_addbd p:last").after(h);
+            }
+            confirmLightBoxBd.Show();
+            document.getElementById("btn_confirm_yes_bd").onclick = function() {
+                var url = "/AddGuarantees";
+
+                var someBaodi = $('#some_baodi').attr('checked'), allBaodi = $('#all_baodi').attr('checked');
+                var num = $('#baodiNum'), val = parseInt(num.val());
+                if (someBaodi) {
+                    if (isNaN(val)) {
+                        val = 0;
+                        num.val("0");
+                    }
+                } else if (allBaodi) {
+                    val = parseInt($("#all_amount").html());
+                }
+                if (val <= 0) {
+                    return alertTip("请输入正确的份数", "err");
+                }
+                var betObj = {
+                    schemeId: schemeid,
+                    buycount: val,
+                    userId: "@(toginfo != null ? toginfo.CreateUserId : "")",
+                    balanecpwd: $("#balancepwd").val()
+                };
+                $.post(url, betObj, function(result) {
+                    if (result.IsSuccess) {
+                     confirmLightBoxBd.Close();
+                        $("#baodiNum").val("");
+                        $("#input_pwd").remove();
+                       $('#some_rate').html(0);
+                        $("#some_amount").html(0.00);
+                       alertTip(result.Message, "ok");
+                        $("#boxAlertOkButton").click(function() {
+                            window.location.href = window.location.href;
+                        });
+                    } else {
+                        if (result.Message == "") {
+                            return alertTip("出错啦，追号保底失败。", "err");
+                        } else {
+                             return alertTip(result.Message, "err");
+                        }
+                       
+                    }
+                });
+            }
+        }, function() {});
+    });
+
+    $("#baodiNum").keyup(function() {
+        var baodiNum = parseInt(this.value);
+        if (isNaN(baodiNum)) {
+            $("#some_rate").html(0.00);
+            $("#some_amount").html(0);
+            return;
+        } else if (baodiNum > sybd) {
+            $(this).val(sybd);
+            baodiNum = sybd;
+        }
+        var per = (baodiNum / totalCount * 100).toFixed(2);
+        $("#some_rate").html(per);
+        $("#some_amount").html(baodiNum);
+    });
+    $('#some_baodi').click(function() {
+        $('#baodiNum').attr("disabled", 0).focus();
+    });
+    $('#all_baodi').click(function() {
+        $('#baodiNum').attr("disabled", 1);
+    });
+</script>

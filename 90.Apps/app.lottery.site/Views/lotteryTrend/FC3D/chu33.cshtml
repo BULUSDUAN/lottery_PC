@@ -1,0 +1,790 @@
+﻿@{
+    Layout = "~/Views/lotteryTrend/_Layout.cshtml";
+    var pageSize = Request["pageSize"];
+    if (pageSize != "" && pageSize != null)
+    {
+        ViewBag.Title = "福彩3d除3余数走势图三近" + pageSize + "期" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "福彩3d除3余数走势图三近" + pageSize + "期";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "福彩3d除3余数走势图三近" + pageSize + "期,查看更多福彩3d除3余数走势图请登录" + SiteString.getHZSiteName(Request) + "彩票网.";
+    }
+    else
+    {
+        ViewBag.Title = "福彩3d除3余数走势图三-" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "福彩3d除3余数走势图三";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "彩票网提供最新的福彩3d除3余数走势图三,其中包括AAA、AAB、ABC的连线走势图,让彩民朋友更直观的分析福彩3d除3余数走势图三.";
+    }
+    var chu33 = ViewBag.DataList as LotteryData.Core.FC3D_Chu32_InfoCollection;
+    var a = 0;  
+}
+@{Html.RenderAction("ThendLink", "lotteryTrend");}
+<div id="container">
+    <div class="cont_box" style="width: 1003px;">
+        <table width="100%" cellspacing="1" cellpadding="0" border="0" class="table_box"
+            style="width: 1003px;" id="chartsTable">
+            <tbody>
+                <tr>
+                    <td align="center" class="tab_top" colspan="32">
+                        标注形式选择：
+                        <input type="checkbox" checked="checked" id="c_yl">
+                        <label for="c_yl">
+                            遗漏</label>
+                        <input type="checkbox" checked="checked" id="has_line">
+                        <label for="has_line">
+                            折线</label>
+                        <input type="checkbox" checked="checked" id="help_line">
+                        <label for="help_line">
+                            分隔线</label>
+                        <input type="checkbox" id="yl_zhu">
+                        <label for="yl_zhu">
+                            遗漏分层</label>
+                    </td>
+                </tr>
+                <tr class="tabbg weight" id="menuitem">
+                    <td width="77" class="line_r" rowspan="2">
+                        日期
+                    </td>
+                    <td width="55" class="line_r" rowspan="2">
+                        期号
+                    </td>
+                    <td class="line_r" rowspan="2" colspan="3">
+                        开奖号码
+                    </td>
+                    <td class="line_r" colspan="3">
+                        AAA
+                    </td>
+                    <td class="line_r" colspan="18">
+                        AAB
+                    </td>
+                    <td colspan="6">
+                        ABC
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td width="35">
+                        0:0:0
+                    </td>
+                    <td width="35">
+                        1:1:1
+                    </td>
+                    <td width="35" class="line_r">
+                        2:2:2
+                    </td>
+                    <td width="26">
+                        001
+                    </td>
+                    <td width="26">
+                        010
+                    </td>
+                    <td width="26">
+                        100
+                    </td>
+                    <td width="26">
+                        110
+                    </td>
+                    <td width="26">
+                        101
+                    </td>
+                    <td width="26">
+                        011
+                    </td>
+                    <td width="26">
+                        002
+                    </td>
+                    <td width="26">
+                        020
+                    </td>
+                    <td width="26">
+                        200
+                    </td>
+                    <td width="26">
+                        220
+                    </td>
+                    <td width="26">
+                        202
+                    </td>
+                    <td width="26">
+                        022
+                    </td>
+                    <td width="26">
+                        112
+                    </td>
+                    <td width="26">
+                        121
+                    </td>
+                    <td width="26">
+                        211
+                    </td>
+                    <td width="26">
+                        221
+                    </td>
+                    <td width="26">
+                        212
+                    </td>
+                    <td width="26" class="line_r">
+                        122
+                    </td>
+                    <td width="26">
+                        012
+                    </td>
+                    <td width="26">
+                        120
+                    </td>
+                    <td width="26">
+                        201
+                    </td>
+                    <td width="26">
+                        102
+                    </td>
+                    <td width="26">
+                        021
+                    </td>
+                    <td width="26">
+                        210
+                    </td>
+                </tr>
+            </tbody>
+            <tbody id="tdata">
+                @foreach (var item in chu33)
+                {
+                    a++;
+                    if (a % 5 == 0)
+                    {
+                    <tr class="tdbck">
+                        <td colspan="32">
+                        </td>
+                    </tr>
+                    }
+                    <tr>
+                        <td align="center" class="line_r">
+                            @item.CreateTime.ToString("yyyy-MM-dd")
+                        </td>
+                        <td align="center" class="line_r">
+                            @item.IssuseNumber
+                        </td>
+                        <td class="hot12">
+                            @item.RedBall1
+                        </td>
+                        <td class="hot12">
+                            @item.RedBall2
+                        </td>
+                        <td class="hot12 line_r">
+                            @item.RedBall3
+                        </td>
+                        <td class="@(item.C_AAA_000 == 0 ? "cbg purple1" : "y101")">
+                            @(item.C_AAA_000 == 0 ? "000" : item.C_AAA_000.ToString())
+                        </td>
+                        <td class="@(item.C_AAA_111 == 0 ? "cbg purple1" : "y101")">
+                            @(item.C_AAA_111 == 0 ? 111 : item.C_AAA_111)
+                        </td>
+                        <td class="@(item.C_AAA_222 == 0 ? "cbg purple1 line_r" : "y101 line_r")">
+                            @(item.C_AAA_222 == 0 ? 222 : item.C_AAA_222)
+                        </td>
+                        <td class="@(item.C_AAB_001 == 0 ? "cbg orange1" : "y101")">
+                            @(item.C_AAB_001 == 0 ? "001" : item.C_AAB_001.ToString())
+                        </td>
+                        <td class="@(item.C_AAB_010 == 0 ? "cbg orange1" : "y101")">
+                            @(item.C_AAB_010 == 0 ? "010" : item.C_AAB_010.ToString())
+                        </td>
+                        <td class="@(item.C_AAB_100 == 0 ? "cbg orange1" : "y101")">
+                            @(item.C_AAB_100 == 0 ? 100 : item.C_AAB_100)
+                        </td>
+                        <td class="@(item.C_AAB_110 == 0 ? "cbg orange1" : "y101")">
+                            @(item.C_AAB_110 == 0 ? 110 : item.C_AAB_110)
+                        </td>
+                        <td class="@(item.C_AAB_101 == 0 ? "cbg orange1" : "y101")">
+                            @(item.C_AAB_101 == 0 ? 101 : item.C_AAB_101)
+                        </td>
+                        <td class="@(item.C_AAB_011 == 0 ? "cbg orange1" : "y101")">
+                            @(item.C_AAB_011 == 0 ? "011" : item.C_AAB_011.ToString())
+                        </td>
+                        <td class="@(item.C_AAB_002 == 0 ? "cbg orange1" : "y101")">
+                            @(item.C_AAB_002 == 0 ? "002" : item.C_AAB_002.ToString())
+                        </td>
+                        <td class="@(item.C_AAB_020 == 0 ? "cbg orange1" : "y101")">
+                            @(item.C_AAB_020 == 0 ? "020" : item.C_AAB_020.ToString())
+                        </td>
+                        <td class="@(item.C_AAB_200 == 0 ? "cbg orange1" : "y101")">
+                            @(item.C_AAB_200 == 0 ? 200 : item.C_AAB_200)
+                        </td>
+                        <td class="@(item.C_AAB_220 == 0 ? "cbg orange1" : "y101")">
+                            @(item.C_AAB_220 == 0 ? 220 : item.C_AAB_220)
+                        </td>
+                        <td class="@(item.C_AAB_202 == 0 ? "cbg orange1" : "y101")">
+                            @(item.C_AAB_202 == 0 ? 202 : item.C_AAB_202)
+                        </td>
+                        <td class="@(item.C_AAB_022 == 0 ? "cbg orange1" : "y101")">
+                            @(item.C_AAB_022 == 0 ? "022" : item.C_AAB_022.ToString())
+                        </td>
+                        <td class="@(item.C_AAB_112 == 0 ? "cbg orange1" : "y101")">
+                            @(item.C_AAB_112 == 0 ? 112 : item.C_AAB_112)
+                        </td>
+                        <td class="@(item.C_AAB_121 == 0 ? "cbg orange1" : "y101")">
+                            @(item.C_AAB_121 == 0 ? 121 : item.C_AAB_121)
+                        </td>
+                        <td class="@(item.C_AAB_211 == 0 ? "cbg orange1" : "y101")">
+                            @(item.C_AAB_211 == 0 ? 211 : item.C_AAB_211)
+                        </td>
+                        <td class="@(item.C_AAB_221 == 0 ? "cbg orange1" : "y101")">
+                            @(item.C_AAB_221 == 0 ? 221 : item.C_AAB_221)
+                        </td>
+                        <td class="@(item.C_AAB_212 == 0 ? "cbg orange1" : "y101")">
+                            @(item.C_AAB_212 == 0 ? 212 : item.C_AAB_212)
+                        </td>
+                        <td class="@(item.C_AAB_122 == 0 ? "cbg orange1 line_r" : "y101 line_r")">
+                            @(item.C_AAB_122 == 0 ? 122 : item.C_AAB_122)
+                        </td>
+                        <td class="@(item.C_ABC_012 == 0 ? "cbg green1" : "y101")">
+                            @(item.C_ABC_012 == 0 ? "012" : item.C_ABC_012.ToString())
+                        </td>
+                        <td class="@(item.C_ABC_120 == 0 ? "cbg green1" : "y101")">
+                            @(item.C_ABC_120 == 0 ? "120" : item.C_ABC_120.ToString())
+                        </td>
+                        <td class="@(item.C_ABC_201 == 0 ? "cbg green1" : "y101")">
+                            @(item.C_ABC_201 == 0 ? "201" : item.C_ABC_201.ToString())
+                        </td>
+                        <td class="@(item.C_ABC_102 == 0 ? "cbg green1" : "y101")">
+                            @(item.C_ABC_102 == 0 ? "102" : item.C_ABC_102.ToString())
+                        </td>
+                        <td class="@(item.C_ABC_021 == 0 ? "cbg green1" : "y101")">
+                            @(item.C_ABC_021 == 0 ? "021" : item.C_ABC_021.ToString())
+                        </td>
+                        <td class="@(item.C_ABC_210 == 0 ? "cbg green1" : "y101")">
+                            @(item.C_ABC_210 == 0 ? "210" : item.C_ABC_210.ToString())
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tbody>
+                <tr>
+                    <td align="center" class="bdtop line_r">
+                        出现次数
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop">
+                        @(chu33.Count(p => p.C_AAA_000 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu33.Count(p => p.C_AAA_111 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(chu33.Count(p => p.C_AAA_222 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu33.Count(p => p.C_AAB_001 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu33.Count(p => p.C_AAB_010 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu33.Count(p => p.C_AAB_100 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu33.Count(p => p.C_AAB_110 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu33.Count(p => p.C_AAB_101 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu33.Count(p => p.C_AAB_011 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu33.Count(p => p.C_AAB_002 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu33.Count(p => p.C_AAB_020 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu33.Count(p => p.C_AAB_200 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu33.Count(p => p.C_AAB_220 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu33.Count(p => p.C_AAB_202 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu33.Count(p => p.C_AAB_022 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu33.Count(p => p.C_AAB_112 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu33.Count(p => p.C_AAB_121 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu33.Count(p => p.C_AAB_211 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu33.Count(p => p.C_AAB_221 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu33.Count(p => p.C_AAB_212 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(chu33.Count(p => p.C_AAB_122 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu33.Count(p => p.C_ABC_012 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu33.Count(p => p.C_ABC_120 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu33.Count(p => p.C_ABC_201 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu33.Count(p => p.C_ABC_102 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu33.Count(p => p.C_ABC_021 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(chu33.Count(p => p.C_ABC_210 == 0))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        平均遗漏
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td class="">
+                        @(chu33.Sum(p => p.C_AAA_000) / chu33.Count)
+                    </td>
+                    <td class="">
+                        @(chu33.Sum(p => p.C_AAA_111) / chu33.Count)
+                    </td>
+                    <td class="line_r">
+                        @(chu33.Sum(p => p.C_AAA_222) / chu33.Count)
+                    </td>
+                    <td class="">
+                        @(chu33.Sum(p => p.C_AAB_001) / chu33.Count)
+                    </td>
+                    <td class="">
+                        @(chu33.Sum(p => p.C_AAB_010) / chu33.Count)
+                    </td>
+                    <td class="">
+                        @(chu33.Sum(p => p.C_AAB_100) / chu33.Count)
+                    </td>
+                    <td class="">
+                        @(chu33.Sum(p => p.C_AAB_110) / chu33.Count)
+                    </td>
+                    <td class="">
+                        @(chu33.Sum(p => p.C_AAB_101) / chu33.Count)
+                    </td>
+                    <td class="">
+                        @(chu33.Sum(p => p.C_AAB_011) / chu33.Count)
+                    </td>
+                    <td class="line_r">
+                        @(chu33.Sum(p => p.C_AAB_002) / chu33.Count)
+                    </td>
+                    <td class="">
+                        @(chu33.Sum(p => p.C_AAB_020) / chu33.Count)
+                    </td>
+                    <td class="">
+                        @(chu33.Sum(p => p.C_AAB_200) / chu33.Count)
+                    </td>
+                    <td class="">
+                        @(chu33.Sum(p => p.C_AAB_220) / chu33.Count)
+                    </td>
+                    <td class="">
+                        @(chu33.Sum(p => p.C_AAB_202) / chu33.Count)
+                    </td>
+                    <td class="">
+                        @(chu33.Sum(p => p.C_AAB_022) / chu33.Count)
+                    </td>
+                    <td class="">
+                        @(chu33.Sum(p => p.C_AAB_112) / chu33.Count)
+                    </td>
+                    <td class="">
+                        @(chu33.Sum(p => p.C_AAB_121) / chu33.Count)
+                    </td>
+                    <td class="">
+                        @(chu33.Sum(p => p.C_AAB_211) / chu33.Count)
+                    </td>
+                    <td class="">
+                        @(chu33.Sum(p => p.C_AAB_221) / chu33.Count)
+                    </td>
+                    <td class="">
+                        @(chu33.Sum(p => p.C_AAB_212) / chu33.Count)
+                    </td>
+                    <td class="line_r">
+                        @(chu33.Sum(p => p.C_AAB_122) / chu33.Count)
+                    </td>
+                    <td class="">
+                        @(chu33.Sum(p => p.C_ABC_012) / chu33.Count)
+                    </td>
+                    <td class="">
+                        @(chu33.Sum(p => p.C_ABC_120) / chu33.Count)
+                    </td>
+                    <td class="">
+                        @(chu33.Sum(p => p.C_ABC_201) / chu33.Count)
+                    </td>
+                    <td class="">
+                        @(chu33.Sum(p => p.C_ABC_102) / chu33.Count)
+                    </td>
+                    <td class="">
+                        @(chu33.Sum(p => p.C_ABC_021) / chu33.Count)
+                    </td>
+                    <td class="line_r">
+                        @(chu33.Sum(p => p.C_ABC_210) / chu33.Count)
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        最大遗漏
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td class="">
+                        @(chu33.Max(p => p.C_AAA_000))
+                    </td>
+                    <td>
+                        @(chu33.Max(p => p.C_AAA_111))
+                    </td>
+                    <td class="line_r">
+                        @(chu33.Max(p => p.C_AAA_222))
+                    </td>
+                    <td class="">
+                        @(chu33.Max(p => p.C_AAB_001))
+                    </td>
+                    <td class="">
+                        @(chu33.Max(p => p.C_AAB_010))
+                    </td>
+                    <td>
+                        @(chu33.Max(p => p.C_AAB_100))
+                    </td>
+                    <td>
+                        @(chu33.Max(p => p.C_AAB_110))
+                    </td>
+                    <td>
+                        @(chu33.Max(p => p.C_AAB_101))
+                    </td>
+                    <td>
+                        @(chu33.Max(p => p.C_AAB_011))
+                    </td>
+                    <td class="">
+                        @(chu33.Max(p => p.C_AAB_002))
+                    </td>
+                    <td class="">
+                        @(chu33.Max(p => p.C_AAB_020))
+                    </td>
+                    <td>
+                        @(chu33.Max(p => p.C_AAB_200))
+                    </td>
+                    <td class="">
+                        @(chu33.Max(p => p.C_AAB_220))
+                    </td>
+                    <td class="">
+                        @(chu33.Max(p => p.C_AAB_202))
+                    </td>
+                    <td class="">
+                        @(chu33.Max(p => p.C_AAB_022))
+                    </td>
+                    <td>
+                        @(chu33.Max(p => p.C_AAB_112))
+                    </td>
+                    <td>
+                        @(chu33.Max(p => p.C_AAB_121))
+                    </td>
+                    <td>
+                        @(chu33.Max(p => p.C_AAB_211))
+                    </td>
+                    <td>
+                        @(chu33.Max(p => p.C_AAB_221))
+                    </td>
+                    <td>
+                        @(chu33.Max(p => p.C_AAB_212))
+                    </td>
+                    <td class="line_r">
+                        @(chu33.Max(p => p.C_AAB_122))
+                    </td>
+                    <td class="">
+                        @(chu33.Max(p => p.C_ABC_012))
+                    </td>
+                    <td>
+                        @(chu33.Max(p => p.C_ABC_120))
+                    </td>
+                    <td class="">
+                        @(chu33.Max(p => p.C_ABC_201))
+                    </td>
+                    <td class="">
+                        @(chu33.Max(p => p.C_ABC_102))
+                    </td>
+                    <td class="">
+                        @(chu33.Max(p => p.C_ABC_021))
+                    </td>
+                    <td class="line_r">
+                        @(chu33.Max(p => p.C_ABC_210))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        当前遗漏
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td valign="bottom" class="">
+                        @(chu33[chu33.Count - 1].C_AAA_000)<br>
+                        <img width="8px" height="@(chu33[chu33.Count - 1].C_AAA_000)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(chu33[chu33.Count - 1].C_AAA_111)<br>
+                        <img width="8px" height="@(chu33[chu33.Count - 1].C_AAA_111)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(chu33[chu33.Count - 1].C_AAA_222)<br>
+                        <img width="8px" height="@(chu33[chu33.Count - 1].C_AAA_222)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="">
+                        @(chu33[chu33.Count - 1].C_AAB_001)<br>
+                        <img width="8px" height="@(chu33[chu33.Count - 1].C_AAB_001)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="">
+                        @(chu33[chu33.Count - 1].C_AAB_010)<br>
+                        <img width="8px" height="@(chu33[chu33.Count - 1].C_AAB_010)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(chu33[chu33.Count - 1].C_AAB_100)<br>
+                        <img width="8px" height="@(chu33[chu33.Count - 1].C_AAB_100)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(chu33[chu33.Count - 1].C_AAB_110)<br>
+                        <img width="8px" height="@(chu33[chu33.Count - 1].C_AAB_110)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(chu33[chu33.Count - 1].C_AAB_101)<br>
+                        <img width="8px" height="@(chu33[chu33.Count - 1].C_AAB_101)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(chu33[chu33.Count - 1].C_AAB_002)<br>
+                        <img width="8px" height="@(chu33[chu33.Count - 1].C_AAB_002)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="">
+                        @(chu33[chu33.Count - 1].C_AAB_002)<br>
+                        <img width="8px" height="@(chu33[chu33.Count - 1].C_AAB_002)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="">
+                        @(chu33[chu33.Count - 1].C_AAB_020)<br>
+                        <img width="8px" height="@(chu33[chu33.Count - 1].C_AAB_020)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(chu33[chu33.Count - 1].C_AAB_200)<br>
+                        <img width="8px" height="@(chu33[chu33.Count - 1].C_AAB_200)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="">
+                        @(chu33[chu33.Count - 1].C_AAB_220)<br>
+                        <img width="8px" height="@(chu33[chu33.Count - 1].C_AAB_220)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="">
+                        @(chu33[chu33.Count - 1].C_AAB_202)<br>
+                        <img width="8px" height="@(chu33[chu33.Count - 1].C_AAB_202)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="">
+                        @(chu33[chu33.Count - 1].C_AAB_022)<br>
+                        <img width="8px" height="@(chu33[chu33.Count - 1].C_AAB_022)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(chu33[chu33.Count - 1].C_AAB_112)<br>
+                        <img width="8px" height="@(chu33[chu33.Count - 1].C_AAB_112)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(chu33[chu33.Count - 1].C_AAB_121)<br>
+                        <img width="8px" height="@(chu33[chu33.Count - 1].C_AAB_121)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(chu33[chu33.Count - 1].C_AAB_211)<br>
+                        <img width="8px" height="@(chu33[chu33.Count - 1].C_AAB_211)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(chu33[chu33.Count - 1].C_AAB_221)<br>
+                        <img width="8px" height="@(chu33[chu33.Count - 1].C_AAB_221)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(chu33[chu33.Count - 1].C_AAB_212)<br>
+                        <img width="8px" height="@(chu33[chu33.Count - 1].C_AAB_212)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(chu33[chu33.Count - 1].C_AAB_122)<br>
+                        <img width="8px" height="@(chu33[chu33.Count - 1].C_AAB_122)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="">
+                        @(chu33[chu33.Count - 1].C_ABC_012)<br>
+                        <img width="8px" height="@(chu33[chu33.Count - 1].C_ABC_012)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(chu33[chu33.Count - 1].C_ABC_120)<br>
+                        <img width="8px" height="@(chu33[chu33.Count - 1].C_ABC_120)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="">
+                        @(chu33[chu33.Count - 1].C_ABC_201)<br>
+                        <img width="8px" height="@(chu33[chu33.Count - 1].C_ABC_201)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="">
+                        @(chu33[chu33.Count - 1].C_ABC_102)<br>
+                        <img width="8px" height="@(chu33[chu33.Count - 1].C_ABC_102)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="">
+                        @(chu33[chu33.Count - 1].C_ABC_021)<br>
+                        <img width="8px" height="@(chu33[chu33.Count - 1].C_ABC_021)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(chu33[chu33.Count - 1].C_ABC_210)<br>
+                        <img width="8px" height="@(chu33[chu33.Count - 1].C_ABC_210)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr class="tabbg">
+                    <td rowspan="2" class="line_r">
+                        日期
+                    </td>
+                    <td align="center" rowspan="2" class="line_r">
+                        期号
+                    </td>
+                    <td rowspan="2" class="line_r" colspan="3">
+                        开奖号码
+                    </td>
+                    <td width="35">
+                        0:0:0
+                    </td>
+                    <td width="35">
+                        1:1:1
+                    </td>
+                    <td width="35" class="line_r">
+                        2:2:2
+                    </td>
+                    <td width="26">
+                        001
+                    </td>
+                    <td width="26">
+                        010
+                    </td>
+                    <td width="26">
+                        100
+                    </td>
+                    <td width="26">
+                        110
+                    </td>
+                    <td width="26">
+                        101
+                    </td>
+                    <td width="26">
+                        011
+                    </td>
+                    <td width="26">
+                        002
+                    </td>
+                    <td width="26">
+                        020
+                    </td>
+                    <td width="26">
+                        200
+                    </td>
+                    <td width="26">
+                        220
+                    </td>
+                    <td width="26">
+                        202
+                    </td>
+                    <td width="26">
+                        022
+                    </td>
+                    <td width="26">
+                        112
+                    </td>
+                    <td width="26">
+                        121
+                    </td>
+                    <td width="26">
+                        211
+                    </td>
+                    <td width="26">
+                        221
+                    </td>
+                    <td width="26">
+                        212
+                    </td>
+                    <td width="26" class="line_r">
+                        122
+                    </td>
+                    <td width="26">
+                        012
+                    </td>
+                    <td width="26">
+                        120
+                    </td>
+                    <td width="26">
+                        201
+                    </td>
+                    <td width="26">
+                        102
+                    </td>
+                    <td width="26">
+                        021
+                    </td>
+                    <td width="26">
+                        210
+                    </td>
+                </tr>
+                <tr class="tabbg">
+                    <td class="line_r" colspan="3">
+                        AAA
+                    </td>
+                    <td class="line_r" colspan="18">
+                        AAB
+                    </td>
+                    <td colspan="6">
+                        ABC
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $(function () {
+        var allLines = new Array();
+        allLines.push({ line: $(".orange1"), color: "#FF590B" });
+        allLines.push({ line: $(".green1"), color: "#004F00" });
+        allLines.push({ line: $(".purple1"), color: "#0000FE" });
+        var line = new XTLine();
+        for (i = 0; i < allLines.length; i++) {
+            var l = allLines[i];
+
+            line.color = l.color;
+            line.arrayBalls = l.line;
+            line.showrect();
+        }
+
+
+        $("#has_line").click(function () {
+            line.display(this.checked);
+        })
+    })
+</script>

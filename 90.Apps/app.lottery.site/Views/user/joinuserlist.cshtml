@@ -1,0 +1,137 @@
+﻿@using GameBiz.Core
+@using app.lottery.site.Models
+@{
+    var join = ViewBag.join as Sports_TogetherJoinInfoCollection;
+    var myjoin = ViewBag.joinmy as Sports_TogetherJoinInfoCollection;
+    var totalmoney=ViewBag.TotalMoney;
+    var soldcount = ViewBag.SoldCount;
+    var guarantees = ViewBag.Guarantees;
+    var progressstatus = ViewBag.ProgressStatus;
+    var user = ViewBag.User as CurrentUserInfo;
+    var CreaterDisplayName = ViewBag.CreateName;
+    var schemeId=ViewBag.SchemeId;
+    
+}
+@*<input type="hidden" value="@schemeId" id="SchemeId" />
+<input type="hidden" value="@totalmoney" id="totalMoney" />
+<input type="hidden" value="@soldcount" id="soldCount" />
+<input type="hidden" value="@guarantees" id="Guarantees" />
+<input type="hidden" value="@progressstatus" id="progressStatus" />
+<input type="hidden" value="@CreaterDisplayName" id="createName"/>*@
+
+<table id="joinList" class="mtable" width="100%" cellspacing="0" cellpadding="2" bordercolor="#A8C9FF" border="1" align="center" style="border-collapse: collapse">
+    <tbody id="showTable">
+        <tr class="thbg">
+            <th>
+                序号
+            </th>
+            <th>
+                用户名
+            </th>
+            <th>
+                购买份数
+            </th>
+            <th>
+                实际购买份数
+            </th>
+            <th>
+                购买金额
+            </th>
+            <th>
+                认购比例
+            </th>
+            <th>
+                中奖金额
+            </th>
+            <th>
+                参与时间
+            </th>
+            <th>
+                购彩类型
+            </th>
+            <th>
+                操作
+            </th>
+        </tr>
+    </tbody>
+    <tbody>
+        @foreach (var item in join.List)
+        {
+            <tr IsId="@item.UserId" class="@(join.List.IndexOf(item) % 2 == 0 ? "" : "ni2")">
+                <td>@((ViewBag.PageIndex * ViewBag.PageSize) + join.List.IndexOf(item) + 1)
+                </td>
+                @if (item.JoinType == TogetherJoinType.Subscription)
+                {
+                    <td style="color: red ">@SiteString.HideUserName(item.UserDisplayName, item.HideDisplayNameCount)
+                        (用户自购)
+                    </td>
+                }
+                else if (item.JoinType == TogetherJoinType.Guarantees)
+                { 
+                    <td style="color: red">@SiteString.HideUserName(item.UserDisplayName, item.HideDisplayNameCount)
+                        (即时保底)
+                    </td>
+                }
+                else if (item.JoinType == TogetherJoinType.SystemGuarantees)
+                { 
+                    <td style="color: red">
+                        系统保底
+                    </td>
+                }
+                else
+                { 
+                    <td>@SiteString.HideUserName(item.UserDisplayName, item.HideDisplayNameCount)
+                    </td>
+                }
+                <td>@item.BuyCount 份</td>
+                <td>@item.RealBuyCount 份</td>
+                <td>@((item.RealBuyCount * item.Price).ToString("f")) 元</td>
+                <td>@(((item.RealBuyCount / totalmoney) * 100).ToString("N2"))%</td>
+                <td>@item.BonusMoney.ToString("N2")</td>
+                <td>@item.JoinDateTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                <td>@SiteConvert.JoinTypeName(item.JoinType)</td>
+                <td>
+                    @{if (item.IsSucess && user != null && user.LoginInfo.UserId == item.UserId  &&(item.JoinType!=TogetherJoinType.Guarantees)&& ((soldcount + guarantees)/totalmoney<0.8M ))
+                    {
+                        <a href="javascript:exit('@item.SchemeId','@item.JoinId');"  >撤单</a>
+                    }
+                    else if (!item.IsSucess || (TogetherSchemeProgress)progressstatus == TogetherSchemeProgress.AutoStop || (TogetherSchemeProgress)progressstatus == TogetherSchemeProgress.Cancel)
+                    { 
+                        <span class="gray">已撤单</span>
+                    }}
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+ <div style="text-align: right">
+        @ViewHelpers.Pager5("getFollow", ViewBag.PageIndex, ViewBag.PageSize, join.TotalCount)
+ </div>
+<script type="text/javascript">
+    function getFollow(pageIndex, pageSize) {
+
+        var href = "/user/joinuserlist?pageIndex=" + pageIndex + "&pageSize=" + pageSize + "&SchemeId=@schemeId&TotalMoney=@totalmoney&SoldCount=@soldcount&Guarantees=@guarantees&ProgressStatus=@progressstatus&CreaterDisplayName=@CreaterDisplayName";
+        $(".load-joinuserlist").load(href);
+
+    }
+
+    //退出合买跟单
+    function exit(schemeId, joinId) {
+        confirmTip("<div style='text-align:center'>是否撤销跟单?</div>", function () {
+            $.post("/hemai/exit_sports/" + schemeId, { joinid: joinId }, function (res) {
+                if (res.IsSuccess) {
+                    alertTip(res.Message, "ok");
+                    // location.href = location.href;
+                    $("#boxAlertOkButton").click(function () {
+                        window.location.href = window.location.href;
+                    });
+                }
+                else {
+                    alertTip(res.Message, "err");
+                }
+            });
+
+        }, function () { });
+
+    }
+</script>

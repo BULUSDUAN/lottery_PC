@@ -1,0 +1,136 @@
+﻿@{
+    var details = ViewBag.Details as External.Core.SiteMessage.ArticleInfo_Query;
+
+    ViewBag.Title = details.Title + " - " + SiteString.getHZSiteName(Request);
+    ViewBag.KeyWords = details.KeyWords;
+    ViewBag.Description = details.DescContent;
+    //var ZXDataSource = ViewBag.ZXDataSource as External.Core.SiteMessage.ArticleInfo_QueryCollection;
+    //var dataSource = ViewBag.DataSource as External.Core.SiteMessage.ArticleInfo_QueryCollection;
+    string category = ViewBag.category;
+    var title = string.Empty;
+    var textNum = ViewBag.textNum;
+}
+@section css{
+    @UserHelper.css("zixun.css")
+}
+<div class="crumb_">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> ></li>
+        <li><a href="/">彩票资讯</a></li>
+        <li>
+            @{
+                switch (category)
+                {
+                    case "jdxw":
+                        title = "焦点新闻";
+                        break;
+                    case "ssdp":
+                        title = "赛事点评";
+                        break;
+                    case "szczx":
+                        title = "数字彩资讯";
+                        break;
+                    case "gpczx":
+                        title = "高频彩资讯";
+                        break;
+                    case "jjczx":
+                        title = "竞技彩资讯";
+                        break;
+                    case "ssq_dlt":
+                        title = "双色球 大乐透";
+                        break;
+                    case "zc_siliu":
+                        title = "足彩胜负 四场进球 六场半全场";
+                        break;
+                    case "zd_jl":
+                        title = "足球单场 竞彩篮球";
+                        break;
+                    case "fc3d_pl3_pl5":
+                        title = "福彩3D 排列三 排列五";
+                        break;
+                    case "zjxw":
+                        title = "中奖新闻";
+                        break;
+                    case "cpbk":
+                        title = "彩票百科";
+                        break;
+                    default:
+                        break;
+                }
+                <a href="/zixun/more?id=@category">&nbsp;&gt;@title</a>
+            }
+        </li>
+    </ul>
+</div>
+<div id="zixun">
+    <div class="main" style="width: 1000px; border-top: 3px solid #d7291c; margin-top: 10px">
+        <div class="zx_left">
+            <div class="zx_text">
+                <div class="text_title">
+                    <h1>
+                        @details.Title</h1>
+                    <div class="text_left">
+                        <span>@details.CreateTime.ToString("yyyy-MM-dd HH:mm")</span>&nbsp;&nbsp;来源：<a href="/"
+                            class="yuan">@SiteString.getHZSiteName(Request)</a>&nbsp;&nbsp;编辑：<span>@SiteString.getHZSiteName(Request)</span></div>
+                    <div class="text_right">
+                        <div class="bdsharebuttonbox">
+                            <a href="#" class="bds_more" data-cmd="more">分享到：</a><a href="#" class="bds_qzone"
+                                data-cmd="qzone" title="分享到QQ空间">QQ空间</a><a href="#" class="bds_tsina" data-cmd="tsina"
+                                    title="分享到新浪微博">新浪微博</a><a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a><a
+                                        href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a><a href="#" class="bds_weixin"
+                                            data-cmd="weixin" title="分享到微信">微信</a></div>
+                        <script>
+                            window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "2", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": { "bdSize": 16} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];
+                        </script>
+                    </div>
+                    <div style="clear: both;">
+                    </div>
+                </div>
+                @*<div class="text_con">*@
+                <div class="text_details">
+                    @Html.Raw(details.Description)
+                </div>
+            </div>
+            <div class="text_jump">
+                <span>上一篇： <a href="/ZiXun/textpart?num=@details.NextId&id=@category">@details.NextTitle</a></span><label>&nbsp;
+                    &nbsp; &nbsp; &nbsp;</label><span>下一篇：<a href="/zixun/textpart?num=@details.PreId&id=@category">@details.PreTitle</a></span>
+                <div>
+                    <div class="comment">
+                        <span class="c_l comment_ima"></span>
+                        <textarea class="comment_main" id="comment_main"></textarea>
+                        <input type="hidden" id="hdTextnum" name="hdTextnum" value="@(textNum == null ? "" : textNum)"/>
+                        <div class="c_expression">
+                            <ul>
+                                <li>
+                                    <div class="putCode" id="putCode">
+                                        <span class="reg_label">
+                                            <label for="Captcha">
+                                                验证码：</label></span>
+                                        <input type="text" maxlength="4" autocomplete="off" name="verifycode" style="ime-mode: disabled"
+                                            id="verifycode" class="reg_in_text" />
+                                        <div class="reg_captcha" style="display: inline-block; margin-left: 6px;">
+                                            <img onclick="refreshVerify()" alt="点击刷新" id="CheckCode" src="/user/createvalidatecode"
+                                                style="vertical-align: -8px;">
+                                            看不清？<a href="javascript:refreshVerify()" href="#" style="line-height: 34px">换一张</a></div>
+                                    </div>
+                                </li>
+                                <li class="c_fabu"><a href="javascript:void(0)" id="submit_comment">发 布</a></li>
+                            </ul>
+                        </div>
+                        <p>
+                            <span class="footer_w">畅言评论</span></p>
+                    </div>
+                    <div class="show_comment">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="zx_right">
+            @{Html.RenderAction("zixunright", "zixun", new { id = category });}
+        </div>
+    </div>
+</div>
+<div style="clear: both">
+</div>
+@ViewHelpers.js("zixun.js")

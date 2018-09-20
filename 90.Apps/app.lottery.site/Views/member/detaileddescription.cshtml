@@ -1,0 +1,40 @@
+﻿@using app.lottery.site.Models
+@{    
+    Layout = "../Shared/_LayoutFoud.cshtml";
+    ViewBag.Title = "细则说明";
+    ViewBag.keywords = "细则说明";
+    var user = ViewBag.CurrentUser as CurrentUserInfo;
+}
+
+<div class="center mt10">
+@{Html.RenderAction("Mycommenu", "Member");}
+@{Html.RenderAction("toptipFoud", "Member");}
+    <div class="new_buy_right">
+        <div class="betorder_top">
+            <ul>
+                @*<li class="betorder_topSelected"><a href="/member/myTc" checklg="/member/myTc">我的返点</a></li>*@
+                @if (user.LoginInfo.IsAgent)
+                {
+                    <li><a href="/member/generalizeUser" >返点用户</a></li>
+                    <li> <a href="/member/CommissionRecord">返点结算</a></li>
+                    <li><a href="/member/StatisticsQuery" >统计查询</a></li>
+                    <li> <a href="/member/SchemeManage">方案管理</a></li>
+                }
+            </ul>
+        </div>
+        <div class="betorder_con clearfix">
+            <div class="scheme">
+            <div class="scheme-show " style="margin-left: 10px;">
+                <a href="/member/myTc">我的返点</a>
+            </div>
+            <div class="scheme-show xzscheme">
+                <a href="/member/detaileddescription"><i></i>细则说明</a>
+            </div>
+        </div>
+        <div class="xzsm clearfix">
+         
+        </div>
+        </div>
+        
+    </div>
+    </div>

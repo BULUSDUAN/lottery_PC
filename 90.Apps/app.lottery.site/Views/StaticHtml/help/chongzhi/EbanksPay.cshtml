@@ -1,0 +1,53 @@
+﻿@{
+    var Title = "如何通过网上银行在线充值？";
+    ViewBag.Title = Title + " - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+   @ViewHelpers.css("help.css")
+} 
+  <div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">玩彩网</a> > </li>
+        <li><a href="/staticHtml/help/index.html">&nbsp;帮助中心</a> > </li>
+        <li>&nbsp;如何通过网上银行在线充值？</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type = "pay", name = "EbanksPay" });}
+<div class="help_r">
+         
+
+        <div class="list_box">
+            	<div class="h_pub_t">
+                	<b class="t_l"></b>
+                    <div class="t_m"><h2>网上银行充值</h2></div>
+                    <b class="t_r"></b>
+                </div>
+                <div class="h_pub_m">
+                	<ul>
+                        	<li><a href="/staticHtml/help/chongzhi/EbanksNotAccount.html" id="link151">网银充值未及时到帐？</a></li>			
+				                        	<li><a href="/staticHtml/help/chongzhi/EbanksDebugError.html" id="link153">网上支付失败，提示：调试错误，怎么办？</a></li>			
+				                        	<li><a href="/staticHtml/help/chongzhi/EbanksSafetyLCE.html" id="link154"><span 宋体";font-size:11pt;font-weight:normal;mso-spacerun:"yes";"="" style="letter-spacing:0pt;font-family:">网上支付时提示此网站出具的安全证书已过期或还未生效？</span></a></li>			
+				                        	<li><a href="/staticHtml/help/chongzhi/EbanksWebpageError.html" id="link155"><span 宋体?;font-size:12pt;mso-spacerun:?yes?;?="" style="FONT-FAMILY: ">充值页面右下方提示网页错误？</span></a></li>			
+				                        	<li><a href="/staticHtml/help/chongzhi/EbanksTradePage.html" id="link156">网银充值，为什么点击去网上银行充值的时候，页面打不开，不能进入到银行的交易页面？</a></li>			
+				                        	<li><a href="/staticHtml/help/chongzhi/EbanksNotReaction.html" id="link157">为什么使用网上银行充值，选择银行后点击下一步没有反应？</a></li>			
+				                        	<li><a href="/staticHtml/help/chongzhi/EbanksOnlinePay.html" id="link158">如何通过网上银行在线充值？</a></li>			
+				                        	<li><a href="/staticHtml/help/chongzhi/EbanksDredge.html" id="link159">如何开通网上银行？</a></li>			
+				                        </ul>
+                </div>
+            </div>
+
+
+        </div>
+         </div>
+<div class="clearfix"></div>
+
+ @ViewHelpers.js("help.js")
+
+
+
+
+
+

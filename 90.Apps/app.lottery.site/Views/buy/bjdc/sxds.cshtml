@@ -1,0 +1,140 @@
+@using System.Text
+@using app.lottery.site.cbbao.Models
+@using app.lottery.site.jsonManager
+@{
+    var match = ViewBag.Matches as List<BJDC_MatchInfo_WEB>;
+    //联赛信息
+    var leagues = new List<string>();
+    //截止比赛的matchid
+    var endedMatchid = new List<int>();
+    var iscurrent = ViewBag.IsCurrent;
+    if (match != null && match.Count > 0)
+    {
+        const string headCols = "<col width=\"86\"/><col width=\"51\"/><col width=\"249\"/><col width=\"549\"/><col width=\"62\"/>";
+        var endTime = match[0].MatchStartTime.Hour < 10 ? Convert.ToDateTime(match[0].MatchStartTime.ToString("yyyy-MM-dd")).AddHours(10) : Convert.ToDateTime(match[0].MatchStartTime.AddDays(1).ToString("yyyy-MM-dd")).AddHours(10);
+        var title = endTime.AddDays(-1).ToString("yyyy年MM月dd日") + " " + SiteConvert.Week_CN(endTime.AddDays(-1).DayOfWeek);
+        var thead = new StringBuilder();
+        thead.Append("<table class=\"lot_con\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><colgroup>" + headCols + "</colgroup>");
+        thead.Append("<thead><tr><th height=\"32\" colspan=\"5\">");
+        thead.Append("<div title=\"" + title + "\" id=\"a_" + endTime.AddDays(-1).ToString("yyyyMMdd") + "\" class=\"tps hide_a\">");
+        thead.Append("<span>" + title + "&nbsp;&nbsp;[10：00--次日10：00]</span><i class=\"line-01\"></i></div></th></tr></thead><tbody>");
+
+
+        @(new HtmlString(thead.ToString()))
+
+        var abbr = string.Empty;
+        //var state = string.Empty;
+        var matchid = 0;
+        var flag = false;
+        var result = string.Empty;
+        var let = 0;
+        var sale = 0;
+        var mid = 0;
+        foreach (var item in match)
+        {
+            flag = false;
+            //sale=true开售false未开售
+            sale = item.LocalStopTime > DateTime.Now && item.MatchStateName != "Cancel" && item.MatchStateName != "Late" ? 1 : 0;
+
+            var startTime = Convert.ToDateTime(item.MatchStartTime);
+            var stopTime = item.LocalStopTime;
+            matchid = item.MatchOrderId;
+            mid = item.Mid;
+            let = item.LetBall;
+
+            if (!leagues.Contains(item.MatchName))
+            {
+                leagues.Add(item.MatchName);
+            }
+            if (sale == 0)
+            {
+                endedMatchid.Add(matchid);
+                result = item.SXDS_Result;
+            }
+
+            if (startTime >= endTime)
+            {
+                //上一个table结束
+                @(new HtmlString("</tbody></table>"))
+                endTime = endTime.AddDays(1);
+                title = endTime.AddDays(-1).ToString("yyyy年MM月dd日") + " " + SiteConvert.Week_CN(endTime.AddDays(-1).DayOfWeek);
+
+                //开始新的table    
+                thead = new StringBuilder();
+                thead.Append("<table class=\"lot_con\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><colgroup>" + headCols + "</colgroup>");
+                thead.Append("<thead><tr sale=\"" + sale + "\"><th height=\"32\" colspan=\"5\">");
+                thead.Append("<div title=\"" + title + "\" id=\"a_" + endTime.AddDays(-1).ToString("yyyyMMdd") + "\" class=\"tps hide_a\">");
+                thead.Append("<span>" + title + "&nbsp;&nbsp;[10：00--次日10：00]</span><i class=\"line-01\"></i></div></th></tr></thead><tbody>");
+                @(new HtmlString(thead.ToString()))
+            }
+
+            abbr = matchid + "|" + item.HomeTeamName + "|" + item.GuestTeamName + "|" + let + "|" + startTime.ToString("yyyy/MM/dd HH:mm:ss");
+            <tr id="@matchid" abbr="@abbr" name="@endTime.AddDays(-1).ToString("yyyyMMdd")" league="@item.MatchName" sale="@sale" class="mtr@(sale == 1 || iscurrent ? "" : " hide_tr")">
+                <td>
+                    <span hover="xulie_h" onclick=" jcpage.dymanic_.ftdClick(@matchid, '周@(matchid)') " class="xulie">@matchid</span>
+                    <a style="color: #FFFFFF; background-color: @(string.IsNullOrEmpty(item.MatchColor) ? "ff3d00" : item.MatchColor)" title="@item.MatchName" @SiteString.GetLeagueHref(item.MatchId) class="saiming aochao">@item.MatchName</a>
+                </td>
+                <td title="截止时间:@stopTime.ToString("yyyy-MM-dd HH:mm")">
+                    @{
+                        if (sale == 0)
+                        {
+                            if (!string.IsNullOrEmpty(item.HomeFull_Result) && !string.IsNullOrEmpty(item.GuestFull_Result))
+                            {
+                                flag = true;
+                                <span class="red">@(item.HomeFull_Result + ":" + item.GuestFull_Result)</span>
+                            }
+                        }
+                        <span class="b_time hide" title="开赛时间:@startTime.ToString("yyyy-MM-dd HH:mm")">@startTime.ToString("HH:mm")</span>
+                        <span class="e_time@(flag ? " hide" : "")" title="截止时间:@stopTime.ToString("yyyy-MM-dd HH:mm")">@stopTime.ToString("HH:mm")</span>
+                    }
+                </td>
+                <td class="team">
+                    <a @(string.IsNullOrEmpty(item.HomeTeamId) ? "href=javascript:void(0)" : SiteString.GetTeamHref(Convert.ToInt32(item.HomeTeamId))) title="@item.HomeTeamName"><span>@item.HomeTeamName</span></a>
+                    <em>vs</em>
+                    <a class="guest" @(string.IsNullOrEmpty(item.GuestTeamId) ? "href=javascript:void(0)" : SiteString.GetTeamHref(Convert.ToInt32(item.GuestTeamId))) title="@item.GuestTeamName"><span>@item.GuestTeamName</span></a>
+                </td>
+                <td class="etr">
+                    @if (sale == 1)
+                    {
+                        <a class="p" id="@(matchid)_sxds_SD"><span>@item.SH_D_Odds</span><em class="tip"></em><sup></sup></a>
+                        <a class="p" id="@(matchid)_sxds_SS"><span>@item.SH_S_Odds</span><em class="tip"></em><sup></sup></a>
+                        <a class="p" id="@(matchid)_sxds_XD"><span>@item.X_D_Odds</span><em class="tip"></em><sup></sup></a>
+                        <a class="p" id="@(matchid)_sxds_XS"><span>@item.X_S_Odds</span><em class="tip"></em><sup></sup></a>
+                    }
+                    else
+                    {
+                        <a href="javascript:void(0)" id="@(matchid)_sxds_SD"><span>@item.JinQiu_0_Odds</span>@if ("SD" == result)
+                                                                                                             {
+                                                                                                                 <span class="result"></span>
+                                                                                                             }</a>
+                        <a href="javascript:void(0)" id="@(matchid)_sxds_SS"><span>@item.JinQiu_1_Odds</span>@if ("SS" == result)
+                                                                                                             {
+                                                                                                                 <span class="result"></span>
+                                                                                                             }</a>
+                        <a href="javascript:void(0)" id="@(matchid)_sxds_XD"><span>@item.JinQiu_2_Odds</span>@if ("XD" == result)
+                                                                                                             {
+                                                                                                                 <span class="result"></span>
+                                                                                                             }</a>
+                        <a href="javascript:void(0)" id="@(matchid)_sxds_XS"><span>@item.JinQiu_3_Odds</span>@if ("XS" == result)
+                                                                                                             {
+                                                                                                                 <span class="result"></span>
+                                                                                                             }</a>
+                    }
+                </td>
+                <td class="datas fx_hh nrb">
+                    @ViewHelpers.yox(mid,5)
+                </td>
+            </tr>
+        }
+        @(new HtmlString("</tbody></table>"))
+    }
+    else
+    {
+        <div class="nords" id="nords"><strong>当前无开售赛事，请等待官方公布新赛程！</strong></div>
+    }
+}
+<script type="text/javascript">
+    var leaguesRelate=@(new HtmlString(Common.JSON.JsonHelper.Serialize(leagues)));
+    var endMatch = @(new HtmlString(Common.JSON.JsonHelper.Serialize(endedMatchid)));
+</script>
+

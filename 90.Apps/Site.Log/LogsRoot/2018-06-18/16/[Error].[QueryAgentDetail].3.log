@@ -1,0 +1,35 @@
+[0][2018-06-18 16:22:48] 过程或函数 'P_Agent_QueryAgentDetail' 需要参数 '@isRecharge'，但未提供该参数。
+    System.Data.SqlClient.SqlException (0x80131904): 过程或函数 'P_Agent_QueryAgentDetail' 需要参数 '@isRecharge'，但未提供该参数。
+   at Common.Communication.WcfService.DoWork(WcfInvokeInfo invokeInfo)
+ClientConnectionId:cdc26929-66b7-4bc0-8650-e654314b62f2
+Error Number:201,State:4,Class:16
+    ----------------------------------------------------------------------------
+
+[0][2018-06-18 16:27:20] 过程或函数 'P_Agent_QueryAgentDetail' 需要参数 '@isRecharge'，但未提供该参数。
+    System.Data.SqlClient.SqlException (0x80131904): 过程或函数 'P_Agent_QueryAgentDetail' 需要参数 '@isRecharge'，但未提供该参数。
+   at Common.Communication.WcfService.DoWork(WcfInvokeInfo invokeInfo)
+ClientConnectionId:60a9d03c-4a33-4093-a4da-65ced8d27c89
+Error Number:201,State:4,Class:16
+    ----------------------------------------------------------------------------
+
+[0][2018-06-18 16:33:39] 过程或函数 'P_Agent_QueryAgentDetail' 需要参数 '@isRecharge'，但未提供该参数。
+    System.Data.SqlClient.SqlException (0x80131904): 过程或函数 'P_Agent_QueryAgentDetail' 需要参数 '@isRecharge'，但未提供该参数。
+   at Common.Communication.WcfService.DoWork(WcfInvokeInfo invokeInfo)
+ClientConnectionId:f6008d4a-9c0f-41ca-af9f-957cec2ea72d
+Error Number:201,State:4,Class:16
+    ----------------------------------------------------------------------------
+
+[0][2018-06-18 16:36:29] 过程或函数 'P_Agent_QueryAgentDetail' 需要参数 '@isRecharge'，但未提供该参数。
+    System.Data.SqlClient.SqlException (0x80131904): 过程或函数 'P_Agent_QueryAgentDetail' 需要参数 '@isRecharge'，但未提供该参数。
+   at Common.Communication.WcfService.DoWork(WcfInvokeInfo invokeInfo)
+ClientConnectionId:65964016-ca06-471d-b614-2aae98cc90d8
+Error Number:201,State:4,Class:16
+    ----------------------------------------------------------------------------
+
+[0][2018-06-18 16:45:04] 必须声明标量变量 "@@isRecharge"。
+    System.Data.SqlClient.SqlException (0x80131904): 必须声明标量变量 "@@isRecharge"。
+   at Common.Communication.WcfService.DoWork(WcfInvokeInfo invokeInfo)
+ClientConnectionId:c94b9ef1-03c9-4673-abd3-4bd4ba5c18d4
+Error Number:137,State:2,Class:15
+    ----------------------------------------------------------------------------
+

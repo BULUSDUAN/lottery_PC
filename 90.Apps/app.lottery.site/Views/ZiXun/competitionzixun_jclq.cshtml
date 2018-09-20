@@ -1,0 +1,85 @@
+﻿@{
+    if (ViewBag.pageNo > 0)
+    {
+        ViewBag.Title = "竞彩篮球预测第" + (@ViewBag.pageNo + 1) + "页-" + SiteString.getHZSiteName(Request);
+        ViewBag.KeyWords = "竞彩篮球预测第" + (@ViewBag.pageNo + 1) + "页";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "竞彩篮球频道第" + (@ViewBag.pageNo + 1) + "页,查看更多竞彩篮球推荐(预测)就上" + SiteString.getHZSiteName(Request) + "竞彩篮球频道";
+    }
+    else
+    {
+        ViewBag.Title = "竞彩篮球专家推荐-竞彩篮球比分预测-今日竞彩篮球分析-" + SiteString.getHZSiteName(Request);
+        ViewBag.KeyWords = "竞彩篮球专家推荐,竞彩篮球比分预测,今日竞彩篮球分析";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "竞彩篮球资讯频道为您提供专业的竞彩篮球分析、竞彩篮球专家(比分)推荐、今日竞彩篮球预测等资讯信息, ,每日及时更新大量竞彩篮球资讯,查看更多竞彩篮球推荐(预测)就上" + SiteString.getHZSiteName(Request) + "竞彩篮球资讯频道";
+    }
+    var ssDataSource = ViewBag.ssDataSource as External.Core.SiteMessage.ArticleInfo_QueryCollection;
+    @UserHelper.css("zixun.css")
+}
+<div class="crumb_">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li><a href="/zixun/competitionzixun">赛事资讯</a></li>
+    </ul>
+</div>
+<div id="zixun">
+    <input type="hidden" name="hdgameCode" id="hdgameCode" value="@ViewBag.gameCode" />
+    <div class="zx_left">
+        <div class="zx_type">
+            <a href="/zixun/competitionzixun" class="tab-title_ss@(ViewBag.gameCode == "" ? " on" : string.Empty)" id="ss-all" gameCode="">
+                查看全部</a> <a href="/zixun/competitionzixun_jczq" id="ss-cczq" class="tab-title_ss @(ViewBag.gameCode == "JCZQ" ? " on" : string.Empty)" gameCode="JCZQ">
+                    竞彩足球</a> <a href="/zixun/competitionzixun_jclq" class="tab-title_ss@(ViewBag.gameCode == "JCLQ" ? " on" : string.Empty)" id="cclq" gameCode="JCLQ">
+                        竞彩篮球</a> <a href="/zixun/competitionzixun_bjdc" class="tab-title_ss@(ViewBag.gameCode == "BJDC" ? " on" : string.Empty)" id="bjdc" gameCode="BJDC">
+                            北京单场</a> <a href="/zixun/competitionzixun_ctzq" class="tab-title_ss@(ViewBag.gameCode == "CTZQ" ? " on" : string.Empty)" id="ctzq" gameCode="CTZQ">
+                                传统足球</a>
+        </div>
+        <div class="zx_content">
+            <table border="0" cellpadding="0" cellspacing="0" class="zx_table">
+                <tr class="zx_title">
+                    <td width="20%">
+                        类型
+                    </td>
+                    <td width="65%">
+                        标题
+                    </td>
+                    <td width="15%">
+                        发布日期
+                    </td>
+                </tr>
+                @foreach (var item in ssDataSource.ArticleList)
+                {
+                    <tr class="zx_con">
+                        <td width="20%">
+                            @SiteConvert.GameName(item.GameCode)
+                        </td>
+                        <td width="65%">
+                            <a href="/zixun/textpart?Id=@item.Id&type=sszx" class="zx_blue">@(item.Title.Length > 30 ? item.Title.Substring(0, 30) + "…" : item.Title)</a>
+                        </td>
+                        <td width="15%">
+                            @item.CreateTime.ToString("yyyy.MM.dd")
+                        </td>
+                    </tr>
+                }
+                <tr class="last-tr no-bottom">
+                    <td colspan="3">@ViewHelpers.Pager_z(ViewBag.pageNo, ViewBag.PageSize, ssDataSource.TotalCount == null ? 0 : ssDataSource.TotalCount)
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="zx_right">
+        @{Html.RenderAction("zixunright", "zixun");}
+    </div>
+</div>
+<script type="text/javascript">
+    //    $(".tab-title_ss").click(function () {
+    //        var gameCode = $(this).attr("gameCode");
+    //        location.search = "pageNo=" + 0 + "&pageSize=" + 25 + "&gameCode=" + gameCode + "&r=" + Math.random().toFixed(5);
+    //        $(this).addClass("on");
+    //        $(this).siblings().removeClass("on");
+    //    });
+    function getAlldata(pageNo, pageSize) {
+        location.search = "pageNo=" + pageNo + "&pageSize=" + pageSize;
+    }
+</script>
+<div style="clear: both">
+</div>

@@ -1,0 +1,583 @@
+﻿@{
+    Layout = "~/Views/lotteryTrend/_Layout.cshtml";
+    var pageSize = Request["pageSize"];
+    if (pageSize != "" && pageSize != null)
+    {
+        ViewBag.Title = "华东15选5基本走势图近" + pageSize + "期" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "华东15选5基本走势图近" + pageSize + "期";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "华东15选5基本走势图近" + pageSize + "期,查看更多华东15选5基本走势图请登录" + SiteString.getHZSiteName(Request) + "彩票网.";
+    }
+    else
+    {
+        ViewBag.Title = "华东15选5基本走势图-" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "华东15选5基本走势图";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "彩票网提供最新的华东15选5基本走势图,其中包括号码走势、和值、和尾、大小比、奇偶比、质合比分布等走势,让彩民朋友更直观的分析华东15选5基本走势图.";
+    }
+    var DataList = ViewBag.DataList as LotteryData.Core.HD15X5_JBZS_InfoCollection;
+    var a = 0;  
+}
+@{Html.RenderAction("ThendLink", "lotteryTrend");}
+<div id="container">
+    <div class="cont_box" style="width: 1003px;">
+        <table width="100%" cellspacing="1" cellpadding="0" border="0" class="table_box"
+            style="width: 1003px;" id="chartsTable">
+            <tbody>
+                <tr>
+                    <td align="center" class="tab_top" colspan="26">
+                        标注形式选择：
+                        <input type="checkbox" checked="checked" id="c_yl">
+                        <label for="c_yl">
+                            遗漏</label>
+                        <input type="checkbox" checked="checked" id="has_line">
+                        <label for="has_line">
+                            折线</label>
+                        <input type="checkbox" checked="checked" id="help_line">
+                        <label for="help_line">
+                            分隔线</label>
+                        <input type="checkbox" id="yl_zhu">
+                        <label for="yl_zhu">
+                            遗漏分层</label>
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td rowspan="2" width="10%" class="line_r">
+                        期号
+                    </td>
+                    <td colspan="5" rowspan="2" width="15%" class="line_r">
+                        开奖号码
+                    </td>
+                    <td colspan="15" class="line_r">
+                        号码走势
+                    </td>
+                    <td rowspan="2" class="line_r">
+                        和值
+                    </td>
+                    <td rowspan="2" class="line_r">
+                        和尾
+                    </td>
+                    <td rowspan="2" class="line_r" width="6%">
+                        大小比
+                    </td>
+                    <td rowspan="2" class="line_r" width="6%">
+                        奇偶比
+                    </td>
+                    <td rowspan="2" class="line_r" width="6%">
+                        质个数
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td width="40">
+                        01
+                    </td>
+                    <td width="40">
+                        02
+                    </td>
+                    <td width="40">
+                        03
+                    </td>
+                    <td width="40">
+                        04
+                    </td>
+                    <td width="40">
+                        05
+                    </td>
+                    <td width="40">
+                        06
+                    </td>
+                    <td width="40">
+                        07
+                    </td>
+                    <td width="40">
+                        08
+                    </td>
+                    <td width="40">
+                        09
+                    </td>
+                    <td width="40">
+                        10
+                    </td>
+                    <td width="40">
+                        11
+                    </td>
+                    <td width="40">
+                        12
+                    </td>
+                    <td width="40">
+                        13
+                    </td>
+                    <td width="40">
+                        14
+                    </td>
+                    <td width="40" class="line_r">
+                        15
+                    </td>
+                </tr>
+            </tbody>
+            <tbody id="tdata" style="font-size: 12px; font-family: '宋体',Tahoma,Consolas,Arial,Simsun;">
+                @foreach (var item in DataList)
+                {
+                    a++;
+                    if (a % 5 == 0)
+                    {
+                    <tr class="tdbck">
+                        <td colspan="26">
+                        </td>
+                    </tr>
+                    }
+                    <tr>
+                        <td align="center" class="line_r">
+                            @item.IssuseNumber
+                        </td>
+                        <td align="center" class="hot12">
+                            @item.WinNumber.Substring(0, 2)
+                        </td>
+                        <td align="center" class="hot12">
+                            @item.WinNumber.Substring(3, 2)
+                        </td>
+                        <td align="center" class="hot12">
+                            @item.WinNumber.Substring(6, 2)
+                        </td>
+                        <td align="center" class="hot12">
+                            @item.WinNumber.Substring(9, 2)
+                        </td>
+                        <td align="center" class="hot12 line_r">
+                            @item.WinNumber.Substring(12, 2)
+                        </td>
+                        <td class="@(item.Red01 == 0 ? "cbg hot03" : "y101")">
+                            @(item.Red01 == 0 ? "01" : item.Red01.ToString())
+                        </td>
+                        <td class="@(item.Red02 == 0 ? "cbg hot03" : "y101")">
+                            @(item.Red02 == 0 ? "02" : item.Red02.ToString())
+                        </td>
+                        <td class="@(item.Red03 == 0 ? "cbg hot03" : "y101")">
+                            @(item.Red03 == 0 ? "03" : item.Red03.ToString())
+                        </td>
+                        <td class="@(item.Red04 == 0 ? "cbg hot03" : "y101")">
+                            @(item.Red04 == 0 ? "04" : item.Red04.ToString())
+                        </td>
+                        <td class="@(item.Red05 == 0 ? "cbg hot03" : "y101")">
+                            @(item.Red05 == 0 ? "05" : item.Red05.ToString())
+                        </td>
+                        <td class="@(item.Red06 == 0 ? "cbg hot03" : "y101")">
+                            @(item.Red06 == 0 ? "06" : item.Red06.ToString())
+                        </td>
+                        <td class="@(item.Red07 == 0 ? "cbg hot03" : "y101")">
+                            @(item.Red07 == 0 ? "07" : item.Red07.ToString())
+                        </td>
+                        <td class="@(item.Red08 == 0 ? "cbg hot03" : "y101")">
+                            @(item.Red08 == 0 ? "08" : item.Red08.ToString())
+                        </td>
+                        <td class="@(item.Red09 == 0 ? "cbg hot03" : "y101")">
+                            @(item.Red09 == 0 ? "09" : item.Red09.ToString())
+                        </td>
+                        <td class="@(item.Red10 == 0 ? "cbg hot03" : "y101")">
+                            @(item.Red10 == 0 ? "10" : item.Red10.ToString())
+                        </td>
+                        <td class="@(item.Red11 == 0 ? "cbg hot03" : "y101")">
+                            @(item.Red11 == 0 ? "11" : item.Red11.ToString())
+                        </td>
+                        <td class="@(item.Red12 == 0 ? "cbg hot03" : "y101")">
+                            @(item.Red12 == 0 ? "12" : item.Red12.ToString())
+                        </td>
+                        <td class="@(item.Red13 == 0 ? "cbg hot03" : "y101")">
+                            @(item.Red13 == 0 ? "13" : item.Red13.ToString())
+                        </td>
+                        <td class="@(item.Red14 == 0 ? "cbg hot03" : "y101")">
+                            @(item.Red14 == 0 ? "14" : item.Red14.ToString())
+                        </td>
+                        <td class="@(item.Red15 == 0 ? "cbg hot03 line_r" : "y101 line_r")">
+                            @(item.Red15 == 0 ? "15" : item.Red15.ToString())
+                        </td>
+                        <td class="line_r" width="100">
+                            @item.Hezhi
+                        </td>
+                        <td class="line_r" width="100">
+                            @item.HW
+                        </td>
+                        <td class="line_r" width="100">
+                            @item.DaXiaobi
+                        </td>
+                        <td class="line_r" width="100">
+                            @item.Jobi
+                        </td>
+                        <td class="line_r" width="100">
+                            @item.ZHbi
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tbody>
+                <tr>
+                    <td align="center" class="bdtop line_r">
+                        出现次数
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.Red01 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.Red02 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.Red03 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.Red04 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.Red05 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.Red06 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.Red07 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.Red08 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.Red09 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.Red10 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.Red11 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.Red12 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.Red13 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.Red14 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(DataList.Count(p => p.Red15 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        平均遗漏
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td class="">
+                        @(DataList.Count==0?0:DataList.Sum(p => p.Red01) / DataList.Count)
+                    </td>
+                    <td class="">
+                        @(DataList.Count == 0 ? 0 : DataList.Sum(p => p.Red02) / DataList.Count)
+                    </td>
+                    <td class="">
+                        @(DataList.Count == 0 ? 0 : DataList.Sum(p => p.Red03) / DataList.Count)
+                    </td>
+                    <td class="">
+                        @(DataList.Count == 0 ? 0 : DataList.Sum(p => p.Red04) / DataList.Count)
+                    </td>
+                    <td class="">
+                        @(DataList.Count == 0 ? 0 : DataList.Sum(p => p.Red05) / DataList.Count)
+                    </td>
+                    <td class="">
+                        @(DataList.Count == 0 ? 0 : DataList.Sum(p => p.Red06) / DataList.Count)
+                    </td>
+                    <td class="">
+                        @(DataList.Count == 0 ? 0 : DataList.Sum(p => p.Red07) / DataList.Count)
+                    </td>
+                    <td class="">
+                        @(DataList.Count == 0 ? 0 : DataList.Sum(p => p.Red08) / DataList.Count)
+                    </td>
+                    <td class="">
+                        @(DataList.Count == 0 ? 0 : DataList.Sum(p => p.Red09) / DataList.Count)
+                    </td>
+                    <td class="">
+                        @(DataList.Count == 0 ? 0 : DataList.Sum(p => p.Red10) / DataList.Count)
+                    </td>
+                    <td class="">
+                        @(DataList.Count == 0 ? 0 : DataList.Sum(p => p.Red11) / DataList.Count)
+                    </td>
+                    <td class="">
+                        @(DataList.Count == 0 ? 0 : DataList.Sum(p => p.Red12) / DataList.Count)
+                    </td>
+                    <td class="">
+                        @(DataList.Count == 0 ? 0 : DataList.Sum(p => p.Red13) / DataList.Count)
+                    </td>
+                    <td class="">
+                        @(DataList.Count == 0 ? 0 : DataList.Sum(p => p.Red14) / DataList.Count)
+                    </td>
+                    <td class="line_r">
+                        @(DataList.Count == 0 ? 0 : DataList.Sum(p => p.Red15) / DataList.Count)
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td class="line_r">
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        最大遗漏
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                        @(DataList.Count == 0 ? 0 : DataList.Max(p => p.Red01))
+                    </td>
+                    <td>
+                        @(DataList.Count == 0 ? 0 : DataList.Max(p => p.Red02))
+                    </td>
+                    <td>
+                        @(DataList.Count == 0 ? 0 : DataList.Max(p => p.Red03))
+                    </td>
+                    <td>
+                        @(DataList.Count == 0 ? 0 : DataList.Max(p => p.Red04))
+                    </td>
+                    <td>
+                        @(DataList.Count == 0 ? 0 : DataList.Max(p => p.Red05))
+                    </td>
+                    <td>
+                        @(DataList.Count == 0 ? 0 : DataList.Max(p => p.Red06))
+                    </td>
+                    <td>
+                        @(DataList.Count == 0 ? 0 : DataList.Max(p => p.Red07))
+                    </td>
+                    <td>
+                        @(DataList.Count == 0 ? 0 : DataList.Max(p => p.Red08))
+                    </td>
+                    <td>
+                        @(DataList.Count == 0 ? 0 : DataList.Max(p => p.Red09))
+                    </td>
+                    <td>
+                        @(DataList.Count == 0 ? 0 : DataList.Max(p => p.Red10))
+                    </td>
+                    <td>
+                        @(DataList.Count == 0 ? 0 : DataList.Max(p => p.Red11))
+                    </td>
+                    <td>
+                        @(DataList.Count == 0 ? 0 : DataList.Max(p => p.Red12))
+                    </td>
+                    <td>
+                        @(DataList.Count == 0 ? 0 : DataList.Max(p => p.Red13))
+                    </td>
+                    <td>
+                        @(DataList.Count == 0 ? 0 : DataList.Max(p => p.Red14))
+                    </td>
+                    <td class="line_r">
+                        @(DataList.Count == 0 ? 0 : DataList.Max(p => p.Red15))
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td class="line_r">
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        当前遗漏
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td valign="bottom">
+                        @(DataList.Count == 0 ? 0 : DataList[DataList.Count - 1].Red01)<br>
+                        <img width="8px" height="@(DataList.Count == 0 ? 0 : DataList[DataList.Count - 1].Red01)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(DataList.Count == 0 ? 0 : DataList[DataList.Count - 1].Red02)<br>
+                        <img width="8px" height="@(DataList.Count == 0 ? 0 : DataList[DataList.Count - 1].Red02)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(DataList.Count == 0 ? 0 : DataList[DataList.Count - 1].Red03)<br>
+                        <img width="8px" height="@(DataList.Count == 0 ? 0 : DataList[DataList.Count - 1].Red03)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(DataList.Count == 0 ? 0 : DataList[DataList.Count - 1].Red04)<br>
+                        <img width="8px" height="@(DataList.Count == 0 ? 0 : DataList[DataList.Count - 1].Red04)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(DataList.Count == 0 ? 0 : DataList[DataList.Count - 1].Red05)<br>
+                        <img width="8px" height="@(DataList.Count == 0 ? 0 : DataList[DataList.Count - 1].Red05)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(DataList.Count == 0 ? 0 : DataList[DataList.Count - 1].Red06)<br>
+                        <img width="8px" height="@(DataList.Count == 0 ? 0 : DataList[DataList.Count - 1].Red06)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(DataList.Count == 0 ? 0 : DataList[DataList.Count - 1].Red07)<br>
+                        <img width="8px" height="@(DataList.Count == 0 ? 0 : DataList[DataList.Count - 1].Red07)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(DataList.Count == 0 ? 0 : DataList[DataList.Count - 1].Red08)<br>
+                        <img width="8px" height="@(DataList.Count == 0 ? 0 : DataList[DataList.Count - 1].Red08)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(DataList.Count == 0 ? 0 : DataList[DataList.Count - 1].Red09)<br>
+                        <img width="8px" height="@(DataList.Count == 0 ? 0 : DataList[DataList.Count - 1].Red09)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(DataList.Count == 0 ? 0 : DataList[DataList.Count - 1].Red10)<br>
+                        <img width="8px" height="@(DataList.Count == 0 ? 0 : DataList[DataList.Count - 1].Red10)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(DataList.Count == 0 ? 0 : DataList[DataList.Count - 1].Red11)<br>
+                        <img width="8px" height="@(DataList.Count == 0 ? 0 : DataList[DataList.Count - 1].Red11)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(DataList.Count == 0 ? 0 : DataList[DataList.Count - 1].Red12)<br>
+                        <img width="8px" height="@(DataList.Count == 0 ? 0 : DataList[DataList.Count - 1].Red12)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(DataList.Count == 0 ? 0 : DataList[DataList.Count - 1].Red13)<br>
+                        <img width="8px" height="@(DataList.Count == 0 ? 0 : DataList[DataList.Count - 1].Red13)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(DataList.Count == 0 ? 0 : DataList[DataList.Count - 1].Red14)<br>
+                        <img width="8px" height="@(DataList.Count == 0 ? 0 : DataList[DataList.Count - 1].Red14)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(DataList.Count == 0 ? 0 : DataList[DataList.Count - 1].Red15)<br>
+                        <img width="8px" height="@(DataList.Count == 0 ? 0 : DataList[DataList.Count - 1].Red15)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                    </td>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr class="tabbg weight">
+                    <td rowspan="2" width="10%" class="line_r">
+                        期号
+                    </td>
+                    <td colspan="5" rowspan="2" width="15%" class="line_r">
+                        开奖号码
+                    </td>
+                    <td width="40">
+                        01
+                    </td>
+                    <td width="40">
+                        02
+                    </td>
+                    <td width="40">
+                        03
+                    </td>
+                    <td width="40">
+                        04
+                    </td>
+                    <td width="40">
+                        05
+                    </td>
+                    <td width="40">
+                        06
+                    </td>
+                    <td width="40">
+                        07
+                    </td>
+                    <td width="40">
+                        08
+                    </td>
+                    <td width="40">
+                        09
+                    </td>
+                    <td width="40">
+                        10
+                    </td>
+                    <td width="40">
+                        11
+                    </td>
+                    <td width="40">
+                        12
+                    </td>
+                    <td width="40">
+                        13
+                    </td>
+                    <td width="40">
+                        14
+                    </td>
+                    <td width="40" class="line_r">
+                        15
+                    </td>
+                    <td rowspan="2" class="line_r">
+                        和值
+                    </td>
+                    <td rowspan="2" class="line_r">
+                        和尾
+                    </td>
+                    <td rowspan="2" class="line_r" width="6%">
+                        大小比
+                    </td>
+                    <td rowspan="2" class="line_r" width="6%">
+                        奇偶比
+                    </td>
+                    <td rowspan="2" class="line_r" width="6%">
+                        质个数
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td colspan="15" class="line_r">
+                        号码走势
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

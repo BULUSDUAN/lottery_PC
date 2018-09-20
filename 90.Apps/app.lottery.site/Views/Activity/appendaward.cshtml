@@ -1,0 +1,83 @@
+﻿@{
+    ViewBag.Title = "竞彩疯狂加奖";
+    Layout = "../Shared/_HuoDong.cshtml";
+}
+<div id="appendaward">
+    <div class="appendaward">
+        <div class="award_subject">
+            <div style="height:365px;">
+                <div class="award_rule">
+                    <p>
+                        活动规则如下</p>
+                    <span>Actives rules are as follows</span>
+                </div>
+                <div class="rule_content">
+                    <p class="rule_p1">
+                        <span class="rule_number">1</span>参与对象必须是@(SiteString.getHZSiteName(Request))实名认证、手机绑定的注册用户</p>
+                    <p class="rule_p2">
+                        <span class="rule_number">2</span>本活动仅限竞彩足球（全玩法两场比赛2串1）、北京单场（不限玩法不限串关）成功出票的方案（不限自购或合买）</p>
+                    <p class="rule_p3">
+                        <span class="rule_number">3</span>网站保底方案均不参与加奖活动，加奖优惠不与网站其他购彩优惠同享</p>
+                    <p class="rule_p4">
+                        <span class="rule_number">4</span>若过关方案场次出现比赛延期，则该方案不享网站任何加奖优惠</p>
+                    <p>
+                        <span class="rule_number">5</span>加奖赠送的彩金红包均只能用于购彩不能提现，在中奖方案开奖后24小时以内派送</p>
+                    <p class="rule_p4">
+                        <span class="rule_number">6</span>合买加奖只奖励给发单人，跟单人不享受加奖优惠</p>
+                    <p class="rule_p3">
+                        <span class="rule_number">7</span>在法律许可范围内，@SiteString.getHZSiteName(Request)保留本次活动的解释权</p>
+                </div>
+                <div class="clear">
+                </div>
+            </div>
+            <div class="award_content">
+                <p>
+                    活动内容</p>
+                <span>Activity content</span>
+            </div>
+            <div class="award_table" style="color: #fff;">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tr class="award_tr">
+                        <td>
+                            <p>
+                                竞彩足球（全玩法两场比赛2串1）</p>
+                            <span>The SMG football,traditional football</span>
+                        </td>
+                        <td>
+                            <p>
+                                北京单场（不限玩法不限串关）</p>
+                            <span>The SMG football,traditional football</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <ul class="award_zuqiu">
+                                <li style="color: #fff;"><span>中奖税后金额范围</span> <span>加奖金额（彩金红包）</span> </li>
+                                <li><span>300-999.99</span> <span>28</span> </li>
+                                <li><span>1000-3999.99</span> <span>88</span> </li>
+                                <li><span>4000-9999.99</span> <span>388</span> </li>
+                                <li><span>10000-49999.99</span> <span>888</span> </li>
+                                <li><span>50000-99999.99</span> <span>3888</span> </li>
+                                <li><span>100000及以上</span> <span>8888</span> </li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul class="award_zuqiu">
+                                <li style="color: #fff;"><span>中奖税后金额范围</span> <span>加奖金额（彩金红包）</span> </li>
+                                <li><span>300-999.99</span> <span>18</span> </li>
+                                <li><span>1000-2999.99</span> <span>58</span> </li>
+                                <li><span>3000-5999.99</span> <span>188</span> </li>
+                                <li><span>6000-9999.99</span> <span>388</span> </li>
+                                <li><span>10000-29999.99</span> <span>888</span> </li>
+                                <li><span>30000及以上</span> <span>2888</span> </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="award_footer">
+        @{Html.RenderAction("footer", "activity");}
+    </div>
+</div>

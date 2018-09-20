@@ -1,0 +1,97 @@
+﻿@using app.lottery.site.Models;
+@{
+    ViewBag.Title = "名家管理 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "名家管理, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var user = ViewBag.CurrentUser as CurrentUserInfo;
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+    @ViewHelpers.css_1("default.css")
+}
+<style>
+    form
+    {
+        margin: 0;
+    }
+    textarea
+    {
+        display: block;
+    }
+</style>
+<script charset="utf-8" src="@ViewHelpers.js_1("kindeditor-min.js")"></script>
+<script charset="utf-8" src="@ViewHelpers.js_11("zh_CN.js")"></script>
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>名家分析</li>
+    </ul>
+</div>
+<div class="center mt10">
+    @{Html.RenderAction("menu", "Member");}
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <ul class="mymenu">
+            <li class="myons"><a href="javascript:void(0);">发布心水推荐</a></li>
+            <li><a href="/member/QueryExpertRecord">发布心水记录</a></li>
+        </ul>
+        <div id="mjfx">
+            <div class="div">
+                标题：<input type="text" id="title" value=" " /></div>
+            <div class="div">
+                售价：<input type="text" id="price" value="" onblur="caijin();" />彩金</div>
+            <div class="div">
+                内容：@*<textarea id="content"></textarea>*@
+                <textarea name="content" style="width: 500px; height: 200px; visibility: hidden;"
+                    id="content"></textarea>
+            </div>
+            <div>
+                <input type="button" name="name" id="save" class="btn-cz" value="提交保存" /></div>
+        </div>
+        <div class="clearfix">
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+<script type="text/javascript">
+
+    function caijin() {
+        var re = /^\d*$/;
+        var cai = $("#price").val();
+        if (!re.test(cai)) {
+            $("#price").val("");
+            return false;
+        }
+    }
+    var editor;
+    KindEditor.ready(function (K) {
+        editor = K.create('textarea[name="content"]', {
+            resizeType: 1,
+            allowPreviewEmoticons: false,
+            allowImageUpload: false,
+            items: [
+						'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+						'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+						'insertunorderedlist', '|', 'emoticons', 'image', 'link']
+        });
+    });
+    $("#save").click(function () {
+        var title = $("#title").val();
+        var content = editor.html();
+        var price = $("#price").val();
+        if (price == null || price == "" || title == null || title == "" || content == null || content == "") {
+            alert("请将信息输入完整！");
+            return false;
+        }
+        $.post("/Member/SaveExpertAnalyze", { title: title, content: content, price: price }, function (date) {
+            if (date.IsSucess == false) {
+                alert(date.Msg);
+                return false;
+            }
+            alert(date.Msg);
+            window.location.href = window.location.href;
+        });
+    });
+
+</script>

@@ -1,0 +1,464 @@
+﻿@using GameBiz.Core;
+@using app.lottery.site.Models;
+@{
+    string game = ViewBag.Game;
+    var gameType = ViewBag.GameType;
+    var hmlist = ViewBag.TogList as GameBiz.Core.Sports_TogetherSchemeQueryInfoCollection;
+    var user = ViewBag.User as CurrentUserInfo;
+    var hotuser = ViewBag.SuperList as List<TogetherHotUserInfo>;
+    var prizedIssuse = WCFService.PrizedIssuseList(game, "", 20);
+    var betUrl = "/szc/ssq";
+    var PlayType = Request["PlayType"];
+    var gameName = "";
+    if (PlayType != null)
+    {
+        gameName = SiteConvert.GameName(game, PlayType);
+    }
+    if (!string.IsNullOrEmpty(game))
+    {
+        switch (game.ToLower())
+        {
+            case "jclq":
+                gameName = gameName == "" ? "" : gameName.ToString().Substring(2);
+                ViewBag.Title = SiteConvert.GameName(game, Request["type"]) + gameName + "合买-" + SiteString.getHZSiteName(Request) + "彩票网";
+                ViewBag.Keywords = SiteConvert.GameName(game, Request["type"]) + gameName + "合买";
+                ViewBag.Description = SiteString.getHZSiteName(Request) + "彩票网合买频道为您提供专业的" + SiteConvert.GameName(game, Request["type"]) + gameName + "合买,更有最新的合买达人发布的" + SiteConvert.GameName(game, Request["type"]) + gameName + "合买方案," + SiteConvert.GameName(game, Request["type"]) + gameName + "合买就上" + SiteString.getHZSiteName(Request) + "彩票网.";
+                betUrl = "/jingcaibasket/" + gameType;
+                break;
+            case "jczq":
+                gameName = gameName == "" ? "" : gameName.ToString().Substring(2);
+                ViewBag.Title = SiteConvert.GameName(game, Request["type"]) + gameName + "合买-" + SiteString.getHZSiteName(Request) + "彩票网";
+                ViewBag.Keywords = SiteConvert.GameName(game, Request["type"]) + gameName + "合买";
+                ViewBag.Description = SiteString.getHZSiteName(Request) + "彩票网合买频道为您提供专业的" + SiteConvert.GameName(game, Request["type"]) + gameName + "合买,更有最新的合买达人发布的" + SiteConvert.GameName(game, Request["type"]) + gameName + "合买方案," + SiteConvert.GameName(game, Request["type"]) + gameName + "合买就上" + SiteString.getHZSiteName(Request) + "彩票网.";
+                betUrl = "/jingcai/" + gameType;
+                break;
+            case "ctzq":
+                ViewBag.Title = "足彩" + gameName + "合买-" + gameName + "合买-" + SiteString.getHZSiteName(Request) + "彩票网";
+                ViewBag.Keywords = "足彩" + gameName + "合买" + gameName + "合买";
+                ViewBag.Description = SiteString.getHZSiteName(Request) + "彩票网合买频道为您提供专业的" + SiteConvert.GameName(game, Request["type"]) + gameName + "合买,更有最新的合买达人发布的" + SiteConvert.GameName(game, Request["type"]) + gameName + "合买方案," + SiteConvert.GameName(game, Request["type"]) + gameName + "合买就上" + SiteString.getHZSiteName(Request) + "彩票网.";
+                betUrl = "/toto/" + gameType;
+                break;
+            case "bjdc":
+                gameName = gameName == "" ? "" : gameName.ToString().Substring(2);
+                ViewBag.Title = SiteConvert.GameName(game, Request["type"]) + gameName + "合买-北单" + gameName + "合买-" + SiteString.getHZSiteName(Request) + "彩票网";
+                ViewBag.Keywords = SiteConvert.GameName(game, Request["type"]) + gameName + "合买-北单" + gameName + "合买";
+                ViewBag.Description = SiteString.getHZSiteName(Request) + "彩票网合买频道为您提供专业的" + SiteConvert.GameName(game, Request["type"]) + gameName + "合买,更有最新的合买达人发布的" + SiteConvert.GameName(game, Request["type"]) + gameName + "合买方案," + SiteConvert.GameName(game, Request["type"]) + gameName + "合买就上" + SiteString.getHZSiteName(Request) + "彩票网.";
+                betUrl = "/danchang/" + gameType;
+                break;
+            default:
+                ViewBag.Title = SiteConvert.GameName(game, Request["type"]) + "合买-" + SiteConvert.GameName(game, Request["type"]) + "合买大厅-" + SiteString.getHZSiteName(Request) + "彩票网";
+                ViewBag.Keywords = SiteConvert.GameName(game, Request["type"]) + "合买" + SiteConvert.GameName(game, Request["type"]) + "合买大厅";
+                ViewBag.Description = SiteString.getHZSiteName(Request) + "彩票网合买频道为您提供专业的" + SiteConvert.GameName(game, Request["type"]) + gameName + "合买,更有最新的合买达人发布的" + SiteConvert.GameName(game, Request["type"]) + gameName + "合买方案," + SiteConvert.GameName(game, Request["type"]) + gameName + "合买就上" + SiteString.getHZSiteName(Request) + "彩票网.";
+                betUrl = "/szc/" + game;
+                break;
+        }
+    }
+    else
+    {
+        ViewBag.Title = "彩票合买跟单-" + SiteString.getHZSiteName(Request) + "-彩票|合买|合买跟单|福彩|体彩|足彩|竞彩|快开彩|大乐透 " + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "彩票,合买,合买跟单,福彩,体彩,足彩,竞彩,快开彩," + SiteString.getHZSiteName(Request);
+        ViewBag.Description = "彩票合买跟单是彩民进行福彩,体彩,足彩,快开彩等彩票合买跟单的频道,提供双色球,大乐透,时时彩,足球单场,胜负彩等热门彩种的合买跟单,购买彩票请到" + SiteString.getHZSiteName(Request);
+    }
+    List<DateTime> list = new List<DateTime>();
+    list.Add(DateTime.Today);
+    for (int i = 1; i <= 7; i++)
+    {
+        list.Add(DateTime.Today.AddDays(-i));
+    }
+}
+<script type="text/javascript">
+    var pageNo = "@ViewBag.pageNo";
+</script>
+@section css{
+    @UserHelper.css("hemai.css")
+}
+<script>
+    var Gametype = "@gameType";
+    var orbN = "@(ViewBag.orderByName)";
+    var orbS = "@(ViewBag.orderBySort)";
+    var res = '@ViewHelpers.jsonres()';
+    var gamecode = '@game';
+    var gametype = '@gameType';
+    var issues = '@Request["issuseNumber"]';
+</script>
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>合买大厅</li>
+    </ul>
+</div>
+<div id="side-menu">
+    <div class="hm-cz">
+        合买彩种</div>
+    <ul class="myyon">
+        <li><span class="hm-logo-cz hm-w-logo logo-all"></span><a href="/chipped">全部彩种</a></li>
+        <li><span class="hm-logo-cz hm-w-logo hm-logo-jczq"></span><a href="/chipped/jczq">竞彩足球</a>
+        </li>
+        <li><span class="hm-logo-cz hm-w-logo hm-logo-jclq"></span><a href="/chipped/jclq">竞彩篮球</a></li>
+        <li><span class="hm-logo-cz hm-w-logo hm-logo-bjdc"></span><a href="/chipped/bjdc">北京单场</a></li>
+        <li><span class="hm-logo-cz hm-w-logo hm-logo-t14c"></span><a href="/chipped/ctzq?PlayType=t14c">
+            14场胜负</a></li>
+        <li><span class="hm-logo-cz hm-w-logo hm-logo-tr9"></span><a href="/chipped/ctzq?PlayType=tr9">
+            任选9</a></li>
+        <li><span class="hm-logo-cz hm-w-logo hm-logo-t4cjq"></span><a href="/chipped/ctzq?PlayType=t4cjq">
+            四场进球彩</a></li>
+        <li><span class="hm-logo-cz hm-w-logo hm-logo-t6bqc"></span><a href="/chipped/ctzq?PlayType=t6bqc">
+            六场半全场</a></li>
+        <li><span class="hm-logo-cz hm-w-logo hm-logo-ssq"></span><a href="/chipped/ssq">双色球</a></li>
+        <li><span class="hm-logo-cz hm-w-logo hm-logo-fc3d"></span><a href="/chipped/fc3d">福彩3D</a></li>
+        <li><span class="hm-logo-cz hm-w-logo hm-logo-dlt"></span><a href="/chipped/dlt">大乐透</a></li>
+        <li><span class="hm-logo-cz hm-w-logo hm-logo-pl3"></span><a href="/chipped/pl3">排列三</a></li>
+       @* <li><span class="hm-logo-cz hm-w-logo hm-logo-cqssc"></span><a href="/chipped/cqssc">重庆时时彩</a></li>
+        <li><span class="hm-logo-cz hm-w-logo hm-logo-jx11x5"></span><a href="/chipped/jx11x5">江西11选5</a></li>*@
+    </ul>
+</div>
+<div id="container" style="overflow: visible;">
+    <div class="hm-top">
+        <a href="javascript:void(0);" class="hm-to hm-start"></a><span>合买名人</span>@*<a href="javascript:void(0)" class="discuss">合买QQ讨论群:210279705</a>*@
+    </div>
+    <div class="hm-star" style="margin-bottom: 10px; @(hotuser == null || hotuser.Count <= 0 ? "padding:0" : "") ">
+        @if (hotuser != null && hotuser.Count > 0)
+        {
+            @*<div class="hd">
+                <span class="next"><a class="hm-to hm-mkt-l"></a></span><span class="prev"><a class="hm-to hm-mkt-r">
+                </a></span>
+            </div>*@
+            <div class="imglist_w">
+                <ul class="hm-star-list" id="mr_list_box">
+                    @foreach (var item in hotuser)
+                    {
+                        var gm = item.OrderList.Select(order => SiteConvert.HMGameName(order.GameCode, order.GameType)).ToList();
+                        <li>
+                            <dl class="dlbox">
+                                <dt><a target="_blank" href="/blog/standings/@(item.UserId)">@item.DisplayName</a></dt>
+                                @if (gm.Any())
+                                {
+                                    <dd>近期中奖 <em class="yellow">@item.WeeksWinMoney.ToString("N2")</em>元<br/>擅长@(string.Join("、", gm.Distinct()))等</dd>
+                                }
+                                else
+                                {
+                                    <dd>近期中奖 <em class="yellow">@item.WeeksWinMoney.ToString("N2")</em>元</dd>
+                                }
+                                <dd>有<span class="yellow">@item.AttentionUserCount</span>已经关注他</dd>
+                            </dl>
+                        </li>
+                    }
+                </ul>
+            </div>
+            <div class="hd">
+                <ul></ul>
+            </div>
+        }
+        else
+        {
+           @* <a href="/huodong/huodong.html" target="_blank">
+                <img src="@ViewHelpers.img("/hemai/hm_hotuser_bg.jpg")" style="padding-left: 0" alt="合买大厅"/></a>*@
+            <img src="@ViewHelpers.img("/hemai/hm_hotuser_bg.jpg")" style="padding-left: 0" alt="合买大厅"/>
+        }
+    </div>
+    <!--搜索-->
+    @if (game == "jczq")
+    { 
+        <div class="hm_slide_nav">
+            <ul>
+                <li class="@(gameType == "spf" ? "on" : string.Empty)"><a style="border-left: 1px solid #ddd;"
+                    href="/chipped/jczq?PlayType=spf">胜平负</a> </li>
+                <li class="@(gameType == "bf" ? "on" : string.Empty)"><a href="/chipped/jczq?PlayType=bf">
+                    比分</a></li>
+                <li class="@(gameType == "zjq" ? "on" : string.Empty)"><a href="/chipped/jczq?PlayType=zjq">
+                    进球数</a></li>
+                <li class="@(gameType == "bqc" ? "on" : string.Empty)"><a href="/chipped/jczq?PlayType=bqc">
+                    半全场</a></li>
+                <li class="@(gameType == "hh" ? "on" : string.Empty)"><a href="/chipped/jczq?PlayType=hh">
+                    混合过关</a></li>
+            </ul>
+        </div>
+    }
+    else if (game == "jclq")
+    { 
+        <div class="hm_slide_nav">
+            <ul>
+                <li class="@(gameType == "rfsf" ? "on" : string.Empty)"><a style="border-left: 1px solid #ddd;"
+                    href="/chipped/jclq?PlayType=rfsf">让分胜负</a> </li>
+                <li class="@(gameType == "sf" ? "on" : string.Empty)"><a href="/chipped/jclq?PlayType=sf">
+                    胜负</a></li>
+                <li class="@(gameType == "sfc" ? "on" : string.Empty)"><a href="/chipped/jclq?PlayType=sfc">
+                    胜负差</a></li>
+                <li class="@(gameType == "dxf" ? "on" : string.Empty)"><a href="/chipped/jclq?PlayType=dxf">
+                    大小分</a></li>
+                <li class="@(gameType == "hh" ? "on" : string.Empty)"><a href="/chipped/jclq?PlayType=hh">
+                    混合过关</a></li>
+            </ul>
+        </div>
+    }
+    else if (game == "bjdc")
+    { 
+        <div class="hm_slide_nav">
+            <ul>
+                <li class="@(gameType == "spf" ? "on" : string.Empty)"><a style="border-left: 1px solid #ddd;"
+                    href="/chipped/bjdc?PlayType=spf">胜平负</a> </li>
+                <li class="@(gameType == "zjq" ? "on" : string.Empty)"><a href="/chipped/bjdc?PlayType=zjq">
+                    进球数</a></li>
+                <li class="@(gameType == "sxds" ? "on" : string.Empty)"><a href="/chipped/bjdc?PlayType=sxds">
+                    上下单双</a></li>
+                <li class="@(gameType == "bf" ? "on" : string.Empty)"><a href="/chipped/bjdc?PlayType=bf">
+                    比分</a></li>
+                <li class="@(gameType == "bqc" ? "on" : string.Empty)"><a href="/chipped/bjdc?PlayType=bqc">
+                    半全场</a></li>
+            </ul>
+        </div>
+    }
+    <div class="list_title hm_select">
+        @if (game == "jclq" || game == "jczq" || game == "")
+        {
+            <label>
+                期号</label>
+            <select id="issuseNumber">
+                <option value="">选择期号</option>
+                @foreach (var item in list)
+                {
+                    <option value="@item.Date.ToString("yyyy-MM-dd")"  @(ViewBag.issuseNumber == item.Date.ToString("yyyy-MM-dd") ? "selected=selected" : "")>@item.Date.ToString("yyyy-MM-dd")</option>
+                }
+            </select>
+        }
+        else if (!string.IsNullOrEmpty(game) && game == "ctzq" && game == "bjdc")
+        { 
+            
+            <label>
+                期号</label>
+            <select id="issuseNumber">
+                <option></option>
+            </select>
+        }
+        else
+        {
+            <label>
+                期号</label>
+            <select id="issuseNumber">
+                <option value="">选择期号</option>
+                @foreach (var item in prizedIssuse)
+                {
+                    <option @(ViewBag.issuseNumber == item ? "selected=selected" : "")>@item</option>
+                }
+            </select>
+        }
+        <input id="txtSearch" type="text" onfocus="ofocus(this)" onblur="oblur(this)" value="@(string.IsNullOrEmpty(ViewBag.key) ? "输入用户名或方案号" : ViewBag.key) "/>
+        <input id="btn-search" type="button" onclick="reloadList('0','30')" value="搜索" class="hm-to" />
+        <input id="myscheme" class="hm-to stylebtn2" style="margin-left: 75px;" onclick="loadMyHeMai()"
+            type="button" value="我的方案" name="myscheme" />
+        <input id="isMineHemai" type="hidden" value="false" />
+        <input class="hm-to stylebtn2" type="button" onclick="javascript:window.open('@betUrl')" value="发起合买" name="button2"/>
+        <a href="/staticHtml/help/goucai/ShoppingService10.html">置顶规则说明</a>
+        @if (string.IsNullOrEmpty(game))
+        {
+            <a href="/staticHtml/help/goucai/ShoppingService.html">什么是合买？</a>
+            <input class="hm-to refresh" type="button" value="刷新" name="hm_btn" onclick=" window.location.href=window.location.href"
+                style="float: right; position: relative; right: 16px; top: 12px;" />
+        }
+        else
+        { 
+            <span id="findMore" class="fr sx">筛选 <i class="hm-to"></i></span>
+        }
+    </div>
+    <input value="@gameType" name="playType" id="playType" type="hidden"/>
+    <!--高级搜索-->
+    <div id="superFindArea" class="hm-high-search" style="display: none;">
+        <div class="hm_select">
+            <label>
+                高级搜索：</label>
+            <select id="SchemeBetting" name="salesMode">
+                <option value="" selected="selected">方案类型</option>
+                <option value="0" @(ViewBag.SchemeBetting == SchemeBettingCategory.GeneralBetting ? "selected=selected" : "")>
+                    普通</option>
+                <option value="1" @(ViewBag.SchemeBetting == SchemeBettingCategory.SingleBetting ? "selected=selected" : "")>
+                    单式</option>
+            </select>
+            <select id="SchemeProgress" name="schemeState">
+                <option value="" selected="selected">状态</option>
+                <option value="90" @(ViewBag.SchemeProgress == TogetherSchemeProgress.Completed ? "selected=selected" : "")>
+                    成功</option>
+                <option value="30" @(ViewBag.SchemeProgress == TogetherSchemeProgress.Finish ? "selected=selected" : "")>
+                    满员</option>
+                <option value="10" @(ViewBag.SchemeProgress == TogetherSchemeProgress.SalesIn ? "selected=selected" : "")>
+                    未满</option>
+                <option value="80" @(ViewBag.SchemeProgress == TogetherSchemeProgress.Cancel ? "selected=selected" : "")>
+                    撤销</option>
+            </select>
+            <select id="costMoney" name="costType">
+                <option value="" selected="selected">金额</option>
+                <option value="-1|100">100以下</option>
+                <option value="100|500">100-500</option>
+                <option value="500|3000">500-3000</option>
+                <option value="3000|-1">3000以上</option>
+            </select>
+            <select id="progressRateType" name="progressRateType">
+                <option value="" selected="selected">进度</option>
+                <option value="-1|0.3">30%以下</option>
+                <option value="0.3|0.6">30%-60%</option>
+                <option value="0.9|0.9">60%-90%</option>
+                <option value="0.9|-1">90%以上</option>
+            </select>
+            <select id="SchemeSecurity" name="secretType">
+                <option value="" selected="selected">保密类型</option>
+                <option value="1" @(ViewBag.SchemeSecurity == TogetherSchemeSecurity.Public ? "selected=selected" : "")>
+                    完全公开</option>
+                <option value="3" @(ViewBag.SchemeSecurity == TogetherSchemeSecurity.CompletePublic ? "selected=selected" : "")>
+                    截止可见</option>
+                <option value="2" @(ViewBag.SchemeSecurity == TogetherSchemeSecurity.JoinPublic ? "selected=selected" : "")>
+                    跟单可见</option>
+                <option value="4" @(ViewBag.SchemeSecurity == TogetherSchemeSecurity.KeepSecrecy ? "selected=selected" : "")>
+                    完全保密</option>
+            </select>
+            <input id="btn-search" type="button" value="搜索" onclick="reloadList('0','30')" class="hm-to" />
+        </div>
+    </div>
+    <!--合买列表-->
+    <div class="hm-content all-list">
+        <ul class="ulhead">
+            <li class="li1">序号</li>
+            <li class="li2">发单人</li>
+            <li class="li3">彩种</li>
+            <li class="li4">类型</li>
+            <li class="li5">内容</li>
+            <li id="progressOrder" class="li6" style="text-align: left" onclick="setOrderBy('0','@(ViewBag.orderByName == "0" ? ViewBag.orderBySort == "DESC" ? "ASC" : "DESC" : "DESC")');">
+                进度+保底<b class="hm-list-order @(ViewBag.orderByName == "0" ? ViewBag.orderBySort == "DESC" ? "desc" : "asc" : "udesc")"></b></li>
+            <li id="sumOrder" class="li7" onclick="setOrderBy('1','@(ViewBag.orderByName == "1" ? ViewBag.orderBySort == "DESC" ? "ASC" : "DESC" : "DESC")');">
+                总金额<b class="hm-list-order @(ViewBag.orderByName == "1" ? ViewBag.orderBySort == "DESC" ? "desc" : "asc" : "udesc")"></b></li>
+            <li class="li8">每份</li>
+            <li class="li9">剩余份数</li>
+            <li class="li10">参与认购</li>
+            <li class="li11">详情</li>
+        </ul>
+        <div id="hmList" class="hmList">
+            @if (hmlist != null)
+            {
+                foreach (var item in hmlist.List)
+                {
+                    var type = "";
+
+                    if (item.SchemeId.StartsWith("TSM"))
+                    {
+                        type = "复式合买";
+                    }
+                    else
+                    {
+                        type = "普通代购";
+                    }
+                    Dictionary<string, int> items = new Dictionary<string, int>();
+                    items.Add("GoldStarCount", item.GoldStarCount);
+                    items.Add("GoldDiamondsCount", item.GoldDiamondsCount);
+                    items.Add("GoldCupCount", item.GoldCupCount);
+                    items.Add("GoldCrownCount", item.GoldCrownCount);
+                    items.Add("SilverCrownCount", item.SilverCrownCount);
+                    items.Add("SilverCupCount", item.SilverCupCount);
+                    items.Add("SilverDiamondsCount", item.SilverDiamondsCount);
+                    items.Add("SilverStarCount", item.SilverStarCount);
+                <ul class="ulbody  @(hmlist.List.IndexOf(item) % 2 == 0 ? "" : "ni2")">
+                    <li class="li1">
+                        @if (hmlist.List.IndexOf(item) <= 10 && item.IsTop && item.Progress != 1 && item.StopTime > DateTime.Now)
+                        { <i class="hm-hm-top" title="方案置顶"></i>}
+                        else
+                        {
+                            <span>@(((hmlist.List.IndexOf(item) + 1) + (ViewBag.pageNo * ViewBag.PageSize)))</span>
+                        }</li>
+                    <li class="li2"><a title="@SiteString.HideUserName(item.CreaterDisplayName, item.CreaterHideDisplayNameCount)" href="/blog/standings/@(item.CreateUserId)" target="_blank">@SiteString.HideUserName(item.CreaterDisplayName, item.CreaterHideDisplayNameCount)</a>@GameHelper.GetZj(items)</li>
+                    <li class="li3">@(item.SchemeBettingCategory == SchemeBettingCategory.ErXuanYi ? "竞彩主客二选一" : SiteConvert.GameName(item.GameCode, item.GameType))</li>
+                    <li class="li4">@type</li>
+                    <li class="li5">
+                        @{
+                           
+                        if (item.Security == TogetherSchemeSecurity.Public)
+                        {
+                            <a href="/user/scheme/@item.SchemeId" target="_blank" class="under blue">查看</a>
+                        }
+                        else
+                        {
+                                
+                            @(OrderManager.SecurityName(item.Security))
+                        }}
+                    </li>
+                    <li class="li6">
+                        @( 
+ (item.TicketStatus == TicketStatus.Ticketed) ? "100.00" : (item.Progress * 100).ToString("f"))%@if (item.Guarantees > 0)
+                                                                                                { <span class="bao">+@((item.Guarantees * item.Price / item.TotalMoney * 100).ToString("0"))%<em
+                                                                                                    title="方案保底">保</em></span> }
+                    </li>
+                    <li class="li7"><b class="yellow">@item.TotalMoney.ToString("N0")元</b> </li>
+                    <li class="li8">@(item.Price.ToString("N0"))元</li>
+                    <li id="remain_@(item.SurplusCount)" class="li9">@(item.SurplusCount)</li>
+                    <li class="li10">
+                        @if (item.SchemeId.StartsWith("TSM"))
+                        {
+                            if (OrderManager.IsCanBuy(item))
+                            {
+                            <input class="hm-copies" type="text"  onkeyup="this.value=this.value.replace(/[^\d]/g,'');" value="1" id="txt_@(item.SchemeId)"/>
+                            <em class="fl">份</em>
+                            <input type="hidden" id="price_@(item.SchemeId)" value="@item.Price" />
+                            <input class="hm-to rg" type="button" value="认购" name="hm_btn" onclick="CheckLogin('@item.SchemeId',@((!string.IsNullOrEmpty(item.JoinPwd)).ToString().ToLower()))" />
+                            }
+                            else if (item.TotalMoney <= item.SoldCount)
+                            {
+                            <em style="color: #DF0010">满员 </em>
+                            }
+                            else if (item.StopTime < DateTime.Today.AddDays(1))
+                            {
+                            <em class="red">截止 </em>
+                            }
+                            else
+                            {
+                            <em></em>
+                            }
+                        }
+                        else
+                        { 
+                            <em class="red">满员 </em>
+                        }
+                    </li>
+                    <li class="li11"><a class="a1" title="方案详情" target="_blank" href="/user/scheme/@item.SchemeId">
+                        详情</a> </li>
+                </ul>
+                }
+            }
+            <div id="pages" class="hm-pages clear">
+                @ViewHelpers.Pager3("reloadList", ViewBag.pageNo, ViewBag.PageSize, hmlist.TotalCount)
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+<script type="text/javascript">
+
+    $(function () {
+        $(".hm-star-list li").hover(function() {
+            $(this).addClass("lifocus");
+        },function() {
+            $(this).removeClass("lifocus");
+        });
+        //合买名人滚动
+        $(".hm-star").slide({ titCell: ".hd ul", mainCell: ".imglist_w ul", vis: 4, autoPlay: false, autoPage: true, scroll: 4, effect: "leftLoop", interTime: 3000 });
+        //绑定菜单
+        setMenuClass3(".myyon");
+        //绑定进度下拉框
+        var progress = "@(ViewBag.minProgress + " | " + ViewBag.maxProgress)";
+        // progress.trim();
+        var ops = document.getElementById("progressRateType").getElementsByTagName("option");
+        for (var i = 0; i < ops.length; i++) {
+            if (ops[i].value == progress.trim()) {
+                ops[i].selected = true;
+            }
+        }
+        //绑定金额下拉框
+        var money = "@(ViewBag.minMoney + " | " + ViewBag.maxMoney)";
+        var obj = document.getElementById("costMoney").getElementsByTagName("option");
+        for (var i = 0; i < obj.length; i++) {
+            if (obj[i].value == money.trim()) {
+                obj[i].selected = true;
+            }
+        }
+    });
+
+</script>
+@UserHelper.js("hemai.js")
+@UserHelper.js("superslide.js")

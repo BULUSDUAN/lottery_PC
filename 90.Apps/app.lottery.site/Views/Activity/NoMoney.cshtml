@@ -1,0 +1,284 @@
+﻿@{
+    ViewBag.Title = "买彩票不花钱";
+    Layout = "../Shared/_HuoDong.cshtml";
+    var nomoney1 = ViewBag.BuyCpBhq1 as Activity.Core.A20140902InfoCollection;
+    var nomoney2 = ViewBag.BuyCpBhq2 as Activity.Core.A20140902InfoCollection;
+    var nomoney3 = ViewBag.BuyCpBhq3 as Activity.Core.A20140902InfoCollection;
+    var nomoney4 = ViewBag.BuyCpBhq4 as Activity.Core.A20140902InfoCollection;
+    var nomoney5 = ViewBag.BuyCpBhq5 as Activity.Core.A20140902InfoCollection;
+    var nomoney6 = ViewBag.BuyCpBhq6 as Activity.Core.A20140902InfoCollection;
+    var nomoney7 = ViewBag.BuyCpBhq7 as Activity.Core.A20140902InfoCollection;
+    var nomoney8 = ViewBag.BuyCpBhq8 as Activity.Core.A20140902InfoCollection;
+    var nomoney9 = ViewBag.BuyCpBhq9 as Activity.Core.A20140902InfoCollection;
+    var nomoney10 = ViewBag.BuyCpBhq10 as Activity.Core.A20140902InfoCollection;
+    var time = int.Parse(DateTime.Now.ToString("yyyyMMdd"));
+}
+<div id="nomoney">
+    <div class="nomoney">
+        <div class="no_time">
+            活动时间：2015年1月9日到2015年1月18日
+        </div>
+        <div class="no_object">
+            活动对象：@SiteString.getHZSiteName(Request)所有注册用户
+        </div>
+        <div class="no_rule">
+            <ul>
+                <li>1、参与对象必须是 @SiteString.getHZSiteName(Request)实名认证、手机绑定的注册用户</li>
+                <li style="height: 75px;"><span style="line-height: 75px;">2、</span><span class="day">每天9:00~24:00
+                </span><span class="jine">前10个发起的 方案金额</span> <span class="fu">≥</span> <span class="jine">
+                    100元的满员 合买订单 </span><span class="jing">仅限竞彩 北京单场 传统足彩 </span><span class="fan">返100元彩金</span></li>
+                <li>3、方案发起时间以网站系统显示的时间为准</li>
+                <li>4、方案内容必须完全公开、不允许某场赛事出现≥3个选项</li>
+                <li>5、每天每个用户限一个方案参与活动</li>
+            </ul>
+            <div class="clear">
+            </div>
+        </div>
+        <div class="no_content">
+            <ul>
+                <li>1、满足活动规则条件的方案我们将在该方案成功出票后以彩金红包的方</li>
+                <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;式将100元派发给方案发起人</li>
+                <li>2、用户所中奖的金额由用户按购买比例所得所有</li>
+                <li>3、方案必须不包含网站保底，且出票成功</li>
+            </ul>
+            <div class="clear">
+            </div>
+        </div>
+        <div class="everyday_reward">
+            <ul class="reward_ul">
+                <input type="hidden" class="btntime" value="@time " />
+                <li class="frist_li"><span @(time == 20150109 ? "class=noon" : "") value="20150109">
+                    1</span><span @(time == 20150110 ? "class=noon" : "") value="20150110">2</span><span
+                   @(time == 20150111 ? "class=noon" : "") value="20150111">3</span><span @(time == 20150112 ? "class=noon" : "") value="20150112">4</span><span @(time == 20150113 ? "class=noon" : "") value="20150113">5</span><span
+                      @(time == 20150114 ? "class=noon" : "") value="20150114">6</span><span @(time == 20150115 ? "class=noon" : "") value="20150115">7</span><span @(time == 20150116 ? "class=noon" : "") value="20150116">8</span><span
+                       @(time == 20150117 ? "class=noon" : "") value="20150117">9</span><span @(time == 20150118 ? "class=noon" : "") style="border-right: none;" value="20150118">10</span>
+                </li>
+                <li class="no_li_title"><span>用户名称</span><span>方案编号</span><span>方案金额</span><span>发起时间</span><span>获得红包</span>
+                </li>
+                <li>
+                    <ul class="nomoney1 @(time == 20150109 ? "" : "hide")">
+                        @if (nomoney1.List != null && nomoney1.List.Count > 0)
+                        {
+                            foreach (var item in nomoney1.List)
+                            {
+                            <li class="no_li_content"><span>@(SiteString.HideUserName(item.DisplayName, item.HideDisplayNameCount))</span><span
+                                class="n_black"><a href="/user/scheme/@item.OrderId" target="_blank">@item.OrderId</a></span><span>@item.FillMoney.ToString("N2")</span><span
+                                    class="n_black">@item.CreateTime.ToString("yyyy-MM-dd")</span><span style="border-right: none;"><a href="/user/scheme/@item.OrderId" target="_blank"
+                            class="no_a">100</a></span> </li>
+                            }
+                        }
+                        else
+                        {
+                            <li class="nodate">暂无数据<input type="hidden" class="btntime" value="@DateTime.Now.ToString("yyyyMMhh")" /></li> 
+                        }
+                    </ul>
+                    <ul class="nomoney2 @(time == 20150110 ? "" : "hide")">
+                        @if (nomoney2.List != null && nomoney2.List.Count > 0)
+                        {
+                            foreach (var item in nomoney2.List)
+                            {
+                            <li class="no_li_content"><span>@(SiteString.HideUserName(item.DisplayName, item.HideDisplayNameCount))</span><span
+                                class="n_black"><a href="/user/scheme/@item.OrderId" target="_blank">@item.OrderId</a></span><span>@item.FillMoney.ToString("N2")</span><span
+                                    class="n_black">@item.CreateTime.ToString("yyyy-MM-dd")</span><span style="border-right: none;"><a href="/user/scheme/@item.OrderId" target="_blank"
+                            class="no_a">100</a></span> </li>
+                            }
+                        }
+                        else
+                        {
+                            <li class="nodate">暂无数据<input type="hidden" class="btntime" value="@DateTime.Now.ToString("yyyyMMhh")" /></li> 
+                        }
+                    </ul>
+                    <ul class="nomoney3 @(time == 20150111 ? "" : "hide")">
+                        @if (nomoney3.List != null && nomoney3.List.Count > 0)
+                        {
+                            foreach (var item in nomoney3.List)
+                            {
+                            <li class="no_li_content"><span>@(SiteString.HideUserName(item.DisplayName, item.HideDisplayNameCount))</span><span
+                                class="n_black"><a href="/user/scheme/@item.OrderId" target="_blank">@item.OrderId</a></span><span>@item.FillMoney.ToString("N2")</span><span
+                                    class="n_black">@item.CreateTime.ToString("yyyy-MM-dd")</span><span style="border-right: none;"><a href="/user/scheme/@item.OrderId" target="_blank"
+                            class="no_a">100</a></span> </li>
+                            }
+                        }
+                        else
+                        {
+                            <li class="nodate">暂无数据<input type="hidden" class="btntime" value="@DateTime.Now.ToString("yyyyMMhh")" /></li> 
+                        }
+                    </ul>
+                    <ul class="nomoney4 @(time == 20150112 ? "" : "hide")">
+                        @if (nomoney4.List != null && nomoney4.List.Count > 0)
+                        {
+                            foreach (var item in nomoney4.List)
+                            {
+                            <li class="no_li_content"><span>@(SiteString.HideUserName(item.DisplayName, item.HideDisplayNameCount))</span><span
+                                class="n_black"><a href="/user/scheme/@item.OrderId" target="_blank">@item.OrderId</a></span><span>@item.FillMoney.ToString("N2")</span><span
+                                    class="n_black">@item.CreateTime.ToString("yyyy-MM-dd")</span><span style="border-right: none;"><a href="/user/scheme/@item.OrderId" target="_blank"
+                            class="no_a">100</a></span> </li>
+                            }
+                        }
+                        else
+                        {
+                            <li class="nodate">暂无数据<input type="hidden" class="btntime" value="@DateTime.Now.ToString("yyyyMMhh")" /></li> 
+                        }
+                    </ul>
+                    <ul class="nomoney5 @(time == 20150113 ? "" : "hide")">
+                        @if (nomoney5.List != null && nomoney5.List.Count > 0)
+                        {
+                            foreach (var item in nomoney5.List)
+                            {
+                            <li class="no_li_content"><span>@(SiteString.HideUserName(item.DisplayName, item.HideDisplayNameCount))</span><span
+                                class="n_black"><a href="/user/scheme/@item.OrderId" target="_blank">@item.OrderId</a></span><span>@item.FillMoney.ToString("N2")</span><span
+                                    class="n_black">@item.CreateTime.ToString("yyyy-MM-dd")</span><span style="border-right: none;"><a href="/user/scheme/@item.OrderId" target="_blank"
+                            class="no_a">100</a></span> </li>
+                            }
+                        }
+                        else
+                        {
+                            <li class="nodate">暂无数据<input type="hidden" class="btntime" value="@DateTime.Now.ToString("yyyyMMhh")" /></li> 
+                        }
+                    </ul>
+                    <ul class="nomoney6 @(time == 20150114 ? "" : "hide")">
+                        @if (nomoney6.List != null && nomoney6.List.Count > 0)
+                        {
+                            foreach (var item in nomoney6.List)
+                            {
+                            <li class="no_li_content"><span>@(SiteString.HideUserName(item.DisplayName, item.HideDisplayNameCount))</span><span
+                                class="n_black"><a href="/user/scheme/@item.OrderId" target="_blank">@item.OrderId</a></span><span>@item.FillMoney.ToString("N2")</span><span
+                                    class="n_black">@item.CreateTime.ToString("yyyy-MM-dd")</span><span style="border-right: none;"><a href="/user/scheme/@item.OrderId" target="_blank"
+                            class="no_a">100</a></span> </li>
+                            }
+                        }
+                        else
+                        {
+                            <li class="nodate">暂无数据<input type="hidden" class="btntime" value="@DateTime.Now.ToString("yyyyMMhh")" /></li> 
+                        }
+                    </ul>
+                    <ul class="nomoney7 @(time == 20150115 ? "" : "hide")">
+                        @if (nomoney7.List != null && nomoney7.List.Count > 0)
+                        {
+                            foreach (var item in nomoney7.List)
+                            {
+                            <li class="no_li_content"><span>@(SiteString.HideUserName(item.DisplayName, item.HideDisplayNameCount))</span><span
+                                class="n_black"><a href="/user/scheme/@item.OrderId" target="_blank">@item.OrderId</a></span><span>@item.FillMoney.ToString("N2")</span><span
+                                    class="n_black">@item.CreateTime.ToString("yyyy-MM-dd")</span><span style="border-right: none;"><a href="/user/scheme/@item.OrderId" target="_blank"
+                            class="no_a">100</a></span> </li>
+                            }
+                        }
+                        else
+                        {
+                            <li class="nodate">暂无数据<input type="hidden" class="btntime" value="@DateTime.Now.ToString("yyyyMMhh")" /></li> 
+                        }
+                    </ul>
+                    <ul class="nomoney8 @(time == 20150116 ? "" : "hide")">
+                        @if (nomoney8.List != null && nomoney8.List.Count > 0)
+                        {
+                            foreach (var item in nomoney8.List)
+                            {
+                            <li class="no_li_content"><span>@(SiteString.HideUserName(item.DisplayName, item.HideDisplayNameCount))</span><span
+                                class="n_black"><a href="/user/scheme/@item.OrderId" target="_blank">@item.OrderId</a></span><span>@item.FillMoney.ToString("N2")</span><span
+                                    class="n_black">@item.CreateTime.ToString("yyyy-MM-dd")</span><span style="border-right: none;"><a href="/user/scheme/@item.OrderId" target="_blank"
+                            class="no_a">100</a></span> </li>
+                            }
+                        }
+                        else
+                        {
+                            <li class="nodate">暂无数据<input type="hidden" class="btntime" value="@DateTime.Now.ToString("yyyyMMhh")" /></li> 
+                        }
+                    </ul>
+                    <ul class="nomoney9 @(time == 20150117 ? "" : "hide")">
+                        @if (nomoney9.List != null && nomoney9.List.Count > 0)
+                        {
+                            foreach (var item in nomoney9.List)
+                            {
+                            <li class="no_li_content"><span>@(SiteString.HideUserName(item.DisplayName, item.HideDisplayNameCount))</span><span
+                                class="n_black"><a href="/user/scheme/@item.OrderId" target="_blank">@item.OrderId</a></span><span>@item.FillMoney.ToString("N2")</span><span
+                                    class="n_black">@item.CreateTime.ToString("yyyy-MM-dd")</span><span style="border-right: none;"><a href="/user/scheme/@item.OrderId" target="_blank"
+                            class="no_a">100</a></span> </li>
+                            }
+                        }
+                        else
+                        {
+                            <li class="nodate">暂无数据<input type="hidden" class="btntime" value="@DateTime.Now.ToString("yyyyMMhh")" /></li> 
+                        }
+                    </ul>
+                    <ul class="nomoney10 @(time == 20150118 ? "" : "hide")">
+                        @if (nomoney10.List != null && nomoney10.List.Count > 0)
+                        {
+                            foreach (var item in nomoney10.List)
+                            {
+                            <li class="no_li_content"><span>@(SiteString.HideUserName(item.DisplayName, item.HideDisplayNameCount))</span><span
+                                class="n_black"><a href="/user/scheme/@item.OrderId" target="_blank">@item.OrderId</a></span><span>@item.FillMoney.ToString("N2")</span><span
+                                    class="n_black">@item.CreateTime.ToString("yyyy-MM-dd")</span><span style="border-right: none;"><a href="/user/scheme/@item.OrderId" target="_blank"
+                            class="no_a">100</a></span> </li>
+                            }
+                        }
+                        else
+                        {
+                            <li class="nodate">暂无数据<input type="hidden" class="btntime" value="@DateTime.Now.ToString("yyyyMMhh")" /></li> 
+                        }
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="no_footer">
+        @{Html.RenderAction("footer", "activity");}
+    </div>
+</div>
+<script type="text/javascript">
+    $(".everyday_reward .reward_ul .frist_li span").click(function () {
+        var CreateTime = $(".btntime").attr("value");
+        var nowtime = $(this).attr("value");
+
+        if (CreateTime < nowtime) {
+            alertTip("敬请期待!");
+            return false;
+        }
+        else {
+            switch (nowtime) {
+                case "20150109":
+                    $(".reward_ul li ul").addClass("hide");
+                    $(".nomoney1").removeClass("hide");
+                    break;
+                case "20150110":
+                    $(".reward_ul li ul").addClass("hide");
+                    $(".nomoney2").removeClass("hide");
+                    break;
+                case "20150111":
+                    $(".reward_ul li ul").addClass("hide");
+                    $(".nomoney3").removeClass("hide");
+                    break;
+                case "20150112":
+                    $(".reward_ul li ul").addClass("hide");
+                    $(".nomoney4").removeClass("hide");
+                    break;
+                case "20150113":
+                    $(".reward_ul li ul").addClass("hide");
+                    $(".nomoney5").removeClass("hide");
+                    break;
+                case "20150114":
+                    $(".reward_ul li ul").addClass("hide");
+                    $(".nomoney6").removeClass("hide");
+                    break;
+                case "20150115":
+                    $(".reward_ul li ul").addClass("hide");
+                    $(".nomoney7").removeClass("hide");
+                    break;
+                case "20150116":
+                    $(".reward_ul li ul").addClass("hide");
+                    $(".nomoney8").removeClass("hide");
+                    break;
+                case "20150117":
+                    $(".reward_ul li ul").addClass("hide");
+                    $(".nomoney9").removeClass("hide");
+                    break;
+                case "20150118":
+                    $(".reward_ul li ul").addClass("hide");
+                    $(".nomoney10").removeClass("hide");
+                    break;
+
+            }
+            $(this).siblings().removeClass("noon");
+            $(this).addClass("noon");
+        }
+    });
+</script>

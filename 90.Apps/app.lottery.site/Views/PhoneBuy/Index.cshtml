@@ -1,0 +1,314 @@
+﻿@{
+    ViewBag.Title = DateTime.Now.ToString("yyyy") + SiteString.getHZSiteName(Request) + " 手机购彩";
+    Layout = null;
+    var apkurl = SiteString.getApk_Url();//安卓
+    var iosUrl = SiteString.getIOS_Url();//IOS
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    @UserHelper.css("main.min.css")
+    @UserHelper.css("phonebuy.css")
+    @UserHelper.js_share("share.min.js")
+    @UserHelper.js("user.min.js")
+    @UserHelper.js("nav.js")
+    @UserHelper.js("SuperSlide.js")
+</head>
+<body>
+    <div class="header">
+        @{Html.RenderAction("headerTop", "home");}
+    </div>
+    <div class="top">
+        <div class="header_box">
+            <a title="@SiteString.getHZSiteName(Request)" class="phone_logo" href="/"></a>
+            <a href="/" class="logo_500" target="_blank">手机购彩</a>
+            <div class="header_right">
+                <div>
+                    <span class="phone_client" id="phoneclient">手机客户端<i class=""></i></span> <span class="phone_touch cur"
+                        id="phonetouch">触屏版</span>
+                </div>
+                <div class="pulldown hide">
+                    <ul>
+                        <li mark="Android"><a href="javascript:;">Android</a></li>
+                        <li mark="iPhone"><a href="javascript:;">iPhone</a></li>
+                        <li mark="iPhone"><a href="javascript:;">iPad</a></li>
+                        <li mark="Android"><a href="javascript:;">AndroidPad</a></li>
+                        <li><a href="javascript:;">WinPhone</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="phone_touch">
+        <div class="touch_log">
+            <div class="touch_box">
+                <form id="touchClientForm" method="post">
+                <input id="phoneNoMobile" type="text" value="输入手机号码，免费获得下载地址" maxlength="11" data-tips="输入手机号码，免费获得下载地址"
+                    name="mobile"/>
+                <input id="phoneClient_Website" type="button" value="发送" name="client"/>
+                <input id="msgTypet_Website" name="msgTypet" type="hidden" value="1" />
+                </form>
+            </div>
+        </div>
+        <div class="touch_mide">
+        <div class="touch_way">
+            <span class="way1"><span class="way1_1">方式A</span> <span class="way1_2"><span class="touchfont1">
+                手机浏览器输入地址访问</span> <span class="touch_url">m.wancai.com</span> </span></span>
+            <span class="way2"><span class="way2_1">方式B</span> <span class="way2_2"><span class="touchfont2">
+                扫一扫<br />
+                直接访问</span> <span class="touch_two"><img src="@ViewHelpers.img("/home/phone-ewm.jpg")" height="107" width="107"></span></span></span>
+            <div class="clear">
+            </div>
+        </div>
+
+            <div class="touch_centent">
+                <div class="touch_icon1">
+                    <p>
+                        @(SiteString.getHZSiteName(Request)) 手机购彩<br />
+                        最方便，最便捷的购彩方式
+                    </p>
+                    <span>只要您打开浏览器，登陆&nbsp;&nbsp;<b style="font-size: 26px;">m.wancai.com</b><br />
+                        只需10秒钟，即可轻松购彩 </span>
+                </div>
+                <div class="touch_icon2">
+                    <p>
+                        随时随地购彩，不错过每一彩期</p>
+                    <span>无论在上班、回家登陆@(SiteString.getHZSiteName(Request)) ，给你一个实现梦想的机会</span>
+                </div>
+                <div class="touch_icon3">
+                    <p>
+                        涵盖彩种最全<br />
+                        最快获取开奖信息
+                    </p>
+                    <span>大乐透、时时彩、福彩3D、排列3、双色球等系列彩种,<br />
+                        让您告别每天守候在电脑前等开奖信息的日子，第一时间<br />
+                        获知中奖好消息！ </span>
+                </div>
+                <div class="touch_icon4">
+                    <p>
+                        购彩工具一应俱全</p>
+                    <span>足彩赛事分析，竞彩智能倍数<br />
+                        追号计划 </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="phone_client" class="hide">
+        <div style="width: 1000px; margin: 0px auto;">
+            <div class="popup_box hide">
+                <span class="cancel"></span>
+                <div class="type">
+                    <ul>
+                        <li mark="Android"><a class="Android bg_icon"></a></li>
+                        <li mark="iPhone"><a class="iPhone bg_icon"></a></li>
+                        <li mark="iPhone"><a class="iPad bg_icon"></a></li>
+                        <li mark="Android"><a class="AndroidPad bg_icon"></a></li>
+                        <li onclick="javascript:alertTip('敬请期待')"><a class="WinPhone bg_icon"></a></li>
+                    </ul>
+                    <div class="clear">
+                    </div>
+                </div>
+                <div class="down">
+                    <span class="two-dimension bg_icon"></span><span class="two-dimension-down">手机二维码下载</span>
+                    <div class="downway">
+                        <p>
+                            直接下载方式</p>
+                        <p style="font-size: 18px;">
+                            download</p>
+                    </div>
+                    <div>
+                        <a href="javascript:;" id="btnapp" class="btngoglePlay"></a><a href="javascript:;"
+                            id="btncomputer" class="computer bg_icon"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="phone_box">
+                <input type="button" name="name" id="btndown" class="nowdown bg_icon" />
+                <p>
+                    <a class="QQ bg_icon"></a><a class="baidu bg_icon"></a><a class="xinlang bg_icon">
+                    </a><a class="weibo bg_icon"></a>
+                </p>
+                <span class="two-dimension"></span>
+            </div>
+        </div>
+        <div class="mBan2 fullSlide">
+            <div id="slideBox" class="slideBox">
+                <div class="hd">
+                    <ul>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                    </ul>
+                </div>
+                <div class="bd">
+                    <ul>
+                        <li class="phone_icon1"></li>
+                        <li class="phone_icon2"></li>
+                        <li class="phone_icon3"></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="reminder">
+            <p>
+                <span class="anytime bg_icon"></span><b style="color: #7bc854;">随时随地购彩</b></p>
+            <p>
+                <span class="moreway bg_icon"></span><b style="color: #ff6600;">多种充值方式</b></p>
+            <p>
+                <span class="major bg_icon"></span><b style="color: #0e77ed;">专业预测分析</b></p>
+            <p>
+                <span class="renewal bg_icon"></span><b style="color: #e14045;">及时更新准确</b></p>
+            <div class="clear">
+            </div>
+        </div>
+    </div>
+    <div class="phone_font" style="background-color: #d53827;">
+        <p>
+            建议您使用</p>
+        <p>
+            系统为 ios7.0 或 android4.0 以上的手机</p>
+        <p>
+            通过 safari浏览器、qq浏览器、chrome浏览器 进行访问</p>
+    </div>
+    <div class="phone_footer">
+        @{Html.RenderAction("footer", "activity");}
+    </div>
+    @{Html.RenderPartial("box_doc");}
+    @{Html.RenderPartial("box_login");}
+    @{Html.RenderPartial("box_confirm");}
+    @{Html.RenderPartial("box_progress");}
+    @{Html.RenderPartial("box_alert");}
+</body>
+</html>
+<script type="text/javascript">
+    $("#phoneNoMobile").focus(function () {
+        $("#phoneNoMobile").val("");
+    });
+    $("#phoneNoMobile").blur(function () {
+        var phoneNoMobile = $("#phoneNoMobile").val();
+        if (phoneNoMobile == null || phoneNoMobile == "") {
+            $("#phoneNoMobile").val("输入手机号码，免费获得下载地址");
+        }
+    });
+    $("#phoneClient_Website").click(function () {
+        $(this).parents("form").ajaxSubmit({
+            type: 'post',
+            url: "/home/SendExtensionMsg?r=" + Math.random(),
+            success: function (callback) {
+                $("#phoneClient_Website").val("发送");
+                alertTip(callback.Msg)
+            },
+            error: function (XmlHttpRequest, textStatus, errorThrown) {
+                $("#phoneClient_Website").val("发送");
+            }
+        });
+    });
+
+    $('body').click(function (e) {
+        var cell = $(e.target);
+        if (cell) {
+            var tgID = $(cell).attr('id') == '' ? "string" : $(cell).attr('id');
+            var isTagert = false;
+            try {
+                isTagert = tgID != 'phoneclient';
+            }
+            catch (e) {
+                isTagert = true;
+            }
+            if (isTagert) {
+                $('.header_right .pulldown').addClass("hide");
+            }
+        }
+    });
+
+    //下载客户端
+    $("#btnapp").click(function () {
+        debugger;
+        var select = $(".popup_box").find(".select");
+        if (select.attr("mark") == "Android") window.location.href = "@apkurl";
+        if (select.attr("mark") == "iPhone") window.location.href = "@iosUrl";
+        //else alertTip("敬请期待");
+    });
+    //下载到电脑
+    $("#btncomputer").click(function () {
+        var select = $(".popup_box").find(".select");
+        if (select.attr("mark") == "Android") window.location.href = "@apkurl";
+        if (select.attr("mark") == "iPhone") window.location.href = "@iosUrl";
+        //else alertTip("敬请期待");
+    });
+
+    //立即下载
+    $("#btndown").click(function () {
+        $(".popup_box").find("li").removeClass("select");
+        $(".popup_box").find("li").eq(0).addClass("select");
+        $(".popup_box").removeClass("hide");
+    });
+    //头部下拉  选择下载类型
+    $(".pulldown li").click(function () {
+        debugger;
+        if ($(this).find("a").text() != 'WinPhone') {
+            var index = $(this).index();
+            $(".popup_box").find("li").removeClass("select");
+            $(".popup_box").find("li").eq(index).addClass("select");
+            if ($(this).attr("mark") == "Android") $("#btnapp").attr("class", "btngoglePlay");
+            else $("#btnapp").attr("class", "app");
+            $(".popup_box").removeClass("hide");
+        } else alertTip("敬请期待");
+    });
+
+    //弹出框  点击不同的系统
+    $(".popup_box .type [mark]").click(function () {
+        $(this).siblings().removeClass("select");
+        $(this).addClass("select");
+        if ($(this).attr("mark") == "Android") $("#btnapp").attr("class", "btngoglePlay");
+        else $("#btnapp").attr("class", "app");
+    });
+
+    //取消  弹出框
+    $(".popup_box .cancel").click(function () {
+        $(".popup_box").addClass("hide");
+    });
+
+    //下拉列表  显示
+    $(".phone_client").click(function () {
+        if ($(".pulldown").is(":visible")) {
+            $(".pulldown").addClass("hide");
+        } else {
+            $(".pulldown").removeClass("hide");
+        }
+    });
+
+    //触屏 客户端 切换
+    $("#phoneclient").click(function () {
+        $(".phone_client").addClass("cur");
+        $(".phone_client i").addClass("icon");
+        $(".phone_touch").removeClass("cur");
+        $("#phone_client").removeClass("hide");
+        $("#phone_touch").addClass("hide");
+        $(".phone_font").css("background-color", "#7bc854");
+    });
+    $("#phonetouch").click(function () {
+        $(".phone_client").removeClass("cur");
+        $(".phone_client i").removeClass("icon");
+        $(".phone_touch").addClass("cur");
+        $("#phone_touch").removeClass("hide");
+        $("#phone_client").addClass("hide");
+        $(".phone_font").css("background-color", "#d53827");
+    });
+</script>
+<script type="text/javascript">
+    jQuery(".slideBox").slide({ mainCell: ".bd ul", effect: "fold", autoPlay: true, trigger: "click" });
+</script>
+<script type="text/javascript">
+    $('#menu').slidy({
+        animation: 'slide',
+        children: 'a',
+        menu: true,
+        pause: true,
+        speed: 500,
+        time: 5000,
+        width: 260,
+        height: 400
+    });
+</script>

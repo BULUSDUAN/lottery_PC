@@ -1,0 +1,40 @@
+@{
+    ViewBag.Title = "工商网监-" + SiteString.getHZSiteName(Request) + "帮助中心";
+    ViewBag.Keywords = "工商网监";
+    ViewBag.Description = SiteString.getHZSiteName(Request) + "帮助中心为您介绍“工商网监”,如果想查看更多关于网上购买彩票的注意事项，请登录" + SiteString.getHZSiteName(Request) + "彩票网.";
+}
+@section css{
+    @ViewHelpers.css("help.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">@SiteString.getHZSiteName(Request) </a> > </li>
+        <li><a href="/help/index">&nbsp;帮助中心</a> > </li>
+        <li>&nbsp;工商网监</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type = "safety", name = "business" });}
+    <div class="help_r">
+        <div class="det_box">
+            <h2>
+                重庆工商网监认证</h2>
+            <div class="det_c">
+                <dl>
+                    <dt><a>重庆工商网监认证</a></dt>
+                    <dd class="img tljj" style="text-align: center">
+                        <iframe frameborder="0" height="90" width="90" allowtransparency="true" scrolling="no"
+                            src='http://www.cqgseb.cn/ztgsgl/WebMonitor/GUILayer/eImgMana/gshdimg.aspx?sfdm=120150108111657015255'>
+                        </iframe>
+                    </dd>
+                    <dd>
+                        网站名称：@SiteString.getHZSiteName(Request) </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+@ViewHelpers.js("help.js")

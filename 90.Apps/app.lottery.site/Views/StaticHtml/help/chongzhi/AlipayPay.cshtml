@@ -1,0 +1,139 @@
+﻿@{
+    var Title = "支付宝支付";
+    ViewBag.Title = Title + " - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    ViewBag.way = SiteString.getAlipayWay.Trim();
+    var way = ViewBag.way;
+}
+@section css{
+    @ViewHelpers.css("help.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">玩彩网</a> > </li>
+        <li><a href="/help/index">&nbsp;帮助中心</a> > </li>
+        <li>&nbsp;支付宝支付</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type = "pay", name = "Alipay" });}
+    <div class="help_r">
+        <div class="det_box">
+            <h2>
+                支付宝支付</h2>
+            <h3 class="top_selected" style="color: #000 !important;">
+                请选择支付方式查看相应教程： <a id="mobile_pay" class="selected" href="javascript:void(0)">手机支付</a><a
+                    id="pc_pay" href="javascript:void(0)" style="margin-left: 30px;">电脑支付</a></h3>
+            <div class="det_c" id="show_for_mobile">
+                <div class="zfb_ewm">
+                    <a title="二维码" href="@ViewHelpers.img(string.Format("help/alipay/{0}/0.png", way))" target="_blank">
+                        <img src="@ViewHelpers.img(string.Format("help/alipay/{0}/0.png", way))" style=" width:200px; height:200px;" />
+                    </a><a href="/member/AlipaySelfHelp" target="_blank" style="color: Red; text-decoration: underline;"
+                        id="link_go_alipayselfhelp">支付宝充值未到账自助处理</a>
+                </div>
+                <div class="det_a feedback">
+                    <p>
+                        第一步：打开手机支付宝客户端，点击页面上方的<span class="red">“扫一扫”</span>；将扫描窗口对准上面的二维码，进入支付宝手机支付页面；<span
+                            class="red">（或者您直接点转账，选择"转到支付宝账户"，对方账户填入 @way)</span>
+                    </p>
+                    <a title="第一步(1)" href="@ViewHelpers.img("help/1.png")" target="_blank">
+                        <img src="@ViewHelpers.img("help/1.png")"  style=" width:230px; height:408px;padding-left:25px;"/>
+                    </a><a title="第一步(1)" href="@ViewHelpers.img(string.Format("help/alipay/{0}/2.png", way))" target="_blank">
+                        <img src="@ViewHelpers.img(string.Format("help/alipay/{0}/2.png", way))"  style=" width:230px; height:408px;margin-left:25px;"/>
+                        <a title="第一步(2)" href="@ViewHelpers.img("help/001.png")" target="_blank">
+                            <img src="@ViewHelpers.img("help/001.png")"  style=" width:230px; height:243px;padding-left:25px;margin:20px 0 20px 0;"/>
+                        </a><a title="第一步(2)" href="@ViewHelpers.img(string.Format("help/alipay/{0}/002.png", way))" target="_blank">
+                            <img src="@ViewHelpers.img(string.Format("help/alipay/{0}/002.png", way))"  style=" width:230px; height:243px;margin:20px 0 20px 25px;"/>
+                        </a></a>
+                    <p>
+                        第二步：扫码成功后，进入支付页面，点选转账。进入转账页面；</p>
+                    <p>
+                        第三步：在转账页面中，请输入<span class="red">金额</span>，备注处填上<span class="red">您的用户名</span>（不然无法为您立即充值成功），再点选确认转账。相应支付完成付款即可。</p>
+                    <a title="第二步" href="@ViewHelpers.img(string.Format("help/alipay/{0}/3.png", way))" target="_blank">
+                        <img src="@ViewHelpers.img(string.Format("help/alipay/{0}/3.png", way))" style=" width:230px; height:408px;padding-left:25px;" /></a>
+                    <a title="第三步" href="@ViewHelpers.img(string.Format("help/alipay/{0}/4.png", way))" target="_blank">
+                        <img src="@ViewHelpers.img(string.Format("help/alipay/{0}/4.png", way))" style=" width:230px; height:408px;margin-left:25px;" /></a>
+                </div>
+            </div>
+            <div class="det_c" id="show_for_pc" style="display: none">
+                <a href="/member/AlipaySelfHelp" target="_blank" style="color: Red; text-decoration: underline;"
+                    id="link_go_alipayselfhelp">支付宝充值未到账自助处理</a>
+                <div class="det_a feedback">
+                    <p>
+                        第一步：打开浏览器，输入网址<span class="red">www.alipay.com</span>,进入支付宝PC版；</p>
+                    <a title="网址" href="@ViewHelpers.img("help/00.png")" target="_blank">
+                        <img src="@ViewHelpers.img("help/00.png")" style="padding-left:25px;"/>
+                    </a>
+                    <p>
+                        第二步：进入支付宝PC客户端，选择个人用户，然后点击登录进入登录页面；</p>
+                    <a title="登录1" href="@ViewHelpers.img("help/01.png")" target="_blank">
+                        <img src="@ViewHelpers.img("help/01.png")" style="padding-left:25px;"/>
+                    </a>
+                    <p>
+                        第三步：输入相应登录信息，进入PC版支付宝首页；</p>
+                    <p>
+                        第四步：在支付宝首页中<span class="red">点击转账</span>，进入支付宝转账页面；</p>
+                    <a title="登录2" href="@ViewHelpers.img("help/02.png")" target="_blank">
+                        <img src="@ViewHelpers.img("help/02.png")" style="padding-left:25px;"/>
+                    </a><a title="第四步" href="@ViewHelpers.img("help/03.png")" target="_blank">
+                        <img src="@ViewHelpers.img("help/03.png")"  style="margin-left:25px;"/>
+                    </a>
+                </div>
+                <div class="det_a feedback">
+                    <p>
+                        第五步：在转账到支付宝页面中，输入相应信息<span class="red">（收款人：@way;输入付款金额；付款说明为您的用户名，为必填项；）</span>，信息填完之后，点击下一步；</p>
+                    <a title="第五步" href="@ViewHelpers.img(string.Format("help/alipay/{0}/04.png", way))" target="_blank">
+                        <img src="@ViewHelpers.img(string.Format("help/alipay/{0}/04.png", way))" style="padding-left:25px;" /></a>
+                    <a title="第五步" href="@ViewHelpers.img(string.Format("help/alipay/{0}/05.png", way))" target="_blank">
+                        <img src="@ViewHelpers.img(string.Format("help/alipay/{0}/05.png", way))"  style="padding-left:25px;" /></a>
+                    <p>
+                        第六步：在弹出的窗口中，点选忽略风险将进入下一步；</p>
+                    <a title="第五步" href="@ViewHelpers.img("help/06.png")" target="_blank">
+                        <img src="@ViewHelpers.img("help/06.png")" style="padding-left:25px;" /></a>
+                    <p>
+                        第七步：在确认转账信息页面中，选择付款终端，如点击<span class="red">手机付款</span>，输入校验码，核实信息后，点选确认用手机付款，进入下一步；</p>
+                    <a title="第七步" href="@ViewHelpers.img(string.Format("help/alipay/{0}/07m.png", way))" target="_blank">
+                        <img src="@ViewHelpers.img(string.Format("help/alipay/{0}/07m.png", way))"  style="padding-left:25px;"/></a>
+                    <p>
+                        打开手机支付宝软件，<span class="red">点选页面右上角处的账单</span>；进入账单页面，发现有一笔等待付款的账单，点选它进入详情；</p>
+                    <p>
+                        核对账单详情无误后，点选进行付款；至此，手机付款完成；</p>
+                    <a title="手机支付" href="@ViewHelpers.img("help/08m.png")" target="_blank">
+                        <img src="@ViewHelpers.img("help/08m.png")"  style="padding-left:25px;" /></a>
+                    <a title="手机支付" href="@ViewHelpers.img(string.Format("help/alipay/{0}/010m.png", way))" target="_blank">
+                        <img src="@ViewHelpers.img(string.Format("help/alipay/{0}/010m.png", way))"  style="margin-left:25px;"/></a>
+                    <p>
+                        第八步：在确认转账信息页面中，选择付款终端，如点击<span class="red">电脑付款</span>，输入校验码，核实信息后，点选确认信息并付款，进入下一步；</p>
+                    <a title="电脑支付" href="@ViewHelpers.img(string.Format("help/alipay/{0}/07p.png", way))" target="_blank">
+                        <img src="@ViewHelpers.img(string.Format("help/alipay/{0}/07p.png", way))"  style="padding-left:25px;" /></a>
+                    <p>
+                        在弹出的页面中，选择将要付款的银行帐号，输入支付宝密码进行付款，至此，电脑付款完成；</p>
+                    <a title="电脑支付" href="@ViewHelpers.img("help/08p.png")" target="_blank">
+                        <img src="@ViewHelpers.img("help/08p.png")" style="padding-left:25px;"  /></a>
+                </div>
+            </div>
+            <p>
+                注：如发现支付成功未及时到帐，请您提供用户名+充值方式+充值金额致电(客服热线：@SiteString.tel）或联系(在线客服QQ：4008484222)，核实，15分钟后再查看账户余额情况，若未到账，请核实是否成功扣款，若成功扣款，请提供充值订单号再次核实查询。</p>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("#mobile_pay").click(function () {
+            $("#show_for_mobile").show();
+            $("#show_for_pc").hide();
+            $("#pc_pay").removeClass("selected");
+            $("#mobile_pay").addClass("selected");
+        })
+        $("#pc_pay").click(function () {
+            $("#show_for_pc").show();
+            $("#pc_pay").addClass("selected");
+            $("#mobile_pay").removeClass("selected");
+            $("#show_for_mobile").hide();
+        })
+    });
+</script>
+@ViewHelpers.js("help.js")

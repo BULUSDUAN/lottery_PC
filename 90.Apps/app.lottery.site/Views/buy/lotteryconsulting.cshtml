@@ -1,0 +1,16 @@
+﻿@using app.lottery.site.Models;
+@using External.Core.SiteMessage;
+@*@{var articleList = WCFService.GetArticleCollection("INFO", ViewBag.GameCode, 10);}*@
+@{var articleList = ViewBag.Art as ArticleInfo_QueryCollection;}
+<ul class="n-list">
+    @{
+        if (articleList != null && articleList.ArticleList != null && articleList.ArticleList.Count > 0)
+        {
+            for (int i = 0; i < articleList.ArticleList.Count; i++)
+            {
+        <li><a target="_blank" href="/zixun/textpart?id=@(articleList.ArticleList[i].Id)&type=sszx">@(articleList.ArticleList[i].Title.Length > 25 ? articleList.ArticleList[i].Title.Substring(0, 25) + "..." : articleList.ArticleList[i].Title)</a><span
+            class="time">@(articleList.ArticleList[i].CreateTime.ToString("MM.dd"))</span></li>  
+            }
+        }
+    }
+</ul>

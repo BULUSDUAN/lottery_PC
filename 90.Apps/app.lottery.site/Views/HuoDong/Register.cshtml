@@ -1,0 +1,104 @@
+﻿@{
+    ViewBag.Title = "注册送彩金充值100送100";
+    Layout = "../Shared/_HuoDong.cshtml";
+}
+<div id="zhuce">
+    <div class="zhu_content">
+        <div class="time">
+            <p>
+                活动时间：2014年10月1日0:00至10月31日24:00</p>
+            <p>
+                活动对象：2014年10月1日后@(SiteString.getHZSiteName(Request))所有认证用户都可参加充值送活动</p>
+        </div>
+        <div class="font">
+            活动规则</div>
+        <span class="qianbao2"></span>
+        <div class="guize">
+            <div class="div1 o">
+                <span class="span1 ss">1</span>
+                <p>
+                    参与对象必须是@(SiteString.getHZSiteName(Request))实名认证、手机绑定的注册用户</p>
+            </div>
+            <div class="div2 g">
+                <span class="span2 ss">2</span>
+                <p>
+                    身份信息未完善的用户：用户在完善手机认证与实名认证后即可参与活动，本活动只可参加一次</p>
+            </div>
+            <div class="div3 o">
+                <span class="span3 ss">3</span>
+                <p>
+                    身份信息已完善的用户：不参与本次活动,用户在*月*日12点-*月*日24点期间，<a class="a">充值20元以上(包含20元)</a><br />
+                    即可参与，本活动只参加一次</p>
+            </div>
+            <div class="div4 g">
+                <span class="span4 ss">4</span>
+                <p>
+                    每个身份信息绑定用户只能参与一次，对于使用各种软件或其他方式作弊的用户，将不予赠送；对已赠送的，有权要求用户返还</p>
+            </div>
+            <div class="div5 o">
+                <span class="span5 ss">5</span>
+                <p>
+                    用户首次充值金额及充值后赠送的彩金红包均只能用于购彩不能提现</p>
+            </div>
+            <div class="div6 g">
+                <span class="span6 ss">6</span>
+                <p>
+                    在法律许可范围内，@(SiteString.getHZSiteName(Request))保留本次活动的解释权</p>
+            </div>
+        </div>
+        <div class="font1">
+            活动内容</div>
+        <span class="baoxiang"></span>
+        <div class="neirong">
+            <ul>
+                <li class="blue"><span class="span" style="margin-left: -5px;">1</span>
+                    <div class="dd one">
+                        <p>
+                            用户注册绑定身份信息</p>
+                        <p>
+                            手机绑定后获得</p>
+                        <span class="caijin size cj_one">2元彩金红包</span>
+                    </div>
+                </li>
+                <li class="green"><span class="span">2</span>
+                    <div class="dd two">
+                        <p>
+                            用户首次充值20元</p>
+                        <p>
+                            （20至100元以内）</p>
+                        <p>
+                            即可获得网站赠送的</p>
+                        <span class="caijin size cj_two">10元彩金红包</span>
+                    </div>
+                </li>
+                <li class="blue"><span class="span" style="margin-left: -5px;">3</span>
+                    <div class="d">
+                        <p class="p">
+                            用户首次充值100元</p>
+                        <p class="p">
+                            （100元及以上）</p>
+                        <p class="p">
+                            即可获得网站赠送的</p>
+                        <span class="caijin size p">100元彩金红包</span>
+                        <p>
+                            网站首先送出20元</p>
+                        <p>
+                            首次充值之日起用户累计购</p>
+                        <p>
+                            彩金额满1000元后系统再派送</p>
+                        <span class="caijin size">80元彩金红包</span>
+                    </div>
+                </li>
+                <li class="green"><span class="span">4</span>
+                    <div class="chong size top">
+                        充值20送10</div>
+                    <div class="chong size distance">
+                        充值100送100</div>
+                    <div class="huodong size distance">
+                        活动只能二选一</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    @{Html.RenderAction("Footer", "HuoDong");}
+</div>

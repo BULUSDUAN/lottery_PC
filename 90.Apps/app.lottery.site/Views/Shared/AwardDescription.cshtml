@@ -1,0 +1,46 @@
+﻿
+
+    <div class="AwardDescriptionAll"  style="position: fixed;left: 83%;top:40%;z-index: 9999">
+    <i class="AwardDescriptionI" style=" width: 20px;
+    height: 20px;
+    background: url(@ViewHelpers.img("AwardDescription/close.png")) no-repeat center center;
+    position: absolute;
+    top: -10px;
+    right: 9px;
+    cursor: pointer;"></i>
+        <a class="AwardDescription" href="/jingcai" target="_blank" style="display: block;top: 45%;">
+<img class="Awar" src="@ViewHelpers.img("home/AwardDescription01.png")" data-url="@ViewHelpers.img("home/AwardDescriptionHover01.png")">
+</a>
+  <a class="AwardDescription02" href="/szc/cqssc" target="_blank" style="display: block;top: 89%;z-index: 9999; position: absolute;">
+<img class="Awar" src="@ViewHelpers.img("home/AwardDescription02.png")" data-url="@ViewHelpers.img("home/AwardDescriptionHover02.png")">
+</a>
+ <a class="AwardDescription" href="/staticHtml/bulletin/detail/28.html" target="_blank" style="display: block;top: 156%;z-index: 9999; position: absolute;">
+<img class="Awar" src="@ViewHelpers.img("home/AwardDescription03.png")" data-url="@ViewHelpers.img("home/AwardDescriptionHover03.png")">
+</a>
+    </div>
+    
+    <script>
+ 
+     
+        $(".AwardDescriptionI").click(function () {
+
+            $(".AwardDescriptionAll").hide();
+
+        });
+        var b_enter = false;
+        $(".Awar").mouseenter(function (ele) {
+            if (b_enter) return;
+            b_enter = true;
+            var newurl = $(this).attr("data-url");
+            $(this).attr("data-url", $(this).attr("src"));
+            $(this).attr("src", newurl);
+        });
+        $(".Awar").mouseleave(function (e) {
+            b_enter = false;
+            var newurl = $(this).attr("data-url");
+            $(this).attr("data-url", $(this).attr("src"));
+            $(this).attr("src", newurl);
+        });
+
+
+    </script>

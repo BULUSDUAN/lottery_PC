@@ -1,0 +1,30 @@
+﻿@{
+    string schemeId = ViewBag.SchemeId;
+    ViewBag.Title = "方案编号" + schemeId + "订单详情-" + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "方案编号" + schemeId + "订单详情";
+    ViewBag.Description = SiteString.getHZSiteName(Request) + "订单中心方案编号" + schemeId + "的订单详情,查看更多订单详情请登录" + SiteString.getHZSiteName(Request) + "彩票网.";
+ }
+@section css{
+    @UserHelper.css("user.css")
+}
+@section js{
+@UserHelper.js("common.js")
+}
+@*@{Html.RenderPartial("box_doc");}*@
+@{
+    if (schemeId.StartsWith("TSM"))
+    {
+        ViewBag.Here = "合买订单详情";
+        Html.RenderAction("hmdetail", "user", new { id = schemeId });
+    }
+    else if (schemeId.StartsWith("CHASE"))
+    {
+        ViewBag.Here = "追号订单详情";
+        Html.RenderAction("chase", "user", new { id = schemeId });
+    }
+    else
+    {
+        ViewBag.Here = "代购订单详情";
+        Html.RenderAction("ordinary", "user", new { id = schemeId });
+    }
+}

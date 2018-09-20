@@ -1,0 +1,2383 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{45640419-6A23-4B83-8323-FCE5FA0155EB}</ProjectGuid>
+    <ProjectTypeGuids>{E53F8FEA-EAE0-44A6-8774-FFD645390401};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>app.lottery.site.iqucai</RootNamespace>
+    <AssemblyName>app.lottery.site.iqucai</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>false</UseIISExpress>
+    <MvcProjectUpgradeChecked>true</MvcProjectUpgradeChecked>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <Use64BitIISExpress />
+    <UseGlobalApplicationHostFile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Activity.Client">
+      <HintPath>..\Outputs\Client\Activity.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Activity.Core">
+      <HintPath>..\Outputs\Common\Activity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Common">
+      <HintPath>..\..\00.ReferenceDlls\Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Lottery">
+      <HintPath>..\..\00.ReferenceDlls\Common.Lottery.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Lottery.Redis">
+      <HintPath>..\..\00.ReferenceDlls\Common.Lottery.Redis.dll</HintPath>
+    </Reference>
+    <Reference Include="DS.Web.UCenter">
+      <HintPath>..\..\00.ReferenceDlls\DS.Web.UCenter.dll</HintPath>
+    </Reference>
+    <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="External.Client">
+      <HintPath>..\Outputs\Client\External.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="External.Core">
+      <HintPath>..\Outputs\Common\External.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="GameBiz.Client">
+      <HintPath>..\Outputs\Client\GameBiz.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="GameBiz.Core">
+      <HintPath>..\..\00.ReferenceDlls\20.GameBiz.Service\GameBiz.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="LotteryData.Client">
+      <HintPath>..\Outputs\Client\LotteryData.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="LotteryData.Core">
+      <HintPath>..\Outputs\Common\LotteryData.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="MatchBiz.Client">
+      <HintPath>..\Outputs\Client\MatchBiz.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="MatchBiz.Core">
+      <HintPath>..\Outputs\Common\MatchBiz.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop, Version=1.0.168.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.RedisSessionStateProvider, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.RedisSessionStateProvider.2.1.0\lib\net40\Microsoft.Web.RedisSessionStateProvider.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\00.ReferenceDlls\Newtonsoft.Json9.0\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="StackExchange.Redis">
+      <HintPath>..\packages\StackExchange.Redis.1.1.572-alpha\lib\net40\StackExchange.Redis.dll</HintPath>
+    </Reference>
+    <Reference Include="StackExchange.Redis.StrongName, Version=1.0.316.0, Culture=neutral, PublicKeyToken=c219ff1ca8c2ce46, processorArchitecture=MSIL">
+      <HintPath>..\packages\StackExchange.Redis.StrongName.1.0.488\lib\net40\StackExchange.Redis.StrongName.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO, Version=2.6.10.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.1.1.10\lib\net40\System.IO.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net" />
+    <Reference Include="System.Runtime, Version=2.6.10.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.1.1.10\lib\net40\System.Runtime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Threading.Tasks, Version=2.6.10.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.1.1.10\lib\net40\System.Threading.Tasks.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=3.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\00.ReferenceDlls\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages" />
+    <Reference Include="System.Web.Helpers" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="ThoughtWorks.QRCode">
+      <HintPath>..\..\00.ReferenceDlls\ThoughtWorks.QRCode.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="app_code\Enum.cs" />
+    <Content Include="app_code\OrderManager.cs" />
+    <Content Include="app_code\SiteConvert.cs" />
+    <Content Include="app_code\SiteString.cs" />
+    <Content Include="app_code\WCFService.cs" />
+    <Content Include="app_code\WebHelper.cs" />
+    <Compile Include="api\CommonAPI.cs" />
+    <Compile Include="api\WebRedisHelper.cs" />
+    <Compile Include="api\uc.ashx.cs">
+      <DependentUpon>uc.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="api\GeetestLib.cs" />
+    <Compile Include="Controllers\ActionFilter.cs" />
+    <Compile Include="Controllers\ActivityController.cs" />
+    <Compile Include="Controllers\ArtistsController.cs" />
+    <Compile Include="Controllers\BaseController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\BlogController.cs" />
+    <Compile Include="Controllers\BonusController.cs" />
+    <Compile Include="Controllers\BuyController.cs" />
+    <Compile Include="Controllers\CommissioController.cs" />
+    <Compile Include="Controllers\CommonController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
+    <Compile Include="Controllers\ExpertController.cs" />
+    <Compile Include="Controllers\HelpController.cs" />
+    <Compile Include="Controllers\HemaiController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\HuoDongController.cs" />
+    <Compile Include="Controllers\BaoDanController.cs" />
+    <Compile Include="Controllers\LotteryController.cs" />
+    <Compile Include="Controllers\lotteryTrendController.cs" />
+    <Compile Include="Controllers\MController.cs" />
+    <Compile Include="Controllers\MemberController.cs" />
+    <Compile Include="Controllers\OneFixController.cs" />
+    <Compile Include="Controllers\PhoneBuyController.cs" />
+    <Compile Include="Controllers\SoccerController.cs" />
+    <Compile Include="Controllers\StaticHtmlController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\ValidateCodeGenerator.cs" />
+    <Compile Include="Controllers\VIPController.cs" />
+    <Compile Include="Controllers\WCFClientsController.cs" />
+    <Compile Include="Controllers\WXPayQRCodeImg.cs" />
+    <Compile Include="Controllers\ZiXunController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="jsonManager\JsonEntities.cs" />
+    <Compile Include="jsonManager\Json_BJDC.cs" />
+    <Compile Include="jsonManager\Json_CTZQ.cs" />
+    <Compile Include="jsonManager\Json_JCLQ.cs" />
+    <Compile Include="jsonManager\Json_JCZQ.cs" />
+    <Compile Include="jsonManager\Json_Odds.cs" />
+    <Compile Include="jsonManager\Json_SZC.cs" />
+    <Compile Include="jsonManager\Json_TeamH.cs" />
+    <Compile Include="jsonManager\OrderLog.cs" />
+    <Compile Include="Models\BlogEntity.cs" />
+    <Compile Include="Models\BusinessHelper.cs" />
+    <Compile Include="Models\CtzqWeb.cs" />
+    <Compile Include="Models\CurrentUserInfo.cs" />
+    <Compile Include="Models\GameWinNumberInfo.cs" />
+    <Compile Include="Models\JczqWeb.cs" />
+    <Compile Include="Models\OrderLog.cs" />
+    <Compile Include="Models\JclqWeb.cs" />
+    <Compile Include="Models\ZixunComment.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Readme\Elmah.txt" />
+    <Content Include="favicon.ico" />
+    <Content Include="Global.asax" />
+    <Content Include="HTMLPage1.htm" />
+    <Content Include="index.html" />
+    <Content Include="index_app.html" />
+    <Content Include="upgrade\index.htm" />
+    <Content Include="upgrade\maintenance.htm" />
+    <Content Include="upgrade\closeFunc.html" />
+    <Content Include="Views\Activity\appendaward.cshtml" />
+    <Content Include="Views\Activity\attentionWechat.cshtml" />
+    <Content Include="Views\Activity\buylottery.cshtml" />
+    <Content Include="Views\Activity\footballagatha.cshtml" />
+    <Content Include="Views\Activity\footer.cshtml" />
+    <Content Include="Views\Activity\Lucky.cshtml" />
+    <Content Include="Views\Activity\nomoney.cshtml" />
+    <Content Include="Views\Activity\phoneactivity.cshtml" />
+    <Content Include="Views\Activity\register.cshtml" />
+    <Content Include="Views\Activity\returnprofit.cshtml" />
+    <Content Include="Views\Activity\thailandtravel.cshtml" />
+    <Content Include="Views\Activity\twodimensioncode.cshtml" />
+    <Content Include="Views\artists\aritscenter.cshtml" />
+    <Content Include="Views\artists\att.cshtml" />
+    <Content Include="Views\artists\buy.cshtml" />
+    <Content Include="Views\artists\create.cshtml" />
+    <Content Include="Views\artists\edit.cshtml" />
+    <Content Include="Views\artists\fav.cshtml" />
+    <Content Include="Views\artists\header.cshtml" />
+    <Content Include="Views\artists\info.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\artists\model.cshtml" />
+    <Content Include="Views\artists\my.cshtml" />
+    <Content Include="Views\artists\mycenter.cshtml" />
+    <Content Include="Views\artists\mymanual.cshtml" />
+    <Content Include="Views\artists\mynavigate.cshtml" />
+    <Content Include="Views\artists\ranklist.cshtml" />
+    <Content Include="Views\Blog\attention.cshtml" />
+    <Content Include="Views\Blog\current.cshtml" />
+    <Content Include="Views\Blog\custombill.cshtml" />
+    <Content Include="Views\Blog\fans.cshtml" />
+    <Content Include="Views\Blog\Index.cshtml" />
+    <Content Include="Views\Blog\left.cshtml" />
+    <Content Include="Views\Blog\standings.cshtml" />
+    <Content Include="Views\bonus\bonuslist.cshtml" />
+    <Content Include="Views\bonus\detail\cgzj.cshtml" />
+    <Content Include="Views\bonus\detail\djph.cshtml" />
+    <Content Include="Views\bonus\detail\fdyl.cshtml" />
+    <Content Include="Views\bonus\detail\gdyl.cshtml" />
+    <Content Include="Views\bonus\detail\hmrq.cshtml" />
+    <Content Include="Views\bonus\detail\ljzj.cshtml" />
+    <Content Include="Views\bonus\detail\zdgd.cshtml" />
+    <Content Include="Views\bonus\index.cshtml" />
+    <Content Include="Views\buy\AwardList.cshtml" />
+    <Content Include="Views\buy\bjdc\bf.cshtml" />
+    <Content Include="Views\buy\bjdc\bf_des.cshtml" />
+    <Content Include="Views\buy\bjdc\bqc.cshtml" />
+    <Content Include="Views\buy\bjdc\bqc_des.cshtml" />
+    <Content Include="Views\buy\bjdc\rfsf.cshtml" />
+    <Content Include="Views\buy\bjdc\sf.cshtml" />
+    <Content Include="Views\buy\bjdc\spf.cshtml" />
+    <Content Include="Views\buy\bjdc\spf_des.cshtml" />
+    <Content Include="Views\buy\bjdc\sxds.cshtml" />
+    <Content Include="Views\buy\bjdc\sxds_des.cshtml" />
+    <Content Include="Views\buy\bjdc\zjq.cshtml" />
+    <Content Include="Views\buy\bjdc\zjq_des.cshtml" />
+    <Content Include="Views\buy\cqssc\1XDX.cshtml" />
+    <Content Include="Views\buy\cqssc\2XBAODAN.cshtml" />
+    <Content Include="Views\buy\cqssc\2XBAODIAN.cshtml" />
+    <Content Include="Views\buy\cqssc\2XDX.cshtml" />
+    <Content Include="Views\buy\cqssc\2XHZ.cshtml" />
+    <Content Include="Views\buy\cqssc\2XZXFS.cshtml" />
+    <Content Include="Views\buy\cqssc\2XZXFW.cshtml" />
+    <Content Include="Views\buy\cqssc\2XZX_Group.cshtml" />
+    <Content Include="Views\buy\cqssc\2X_Group.cshtml" />
+    <Content Include="Views\buy\cqssc\3XBAODAN.cshtml" />
+    <Content Include="Views\buy\cqssc\3XBAODAN2.cshtml" />
+    <Content Include="Views\buy\cqssc\3XBAODIAN.cshtml" />
+    <Content Include="Views\buy\cqssc\3XDX.cshtml" />
+    <Content Include="Views\buy\cqssc\3XDXHZ.cshtml" />
+    <Content Include="Views\buy\cqssc\3XDXSG.cshtml" />
+    <Content Include="Views\buy\cqssc\3XDX_Group.cshtml" />
+    <Content Include="Views\buy\cqssc\3XHZ.cshtml" />
+    <Content Include="Views\buy\cqssc\3XZXZH.cshtml" />
+    <Content Include="Views\buy\cqssc\3XZX_Group.cshtml" />
+    <Content Include="Views\buy\cqssc\5XDX.cshtml" />
+    <Content Include="Views\buy\cqssc\5XTX.cshtml" />
+    <Content Include="Views\buy\cqssc\DXDS.cshtml" />
+    <Content Include="Views\buy\cqssc\ZX3DS.cshtml" />
+    <Content Include="Views\buy\cqssc\ZX3FS.cshtml" />
+    <Content Include="Views\buy\cqssc\ZX3HZ.cshtml" />
+    <Content Include="Views\buy\cqssc\ZX3SG.cshtml" />
+    <Content Include="Views\buy\cqssc\ZX3_Group.cshtml" />
+    <Content Include="Views\buy\cqssc\ZX6.cshtml" />
+    <Content Include="Views\buy\cqssc\ZX6HZ.cshtml" />
+    <Content Include="Views\buy\cqssc\ZX6SG.cshtml" />
+    <Content Include="Views\buy\cqssc\ZX6_Group.cshtml" />
+    <Content Include="Views\buy\ctzq\T14C_des.cshtml" />
+    <Content Include="Views\buy\ctzq\t4cjq_des.cshtml" />
+    <Content Include="Views\buy\ctzq\t6bqc_des.cshtml" />
+    <Content Include="Views\buy\ctzq\tr9_des.cshtml" />
+    <Content Include="Views\buy\danchang.cshtml" />
+    <Content Include="Views\buy\dlt\12X2.cshtml" />
+    <Content Include="Views\buy\dlt\PTTZ.cshtml" />
+    <Content Include="Views\buy\dlt\SGSR.cshtml" />
+    <Content Include="Views\buy\dlt\TDTZ.cshtml" />
+    <Content Include="Views\buy\fcpl\DT.cshtml" />
+    <Content Include="Views\buy\fcpl\FS.cshtml" />
+    <Content Include="Views\buy\fcpl\FSSG.cshtml" />
+    <Content Include="Views\buy\fcpl\FS_Group.cshtml" />
+    <Content Include="Views\buy\fcpl\HZ.cshtml" />
+    <Content Include="Views\buy\fcpl\ZX3DS.cshtml" />
+    <Content Include="Views\buy\fcpl\ZX3FS.cshtml" />
+    <Content Include="Views\buy\fcpl\ZX3HZ.cshtml" />
+    <Content Include="Views\buy\fcpl\ZX3SG.cshtml" />
+    <Content Include="Views\buy\fcpl\ZX3_Group.cshtml" />
+    <Content Include="Views\buy\fcpl\ZX6.cshtml" />
+    <Content Include="Views\buy\fcpl\ZX6HZ.cshtml" />
+    <Content Include="Views\buy\fcpl\ZX6SG.cshtml" />
+    <Content Include="Views\buy\fcpl\ZX6_Group.cshtml" />
+    <Content Include="Views\buy\hemai.cshtml" />
+    <Content Include="Views\buy\jclq\dxf.cshtml" />
+    <Content Include="Views\buy\jclq\hh.cshtml" />
+    <Content Include="Views\buy\jclq\rfsf.cshtml" />
+    <Content Include="Views\buy\jclq\sf.cshtml" />
+    <Content Include="Views\buy\jclq\sfc.cshtml" />
+    <Content Include="Views\buy\jczq\bf.cshtml" />
+    <Content Include="Views\buy\jczq\bf_des.cshtml" />
+    <Content Include="Views\buy\jczq\bqc.cshtml" />
+    <Content Include="Views\buy\jczq\bqc_des.cshtml" />
+    <Content Include="Views\buy\jczq\brqspf.cshtml" />
+    <Content Include="Views\buy\jczq\exy.cshtml" />
+    <Content Include="Views\buy\jczq\spf.cshtml" />
+    <Content Include="Views\buy\jczq\spf_des.cshtml" />
+    <Content Include="Views\buy\jczq\zjq.cshtml" />
+    <Content Include="Views\buy\jczq\zjq_des.cshtml" />
+    <Content Include="Views\buy\jingcai.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\buy\jingcaibasket.cshtml" />
+    <Content Include="Views\buy\lotteryconsulting.cshtml" />
+    <Content Include="Views\buy\lotterydetail.cshtml" />
+    <Content Include="Views\buy\optimize.cshtml" />
+    <Content Include="Views\buy\schemessnapshoot.cshtml" />
+    <Content Include="Views\buy\single.cshtml" />
+    <Content Include="Views\buy\ssq\BZXH.cshtml" />
+    <Content Include="Views\buy\ssq\SGSR.cshtml" />
+    <Content Include="Views\buy\ssq\TDTZ.cshtml" />
+    <Content Include="Views\buy\syx5\Q2ZHIX.cshtml" />
+    <Content Include="Views\buy\syx5\Q2ZHIXSG.cshtml" />
+    <Content Include="Views\buy\syx5\Q2ZHIX_Group.cshtml" />
+    <Content Include="Views\buy\syx5\Q2ZUX.cshtml" />
+    <Content Include="Views\buy\syx5\Q2ZUXDT.cshtml" />
+    <Content Include="Views\buy\syx5\Q2ZUXSG.cshtml" />
+    <Content Include="Views\buy\syx5\Q2ZUX_Group.cshtml" />
+    <Content Include="Views\buy\syx5\Q3ZHIX.cshtml" />
+    <Content Include="Views\buy\syx5\Q3ZHIXSG.cshtml" />
+    <Content Include="Views\buy\syx5\Q3ZHIX_Group.cshtml" />
+    <Content Include="Views\buy\syx5\Q3ZUX.cshtml" />
+    <Content Include="Views\buy\syx5\Q3ZUXDT.cshtml" />
+    <Content Include="Views\buy\syx5\Q3ZUXSG.cshtml" />
+    <Content Include="Views\buy\syx5\Q3ZUX_Group.cshtml" />
+    <Content Include="Views\buy\syx5\RX1.cshtml" />
+    <Content Include="Views\buy\syx5\RX2.cshtml" />
+    <Content Include="Views\buy\syx5\RX2DT.cshtml" />
+    <Content Include="Views\buy\syx5\RX2_Group.cshtml" />
+    <Content Include="Views\buy\syx5\RX3.cshtml" />
+    <Content Include="Views\buy\syx5\RX3DT.cshtml" />
+    <Content Include="Views\buy\syx5\RX3_Group.cshtml" />
+    <Content Include="Views\buy\syx5\RX4.cshtml" />
+    <Content Include="Views\buy\syx5\RX4DT.cshtml" />
+    <Content Include="Views\buy\syx5\RX4SG.cshtml" />
+    <Content Include="Views\buy\syx5\RX4_Group.cshtml" />
+    <Content Include="Views\buy\syx5\RX5.cshtml" />
+    <Content Include="Views\buy\syx5\RX5DT.cshtml" />
+    <Content Include="Views\buy\syx5\RX5SG.cshtml" />
+    <Content Include="Views\buy\syx5\RX5_Group.cshtml" />
+    <Content Include="Views\buy\syx5\RX6.cshtml" />
+    <Content Include="Views\buy\syx5\RX6DT.cshtml" />
+    <Content Include="Views\buy\syx5\RX6SG.cshtml" />
+    <Content Include="Views\buy\syx5\RX6_Group.cshtml" />
+    <Content Include="Views\buy\syx5\RX7.cshtml" />
+    <Content Include="Views\buy\syx5\RX7DT.cshtml" />
+    <Content Include="Views\buy\syx5\RX7SG.cshtml" />
+    <Content Include="Views\buy\syx5\RX7_Group.cshtml" />
+    <Content Include="Views\buy\syx5\RX8.cshtml" />
+    <Content Include="Views\buy\syx5\RX8DT.cshtml" />
+    <Content Include="Views\buy\syx5\RX8SG.cshtml" />
+    <Content Include="Views\buy\syx5\RX8_Group.cshtml" />
+    <Content Include="Views\buy\test.cshtml" />
+    <Content Include="Views\commissio\agentusershow.cshtml" />
+    <Content Include="Views\commissio\alipayCommissionExtract.cshtml" />
+    <Content Include="Views\commissio\bankCommissionExtract.cshtml" />
+    <Content Include="Views\commissio\commissionManage.cshtml" />
+    <Content Include="Views\commissio\commissionRecord.cshtml" />
+    <Content Include="Views\commissio\configurationuserrebate.cshtml" />
+    <Content Include="Views\commissio\ConfigurationUserRebateNew.cshtml" />
+    <Content Include="Views\commissio\dealerMsg.cshtml" />
+    <Content Include="Views\commissio\detaileddescription.cshtml" />
+    <Content Include="Views\commissio\generalizeUser.cshtml" />
+    <Content Include="Views\commissio\myTc.cshtml" />
+    <Content Include="Views\commissio\newagencylist.cshtml" />
+    <Content Include="Views\commissio\paySeniority.cshtml" />
+    <Content Include="Views\commissio\pjScheme.cshtml" />
+    <Content Include="Views\commissio\popularizeLink.cshtml" />
+    <Content Include="Views\commissio\registernewagency.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\commissio\schemeManage.cshtml" />
+    <Content Include="Views\commissio\setNewUserRebate.cshtml" />
+    <Content Include="Views\commissio\statisticsQuery.cshtml" />
+    <Content Include="Views\commissio\subordinateuser.cshtml" />
+    <Content Include="Views\commissio\txDetail.cshtml" />
+    <Content Include="Views\commissio\winScheme.cshtml" />
+    <Content Include="Views\Common\bonus.cshtml" />
+    <Content Include="Views\Common\goucaihall.cshtml" />
+    <Content Include="Views\Common\chipped.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\Common\jingcai.cshtml" />
+    <Content Include="Views\Common\lotteryhall.cshtml" />
+    <Content Include="Views\Common\soccer.cshtml" />
+    <Content Include="Views\Common\supervip.cshtml" />
+    <Content Include="Views\Expert\AllExpert.cshtml" />
+    <Content Include="Views\Expert\Footer.cshtml" />
+    <Content Include="Views\Expert\Index.cshtml" />
+    <Content Include="Views\Expert\PersonArticle.cshtml" />
+    <Content Include="Views\Expert\PersonSpacial.cshtml" />
+    <Content Include="Views\Expert\Recommend.cshtml" />
+    <Content Include="Views\Expert\State.cshtml" />
+    <Content Include="Views\Help\Aboutsite.cshtml" />
+    <Content Include="Views\Help\Aboutsite1.cshtml" />
+    <Content Include="Views\Help\abtus.cshtml" />
+    <Content Include="Views\Help\AccountSecurity.cshtml" />
+    <Content Include="Views\Help\administrator.cshtml" />
+    <Content Include="Views\Help\advantage.cshtml" />
+    <Content Include="Views\Help\advantage1.cshtml" />
+    <Content Include="Views\Help\Alipay.cshtml" />
+    <Content Include="Views\Help\AlipayPay.cshtml" />
+    <Content Include="Views\Help\animationDocumentary.cshtml" />
+    <Content Include="Views\Help\animationDocumentary1.cshtml" />
+    <Content Include="Views\Help\animationDocumentary2.cshtml" />
+    <Content Include="Views\Help\animationDocumentary3.cshtml" />
+    <Content Include="Views\Help\animationDocumentary4.cshtml" />
+    <Content Include="Views\Help\animationDocumentary5.cshtml" />
+    <Content Include="Views\Help\Approve.cshtml" />
+    <Content Include="Views\Help\astrict.cshtml" />
+    <Content Include="Views\Help\Attention.cshtml" />
+    <Content Include="Views\Help\azjjwsmzyly.cshtml" />
+    <Content Include="Views\Help\betNotice.cshtml" />
+    <Content Include="Views\Help\betNotice1.cshtml" />
+    <Content Include="Views\Help\betpact.cshtml" />
+    <Content Include="Views\Help\bindingBank.cshtml" />
+    <Content Include="Views\Help\bindingBankNotPhone.cshtml" />
+    <Content Include="Views\Help\bindingPhone.cshtml" />
+    <Content Include="Views\Help\bjdc.cshtml" />
+    <Content Include="Views\Help\bjdc1.cshtml" />
+    <Content Include="Views\Help\bonusAllot.cshtml" />
+    <Content Include="Views\Help\bonusAllot1.cshtml" />
+    <Content Include="Views\Help\bonusAllot2.cshtml" />
+    <Content Include="Views\Help\bonusGet.cshtml" />
+    <Content Include="Views\Help\bonusGet1.cshtml" />
+    <Content Include="Views\Help\bonusGet2.cshtml" />
+    <Content Include="Views\Help\bonusGet3.cshtml" />
+    <Content Include="Views\Help\bonusGet4.cshtml" />
+    <Content Include="Views\Help\bonusGet5.cshtml" />
+    <Content Include="Views\Help\bonusGet6.cshtml" />
+    <Content Include="Views\Help\business.cshtml" />
+    <Content Include="Views\Help\business1.cshtml" />
+    <Content Include="Views\Help\buyguide.cshtml" />
+    <Content Include="Views\Help\chippedBonus.cshtml" />
+    <Content Include="Views\Help\cooperation.cshtml" />
+    <Content Include="Views\Help\cqssc.cshtml" />
+    <Content Include="Views\Help\cqssc1.cshtml" />
+    <Content Include="Views\Help\customizeDocumentary.cshtml" />
+    <Content Include="Views\Help\customizeDocumentary1.cshtml" />
+    <Content Include="Views\Help\customizeDocumentary2.cshtml" />
+    <Content Include="Views\Help\customizeDocumentary3.cshtml" />
+    <Content Include="Views\Help\daigou.cshtml" />
+    <Content Include="Views\Help\dlt.cshtml" />
+    <Content Include="Views\Help\dlt1.cshtml" />
+    <Content Include="Views\Help\drawing.cshtml" />
+    <Content Include="Views\Help\drawing1.cshtml" />
+    <Content Include="Views\Help\drawing2.cshtml" />
+    <Content Include="Views\Help\drawing3.cshtml" />
+    <Content Include="Views\Help\drawing4.cshtml" />
+    <Content Include="Views\Help\drawing5.cshtml" />
+    <Content Include="Views\Help\drawing6.cshtml" />
+    <Content Include="Views\Help\dsgs.cshtml" />
+    <Content Include="Views\Help\Ebank.cshtml" />
+    <Content Include="Views\Help\EbankABC.cshtml" />
+    <Content Include="Views\Help\EbankAlipay.cshtml" />
+    <Content Include="Views\Help\EbankBOC.cshtml" />
+    <Content Include="Views\Help\EbankBOCOM.cshtml" />
+    <Content Include="Views\Help\EbankCCB.cshtml" />
+    <Content Include="Views\Help\EbankCEB.cshtml" />
+    <Content Include="Views\Help\EbankCIB.cshtml" />
+    <Content Include="Views\Help\EbankCITIC.cshtml" />
+    <Content Include="Views\Help\EbankCMB.cshtml" />
+    <Content Include="Views\Help\EbankCMBC.cshtml" />
+    <Content Include="Views\Help\EbankGDB.cshtml" />
+    <Content Include="Views\Help\EbankICBC.cshtml" />
+    <Content Include="Views\Help\EbankPDB.cshtml" />
+    <Content Include="Views\Help\EbankSDB.cshtml" />
+    <Content Include="Views\Help\EbanksDebugError.cshtml" />
+    <Content Include="Views\Help\EbanksDredge.cshtml" />
+    <Content Include="Views\Help\EbanksNotAccount.cshtml" />
+    <Content Include="Views\Help\EbanksNotReaction.cshtml" />
+    <Content Include="Views\Help\EbanksOnlinePay.cshtml" />
+    <Content Include="Views\Help\EbanksPay.cshtml" />
+    <Content Include="Views\Help\EbanksSafetyLCE.cshtml" />
+    <Content Include="Views\Help\EbanksTradePage.cshtml" />
+    <Content Include="Views\Help\EbanksWebpageError.cshtml" />
+    <Content Include="Views\Help\ecy.cshtml" />
+    <Content Include="Views\Help\Email.cshtml" />
+    <Content Include="Views\Help\fc3d.cshtml" />
+    <Content Include="Views\Help\fc3d1.cshtml" />
+    <Content Include="Views\Help\ForTheColor.cshtml" />
+    <Content Include="Views\Help\ForTheColor1.cshtml" />
+    <Content Include="Views\Help\ForTheColor10.cshtml" />
+    <Content Include="Views\Help\ForTheColor11.cshtml" />
+    <Content Include="Views\Help\ForTheColor12.cshtml" />
+    <Content Include="Views\Help\ForTheColor13.cshtml" />
+    <Content Include="Views\Help\ForTheColor14.cshtml" />
+    <Content Include="Views\Help\ForTheColor2.cshtml" />
+    <Content Include="Views\Help\ForTheColor3.cshtml" />
+    <Content Include="Views\Help\ForTheColor4.cshtml" />
+    <Content Include="Views\Help\ForTheColor5.cshtml" />
+    <Content Include="Views\Help\ForTheColor6.cshtml" />
+    <Content Include="Views\Help\ForTheColor7.cshtml" />
+    <Content Include="Views\Help\ForTheColor8.cshtml" />
+    <Content Include="Views\Help\ForTheColor9.cshtml" />
+    <Content Include="Views\Help\forTheColorSafety.cshtml" />
+    <Content Include="Views\Help\forTheColorSafety1.cshtml" />
+    <Content Include="Views\Help\gswj.cshtml" />
+    <Content Include="Views\Help\Index.cshtml" />
+    <Content Include="Views\Help\information.cshtml" />
+    <Content Include="Views\Help\isokregister.cshtml" />
+    <Content Include="Views\Help\jclq.cshtml" />
+    <Content Include="Views\Help\jclq1.cshtml" />
+    <Content Include="Views\Help\jczq.cshtml" />
+    <Content Include="Views\Help\jczq1.cshtml" />
+    <Content Include="Views\Help\jjzmjs.cshtml" />
+    <Content Include="Views\Help\Join.cshtml" />
+    <Content Include="Views\Help\Join1.cshtml" />
+    <Content Include="Views\Help\Join2.cshtml" />
+    <Content Include="Views\Help\jx11x5.cshtml" />
+    <Content Include="Views\Help\jx11x51.cshtml" />
+    <Content Include="Views\Help\left.cshtml" />
+    <Content Include="Views\Help\links.cshtml" />
+    <Content Include="Views\Help\links1.cshtml" />
+    <Content Include="Views\Help\login.cshtml" />
+    <Content Include="Views\Help\login1.cshtml" />
+    <Content Include="Views\Help\moneyser.cshtml" />
+    <Content Include="Views\Help\NotApprove.cshtml" />
+    <Content Include="Views\Help\NotbindingPhone.cshtml" />
+    <Content Include="Views\Help\notes.cshtml" />
+    <Content Include="Views\Help\notification.cshtml" />
+    <Content Include="Views\Help\password.cshtml" />
+    <Content Include="Views\Help\payAccount.cshtml" />
+    <Content Include="Views\Help\payintroduce.cshtml" />
+    <Content Include="Views\Help\payNotAccount.cshtml" />
+    <Content Include="Views\Help\paypoundage.cshtml" />
+    <Content Include="Views\Help\payway.cshtml" />
+    <Content Include="Views\Help\personalData.cshtml" />
+    <Content Include="Views\Help\phoneForTheColor.cshtml" />
+    <Content Include="Views\Help\phoneForTheColor1.cshtml" />
+    <Content Include="Views\Help\phoneForTheColor2.cshtml" />
+    <Content Include="Views\Help\phoneForTheColor3.cshtml" />
+    <Content Include="Views\Help\phoneForTheColor4.cshtml" />
+    <Content Include="Views\Help\pl3.cshtml" />
+    <Content Include="Views\Help\pl31.cshtml" />
+    <Content Include="Views\Help\poundage.cshtml" />
+    <Content Include="Views\Help\poundage1.cshtml" />
+    <Content Include="Views\Help\poundageTime.cshtml" />
+    <Content Include="Views\Help\poundageTime1.cshtml" />
+    <Content Include="Views\Help\privacySet.cshtml" />
+    <Content Include="Views\Help\privacySet1.cshtml" />
+    <Content Include="Views\Help\privacySet2.cshtml" />
+    <Content Include="Views\Help\privacySet3.cshtml" />
+    <Content Include="Views\Help\privacySet4.cshtml" />
+    <Content Include="Views\Help\Quickpayment.cshtml" />
+    <Content Include="Views\Help\QuickpaymentPay.cshtml" />
+    <Content Include="Views\Help\recordRule.cshtml" />
+    <Content Include="Views\Help\recordRule1.cshtml" />
+    <Content Include="Views\Help\recordRule2.cshtml" />
+    <Content Include="Views\Help\Redpackets.cshtml" />
+    <Content Include="Views\Help\Redpackets1.cshtml" />
+    <Content Include="Views\Help\Redpackets2.cshtml" />
+    <Content Include="Views\Help\Redpackets3.cshtml" />
+    <Content Include="Views\Help\Redpackets4.cshtml" />
+    <Content Include="Views\Help\Redpackets5.cshtml" />
+    <Content Include="Views\Help\Redpackets6.cshtml" />
+    <Content Include="Views\Help\Revoke.cshtml" />
+    <Content Include="Views\Help\Revoke1.cshtml" />
+    <Content Include="Views\Help\Revoke2.cshtml" />
+    <Content Include="Views\Help\Revoke3.cshtml" />
+    <Content Include="Views\Help\Revoke4.cshtml" />
+    <Content Include="Views\Help\Revoke5.cshtml" />
+    <Content Include="Views\Help\safety.cshtml" />
+    <Content Include="Views\Help\serviceAgreement.cshtml" />
+    <Content Include="Views\Help\serviceAgreement1.cshtml" />
+    <Content Include="Views\Help\ShoppingService.cshtml" />
+    <Content Include="Views\Help\ShoppingService1.cshtml" />
+    <Content Include="Views\Help\ShoppingService10.cshtml" />
+    <Content Include="Views\Help\ShoppingService11.cshtml" />
+    <Content Include="Views\Help\ShoppingService12.cshtml" />
+    <Content Include="Views\Help\ShoppingService13.cshtml" />
+    <Content Include="Views\Help\ShoppingService14.cshtml" />
+    <Content Include="Views\Help\ShoppingService15.cshtml" />
+    <Content Include="Views\Help\ShoppingService16.cshtml" />
+    <Content Include="Views\Help\ShoppingService17.cshtml" />
+    <Content Include="Views\Help\ShoppingService18.cshtml" />
+    <Content Include="Views\Help\ShoppingService19.cshtml" />
+    <Content Include="Views\Help\ShoppingService2.cshtml" />
+    <Content Include="Views\Help\ShoppingService20.cshtml" />
+    <Content Include="Views\Help\ShoppingService21.cshtml" />
+    <Content Include="Views\Help\ShoppingService3.cshtml" />
+    <Content Include="Views\Help\ShoppingService4.cshtml" />
+    <Content Include="Views\Help\ShoppingService5.cshtml" />
+    <Content Include="Views\Help\ShoppingService6.cshtml" />
+    <Content Include="Views\Help\ShoppingService7.cshtml" />
+    <Content Include="Views\Help\ShoppingService8.cshtml" />
+    <Content Include="Views\Help\ShoppingService9.cshtml" />
+    <Content Include="Views\Help\ssq.cshtml" />
+    <Content Include="Views\Help\ssq1.cshtml" />
+    <Content Include="Views\Help\suggest.cshtml" />
+    <Content Include="Views\Help\tkxz.cshtml" />
+    <Content Include="Views\Help\username.cshtml" />
+    <Content Include="Views\Help\usual.cshtml" />
+    <Content Include="Views\Help\validationMail.cshtml" />
+    <Content Include="Views\Help\validationPhone.cshtml" />
+    <Content Include="Views\Help\verificationcode.cshtml" />
+    <Content Include="Views\Help\VerifyImage.cshtml" />
+    <Content Include="Views\Help\website.cshtml" />
+    <Content Include="Views\Help\website1.cshtml" />
+    <Content Include="Views\Help\website2.cshtml" />
+    <Content Include="Views\Help\websiteMap.cshtml" />
+    <Content Include="Views\Help\websiteMap1.cshtml" />
+    <Content Include="Views\Help\whatApprove.cshtml" />
+    <Content Include="Views\Help\worldcup.cshtml" />
+    <Content Include="Views\Help\w_bjdc.cshtml" />
+    <Content Include="Views\Help\W_CQSSC.cshtml" />
+    <Content Include="Views\Help\w_ctzq.cshtml" />
+    <Content Include="Views\Help\W_DLT.cshtml" />
+    <Content Include="Views\Help\W_FC3D.cshtml" />
+    <Content Include="Views\Help\W_GD11X5.cshtml" />
+    <Content Include="Views\Help\W_GDKLSF.cshtml" />
+    <Content Include="Views\Help\W_GXKLSF.cshtml" />
+    <Content Include="Views\Help\w_jclq.cshtml" />
+    <Content Include="Views\Help\w_jczq.cshtml" />
+    <Content Include="Views\Help\W_JSKS.cshtml" />
+    <Content Include="Views\Help\W_JX11X5.cshtml" />
+    <Content Include="Views\Help\W_JXSSC.cshtml" />
+    <Content Include="Views\Help\W_PL3.cshtml" />
+    <Content Include="Views\Help\W_SD11X5.cshtml" />
+    <Content Include="Views\Help\W_SDQYH.cshtml" />
+    <Content Include="Views\Help\W_SSQ.cshtml" />
+    <Content Include="Views\Help\w_t14c.cshtml" />
+    <Content Include="Views\Help\w_t4cjq.cshtml" />
+    <Content Include="Views\Help\w_t6bqc.cshtml" />
+    <Content Include="Views\Help\w_tr9.cshtml" />
+    <Content Include="Views\Help\yhxy.cshtml" />
+    <Content Include="Views\Help\zclcbq.cshtml" />
+    <Content Include="Views\Help\zclcbq1.cshtml" />
+    <Content Include="Views\Help\zcscjq.cshtml" />
+    <Content Include="Views\Help\zcscjq1.cshtml" />
+    <Content Include="Views\Help\zcsfc.cshtml" />
+    <Content Include="Views\Help\zcsfc1.cshtml" />
+    <Content Include="Views\Help\zjsmshpj.cshtml" />
+    <Content Include="Views\Help\zjtzzh.cshtml" />
+    <Content Include="Views\home\awardctrl.cshtml" />
+    <Content Include="Views\home\footer.cshtml" />
+    <Content Include="Views\home\footerBottom.cshtml" />
+    <Content Include="Views\home\footerCMS.cshtml" />
+    <Content Include="Views\home\footerindex.cshtml" />
+    <Content Include="Views\home\gamemenuo.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\home\header.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\home\headerCMS.cshtml" />
+    <Content Include="Views\home\headerindex.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\home\headerTop.cshtml" />
+    <Content Include="Views\home\hemaiList.cshtml" />
+    <Content Include="Views\home\maintain.cshtml" />
+    <Content Include="Views\home\qqback.cshtml" />
+    <Content Include="Views\home\qqbind.cshtml" />
+    <Content Include="Views\home\topmenu.cshtml" />
+    <Content Include="Views\HuoDong\avtioncentent.cshtml" />
+    <Content Include="Views\HuoDong\BuyCaiBhq.cshtml" />
+    <Content Include="Views\HuoDong\expertpk.cshtml" />
+    <Content Include="Views\HuoDong\family.cshtml" />
+    <Content Include="Views\HuoDong\Fanli.cshtml" />
+    <Content Include="Views\HuoDong\FengKuangJiaJiang.cshtml" />
+    <Content Include="Views\HuoDong\Footer.cshtml" />
+    <Content Include="Views\HuoDong\gamemenu.cshtml" />
+    <Content Include="Views\HuoDong\newavtioncentent.cshtml" />
+    <Content Include="Views\HuoDong\Register.cshtml" />
+    <Content Include="Views\HuoDong\State.cshtml" />
+    <Content Include="Views\HuoDong\Zucai.cshtml" />
+    <Content Include="Views\lotteryTrend\CQ11X5\chzs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQ11X5\dlzs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQ11X5\dwzs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQ11X5\elzs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQ11X5\ghzs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQ11X5\hzzs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQ11X5\jbzs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQ11X5\kdzs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQ11X5\lzzs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQ11X5\q1jbzs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQ11X5\q1xtzs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQ11X5\q2jbzs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQ11X5\q2xtzs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQ11X5\q3jbzs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQ11X5\q3xtzs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQ11X5\xtzs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQKLSF\dxzs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQKLSF\elzs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQKLSF\ghzs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQKLSF\jbzs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQKLSF\jozs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQKLSF\q1zs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQKLSF\q3zs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQKLSF\qjzs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQKLSF\slzs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQKLSF\twzs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQSSC\dxds.cshtml" />
+    <Content Include="Views\lotteryTrend\CQSSC\s1zs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQSSC\s2hzzs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQSSC\s2zuxzs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQSSC\s2zxzs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQSSC\s3c3ys.cshtml" />
+    <Content Include="Views\lotteryTrend\CQSSC\s3dxzs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQSSC\s3hzzs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQSSC\s3jozs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQSSC\s3kd.cshtml" />
+    <Content Include="Views\lotteryTrend\CQSSC\s3zhzs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQSSC\s3zuxzs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQSSC\s3zxzs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQSSC\s5hzzs.cshtml" />
+    <Content Include="Views\lotteryTrend\CQSSC\s5jbzs.cshtml" />
+    <Content Include="Views\lotteryTrend\DF6J1\dxzs.cshtml" />
+    <Content Include="Views\lotteryTrend\DF6J1\hzzs.cshtml" />
+    <Content Include="Views\lotteryTrend\DF6J1\jbzs.cshtml" />
+    <Content Include="Views\lotteryTrend\DF6J1\jozs.cshtml" />
+    <Content Include="Views\lotteryTrend\DF6J1\kdzs.cshtml" />
+    <Content Include="Views\lotteryTrend\DF6J1\zhzs.cshtml" />
+    <Content Include="Views\lotteryTrend\DLT\chu3.cshtml" />
+    <Content Include="Views\lotteryTrend\DLT\dx.cshtml" />
+    <Content Include="Views\lotteryTrend\DLT\hezhi.cshtml" />
+    <Content Include="Views\lotteryTrend\DLT\jbzs.cshtml" />
+    <Content Include="Views\lotteryTrend\DLT\jiou.cshtml" />
+    <Content Include="Views\lotteryTrend\DLT\kuadu_12.cshtml" />
+    <Content Include="Views\lotteryTrend\DLT\kuadu_23.cshtml" />
+    <Content Include="Views\lotteryTrend\DLT\kuadu_34.cshtml" />
+    <Content Include="Views\lotteryTrend\DLT\kuadu_45.cshtml" />
+    <Content Include="Views\lotteryTrend\DLT\kuadu_sw.cshtml" />
+    <Content Include="Views\lotteryTrend\DLT\zhihe.cshtml" />
+    <Content Include="Views\lotteryTrend\FC3D\chu31.cshtml" />
+    <Content Include="Views\lotteryTrend\FC3D\chu32.cshtml" />
+    <Content Include="Views\lotteryTrend\FC3D\chu33.cshtml" />
+    <Content Include="Views\lotteryTrend\FC3D\dxhm.cshtml" />
+    <Content Include="Views\lotteryTrend\FC3D\dxxt.cshtml" />
+    <Content Include="Views\lotteryTrend\FC3D\hwzs.cshtml" />
+    <Content Include="Views\lotteryTrend\FC3D\hzfb.cshtml" />
+    <Content Include="Views\lotteryTrend\FC3D\hztz.cshtml" />
+    <Content Include="Views\lotteryTrend\FC3D\johm.cshtml" />
+    <Content Include="Views\lotteryTrend\FC3D\joxt.cshtml" />
+    <Content Include="Views\lotteryTrend\FC3D\kuadu.cshtml" />
+    <Content Include="Views\lotteryTrend\FC3D\kuadu12.cshtml" />
+    <Content Include="Views\lotteryTrend\FC3D\kuadu13.cshtml" />
+    <Content Include="Views\lotteryTrend\FC3D\kuadu23.cshtml" />
+    <Content Include="Views\lotteryTrend\FC3D\zhhm.cshtml" />
+    <Content Include="Views\lotteryTrend\FC3D\zhxt.cshtml" />
+    <Content Include="Views\lotteryTrend\FC3D\zuxzs.cshtml" />
+    <Content Include="Views\lotteryTrend\FC3D\zxzs.cshtml" />
+    <Content Include="Views\lotteryTrend\footer.cshtml" />
+    <Content Include="Views\lotteryTrend\GD11X5\chzs.cshtml" />
+    <Content Include="Views\lotteryTrend\GD11X5\dlzs.cshtml" />
+    <Content Include="Views\lotteryTrend\GD11X5\dwzs.cshtml" />
+    <Content Include="Views\lotteryTrend\GD11X5\elzs.cshtml" />
+    <Content Include="Views\lotteryTrend\GD11X5\ghzs.cshtml" />
+    <Content Include="Views\lotteryTrend\GD11X5\hzzs.cshtml" />
+    <Content Include="Views\lotteryTrend\GD11X5\jbzs.cshtml" />
+    <Content Include="Views\lotteryTrend\GD11X5\kdzs.cshtml" />
+    <Content Include="Views\lotteryTrend\GD11X5\lzzs.cshtml" />
+    <Content Include="Views\lotteryTrend\GD11X5\q1jbzs.cshtml" />
+    <Content Include="Views\lotteryTrend\GD11X5\q1xtzs.cshtml" />
+    <Content Include="Views\lotteryTrend\GD11X5\q2jbzs.cshtml" />
+    <Content Include="Views\lotteryTrend\GD11X5\q2xtzs.cshtml" />
+    <Content Include="Views\lotteryTrend\GD11X5\q3jbzs.cshtml" />
+    <Content Include="Views\lotteryTrend\GD11X5\q3xtzs.cshtml" />
+    <Content Include="Views\lotteryTrend\GD11X5\xtzs.cshtml" />
+    <Content Include="Views\lotteryTrend\GDKLSF\dw1.cshtml" />
+    <Content Include="Views\lotteryTrend\GDKLSF\dw2.cshtml" />
+    <Content Include="Views\lotteryTrend\GDKLSF\dw3.cshtml" />
+    <Content Include="Views\lotteryTrend\GDKLSF\dx.cshtml" />
+    <Content Include="Views\lotteryTrend\GDKLSF\jbzs.cshtml" />
+    <Content Include="Views\lotteryTrend\GDKLSF\jo.cshtml" />
+    <Content Include="Views\lotteryTrend\GDKLSF\zh.cshtml" />
+    <Content Include="Views\lotteryTrend\HBK3\hz.cshtml" />
+    <Content Include="Views\lotteryTrend\HBK3\jbzs.cshtml" />
+    <Content Include="Views\lotteryTrend\HBK3\xt.cshtml" />
+    <Content Include="Views\lotteryTrend\HBK3\zh.cshtml" />
+    <Content Include="Views\lotteryTrend\HBK3\zhzs.cshtml" />
+    <Content Include="Views\lotteryTrend\HC1\jbzs.cshtml" />
+    <Content Include="Views\lotteryTrend\HC1\sxjjfwzs.cshtml" />
+    <Content Include="Views\lotteryTrend\HD15X5\chzs.cshtml" />
+    <Content Include="Views\lotteryTrend\HD15X5\dx.cshtml" />
+    <Content Include="Views\lotteryTrend\HD15X5\hz.cshtml" />
+    <Content Include="Views\lotteryTrend\HD15X5\jbzs.cshtml" />
+    <Content Include="Views\lotteryTrend\HD15X5\jo.cshtml" />
+    <Content Include="Views\lotteryTrend\HD15X5\lhzs.cshtml" />
+    <Content Include="Views\lotteryTrend\HD15X5\zh.cshtml" />
+    <Content Include="Views\lotteryTrend\HNKLSF\dxzs.cshtml" />
+    <Content Include="Views\lotteryTrend\HNKLSF\elzs.cshtml" />
+    <Content Include="Views\lotteryTrend\HNKLSF\ghzs.cshtml" />
+    <Content Include="Views\lotteryTrend\HNKLSF\jbzs.cshtml" />
+    <Content Include="Views\lotteryTrend\HNKLSF\jozs.cshtml" />
+    <Content Include="Views\lotteryTrend\HNKLSF\q1zs.cshtml" />
+    <Content Include="Views\lotteryTrend\HNKLSF\q3zs.cshtml" />
+    <Content Include="Views\lotteryTrend\HNKLSF\qjzs.cshtml" />
+    <Content Include="Views\lotteryTrend\HNKLSF\slzs.cshtml" />
+    <Content Include="Views\lotteryTrend\HNKLSF\twzs.cshtml" />
+    <Content Include="Views\lotteryTrend\Index.cshtml" />
+    <Content Include="Views\lotteryTrend\JLK3\hz.cshtml" />
+    <Content Include="Views\lotteryTrend\JLK3\jbzs.cshtml" />
+    <Content Include="Views\lotteryTrend\JLK3\xt.cshtml" />
+    <Content Include="Views\lotteryTrend\JLK3\zh.cshtml" />
+    <Content Include="Views\lotteryTrend\JLK3\zhzs.cshtml" />
+    <Content Include="Views\lotteryTrend\JSKS\hz.cshtml" />
+    <Content Include="Views\lotteryTrend\JSKS\jbzs.cshtml" />
+    <Content Include="Views\lotteryTrend\JSKS\xt.cshtml" />
+    <Content Include="Views\lotteryTrend\JSKS\zh.cshtml" />
+    <Content Include="Views\lotteryTrend\JSKS\zhzs.cshtml" />
+    <Content Include="Views\lotteryTrend\JX11X5\q2hz.cshtml" />
+    <Content Include="Views\lotteryTrend\JX11X5\q2zux.cshtml" />
+    <Content Include="Views\lotteryTrend\JX11X5\q2zx.cshtml" />
+    <Content Include="Views\lotteryTrend\JX11X5\q3chu3.cshtml" />
+    <Content Include="Views\lotteryTrend\JX11X5\q3dx.cshtml" />
+    <Content Include="Views\lotteryTrend\JX11X5\q3hz.cshtml" />
+    <Content Include="Views\lotteryTrend\JX11X5\q3jo.cshtml" />
+    <Content Include="Views\lotteryTrend\JX11X5\q3zh.cshtml" />
+    <Content Include="Views\lotteryTrend\JX11X5\q3zux.cshtml" />
+    <Content Include="Views\lotteryTrend\JX11X5\q3zx.cshtml" />
+    <Content Include="Views\lotteryTrend\JX11X5\rx1.cshtml" />
+    <Content Include="Views\lotteryTrend\JX11X5\rx2.cshtml" />
+    <Content Include="Views\lotteryTrend\JX11X5\rx3.cshtml" />
+    <Content Include="Views\lotteryTrend\JX11X5\rx4.cshtml" />
+    <Content Include="Views\lotteryTrend\JX11X5\rx5.cshtml" />
+    <Content Include="Views\lotteryTrend\JX11X5\rxchu3.cshtml" />
+    <Content Include="Views\lotteryTrend\JX11X5\rxdx.cshtml" />
+    <Content Include="Views\lotteryTrend\JX11X5\rxhz.cshtml" />
+    <Content Include="Views\lotteryTrend\JX11X5\rxjbzs.cshtml" />
+    <Content Include="Views\lotteryTrend\JX11X5\rxjo.cshtml" />
+    <Content Include="Views\lotteryTrend\JX11X5\rxzh.cshtml" />
+    <Content Include="Views\lotteryTrend\JXSSC\dxds.cshtml" />
+    <Content Include="Views\lotteryTrend\JXSSC\s1zs.cshtml" />
+    <Content Include="Views\lotteryTrend\JXSSC\s2hzzs.cshtml" />
+    <Content Include="Views\lotteryTrend\JXSSC\s2zuxzs.cshtml" />
+    <Content Include="Views\lotteryTrend\JXSSC\s2zxzs.cshtml" />
+    <Content Include="Views\lotteryTrend\JXSSC\s3c3ys.cshtml" />
+    <Content Include="Views\lotteryTrend\JXSSC\s3dxzs.cshtml" />
+    <Content Include="Views\lotteryTrend\JXSSC\s3hzzs.cshtml" />
+    <Content Include="Views\lotteryTrend\JXSSC\s3jozs.cshtml" />
+    <Content Include="Views\lotteryTrend\JXSSC\s3kd.cshtml" />
+    <Content Include="Views\lotteryTrend\JXSSC\s3zhzs.cshtml" />
+    <Content Include="Views\lotteryTrend\JXSSC\s3zuxzs.cshtml" />
+    <Content Include="Views\lotteryTrend\JXSSC\s3zxzs.cshtml" />
+    <Content Include="Views\lotteryTrend\JXSSC\s5hzzs.cshtml" />
+    <Content Include="Views\lotteryTrend\JXSSC\s5jbzs.cshtml" />
+    <Content Include="Views\lotteryTrend\LN11X5\chzs.cshtml" />
+    <Content Include="Views\lotteryTrend\LN11X5\dlzs.cshtml" />
+    <Content Include="Views\lotteryTrend\LN11X5\dxzs.cshtml" />
+    <Content Include="Views\lotteryTrend\LN11X5\elzs.cshtml" />
+    <Content Include="Views\lotteryTrend\LN11X5\ghzs.cshtml" />
+    <Content Include="Views\lotteryTrend\LN11X5\hzzs.cshtml" />
+    <Content Include="Views\lotteryTrend\LN11X5\jbzs.cshtml" />
+    <Content Include="Views\lotteryTrend\LN11X5\jozs.cshtml" />
+    <Content Include="Views\lotteryTrend\LN11X5\q1zs.cshtml" />
+    <Content Include="Views\lotteryTrend\LN11X5\q2zs.cshtml" />
+    <Content Include="Views\lotteryTrend\LN11X5\q3zs.cshtml" />
+    <Content Include="Views\lotteryTrend\PL3\chu31.cshtml" />
+    <Content Include="Views\lotteryTrend\PL3\chu32.cshtml" />
+    <Content Include="Views\lotteryTrend\PL3\chu33.cshtml" />
+    <Content Include="Views\lotteryTrend\PL3\dx.cshtml" />
+    <Content Include="Views\lotteryTrend\PL3\dxhm.cshtml" />
+    <Content Include="Views\lotteryTrend\PL3\hezhi.cshtml" />
+    <Content Include="Views\lotteryTrend\PL3\hzhw.cshtml" />
+    <Content Include="Views\lotteryTrend\PL3\hztz.cshtml" />
+    <Content Include="Views\lotteryTrend\PL3\jbzs.cshtml" />
+    <Content Include="Views\lotteryTrend\PL3\jo.cshtml" />
+    <Content Include="Views\lotteryTrend\PL3\johm.cshtml" />
+    <Content Include="Views\lotteryTrend\PL3\kdbg.cshtml" />
+    <Content Include="Views\lotteryTrend\PL3\kdbs.cshtml" />
+    <Content Include="Views\lotteryTrend\PL3\kdsg.cshtml" />
+    <Content Include="Views\lotteryTrend\PL3\zhhm.cshtml" />
+    <Content Include="Views\lotteryTrend\PL3\zhihe.cshtml" />
+    <Content Include="Views\lotteryTrend\PL3\zxzs.cshtml" />
+    <Content Include="Views\lotteryTrend\PL5\chu3.cshtml" />
+    <Content Include="Views\lotteryTrend\PL5\dx.cshtml" />
+    <Content Include="Views\lotteryTrend\PL5\hz.cshtml" />
+    <Content Include="Views\lotteryTrend\PL5\jbzs.cshtml" />
+    <Content Include="Views\lotteryTrend\PL5\jo.cshtml" />
+    <Content Include="Views\lotteryTrend\PL5\zh.cshtml" />
+    <Content Include="Views\lotteryTrend\QLC\chu3.cshtml" />
+    <Content Include="Views\lotteryTrend\QLC\dx.cshtml" />
+    <Content Include="Views\lotteryTrend\QLC\jbzs.cshtml" />
+    <Content Include="Views\lotteryTrend\QLC\jo.cshtml" />
+    <Content Include="Views\lotteryTrend\QLC\zh.cshtml" />
+    <Content Include="Views\lotteryTrend\QXC\chu3.cshtml" />
+    <Content Include="Views\lotteryTrend\QXC\dx.cshtml" />
+    <Content Include="Views\lotteryTrend\QXC\jbzs.cshtml" />
+    <Content Include="Views\lotteryTrend\QXC\jo.cshtml" />
+    <Content Include="Views\lotteryTrend\QXC\zh.cshtml" />
+    <Content Include="Views\lotteryTrend\SD11X5\chzs.cshtml" />
+    <Content Include="Views\lotteryTrend\SD11X5\dlzs.cshtml" />
+    <Content Include="Views\lotteryTrend\SD11X5\dwzs.cshtml" />
+    <Content Include="Views\lotteryTrend\SD11X5\elzs.cshtml" />
+    <Content Include="Views\lotteryTrend\SD11X5\ghzs.cshtml" />
+    <Content Include="Views\lotteryTrend\SD11X5\hzzs.cshtml" />
+    <Content Include="Views\lotteryTrend\SD11X5\jbzs.cshtml" />
+    <Content Include="Views\lotteryTrend\SD11X5\kdzs.cshtml" />
+    <Content Include="Views\lotteryTrend\SD11X5\lzzs.cshtml" />
+    <Content Include="Views\lotteryTrend\SD11X5\q1jbzs.cshtml" />
+    <Content Include="Views\lotteryTrend\SD11X5\q1xtzs.cshtml" />
+    <Content Include="Views\lotteryTrend\SD11X5\q2jbzs.cshtml" />
+    <Content Include="Views\lotteryTrend\SD11X5\q2xtzs.cshtml" />
+    <Content Include="Views\lotteryTrend\SD11X5\q3jbzs.cshtml" />
+    <Content Include="Views\lotteryTrend\SD11X5\q3xtzs.cshtml" />
+    <Content Include="Views\lotteryTrend\SD11X5\xtzs.cshtml" />
+    <Content Include="Views\lotteryTrend\SDQYH\chu3.cshtml" />
+    <Content Include="Views\lotteryTrend\SDQYH\dx.cshtml" />
+    <Content Include="Views\lotteryTrend\SDQYH\jo.cshtml" />
+    <Content Include="Views\lotteryTrend\SDQYH\sx1.cshtml" />
+    <Content Include="Views\lotteryTrend\SDQYH\sx2.cshtml" />
+    <Content Include="Views\lotteryTrend\SDQYH\sx3.cshtml" />
+    <Content Include="Views\lotteryTrend\SDQYH\zh.cshtml" />
+    <Content Include="Views\lotteryTrend\SSQ\Chu3.cshtml" />
+    <Content Include="Views\lotteryTrend\SSQ\DaXiao.cshtml" />
+    <Content Include="Views\lotteryTrend\SSQ\HeZhi.cshtml" />
+    <Content Include="Views\lotteryTrend\SSQ\jbzs.cshtml" />
+    <Content Include="Views\lotteryTrend\SSQ\JiOu.cshtml" />
+    <Content Include="Views\lotteryTrend\SSQ\KuaDu_12.cshtml" />
+    <Content Include="Views\lotteryTrend\SSQ\KuaDu_23.cshtml" />
+    <Content Include="Views\lotteryTrend\SSQ\KuaDu_34.cshtml" />
+    <Content Include="Views\lotteryTrend\SSQ\KuaDu_45.cshtml" />
+    <Content Include="Views\lotteryTrend\SSQ\KuaDu_56.cshtml" />
+    <Content Include="Views\lotteryTrend\SSQ\KuaDu_SW.cshtml" />
+    <Content Include="Views\lotteryTrend\SSQ\ZhiHe.cshtml" />
+    <Content Include="Views\lotteryTrend\ThendLink.cshtml" />
+    <Content Include="Views\lotteryTrend\_layout.cshtml" />
+    <Content Include="Views\lottery\bjdc.cshtml" />
+    <Content Include="Views\lottery\bjdcmatchlist.cshtml" />
+    <Content Include="Views\lottery\ctzq.cshtml" />
+    <Content Include="Views\lottery\ctzqmatchlist.cshtml" />
+    <Content Include="Views\lottery\detail\cqssc.cshtml" />
+    <Content Include="Views\lottery\detail\dlt.cshtml" />
+    <Content Include="Views\lottery\detail\fc3d.cshtml" />
+    <Content Include="Views\lottery\detail\gd11x5.cshtml" />
+    <Content Include="Views\lottery\detail\gdklsf.cshtml" />
+    <Content Include="Views\lottery\detail\index.cshtml" />
+    <Content Include="Views\lottery\detail\jsks.cshtml" />
+    <Content Include="Views\lottery\detail\jx11x5.cshtml" />
+    <Content Include="Views\lottery\detail\jxssc.cshtml" />
+    <Content Include="Views\lottery\detail\pl3.cshtml" />
+    <Content Include="Views\lottery\detail\sd11x5.cshtml" />
+    <Content Include="Views\lottery\detail\sdqyh.cshtml" />
+    <Content Include="Views\lottery\detail\ssq.cshtml" />
+    <Content Include="Views\lottery\history.cshtml" />
+    <Content Include="Views\lottery\Index.cshtml" />
+    <Content Include="Views\lottery\jclq.cshtml" />
+    <Content Include="Views\lottery\jczq.cshtml" />
+    <Content Include="Views\member\accountdetail.cshtml" />
+    <Content Include="Views\member\AddExpertAnalyze.cshtml" />
+    <Content Include="Views\member\autofollow.cshtml" />
+    <Content Include="Views\member\balancepwd.cshtml" />
+    <Content Include="Views\member\bankcard.cshtml" />
+    <Content Include="Views\member\betorder.cshtml" />
+    <Content Include="Views\member\chaseorder.cshtml" />
+    <Content Include="Views\member\DrawingRecords.cshtml" />
+    <Content Include="Views\member\drawingsguide.cshtml" />
+    <Content Include="Views\member\drawingsrecord.cshtml" />
+    <Content Include="Views\member\drawingsrecordall.cshtml" />
+    <Content Include="Views\member\email.cshtml" />
+    <Content Include="Views\member\fetchsubmit.cshtml" />
+    <Content Include="Views\member\fetchvalidate.cshtml" />
+    <Content Include="Views\member\fetch_alipay.cshtml" />
+    <Content Include="Views\member\fetch_bank.cshtml" />
+    <Content Include="Views\member\followme.cshtml" />
+    <Content Include="Views\member\followmerecord.cshtml" />
+    <Content Include="Views\member\followrecord.cshtml" />
+    <Content Include="Views\member\followusers.cshtml" />
+    <Content Include="Views\member\gcrecord.cshtml" />
+    <Content Include="Views\member\help.cshtml" />
+    <Content Include="Views\member\helpcenter.cshtml" />
+    <Content Include="Views\member\innermail.cshtml" />
+    <Content Include="Views\member\innermailcontent.cshtml" />
+    <Content Include="Views\member\jcplan.cshtml" />
+    <Content Include="Views\member\loginhistory.cshtml" />
+    <Content Include="Views\member\menu.cshtml" />
+    <Content Include="Views\member\mobile.cshtml" />
+    <Content Include="Views\member\mysuggestions.cshtml" />
+    <Content Include="Views\member\password.cshtml" />
+    <Content Include="Views\member\passwordexcute.cshtml" />
+    <Content Include="Views\member\pay.cshtml" />
+    <Content Include="Views\member\payrecord.cshtml" />
+    <Content Include="Views\member\paywizzard.cshtml" />
+    <Content Include="Views\member\personaldata.cshtml" />
+    <Content Include="Views\member\queryexpertrecord.cshtml" />
+    <Content Include="Views\member\queryjcrecord.cshtml" />
+    <Content Include="Views\member\queryupdaterecord.cshtml" />
+    <Content Include="Views\member\realnameauth.cshtml" />
+    <Content Include="Views\member\RechargeRecord.cshtml" />
+    <Content Include="Views\member\redBagList.cshtml" />
+    <Content Include="Views\member\safe.cshtml" />
+    <Content Include="Views\member\saveProgram.cshtml" />
+    <Content Include="Views\member\suggestions.cshtml" />
+    <Content Include="Views\member\toptip.cshtml" />
+    <Content Include="Views\member\updateexpert.cshtml" />
+    <Content Include="Views\member\WinningRecord.cshtml" />
+    <Content Include="Views\M\lucky.cshtml" />
+    <Content Include="Views\onefix\fixheader.cshtml" />
+    <Content Include="Views\onefix\jcdgzt.cshtml" />
+    <Content Include="Views\PhoneBuy\phonebuy.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\Shared\bd_share.cshtml" />
+    <Content Include="Views\Shared\box_activity.cshtml" />
+    <Content Include="Views\Shared\box_alert.cshtml" />
+    <Content Include="Views\Shared\box_confirm.cshtml" />
+    <Content Include="Views\Shared\box_confirm_addbd.cshtml" />
+    <Content Include="Views\Shared\box_confirm_bpwd.cshtml" />
+    <Content Include="Views\Shared\box_confirm_gg.cshtml" />
+    <Content Include="Views\Shared\box_confirm_rich.cshtml" />
+    <Content Include="Views\Shared\box_doc.cshtml" />
+    <Content Include="Views\Shared\box_fetch_rule.cshtml" />
+    <Content Include="Views\Shared\box_login.cshtml" />
+    <Content Include="Views\Shared\box_progress.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\tj.cshtml" />
+    <Content Include="Views\Shared\_ArtistsLayout.cshtml" />
+    <Content Include="Views\Shared\_Demo.cshtml" />
+    <Content Include="Views\Shared\_Expert.cshtml" />
+    <Content Include="Views\Shared\_HuoDong.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Shared\_LayoutIndex.cshtml" />
+    <Content Include="Views\Shared\_OneFix.cshtml" />
+    <Content Include="Views\soccer\index.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\soccer\menu.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\user\agencyregister.cshtml" />
+    <Content Include="Views\user\alipatloginfirst.cshtml" />
+    <Content Include="Views\user\alipayback.cshtml" />
+    <Content Include="Views\user\alipaybind.cshtml" />
+    <Content Include="Views\user\alipaylogin.cshtml" />
+    <Content Include="Views\user\alipayloginsecond.cshtml" />
+    <Content Include="Views\user\alipayreturnurl.cshtml" />
+    <Content Include="Views\user\chase.cshtml" />
+    <Content Include="Views\user\chinabankreturnurl.cshtml" />
+    <Content Include="Views\user\forget.cshtml" />
+    <Content Include="Views\user\joinuserlist.cshtml" />
+    <Content Include="Views\user\loginfirst.cshtml" />
+    <Content Include="Views\user\loginmenu.cshtml" />
+    <Content Include="Views\user\loginsecond.cshtml" />
+    <Content Include="Views\user\loginthird.cshtml" />
+    <Content Include="Views\user\lotteryticket.cshtml" />
+    <Content Include="Views\user\ordinary.cshtml" />
+    <Content Include="Views\user\qqback.cshtml" />
+    <Content Include="Views\user\qqbind.cshtml" />
+    <Content Include="Views\user\qqlogin.cshtml" />
+    <Content Include="Views\user\register.cshtml" />
+    <Content Include="Views\user\registersuc.cshtml" />
+    <Content Include="Views\user\register_old.cshtml" />
+    <Content Include="Views\user\scheme.cshtml" />
+    <Content Include="Views\user\schemefile.cshtml" />
+    <Content Include="Views\user\sportsticket.cshtml" />
+    <Content Include="Views\user\syncLogin.cshtml" />
+    <Content Include="Views\vip\footer.cshtml" />
+    <Content Include="Views\vip\freedom.cshtml" />
+    <Content Include="Views\vip\gamemenu.cshtml" />
+    <Content Include="Views\vip\header.cshtml" />
+    <Content Include="Views\vip\index.cshtml" />
+    <Content Include="Views\vip\introduction.cshtml" />
+    <Content Include="Views\vip\ldlist.cshtml" />
+    <Content Include="Views\vip\ledou.cshtml" />
+    <Content Include="Views\vip\ledoutoptip.cshtml" />
+    <Content Include="Views\vip\menu.cshtml" />
+    <Content Include="Views\vip\privilege.cshtml" />
+    <Content Include="Views\vip\task.cshtml" />
+    <Content Include="Views\vip\_Layout.cshtml" />
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\ZiXun\competitiondian.cshtml" />
+    <Content Include="Views\ZiXun\competitionzixun.cshtml" />
+    <Content Include="Views\ZiXun\hotcaixun.cshtml" />
+    <Content Include="Views\ZiXun\notecilist.cshtml" />
+    <Content Include="Views\ZiXun\notice.cshtml" />
+    <Content Include="Views\ZiXun\textpart.cshtml" />
+    <Content Include="Views\ZiXun\zixunright.cshtml" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="app_code\ControlHelper.cshtml" />
+    <Content Include="app_code\GameHelper.cshtml" />
+    <Content Include="app_code\OrderHelper.cshtml" />
+    <Content Include="app_code\UserHelper.cshtml" />
+    <Content Include="app_code\ViewHelpers.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\artists\mymodelinfo.cshtml" />
+    <Content Include="Views\Shared\box_confirm_addguarantees.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Hemai\doclist.cshtml" />
+    <Content Include="Views\Hemai\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Help\hemai.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Common\tendency.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Common\assist.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Common\jingcaibasket.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Common\toto.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Common\danchang.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Common\szc.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Common\hemai.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Common\schemessnapshoot.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Common\single.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Common\optimize.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Common\phonebuy.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\user\requestsampletickets.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\mysampleticket.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\artists\chaseplan.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\artists\chaseplanlist.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\box_discontinued.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\HuoDong\cpmail.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\commissio\agentsales.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\onefix\jcdg.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\onefix\lcdg.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\box_payconfirm.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\buy\fcpl\ZXHZ.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Error\Def.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Error\Err_403.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Error\Err_404.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Error\Err_500.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\box_hongbao.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\box_chongzhi.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\hideusername.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\editmobile.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\redirectpay.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Common\SchemeShare.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\box_confirm_fxgg.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\BaoDan\redantoday.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\BaoDan\redanmyattention.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\BaoDan\redanrank.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\BaoDan\redanmy.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\BaoDan\redanauthorhome.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\BaoDan\redanbuyconfirm.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\BaoDan\redan.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\user\bbpayreturnurl.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\BaoDan\bddetailsbody.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_Layoutbaodan.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\BaoDan\SportsTicket.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\BaoDan\buyneedPassword.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\box_buyconfirmBdfx.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\integraldetail.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\menuFoud.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\toptipFoud.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_LayoutFoud.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\mytc.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\integralextract.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\drawingsrecordfoud.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\integralinto.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\IntegralIntoDetail.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\IntegralIntoSubmit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\mycommenu.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\generalizeuser.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\commissionRecord.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\statisticsQuery.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\agentsales.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\agentusershow.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\configurationuserrebate.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\dealerMsg.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\detaileddescription.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\fetchsubmitFoud.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\fetchvalidateFoud.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\paySeniority.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\pjScheme.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\popularizeLink.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\schemeManage.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\setNewUserRebate.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\subordinateuser.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\winScheme.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\jf.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\jfsm.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\ConfigurationUserRebateNew.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\ffetchvalidate.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\ffetchsubmit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\lottery\newdetail\dlt.cshtml" />
+    <Content Include="Views\lottery\newdetail\newindex.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\lottery\NewIndex.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\lottery\newdetail\fc3d.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\lottery\newdetail\ssq.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\lottery\newdetail\pl3.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\user\newregistersuc.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\bonus\newdetail\cgzj.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\bonus\newdetail\djph.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\bonus\newdetail\fdyl.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\bonus\newdetail\gdyl.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\bonus\newdetail\hmrq.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\bonus\newdetail\ljzj.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\bonus\newdetail\zdgd.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\bonus\newindex.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Common\newbonus.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\noteremind.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\lottery\newctzq.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\lottery\newctzqmatchlist.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\lottery\newjczq.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\lottery\newjclq.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\lottery\newbjdc.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\lottery\newbjdcmatchlist.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Activity\baodan.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\payTest.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\pay_by_front.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\buy\ctzq\T14C.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\buy\ctzq\t4cjq.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\buy\ctzq\t6bqc.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\buy\ctzq\tr9.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ZiXun\competitiondian_lqdp.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ZiXun\competitiondian_zqdp.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ZiXun\competitionzixun_jczq.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ZiXun\competitionzixun_jclq.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ZiXun\competitionzixun_bjdc.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ZiXun\competitionzixun_ctzq.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ZiXun\hotcaixun_cpzj.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ZiXun\hotcaixun_hot.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ZiXun\hotcaixun_cpbk.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Help\tr9.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Help\tr91.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\NewAgentSales.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\home\slidebox.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ZiXun\more.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\default.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\home\default.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\gamemenuo.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\bonus\cgzj.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\bonus\zdgd.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\bonus\djph.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\bonus\fdyl.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\bonus\gdyl.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\bonus\hmrq.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\bonus\ljzj.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\bonus\newbonus.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\lottery\lotteryhall.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\lottery\history.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\lottery\NewIndex.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\lottery\newctzq.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\lottery\newjclq.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\lottery\newjczq.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\lottery\newbjdc.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Common\cqssc_all.cshtml" />
+    <Content Include="Views\Common\jx11x5_all.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Common\ssq_all.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Common\dlt_all.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Common\fc3d_all.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Common\pl3_all.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\buy\jczq\hh.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\lotterytrend\tendency.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\zixun\HotCaiXun.cshtml" />
+    <Content Include="Views\StaticHtml\zixun\more.cshtml" />
+    <Content Include="Views\StaticHtml\zixun\notecilist.cshtml" />
+    <Content Include="Views\StaticHtml\zixun\notice.cshtml" />
+    <Content Include="Views\StaticHtml\zixun\textpart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\lotterytrend\SSQ\jbzs.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\lotteryTrend\ThendLink_2.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\safe_Authname.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Common\szc_fb.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\buy\goucaihall.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Common\szcpop.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Common\jingcaitheader.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Common\jingcaibaskettheader.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Common\danchangtheader.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\home\gamemenu.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\default_app.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\blog\standings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\blog\custombill.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_LayoutBlog.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\lotterytrend\DLT\chu3.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\DLT\dx.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\DLT\hezhi.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\DLT\jbzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\DLT\jiou.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\DLT\kuadu_12.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\DLT\kuadu_23.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\DLT\kuadu_34.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\DLT\kuadu_45.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\DLT\kuadu_sw.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\DLT\zhihe.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\lotterytrend\PL3\chu31.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\PL3\chu32.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\PL3\chu33.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\PL3\dx.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\PL3\dxhm.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\PL3\hezhi.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\PL3\hzhw.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\PL3\hztz.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\PL3\jbzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\PL3\jo.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\PL3\johm.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\PL3\kdbg.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\PL3\kdbs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\PL3\kdsg.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\PL3\zhhm.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\PL3\zhihe.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\PL3\zxzs.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\lotterytrend\FC3D\chu31.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\FC3D\chu32.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\FC3D\chu33.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\FC3D\dxhm.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\FC3D\dxxt.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\FC3D\hwzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\FC3D\hzfb.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\FC3D\hztz.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\FC3D\johm.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\FC3D\joxt.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\FC3D\kuadu.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\FC3D\kuadu12.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\FC3D\kuadu13.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\FC3D\kuadu23.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\FC3D\zhhm.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\FC3D\zhxt.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\FC3D\zuxzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\FC3D\zxzs.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\lotterytrend\CQSSC\dxds.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQSSC\s1zs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQSSC\s2hzzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQSSC\s2zuxzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQSSC\s2zxzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQSSC\s3c3ys.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQSSC\s3dxzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQSSC\s3hzzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQSSC\s3jozs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQSSC\s3kd.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQSSC\s3zhzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQSSC\s3zuxzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQSSC\s3zxzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQSSC\s5hzzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQSSC\s5jbzs.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\lotterytrend\JX11X5\q2hz.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JX11X5\q2zux.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JX11X5\q2zx.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JX11X5\q3chu3.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JX11X5\q3dx.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JX11X5\q3hz.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JX11X5\q3jo.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JX11X5\q3zh.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JX11X5\q3zux.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JX11X5\q3zx.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JX11X5\rx1.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JX11X5\rx2.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JX11X5\rx3.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JX11X5\rx4.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JX11X5\rx5.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JX11X5\rxchu3.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JX11X5\rxdx.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JX11X5\rxhz.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JX11X5\rxjbzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JX11X5\rxjo.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JX11X5\rxzh.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\baodan\redan.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\vip\introduction.cshtml" />
+    <Content Include="Views\StaticHtml\vip\ledou.cshtml" />
+    <Content Include="Views\StaticHtml\vip\privilege.cshtml" />
+    <Content Include="Views\StaticHtml\vip\supervip.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\register.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\vip\menu1.cshtml" />
+    <Content Include="Views\vip\menu2.cshtml" />
+    <Content Include="Views\vip\menu3.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\PhoneBuy\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\user\hmdetail.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="api\uc.ashx" />
+    <Content Include="Views\member\myCreateTogether.cshtml" />
+    <Content Include="Views\member\myJoinTogether.cshtml" />
+    <Content Include="Views\BaoDan\rdheader.cshtml" />
+    <Content Include="Views\Common\tototheader.cshtml" />
+    <Content Include="Views\lotteryTrend\ThendLink_3.cshtml" />
+    <Content Include="Views\StaticHtml\huodong\avtioncentent.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SSQ\DaXiao.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\StaticHtml\lotterytrend\SSQ\HeZhi.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\StaticHtml\lotterytrend\SSQ\JiOu.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\StaticHtml\lotterytrend\SSQ\KuaDu_12.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\StaticHtml\lotterytrend\SSQ\KuaDu_23.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\StaticHtml\lotterytrend\SSQ\KuaDu_34.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\StaticHtml\lotterytrend\SSQ\KuaDu_45.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\StaticHtml\lotterytrend\SSQ\KuaDu_56.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\StaticHtml\lotterytrend\SSQ\KuaDu_SW.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\StaticHtml\lotterytrend\SSQ\ZhiHe.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\StaticHtml\lotterytrend\QLC\chu3.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\QLC\dx.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\QLC\jbzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\QLC\jo.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\QLC\zh.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JLK3\hz.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JLK3\jbzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JLK3\xt.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JLK3\zh.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JLK3\zhzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JSKS\hz.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JSKS\jbzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JSKS\xt.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JSKS\zh.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JSKS\zhzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\HBK3\hz.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\HBK3\jbzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\HBK3\xt.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\HBK3\zh.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\HBK3\zhzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\HC1\jbzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\HC1\sxjjfwzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\HD15X5\chzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\HD15X5\dx.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\HD15X5\hz.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\HD15X5\jbzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\HD15X5\jo.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\HD15X5\lhzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\HD15X5\zh.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\DF6J1\dxzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\DF6J1\hzzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\DF6J1\jbzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\DF6J1\jozs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\DF6J1\kdzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\DF6J1\zhzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\PL5\chu3.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\PL5\dx.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\PL5\hz.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\PL5\jbzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\PL5\jo.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\PL5\zh.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\QXC\chu3.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\QXC\dx.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\QXC\jbzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\QXC\jo.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\QXC\zh.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SD11X5\chzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SD11X5\dlzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SD11X5\dwzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SD11X5\elzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SD11X5\ghzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SD11X5\hzzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SD11X5\jbzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SD11X5\kdzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SD11X5\lzzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SD11X5\q1jbzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SD11X5\q1xtzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SD11X5\q2jbzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SD11X5\q2xtzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SD11X5\q3jbzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SD11X5\q3xtzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SD11X5\xtzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\GD11X5\chzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\GD11X5\dlzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\GD11X5\dwzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\GD11X5\elzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\GD11X5\ghzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\GD11X5\hzzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\GD11X5\jbzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\GD11X5\kdzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\GD11X5\lzzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\GD11X5\q1jbzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\GD11X5\q1xtzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\GD11X5\q2jbzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\GD11X5\q2xtzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\GD11X5\q3jbzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\GD11X5\q3xtzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\GD11X5\xtzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQ11X5\chzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQ11X5\dlzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQ11X5\dwzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQ11X5\elzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQ11X5\ghzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQ11X5\hzzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQ11X5\jbzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQ11X5\kdzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQ11X5\lzzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQ11X5\q1jbzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQ11X5\q1xtzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQ11X5\q2jbzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQ11X5\q2xtzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQ11X5\q3jbzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQ11X5\q3xtzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQ11X5\xtzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\LN11X5\chzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\LN11X5\dlzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\LN11X5\dxzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\LN11X5\elzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\LN11X5\ghzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\LN11X5\hzzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\LN11X5\jbzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\LN11X5\jozs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\LN11X5\q1zs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\LN11X5\q2zs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\LN11X5\q3zs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JXSSC\dxds.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JXSSC\s1zs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JXSSC\s2hzzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JXSSC\s2zuxzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JXSSC\s2zxzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JXSSC\s3c3ys.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JXSSC\s3dxzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JXSSC\s3hzzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JXSSC\s3jozs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JXSSC\s3kd.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JXSSC\s3zhzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JXSSC\s3zuxzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JXSSC\s3zxzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JXSSC\s5hzzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\JXSSC\s5jbzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\HNKLSF\dxzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\HNKLSF\elzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\HNKLSF\ghzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\HNKLSF\jbzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\HNKLSF\jozs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\HNKLSF\q1zs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\HNKLSF\q3zs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\HNKLSF\qjzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\HNKLSF\slzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\HNKLSF\twzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\GDKLSF\dw1.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\GDKLSF\dw2.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\GDKLSF\dw3.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\GDKLSF\dx.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\GDKLSF\jbzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\GDKLSF\jo.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\GDKLSF\zh.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQKLSF\dxzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQKLSF\elzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQKLSF\ghzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQKLSF\jbzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQKLSF\jozs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQKLSF\q1zs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQKLSF\q3zs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQKLSF\qjzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQKLSF\slzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\CQKLSF\twzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SDQYH\chu3.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SDQYH\dx.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SDQYH\jo.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SDQYH\sx1.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SDQYH\sx2.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SDQYH\sx3.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SDQYH\zh.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SSQ\Chu3.cshtml" />
+    <Content Include="Views\StaticHtml\phonebuy\phonebuy.cshtml" />
+    <Content Include="Views\buy\bjdc\bjdcds.cshtml" />
+    <Content Include="Views\buy\jczq\jczqds.cshtml" />
+    <Content Include="Views\StaticHtml\help\Index.cshtml" />
+    <Content Include="Views\StaticHtml\help\login.cshtml" />
+    <Content Include="Views\StaticHtml\help\notes.cshtml" />
+    <Content Include="Views\StaticHtml\help\isokregister.cshtml" />
+    <Content Include="Views\StaticHtml\help\validationMail.cshtml" />
+    <Content Include="Views\StaticHtml\help\validationPhone.cshtml" />
+    <Content Include="Views\StaticHtml\help\chongzhi\payintroduce.cshtml" />
+    <Content Include="Views\StaticHtml\help\chongzhi\EbanksPay.cshtml" />
+    <Content Include="Views\StaticHtml\help\chongzhi\Alipay.cshtml" />
+    <Content Include="Views\StaticHtml\help\chongzhi\Quickpayment.cshtml" />
+    <Content Include="Views\StaticHtml\help\chongzhi\payway.cshtml" />
+    <Content Include="Views\StaticHtml\help\chongzhi\payAccount.cshtml" />
+    <Content Include="Views\StaticHtml\help\chongzhi\payNotAccount.cshtml" />
+    <Content Include="Views\StaticHtml\help\chongzhi\paypoundage.cshtml" />
+    <Content Include="Views\StaticHtml\help\chongzhi\EbanksNotAccount.cshtml" />
+    <Content Include="Views\StaticHtml\help\chongzhi\EbanksDebugError.cshtml" />
+    <Content Include="Views\StaticHtml\help\chongzhi\EbanksSafetyLCE.cshtml" />
+    <Content Include="Views\StaticHtml\help\chongzhi\EbanksWebpageError.cshtml" />
+    <Content Include="Views\StaticHtml\help\chongzhi\EbanksTradePage.cshtml" />
+    <Content Include="Views\StaticHtml\help\chongzhi\EbanksNotReaction.cshtml" />
+    <Content Include="Views\StaticHtml\help\chongzhi\EbanksOnlinePay.cshtml" />
+    <Content Include="Views\StaticHtml\help\chongzhi\EbanksDredge.cshtml" />
+    <Content Include="Views\StaticHtml\help\chongzhi\AlipayPay.cshtml" />
+    <Content Include="Views\StaticHtml\help\chongzhi\QuickpaymentPay.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\Approve.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\whatApprove.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\information.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\Attention.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\NotApprove.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\administrator.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\password.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\username.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\verificationcode.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\VerifyImage.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\AccountSecurity.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\bindingPhone.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\astrict.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\Email.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\NotbindingPhone.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\bindingBank.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\bindingBankNotPhone.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\safety.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\Ebank.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\EbankAlipay.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\EbankBOC.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\EbankCMBC.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\EbankBOCOM.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\EbankCCB.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\EbankCMB.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\EbankICBC.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\EbankABC.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\privacySet.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\privacySet1.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\privacySet4.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\privacySet2.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\privacySet3.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\Redpackets.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\Redpackets6.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\Redpackets1.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\Redpackets2.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\Redpackets3.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\Redpackets4.cshtml" />
+    <Content Include="Views\StaticHtml\help\myAccount\Redpackets5.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ForTheColor.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ForTheColor9.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ForTheColor1.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ForTheColor10.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ForTheColor11.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ForTheColor12.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ForTheColor13.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ForTheColor14.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ForTheColor2.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ForTheColor3.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ForTheColor4.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ForTheColor5.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ForTheColor6.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ForTheColor7.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ForTheColor8.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ShoppingService.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ShoppingService9.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ShoppingService1.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ShoppingService10.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ShoppingService11.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ShoppingService12.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ShoppingService13.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ShoppingService14.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ShoppingService15.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ShoppingService16.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ShoppingService17.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ShoppingService18.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ShoppingService19.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ShoppingService2.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ShoppingService20.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ShoppingService21.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ShoppingService3.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ShoppingService4.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ShoppingService5.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ShoppingService6.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ShoppingService7.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\ShoppingService8.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\animationDocumentary.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\animationDocumentary5.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\animationDocumentary1.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\animationDocumentary2.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\animationDocumentary3.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\animationDocumentary4.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\Revoke.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\Revoke5.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\Revoke1.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\Revoke2.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\Revoke3.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\Revoke4.cshtml" />
+    <Content Include="Views\StaticHtml\help\drawMoney\bonusGet.cshtml" />
+    <Content Include="Views\StaticHtml\help\drawMoney\bonusGet6.cshtml" />
+    <Content Include="Views\StaticHtml\help\drawMoney\bonusGet1.cshtml" />
+    <Content Include="Views\StaticHtml\help\drawMoney\bonusGet2.cshtml" />
+    <Content Include="Views\StaticHtml\help\drawMoney\bonusGet3.cshtml" />
+    <Content Include="Views\StaticHtml\help\drawMoney\bonusGet4.cshtml" />
+    <Content Include="Views\StaticHtml\help\drawMoney\bonusGet5.cshtml" />
+    <Content Include="Views\StaticHtml\help\drawMoney\drawing.cshtml" />
+    <Content Include="Views\StaticHtml\help\drawMoney\drawing6.cshtml" />
+    <Content Include="Views\StaticHtml\help\drawMoney\drawing1.cshtml" />
+    <Content Include="Views\StaticHtml\help\drawMoney\drawing2.cshtml" />
+    <Content Include="Views\StaticHtml\help\drawMoney\drawing3.cshtml" />
+    <Content Include="Views\StaticHtml\help\drawMoney\drawing4.cshtml" />
+    <Content Include="Views\StaticHtml\help\drawMoney\drawing5.cshtml" />
+    <Content Include="Views\StaticHtml\help\drawMoney\poundage.cshtml" />
+    <Content Include="Views\StaticHtml\help\drawMoney\poundage1.cshtml" />
+    <Content Include="Views\StaticHtml\help\drawMoney\poundageTime.cshtml" />
+    <Content Include="Views\StaticHtml\help\drawMoney\poundageTime1.cshtml" />
+    <Content Include="Views\StaticHtml\help\tradeRules\bonusAllot.cshtml" />
+    <Content Include="Views\StaticHtml\help\tradeRules\bonusAllot2.cshtml" />
+    <Content Include="Views\StaticHtml\help\tradeRules\bonusAllot1.cshtml" />
+    <Content Include="Views\StaticHtml\help\tradeRules\customizeDocumentary.cshtml" />
+    <Content Include="Views\StaticHtml\help\tradeRules\customizeDocumentary3.cshtml" />
+    <Content Include="Views\StaticHtml\help\tradeRules\customizeDocumentary1.cshtml" />
+    <Content Include="Views\StaticHtml\help\tradeRules\customizeDocumentary2.cshtml" />
+    <Content Include="Views\StaticHtml\help\tradeRules\website.cshtml" />
+    <Content Include="Views\StaticHtml\help\tradeRules\website2.cshtml" />
+    <Content Include="Views\StaticHtml\help\tradeRules\website1.cshtml" />
+    <Content Include="Views\StaticHtml\help\tradeRules\recordRule.cshtml" />
+    <Content Include="Views\StaticHtml\help\tradeRules\recordRule2.cshtml" />
+    <Content Include="Views\StaticHtml\help\tradeRules\recordRule1.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\zcsfc.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\zcsfc1.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\zcscjq.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\zcscjq1.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\zclcbq.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\zclcbq1.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\bjdc.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\bjdc1.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\jclq.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\jczq1.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\jclq1.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\jczq.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\ssq1.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\ssq.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\fc3d.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\fc3d1.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\dlt.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\dlt1.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\pl3.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\pl31.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\cqssc.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\cqssc1.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\jx11x5.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\jx11x51.cshtml" />
+    <Content Include="Views\StaticHtml\help\phoneBuy\phoneForTheColor.cshtml" />
+    <Content Include="Views\StaticHtml\help\phoneBuy\phoneForTheColor4.cshtml" />
+    <Content Include="Views\StaticHtml\help\phoneBuy\phoneForTheColor1.cshtml" />
+    <Content Include="Views\StaticHtml\help\phoneBuy\phoneForTheColor2.cshtml" />
+    <Content Include="Views\StaticHtml\help\phoneBuy\phoneForTheColor3.cshtml" />
+    <Content Include="Views\BaoDan\LoadYesterdayNR.cshtml" />
+    <Content Include="Views\BaoDan\_Layout.cshtml" />
+    <Content Include="Views\StaticHtml\help\safety\forTheColorSafety.cshtml" />
+    <Content Include="Views\StaticHtml\help\safety\forTheColorSafety1.cshtml" />
+    <Content Include="Views\StaticHtml\help\safety\business.cshtml" />
+    <Content Include="Views\StaticHtml\help\safety\business1.cshtml" />
+    <Content Include="Views\StaticHtml\help\safety\advantage.cshtml" />
+    <Content Include="Views\StaticHtml\help\safety\advantage1.cshtml" />
+    <Content Include="Views\StaticHtml\help\safety\betNotice.cshtml" />
+    <Content Include="Views\StaticHtml\help\safety\betNotice1.cshtml" />
+    <Content Include="Views\StaticHtml\help\safety\serviceAgreement.cshtml" />
+    <Content Include="Views\StaticHtml\help\safety\serviceAgreement1.cshtml" />
+    <Content Include="Views\StaticHtml\help\about\Aboutsite.cshtml" />
+    <Content Include="Views\StaticHtml\help\about\Aboutsite1.cshtml" />
+    <Content Include="Views\StaticHtml\help\about\Join.cshtml" />
+    <Content Include="Views\StaticHtml\help\about\Join1.cshtml" />
+    <Content Include="Views\StaticHtml\help\about\Join2.cshtml" />
+    <Content Include="Views\StaticHtml\help\about\websiteMap.cshtml" />
+    <Content Include="Views\StaticHtml\help\about\websiteMap1.cshtml" />
+    <Content Include="Views\StaticHtml\help\about\links.cshtml" />
+    <Content Include="Views\StaticHtml\help\about\links1.cshtml" />
+    <Content Include="Views\StaticHtml\help\zjtzzh.cshtml" />
+    <Content Include="Views\StaticHtml\help\zjsmshpj.cshtml" />
+    <Content Include="Views\StaticHtml\help\azjjwsmzyly.cshtml" />
+    <Content Include="Views\StaticHtml\help\jjzmjs.cshtml" />
+    <Content Include="Views\StaticHtml\help\chippedBonus.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\tr9.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\tr91.cshtml" />
+    <Content Include="Views\StaticHtml\help\about\abtus.cshtml" />
+    <Content Include="Views\Help\betpact1.cshtml" />
+    <Content Include="Views\StaticHtml\help\safety\betpact.cshtml" />
+    <Content Include="Views\StaticHtml\help\safety\betpact1.cshtml" />
+    <Content Include="Views\user\IPSReturnUrl.cshtml" />
+    <Content Include="Views\member\qq.cshtml" />
+    <Content Include="Views\ZiXun\comment.cshtml" />
+    <Content Include="Views\member\AliPay.cshtml" />
+    <Content Include="Views\user\RegisterValidaMobile.cshtml" />
+    <Content Include="Views\Help\dsgs1.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\dsgs.cshtml" />
+    <Content Include="Views\StaticHtml\help\goucai\dsgs1.cshtml" />
+    <Content Include="Views\Common\syncLogin.cshtml" />
+    <Content Include="Views\Help\AlipaySelfHelp.cshtml" />
+    <Content Include="Views\StaticHtml\help\chongzhi\AlipaySelfHelp.cshtml" />
+    <Content Include="Views\member\AlipaySelfHelp.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\home\default_app.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Help\Recruitment.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\StaticHtml\help\about\Recruitment.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\box_confirm_wxpay.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\member\WXPayComplate.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\buy\gdklsf\RX2.cshtml" />
+    <Content Include="Views\buy\gdklsf\RX2DT.cshtml" />
+    <Content Include="Views\buy\gdklsf\RX2SG.cshtml" />
+    <Content Include="Views\buy\gdklsf\RX2_Group.cshtml" />
+    <Content Include="Views\buy\gdklsf\RX3.cshtml" />
+    <Content Include="Views\buy\gdklsf\RX3DT.cshtml" />
+    <Content Include="Views\buy\gdklsf\RX3SG.cshtml" />
+    <Content Include="Views\buy\gdklsf\RX3_Group.cshtml" />
+    <Content Include="Views\buy\gdklsf\RX4.cshtml" />
+    <Content Include="Views\buy\gdklsf\RX4DT.cshtml" />
+    <Content Include="Views\buy\gdklsf\RX4SG.cshtml" />
+    <Content Include="Views\buy\gdklsf\RX4_Group.cshtml" />
+    <Content Include="Views\buy\gdklsf\RX5.cshtml" />
+    <Content Include="Views\buy\gdklsf\RX5DT.cshtml" />
+    <Content Include="Views\buy\gdklsf\RX5SG.cshtml" />
+    <Content Include="Views\buy\gdklsf\RX5_Group.cshtml" />
+    <Content Include="Views\buy\gdklsf\X1HT.cshtml" />
+    <Content Include="Views\buy\gdklsf\X1ST.cshtml" />
+    <Content Include="Views\buy\gdklsf\X2LZHI.cshtml" />
+    <Content Include="Views\buy\gdklsf\X2LZHISG.cshtml" />
+    <Content Include="Views\buy\gdklsf\X2LZHI_Group.cshtml" />
+    <Content Include="Views\buy\gdklsf\X2LZU.cshtml" />
+    <Content Include="Views\buy\gdklsf\X2LZUDT.cshtml" />
+    <Content Include="Views\buy\gdklsf\X2LZUSG.cshtml" />
+    <Content Include="Views\buy\gdklsf\X2LZU_Group.cshtml" />
+    <Content Include="Views\buy\gdklsf\X3QZHI.cshtml" />
+    <Content Include="Views\buy\gdklsf\X3QZHISG.cshtml" />
+    <Content Include="Views\buy\gdklsf\X3QZHI_Group.cshtml" />
+    <Content Include="Views\buy\gdklsf\X3QZU.cshtml" />
+    <Content Include="Views\buy\gdklsf\X3QZUDT.cshtml" />
+    <Content Include="Views\buy\gdklsf\X3QZUSG.cshtml" />
+    <Content Include="Views\buy\gdklsf\X3QZU_Group.cshtml" />
+    <Content Include="Views\buy\gxklsf\TXHY3.cshtml" />
+    <Content Include="Views\buy\gxklsf\TXHY3SG.cshtml" />
+    <Content Include="Views\buy\gxklsf\TXHY3_Group.cshtml" />
+    <Content Include="Views\buy\gxklsf\TXHY4.cshtml" />
+    <Content Include="Views\buy\gxklsf\TXHY4SG.cshtml" />
+    <Content Include="Views\buy\gxklsf\TXHY4_Group.cshtml" />
+    <Content Include="Views\buy\gxklsf\TXHY5.cshtml" />
+    <Content Include="Views\buy\gxklsf\TXHY5SG.cshtml" />
+    <Content Include="Views\buy\gxklsf\TXHY5_Group.cshtml" />
+    <Content Include="Views\buy\gxklsf\ZXHY1.cshtml" />
+    <Content Include="Views\buy\gxklsf\ZXHY2.cshtml" />
+    <Content Include="Views\buy\gxklsf\ZXHY2DT.cshtml" />
+    <Content Include="Views\buy\gxklsf\ZXHY2SG.cshtml" />
+    <Content Include="Views\buy\gxklsf\ZXHY2_Group.cshtml" />
+    <Content Include="Views\buy\gxklsf\ZXHY3.cshtml" />
+    <Content Include="Views\buy\gxklsf\ZXHY3DT.cshtml" />
+    <Content Include="Views\buy\gxklsf\ZXHY3SG.cshtml" />
+    <Content Include="Views\buy\gxklsf\ZXHY3_Group.cshtml" />
+    <Content Include="Views\buy\gxklsf\ZXHY4.cshtml" />
+    <Content Include="Views\buy\gxklsf\ZXHY4DT.cshtml" />
+    <Content Include="Views\buy\gxklsf\ZXHY4SG.cshtml" />
+    <Content Include="Views\buy\gxklsf\ZXHY4_Group.cshtml" />
+    <Content Include="Views\buy\gxklsf\ZXHY5.cshtml" />
+    <Content Include="Views\buy\gxklsf\ZXHY5DT.cshtml" />
+    <Content Include="Views\buy\gxklsf\ZXHY5SG.cshtml" />
+    <Content Include="Views\buy\gxklsf\ZXHY5_Group.cshtml" />
+    <Content Include="Views\buy\gxklsf\ZXHYT.cshtml" />
+    <Content Include="Views\buy\jsks\2BTH.cshtml" />
+    <Content Include="Views\buy\jsks\2BTHDT.cshtml" />
+    <Content Include="Views\buy\jsks\2BTH_Group.cshtml" />
+    <Content Include="Views\buy\jsks\2THDX.cshtml" />
+    <Content Include="Views\buy\jsks\2THFX.cshtml" />
+    <Content Include="Views\buy\jsks\3BTH.cshtml" />
+    <Content Include="Views\buy\jsks\3BTHDT.cshtml" />
+    <Content Include="Views\buy\jsks\3BTH_Group.cshtml" />
+    <Content Include="Views\buy\jsks\3LHTX.cshtml" />
+    <Content Include="Views\buy\jsks\3THDX.cshtml" />
+    <Content Include="Views\buy\jsks\3THTX.cshtml" />
+    <Content Include="Views\buy\jsks\HZ.cshtml" />
+    <Content Include="Views\Common\gd11x5_all.cshtml" />
+    <Content Include="Views\Common\gdklsf_all.cshtml" />
+    <Content Include="Views\Common\sd11x5_all.cshtml" />
+    <Content Include="Views\Common\jsks_all.cshtml" />
+    <Content Include="Views\Common\sdklpk3_all.cshtml" />
+    <Content Include="Views\lotteryTrend\SDKLPK3\jbzs.cshtml" />
+    <Content Include="Views\lotteryTrend\SDKLPK3\zhxzs.cshtml" />
+    <Content Include="Views\lotteryTrend\SDKLPK3\hszs.cshtml" />
+    <Content Include="Views\lotteryTrend\SDKLPK3\dxzs.cshtml" />
+    <Content Include="Views\lotteryTrend\SDKLPK3\jozs.cshtml" />
+    <Content Include="Views\lotteryTrend\SDKLPK3\zhzs.cshtml" />
+    <Content Include="Views\lotteryTrend\SDKLPK3\c3yzs.cshtml" />
+    <Content Include="Views\lotteryTrend\SDKLPK3\hzzs.cshtml" />
+    <Content Include="Views\lotteryTrend\SDKLPK3\lxzs.cshtml" />
+    <Content Include="Views\Help\sd11x5.cshtml" />
+    <Content Include="Views\Help\sd11x51.cshtml" />
+    <Content Include="Views\Help\gd11x5.cshtml" />
+    <Content Include="Views\Help\gd11x51.cshtml" />
+    <Content Include="Views\Help\gdklsf1.cshtml" />
+    <Content Include="Views\Help\gdklsf.cshtml" />
+    <Content Include="Views\Help\jsks.cshtml" />
+    <Content Include="Views\Help\jsks1.cshtml" />
+    <Content Include="Views\Help\sdklpk3.cshtml" />
+    <Content Include="Views\Help\sdklpk31.cshtml" />
+    <Content Include="Views\BaoDan\nrandrecommend.cshtml" />
+    <Content Include="Views\member\ShowWePay.cshtml" />
+    <Content Include="Views\member\ShowAliPay.cshtml" />
+    <Content Include="Views\StaticHtml\help\chongzhi\HWAlipay.cshtml" />
+    <Content Include="Views\member\SpreadLinks.cshtml" />
+    <Content Include="Views\member\SporeadUsers.cshtml" />
+    <Content Include="Views\member\TransferFillMoney.cshtml" />
+    <Content Include="Views\member\TransferFillMoneyList.cshtml" />
+    <Content Include="Views\Common\WorldCup.cshtml" />
+    <Content Include="Views\member\PayHeader.cshtml" />
+    <Content Include="Views\member\PayContext.cshtml" />
+    <Content Include="Views\Shared\AwardDescription.cshtml" />
+    <None Include="Views\StaticHtml\help\chongzhi\weixin.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SDKLPK3\zhzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SDKLPK3\c3yzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SDKLPK3\dxzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SDKLPK3\hszs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SDKLPK3\hzzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SDKLPK3\jbzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SDKLPK3\jozs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SDKLPK3\lxzs.cshtml" />
+    <Content Include="Views\StaticHtml\lotterytrend\SDKLPK3\zhxzs.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\gd11x5.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\gd11x51.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\gdklsf.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\gdklsf1.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\jsks.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\jsks1.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\sd11x5.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\sd11x51.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\sdklpk3.cshtml" />
+    <Content Include="Views\StaticHtml\help\playRules\sdklpk31.cshtml" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>7747</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
+    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
+    <Error Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
+  </Target>
+</Project>

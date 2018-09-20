@@ -1,0 +1,356 @@
+﻿@using MatchBiz.Core;
+@using app.lottery.site.Models;
+@using GameBiz.Core;
+@{
+    string type = ViewBag.Type;
+    ViewBag.Title = SiteConvert.GameName("jczq", type) + " - 开奖信息 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = SiteConvert.GameName("jczq", type) + ", 开奖信息, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    ViewBag.Description = SiteConvert.GameName("jczq", type) + "开奖频道为您提供实时的竞彩足球比赛结果,各玩法赛果开奖详情,查询竞彩足球开奖结果就上" + SiteString.getHZSiteName(Request);
+
+    CurrentUserInfo user = ViewBag.CurrentUser;
+    var match = ViewBag.Match as JCZQMatchResult_Collection;
+    var date = (DateTime)ViewBag.Begin;
+    var isDefault = (bool)ViewBag.IsDefault;
+    @UserHelper.css("newlottery.css")
+    @UserHelper.js_share("/My97DatePicker/WdatePicker.js")
+}
+<div id="jczq">
+    <div class="jczq_lottery_notic">
+        <span class="icon_game jczq jc_jczq"></span>
+        <div class="jczq_top">
+            <div class="jczq_title">
+                @(SiteConvert.GameName("jczq", type))开奖信息</div>
+            <div class="jczq_lottery_search">
+                赛果查询：
+                @ControlHelper.Calendar("begin", ViewBag.Begin)
+                <input type="button" value="查 询" id="btn-query" class="btn2"/>
+                <input type="hidden" id="gameType" value="@type" />
+            </div>
+        </div>
+        <div class="jczq_top_r">
+            <div>
+                开奖时间：<span style="color: #fd3d00;">每日开奖</span></div>
+            <div style="color: #fd3d00;">
+                注：竞彩开奖比赛日期选择，指比赛的实际开赛时间</div>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+    <div class="mymenu">
+        <ul>
+            <li class="@(string.IsNullOrEmpty(type) ? "myons" : string.Empty)"><a href="@(isDefault ? "/statichtml/lottery/jczq/detail_jczq_all.html" : string.Format("/statichtml/lottery/jczq/{0}/detail_jczq_all_{1}.html", date.ToString("yyyyMM"), date.ToString("yyyyMMdd")))">
+            单关奖金</a></li>
+        <li class="@(type == "spf" ? "myons" : string.Empty)"><a href="@(isDefault ? "/statichtml/lottery/jczq/detail_jczq_spf.html" : string.Format("/statichtml/lottery/jczq/{0}/detail_jczq_spf_{1}.html", date.ToString("yyyyMM"), date.ToString("yyyyMMdd")))">
+            让球胜平负</a></li>
+        <li class="@(type == "brqspf" ? "myons" : string.Empty)"><a href="@(isDefault ? "/statichtml/lottery/jczq/detail_jczq_brqspf.html" : string.Format("/statichtml/lottery/jczq/{0}/detail_jczq_brqspf_{1}.html", date.ToString("yyyyMM"), date.ToString("yyyyMMdd")))">
+            胜平负</a></li>
+        <li class="@(type == "bf" ? "myons" : string.Empty)"><a href="@(isDefault ? "/statichtml/lottery/jczq/detail_jczq_bf.html" : string.Format("/statichtml/lottery/jczq/{0}/detail_jczq_bf_{1}.html", date.ToString("yyyyMM"), date.ToString("yyyyMMdd")))">
+            比分</a></li>
+        <li class="@(type == "zjq" ? "myons" : string.Empty)"><a href="@(isDefault ? "/statichtml/lottery/jczq/detail_jczq_zjq.html" : string.Format("/statichtml/lottery/jczq/{0}/detail_jczq_zjq_{1}.html", date.ToString("yyyyMM"), date.ToString("yyyyMMdd")))">
+            进球数</a></li>
+        <li class="@(type == "bqc" ? "myons" : string.Empty)"><a href="@(isDefault ? "/statichtml/lottery/jczq/detail_jczq_bqc.html" : string.Format("/statichtml/lottery/jczq/{0}/detail_jczq_bqc_{1}.html", date.ToString("yyyyMM"), date.ToString("yyyyMMdd")))">
+            半全场</a></li>
+        </ul>
+        <div class="clear">
+        </div>
+    </div>
+    <div class="jczq_tab">
+        <table cellspacing="0" cellpadding="0">
+            @{if (string.IsNullOrEmpty(type))
+              {
+                <tr class="top_tr" height="30">
+                    <td style="width: 6%">
+                        场次
+                    </td>
+                    <td style="width: 8%">
+                        比赛时间
+                    </td>
+                    <td style="width: 6%">
+                        赛事
+                    </td>
+                    <td style="width: 13%">
+                        主队(让球)
+                    </td>
+                    <td style="width: 4%">
+                        比分
+                    </td>
+                    <td style="width: 10%">
+                        客队
+                    </td>
+                    <td style="width: 4%">
+                        半场
+                    </td>
+                    <td style="width: 8%">
+                        让球胜平负
+                    </td>
+                    <td style="width: 8%">
+                        胜平负
+                    </td>
+                    <td style="width: 8%">
+                        比分
+                    </td>
+                    <td style="width: 8%">
+                        总进球数
+                    </td>
+                    <td style="width: 8%">
+                        半全场
+                    </td>
+                </tr>
+                  foreach (var item in match.MatchResultList)
+                  {
+                <tr id="row_@(item.MatchId)" class="@(match.MatchResultList.IndexOf(item) % 2 == 0 ? "ni" : "ni2")">
+                    <td>@item.MatchIdName
+                    </td>
+                    <td style="font-size: 11px;">@item.StartTime.ToString("MM-dd HH:mm")
+                    </td>
+                    <td style="color: #FFFFFF; background-color: @item.LeagueColor;">@item.LeagueName
+                    </td>
+                    <td style="text-align: right">@item.HomeTeamName
+                        <b class="@(item.LetBall > 0 ? "red" : "green")">@(item.LetBall == 0 ? string.Empty : "(" + item.LetBall + ")")</b>
+                    </td>
+                    @{if (string.IsNullOrEmpty(item.MatchState) || item.MatchState == "2")
+                      {
+                        <td style="color: red">
+                            <b>@(item.FullHomeTeamScore)-@(item.FullGuestTeamScore)</b>
+                        </td>
+                        <td style="text-align: left">@item.GuestTeamName
+                        </td>
+                        <td>@(item.HalfHomeTeamScore)-@(item.HalfGuestTeamScore)
+                        </td>
+                        <td>
+                            <span style="color: #f00;">@SiteString.ANTECODES_NAME("spf", item.SPF_Result)</span><br>
+                            @item.SPF_SP.ToString("f")
+                        </td>
+                        <td>
+                            <span style="color: #f00;">@SiteString.ANTECODES_NAME("brqspf", item.BRQSPF_Result)</span><br>
+                            @item.BRQSPF_SP.ToString("f")
+                        </td>
+                        <td>
+                            <span style="color: #f00;">@SiteString.ANTECODES_NAME("bf", item.BF_Result)</span><br>
+                            @item.BF_SP.ToString("f")
+                        </td>
+                        <td>
+                            <span style="color: #f00;">@SiteString.ANTECODES_NAME("zjq", item.ZJQ_Result)</span><br>
+                            @item.ZJQ_SP.ToString("f")
+                        </td>
+                        <td>
+                            <span style="color: #f00;">@SiteString.ANTECODES_NAME("bqc", item.BQC_Result)</span><br>
+                            @item.BQC_SP.ToString("f")
+                        </td>
+                      }
+                      else if (item.MatchState == "3")
+                      {
+                        <td class="red">
+                            取消
+                        </td>
+                        <td style="text-align: left">@item.GuestTeamName
+                        </td>
+                        <td>
+                        </td>
+                        <td class="red">
+                            取消
+                        </td>
+                        <td class="red">
+                            取消
+                        </td>
+                        <td class="red">
+                            取消
+                        </td>
+                        <td class="red">
+                            取消
+                        </td>                      
+                      }
+                      else if (item.MatchState == "4")
+                      {
+                        <td class="red">
+                            推迟
+                        </td>
+                        <td style="text-align: left">@item.GuestTeamName
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>                      
+                      }
+                      else
+                      {
+                        <td>
+                        </td>
+                        <td style="text-align: left">@item.GuestTeamName
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td> 
+                      }
+                    }
+                </tr>
+                  }
+              }
+              else
+              {
+                <tr class="top_tr" height="30">
+                    <td style="width: 8%">
+                        比赛时间
+                    </td>
+                    <td style="width: 7%">
+                        场次
+                    </td>
+                    <td style="width: 6%;">
+                        赛事
+                    </td>
+                    <td style="width: 14%;">
+                        主队(让球)
+                    </td>
+                    <td style="width: 6%;">
+                        比分
+                    </td>
+                    <td style="width: 11%;">
+                        客队
+                    </td>
+                    <td style="width: 5%">
+                        半场
+                    </td>
+                    <td style="width: 5%;">
+                        彩果
+                    </td>
+                    <td style="width: 8%;">
+                        开奖奖金
+                    </td>
+                    <td style="width: 10%;" colspan="3">
+                        平均欧赔
+                    </td>
+                </tr>
+                  foreach (var item in match.MatchResultList)
+                  {
+                      var cg = item.SPF_Result;
+                      var sp = item.SPF_SP;
+                      if (type == "bf")
+                      {
+                          cg = item.BF_Result;
+                          sp = item.BF_SP;
+                      }
+                      else if (type == "zjq")
+                      {
+                          cg = item.ZJQ_Result;
+                          sp = item.ZJQ_SP;
+                      }
+                      else if (type == "bqc")
+                      {
+                          cg = item.BQC_Result;
+                          sp = item.BQC_SP;
+                      }
+                      else if (type == "spf")
+                      {
+                          cg = item.SPF_Result;
+                          sp = item.SPF_SP;
+                      }
+                      else if (type == "brqspf")
+                      {
+                          cg = item.BRQSPF_Result;
+                          sp = item.BRQSPF_SP;
+                      }
+                <tr id="row_@(item.MatchId)" class="@(match.MatchResultList.IndexOf(item) % 2 == 0 ? "ni" : "ni2")">
+                    <td style="font-size: 11px;">@item.StartTime.ToString("MM-dd HH:mm")
+                    </td>
+                    <td>@item.MatchIdName
+                    </td>
+                    <td style="color: #FFFFFF; background-color: @item.LeagueColor;">@item.LeagueName
+                    </td>
+                    <td style="text-align: right">@item.HomeTeamName
+                    </td>
+                    @{if (string.IsNullOrEmpty(item.MatchState) || item.MatchState == "2")
+                      {
+                        <td style="color: red">
+                            <b>@(item.FullHomeTeamScore)-@(item.FullGuestTeamScore)</b>
+                        </td>
+                        <td style="text-align: left">@item.GuestTeamName
+                        </td>
+                        <td>@(item.HalfHomeTeamScore)-@(item.HalfGuestTeamScore)
+                        </td>
+                        <td style="padding-right: 15px;">
+                            <span class="spitems" style="float: right;">@SiteString.ANTECODES_NAME(type, cg)</span>
+                        </td>
+                      }
+                      else if (item.MatchState == "3")
+                      {
+                        <td class="red">
+                            <b>取消</b>
+                        </td>
+                        <td style="text-align: left">@item.GuestTeamName
+                        </td>
+                        <td>
+                            -
+                        </td>
+                        <td>
+                        </td>                 
+                      }
+                      else if (item.MatchState == "4")
+                      {
+                        <td class="red">
+                            <b>推迟</b>
+                        </td>
+                        <td style="text-align: left">@item.GuestTeamName
+                        </td>
+                        <td>
+                            -
+                        </td>
+                        <td>
+                        </td>                     
+                      }
+                      else
+                      {
+                        <td>
+                        </td>
+                        <td style="text-align: left">@item.GuestTeamName
+                        </td>
+                        <td>
+                            -
+                        </td>
+                        <td>
+                        </td>
+                      }
+                    }
+                    <td style="color: Red; padding-right: 10px; text-align: right;">@sp.ToString("f")
+                    </td>
+                    <td class="op">@item.WinOdds.ToString("f")
+                    </td>
+                    <td class="op">@item.FlatOdds.ToString("f")
+                    </td>
+                    <td class="op">@item.LoseOdds.ToString("f")
+                    </td>
+                </tr>
+                  }
+              }}
+        </table>
+    </div>
+</div>
+<div class="clear">
+</div>
+<script type="text/javascript">
+    $("#btn-query").click(function () {
+        var begin = $("#begin").val();
+        var d = new Date(begin);
+        var year = d.getFullYear();
+        var month = (d.getMonth() + 1) < 10 ? "0" + (d.getMonth() + 1) : (d.getMonth() + 1);
+        var day = d.getDate() < 10 ? "0" + d.getDate() : d.getDate();
+        var gameType = $("#gameType").val();
+        if (!gameType)
+            gameType = "all";
+        var url = "/statichtml/lottery/jczq/" + year + month + "/detail_jczq_" + gameType + "_" + year + month + day + ".html"
+        location.href = url;
+
+    })
+</script>

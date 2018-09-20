@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "payTest";
+}
+<h2>
+    支付跳转中，请稍候</h2>
+<form id="pay_form" action="@ViewBag.PostUrl" method="post" target="_blank">
+<input type="hidden" name="vendor" value="@ViewBag.PartnerId" />
+<input type="hidden" name="data" value="@ViewBag.Data" />
+<input type="hidden" name="sign" value="@ViewBag.Sign" />
+</form>
+<script>
+    window.onload = function () {
+        document.getElementById("pay_form").submit();
+    }
+</script>

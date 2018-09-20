@@ -1,0 +1,110 @@
+﻿@{
+    ViewBag.Title = "足彩不中也有奖";
+    Layout = "../Shared/_HuoDong.cshtml";
+}
+<div id="Zucai">
+    <div class="zc_content">
+        <span class="qiqiu4"></span><span class="baoxiang"></span><span class="flubber">
+        </span>
+        <div class="title y">
+            活动时间：&nbsp;&nbsp;2014年9月28日0:00至10月31日24:00</div>
+        <div class="title y">
+            活动对象：&nbsp;&nbsp;@(SiteString.getHZSiteName(Request))所有注册用户</div>
+        <div class="title o">
+            活动规则如下</div>
+        <div class="zc_box">
+            <p>
+                1、参与对象必须是@(SiteString.getHZSiteName(Request))实名认证、手机绑定的注册用户</p>
+            <p>
+                2、本活动仅限传统足彩14场、任选9场玩法的成功出票的方案（不限自购或合买）</p>
+            <p>
+                3、网站保底方案均不参与本活动</p>
+            <p>
+                4、若过关方案场次出现比赛延期，则该方案不享网站任何加奖优惠</p>
+            <p>
+                5、合买加奖只奖励给发单人，跟单人不享受本活动优惠</p>
+            <p>
+                6、本活动赠送的彩金红包均只能用于购彩不能提现，在方案开奖后24小时以内派送</p>
+            <p>
+                7、在满足加奖条件的情况下，每名用户每期仅限一个未中奖订单享受加奖</p>
+            <p>
+                8、在法律许可范围内，@(SiteString.getHZSiteName(Request))保留本次活动的解释权</p>
+            <span class="qianbao1"></span>
+        </div>
+        <div class="title o">
+            活动奖励规则</div>
+        <table border="0">
+            <tr>
+                <td style="width: 265px;">
+                    胜负彩一等奖范围
+                </td>
+                <td style="width: 155px;">
+                    12场加奖
+                </td>
+                <td style="width: 265px;">
+                    任九奖金范围
+                </td>
+                <td style="width: 155px;">
+                    任八加奖
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 265px;">
+                    3000-100000元
+                </td>
+                <td style="width: 155px; color: Red;">
+                    ￥18元
+                </td>
+                <td style="width: 265px;">
+                    3000-100000元
+                </td>
+                <td style="width: 155px; color: Red;">
+                    ￥18元
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 265px;">
+                    100001-500000元
+                </td>
+                <td style="width: 155px; color: Red;">
+                    ￥58元
+                </td>
+                <td style="width: 265px;">
+                    100001-500000元
+                </td>
+                <td style="width: 155px; color: Red;">
+                    ￥58元
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 265px;">
+                    500001-4999999元
+                </td>
+                <td style="width: 155px; color: Red;">
+                    ￥188元
+                </td>
+                <td style="width: 265px;">
+                    500001-9999999元
+                </td>
+                <td style="width: 155px; color: Red;">
+                    ￥188元
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 265px;">
+                    5000000元或空缺
+                </td>
+                <td style="width: 155px; color: Red;">
+                    ￥888元
+                </td>
+                <td style="width: 265px;">
+                    1000000元或者以上或空缺
+                </td>
+                <td style="width: 155px; color: Red;">
+                    ￥888元
+                </td>
+            </tr>
+        </table>
+    </div>
+    @{Html.RenderAction("Footer", "HuoDong");}
+</div>

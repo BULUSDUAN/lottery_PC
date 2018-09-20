@@ -1,0 +1,1300 @@
+﻿@{
+    ViewBag.Title = "账户充值";
+    var currentUser = ViewBag.CurrentUser as app.lottery.site.Models.CurrentUserInfo;
+    var alipayuser = SiteString.GetAliPayAccount();
+    var gateWayArray = ((string)ViewBag.EnableGateWary).Split('|');
+    var realNameInfo = ViewBag.RealNameInfo == null ? new External.Core.Authentication.UserRealNameInfo() : ViewBag.RealNameInfo as External.Core.Authentication.UserRealNameInfo;
+    var bankCardInfo = ViewBag.BankCardInfo == null ? new GameBiz.Core.BankCardInfo() : ViewBag.BankCardInfo as GameBiz.Core.BankCardInfo;
+    var mobileInfo = ViewBag.MobileInfo == null ? new External.Core.Authentication.UserMobileInfo() : ViewBag.MobileInfo as External.Core.Authentication.UserMobileInfo;
+    var IsAuthenticationRealName = currentUser.IsAuthenticationRealName ? "1" : "2";
+}
+@section css{
+    @ViewHelpers.csscdn("mycenter.css", "20151222")
+    @UserHelper.csscdn("user.css", "20151222")
+}
+@section js{
+    @UserHelper.js_share("noreferrer.yui.js")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>账户充值</li>
+    </ul>
+</div>
+<div class="center mt10">
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        @{Html.RenderPartial("box_confirm_wxpay");}
+        <div class="mune_safe">
+            <div class="account_menu clearfix">
+                <a href="/member/accountdetail">账户明细</a> <a href="/member/redBagList">红包明细</a> <a
+                    href="/member/paywizzard" class="select">账户充值</a> <a href="/member/drawingsguide">账户提款</a>
+            </div>
+            <div class="account_con">
+                <div class="betorder_top">
+                    <ul>
+                        <li><a href="paywizzard"><i></i>充值向导</a> </li>
+                        <li class="betorder_topSelected"><a href="pay"><i></i>账户充值</a> </li>
+                        <li class=""><a href="payrecord"><i></i>充值记录</a></li>
+                        <li class="pay_alert"><span class="alert1"></span>账户充值金额提现收取10%手续费</li>
+                    </ul>
+                </div>
+                <script type="text/javascript">
+                    $(function () {
+                        $(".betorder_topSelected").click(function () {
+                            $(".pay_alert").display();
+                        })
+                    })
+                </script>
+                <div class="pay_type">
+                    <ul id="btn_pay_type">
+                       @{Html.RenderPartial("PayHeader");}
+                    </ul>
+                </div>
+                <input type="hidden" value="@ViewBag.MaxFillMoney" id="hd_maxFillMoney" />
+                @{Html.RenderPartial("PayContext");}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+<div style="display: none;" id="box_user_info">
+    <div style="width: 605px; height: auto; padding: 0px; left: 488px; top: 13px;" id="box_user_info_div"
+        class="box">
+        <form onsubmit="return false" autocomplete="off" id="form_for_user" method="post">
+        <h3>
+            <a class="fr" onclick="hideBox()" href="javascript:void 0;">关闭</a>温馨提示：</h3>
+        <div class="margincont">
+            <div style="height: 35px; border-radius: 6px;" class="tz" id="insertHtml">
+                <p style="height: 30px; line-height: 30px; text-align: center">
+                    @currentUser.LoginInfo.DisplayName：您好,本站完善资料即可参加充值送彩金活动.<a href="/activity/register"
+                        style="color: #3C0EFF;" target="_blank"> 活动详情 </a>
+                </p>
+            </div>
+            <dl>
+                <dt>真实姓名：</dt>
+                @if (currentUser != null && currentUser.IsAuthenticationRealName == true)
+                {
+                    <dd>
+                        <label>
+                            @SiteString.AllHideUser(currentUser.RealNameInfo.RealName)
+                            <input type="hidden" value="@currentUser.RealNameInfo.RealName" id="realName" name="infoForm.realName">
+                        </label>
+                    </dd>
+                }
+                else
+                {
+                    <dd>
+                        <label>
+                            <input type="text" onblur="checkRealNameId('form_for_user')" class="text_input2"
+                                size="11" id="realName" name="infoForm.realName">
+                            <span class="com_tip onShow">领奖和提款的凭证，提交后不能修改</span>
+                        </label>
+                    </dd>
+                }
+                <dt>身份证号：</dt>
+                @if (currentUser != null && currentUser.IsAuthenticationRealName == true)
+                {
+                    <dd>
+                        <label>
+                            @SiteString.EncodeIdCardNumber(currentUser.RealNameInfo.IdCardNumber)
+                            <input type="hidden" value="@currentUser.RealNameInfo.IdCardNumber" id="idCard" name="infoForm.idCard">
+                        </label>
+                    </dd>
+                }
+                else
+                {
+                    <dd>
+                        <label>
+                            <input type="text" onblur="checkRealNameId('form_for_user')" class="text_input2"
+                                size="18" id="idCard" name="infoForm.idCard">
+                            <span class="com_tip onShow">领奖和提款的凭证，需与真实姓名一致</span>
+                        </label>
+                    </dd>
+                }
+                <dt>手机号码：</dt>
+                @if (currentUser.IsAuthenticationMobile == true)
+                {
+                    <dd>
+                        <label>
+                            @SiteString.EncodeMobile(currentUser.MobileInfo.Mobile)
+                        </label>
+                        <input type="hidden" value="@currentUser.MobileInfo.Mobile" id="phoneNumber" name="phoneNumber">
+                    </dd>
+                }
+                else
+                {
+                    <dd>
+                        <label>
+                            <input type="text" onblur="checkMobileNum('phoneNumber')" onkeyup="return isMobileBinded('phoneNumber','getMessage');"
+                                onpaste="return false;" class="text_input2" size="13" id="phoneNumber" name="phoneNumber">
+                            <span class="com_tip onShow">用于找回密码、修改信息</span>
+                        </label>
+                    </dd>
+                    <dt>获取验证：</dt>
+                    <dd>
+                        <div style="width: 380px; margin-top: 0" class="code_sender">
+                            <label>
+                                <input type="text" class="text_input2" id="codeNumber" name="codeNumber" style="width: 50px;" />
+                                <input type="button" class="getBtn" onclick="getTelRall(this, 'phoneNumber')" value="免费获取"
+                                    id="answer2" name="answer2">
+                            </label>
+                        </div>
+                    </dd>
+                }
+            </dl>
+            <div class="cont_center layerbtns">
+                <label>
+                    <input type="button" value="确 定" title="确定" class="layer_a" id="submit_btn"></label>
+                <label>
+                    <input type="button" onclick="hideBox()" value="取 消" title="取消" class="layer_b"></label>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+<a id="sendalipayurl" rel="noreferrer"></a>@* @{Html.RenderPartial("box_payconfirm");}*@
+<script type="text/javascript">
+    $(function () {
+        var first_a = $("#btn_pay_type li:eq(0) a");
+        first_a.addClass("selected");
+        var t = first_a.attr("data-v")
+        $("#p_" + t).show();
+
+        $("#btn_pay_type a").click(function () {
+
+            $(this).addClass("selected").parent().siblings().children().removeClass("selected");
+            $(".payDiv").hide();
+            var type = $(this).attr("data-v");
+            $("#p_" + type).show();
+        });
+
+        $("#ul_ips_bank_list input").click(function () {
+            var payType = $(this).val();
+            $("#p_ips_bank input[name=payType]").val(payType);
+            $("#ul_ips_bank_list li label").removeClass("icon-box-on");
+            $(this).parent().addClass("icon-box-on");
+        })
+        $("#ul_zt_bank_list input").click(function () {
+            var payType = $(this).val();
+            $("#p_zt_bank input[name=payType]").val(payType);
+            $("#ul_zt_bank_list li label").removeClass("icon-box-on");
+            $(this).parent().addClass("icon-box-on");
+        })
+        $("#ul_zf_bank_list input").click(function () {
+            var payType = $(this).val();
+            $("#p_zf_bank input[name=payType]").val(payType);
+            $("#ul_zf_bank_list li label").removeClass("icon-box-on");
+            $(this).parent().addClass("icon-box-on");
+        })
+        $("#ul_hc_bank_list input").click(function () {
+            var payType = $(this).val();
+            $("#p_hc_bank input[name=payType]").val(payType);
+            $("#ul_hc_bank_list li label").removeClass("icon-box-on");
+            $(this).parent().addClass("icon-box-on");
+        })
+        $("#ul_ys_bank_list input").click(function () {
+            var payType = $(this).val();
+            $("#p_ys_bank input[name=payType]").val(payType);
+            $("#ul_ys_bank_list li label").removeClass("icon-box-on");
+            $(this).parent().addClass("icon-box-on");
+        })
+        $("#ul_yespay_bank_list input").click(function () {
+            var payType = $(this).val();
+            $("#p_yespay_bank input[name=payType]").val(payType);
+            $("#ul_yespay_bank_list li label").removeClass("icon-box-on");
+            $(this).parent().addClass("icon-box-on");
+        })
+        $("#ul_jhz_bank_list input").click(function () {
+            var payType = $(this).val();
+            $("#p_jhz_bank input[name=payType]").val(payType);
+            $("#ul_jhz_bank_list li label").removeClass("icon-box-on");
+            $(this).parent().addClass("icon-box-on");
+        })
+        $("#ul_payworth_bank_list input").click(function () {
+            var payType = $(this).val();
+            $("#p_payworth_bank input[name=payType]").val(payType);
+            $("#ul_payworth_bank_list li label").removeClass("icon-box-on");
+            $(this).parent().addClass("icon-box-on");
+        })
+        $("#ul_sandpay_bank_list input").click(function () {
+            var payType = $(this).val();
+            $("#p_sandpay_bank input[name=payType]").val(payType);
+            $("#ul_sandpay_bank_list li label").removeClass("icon-box-on");
+            $(this).parent().addClass("icon-box-on");
+        })
+        $("#ul_txf_bank_list input").click(function () {
+            var payType = $(this).val();
+            $("#p_txf_bank input[name=payType]").val(payType);
+            $("#ul_txf_bank_list li label").removeClass("icon-box-on");
+            $(this).parent().addClass("icon-box-on");
+        })
+        $("#ul_hfb_bank_list input").click(function () {
+            var payType = $(this).val();
+            $("#p_hfb_bank input[name=payType]").val(payType);
+            $("#ul_hfb_bank_list li label").removeClass("icon-box-on");
+            $(this).parent().addClass("icon-box-on");
+        })
+        $(".fillmoney").change(function () {
+            var maxMoney = parseInt($("#hd_maxFillMoney").val(), 10);
+            if (!$(this).val() || !parseInt($(this).val(), 10)) {
+                $(this).val(10);
+                return;
+            }
+            if (parseInt($(this).val(), 10) > maxMoney) {
+                $(this).val(maxMoney);
+                return;
+            }
+        })
+        $("#bt_alipay_pay").click(function () {
+            alert("为了即时到账，支付宝充值请备注玩彩网登录名");
+            document.charset = 'gbk';
+            window.open("/staticHtml/help/chongzhi/AlipayPay.html")
+            return false;
+        })
+
+        $("#bt_wxpay_pay").click(function () {
+            //            confirmTip("测试");
+            var money = $("#wxpay_pay_money").val();
+            var url = "/Member/GetWXPayOrder?requestMoney=" + money + "&r=" + Math.random();
+            $.getJSON(url, function (json) {
+                //                console.warn(json)
+                if (!json.IsSuccess) {
+                    alert(json.Message);
+                    return;
+                }
+                //生成订单号成功
+                var orderId = json.Message;
+                var wxPayUrl = "/member/LoadQRCode?requestMoney=" + money + "&orderId=" + orderId + "&r=" + Math.random();
+                confirmTipWXPay(wxPayUrl, orderId, money);
+            });
+        })
+
+        $("#bt_jhz_weixin").click(function () {
+            var money = $("#jhz_weixin_money").val();
+            var type = "weixin";
+            var url = "/Member/GetJHZPayOrder?requestMoney=" + money + "&type=" + type + "&r=" + Math.random();
+            $.getJSON(url, function (json) {
+                if (!json.IsSuccess) {
+                    alert(json.Message);
+                    return;
+                }
+                //生成订单号成功
+                var orderId = json.Message;
+                var wxPayUrl = "/member/LoadQRCode_JHZ_WX?requestMoney=" + money + "&orderId=" + orderId + "&r=" + Math.random();
+                confirmTipWXPay(wxPayUrl, orderId, money);
+            });
+        })
+
+
+        $("#bt_jhz_alipay").click(function () {
+            var money = $("#jhz_alipay_money").val();
+            var type = "alipay";
+            var url = "/Member/GetJHZPayOrder?requestMoney=" + money + "&type=" + type + "&r=" + Math.random();
+            $.getJSON(url, function (json) {
+                if (!json.IsSuccess) {
+                    alert(json.Message);
+                    return;
+                }
+                //生成订单号成功
+                var orderId = json.Message;
+                var wxPayUrl = "/member/LoadQRCode_JHZ_ALI?requestMoney=" + money + "&orderId=" + orderId + "&r=" + Math.random();
+                confirmTipWXPay(wxPayUrl, orderId, money);
+            });
+        })
+        //中铁微信扫码
+        $("#bt_ztwxpay").click(function () {
+            var money = $("#zt_pay_money").val();
+            var type = "weixin";
+            var url = "/Member/GetZTPayOrder?requestMoney=" + money + "&type=" + type + "&r=" + Math.random();
+            $.getJSON(url, function (json) {
+                if (!json.IsSuccess) {
+                    alert(json.Message);
+                    return;
+                }
+                //生成订单号成功
+                var orderId = json.Message;
+                var wxPayUrl = "/member/LoadQRCode_ZT_WX?requestMoney=" + money + "&orderId=" + orderId + "&r=" + Math.random();
+                confirmTipWXPay(wxPayUrl, orderId, money);
+            });
+        })
+        //中铁支付宝扫码
+        $("#bt_ztAlipayPay").click(function () {
+            var money = $("#zt_alipay_money").val();
+            var type = "alipay";
+            var url = "/Member/GetZTPayOrder?requestMoney=" + money + "&type=" + type + "&r=" + Math.random();
+            $.getJSON(url, function (json) {
+                if (!json.IsSuccess) {
+                    alert(json.Message);
+                    return;
+                }
+                //生成订单号成功
+                var orderId = json.Message;
+                var wxPayUrl = "/member/LoadQRCode_ZT_Alipay?requestMoney=" + money + "&orderId=" + orderId + "&r=" + Math.random();
+                confirmTipWXPay(wxPayUrl, orderId, money);
+            });
+        })
+        //天下付微信扫码
+        $("#bt_txf_weixin").click(function () {
+            var money = $("#txf_weixin_money").val();
+            var type = "weixin";
+            var url = "/Member/GetTXFPayOrder?requestMoney=" + money + "&type=" + type + "&r=" + Math.random();
+            $.getJSON(url, function (json) {
+                if (!json.IsSuccess) {
+                    alert(json.Message);
+                    return;
+                }
+                //生成订单号成功
+                var orderId = json.Message;
+                var wxPayUrl = "/member/LoadQRCode_TXF_WX?requestMoney=" + money + "&orderId=" + orderId + "&r=" + Math.random();
+                confirmTipWXPay(wxPayUrl, orderId, money);
+            });
+        })
+        //天下付支付宝扫码
+        $("#bt_txf_alipay").click(function () {
+            var money = $("#txf_alipay_money").val();
+            var type = "alipay";
+            var url = "/Member/GetTXFPayOrder?requestMoney=" + money + "&type=" + type + "&r=" + Math.random();
+            $.getJSON(url, function (json) {
+                if (!json.IsSuccess) {
+                    alert(json.Message);
+                    return;
+                }
+                //生成订单号成功
+                var orderId = json.Message;
+                var wxPayUrl = "/member/LoadQRCode_TXF_ALIPAY?requestMoney=" + money + "&orderId=" + orderId + "&r=" + Math.random();
+                confirmTipWXPay(wxPayUrl, orderId, money);
+            });
+        })
+        //天下付qq扫码
+        $("#bt_txf_qq").click(function () {
+            var money = $("#txf_qq_money").val();
+            var type = "qq";
+            var url = "/Member/GetTXFPayOrder?requestMoney=" + money + "&type=" + type + "&r=" + Math.random();
+            $.getJSON(url, function (json) {
+                if (!json.IsSuccess) {
+                    alert(json.Message);
+                    return;
+                }
+                //生成订单号成功
+                var orderId = json.Message;
+                var wxPayUrl = "/member/LoadQRCode_TXF_QQ?requestMoney=" + money + "&orderId=" + orderId + "&r=" + Math.random();
+                confirmTipWXPay(wxPayUrl, orderId, money);
+            });
+        })
+        //微信(优付)
+        //        $("#bt_weixin_pay").click(function () {
+        //            var value = $("#weixin_pay_money").val();
+        //            if (value < 2 || value > 5000) {
+        //                alert("金额必须大于2元，小于5000元！");
+        //                return;
+        //            }
+        //            var url1 = '@ViewBag.YF_WeiXin_Url';
+        //            $("#form_ys").attr("action", url1 + '/user/redirectpay');
+        //            alert(111);
+        //        })
+    });
+</script>
+<script type="text/javascript">
+    function payworth_weixin_Sumbit() {
+        pay_sumbit("payworth_weixin", '@ViewBag.ZTPay_Url');
+    }
+    function payworth_alipay_Sumbit() {
+        pay_sumbit("payworth_alipay", '@ViewBag.ZTPay_Url');
+    }
+    function sandpay_weixin_Sumbit() {
+        pay_sumbit("sandpay_weixin", '@ViewBag.ZTPay_Url');
+    }
+    function sandpay_alipay_Sumbit() {
+        pay_sumbit("sandpay_alipay", '@ViewBag.ZTPay_Url');
+    }
+    function yespay_weixin_Sumbit() {
+        pay_sumbit("yespay_weixin", '@ViewBag.ZTPay_Url');
+    }
+
+    function yespay_alipay_Sumbit() {
+        pay_sumbit("yespay_alipay", '@ViewBag.ZTPay_Url');
+    }
+
+    function duobao_weixin_Sumbit() {
+        pay_sumbit("duobao_weixin", '@ViewBag.ZTPay_Url');
+    }
+
+    function duobao_alipay_Sumbit() {
+        pay_sumbit("duobao_alipay", '@ViewBag.ZTPay_Url');
+    }
+
+    function ka101_express_Sumbit() {
+        pay_sumbit("ka101_express", '@ViewBag.PAY_101ka_URL_Url');
+    }
+
+    function ka101_weixin_Sumbit() {
+        pay_sumbit("ka101_weixin", '@ViewBag.PAY_101ka_URL_Url');
+    }
+
+    function ka101_alipay_Sumbit() {
+        pay_sumbit("ka101_alipay", '@ViewBag.PAY_101ka_URL_Url');
+    }
+
+    function slf_weixin_Sumbit() {
+        pay_sumbit("slf_weixin", '@ViewBag.ZTPay_Url');
+    }
+
+    function hwweixin_Sumbit() {
+        pay_sumbit("hw_weixin", '@ViewBag.ZTPay_Url');
+    }
+
+
+    function duodebao_alipay_Sumbit() {
+        pay_sumbit("duodebao_alipay", '@ViewBag.DEBPay_Url');
+    }
+
+
+    function duodebao_weixin_Sumbit() {
+        pay_sumbit("duodebao_weixin", '@ViewBag.DEBPay_Url');
+    }
+    function duodebao_qq_Sumbit() {
+        pay_sumbit("duodebao_qq", '@ViewBag.DEBPay_Url');
+    }
+    function slf_qq_Sumbit() {
+        pay_sumbit("slf_qq", '@ViewBag.DEBPay_Url');
+    }
+    function slf_upay_Sumbit() {
+        pay_sumbit("slf_upay", '@ViewBag.ZTPay_Url');
+    }
+    function sfb_alipay_Sumbit() {
+        var money = $("#sfb_alipay_money").val();
+        var type = "sfb_alipay";
+        var url = "/Member/GetPayOrder?requestMoney=" + money + "&type=" + type + "&r=" + Math.random();
+        $.getJSON(url, function (json) {
+            if (!json.IsSuccess) {
+                alert(json.Message);
+                return;
+            }
+            //生成订单号成功
+            var orderId = json.Message;
+            var wxPayUrl = "/member/LoadQRCodeIMG?requestMoney=" + money + "&orderId=" + orderId + "&type=" + type + "&r=" + Math.random();
+            confirmTipWXPay(wxPayUrl, orderId, money);
+        });
+    }
+    function sfb_weixin_Sumbit() {
+        var money = $("#sfb_weixin_money").val();
+        var type = "sfb_weixin";
+        var url = "/Member/GetPayOrder?requestMoney=" + money + "&type=" + type + "&r=" + Math.random();
+        $.getJSON(url, function (json) {
+            if (!json.IsSuccess) {
+                alert(json.Message);
+                return;
+            }
+            //生成订单号成功
+            var orderId = json.Message;
+            var wxPayUrl = "/member/LoadQRCodeIMG?requestMoney=" + money + "&orderId=" + orderId + "&type=" + type + "&r=" + Math.random();
+            confirmTipWXPay(wxPayUrl, orderId, money);
+        });
+    }
+    function sfb_qq_Sumbit() {
+        var money = $("#sfb_qq_money").val();
+        var type = "sfb_qq";
+        var url = "/Member/GetPayOrder?requestMoney=" + money + "&type=" + type + "&r=" + Math.random();
+        $.getJSON(url, function (json) {
+            if (!json.IsSuccess) {
+                alert(json.Message);
+                return;
+            }
+            //生成订单号成功
+            var orderId = json.Message;
+            var wxPayUrl = "/member/LoadQRCodeIMG?requestMoney=" + money + "&orderId=" + orderId + "&type=" + type + "&r=" + Math.random();
+            confirmTipWXPay(wxPayUrl, orderId, money);
+        });
+    }
+
+    function af_weixin_Sumbit() {
+        var money = $("#af_weixin_money").val();
+        var type = "af_weixin";
+        var url = "/Member/GetAFPayOrder?requestMoney=" + money + "&type=" + type + "&r=" + Math.random();
+        $.getJSON(url, function (json) {
+            if (!json.IsSuccess) {
+                alert(json.Message);
+                return;
+            }
+            //生成订单号成功
+            var orderId = json.Message;
+            var wxPayUrl = "/member/LoadAFQRCodeIMG?requestMoney=" + money + "&orderId=" + orderId + "&type=" + type + "&r=" + Math.random();
+            confirmTipWXPay(wxPayUrl, orderId, money);
+        });
+    }
+    function af_alipay_Sumbit() {
+        var money = $("#af_alipay_money").val();
+        var type = "af_alipay";
+        var url = "/Member/GetAFPayOrder?requestMoney=" + money + "&type=" + type + "&r=" + Math.random();
+        $.getJSON(url, function (json) {
+            if (!json.IsSuccess) {
+                alert(json.Message);
+                return;
+            }
+            //生成订单号成功
+            var orderId = json.Message;
+            var wxPayUrl = "/member/LoadAFQRCodeIMG?requestMoney=" + money + "&orderId=" + orderId + "&type=" + type + "&r=" + Math.random();
+            confirmTipWXPay(wxPayUrl, orderId, money);
+        });
+    }
+    function af_qq_Sumbit() {
+        var money = $("#af_qq_money").val();
+        var type = "af_qq";
+        var url = "/Member/GetAFPayOrder?requestMoney=" + money + "&type=" + type + "&r=" + Math.random();
+        $.getJSON(url, function (json) {
+            if (!json.IsSuccess) {
+                alert(json.Message);
+                return;
+            }
+            //生成订单号成功
+            var orderId = json.Message;
+            var wxPayUrl = "/member/LoadAFQRCodeIMG?requestMoney=" + money + "&orderId=" + orderId + "&type=" + type + "&r=" + Math.random();
+            confirmTipWXPay(wxPayUrl, orderId, money);
+        });
+    }
+    function af_upay_Sumbit() {
+        var money = $("#af_upay_money").val();
+        var type = "af_upay";
+        var url = "/Member/GetAFPayOrder?requestMoney=" + money + "&type=" + type + "&r=" + Math.random();
+        $.getJSON(url, function (json) {
+            if (!json.IsSuccess) {
+                alert(json.Message);
+                return;
+            }
+            //生成订单号成功
+            var orderId = json.Message;
+            var wxPayUrl = "/member/LoadAFQRCodeIMG?requestMoney=" + money + "&orderId=" + orderId + "&type=" + type + "&r=" + Math.random();
+            confirmTipWXPay(wxPayUrl, orderId, money);
+        });
+    }
+
+    function mobao_express_Sumbit() {
+        var value = $("#mobao_express_money").val();
+        if (value < 2 || value > 5000) {
+            alert("金额必须大于2元，小于5000元！");
+            return false;
+        }
+        if ($("#mb_realName").val() == "") {
+            alert("持卡人姓名不能为空");
+            return false;
+        }
+        if ($("#mb_idCard").val() == "") {
+            alert("身份证号码不能为空");
+            return false;
+        }
+        if ($("#mb_bankNum").val() == "") {
+            alert("银行卡号不能为空");
+            return false;
+        }
+        if ($("#mb_phoneNum").val() == "") {
+            alert("预留手机号码不能为空");
+            return false;
+        }
+        if ($("#mobao_yzmNum").val() == "") {
+            alert("验证码不能为空");
+            return false;
+        }
+    }
+
+    function pay_sumbit(id, url) {
+
+        var value = $("#" + id + "_money").val();
+        if (value < 2 || value > 5000) {
+            alert("金额必须大于2元，小于5000元！");
+            return;
+        }
+        else {
+
+            $("#form_" + id).attr("action", url + '/user/redirectpay');
+            document.getElementById("form_" + id).submit();
+            $("#form_" + id).attr("action", "");
+        }
+    }
+
+    function hwalipay_Sumbit() {
+        var value = $("#hw_alipay_money").val();
+        if (value < 2 || value > 5000) {
+            alert("金额必须大于2元，小于5000元！");
+            return;
+        }
+        else {
+            var url1 = '@ViewBag.ZTPay_Url';
+            $("#form_hw_alipay").attr("action", url1 + '/user/redirectpay');
+            document.getElementById("form_hw_alipay").submit();
+            $("#form_hw_alipay").attr("action", "");
+        }
+    }
+
+    function slf_alipay_Sumbit() {
+        var value = $("#slf_alipay_money").val();
+        if (value < 2 || value > 5000) {
+            alert("金额必须大于2元，小于5000元！");
+            return;
+        }
+        else {
+            var url1 = '@ViewBag.ZTPay_Url';
+            $("#form_slf_alipay").attr("action", url1 + '/user/redirectpay');
+            document.getElementById("form_slf_alipay").submit();
+            $("#form_slf_alipay").attr("action", "");
+        }
+    }
+
+    function zt_Sumbit() {
+        var value = $("#zt_pay_money").val();
+        if (value < 2 || value > 5000) {
+            alert("金额必须大于2元，小于5000元！");
+            return;
+        }
+        else {
+            var url1 = '@ViewBag.ZTPay_Url';
+            $("#form_zt").attr("action", url1 + '/user/redirectpay');
+            document.getElementById("form_zt").submit();
+            $("#form_zt").attr("action", "");
+        }
+    }
+
+    function ztalipay_Sumbit() {
+        var value = $("#zt_alipay_money").val();
+        if (value < 2 || value > 5000) {
+            alert("金额必须大于2元，小于5000元！");
+            return;
+        }
+        else {
+            var url1 = '@ViewBag.ZTPay_Url';
+            $("#form_ztalipay").attr("action", url1 + '/user/redirectpay');
+            document.getElementById("form_ztalipay").submit();
+            $("#form_ztalipay").attr("action", "");
+        }
+    }
+
+    function yf_Sumbit() {
+        var value = $("#weixin_pay_money").val();
+        if (value < 2 || value > 5000) {
+            alert("金额必须大于2元，小于5000元！");
+            return;
+        }
+        else {
+            var url1 = '@ViewBag.YF_WeiXin_Url';
+            $("#form_yf").attr("action", url1 + '/user/redirectpay');
+            document.getElementById("form_yf").submit();
+            $("#form_yf").attr("action", "");
+        }
+    }
+
+    function slf_express_Sumbit() {
+        var value = $("#slf_express_money").val();
+        var IsAuthenticationRealName = '@IsAuthenticationRealName';
+        if (IsAuthenticationRealName != '1') {
+            alert("未实名认证，请先实名认证！");
+            return;
+        }
+        if (value < 2 || value > 5000) {
+            alert("金额必须大于2元，小于5000元！");
+            return;
+        }
+        else {
+            $("#form_slf_express").attr("action", '@(bankCardInfo.BankCardNumber == null ? "/member/safe" : ViewBag.ZTPay_Url + "/user/redirectpay")');
+            document.getElementById("form_slf_express").submit();
+            //$("#form_slf_express").attr("action", "");
+        }
+    }
+
+
+    function hfb_express_Sumbit() {
+        var value = $("#hfb_express_money").val();
+        var IsAuthenticationRealName = '@IsAuthenticationRealName';
+        if (IsAuthenticationRealName != '1') {
+            alert("未实名认证，请先实名认证！");
+            return;
+        }
+        if (value < 2 || value > 5000) {
+            alert("金额必须大于2元，小于5000元！");
+            return;
+        }
+        else {
+            $("#form_hfb_express").attr("action", '@(bankCardInfo.BankCardNumber == null ? "/member/safe" : ViewBag.ZTPay_Url + "/user/redirectpay")');
+            document.getElementById("form_hfb_express").submit();
+            //$("#form_slf_express").attr("action", "");
+        }
+    }
+
+
+    function xinfu_express_Sumbit() {
+        var value = $("#xinfu_express_money").val();
+        var IsAuthenticationRealName = '@IsAuthenticationRealName';
+        if (IsAuthenticationRealName != '1') {
+            alert("未实名认证，请先实名认证！");
+            return;
+        }
+        if (value < 2 || value > 5000) {
+            alert("金额必须大于2元，小于5000元！");
+            return;
+        }
+        else {
+            $("#form_xinfu_express").attr("action", '@(bankCardInfo.BankCardNumber == null ? "/member/safe" : ViewBag.ZTPay_Url + "/user/redirectpay")');
+            document.getElementById("form_xinfu_express").submit();
+            //$("#form_slf_express").attr("action", "");
+        }
+    }
+
+    function ys_Sumbit() {
+        //action="@ViewBag.YS_Jump_Url/user/redirectpay"
+        var radio = $("#p_ys_bank input[name=payType]").val();
+        var payTypeArray = radio.split('|');
+        if (payTypeArray[0] == "hc_bank") {
+            var url1 = '@ViewBag.HC_Jump_Url';
+            $("#form_ys").attr("action", url1 + '/user/redirectpay');
+        }
+        else {
+            var url2 = '@ViewBag.YS_Jump_Url';
+            $("#form_ys").attr("action", url2 + '/user/redirectpay');
+        }
+        document.getElementById("form_ys").submit();
+        $("#form_ys").attr("action", "");
+    }
+    var pay = {
+
+        moneyFormat: function (obj) {
+            if ($(obj).val() == "" || parseInt($(obj).val()) == 0)
+                $("#pay_txt_money").val(10);
+            else
+                $("#pay_txt_money").val($(obj).val().toNumber(10, 999999));
+        },
+        init: function () {
+            var type = $("#btn_pay_type  a.selected ").attr("data-v");
+            $("#" + type).show().siblings().hide();
+            $("#" + type + " :radio[name='payList']:eq(0)").click();
+        },
+        alipayurl: function (payAmount, orderId) {
+            var url = $.format("https://shenghuo.alipay.com/send/payment/fill.htm?optEmail={0}&payAmount={1}&title={2}", encodeURI("@alipayuser"), payAmount, orderId);
+            return url;
+        }
+    };
+
+    $(function () {
+        pay.init();
+        var IsIE = false;
+        if ((navigator.userAgent.indexOf('MSIE') >= 0) && (navigator.userAgent.indexOf('Opera') < 0)) {
+            IsIE = true;
+        }
+        $("#btn_pay").click(function () {
+            var curpaytype = $("#btn_pay_type  a.selected ").attr("data-v");
+            var money = $("#pay_txt_money").val();
+            if (curpaytype == "alipy") {
+                $("#btn_pay").removeAttr("href");
+                $("#btn_pay").removeAttr("target");
+                $.post("/member/redireAlipayUrl", { payType: "alipay|alipay", money: money }, function (result) {
+
+                    if (result.IsSucess) {
+
+                        var payurl = pay.alipayurl(result.PayMoney, result.OrderId);
+                        $("#sendalipayurl").attr("href", payurl);
+                        $("#sendalipayurl").attr("data-setnoreferrer", payurl);
+
+                        //ie浏览器
+                        if (IsIE) {
+                            $("#sendalipayurl").attr("target", "blank");
+                        } else {
+                            $("#sendalipayurl").removeAttr("target");
+                        }
+
+                        var timer = setInterval(function () {
+                            $.noreferrerReg();
+                            document.getElementById("sendalipayurl").click();
+                            clearInterval(timer);
+                        }, 500);
+                    } else {
+                        return alertTip(result.Message, "err");
+                    }
+
+                });
+            } else {
+                var radio = $(":radio[name='payList']:checked").val();
+                //var payMoney = $("#pay_txt_money").val();
+                var payUrl = "/member/redirectpay?money=" + money + "&payType=" + radio;
+                $("#btn_pay").attr("target", "_blank");
+                $("#btn_pay").attr("href", payUrl);
+            }
+
+        });
+    });
+</script>
+<script type="text/javascript">
+    //停售通知
+    $(".btn_pay_disabled").click(function () {
+        alertTip("暂不能充值", "err");
+    });
+    var Shader = function () {
+        var shade;
+        function _getShade() {
+            var div = document.createElement("div");
+            div.className = "dialogLayout";
+            div.style.zIndex = '1000';
+            div.id = "msg_shade_single";
+            return div;
+        }
+        function _show() {
+            if (shade === undefined) {
+                shade = _getShade();
+                document.body.appendChild(shade);
+            }
+        }
+        function _hide() {
+            if (shade) {
+                shade.parentNode.removeChild(shade);
+                shade = undefined;
+            }
+        }
+        function _adjustPostion(elem) {
+            if (elem && elem.nodeType && elem.nodeType === 1) {
+                var left = parseInt((document.documentElement.clientWidth - elem.offsetWidth) / 2);
+                var top = parseInt((document.documentElement.clientHeight - elem.offsetHeight) / 2);
+                elem.style.left = left + "px";
+                elem.style.top = top + "px";
+            }
+        }
+        return {
+            show: _show,
+            hide: _hide,
+            adjustPostion: _adjustPostion
+        }
+    } ();
+    function hideBox() {
+        $('#box_user_info').hide();
+        Shader.hide();
+    }
+
+    function checkRealNameId(fid) {
+        var name = $("#realName"), idCard = $("#idCard");
+        //$('#'+fid+' input').next('span.com_tip').remove();
+        name.next('.com_tip').remove();
+        //idCard.next('.com_tip').remove();
+        if (name.val() == "") {
+            name.focus().after('<span class="com_tip onShow">领奖和提款的凭证，提交后不能修改</span>');
+            return false;
+        }
+        if (!/^[\u4E00-\u9FA5·a-zA-Z]+$/.test(name.val().trim())) {
+            name.after('<span class="com_tip onShow">请输入汉字、字母或间隔符</span>');
+            return false;
+        }
+        idCard.next('.com_tip').remove();
+        if (idCard.val().trim() == "") {
+            idCard.after('<span class="com_tip onShow">领奖和提款的凭证，需与真实姓名一致</span>');
+            return false;
+        }
+        if (!/^(\d{14}|\d{17})(\d|[xX])$/.test(idCard.val())) {
+            idCard.after('<span class="com_tip onError">身份证号格式输入有误</span>');
+            return false;
+        }
+        var error = isIdCardNo && isIdCardNo(idCard.val());
+        if (error) {
+            idCard.after('<span class="com_tip onError">' + error + '</span>');
+            return false;
+        }
+        return true;
+    }
+    function checkMobileNum(mid) {
+        var mobile = $('#' + mid), val = mobile.val();
+        var tip = mobile.next('span.com_tip');
+        if (!tip[0]) tip = $('<span class="com_tip"></span>').insertAfter(mobile);
+        if (val == "") {
+            tip.addClass('onShow').html('用于找回密码、修改信息');
+            return false;
+        } else if (!/^\d{11}$/.test(val)) {
+            tip.addClass('onError').html('手机号码输入有误');
+            return false;
+        }
+        //tip.attr('class', 'com_tip onCorrect').html('&nbsp;');
+        return true;
+    }
+    function isMobileBinded(mid, gid) {
+        var t = $("#" + mid), g = $("#" + gid), number = t.val().trim();
+        t.next('.com_tip').remove();
+        if (number.length != 11) {
+            return false;
+        } else {
+            if (!checkMobileNum(mid)) return false;
+            t.next('.com_tip').addClass('onShow').html('正在检验手机号码是否被使用');
+            $.ajax({
+                type: 'POST',
+                url: '/user/isMobileBinded',
+                data: { mobile: number },
+                success: function (res) {
+                    if (res.code == true) {
+                        t.next('.com_tip').remove();
+                        t.after('<span class="com_tip onError">' + res.Msg + '</span>');
+                    } else {
+                        t.next('.com_tip').addClass('onCorrect').html('此手机号码可用');
+                    }
+                }
+            });
+            return false;
+        }
+    }
+    function checkPhoneRandom() {
+        var ran = $('#phoneRandomNum');
+        var getBtn = $('#getMessage');
+        var random = ran.val().trim();
+        getBtn.next('.com_tip').remove();
+        if (random == "" || random == null) {
+            getBtn.after('<span class="com_tip onShow">请输入短信验证码</span>');
+            return false;
+        }
+        return true;
+    }
+
+    var isSend = 0;
+    function senPhoneRandom(num, gid) {
+        if (isSend == 1) {
+            $.alert("刚下发短信，请耐心等待。");
+            return;
+        }
+        isSend = 1;
+        var input = $("#" + gid); //.hide();
+        input.removeClass('getBtn').addClass('getBtn_des').unbind();
+        $.ajax({
+            type: "POST",
+            url: '/user/getTelCode',
+            dataType: 'json',
+            data: { bindMobile: num },
+            success: function (msg) {
+                var content = $('#timer_content_user');
+                //content.html('<span id="timer_text">发送中</span>(<span id="timer">120</span>)秒');
+                input.val('倒计时(60)');
+                if (msg.msg == '下发成功' || msg.success) {
+                    //$("#timer_text").html('下发成功，倒计时');
+                    var timeCtr = setInterval(function () {
+                        var sec = +input.val().match(/\d+/)[0];
+                        if (sec > 0) {
+                            input.val('倒计时(' + (sec - 1) + ')');
+                        } else {
+                            clearInterval(timeCtr);
+                            input.val('获取短信');
+                            input.removeClass('getBtn_des').addClass('getBtn').click(function () { senPhoneRandom(num, gid) });
+                            isSend = 0;
+                            //input.show();
+                        }
+                    }, 1000);
+                } else {
+                    input.val('获取短信');
+                    input.removeClass('getBtn_des').addClass('getBtn').click(function () { senPhoneRandom(num, gid) });
+                    isSend = 0;
+                    //input.show();
+                    $.alert('下发失败，请重试');
+                }
+            }
+        });
+    }
+
+    function isIdCardNo(num) {
+        num = num.toUpperCase();
+        if (!(/(^\d{15}$)|(^\d{17}([0-9]|X)$)/.test(num))) {
+            return '输入的身份证号长度不对，或者不符合规定';
+            //'输入的身份证号长度不对，或者号码不符合规定！/n15位号码应全为数字，18位号码末位可以为数字或X。';
+        }
+        var len, re;
+        len = num.length;
+        if (len == 15) {
+            re = new RegExp(/^(\d{6})(\d{2})(\d{2})(\d{2})(\d{3})$/);
+            var arrSplit = num.match(re);
+            var dtmBirth = new Date('19' + arrSplit[2] + '/' + arrSplit[3] + '/' + arrSplit[4]);
+            var bGoodDay;
+            bGoodDay = (dtmBirth.getYear() == Number(arrSplit[2])) && ((dtmBirth.getMonth() + 1) == Number(arrSplit[3])) && (dtmBirth.getDate() == Number(arrSplit[4]));
+            if (!bGoodDay) {
+                return '输入的身份证号里出生日期不对！';
+            } else {
+                var arrInt = new Array(7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2);
+                var arrCh = new Array('1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2');
+                var nTemp = 0, i;
+                num = num.substr(0, 6) + '19' + num.substr(6, num.length - 6);
+                for (i = 0; i < 17; i++) {
+                    nTemp += num.substr(i, 1) * arrInt[i];
+                }
+                num += arrCh[nTemp % 11];
+            }
+        }
+        if (len == 18) {
+            re = new RegExp(/^(\d{6})(\d{4})(\d{2})(\d{2})(\d{3})([0-9]|X)$/);
+            var arrSplit = num.match(re);
+            var dtmBirth = new Date(arrSplit[2] + "/" + arrSplit[3] + "/" + arrSplit[4]);
+            var bGoodDay;
+            bGoodDay = (dtmBirth.getFullYear() == Number(arrSplit[2])) && ((dtmBirth.getMonth() + 1) == Number(arrSplit[3])) && (dtmBirth.getDate() == Number(arrSplit[4]));
+            if (!bGoodDay) {
+                return '输入的身份证号里出生日期不对！';
+            } else {
+                var valnum;
+                var arrInt = new Array(7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2);
+                var arrCh = new Array('1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2');
+                var nTemp = 0, i;
+                for (i = 0; i < 17; i++) {
+                    nTemp += num.substr(i, 1) * arrInt[i];
+                }
+                valnum = arrCh[nTemp % 11];
+                if (valnum != num.substr(17, 1)) {
+                    return '身份证号码输入有误';
+                }
+            }
+            //            判断年龄是否已满18周岁或者超过80周岁
+            var isLegal = filter18(num);
+            if (isLegal) {
+                return isLegal;
+            } else {
+                isLegal = filter80(num);
+                if (isLegal) return isLegal;
+            }
+        }
+        return false;
+    }
+    function filter18(num) {
+        var birthY = +num.slice(6, 10), birthM = +num.slice(10, 12), birthD = +num.slice(12, 14), today = new Date();
+        var thisY = today.getFullYear(), thisM = today.getMonth() + 1, thisD = today.getDate();
+        if (birthY + 18 > thisY) {
+            return '未满18周岁不能参与该活动';
+        } else if (birthY + 18 == thisY) {
+            if (birthM > thisM) {
+                return '未满18周岁不能参与该活动';
+            } else if (birthM == thisM) {
+                if (birthD > thisD) {
+                    return '未满18周岁不能参与该活动';
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+    function filter80(num) {
+        var birthY = +num.slice(6, 10), birthM = +num.slice(10, 12), birthD = +num.slice(12, 14), today = new Date();
+        var thisY = today.getFullYear(), thisM = today.getMonth() + 1, thisD = today.getDate();
+        if (birthY + 80 < thisY) {
+            return '超过80周岁不能参与该活动';
+        } else if (birthY + 80 == thisY) {
+            if (birthM < thisM) {
+                return '超过80周岁不能参与该活动';
+            } else if (birthM == thisM) {
+                if (birthD <= thisD) {
+                    return '超过80周岁不能参与该活动';
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+    function showUserInfoPanel(obj, index) {
+        $.ajax({
+            type: "post",
+            url: "/user/Info",
+            success: function (res) {
+                if (res.IsSuccess == true && res.isAuthentication == true && res.isAuthenticationMobile == true) {
+                    alertTip("您的信息已完善");
+                } else {
+                    $('#box_user_info').show();
+                    Shader.show();
+                    Shader.adjustPostion(document.getElementById('box_user_info_div'));
+                    if (index == 1) {
+                        var insertText = ' <p style="height: 30px; line-height: 30px; text-align: center">' + res.displayName + '：您好,本站完善资料即可参加充值送彩金活动.<a href="/activity/register" style="color:#3C0EFF;" target="_blank"> 活动详情 </a></p>';
+                        document.getElementById("insertHtml").innerHTML = insertText;
+                    } else {
+                        var insertText = ' <p style="height: 30px; line-height: 30px; text-align: center">' + res.displayName + '：您好,本站完善资料即可获赠<span class="red"> 3 </span>元彩金.</p>';
+                        document.getElementById("insertHtml").innerHTML = insertText;
+                    }
+                }
+            }
+        });
+    }
+
+    function checkRealNameId(fid) {
+        var name = $("#realName"), idCard = $("#idCard");
+        var name_tip = name.next('.com_tip');
+        if (!/^[\u4E00-\u9FA5·a-zA-Z]+$/.test(name.val())) {
+            name_tip.attr('class', 'com_tip onError').html('请输入汉字、字母或间隔符');
+            setTimeout(function () {
+                name_tip.attr('class', 'com_tip onShow').html('领奖和提款的凭证，提交后不能修改');
+            }, 2000);
+            return false;
+        } else {
+            name_tip.attr('class', 'com_tip onCorrect').html('输入的姓名正确。');
+        }
+        var id_tip = idCard.next('.com_tip'), id_error = '';
+        if (!/^(\d{14}|\d{17})(\d|[xX])$/.test(idCard.val())) {
+            id_error = '身份证号格式输入有误';
+        }
+        var error = isIdCardNo && isIdCardNo(idCard.val());
+        if (error) id_error = error;
+        if (id_error) {
+            id_tip.attr('class', 'com_tip onError').html(id_error);
+            setTimeout(function () {
+                id_tip.attr('class', 'com_tip onShow').html('领奖和提款的凭证，需与真实姓名一致');
+            }, 2000);
+            return false;
+        } else {
+            id_tip.attr('class', 'com_tip onCorrect').html('输入的身份证号码正确。');
+        }
+        return true;
+    }
+
+    function getTelRall(obj, phoneId) {
+        phoneId = phoneId || 'bindMobile';
+        var input = $(obj), form = input.closest('form'), inputP = input.parent();
+        var bindVal = $('#' + phoneId, form);
+        if (phoneId == 'phoneNumber') {
+            if (!checkRealNameId('form_for_user')) return false;
+        }
+        if (!checkMobileNum(phoneId)) {
+            bindVal.focus();
+            return false;
+        }
+
+        if (bindVal.next(".onError").length) return false;
+        if (!bindVal.next(".onCorrect").length) return false;
+        var mobile = bindVal.val(), tet = form.serialize(), surebtn = form.find('.layer_a:last').prev(':button');
+        if (phoneId == 'phoneNumber') tet = tet.replace(/phoneNumber/i, 'bindMobile');
+        $.post('/user/getTelCode', tet, function (msg) {
+            if (msg.code == true) {
+                time();
+            } else {
+                input.val('获取失败').attr('disabled', 0);
+            }
+        });
+    }
+
+    var wait = 60; //时间 
+    function time() {
+        var again = $("#answer2");
+        if (wait == 0) {
+            again.removeAttr("disabled");
+            again.removeClass("layer_b");
+            again.val("免费获取"); //改变按钮中value的值 
+            wait = 60;
+        } else {
+            again.addClass("layer_b");
+            again.attr("disabled", true); //倒计时过程中禁止点击按钮 
+            again.val(wait + "秒后重获"); //改变按钮中value的值 
+            wait--;
+            setTimeout(function () {
+                time(); //循环调用 
+            }, 1000);
+        }
+    }
+    //提交
+    $("#submit_btn").click(function () {
+        var bindVal = $("#phoneNumber"), codeNumer = $('#codeNumber').val(), realName = $("#realName").val(), idCard = $("#idCard").val();
+        if (!checkRealNameId('form_for_user')) return;
+        if (!checkMobileNum('phoneNumber')) return;
+        if (bindVal.next(".onError").length) return;
+        if (codeNumer == '') {
+            alertTip('请输入验证码！');
+            return;
+        }
+        //  $(this).val('正在验证').attr('disabled', 1);
+        $.post("/user/bindMobileOrRealname", { mobileCode: codeNumer, realName: realName, idCardNumber: idCard }, function (res) {
+            if (res.code == true) {
+                alertTip(res.Msg);
+                $("#boxAlertOkButton").click(function () {
+                    window.location.href = "/member/pay";
+                });
+            } else {
+                alertTip(res.Msg);
+                return;
+            }
+        });
+
+    });
+
+
+    var checkBoxs = $('input[name=joinactive]');
+    checkBoxs.change(function () {
+        checkBoxs.attr('checked', true);
+        $.ajax({
+            type: "post",
+            url: "/user/Info",
+            success: function (res) {
+                if (res.IsSuccess == true && res.isAuthentication == true && res.isAuthenticationMobile == true) {
+                    alertTip("您的信息已完善,可以参加。");
+                } else {
+                    $('#box_user_info').show();
+                    Shader.show();
+                    Shader.adjustPostion(document.getElementById('box_user_info_div'));
+
+                }
+            }
+        });
+    });
+
+
+</script>
+<script type="text/javascript">
+    function changeCardType(obj) {
+        $("#hnd_Cardtype").val($(obj).val());
+        if ($(obj).val() == "00") {
+            $("#li_expireDate").show();
+            $("#li_Cvv2").show();
+        }
+        else {
+            $("#li_expireDate").hide();
+            $("#li_Cvv2").hide();
+        }
+    }
+    var isSend = 0;
+    function getMessages() {
+        if ($("#hnd_Cardtype").val() == "01") {
+            if ($("#mb_idCard").val() == "" || $("#mb_idCard").val() == null) {
+                alert("银行卡类型为借记卡,身份证号不能为空！");
+            }
+        }
+        if ($("#hnd_Cardtype").val() == "00") {
+            if ($("#mb_expireDate").val() == "" || $("#mb_expireDate").val() == null) {
+                alert("银行卡类型为贷记卡,有效期不能为空！");
+            }
+            if ($("#mb_Cvv2").val() == "" || $("#mb_Cvv2").val() == null) {
+                alert("银行卡类型为贷记卡,Cvv2不能为空！");
+            }
+        }
+        if ($("#mb_bankNum").val() == "") {
+            alert("银行卡号不能为空");
+            window.location.href = "/member/safe";
+        }
+        if ($("#mb_phoneNum").val() == "") {
+            alert("手机号码不能为空");
+        }
+
+        if (isSend == 1) {
+            alert("刚下发短信，请耐心等待。");
+            return;
+        }
+        isSend = 1;
+        var input = $("#a_getverifycode");
+        //input.removeAttr("onclick");
+        $.post("/member/mobaoresult1401", { "payType": $("#mobao_payType").val(), "userId": $("#mobao_userId").val(), "fromDomain": $("input[name='fromDomain']").val(), "money": $("#mobao_express_money").val(), "realName": $("#mb_realName").val(), "bankNum": $("#mb_bankNum").val(), "hnd_Cardtype": $("#hnd_Cardtype").val(), "idCard": $("#mb_idCard").val(), "expireDate": $("#mb_expireDate").val(), "Cvv2": $("#mb_Cvv2").val(), "phoneNum": $("#mb_phoneNum").val() }, function (r) {
+            if (r.refCode == "01") {
+                $("#hnd_ksPayOrderId").val(r.ksPayOrderId);
+                //alert("预交易成功！");
+                input.val('倒计时(180)');
+                var timeCtr = setInterval(function () {
+                    var sec = +input.val().match(/\d+/)[0];
+                    if (sec > 0) {
+                        input.val('倒计时(' + (sec - 1) + ')');
+                    } else {
+                        clearInterval(timeCtr);
+                        input.val('获取验证码');
+                        document.getElementById("a_getverifycode").onclick = getMessages;
+                        isSend = 0;
+                    }
+                }, 1000);
+            }
+            else {
+                alert(r.Msg);
+            }
+        });
+    }
+</script>

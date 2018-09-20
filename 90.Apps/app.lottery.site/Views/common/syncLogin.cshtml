@@ -1,0 +1,25 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>syncLogin</title>
+</head>
+<body>
+    @if (string.IsNullOrEmpty(ViewBag.Html))
+    {
+        <div>@ViewBag.Error</div>
+    }
+    else
+    {
+        <div>正在跳转，请稍后...</div>
+        <div style="display: none;">
+            @Html.Raw(ViewBag.Html)
+            <script type="text/javascript">
+                window.location.href = "@ViewBag.BBS";
+            </script>
+        </div>
+    }
+</body>
+</html>

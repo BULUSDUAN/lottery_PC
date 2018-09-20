@@ -1,0 +1,141 @@
+﻿@using External.Core
+@using External.Core.Celebritys;
+@{
+    Layout = "../Shared/_ArtistsLayout.cshtml";
+    ViewBag.Title = "模型管理";
+    var modellist = ViewBag.modelInfo as WinnerModelCycleInfo_Collection;
+    var modelinfo = modellist.ModelList.FirstOrDefault();
+}
+<div class="other_con">
+    <div class="other_tab clearfix">
+        <ul>
+            <a href="javascript:void(0)" date-type="my">
+                <li class="on">模型管理</li>
+            </a>
+        </ul>
+    </div>
+    <div class="other_box">
+        @if (modelinfo != null)
+        {
+            <div class="modelinfo">
+                <p class="project_tit">
+                    模型名称：@modelinfo.ModelName</p>
+                <div class="model_info_con clearfix">
+                    <ul class="editCon">
+                        <li class="clearfix"><span class="modeldes">模型描述：</span>
+                            <textarea id="modelmidObj" class="txt01">@modelinfo.ModelDescription</textarea>
+                        </li>
+                        <li class="clearfix"><span>分享设置：</span>
+                            <label>
+                                <input type="checkbox" id="issahreObj" @(modelinfo.IsShare ? "checked=true" : "") data-v="@(modelinfo.IsShare ? 1 : 0)" />分享,赢取奖励
+                            </label>
+                            <a href="" id="fxTipsObj" class="link2">奖励规则 <em class="bg2 common_tip"></em></a>
+                            <div id="fxConObj" class="rules r1" style="display: none;">
+                                <b>1、分享奖励</b>
+                                <br>
+                                分享模型，其他用户就可以购买你的模型，如果购买后中奖且盈利，你将得到中奖方案本金的 5%作为奖励 ，奖励将在用户购买彩票开奖后派发到彩金账户。如果购买后未中奖或未盈利，没有奖励。
+                                <br>
+                                <b>2、包赚奖励</b>
+                                <br>
+                                如果模型被 @SiteString.getHZSiteName(Request)选中作为包赚模型，用户购买包赚计划并整体盈利，你将得到包赚计划盈利金额的1%作为奖励，奖励将在盈利计划执行完后派发到彩金账户。包赚奖励不与分享奖励同享。
+                                <br>
+                                <b>3、先行赔付奖励</b>
+                                <br>
+                                开启先行赔付，用户购买支持“先行赔付”的盈利计划并整体盈利，你将得到盈利计划购买本金的 5%作为奖励，奖励将在盈利计划执行完后派发到彩金账户，先行赔付奖励不与分享奖励同享。
+                            </div>
+                        </li>
+                    </ul>
+                    <ul class="editCon" style="display: @(modelinfo.IsShare ? "block" : "none")" id="sahreConObj">
+                        <li class="clearfix"><span>公开设置： </span>
+                            <label>
+                                <input type="radio" name="open" class="openTypeObj" @(modelinfo.ModelSecurity==ModelSecurity.Public?"checked=checked":"")  value="10"/>公开
+                            </label>
+                            <label>
+                                <input type="radio"  name="open" class="openTypeObj"  @(modelinfo.ModelSecurity==ModelSecurity.CompletePublic?"checked=checked":"") value="20"/>方案截止后公开
+                            </label>
+                        </li>
+                        <li class="clearfix"><span>先行赔付设置： </span>
+                            <label>
+                                <input type="checkbox" id="isriskshareConObj" @(modelinfo.IsFirstPayment ? "checked=true" : "") data-v="@(modelinfo.IsFirstPayment ? 1 : 0)" @(modelinfo.IsFirstPayment?"disabled":"") />先行赔付
+                            </label>
+                            <a href="" class="link2" id="szTipsObj">如何设置 <em class="bg2 common_tip"></em></a>
+                            <div id="szConObj" class="rules r2" style="display: none;">
+                                <b>如何设置？</b>
+                                <br>
+                                1、打开模型设置页，勾中模型“先行赔付”，设置盈利计划类型/周期/赔付比例（必须大于5%，@SiteString.getHZSiteName(Request)也同时赔付5%）佣金比例（盈利金额提成，需要先设置赔付比例），保存设置。
+                                <br>
+                                2、打开模型详情页面，点击模型管理模块中的“转入”按钮，输入指定金额，点击确认，如果账户余额和彩金足够（转入顺序是先彩金，后现金），金额将转入模型赔付金。
+                                <br>
+                                3、点击 “开启”按钮，如果赔付金大于500元，先行赔付就可以工作了（支持先行赔付的模型将被标记）。
+                                <br>
+                                4、用户购买先行赔付，赔付金将随之减少，观察剩余赔付金决定是否继续转入，如果赔付金不足最低赔付，先行赔付也将失效。
+                                <br>
+                                5、已经开启的“先行赔付”，可以设置“先行赔付”的参数，设置将在下次用户购买时生效。
+                                <br>
+                                6、已经开启的“先行赔付”，点击“暂停”，“先行赔付”将临时停止，用户也不能购买，点击“开启”，将再次启动。
+                            </div>
+                        </li>
+                        <li class="clearfix" id="riskshareConObj" style="display: @(modelinfo.IsFirstPayment ? "block" : "none")">
+                            <ul class="pfsetbox">
+                                <li class="clearfix"><span>盈利计划设置：</span>
+                                    <select id="noObj" autocomplete="off">
+                                         @for (int i = 1; i <= 30; i++)
+                                         {
+                                   <option value='@i'  @(@modelinfo.ProfitIssuseCount==i?"selected=selected":"")  >@(i)期</option>
+                                         }
+                                    </select>
+                                    <select id="risktypeObj"  autocomplete="off">
+                                        <option value='20'  @(modelinfo.RiskType == RiskType.Low ? "selected=selected" : "")>低风险</option>
+                                        <option value='10' @(modelinfo.RiskType == RiskType.Moderate ? "selected=selected" : "")>适中</option>
+                                    </select>
+                                </li>
+                                <li class="clearfix"><span>亏损赔付比例设置：</span>
+                                    <input type="text" class="perset" id="rateObj" value="@(modelinfo.LossRatio == 0 ? 5 : Convert.ToInt32(modelinfo.LossRatio * 100))" />
+                                    % </li>
+                                <li><span>佣金比例设置：</span>
+                                    <input type="text" class="perset" id="profitrateObj" value="@(modelinfo.CommissionRitio == 0 ? 0 : Convert.ToInt32(modelinfo.CommissionRitio * 100)) "/>
+                                    % </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="editCon">
+                        <li class="clearfix"><a href="javascript:void(0)" id="saveModelObj" class="bg2 btn_save">
+                                                 保&nbsp;存</a> </li>
+                        <li class="clearfix txt02">温馨提示：模型修改设置后，将在下次投注时生效 </li>
+                    </ul>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="new_f_top clearfix">
+                找不到
+            </div>
+        }
+    </div>
+</div>
+<!--保存设置-->
+<div class=" dialog_layer" id="save_set">
+    <div class="box_tit" id="box_tit">
+        <span class="fl">winner.wancai.com 提示您</span> <a id="closeSaveset" class="close fr bg2" href="javascript:closeTips();">close</a>
+    </div>
+    <div class="box_con">
+        <div class="fl ">
+            <span class="bg2 security"></span>
+            <span class="setsuc">设置成功</span>
+        </div>
+        <div class="fr konwn">
+            <a class="bg2 btn btn_sure" href="javascript:window.location.href='/artists/info?mid=@ViewBag.Mid';closeTips()">我知道了</a>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var modelId = "@ViewBag.Mid";
+    var saveSetTips = new LightBox("save_set");
+    function closeTips() {
+        saveSetTips.Close();
+        
+    }
+</script>
+@UserHelper.js("edit.js")

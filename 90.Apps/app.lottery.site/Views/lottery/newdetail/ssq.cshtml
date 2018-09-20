@@ -1,0 +1,53 @@
+﻿@using GameBiz.Core;
+@{
+    var award = ViewBag.Award as LotteryData.Core.GameWinNumber_Info;
+    var issues = ViewBag.CurIssuse as Issuse_QueryInfo;
+}
+<div class="lo_box" style="padding-bottom:25px;">
+    <div class="details_box">
+        <span class="icon_game ssq"></span>
+        @GameHelper.LotteryHeaderViewNew(issues == null ? null : issues, award == null ? null : award, award == null || award.Id == 0 ? "SSQ" : award.GameCode)
+        @GameHelper.LotteryDescViewNew(award == null || award.Id == 0 ? "SSQ" : award.GameCode)
+    </div>
+    <div class="award">
+        <div class="awardgrade">
+            <div class="grade_title">
+                双色球奖级设置</div>
+            <div>
+                <span style="width: 15%">一等奖</span><span style="width: 50%">选6+1中6+1</span><span
+                    style="width: 30%">500万</span>
+            </div>
+            <div class="bgay">
+                <span style="width: 15%">二等奖</span><span style="width: 50%">选6+1中6+0</span><span
+                    style="width: 30%">当期高等奖奖金的30%</span>
+            </div>
+            <div>
+                <span style="width: 15%">三等奖</span><span style="width: 50%">选6+1中5+1</span><span
+                    style="width: 30%"> 单注奖金额固定为3000元</span>
+            </div>
+            <div class="bgay">
+                <span style="width: 15%">四等奖</span><span style="width: 50%">选6+1中5+0或中4+1</span><span
+                    style="width: 30%">单注奖金额固定为200元</span>
+            </div>
+            <div>
+                <span style="width: 15%">五等奖</span><span style="width: 50%">选6+1中4+0或中3+1</span><span
+                    style="width: 30%"> 单注奖金额固定为10元</span>
+            </div>
+            <div class="bgay">
+                <span style="width: 15%">六等奖</span><span style="width: 50%">选6+1中2+1或中1+1或中0+1</span><span
+                    style="width: 30%">单注奖金额固定为5元</span>
+            </div>
+        </div>
+        <div class="details_list">
+            <div class="list_title">
+                开奖详情</div>
+            <div id="lottery_details">
+                <div>
+                    <span style="width: 100%">暂无信息数据</span>
+                </div>
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+</div>

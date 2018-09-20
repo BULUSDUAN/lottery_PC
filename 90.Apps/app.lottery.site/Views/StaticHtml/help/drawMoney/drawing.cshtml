@@ -1,0 +1,53 @@
+﻿@{
+    var Title = "提款";
+    ViewBag.Title = Title + " - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+   @ViewHelpers.css("help.css")
+} 
+  <div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">玩彩网</a> > </li>
+        <li><a href="/staticHtml/help/index.html">&nbsp;帮助中心</a> > </li>
+        <li>&nbsp;提款</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type = "drawMoney", name = "drawing" });}
+<div class="help_r">
+         
+
+       <div class="list_box">
+            	<div class="h_pub_t">
+                	<b class="t_l"></b>
+                    <div class="t_m"><h2>提款</h2></div>
+                    <b class="t_r"></b>
+                </div>
+                <div class="h_pub_m">
+                	<ul>
+                    
+                            <li><a href="/staticHtml/help/drawMoney/drawing1.html" id="link151">提款须知</a></li>
+                            <li><a href="/staticHtml/help/drawMoney/drawing2.html" id="link151">如何绑定银行卡？</a></li>
+                            <li><a href="/staticHtml/help/drawMoney/drawing3.html" id="link151">为什么我的提款不成功？</a></li>
+                            <li><a href="/staticHtml/help/drawMoney/drawing4.html" id="link151">提款后为什么账户中有冻结的资金？</a></li>
+                            <li><a href="/staticHtml/help/drawMoney/drawing5.html" id="link151">申请提款，网站是否有通知？</a></li>
+                            <li><a href="/staticHtml/help/drawMoney/drawing6.html" id="link151">如何将钱从玩彩网帐号中提取出来（如何提款）？</a></li>
+                      
+				            </ul>
+                </div>     
+            </div>
+
+
+        </div>
+         </div>
+<div class="clearfix"></div>
+
+ @ViewHelpers.js("help.js")
+
+
+
+
+
+

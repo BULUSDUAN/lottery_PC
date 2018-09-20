@@ -1,0 +1,87 @@
+﻿@{
+    var url = Request.Url;
+    var user = ViewBag.User as app.lottery.site.Models.CurrentUserInfo;
+}
+@{Html.RenderAction("headerTop", "home");}
+<div class="header_con p_r">
+    <div class="logo_v">
+        <a id="link73" href="/" class="logo_vip"></a><a id="link72" href="/" class="logo_500"
+            target="_blank">会员中心</a> <a id="link74" href="/" target="_blank">
+                <img class="note" src="@ViewHelpers.img("/vip/note.gif")"></a>
+    </div>
+    <ul class="nav_v">
+        <li><a id="link75" href="/staticHtml/vip/index.html">首页</a></li>
+        <li><a id="link76" href="/staticHtml/vip/privilege.html">特权与服务 </a></li>
+        <li><a id="link77" href="javascript:void(0)" checklg="/vip/task">我的任务</a></li>
+        <li><a id="link78" href="javascript:void(0)" checklg="/vip/freedom">我的成长</a></li>
+        <li><a id="link79" href="/staticHtml/vip/introduction.html">会员介绍</a></li>
+        <li><a id="link81" href="/staticHtml/vip/ledou.html">豆豆兑换</a></li>
+    </ul>
+    
+</div>
+@if (url.ToString().IndexOf("supervip") > -1)
+{
+    <div class="banner_v" id="slider">
+        <div class="conbox">
+            <div style="display: block;">
+                <a id="link82" style="position: absolute; z-index: 1; opacity: 1;">
+                    <img src="@ViewHelpers.img("/vip/VIPbannner.jpg")" alt="" align="middle" height="330" width="2000">
+                </a>
+            </div>
+            <div style="display: block;">
+                <a id="link83" style="position: absolute; z-index: 0; opacity: 0;">
+                    <img src="@ViewHelpers.img("/vip/VIPbannner4.png")" alt="" align="middle" height="330" width="2000">
+                </a>
+            </div>
+            <!--2014-08-03 11:07:12-->
+        </div>
+        <div class="switcher">
+            <a id="link84" class="cur" href="javascript:void(0)"></a><a id="link85" class=""
+                href="javascript:void(0)"></a>
+        </div>
+    </div>
+    <script type="text/javascript">
+            //banner轮播
+            $(function () {
+                var len = $(".conbox div").length;
+                var temhtml = '';
+                for (var i = 0; i < len; i++) {
+                    temhtml += '<a class="' + (i == 0 ? 'cur' : '') + '" href="javascript:void(0)"></a>';
+                }
+                $(".switcher").html(temhtml);
+
+                $("#slider").Xslider({
+                    affect: 'fade',
+                    ctag: 'a',
+                    speed: 1500,
+                    space: 6000,
+                    trigger: 'mouseover',
+                    conbox: '.conbox',
+                    switcher: '.switcher',
+                    stag: 'a',
+                    current: 'cur',
+                    rand: false
+                });
+                //首页会员动态滚动
+                function scrollDymic() {
+                    var tab = document.getElementById("js_table_scroll");
+                    var tab1 = document.getElementById("js_table_scroll1");
+                    var tab2 = document.getElementById("js_table_scroll2");
+                    if (tab == null || tab.length == 0 || tab1.length == 0 || tab2.length == 0) return false;
+                    function Marquee() {
+                        if (tab2.offsetHeight - tab.scrollTop <= 0)
+                            tab.scrollTop -= tab1.offsetHeight;
+                        else {
+                            tab.scrollTop++;
+                        }
+                    }
+                    var speed = 30;
+
+                    var MyMar = setInterval(Marquee, speed);
+                    tab.onmouseover = function () { clearInterval(MyMar); };
+                    tab.onmouseout = function () { MyMar = setInterval(Marquee, speed); };
+                }
+                scrollDymic();
+            })
+    </script>
+}

@@ -1,0 +1,160 @@
+﻿@{
+    ViewBag.Title = "活动中心";
+    @UserHelper.css("HuoDong.css")
+    var avtion = ViewBag.Avtion as External.Core.Task.ActivityListInfoCollection;
+    var i = 0;
+    
+    @UserHelper.js("user.min.js")
+    @UserHelper.js("nav.js")
+}
+<div id="action">
+    <span class="titlebg"></span><span class="huo_title"><span class="font">网站活动</span></span>
+</div>
+<div id="avition">
+    <div class="avi_left">
+        <ul>
+            @if (avtion != null)
+            {
+                foreach (var item in avtion.List)
+                {
+                    if (item.IsShow == true && item.EndTime > DateTime.Now)
+                    {
+                        if (i % 3 == 0)
+                        {
+                <li class="top20">
+                    <div class="a_left">
+                        <img src="@item.ImageUrl" alt="" width="272" height="189" />
+                    </div>
+                    <div class="a_right greeng">
+                        <span class="hot">火热进行中</span>
+                        <div class="hdbt blueb pl">
+                            @item.Title</div>
+                        <div style="margin-top: 50px;">
+                            <div class="hd_jx orangeo pl">
+                                活动时间：</div>
+                            <p class="pl">
+                                @item.BeginTime.ToString("yyyy-MM-dd HH:mm") 至 @item.EndTime.ToString("yyyy-MM-dd")&nbsp;24:00</p>
+                            <div class="hd_jx orangeo pl">
+                                活动详情：</div>
+                            <p class="pl">
+                                @item.Summary</p>
+                        </div>
+                        <a href="@item.LinkUrl" class="canyu blueb">马上参与</a>
+                    </div>
+                    <div style="clear: both;">
+                    </div>
+                </li>
+                        }
+                        if (i % 3 == 1)
+                        { 
+                <li class="top20">
+                    <div class="a_left">
+                        <img src="@item.ImageUrl" alt="" width="272" height="189" />
+                    </div>
+                    <div class="a_right orangeo">
+                        <span class="hot">火热进行中</span>
+                        <div class="hdbt greeng pl">
+                            @item.Title</div>
+                        <div style="margin-top: 50px;">
+                            <div class="hd_jx orangeo1 pl">
+                                活动时间：</div>
+                            <p class="pl">
+                                @item.BeginTime.ToString("yyyy-MM-dd HH:mm") 至 @item.EndTime.ToString("yyyy-MM-dd")&nbsp;24:00</p>
+                            <div class="hd_jx orangeo1 pl">
+                                活动详情：</div>
+                            <p class="pl">
+                                @item.Summary</p>
+                        </div>
+                        <a href="@item.LinkUrl" class="canyu orangeo1">马上参与</a>
+                    </div>
+                    <div style="clear: both;">
+                    </div>
+                </li>
+                        }
+                        if (i % 3 == 2)
+                        {
+                <li class="top20">
+                    <div class="a_left">
+                        <img src="@item.ImageUrl" alt="" width="272" height="189" />
+                    </div>
+                    <div class="a_right blueb">
+                        <span class="hot">火热进行中</span>
+                        <div class="hdbt orangeo pl">
+                            @item.Title</div>
+                        <div style="margin-top: 50px;">
+                            <div class="hd_jx greeng pl">
+                                活动时间：</div>
+                            <p class="pl">
+                                @item.BeginTime.ToString("yyyy-MM-dd HH:mm") 至 @item.EndTime.ToString("yyyy-MM-dd")&nbsp;24:00</p>
+                            <div class="hd_jx greeng pl">
+                                活动详情：</div>
+                            <p class="pl">
+                                @item.Summary</p>
+                        </div>
+                        <a href="@item.LinkUrl" class="canyu greeng">马上参与</a>
+                    </div>
+                    <div style="clear: both;">
+                    </div>
+                </li>
+                        }
+                        i++;
+                    }
+                }
+            }
+        </ul>
+        <ul>
+            @if (avtion != null)
+            {
+                foreach (var item in avtion.List)
+                {
+                    if (item.IsShow == true && item.EndTime < DateTime.Now)
+                    {
+                <li class="top20">
+                    <div class="a_left">
+                        <img src="@item.ImageUrl" alt="" width="272" height="189" style="filter：#383637; -moz-opacity:0.1;opacity:0.3;" />
+                    </div>
+                    <div class="a_right1 hdtz">
+                        <span class="hot1">火热进行中</span>
+                        <div class="hdbt hdtzbg pl">
+                            @item.Title</div>
+                        <div style="margin-top: 50px;">
+                            <div class="hd_jx hdtzbg pl">
+                                活动时间：</div>
+                            <p class="pl">
+                                @item.BeginTime.ToString("yyyy-MM-dd HH:mm") 至 @item.EndTime.ToString("yyyy-MM-dd")&nbsp;24:00</p>
+                            <div class="hd_jx hdtzbg pl">
+                                活动详情：</div>
+                            <p class="pl">
+                                @item.Summary</p>
+                        </div>
+                        <span class="canyu1 hdtzbg">马上参与</span>
+                    </div>
+                    <div style="clear: both;">
+                    </div>
+                </li>
+                    }
+                }
+            }
+        </ul>
+        <div style="margin-top: 10px;">@ControlHelper.Pager("ReloadList", ViewBag.PageIndex, ViewBag.PageSize, avtion == null ? 0 : avtion.TotalCount)</div>
+    </div>
+    <div class="avi_right">
+        <a href="/buy/jingcai/spf" target="_blank">
+            <img src="@ViewHelpers.img("../images/huodong/huodong1.png")" alt="" class="img top20" /></a>
+        <a href="/buy/danchang/spf" target="_blank">
+            <img src="@ViewHelpers.img("../images/huodong/huodong2.png")" alt="" class="img top20" /></a>
+        <a href="/buy/toto/t14c" target="_blank">
+            <img src="@ViewHelpers.img("../images/huodong/huodong3.png")" alt="" class="img top20" /></a>
+        <a href="/buy/szc/ssq" target="_blank">
+            <img src="@ViewHelpers.img("../images/huodong/huodong4.png")" alt="" class="img top20" /></a>
+        <a href="/buy/szc/dlt" target="_blank">
+            <img src="@ViewHelpers.img("../images/huodong/huodong5.png")" alt="" class="img top20" /></a>
+    </div>
+    <div style="clear: both;">
+    </div>
+</div>
+<script type="text/javascript">
+    function ReloadList(pageIndex, pageSize) {
+        location.search = "pageIndex=" + pageIndex + "&pageSize=" + pageSize;
+    }
+</script>

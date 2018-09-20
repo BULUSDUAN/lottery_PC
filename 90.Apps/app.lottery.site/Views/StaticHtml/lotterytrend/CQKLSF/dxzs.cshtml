@@ -1,0 +1,827 @@
+﻿@{
+    Layout = "~/Views/lotteryTrend/_Layout.cshtml";
+    var pageSize = Request["pageSize"];
+    if (pageSize != "" && pageSize != null)
+    {
+        ViewBag.Title = "重庆快乐十分大小走势图近" + pageSize + "期" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "重庆快乐十分大小走势图近" + pageSize + "期";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "重庆快乐十分大小走势图近" + pageSize + "期,查看更多重庆快乐十分大小走势图请登录" + SiteString.getHZSiteName(Request) + "彩票网.";
+    }
+    else
+    {
+        ViewBag.Title = "重庆快乐十分大小走势图-" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "重庆快乐十分大小走势图";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "彩票网提供最新的重庆快乐十分大小走势图,其中包括所有开奖号码的大小号分布及大小组合走势情况,让彩民朋友更直观的分析重庆快乐十分大小走势图";
+    }
+    var dxzs = ViewBag.DataList as List<LotteryData.Core.CQKLSF_DXZS_Info>;
+    var a = 0;  
+}
+@{Html.RenderAction("ThendLink_2", "lotteryTrend",new{id="dxzs_cqklsf"});}
+<div id="container">
+    <div class="cont_box" style="width: 1003px;">
+        <table width="100%" cellspacing="1" cellpadding="0" border="0" class="table_box"
+            style="width: 1003px;" id="chartsTable">
+            <tbody>
+                <tr>
+                    <td align="center" class="tab_top" colspan="34">
+                        标注形式选择：
+                        <input type="checkbox" checked="checked" id="c_yl">
+                        <label for="c_yl">
+                            遗漏</label>
+                        <input type="checkbox" checked="checked" id="has_line">
+                        <label for="has_line">
+                            折线</label>
+                        <input type="checkbox" checked="checked" id="help_line">
+                        <label for="help_line">
+                            分隔线</label>
+                        <input type="checkbox" id="yl_zhu">
+                        <label for="yl_zhu">
+                            遗漏分层</label>
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td rowspan="2" style="width: 80px;" class="line_r">
+                        <strong>期号</strong>
+                    </td>
+                    <td rowspan="2" colspan="8" class="line_r">
+                        开奖号码
+                    </td>
+                    <td colspan="2">
+                        第一位
+                    </td>
+                    <td colspan="2">
+                        第二位
+                    </td>
+                    <td colspan="2">
+                        第三位
+                    </td>
+                    <td colspan="2">
+                        第四位
+                    </td>
+                    <td colspan="2">
+                        第五位
+                    </td>
+                    <td colspan="2">
+                        第六位
+                    </td>
+                    <td colspan="2">
+                        第七位
+                    </td>
+                    <td colspan="2" class="line_r">
+                        第八位
+                    </td>
+                    <td colspan="9" class="line_r">
+                        大小组合走势
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td style="width: 26px;">
+                        小
+                    </td>
+                    <td style="width: 26px;">
+                        大
+                    </td>
+                    <td style="width: 26px;">
+                        小
+                    </td>
+                    <td style="width: 26px;">
+                        大
+                    </td>
+                    <td style="width: 26px;">
+                        小
+                    </td>
+                    <td style="width: 26px;">
+                        大
+                    </td>
+                    <td style="width: 26px;">
+                        小
+                    </td>
+                    <td style="width: 26px;">
+                        大
+                    </td>
+                    <td style="width: 26px;">
+                        小
+                    </td>
+                    <td style="width: 26px;">
+                        大
+                    </td>
+                    <td style="width: 26px;">
+                        小
+                    </td>
+                    <td style="width: 26px;">
+                        大
+                    </td>
+                    <td style="width: 26px;">
+                        小
+                    </td>
+                    <td style="width: 26px;">
+                        大
+                    </td>
+                    <td style="width: 26px;">
+                        小
+                    </td>
+                    <td style="width: 26px;" class="line_r">
+                        大
+                    </td>
+                    <td style="width: 26px;">
+                        全小
+                    </td>
+                    <td style="width: 26px;">
+                        一大七小
+                    </td>
+                    <td style="width: 26px;">
+                        二大六小
+                    </td>
+                    <td style="width: 26px;">
+                        三大五小
+                    </td>
+                    <td style="width: 26px;">
+                        四大四小
+                    </td>
+                    <td style="width: 26px;">
+                        五大三小
+                    </td>
+                    <td style="width: 26px;">
+                        六大二小
+                    </td>
+                    <td style="width: 26px;">
+                        七大一小
+                    </td>
+                    <td style="width: 26px;" class="line_r">
+                        全大
+                    </td>
+                </tr>
+            </tbody>
+            <tbody id="tdata" style="font-size: 12px; font-family: '宋体',Tahoma,Consolas,Arial,Simsun;">
+                @foreach (var item in dxzs)
+                {
+                    a++;
+                    if (a % 5 == 0)
+                    {
+                    <tr class="tdbck">
+                        <td colspan="34">
+                        </td>
+                    </tr>
+                    }
+                    <tr>
+                        <td align="center" class="line_r">
+                            @item.IssuseNumber
+                        </td>
+                        <td class="hot12">
+                            @item.WinNumber.Split(',')[0]
+                        </td>
+                        <td class="hot12">
+                            @item.WinNumber.Split(',')[1]
+                        </td>
+                        <td class="hot12">
+                            @item.WinNumber.Split(',')[2]
+                        </td>
+                        <td class="hot12">
+                            @item.WinNumber.Split(',')[3]
+                        </td>
+                        <td class="hot12">
+                            @item.WinNumber.Split(',')[4]
+                        </td>
+                        <td class="hot12">
+                            @item.WinNumber.Split(',')[5]
+                        </td>
+                        <td class="hot12">
+                            @item.WinNumber.Split(',')[6]
+                        </td>
+                        <td class="hot12 line_r">
+                            @item.WinNumber.Split(',')[7]
+                        </td>
+                        <td class="@(item.DX1_X == 0 ? "cbg orange1" : "y101")">
+                            @(item.DX1_X == 0 ? "小" : item.DX1_X.ToString())
+                        </td>
+                        <td class="@(item.DX1_D == 0 ? "cbg orange1" : "y101")">
+                            @(item.DX1_D == 0 ? "大" : item.DX1_D.ToString())
+                        </td>
+                        <td class="@(item.DX2_X == 0 ? "cbg green1" : "y101")">
+                            @(item.DX2_X == 0 ? "小" : item.DX2_X.ToString())
+                        </td>
+                        <td class="@(item.DX2_D == 0 ? "cbg green1" : "y101")">
+                            @(item.DX2_D == 0 ? "大" : item.DX2_D.ToString())
+                        </td>
+                        <td class="@(item.DX3_X == 0 ? "cbg purple1" : "y101")">
+                            @(item.DX3_X == 0 ? "小" : item.DX3_X.ToString())
+                        </td>
+                        <td class="@(item.DX3_D == 0 ? "cbg purple1" : "y101")">
+                            @(item.DX3_D == 0 ? "大" : item.DX3_D.ToString())
+                        </td>
+                        <td class="@(item.DX4_X == 0 ? "cbg purple2" : "y101")">
+                            @(item.DX4_X == 0 ? "小" : item.DX4_X.ToString())
+                        </td>
+                        <td class="@(item.DX4_D == 0 ? "cbg purple2" : "y101")">
+                            @(item.DX4_D == 0 ? "大" : item.DX4_D.ToString())
+                        </td>
+                        <td class="@(item.DX5_X == 0 ? "cbg gray1" : "y101")">
+                            @(item.DX5_X == 0 ? "小" : item.DX5_X.ToString())
+                        </td>
+                        <td class="@(item.DX5_D == 0 ? "cbg gray1" : "y101")">
+                            @(item.DX5_D == 0 ? "大" : item.DX5_D.ToString())
+                        </td>
+                        <td class="@(item.DX6_X == 0 ? "cbg tbg2" : "y101")">
+                            @(item.DX6_X == 0 ? "小" : item.DX6_X.ToString())
+                        </td>
+                        <td class="@(item.DX6_D == 0 ? "cbg tbg2" : "y101")">
+                            @(item.DX6_D == 0 ? "大" : item.DX6_D.ToString())
+                        </td>
+                        <td class="@(item.DX7_X == 0 ? "cbg big" : "y101")">
+                            @(item.DX7_X == 0 ? "小" : item.DX7_X.ToString())
+                        </td>
+                        <td class="@(item.DX7_D == 0 ? "cbg big" : "y101")">
+                            @(item.DX7_D == 0 ? "大" : item.DX7_D.ToString())
+                        </td>
+                        <td class="@(item.DX8_X == 0 ? "cbg cbg5" : "y101")">
+                            @(item.DX8_X == 0 ? "小" : item.DX8_X.ToString())
+                        </td>
+                        <td class="@(item.DX8_D == 0 ? "cbg cbg5 line_r" : "y101 line_r")">
+                            @(item.DX8_D == 0 ? "大" : item.DX8_D.ToString())
+                        </td>
+                        <td class="@(item.DX_Q_X == 0 ? "cbg tbg1" : "y101")">
+                            @(item.DX_Q_X == 0 ? "0:8" : item.DX_Q_X.ToString())
+                        </td>
+                        <td class="@(item.DX_1D7X == 0 ? "cbg tbg1" : "y101")">
+                            @(item.DX_1D7X == 0 ? "1:7" : item.DX_1D7X.ToString())
+                        </td>
+                        <td class="@(item.DX_2D6X == 0 ? "cbg tbg1" : "y101")">
+                            @(item.DX_2D6X == 0 ? "2:6" : item.DX_2D6X.ToString())
+                        </td>
+                        <td class="@(item.DX_3D5X == 0 ? "cbg tbg1" : "y101")">
+                            @(item.DX_3D5X == 0 ? "3:5" : item.DX_3D5X.ToString())
+                        </td>
+                        <td class="@(item.DX_4D4X == 0 ? "cbg tbg1" : "y101")">
+                            @(item.DX_4D4X == 0 ? "4:4" : item.DX_4D4X.ToString())
+                        </td>
+                        <td class="@(item.DX_5D3X == 0 ? "cbg tbg1" : "y101")">
+                            @(item.DX_5D3X == 0 ? "5:3" : item.DX_5D3X.ToString())
+                        </td>
+                        <td class="@(item.DX_6D2X == 0 ? "cbg tbg1" : "y101")">
+                            @(item.DX_6D2X == 0 ? "6:2" : item.DX_6D2X.ToString())
+                        </td>
+                        <td class="@(item.DX_7D1X == 0 ? "cbg tbg1" : "y101")">
+                            @(item.DX_7D1X == 0 ? "7:1" : item.DX_7D1X.ToString())
+                        </td>
+                        <td class="@(item.DX_Q_D == 0 ? "cbg tbg1 line_r" : "y101 line_r")">
+                            @(item.DX_Q_D == 0 ? "8:0" : item.DX_Q_D.ToString())
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tbody>
+                <tr>
+                    <td align="center" class="bdtop line_r">
+                        出现次数
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop">
+                        @(dxzs.Count(p => p.DX1_X == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(dxzs.Count(p => p.DX1_D == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(dxzs.Count(p => p.DX2_X == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(dxzs.Count(p => p.DX2_D == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(dxzs.Count(p => p.DX3_X == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(dxzs.Count(p => p.DX3_D == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(dxzs.Count(p => p.DX4_X == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(dxzs.Count(p => p.DX4_D == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(dxzs.Count(p => p.DX5_X == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(dxzs.Count(p => p.DX5_D == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(dxzs.Count(p => p.DX6_X == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(dxzs.Count(p => p.DX6_D == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(dxzs.Count(p => p.DX7_X == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(dxzs.Count(p => p.DX7_D == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(dxzs.Count(p => p.DX8_X == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(dxzs.Count(p => p.DX8_D == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(dxzs.Count(p => p.DX_Q_X == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(dxzs.Count(p => p.DX_1D7X == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(dxzs.Count(p => p.DX_2D6X == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(dxzs.Count(p => p.DX_3D5X == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(dxzs.Count(p => p.DX_4D4X == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(dxzs.Count(p => p.DX_5D3X == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(dxzs.Count(p => p.DX_6D2X == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(dxzs.Count(p => p.DX_7D1X == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(dxzs.Count(p => p.DX_Q_D == 0))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        平均遗漏
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                        @(dxzs.Sum(p => p.DX1_X) / dxzs.Count)
+                    </td>
+                    <td>
+                        @(dxzs.Sum(p => p.DX1_D) / dxzs.Count)
+                    </td>
+                    <td>
+                        @(dxzs.Sum(p => p.DX2_X) / dxzs.Count)
+                    </td>
+                    <td>
+                        @(dxzs.Sum(p => p.DX2_D) / dxzs.Count)
+                    </td>
+                    <td>
+                        @(dxzs.Sum(p => p.DX3_X) / dxzs.Count)
+                    </td>
+                    <td>
+                        @(dxzs.Sum(p => p.DX3_D) / dxzs.Count)
+                    </td>
+                    <td>
+                        @(dxzs.Sum(p => p.DX4_X) / dxzs.Count)
+                    </td>
+                    <td>
+                        @(dxzs.Sum(p => p.DX4_D) / dxzs.Count)
+                    </td>
+                    <td>
+                        @(dxzs.Sum(p => p.DX5_X) / dxzs.Count)
+                    </td>
+                    <td>
+                        @(dxzs.Sum(p => p.DX5_D) / dxzs.Count)
+                    </td>
+                    <td>
+                        @(dxzs.Sum(p => p.DX6_X) / dxzs.Count)
+                    </td>
+                    <td>
+                        @(dxzs.Sum(p => p.DX6_D) / dxzs.Count)
+                    </td>
+                    <td>
+                        @(dxzs.Sum(p => p.DX7_X) / dxzs.Count)
+                    </td>
+                    <td>
+                        @(dxzs.Sum(p => p.DX7_D) / dxzs.Count)
+                    </td>
+                    <td>
+                        @(dxzs.Sum(p => p.DX8_X) / dxzs.Count)
+                    </td>
+                    <td class="line_r">
+                        @(dxzs.Sum(p => p.DX8_D) / dxzs.Count)
+                    </td>
+                    <td>
+                        @(dxzs.Sum(p => p.DX_Q_X) / dxzs.Count)
+                    </td>
+                    <td>
+                        @(dxzs.Sum(p => p.DX_1D7X) / dxzs.Count)
+                    </td>
+                    <td>
+                        @(dxzs.Sum(p => p.DX_2D6X) / dxzs.Count)
+                    </td>
+                    <td>
+                        @(dxzs.Sum(p => p.DX_3D5X) / dxzs.Count)
+                    </td>
+                    <td>
+                        @(dxzs.Sum(p => p.DX_4D4X) / dxzs.Count)
+                    </td>
+                    <td>
+                        @(dxzs.Sum(p => p.DX_5D3X) / dxzs.Count)
+                    </td>
+                    <td>
+                        @(dxzs.Sum(p => p.DX_6D2X) / dxzs.Count)
+                    </td>
+                    <td>
+                        @(dxzs.Sum(p => p.DX_7D1X) / dxzs.Count)
+                    </td>
+                    <td class="line_r">
+                        @(dxzs.Sum(p => p.DX_Q_D) / dxzs.Count)
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        最大遗漏
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                        @(dxzs.Max(p => p.DX1_X))
+                    </td>
+                    <td>
+                        @(dxzs.Max(p => p.DX1_D))
+                    </td>
+                    <td>
+                        @(dxzs.Max(p => p.DX2_X))
+                    </td>
+                    <td>
+                        @(dxzs.Max(p => p.DX2_D))
+                    </td>
+                    <td>
+                        @(dxzs.Max(p => p.DX3_X))
+                    </td>
+                    <td>
+                        @(dxzs.Max(p => p.DX3_D))
+                    </td>
+                    <td>
+                        @(dxzs.Max(p => p.DX4_X))
+                    </td>
+                    <td>
+                        @(dxzs.Max(p => p.DX4_D))
+                    </td>
+                    <td>
+                        @(dxzs.Max(p => p.DX5_X))
+                    </td>
+                    <td>
+                        @(dxzs.Max(p => p.DX5_D))
+                    </td>
+                    <td>
+                        @(dxzs.Max(p => p.DX6_X))
+                    </td>
+                    <td>
+                        @(dxzs.Max(p => p.DX6_D))
+                    </td>
+                    <td>
+                        @(dxzs.Max(p => p.DX7_X))
+                    </td>
+                    <td>
+                        @(dxzs.Max(p => p.DX7_D))
+                    </td>
+                    <td>
+                        @(dxzs.Max(p => p.DX8_X))
+                    </td>
+                    <td class="line_r">
+                        @(dxzs.Max(p => p.DX8_D))
+                    </td>
+                    <td>
+                        @(dxzs.Max(p => p.DX_Q_X))
+                    </td>
+                    <td>
+                        @(dxzs.Max(p => p.DX_1D7X))
+                    </td>
+                    <td>
+                        @(dxzs.Max(p => p.DX_2D6X))
+                    </td>
+                    <td>
+                        @(dxzs.Max(p => p.DX_3D5X))
+                    </td>
+                    <td>
+                        @(dxzs.Max(p => p.DX_4D4X))
+                    </td>
+                    <td>
+                        @(dxzs.Max(p => p.DX_5D3X))
+                    </td>
+                    <td>
+                        @(dxzs.Max(p => p.DX_6D2X))
+                    </td>
+                    <td>
+                        @(dxzs.Max(p => p.DX_7D1X))
+                    </td>
+                    <td class="line_r">
+                        @(dxzs.Max(p => p.DX_Q_D))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        当前遗漏
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="">
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td valign="bottom">
+                        @(dxzs[dxzs.Count - 1].DX1_X)<br>
+                        <img width="8px" height="@(dxzs[dxzs.Count - 1].DX1_X)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(dxzs[dxzs.Count - 1].DX1_D)<br>
+                        <img width="8px" height="@(dxzs[dxzs.Count - 1].DX1_D)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(dxzs[dxzs.Count - 1].DX2_X)<br>
+                        <img width="8px" height="@(dxzs[dxzs.Count - 1].DX2_X)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(dxzs[dxzs.Count - 1].DX2_D)<br>
+                        <img width="8px" height="@(dxzs[dxzs.Count - 1].DX2_D)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(dxzs[dxzs.Count - 1].DX3_X)<br>
+                        <img width="8px" height="@(dxzs[dxzs.Count - 1].DX3_X)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(dxzs[dxzs.Count - 1].DX3_D)<br>
+                        <img width="8px" height="@(dxzs[dxzs.Count - 1].DX3_D)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(dxzs[dxzs.Count - 1].DX4_X)<br>
+                        <img width="8px" height="@(dxzs[dxzs.Count - 1].DX4_X)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(dxzs[dxzs.Count - 1].DX4_D)<br>
+                        <img width="8px" height="@(dxzs[dxzs.Count - 1].DX4_D)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(dxzs[dxzs.Count - 1].DX5_X)<br>
+                        <img width="8px" height="@(dxzs[dxzs.Count - 1].DX5_X)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(dxzs[dxzs.Count - 1].DX5_D)<br>
+                        <img width="8px" height="@(dxzs[dxzs.Count - 1].DX5_D)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(dxzs[dxzs.Count - 1].DX6_X)<br>
+                        <img width="8px" height="@(dxzs[dxzs.Count - 1].DX6_X)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(dxzs[dxzs.Count - 1].DX6_D)<br>
+                        <img width="8px" height="@(dxzs[dxzs.Count - 1].DX6_D)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(dxzs[dxzs.Count - 1].DX7_X)<br>
+                        <img width="8px" height="@(dxzs[dxzs.Count - 1].DX7_X)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(dxzs[dxzs.Count - 1].DX7_D)<br>
+                        <img width="8px" height="@(dxzs[dxzs.Count - 1].DX7_D)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(dxzs[dxzs.Count - 1].DX8_X)<br>
+                        <img width="8px" height="@(dxzs[dxzs.Count - 1].DX8_X)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(dxzs[dxzs.Count - 1].DX8_D)<br>
+                        <img width="8px" height="@(dxzs[dxzs.Count - 1].DX8_D)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(dxzs[dxzs.Count - 1].DX_Q_X)<br>
+                        <img width="8px" height="@(dxzs[dxzs.Count - 1].DX_Q_X)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(dxzs[dxzs.Count - 1].DX_1D7X)<br>
+                        <img width="8px" height="@(dxzs[dxzs.Count - 1].DX_1D7X)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(dxzs[dxzs.Count - 1].DX_2D6X)<br>
+                        <img width="8px" height="@(dxzs[dxzs.Count - 1].DX_2D6X)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(dxzs[dxzs.Count - 1].DX_3D5X)<br>
+                        <img width="8px" height="@(dxzs[dxzs.Count - 1].DX_3D5X)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(dxzs[dxzs.Count - 1].DX_4D4X)<br>
+                        <img width="8px" height="@(dxzs[dxzs.Count - 1].DX_4D4X)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(dxzs[dxzs.Count - 1].DX_5D3X)<br>
+                        <img width="8px" height="@(dxzs[dxzs.Count - 1].DX_5D3X)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(dxzs[dxzs.Count - 1].DX_6D2X)<br>
+                        <img width="8px" height="@(dxzs[dxzs.Count - 1].DX_6D2X)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(dxzs[dxzs.Count - 1].DX_7D1X)<br>
+                        <img width="8px" height="@(dxzs[dxzs.Count - 1].DX_7D1X)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(dxzs[dxzs.Count - 1].DX_Q_D)<br>
+                        <img width="8px" height="@(dxzs[dxzs.Count - 1].DX_Q_D)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr class="tabbg weight">
+                    <td rowspan="2" style="width: 80px;" class="line_r">
+                        <strong>期号</strong>
+                    </td>
+                    <td rowspan="2" colspan="8" class="line_r">
+                        开奖号码
+                    </td>
+                    <td style="width: 26px;">
+                        小
+                    </td>
+                    <td style="width: 26px;">
+                        大
+                    </td>
+                    <td style="width: 26px;">
+                        小
+                    </td>
+                    <td style="width: 26px;">
+                        大
+                    </td>
+                    <td style="width: 26px;">
+                        小
+                    </td>
+                    <td style="width: 26px;">
+                        大
+                    </td>
+                    <td style="width: 26px;">
+                        小
+                    </td>
+                    <td style="width: 26px;">
+                        大
+                    </td>
+                    <td style="width: 26px;">
+                        小
+                    </td>
+                    <td style="width: 26px;">
+                        大
+                    </td>
+                    <td style="width: 26px;">
+                        小
+                    </td>
+                    <td style="width: 26px;">
+                        大
+                    </td>
+                    <td style="width: 26px;">
+                        小
+                    </td>
+                    <td style="width: 26px;">
+                        大
+                    </td>
+                    <td style="width: 26px;">
+                        小
+                    </td>
+                    <td style="width: 26px;" class="line_r">
+                        大
+                    </td>
+                    <td style="width: 26px;">
+                        全小
+                    </td>
+                    <td style="width: 26px;">
+                        一大七小
+                    </td>
+                    <td style="width: 26px;">
+                        二大六小
+                    </td>
+                    <td style="width: 26px;">
+                        三大五小
+                    </td>
+                    <td style="width: 26px;">
+                        四大四小
+                    </td>
+                    <td style="width: 26px;">
+                        五大三小
+                    </td>
+                    <td style="width: 26px;">
+                        六大二小
+                    </td>
+                    <td style="width: 26px;">
+                        七大一小
+                    </td>
+                    <td style="width: 26px;" class="line_r">
+                        全大
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td colspan="2">
+                        第一位
+                    </td>
+                    <td colspan="2">
+                        第二位
+                    </td>
+                    <td colspan="2">
+                        第三位
+                    </td>
+                    <td colspan="2">
+                        第四位
+                    </td>
+                    <td colspan="2">
+                        第五位
+                    </td>
+                    <td colspan="2">
+                        第六位
+                    </td>
+                    <td colspan="2">
+                        第七位
+                    </td>
+                    <td colspan="2" class="line_r">
+                        第八位
+                    </td>
+                    <td colspan="9" class="line_r">
+                        大小组合走势
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $(function () {
+
+        var allLines = new Array();
+        allLines.push({ line: $(".big"), color: "red" });
+        allLines.push({ line: $(".cbg5"), color: "red" });
+        allLines.push({ line: $(".tbg1"), color: "#05650E" });
+        allLines.push({ line: $(".tbg2"), color: "#FFFF33" });
+        allLines.push({ line: $(".orange1"), color: "#FF590B" });
+        allLines.push({ line: $(".green1"), color: "#004F00" });
+        allLines.push({ line: $(".purple1"), color: "#0000FE" });
+        allLines.push({ line: $(".purple2"), color: "#36006F" });
+        allLines.push({ line: $(".gray1"), color: "#FF590B" });
+        var line = new XTLine();
+        for (i = 0; i < allLines.length; i++) {
+            var l = allLines[i];
+
+            line.color = l.color;
+            line.arrayBalls = l.line;
+            line.showrect();
+        }
+
+
+        $("#has_line").click(function () {
+            line.display(this.checked);
+        })
+    })
+</script>

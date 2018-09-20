@@ -1,0 +1,184 @@
+﻿@using External.Core.Celebritys
+@using GameBiz.Core
+@{
+    Layout = "../Shared/_ArtistsLayout.cshtml";
+    ViewBag.Title = "创建自选模型";
+    var orderlist = ViewBag.SaveOrderList as Sports_SchemeQueryInfoCollection;
+    var Cyclist = ViewBag.CycleList as WinnerModelCycleInfo_Collection;
+    var idx = 1;
+}
+<div class="other_con">
+    <div class="other_tab clearfix">
+        <ul>
+            <a href="javascript:void(0)" date-type="my">
+                <li class="on">自选模型</li>
+            </a>
+        </ul>
+    </div>
+    <div class="other_box">
+        <div class="model">
+            <p class="project_tit"> 添加方案到模型--【方案的倍数不会添加到模型，全部按1倍处理】</p>
+           @if (Cyclist!=null&&Cyclist.TotalCount > 0)
+           {
+              
+               foreach (var cycitem in Cyclist.ModelCycleList.OrderBy(p=>p.CreateTime))
+               {
+                   
+                   <div id="pp450004042" class="model_item mb10 clearfix">
+                       <div class="add_num">
+                           第
+                           <span>@idx</span>
+                           期
+                       </div>
+                       <div class="add_mode saved_mode">
+                           <p style="line-height:35px;">
+                               方案：
+                               <span>@cycitem.SchemeId</span>
+                               <a class="view" href="javascript:void 0">查看</a>
+                           </p>
+                       </div>
+                   </div>
+                   idx++;
+               }
+               <input type="hidden" id="modelId" value="@ViewBag.Mid "/>
+           }
+           
+            <div class="first_show">
+                <div class="add_mode">
+                    <div class="model1">
+                        <p>
+                            从以下投注记录添加一个方案到模型(如果没有方案，您需要在投注页面创建一个购彩方案) <a href="/jingcai" class="fr blue">
+                                创建购彩方案</a>
+                        </p>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th width="180px">
+                                        发起时间
+                                    </th>
+                                    <th width="180px">
+                                        彩种
+                                    </th>
+                                    <th width="175px">
+                                        金额
+                                    </th>
+                                    <th width="180px">
+                                        方案号
+                                    </th>
+                                    <th width="120px">
+                                        添加
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    if (orderlist != null && orderlist.TotalCount > 0 && orderlist.List != null)
+                                    {
+                                        foreach (var item in orderlist.List.OrderByDescending(p => p.CreateTime))
+                                        {
+                                            <tr>
+                                                <td class="gray">@item.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")
+                                                </td>
+                                                <td class="gray">
+                                                 @SiteConvert.GameName(item.GameCode, item.GameType)
+                                                </td>
+                                                <td class="money">
+                                                    @item.TotalMoney.ToString("f")
+                                                </td>
+                                                <td class="num">
+                                                    @item.SchemeId
+                                                </td>
+                                                <td>
+                                                    <a href="javascript:void(0)" class="blue" id="Addmodel_@(item.SchemeId)" val="@item.SchemeId" >添加</a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="5">
+                                                暂时没有保存的订单，您可以去<a href="/jingcai" class="orange" style="margin: 0 5px;" target="_blank">投注页面</a>看看
+                                            </td>
+                                        </tr>
+                                    }
+                                   
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="second_show model_item mb10 clearfix" style="display: none">
+                <div class="add_num">
+                    第
+                    <span>@idx</span>
+                    期
+                </div>
+                 <div class="add_mode saved_mode">
+                           <p style="line-height:35px;">
+                               方案：
+                               <span id="first_pid"></span>
+                               <a class="view" href="javascript:void(0);" onclick="Del()">取消</a>
+                           </p>
+                       </div>
+            </div>
+            <div class="save_btn">
+                <a href="javascript:void(0)" class="bg2 btn_save" id="btn_save_model">保&nbsp;存</a>
+            </div>
+            <div class="show_tips">
+                <p>
+                    添加方案规则：</p>
+                <p>
+                    1、模型必须固定某个彩种的玩法、过关方式和固定金额。</p>
+                <p class="p1">
+                    例如：首次创建模型方案为竞彩胜平负(不分让球)2串1，本金为8元；以后再该模型添加方案必须满足以上条件。</p>
+                <p>
+                    2、不允许添加他人发起的模型中的方案，只能添加本人发起的自建购彩方案。</p>
+                <p>
+                    3、模型支持在线过滤、奖金优化、单式上传等方案。</p>
+                <p>
+                    4、模型现支持的彩种或玩法：竞彩足球、竞彩篮球全玩法；北京单场全玩法；足彩14场、足彩任选九场</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class=" dialog_layer" id="saveBox">
+    <div class="box_tit">
+        <span class="fl">保存模型</span> <a id="closeSaveObj" class="close fr bg2" href="javascript:void(0);">
+            close</a>
+    </div>
+    <div class="box_con">
+        <ul>
+            <li class="clearfix">
+                <label>
+                    模型名称：</label>
+                <input type="text" class=" text1" id="mtitle"/>
+            </li>
+            <li class="clearfix" style="text-align: center"><a href="javascript:void(0)" id="submitSaveObj"
+                class="bg2 btn btn_sure">保&nbsp;存</a> <a href="javascript:void(0)" id="qxSaveObj"
+                    class="bg2 btn btn_cancel">取&nbsp;消</a> </li>
+        </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    var modelId = "@ViewBag.Mid";
+    var savebox = new LightBox("saveBox");
+    $("#closeSaveObj,#qxSaveObj").click(function () {
+        savebox.Close();
+    });
+    function showSave(func1, func2) {
+
+        var confirmgg_no_Event = function () {
+            confirmLightBoxGg.Close();
+            func2();
+            document.getElementById("bet_confirm_content_gg").innerHTML = "";
+        };
+        func1();
+        document.getElementById("btn_confirm_no_gg").onclick = confirmgg_no_Event;
+        document.getElementById("btn_confirm_close_gg").onclick = confirmgg_no_Event;
+        $("#btn_confirm_yes_gg").focus();
+
+    }
+
+</script>

@@ -1,0 +1,309 @@
+﻿@{
+    ViewBag.Title = "网上购买双色球,网上购买大乐透,网上购买竞彩,网上购买足彩-" + SiteString.getHZSiteName(Request) + "购彩大厅";
+    ViewBag.KeyWords = "网上购买双色球,网上购买大乐透,网上购买竞彩,网上购买足彩";
+    ViewBag.Description = SiteString.getHZSiteName(Request) + SiteString.getHZSiteName(Request) + "购彩大厅为广大彩民提供双色球、大乐透等福彩、体彩网上购买,更有竞彩和足彩网上投注和合买,高频彩网上分析及投注.专注网上购彩，所以我们更专业，网上购彩就上" + SiteString.getHZSiteName(Request) + "彩票网.";
+}
+@(
+ ViewHelpers.css("hall.css")
+)
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>购彩大厅</li>
+    </ul>
+</div>
+<div id="goucaiMain" class="goucai-main">
+     <div class="sz-type " style=" margin-bottom:20px;margin-top:20px;">
+    <div class="lctit">
+        <div class="div-title div_title_fucai">
+          </div>  
+        </div>
+        <div class="divcont daletou-sprite">
+            <div class="div1">
+                <a class="logo animated rotateX daletou" target="_blank" href="/szc/dlt">大乐透</a>
+                <div class="fr">
+                   <h3>
+                         <a  target="_blank" href="/szc/dlt">大乐透</a>
+                   </h3>
+                    <span>每周一、三、六开奖 3元中1600万</span>
+                </div>
+            </div>
+            <div class="div3">
+                <a target="_blank" class="btn-tz" href="/szc/dlt">立即购彩</a> <a target="_blank" class="btn-hm-hall" href="/chipped/dlt">参与合买</a>
+            </div>
+             <div class=" div4">
+            <a class="div_kjgg" href="/lottery/newindex/dlt" target="_blank">开奖公告</a>
+            <a class="div_zst" href="/lotterytrend/dlt" target="_blank">走势图型</a>
+            </div>
+            <div class="hot-tip">
+            </div>
+        </div>
+        <div class="divcont daletou-sprite">
+            <div class="div1">
+                <a class="logo animated rotateX pai3" target="_blank" href="/szc/pl3">排列3</a>
+                <div class="fr">
+                   <h3>
+                         <a  target="_blank" href="/szc/pl3">排列3</a></h3>
+                    <span>天天排列三
+不用愁吃穿 </span>
+                </div>
+            </div>
+           
+            <div class="div3">
+                <a target="_blank" class="btn-tz" href="/szc/pl3">立即购彩</a> <a target="_blank" class="btn-hm-hall" href="/chipped/pl3">参与合买</a>
+            </div>
+             <div class=" div4">
+            <a class="div_kjgg" href="/lottery/newindex/pl3" target="_blank">开奖公告</a>
+            <a class="div_zst" href="lotterytrend/pl3" target="_blank">走势图型</a>
+            </div>
+            <div class="hot-tip">
+            </div>
+        </div>
+        <div class="divcont ssq-sprite">
+            <div class="div1">
+                <a class="logo animated rotateX fc3d" target="_blank" href="/szc/fc3d">福彩3D</a>
+                <div class="fr">
+                    <h3>
+                         <a  target="_blank" href="/szc/fc3d">福彩3D</a></h3>
+                    <span>每天20：30开奖 猜对3个号就有奖</span>
+                </div>
+            </div>
+           
+            <div class="div3">
+                <a target="_blank" class="btn-tz" href="/szc/fc3d">立即购彩</a> <a target="_blank" class="btn-hm-hall" href="/chipped/fc3d">参与合买</a>
+            </div>
+             <div class=" div4">
+            <a class="div_kjgg" href="/lottery/newindex/fc3d" target="_blank">开奖公告</a>
+            <a class="div_zst" href="/lotterytrend/fc3d" target="_blank">走势图型</a>
+            </div>
+        </div>
+        <div class="divcont ssq-sprite">
+            <div class="div1">
+                <a class="logo animated rotateX ssq" target="_blank" href="/szc/ssq">双色球</a>
+                <div class="fr">
+                    <h3>
+                         <a  target="_blank" href="/szc/ssq">双色球</a></h3>
+                    <span>每周二、四、日开奖 2元赢1000万</span>
+                </div>
+            </div>
+            
+            <div class="div3">
+                <a target="_blank" class="btn-tz" href="/szc/ssq">立即购彩</a> <a target="_blank" class="btn-hm-hall" href="/chipped/ssq">参与合买</a>
+            </div>
+             <div class=" div4">
+            <a class="div_kjgg" href="/lottery/newindex/ssq" target="_blank">开奖公告</a>
+            <a class="div_zst" href="/lotterytrend/ssq" target="_blank">走势图型</a>
+            </div>
+        </div>
+    </div>
+   <br />
+   <br />
+   <br />
+   <br />
+   <br />
+   <br />
+        <div class=" clearfix"></div>
+        <div class="jincai-type" style=" margin-bottom：20px; margin-top:20px;">
+    <div class="lctit">
+        <div class="div-title  div_title_zucai">
+           
+        </div>
+        </div>
+        <div class="divcont jingcai-sprite">
+            <div class="div1">
+                <a class="logo animated rotate zuqiu" target="_blank" href="/toto/t14c">14场胜负彩</a>
+                <div class="fr">
+                    <h3>
+                         <a  target="_blank" href="/toto/t14c">14场胜负彩</a></h3>
+                    <span>竞猜14场足球比赛 奖金500万 </span>
+                </div>
+            </div>
+           
+            <div class="div3">
+                <a target="_blank" class="btn-tz" href="/toto/t14c">立即购彩</a> <a target="_blank" class="btn-hm-hall" href="/chipped/ctzq?PlayType=t14c">参与合买</a>
+            </div>
+             <div class=" div4">
+            <a class="div_kjgg" href="/lottery/newctzq/t14c" target="_blank">开奖公告</a> 
+            </div>
+        </div>
+        <div class="divcont jingcai-sprite">
+            <div class="div1">
+                <a class="logo animated rotate zuqiu" target="_blank" href="/toto/t14c">四场进彩球</a>
+                <div class="fr">
+                    <h3>
+                         <a  target="_blank" href="/toto/t14c">四场进彩球</a></h3>
+                    <span>竞猜14场足球比赛 奖金500万 </span>
+                </div>
+            </div>
+           
+            <div class="div3">
+                <a target="_blank" class="btn-tz" href="/toto/t14c">立即购彩</a> <a target="_blank" class="btn-hm-hall" href="/chipped/ctzq?PlayType=t4cjq">参与合买</a>
+            </div>
+             <div class=" div4">
+            <a class="div_kjgg" href="/lottery/newctzq/t4cjq" target="_blank">开奖公告</a> 
+            </div>
+        </div>
+        <div class="divcont jingcai-sprite">
+            <div class="div1">
+                <a class="logo animated rotate zuqiu" target="_blank" href="/toto/t14c">六场半全场</a>
+                <div class="fr">
+                    <h3>
+                         <a  target="_blank" href="/toto/t14c">六场半全场</a></h3>
+                    <span>竞猜14场足球比赛 奖金500万 </span>
+                </div>
+            </div>
+           
+            <div class="div3">
+                <a target="_blank" class="btn-tz" href="/toto/t14c">立即购彩</a> <a target="_blank" class="btn-hm-hall" href="/chipped/ctzq?PlayType=t6bqc">参与合买</a>
+            </div>
+             <div class=" div4">
+            <a class="div_kjgg" href="/lottery/newctzq/t6bqc" target="_blank">开奖公告</a> 
+            </div>
+        </div>
+         <div class="divcont jingcai-sprite">
+            <div class="div1">
+                <a class="logo animated rotate zuqiu" target="_blank" href="/toto/tr9">任九场</a>
+                <div class="fr">
+                    <h3>
+                         <a  target="_blank" href="/toto/tr9">任九场</a></h3>
+                    <span>中奖容易，赛事任选 最高奖金500万 </span>
+                </div>
+            </div>
+           
+            <div class="div3">
+                <a target="_blank" class="btn-tz" href="/toto/tr9">立即购彩</a> <a target="_blank" class="btn-hm-hall" href="/chipped/ctzq?PlayType=tr9">参与合买</a>
+            </div>
+             <div class=" div4">
+            <a class="div_kjgg" href="/lottery/newctzq/tr9" target="_blank">开奖公告</a> 
+            </div>
+        </div>
+        <div class="divcont jingcai-sprite">
+            <div class="div1">
+                <a class="logo animated rotate beidan" target="_blank" href="/danchang/spf">北京单场</a>
+                <div class="fr">
+                    <h3>
+                         <a  target="_blank" href="/danchang/spf">北京单场</a></h3>
+                    <span>每天20：30开奖 猜对3个号就有奖</span>
+                </div>
+            </div>
+           
+            <div class="div3">
+                <a target="_blank" class="btn-tz" href="/danchang/spf">立即购彩</a> <a target="_blank" class="btn-hm-hall" href="/chipped/bjdc">参与合买</a>
+            </div>
+             <div class=" div4">
+            <a class="div_kjgg" href="/lottery/newbjdc" target="_blank">开奖公告</a> 
+            </div>
+        </div>
+    </div>
+   <br />
+   <br />
+   <br />
+   <br />
+   <br />
+   <br />
+   <br />  
+   <div class="clearfix"></div>
+     
+    <div class="jincai-type" style=" margin-bottom：20px; margin-top:20px;">
+    <div class="lctit">
+        <div class="div-title div_title_jingcai">
+           
+        </div>
+        </div>
+        <div class="divcont jingcai-sprite">
+            <div class="div1">
+                <a class="logo animated rotate football" target="_blank" href="/jingcai/hh">竞彩足球</a>
+                <div class="fr">
+                    <h3>
+                         <a  target="_blank" href="/jingcai/hh">竞彩足球</a></h3>
+                    <span>返奖率高达73%过关投注奖金固定</span>
+                </div>
+            </div>
+            <div class="div3">
+                <a target="_blank" class="btn-tz" href="/jingcai/hh" >立即购彩</a>
+                 <a target="_blank" class="btn-hm-hall" href="/chipped/jczq">参与合买</a>
+            </div>
+            <div class=" div4">
+            <a class="div_kjgg" href="/lottery/newjczq" target="_blank">开奖公告</a> 
+            </div>
+            <div class="hot-tip">
+            </div>
+        </div>
+        <div class="divcont jingcai-sprite">
+            <div class="div1">
+                <a class="logo animated rotate basketball" target="_blank" href="/jingcaibasket/hh">竞彩篮球</a>
+                <div class="fr">
+                   <h3>
+                         <a  target="_blank" href="/jingcaibasket/hh">竞彩篮球</a></h3>
+                    <span>返奖率高达73%过关投注奖金固定</span>
+                </div>
+            </div> 
+            <div class="div3">
+                <a target="_blank" class="btn-tz" href="/jingcaibasket/hh">立即购彩</a> <a target="_blank" class="btn-hm-hall" href="/chipped/jclq">参与合买</a>
+            </div>
+             <div class=" div4">
+            <a class="div_kjgg" href="/lottery/newjclq" target="_blank">开奖公告</a> 
+            </div>
+        </div>
+        </div>
+   <br />
+   <br />
+   <br />
+   <br />
+   <br />
+   <br />
+   <br />
+    <div class="clearfix"></div>
+    <div class="gp-type" style=" margin-bottom：20px;margin-top:20px;">
+    <div class="lctit ">
+        <div class="div-title div_title_kuaicai">
+         </div>   
+        </div>
+        <div class="divcont gaopincai-sprite">
+            <div class="div1">
+                <a class="logo animated rotate shishic" target="_blank" href="/szc/cqssc">重庆时时彩</a>
+                <div class="fr">
+                    <h3>
+                         <a  target="_blank" href="/szc/cqssc">重庆时时彩</a></h3>
+                    <span>早晚场 全天120期最高奖金10万</span>
+                </div>
+            </div>
+           
+            <div class="div3">
+                <a target="_blank" class="btn-tz" href="/szc/cqssc">立即购彩</a>
+            </div>
+             <div class=" div4">
+            <a class="div_kjgg" href="" target="_blank">开奖公告</a>
+            <a class="div_zst" href="/lotterytrend/cqssc/s3zxzs" target="_blank">走势图型</a>
+            </div>
+            <div class="hot-tip">
+            </div>
+        </div>
+        <div class="divcont gaopincai-sprite">
+            <div class="div1">
+                <a class="logo animated rotate new11to5" target="_blank" href="/szc/jx11x5">江西11选5</a>
+                <div class="fr">
+                   <h3>
+                         <a  target="_blank" href="/szc/jx11x5">江西11选5</a></h3>
+                    <span>10分钟一期玩法多样</span>
+                </div>
+            </div>
+           
+            <div class="div3">
+                <a target="_blank" class="btn-tz" href="/szc/jx11x5">立即购彩</a>
+            </div>
+             <div class=" div4">
+            <a class="div_kjgg" href="" target="_blank">开奖公告</a>
+            <a class="div_zst" href="/lotterytrend/jx11x5/rxjbzs" target="_blank">走势图型</a>
+            </div>
+        </div>
+        <div class="divcont">
+            <div class="qidaicz">
+                新彩种，敬请期待...</div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+
+@*@ViewHelpers.js("hall.js")*@

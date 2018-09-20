@@ -1,0 +1,46 @@
+﻿
+<div id="box_payconfirm"  >
+    <table>
+        <tr>
+            <td class="itd-top-left"></td>
+            <td class="itd-top-center"></td>
+            <td class="itd-top-right"></td>
+        </tr>
+        <tr>
+            <td class="itd-mid-left"></td>
+            <td class="itd-mid-center">
+                <div class="dialogContent">
+                       <h3 id="drag_alert" class="pop-comm-top">
+                          @(SiteString.getHZSiteName(Request))提醒您
+    </h3>
+                    <div class="pop-comm-middle" >
+                        <div id="bet_message" >
+                        </div>
+                        <div class="buttonrow">
+                            <a type="button" id="btn_confirm_yes" class="dialogBtn" rel="noreferrer" target="_blank" onclick=" box_payconfirm.Close();">确定</a>
+                            <a type="button" id="btn_confirm_no" class="dialogBtn focusBtn" onclick=" box_payconfirm.Close();">取消</a>
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td class="itd-mid-right"></td> 
+        </tr>
+        <tr>
+            <td class="itd-bot-left"></td>
+            <td class="itd-bot-center"></td>
+            <td class="itd-bot-right"></td>
+        </tr>
+    </table>
+</div>
+<script type="text/javascript">
+   // new Drag("box_discontinued", { Handle: "drag_alert", Limit: true });
+    var box_payconfirm = new LightBox("box_payconfirm");
+
+    function box_dis_show(msg) {
+        document.getElementById("bet_message").innerHTML = msg;
+        box_payconfirm.Show();
+    }
+    
+
+
+</script>

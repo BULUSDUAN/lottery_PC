@@ -1,0 +1,34 @@
+﻿@{
+    var Title = "提款处理及到账时间";
+    ViewBag.Title = Title + " - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+    @ViewHelpers.css("help.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">玩彩网</a> > </li>
+        <li><a href="/help/index">&nbsp;帮助中心</a> > </li>
+        <li>&nbsp;提款处理及到账时间</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type = "drawMoney", name = "poundageTime" });}
+    <div class="help_r">
+        <div class="det_box">
+            <h2>
+                提款处理及到账时间</h2>
+            <div class="det_c">
+                <p>
+                    提款处理时间：本站09：30-17：30为您处理提款（如遇法定节假日，提款处理时间公告通知用户）。</p>
+                <p>
+                    银行到账时间：正常提款，最快10分钟到账，所有银行预计24小时可到账。节假日因银行系统处理不及时造成的延误，预计在假期后第一个工作日到账。
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix">
+    </div>
+@ViewHelpers.js("help.js")

@@ -1,0 +1,13 @@
+﻿@{
+    ViewBag.Title = "IPSReturnUrl";
+}
+
+<h2>@ViewBag.Code</h2>
+<h2>@ViewBag.ErrorMsg</h2>
+<script>
+    setTimeout(function () {
+        this.location.href = "/member/safe"
+    },500);
+</script>
+
+

@@ -1,0 +1,319 @@
+﻿@{
+    ViewBag.Here = "账户资金安全";
+
+    ViewBag.Title = "账户资金安全 - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "账户资金安全, 帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+}
+@section css{
+    @ViewHelpers.css("help.css")
+
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">帮助中心</a> > </li>
+        <li>账户资金安全</li>
+    </ul>
+</div>
+<div class="center mt10">
+    @{Html.RenderAction("left", "help");}
+    <div class="new_buy_right">
+<div class="help-content f_r">
+    <div class="help-cont">
+        <h1 class="hp-title">
+            账户资金安全</h1>
+        <h3>
+            一.选择正规网站，保障资金安全！</h3>
+        <b>1、在@(SiteString.getHZSiteName(Request))买彩票安全吗？</b>
+        <p class="indet">
+            深圳市玩彩科技有限公司专注于为彩民提供专业的彩票在线投注、数据分析与开奖、彩票资讯等服务。旗下网站(www.wancai.com)销售的彩种全部与彩票中心签订了代销协议，在彩票中心的监督下合法运营。
+        </p>
+        <b>2、@(SiteString.getHZSiteName(Request))销售的彩种有哪些：</b>
+        <p>
+            福彩：双色球 福彩3D
+            <br />
+            体彩：大乐透 排列三
+            <br />
+            高频彩：时时彩 新时时彩 老11选5 11选5 新11选5
+        </p>
+        <br />
+        <b>3、如何对彩票代购网站进行真伪鉴定？</b>
+        <table cellpadding="0" cellspacing="0" border="0" width="100%" class="bordertable">
+            <tr>
+                <th width="20%">
+                    特征
+                </th>
+                <th width="40%">
+                    正规网站
+                </th>
+                <th width="40%">
+                    诈骗网站
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    网站名称
+                </td>
+                <td>
+                    以正规公司命名，名称多年不变。
+                </td>
+                <td>
+                    通常使用非常有诱惑力的名称。
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    网站内容
+                </td>
+                <td>
+                    内容丰富，覆盖范围广。
+                </td>
+                <td>
+                    内容单一，主要以预测类信息为主。
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    提供服务
+                </td>
+                <td>
+                    提供多样化、优质的信息服务。
+                </td>
+                <td>
+                    不提供相应服务或提供劣质服务。
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    收费情况
+                </td>
+                <td>
+                    一般不收取任何费用。
+                </td>
+                <td>
+                    不断要求用户缴纳各种费用。
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    预测信息
+                </td>
+                <td>
+                    预测只作为用户投注参考信息，一般不收取费用。
+                </td>
+                <td>
+                    吹嘘高命中率，承诺不中退款甚至给予赔偿以收取高额服务费用。
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    联系方式
+                </td>
+                <td>
+                    提供详细的联系方式，公司会提供800或400电话，一般都会提供固定电话。
+                </td>
+                <td>
+                    只提供电子邮件或者手机号码，以便于随时藏匿和逃避警方打击。
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    支付方式
+                </td>
+                <td>
+                    提供多种支付方式，特别是开通网上支付(只有正规公司才能开通网上支付功能)。
+                </td>
+                <td>
+                    一般只提供银行汇款支付方式，通常收款账号和收款人不直接显示，以逃避警察抓捕。
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    办公地址
+                </td>
+                <td>
+                    供真实办公地址，可以通过固定电话进行分辨。
+                </td>
+                <td>
+                    通常用其他正规彩票网站和虚构的地址,来误导彩民上当。
+                </td>
+            </tr>
+        </table>
+        <b>4、 @(SiteString.getHZSiteName(Request))标示</b>
+        <p>
+            <b>标识一、网址独一无二</b><br />
+            认准@(SiteString.getHZSiteName(Request))网址 www.wancai.com<br />
+            <br />
+            <b>标识二、ICP证不可仿冒</b><br />
+            认准@(SiteString.getHZSiteName(Request))ICP证号：粤ICP备16020147号-1
+            <br />
+            <br />
+            <b>标识三、公司名称和地址不可更改</b><br />
+            认准@(SiteString.getHZSiteName(Request))公司名称：深圳市玩彩科技有限公司
+            <br />
+            认准@(SiteString.getHZSiteName(Request))公司地址：广东省深圳市宝安区龙华新区大浪街道运华大厦602
+            <br />
+            邮编:400000
+            <br />
+            <br />
+            <b>标识四、购彩4大安全保证</b><br />
+            认准@(SiteString.getHZSiteName(Request))4大安全保证：<br />
+            •充值安全<br />
+            网上充值采用支付宝支付平台，既安全又快捷。充值资金受彩票中心和银行监管，保证用户充值资金绝对安全。<br />
+            •投注安全<br />
+            安全级别高，投注数据及相关资料时时备份，确保用户投注数据绝安全。<br />
+            同时，投注平台销售的每一注彩票都对应一个身份证号码，即每注电子票等于都加了唯一的身份标识，确保了彩票的身份归属。<br />
+            •返奖安全<br />
+            用户中奖后，采用自动返还奖金，中奖后由系统自动返还至用户的投注帐户中，用户可以投注或提款，保证永无弃奖。<br />
+            •提款安全<br />
+            通过提交提款申请确保只能由用户自己提款;通过将用户提交的提款银行卡信息与用户注册时提交的身份认证信息进行核对，确保用户只能提款到本人银行卡，任何人都无法盗取用户的资金，保证提款的绝对安全。<br />
+            <br />
+        </p>
+        <h3>
+            二.帐户安全</h3>
+        <p>
+            @(SiteString.getHZSiteName(Request))（www.wancai.com）提供实名绑定、手机绑定、邮箱绑定等多重保护措施：<br />
+            <br />
+            1、实名信息（真实姓名、身份证）<br />
+            中奖、提款的重要依据，绑定后不可以修改<br />
+            <br />
+            2、手机绑定<br />
+            提款提醒，让你的资金更安全<br />
+            <br />
+            3、邮箱绑定<br />
+            重大优惠活动会第一时间发送到您的邮箱<br />
+            <br />
+            同时，您的银行卡资料修改需要通过我们的客服验证后方可修改，以确保您帐户的资金安全。<br />
+            如果您对账户安全的情况还有其它疑问，欢迎您咨询本站在线客服<br />
+            <br />
+        </p>
+        <h3>
+            三.支付安全</h3>
+        <p class="indet">
+            @(SiteString.getHZSiteName(Request))（www.wancai.com）提供多种支付方式，开通正规的网上支付功能，充值后资金即时到账，彻底解决通过银行汇款进行支付的不安全因素。
+        </p>
+        @*  <p class="indet">
+            @(SiteString.getHZSiteName(Request))（www.wancai.com）是 <a href="http://www.99bill.com"
+                target="_blank">快钱</a> 合作伙伴，为用户提供安全、稳定、快速的资金支付渠道，彻底保障用户支付安全。
+            <br />
+            <br />
+        </p>*@
+        <h3>
+            四.中奖奖金即时到账</h3>
+        <p class="indet">
+            本站购彩中奖后，无论中奖金额大小，都是直接派发到您的购彩账户中的，您足不出户即可随时可以查看、使用或提取投注账户中的奖金，避免了您领奖的麻烦，同时也解决了您隐私保护的担忧。<br />
+            1、网站不收取任何手续费及返点，中奖后亦不提成。<br />
+            2、代购方案中奖后，税后奖金将全部派送到代购人的购彩账户中。<br />
+            3、合买方案中奖后，税后奖金将按方案发起人发起方案时设置返点及参与份额比例，准确分配到方案的各参与用户的购彩账户中。<br />
+            <br />
+        </p>
+        <h3>
+            五.提款24小时到账</h3>
+        <p>
+            在@(SiteString.getHZSiteName(Request))（www.wancai.com）提款一般可以在24小时内到账，具体到账时间取决于银行系统是否正常。（具体到账时间可查看下表）
+        </p>
+        <table cellpadding="0" cellspacing="0" border="0" width="100%" class="bordertable">
+            <tr>
+                <th width="30%" rowspan="2">
+                    提款方式
+                </th>
+                <th width="25%" rowspan="2">
+                    处理时间
+                </th>
+                <th width="25%" rowspan="2">
+                    到账时间
+                </th>
+                <th width="20%" colspan="2">
+                    手续费
+                </th>
+            </tr>
+            <tr>
+                <th>
+                    普通用户
+                </th>
+                <th>
+                    VIP用户
+                </th>
+            </tr>
+            @* <tr>
+                <td>
+                    快钱(<em class="red">荐</em>)
+                </td>
+            </tr>*@
+            <tr>
+                <td>
+                    中国工商银行(<em class="red">荐</em>)
+                </td>
+                <td rowspan="9">
+                    周一至周王每日分为三次处理，分别为：上午9点，下午1点，下午5点<br />
+                    <br />
+                    周六、周日、节假日每日不定时处理一次，分别为：晚上20-22点之间
+                </td>
+                <td rowspan="4">
+                    17:00前的申请，当天到账
+                </td>
+                <td rowspan="9">
+                    1元
+                </td>
+                <td rowspan="9">
+                    无手续费
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    中国农业银行(<em class="red">荐</em>)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    中国建设银行(<em class="red">荐</em>)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    招商银行(<em class="red">荐</em>)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    交通银行 光大银行
+                </td>
+                <td rowspan="4">
+                    17:00前的申请，第二天到账
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    兴业银行 中国民生银行
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    上海浦东发展银行 深圳发展银行
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    宁波银行 广东发展银行
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    中信银行 中国银行
+                </td>
+                <td>
+                    17:00后的申请，第二天到账
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <b class="red">注:</b>@*（1）快钱提款审核通过，一般情况下10分钟内到账；*@（1）工行、农行、建行、招行提款审核通过，一般情况1-2小时内到账；(2)其他特殊情况除外，建议大家可以使用以上方式提款。
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+        </div>
+</div>
+<div class="clearfix"></div>

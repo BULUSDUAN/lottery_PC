@@ -1,0 +1,10 @@
+[0][2018-06-17 21:29:48] _sendurl
+    http://106.ihuyi.cn/webservice/sms.php?method=Submit&account=C40517741&password=cddfc1070701043da3be9a6c087e7a57&mobile=15820704625&content=尊敬的用户15820704625，您好，您6/17/2018 10:22:12 AM申请的1.00元提款订单MWD1001002212228880658256已经被受理，请您注意查收，感谢您的支持！
+<?xml version="1.0" encoding="utf-8"?>
+<SubmitResult xmlns="http://106.ihuyi.cn/">
+<code>4072</code>
+<msg>你提交过来的短信内容必须与报备过的模板格式相匹配</msg>
+<smsid>0</smsid>
+</SubmitResult>
+    ----------------------------------------------------------------------------
+

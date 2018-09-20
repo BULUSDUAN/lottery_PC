@@ -1,0 +1,38 @@
+﻿@{
+    ViewBag.Title = "loginthird";
+}
+@UserHelper.css("otherlogin.css")
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>绑定已注册的用户名</li>
+    </ul>
+</div>
+ <div class="other-lg-tip">
+        <span class="other-text">Q Q 登录</span>
+    </div>
+    <div class="other-lg-box">
+        <div class="other-u0">
+            <i class="u0-img"></i>
+            <div class="u0-text">
+                @(SiteString.getHZSiteName(Request))账户基本信息设置</div>
+        </div>
+        <div class="box-fr">
+            @{Html.RenderPartial("loginmenu");}
+        </div>
+        <div class="box-fl">
+            <p class="c95" >绑定已注册的用户名&nbsp;&nbsp;(<em  class="cred">*</em>项为必填)</p>
+            <br />
+              <br />
+            <p><span class="span-text"><em class="cred">*&nbsp;</em>手机号码：</span><input type="text"  class="input-text" /><a class="btn-next-old" href="javascript:void(0)" style="margin-left:10px;">发送验证码</a></p>
+            <br />
+            <br />
+               <p><span  class="span-text"><em class="cred">*&nbsp;</em>验证码：</span><input type="password" class="input-text"  /></p>
+               <br />
+               <br />
+            <p style=" margin-left: 133px;">   <a href="javascript:void(0)" class="btn-next-old">下一步</a></p>
+        </div>
+    </div>
+
+

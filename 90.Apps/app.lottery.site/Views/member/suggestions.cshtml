@@ -1,0 +1,188 @@
+﻿@using app.lottery.site.Models;
+@{
+    ViewBag.Title = "填写意见建议 - " + SiteString.getHZSiteName(Request) + "-专业彩票代购网站|网上投注|福彩|体彩|高频彩";
+    var user = ViewBag.User as CurrentUserInfo;
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>填写意见建议</li>
+    </ul>
+</div>
+<div class="center mt10">
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mune_safe">
+        <div class="account_menu clearfix">
+            <a href="/member/innermail">站内消息</a> <a href="/member/suggestions" class="select">我的建议</a>
+        </div>
+        <div class="account_con">
+            <div class="betorder_top">
+                <ul>
+                    <li><a href="/member/mysuggestions"><i></i>我的意见建议</a></li>
+                    <li class="betorder_topSelected"><a href="/member/suggestions"><i></i>填写意见建议</a></li>
+                </ul>
+            </div>
+            <p class="tip2_new">
+            <i></i>欢迎提出您宝贵的意见和建议，相关工作人员会尽快作出回应，请耐心等候，谢谢。
+        </p>
+        <ul class="userinfo_list">
+            <li><span class="sp120"><em class="red">*</em> 联系电话：</span><input type="text" id="mobile" maxlength="16" size="26" class="login_input_1" onafterpaste="this.value=this.value.replace(/\D/g,'')" onkeyup="this.value=this.value.replace(/\D/g,'')" value="@(user.IsAuthenticationMobile ? user.MobileInfo.Mobile : string.Empty)" @(user.IsAuthenticationMobile ? "disabled=disabled" : string.Empty) /></li>
+            <li><span class="sp120"><em class="red">*</em> 选择分类：</span><select id="category">
+                <option value="">--请选择--</option>
+                <option value="网站建议">网站建议</option>
+                <option value="合买代购">合买代购</option>
+                <option value="网上支付">网上支付</option>
+                <option value="网站报错">网站报错</option>
+                <option value="投诉客服">投诉客服</option>
+                <option value="其他问题">其他问题</option>
+            </select>
+            </li>
+            <li><span class="sp120" style="vertical-align: top"><em class="red">*</em> 意见建议：</span>
+                <textarea class="text text_" rows="6" style="border: 1px solid #e5e5e5;width: 400px;" maxlength="2000" cols="70" id="sugtext"></textarea>
+            </li>
+            <li><span class="sp120">&nbsp;</span><input type="button" value="确认提交" class="btn_submit"
+                onclick="checkInput();" />
+            </li>
+            <li><span class="sp120">&nbsp;</span><span class="error-box" id="errbox"><i class="err-icon"></i>
+                <span class="msg" id="modifyPwdERR"></span></span></li>
+        </ul>
+        <div class="f_appraise  suggest_dov">
+            <h3>
+                对“@(SiteString.getHZSiteName(Request))彩票网首页”的各个方面,您的满意程度如何？</h3>
+            <div class="shop-rating" style="margin-top: 10px;">
+                <span class="title">页面打开速度</span>
+                <ul id="stars1" class="rating-level">
+                    <li><a href="#" star:value="1" class="one-star">20</a></li>
+                    <li><a href="#" star:value="2" class="two-stars">40</a></li>
+                    <li><a href="#" star:value="3" class="three-stars">60</a></li>
+                    <li><a href="#" star:value="4" class="four-stars">80</a></li>
+                    <li><a href="#" star:value="5" class="five-stars">100</a></li>
+                </ul>
+                <span id="stars1-tips" class="result"></span>
+                <input type="hidden" size="2" value="1" name="a" id="stars1-input">
+            </div>
+            <div class="shop-rating">
+                <span class="title">界面设计美观</span>
+                <ul id="stars2" class="rating-level">
+                    <li><a href="#" star:value="1" class="one-star">20</a></li>
+                    <li><a href="#" star:value="2" class="two-stars">40</a></li>
+                    <li><a href="#" star:value="3" class="three-stars">60</a></li>
+                    <li><a href="#" star:value="4" class="four-stars">80</a></li>
+                    <li><a href="#" star:value="5" class="five-stars">100</a></li>
+                </ul>
+                <span id="stars2-tips" class="result"></span>
+                <input type="hidden" size="2" value="1" name="a" id="stars2-input">
+            </div>
+            <div class="shop-rating">
+                <span class="title">排版展示合理</span>
+                <ul id="stars3" class="rating-level">
+                    <li><a href="#" star:value="1" class="one-star">20</a></li>
+                    <li><a href="#" star:value="2" class="two-stars">40</a></li>
+                    <li><a href="#" star:value="3" class="three-stars">60</a></li>
+                    <li><a href="#" star:value="4" class="four-stars">80</a></li>
+                    <li><a href="#" star:value="5" class="five-stars">100</a></li>
+                </ul>
+                <span id="stars3-tips" class="result"></span>
+                <input type="hidden" size="2" value="1" name="a" id="stars3-input">
+            </div>
+            <div class="shop-rating">
+                <span class="title">操作过程合理</span>
+                <ul id="stars4" class="rating-level">
+                    <li><a href="#" star:value="1" class="one-star">20</a></li>
+                    <li><a href="#" star:value="2" class="two-stars">40</a></li>
+                    <li><a href="#" star:value="3" class="three-stars">60</a></li>
+                    <li><a href="#" star:value="4" class="four-stars">80</a></li>
+                    <li><a href="#" star:value="5" class="five-stars">100</a></li>
+                </ul>
+                <span id="stars4-tips" class="result"></span>
+                <input type="hidden" size="2" value="1" name="a" id="stars4-input">
+            </div>
+            <div class="shop-rating">
+                <span class="title">内容传达清晰</span>
+                <ul id="stars5" class="rating-level">
+                    <li><a href="#" star:value="1" class="one-star">20</a></li>
+                    <li><a href="#" star:value="2" class="two-stars">40</a></li>
+                    <li><a href="#" star:value="3" class="three-stars">60</a></li>
+                    <li><a href="#" star:value="4" class="four-stars">80</a></li>
+                    <li><a href="#" star:value="5" class="five-stars">100</a></li>
+                </ul>
+                <span id="stars5-tips" class="result"></span>
+                <input type="hidden" size="2" value="1" name="a" id="stars5-input" />
+            </div>
+        </div>
+        </div>
+        </div>
+        
+    </div>
+</div>
+<div class="clearfix">
+</div>
+<script type="text/javascript">
+    function showMsg(msg) {
+        if (msg.length > 0) {
+            $("#errbox").show();
+            $("#modifyPwdERR").text(msg);
+        }
+        else {
+            $("#modifyPwdERR").text("");
+            $("#errbox").hide();
+        }
+    }
+    function checkMoble(str) {
+
+        var regPartton = /1[3-8]+\d{9}$/;
+        if (!regPartton.test(str) && str.length > 11) {
+            return "手机号码格式不正确！";
+        } else {
+            return true;
+        }
+    }
+
+    function checkInput() {
+        var PageOpenSpeed = $("#stars1-input").val();
+        var InterfaceBeautiful = $("#stars2-input").val();
+        var ComposingReasonable = $("#stars3-input").val();
+        var OperationReasonable = $("#stars4-input").val();
+        var ContentConveyDistinct = $("#stars5-input").val();
+        var mobile = $.trim($("#mobile").val());
+        var cate = document.getElementById("category").value; // $.trim($("#category option:selected").val());
+        var sug = $.trim($("#sugtext").val());
+        var msg = "";
+
+
+        if (!mobile) {
+            msg = "请输入您的手机号码，以便我们更好的为您服务。";
+            $("#mobile").focus().select();
+        } else {
+            if (checkMoble(mobile) != "true") {
+                msg = checkMoble(mobile);
+            }
+        }
+        if (!cate) {
+            msg = "请选择问题分类，以便我们更好的处理问题。";
+            $("#category").focus();
+        }
+        if (!sug) {
+            msg = "请输入您的投诉内容。";
+            $("#sugtext").focus();
+        }
+        if (!msg.length > 0) {
+            $.post("/member/submitsuggestion", { mobile: mobile, category: cate, suggestion: sug, PageOpenSpeed: PageOpenSpeed, InterfaceBeautiful: InterfaceBeautiful, ComposingReasonable: ComposingReasonable, OperationReasonable: OperationReasonable, ContentConveyDistinct: ContentConveyDistinct }, function (result) {
+                if (result.IsSuccess) {
+                    alertTip("感谢您提出的宝贵建议，我们的客服人员将尽快处理您的建议。");
+                    location.href = "/member/mysuggestions";
+                }
+                else {
+                    alert(result.Message);
+                }
+            });
+        }
+        showMsg(msg);
+    }
+</script>
+@ViewHelpers.js("help.js")

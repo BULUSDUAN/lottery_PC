@@ -1,0 +1,392 @@
+﻿@using app.lottery.site.cbbao.Models
+@using MatchBiz.Core;
+@using app.lottery.site.Models;
+@using GameBiz.Core;
+@{
+    Layout = "../Shared/_Layout.cshtml";
+    string type = ViewBag.Type;
+    type = type.ToLower();
+    var title = string.Empty;
+    var keywords = string.Empty;
+    var desc = string.Empty;
+    var count = 0;
+    var gameName = SiteConvert.GameName("ctzq", type);
+
+    var saleIssue = ViewBag.SaleIssue as List<CtzqIssuesWeb>;
+    var stopIssue = ViewBag.StopIssue as List<string>;
+    var currentIssue = string.Empty;
+    var stoptime = string.Empty;
+    var ctzqStartTime = string.Empty;
+    if (saleIssue.Count > 0)
+    {
+        ctzqStartTime = saleIssue[0].StartTime; //当前期开始购买时间
+        currentIssue = saleIssue[0].IssuseNumber;
+        stoptime = saleIssue[0].StopBettingTime;
+    }
+
+    var issues = Request["IssuesNum"];
+    var oddstype = ViewBag.OddType;
+    var flag = oddstype != 3;
+    if (!string.IsNullOrEmpty(issues) && issues != currentIssue)
+    {
+        title = "足彩" + gameName + "第" + issues + "期投注信息-" + SiteString.getHZSiteName(Request);
+        keywords = "足彩" + gameName + "第" + issues + "期投注信息";
+        desc = SiteString.getHZSiteName(Request) + "彩票网为您提供足彩" + gameName + "第" + issues + "期投注信息，方面彩民朋友查看往期投注信息";
+        ctzqStartTime = DateTime.Now.ToString();
+    }
+    else
+    {
+        switch (type)
+        {
+            case "t14c":
+                title = "足彩网上投注-14场胜负彩投注-网上购买十四场胜负彩-14场胜负彩赔率-" + SiteString.getHZSiteName(Request);
+                keywords = "足彩网上投注,14场胜负彩投注,网上购买十四场胜负彩,14场胜负彩赔率";
+                desc = "网上购买足彩首选" + SiteString.getHZSiteName(Request) + "彩票网," + SiteString.getHZSiteName(Request) + "彩票网提供专业的足彩14场胜负彩投注,更有足彩十四场最新赔率信息,这里是足彩的中奖福地.【" + SiteString.getHZSiteName(Request) + "彩票网-专业、安全的网上购彩平台】";
+                count = 14;
+                break;
+            case "tr9":
+                title = "足彩任选9场投注-网上购买任选九场-任选9赔率-" + SiteString.getHZSiteName(Request);
+                keywords = "足彩任选9场投注,网上购买任选九场,任选9赔率";
+                desc = "网上购买足彩任选9场首选" + SiteString.getHZSiteName(Request) + "彩票网," + SiteString.getHZSiteName(Request) + "彩票网提供专业的足彩任选九场投注,更有任选9最新赔率信息,这里是足彩任选九的中奖福地.【" + SiteString.getHZSiteName(Request) + "彩票网-专业、安全的网上购彩平台】";
+                count = 14;
+                break;
+            case "t6bqc":
+                title = "足彩半全场投注-网上购买6场半全场-六场半全场赔率-" + SiteString.getHZSiteName(Request);
+                keywords = "足彩半全场投注,网上购买6场半全场,六场半全场赔率";
+                desc = "网上购买足彩6场半全场首选" + SiteString.getHZSiteName(Request) + "彩票网," + SiteString.getHZSiteName(Request) + "彩票网提供专业的足彩六场半全场投注,更有6场半全场最新赔率信息,这里是足彩半全场的中奖福地.【" + SiteString.getHZSiteName(Request) + "彩票网-专业、安全的网上购彩平台】";
+                count = 6;
+                break;
+            case "t4cjq":
+                title = "4场进球数投注-足彩进球数网上购买-四场进球数赔率-" + SiteString.getHZSiteName(Request);
+                keywords = "4场进球数投注,足彩进球数网上购买,四场进球数赔率";
+                desc = "网上购买足彩4场进球数首选" + SiteString.getHZSiteName(Request) + "彩票网," + SiteString.getHZSiteName(Request) + "彩票网提供专业的足彩四场进球数投注,更有4场进球数最新赔率信息,这里是足彩进球数的中奖福地.【" + SiteString.getHZSiteName(Request) + "彩票网-专业、安全的网上购彩平台】";
+                count = 4;
+                break;
+        }
+    }
+    ViewBag.Title = title;
+    ViewBag.KeyWords = keywords;
+    ViewBag.Description = desc;
+    CurrentUserInfo user = ViewBag.CurrentUser;
+    var querystr = string.Format("isue={0}&risue={1}&st={2}", HttpUtility.UrlEncode(currentIssue), HttpUtility.UrlEncode(issues), HttpUtility.UrlEncode(stoptime));
+}
+@section css{@UserHelper.csscdn("njc.min.css", "0120")}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a>&nbsp;&gt; &nbsp;</li>
+        <li><a target="_blank" href="/statichtml/buy/index.html">购彩大厅</a>&nbsp;&gt;&nbsp;</li>
+        <li>@gameName</li>
+        <li class="bonus"><span style="display: block; float: right; height: 27px; line-height: 27px;">
+            <img style="float: left;" src="@ViewHelpers.img("games/jiajiang.png")" alt="加奖"/>
+            <span style="float: left; font-size: 16px; color: Red; vertical-align: middle;">加奖15%</span>
+        </span></li>
+    </ul>
+</div>
+@{Html.RenderPartial("AwardDescription");}
+<div class="content">
+    <div id="lotteryWrapper" class="conbox jczq">
+        <div class="sub_banner">
+            <div class="game_con">
+                <a@(type == "t14c" && flag ? " class=select" : "")  href="/toto" >14场胜负</a> <a@(type == "tr9" && flag ? " class=select" : "") href="/toto/tr9">
+                    任9场</a> <a@(type == "t6bqc" && flag ? " class=select" : "") href="/toto/t6bqc">6场半全</a>
+                <a@(type == "t4cjq" && flag ? " class=select" : "") href="/toto/t4cjq">4场进球</a>
+                @*<a@(flag ? "" : " class=select") href="/toto?oddstype=3">单式上传</a>*@
+            </div>
+            <div class="clearfix">
+                @if (flag)
+                {
+@*<ul class="fr">
+                        <li class="endmatch">
+                            单式投注截止时间:在复式投注截止时间提前25分钟截止
+                        </li>
+                    </ul>*@
+                }
+                else
+                {
+                    <ul class="fr">
+                        <li>当前时间：<span id="sysTime">@DateTime.Now.ToString("yyyy年MM月dd日 HH:mm:ss")</span>
+                        </li>
+                    </ul>
+                }
+            </div>
+        </div>
+        @if (flag)
+        {
+            <div class="sub_menu">
+                <p class="fl crti">
+                    <span class="fl">当前期号:</span>
+                    @if (!string.IsNullOrEmpty(issues) && issues != currentIssue)
+                    {
+                        <a href="/toto/@type" class="fl" style="padding: 0 1px 0 5px">
+                            <input type="radio" name="issue" value="@currentIssue" class="fl" style="margin-top: 12px;"/><span
+                                class="fl red bold" style="padding: 0 2px">@currentIssue</span></a>
+                    }
+                    else
+                    {
+                        <a href="/toto/@type" class="fl" style="padding: 0 1px 0 5px">
+                            <input type="radio" name="issue" value="@currentIssue" checked="checked" class="fl" style="margin-top: 12px;"/><span
+                                class="fl red bold" style="padding: 0 2px">@currentIssue</span></a>
+                    }期
+                </p>
+                <p class="fl fset">
+                    复式投注截止时间:<b id="sysEndTime" data-et="@(string.IsNullOrEmpty(stoptime) || (!string.IsNullOrEmpty(issues) && currentIssue != issues) ? "" : Convert.ToDateTime(stoptime).ToString("yyyy/MM/dd HH:mm:ss"))">@stoptime</b></p>
+                <p class="fl et">
+                    离截止时间:<span class="sys_clocks" id="sysClock"><em>00</em>天<em>00</em>时<em>00</em>分<em>00</em>秒</span></p>
+                <div class="fr" style="margin-right: 5px;">
+                    赛事回查
+                    <p class="dropdown" name="issue">
+                        <cite data-key="@currentIssue" id="querySelect" class="issueselect">第@(!string.IsNullOrEmpty(issues) ? issues : currentIssue)期</cite>
+                        <em class="dropissuse" style="display: none; z-index: 10; width: 102px;"><a href="/toto/@type" data-key="@currentIssue" class="red">
+                            第@(currentIssue)期</a>
+                            @{
+                    for (var i = stopIssue.Count - 1; i >= 0; i--)
+                    {
+                                <a href="/toto/@type?IssuesNum=@(stopIssue[i])" data-key="@(stopIssue[i])">第@(stopIssue[i])期</a>
+                    }
+                            }
+                        </em><i class="line-01"></i>
+                    </p>
+                </div>
+            </div>
+            <div class="clearfix">
+            </div>
+            if (Convert.ToDateTime(ctzqStartTime) < DateTime.Now)
+            {
+                Html.RenderPartial("tototheader");
+            }
+            else
+            {
+                 <div class="sfc_area"> <div class="red">当前期开始投注时间为:@ctzqStartTime</div></div>              
+            }
+            //Html.RenderAction("Ctzq", "buy", new {type, currentIssue, stoptime, requestIssue = issues});
+            <div class="sfc_area">
+                @{
+            if (type == "t14c" || type == "tr9")
+            {
+                    <div class="sfc_area_c">
+                        <span>投注内容：</span>
+                        <ul id="sfc_nums">
+                            @for (var i = 0; i < count; i++)
+                            {
+                                <li><i title="-"></i></li>
+                            }
+                        </ul>
+                    </div>
+            }
+                }
+                <div class="sfc_area_a">
+                    <ul>
+                        <li id="bet_info">您选了 <span class="yellow bold" id="betNum">0</span>&nbsp;场， <span
+                            class="yellow bold betinfp" id="u1">0</span> 个单选， <span class="yellow bold betinfp"
+                                id="u2">0</span> 个双选， <span class="yellow bold betinfp" id="u3">0</span> 个全选，共
+                            ： <span class="yellow bold" id="items">0</span> 注，<span class="yellow bold">￥ <span
+                                id="sum">0</span>.00</span> 元&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @*<a id="filterBtn" class="onlinefilter" href="javascript:void 0">在线过滤</a>*@
+                        </li>
+                        <li><b>投注倍数：</b>
+                            <input type="text" class="muti_input" maxlength="5" size="4" value="1" id="multiple"
+                                onmouseover=" this.select();" onkeyup=" Tool.tonumber(this, 1, 99);ctzqpage.input_.changeMutiple();"
+                                oncontextmenu="return false;" />
+                            <input type="button" accesskey="=" id="beiUp" class="add_btn icon2" onclick=" ctzqpage.input_.addMutiple(1); " />
+                            <input type="button" accesskey="-" id="beiDown" class="sub_btn sub_btn_des icon2"
+                                onclick=" ctzqpage.input_.addMutiple(-1); " />
+                            (最高99倍) </li>
+                    </ul>
+                </div>
+                <p class="sfc_area_b buyBtns">
+               @if (Convert.ToDateTime(ctzqStartTime) < DateTime.Now)
+               {
+                    <input type="button" value="立即认购" id="singleBuyBtn" class="dialogBtn" onclick="ctzqpage.input_.dealBuy('single', this)"
+                        style="display: inline-block;" />
+                    <input type="button" value="发起合买" id="multBuyBtn" class="dialogBtn" onclick="ctzqpage.input_.dealBuy('hemai', this)"
+                        style="display: inline-block;" />
+               }
+                </p>
+            </div>
+            <input type="hidden" value="2" name="activityType" id="activityType" />
+            <!-- 投注参数 -->
+            <div style="display: none;">
+                <input type="hidden" id="issueState" value="" />
+                <input type="hidden" id="gameName" value="@SiteConvert.GameName("ctzq", type)" />
+                <input type="hidden" id="game" value="ctzq" />
+                <input type="hidden" id="type" value="@type" />
+                <input type="hidden" id="issuseNumber" value="" />
+                <input type="hidden" id="Action" value="prebuy" />
+                @*   <input type="hidden" id="SALECOUNT" value="@(match.Count)" />*@
+                <input type="hidden" id="matchLength" value="@((type == "t14c" || type == "tr9") ? 14 : type == "t4cjq" ? 4 : 12)" />
+                <input type="hidden" id="itemLength" value="@(type == "t14c" ? 3 : 4)" />
+                <input type="hidden" id="betUnits" value="" />
+                <input type="hidden" id="betCost" value="" />
+            </div>
+        }
+        else
+        {
+            <div class="conbox">
+                <div class="buy_single jczq">
+                    <div class="single_game" hover="game_c">
+                        <a@(type == "t14c" ? " class=game_a" : "")  href="/toto?oddstype=3" >14场胜负</a> <a@(type == "tr9" ? " class=game_a" : "") href="/toto/tr9?oddstype=3">
+                            任9场</a> <a@(type == "t6bqc" ? " class=game_a" : "") href="/toto/t6bqc?oddstype=3">6场半全</a>
+                        <a@(type == "t4cjq" ? " class=game_a" : "") href="/toto/t4cjq?oddstype=3">4场进球</a>
+                    </div>
+                    <div class="single_chk">
+                        <a class="fr" href="javascript:void(0)">上传功能使用帮助&gt;&gt; </a>
+                        <input id="nowup" type="radio" checked="checked" value="0" name="radiobutton">
+                        <label for="nowup">
+                            现在上传</label>
+                        <input id="laterup" type="radio" value="1" name="radiobutton">
+                        <label for="laterup">
+                            先发起后上传</label>
+                        <span class="note">单式投注截止时间：在复式投注截止时间提前<em style="color: #ff3d00;"> 25 </em>分钟截止</span>
+                        <input type="hidden" value="16046" id="cissue">
+                    </div>
+                    <div id="nowup_pannel" style="display: block;">
+                        <div class="m_1">
+                            <div class="match_step match_step_line">
+                                <div class="fl match_con">
+                                    <span class="step_3 clearfix"></span><i class="s1">01上传文件</i> <i class="s2">02上传文件</i>
+                                </div>
+                                <a href="javascript:void(0)" class="fr up_gs">查看标准格式样本</a>
+                            </div>
+                            <div id="step3" class="third_step">
+                                <div class="up_description">
+                                    <table width="100%" border="0">
+                                        <caption>
+                                            上传字符标准</caption>
+                                        <tbody>
+                                            <tr>
+                                                <td width="25%">
+                                                    选项
+                                                </td>
+                                                <td width="25%">
+                                                    胜
+                                                </td>
+                                                <td width="25%">
+                                                    平
+                                                </td>
+                                                <td width="25%">
+                                                    负
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    上传字符
+                                                </td>
+                                                <td>
+                                                    <input class="up_dc" type="text" readonly="readonly" maxlength="2" size="2" value="3">
+                                                </td>
+                                                <td>
+                                                    <input class="up_dc" type="text" readonly="readonly" maxlength="2" size="2" value="1">
+                                                </td>
+                                                <td>
+                                                    <input class="up_dc" type="text" readonly="readonly" maxlength="2" size="2" value="0">
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="up_line">
+                                </div>
+                                <div class="up_body clear">
+                                    <span class="single_txt">
+                                        <input id="upFileVal" class="up_text" type="text" value="请选择文件" readonly="readonly"
+                                            name="upFileVal">
+                                    </span>
+                                    <form method="post" action="/Uploadcz" enctype="multipart/form-data" id="importCodeForm">
+                                    <input id="upFile" class="up_file" type="file" accesskey="text/plain" multiple="true"
+                                        name="upload_file">
+                                    </form>
+                                    <label for="upSbutton">
+                                        <input id="upSbutton" class="upbtn" type="button" value="选择文件">
+                                    </label>
+                                    <input id="upFileBtn" class="upbtn upFileBtn" type="button" style="" value="上&nbsp;&nbsp;传">
+                                    <div id="loading" class="loading" style="left: 400px; width: 50%; background-position: 1% center;
+                                        display: none; padding-left: 5px;">
+                                    </div>
+                                </div>
+                                <div id="upFileQueue">
+                                </div>
+                                <p>
+                                    <b>*</b>1、请严格按照“标准格式样本”格式上传方案，否则网站不保证为您做过关统计以及历史战绩。
+                                    <br>
+                                    <b>*</b>2、文件格式必须是文本文件。
+                                    <br>
+                                    <b>*</b>3、由于上传的文件较大，会导致上传时间较长，请耐心等待。
+                                </p>
+                            </div>
+                        </div>
+                        <div class="m_1">
+                            <div class="match_step match_step_line">
+                                <div class="fl match_con">
+                                    <span class="step_4"></span><i class="s1">02选择倍数</i> <i class="s2">03选择倍数</i>
+                                </div>
+                                <a href="javascript:void(0)" class="fr up_gs">查看标准格式样本</a>
+                            </div>
+                            <div id="step4" class="fourth_setp">
+                                投注倍数：
+                                <input id="beiUp" class="add_btn icon2" type="button" accesskey="=">
+                                <input id="bei" class="muti_input" type="text" maxlength="5" size="5" value="1">
+                                <input id="beiDown" class="sub_btn sub_btn_des icon2" type="button" accesskey="-">
+                                (最高99倍)
+                                <p>
+                                    总注数： <em id="items" class="fred">0</em> 注&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;倍数：
+                                    <em id="multiple" class="fred">1</em> 倍&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;金额： <em
+                                        id="sum" class="fred">0</em> 元
+                                </p>
+                                <div class="purchasing_sub">
+                                    <p class="buyBtns">
+                                        <input id="single" class="dialogBtn" type="button" title="个人购买" value="个人购买" style="display: inline-block;">
+                                        <input id="hemai" class="dialogBtn" type="button" title="发起合买" value="发起合买">
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="laterup_pannel" class="laterup" style="display: none;">
+                        <label for="buySum">
+                            设置方案金额：</label>
+                        <input id="buySum" type="text" maxlength="5" onkeyup=" this.value = this.value.replace(/[^\d]/g, '');if (this.value < 0)this.value = 2 ;"
+                            placeholder="最少2元" value="2">元 <span class="schemetip">方案金额浮动范围： <b id="minSum">2</b>
+                                ~ <b id="maxSum">2</b> 元 </span>
+                        <dl>
+                            <dt>浮动金额说明：</dt>
+                            <dd>
+                                此功能可有效使用资金，在发起人预投设置金额的基础上，实际上传方案可以上下浮动 <b class="fred">30</b> %，如发起人设置100元的预投，可以上传70-130元间的单式。
+                            </dd>
+                            <dd>
+                                1.上传方案&gt;预计金额时，发起人请注意及时追加保底，此单可以继续参与跟单。</dd>
+                            <dd>
+                                2.上传方案&lt; 预计金额时，发起人在实际上传方案的时候发起金额不能少于该方案当前已认购的总金额。</dd>
+                            <dd>
+                                3.上传方案=预计金额时，认购金额不发生变化。</dd>
+                        </dl>
+                        <div class="purchasing_sub">
+                            <p class="buyBtns">
+                                <input id="hemai" class="dialogBtn" type="button" title="发起合买" value="发起合买">
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<script type="text/javascript">
+    var gameCode = "ctzq";
+    var type = "@(type)";
+    var IssuesNum = '@issues';
+    var qs = "@(Html.Raw(querystr))";
+
+    var gameName = "@gameName";
+    var nowtime = "@DateTime.Now.ToString()";
+</script>
+@*@UserHelper.js("ctzq.min.js")*@
+@UserHelper.js("common.js")
+@if (flag)
+{
+    @UserHelper.js("ctzq.js")
+}
+else
+{
+    @UserHelper.js("dssczc.js")
+}
+@{Html.RenderPartial("box_confirm_gg");}

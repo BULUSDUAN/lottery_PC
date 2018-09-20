@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>@ViewBag.Title</title>
+        <meta name="keywords" content="@ViewBag.KeyWords" />
+        <meta name="description" content="@ViewBag.Description" />
+        <meta name="baidu-site-verification" content="G3yjx3dBmE" />
+        <meta property="qc:admins" content="34400747776311226375" />
+        <meta name="360-site-verification" content="5fc59d0c2b686ee3ea83e35da560e3de" />
+        @UserHelper.csscdn("main.min.css","0121")
+        @RenderSection("css", false)
+        @UserHelper.js_share("share.min.js")
+        @UserHelper.js("user.min.js")
+        @UserHelper.js("nav.js")
+        @ViewHelpers.js("onlinePhone.js")
+        @RenderSection("js", false)
+    </head>
+    <body>
+        <script type="text/javascript">
+            var dres = "@ViewHelpers.jsonres()/matchdata/";
+        </script>
+        <div class="header">
+            @{ Html.RenderAction("rdheader", "baodan");}
+        </div>
+        <div class="wrap">
+            @RenderBody()
+        </div>
+        <div class="clearfix">
+        </div>
+        <div class="footer">
+        @{Html.RenderAction("footerindex", "home");}
+        </div>
+        @{Html.RenderPartial("tj", "Shared");}
+        @{Html.RenderPartial("box_login");}
+        @{Html.RenderPartial("box_alert");}
+        @{Html.RenderPartial("box_progress");}
+    </body>
+</html>

@@ -1,0 +1,99 @@
+﻿@using app.lottery.site.Models;
+@{
+    ViewBag.Title = "银行卡绑定 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "银行卡绑定, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var user = ViewBag.User as app.lottery.site.Models.CurrentUserInfo;
+    Layout = null;
+}
+
+        <div class="info_tt">银行卡绑定</div>
+        <div class="xgmm_main" style="margin-top: 0px;">
+            
+            <div class="info_zl_ico">
+                <span class="member-safe  @(user.IsBindBank ? "member_safe_y" : "member_safe_w") safe_maggin"></span>
+                <span class="ml10 @(user.IsBindBank ? "member_bank_y" : "member_bank_w")"></span>
+            </div>
+           @* @if (user.IsAuthenticationRealName)
+            {
+                if (user.IsBindBank)
+                {
+                    
+                    <div class="info_wxts">
+                        <div class="info_wxts_show">
+                            <span><em style="color: Red">*</em>绑定的银行卡是您提款的唯一用卡。</span> 
+                        </div>
+                    </div>
+                 <div class="info_wxts">
+                        <div class="info_wxts_show">
+                            <span>开户姓名：@(SiteString.AllHideUser(user.BankCardInfo.RealName))</span>
+                            <span>开户银行：@user.BankCardInfo.BankName (@user.BankCardInfo.ProvinceName/@user.BankCardInfo.CityName)</span>    
+                            <span>开户支行：@user.BankCardInfo.BankSubName</span>
+                            <span>银行卡号：@(SiteString.EncodeBankCardNumber(user.BankCardInfo.BankCardNumber))</span> 
+                        </div>
+                    </div>
+                }
+                else
+                {              
+                
+                @UserHelper.BindBank(user)
+
+                  <div class="info_wxts">
+                    <div class="info_wxts_show">
+                        <span><em style="color: Red">*</em>1.请尽量填写您将长期使用的银行借记卡号。</span> <span><em style="color: Red">
+                            *</em>2.绑定卡是您提款的唯一专用卡。</span> <span><em style="color: Red">*</em>3.银行卡开户姓名必须与您实名认证时的姓名一致，否则会导致提款无法到账。</span>
+                    </div>
+                </div>  
+ 
+                }
+            }
+            else
+            {
+                <div class="info_wxts">
+                    <div class="info_wxts_show" style="margin-bottom: 0px;">
+                        <span><em style="color: Red">*</em>为保障您的账户安全，绑定银行卡前请填写您的真实身份信息、进行实名认证！</span>
+                    </div>
+                    <br />
+                    <br />
+                </div>  
+           
+            }*@
+
+             @if (user.IsBindBank)
+                {
+                    
+                    <div class="info_wxts">
+                        <div class="info_wxts_show">
+                            <span><em style="color: Red">*</em>绑定的银行卡是您提款的唯一用卡。</span> 
+                        </div>
+                    </div>
+                 <div class="info_wxts">
+                        <div class="info_wxts_show">
+                            <span>开户姓名：@(SiteString.AllHideUser(user.BankCardInfo.RealName))</span>
+                            <span>开户银行：@user.BankCardInfo.BankName (@user.BankCardInfo.ProvinceName/@user.BankCardInfo.CityName)</span>    
+                            <span>开户支行：@user.BankCardInfo.BankSubName</span>
+                            <span>银行卡号：@(SiteString.EncodeBankCardNumber(user.BankCardInfo.BankCardNumber))</span> 
+                        </div>
+                    </div>
+                }
+                else
+                {              
+                
+                @UserHelper.BindBank(user)
+
+                  <div class="info_wxts">
+                    <div class="info_wxts_show">
+                        <span><em style="color: Red">*</em>1.请尽量填写您将长期使用的银行借记卡号。</span> <span><em style="color: Red">
+                            *</em>2.绑定卡是您提款的唯一专用卡。</span> <span><em style="color: Red">*</em>3.银行卡开户姓名必须与您实名认证时的姓名一致，否则会导致提款无法到账。</span>
+                    </div>
+                </div>  
+ 
+                }
+        </div>
+<script type="text/javascript">
+    $(function () {
+        $(".member_bank_y").text("已绑定银行卡").css("color", "#8ecc33").addClass("td_yseOrno");
+        $(".member_bank_w").text("绑定银行卡").css("color", "#ff5c00").addClass("td_yseOrno");
+    });
+</script>
+<div class="clearfix">
+</div>

@@ -1,0 +1,157 @@
+﻿@using app.lottery.site.Models;
+@{
+    ViewBag.Title = "银行卡提款 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "银行卡提款, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var user = ViewBag.CurrentUser as CurrentUserInfo;
+    var balance = ViewBag.CurrentUserBalance as GameBiz.Core.UserBalanceInfo;
+}
+@section css{
+    @UserHelper.csscdn("mycenter.css","1215")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>银行卡提款</li>
+    </ul>
+</div>
+<div class="center mt10">
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mune_safe">
+        <div class="account_menu clearfix">
+            <a href="/member/accountdetail"  >账户明细</a>
+            <a href="/member/redBagList">红包明细</a>
+            <a href="/member/paywizzard" >账户充值</a>
+            <a href="/member/drawingsguide" class="select">账户提款</a>
+        </div>
+        <div class="account_con">
+            <div class="betorder_top">
+                <ul>
+                    <li><a href="/member/drawingsguide"><i></i>提款向导</a></li>
+                    <li class="betorder_topSelected"><a href="/member/fetch_bank"><i></i>银行提款</a></li>
+                   @* <li><a href="/member/fetch_alipay"><i></i>支付宝提款</a></li>*@
+                    <li><a href="/member/drawingsrecordall"><i></i>提款记录</a></li>
+                </ul>
+            </div>
+            <div class="center_con">
+                @if (user.IsAuthenticationMobile && user.IsAuthenticationRealName && user.IsBindBank)
+                { 
+                    <div class="info_wxts">
+                        <div class="info_wxts_show">
+                            <span><em style="color: Red">*</em>1.为保障您的账户安全，提款前请填写您的真实身份信息、银行卡信息、手机信息。</span> 
+                            <span><em style="color: Red">*</em>2.请尽量填写您将长期使用的银行借记卡号。 </span>
+                            <span><em style="color: Red">*</em>3.绑定银行卡是您提款的唯一专用卡。</span>
+                            <span><em style="color: Red">*</em>4.银行卡开户姓名必须和您实名认证时的姓名一致，否则会导致提款无法到账。</span>
+                            <span><em style="color: Red">*</em>5.注意：支行名称必须认真填写且与总行对应，否则会导致提款无法到账。</span>
+                            <span><em style="color: Red">*</em>6.注意：提现时间早上9点到凌晨1点。</span>
+                        </div>
+                    </div>
+                        <form action="/member/fetchvalidate" method="post" onsubmit="return checkInput();" autocomplete="off">
+                            <ul class="userinfo_list">
+                                <li><span class="sp120">持&nbsp;卡&nbsp;人：</span>@SiteString.AllHideUser(user.BankCardInfo.RealName)
+                                </li>
+                                <li><span class="sp120">开户银行：</span>@user.BankCardInfo.BankName (@user.BankCardInfo.ProvinceName/@user.BankCardInfo.CityName)
+                                    @user.BankCardInfo.BankSubName
+                                </li>
+                                <li><span class="sp120">银行卡号：</span>@SiteString.EncodeBankCardNumber(user.BankCardInfo.BankCardNumber)
+                                </li>
+                                <li><span class="sp120">可提金额：</span><b class="ye blod fszie">@balance.GetTotalCashMoney().ToString("f")</b>
+                                    元</li>
+                                <li><span class="sp120">提款金额：</span><input type="text" id="money" name="money" maxlength="8"
+                                                                           value="50" class="fillmoney" size="10" onkeydown="number_check(this,event)" />
+                                    元 <em class="gray">(单笔提款金额最少50元)</em> </li>
+                                <li><span class="sp120">&nbsp;</span><input type="hidden" name="fetchType" value="bank" />
+                                    <input type="hidden" name="backurl" value="@Request.Url.AbsoluteUri.Split('?')[0]" />
+                                    <input type="submit" value="下一步" class="btn_next" />
+                                </li>
+                                <li><span class="sp120">&nbsp;</span><span class="error-box" id="errbox"><i class="err-icon"></i><span
+                                                                                                                                     class="msg" id="errMsgFetch"></span></span> </li>
+                            </ul>
+                        </form>
+                        <script type="text/javascript">
+                            var msg = location.request("errMsg") ? location.request("errMsg") : "";
+                            showMsg(msg);
+                            function showMsg(msg) {
+                                if (msg.length > 0) {
+                                    $("#errbox").show();
+                                    $("#errMsgFetch").text(msg);
+                                }
+                                else {
+                                    $("#errMsgFetch").text("");
+                                    $("#errbox").hide();
+                                }
+                            }
+                            function checkInput() {
+                                msg = '';
+                                var money = $.trim($("#money").val());
+                                if (money && Tool.isNumber(money) && parseInt(money, 10) >= 50) {
+                                    msg = '';
+                                }
+                                else {
+                                    msg = "请输入正确的提现金额(提款金额不能小于50元)";
+                                    $("#money").focus();
+                                }
+                                showMsg(msg);
+                                return !msg.length > 0;
+                            }
+                        </script>
+                }
+                else if (!user.IsAuthenticationRealName)
+                {
+            @*<div class="tip2">
+                <i></i><b class="leftdesc">温馨提示：</b><span class="desc red">为保障您的账户安全，提款前请填写您的真实身份信息、银行卡信息、手机信息！</span>
+            </div>*@
+                    <div class="info_zl_ico">
+                        <span class="member-bg" style="margin-top: 15px; margin-left: 50px;"></span><span class="ml10">@(user.IsAuthenticationRealName ? "已实名认证" : "实名认证")</span>
+                    </div>
+                    <div class="info_wxts" style=" color: #666">
+                        <div class="info_wxts_show" style="margin-bottom: 0px;">
+                            <span><em style="color: Red">*</em>为保障您的账户安全，请填写您的真实身份信息</span>
+                        </div>
+                    </div>  
+                    @UserHelper.AuthRealName()
+
+           
+                }
+                else if (!user.IsBindBank)
+                {
+                    <div class="info_zl_ico">
+                        <span  style="margin-top: 15px; margin-left: 50px;"></span>
+                        <span class="ml10">银行卡绑定</span>
+                    </div>
+                   <div class="info_wxts" style="color: #666">
+                    <div class="info_wxts_show">
+                        <span><em style="color: Red">*</em>1.请尽量填写您将长期使用的银行借记卡号。</span> <span><em style="color: Red">
+                            *</em>2.绑定卡是您提款的唯一专用卡。</span> <span><em style="color: Red">*</em>3.银行卡开户姓名必须与您实名认证时的姓名一致，否则会导致提款无法到账。</span>
+                    </div>
+                </div>  
+                
+                @UserHelper.BindBank(user)
+                }
+                else if (!user.IsAuthenticationMobile)
+                {
+                    External.Core.Authentication.UserMobileRequestInfo requestInfo = ViewBag.MobileRequestInfo;
+                    <div class="alipay-content2" style="border: none;color: #666">
+                        <div class="info_zl_ico">
+                            <span class="member-rz" style="margin-top: 15px; margin-left: 50px;"></span><span
+                                                                                                            class="ml10">绑定手机</span>
+                        </div>
+                        <div class="info_wxts">
+                            <div class="info_wxts_show">
+                                <span><em style="color: Red">*</em>1.为保障您的账户安全，请绑定您的常用手机号码。</span> 
+                                <span><em style="color: Red">*</em>2.当您忘记密码时，可以通过绑定手机找回密码。 </span>
+                                <span><em style="color: Red">*</em>3.当您申请提款时，首先需要绑定手机号码。</span>
+                            </div>
+                        </div>
+                            @UserHelper.AuthMobile_Submit(requestInfo)
+                    </div>
+                }
+            </div>
+      
+        </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>

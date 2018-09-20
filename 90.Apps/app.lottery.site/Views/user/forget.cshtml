@@ -1,0 +1,334 @@
+@{
+
+  ViewBag.Title = "找回密码 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+  ViewBag.keywords = "找回密码, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+  ViewBag.Here = "找回密码";}
+  @section css{
+  @UserHelper.css("user.css")
+  }
+<div id="fullbg"></div>
+<div class="wrap_s">
+    <div class="mainBox">
+        <!--第一步-->
+        <div id="step_1">
+            <div class="step_title">
+                <p class="text">
+                    请输入您需要找回密码的用户名
+                </p>
+            </div>
+            <form name="checkuser" id="checkuser" method="post" onsubmit="checkUserForm();return false;">
+                <div class="step_content">
+                    <span class="inputNameText">用户名：</span>
+                    <input type="text" class="input_text" size="25" name="username" id="username" tabindex="1" />
+                    <a href="javascript:void(0)" id="forgotname_openBtn" class="" tabindex="3">用户名忘记了?</a>
+                    <div class="btn_step1">
+                        <input type="submit" value="提 交" id="btn_red_b" class="btn_red_b" tabindex="2" />
+                    </div>
+                    <p class="err_name" id="username_err">
+                    </p>
+                </div>
+            </form>
+        </div>
+        <!--//第一步-->
+        <!--第二步-->
+        <div id="step_2" style="display: none">
+            <div class="step_title">
+                <p class="text">
+                    您需要找回密码的用户名是 <span class="userName"></span>，请选择您准备找回密码的方式：
+                </p>
+            </div>
+            <div class="step_content">
+                <ul class="getway">
+                    <li class="disable" id="getway1"><a href="javascript:void(0)" id="mobile_openBtn"
+                        class="way1" title="用手机找回">用手机找回</a>
+                        <div>
+                            <strong></strong><span></span>
+                        </div>
+                    </li>
+                    <li class="disable" style="display:none;" id="getway2"><a href="javascript:void(0)" id="email_openBtn"
+                        class="way2" title="用邮箱找回">用邮箱找回</a>
+                        <div>
+                            <strong></strong><span></span>
+                        </div>
+                    </li>
+                    <li class="disable" id="getway3"><a href="javascript:void(0)" id="protect_openBtn"
+                        class="way3" title="用实名认证找回">用实名认证找回</a>
+                        <div>
+                            <strong></strong><span></span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!--//第二步-->
+        <!--第三步-->
+        <div id="step_suc" style="display: none">
+            <div class="step_title">
+                <p class="text">
+                    祝贺您，<span class="userName"></span>，您的密码找回成功！
+                </p>
+            </div>
+            <div class="step_content">
+                <p class="info_suc1">
+                    您的密码被重置为：<span class="phoneNum" id="newpwd"></span>，请妥善保存
+                </p>
+                <p class="info_suc2">
+                    建议您尽快登录并修改密码 <a href="@SiteString.root(Request)" target="_blank" class="backLogin">登录@(SiteString.getHZSiteName(Request))</a>
+                </p>
+            </div>
+        </div>
+        <!--//第三步-->
+        <!--通用提示层-->
+        <div id="common_msg" style="display: none">
+            <div class="step_title">
+                <p class="text" id="msg_title">
+                </p>
+            </div>
+            <div class="step_content">
+                <p class="info_suc1" id="msg_content">
+                </p>
+                <p class="info_suc1" id="msg_content2">
+                </p>
+                <p class="info_suc2">
+                    <a href="@SiteString.root(Request)" target="_blank" class="backLogin">返回首页</a>
+                </p>
+            </div>
+        </div>
+        <!--//通用提示层-->
+    </div>
+</div>
+<!--忘记用户名层-->
+<div id="forgotname" class="alert_s_wrap" style="display: none" lang="myalert">
+    <div class="alert_s_box">
+        <div class="alert_s_title">
+            <span>温馨提示</span> <a href="javascript:void(0)" class="alert_closeBtn">关闭</a>
+        </div>
+        <div class="alert_s_content">
+            <p class="info1">
+                您可以通过以下方式找回用户名：
+            </p>
+            <ul class="fangshi">
+                <li class="fangshi1"><strong>一、在线客服</strong>
+                 <a  href="javascript:void(0)" data="@SiteString.kefuUrl" class="link_kefu" title="点击联系在线客服"></a> </li>
+                <li class="fangshi2" ><strong>二、热线电话</strong> <b style=" margin-top:25px;">@SiteString.tel</b> </li>
+            </ul> 
+        </div>
+    </div>
+    <div class="alert_s_shadow">
+    </div>
+</div>
+<!--//忘记用户名层-->
+<!--手机层-->
+<div id="layer_mobile1" class="alert_s_wrap" style="display: none; height: 270px;" lang="myalert">
+    <div class="alert_s_box">
+        <div class="alert_s_title">
+            <span>温馨提示</span> <a href="javascript:void(0)" class="alert_closeBtn">关闭</a>
+        </div>
+        <form name="checkmobile" id="checkmobile" method="post" onsubmit="return checkMobileForm();">
+            <div class="alert_s_content">
+                <p class="waytitle">
+                    用手机找回密码
+                </p>
+                <p class="info2">
+                    您好，<span class="userName"></span>，请输入您绑定的手机号码
+                </p>
+                <ul class="phoneForm">
+                    <li><span>手机号码：</span>
+                        <input type="text" name="mobile" id="mobile" class="input_text" size="30" />
+                    </li>
+                    <li id="li_verify1" style="display: none"><span>验证码：</span>
+                        <input type="text" name="checkcode1" class="input_text" id="checkcode1" size="10" maxlength="4" />
+                        <img alt="点击刷新" id="chkimg1" src="/user/createvalidatecode" />
+                        <a onclick="refreshVerify('chkimg1')" href="javascript:;">看不清？换一张</a></li>
+                    <li class="btn_step2">
+                        <input type="submit" value="提 交" id="btn_red_b_mobile" class="btn_red_b" />
+                    </li>
+                    <li><span id="err_info1" class="err_info"></span></li>
+                </ul>
+            </div>
+        </form>
+    </div>
+    <div class="alert_s_shadow">
+    </div>
+</div>
+<!--//手机层-->
+<!--手机验证码输入层-->
+<div id="mobile_msg" class="alert_s_wrap" style="display: none; height: 300px;" lang="myalert">
+    <div class="alert_s_box">
+        <div class="alert_s_title">
+            <span>温馨提示</span> <a href="javascript:void(0)" class="alert_closeBtn">关闭</a>
+        </div>
+        <form name="verifymobile" id="verifymobile" method="post" onsubmit="checkMobileVCode();return false;">
+            <div class="alert_s_content">
+                <p class="waytitle">
+                    请查收短信
+                </p>
+                <p class="info2">
+                    您的密码已经通过短信发送到您绑定的手机：<span class="phoneNum" id="mobileNum"></span>，请查收
+                </p>
+             @*   <ul class="phoneForm">
+                    <li><span>随机代码：</span>
+                        <input type="text" name="vcode" id="vcode" class="input_text" size="5" maxlength="6" /> 请输入您收到的6位随机代码 </li>
+                    <li id="li_verify4" style="display: none"><span>验证码：</span> <span style="width: 80px; text-align: left;">
+                        <input type="text" name="checkcode4" class="inputTong" id="checkcode4" size="3" maxlength="4" /></span>
+                        <span style='cursor: pointer; width: 50px; text-align: right;' class="code-img" onclick="refreshVerify('chkimg4')">
+                            <img alt="点击刷新" id="chkimg4" src="http://passport.500wan.com/comm/regcode.php" /></span>
+                    </li>
+                    <li><span id="err_info4" class="err_info"></span></li>
+                    <li class="btn_step2">
+                        <input type="submit" value="提 交" class="btn_red_b" />
+                    </li>
+                </ul>*@
+            </div>
+        </form>
+    </div>
+    <div class="alert_s_shadow">
+    </div>
+</div>
+<!--//手机验证码输入层-->
+<!--邮箱层-->
+<div id="layer_email1" class="alert_s_wrap" style="display: none; height: 270px;"
+    lang="myalert">
+    <div class="alert_s_box">
+        <div class="alert_s_title">
+            <span>温馨提示</span> <a href="javascript:void(0)" id="layer3_closeBtn" class="alert_closeBtn">关闭</a>
+        </div>
+        <form name="checkemail" id="checkemail" method="post" onsubmit="return checkEmailForm();">
+            <div class="alert_s_content">
+                <p class="waytitle">
+                    用邮箱找回密码
+                </p>
+                <p class="info2">
+                    您好，<span class="userName"></span>，请输入您绑定的邮箱地址
+                </p>
+                <ul class="phoneForm">
+                    <li><span>邮箱地址：</span>
+                        <input type="text" name="email" id="email" class="input_text" size="30" />
+                    </li>
+                    <li id="li_verify2" style="display: none"><span>验证码：</span>
+                        <input type="text" name="checkcode2" class="input_text" id="checkcode2" size="10" maxlength="4" />
+                        <img alt="点击刷新" id="chkimg2" src="/user/createvalidatecode" />
+                        <a onclick="refreshVerify('chkimg2')" href="javascript:;">看不清？换一张</a></li>
+                    <li class="btn_step2">
+                        <input type="submit" value="提 交" id="btn_red_b_email" class="btn_red_b" />
+                    </li>
+                    <li><span id="err_info2" class="err_info"></span></li>
+                </ul>
+            </div>
+        </form>
+    </div>
+    <div class="alert_s_shadow">
+    </div>
+</div>
+<!--//邮箱层-->
+<!--实名认证层-->
+<div id="layer_realname" class="alert_s_wrap" style="display: none" lang="myalert">
+    <div class="alert_s_box">
+        <div class="alert_s_title">
+            <span>温馨提示</span> <a href="javascript:void(0)" class="alert_closeBtn" >关闭</a>
+        </div>
+        <div class="alert_s_content">
+            <p class="info1">
+                您可以通过以下方式找回密码：
+            </p>
+            <ul class="fangshi">
+                <li class="fangshi1"><strong>一、在线客服</strong> 
+                <a  href="javascript:void(0)" data="@SiteString.kefuUrl" class="link_kefu" title="点击联系在线客服"></a> </li>
+                <li class="fangshi2"><strong>二、热线电话</strong> <b style=" margin-top:25px;">@SiteString.tel</b> </li>
+            </ul>
+        </div>
+    </div>
+    <div class="alert_s_shadow">
+    </div>
+</div>
+<!--//忘记用户名层-->
+<!--密保层-->
+<div id="layer_protect1" class="alert_s_wrap" style="display: none; height: 300px;"
+    lang="myalert">
+    <div class="alert_s_box">
+        <div class="alert_s_title">
+            <span>温馨提示</span> <a href="javascript:void(0)" id="layer4_closeBtn" class="alert_closeBtn">关闭</a>
+        </div>
+        <div class="alert_s_content">
+            @*<form name="checkprotect" id="checkprotect" action="getpwd_do.php" method="post"
+                onsubmit="checkProtectForm();return false;">
+                <p class="waytitle">
+                    用密保找回密码
+                </p>
+                <p class="info2">
+                    您好，<span class="userName"></span>，请回答您的密保问题
+                </p>
+                <ul class="phoneForm">
+                    <li><span>密保问题：</span>
+                        <select name="question" id="question" class="mibao">
+                            <option value="">选择您的密保问题</option>
+                            <option value="我的宠物名字？">我的宠物名字？</option>
+                            <option value="我最好的朋友是谁？">我最好的朋友是谁？</option>
+                            <option value="我最喜爱的颜色？">我最喜爱的颜色？</option>
+                            <option value="我最喜爱的电影？">我最喜爱的电影？</option>
+                            <option value="我最喜爱的影星？">我最喜爱的影星？</option>
+                            <option value="我最喜爱的歌曲？">我最喜爱的歌曲？</option>
+                            <option value="我最喜爱的食物？">我最喜爱的食物？</option>
+                            <option value="我最大的爱好？">我最大的爱好？</option>
+                            <option value="我中学校名全称是什么？">我中学校名全称是什么？</option>
+                            <option value="我的座右铭是？">我的座右铭是？</option>
+                            <option value="我最喜欢的小说的名字？">我最喜欢的小说的名字？</option>
+                            <option value="我最喜欢的卡通人物名字？">我最喜欢的卡通人物名字？</option>
+                            <option value="我母亲/父亲的生日？">我母亲/父亲的生日？</option>
+                            <option value="我最欣赏的一位名人的名字？">我最欣赏的一位名人的名字？</option>
+                            <option value="我最喜欢的运动队全称？">我最喜欢的运动队全称？</option>
+                            <option value="我最喜欢的一句影视台词？">我最喜欢的一句影视台词？</option>
+                            <option value="我的小名或者外号？">我的小名或者外号？</option>
+                            <option value="我最亲密的朋友是？">我最亲密的朋友是？</option>
+                            <option value="我最喜欢的颜色？">我最喜欢的颜色？</option>
+                            <option value="我最喜欢的演员？">我最喜欢的演员？</option>
+                            <option value="我经常买的彩票彩种？">我经常买的彩票彩种？</option>
+                            <option value="我最喜欢的球星？">我最喜欢的球星？</option>
+                            <option value="我最喜欢的球队？">我最喜欢的球队？</option>
+                            <option value="我最喜欢吃的菜？">我最喜欢吃的菜？</option>
+                            <option value="我喜欢的人的生日？">我喜欢的人的生日？</option>
+                            <option value="我崇拜的人？">我崇拜的人？</option>
+                            <option value="我读的中学学校的全称是？">我读的中学学校的全称是？</option>
+                            <option value="我的幸运数字？">我的幸运数字？</option>
+                        </select>
+                    </li>
+                    <li><span>密保答案：</span>
+                        <input type="text" name="answer" id="answer" class="inputTong" />
+                    </li>
+                    <li id="li_verify3" style="display: none"><span>验证码：</span> <span style="width: 80px; text-align: left;">
+                        <input type="text" name="checkcode3" class="inputTong" id="checkcode3" size="3" maxlength="4" /></span>
+                        <span style='cursor: pointer; width: 50px; text-align: right;' class="code-img" onclick="refreshVerify('chkimg3')">
+                            <img alt="点击刷新" id="chkimg3" src="http://passport.500wan.com/comm/regcode.php" /></span>
+                    </li>
+                    <li><span id="err_info3" class="err_info"></span></li>
+                    <li class="btn_step2">
+                        <input type="submit" value="提 交" id="btn_red_b_protect" class="btn_red_b" />
+                    </li>
+                </ul>
+            </form>*@
+        </div>
+    </div>
+    <div class="alert_s_shadow">
+    </div>
+</div>
+<!--//密保层-->
+<!--错误提示层-->
+<div id="layer_err1" class="alert_s_wrap" style="display: none; height: 270px;" lang="myalert">
+    <div class="alert_s_box">
+        <div class="alert_s_title">
+            <span>温馨提示</span> <a href="javascript:void(0)" id="layer5_closeBtn" class="alert_closeBtn">关闭</a>
+        </div>
+        <div class="alert_s_content">
+            <p class="infoErr" id="info_err1">
+            </p>
+            <div class="backLink">
+                <a href="javascript:void(0)" id="btn_back1" class="back1">&lt; 返回重新输入</a> <a href="javascript:void(0)"
+                    id="btn_back2" class="back2">更换找回方式</a>
+            </div>
+        </div>
+    </div>
+    <div class="alert_s_shadow">
+    </div>
+</div>
+<!--//错误提示层-->
+@UserHelper.js("getpwd.min.js")

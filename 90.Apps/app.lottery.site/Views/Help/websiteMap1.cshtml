@@ -1,0 +1,96 @@
+﻿@{
+    var Title = "网站地图";
+    ViewBag.Title = Title + " - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+   @ViewHelpers.css("help.css")
+} 
+  <div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">玩彩网</a> > </li>
+        <li><a href="/help/index">&nbsp;帮助中心</a> > </li>
+        <li>&nbsp;网站地图</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type = "About", name = "websiteMap" });}
+<div class="help_r">
+         
+
+             <div class="det_box">
+            	<h2>网站地图</h2>
+                <div class="det_c">
+                    <div class="News">
+                        <p>【首页】</p>
+                        <ul>
+                            <li><a href="/member/pay">充值</a></li><li><a href="/member/fetch_bank">提款</a></li><li><a href="/ZiXun/HotCaiXun">彩票资讯</a></li><li><a href="/bonus/Index">中奖排行榜</a></li>
+                        </ul>
+                       
+                    </div>
+                    <div class="clearfix"></div>
+                     <div style="border-bottom: 1px dashed   #999999; height: 10px;"></div>
+                     <div class="News">
+                        <p>【竞技彩】</p>
+                        <ul>
+                            <li><a href="/buy/danchang/spf">北京单场</a></li><li><a href="/buy/toto/t14c">足彩</a></li><li><a href="/buy/jingcai/spf">竞彩足球</a></li><li><a href="/buy/jingcaibasket/rfsf">竞彩篮球</a></li>
+                        </ul>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div style="border-bottom: 1px dashed   #999999; height: 10px;"></div>
+                     <div class="News">
+                        <p>【福彩】</p>
+                        <ul>
+                            <li><a href="/buy/szc/ssq">双色球</a></li><li><a href="/buy/szc/fc3d">福彩3D</a></li><li><a href="/buy/szc/cqssc">重庆时时彩</a></li>
+                        </ul>
+                        
+                    </div>
+                    <div class="clearfix"></div>
+                    <div style="border-bottom: 1px dashed   #999999; height: 10px;"></div>
+                     <div class="News">
+                        <p>【体彩】</p>
+                        <ul>
+                            <li><a href="/buy/szc/jx11x5">江西11选5</a></li><li><a href="/buy/szc/pl3">排列三</a></li><li><a href="/buy/szc/dlt">大乐透</a></li>
+                        </ul>
+                        <br />
+                    </div>
+                    <div class="clearfix"></div>
+                    <div style="border-bottom: 1px dashed   #999999; height: 10px;"></div>
+                     <div class="News">
+                        <p>【彩票开奖】</p>
+                        <ul>
+                            <li><a href="/statichtml/lottery/history_fc3d.html">福彩3D开奖查询</a></li><li><a href="/statichtml/lottery/history_cqssc.html">时时彩开奖查询</a></li>
+                            <li><a href="/statichtml/lottery/history_jx11x5.html">11x5开奖查询</a></li><li><a href="/statichtml/lottery/history_pl3.html">排列三开奖查询</a></li>
+                            <li><a href="/statichtml/lottery/history_ssq.html">双色球开奖查询</a></li><li><a href="/statichtml/lottery/history_dlt.html">大乐透开奖查询</a></li>
+                        </ul>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div style="border-bottom: 1px dashed   #999999; height: 10px;"></div>
+                         <div class="News">
+                        <p>【帮助中心】</p>
+                        <ul>
+                            <li><a href="/help/index">常用问题</a></li><li><a href="/help/login">用户如何注册</a></li>
+                            <li><a href="/help/payintroduce">如何充值彩票</a></li><li><a href="/help/ForTheColor">如何购买彩票</a></li>
+                            <li><a href="/help/bonusGet">中奖如何提款</a></li>
+                        </ul>
+                    </div>
+    
+ 
+                 </div>
+                <div class="clearfix"></div>
+                <div style="border-bottom: 1px dashed   #999999; height: 10px;"></div>
+                
+            </div>
+
+        </div>
+         </div>
+<div class="clearfix"></div>
+
+ @ViewHelpers.js("help.js")
+
+
+
+
+
+

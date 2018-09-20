@@ -1,0 +1,37 @@
+﻿<div class="footer">
+    <div class="f-ser">
+        <a class="ser-bljb" href="javascript:;" onclick="window.open('http://net.china.cn/chinese/')"
+            title="不良信息举报"></a><a class="ser-jyba" href="javascript:;" onclick="window.open('http://www.miibeian.gov.cn/')"
+                title="经营性网站备案"></a><a class="ser-fc" href="javascript:;" onclick="window.open('http://www.zhcw.com/')"
+                    title="福彩中心合作伙伴"></a><a class="ser-tc" href="javascript:;" onclick="window.open('http://www.lottery.gov.cn/')"
+                        title="体彩中心合作伙伴"></a><a class="ser-jybz" href="javascript:;" onclick="window.open('http://www.315online.com.cn/')"
+                            title="网上交易保障中心"></a>@*<a class="ser-kxwz" href="javascript:;" onclick="window.open('https://kxlogo.knet.cn/')" title="可信网站"></a>*@
+        <a href="http://webscan.360.cn/index/checkwebsite/url/" + SiteString.getHZSiteUrl(Request) + "" target="_blank"
+            class="last" rel="nofollow" title="360网站安全检测">
+            <img border="0" src="http://webscan.360.cn/status/pai/hash/f04b4333e628912a0918d1aa970d1415"
+                width="118" height="45" /></a> @*<script type='text/javascript' src='http://www.ectrustprc.org.cn/certificate.php?id=20064792'></script>*@
+    </div>
+
+    <div class="copy_new">
+        © 2007-@DateTime.Now.Year <a href="@SiteString.root(Request)" title="@SiteString.getHZSiteName(Request)">@SiteString.getHZSiteUrl(Request)</a> All Rights Reserved <em>|</em> ICP备案：<a href="javascript:;" onclick="window.open('http://www.miibeian.gov.cn/')">@SiteString.icp</a>
+        <em>|</em> 免费客服热线：@SiteString.tel (09:00-24:00)
+        <br />
+        <b>郑重提示：</b>网上买彩票需理性，请选择诚信的彩票代购网站，@(SiteString.getHZSiteName(Request))不向未满18周岁的青少年出售彩票及提供彩票代购服务</br>彩票交流群：①159713596<span class="blue">(使用IE8或谷歌浏览器浏览效果更佳)</span>
+        <span class="f-link">
+            <a href="/help/abtus" target="_blank" title="关于我们">关于我们</a>|@*<a href="/activity/newguide/xsjc.html" target="_blank" title="新手指引">新手指引</a>|*@<a
+                href="/statichtml/register.html" target="_blank" title="">用户注册</a>|<a href="/help/websiteMap"
+                    target="_blank" title="">网站地图</a>|<a href="/help/links" target="_blank"
+                        title="">友情链接</a>
+        </span>
+    </div>
+    @if (Model != null && Model)
+    {
+        <div class="f-guide">
+            <div class="f-guide-inner">
+                <em>热点链接：</em>
+                @{Html.RenderAction("frindRDLink", "help");}
+            </div>
+        </div>
+    }
+</div>
+@{Html.RenderPartial("tj");}

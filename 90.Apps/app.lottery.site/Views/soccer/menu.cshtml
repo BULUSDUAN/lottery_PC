@@ -1,0 +1,40 @@
+﻿@{
+  var type = string.IsNullOrEmpty(Request["gametype"]) ? "" : Request["gametype"].ToLower();
+  var game = ViewBag.GameCode;   
+}
+<div id="side-menu">
+    <div class="hm-cz">
+        过关统计</div>
+    <ul class="myyon">
+        <li><span class="hm-logo-cz hm-w-logo logo-all"></span><a href="/soccer/index">全部彩种</a></li>
+        <li><span class="hm-logo-cz hm-w-logo hm-logo-jczq"></span><a href="/soccer/index/jczq">
+            竞彩足球</a> </li>
+        <li><span class="hm-logo-cz hm-w-logo hm-logo-jclq"></span><a href="/soccer/index/jclq">
+            竞彩篮球</a></li>
+        <li><span class="hm-logo-cz hm-w-logo hm-logo-bjdc"></span><a href="/soccer/index/bjdc">
+            北京单场</a></li>
+        <li><span class="hm-logo-cz hm-w-logo hm-logo-t14c"></span><a href="/soccer/index/ctzq?gametype=t14c">
+            14场胜负</a></li>
+        <li><span class="hm-logo-cz hm-w-logo hm-logo-tr9"></span><a href="/soccer/index/ctzq?gametype=tr9">
+            任选9</a></li>
+        <li><span class="hm-logo-cz hm-w-logo hm-logo-t4cjq"></span><a href="/soccer/index/ctzq?gametype=t4cjq">
+            四场进球彩</a></li>
+        <li><span class="hm-logo-cz hm-w-logo hm-logo-t6bqc"></span><a href="/soccer/index/ctzq?gametype=t6bqc">
+            六场半全场</a></li>
+        @*<li><span class="hm-logo-cz hm-w-logo hm-logo-ssq"></span><a href="/soccer/index/ssq">
+            双色球</a></li>
+        <li><span class="hm-logo-cz hm-w-logo hm-logo-fc3d"></span><a href="/soccer/index/fc3d">
+            福彩3D</a></li>
+        <li><span class="hm-logo-cz hm-w-logo hm-logo-dlt"></span><a href="/soccer/index/dlt">
+            大乐透</a></li>
+        <li><span class="hm-logo-cz hm-w-logo hm-logo-pl3"></span><a href="/soccer/index/pl3">
+            排列三</a></li>*@
+    </ul>
+</div>
+<script type="text/javascript">
+
+    $(function () {
+        setMenuClass3(".myyon");
+
+    });
+</script>

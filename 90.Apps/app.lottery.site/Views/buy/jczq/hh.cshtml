@@ -1,0 +1,392 @@
+@using System.Text
+@using app.lottery.site.cbbao.Models
+@{
+    //var type = ViewBag.Type;
+  
+    
+    var requestDate = ViewBag.Date;
+    DateTime minSaleDate = ViewBag.MinDate;
+    var match = ViewBag.Match as List<JczqWeb>;
+   
+    //联赛信息
+    var leagues = new List<string>();
+    //单关比赛的matchid
+    var dgMatchid = new List<string>();
+    //截止比赛的matchid
+    var endedMatchid = new List<string>();
+    var iscurrent = requestDate != minSaleDate.ToString("yyyy-MM-dd");
+
+    if (match != null && match.Count > 0)
+    {
+        var abbr = string.Empty;
+        var state = string.Empty;
+        var matchid = string.Empty;
+        var ptype = string.Empty;
+        var isDg = 0;
+        var pri = false;
+        var flag = false;
+        var sale = 0;
+        var result = string.Empty;
+        var matchdata = string.Empty;
+        var title = string.Empty;
+        DateTime startTime = DateTime.Now;
+        StringBuilder thead;
+       
+        foreach (var item in match)
+        {
+
+            
+            var stime = Convert.ToDateTime(item.StartDateTime);
+            var stopTime = Convert.ToDateTime(item.FSStopBettingTime);
+            state = item.State;
+            matchid = item.MatchId;
+            ptype = item.PrivilegesType;
+            sale = stopTime > DateTime.Now ? 1 : 0;
+
+          
+            if (sale == 1)
+            {
+                if (!leagues.Contains(item.LeagueName))
+                {
+                    leagues.Add(item.LeagueName);
+                }
+            }
+            else
+            {
+                endedMatchid.Add(matchid);
+            }
+            if (state.Contains("1") || state.Contains("2") || state.Contains("3") || state.Contains("4") || state.Contains("5"))
+            {
+                dgMatchid.Add(matchid);
+            }
+           
+            if (matchdata != item.MatchData)
+            {
+               
+                //上一个table结束
+                if (!string.IsNullOrEmpty(matchdata))
+                {
+                    @(new HtmlString("</tbody></table>"))
+                }
+                matchdata = item.MatchData;
+                try
+                {
+                   
+                    startTime = Convert.ToDateTime(matchdata.Substring(0, 2) + "-" + matchdata.Substring(2, 2) + "-" + matchdata.Substring(4, 2));
+                }
+                catch (Exception ex)
+                {
+
+                   
+                }            
+               
+
+
+               
+                title = startTime.ToString("yyyy年MM月dd日") + " " + SiteConvert.Week_CN(startTime.DayOfWeek);
+              
+
+               
+                
+                //开始新的table    
+                thead = new StringBuilder();
+                thead.Append("<table class=\"lot_con\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><colgroup><col width=\"86\"/><col width=\"51\"/><col width=\"383\"/><col width=\"48\"/><col width=\"260\"/><col width=\"37\"/><col width=\"133\"/></colgroup>");
+                thead.Append("<thead><tr><th height=\"32\" colspan=\"7\">");
+                thead.Append("<div title=\"" + title + "\" id=\"a_" + startTime.ToString("yyyyMMdd") + "\" class=\"tps hide_a\">");
+                thead.Append("<span>" + title + "&nbsp;&nbsp;</span><i class=\"line-01\"></i></div></th></tr></thead><tbody>");
+               
+                
+                @(new HtmlString(thead.ToString()))
+            }
+            abbr = item.MatchIdName + "|" + item.HomeTeamName + "|" + item.GuestTeamName + "|" + item.LetBall + "|" + stopTime.ToString("yyyy/MM/dd HH:mm:ss");
+
+            <tr state="@state" id="@matchid" abbr="@abbr" name="@startTime.ToString("yyyyMMdd")" league="@item.LeagueName" sale="@sale" stop="undefined" pri="@ptype" class="mtr@(sale == 1 || iscurrent ? "" : " hide_tr")">
+                <td>
+                    <span hover="xulie_h" title="@item.MatchIdName" onclick="jcpage.dymanic_.ftdClick(@matchid, '@item.MatchIdName') " class="xulie">@item.MatchNumber</span>
+                    <a style="color: #FFFFFF; background-color: @(string.IsNullOrEmpty(item.LeagueColor) ? "ff3d00" : item.LeagueColor)" title="@item.LeagueName" @SiteString.GetLeagueHref(item.LeagueId) class="saiming aochao">@item.ShortLeagueName</a>
+                </td>
+                <td mtime="@startTime.ToString("HH:mm")" title="截止时间:@stopTime.ToString("yyyy-MM-dd HH:mm")">
+                    @if (sale == 0 && item.FullHomeTeamScore == -1 && item.FullGuestTeamScore == -1)
+                    {
+                        <span style="color: #e70000;">截止</span>
+                        <span class="e_time hide" title="截止时间:@stopTime.ToString("yyyy-MM-dd HH:mm")">@stopTime.ToString("HH:mm")</span>
+                    }
+                    else
+                    {
+                        <span class="e_time" title="截止时间:@stopTime.ToString("yyyy-MM-dd HH:mm")">@stopTime.ToString("HH:mm")</span>
+                    }
+                    <span class="b_time hide" title="开赛时间:@stime.ToString("yyyy-MM-dd HH:mm")">@stime.ToString("HH:mm")</span>
+                </td>
+                <td class="bet_area shenpf@(@state.Contains("2") ? " danguanbor" : "")">
+                    <div class="dg_div">
+                        @{
+                            flag = item.BRQSPF.NoSaleState == "0";
+                            pri = (ptype.Contains("9") || !state.Contains("2")) && ptype.Contains("0");
+
+                            isDg = state.Contains("2") && !ptype.Contains("9") ? 1 : 0;
+                            if (isDg == 1)
+                            {
+                                <div class="danguan" title="本场比赛该玩法可以投注单关"></div>
+                            }
+                            result = item.BRQSPF_Result;
+                        }
+                        <ul class="firstul">
+                            <li class="@(flag ? "p" : "")@(pri ? " stopdesc" : "")" data-dg="@isDg" id="@(matchid)_brqspf_3">
+                                <a href="javascript:void(0)" class="bet">
+                                    <div class="zhu@((pri || !flag) ? " weiks" : "")" hover="hover1">
+                                        <span class="icon zuo1 hover1_1 sel1_1"></span>
+                                        <div class="zhud hover1_2 sel1_2 ">
+                                            <div class="paim paim_sel">
+                                                <p class="p2">@item.HRank</p><p class="p1">@item.HLg</p>
+                                            </div>
+                                            <div title="@item.HomeTeamName" class="zhum fff hui_colo">@item.HomeTeamName</div>
+                                            <div sp="@item.BRQSPF.WinOdds" class="peilv fff hui_colo@("3" == result ? " red_colo" : "")">@item.BRQSPF.WinOdds</div>
+                                            <em class="tip "></em>
+                                        </div>
+                                        <span class="icon you1 hover1_3 sel1_3"></span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="@(flag ? "p" : "")@(pri ? " stopdesc" : "")" data-dg="@isDg" id="@(matchid)_brqspf_1">
+                                <a href="javascript:void(0)" class="bet">
+                                    <div class="ping@(pri || !flag ? " weiks" : "")" hover="hover1">
+                                        <span class="icon zuo1 hover1_1 sel1_1"></span>
+                                        <div class="pingd hover1_2 sel1_2 ">
+                                            <div sp="@item.BRQSPF.FlatOdds" class="peilv fff hui_colo@("1" == result ? " red_colo" : "")">@item.BRQSPF.FlatOdds</div>
+                                            <em class="tip"></em>
+                                        </div>
+                                        <span class="icon you1 hover1_3 sel1_3"></span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="@(flag ? "p" : "")@(pri ? " stopdesc" : "")" data-dg="@isDg" id="@(matchid)_brqspf_0">
+                                <a href="javascript:void(0)" class="bet">
+                                    <div hover="hover1" class="fu@(pri || !flag ? " weiks" : "")">
+                                        <span class="icon zuo1 hover1_1 sel1_1"></span>
+                                        <div class="ked hover1_2  sel1_2 ">
+                                            <div sp="@item.BRQSPF.LoseOdds" class="peilv fff hui_colo@("0" == result ? " red_colo" : "")">@item.BRQSPF.LoseOdds</div>
+                                            <em class="tip"></em>
+                                            <div class="paim paim_sel">
+                                                <p class="p2">@(item.GRank)</p><p class="p1">@item.GLg</p>
+                                            </div>
+                                            <div title="@item.GuestTeamName" class="zhum fff hui_colo">@item.GuestTeamName</div>
+                                        </div>
+                                        <span class="icon you1 hover1_3 sel1_3"></span>
+                                    </div>
+                                </a>
+                            </li>
+                            @{
+                                if (!flag || pri)
+                                {
+                                    <div class="spfweik"><div class="spfweik_1">未开售</div></div>
+                                }
+                            }
+                        </ul>
+                    </div>
+                </td>
+                <td class="datas fx_hh">
+                    @ViewHelpers.yox(item.Mid,6)
+                </td>
+                <td class="bet_area rangqiuspf@(state.Contains("1") ? " danguanbor" : "")"> 
+                    <div class="dg_div">
+                        @{
+                            flag = item.SPF.NoSaleState == "0";
+                            pri = (ptype.Contains("1") || !state.Contains("1")) && ptype.Contains("5");
+                            isDg = state.Contains("1") && !ptype.Contains("1") ? 1 : 0;
+                            if (isDg == 1)
+                            {
+                                <div class="danguan" title="本场比赛该玩法可以投注单关"></div>
+                            }
+                            result = item.SPF_Result;
+                        }
+                        <ul class="firstul">
+                            <li class="@(flag ? "p" : "")@(!flag || pri ? " stopdesc" : "")" data-dg="@isDg" id="@(matchid)_spf_3">
+                                <a href="javascript:void(0)" class="bet">
+                                    <div hover="hover1" class="zhu@(pri || !flag ? " weiks" : "")">
+                                        <span class="icon zuo1 hover1_1 sel1_1"></span>
+                                        <div class="zhud hover1_2 sel1_2">
+                                            <div title="@item.HomeTeamName" class="zhum fff hui_colo">@item.HomeTeamName</div>
+                                            <span class="@(item.LetBall > 0 ? "rangqiu" : "rangqiuzhen")">@(item.LetBall > 0 ? "+" + item.LetBall : item.LetBall.ToString())</span>
+                                            <div sp="@item.SPF.WinOdds" class="peilv fff hui_colo@("3" == result ? " red_colo" : "")">@item.SPF.WinOdds</div>
+                                            <em class="tip "></em>
+                                        </div>
+                                        <span class="icon you1 hover1_3 sel1_3"></span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="@(flag ? "p" : "")@(!flag || pri ? " stopdesc" : "")" data-dg="@isDg" id="@(matchid)_spf_1">
+                                <a href="javascript:void(0)" class="bet">
+                                    <div hover="hover1" class="ping@(!flag || pri ? " weiks" : "")">
+                                        <span class="icon zuo1 hover1_1 sel1_1"></span>
+                                        <div class="pingd hover1_2 sel1_2 ">
+                                            <div sp="@item.SPF.FlatOdds" class="peilv fff hui_colo@("1" == result ? " red_colo" : "")">@item.SPF.FlatOdds</div>
+                                            <em class="tip "></em>
+                                        </div>
+                                        <span class="icon you1 hover1_3 sel1_3"></span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="@(flag ? "p" : "")@(!flag || pri ? " stopdesc" : "")" data-dg="@isDg" id="@(matchid)_spf_0">
+                                <a href="javascript:void(0)" class="bet">
+                                    <div hover="hover1" class="fu@(!flag || pri ? " weiks" : "")">
+                                        <span class="icon zuo1 hover1_1 sel1_1"></span>
+                                        <div class="zhud hover1_2 sel1_2 ">
+                                            <div sp="@item.SPF.LoseOdds" class="peilv fff hui_colo@("0" == result ? " red_colo" : "")">@item.SPF.LoseOdds</div>
+                                            <em class="tip "></em>
+                                            <div title="@item.GuestTeamName" class="zhum fff hui_colo">@item.GuestTeamName</div>
+                                        </div>
+                                        <span class="icon you1 hover1_3 sel1_3"></span>
+                                    </div>
+                                </a>
+                            </li>
+                            @{
+                                if (!flag || pri)
+                                {
+                                    <div class="rqspfweik"><div class="spfweik_1">未开售</div></div>
+                                }
+                            }
+                        </ul>
+                    </div>
+                </td>
+                <td class="bg_ht">
+                    <div id="all_@(matchid)" rsel="gengd_weiks" hover="hover1" class="more">
+                        <div class="more_bg ">
+                            <p class="p1 countNum">
+                                @if (sale == 0 && item.FullHomeTeamScore > -1 && item.FullGuestTeamScore > -1)
+                                {
+                                    @(item.FullHomeTeamScore + ":" + item.FullGuestTeamScore)
+                                }               
+                            </p>
+                            <p class="icon2 p2 sel1_31"></p>
+                        </div>
+                    </div>
+                </td>
+                <td class="odds_data" id="odd_@(matchid)">
+                    <div id="odd_@(matchid)_oz">
+                        <span id="odd_@(matchid)_1" class="op">@item.WinOdds</span>
+                        <span id="odd_@(matchid)_2" class="op">@item.FlatOdds</span>
+                        <span id="odd_@(matchid)_3" class="op">@item.LoseOdds</span>
+                    </div>
+                </td>
+            </tr>
+            if (sale == 0)
+            {
+                <tr class="more_zk hide_tr" id="ht_@(matchid)">
+                    <td colspan="14" class="nrb bet_area">
+                        <div class="ht_wrap">
+                            <table border="0" class="ht3 bet_bf">
+                                <tbody>
+                                    <tr class="zk_1">
+                                        <td width="133" rowspan="3" class="ht_name">比分
+                                            @{
+                                                result = item.BF_Result;
+                                                if (state.Contains("3") && !ptype.Contains("2"))
+                                                {
+                                                    <span class="dgmp2">可投单关</span>
+                                                }
+                                            }
+                                        </td>
+                                        <td>@ViewHelpers.HhView("胜其它", "X0", item.BF.S_QT, result)</td>   
+                                        <td>@ViewHelpers.HhView("1:0", "10", item.BF.S_10, result)</td>   
+                                        <td>@ViewHelpers.HhView("2:0", "20", item.BF.S_20, result)</td>   
+                                        <td>@ViewHelpers.HhView("2:1", "21", item.BF.S_21, result)</td>   
+                                        <td>@ViewHelpers.HhView("3:0", "30", item.BF.S_30, result)</td>   
+                                        <td>@ViewHelpers.HhView("3:1", "31", item.BF.S_31, result)</td>   
+                                        <td>@ViewHelpers.HhView("3:2", "32", item.BF.S_32, result)</td>   
+                                        <td>@ViewHelpers.HhView("4:0", "40", item.BF.S_40, result)</td>   
+                                        <td>@ViewHelpers.HhView("4:1", "41", item.BF.S_41, result)</td>   
+                                        <td>@ViewHelpers.HhView("4:2", "42", item.BF.S_42, result)</td>   
+                                        <td>@ViewHelpers.HhView("5:0", "50", item.BF.S_50, result)</td>   
+                                        <td>@ViewHelpers.HhView("5:1", "51", item.BF.S_51, result)</td>   
+                                        <td>@ViewHelpers.HhView("5:2", "52", item.BF.S_52, result)</td>   
+                                    </tr>
+                                    <tr class="zk_1">
+                                        <td>@ViewHelpers.HhView("平其它", "XX", item.BF.P_QT, result)</td>   
+                                        <td>@ViewHelpers.HhView("0:0", "00", item.BF.P_00, result)</td>   
+                                        <td>@ViewHelpers.HhView("1:1", "11", item.BF.P_11, result)</td>   
+                                        <td>@ViewHelpers.HhView("2:2", "22", item.BF.P_22, result)</td>   
+                                        <td>@ViewHelpers.HhView("3:3", "33", item.BF.P_33, result)</td>   
+                                    </tr>
+                                    <tr class="zk_1">
+                                        <td>@ViewHelpers.HhView("负其它", "0X", item.BF.F_QT, result)</td>   
+                                        <td>@ViewHelpers.HhView("0:1", "01", item.BF.F_01, result)</td>   
+                                        <td>@ViewHelpers.HhView("0:2", "02", item.BF.F_02, result)</td>   
+                                        <td>@ViewHelpers.HhView("1:2", "12", item.BF.F_12, result)</td>   
+                                        <td>@ViewHelpers.HhView("0:3", "03", item.BF.F_03, result)</td>   
+                                        <td>@ViewHelpers.HhView("1:3", "13", item.BF.F_13, result)</td>   
+                                        <td>@ViewHelpers.HhView("2:3", "23", item.BF.F_23, result)</td>   
+                                        <td>@ViewHelpers.HhView("0:4", "04", item.BF.F_04, result)</td>   
+                                        <td>@ViewHelpers.HhView("1:4", "14", item.BF.F_14, result)</td>   
+                                        <td>@ViewHelpers.HhView("2:4", "24", item.BF.F_24, result)</td>   
+                                        <td>@ViewHelpers.HhView("0:5", "05", item.BF.F_05, result)</td>   
+                                        <td>@ViewHelpers.HhView("1:5", "15", item.BF.F_15, result)</td>   
+                                        <td>@ViewHelpers.HhView("2:5", "25", item.BF.F_25, result)</td>   
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table border="0" class="ht1 bet_zjq">
+                                <tbody>
+                                    <tr class="zk_1">
+                                        <td width="133" class="ht_name">总进球数
+                                            @{
+                                                result = item.ZJQ_Result;
+                                                if (state.Contains("5") && !ptype.Contains("3"))
+                                                {
+                                                    <span class="dgmp2">可投单关</span>
+                                                }
+                                            }
+                                        </td>
+                                        <td>@ViewHelpers.HhView("0球", "0", item.ZJQ.JinQiu_0_Odds, result)</td>      
+                                        <td>@ViewHelpers.HhView("1球", "1", item.ZJQ.JinQiu_1_Odds, result)</td>     
+                                        <td>@ViewHelpers.HhView("2球", "2", item.ZJQ.JinQiu_2_Odds, result)</td>     
+                                        <td>@ViewHelpers.HhView("3球", "3", item.ZJQ.JinQiu_3_Odds, result)</td>     
+                                        <td>@ViewHelpers.HhView("4球", "4", item.ZJQ.JinQiu_4_Odds, result)</td>     
+                                        <td>@ViewHelpers.HhView("5球", "5", item.ZJQ.JinQiu_5_Odds, result)</td>     
+                                        <td>@ViewHelpers.HhView("6球", "6", item.ZJQ.JinQiu_6_Odds, result)</td>     
+                                        <td>@ViewHelpers.HhView("7+球", "7", item.ZJQ.JinQiu_7_Odds, result)</td>    
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table border="0" class="ht2 bet_bqc">
+                                <tbody>
+                                    <tr class="zk_1">
+                                        <td width="133" class="ht_name">半全场
+                                            @{
+                                                result = item.BQC_Result;
+                                                if (state.Contains("4") && !ptype.Contains("4"))
+                                                {
+                                                    <span class="dgmp2">可投单关</span>
+                                                }
+                                            }
+                                        </td>
+                                        <td>@ViewHelpers.HhView("胜胜", "33", item.BQC.SH_F_Odds, result)</td>   
+                                        <td>@ViewHelpers.HhView("胜平", "31", item.BQC.SH_P_Odds, result)</td>     
+                                        <td>@ViewHelpers.HhView("胜负", "30", item.BQC.SH_SH_Odds, result)</td>    
+                                        <td>@ViewHelpers.HhView("平胜", "13", item.BQC.P_F_Odds, result)</td>     
+                                        <td>@ViewHelpers.HhView("平平", "11", item.BQC.P_P_Odds, result)</td>     
+                                        <td>@ViewHelpers.HhView("平负", "10", item.BQC.P_SH_Odds, result)</td>     
+                                        <td>@ViewHelpers.HhView("负胜", "03", item.BQC.F_F_Odds, result)</td>     
+                                        <td>@ViewHelpers.HhView("负平", "01", item.BQC.F_P_Odds, result)</td>     
+                                        <td>@ViewHelpers.HhView("负负", "00", item.BQC.F_SH_Odds, result)</td>     
+                                    </tr>  
+                                </tbody>                                         
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            }
+        }
+        @(new HtmlString("</tbody></table>"))
+    }
+    else
+    {
+        <div class="nords" id="nords"><strong>当前无开售赛事，请等待官方公布新赛程！</strong></div>
+    }
+}
+<script type="text/javascript">
+    var leaguesRelate=@(new HtmlString(Common.JSON.JsonHelper.Serialize(leagues)));
+    var requestDate = "@requestDate";
+    var minSaleDate = new Date("@(minSaleDate.Year)", "@(minSaleDate.Month)", "@(minSaleDate.Day)");
+    var dgMatch = @(new HtmlString(Common.JSON.JsonHelper.Serialize(dgMatchid)));
+    var endMatch = @(new HtmlString(Common.JSON.JsonHelper.Serialize(endedMatchid)));
+</script>

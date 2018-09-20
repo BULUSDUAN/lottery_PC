@@ -1,0 +1,42 @@
+﻿@{
+    var Title = "充值介绍";
+    ViewBag.Title = Title + " - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+   @ViewHelpers.css("help.css")
+} 
+  <div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">玩彩网</a> > </li>
+        <li><a href="/staticHtml/help/index.html">帮助中心</a> > </li>
+        <li>&nbsp;充值介绍</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type = "pay", name = "payintroduce" });}
+<div class="help_r">
+         
+         <div class="list_box">
+            	<div class="h_pub_t">
+                	<b class="t_l"></b>
+                    <div class="t_m"><h2>充值介绍</h2></div>
+                    <b class="t_r"></b>
+                </div>
+                <div class="h_pub_m">
+                	<ul>
+                        	<li><a href="/staticHtml/help/chongzhi/payway.html" id="link151">网站有哪些充值方式？</a></li>			
+				                        	<li><a href="/staticHtml/help/chongzhi/payAccount.html" id="link152">充值后，多久可以到账？</a></li>			
+				                        	<li><a href="/staticHtml/help/chongzhi/payNotAccount.html" id="link154">充值未到账？</a></li>			
+				                        	<li><a href="/staticHtml/help/chongzhi/paypoundage.html" id="link156">账户充值会收手续费吗？</a></li>			
+				                        </ul>
+                </div>
+            </div>
+
+        </div>
+         </div>
+<div class="clearfix"></div>
+
+ @ViewHelpers.js("help.js")
+

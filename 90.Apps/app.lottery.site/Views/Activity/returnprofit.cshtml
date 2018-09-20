@@ -1,0 +1,118 @@
+﻿@{
+    ViewBag.Title = "买彩票 得返利";
+    Layout = "../Shared/_HuoDong.cshtml";
+}
+<div id="returnprofit">
+    <div class="returnprofit">
+        <div class="profit">
+            <ul>
+                <li class="return_time">
+                    <p>
+                        活动时间</p>
+                    <span>Time</span> </li>
+                <li class="return_object" style="margin-right: 15px;">2015年1月1日至2015年1月31日</li>
+                <li class="return_time">
+                    <p>
+                        活动对象</p>
+                    <span>Active Objects</span> </li>
+                <li class="return_object">@SiteString.getHZSiteName(Request)所有注册用户</li>
+            </ul>
+            <div class="clear">
+            </div>
+        </div>
+        <div class="p_rule_title">
+            <p>
+                活动规则如下</p>
+            <span>Actives rules are as follows</span>
+        </div>
+        <div class="p_rule_content">
+            <ul>
+                <li>
+                    <p style="color: #a4015a">
+                        参与对象必须是 @SiteString.getHZSiteName(Request)实名认证、手机绑定的注册用户</p>
+                </li>
+                <li>
+                    <p style="color: #0fabe4">
+                        本活动仅限竞彩足球、传统足球、北京单场成功出票的方案（不限自购或合买）</p>
+                </li>
+                <li>
+                    <p style="color: #f84666">
+                        网站保底方案均不参与返利活动，返利优惠不与网站其他购彩优惠同享</p>
+                </li>
+                <li>
+                    <p style="color: #e66b1b">
+                        合买返利只奖励给发单人，跟单人不享受返利优惠</p>
+                </li>
+                <li>
+                    <p style="color: #dd4156">
+                        返利使用不受限制、可自由提取或购买彩票</p>
+                </li>
+                <li>
+                    <p style="color: #bf1e88">
+                        在法律许可范围内，@SiteString.getHZSiteName(Request)保留本次活动的解释权</p>
+                </li>
+            </ul>
+            <div class="clear">
+            </div>
+        </div>
+        <div class="p_content_title">
+            <p style="font-size: 30px;">
+                活动内容</p>
+            <p>
+                只要满足购彩返利活动的方案根据</p>
+            <p>
+                所购买的方案金额进行相应的返利派送</p>
+        </div>
+        <div class="p_content">
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tr class="p_c_tr">
+                    <td>
+                        <p>
+                            竞彩足球、传统足球</p>
+                        <span>The SMG football,traditional football</span>
+                    </td>
+                    <td>
+                        <p>
+                            北京单场</p>
+                        <span>Beijing single field</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <ul class="p_cai" style=" margin-right:10px;">
+                            <li style="color: #fff;"><span>方案金额范围</span> <span>返现金额（彩金红包）</span> </li>
+                            <li><span>100-199.99</span> <span>￥3</span> </li>
+                            <li><span>200-299.99</span> <span>￥6</span> </li>
+                            <li><span>300-399.99</span> <span>￥10</span> </li>
+                            <li><span>400-499.99</span> <span>￥15</span> </li>
+                            <li><span>500-599.99</span> <span>￥20</span> </li>
+                            <li><span>600-699.99</span> <span>￥26</span> </li>
+                            <li><span>700-799.99</span> <span>￥33</span> </li>
+                            <li><span>800-899.99</span> <span>￥39</span> </li>
+                            <li><span>900-999.99</span> <span>￥49</span> </li>
+                            <li><span>1000及以上</span> <span>￥58</span> </li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul class="p_cai">
+                            <li style="color: #fff;"><span>方案金额范围</span> <span>返现金额（彩金红包）</span> </li>
+                            <li><span>100-199.99</span> <span>￥3</span> </li>
+                            <li><span>200-299.99</span> <span>￥6</span> </li>
+                            <li><span>300-399.99</span> <span>￥10</span> </li>
+                            <li><span>400-499.99</span> <span>￥15</span> </li>
+                            <li><span>500-599.99</span> <span>￥20</span> </li>
+                            <li><span>600-699.99</span> <span>￥26</span> </li>
+                            <li><span>700-799.99</span> <span>￥33</span> </li>
+                            <li><span>800-899.99</span> <span>￥39</span> </li>
+                            <li><span>900-999.99</span> <span>￥49</span> </li>
+                            <li><span>1000及以上</span> <span>￥58</span> </li>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="p_footer">
+        @{Html.RenderAction("footer", "activity");}
+    </div>
+</div>

@@ -1,0 +1,83 @@
+﻿@{
+    ViewBag.Title = "提现明细, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "提现明细, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+    @UserHelper.css("commissio.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>提现明细</li>
+    </ul>
+</div>
+<div class="center mt10">
+    @{Html.RenderAction("menu", "Member");}
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mycommenu">                
+                <a href="javascript:void(0);" checklg="/commissio/myTc">我的提成</a> <a href="javascript:void(0);" checklg="/commissio/generalizeUser">推广用户</a>
+            <a href="javascript:void(0);" checklg="/commissio/CommissionRecord"  class="up">返点结算</a> <a href="javascript:void(0);" checklg="/commissio/StatisticsQuery">统计查询</a>
+            <a href="javascript:void(0);" checklg="/commissio/SchemeManage">方案管理</a>
+        </div>
+        <div class="scheme">
+            <div class="scheme-show">
+                <a href="javascript:void(0)" checklg="/commissio/CommissionManage">结算明细</a>
+            </div>
+            <div class="scheme-show">
+                <a href="javascript:void(0)" checklg="/commissio/CommissionRecord">返点记录</a>
+            </div>
+        </div>
+        <div class="scheme-titile">
+            <span class="bgimg"></span>
+            <label class="lbfa">
+                提现明细</label>
+        </div>
+        <table border="0" cellpadding="0" cellspacing="0" class="scheme-table">
+            <tr class="t-tr1">
+                <td colspan="7">
+                    <div style="width: 620px !important 540px; float: left; height: 40px; line-height: 40px;">
+                        &nbsp;&nbsp;&nbsp;&nbsp;时间：<input type="text" name="txtbeginTime" id="txtbeginTime"
+                            value="2014-07-09" />
+                        到 &nbsp;<input type="text" name="txtendTime" id="txtendTime" value="2014-08-04" />
+                    </div>
+                    <div style="width: 60px; float: left; height: 40px;">
+                        &nbsp;&nbsp;<a class="Query" href="#"></a>
+                    </div>
+                </td>
+            </tr>
+            <tr class="t-tr2">
+                <td width="86">
+                    时间
+                </td>
+                <td width="131">
+                    交易类型
+                </td>
+                <td width="126">
+                    状态
+                </td>
+                <td width="131">
+                    收入￥
+                </td>
+                <td width="131">
+                    支出￥
+                </td>
+                <td width="131">
+                    余额￥
+                </td>
+                <td width="86">
+                    交易说明
+                </td>
+            </tr>
+            <tr class="t-tr-even">
+                <td colspan="7">
+                    无数据
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="clearfix">
+</div>

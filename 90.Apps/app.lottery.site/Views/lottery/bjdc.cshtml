@@ -1,0 +1,66 @@
+﻿@using MatchBiz.Core;
+@using app.lottery.site.Models;
+@{
+    string type = ViewBag.Type;
+    var issueNum = Request["issueNum"];
+    var gameName = SiteConvert.GameName("bjdc", type).ToString().Substring(2);
+    if (type != "" && type != null)
+    {
+        if (issueNum != null && issueNum != "")
+        {
+            ViewBag.Title = "北单" + gameName + "第" + issueNum + "期开奖结果-" + SiteString.getHZSiteName(Request);
+            ViewBag.keywords = "北单" + gameName + "第" + issueNum + "期开奖结果";
+            ViewBag.Description = "北单" + gameName + "第" + issueNum + "期开奖结果,更多" + gameName + "开奖结果请登录" + SiteString.getHZSiteName(Request) + "彩票网进行查看.";
+        }
+        else
+        {
+            ViewBag.Title = "北单" + gameName + "开奖号码-" + gameName + "开奖结果-" + gameName + "开奖详情-" + SiteString.getHZSiteName(Request);
+            ViewBag.keywords = "北单" + gameName + "开奖号码-" + gameName + "开奖结果-" + gameName + "开奖详情";
+            ViewBag.Description = SiteString.getHZSiteName(Request) + "开奖公告为您提供" + gameName + "开奖查询,最快的" + gameName + "开奖结果,最全的" + gameName + "开奖详情,查询" + gameName + "开奖号码就上" + SiteString.getHZSiteName(Request) + "彩票网.";
+        }
+    }
+    else
+    {
+        if (issueNum != null && issueNum != "")
+        {
+            ViewBag.Title = "北京单场第" + issueNum + "期开奖结果-" + SiteString.getHZSiteName(Request);
+            ViewBag.keywords = "北京单场第" + issueNum + "期开奖结果";
+            ViewBag.Description = "北京单场第" + issueNum + "期开奖结果,更多" + gameName + "开奖结果请登录" + SiteString.getHZSiteName(Request) + "彩票网进行查看.";
+        }
+        else
+        {
+            ViewBag.Title = "北京单场开奖结果-北京单场开奖详情-北京单场比赛结果-" + SiteString.getHZSiteName(Request);
+            ViewBag.keywords = "北京单场开奖结果,北京单场开奖详情,北京单场比赛结果";
+            ViewBag.Description = SiteString.getHZSiteName(Request) + "北京单场开奖频道为您提供实时的北京单场比赛结果,各玩法赛果开奖详情,查询北京单场开奖结果就上" + SiteString.getHZSiteName(Request) + "彩票网.";
+        }
+    }
+    var currentIssuses = string.IsNullOrEmpty(Request.QueryString["issueNum"]) ? "" : Request.QueryString["issueNum"];
+    CurrentUserInfo user = ViewBag.CurrentUser;
+}
+@section css{
+    @UserHelper.css("lottery.css")
+}
+<script type="text/javascript">
+    var issues = '@currentIssuses';
+    var type = '@type';
+    var gamecode = 'bjdc';
+    var res = '@ViewHelpers.jsonres()';
+    var resS = '@ViewHelpers.jsonres()/alicai';
+</script>
+<div class="lottery-right">
+    <div class="lottery_notic detail-top mb10" style="border: 1px solid #A8C9FF;">
+        <div class="lottery_today">
+        </div>
+        <div class="lottery_search">
+            第<select onchange="self.location.href='?issueNum='+this.value" name="dropIssueNum"
+                id="dropIssueNum">
+                <option>140603</option>
+            </select>期开奖SP
+        </div>
+    </div>
+    <div id="myload_bjdc">
+    </div>
+</div>
+<div class="clear">
+</div>
+@UserHelper.js("bjdcbous.js")

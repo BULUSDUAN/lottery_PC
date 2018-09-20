@@ -1,0 +1,1102 @@
+﻿@{
+    Layout = "~/Views/lotteryTrend/_Layout.cshtml";
+    var pageSize = Request["pageSize"];
+    if (pageSize != "" && pageSize != null)
+    {
+        ViewBag.Title = "排列3除3走势图二近" + pageSize + "期" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "排列3除3走势图二近" + pageSize + "期";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "排列3除3走势图二近" + pageSize + "期,查看更多排列3除3走势图二请登录" + SiteString.getHZSiteName(Request) + "彩票网.";
+    }
+    else
+    {
+        ViewBag.Title = "排列3除3走势图二-" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "排列3除3走势图二";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "彩票网提供最新的排列3除3走势图二,其中包括除3后余0个数、余1个数、余2个数和除3余数比的连线走势图,让彩民朋友更直观的分析排列3除3走势图二.";
+    }
+    var chu32 = ViewBag.DataList as LotteryData.Core.PL3_Chu31_InfoCollection;
+    var a = 0;  
+}
+@{Html.RenderAction("ThendLink", "lotteryTrend");}
+<div id="container">
+    <div class="cont_box" style="width: 1003px;">
+        <table width="100%" cellspacing="1" cellpadding="0" border="0" class="table_box"
+            style="width: 1003px;" id="chartsTable">
+            <tbody>
+                <tr>
+                    <td align="center" class="tab_top" colspan="38">
+                        标注形式选择：
+                        <input type="checkbox" checked="checked" id="c_yl">
+                        <label for="c_yl">
+                            遗漏</label>
+                        <input type="checkbox" checked="checked" id="has_line">
+                        <label for="has_line">
+                            折线</label>
+                        <input type="checkbox" checked="checked" id="help_line">
+                        <label for="help_line">
+                            分隔线</label>
+                        <input type="checkbox" id="yl_zhu">
+                        <label for="yl_zhu">
+                            遗漏分层</label>
+                    </td>
+                </tr>
+                <tr class="tabbg weight" id="menuitem">
+                    <td width="75" class="line_r" rowspan="3">
+                        日期
+                    </td>
+                    <td width="55" align="center" class="line_r" rowspan="3">
+                        期号
+                    </td>
+                    <td class="line_r" rowspan="3" colspan="3">
+                        开奖号码
+                    </td>
+                    <td class="line_r" colspan="10">
+                        不分位
+                    </td>
+                    <td class="line_r" rowspan="2" colspan="4">
+                        余0个数
+                    </td>
+                    <td class="line_r" rowspan="2" colspan="4">
+                        余1个数
+                    </td>
+                    <td class="line_r" rowspan="2" colspan="4">
+                        余2个数
+                    </td>
+                    <td rowspan="2" colspan="11">
+                        除3余数比
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td colspan="4" class="cbg1 line_r">
+                        0
+                    </td>
+                    <td colspan="3" class="cbg2 line_r">
+                        1
+                    </td>
+                    <td colspan="3" class="cbg1 line_r">
+                        2
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td width="17">
+                        0
+                    </td>
+                    <td width="17">
+                        3
+                    </td>
+                    <td width="17">
+                        6
+                    </td>
+                    <td width="17" class="line_r">
+                        9
+                    </td>
+                    <td width="17">
+                        1
+                    </td>
+                    <td width="17">
+                        4
+                    </td>
+                    <td width="17" class="line_r">
+                        7
+                    </td>
+                    <td width="17">
+                        2
+                    </td>
+                    <td width="17">
+                        5
+                    </td>
+                    <td width="17" class="line_r">
+                        8
+                    </td>
+                    <td width="17">
+                        0
+                    </td>
+                    <td width="17">
+                        1
+                    </td>
+                    <td width="17">
+                        2
+                    </td>
+                    <td width="17" class="line_r">
+                        3
+                    </td>
+                    <td width="17">
+                        0
+                    </td>
+                    <td width="17">
+                        1
+                    </td>
+                    <td width="17">
+                        2
+                    </td>
+                    <td width="17" class="line_r">
+                        3
+                    </td>
+                    <td width="17">
+                        0
+                    </td>
+                    <td width="17">
+                        1
+                    </td>
+                    <td width="17">
+                        2
+                    </td>
+                    <td width="17" class="line_r">
+                        3
+                    </td>
+                    <td width="44">
+                        012比
+                    </td>
+                    <td width="32">
+                        3:0:0
+                    </td>
+                    <td width="32">
+                        2:1:0
+                    </td>
+                    <td width="32">
+                        2:0:1
+                    </td>
+                    <td width="32">
+                        1:2:0
+                    </td>
+                    <td width="32">
+                        1:1:1
+                    </td>
+                    <td width="32">
+                        1:0:2
+                    </td>
+                    <td width="32">
+                        0:3:0
+                    </td>
+                    <td width="32">
+                        0:2:1
+                    </td>
+                    <td width="32">
+                        0:1:2
+                    </td>
+                    <td width="32">
+                        0:0:3
+                    </td>
+                </tr>
+            </tbody>
+            <tbody id="tdata">
+                @foreach (var item in chu32)
+                {
+                    a++;
+                    if (a % 5 == 0)
+                    {
+                    <tr class="tdbck">
+                        <td colspan="38">
+                        </td>
+                    </tr>
+                    }
+                    <tr>
+                        <td align="center" class="line_r">
+                            @item.CreateTime.ToString("yyyy-MM-dd")
+                        </td>
+                        <td align="center" class="line_r">
+                            @item.IssuseNumber
+                        </td>
+                        <td class="hot12">
+                            @item.RedBall1
+                        </td>
+                        <td class="hot12">
+                            @item.RedBall2
+                        </td>
+                        <td class="hot12 line_r">
+                            @item.RedBall3
+                        </td>
+                        <td class="@(item.Red_0 == 0 ? "cbg hot06" : "y101")">
+                            @if (item.Red_0 == 0)
+                            {
+                                if (item.RedCan_0 != 1)
+                                {
+                                    var aaa = "0<div align='center' style='position: relative;'><div class='smallball'>" + item.RedCan_0 + "</div></div>";
+                                @Html.Raw(aaa)
+                                }
+                                else
+                                {
+                                @Html.Raw("0")
+                                }
+                            }
+                            else
+                            {
+                                @item.Red_0
+                            }
+                        </td>
+                        <td class="@(item.Red_3 == 0 ? "cbg hot06" : "y101")">
+                            @if (item.Red_3 == 0)
+                            {
+                                if (item.RedCan_3 != 1)
+                                {
+                                    var aaa = "3<div align='center' style='position: relative;'><div class='smallball'>" + item.RedCan_3 + "</div></div>";
+                                @Html.Raw(aaa)
+                                }
+                                else
+                                {
+                                @Html.Raw("3")
+                                }
+                            }
+                            else
+                            {
+                                @item.Red_3
+                            }
+                        </td>
+                        <td class="@(item.Red_6 == 0 ? "cbg hot06" : "y101")">
+                            @if (item.Red_6 == 0)
+                            {
+                                if (item.RedCan_6 != 1)
+                                {
+                                    var aaa = "6<div align='center' style='position: relative;'><div class='smallball'>" + item.RedCan_6 + "</div></div>";
+                                @Html.Raw(aaa)
+                                }
+                                else
+                                {
+                                @Html.Raw("6")
+                                }
+                            }
+                            else
+                            {
+                                @item.Red_6
+                            }
+                        </td>
+                        <td class="@(item.Red_9 == 0 ? "cbg hot06 line_r" : "y101 line_r")">
+                            @if (item.Red_9 == 0)
+                            {
+                                if (item.RedCan_9 != 1)
+                                {
+                                    var aaa = "9<div align='center' style='position: relative;'><div class='smallball'>" + item.RedCan_9 + "</div></div>";
+                                @Html.Raw(aaa)
+                                }
+                                else
+                                {
+                                @Html.Raw("9")
+                                }
+                            }
+                            else
+                            {
+                                @item.Red_9
+                            }
+                        </td>
+                        <td class="@(item.Red_1 == 0 ? "cbg hot06" : "y101")">
+                            @if (item.Red_1 == 0)
+                            {
+                                if (item.RedCan_1 != 1)
+                                {
+                                    var aaa = "1<div align='center' style='position: relative;'><div class='smallball'>" + item.RedCan_1 + "</div></div>";
+                                @Html.Raw(aaa)
+                                }
+                                else
+                                {
+                                @Html.Raw("1")
+                                }
+                            }
+                            else
+                            {
+                                @item.Red_1
+                            }
+                        </td>
+                        <td class="@(item.Red_4 == 0 ? "cbg hot06" : "y101")">
+                            @if (item.Red_4 == 0)
+                            {
+                                if (item.RedCan_4 != 1)
+                                {
+                                    var aaa = "4<div align='center' style='position: relative;'><div class='smallball'>" + item.RedCan_4 + "</div></div>";
+                                @Html.Raw(aaa)
+                                }
+                                else
+                                {
+                                @Html.Raw("4")
+                                }
+                            }
+                            else
+                            {
+                                @item.Red_4
+                            }
+                        </td>
+                        <td class="@(item.Red_7 == 0 ? "cbg hot06 line_r" : "y101 line_r")">
+                            @if (item.Red_7 == 0)
+                            {
+                                if (item.RedCan_7 != 1)
+                                {
+                                    var aaa = "7<div align='center' style='position: relative;'><div class='smallball'>" + item.RedCan_7 + "</div></div>";
+                                @Html.Raw(aaa)
+                                }
+                                else
+                                {
+                                @Html.Raw("7")
+                                }
+                            }
+                            else
+                            {
+                                @item.Red_7
+                            }
+                        </td>
+                        <td class="@(item.Red_2 == 0 ? "cbg hot06" : "y101")">
+                            @if (item.Red_2 == 0)
+                            {
+                                if (item.RedCan_2 != 1)
+                                {
+                                    var aaa = "2<div align='center' style='position: relative;'><div class='smallball'>" + item.RedCan_2 + "</div></div>";
+                                @Html.Raw(aaa)
+                                }
+                                else
+                                {
+                                @Html.Raw("2")
+                                }
+                            }
+                            else
+                            {
+                                @item.Red_2
+                            }
+                        </td>
+                        <td class="@(item.Red_5 == 0 ? "cbg hot06" : "y101")">
+                            @if (item.Red_5 == 0)
+                            {
+                                if (item.RedCan_5 != 1)
+                                {
+                                    var aaa = "5<div align='center' style='position: relative;'><div class='smallball'>" + item.RedCan_5 + "</div></div>";
+                                @Html.Raw(aaa)
+                                }
+                                else
+                                {
+                                @Html.Raw("5")
+                                }
+                            }
+                            else
+                            {
+                                @item.Red_5
+                            }
+                        </td>
+                        <td class="@(item.Red_8 == 0 ? "cbg hot06 line_r" : "y101 line_r")">
+                            @if (item.Red_8 == 0)
+                            {
+                                if (item.RedCan_8 != 1)
+                                {
+                                    var aaa = "8<div align='center' style='position: relative;'><div class='smallball'>" + item.RedCan_8 + "</div></div>";
+                                @Html.Raw(aaa)
+                                }
+                                else
+                                {
+                                @Html.Raw("8")
+                                }
+                            }
+                            else
+                            {
+                                @item.Red_8
+                            }
+                        </td>
+                        <td class="@(item.Y0_Number0 == 0 ? "cbg big" : "y101")">
+                            @(item.Y0_Number0 == 0 ? 0 : item.Y0_Number0)
+                        </td>
+                        <td class="@(item.Y0_Number1 == 0 ? "cbg big" : "y101")">
+                            @(item.Y0_Number1 == 0 ? 1 : item.Y0_Number1)
+                        </td>
+                        <td class="@(item.Y0_Number2 == 0 ? "cbg big" : "y101")">
+                            @(item.Y0_Number2 == 0 ? 2 : item.Y0_Number2)
+                        </td>
+                        <td class="@(item.Y0_Number3 == 0 ? "cbg big line_r" : "y101 line_r")">
+                            @(item.Y0_Number3 == 0 ? 3 : item.Y0_Number3)
+                        </td>
+                        <td class="@(item.Y1_Number0 == 0 ? "cbg orange1" : "y101")">
+                            @(item.Y1_Number0 == 0 ? 0 : item.Y1_Number0)
+                        </td>
+                        <td class="@(item.Y1_Number1 == 0 ? "cbg orange1" : "y101")">
+                            @(item.Y1_Number1 == 0 ? 1 : item.Y1_Number1)
+                        </td>
+                        <td class="@(item.Y1_Number2 == 0 ? "cbg orange1" : "y101")">
+                            @(item.Y1_Number2 == 0 ? 2 : item.Y1_Number2)
+                        </td>
+                        <td class="@(item.Y1_Number3 == 0 ? "cbg orange1 line_r" : "y101 line_r")">
+                            @(item.Y1_Number3 == 0 ? 3 : item.Y1_Number3)
+                        </td>
+                        <td class="@(item.Y2_Number0 == 0 ? "cbg green1" : "y101")">
+                            @(item.Y2_Number0 == 0 ? 0 : item.Y2_Number0)
+                        </td>
+                        <td class="@(item.Y2_Number1 == 0 ? "cbg green1" : "y101")">
+                            @(item.Y2_Number1 == 0 ? 1 : item.Y2_Number1)
+                        </td>
+                        <td class="@(item.Y2_Number2 == 0 ? "cbg green1" : "y101")">
+                            @(item.Y2_Number2 == 0 ? 2 : item.Y2_Number2)
+                        </td>
+                        <td class="@(item.Y2_Number3 == 0 ? "cbg green1 line_r" : "y101 line_r")">
+                            @(item.Y2_Number3 == 0 ? 3 : item.Y2_Number3)
+                        </td>
+                        <td class="line_r">
+                            @item.P012_Proportion
+                        </td>
+                        <td class="@(item.O_P012_Proportion300 == 0 ? "cbg purple1" : "y101")">
+                            @(item.O_P012_Proportion300 == 0 ? item.P012_Proportion : item.O_P012_Proportion300.ToString())
+                        </td>
+                        <td class="@(item.O_P012_Proportion210 == 0 ? "cbg purple1" : "y101")">
+                            @(item.O_P012_Proportion210 == 0 ? item.P012_Proportion : item.O_P012_Proportion210.ToString())
+                        </td>
+                        <td class="@(item.O_P012_Proportion201 == 0 ? "cbg purple1" : "y101")">
+                            @(item.O_P012_Proportion201 == 0 ? item.P012_Proportion : item.O_P012_Proportion201.ToString())
+                        </td>
+                        <td class="@(item.O_P012_Proportion120 == 0 ? "cbg purple1" : "y101")">
+                            @(item.O_P012_Proportion120 == 0 ? item.P012_Proportion : item.O_P012_Proportion120.ToString())
+                        </td>
+                        <td class="@(item.O_P012_Proportion111 == 0 ? "cbg purple1" : "y101")">
+                            @(item.O_P012_Proportion111 == 0 ? item.P012_Proportion : item.O_P012_Proportion111.ToString())
+                        </td>
+                        <td class="@(item.O_P012_Proportion102 == 0 ? "cbg purple1" : "y101")">
+                            @(item.O_P012_Proportion102 == 0 ? item.P012_Proportion : item.O_P012_Proportion102.ToString())
+                        </td>
+                        <td class="@(item.O_P012_Proportion030 == 0 ? "cbg purple1" : "y101")">
+                            @(item.O_P012_Proportion030 == 0 ? item.P012_Proportion : item.O_P012_Proportion030.ToString())
+                        </td>
+                        <td class="@(item.O_P012_Proportion021 == 0 ? "cbg purple1" : "y101")">
+                            @(item.O_P012_Proportion021 == 0 ? item.P012_Proportion : item.O_P012_Proportion021.ToString())
+                        </td>
+                        <td class="@(item.O_P012_Proportion012 == 0 ? "cbg purple1" : "y101")">
+                            @(item.O_P012_Proportion012 == 0 ? item.P012_Proportion : item.O_P012_Proportion012.ToString())
+                        </td>
+                        <td class="@(item.O_P012_Proportion003 == 0 ? "cbg purple1" : "y101")">
+                            @(item.O_P012_Proportion003 == 0 ? item.P012_Proportion : item.O_P012_Proportion003.ToString())
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tbody>
+                <tr>
+                    <td align="center" class="bdtop line_r">
+                        出现次数
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop">
+                        @(chu32.Count(p => p.Red_0 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu32.Count(p => p.Red_3 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu32.Count(p => p.Red_6 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu32.Count(p => p.Red_9 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu32.Count(p => p.Red_1 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu32.Count(p => p.Red_4 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu32.Count(p => p.Red_7 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu32.Count(p => p.Red_2 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu32.Count(p => p.Red_5 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(chu32.Count(p => p.Red_8 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu32.Count(p => p.Y0_Number0 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu32.Count(p => p.Y0_Number1 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu32.Count(p => p.Y0_Number2 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(chu32.Count(p => p.Y0_Number3 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu32.Count(p => p.Y1_Number0 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu32.Count(p => p.Y1_Number1 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu32.Count(p => p.Y1_Number2 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(chu32.Count(p => p.Y1_Number3 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu32.Count(p => p.Y2_Number0 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu32.Count(p => p.Y2_Number1 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu32.Count(p => p.Y2_Number2 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(chu32.Count(p => p.Y2_Number3 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop">
+                        @(chu32.Count(p => p.O_P012_Proportion300 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu32.Count(p => p.O_P012_Proportion210 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu32.Count(p => p.O_P012_Proportion201 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu32.Count(p => p.O_P012_Proportion120 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(chu32.Count(p => p.O_P012_Proportion111 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu32.Count(p => p.O_P012_Proportion102 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu32.Count(p => p.O_P012_Proportion030 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu32.Count(p => p.O_P012_Proportion021 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(chu32.Count(p => p.O_P012_Proportion012 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(chu32.Count(p => p.O_P012_Proportion003 == 0))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        平均遗漏
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td class="">
+                        @(chu32.Sum(p => p.Red_0) / chu32.Count)
+                    </td>
+                    <td class="">
+                        @(chu32.Sum(p => p.Red_3) / chu32.Count)
+                    </td>
+                    <td class="">
+                        @(chu32.Sum(p => p.Red_6) / chu32.Count)
+                    </td>
+                    <td class="">
+                        @(chu32.Sum(p => p.Red_9) / chu32.Count)
+                    </td>
+                    <td class="">
+                        @(chu32.Sum(p => p.Red_1) / chu32.Count)
+                    </td>
+                    <td class="">
+                        @(chu32.Sum(p => p.Red_4) / chu32.Count)
+                    </td>
+                    <td class="">
+                        @(chu32.Sum(p => p.Red_7) / chu32.Count)
+                    </td>
+                    <td class="">
+                        @(chu32.Sum(p => p.Red_2) / chu32.Count)
+                    </td>
+                    <td class="">
+                        @(chu32.Sum(p => p.Red_5) / chu32.Count)
+                    </td>
+                    <td class="line_r">
+                        @(chu32.Sum(p => p.Red_8) / chu32.Count)
+                    </td>
+                    <td class="">
+                        @(chu32.Sum(p => p.Y0_Number0) / chu32.Count)
+                    </td>
+                    <td class="">
+                        @(chu32.Sum(p => p.Y0_Number1) / chu32.Count)
+                    </td>
+                    <td class="">
+                        @(chu32.Sum(p => p.Y0_Number2) / chu32.Count)
+                    </td>
+                    <td class="line_r">
+                        @(chu32.Sum(p => p.Y0_Number3) / chu32.Count)
+                    </td>
+                    <td class="">
+                        @(chu32.Sum(p => p.Y1_Number0) / chu32.Count)
+                    </td>
+                    <td class="">
+                        @(chu32.Sum(p => p.Y1_Number1) / chu32.Count)
+                    </td>
+                    <td class="">
+                        @(chu32.Sum(p => p.Y1_Number2) / chu32.Count)
+                    </td>
+                    <td class="line_r">
+                        @(chu32.Sum(p => p.Y1_Number3) / chu32.Count)
+                    </td>
+                    <td class="">
+                        @(chu32.Sum(p => p.Y2_Number0) / chu32.Count)
+                    </td>
+                    <td class="">
+                        @(chu32.Sum(p => p.Y2_Number1) / chu32.Count)
+                    </td>
+                    <td class="">
+                        @(chu32.Sum(p => p.Y2_Number2) / chu32.Count)
+                    </td>
+                    <td class="line_r">
+                        @(chu32.Sum(p => p.Y2_Number3) / chu32.Count)
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td class="">
+                        @(chu32.Sum(p => p.O_P012_Proportion300) / chu32.Count)
+                    </td>
+                    <td class="">
+                        @(chu32.Sum(p => p.O_P012_Proportion210) / chu32.Count)
+                    </td>
+                    <td class="">
+                        @(chu32.Sum(p => p.O_P012_Proportion201) / chu32.Count)
+                    </td>
+                    <td class="">
+                        @(chu32.Sum(p => p.O_P012_Proportion120) / chu32.Count)
+                    </td>
+                    <td class="">
+                        @(chu32.Sum(p => p.O_P012_Proportion111) / chu32.Count)
+                    </td>
+                    <td class="">
+                        @(chu32.Sum(p => p.O_P012_Proportion102) / chu32.Count)
+                    </td>
+                    <td class="">
+                        @(chu32.Sum(p => p.O_P012_Proportion030) / chu32.Count)
+                    </td>
+                    <td class="">
+                        @(chu32.Sum(p => p.O_P012_Proportion021) / chu32.Count)
+                    </td>
+                    <td class="">
+                        @(chu32.Sum(p => p.O_P012_Proportion012) / chu32.Count)
+                    </td>
+                    <td class="line_r">
+                        @(chu32.Sum(p => p.O_P012_Proportion003) / chu32.Count)
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        最大遗漏
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td class="">
+                        @(chu32.Max(p => p.Red_0))
+                    </td>
+                    <td>
+                        @(chu32.Max(p => p.Red_3))
+                    </td>
+                    <td class="">
+                        @(chu32.Max(p => p.Red_6))
+                    </td>
+                    <td class="">
+                        @(chu32.Max(p => p.Red_9))
+                    </td>
+                    <td class="">
+                        @(chu32.Max(p => p.Red_1))
+                    </td>
+                    <td>
+                        @(chu32.Max(p => p.Red_4))
+                    </td>
+                    <td>
+                        @(chu32.Max(p => p.Red_7))
+                    </td>
+                    <td>
+                        @(chu32.Max(p => p.Red_2))
+                    </td>
+                    <td>
+                        @(chu32.Max(p => p.Red_5))
+                    </td>
+                    <td class="line_r">
+                        @(chu32.Max(p => p.Red_8))
+                    </td>
+                    <td class="">
+                        @(chu32.Max(p => p.Y0_Number0))
+                    </td>
+                    <td>
+                        @(chu32.Max(p => p.Y0_Number1))
+                    </td>
+                    <td class="">
+                        @(chu32.Max(p => p.Y0_Number2))
+                    </td>
+                    <td class="line_r">
+                        @(chu32.Max(p => p.Y0_Number3))
+                    </td>
+                    <td class="">
+                        @(chu32.Max(p => p.Y1_Number0))
+                    </td>
+                    <td>
+                        @(chu32.Max(p => p.Y1_Number1))
+                    </td>
+                    <td class="">
+                        @(chu32.Max(p => p.Y1_Number2))
+                    </td>
+                    <td class="line_r">
+                        @(chu32.Max(p => p.Y1_Number3))
+                    </td>
+                    <td class="">
+                        @(chu32.Max(p => p.Y2_Number0))
+                    </td>
+                    <td>
+                        @(chu32.Max(p => p.Y2_Number1))
+                    </td>
+                    <td class="">
+                        @(chu32.Max(p => p.Y2_Number2))
+                    </td>
+                    <td class="line_r">
+                        @(chu32.Max(p => p.Y2_Number3))
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                        @(chu32.Max(p => p.O_P012_Proportion300))
+                    </td>
+                    <td>
+                        @(chu32.Max(p => p.O_P012_Proportion210))
+                    </td>
+                    <td>
+                        @(chu32.Max(p => p.O_P012_Proportion201))
+                    </td>
+                    <td>
+                        @(chu32.Max(p => p.O_P012_Proportion120))
+                    </td>
+                    <td class="">
+                        @(chu32.Max(p => p.O_P012_Proportion111))
+                    </td>
+                    <td class="">
+                        @(chu32.Max(p => p.O_P012_Proportion102))
+                    </td>
+                    <td>
+                        @(chu32.Max(p => p.O_P012_Proportion030))
+                    </td>
+                    <td class="">
+                        @(chu32.Max(p => p.O_P012_Proportion021))
+                    </td>
+                    <td class="">
+                        @(chu32.Max(p => p.O_P012_Proportion012))
+                    </td>
+                    <td class="line_r">
+                        @(chu32.Max(p => p.O_P012_Proportion003))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        当前遗漏
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td valign="bottom" class="">
+                        @(chu32[chu32.Count - 1].Red_0)<br>
+                        <img width="8px" height="@(chu32[chu32.Count - 1].Red_0)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(chu32[chu32.Count - 1].Red_3)<br>
+                        <img width="8px" height="@(chu32[chu32.Count - 1].Red_3)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="">
+                        @(chu32[chu32.Count - 1].Red_6)<br>
+                        <img width="8px" height="@(chu32[chu32.Count - 1].Red_6)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="">
+                        @(chu32[chu32.Count - 1].Red_9)<br>
+                        <img width="8px" height="@(chu32[chu32.Count - 1].Red_9)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="">
+                        @(chu32[chu32.Count - 1].Red_1)<br>
+                        <img width="8px" height="@(chu32[chu32.Count - 1].Red_1)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(chu32[chu32.Count - 1].Red_4)<br>
+                        <img width="8px" height="@(chu32[chu32.Count - 1].Red_4)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(chu32[chu32.Count - 1].Red_7)<br>
+                        <img width="8px" height="@(chu32[chu32.Count - 1].Red_7)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(chu32[chu32.Count - 1].Red_2)<br>
+                        <img width="8px" height="@(chu32[chu32.Count - 1].Red_2)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(chu32[chu32.Count - 1].Red_5)<br>
+                        <img width="8px" height="@(chu32[chu32.Count - 1].Red_5)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(chu32[chu32.Count - 1].Red_8)<br>
+                        <img width="8px" height="@(chu32[chu32.Count - 1].Red_8)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="">
+                        @(chu32[chu32.Count - 1].Y0_Number0)<br>
+                        <img width="8px" height="@(chu32[chu32.Count - 1].Y0_Number0)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(chu32[chu32.Count - 1].Y0_Number1)<br>
+                        <img width="8px" height="@(chu32[chu32.Count - 1].Y0_Number1)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="">
+                        @(chu32[chu32.Count - 1].Y0_Number2)<br>
+                        <img width="8px" height="@(chu32[chu32.Count - 1].Y0_Number2)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(chu32[chu32.Count - 1].Y0_Number3)<br>
+                        <img width="8px" height="@(chu32[chu32.Count - 1].Y0_Number3)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="">
+                        @(chu32[chu32.Count - 1].Y1_Number0)<br>
+                        <img width="8px" height="@(chu32[chu32.Count - 1].Y1_Number0)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(chu32[chu32.Count - 1].Y1_Number1)<br>
+                        <img width="8px" height="@(chu32[chu32.Count - 1].Y1_Number1)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="">
+                        @(chu32[chu32.Count - 1].Y1_Number2)<br>
+                        <img width="8px" height="@(chu32[chu32.Count - 1].Y1_Number2)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(chu32[chu32.Count - 1].Y1_Number3)<br>
+                        <img width="8px" height="@(chu32[chu32.Count - 1].Y1_Number3)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="">
+                        @(chu32[chu32.Count - 1].Y2_Number0)<br>
+                        <img width="8px" height="@(chu32[chu32.Count - 1].Y2_Number0)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(chu32[chu32.Count - 1].Y2_Number1)<br>
+                        <img width="8px" height="@(chu32[chu32.Count - 1].Y2_Number1)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="">
+                        @(chu32[chu32.Count - 1].Y2_Number2)<br>
+                        <img width="8px" height="@(chu32[chu32.Count - 1].Y2_Number2)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(chu32[chu32.Count - 1].Y2_Number3)<br>
+                        <img width="8px" height="@(chu32[chu32.Count - 1].Y2_Number3)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                    </td>
+                    <td valign="bottom" class="">
+                        @(chu32[chu32.Count - 1].O_P012_Proportion300)<br>
+                        <img width="8px" height="@(chu32[chu32.Count - 1].O_P012_Proportion300)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(chu32[chu32.Count - 1].O_P012_Proportion210)<br>
+                        <img width="8px" height="@(chu32[chu32.Count - 1].O_P012_Proportion210)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(chu32[chu32.Count - 1].O_P012_Proportion201)<br>
+                        <img width="8px" height="@(chu32[chu32.Count - 1].O_P012_Proportion201)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(chu32[chu32.Count - 1].O_P012_Proportion120)<br>
+                        <img width="8px" height="@(chu32[chu32.Count - 1].O_P012_Proportion120)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(chu32[chu32.Count - 1].O_P012_Proportion111)<br>
+                        <img width="8px" height="@(chu32[chu32.Count - 1].O_P012_Proportion111)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(chu32[chu32.Count - 1].O_P012_Proportion102)<br>
+                        <img width="8px" height="@(chu32[chu32.Count - 1].O_P012_Proportion102)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="">
+                        @(chu32[chu32.Count - 1].O_P012_Proportion030)<br>
+                        <img width="8px" height="@(chu32[chu32.Count - 1].O_P012_Proportion030)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(chu32[chu32.Count - 1].O_P012_Proportion021)<br>
+                        <img width="8px" height="@(chu32[chu32.Count - 1].O_P012_Proportion021)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="">
+                        @(chu32[chu32.Count - 1].O_P012_Proportion012)<br>
+                        <img width="8px" height="@(chu32[chu32.Count - 1].O_P012_Proportion012)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(chu32[chu32.Count - 1].O_P012_Proportion003)<br>
+                        <img width="8px" height="@(chu32[chu32.Count - 1].O_P012_Proportion003)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr class="tabbg">
+                    <td class="line_r" rowspan="3">
+                        日期
+                    </td>
+                    <td class="line_r" rowspan="3">
+                        期号
+                    </td>
+                    <td class="line_r" rowspan="3" colspan="3">
+                        开奖号码
+                    </td>
+                    <td>
+                        0
+                    </td>
+                    <td>
+                        3
+                    </td>
+                    <td>
+                        6
+                    </td>
+                    <td class="line_r">
+                        9
+                    </td>
+                    <td>
+                        1
+                    </td>
+                    <td>
+                        4
+                    </td>
+                    <td class="line_r">
+                        7
+                    </td>
+                    <td>
+                        2
+                    </td>
+                    <td>
+                        5
+                    </td>
+                    <td class="line_r">
+                        8
+                    </td>
+                    <td>
+                        0
+                    </td>
+                    <td>
+                        1
+                    </td>
+                    <td>
+                        2
+                    </td>
+                    <td class="line_r">
+                        3
+                    </td>
+                    <td>
+                        0
+                    </td>
+                    <td>
+                        1
+                    </td>
+                    <td>
+                        2
+                    </td>
+                    <td class="line_r">
+                        3
+                    </td>
+                    <td>
+                        0
+                    </td>
+                    <td>
+                        1
+                    </td>
+                    <td>
+                        2
+                    </td>
+                    <td class="line_r">
+                        3
+                    </td>
+                    <td>
+                        012比
+                    </td>
+                    <td>
+                        3:0:0
+                    </td>
+                    <td>
+                        2:1:0
+                    </td>
+                    <td>
+                        2:0:1
+                    </td>
+                    <td>
+                        1:2:0
+                    </td>
+                    <td>
+                        1:1:1
+                    </td>
+                    <td>
+                        1:0:2
+                    </td>
+                    <td>
+                        0:3:0
+                    </td>
+                    <td>
+                        0:2:1
+                    </td>
+                    <td>
+                        0:1:2
+                    </td>
+                    <td>
+                        0:0:3
+                    </td>
+                </tr>
+                <tr class="tabbg">
+                    <td class="line_r" colspan="4">
+                        0
+                    </td>
+                    <td class="line_r" colspan="3">
+                        1
+                    </td>
+                    <td class="line_r" colspan="3">
+                        2
+                    </td>
+                    <td class="line_r" rowspan="2" colspan="4">
+                        余0个数
+                    </td>
+                    <td class="line_r" rowspan="2" colspan="4">
+                        余1个数
+                    </td>
+                    <td class="line_r" rowspan="2" colspan="4">
+                        余2个数
+                    </td>
+                    <td rowspan="2" colspan="11">
+                        除3余数比
+                    </td>
+                </tr>
+                <tr class="tabbg">
+                    <td class="line_r" colspan="10">
+                        不分位
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $(function () {
+        var allLines = new Array();
+        allLines.push({ line: $(".big"), color: "red" });
+        allLines.push({ line: $(".orange1"), color: "#FF590B" });
+        allLines.push({ line: $(".green1"), color: "#004F00" });
+        allLines.push({ line: $(".purple1"), color: "#0000FE" });
+        var line = new XTLine();
+        for (i = 0; i < allLines.length; i++) {
+            var l = allLines[i];
+
+            line.color = l.color;
+            line.arrayBalls = l.line;
+            line.showrect();
+        }
+
+
+        $("#has_line").click(function () {
+            line.display(this.checked);
+        })
+    })
+</script>

@@ -1,0 +1,997 @@
+﻿@using System.Text.RegularExpressions
+@using System.Web.Mvc;
+@using System.Configuration;
+@using External.Core
+@helper js(string scriptName)
+    {    
+        //外部资源 - 脚本    
+    <script src="@(res() + "/js/" + scriptName)" type="text/javascript"></script>    }
+@helper js_share(string scriptName)
+    {    
+        //外部共享资源 - 脚本    
+    <script src="@(share() + "/js/" + scriptName)" type="text/javascript"></script>    }
+@helper css(string cssName)
+    {        
+        //外部资源 - CSS
+    <link href="@(res() + "/css/" + cssName)" rel="stylesheet" type="text/css" />    }
+@helper csscdn(string cssName,string version)
+    {        
+    <link href="@(SiteString.res + "/css/" + cssName + "?v=" + version)" rel="stylesheet" type="text/css" media="screen" />    }
+@helper css2(string cssName)
+    {        
+        //外部资源 - CSS
+    <link href="@(res() + "/css/AdminCSS/" + cssName)" rel="stylesheet" type="text/css" />    }
+@helper css_1(string cssName)
+    {        
+        //富文本 - CSS
+    <link href="@(res() + "/kindeditor/themes/default/" + cssName)" rel="stylesheet" type="text/css" />    }
+@helper img(string imageName)
+    {     
+        //外部资源 - 图片   
+    @(res() + "/images/" + imageName)
+}
+@helper js_1(string jsname)
+    {
+    @(res() + "/kindeditor/" + jsname)
+}
+@helper js_11(string jsname)
+    {
+    @(res() + "/kindeditor/lang/" + jsname)
+}
+@helper res()
+    {
+        //外部资源地址，从web.config里读取
+    @ConfigurationManager.AppSettings["ResourceSiteUrl"].ToString()
+}
+@helper jsonres()
+    {
+        //外部资源地址，从web.config里读取
+@*  @ConfigurationManager.AppSettings["ResSiteUrl"].ToString()*@
+    @ConfigurationManager.AppSettings["DataSiteUrl"].ToString()
+}
+@helper WorldCup()
+    {
+        //外部资源地址，从web.config里读取
+    @ConfigurationManager.AppSettings["WorldCup"].ToString()
+}
+@helper share()
+    {
+        //外部资源地址 - 共享资源
+    @ConfigurationManager.AppSettings["ShareRes"].ToString()
+}
+@helper Calendar(string id, DateTime value)
+    {        
+        //时间选择控件
+        string imgId = "duedate_trigger_" + id;
+        string datetime = value.ToString("yyyy-MM-dd");
+    <input type="text" id="@id" name="@id" value="@datetime" class="input_calendar" style="width:80px;"/>
+    <img height="16" border="0" width="16" title="选择日期" alt="选择日期" src='@img("admin/cal.gif")'
+    id='@imgId' />
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var calendar_option = {
+                firstDay: (1) - 1,
+                inputField: "@id",
+                button: "@imgId",
+                align: "Tl",
+                singleClick: true,
+                useISO8601WeekNumbers: false,
+                ifFormat: "%Y-%m-%d"
+            };
+            var date = Calendar.setup(calendar_option);
+
+        })
+    </script>
+}
+@helper Calendar2(string id, DateTime value)
+    {
+        //时间选择控件
+        string imgId = "duedate_trigger_" + id;
+        string datetime = value.ToString("yyyy-MM-dd");
+    <input type="text" id="@id" name="@id" value="" class="input_calendar" style="width:80px;"/>
+    <img height="16" border="0" width="16" title="选择日期" alt="选择日期" src='@img("admin/cal.gif")'
+    id='@imgId' />
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var calendar_option = {
+                firstDay: (1) - 1,
+                inputField: "@id",
+                button: "@imgId",
+                align: "Tl",
+                singleClick: true,
+                useISO8601WeekNumbers: false,
+                ifFormat: "%Y-%m-%d"
+            };
+            var date = Calendar.setup(calendar_option);
+
+        })
+    </script>
+}
+@helper Calendar3(string id, DateTime value)
+    {
+        //时间选择控件 - my97控件
+        string datetime = value.ToString("yyyy-MM-dd");
+    <input class="Wdate" id="@id" name="@id" value="@datetime" type="text" onClick="WdatePicker()" size="12" />
+}
+@helper Pager(string functionName, int pageIndex, int pageSize, int totalCount)
+    {
+        //-----------分页控件-----------
+        //计算总页数
+        int pageTotalCount = ((totalCount + pageSize - 1) / pageSize); // ? (totalCount / pageSize) : (totalCount / pageSize) + 1;
+    <div class="pager">
+        @{
+            //如果当前页为第一页则不显示首页和上一页
+            if (pageIndex > 0)
+            {
+                string firstHref = string.Format("javascript:{0}({1},{2})", functionName, 0, pageSize);
+                string secondHref = string.Format("javascript:{0}({1},{2})", functionName, pageIndex - 1, pageSize);
+            <a href="@firstHref">&lt;&lt;</a>
+            <a href="@secondHref">&lt;</a>
+            }
+
+            //中间的页码部分
+            int showPageNumber = pageTotalCount < 10 ? pageTotalCount : 10;
+
+            int startPageNumber = 0;
+            if ((pageIndex + 1) > showPageNumber)
+            {
+                startPageNumber = (pageIndex + 1) - showPageNumber / 2;
+            }
+            //超过了最大页数
+            if ((showPageNumber + startPageNumber) > pageTotalCount)
+            {
+                startPageNumber = pageTotalCount - showPageNumber;
+            }
+            for (int i = startPageNumber + 1; i <= showPageNumber + startPageNumber; i++)
+            {
+                if (i == (pageIndex + 1))
+                {
+            <a class="xz">@i</a>
+                }
+                else
+                {
+                    string pageNumberHref = string.Format("javascript:{0}({1},{2})", functionName, (i - 1), pageSize);
+            <a href="@pageNumberHref">@i</a>
+                }
+            }
+
+            // 如果当前页为最后页则不显示下一页和尾页
+            if ((pageIndex + 1) < pageTotalCount)
+            {
+                string nextHref = string.Format("javascript:{0}({1},{2})", functionName, (pageIndex + 1), pageSize);
+                string lastHref = string.Format("javascript:{0}({1},{2})", functionName, (pageTotalCount - 1), pageSize);
+            <a href="@nextHref">&gt;</a>
+            <a href="@lastHref">&gt;&gt;</a>
+            }
+
+            int nowMaxValue = (pageIndex + 1) * pageSize;
+            if (pageIndex * pageSize > totalCount)
+            {
+                nowMaxValue = totalCount;
+            }
+    //string logInfo = string.Format("第{0}-{1}条 / 共{2}页（{3}条）", (pageIndex * pageSize + 1), nowMaxValue, pageTotalCount, totalCount);
+@*<span>@logInfo</span>*@
+        }
+    </div>
+}
+@helper Pager2(HttpRequestBase request, int pageIndex, int pageSize, int totalCount, string pageIndexName = "pageindex", string pageSizeName = "pagesize")
+    {
+
+    <div class="pager">
+        @{
+            //int pageTotalCount = (totalCount % pageSize == 0) ? (totalCount / pageSize) : (totalCount / pageSize) + 1;
+            int pageTotalCount = ((totalCount + pageSize - 1) / pageSize); // ? (totalCount / pageSize) : (totalCount / pageSize) + 1;
+            var queryString = string.Empty;
+            foreach (var key in request.QueryString.AllKeys)
+            {
+                if (string.IsNullOrEmpty(key))
+                {
+                    continue;
+                }
+                if (key.ToLower() == pageIndexName.ToLower())
+                {
+                    continue;
+                }
+                if (key.ToLower() == pageSizeName.ToLower())
+                {
+                    continue;
+                }
+
+                queryString += string.Format("&{0}={1}", key, request.QueryString[key]);
+            }
+            string a = "?" + pageIndexName + "={0}&" + pageSizeName + "={1}" + queryString;
+            //如果当前页为第一页则不显示首页和上一页
+            if (pageIndex > 0)
+            {
+                string firstHref = string.Format(a, 0, pageSize);
+                string secondHref = string.Format(a, pageIndex - 1, pageSize);
+            <a href="@firstHref">首页</a>
+            <a href="@secondHref">上一页</a>
+            }
+
+            //中间的页码部分
+            int showPageNumber = pageTotalCount < 10 ? pageTotalCount : 10;
+
+            int startPageNumber = 0;
+            if ((pageIndex + 1) > showPageNumber)
+            {
+                startPageNumber = (pageIndex + 1) - showPageNumber / 2;
+            }
+            //超过了最大页数
+            if ((showPageNumber + startPageNumber) > pageTotalCount)
+            {
+                startPageNumber = pageTotalCount - showPageNumber;
+            }
+            for (int i = startPageNumber + 1; i <= showPageNumber + startPageNumber; i++)
+            {
+                if (i == (pageIndex + 1))
+                {
+            <a class="on">@i</a>
+                }
+                else
+                {
+                    string pageNumberHref = string.Format(a, (i - 1), pageSize);
+            <a href="@pageNumberHref">@i</a>
+                }
+            }
+
+            // 如果当前页为最后页则不显示下一页和尾页
+            if ((pageIndex + 1) < pageTotalCount)
+            {
+                string nextHref = string.Format(a, (pageIndex + 1), pageSize);
+                string lastHref = string.Format(a, (pageTotalCount - 1), pageSize);
+            <a href="@nextHref">下一页</a>
+            <a href="@lastHref">尾页</a>
+            }
+
+            int nowMaxValue = (pageIndex + 1) * pageSize;
+            if (pageIndex * pageSize > totalCount)
+            {
+                nowMaxValue = totalCount;
+            }
+            string logInfo = string.Format("第{0}-{1}条 / 共{2}页（{3}条）", (pageIndex * pageSize + 1), nowMaxValue, pageTotalCount, totalCount);
+            <span>@logInfo</span>
+        }
+    </div>
+}
+@helper Pager3(string functionName, int pageIndex, int pageSize, int totalCount)
+    {
+        //-----------分页控件-----------
+        //计算总页数
+        int pageTotalCount = ((totalCount + pageSize - 1) / pageSize); // ? (totalCount / pageSize) : (totalCount / pageSize) + 1;
+    <div class="pager3">
+        @{
+            //if (totalCount > 0)
+            //{
+            if (pageIndex > 0)
+            {
+                //首页，上一页
+                string firstHref = string.Format("javascript:{0}({1},{2})", functionName, 0, pageSize);
+                string secondHref = string.Format("javascript:{0}({1},{2})", functionName, pageIndex - 1, pageSize);
+            <a href="@firstHref" class="page_first">首页</a>
+            <a href="@secondHref">◀</a>
+            }
+            else
+            {
+            <a href="javascript:void(0);" class="page_first">首页</a>
+            <a href="javascript:void(0);">◀</a>
+            }
+            //中间的页码部分
+            int showPageNumber = pageTotalCount < 5 ? pageTotalCount : 5;
+            var startPageNumber = 0;
+            if ((pageIndex + 1) > showPageNumber)
+            {
+                startPageNumber = (pageIndex + 1) - showPageNumber / 2;
+            }
+            //超过了最大页数
+            if ((showPageNumber + startPageNumber) > pageTotalCount)
+            {
+                startPageNumber = pageTotalCount - showPageNumber;
+            }
+            for (int i = startPageNumber + 1; i <= showPageNumber + startPageNumber; i++)
+            {
+                if (i > 1 && i == startPageNumber + 1)
+                {
+                    var pageNumberHref = string.Format("javascript:{0}({1},{2})", functionName, (i - 2), pageSize);
+            <a href="@pageNumberHref" title="第@(i - 1)页">...</a>
+                }
+
+                if (i == pageIndex + 1)
+                {
+            <a class="on">@i</a>
+                }
+                else
+                {
+                    var pageNumberHref = string.Format("javascript:{0}({1},{2})", functionName, (i - 1), pageSize);
+            <a href="@pageNumberHref" >@i</a>
+                }
+
+                if (i == showPageNumber + startPageNumber && pageTotalCount > i)
+                {
+                    var pageNumberHref = string.Format("javascript:{0}({1},{2})", functionName, i, pageSize);
+            <a href="@pageNumberHref" title="共@(pageTotalCount)页">...</a>
+                }
+
+            }
+
+            if (pageIndex + 1 < pageTotalCount)
+            {
+                //尾页 一下页
+                string nextHref = string.Format("javascript:{0}({1},{2})", functionName, (pageIndex + 1), pageSize);
+                string lastHref = string.Format("javascript:{0}({1},{2})", functionName, (pageTotalCount - 1), pageSize);
+            <a href="@nextHref">▶</a>
+            <a href="@lastHref" class="page_first">尾页</a>
+            }
+            else
+            {
+            <a href="javascript:void(0);">▶</a>
+            <a href="javascript:void(0);" class="page_first">尾页</a>
+            
+            }
+            int nowMaxValue = (pageIndex + 1) * pageSize;
+            if (pageIndex * pageSize > totalCount)
+            {
+                nowMaxValue = totalCount;
+            }
+            string logInfo = string.Format("第{0}-{1}条 / 共{2}页（{3}条）", (pageIndex * pageSize + 1), nowMaxValue, pageTotalCount, totalCount);
+            <b>@logInfo</b>
+          @*  }
+            else
+            {
+            <b>暂无信息</b>
+            }*@
+        }
+    </div>
+}
+@*会员中心分页*@
+@helper Pager4(string functionName, int pageIndex, int pageSize, int totalCount)
+    {
+        //-----------分页控件-----------
+        //计算总页数
+        int pageTotalCount = ((totalCount + pageSize - 1) / pageSize); // ? (totalCount / pageSize) : (totalCount / pageSize) + 1;
+    <div class="pager4">
+        @{
+            if (totalCount > 0)
+            {
+                if (pageIndex > 0)
+                {
+                    //首页，上一页
+                    string firstHref = string.Format("javascript:{0}({1},{2})", functionName, 0, pageSize);
+                    string secondHref = string.Format("javascript:{0}({1},{2})", functionName, pageIndex - 1, pageSize);
+            <a href="@firstHref" class="betorder_btn">首页</a>
+            <a href="@secondHref" class="betorder_Prev"></a>
+                }
+                else
+                {
+            <a href="javascript:void(0);" class="betorder_btn">首页</a>
+            <a href="javascript:void(0);" class="betorder_Prev"></a>
+                }
+                //中间的页码部分
+                int showPageNumber = pageTotalCount < 5 ? pageTotalCount : 5;
+                var startPageNumber = 0;
+                if ((pageIndex + 1) > showPageNumber)
+                {
+                    startPageNumber = (pageIndex + 1) - showPageNumber / 2;
+                }
+                //超过了最大页数
+                if ((showPageNumber + startPageNumber) > pageTotalCount)
+                {
+                    startPageNumber = pageTotalCount - showPageNumber;
+                }
+                for (int i = startPageNumber + 1; i <= showPageNumber + startPageNumber; i++)
+                {
+                    if (i > 1 && i == startPageNumber + 1)
+                    {
+                        var pageNumberHref = string.Format("javascript:{0}({1},{2})", functionName, (i - 2), pageSize);
+            <a href="@pageNumberHref" title="第@(i - 1)页">...</a>
+                    }
+
+                    if (i == pageIndex + 1)
+                    {
+            <a class="betorder_Number_Selected">@i</a>
+                    }
+                    else
+                    {
+                        var pageNumberHref = string.Format("javascript:{0}({1},{2})", functionName, (i - 1), pageSize);
+            <a href="@pageNumberHref" class="betorder_Number">@i</a>
+                    }
+
+                    if (i == showPageNumber + startPageNumber && pageTotalCount > i)
+                    {
+                        var pageNumberHref = string.Format("javascript:{0}({1},{2})", functionName, i, pageSize);
+            <a href="@pageNumberHref" title="共@(pageTotalCount)页">...</a>
+                    }
+
+                }
+
+                if (pageIndex + 1 < pageTotalCount)
+                {
+                    //尾页 一下页
+                    string nextHref = string.Format("javascript:{0}({1},{2})", functionName, (pageIndex + 1), pageSize);
+                    string lastHref = string.Format("javascript:{0}({1},{2})", functionName, (pageTotalCount - 1), pageSize);
+            <a href="@nextHref" class="betorder_PrevDown"></a>
+            <a href="@lastHref" class="betorder_btn">尾页</a>
+                }
+                else
+                {
+            <a href="javascript:void(0);" class="betorder_PrevDown"></a>
+            <a href="javascript:void(0);" class="betorder_btn">尾页</a>
+            
+                }
+                int nowMaxValue = (pageIndex + 1) * pageSize;
+                if (pageIndex * pageSize > totalCount)
+                {
+                    nowMaxValue = totalCount;
+                }
+
+                string logInfo = string.Format("第{0}-{1}条 / 共{2}页（{3}条）", (pageIndex * pageSize + 1), nowMaxValue, pageTotalCount, totalCount);
+            <em style="color: Black;">@logInfo</em>
+@*<b style="color:#999999;">@logInfo</b>*@
+            }
+            else
+            {
+@*  <em style="color: #999999;">暂无数据</em>*@
+            }
+        }
+    </div>
+}
+@helper Pager5(string functionName, int pageIndex, int pageSize, int totalCount)
+    {
+    
+        //-----------分页控件-----------
+        //计算总页数
+        int pageTotalCount = ((totalCount + pageSize - 1) / pageSize); // ? (totalCount / pageSize) : (totalCount / pageSize) + 1;
+    <div class="pager_hmdetail">
+        @{
+            if (totalCount > 0)
+            {
+                if (pageIndex > 0)
+                {
+                    //首页，上一页
+                    string firstHref = string.Format("javascript:{0}({1},{2})", functionName, 0, pageSize);
+                    string secondHref = string.Format("javascript:{0}({1},{2})", functionName, pageIndex - 1, pageSize);
+            <a href="@firstHref" class="page_first">首页</a>
+            <a href="@secondHref"  class="first">上一页</a>
+                }
+                else
+                {
+            <span class='no'>首页</span><span class='first no'>上一页</span>
+
+                }
+                //中间的页码部分
+                int showPageNumber = pageTotalCount < 5 ? pageTotalCount : 5;
+                var startPageNumber = 0;
+                if ((pageIndex + 1) > showPageNumber)
+                {
+                    startPageNumber = (pageIndex + 1) - showPageNumber / 2;
+                }
+                //超过了最大页数
+                if ((showPageNumber + startPageNumber) > pageTotalCount)
+                {
+                    startPageNumber = pageTotalCount - showPageNumber;
+                }
+                for (int i = startPageNumber + 1; i <= showPageNumber + startPageNumber; i++)
+                {
+                    if (i > 1 && i == startPageNumber + 1)
+                    {
+                        var pageNumberHref = string.Format("javascript:{0}({1},{2})", functionName, (i - 2), pageSize);
+            <a href="@pageNumberHref" title="第@(i - 1)页">...</a>
+                    }
+
+                    if (i == pageIndex + 1)
+                    {
+            <span class="on">@i </span>
+                    }
+                    else
+                    {
+                        var pageNumberHref = string.Format("javascript:{0}({1},{2})", functionName, (i - 1), pageSize);
+            <a href="@pageNumberHref" >@i</a>
+                    }
+
+                    if (i == showPageNumber + startPageNumber && pageTotalCount > i)
+                    {
+                        var pageNumberHref = string.Format("javascript:{0}({1},{2})", functionName, i, pageSize);
+            <a href="@pageNumberHref" title="共@(pageTotalCount)页">...</a>
+                    }
+
+                }
+
+                if (pageIndex + 1 < pageTotalCount)
+                {
+                    //尾页 一下页
+                    string nextHref = string.Format("javascript:{0}({1},{2})", functionName, (pageIndex + 1), pageSize);
+                    string lastHref = string.Format("javascript:{0}({1},{2})", functionName, (pageTotalCount - 1), pageSize);
+            <a href="@nextHref"  class="first">下一页</a>
+            <a href="@lastHref" class="page_first">尾页</a>
+                }
+                else
+                {
+            <span class='first no'>下一页</span><span class='no'>尾页</span>
+            
+                }
+                int nowMaxValue = (pageIndex + 1) * pageSize;
+                if (pageIndex * pageSize > totalCount)
+                {
+                    nowMaxValue = totalCount;
+                }
+                string logInfo = string.Format("第{0}-{1}条 / 共{2}页（{3}条）", (pageIndex * pageSize + 1), nowMaxValue, pageTotalCount, totalCount);
+            <b>@logInfo</b>
+            }
+            else
+            {
+            <b>暂无信息</b>
+            }
+        }
+    </div>
+}
+@*赛事点评和咨询分页*@
+@helper Pager_z(int pageIndex, int pageSize, int totalCount)
+    {
+        //-----------分页控件-----------
+        //计算总页数
+        int pageTotalCount = ((totalCount + pageSize - 1) / pageSize); // ? (totalCount / pageSize) : (totalCount / pageSize) + 1;
+        string url = HttpContext.Current.Request.Url.AbsolutePath;
+    <div class="pager4">
+        @{
+            if (totalCount > 0)
+            {
+                if (pageIndex > 0)
+                {
+                    //首页，上一页
+                    string firstHref = string.Format("{0}?pageNo={1}&pageSize={2}", url, 0, pageSize);
+                    string secondHref = string.Format("{0}?pageNo={1}&pageSize={2}", url, pageIndex - 1, pageSize);
+            <a href="@firstHref" class="betorder_btn">首页</a>
+            <a href="@secondHref" class="betorder_Prev"></a>
+                }
+                else
+                {
+            <a href="" class="betorder_btn">首页</a>
+            <a href="" class="betorder_Prev"></a>
+                }
+                //中间的页码部分
+                int showPageNumber = pageTotalCount < 5 ? pageTotalCount : 5;
+                var startPageNumber = 0;
+                if ((pageIndex + 1) > showPageNumber)
+                {
+                    startPageNumber = (pageIndex + 1) - showPageNumber / 2;
+                }
+                //超过了最大页数
+                if ((showPageNumber + startPageNumber) > pageTotalCount)
+                {
+                    startPageNumber = pageTotalCount - showPageNumber;
+                }
+                for (int i = startPageNumber + 1; i <= showPageNumber + startPageNumber; i++)
+                {
+                    if (i > 1 && i == startPageNumber + 1)
+                    {
+                        var pageNumberHref = string.Format("{0}?pageNo={1}&pageSize={2}", url, (i - 2), pageSize);
+            <a href="@pageNumberHref" title="第@(i - 1)页">...</a>
+                    }
+
+                    if (i == pageIndex + 1)
+                    {
+            <a class="betorder_Number_Selected">@i</a>
+                    }
+                    else
+                    {
+                        var pageNumberHref = string.Format("{0}?pageNo={1}&pageSize={2}", url, (i - 1), pageSize);
+            <a href="@pageNumberHref" class="betorder_Number">@i</a>
+                    }
+
+                    if (i == showPageNumber + startPageNumber && pageTotalCount > i)
+                    {
+                        var pageNumberHref = string.Format("{0}?pageNo={1}&pageSize={2}", url, i, pageSize);
+            <a href="@pageNumberHref" title="共@(pageTotalCount)页">...</a>
+                    }
+
+                }
+
+                if (pageIndex + 1 < pageTotalCount)
+                {
+                    //尾页 一下页
+                    string nextHref = string.Format("{0}?pageNo={1}&pageSize={2}", url, (pageIndex + 1), pageSize);
+                    string lastHref = string.Format("{0}?pageNo={1}&pageSize={2}", url, (pageTotalCount - 1), pageSize);
+            <a href="@nextHref" class="betorder_PrevDown"></a>
+            <a href="@lastHref" class="betorder_btn">尾页</a>
+                }
+                else
+                {
+            <a href="" class="betorder_PrevDown"></a>
+            <a href="" class="betorder_btn">尾页</a>
+            
+                }
+                int nowMaxValue = (pageIndex + 1) * pageSize;
+                if (pageIndex * pageSize > totalCount)
+                {
+                    nowMaxValue = totalCount;
+                }
+
+                string logInfo = string.Format("第{0}-{1}条 / 共{2}页（{3}条）", (pageIndex * pageSize + 1), nowMaxValue, pageTotalCount, totalCount);
+            <em style="color: #999999;">@logInfo</em>
+            }
+            else
+            {
+            }
+        }
+    </div>
+}
+@helper Pager_static(string url, int pageIndex, int pageSize, int totalCount)
+    {
+        //-----------分页控件-----------
+        //计算总页数
+        int pageTotalCount = ((totalCount + pageSize - 1) / pageSize); // ? (totalCount / pageSize) : (totalCount / pageSize) + 1;
+    <div class="pager4">
+        @{
+            if (totalCount > 0)
+            {
+                if (pageIndex > 0)
+                {
+                    //首页，上一页
+                    string firstHref = string.Format("{0}{1}.html", url, 0);
+                    string secondHref = string.Format("{0}{1}.html", url, pageIndex - 1);
+            <a href="@firstHref" class="betorder_btn">首页</a>
+            <a href="@secondHref" class="betorder_Prev"></a>
+                }
+                else
+                {
+            <a href="" class="betorder_btn">首页</a>
+            <a href="" class="betorder_Prev"></a>
+                }
+                //中间的页码部分
+                int showPageNumber = pageTotalCount < 5 ? pageTotalCount : 5;
+                var startPageNumber = 0;
+                if ((pageIndex + 1) > showPageNumber)
+                {
+                    startPageNumber = (pageIndex + 1) - showPageNumber / 2;
+                }
+                //超过了最大页数
+                if ((showPageNumber + startPageNumber) > pageTotalCount)
+                {
+                    startPageNumber = pageTotalCount - showPageNumber;
+                }
+                for (int i = startPageNumber + 1; i <= showPageNumber + startPageNumber; i++)
+                {
+                    if (i > 1 && i == startPageNumber + 1)
+                    {
+                        var pageNumberHref = string.Format("{0}{1}.html", url, (i - 2));
+            <a href="@pageNumberHref" title="第@(i - 1)页">...</a>
+                    }
+
+                    if (i == pageIndex + 1)
+                    {
+            <a class="betorder_Number_Selected">@i</a>
+                    }
+                    else
+                    {
+                        var pageNumberHref = string.Format("{0}{1}.html", url, (i - 1));
+            <a href="@pageNumberHref" class="betorder_Number">@i</a>
+                    }
+
+                    if (i == showPageNumber + startPageNumber && pageTotalCount > i)
+                    {
+                        var pageNumberHref = string.Format("{0}{1}.html", url, i);
+            <a href="@pageNumberHref" title="共@(pageTotalCount)页">...</a>
+                    }
+
+                }
+
+                if (pageIndex + 1 < pageTotalCount)
+                {
+                    //尾页 一下页
+                    string nextHref = string.Format("{0}{1}.html", url, (pageIndex + 1));
+                    string lastHref = string.Format("{0}{1}.html", url, (pageTotalCount - 1));
+            <a href="@nextHref" class="betorder_PrevDown"></a>
+            <a href="@lastHref" class="betorder_btn">尾页</a>
+                }
+                else
+                {
+            <a href="" class="betorder_PrevDown"></a>
+            <a href="" class="betorder_btn">尾页</a>
+            
+                }
+                int nowMaxValue = (pageIndex + 1) * pageSize;
+                if (pageIndex * pageSize > totalCount)
+                {
+                    nowMaxValue = totalCount;
+                }
+                string logInfo = string.Format("共{0}页，{1}条记录", pageTotalCount, totalCount);
+            <em style="color: #999999;">@logInfo</em>
+            }
+            else
+            {
+            }
+        }
+    </div>
+}
+@*会员中心分页*@
+@helper Pager6(string functionName, int pageIndex, int pageSize, int totalCount)
+    {
+        //-----------分页控件-----------
+        //计算总页数
+        int pageTotalCount = ((totalCount + pageSize - 1) / pageSize); // ? (totalCount / pageSize) : (totalCount / pageSize) + 1;
+    <div class="pager4">
+        @{
+            if (totalCount > 0)
+            {
+                if (pageIndex > 0)
+                {
+                    //首页，上一页
+                    string firstHref = string.Format("javascript:{0}({1},{2})", functionName, 0, pageSize);
+                    string secondHref = string.Format("javascript:{0}({1},{2})", functionName, pageIndex - 1, pageSize);
+            <a href="@firstHref" class="betorder_btn">首页</a>
+            <a href="@secondHref" class="betorder_Prev"><s></s></a>
+                }
+                else
+                {
+            <a href="javascript:void(0);" class="betorder_btn">首页</a>
+            <a href="javascript:void(0);" class="betorder_Prev"><s></s></a>
+                }
+                //中间的页码部分
+                int showPageNumber = pageTotalCount < 5 ? pageTotalCount : 5;
+                var startPageNumber = 0;
+                if ((pageIndex + 1) > showPageNumber)
+                {
+                    startPageNumber = (pageIndex + 1) - showPageNumber / 2;
+                }
+                //超过了最大页数
+                if ((showPageNumber + startPageNumber) > pageTotalCount)
+                {
+                    startPageNumber = pageTotalCount - showPageNumber;
+                }
+                for (int i = startPageNumber + 1; i <= showPageNumber + startPageNumber; i++)
+                {
+                    if (i > 1 && i == startPageNumber + 1)
+                    {
+                        var pageNumberHref = string.Format("javascript:{0}({1},{2})", functionName, (i - 2), pageSize);
+            <a href="@pageNumberHref" title="第@(i - 1)页">...</a>
+                    }
+
+                    if (i == pageIndex + 1)
+                    {
+            <a class="betorder_Number_Selected">@i</a>
+                    }
+                    else
+                    {
+                        var pageNumberHref = string.Format("javascript:{0}({1},{2})", functionName, (i - 1), pageSize);
+            <a href="@pageNumberHref" class="betorder_Number">@i</a>
+                    }
+
+                    if (i == showPageNumber + startPageNumber && pageTotalCount > i)
+                    {
+                        var pageNumberHref = string.Format("javascript:{0}({1},{2})", functionName, i, pageSize);
+            <a href="@pageNumberHref" title="共@(pageTotalCount)页">...</a>
+                    }
+
+                }
+
+                if (pageIndex + 1 < pageTotalCount)
+                {
+                    //尾页 一下页
+                    string nextHref = string.Format("javascript:{0}({1},{2})", functionName, (pageIndex + 1), pageSize);
+                    string lastHref = string.Format("javascript:{0}({1},{2})", functionName, (pageTotalCount - 1), pageSize);
+            <a href="@nextHref" class="betorder_PrevDown"><s></s></a>
+            <a href="@lastHref" class="betorder_btn">尾页</a>
+                }
+                else
+                {
+            <a href="javascript:void(0);" class="betorder_PrevDown"><s></s></a>
+            <a href="javascript:void(0);" class="betorder_btn">尾页</a>
+            
+                }
+                int nowMaxValue = (pageIndex + 1) * pageSize;
+                if (pageIndex * pageSize > totalCount)
+                {
+                    nowMaxValue = totalCount;
+                }
+                int nowMinValue = (pageIndex * pageSize) + 1;
+
+                //string logInfo = string.Format("共{0}页，{1}条记录", pageTotalCount, totalCount);
+                string logInfo = string.Format("第{0}-{1}条 / 共{2}页({3}条)", nowMinValue, nowMaxValue, pageTotalCount, totalCount);
+            <em>@logInfo</em>
+            }
+        }
+    </div>
+}
+@helper PagerbaodanSportTicket(string functionName, int pageIndex, int pageSize, int totalCount)
+    {
+        //-----------分页控件-----------
+        //计算总页数
+        int pageTotalCount = ((totalCount + pageSize - 1) / pageSize); // ? (totalCount / pageSize) : (totalCount / pageSize) + 1;
+    <div class="pager">
+        @{
+            //如果当前页为第一页则不显示首页和上一页
+            if (pageIndex > 0)
+            {
+                string firstHref = string.Format("javascript:{0}({1},{2})", functionName, 0, pageSize);
+                string secondHref = string.Format("javascript:{0}({1},{2})", functionName, pageIndex - 1, pageSize);
+            <a href="@firstHref">首页</a>
+            <a href="@secondHref">上一页</a>
+            }
+
+            //中间的页码部分
+            int showPageNumber = pageTotalCount < 10 ? pageTotalCount : 10;
+
+            int startPageNumber = 0;
+            if ((pageIndex + 1) > showPageNumber)
+            {
+                startPageNumber = (pageIndex + 1) - showPageNumber / 2;
+            }
+            //超过了最大页数
+            if ((showPageNumber + startPageNumber) > pageTotalCount)
+            {
+                startPageNumber = pageTotalCount - showPageNumber;
+            }
+            for (int i = startPageNumber + 1; i <= showPageNumber + startPageNumber; i++)
+            {
+                if (i == (pageIndex + 1))
+                {
+            <a class="on">@i</a>
+                }
+                else
+                {
+                    string pageNumberHref = string.Format("javascript:{0}({1},{2})", functionName, (i - 1), pageSize);
+            <a href="@pageNumberHref">@i</a>
+                }
+            }
+
+            // 如果当前页为最后页则不显示下一页和尾页
+            if ((pageIndex + 1) < pageTotalCount)
+            {
+                string nextHref = string.Format("javascript:{0}({1},{2})", functionName, (pageIndex + 1), pageSize);
+                string lastHref = string.Format("javascript:{0}({1},{2})", functionName, (pageTotalCount - 1), pageSize);
+            <a href="@nextHref">下一页</a>
+            <a href="@lastHref">尾页</a>
+            }
+           
+        }
+    </div>
+}
+@helper ConvertApplyState(ApplyState applyState)
+    {
+        string str = string.Empty;
+        switch (applyState)
+        {
+            case ApplyState.Pending:
+                str = "申请中";
+                break;
+            case ApplyState.Sending:
+                str = "派送中";
+                break;
+            case ApplyState.Refusal:
+                str = "已拒绝";
+                break;
+            case ApplyState.SendCarryout:
+                str = "派送完成";
+                break;
+            case ApplyState.Canceled:
+                str = "已取消";
+                break;
+        }
+    @str;
+}
+@helper ZjqView(string matchid, string i, bool flag, bool pri, decimal sp, int isDg, string result)
+    {
+    <li class="@(flag ? "" : "p")@(pri || sp == 0 ? " stopdesc" : "")" data-dg="@isDg" id="@(matchid)_zjq_@(i)">
+        <a class="bet">
+            <div hover="hover1" class="ping@(sp == 0 || pri ? " weiks" : "")">
+                <span class="icon zuo1 hover1_1 sel1_1"></span>
+                <div class="pingd hover1_2 sel1_2">
+                    <div sp="@sp" class="peilv fff hui_colo@(i == result ? " red_colo" : "")">@sp</div>
+                    <em class="tip"></em>
+                </div>
+                <span class="icon you1 hover1_3 sel1_3"></span>
+            </div>
+        </a></li>
+}
+@helper BqcView(string matchid, string i, bool flag, bool pri, decimal sp, int isDg, string result)
+    {
+    <li class="@(flag ? "" : "p")@(pri || sp == 0 ? " stopdesc" : "")" data-dg="@isDg" id="@(matchid)_bqc_@(i)">
+        <a class="bet">
+            <div hover="hover1" class="ping@(sp == 0 || pri ? " weiks" : "")">
+                <span class="icon zuo1 hover1_1 sel1_1"></span>
+                <div class="pingd hover1_2 sel1_2">
+                    <div sp="@sp" class="peilv fff hui_colo@(i == result ? " red_colo" : "")">@sp</div>
+                    <em class="tip "></em>
+                </div>
+                <span class="icon you1 hover1_3 sel1_3"></span>
+            </div>
+        </a></li>
+}
+
+@helper HhView(string display, string type, decimal sp, string result)
+    {
+    <a class="bet">
+        <div hover="hover11" class="ping weiks">
+            <span class="icon zuo1 hover1_1 sel1_1"></span>
+            <div class="pingd hover1_2 sel1_2">
+                @if (type == result)
+                {
+                <div class="peilv fff red_colo">@display</div>
+                <div sp="0" class="peilv_1 fff red_colo">@sp</div>
+                }
+                else
+                {
+                <div class="peilv fff hui_colo">@display</div>
+                <div sp="0" class="peilv_1 fff hui_colo">@sp</div>
+                }
+                <em class="tip"></em>
+            </div>
+            <span class="icon you1 hover1_3 sel1_3"></span>
+        </div>
+    </a>
+}
+@helper JclqHhView(string type, decimal sp, string result)
+    {
+    <a class="bet">
+        <div hover="hover11" class="ping weiks">
+            <span class="icon zuo1 hover1_1 sel1_1"></span>
+            <div class="pingd hover1_2 sel1_2">
+                <div class="peilv_1 fff @(type == result ? "red_colo" : "hui_colo")">@sp</div>
+            </div>
+            <span class="icon you1 hover1_3 sel1_3"></span>
+        </div>
+    </a>
+}
+@helper SfcView(string matchid, string i, bool pri, decimal sp, int isDg, string result)
+    {
+    <a data-dg="@isDg" id="@(matchid)_sfc_@(i)" class="p@(sp <= 0 || pri ? " stopdesc" : "")">
+        <div hover="hover1" class="ke">
+            <span class="icon zuo1 hover1_1 sel1_1"></span>
+            <div class="ked hover1_2 sel1_2">
+                <div sp="@sp" class="peilv fff hui_colo@(i == result ? " red_colo" : "") ">@sp</div>
+                <em class="tip"></em>
+            </div>
+            <span class="icon you1 hover1_3 sel1_3"></span>
+        </div>
+    </a>
+}
+@helper Bjdc_bf_view(int matchid, string id, string display, int sale, decimal sp, int index, string result)
+    {
+    <td rel="a@(index)" id="@(matchid)_bf_@(id)" class="tdsp">
+        <a class="bet @(sale == 1 ? " p" : "")" href="javascript:void(0)">
+            <em>@display</em>
+            <span class="sp">@sp</span>
+            @if (sale == 0)
+            {
+                if (id == result)
+                {
+                     <span class="result"></span>
+                }
+            }
+            else
+            {
+            <em class="tip"></em>
+            }
+        </a>
+    </td>
+}
+@helper yox(int mid, int lotyid)
+    {
+    if (mid <= 0)
+    {
+        <a href="javascript:void(0)">亚</a>
+        <a href="javascript:void(0)">欧</a>
+        <a href="javascript:void(0)">析</a>
+    }
+    else
+    {
+        <a href="http://odds.wancai.com/match/asia/@mid?lotyid=@lotyid" target="_blank">亚</a>
+        <a href="http://odds.wancai.com/match/europe/@mid?lotyid=@lotyid" target="_blank">欧</a>
+        <a href="http://odds.wancai.com/match/analyze/@mid?lotyid=@lotyid" target="_blank">析</a>
+    }
+}
+@helper jclq_ox(int mid)
+    {
+    if (mid <= 0)
+    {
+        <a href="javascript:void(0)">欧</a>
+        <a href="javascript:void(0)">析</a>
+    }
+    else
+    {
+        <a href="http://odds.wancai.com/basketball/europe/@mid" target="_blank">欧</a>
+        <a href="http://odds.wancai.com/basketball/analyze/@mid" target="_blank">析</a>
+    }
+}

@@ -1,0 +1,31 @@
+﻿@{
+    var gameType = string.IsNullOrEmpty(Request["gameType"]) ? "" : Request["gameType"];
+    var issusenumber = Request["issusenumber"];
+    if (ViewBag.GameCode == "newindex")
+    {
+        ViewBag.Title = "开奖中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+        ViewBag.keywords = SiteConvert.GameName(ViewBag.GameCode) + ", 开奖号码, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+        ViewBag.Description = "";
+    }
+    else
+    {
+        if (issusenumber != null && issusenumber!="")
+        {
+            ViewBag.Title = SiteConvert.GameName(ViewBag.GameCode, gameType) + "第" + issusenumber + "期开奖结果-" + SiteString.getHZSiteName(Request);
+            ViewBag.keywords = SiteConvert.GameName(ViewBag.GameCode, gameType) + "第" + issusenumber + "期开奖结果";
+            ViewBag.Description = SiteConvert.GameName(ViewBag.GameCode, gameType) + "第" + issusenumber + "期开奖结果,更多" + SiteConvert.GameName(ViewBag.GameCode, gameType) + "开奖结果请登录" + SiteString.getHZSiteName(Request) + "彩票网进行查看.";
+        }
+        else
+        {
+            ViewBag.Title = SiteConvert.GameName(ViewBag.GameCode, gameType) + "开奖号码-" + SiteConvert.GameName(ViewBag.GameCode, gameType) + "开奖结果-" + SiteConvert.GameName(ViewBag.GameCode, gameType) + "开奖详情-" + SiteString.getHZSiteName(Request);
+            ViewBag.keywords = SiteConvert.GameName(ViewBag.GameCode, gameType) + "开奖号码-" + SiteConvert.GameName(ViewBag.GameCode, gameType) + "开奖结果-" + SiteConvert.GameName(ViewBag.GameCode, gameType) + "开奖详情";
+            ViewBag.Description = SiteString.getHZSiteName(Request) + "开奖公告为您提供" + SiteConvert.GameName(ViewBag.GameCode, gameType) + "开奖查询,最快的" + SiteConvert.GameName(ViewBag.GameCode, gameType) + "开奖结果,最全的" + SiteConvert.GameName(ViewBag.GameCode, gameType) + "开奖详情,查询" + SiteConvert.GameName(ViewBag.GameCode, gameType) + "开奖号码就上" + SiteString.getHZSiteName(Request) + "彩票网.";
+        }
+    }
+}
+@section css
+{@UserHelper.css("newlottery.css")}
+<div>
+    @{Html.RenderAction("newdetail", "lottery", new { id = ViewBag.GameCode });}
+</div>
+

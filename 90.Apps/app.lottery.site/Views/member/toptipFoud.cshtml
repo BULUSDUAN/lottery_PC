@@ -1,0 +1,40 @@
+﻿@{
+    var user = ViewBag.CurrentUser as app.lottery.site.Models.CurrentUserInfo;
+    var balance = ViewBag.CurrentUserBalance as GameBiz.Core.UserBalanceInfo;
+}
+<div class="mem-memberinfo clearfix">
+    <div class="userninfo">
+        <div class="user_con">
+            <label>
+                <i class="userhed"></i>
+            </label>
+            
+            <span class="username">用户[User]</span>
+            <p class="username">@user.LoginInfo.DisplayName</p>
+        </div>
+              
+ 
+     
+    </div>
+    <div class="cbalance">
+        <div class="user_con">
+             <i class="integral"></i>
+        <span>返点余额[Integral balance]</span>
+        <p class="balance">@balance.CommissionBalance.ToString("N2")</p>
+        </div>
+       
+    </div>
+  @*  <div class="fbalance">
+        <div class="user_con">
+             <i class="freezing"></i>
+        <span>冻结返点[Freezing integral]</span>
+        <p class="balance">@balance.FreezeBalance.ToString("N2")</p>
+        </div>
+       
+    </div>
+    <div class="tqbox">
+        <a href="/member/integralinto" class="btn_zr">转&nbsp;&nbsp;入</a>
+         <a href="/member/integralextract" class="btn_tq">提&nbsp;&nbsp;取</a>
+    </div>*@
+</div>
+

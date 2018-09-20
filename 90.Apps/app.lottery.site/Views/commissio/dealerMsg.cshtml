@@ -1,0 +1,161 @@
+﻿@using GameBiz.Core;
+@using app.lottery.site.Models
+@{
+    ViewBag.Title = "经销商信息, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "经销商信息, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    CurrentUserInfo currentUser = ViewBag.CurrentUser;
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+    @UserHelper.css("commissio.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>经销商信息</li>
+    </ul>
+</div>
+<div class="center mt10">
+    @{Html.RenderAction("menu", "Member");}
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mycommenu">
+            <a href="javascript:void(0);" checklg="/commissio/myTc">我的提成</a> <a href="javascript:void(0);"
+                checklg="/commissio/generalizeUser" class="up">推广用户</a> <a href="javascript:void(0);"
+                    checklg="/commissio/CommissionRecord">返点结算</a> <a href="javascript:void(0);" checklg="/commissio/StatisticsQuery">
+                        统计查询</a> <a href="javascript:void(0);" checklg="/commissio/SchemeManage">方案管理</a>
+        </div>
+        <div class="scheme">
+            @if (currentUser.LoginInfo.OCAgentType != GameBiz.Core.OCAgentCategory.SportLotterySubAgent)
+            {
+                <div class="scheme-show" style="margin-left: 10px;">
+                    <a href="javascript:void(0)" checklg="/commissio/generalizeUser">下级代理</a>
+                </div>
+            }
+            <div class="scheme-show">
+                <a href="javascript:void(0)" checklg="/commissio/subordinateuser">下级用户</a>
+            </div>
+            @if (currentUser.LoginInfo.OCAgentType != GameBiz.Core.OCAgentCategory.SportLotterySubAgent)
+            {
+                <div class="scheme-show xzscheme">
+                    <a href="javascript:void(0)" checklg="/commissio/dealerMsg">添加代理</a>
+                </div>
+            }
+            <div class="scheme-show" style="width: 130px;">
+                <a href="javascript:void(0)" checklg="/commissio/setNewUserRebate">设置新用户返点</a>
+            </div>
+            <div class="scheme-show">
+                <a href="javascript:void(0)" checklg="/commissio/popularizeLink">推广链接</a>
+            </div>
+            @if (currentUser.LoginInfo.OCAgentType == GameBiz.Core.OCAgentCategory.SportLotteryAgent)
+            {
+                <div class="scheme-show">
+                    <a href="javascript:void(0)" checklg="/commissio/registernewagency">注册新代理</a>
+                </div>
+                <div class="scheme-show">
+                    <a href="javascript:void(0)" checklg="/commissio/newagencylist">店铺代理</a>
+                </div>
+            }
+        </div>
+        <table border="0" cellpadding="0" cellspacing="0" class="dealer-table">
+            <tr style="background: #f9f4ea;">
+                <td width="120">
+                    现有用户编号：
+                </td>
+                <td>
+                    <div style="width: 620px !important 540px; float: left; height: 40px; line-height: 40px;">
+                        <input type="text" name="txtDealerId" id="txtDealerId" style="width: 80px; margin-left: 10px;" />
+                    </div>
+                    <div style="width: 60px; float: left; height: 40px;">
+                        &nbsp;&nbsp;<a class="Query" href="javascript:void(0)" onclick="QueryDealer();"></a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td width="120">
+                    用户编号：
+                </td>
+                <td align="left">
+                    <div id="txtUserId" class="dealer-table-w-ml">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td width="120">
+                    用户名称：
+                </td>
+                <td align="left">
+                    <div id="txtName" class="dealer-table-w-ml">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td width="120">
+                    真实姓名：
+                </td>
+                <td align="left">
+                    <div id="txtTrueName" class="dealer-table-w-ml">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td width="120">
+                    认证手机：
+                </td>
+                <td align="left">
+                    <div id="txtAuthenticationPhone" class="dealer-table-w-ml">
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div class="dealer-save">
+            <a href="javascript:void(0)" class="saveDealer" onclick="saveDaler();">添加代理</a>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function saveDaler() {
+        var txtUserId = $("#txtDealerId").val();
+        if (txtUserId == null) {
+            alert("用户编号不能为空");
+            return false;
+        }
+        $.post("/commissio/AddOCAgent", { txtId: txtUserId }, function (data) {
+            if (data.IsSuccess) {
+                alert(data.Msg);
+                location.href = location.href;
+            }
+            else {
+                alert(data.Msg);
+                return false;
+            }
+        });
+    }
+    function QueryDealer() {
+        var txtDealerId = $("#txtDealerId").val();
+        $.post("/commissio/QueryUser", { txtDealerId: txtDealerId }, function (data) {
+            if (data.IsSuccess) {
+                $("#txtUserId").html(data.UserShow.UserId);
+                $("#txtName").html(data.UserShow.DisplayName);
+                if (data.UserShow.RealName != null && data.UserShow.RealName != "") {
+                    $("#txtTrueName").html("*");
+                } else {
+                    $("#txtTrueName").html("无");
+                }
+                if (data.UserShow.Mobile != null && data.UserShow.Mobile != "") {
+                    $("#txtAuthenticationPhone").html("*");
+                }
+                else {
+                    $("#txtAuthenticationPhone").html("无");
+                }
+
+            }
+            else {
+                alert(data.Msg);
+            }
+        });
+    }
+</script>
+<div class="clearfix">
+</div>

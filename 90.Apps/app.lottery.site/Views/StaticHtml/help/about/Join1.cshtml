@@ -1,0 +1,88 @@
+﻿@{
+    var Title = "加盟合作";
+    ViewBag.Title = Title + " - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+   @ViewHelpers.css("help.css")
+} 
+  <div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">玩彩网</a> > </li>
+        <li><a href="/staticHtml/help/index.html">&nbsp;帮助中心</a> > </li>
+        <li>&nbsp;加盟合作</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type = "About", name = "Join" });}
+<div class="help_r">
+         
+
+             <div class="det_box">
+            	<h2>加盟合作</h2>
+                <div class="det_c">
+
+                <span style="color:#333333;font-family:宋体, tahoma;font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;letter-spacing:normal;line-height:24px;orphans:2;text-align:-webkit-auto;text-indent:0px;text-transform:none;white-space:normal;widows:2;word-spacing:0px;-webkit-text-decorations-in-effect:none;-webkit-text-size-adjust:auto;-webkit-text-stroke-width:0px;" class="Apple-style-span">
+
+                <h3 style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">网站合作（CPS，按用户实际消费结算）</h3>
+                <p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">1、链接推广，即合作渠道通过图片、文字等方式推广由玩彩网提供的链接地址（如：www.wancai.com/***）。 用户通过访问推广链接购买彩票，即可获得分成；</p>
+                <p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">2、频道推广，玩彩网提供相应技术支持（如：定制购彩频道logo、联合授权登录、充值支付接口等），一起建设网站购彩频道，彩民在网站购彩频道进行购买彩票，网站即可获得分成。彩票，即可获得分成；</p>
+                <p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">案例： <img src="@ViewHelpers.img("/help/zfb.png")" /></p>
+                <p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">移动端合作（CPS，按用户实际消费结算）</p>
+                <p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">1、触屏网站推广，即玩彩网提供触屏网站推广地址（如：m.wancai.com/***），渠道可通过图片、文字广告位或直接在APP内置购彩频道，引导用户购买彩票，获得分成。内置购彩频道玩彩网可提供技术支持（如：定制彩频道logo、联合授权登录、充值支付接口）；</p>
+                <p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">2、客户端推广，即合作渠道通过应用推荐、图片引导用户下载安装玩彩网彩票客户端，客户端由玩彩网提供，客户端包可以是玩彩网官方包，也可是渠道定制包（定制内容有：应用图标、APP启动页、包名等），客户端分Android版、IOS版。</p>
+                <p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">案例： <img src="@ViewHelpers.img("/help/ths.png")" /></p>
+                <p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">更多合作咨询，请联系:</p>
+                <p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">邮箱kefu@wancai.com   QQ:4065834</p>
+
+    <h3 style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;">加盟流程</h3>
+    <p style="margin-top:15px;margin-right:0px;margin-bottom:15px;margin-left:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;font-size:14px;"><img src="@ViewHelpers.img("/help/jiameng.png")" /></p>
+ </span>
+    
+ 
+                 </div>
+                @*
+                <div class="det_a feedback">
+                <div>以上内容是否解决了您的问题呢？</div>
+                              
+                <div>
+                <a id="btn_a_yes" class="btn"><span class="feedback_yes">是，已经解决。</span></a> <a class="btn" id="btn_a_no" href="javascript:void(0);"><span class="feedback_no">否，尚未解决。</span></a>
+                    <div style="display:none;" class="feedback_form clearfix" id="feed_div">                  
+                    <a id="fclose" class="feedback-close" href="javascript:void(0);">关闭</a>     
+                    <span style="display:none;" id="feed_detail"> 
+	                    <form method="post" name="feed_dtl" id="feed_dtlf">             
+		                    <span class="fb-input"><input type="radio" value="1" name="nodtl"> 描述不清晰</span>
+		                    <span class="fb-input"><input type="radio" value="2" name="nodtl"> 字太多，不想看</span>
+		                    <span class="fb-input"><input type="radio" value="3" name="nodtl"> 太复杂，看不懂</span>
+		                    <span class="fb-input"><input type="button" value="提交" name="fsbmt"></span>
+		                </form>    
+	                </span>
+                    <div style="display:none;" class="feedback-suc l" id="feed_result">您的反馈信息已经提交，谢谢您的反馈。</div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                  
+                </script>                                           
+                </div>
+                
+                <div class="det_a">
+                	<div class="det_a_l">相关问题：</div>
+                    <div class="det_a_r">
+                    	<ul>
+                        	                    	</ul>    
+                    </div>
+                </div>*@
+            </div>
+
+        </div>
+         </div>
+<div class="clearfix"></div>
+
+ @ViewHelpers.js("help.js")
+
+
+
+
+
+

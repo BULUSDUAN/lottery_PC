@@ -1,0 +1,75 @@
+﻿@{
+    var Title = "已购买的方案如何申请撤单？";
+    ViewBag.Title = Title + " - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+   @ViewHelpers.css("help.css")
+} 
+  <div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">玩彩网</a> > </li>
+        <li><a href="/staticHtml/help/index.html">&nbsp;帮助中心</a> > </li>
+        <li>&nbsp;已购买的方案如何申请撤单？</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type = "buylottery", name = "Revoke" });}
+<div class="help_r">
+         
+         <div class="det_box">
+            	<h2>已购买的方案如何申请撤单？</h2>
+                <div class="det_c"><div class="det_c">
+<p>复式代购和复式合买理论满员（进度＋保底≥90%）方案是不能撤单的，因为满员和理论满员方案，网站就会立即把数据提供给彩票中心出票点，这个时候对满员或者理论满员方案就不能进行撤单处理!</p>
+<p>对于方案进度加保底＜５０%的方案，用户可以点击方案编号进入，有一个发起人撤单的显示出来，选择"点击此处对该方案撤单"就可以对自己认购部分做撤单。（方案进度加保底<span style="line-height:1.5;">＜５０%，跟单人也可以撤单，但</span>同一个方案一个跟单人只能撤三次）</p>
+<p>对于方案进度加保底≥５０％的方案，认购人不能撤单。发起人原则上也不能撤单，要等到合买代购时间截止以后由本站工作人员统一做撤单返款处理，如非常特殊原因发起人需要撤单的，可以申请撤单处理。</p>
+<p>&nbsp;&nbsp;a、&nbsp;通过网站的在线咨询或者客服热线咨询，提供您的用户名、方案编号先帮您核实您的方案详情。</p>
+<p>&nbsp;&nbsp;b、&nbsp;客服人员核实您的方案详情，确定您的方案可以申请撤单后，需要再帮您核实您的身份信息，包括：真实姓名、身份证号码、绑定的银行卡后6位、手机号码、邮箱，核实无误后会先帮您冻结您的方案。</p>
+<p>&nbsp;&nbsp;c、 点击您的方案订单号进入到您方案的方案页面后，您即可以进行撤单操作。</p>
+</div>                </div>
+                
+             @*   <div class="det_a feedback">
+                <div>以上内容是否解决了您的问题呢？</div>
+                              
+                <div>
+                <a id="btn_a_yes" class="btn"><span class="feedback_yes">是，已经解决。</span></a> <a class="btn" id="btn_a_no" href="javascript:void(0);"><span class="feedback_no">否，尚未解决。</span></a>
+                    <div style="display:none;" class="feedback_form clearfix" id="feed_div">                  
+                    <a id="fclose" class="feedback-close" href="javascript:void(0);">关闭</a>     
+                    <span style="display:none;" id="feed_detail"> 
+	                    <form method="post" name="feed_dtl" id="feed_dtlf">             
+		                    <span class="fb-input"><input type="radio" value="1" name="nodtl"> 描述不清晰</span>
+		                    <span class="fb-input"><input type="radio" value="2" name="nodtl"> 字太多，不想看</span>
+		                    <span class="fb-input"><input type="radio" value="3" name="nodtl"> 太复杂，看不懂</span>
+		                    <span class="fb-input"><input type="button" value="提交" name="fsbmt"></span>
+		                </form>    
+	                </span>
+                    <div style="display:none;" class="feedback-suc l" id="feed_result">您的反馈信息已经提交，谢谢您的反馈。</div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                  
+                </script>                                           
+                </div>
+                
+                <div class="det_a">
+                	<div class="det_a_l">相关问题：</div>
+                    <div class="det_a_r">
+                    	<ul>
+                        	                    	</ul>    
+                    </div>
+                </div>*@
+            </div>
+
+
+        </div>
+         </div>
+<div class="clearfix"></div>
+
+ @ViewHelpers.js("help.js")
+
+
+
+
+
+

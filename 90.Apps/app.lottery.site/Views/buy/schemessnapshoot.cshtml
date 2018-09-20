@@ -1,0 +1,319 @@
+﻿@using GameBiz.Core;
+@{
+    Layout = null;
+    ViewBag.Title = "方案快照, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var JCBetting = ViewBag.JCBetting as OrderSnapshotDetailInfo_JC_Collection;//竞彩普通投注
+    var PTBetting = ViewBag.PTBetting as OrderSnapshotDetailInfo_PT_Collection;//普通投注
+    var ChaseBetting = ViewBag.ChaseBetting as OrderSnapshotDetailInfo_PT_Collection;//追号
+    var TogetherBetting = ViewBag.TogetherBetting as OrderSnapshotDetailInfo_Together_Collection;//合买
+    var i = 1;
+    var j = 1;
+    var pageSize = 0;
+    var gameCode = ViewBag.GameCode as string;
+}
+@ViewHelpers.css("fakz.css")
+@ViewHelpers.css("main.min.css")
+<style type="text/css">
+    b
+    {
+        font-weight: bolder;
+    }
+</style>
+<!--普通投注-->
+@if (PTBetting != null && PTBetting.ListInfo != null && PTBetting.ListInfo.Count > 0)
+{
+    <div class="fa-main">
+    </div>
+    <div class="snapshoot_box">
+        <div class="snapshoot_top">
+            <div class="title">
+                @PTBetting.ListInfo[0].UserName @SiteConvert.GameName(PTBetting.ListInfo[0].GameCode, PTBetting.ListInfo[0].OrderGameType)</div>
+            <div class="number">
+                @PTBetting.ListInfo[0].CreateTime.ToString("yyyy-MM-dd HH:mm:ss") 方案期号：@PTBetting.ListInfo[0].SchemeId</div>
+            <div>
+                方案金额：<span>@PTBetting.ListInfo[0].TotalMoney.ToString("N2")</span></div>
+        </div>
+        <div class="info">
+            <span>方案信息</span>
+        </div>
+        <div class="centent">
+            <ul>
+                <li class="first_li"><span class="first line60" style="width: 80px">序号</span> <span
+                    class="second line60" style="width: 271px">方案</span> <span class="third line60" style="width: 155px">
+                        玩法</span> <span class="last line60" style="width: 164px; *width: 167px;">注数</span>
+                    <span class="line60" style="width: 100px; border-left: 1px solid #b8b8b8;">倍数</span>
+                    <span class="line60" style="width: 100px">金额</span> </li>
+                @{
+                      foreach (var item in PTBetting.ListInfo)
+                      {
+                          pageSize++;
+                    <li><span class="first line60" style="width: 80px">@(i++)</span> <span class="second line60"
+                        style="width: 271px">@item.AnteCode</span> <span class="third line60" style="width: 155px">@WCFService.GameTypeList(item.GameCode, item.GameType)</span>
+                        <span class="last" style="width: 164px; *width: 167px">@SiteConvert.AnalyzeAnteCodeBetCount(item.GameCode, item.GameType, item.AnteCode)</span>
+                        <span class="line60" style="width: 100px; border-left: 1px solid #b8b8b8;">@item.Amount</span>
+                        <span class="line60" style="width: 100px">@((SiteConvert.AnalyzeAnteCodeBetCount(item.GameCode, item.GameType, item.AnteCode) * 2 * item.Amount).ToString("N2"))元</span>
+                    </li>
+                                                              if (pageSize >= 5)
+                                                              {
+                    <li><span style="width: 878px; border: none; border-top: 1px solid #b8b8b8;">更多</span>
+                    </li>
+                                                                  break;
+                                                              }
+                      }
+                }
+                <div class="clear">
+                </div>
+            </ul>
+        </div>
+        <div class="lock">
+            详情可登录网站查看投注记录
+        </div>
+        <div class="snapshoot_down">
+            <p>
+                【说明:】</p>
+            <p class="ml96">
+                1、该快照展示方案生成的是方案投注选项，快照时间为方案生成时间。</p>
+            <p class="ml96">
+                2、若您的方案包含“胆、奖金优化、过滤的优化条件”，则仅显示优化后的剩余注数。</p>
+            <p class="ml96">
+                3、篮球让分和大小分，展示的为方案生成时的盘口值。</p>
+        </div>
+    </div>
+}
+<!--普通竞彩投注-->
+@if (JCBetting != null && JCBetting.ListInfo != null && JCBetting.ListInfo.Count > 0)
+{
+    <div class="fa-main">
+    </div>
+    <div class="snapshoot_box">
+        <div class="snapshoot_top">
+            <div class="title" style="font-size: 15px;">
+                @JCBetting.ListInfo[0].UserName @SiteConvert.GameName(JCBetting.ListInfo[0].GameCode, JCBetting.ListInfo[0].OrderGameType)</div>
+            <div class="number">
+                @JCBetting.ListInfo[0].CreateTime.ToString("yyyy-MM-dd HH:mm:ss") 方案期号：@JCBetting.ListInfo[0].SchemeId</div>
+            <div>
+                方案金额：<span>@JCBetting.ListInfo[0].TotalMoney.ToString("N2")元</span></div>
+        </div>
+        <div class="info">
+            <span>@JCBetting.ListInfo.GroupBy(s => s.HomeTeamName).Count()场</span> <span>方案信息</span>
+            <span>@JCBetting.ListInfo[0].Amount 倍</span>
+        </div>
+        <div class="centent">
+            <table border="0" cellpadding="0" cellspacing="0" class="fa-table" style="margin: 0px;">
+                <tr class="fa-newtr1">
+                    <td width="100px">
+                        序号
+                    </td>
+                    <td width="150px">
+                        时间
+                    </td>
+                    <td class="width215">
+                        球队
+                    </td>
+                    <td class="bet-are">
+                        投注内容
+                    </td>
+                </tr>
+                @{
+             foreach (var item in JCBetting.ListInfo)
+             {
+                 pageSize++;
+                    <tr>
+                        <td>
+                            @(item.MatchIdName)
+                        </td>
+                        <td>
+                            @item.CreateTime
+                        </td>
+                        <td>
+                            @item.HomeTeamName VS @item.GuestTeamName
+                        </td>
+                        <td>
+                            @{
+                                             var str = string.Empty;
+                                             if (!string.IsNullOrEmpty(item.AnteCode))
+                                             {
+                                                 foreach (var a in item.AnteCode.Split(','))
+                                                 {
+                                                     str += SiteString.ANTECODES_NAME(item.GameType, a) + ",";
+                                                 }
+                                             }
+                                @Html.Raw(str.TrimEnd(','))
+                            }
+                        </td>
+                    </tr>              
+   
+                           if (pageSize >= 5)
+                           { 
+                    <li><span style="width: 878px; border: none; border-top: 1px solid #b8b8b8;">更多 </span>
+                    </li>
+                               break;
+                           }
+             }
+                }
+            </table>
+        </div>
+        <div class="lock">
+            详情可登录网站查看投注记录
+        </div>
+        <div class="snapshoot_down">
+            <p>
+                【说明:】</p>
+            <p class="ml96">
+                1、该快照展示方案生成的是方案投注选项，快照时间为方案生成时间。</p>
+            <p class="ml96">
+                2、若您的方案包含“胆、奖金优化、过滤的优化条件”，则仅显示优化后的剩余注数。</p>
+            <p class="ml96">
+                3、篮球让分和大小分，展示的为方案生成时的盘口值。</p>
+        </div>
+    </div>
+}
+<!--合买投注-->
+@if (TogetherBetting != null && TogetherBetting.ListInfo != null && TogetherBetting.ListInfo.Count > 0)
+{
+    <div class="fa-main">
+    </div>
+    <div class="snapshoot_box">
+        <div class="snapshoot_top">
+            <div class="title">
+                @TogetherBetting.ListInfo[0].UserName
+            </div>
+            <div class="number">
+                @TogetherBetting.ListInfo[0].CreateTime.ToString("yyyy-MM-dd HH:mm:ss") 方案期号：@TogetherBetting.ListInfo[0].SchemeId</div>
+            <div>
+                方案金额：<span>@TogetherBetting.ListInfo[0].TotalMoney.ToString("N2")元</span></div>
+        </div>
+        <div class="info">
+            <span>方案信息</span> <span>总份数:@(TogetherBetting.ListInfo[0].TotalCount)份</span> <span>
+                认购:@((TogetherBetting.ListInfo[0].Guarantees * TogetherBetting.ListInfo[0].Price).ToString("N2"))元</span><span>保底:@((TogetherBetting.ListInfo[0].Subscription * TogetherBetting.ListInfo[0].Price).ToString("N2"))元</span>
+        </div>
+        <div class="centent">
+            <table border="0" cellpadding="0" cellspacing="0" class="fa-table" style="margin: 0px;">
+                <tr class="fa-newtr1">
+                    <td>
+                        序号
+                    </td>
+                    <td class="bet-are">
+                        方案
+                    </td>
+                    <td class="">
+                        玩法
+                    </td>
+                    <td class="">
+                        倍数
+                    </td>
+                </tr>
+                @foreach (var item in TogetherBetting.ListInfo)
+                {
+                    pageSize++;
+                    <tr>
+                        <td class="">
+                            @(i++)
+                        </td>
+                        <td class="">
+                            @item.AnteCode
+                        </td>
+                        <td class="">
+                            @(WCFService.GameTypeList(item.GameCode, item.GameType))
+                        </td>
+                        <td class="">
+                            @item.Amount
+                        </td>
+                    </tr>
+                          
+                       if (pageSize >= 5)
+                       { 
+                    <tr>
+                        <td style="width: 878px; border: none; border-top: 1px solid #b8b8b8;">
+                            更多
+                        </td>
+                    </tr>
+                           break;
+                       }
+                }
+                <div class="clear">
+                </div>
+            </table>
+        </div>
+        <div class="lock">
+            详情可登录网站查看投注记录
+        </div>
+        <div class="snapshoot_down">
+            <p>
+                【说明:】</p>
+            <p class="ml96">
+                1、该快照展示方案生成的是方案投注选项，快照时间为方案生成时间。</p>
+            <p class="ml96">
+                2、若您的方案包含“胆、奖金优化、过滤的优化条件”，则仅显示优化后的剩余注数。</p>
+            <p class="ml96">
+                3、篮球让分和大小分，展示的为方案生成时的盘口值。</p>
+        </div>
+    </div>
+}
+<!--追号投注-->
+@if (ChaseBetting != null && ChaseBetting.ListInfo != null && ChaseBetting.ListInfo.Count > 0)
+{
+    <div class="fa-main">
+    </div>
+    <div class="snapshoot_box">
+        <div class="snapshoot_top">
+            <div class="title">
+                @ChaseBetting.ListInfo[0].UserName
+            </div>
+            <div class="number">
+                时间: @ChaseBetting.ListInfo[0].CreateTime.ToString("yyyy-MM-dd HH:mm:ss")</div>
+            <div>
+                方案金额：<span>@ChaseBetting.ListInfo.Sum(s => s.TotalMoney).ToString("N2")元</span></div>
+        </div>
+        <div class="info">
+            <span>方案信息</span> <span>@ChaseBetting.ListInfo[0].IssuseNumber 期</span> <span style="width: 340px;">
+                方案编号：@ChaseBetting.ListInfo[0].KeyLine</span>
+        </div>
+        <div class="centent">
+            <ul>
+                <li class="first_li"><span class="first line60" style="width: 80px;">序号</span> <span
+                    class="second line60" style="width: 271px;">方案</span> <span class="third line60"
+                        style="width: 155px;">玩法</span> <span class="third line60" style="width: 214px; *width: 217px;">
+                            注数</span> <span class="line60" style="width: 150px;">投注金额</span> </li>
+                @{
+                foreach (var item in ChaseBetting.HeadListInfo)
+                {
+                    pageSize++;
+                    <li><span class="first line60" style="width: 80px;">
+                        @(i++)
+                    </span><span class="second line60" style="width: 271px;">
+                        @item.AnteCode
+                    </span><span class="third line60" style="width: 155px;">
+                        @WCFService.GameTypeList(item.GameCode, item.GameType)
+                    </span><span class="third line60" style="width: 214px; *width: 217px;">
+                        @SiteConvert.AnalyzeAnteCodeBetCount(item.GameCode, item.GameType, item.AnteCode)
+                    </span><span class="line60" style="width: 150px;">
+                        @((SiteConvert.AnalyzeAnteCodeBetCount(item.GameCode, item.GameType, item.AnteCode) * 2).ToString("N2"))元
+                    </span></li>
+                    if (pageSize >= 5)
+                    { 
+                    <li><span style="width: 878px; border: none; border-top: 1px solid #b8b8b8;">更多 </span>
+                    </li>
+                        break;
+                    }
+                }
+                }
+                <div class="clear">
+                </div>
+            </ul>
+        </div>
+        <div class="lock">
+            详情可登录网站查看投注记录
+        </div>
+        <div class="snapshoot_down">
+            <p>
+                【说明:】</p>
+            <p class="ml96">
+                1、该快照展示方案生成的是方案投注选项，快照时间为方案生成时间。</p>
+            <p class="ml96">
+                2、若您的方案包含“胆、奖金优化、过滤的优化条件”，则仅显示优化后的剩余注数。</p>
+            <p class="ml96">
+                3、篮球让分和大小分，展示的为方案生成时的盘口值。</p>
+        </div>
+    </div>
+}

@@ -1,0 +1,2933 @@
+﻿@{
+    var currentUser = ViewBag.CurrentUser as app.lottery.site.Models.CurrentUserInfo;
+    var alipayuser = SiteString.GetAliPayAccount();
+    var gateWayArray = ((string)ViewBag.EnableGateWary).Split('|');
+    var realNameInfo = ViewBag.RealNameInfo == null ? new External.Core.Authentication.UserRealNameInfo() : ViewBag.RealNameInfo as External.Core.Authentication.UserRealNameInfo;
+    var bankCardInfo = ViewBag.BankCardInfo == null ? new GameBiz.Core.BankCardInfo() : ViewBag.BankCardInfo as GameBiz.Core.BankCardInfo;
+    var mobileInfo = ViewBag.MobileInfo == null ? new External.Core.Authentication.UserMobileInfo() : ViewBag.MobileInfo as External.Core.Authentication.UserMobileInfo;
+}
+<div class="payDiv" id="p_zf_bank" style="display: none;">
+    <form action="@ViewBag.ZF_Jump_Url/user/redirectpay" target="_blank"  method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+            class="fillmoney" size="15" value="100" name="money" id="zf_bank_pay_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费</em>
+    </div>
+    <span class="pay_list_left">请选择银行：</span>
+    <div class="clearfix">
+        <ul class="pay_list clearfix" id="ul_zf_bank_list">
+            <li><span title="中国工商银行">
+                <label class="icon-box icon-box-on" for="bank_type6_zf">
+                    <input type="radio" checked="checked" id="bank_type6_zf" class="rdo3" value="zf_bank|ICBC"
+                        name="payList"><span class="bank-icon icbc"><i></i></span></label></span></li>
+            <li><span title="中国建设银行">
+                <label class="icon-box" for="bank_type7_zf">
+                    <input type="radio" class="rdo3" value="zf_bank|CCB" id="bank_type7_zf" name="payList"><span
+                        class="bank-icon ccb"><i></i></span></label></span></li>
+            <li><span title="中国农业银行">
+                <label class="icon-box" for="bank_type8_zf">
+                    <input type="radio" class="rdo3" value="zf_bank|ABC" id="bank_type8_zf" name="payList"><span
+                        class="bank-icon abc"><i></i></span></label></span></li>
+            <li><span title="招商银行">
+                <label class="icon-box" for="bank_type5_zf">
+                    <input type="radio" class="rdo3" value="zf_bank|CMB" id="bank_type5_zf" name="payList"><span
+                        class="bank-icon cmb"><i></i></span></label></span></li>
+            <li><span title="交通银行">
+                <label class="icon-box" for="bank_type9_zf">
+                    <input type="radio" class="rdo3" value="zf_bank|BCOM" id="bank_type9_zf" name="payList"><span
+                        class="bank-icon comm"><i></i></span></label></span></li>
+            <li><span title="中国银行">
+                <label class="icon-box" for="bank_type11_zf">
+                    <input type="radio" class="rdo3" value="zf_bank|BOC" id="bank_type11_zf" name="payList"><span
+                        class="bank-icon boc"><i></i></span></label></span></li>
+            <li><span title="上海浦发银行">
+                <label class="icon-box" for="bank_type18_zf">
+                    <input type="radio" class="rdo3" value="zf_bank|SPDB" id="bank_type18_zf" name="payList"><span
+                        class="bank-icon spdb"><i></i></span></label></span></li>
+            <li><span title="中国光大银行">
+                <label class="icon-box" for="bank_type17_zf">
+                    <input type="radio" class="rdo3" value="zf_bank|CEBB" id="bank_type17_zf" name="payList"><span
+                        class="bank-icon cebb"><i></i></span></label></span></li>
+            <li><span title="中国邮政储蓄银行">
+                <label class="icon-box" for="bank_type22_zf">
+                    <input type="radio" class="rdo3" value="zf_bank|PSBC" id="bank_type22_zf" name="payList"><span
+                        class="bank-icon psbc"><i></i></span></label></span></li>
+            <li><span title="中信银行">
+                <label for="bank_type10_zf" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type10_zf" value="zf_bank|ECITIC" class="rdo3"><span
+                        class="bank-icon citic"><i></i></span></label></span></li>
+            <li><span title="中国民生银行">
+                <label class="icon-box" for="bank_type12_zf">
+                    <input type="radio" class="rdo3" value="zf_bank|CMBC" id="bank_type12_zf" name="payList"><span
+                        class="bank-icon cmbc"><i></i></span></label></span></li>
+            <li><span title="平安银行">
+                <label class="icon-box" for="bank_type19_zf">
+                    <input type="radio" class="rdo3" value="zf_bank|SPABANK" id="bank_type19_zf" name="payList"><span
+                        class="bank-icon spab"><i></i></span></label></span></li>
+            <li><span title="兴业银行">
+                <label class="icon-box" for="bank_type16_zf">
+                    <input type="radio" class="rdo3" value="zf_bank|CIB" id="bank_type16_zf" name="payList"><span
+                        class="bank-icon cib"><i></i></span></label></span></li>
+            <li><span title="华夏银行">
+                <label for="bbpay_bank_type30_zf" class="icon-box">
+                    <input type="radio" name="payList" id="bbpay_bank_type30_zf" data-v="bank_type30"
+                        value="zf_bank|HXB" class="rdo3" /><span class="bank-icon hxyh"><i></i></span></label></span></li>
+            <li><span title="北京银行">
+                <label for="bank_type20_zf" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type20_zf" value="zf_bank|BOB" class="rdo3" /><span
+                        class="bank-icon bjb"><i></i></span></label></span></li>
+            <li><span title="宁波银行">
+                <label for="bank_type27_zf" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type27_zf" value="zf_bank|NBB" class="rdo3" /><span
+                        class="bank-icon ningbyh"><i></i></span></label></span> </li>
+            <li><span title="上海银行">
+                <label for="bank_type29_zf" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type29_zf" value="zf_bank|SHB" class="rdo3" /><span
+                        class="bank-icon shanghyh"><i></i></span></label></span> </li>
+        </ul>
+    </div>
+    <div style="padding-left: 100px;">
+        <input type="hidden" name="payType" value="zf_bank|ICBC" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="submit" value="立即充值" class="btn_pay" />
+    </div>
+    </form>
+    <div style="clear: both;">
+    </div>
+</div>
+<div class="payDiv" id="p_hc_bank" style="display: none;">
+    <form action="@ViewBag.HC_Jump_Url/user/redirectpay" target="_blank"  method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+            class="fillmoney" size="15" value="100" name="money" id="hc_bank_pay_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费</em>
+    </div>
+    <span class="pay_list_left">请选择银行：</span>
+    <div class="clearfix">
+        <ul class="pay_list clearfix" id="ul_hc_bank_list">
+            <li><span title="中国工商银行">
+                <label class="icon-box icon-box-on" for="bank_type6_hc">
+                    <input type="radio" checked="checked" id="bank_type6_hc" class="rdo3" value="hc_bank|ICBC"
+                        name="payList"><span class="bank-icon icbc"><i></i></span></label></span></li>
+            <li><span title="中国建设银行">
+                <label class="icon-box" for="bank_type7_hc">
+                    <input type="radio" class="rdo3" value="hc_bank|CCB" id="bank_type7_hc" name="payList"><span
+                        class="bank-icon ccb"><i></i></span></label></span></li>
+            <li><span title="广东发展银行">
+                <label class="icon-box" for="bank_type13_hc">
+                    <input type="radio" class="rdo3" value="hc_bank|GDB" id="bank_type13_hc" name="payList"><span
+                        class="bank-icon gdb"><i></i></span></label></span></li>
+            <li><span title="中国农业银行">
+                <label class="icon-box" for="bank_type8_hc">
+                    <input type="radio" class="rdo3" value="hc_bank|ABC" id="bank_type8_hc" name="payList"><span
+                        class="bank-icon abc"><i></i></span></label></span></li>
+            <li><span title="招商银行">
+                <label class="icon-box" for="bank_type5_hc">
+                    <input type="radio" class="rdo3" value="hc_bank|CMB" id="bank_type5_hc" name="payList"><span
+                        class="bank-icon cmb"><i></i></span></label></span></li>
+            <li><span title="交通银行">
+                <label class="icon-box" for="bank_type9_hc">
+                    <input type="radio" class="rdo3" value="hc_bank|BOCOM" id="bank_type9_hc" name="payList"><span
+                        class="bank-icon comm"><i></i></span></label></span></li>
+            @*<li><span title="中国银行">
+                                <label class="icon-box" for="bank_type11_hc">
+                                    <input type="radio" class="rdo3" value="hc_bank|BOCSH" id="bank_type11_hc" name="payList"><span
+                                        class="bank-icon boc"><i></i></span></label></span></li>*@
+            <li><span title="中国银行(大额)">
+                <label class="icon-box" for="bank_type11_dl_hc">
+                    <input type="radio" class="rdo3" value="hc_bank|BOC" id="bank_type11_dl_hc" name="payList"><span
+                        class="bank-icon boc_dl"><i></i></span></label></span></li>
+            <li><span title="上海浦发银行">
+                <label class="icon-box" for="bank_type18_hc">
+                    <input type="radio" class="rdo3" value="hc_bank|SPDB" id="bank_type18_hc" name="payList"><span
+                        class="bank-icon spdb"><i></i></span></label></span></li>
+            <li><span title="中国光大银行">
+                <label class="icon-box" for="bank_type17_hc">
+                    <input type="radio" class="rdo3" value="hc_bank|CEB" id="bank_type17_hc" name="payList"><span
+                        class="bank-icon cebb"><i></i></span></label></span></li>
+            <li><span title="中国邮政储蓄银行">
+                <label class="icon-box" for="bank_type22_hc">
+                    <input type="radio" class="rdo3" value="hc_bank|PSBC" id="bank_type22_hc" name="payList"><span
+                        class="bank-icon psbc"><i></i></span></label></span></li>
+            <li><span title="中信银行">
+                <label for="bank_type10_hc" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type10_hc" value="hc_bank|CNCB" class="rdo3"><span
+                        class="bank-icon citic"><i></i></span></label></span></li>
+            <li><span title="中国民生银行">
+                <label class="icon-box" for="bank_type12_hc">
+                    <input type="radio" class="rdo3" value="hc_bank|CMBC" id="bank_type12_hc" name="payList"><span
+                        class="bank-icon cmbc"><i></i></span></label></span></li>
+            <li><span title="平安银行">
+                <label class="icon-box" for="bank_type19_hc">
+                    <input type="radio" class="rdo3" value="hc_bank|PAB" id="bank_type19_hc" name="payList"><span
+                        class="bank-icon spab"><i></i></span></label></span></li>
+            <li><span title="兴业银行">
+                <label class="icon-box" for="bank_type16_hc">
+                    <input type="radio" class="rdo3" value="hc_bank|CIB" id="bank_type16_hc" name="payList"><span
+                        class="bank-icon cib"><i></i></span></label></span></li>
+            <li><span title="华夏银行">
+                <label for="bbpay_bank_type30_hc" class="icon-box">
+                    <input type="radio" name="payList" id="bbpay_bank_type30_hc" data-v="bank_type30"
+                        value="hc_bank|HXB" class="rdo3" /><span class="bank-icon hxyh"><i></i></span></label></span></li>
+            <li><span title="北京银行">
+                <label for="bank_type20_hc" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type20_hc" value="hc_bank|BCCB" class="rdo3" /><span
+                        class="bank-icon bjb"><i></i></span></label></span></li>
+            <li><span title="上海银行">
+                <label for="bank_type29_hc" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type29_hc" value="hc_bank|BOS" class="rdo3" /><span
+                        class="bank-icon shanghyh"><i></i></span></label></span> </li>
+            <li><span title="上海农商银行">
+                <label for="bank_type29_ns_hc" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type29_ns_hc" value="hc_bank|SRCB" class="rdo3" /><span
+                        class="bank-icon shanghainongshangyh"><i></i></span></label></span></li>
+            <li><span title="其它">
+                <label for="bank_type29_other_hc" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type29_other_hc" value="hc_bank|UNIONPAY"
+                        class="rdo3" /><span style="margin-top: 8px; float: left; font-size: 14px; font-weight: bold;">&nbsp;&nbsp;更
+                            多 银 行</span></label></span></li>
+        </ul>
+    </div>
+    <div style="padding-left: 100px;">
+        <input type="hidden" name="payType" value="hc_bank|ICBC" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="submit" value="立即充值" class="btn_pay" />
+    </div>
+    </form>
+    <div style="clear: both;">
+    </div>
+</div>
+<div class="payDiv" id="p_ips_bank" style="display: none;">
+    <form action="@ViewBag.IPS_JumpURL/user/redirectpay" target="_blank"  method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+            class="fillmoney" size="15" value="100" name="money" id="ips_bank_pay_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费</em>
+    </div>
+    <span class="pay_list_left">请选择银行：</span>
+    <div class="clearfix">
+        <ul class="pay_list clearfix" id="ul_ips_bank_list">
+            <li><span title="中国工商银行">
+                <label class="icon-box icon-box-on" for="bank_type6">
+                    <input type="radio" checked="checked" id="bank_type6" class="rdo3" value="ips_bank|00004"
+                        name="payList"><span class="bank-icon icbc"><i></i></span></label></span></li>
+            <li><span title="中国建设银行">
+                <label class="icon-box" for="bank_type7">
+                    <input type="radio" class="rdo3" value="ips_bank|00003" id="bank_type7" name="payList"><span
+                        class="bank-icon ccb"><i></i></span></label></span></li>
+            <li><span title="中国农业银行">
+                <label class="icon-box" for="bank_type8">
+                    <input type="radio" class="rdo3" value="ips_bank|00017" id="bank_type8" name="payList"><span
+                        class="bank-icon abc"><i></i></span></label></span></li>
+            <li><span title="招商银行">
+                <label class="icon-box" for="bank_type5">
+                    <input type="radio" class="rdo3" value="ips_bank|00021" id="bank_type5" name="payList"><span
+                        class="bank-icon cmb"><i></i></span></label></span></li>
+            <li><span title="交通银行">
+                <label class="icon-box" for="bank_type9">
+                    <input type="radio" class="rdo3" value="ips_bank|00005" id="bank_type9" name="payList"><span
+                        class="bank-icon comm"><i></i></span></label></span></li>
+            <li><span title="中国银行">
+                <label class="icon-box" for="bank_type11">
+                    <input type="radio" class="rdo3" value="ips_bank|00083" id="bank_type11" name="payList"><span
+                        class="bank-icon boc"><i></i></span></label></span></li>
+            <li><span title="上海浦发银行">
+                <label class="icon-box" for="bank_type18">
+                    <input type="radio" class="rdo3" value="ips_bank|00032" id="bank_type18" name="payList"><span
+                        class="bank-icon spdb"><i></i></span></label></span></li>
+            <li><span title="中国光大银行">
+                <label class="icon-box" for="bank_type17">
+                    <input type="radio" class="rdo3" value="ips_bank|00057" id="bank_type17" name="payList"><span
+                        class="bank-icon cebb"><i></i></span></label></span></li>
+            <li><span title="广东发展银行">
+                <label class="icon-box" for="bank_type13">
+                    <input type="radio" class="rdo3" value="ips_bank|00052" id="bank_type13" name="payList"><span
+                        class="bank-icon gdb"><i></i></span></label></span></li>
+            <li><span title="中国邮政储蓄银行">
+                <label class="icon-box" for="bank_type22">
+                    <input type="radio" class="rdo3" value="ips_bank|00051" id="bank_type22" name="payList"><span
+                        class="bank-icon psbc"><i></i></span></label></span></li>
+            <li><span title="中信银行">
+                <label for="bank_type10" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type10" value="ips_bank|00054" class="rdo3"><span
+                        class="bank-icon citic"><i></i></span></label></span></li>
+            <li><span title="中国民生银行">
+                <label class="icon-box" for="bank_type12">
+                    <input type="radio" class="rdo3" value="ips_bank|00013" id="bank_type12" name="payList"><span
+                        class="bank-icon cmbc"><i></i></span></label></span></li>
+            <li><span title="平安银行">
+                <label class="icon-box" for="bank_type19">
+                    <input type="radio" class="rdo3" value="ips_bank|00006" id="bank_type19" name="payList"><span
+                        class="bank-icon spab"><i></i></span></label></span></li>
+            <li><span title="兴业银行">
+                <label class="icon-box" for="bank_type16">
+                    <input type="radio" class="rdo3" value="ips_bank|00016" id="bank_type16" name="payList"><span
+                        class="bank-icon cib"><i></i></span></label></span></li>
+            <li><span title="深圳发展银行">
+                <label for="kuaiqian_bank_type15" class="icon-box">
+                    <input type="radio" name="payList" id="kuaiqian_bank_type15" data-v="bank_type15"
+                        value="ips_bank|00023" class="rdo3" /><span class="bank-icon sdb"><i></i></span></label></span></li>
+            <li><span title="华夏银行">
+                <label for="bbpay_bank_type30" class="icon-box">
+                    <input type="radio" name="payList" id="bbpay_bank_type30" data-v="bank_type30" value="ips_bank|00041"
+                        class="rdo3" /><span class="bank-icon hxyh"><i></i></span></label></span></li>
+            <li><span title="北京银行">
+                <label for="bank_type20" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type20" value="ips_bank|00050" class="rdo3" /><span
+                        class="bank-icon bjb"><i></i></span></label></span></li>
+            <li><span title="北京农村商业银行">
+                <label for="bank_type21" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type21" value="ips_bank|00056" class="rdo3" /><span
+                        class="bank-icon bjncsyyh"><i></i></span></label></span></li>
+            <li><span title="渤海银行">
+                <label for="bank_type23" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type23" value="ips_bank|00095" class="rdo3" /><span
+                        class="bank-icon bohyh"><i></i></span></label></span> </li>
+            <li><span title="东亚银行">
+                <label for="bank_type24" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type24" value="ips_bank|00096" class="rdo3" /><span
+                        class="bank-icon1 dyyh"><i></i></span></label></span> </li>
+            <li><span title="杭州银行">
+                <label for="bank_type25" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type25" value="ips_bank|00081" class="rdo3" /><span
+                        class="bank-icon hangzyh"><i></i></span></label></span> </li>
+            <li><span title="南京银行">
+                <label for="bank_type26" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type26" value="ips_bank|00055" class="rdo3" /><span
+                        class="bank-icon nanjyh"><i></i></span></label></span> </li>
+            <li><span title="宁波银行">
+                <label for="bank_type27" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type27" value="ips_bank|00085" class="rdo3" /><span
+                        class="bank-icon ningbyh"><i></i></span></label></span> </li>
+            <li><span title="上海银行">
+                <label for="bank_type29" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type29" value="ips_bank|00084" class="rdo3" /><span
+                        class="bank-icon shanghyh"><i></i></span></label></span> </li>
+            <li><span title="浙江泰隆商业银行">
+                <label for="bank_type30" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type30" value="ips_bank|00209" class="rdo3" /><span
+                        class="bank-icon2 zjltsyyh"><i></i></span></label></span> </li>
+            <li><span title="浙商银行">
+                <label for="bank_type31" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type31" value="ips_bank|00086" class="rdo3" /><span
+                        class="bank-icon zjsyyh"><i></i></span></label></span> </li>
+        </ul>
+    </div>
+    <div style="padding-left: 100px;">
+        <input type="hidden" name="payType" value="ips_bank|00004" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="submit" value="立即充值" class="btn_pay" />
+    </div>
+    </form>
+    <div style="clear: both;">
+    </div>
+</div>
+<div class="payDiv" id="p_alipay" style="display: none;">
+    <form method="post" @*target="_blank" action="https://shenghuo.alipay.com/send/payment/fill.htm"*@
+                    accept-charset="gbk">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+            class="fillmoney" size="15" value="100" name="payAmount" id="alipay_pay_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(支付宝充值请备注大奖网会员登录名)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="optEmail" value="@alipayuser" />
+        <input type="hidden" name="title" value="@currentUser.LoginInfo.LoginName" />
+        <input type="hidden" name="memo" value="请勿修改付款说明里的内容,否则将无法自动完成充值" />
+        @*<input type="submit" id="bt_alipay_pay" value="人工充值" class="btn_pay" />*@ <a href="http://v88.live800.com/live800/chatClient/chatbox.jsp?companyID=938269&configID=8258&jid=9971775560"
+            class="btn_pay">人工充值</a> @* <a href="/staticHtml/help/chongzhi/AlipayPay.html" class="alipayhelp hide" id="alipayhelp"
+                            target="_blank">充值必看</a>*@
+    </div>
+    @* <div style="padding-left: 100px; margin-top: 20px;">
+                        <a href="/member/AlipaySelfHelp" style="color: Red; text-decoration: underline;">支付宝充值未到账自助处理</a>
+                    </div>*@
+    </form>
+    <div style="clear: both;">
+    </div>
+</div>
+<div class="payDiv" id="p_ips" style="display: none;">
+    <form method="post" target="_blank" action="@ViewBag.IPS_JumpURL/user/redirectpay">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+            class="fillmoney" size="15" value="100" name="money" id="ips_pay_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="ips|ips" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="submit" value="立即充值" class="btn_pay" />
+        @*<a class="btn_pay" id="btn_pay" href="javascript:void(0)" type="button">立即充值</a>*@
+    </div>
+    </form>
+    <div style="clear: both;">
+    </div>
+</div>
+<div class="payDiv" id="p_hc_quik" style="display: none;">
+    <form method="post" target="_blank" action="@ViewBag.HC_NoCard_Jump_Url/user/redirectpay">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+            class="fillmoney" size="15" value="100" name="money" id="hc_quik_money" />
+        元
+    </div>
+    <div class="clear">
+        <em class="ye">输入卡号就能支付，只支持借记卡，暂不支持信用卡(快捷必须先绑定银行卡才能使用)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="hc_bank|NOCARD" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="submit" value="立即充值" class="btn_pay" />
+        @*<a class="btn_pay" id="btn_pay" href="javascript:void(0)" type="button">立即充值</a>*@
+    </div>
+    </form>
+    <div style="clear: both;">
+    </div>
+</div>
+@*<div class="payDiv" id="p_wxpay" style="display: none;">
+                    <div class="clear">
+                        <span class="span_money">请输入充值金额：</span>
+                        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+                            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+                            class="fillmoney" size="15" value="100" name="payAmount" id="wxpay_pay_money" />
+                        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费</em>
+                    </div>
+                    <div style="padding-left: 100px; margin-top: 20px;">
+                        <input type="submit" id="bt_wxpay_pay" value="立即充值" class="btn_pay" />
+                    </div>
+                    <div style="padding-left: 100px; margin-top: 20px;">
+                        <img id="img_wxpay_qr" />
+                    </div>
+                </div>*@
+<div class="payDiv" id="p_ys_bank" style="display: none;">
+    <form id="form_ys" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+            class="fillmoney" size="15" value="100" name="money" id="ys_bank_pay_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费</em>
+    </div>
+    <span class="pay_list_left">请选择银行：</span>
+    <div class="clearfix">
+        <ul class="pay_list clearfix" id="ul_ys_bank_list">
+            <li><span title="中国工商银行">
+                <label class="icon-box icon-box-on" for="bank_type6_ys">
+                    <input type="radio" checked="checked" id="bank_type6_ys" class="rdo3" value="ys_bank|1021000"
+                        name="payList" /><span class="bank-icon icbc"><i></i></span></label></span></li>
+            <li><span title="中国建设银行">
+                <label class="icon-box" for="bank_type7_ys">
+                    <input type="radio" class="rdo3" value="ys_bank|1051000" id="bank_type7_ys" name="payList" /><span
+                        class="bank-icon ccb"><i></i></span></label></span></li>
+            <li><span title="中国农业银行">
+                <label class="icon-box" for="bank_type8_ys">
+                    <input type="radio" class="rdo3" value="ys_bank|1031000" id="bank_type8_ys" name="payList" /><span
+                        class="bank-icon abc"><i></i></span></label></span></li>
+            <li><span title="招商银行">
+                <label class="icon-box" for="bank_type5_ys">
+                    <input type="radio" class="rdo3" value="ys_bank|3085840" id="bank_type5_ys" name="payList" /><span
+                        class="bank-icon cmb"><i></i></span></label></span></li>
+            <li><span title="交通银行">
+                <label class="icon-box" for="bank_type9_ys">
+                    <input type="radio" class="rdo3" value="ys_bank|3012900" id="bank_type9_ys" name="payList" /><span
+                        class="bank-icon comm"><i></i></span></label></span></li>
+            <li><span title="中国银行">
+                <label class="icon-box" for="bank_type11_ys">
+                    <input type="radio" class="rdo3" value="ys_bank|1041000" id="bank_type11_ys" name="payList" /><span
+                        class="bank-icon boc"><i></i></span></label></span></li>
+            <li><span title="上海浦发银行">
+                <label class="icon-box" for="bank_type28_ys">
+                    <input type="radio" class="rdo3" value="ys_bank|3102900" id="bank_type28_ys" name="payList" /><span
+                        class="bank-icon spdb"><i></i></span></label></span></li>
+            <li><span title="中国光大银行">
+                <label class="icon-box" for="bank_type17_ys">
+                    <input type="radio" class="rdo3" value="ys_bank|3031000" id="bank_type17_ys" name="payList" /><span
+                        class="bank-icon cebb"><i></i></span></label></span></li>
+            <li><span title="广东发展银行">
+                <label class="icon-box" for="bank_type13_ys">
+                    <input type="radio" class="rdo3" value="ys_bank|3065810" id="bank_type13_ys" name="payList" /><span
+                        class="bank-icon gdb"><i></i></span></label></span></li>
+            <li><span title="中国民生银行">
+                <label class="icon-box" for="bank_type12_ys">
+                    <input type="radio" class="rdo3" value="ys_bank|3051000" id="bank_type12_ys" name="payList" /><span
+                        class="bank-icon cmbc"><i></i></span></label></span></li>
+            <li><span title="兴业银行">
+                <label class="icon-box" for="bank_type16_ys">
+                    <input type="radio" class="rdo3" value="ys_bank|3093910" id="bank_type16_ys" name="payList" /><span
+                        class="bank-icon cib"><i></i></span></label></span></li>
+            <li><span title="宁波银行">
+                <label for="bank_type27_ys" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type27_ys" value="ys_bank|3133320" class="rdo3" /><span
+                        class="bank-icon ningbyh"><i></i></span></label></span> </li>
+            <li><span title="上海浦发银行">
+                <label class="icon-box" for="bank_type18_ys">
+                    <input type="radio" class="rdo3" value="ys_bank|3102900" id="bank_type18_ys" name="payList"><span
+                        class="bank-icon spdb"><i></i></span></label></span></li>
+            <li><span title="中信银行">
+                <label for="bank_type10_ys" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type10_ys" value="ys_bank|3021000" class="rdo3"><span
+                        class="bank-icon citic"><i></i></span></label></span></li>
+            <li><span title="平安银行">
+                <label class="icon-box" for="bank_type19_ys">
+                    <input type="radio" class="rdo3" value="ys_bank|3071000" id="bank_type19_ys" name="payList" /><span
+                        class="bank-icon spab"><i></i></span></label></span></li>
+            <li><span title="北京银行">
+                <label for="bank_type20_ys" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type20_ys" value="ys_bank|3131000" class="rdo3" /><span
+                        class="bank-icon bjb"><i></i></span></label></span></li>
+            <li><span title="东亚银行">
+                <label for="bank_type24_ys" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type24_ys" value="ys_bank|5021000" class="rdo3" /><span
+                        class="bank-icon1 dyyh"><i></i></span></label></span> </li>
+            <li><span title="上海农村商业银行">
+                <label for="bank_type25_ys" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type25_ys" value="ys_bank|3222900" class="rdo3" /><span
+                        class="bank-icon shanghainongshangyh"><i></i></span></label></span>
+            </li>
+            <li><span title="南京银行">
+                <label for="bank_type26_ys" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type26_ys" value="ys_bank|3133010" class="rdo3" /><span
+                        class="bank-icon nanjyh"><i></i></span></label></span> </li>
+            @*   <li><span title="其它">
+                                <label for="bank_type29_other_ys" class="icon-box">
+                                    <input type="radio" name="payList" id="bank_type29_other_ys" value="ys_bank|UNIONPAY"
+                                        class="rdo3" /><span style="margin-top: 8px; float: left; font-size: 14px; font-weight: bold;">&nbsp;&nbsp;更
+                                            多 银 行</span></label></span></li>*@
+        </ul>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="ys_bank|1021000" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" value="立即充值" class="btn_pay" onclick="ys_Sumbit();" />
+    </div>
+    </form>
+</div>
+@*中铁网银*@
+<div class="payDiv" id="p_zt_bank" style="display: none;">
+    <form action="@ViewBag.ZTPay_Url/user/redirectpay" target="_blank"  method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+            class="fillmoney" size="15" value="100" name="money" id="zt_bank_pay_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费</em>
+    </div>
+    <span class="pay_list_left">请选择银行：</span>
+    <div class="clearfix">
+        <ul class="pay_list clearfix" id="ul_zt_bank_list">
+            <li><span title="中国工商银行">
+                <label class="icon-box icon-box-on" for="bank_type6_zt">
+                    <input type="radio" checked="checked" id="bank_type6_zt" class="rdo3" value="zt_bank|ICBC"
+                        name="payList"><span class="bank-icon icbc"><i></i></span></label></span></li>
+            <li><span title="中国建设银行">
+                <label class="icon-box" for="bank_type7_zt">
+                    <input type="radio" class="rdo3" value="zt_bank|CCB" id="bank_type7_zt" name="payList"><span
+                        class="bank-icon ccb"><i></i></span></label></span></li>
+            <li><span title="中国农业银行">
+                <label class="icon-box" for="bank_type8_zt">
+                    <input type="radio" class="rdo3" value="zt_bank|ABC" id="bank_type8_zt" name="payList"><span
+                        class="bank-icon abc"><i></i></span></label></span></li>
+            <li><span title="招商银行">
+                <label class="icon-box" for="bank_type5_zt">
+                    <input type="radio" class="rdo3" value="zt_bank|CMB" id="bank_type5_zt" name="payList"><span
+                        class="bank-icon cmb"><i></i></span></label></span></li>
+            <li><span title="交通银行">
+                <label class="icon-box" for="bank_type9_zt">
+                    <input type="radio" class="rdo3" value="zt_bank|COMM" id="bank_type9_zt" name="payList"><span
+                        class="bank-icon comm"><i></i></span></label></span></li>
+            <li><span title="中国银行">
+                <label class="icon-box" for="bank_type11_zt">
+                    <input type="radio" class="rdo3" value="zt_bank|BOC" id="bank_type11_zt" name="payList"><span
+                        class="bank-icon boc"><i></i></span></label></span></li>
+            <li><span title="上海浦发银行">
+                <label class="icon-box" for="bank_type18_zt">
+                    <input type="radio" class="rdo3" value="zt_bank|SPDB" id="bank_type18_zt" name="payList"><span
+                        class="bank-icon spdb"><i></i></span></label></span></li>
+            <li><span title="中国光大银行">
+                <label class="icon-box" for="bank_type17_zt">
+                    <input type="radio" class="rdo3" value="zt_bank|CEB" id="bank_type17_zt" name="payList"><span
+                        class="bank-icon cebb"><i></i></span></label></span></li>
+            <li><span title="广发银行">
+                <label class="icon-box" for="bank_type13_zt">
+                    <input type="radio" class="rdo3" value="zt_bank|GDB" id="bank_type13_zt" name="payList" /><span
+                        class="bank-icon gdb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国邮政储蓄银行">
+                <label class="icon-box" for="bank_type22_zt">
+                    <input type="radio" class="rdo3" value="zt_bank|POST" id="bank_type22_zt" name="payList"><span
+                        class="bank-icon psbc"><i></i></span></label></span></li>
+            <li><span title="中信银行">
+                <label for="bank_type10_zt" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type10_zt" value="zt_bank|ECITIC" class="rdo3"><span
+                        class="bank-icon citic"><i></i></span></label></span></li>
+            <li><span title="中国民生银行">
+                <label class="icon-box" for="bank_type12_zt">
+                    <input type="radio" class="rdo3" value="zt_bank|CMBC" id="bank_type12_zt" name="payList"><span
+                        class="bank-icon cmbc"><i></i></span></label></span></li>
+            <li><span title="平安银行">
+                <label class="icon-box" for="bank_type19_zt">
+                    <input type="radio" class="rdo3" value="zt_bank|SZPAB" id="bank_type19_zt" name="payList"><span
+                        class="bank-icon spab"><i></i></span></label></span></li>
+            <li><span title="兴业银行">
+                <label class="icon-box" for="bank_type16_zt">
+                    <input type="radio" class="rdo3" value="zt_bank|CIB" id="bank_type16_zt" name="payList"><span
+                        class="bank-icon cib"><i></i></span></label></span></li>
+            <li><span title="华夏银行">
+                <label for="bbpay_bank_type30_zt" class="icon-box">
+                    <input type="radio" name="payList" id="bbpay_bank_type30_zt" data-v="bank_type30"
+                        value="zt_bank|HXB" class="rdo3" /><span class="bank-icon hxyh"><i></i></span></label></span></li>
+            <li><span title="北京银行">
+                <label for="bank_type20_zt" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type20_zt" value="zt_bank|BCCB" class="rdo3" /><span
+                        class="bank-icon bjb"><i></i></span></label></span></li>
+            <li><span title="宁波银行">
+                <label for="bank_type27_zt" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type27_zt" value="zt_bank|NB" class="rdo3" /><span
+                        class="bank-icon ningbyh"><i></i></span></label></span> </li>
+            <li><span title="上海银行">
+                <label for="bank_type29_zt" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type29_zt" value="zt_bank|BOS" class="rdo3" /><span
+                        class="bank-icon shanghyh"><i></i></span></label></span> </li>
+            <li><span title="东亚银行">
+                <label for="bank_type39_zt" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type39_zt" value="zt_bank|BEA" class="rdo3" /><span
+                        class="bank-icon1 dyyh"><i></i></span></label></span> </li>
+            <li><span title="渤海银行">
+                <label for="bank_type38_zt" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type38_zt" value="zt_bank|CBHB" class="rdo3" /><span
+                        class="bank-icon bohyh"><i></i></span></label></span> </li>
+        </ul>
+    </div>
+    <div style="padding-left: 100px;">
+        <input type="hidden" name="payType" value="zt_bank|10018" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="submit" value="立即充值" class="btn_pay" />
+    </div>
+    </form>
+    <div style="clear: both;">
+    </div>
+</div>
+@*微信(优付)*@
+<div class="payDiv" id="p_yf_weixin" style="display: none;">
+    <form id="form_yf" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="weixin_pay_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开微信扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="yf_weixin|WEIXIN" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" id="bt_weixin_pay" value="立即充值" class="btn_pay" onclick="yf_Sumbit();" />
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <a href="/staticHtml/help/chongzhi/weixin.html" style="color: Red; text-decoration: underline;"
+            target="_blank">微信充值使用说明</a>
+    </div>
+    </form>
+</div>
+@*中铁微信支付*@
+<div class="payDiv" id="p_ztpay" style="display: none;">
+    <form id="form_zt" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="zt_pay_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开微信扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="ztpay|WEIXIN" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        @* <input type="button" id="bt_ztpay" value="立即充值" class="btn_pay" onclick="zt_Sumbit();" />*@
+        <input type="button" id="bt_ztwxpay" value="立即充值" class="btn_pay" />
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <a href="/staticHtml/help/chongzhi/weixin.html" style="color: Red; text-decoration: underline;"
+            target="_blank">微信充值使用说明</a>
+    </div>
+    </form>
+</div>
+@*中铁支付宝支付*@
+<div class="payDiv" id="p_ztalipay" style="display: none;">
+    <form id="form_ztalipay" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="zt_alipay_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开支付宝扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="ztalipay|Alipay" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        @*<input type="button" id="bt_ztalipay" value="立即充值" class="btn_pay" onclick="ztalipay_Sumbit();" />*@
+        <input type="button" id="bt_ztAlipayPay" value="立即充值" class="btn_pay" />
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <a href="/staticHtml/help/chongzhi/HWAlipay.html" style="color: Red; text-decoration: underline;"
+            target="_blank">支付宝(扫码)充值说明，若充值失败可反复尝试</a>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <a href="/staticHtml/help/chongzhi/EbanksPay.html" style="color: Red; text-decoration: underline;"
+            target="_blank">若充值失败，推荐使用网银充值</a>
+    </div>
+    </form>
+</div>
+@*中铁qq*@
+<div class="payDiv" id="p_zt_qq" style="display: none;">
+    <form id="form_zt_qq" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="zt_qq_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开QQ扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="zt_qq|qqQR" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" value="立即充值" class="btn_pay" id="bt_zt_qq" />
+    </div>
+    </form>
+</div>
+@*汇旺支付宝扫码*@
+<div class="payDiv" id="p_hw_alipay" style="display: none;">
+    <form id="form_hw_alipay" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="hw_alipay_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开支付宝扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="hwalipay|Alipay" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" id="bt_hwalipay" value="立即充值" class="btn_pay" onclick="hwalipay_Sumbit();" />
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <a href="/staticHtml/help/chongzhi/HWAlipay.html" style="color: Red; text-decoration: underline;"
+            target="_blank">支付宝(扫码)充值说明(若充值失败，请使用其他充值方式或反复充值几次)</a>
+    </div>
+    </form>
+</div>
+@*汇旺网银*@
+<div class="payDiv" id="p_hw_bank" style="display: none;">
+    <form method="post" target="_blank" action="@ViewBag.ZTPay_Url/user/redirectpay">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+            class="fillmoney" size="15" value="100" name="money" id="hw_bank_money" />
+        元
+    </div>
+    @*  <div class="clear">
+                        <em class="ye">输入卡号就能支付，只支持借记卡，暂不支持信用卡</em>
+                    </div>*@
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="hw_bank|1003" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="submit" value="立即充值" class="btn_pay" />
+        @*<a class="btn_pay" id="btn_pay" href="javascript:void(0)" type="button">立即充值</a>*@
+    </div>
+    </form>
+    <div style="clear: both;">
+    </div>
+</div>
+@*网银充值101*@
+<div class="payDiv" id="p_ka101_bank" style="display: none;">
+    <form action="@ViewBag.PAY_101ka_URL_Url/user/redirectpay" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+            class="fillmoney" size="15" value="100" name="money" id="ka101_bank_pay_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费</em>
+    </div>
+    <span class="pay_list_left">请选择银行：</span>
+    <div class="clearfix">
+        <ul class="pay_list clearfix" id="ul_ka101_bank_list">
+            <li><span title="中国工商银行">
+                <label class="icon-box icon-box-on" for="bank_type6_ka101">
+                    <input type="radio" checked="checked" id="bank_type6_ka101" class="rdo3" value="ka101_bank|ICBC-NET"
+                        name="payList"><span class="bank-icon icbc"><i></i></span></label></span></li>
+            <li><span title="中国建设银行">
+                <label class="icon-box" for="bank_type7_ka101">
+                    <input type="radio" class="rdo3" value="ka101_bank|CCB-NET" id="bank_type7_ka101"
+                        name="payList"><span class="bank-icon ccb"><i></i></span></label></span></li>
+            <li><span title="广东发展银行">
+                <label class="icon-box" for="bank_type13_ka101">
+                    <input type="radio" class="rdo3" value="ka101_bank|GDB" id="bank_type13_ka101" name="payList"><span
+                        class="bank-icon gdb"><i></i></span></label></span></li>
+            <li><span title="中国农业银行">
+                <label class="icon-box" for="bank_type8_ka101">
+                    <input type="radio" class="rdo3" value="ka101_bank|ABC-NET" id="bank_type8_ka101"
+                        name="payList"><span class="bank-icon abc"><i></i></span></label></span></li>
+            <li><span title="招商银行">
+                <label class="icon-box" for="bank_type5_ka101">
+                    <input type="radio" class="rdo3" value="ka101_bank|CMBCHINA-NET" id="bank_type5_ka101"
+                        name="payList"><span class="bank-icon cmb"><i></i></span></label></span></li>
+            <li><span title="交通银行">
+                <label class="icon-box" for="bank_type9_ka101">
+                    <input type="radio" class="rdo3" value="ka101_bank|BOCO-NET" id="bank_type9_ka101"
+                        name="payList"><span class="bank-icon comm"><i></i></span></label></span></li>
+            <li><span title="中国银行">
+                <label class="icon-box" for="bank_type11_ka101">
+                    <input type="radio" class="rdo3" value="ka101_bank|BOC-NET" id="bank_type11_ka101"
+                        name="payList"><span class="bank-icon boc"><i></i></span></label></span></li>
+            <li><span title="中国光大银行">
+                <label class="icon-box" for="bank_type17_ka101">
+                    <input type="radio" class="rdo3" value="ka101_bank|CEB-NET" id="bank_type17_ka101"
+                        name="payList"><span class="bank-icon cebb"><i></i></span></label></span></li>
+            <li><span title="中国邮政储蓄银行">
+                <label class="icon-box" for="bank_type22_ka101">
+                    <input type="radio" class="rdo3" value="ka101_bank|POST-NET" id="bank_type22_ka101"
+                        name="payList"><span class="bank-icon psbc"><i></i></span></label></span></li>
+            <li><span title="中信银行">
+                <label for="bank_type10_ka101" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type10_ka101" value="ka101_bank|ECITIC-NET"
+                        class="rdo3"><span class="bank-icon citic"><i></i></span></label></span></li>
+            <li><span title="中国民生银行">
+                <label class="icon-box" for="bank_type12_ka101">
+                    <input type="radio" class="rdo3" value="ka101_bank|CMBC-NET" id="bank_type12_ka101"
+                        name="payList"><span class="bank-icon cmbc"><i></i></span></label></span></li>
+            <li><span title="兴业银行">
+                <label class="icon-box" for="bank_type16_ka101">
+                    <input type="radio" class="rdo3" value="ka101_bank|CIB-NET" id="bank_type16_ka101"
+                        name="payList"><span class="bank-icon cib"><i></i></span></label></span></li>
+            <li><span title="华夏银行">
+                <label for="bbpay_bank_type30_ka101" class="icon-box">
+                    <input type="radio" name="payList" id="bbpay_bank_type30_ka101" data-v="bank_type30"
+                        value="ka101_bank|HXB-NET" class="rdo3" /><span class="bank-icon hxyh"><i></i></span></label></span></li>
+            <li><span title="北京银行">
+                <label for="bank_type20_ka101" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type20_ka101" value="ka101_bank|BCCB-NET"
+                        class="rdo3" /><span class="bank-icon bjb"><i></i></span></label></span></li>
+        </ul>
+    </div>
+    <div style="padding-left: 100px;">
+        <input type="hidden" name="payType" value="ka101_bank|ICBC-NET" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="submit" value="立即充值" class="btn_pay" />
+    </div>
+    </form>
+    <div style="clear: both;">
+    </div>
+</div>
+@*快捷支付101*@
+<div class="payDiv" id="p_ka101_express" style="display: none;">
+    <form id="form_ka101_express" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+            class="fillmoney" size="15" value="100" name="money" id="ka101_express_pay_money" />
+        元 &nbsp;&nbsp; &nbsp;
+    </div>
+    <div class="clear">
+        <em class="ye">输入卡号就能支付</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="ka101_express|pc" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" id="bt_ka101_express" value="立即充值" class="btn_pay" onclick="ka101_express_Sumbit();" />
+    </div>
+    </form>
+</div>
+@*微信扫码101*@
+<div class="payDiv" id="p_ka101_weixin" style="display: none;">
+    <form id="form_ka101_weixin" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+            class="fillmoney" size="15" value="100" name="money" id="ka101_weixin_pay_money" />
+        元 &nbsp;&nbsp; &nbsp;
+    </div>
+    <div class="clear">
+        <em class="ye">输入卡号就能支付</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="ka101_weixin|pc" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" id="bt_ka101_weixin" value="立即充值" class="btn_pay" onclick="ka101_weixin_Sumbit();" />
+    </div>
+    </form>
+</div>
+@*支付宝101*@
+<div class="payDiv" id="p_ka101_alipay" style="display: none;">
+    <form id="form_ka101_alipay" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+            class="fillmoney" size="15" value="100" name="money" id="ka101_alipay_pay_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开支付宝扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="ka101_alipay|pc" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" id="bt_ka101_alipay" value="立即充值" class="btn_pay" onclick="ka101_alipay_Sumbit();" />
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <a href="/staticHtml/help/chongzhi/HWAlipay.html" style="color: Red; text-decoration: underline;"
+            target="_blank">支付宝(扫码)充值说明(若充值失败，请使用其他充值方式或反复充值几次)</a>
+    </div>
+    </form>
+</div>
+@*顺利付支付宝*@
+<div class="payDiv" id="p_slf_alipay" style="display: none;">
+    <form id="form_slf_alipay" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="slf_alipay_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开支付宝扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="slf_alipay|Alipay" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" id="bt_slf_alipay" value="立即充值" class="btn_pay" onclick="slf_alipay_Sumbit();" />
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <a href="/staticHtml/help/chongzhi/HWAlipay.html" style="color: Red; text-decoration: underline;"
+            target="_blank">支付宝(扫码)充值说明(若充值失败，请使用其他充值方式或反复充值几次)</a>
+    </div>
+    </form>
+</div>
+@*顺利付微信*@
+<div class="payDiv" id="p_slf_weixin" style="display: none;">
+    <form id="form_slf_weixin" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="slf_weixin_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开微信扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="slf_weixin|WEIXIN" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" id="bt_ztpay" value="立即充值" class="btn_pay" onclick="slf_weixin_Sumbit();" />
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <a href="/staticHtml/help/chongzhi/weixin.html" style="color: Red; text-decoration: underline;"
+            target="_blank">微信充值使用说明</a>
+    </div>
+    </form>
+</div>
+@*顺利付qq*@
+<div class="payDiv" id="p_slf_qq" style="display: none;">
+    <form id="form_slf_qq" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="slf_qq_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(单笔限额1000以下)(手机打开QQ扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="slf_qq|qq" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" id="bt_slf_qq" value="立即充值" class="btn_pay" onclick="slf_qq_Sumbit();" />
+    </div>
+    </form>
+</div>
+@*顺利付银联*@
+<div class="payDiv" id="p_slf_upay" style="display: none;">
+    <form id="form_slf_upay" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="slf_upay_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开银联APP扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="slf_upay|upay" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" id="bt_slf_upay" value="立即充值" class="btn_pay" onclick="slf_upay_Sumbit();" />
+    </div>
+    </form>
+</div>
+@*汇旺微信hw_weixin*@
+<div class="payDiv" id="p_hw_weixin" style="display: none;">
+    <form id="form_hw_weixin" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="hw_weixin_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开微信扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="hwweixin|WEIXIN" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" id="bt_hwweixinpay" value="立即充值" class="btn_pay" onclick="hwweixin_Sumbit();" />
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <a href="/staticHtml/help/chongzhi/weixin.html" style="color: Red; text-decoration: underline;"
+            target="_blank">微信充值使用说明</a>
+    </div>
+    </form>
+</div>
+@*顺利付网银*@
+<div class="payDiv" id="p_slf_bank" style="display: none;">
+    <form id="form_slf_bank" method="post" target="_blank" action="@ViewBag.ZTPay_Url/user/redirectpay">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+            class="fillmoney" size="15" value="100" name="money" id="slf_bank_money" />
+        元
+    </div>
+    @*  <div class="clear">
+                        <em class="ye">输入卡号就能支付，只支持借记卡，暂不支持信用卡</em>
+                    </div>*@
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="slf_bank|0" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="submit" value="立即充值" class="btn_pay" />
+        @*<a class="btn_pay" id="btn_pay" href="javascript:void(0)" type="button">立即充值</a>*@
+    </div>
+    </form>
+    <div style="clear: both;">
+    </div>
+</div>
+@*顺利付快捷*@
+<div class="payDiv" id="p_slf_express" style="display: none;">
+    <form id="form_slf_express" method="post" target="_blank">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<100){this.value=100;}"
+            class="fillmoney" size="15" value="100" name="money" id="slf_express_money" />
+        元
+    </div>
+    <div class="clear">
+        <em class="ye">请先个人资料里绑定银行卡，才能使用快捷支付。</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="slf_express|0" />
+        <input type="hidden" name="no" value="@bankCardInfo.BankCardNumber" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="submit" id="bt_slf_express" value="立即充值" class="btn_pay" onclick="slf_express_Sumbit();" />
+        @*<a class="btn_pay" id="btn_pay" href="javascript:void(0)" type="button">立即充值</a>*@
+    </div>
+    </form>
+    <div style="clear: both;">
+    </div>
+</div>
+@*多宝网银*@
+<div class="payDiv" id="p_duobao_bank" style="display: none;">
+    <form id="form_duobao_bank" method="post" target="_blank" action="@ViewBag.ZTPay_Url/user/redirectpay">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+            class="fillmoney" size="15" value="100" name="money" id="duobao_bank_money" />
+        元
+    </div>
+    @*  <div class="clear">
+                        <em class="ye">输入卡号就能支付，只支持借记卡，暂不支持信用卡</em>
+                    </div>*@
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="duobao_bank|0" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="submit" value="立即充值" class="btn_pay" />
+        @*<a class="btn_pay" id="btn_pay" href="javascript:void(0)" type="button">立即充值</a>*@
+    </div>
+    </form>
+    <div style="clear: both;">
+    </div>
+</div>
+@*多宝支付宝*@
+<div class="payDiv" id="p_duobao_alipay" style="display: none;">
+    <form id="form_duobao_alipay" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="duobao_alipay_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开支付宝扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="duobao_alipay|Alipay" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" id="bt_duobao_alipay" value="立即充值" class="btn_pay" onclick="duobao_alipay_Sumbit();" />
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <a href="/staticHtml/help/chongzhi/HWAlipay.html" style="color: Red; text-decoration: underline;"
+            target="_blank">支付宝(扫码)充值说明(若充值失败，请使用其他充值方式或反复充值几次)</a>
+    </div>
+    </form>
+</div>
+@*多宝微信*@
+<div class="payDiv" id="p_duobao_weixin" style="display: none;">
+    <form id="form_duobao_weixin" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="duobao_weixin_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开微信扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="duobao_weixin|WEIXIN" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" id="bt_duobao_weixin" value="立即充值" class="btn_pay" onclick="duobao_weixin_Sumbit();" />
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <a href="/staticHtml/help/chongzhi/weixin.html" style="color: Red; text-decoration: underline;"
+            target="_blank">微信充值使用说明</a>
+    </div>
+    </form>
+</div>
+@*银盛网银*@
+<div class="payDiv" id="p_yespay_bank" style="display: none;">
+    <form id="form_yespay_bank" method="post" target="_blank" action="@ViewBag.ZTPay_Url/user/redirectpay">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+            class="fillmoney" size="15" value="100" name="money" id="yespay_bank_money" />
+        元
+    </div>
+    @*  <div class="clear">
+                        <em class="ye">输入卡号就能支付，只支持借记卡，暂不支持信用卡</em>
+                    </div>*@ <span class="pay_list_left">请选择银行：</span>
+    <div class="clearfix">
+        <ul class="pay_list clearfix" id="ul_yespay_bank_list">
+            <li><span title="中国工商银行">
+                <label class="icon-box icon-box-on" for="bank_type6_yespay">
+                    <input type="radio" checked="checked" id="bank_type6_yespay" class="rdo3" value="yespay_bank|1021000"
+                        name="payList" /><span class="bank-icon icbc"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国建设银行">
+                <label class="icon-box" for="bank_type7_yespay">
+                    <input type="radio" class="rdo3" value="yespay_bank|1051000" id="bank_type7_yespay"
+                        name="payList" /><span class="bank-icon ccb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国农业银行">
+                <label class="icon-box" for="bank_type8_yespay">
+                    <input type="radio" class="rdo3" value="yespay_bank|1031000" id="bank_type8_yespay"
+                        name="payList" /><span class="bank-icon abc"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="招商银行">
+                <label class="icon-box" for="bank_type5_yespay">
+                    <input type="radio" class="rdo3" value="yespay_bank|3085840" id="bank_type5_yespay"
+                        name="payList" /><span class="bank-icon cmb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="交通银行">
+                <label class="icon-box" for="bank_type9_yespay">
+                    <input type="radio" class="rdo3" value="yespay_bank|3012900" id="bank_type9_yespay"
+                        name="payList" /><span class="bank-icon comm"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国银行">
+                <label class="icon-box" for="bank_type11_yespay">
+                    <input type="radio" class="rdo3" value="yespay_bank|1041000" id="bank_type11_yespay"
+                        name="payList" /><span class="bank-icon boc"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="上海浦发银行">
+                <label class="icon-box" for="bank_type28_yespay">
+                    <input type="radio" class="rdo3" value="yespay_bank|3102900" id="bank_type28_yespay"
+                        name="payList" /><span class="bank-icon spdb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国光大银行">
+                <label class="icon-box" for="bank_type17_yespay">
+                    <input type="radio" class="rdo3" value="yespay_bank|3031000" id="bank_type17_yespay"
+                        name="payList" /><span class="bank-icon cebb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="广东发展银行">
+                <label class="icon-box" for="bank_type13_yespay">
+                    <input type="radio" class="rdo3" value="yespay_bank|3065810" id="bank_type13_yespay"
+                        name="payList" /><span class="bank-icon gdb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国民生银行">
+                <label class="icon-box" for="bank_type12_yespay">
+                    <input type="radio" class="rdo3" value="yespay_bank|3051000" id="bank_type12_yespay"
+                        name="payList" /><span class="bank-icon cmbc"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="兴业银行">
+                <label class="icon-box" for="bank_type16_yespay">
+                    <input type="radio" class="rdo3" value="yespay_bank|3093910" id="bank_type16_yespay"
+                        name="payList" /><span class="bank-icon cib"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="宁波银行">
+                <label for="bank_type27_yespay" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type27_yespay" value="yespay_bank|3133320"
+                        class="rdo3" /><span class="bank-icon ningbyh"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="上海浦发银行">
+                <label class="icon-box" for="bank_type18_yespay">
+                    <input type="radio" class="rdo3" value="yespay_bank|3102900" id="bank_type18_yespay"
+                        name="payList"><span class="bank-icon spdb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中信银行">
+                <label for="bank_type10_yespay" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type10_yespay" value="yespay_bank|3021000"
+                        class="rdo3"><span class="bank-icon citic"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="平安银行">
+                <label class="icon-box" for="bank_type19_yespay">
+                    <input type="radio" class="rdo3" value="yespay_bank|3071000" id="bank_type19_yespay"
+                        name="payList" /><span class="bank-icon spab"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="北京银行">
+                <label for="bank_type20_yespay" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type20_yespay" value="yespay_bank|3131000"
+                        class="rdo3" /><span class="bank-icon bjb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="东亚银行">
+                <label for="bank_type24_yespay" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type24_yespay" value="yespay_bank|5021000"
+                        class="rdo3" /><span class="bank-icon1 dyyh"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="上海农村商业银行">
+                <label for="bank_type25_yespay" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type25_yespay" value="yespay_bank|3222900"
+                        class="rdo3" /><span class="bank-icon shanghainongshangyh"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="南京银行">
+                <label for="bank_type26_yespay" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type26_yespay" value="yespay_bank|3133010"
+                        class="rdo3" /><span class="bank-icon nanjyh"><i></i></span>
+                </label>
+            </span></li>
+            @*   <li><span title="其它">
+                <label for="bank_type29_other_ys" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type29_other_ys" value="ys_bank|UNIONPAY"
+                        class="rdo3" /><span style="margin-top: 8px; float: left; font-size: 14px; font-weight: bold;">&nbsp;&nbsp;更
+                            多 银 行</span></label></span></li>*@
+        </ul>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="yespay_bank|1021000" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="submit" value="立即充值" class="btn_pay" />
+        @*<a class="btn_pay" id="btn_pay" href="javascript:void(0)" type="button">立即充值</a>*@
+    </div>
+    </form>
+    <div style="clear: both;">
+    </div>
+</div>
+@*银盛快捷*@
+<div class="payDiv" id="p_yespay_express" style="display: none;">
+    <form id="form_yespay_express" method="post" target="_blank" action="@ViewBag.ZTPay_Url/user/redirectpay">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+            class="fillmoney" size="15" value="100" name="money" id="yespay_express_money" />
+        元
+    </div>
+    <div class="clear">
+        <em class="ye">输入卡号就能支付，只支持借记卡，暂不支持信用卡(快捷必须先绑定银行卡才能使用)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="yespay_express|0" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="submit" value="立即充值" class="btn_pay" />
+        @*<a class="btn_pay" id="btn_pay" href="javascript:void(0)" type="button">立即充值</a>*@
+    </div>
+    </form>
+    <div style="clear: both;">
+    </div>
+</div>
+@*银盛支付宝*@
+<div class="payDiv" id="p_yespay_alipay" style="display: none;">
+    <form id="form_yespay_alipay" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="yespay_alipay_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开支付宝扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="yespay_alipay|Alipay" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" id="bt_yespay_alipay" value="立即充值" class="btn_pay" onclick="yespay_alipay_Sumbit();" />
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <a href="/staticHtml/help/chongzhi/HWAlipay.html" style="color: Red; text-decoration: underline;"
+            target="_blank">支付宝(扫码)充值说明(若充值失败，请使用其他充值方式或反复充值几次)</a>
+    </div>
+    </form>
+</div>
+@*银盛微信*@
+<div class="payDiv" id="p_yespay_weixin" style="display: none;">
+    <form id="form_yespay_weixin" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="yespay_weixin_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开微信扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="yespay_weixin|WEIXIN" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" id="bt_yespay_weixin" value="立即充值" class="btn_pay" onclick="yespay_weixin_Sumbit();" />
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <a href="/staticHtml/help/chongzhi/weixin.html" style="color: Red; text-decoration: underline;"
+            target="_blank">微信充值使用说明</a>
+    </div>
+    </form>
+</div>
+@*摩宝快捷*@
+<div class="payDiv" id="p_mobao_express" style="display: none;">
+    <form id="form_mobao_express" method="post" target="_blank" action="@ViewBag.ZTPay_Url/user/redirectpay" onsubmit="return mobao_express_Sumbit();">
+    <div class="clear">
+        <div id="cardType" style="line-height: 36px; margin: 2px 0 0; text-align: left; display: none;">
+            <span style="padding-left: 35px;">卡类型：</span>
+            <input type="hidden" value="" name="hnd_ksPayOrderId" id="hnd_ksPayOrderId" />
+            <label hidefocus="true" for="b1" style="padding-left: 20px;">
+                <input type="radio" title="借记卡" checked="checked" id="b1" value="01" name="btype"
+                    onclick="changeCardType(this);" />借记卡
+            </label>
+            <label hidefocus="true" for="b0" style="padding-left: 20px;">
+                <input type="radio" title="贷记卡" id="b0" value="00" name="btype" onclick="changeCardType(this);" />贷记卡
+            </label>
+            <label hidefocus="true" for="b2" style="padding-left: 20px;">
+                <input type="radio" title="准贷记卡" id="b2" value="02" name="btype" onclick="changeCardType(this);" />准贷记卡
+            </label>
+        </div>
+        <ul class="userinfo_list">
+            <li><span class="sp120">输入充值金额：</span>
+                <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+                    onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+                    class="fillmoney" size="15" value="100" name="money" id="mobao_express_money" />元</li>
+            <li><span class="sp120">持卡人姓名：</span><input type="text" autocomplete="off" class="expressfillmoney" size="15" disabled="disabled" value="@(realNameInfo.RealName == null ? "" : realNameInfo.RealName)" name="realName" id="mb_realName"/></li>
+            <li><span class="sp120">身份证号：</span><input type="text" autocomplete="off" class="expressfillmoney" size="15" disabled="disabled" value="@(realNameInfo.IdCardNumber == null ? "" : realNameInfo.IdCardNumber)" name="idCard" id="mb_idCard"/></li>
+            <li><span class="sp120">银行卡号：</span><input type="text" autocomplete="off" class="expressfillmoney" size="15" disabled="disabled" value="@(bankCardInfo.BankCardNumber == null ? "" : bankCardInfo.BankCardNumber)" name="bankNum" id="mb_bankNum"/></li>
+            <li id="li_expireDate" style="display: none;"><span class="sp120">有效期：</span><input
+                type="text" autocomplete="off" class="expressfillmoney" size="15" value="" name="expireDate"
+                id="mb_expireDate" />比如:2016</li>
+            <li id="li_Cvv2" style="display: none;"><span class="sp120">Cvv2：</span><input type="text"
+                autocomplete="off" class="expressfillmoney" size="15" value="" name="Cvv2" id="mb_Cvv2" />卡背面的后三位数字</li>
+            <li><span class="sp120">手机号码：</span><input type="text" autocomplete="off" class="expressfillmoney" size="15"  value ='@(mobileInfo.Mobile == null ? "" : mobileInfo.Mobile)' name="phoneNum" id="mb_phoneNum"/>请填写该卡在银行预留的手机号码</li>
+            <li><span class="sp120">验证码：</span><input type="text" autocomplete="off" class="expressfillmoney"
+                size="8" value="" name="mobaoyzmNum" id="mobao_yzmNum" />
+                <input id="a_getverifycode" type="button" onclick="getMessages();" value="获取验证码"
+                    class="agetverifycode" />
+            </li>
+        </ul>
+    </div>
+    <div class="clear">
+        <em class="ye">请先个人资料里绑定银行卡，才能使用快捷支付。</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" value="01" name="hnd_Cardtype" id="hnd_Cardtype" />
+        <input type="hidden" name="payType" id="mobao_payType" value="mobao_express|0" />
+        <input type="hidden" name="fromDomain" id="mobao_fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" id="mobao_userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="submit" value="立即充值" class="btn_pay" />
+    </div>
+    </form>
+    <div style="clear: both;">
+    </div>
+</div>
+@*金海哲网银*@
+<div class="payDiv" id="p_jhz_bank" style="display: none;">
+    <form id="form_jhz_bank" method="post" target="_blank" action="@ViewBag.ZTPay_Url/user/redirectpay">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+            class="fillmoney" size="15" value="100" name="money" id="jhz_bank_money" />
+        元
+    </div>
+    <span class="pay_list_left">请选择银行：</span>
+    <div class="clearfix">
+        <ul class="pay_list clearfix" id="ul_jhz_bank_list">
+            <li><span title="中国工商银行">
+                <label class="icon-box icon-box-on" for="bank_type6_jhz">
+                    <input type="radio" checked="checked" id="bank_type6_jhz" class="rdo3" value="jhz_bank|1021000"
+                        name="payList" /><span class="bank-icon icbc"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国建设银行">
+                <label class="icon-box" for="bank_type7_jhz">
+                    <input type="radio" class="rdo3" value="jhz_bank|1051000" id="bank_type7_jhz" name="payList" /><span
+                        class="bank-icon ccb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国农业银行">
+                <label class="icon-box" for="bank_type8_jhz">
+                    <input type="radio" class="rdo3" value="jhz_bank|1031000" id="bank_type8_jhz" name="payList" /><span
+                        class="bank-icon abc"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="招商银行">
+                <label class="icon-box" for="bank_type5_jhz">
+                    <input type="radio" class="rdo3" value="jhz_bank|3085840" id="bank_type5_jhz" name="payList" /><span
+                        class="bank-icon cmb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="交通银行">
+                <label class="icon-box" for="bank_type9_jhz">
+                    <input type="radio" class="rdo3" value="jhz_bank|3012900" id="bank_type9_jhz" name="payList" /><span
+                        class="bank-icon comm"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国银行">
+                <label class="icon-box" for="bank_type11_jhz">
+                    <input type="radio" class="rdo3" value="jhz_bank|1041000" id="bank_type11_jhz" name="payList" /><span
+                        class="bank-icon boc"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="上海浦发银行">
+                <label class="icon-box" for="bank_type28_jhz">
+                    <input type="radio" class="rdo3" value="jhz_bank|3102900" id="bank_type28_jhz" name="payList" /><span
+                        class="bank-icon spdb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国光大银行">
+                <label class="icon-box" for="bank_type17_jhz">
+                    <input type="radio" class="rdo3" value="jhz_bank|3031000" id="bank_type17_jhz" name="payList" /><span
+                        class="bank-icon cebb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="广东发展银行">
+                <label class="icon-box" for="bank_type13_jhz">
+                    <input type="radio" class="rdo3" value="jhz_bank|3065810" id="bank_type13_jhz" name="payList" /><span
+                        class="bank-icon gdb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国民生银行">
+                <label class="icon-box" for="bank_type12_jhz">
+                    <input type="radio" class="rdo3" value="jhz_bank|3051000" id="bank_type12_jhz" name="payList" /><span
+                        class="bank-icon cmbc"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="兴业银行">
+                <label class="icon-box" for="bank_type16_jhz">
+                    <input type="radio" class="rdo3" value="jhz_bank|3093910" id="bank_type16_jhz" name="payList" /><span
+                        class="bank-icon cib"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="宁波银行">
+                <label for="bank_type27_jhz" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type27_jhz" value="jhz_bank|3133320"
+                        class="rdo3" /><span class="bank-icon ningbyh"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="上海浦发银行">
+                <label class="icon-box" for="bank_type18_jhz">
+                    <input type="radio" class="rdo3" value="jhz_bank|3102900" id="bank_type18_jhz" name="payList"><span
+                        class="bank-icon spdb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中信银行">
+                <label for="bank_type10_jhz" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type10_jhz" value="jhz_bank|3021000"
+                        class="rdo3"><span class="bank-icon citic"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="平安银行">
+                <label class="icon-box" for="bank_type19_jhz">
+                    <input type="radio" class="rdo3" value="jhz_bank|3071000" id="bank_type19_jhz" name="payList" /><span
+                        class="bank-icon spab"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="北京银行">
+                <label for="bank_type20_jhz" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type20_jhz" value="jhz_bank|3131000"
+                        class="rdo3" /><span class="bank-icon bjb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="东亚银行">
+                <label for="bank_type24_jhz" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type24_jhz" value="jhz_bank|5021000"
+                        class="rdo3" /><span class="bank-icon1 dyyh"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="上海农村商业银行">
+                <label for="bank_type25_jhz" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type25_jhz" value="jhz_bank|3222900"
+                        class="rdo3" /><span class="bank-icon shanghainongshangyh"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="南京银行">
+                <label for="bank_type26_jhz" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type26_jhz" value="jhz_bank|3133010"
+                        class="rdo3" /><span class="bank-icon nanjyh"><i></i></span>
+                </label>
+            </span></li>
+        </ul>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="jhz_bank|1021000" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="submit" value="立即充值" class="btn_pay" />
+        @*<a class="btn_pay" id="btn_pay" href="javascript:void(0)" type="button">立即充值</a>*@
+    </div>
+    </form>
+    <div style="clear: both;">
+    </div>
+</div>
+@*金海哲支付宝*@
+<div class="payDiv" id="p_jhz_alipay" style="display: none;">
+    <form id="form_jhz_alipay" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="jhz_alipay_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开支付宝扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="jhz_alipay|Alipay" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" id="bt_jhz_alipay" value="立即充值" class="btn_pay" />
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <a href="/staticHtml/help/chongzhi/HWAlipay.html" style="color: Red; text-decoration: underline;"
+            target="_blank">支付宝(扫码)充值说明(若充值失败，请使用其他充值方式或反复充值几次)</a>
+    </div>
+    </form>
+</div>
+@*金海哲微信*@
+<div class="payDiv" id="p_jhz_weixin" style="display: none;">
+    <form id="form_jhz_weixin" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="jhz_weixin_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开微信扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="jhz_weixin|WEIXIN" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" id="bt_jhz_weixin" value="立即充值" class="btn_pay" />
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <a href="/staticHtml/help/chongzhi/weixin.html" style="color: Red; text-decoration: underline;"
+            target="_blank">微信充值使用说明</a>
+    </div>
+    </form>
+</div>
+@*杉德网银*@
+<div class="payDiv" id="p_sandpay_bank" style="display: none;">
+    <form id="form_sandpay_bank" method="post" target="_blank" action="@ViewBag.ZTPay_Url/user/redirectpay">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+            class="fillmoney" size="15" value="100" name="money" id="sandpay_bank_money" />
+        元
+    </div>
+    <span class="pay_list_left">请选择银行：</span>
+    <div class="clearfix">
+        <ul class="pay_list clearfix" id="ul_sandpay_bank_list">
+            <li><span title="中国工商银行">
+                <label class="icon-box icon-box-on" for="bank_type6_sandpay">
+                    <input type="radio" checked="checked" id="bank_type6_sandpay" class="rdo3" value="sandpay_bank|01020000"
+                        name="payList" /><span class="bank-icon icbc"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国建设银行">
+                <label class="icon-box" for="bank_type7_sandpay">
+                    <input type="radio" class="rdo3" value="sandpay_bank|01050000" id="bank_type7_sandpay"
+                        name="payList" /><span class="bank-icon ccb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国农业银行">
+                <label class="icon-box" for="bank_type8_sandpay">
+                    <input type="radio" class="rdo3" value="sandpay_bank|01030000" id="bank_type8_sandpay"
+                        name="payList" /><span class="bank-icon abc"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="招商银行">
+                <label class="icon-box" for="bank_type5_sandpay">
+                    <input type="radio" class="rdo3" value="sandpay_bank|03080000" id="bank_type5_sandpay"
+                        name="payList" /><span class="bank-icon cmb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="交通银行">
+                <label class="icon-box" for="bank_type9_sandpay">
+                    <input type="radio" class="rdo3" value="sandpay_bank|03010000" id="bank_type9_sandpay"
+                        name="payList" /><span class="bank-icon comm"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国银行">
+                <label class="icon-box" for="bank_type11_sandpay">
+                    <input type="radio" class="rdo3" value="sandpay_bank|01040000" id="bank_type11_sandpay"
+                        name="payList" /><span class="bank-icon boc"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="上海浦发银行">
+                <label class="icon-box" for="bank_type28_sandpay">
+                    <input type="radio" class="rdo3" value="sandpay_bank|03100000" id="bank_type28_sandpay"
+                        name="payList" /><span class="bank-icon spdb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国光大银行">
+                <label class="icon-box" for="bank_type17_sandpay">
+                    <input type="radio" class="rdo3" value="sandpay_bank|03030000" id="bank_type17_sandpay"
+                        name="payList" /><span class="bank-icon cebb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="广东发展银行">
+                <label class="icon-box" for="bank_type13_sandpay">
+                    <input type="radio" class="rdo3" value="sandpay_bank|03060000" id="bank_type13_sandpay"
+                        name="payList" /><span class="bank-icon gdb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国民生银行">
+                <label class="icon-box" for="bank_type12_sandpay">
+                    <input type="radio" class="rdo3" value="sandpay_bank|03050000" id="bank_type12_sandpay"
+                        name="payList" /><span class="bank-icon cmbc"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="兴业银行">
+                <label class="icon-box" for="bank_type16_sandpay">
+                    <input type="radio" class="rdo3" value="sandpay_bank|03090000" id="bank_type16_sandpay"
+                        name="payList" /><span class="bank-icon cib"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="宁波银行">
+                <label for="bank_type27_sandpay" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type27_sandpay" value="sandpay_bank|04083320"
+                        class="rdo3" /><span class="bank-icon ningbyh"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="上海浦发银行">
+                <label class="icon-box" for="bank_type18_sandpay">
+                    <input type="radio" class="rdo3" value="sandpay_bank|03100000" id="bank_type18_sandpay"
+                        name="payList"><span class="bank-icon spdb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中信银行">
+                <label for="bank_type10_sandpay" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type10_sandpay" value="sandpay_bank|03020000"
+                        class="rdo3"><span class="bank-icon citic"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="平安银行">
+                <label class="icon-box" for="bank_type19_sandpay">
+                    <input type="radio" class="rdo3" value="sandpay_bank|03070000" id="bank_type19_sandpay"
+                        name="payList" /><span class="bank-icon spab"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="北京银行">
+                <label for="bank_type20_sandpay" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type20_sandpay" value="sandpay_bank|04031000"
+                        class="rdo3" /><span class="bank-icon bjb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="东亚银行">
+                <label for="bank_type24_sandpay" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type24_sandpay" value="sandpay_bank|03200000"
+                        class="rdo3" /><span class="bank-icon1 dyyh"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="上海农村商业银行">
+                <label for="bank_type25_sandpay" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type25_sandpay" value="sandpay_bank|65012900"
+                        class="rdo3" /><span class="bank-icon shanghainongshangyh"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="南京银行">
+                <label for="bank_type26_sandpay" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type26_sandpay" value="sandpay_bank|04243010"
+                        class="rdo3" /><span class="bank-icon nanjyh"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="上海银行">
+                <label for="bank_type37_sandpay" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type37_sandpay" value="sandpay_bank|04012900"
+                        class="rdo3" /><span class="bank-icon shanghyh"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="渤海银行">
+                <label for="bank_type38_sandpay" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type38_sandpay" value="sandpay_bank|03170000"
+                        class="rdo3" /><span class="bank-icon bohyh"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="华夏银行">
+                <label for="bank_type29_sandpay" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type29_sandpay" value="sandpay_bank|03040000"
+                        class="rdo3" /><span class="bank-icon hxyh"><i></i></span>
+                </label>
+            </span></li>
+        </ul>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="sandpay_bank|01020000" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="submit" value="立即充值" class="btn_pay" />
+        @*<a class="btn_pay" id="btn_pay" href="javascript:void(0)" type="button">立即充值</a>*@
+    </div>
+    </form>
+    <div style="clear: both;">
+    </div>
+</div>
+@*杉德快捷*@
+<div class="payDiv" id="p_sandpay_express" style="display: none;">
+    <form id="form_sandpay_express" method="post" target="_blank" action="@ViewBag.ZTPay_Url/user/redirectpay">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+            class="fillmoney" size="15" value="100" name="money" id="sandpay_express_money" />
+        元
+    </div>
+    <div class="clear">
+        <em class="ye">输入卡号就能支付，只支持借记卡，暂不支持信用卡(快捷必须先绑定银行卡才能使用)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="sandpay_express|0" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="submit" value="立即充值" class="btn_pay" />
+        @*<a class="btn_pay" id="btn_pay" href="javascript:void(0)" type="button">立即充值</a>*@
+    </div>
+    </form>
+    <div style="clear: both;">
+    </div>
+</div>
+@*杉德支付宝*@
+<div class="payDiv" id="p_sandpay_alipay" style="display: none;">
+    <form id="form_sandpay_alipay" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="sandpay_alipay_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开支付宝扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="sandpay_alipay|Alipay" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" id="bt_sandpay_alipay" value="立即充值" class="btn_pay" onclick="sandpay_alipay_Sumbit();" />
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <a href="/staticHtml/help/chongzhi/HWAlipay.html" style="color: Red; text-decoration: underline;"
+            target="_blank">支付宝(扫码)充值说明(若充值失败，请使用其他充值方式或反复充值几次)</a>
+    </div>
+    </form>
+</div>
+@*杉德微信*@
+<div class="payDiv" id="p_sandpay_weixin" style="display: none;">
+    <form id="form_sandpay_weixin" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="sandpay_weixin_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开微信扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="sandpay_weixin|WEIXIN" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" id="bt_sandpay_weixin" value="立即充值" class="btn_pay" onclick="sandpay_weixin_Sumbit();" />
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <a href="/staticHtml/help/chongzhi/weixin.html" style="color: Red; text-decoration: underline;"
+            target="_blank">微信充值使用说明</a>
+    </div>
+    </form>
+</div>
+@*华势网银*@
+<div class="payDiv" id="p_payworth_bank" style="display: none;">
+    <form id="form_payworth_bank" method="post" target="_blank" action="@ViewBag.ZTPay_Url/user/redirectpay">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+            class="fillmoney" size="15" value="100" name="money" id="payworth_bank_money" />
+        元
+    </div>
+    <span class="pay_list_left">请选择银行：</span>
+    <div class="clearfix">
+        <ul class="pay_list clearfix" id="ul_payworth_bank_list">
+            <li><span title="中国工商银行">
+                <label class="icon-box icon-box-on" for="bank_type6_payworth">
+                    <input type="radio" checked="checked" id="bank_type6_payworth" class="rdo3" value="payworth_bank|ICBC"
+                        name="payList" /><span class="bank-icon icbc"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国建设银行">
+                <label class="icon-box" for="bank_type7_payworth">
+                    <input type="radio" class="rdo3" value="payworth_bank|CCB" id="bank_type7_payworth"
+                        name="payList" /><span class="bank-icon ccb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国农业银行">
+                <label class="icon-box" for="bank_type8_payworth">
+                    <input type="radio" class="rdo3" value="payworth_bank|ABC" id="bank_type8_payworth"
+                        name="payList" /><span class="bank-icon abc"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="招商银行">
+                <label class="icon-box" for="bank_type5_payworth">
+                    <input type="radio" class="rdo3" value="payworth_bank|CMB" id="bank_type5_payworth"
+                        name="payList" /><span class="bank-icon cmb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="交通银行">
+                <label class="icon-box" for="bank_type9_payworth">
+                    <input type="radio" class="rdo3" value="payworth_bank|BOCM" id="bank_type9_payworth"
+                        name="payList" /><span class="bank-icon comm"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国银行">
+                <label class="icon-box" for="bank_type11_payworth">
+                    <input type="radio" class="rdo3" value="payworth_bank|BOC" id="bank_type11_payworth"
+                        name="payList" /><span class="bank-icon boc"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="上海浦发银行">
+                <label class="icon-box" for="bank_type28_payworth">
+                    <input type="radio" class="rdo3" value="payworth_bank|SPDB" id="bank_type28_payworth"
+                        name="payList" /><span class="bank-icon spdb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国光大银行">
+                <label class="icon-box" for="bank_type17_payworth">
+                    <input type="radio" class="rdo3" value="payworth_bank|CEB" id="bank_type17_payworth"
+                        name="payList" /><span class="bank-icon cebb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="广发银行">
+                <label class="icon-box" for="bank_type13_payworth">
+                    <input type="radio" class="rdo3" value="payworth_bank|CGB" id="bank_type13_payworth"
+                        name="payList" /><span class="bank-icon gdb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国民生银行">
+                <label class="icon-box" for="bank_type12_payworth">
+                    <input type="radio" class="rdo3" value="payworth_bank|CMBC" id="bank_type12_payworth"
+                        name="payList" /><span class="bank-icon cmbc"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="兴业银行">
+                <label class="icon-box" for="bank_type16_payworth">
+                    <input type="radio" class="rdo3" value="payworth_bank|CIB" id="bank_type16_payworth"
+                        name="payList" /><span class="bank-icon cib"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="上海浦发银行">
+                <label class="icon-box" for="bank_type18_payworth">
+                    <input type="radio" class="rdo3" value="payworth_bank|SPDB" id="bank_type18_payworth"
+                        name="payList"><span class="bank-icon spdb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中信银行">
+                <label for="bank_type10_payworth" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type10_payworth" value="payworth_bank|CITIC"
+                        class="rdo3"><span class="bank-icon citic"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="平安银行">
+                <label class="icon-box" for="bank_type19_payworth">
+                    <input type="radio" class="rdo3" value="payworth_bank|PAYH" id="bank_type19_payworth"
+                        name="payList" /><span class="bank-icon spab"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="北京银行">
+                <label for="bank_type20_payworth" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type20_payworth" value="payworth_bank|BCCB"
+                        class="rdo3" /><span class="bank-icon bjb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="上海银行">
+                <label for="bank_type25_payworth" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type25_payworth" value="payworth_bank|SHBANK "
+                        class="rdo3" /><span class="bank-icon shanghyh"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国邮政储蓄银行">
+                <label for="bank_type26_payworth" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type26_payworth" value="payworth_bank|PSBC "
+                        class="rdo3" /><span class="bank-icon psbc"><i></i></span>
+                </label>
+            </span></li>
+        </ul>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="payworth_bank|ICBC" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="submit" value="立即充值" class="btn_pay" />
+        @*<a class="btn_pay" id="btn_pay" href="javascript:void(0)" type="button">立即充值</a>*@
+    </div>
+    </form>
+    <div style="clear: both;">
+    </div>
+</div>
+@*华势支付宝*@
+<div class="payDiv" id="p_payworth_alipay" style="display: none;">
+    <form id="form_payworth_alipay" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="payworth_alipay_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开支付宝扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="payworth_alipay|Alipay" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" id="bt_payworth_alipay" value="立即充值" class="btn_pay" onclick="payworth_alipay_Sumbit();" />
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <a href="/staticHtml/help/chongzhi/HWAlipay.html" style="color: Red; text-decoration: underline;"
+            target="_blank">支付宝(扫码)充值说明(若充值失败，请使用其他充值方式或反复充值几次)</a>
+    </div>
+    </form>
+</div>
+@*华势微信*@
+<div class="payDiv" id="p_payworth_weixin" style="display: none;">
+    <form id="form_payworth_weixin" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="payworth_weixin_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开微信扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="payworth_weixin|WEIXIN" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" id="bt_payworth_weixin" value="立即充值" class="btn_pay" onclick="payworth_weixin_Sumbit();" />
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <a href="/staticHtml/help/chongzhi/weixin.html" style="color: Red; text-decoration: underline;"
+            target="_blank">微信充值使用说明</a>
+    </div>
+    </form>
+</div>
+@*多的宝网银*@
+<div class="payDiv" id="p_duodebao_bank" style="display: none;">
+    <form id="form_duodebao_bank" method="post" target="_blank" action="@ViewBag.DEBPay_Url/user/redirectpay">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+            class="fillmoney" size="15" value="100" name="money" id="duodebao_bank_money" />
+        元
+    </div>
+    @*  <div class="clear">
+                        <em class="ye">输入卡号就能支付，只支持借记卡，暂不支持信用卡</em>
+                    </div>*@
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="duodebao_bank|0" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="submit" value="立即充值" class="btn_pay" />
+        @*<a class="btn_pay" id="btn_pay" href="javascript:void(0)" type="button">立即充值</a>*@
+    </div>
+    </form>
+    <div style="clear: both;">
+    </div>
+</div>
+@*多的宝微信*@
+<div class="payDiv" id="p_duodebao_weixin" style="display: none;">
+    <form id="form_duodebao_weixin" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="duodebao_weixin_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开微信扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="duodebao_weixin|WEIXIN" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" id="bt_ztpay" value="立即充值" class="btn_pay" onclick="duodebao_weixin_Sumbit();" />
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <a href="/staticHtml/help/chongzhi/weixin.html" style="color: Red; text-decoration: underline;"
+            target="_blank">微信充值使用说明(微信充值单笔额度最高5000)</a>
+    </div>
+    </form>
+</div>
+@*多的宝支付宝*@
+<div class="payDiv" id="p_duodebao_alipay" style="display: none;">
+    <form id="form_duodebao_alipay" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="duodebao_alipay_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开支付宝扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="duodebao_alipay|Alipay" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" id="bt_slf_alipay" value="立即充值" class="btn_pay" onclick="duodebao_alipay_Sumbit();" />
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <a href="/staticHtml/help/chongzhi/HWAlipay.html" style="color: Red; text-decoration: underline;"
+            target="_blank">支付宝(扫码)充值说明(若充值失败，请使用其他充值方式或反复充值几次)</a>
+    </div>
+    </form>
+</div>
+@*多的宝qq*@
+<div class="payDiv" id="p_duodebao_qq" style="display: none;">
+    <form id="form_duodebao_qq" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="duodebao_weixin_qq" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开QQ扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="duodebao_qq|qq" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" id="bt_ztpay" value="立即充值" class="btn_pay" onclick="duodebao_qq_Sumbit();" />
+    </div>
+    @*  <div style="padding-left: 100px; margin-top: 20px;">
+                        <a href="/staticHtml/help/chongzhi/weixin.html" style="color: Red; text-decoration: underline;"
+                            target="_blank">微信充值使用说明</a>
+                    </div>*@
+    </form>
+</div>
+@*天下付网银*@
+<div class="payDiv" id="p_txf_bank" style="display: none;">
+    <form id="form_txf_bank" method="post" target="_blank" action="@ViewBag.ZTPay_Url/user/redirectpay">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+            class="fillmoney" size="15" value="100" name="money" id="txf_bank_money" />
+        元
+    </div>
+    <span class="pay_list_left">请选择银行：</span>
+    <div class="clearfix">
+        <ul class="pay_list clearfix" id="ul_txf_bank_list">
+            <li><span title="中国工商银行">
+                <label class="icon-box icon-box-on" for="bank_type6_txf">
+                    <input type="radio" checked="checked" id="bank_type6_txf" class="rdo3" value="txf_bank|1001"
+                        name="payList" /><span class="bank-icon icbc"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国建设银行">
+                <label class="icon-box" for="bank_type7_txf">
+                    <input type="radio" class="rdo3" value="txf_bank|1004" id="bank_type7_txf" name="payList" /><span
+                        class="bank-icon ccb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国农业银行">
+                <label class="icon-box" for="bank_type8_txf">
+                    <input type="radio" class="rdo3" value="txf_bank|1002" id="bank_type8_txf" name="payList" /><span
+                        class="bank-icon abc"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="招商银行">
+                <label class="icon-box" for="bank_type5_txf">
+                    <input type="radio" class="rdo3" value="txf_bank|1012" id="bank_type5_txf" name="payList" /><span
+                        class="bank-icon cmb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="交通银行">
+                <label class="icon-box" for="bank_type9_txf">
+                    <input type="radio" class="rdo3" value="txf_bank|1005" id="bank_type9_txf" name="payList" /><span
+                        class="bank-icon comm"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国银行">
+                <label class="icon-box" for="bank_type11_txf">
+                    <input type="radio" class="rdo3" value="txf_bank|1003" id="bank_type11_txf" name="payList" /><span
+                        class="bank-icon boc"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="上海浦发银行">
+                <label class="icon-box" for="bank_type28_txf">
+                    <input type="radio" class="rdo3" value="txf_bank|1014" id="bank_type28_txf" name="payList" /><span
+                        class="bank-icon spdb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国光大银行">
+                <label class="icon-box" for="bank_type17_txf">
+                    <input type="radio" class="rdo3" value="txf_bank|1008" id="bank_type17_txf" name="payList" /><span
+                        class="bank-icon cebb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="广发银行">
+                <label class="icon-box" for="bank_type13_txf">
+                    <input type="radio" class="rdo3" value="txf_bank|1017" id="bank_type13_txf" name="payList" /><span
+                        class="bank-icon gdb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国民生银行">
+                <label class="icon-box" for="bank_type12_txf">
+                    <input type="radio" class="rdo3" value="txf_bank|1010" id="bank_type12_txf" name="payList" /><span
+                        class="bank-icon cmbc"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="兴业银行">
+                <label class="icon-box" for="bank_type16_txf">
+                    <input type="radio" class="rdo3" value="txf_bank|1013" id="bank_type16_txf" name="payList" /><span
+                        class="bank-icon cib"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中信银行">
+                <label for="bank_type10_txf" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type10_txf" value="txf_bank|1007" class="rdo3"><span
+                        class="bank-icon citic"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="平安银行">
+                <label class="icon-box" for="bank_type19_txf">
+                    <input type="radio" class="rdo3" value="txf_bank|1011" id="bank_type19_txf" name="payList" /><span
+                        class="bank-icon spab"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="北京银行">
+                <label for="bank_type20_txf" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type20_txf" value="txf_bank|1016" class="rdo3" /><span
+                        class="bank-icon bjb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="上海银行">
+                <label for="bank_type25_txf" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type25_txf" value="txf_bank|1025" class="rdo3" /><span
+                        class="bank-icon shanghyh"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国邮政储蓄银行">
+                <label for="bank_type26_txf" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type26_txf" value="txf_bank|1006" class="rdo3" /><span
+                        class="bank-icon psbc"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="华夏银行">
+                <label for="bank_type29_txf" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type29_txf" value="txf_bank|1009" class="rdo3" /><span
+                        class="bank-icon hxyh"><i></i></span>
+                </label>
+            </span></li>
+        </ul>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="txf_bank|1001" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="submit" value="立即充值" class="btn_pay" />
+        @*<a class="btn_pay" id="btn_pay" href="javascript:void(0)" type="button">立即充值</a>*@
+    </div>
+    </form>
+    <div style="clear: both;">
+    </div>
+</div>
+@*天下付微信*@
+<div class="payDiv" id="p_txf_weixin" style="display: none;">
+    <form id="form_txf_weixin" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="txf_weixin_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开微信扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="txf_weixin|WEIXIN" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" id="bt_txf_weixin" value="立即充值" class="btn_pay" />
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <a href="/staticHtml/help/chongzhi/weixin.html" style="color: Red; text-decoration: underline;"
+            target="_blank">微信充值使用说明(微信充值单笔额度最高5000)</a>
+    </div>
+    </form>
+</div>
+@*天下付支付宝*@
+<div class="payDiv" id="p_txf_alipay" style="display: none;">
+    <form id="form_txf_alipay" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="txf_alipay_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开支付宝扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="txf_alipay|alipay" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" id="bt_txf_alipay" value="立即充值" class="btn_pay" />
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <a href="/staticHtml/help/chongzhi/HWAlipay.html" style="color: Red; text-decoration: underline;"
+            target="_blank">支付宝(扫码)充值说明(单笔额度最高5000)(若充值失败，请使用其他充值方式或反复充值几次)</a>
+    </div>
+    </form>
+</div>
+@*天下付qq*@
+<div class="payDiv" id="p_txf_qq" style="display: none;">
+    <form id="form_txf_qq" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="txf_qq_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(单笔限额1000以下)(手机打开QQ扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="txf_qq|qq" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" id="bt_txf_qq" value="立即充值" class="btn_pay" />
+    </div>
+    @*  <div style="padding-left: 100px; margin-top: 20px;">
+                        <a href="/staticHtml/help/chongzhi/weixin.html" style="color: Red; text-decoration: underline;"
+                            target="_blank">微信充值使用说明</a>
+                    </div>*@
+    </form>
+</div>
+@*天下付银联*@
+<div class="payDiv" id="p_txf_upay" style="display: none;">
+    <form id="form_txf_upay" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="txf_upay_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开银联APP扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="txf_upay|upay" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" id="bt_txf_upay" value="立即充值" class="btn_pay" />
+    </div>
+    @*  <div style="padding-left: 100px; margin-top: 20px;">
+                        <a href="/staticHtml/help/chongzhi/weixin.html" style="color: Red; text-decoration: underline;"
+                            target="_blank">微信充值使用说明</a>
+                    </div>*@
+    </form>
+</div>
+@*速汇宝网银*@
+<div class="payDiv" id="p_sfb_bank" style="display: none;">
+    <form id="form_sfb_bank" method="post" target="_blank" action="@ViewBag.DEBPay_Url/user/redirectpay">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+            class="fillmoney" size="15" value="100" name="money" id="sfb_bank_money" />
+        元
+    </div>
+    @*  <div class="clear">
+                        <em class="ye">输入卡号就能支付，只支持借记卡，暂不支持信用卡</em>
+                    </div>*@
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="sfb_bank|0" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="submit" value="立即充值" class="btn_pay" />
+        @*<a class="btn_pay" id="btn_pay" href="javascript:void(0)" type="button">立即充值</a>*@
+    </div>
+    </form>
+    <div style="clear: both;">
+    </div>
+</div>
+@*速汇宝微信*@
+<div class="payDiv" id="p_sfb_weixin" style="display: none;">
+    <form id="form_sfb_weixin" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="sfb_weixin_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开微信扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="sfb_weixin|WEIXIN" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" id="bt_sfbpay" value="立即充值" class="btn_pay" onclick="sfb_weixin_Sumbit();" />
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <a href="/staticHtml/help/chongzhi/weixin.html" style="color: Red; text-decoration: underline;"
+            target="_blank">微信充值使用说明(微信充值单笔额度最高5000)</a>
+    </div>
+    </form>
+</div>
+@*速汇宝支付宝*@
+<div class="payDiv" id="p_sfb_alipay" style="display: none;">
+    <form id="form_sfb_alipay" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="sfb_alipay_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开支付宝扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="sfb_alipay|Alipay" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" id="bt_sfb_alipay" value="立即充值" class="btn_pay" onclick="sfb_alipay_Sumbit();" />
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <a href="/staticHtml/help/chongzhi/HWAlipay.html" style="color: Red; text-decoration: underline;"
+            target="_blank">支付宝(扫码)充值说明(单笔额度最高5000)(若充值失败，请使用其他充值方式或反复充值几次)</a>
+    </div>
+    </form>
+</div>
+@*速汇宝qq*@
+<div class="payDiv" id="p_sfb_qq" style="display: none;">
+    <form id="form_sfb_qq" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="sfb_qq_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开QQ扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="sfb_qq|qq" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" id="bt_sfbqqpay" value="立即充值" class="btn_pay" onclick="sfb_qq_Sumbit();" />
+    </div>
+    @*  <div style="padding-left: 100px; margin-top: 20px;">
+                        <a href="/staticHtml/help/chongzhi/weixin.html" style="color: Red; text-decoration: underline;"
+                            target="_blank">微信充值使用说明</a>
+                    </div>*@
+    </form>
+</div>
+@*海鸥网银*@
+<div class="payDiv" id="p_haio_bank" style="display: none;">
+    <form id="form_haio_bank" method="post" target="_blank" action="@ViewBag.DEBPay_Url/user/redirectpay">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+            class="fillmoney" size="15" value="100" name="money" id="haio_bank_money" />
+        元
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="haio_bank|bank" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="submit" value="立即充值" class="btn_pay" />
+        @*<a class="btn_pay" id="btn_pay" href="javascript:void(0)" type="button">立即充值</a>*@
+    </div>
+    </form>
+    <div style="clear: both;">
+    </div>
+</div>
+@*海鸥微信*@
+<div class="payDiv" id="p_haio_weixin" style="display: none;">
+    <form id="form_haio_weixin" target="_blank" method="post" action="@ViewBag.DEBPay_Url/user/redirectpay">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="haio_weixin_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开微信扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="haio_weixin|weixin" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="submit" value="立即充值" class="btn_pay" />
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <a href="/staticHtml/help/chongzhi/weixin.html" style="color: Red; text-decoration: underline;"
+            target="_blank">微信充值使用说明(微信充值单笔额度最高5000)</a>
+    </div>
+    </form>
+</div>
+@*海鸥支付宝*@
+<div class="payDiv" id="p_haio_alipay" style="display: none;">
+    <form id="form_haio_alipay" target="_blank" method="post" action="@ViewBag.DEBPay_Url/user/redirectpay">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="haio_alipay_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开支付宝扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="haio_alipay|alipay" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="submit" value="立即充值" class="btn_pay" />
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <a href="/staticHtml/help/chongzhi/HWAlipay.html" style="color: Red; text-decoration: underline;"
+            target="_blank">支付宝(扫码)充值说明(单笔额度最高5000)(若充值失败，请使用其他充值方式或反复充值几次)</a>
+    </div>
+    </form>
+</div>
+@*海鸥qq*@
+<div class="payDiv" id="p_haio_qq" style="display: none;">
+    <form id="form_haio_qq" target="_blank" method="post" action="@ViewBag.DEBPay_Url/user/redirectpay">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="haio_qq_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开QQ扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="haio_qq|qqpay" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="submit" value="立即充值" class="btn_pay" />
+    </div>
+    @*  <div style="padding-left: 100px; margin-top: 20px;">
+                        <a href="/staticHtml/help/chongzhi/weixin.html" style="color: Red; text-decoration: underline;"
+                            target="_blank">微信充值使用说明</a>
+                    </div>*@
+    </form>
+</div>
+@*人工充值*@
+<div class="payDiv" id="p_rgcz" style="display: none;">
+    <div style="line-height: 22px">
+        <span style="font-weight: bold;">人工大额充值使用说明</span><br />
+        <span>第一步：添加官方充值专用QQ5401694为好友；</span><br />
+        <span>第二步：联系客服输入充值金额（需单笔充值金额1000元含及以上）与想要充值的渠道（目前只支持银行卡转账或支付宝转账）；</span><br />
+        <span>第三步：进行转账，并备注大奖网用户名；</span><br />
+        <span>第四步：等待5-10分钟内到账；</span><br />
+        <em style="color: Red; text-decoration: underline; font-size: large;">*如一直未到账，请联系充值专用qq号提供充值时间，充值金额，备注用户名复查</em>
+    </div>
+</div>
+@*合付宝网关*@
+<div class="payDiv" id="p_hfb_bank" style="display: none;">
+    <form id="form_hfb_bank" method="post" target="_blank" action="@ViewBag.ZTPay_Url/user/redirectpay">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+            class="fillmoney" size="15" value="100" name="money" id="hfb_bank_money" />
+        元@*<em class="ye">(额外赠送充值金额1%的红包)</em>*@
+    </div>
+    <span class="pay_list_left">请选择银行：</span>
+    <div class="clearfix">
+        <ul class="pay_list clearfix" id="ul_hfb_bank_list">
+            <li><span title="中国工商银行">
+                <label class="icon-box icon-box-on" for="bank_type6_hfb">
+                    <input type="radio" checked="checked" id="bank_type6_hfb" class="rdo3" value="hfb_bank|01020000"
+                        name="payList" /><span class="bank-icon icbc"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国建设银行">
+                <label class="icon-box" for="bank_type7_hfb">
+                    <input type="radio" class="rdo3" value="hfb_bank|01050000" id="bank_type7_hfb" name="payList" /><span
+                        class="bank-icon ccb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国农业银行">
+                <label class="icon-box" for="bank_type8_hfb">
+                    <input type="radio" class="rdo3" value="hfb_bank|01030000" id="bank_type8_hfb" name="payList" /><span
+                        class="bank-icon abc"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="招商银行">
+                <label class="icon-box" for="bank_type5_hfb">
+                    <input type="radio" class="rdo3" value="hfb_bank|03080000" id="bank_type5_hfb" name="payList" /><span
+                        class="bank-icon cmb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="交通银行">
+                <label class="icon-box" for="bank_type9_hfb">
+                    <input type="radio" class="rdo3" value="hfb_bank|03010000" id="bank_type9_hfb" name="payList" /><span
+                        class="bank-icon comm"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国银行">
+                <label class="icon-box" for="bank_type11_hfb">
+                    <input type="radio" class="rdo3" value="hfb_bank|01040000" id="bank_type11_hfb" name="payList" /><span
+                        class="bank-icon boc"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="浦发银行">
+                <label class="icon-box" for="bank_type28_hfb">
+                    <input type="radio" class="rdo3" value="hfb_bank|03100000" id="bank_type28_hfb" name="payList" /><span
+                        class="bank-icon spdb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国光大银行">
+                <label class="icon-box" for="bank_type17_hfb">
+                    <input type="radio" class="rdo3" value="hfb_bank|03030000" id="bank_type17_hfb" name="payList" /><span
+                        class="bank-icon cebb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="广发银行">
+                <label class="icon-box" for="bank_type13_hfb">
+                    <input type="radio" class="rdo3" value="hfb_bank|03060000" id="bank_type13_hfb" name="payList" /><span
+                        class="bank-icon gdb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国民生银行">
+                <label class="icon-box" for="bank_type12_hfb">
+                    <input type="radio" class="rdo3" value="hfb_bank|03050000" id="bank_type12_hfb" name="payList" /><span
+                        class="bank-icon cmbc"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="兴业银行">
+                <label class="icon-box" for="bank_type16_hfb">
+                    <input type="radio" class="rdo3" value="hfb_bank|03090000" id="bank_type16_hfb" name="payList" /><span
+                        class="bank-icon cib"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中信银行">
+                <label for="bank_type10_hfb" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type10_hfb" value="hfb_bank|03020000"
+                        class="rdo3"><span class="bank-icon citic"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="平安银行">
+                <label class="icon-box" for="bank_type19_hfb">
+                    <input type="radio" class="rdo3" value="hfb_bank|04100000" id="bank_type19_hfb" name="payList" /><span
+                        class="bank-icon spab"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国邮政储蓄银行">
+                <label for="bank_type26_hfb" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type26_hfb" value="hfb_bank|01000000 "
+                        class="rdo3" /><span class="bank-icon psbc"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="华夏银行">
+                <label for="bank_type29_hfb" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type29_hfb" value="hfb_bank|03040000"
+                        class="rdo3" /><span class="bank-icon hxyh"><i></i></span>
+                </label>
+            </span></li>
+        </ul>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="hfb_bank|01020000" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="submit" value="立即充值" class="btn_pay" />
+        @*<a class="btn_pay" id="btn_pay" href="javascript:void(0)" type="button">立即充值</a>*@
+    </div>
+    </form>
+    <div style="clear: both;">
+    </div>
+</div>
+@*合付宝快捷*@
+<div class="payDiv" id="p_hfb_express" style="display: none;">
+    <form id="form_hfb_express" method="post" target="_blank">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+            class="fillmoney" size="15" value="100" name="money" id="hfb_express_money" />
+        元@*<em class="ye">(额外赠送充值金额1%的红包)</em>*@
+    </div>
+    <div class="clear">
+        <em class="ye">请先个人资料里绑定银行卡，才能使用快捷支付。</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="hfb_express|0" />
+        <input type="hidden" name="no" value="@bankCardInfo.BankCardNumber" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="submit" id="bt_hfb_express" value="立即充值" class="btn_pay" onclick="hfb_express_Sumbit();" />
+        @*<a class="btn_pay" id="btn_pay" href="javascript:void(0)" type="button">立即充值</a>*@
+    </div>
+    </form>
+    <div style="clear: both;">
+    </div>
+</div>
+@*艾付网关*@
+<div class="payDiv" id="p_af_bank" style="display: none;">
+    <form id="form_af_bank" method="post" target="_blank" action="@ViewBag.ZTPay_Url/user/redirectpay">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+            class="fillmoney" size="15" value="100" name="money" id="af_bank_money" />
+        元
+    </div>
+    <span class="pay_list_left">请选择银行：</span>
+    <div class="clearfix">
+        <ul class="pay_list clearfix" id="ul_af_bank_list">
+            <li><span title="中国工商银行">
+                <label class="icon-box icon-box-on" for="bank_type6_af">
+                    <input type="radio" checked="checked" id="bank_type6_af" class="rdo3" value="af_bank|ICBC"
+                        name="payList" /><span class="bank-icon icbc"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国建设银行">
+                <label class="icon-box" for="bank_type7_af">
+                    <input type="radio" class="rdo3" value="af_bank|CCB" id="bank_type7_af" name="payList" /><span
+                        class="bank-icon ccb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国农业银行">
+                <label class="icon-box" for="bank_type8_af">
+                    <input type="radio" class="rdo3" value="af_bank|ABC" id="bank_type8_af" name="payList" /><span
+                        class="bank-icon abc"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="招商银行">
+                <label class="icon-box" for="bank_type5_af">
+                    <input type="radio" class="rdo3" value="af_bank|CMB" id="bank_type5_af" name="payList" /><span
+                        class="bank-icon cmb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="交通银行">
+                <label class="icon-box" for="bank_type9_af">
+                    <input type="radio" class="rdo3" value="af_bank|BOCOM" id="bank_type9_af" name="payList" /><span
+                        class="bank-icon comm"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国银行">
+                <label class="icon-box" for="bank_type11_af">
+                    <input type="radio" class="rdo3" value="af_bank|BOC" id="bank_type11_af" name="payList" /><span
+                        class="bank-icon boc"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="浦发银行">
+                <label class="icon-box" for="bank_type28_af">
+                    <input type="radio" class="rdo3" value="af_bank|SPDB" id="bank_type28_af" name="payList" /><span
+                        class="bank-icon spdb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国光大银行">
+                <label class="icon-box" for="bank_type17_af">
+                    <input type="radio" class="rdo3" value="af_bank|CEB" id="bank_type17_af" name="payList" /><span
+                        class="bank-icon cebb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="广发银行">
+                <label class="icon-box" for="bank_type13_af">
+                    <input type="radio" class="rdo3" value="af_bank|GDB" id="bank_type13_af" name="payList" /><span
+                        class="bank-icon gdb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国民生银行">
+                <label class="icon-box" for="bank_type12_af">
+                    <input type="radio" class="rdo3" value="af_bank|CMBC" id="bank_type12_af" name="payList" /><span
+                        class="bank-icon cmbc"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="兴业银行">
+                <label class="icon-box" for="bank_type16_af">
+                    <input type="radio" class="rdo3" value="af_bank|CIB" id="bank_type16_af" name="payList" /><span
+                        class="bank-icon cib"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中信银行">
+                <label for="bank_type10_af" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type10_af" value="af_bank|CNCB" class="rdo3"><span
+                        class="bank-icon citic"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="平安银行">
+                <label class="icon-box" for="bank_type19_af">
+                    <input type="radio" class="rdo3" value="af_bank|PAB" id="bank_type19_af" name="payList" /><span
+                        class="bank-icon spab"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="中国邮政储蓄银行">
+                <label for="bank_type26_af" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type26_af" value="af_bank|PSBC " class="rdo3" /><span
+                        class="bank-icon psbc"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="华夏银行">
+                <label for="bank_type29_af" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type29_af" value="af_bank|HXB" class="rdo3" /><span
+                        class="bank-icon hxyh"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="北京银行">
+                <label for="bank_type201_af" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type201_af" value="af_bank|BCCB" class="rdo3" /><span
+                        class="bank-icon bjb"><i></i></span>
+                </label>
+            </span></li>
+            <li><span title="上海银行">
+                <label for="bank_type215_af" class="icon-box">
+                    <input type="radio" name="payList" id="bank_type215_af" value="af_bank|BOS" class="rdo3" /><span
+                        class="bank-icon shanghyh"><i></i></span>
+                </label>
+            </span></li>
+        </ul>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="af_bank|ABC" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="submit" value="立即充值" class="btn_pay" />
+        @*<a class="btn_pay" id="btn_pay" href="javascript:void(0)" type="button">立即充值</a>*@
+    </div>
+    </form>
+    <div style="clear: both;">
+    </div>
+</div>
+@*艾付微信*@
+<div class="payDiv" id="p_af_weixin" style="display: none;">
+    <form id="form_af_weixin" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="af_weixin_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开微信扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="af_weixin|WECHAT" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" value="立即充值" class="btn_pay" onclick="af_weixin_Sumbit();" />
+    </div>
+    </form>
+</div>
+@*艾付支付宝*@
+<div class="payDiv" id="p_af_alipay" style="display: none;">
+    <form id="form_af_alipay" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="af_alipay_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开支付宝扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="af_alipay|ALIPAY" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" value="立即充值" class="btn_pay" onclick="af_alipay_Sumbit();" />
+    </div>
+    </form>
+</div>
+@*艾付qq*@
+<div class="payDiv" id="p_af_qq" style="display: none;">
+    <form id="form_af_qq" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="af_qq_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开QQ扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="af_qq|QQSCAN" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" value="立即充值" class="btn_pay" onclick="af_qq_Sumbit();" />
+    </div>
+    </form>
+</div>
+@*艾付银联扫码*@
+<div class="payDiv" id="p_af_upay" style="display: none;">
+    <form id="form_af_upay" target="_blank" method="post">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="af_upay_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开银联APP扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="af_upay|UNIONPAY" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="button" value="立即充值" class="btn_pay" onclick="af_upay_Sumbit();" />
+    </div>
+    </form>
+</div>
+@*好易微信*@
+<div class="payDiv" id="p_haoyi_weixin" style="display: none;">
+    <form id="form_haoyi_weixin" target="_blank" method="post" action="@ViewBag.ZTPay_Url/user/redirectpay">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<2){this.value=2;}"
+            class="fillmoney" size="15" value="100" name="money" id="haoyi_weixin_money" />
+        元 &nbsp;&nbsp; &nbsp;<em class="ye">免手续费(手机打开微信扫一扫二维码支付)</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="haoyi_weixin|wxperson" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="submit" value="立即充值" class="btn_pay" />
+    </div>
+    </form>
+</div>
+@*好易支付宝*@
+<div class="payDiv" id="p_haoyi_alipay" style="display: none;">
+    <form id="form_haoyi_alipay" target="_blank" method="post" action="@ViewBag.ZTPay_Url/user/redirectpay">
+    <div class="clear">
+        <span class="pay_list_left">请选择金额：</span>
+        <ul class="pay_list clearfix" id="ul_amount_list">
+            <li><a href="javascript:;" class="icon-box" onclick="selectAmount(this);" style="display: block;
+                color: #ff3d00; font-size: 20px; font-weight: bold; text-align: center; line-height: 36px;"
+                data-amount="100">100元</a></li>
+            <li><a href="javascript:;" class="icon-box" onclick="selectAmount(this);" style="display: block;
+                color: #ff3d00; font-size: 20px; font-weight: bold; text-align: center; line-height: 36px;"
+                data-amount="200">200元</a></li>
+            <li><a href="javascript:;" class="icon-box" onclick="selectAmount(this);" style="display: block;
+                color: #ff3d00; font-size: 20px; font-weight: bold; text-align: center; line-height: 36px;"
+                data-amount="500">500元</a></li>
+            <li><a href="javascript:;" class="icon-box" onclick="selectAmount(this);" style="display: block;
+                color: #ff3d00; font-size: 20px; font-weight: bold; text-align: center; line-height: 36px;"
+                data-amount="1000">1000元</a></li>
+            <li><a href="javascript:;" class="icon-box" onclick="selectAmount(this);" style="display: block;
+                color: #ff3d00; font-size: 20px; font-weight: bold; text-align: center; line-height: 36px;"
+                data-amount="2000">2000元</a></li>
+            <li><a href="javascript:;" class="icon-box" onclick="selectAmount(this);" style="display: block;
+                color: #ff3d00; font-size: 20px; font-weight: bold; text-align: center; line-height: 36px;"
+                data-amount="3000">3000元</a></li>
+        </ul>
+        <input type="hidden" autocomplete="off" class="fillmoney" size="15" value="0" name="money"
+            id="haoyi_alipay_money" />
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="haoyi_alipay|zfbperson" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="submit" value="立即充值" class="btn_pay" />
+    </div>
+    </form>
+</div>
+@*新付网银*@
+<div class="payDiv" id="p_xinfu_bank" style="display: none;">
+    <form id="form_xinfu_bank" method="post" target="_blank" action="@ViewBag.ZTPay_Url/user/redirectpay">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+            class="fillmoney" size="15" value="100" name="money" id="xinfu_bank_money" />
+        元@*<em class="ye">(额外赠送充值金额1%的红包)</em>*@
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="xinfu_bank|bank" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="submit" value="立即充值" class="btn_pay" />
+        @*<a class="btn_pay" id="btn_pay" href="javascript:void(0)" type="button">立即充值</a>*@
+    </div>
+    </form>
+    <div style="clear: both;">
+    </div>
+</div>
+@*新付快捷*@
+<div class="payDiv" id="p_xinfu_express" style="display: none;">
+    <form id="form_xinfu_express" method="post" target="_blank">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+            class="fillmoney" size="15" value="100" name="money" id="xinfu_express_money" />
+        元@*<em class="ye">(额外赠送充值金额1%的红包)</em>*@
+    </div>
+    <div class="clear">
+        <em class="ye">请先个人资料里绑定银行卡，才能使用快捷支付。</em>
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="xinfu_express|0" />
+        <input type="hidden" name="no" value="@bankCardInfo.BankCardNumber" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="submit" id="bt_xinfu_express" value="立即充值" class="btn_pay" onclick="xinfu_express_Sumbit();" />
+        @*<a class="btn_pay" id="btn_pay" href="javascript:void(0)" type="button">立即充值</a>*@
+    </div>
+    </form>
+    <div style="clear: both;">
+    </div>
+</div>
+@*新付微信*@
+<div class="payDiv" id="p_xinfu_weixin" style="display: none;">
+    <form id="form_xinfu_weixin" method="post" target="_blank" action="@ViewBag.ZTPay_Url/user/redirectpay">
+    <div class="clear">
+        <span class="span_money">请输入充值金额：</span>
+        <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+            onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+            class="fillmoney" size="15" value="100" name="money" id="xinfu_weixin_money" />
+        元@*<em class="ye">(额外赠送充值金额1%的红包)</em>*@
+    </div>
+    <div style="padding-left: 100px; margin-top: 20px;">
+        <input type="hidden" name="payType" value="xinfu_weixin|weixin" />
+        <input type="hidden" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+        <input type="hidden" name="userId" value="@currentUser.LoginInfo.UserId" />
+        <input type="submit" value="立即充值" class="btn_pay" />
+        @*<a class="btn_pay" id="btn_pay" href="javascript:void(0)" type="button">立即充值</a>*@
+    </div>
+    </form>
+    <div style="clear: both;">
+    </div>
+</div>

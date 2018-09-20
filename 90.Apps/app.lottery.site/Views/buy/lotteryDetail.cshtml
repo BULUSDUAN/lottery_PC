@@ -1,0 +1,138 @@
+﻿@{
+    var game = ViewBag.Game;
+    var gameName = ViewBag.GameName;
+}
+<div class="content_pub web_news">
+    <div class="cp_slide_nav">
+        <label class="cp_slide_tip">
+            @(gameName)开奖信息</label>
+        <a target="_blank" href="/staticHtml/lottery/index.html" class="more">更多&gt;&gt;</a>
+    </div>
+    <div id="prizeInfo" class="cp_slide_body">
+        <p class="rb_p1">
+            <strong>@(gameName)</strong>第<em class="red" id="GameInfo_PreIssuse">0000-000</em>期 &lt; 
+            <a href="javascript:lottery.getPrizeNumber(true);">上期</a> | 
+            <a href="javascript:lottery.getPrizeNumber(false);">下期</a> &gt;
+        </p>
+        <p class="rb_p2">开奖时间：<span id="award_time">0000-00-00 00:00:00</span></p>
+        <p class="rb_p3" id="GameInfo_AwardNumberList">
+            @{
+                if (game == "SSQ")
+                {
+                    <i isopen="n">--</i>
+                    <i isopen="n">--</i>
+                    <i isopen="n">--</i>
+                    <i isopen="n">--</i>
+                    <i isopen="n">--</i>
+                    <i isopen="n">--</i>
+                    <i isopen="n" class="blueball">--</i>
+                }
+                else if (game == "DLT")
+                {
+                    <i isopen="n">--</i>
+                    <i isopen="n">--</i>
+                    <i isopen="n">--</i>
+                    <i isopen="n">--</i>
+                    <i isopen="n">--</i>
+                    <i isopen="n" class="blueball">--</i>
+                    <i isopen="n" class="blueball">--</i>
+                }
+                else if (game == "FC3D" || game == "PL3")
+                {
+                    <i isopen="n">--</i>
+                    <i isopen="n">--</i>                
+                    <i isopen="n">--</i>}
+            }
+        </p>
+        <dl>
+            <dt>
+                <span class="kjxx_jx">奖项</span>
+                <span class="kjxx_zs">注数</span>
+                <span class="kjxx_jj">每注奖金(元)</span>
+                <span class="kjxx_zjtj">中奖条件</span>
+            </dt>
+            @{
+                if (game == "SSQ")
+                {
+            <dd grade="1">
+                <span class="kjxx_jx">一等奖</span>
+                <span class="kjxx_zs red">-</span>
+                <span class="kjxx_jj">-</span>
+                <span class="kjxx_zjtj"><em class="red">6</em>+<em class="blue">1</em></span>
+            </dd>
+            <dd grade="2" class="gray">
+                <span class="kjxx_jx">二等奖</span>
+                <span class="kjxx_zs red">-</span>
+                <span class="kjxx_jj">-</span>
+                <span class="kjxx_zjtj"><em class="red">6</em>+<em class="blue">0</em></span>
+            </dd>
+            <dd grade="3">
+                <span class="kjxx_jx">三等奖</span>
+                <span class="kjxx_zs red">-</span>
+                <span class="kjxx_jj">-</span>
+                <span class="kjxx_zjtj"><em class="red">5</em>+<em class="blue">1</em></span>
+            </dd>
+            <dd grade="4" class="gray">
+                <span class="kjxx_jx">四等奖</span>
+                <span class="kjxx_zs red">-</span>
+                <span class="kjxx_jj">-</span>
+                <span class="kjxx_zjtj"><em class="red">5</em>+<em class="blue">0</em>/<em class="red">4</em>+<em class="blue">1</em></span>
+            </dd>
+            <dd grade="5">
+                <span class="kjxx_jx">五等奖</span>
+                <span class="kjxx_zs red">-</span>
+                <span class="kjxx_jj">-</span>
+                <span  class="kjxx_zjtj"><em class="red">3</em>+<em class="blue">1</em>/<em class="red">4</em>+<em class="blue">0</em></span>
+            </dd>
+            <dd grade="6" class="gray">
+                <span class="kjxx_jx">六等奖</span>
+                <span class="kjxx_zs red">-</span>
+                <span class="kjxx_jj">-</span>
+                <span class="kjxx_zjtj"><em class="red">2</em>+<em class="blue">1</em>/<em class="red">1</em>+<em class="blue">1</em>/<em class="red">0</em>+<em class="blue">1</em></span>
+            </dd>
+                }
+                else if (game == "DLT")
+                {
+                    <dd grade="1">
+                        <span class="kjxx_jx">一等奖</span>
+                        <span class="kjxx_zs red">-</span>
+                        <span class="kjxx_jj">-</span>
+                        <span class="kjxx_zjtj"><em class="red">5</em>+<em class="blue">2</em></span>
+                    </dd>
+                    <dd grade="2" class="gray">
+                        <span class="kjxx_jx">二等奖</span>
+                        <span class="kjxx_zs red">-</span>
+                        <span class="kjxx_jj">-</span>
+                        <span class="kjxx_zjtj"><em class="red">5</em>+<em class="blue">1</em></span>
+                    </dd>
+                    <dd grade="3">
+                        <span class="kjxx_jx">三等奖</span>
+                        <span class="kjxx_zs red">-</span>
+                        <span class="kjxx_jj">-</span>
+                        <span class="kjxx_zjtj"><em class="red">5</em>+<em class="blue">0</em>/<em class="red">4</em>+<em class="blue">2</em></span>
+                    </dd>
+                    <dd grade="4" class="gray">
+                        <span class="kjxx_jx">四等奖</span>
+                        <span class="kjxx_zs red">-</span>
+                        <span class="kjxx_jj">-</span>
+                        <span class="kjxx_zjtj"><em class="red">4</em>+<em class="blue">1</em>/<em class="red">3</em>+<em class="blue">2</em></span>
+                    </dd>
+                    <dd grade="5">
+                        <span class="kjxx_jx">五等奖</span>
+                        <span class="kjxx_zs red">-</span>
+                        <span class="kjxx_jj">-</span>
+                        <span class="kjxx_zjtj"><em class="red">4</em>+<em class="blue">0</em>/<em class="red">3</em>+<em class="blue">1</em>/<em class="red">2</em>+<em class="blue">2</em></span>
+                    </dd>
+                    <dd grade="6" class="gray">
+                        <span class="kjxx_jx">六等奖</span>
+                        <span class="kjxx_zs red">-</span>
+                        <span class="kjxx_jj">-</span>
+                        <span class="kjxx_zjtj"><em class="red">3</em>+<em class="blue">0</em>/<em class="red">1</em>+<em class="blue">2</em>/<em class="red">2</em>+<em class="blue">1</em>/<em class="red">0</em>+<em class="blue">2</em></span>
+                    </dd>
+                }
+            }
+        </dl>
+    </div>
+    <div class="cp_slide_banner">
+        <s></s><span id="openPrizeDetail" class="cp_slide_close" onclick="lottery.expandPrize(this)">展开</span></div>
+</div>

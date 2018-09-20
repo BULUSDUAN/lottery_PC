@@ -1,0 +1,84 @@
+﻿@using GameBiz.Core;
+@{
+    ViewBag.Title = "名家管理 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "名家管理, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var ExpertRecord = ViewBag.ExpertRecord as ExperterAnalyzeInfoCollection;
+    app.lottery.site.Models.CurrentUserInfo user = ViewBag.User;
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>名家分析</li>
+    </ul>
+</div>
+<div class="center mt10">
+    @{Html.RenderAction("menu", "Member");}
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <ul class="mymenu" style="margin-bottom:5px;">
+            <li><a href="/member/AddExpertAnalyze">发布心水推荐</a></li>
+            <li class="myons"><a href="/member/QueryExpertRecord">发布心水记录</a></li>
+        </ul>
+        <div id="mjgl">
+            <table class="betorder_table extper_tab" width="100%">
+                <tr class="jjtb-tr1">
+                    <td width="10%" height="23" class="xian">
+                        时间
+                    </td>
+                    <td width="25%" class="xian">
+                        主题
+                    </td>
+                    <td width="10%" class="xian">
+                        价格
+                    </td>
+                    <td width="8%" class="xian">
+                        售卖次数
+                    </td>
+                    <td width="10%" class="last-td">
+                        查看
+                    </td>
+                </tr>
+                @if (ExpertRecord != null)
+                {
+                    foreach (var item in ExpertRecord.List)
+                    {
+                    <tr class="tt">
+                        <td width="10%" height="23">
+                            @item.CreateTime.ToString("yyyy-MM-dd")
+                        </td>
+                        <td width="25%" class="expert_title">
+                            @item.Title
+                        </td>
+                        <td width="10%">
+                            @item.Price.ToString("N2")
+                        </td>
+                        <td width="10%">
+                            @item.SellCount
+                        </td>
+                        <td width="10%" class="last-td">
+                            <a href="/Expert/PersonArticle?AndanalyzeId=@item.AnalyzeId&experterid=@user.LoginInfo.UserId&time=@item.CreateTime.ToString("yyyy-MM-dd")" target="_blank">查看</a>
+                        </td>
+                    </tr>
+                    }
+                }
+                <tr class="last-tr no-bottom">
+                    <td colspan="7">@ViewHelpers.Pager4("getUserRebate", ViewBag.pageNo, ViewBag.PageSize, ExpertRecord.TotalCount)
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="clearfix">
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+<script type="text/javascript">
+    var getUserRebate = function (pageNo, pageSize) {
+        location.search = "pageNo=" + pageNo + "&pageSize" + pageSize;
+    };
+</script>

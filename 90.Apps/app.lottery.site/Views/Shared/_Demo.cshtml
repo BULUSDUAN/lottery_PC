@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <title>@ViewBag.Title</title>
+    @UserHelper.css("Demo.css")
+    @UserHelper.js_share("jquery-1.5.2.min.js")
+</head>
+<body>
+    <script type="text/javascript">
+        $(function () {
+            $(".daohang li").click(function () {
+                var cc = $(this).attr("id").split("_");
+                $(".daohang li").removeClass("daohang_li");
+                $(this).addClass("daohang_li");
+
+                $(".contents_img li").css("display", "none");
+                $("#dcontents_img_" + cc[1]).css("display", "block");
+            });
+            $(".contents_img p").click(function () {
+                var cc = $(this).attr("id").split("_");
+                var count = parseInt(cc[1]) + 1;
+                $(".daohang li").removeClass("daohang_li");
+                $(".contents_img li").css("display", "none");
+
+                $("#dcontents_img_" + count).css("display", "block");
+                $("#daohang_" + count).addClass("daohang_li");
+
+            });
+        });
+</script>
+    <div class="wrap">
+        @RenderBody()
+    </div>
+   
+     @{Html.RenderPartial("tj", "Shared");}
+</body>
+</html>

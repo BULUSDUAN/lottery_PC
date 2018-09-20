@@ -1,0 +1,103 @@
+﻿@{
+    Layout = "../Shared/_LayoutFoud.cshtml";
+    ViewBag.Title = "返点提取";
+    var user = ViewBag.CurrentUser as app.lottery.site.Models.CurrentUserInfo;
+    var balance = ViewBag.CurrentUserBalance as GameBiz.Core.UserBalanceInfo;
+
+}
+
+<div class="center mt10">
+    @{Html.RenderAction("menuFoud", "Member");}
+    @{Html.RenderAction("toptipFoud", "Member");}
+    <div class="new_buy_right">
+        <div class="betorder_top">
+            <ul>
+                <li ><a href="/member/integraldetail">返点明细</a></li>
+                <li class="betorder_topSelected"><a href="/member/integralextract">返点提取</a></li>
+                <li><a href="/member/drawingsrecordfoud">提取记录</a></li>
+                <li><a href="/member/integralinto">返点转入</a></li>
+                <li><a href="/member/integralintodetail">转入记录</a></li>
+                 <li><a href="/member/jf">我的返点</a></li>
+            </ul>
+        </div>
+        <div class="betorder_con clearfix">
+            @if (user.IsAuthenticationMobile && user.IsAuthenticationRealName && user.IsBindBank)
+            {
+
+                <div class="alipay-content2 clearfix">
+                    <form action="/member/ffetchvalidate" method="post" onsubmit=" return checkInput(); " autocomplete="off">
+                        <ul class="userinfo_list">
+                            <li style="display: none"><b class="username"></b><span class="sp120">持卡人：</span><em style="color: #3b73cc">@user.RealNameInfo.RealName</em>
+                            </li>
+                            <li style="display: none"><b class="bankname"></b><span class="sp120">开户银行名称：</span> @user.BankCardInfo.BankName @(!string.IsNullOrEmpty(user.BankCardInfo.ProvinceName) && !string.IsNullOrEmpty(user.BankCardInfo.CityName) ? "(" + user.BankCardInfo.ProvinceName + "/" + user.BankCardInfo.CityName + ")" : user.BankCardInfo.ProvinceName + (string.IsNullOrEmpty(user.BankCardInfo.CityName) ? "" : "/" + user.BankCardInfo.CityName))
+                                @user.BankCardInfo.BankSubName
+                            </li>
+                            <li style="display: none"><b class="bankcard"></b><span class="sp120">银行卡号：</span>@SiteString.EncodeBankCardNumber(user.BankCardInfo.BankCardNumber)
+                            </li>
+                            <li><b class="ktmoney"></b><span class="sp120">可提返点：</span><em style="color: #ff3c00; font-weight: bold">@balance.CommissionBalance.ToString("f") </em>
+                            </li>
+                            <li style="margin: 10px 0;"><b class="tkmoney"></b><span class="sp120">提取返点：</span><input type="text" id="money" name="money" maxlength="8" value="10" class="fillmoney" size="15" onkeydown=" number_check(this, event) " />
+                            </li>
+                            <li style="margin-bottom: 20px;"><span class="sp120">&nbsp;</span><input type="hidden" name="fetchType" value="bank" />
+                                <input type="hidden" name="backurl" value="@Request.Url.AbsoluteUri.Split('?')[0]" />
+                                <input type="submit" value="下一步" class="btn_next" />
+                                @*      <input type="button" value="下一步" class="btn_next btn_next_disabled" id="btn_next" />*@
+                                <span class="error-box" id="errbox"><span class="msg" id="errMsgFetch"></span></span> 
+                            </li>
+                        </ul>
+                    </form>
+                    <script type="text/javascript">
+                        var msg = location.request("errMsg") ? location.request("errMsg") : "";
+                        showMsg(msg);
+
+                        function showMsg(msg) {
+                            if (msg.length > 0) {
+                                $("#errbox").show();
+                                $("#errMsgFetch").text(msg);
+                            } else {
+                                $("#errMsgFetch").text("");
+                                $("#errbox").hide();
+                            }
+                        }
+                        function checkInput() {
+                            msg = '';
+                            var money = $.trim($("#money").val());
+                            if (money && Tool.isNumber(money) && parseInt(money, 10) >= 10) {
+                                msg = '';
+                            } else {
+                                msg = "请输入正确的返点(提取返点不能小于10)";
+                                $("#money").focus();
+                            }
+                            showMsg(msg);
+                            return !msg.length > 0;
+                        }
+                    </script>
+                </div>
+
+            }
+            else
+            {
+                 
+                if (!user.IsAuthenticationMobile)
+                { <p class="tip2">
+                      <i></i>
+                      温馨提示：您当前未绑定手机，为保障您的账户安全，请先去网站绑定手机。
+                  </p>
+                }
+                else if (!user.IsAuthenticationRealName)
+                { <p class="tip2">
+                      <i></i>
+                      温馨提示：您当前未实名认证，为保障您的账户安全，请先去网站实名认证。
+                  </p>
+                }
+                else if (!user.IsBindBank)
+                {
+                    <p class="tip2">
+                        <i></i>
+                        温馨提示：您当前未绑定银行卡，为保障您的账户安全，请先去网站绑定银行卡。
+                    </p>
+                }
+            }
+        </div>
+    </div>
+</div>

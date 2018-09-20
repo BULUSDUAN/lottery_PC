@@ -1,0 +1,1039 @@
+﻿@{
+    Layout = "~/Views/lotteryTrend/_Layout.cshtml";
+    var pageSize = Request["pageSize"];
+    if (pageSize != "" && pageSize != null)
+    {
+        ViewBag.Title = "双色球二三跨度走势图近" + pageSize + "期" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "双色球二三跨度走势图近" + pageSize + "期";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "双色球二三跨度走势图近" + pageSize + "期,查看更多双色球二三跨度走势图请登录" + SiteString.getHZSiteName(Request) + "彩票网.";
+    }
+    else
+    {
+        ViewBag.Title = "双色球二三跨度走势图-" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "双色球二三跨度走势图";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "彩票网为您提供专业的双色球二三跨度走势图,包括双色球红球第二个号码和第三个号码的跨度值带坐标和连线的走势图表,让彩民朋友更直观的分析双色球二三跨度走势.";
+    }
+    var KuaDu_23 = ViewBag.DataList as LotteryData.Core.SSQ_KuaDu_1_6_InfoCollection;
+    var a = 0;  
+}
+@{Html.RenderAction("ThendLink", "lotteryTrend");}
+<div id="container">
+    <div class="cont_box" style="width: 1002px;">
+        <table width="100%" cellspacing="1" cellpadding="0" border="0" align="center" class="table_box"
+            style="width: 1002px;" id="chartsTable">
+            <tbody>
+                <tr>
+                    <td align="center" class="tab_top" colspan="45">
+                        标注形式选择：
+                        <input type="checkbox" checked="checked" id="c_yl">
+                        <label for="c_yl">
+                            遗漏</label>
+                        <input type="checkbox" checked="checked" id="has_line">
+                        <label for="has_line">
+                            折线</label>
+                        <input type="checkbox" checked="checked" id="help_line">
+                        <label for="help_line">
+                            分隔线</label>
+                        <input type="checkbox" id="yl_zhu">
+                        <label for="yl_zhu">
+                            遗漏分层</label>
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td align="center" width="75" rowspan="2">
+                        期号<img src="@ViewHelpers.img("../images/trend/up.png")" id="sortImg" alt="" />
+                    </td>
+                    <td class="tred" colspan="6" rowspan="2">
+                        红球
+                    </td>
+                    <td colspan="28">
+                        跨度走势
+                    </td>
+                    <td colspan="10">
+                        跨度尾数
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td class="line_tdl">
+                        1
+                    </td>
+                    <td>
+                        2
+                    </td>
+                    <td>
+                        3
+                    </td>
+                    <td>
+                        4
+                    </td>
+                    <td>
+                        5
+                    </td>
+                    <td>
+                        6
+                    </td>
+                    <td>
+                        7
+                    </td>
+                    <td>
+                        8
+                    </td>
+                    <td>
+                        9
+                    </td>
+                    <td>
+                        10
+                    </td>
+                    <td>
+                        11
+                    </td>
+                    <td>
+                        12
+                    </td>
+                    <td>
+                        13
+                    </td>
+                    <td>
+                        14
+                    </td>
+                    <td>
+                        15
+                    </td>
+                    <td>
+                        16
+                    </td>
+                    <td>
+                        17
+                    </td>
+                    <td>
+                        18
+                    </td>
+                    <td>
+                        19
+                    </td>
+                    <td>
+                        20
+                    </td>
+                    <td>
+                        21
+                    </td>
+                    <td>
+                        22
+                    </td>
+                    <td>
+                        23
+                    </td>
+                    <td>
+                        24
+                    </td>
+                    <td>
+                        25
+                    </td>
+                    <td>
+                        26
+                    </td>
+                    <td>
+                        27
+                    </td>
+                    <td>
+                        28
+                    </td>
+                    <td class="line_tdl">
+                        0
+                    </td>
+                    <td>
+                        1
+                    </td>
+                    <td>
+                        2
+                    </td>
+                    <td>
+                        3
+                    </td>
+                    <td>
+                        4
+                    </td>
+                    <td>
+                        5
+                    </td>
+                    <td>
+                        6
+                    </td>
+                    <td>
+                        7
+                    </td>
+                    <td>
+                        8
+                    </td>
+                    <td>
+                        9
+                    </td>
+                </tr>
+            </tbody>
+            <tbody id="tdata" style="font-size: 12px; font-family: '宋体',Tahoma,Consolas,Arial,Simsun;">
+                @foreach (var item in KuaDu_23)
+                {
+                    a++;
+                    if (a % 5 == 0)
+                    {
+                    <tr class="tdbck">
+                        <td colspan="45">
+                        </td>
+                    </tr>
+                    }
+                    <tr>
+                        <td align="center">
+                            @item.IssuseNumber
+                        </td>
+                        <td class="hot12">
+                            @item.RedLotteryNumber.Split(',')[0]
+                        </td>
+                        <td class="hot12">
+                            @item.RedLotteryNumber.Split(',')[1]
+                        </td>
+                        <td class="hot12">
+                            @item.RedLotteryNumber.Split(',')[2]
+                        </td>
+                        <td class="hot12">
+                            @item.RedLotteryNumber.Split(',')[3]
+                        </td>
+                        <td class="hot12">
+                            @item.RedLotteryNumber.Split(',')[4]
+                        </td>
+                        <td class="hot12 line_rd">
+                            @item.RedLotteryNumber.Split(',')[5]
+                        </td>
+                        <td class="@(item.KD_23_1 == 0 ? "big" : "y101")">
+                            @(item.KD_23_1 == 0 ? item.KuaDu_23 : item.KD_23_1)
+                        </td>
+                        <td class="@(item.KD_23_2 == 0 ? "big" : "y101")">
+                            @(item.KD_23_2 == 0 ? item.KuaDu_23 : item.KD_23_2)
+                        </td>
+                        <td class="@(item.KD_23_3 == 0 ? "big" : "y101")">
+                            @(item.KD_23_3 == 0 ? item.KuaDu_23 : item.KD_23_3)
+                        </td>
+                        <td class="@(item.KD_23_4 == 0 ? "big" : "y101")">
+                            @(item.KD_23_4 == 0 ? item.KuaDu_23 : item.KD_23_4)
+                        </td>
+                        <td class="@(item.KD_23_5 == 0 ? "big" : "y101")">
+                            @(item.KD_23_5 == 0 ? item.KuaDu_23 : item.KD_23_5)
+                        </td>
+                        <td class="@(item.KD_23_6 == 0 ? "big" : "y101")">
+                            @(item.KD_23_6 == 0 ? item.KuaDu_23 : item.KD_23_6)
+                        </td>
+                        <td class="@(item.KD_23_7 == 0 ? "big" : "y101")">
+                            @(item.KD_23_7 == 0 ? item.KuaDu_23 : item.KD_23_7)
+                        </td>
+                        <td class="@(item.KD_23_8 == 0 ? "big" : "y101")">
+                            @(item.KD_23_8 == 0 ? item.KuaDu_23 : item.KD_23_8)
+                        </td>
+                        <td class="@(item.KD_23_9 == 0 ? "big" : "y101")">
+                            @(item.KD_23_9 == 0 ? item.KuaDu_23 : item.KD_23_9)
+                        </td>
+                        <td class="@(item.KD_23_10 == 0 ? "big" : "y101")">
+                            @(item.KD_23_10 == 0 ? item.KuaDu_23 : item.KD_23_10)
+                        </td>
+                        <td class="@(item.KD_23_11 == 0 ? "big" : "y101")">
+                            @(item.KD_23_11 == 0 ? item.KuaDu_23 : item.KD_23_11)
+                        </td>
+                        <td class="@(item.KD_23_12 == 0 ? "big" : "y101")">
+                            @(item.KD_23_12 == 0 ? item.KuaDu_23 : item.KD_23_12)
+                        </td>
+                        <td class="@(item.KD_23_13 == 0 ? "big" : "y101")">
+                            @(item.KD_23_13 == 0 ? item.KuaDu_23 : item.KD_23_13)
+                        </td>
+                        <td class="@(item.KD_23_14 == 0 ? "big" : "y101")">
+                            @(item.KD_23_14 == 0 ? item.KuaDu_23 : item.KD_23_14)
+                        </td>
+                        <td class="@(item.KD_23_15 == 0 ? "big" : "y101")">
+                            @(item.KD_23_15 == 0 ? item.KuaDu_23 : item.KD_23_15)
+                        </td>
+                        <td class="@(item.KD_23_16 == 0 ? "big" : "y101")">
+                            @(item.KD_23_16 == 0 ? item.KuaDu_23 : item.KD_23_16)
+                        </td>
+                        <td class="@(item.KD_23_17 == 0 ? "big" : "y101")">
+                            @(item.KD_23_17 == 0 ? item.KuaDu_23 : item.KD_23_17)
+                        </td>
+                        <td class="@(item.KD_23_18 == 0 ? "big" : "y101")">
+                            @(item.KD_23_18 == 0 ? item.KuaDu_23 : item.KD_23_18)
+                        </td>
+                        <td class="@(item.KD_23_19 == 0 ? "big" : "y101")">
+                            @(item.KD_23_19 == 0 ? item.KuaDu_23 : item.KD_23_19)
+                        </td>
+                        <td class="@(item.KD_23_20 == 0 ? "big" : "y101")">
+                            @(item.KD_23_20 == 0 ? item.KuaDu_23 : item.KD_23_20)
+                        </td>
+                        <td class="@(item.KD_23_21 == 0 ? "big" : "y101")">
+                            @(item.KD_23_21 == 0 ? item.KuaDu_23 : item.KD_23_21)
+                        </td>
+                        <td class="@(item.KD_23_22 == 0 ? "big" : "y101")">
+                            @(item.KD_23_22 == 0 ? item.KuaDu_23 : item.KD_23_22)
+                        </td>
+                        <td class="@(item.KD_23_23 == 0 ? "big" : "y101")">
+                            @(item.KD_23_23 == 0 ? item.KuaDu_23 : item.KD_23_23)
+                        </td>
+                        <td class="@(item.KD_23_24 == 0 ? "big" : "y101")">
+                            @(item.KD_23_24 == 0 ? item.KuaDu_23 : item.KD_23_24)
+                        </td>
+                        <td class="@(item.KD_23_25 == 0 ? "big" : "y101")">
+                            @(item.KD_23_25 == 0 ? item.KuaDu_23 : item.KD_23_25)
+                        </td>
+                        <td class="@(item.KD_23_26 == 0 ? "big" : "y101")">
+                            @(item.KD_23_26 == 0 ? item.KuaDu_23 : item.KD_23_26)
+                        </td>
+                        <td class="@(item.KD_23_27 == 0 ? "big" : "y101")">
+                            @(item.KD_23_27 == 0 ? item.KuaDu_23 : item.KD_23_27)
+                        </td>
+                        <td class="@(item.KD_23_28 == 0 ? "big line_rd" : "y101 line_rd")">
+                            @(item.KD_23_28 == 0 ? item.KuaDu_23 : item.KD_23_28)
+                        </td>
+                        <td class="@(item.KDW_23_0 == 0 ? "tbg1" : "y101")">
+                            @(item.KDW_23_0 == 0 ? item.KuaDu_W_23 : item.KDW_23_0)
+                        </td>
+                        <td class="@(item.KDW_23_1 == 0 ? "tbg1" : "y101")">
+                            @(item.KDW_23_1 == 0 ? item.KuaDu_W_23 : item.KDW_23_1)
+                        </td>
+                        <td class="@(item.KDW_23_2 == 0 ? "tbg1" : "y101")">
+                            @(item.KDW_23_2 == 0 ? item.KuaDu_W_23 : item.KDW_23_2)
+                        </td>
+                        <td class="@(item.KDW_23_3 == 0 ? "tbg1" : "y101")">
+                            @(item.KDW_23_3 == 0 ? item.KuaDu_W_23 : item.KDW_23_3)
+                        </td>
+                        <td class="@(item.KDW_23_4 == 0 ? "tbg1" : "y101")">
+                            @(item.KDW_23_4 == 0 ? item.KuaDu_W_23 : item.KDW_23_4)
+                        </td>
+                        <td class="@(item.KDW_23_5 == 0 ? "tbg1" : "y101")">
+                            @(item.KDW_23_5 == 0 ? item.KuaDu_W_23 : item.KDW_23_5)
+                        </td>
+                        <td class="@(item.KDW_23_6 == 0 ? "tbg1" : "y101")">
+                            @(item.KDW_23_6 == 0 ? item.KuaDu_W_23 : item.KDW_23_6)
+                        </td>
+                        <td class="@(item.KDW_23_7 == 0 ? "tbg1" : "y101")">
+                            @(item.KDW_23_7 == 0 ? item.KuaDu_W_23 : item.KDW_23_7)
+                        </td>
+                        <td class="@(item.KDW_23_8 == 0 ? "tbg1" : "y101")">
+                            @(item.KDW_23_8 == 0 ? item.KuaDu_W_23 : item.KDW_23_8)
+                        </td>
+                        <td class="@(item.KDW_23_9 == 0 ? "tbg1" : "y101")">
+                            @(item.KDW_23_9 == 0 ? item.KuaDu_W_23 : item.KDW_23_9)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tbody>
+                <tr>
+                    <td align="center" class="bdtop line_r">
+                        出现次数
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KD_23_1 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KD_23_2 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KD_23_3 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KD_23_4 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KD_23_5 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KD_23_6 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KD_23_7 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KD_23_8 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KD_23_9 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KD_23_10 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KD_23_11 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KD_23_12 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KD_23_13 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KD_23_14 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KD_23_15 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KD_23_16 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KD_23_17 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KD_23_18 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KD_23_19 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KD_23_20 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KD_23_21 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KD_23_22 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KD_23_23 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KD_23_24 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KD_23_25 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KD_23_26 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KD_23_27 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(KuaDu_23.Count(p => p.KD_23_28 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KDW_23_0 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KDW_23_1 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KDW_23_2 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KDW_23_3 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KDW_23_4 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KDW_23_5 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KDW_23_6 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KDW_23_7 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(KuaDu_23.Count(p => p.KDW_23_8 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(KuaDu_23.Count(p => p.KDW_23_9 == 0))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        平均遗漏
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KD_23_1) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KD_23_2) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KD_23_3) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KD_23_4) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KD_23_5) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KD_23_6) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KD_23_7) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KD_23_8) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KD_23_9) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KD_23_10) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KD_23_11) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KD_23_12) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KD_23_13) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KD_23_14) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KD_23_15) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KD_23_16) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KD_23_17) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KD_23_18) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KD_23_19) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KD_23_20) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KD_23_21) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KD_23_22) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KD_23_23) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KD_23_24) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KD_23_25) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KD_23_26) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KD_23_27) / KuaDu_23.Count)
+                    </td>
+                    <td class="line_r">
+                        @(KuaDu_23.Sum(p => p.KD_23_28) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KDW_23_0) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KDW_23_1) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KDW_23_2) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KDW_23_3) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KDW_23_4) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KDW_23_5) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KDW_23_6) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KDW_23_7) / KuaDu_23.Count)
+                    </td>
+                    <td>
+                        @(KuaDu_23.Sum(p => p.KDW_23_8) / KuaDu_23.Count)
+                    </td>
+                    <td class="line_r">
+                        @(KuaDu_23.Sum(p => p.KDW_23_9) / KuaDu_23.Count)
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        最大遗漏
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KD_23_1))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KD_23_2))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KD_23_3))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KD_23_4))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KD_23_5))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KD_23_6))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KD_23_7))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KD_23_8))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KD_23_9))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KD_23_10))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KD_23_11))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KD_23_12))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KD_23_13))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KD_23_14))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KD_23_15))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KD_23_16))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KD_23_17))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KD_23_18))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KD_23_19))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KD_23_20))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KD_23_21))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KD_23_22))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KD_23_23))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KD_23_24))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KD_23_25))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KD_23_26))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KD_23_27))
+                    </td>
+                    <td class="line_r">
+                        @(KuaDu_23.Max(p => p.KD_23_28))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KDW_23_0))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KDW_23_1))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KDW_23_2))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KDW_23_3))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KDW_23_4))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KDW_23_5))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KDW_23_6))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KDW_23_7))
+                    </td>
+                    <td>
+                        @(KuaDu_23.Max(p => p.KDW_23_8))
+                    </td>
+                    <td class="line_r">
+                        @(KuaDu_23.Max(p => p.KDW_23_9))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        当前遗漏
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KD_23_1)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KD_23_1)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KD_23_2)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KD_23_2)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KD_23_3)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KD_23_3)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KD_23_4)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KD_23_4)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KD_23_5)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KD_23_5)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KD_23_6)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KD_23_6)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KD_23_7)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KD_23_7)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KD_23_8)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KD_23_8)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KD_23_9)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KD_23_9)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KD_23_10)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KD_23_10)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KD_23_11)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KD_23_11)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KD_23_12)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KD_23_12)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KD_23_13)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KD_23_13)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KD_23_14)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KD_23_14)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KD_23_15)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KD_23_15)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KD_23_16)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KD_23_16)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KD_23_17)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KD_23_17)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KD_23_18)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KD_23_18)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KD_23_19)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KD_23_19)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KD_23_20)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KD_23_20)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KD_23_21)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KD_23_21)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KD_23_22)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KD_23_22)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KD_23_23)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KD_23_23)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KD_23_24)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KD_23_24)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KD_23_25)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KD_23_25)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KD_23_26)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KD_23_26)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KD_23_27)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KD_23_27)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KD_23_28)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KD_23_28)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KDW_23_0)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KDW_23_0)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KDW_23_1)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KDW_23_1)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KDW_23_2)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KDW_23_2)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KDW_23_3)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KDW_23_3)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KDW_23_4)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KDW_23_4)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KDW_23_5)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KDW_23_5)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KDW_23_6)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KDW_23_6)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KDW_23_7)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KDW_23_7)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KDW_23_8)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KDW_23_8)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(KuaDu_23[KuaDu_23.Count - 1].KDW_23_9)<br>
+                        <img width="8px" height="@(KuaDu_23[KuaDu_23.Count - 1].KDW_23_9)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr class="tabbg weight">
+                    <td align="center" rowspan="2" class="tred" colspan="7">
+                        红球
+                    </td>
+                    <td>
+                        1
+                    </td>
+                    <td>
+                        2
+                    </td>
+                    <td>
+                        3
+                    </td>
+                    <td>
+                        4
+                    </td>
+                    <td>
+                        5
+                    </td>
+                    <td>
+                        6
+                    </td>
+                    <td>
+                        7
+                    </td>
+                    <td>
+                        8
+                    </td>
+                    <td>
+                        9
+                    </td>
+                    <td>
+                        10
+                    </td>
+                    <td>
+                        11
+                    </td>
+                    <td>
+                        12
+                    </td>
+                    <td>
+                        13
+                    </td>
+                    <td>
+                        14
+                    </td>
+                    <td>
+                        15
+                    </td>
+                    <td>
+                        16
+                    </td>
+                    <td>
+                        17
+                    </td>
+                    <td>
+                        18
+                    </td>
+                    <td>
+                        19
+                    </td>
+                    <td>
+                        20
+                    </td>
+                    <td>
+                        21
+                    </td>
+                    <td>
+                        22
+                    </td>
+                    <td>
+                        23
+                    </td>
+                    <td>
+                        24
+                    </td>
+                    <td>
+                        25
+                    </td>
+                    <td>
+                        26
+                    </td>
+                    <td>
+                        27
+                    </td>
+                    <td>
+                        28
+                    </td>
+                    <td>
+                        0
+                    </td>
+                    <td>
+                        1
+                    </td>
+                    <td>
+                        2
+                    </td>
+                    <td>
+                        3
+                    </td>
+                    <td>
+                        4
+                    </td>
+                    <td>
+                        5
+                    </td>
+                    <td>
+                        6
+                    </td>
+                    <td>
+                        7
+                    </td>
+                    <td>
+                        8
+                    </td>
+                    <td>
+                        9
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td colspan="28">
+                        跨度走势
+                    </td>
+                    <td colspan="11">
+                        跨度尾数
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $(function () {
+
+        var allLines = new Array();
+        allLines.push({ line: $(".big"), color: "#CE7B00" });
+        allLines.push({ line: $(".tbg1"), color: "#05650E" });
+        var line = new XTLine();
+        for (i = 0; i < allLines.length; i++) {
+            var l = allLines[i];
+
+            line.color = l.color;
+            line.arrayBalls = l.line;
+            line.showrect();
+        }
+
+
+        $("#has_line").click(function () {
+            line.display(this.checked);
+        })
+    })
+</script>

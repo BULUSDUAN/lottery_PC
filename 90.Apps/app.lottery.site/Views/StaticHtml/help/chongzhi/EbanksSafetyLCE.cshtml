@@ -1,0 +1,71 @@
+﻿@{
+    var Title = "网上支付时提示此网站出具的安全证书已过期或还未生效？";
+    ViewBag.Title = Title + " - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+   @ViewHelpers.css("help.css")
+} 
+  <div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">玩彩网</a> > </li>
+        <li><a href="/staticHtml/help/index.html">&nbsp;帮助中心</a> > </li>
+        <li>&nbsp;网上支付时提示此网站出具的安全证书已过期或还未生效？</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type = "pay", name = "EbanksPay" });}
+<div class="help_r">
+         
+<div class="det_box">
+            	<h2>网上支付时提示此网站出具的安全证书已过期或还未生效？</h2>
+                <div class="det_c"><p class="p17" style="text-align:left;text-indent:-18pt;margin-top:0pt;margin-bottom:0pt;margin-left:18pt;"><span class="15" 宋体";font-size:12pt;font-weight:normal;mso-spacerun:"yes";"="" style="letter-spacing:0pt;font-family:">1、检查系统日期和时间是否设置正确</span><span class="15" 宋体";font-size:12pt;font-weight:normal;mso-spacerun:"yes";"="" style="letter-spacing:0pt;font-family:"><!--?xml:namespace prefix = o ns = "urn:schemas-microsoft-com:office:office" /--><o:p></o:p></span></p>
+<p class="p0" style="text-align:left;margin-top:0pt;margin-bottom:0pt;"><span class="15" 宋体";font-size:12pt;font-weight:normal;mso-spacerun:"yes";"="" style="letter-spacing:0pt;font-family:">您好，请检查系统的日期和时间是否正确，即年月日是否正确&mdash;&mdash;设置正确日期和时间后重新充值操作</span><span 宋体";font-size:12pt;mso-spacerun:"yes";"="" style="font-family:"><br>
+</span><span 宋体";font-size:12pt;mso-spacerun:"yes";"="" style="font-family:">2、若日期和时间正确</span><span 宋体";font-size:12pt;mso-spacerun:"yes";"="" style="font-family:"><o:p></o:p></span></p>
+<p class="p0" style="text-align:left;margin-top:0pt;margin-bottom:0pt;"><span 宋体";font-size:12pt;mso-spacerun:"yes";"="" style="font-family:">请使用IE浏览器操作&mdash;&mdash;选择工具&mdash;&mdash;</span><span class="16" 宋体";font-size:12pt;mso-spacerun:"yes";"="" style="font-family:">Internet</span><span class="16" 宋体";font-size:12pt;mso-spacerun:"yes";"="" style="font-family:">选项&mdash;&mdash;</span><span class="16" 宋体";font-size:12pt;mso-spacerun:"yes";"="" style="font-family:">选择&nbsp;安全&nbsp;选项卡</span><span class="16" 宋体";font-size:12pt;mso-spacerun:"yes";"="" style="font-family:">&mdash;&mdash;将安全级别设置为‘中’&mdash;&mdash;点击确定。点击继续浏览该网站。</span><span 宋体";font-size:12pt;mso-spacerun:"yes";"="" style="color:#000000;font-family:"><o:p></o:p></span></p>
+<!--EndFragment-->                </div>
+                
+               @* <div class="det_a feedback">
+                <div>以上内容是否解决了您的问题呢？</div>
+                              
+                <div>
+                <a id="btn_a_yes" class="btn"><span class="feedback_yes">是，已经解决。</span></a> <a class="btn" id="btn_a_no" href="javascript:void(0);"><span class="feedback_no">否，尚未解决。</span></a>
+                    <div style="display:none;" class="feedback_form clearfix" id="feed_div">                  
+                    <a id="fclose" class="feedback-close" href="javascript:void(0);">关闭</a>     
+                    <span style="display:none;" id="feed_detail"> 
+	                    <form method="post" name="feed_dtl" id="feed_dtlf">             
+		                    <span class="fb-input"><input type="radio" value="1" name="nodtl"> 描述不清晰</span>
+		                    <span class="fb-input"><input type="radio" value="2" name="nodtl"> 字太多，不想看</span>
+		                    <span class="fb-input"><input type="radio" value="3" name="nodtl"> 太复杂，看不懂</span>
+		                    <span class="fb-input"><input type="button" value="提交" name="fsbmt"></span>
+		                </form>    
+	                </span>
+                    <div style="display:none;" class="feedback-suc l" id="feed_result">您的反馈信息已经提交，谢谢您的反馈。</div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                  
+                </script>                                           
+                </div>
+                
+                <div class="det_a">
+                	<div class="det_a_l">相关问题：</div>
+                    <div class="det_a_r">
+                    	<ul>
+                        	                    	</ul>    
+                    </div>
+                </div>*@
+            </div>
+
+        </div>
+         </div>
+<div class="clearfix"></div>
+
+ @ViewHelpers.js("help.js")
+
+
+
+
+
+

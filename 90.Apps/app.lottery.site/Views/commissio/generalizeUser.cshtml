@@ -1,0 +1,228 @@
+﻿@using External.Core;
+@using app.lottery.site.Models
+@{
+    ViewBag.Title = "推广用户, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "推广用户, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var list = ViewBag.GeneralizeUser as External.Core.Agnet.AgentUserInfoCollection;
+    var user = ViewBag.CurrentUser as app.lottery.site.Models.CurrentUserInfo;
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+    @UserHelper.css("commissio.css")
+}
+<div id="bet_confirm_show" style="height: auto">
+</div>
+<div id="fullbg">
+</div>
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>推广用户</li>
+    </ul>
+</div>
+<div class="center mt10">
+    @{Html.RenderAction("menu", "Member");}
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mycommenu">
+            <a href="javascript:void(0);" checklg="/commissio/myTc">我的提成</a>
+            @if (user.LoginInfo.OCAgentType == GameBiz.Core.OCAgentCategory.SportLotterySubAgent)
+            {
+                <a href="javascript:void(0);" checklg="/commissio/subordinateuser" class="up">推广用户</a> 
+            }
+            else
+            {
+                <a href="javascript:void(0);" checklg="/commissio/generalizeUser" class="up">推广用户</a> 
+            }
+            <a href="javascript:void(0);" checklg="/commissio/CommissionRecord">返点结算</a> <a href="javascript:void(0);"
+                checklg="/commissio/StatisticsQuery">统计查询</a> <a href="javascript:void(0);" checklg="/commissio/SchemeManage">
+                    方案管理</a>
+        </div>
+        <div class="scheme">
+            @if (user.LoginInfo.OCAgentType != GameBiz.Core.OCAgentCategory.SportLotterySubAgent)
+            {
+                <div class="scheme-show xzscheme" style="margin-left: 10px;">
+                    <a href="javascript:void(0)" checklg="/commissio/generalizeUser">下级代理</a>
+                </div>
+            }
+            @if (user.LoginInfo.OCAgentType != GameBiz.Core.OCAgentCategory.SportLotterySubAgent)
+            {
+                <div class="scheme-show">
+                    <a href="javascript:void(0)" checklg="/commissio/subordinateuser">下级用户</a>
+                </div>
+            }
+            else
+            {
+                <div class="scheme-show xzscheme">
+                    <a href="javascript:void(0)" checklg="/commissio/subordinateuser">下级用户</a>
+                </div>
+            }
+            @if (user.LoginInfo.OCAgentType != GameBiz.Core.OCAgentCategory.SportLotterySubAgent)
+            {
+                <div class="scheme-show">
+                    <a href="javascript:void(0)" checklg="/commissio/dealerMsg">添加代理</a>
+                </div>
+            }
+            <div class="scheme-show" style="width: 130px;">
+                <a href="javascript:void(0)" checklg="/commissio/setNewUserRebate">设置新用户返点</a>
+            </div>
+            <div class="scheme-show">
+                <a href="javascript:void(0)" checklg="/commissio/popularizeLink">推广链接</a>
+            </div>
+            @if (user.LoginInfo.OCAgentType == GameBiz.Core.OCAgentCategory.SportLotteryAgent)
+            {
+                <div class="scheme-show">
+                    <a href="javascript:void(0)" checklg="/commissio/registernewagency">注册新代理</a>
+                </div>
+                <div class="scheme-show">
+                    <a href="javascript:void(0)" checklg="/commissio/newagencylist">店铺代理</a>
+                </div>
+            }
+        </div>
+        <table border="0" cellpadding="0" cellspacing="0" class="generalizeUser-table">
+            <tr class="t-tr1">
+                <td colspan="14">
+                    <form>
+                    <div style="width: 620px !important 540px; float: left; height: 40px; line-height: 40px;">
+                        &nbsp;&nbsp;&nbsp;&nbsp;关键字：<input type="text" name="key" id="txtKeyWord" value="" />
+                    </div>
+                    <div style="width: 60px; float: left; height: 40px;">
+                        &nbsp;&nbsp;<a class="Query" href="javascript:void(0)" onclick="document.forms[0].submit()"></a>
+                    </div>
+                    </form>
+                </td>
+            </tr>
+            <tr class="gu-t-tr2">
+                <td width="55">
+                    下线 <span class="commissionM-table-sx"></span>
+                </td>
+                <td width="66">
+                    用户编号 <span class="commissionM-table-sx"></span>
+                </td>
+                <td width="100">
+                    用户名 <span class="commissionM-table-sx"></span>
+                </td>
+                <td width="50">
+                    实名 <span class="commissionM-table-sx"></span>
+                </td>
+                <td width="50">
+                    手机 <span class="commissionM-table-sx"></span>
+                </td>
+                <td width="50">
+                    余额 <span class="commissionM-table-sx"></span>
+                </td>
+                <td width="88">
+                    注册时间 <span class="commissionM-table-sx"></span>
+                </td>
+                <td width="62">
+                    传统足球 <span class="commissionM-table-sx"></span>
+                </td>
+                <td width="62">
+                    北京单场 <span class="commissionM-table-sx"></span>
+                </td>
+                <td width="62">
+                    竞彩足球 <span class="commissionM-table-sx"></span>
+                </td>
+                <td width="62">
+                    竞彩篮球 <span class="commissionM-table-sx"></span>
+                </td>
+                <td width="62">
+                    数字彩 <span class="commissionM-table-sx"></span>
+                </td>
+                <td width="62">
+                    高频彩 <span class="commissionM-table-sx"></span>
+                </td>
+                <td width="60">
+                    操作
+                </td>
+            </tr>
+            @if (list != null)
+            {
+                foreach (var item in list.AgentUserList)
+                {
+                <tr class="gu-bg-tr">
+                    <td width="55">
+                        @item.UserCount
+                    </td>
+                    <td width="66">
+                        @item.UserId
+                    </td>
+                    <td width="100">
+                        @item.DisplayName
+                    </td>
+                    <td width="50">
+                        @(item.RealName != null && item.RealName != ""&&item.IsSettedRealName ? "*" : "无")
+                    </td>
+                    <td width="50">
+                        @(item.Mobile != null && item.Mobile != ""&&item.IsSettedMobile ? "*" : "无")
+                    </td>
+                    <td width="50">
+                     
+                        @(item.TotalBalanceMoney.ToString().Substring(0, item.TotalBalanceMoney.ToString().IndexOf('.')))
+                    </td>
+                    <td width="88">
+                        @item.CreateTime
+                    </td>
+                    <td width="62">
+                        @item.CTZQ.ToString("N2")%
+                    </td>
+                    <td width="62">
+                        @item.BJDC.ToString("N2")%
+                    </td>
+                    <td width="62">
+                        @item.JCZQ.ToString("N2")%
+                    </td>
+                    <td width="62">
+                        @item.JCLQ.ToString("N2")%
+                    </td>
+                    <td width="62">
+                        @item.SZC.ToString("N2")%
+                    </td>
+                    <td width="60">
+                        @item.GPC.ToString("N2")%
+                    </td>
+                    <td width="" class="unfoldorfold">
+                        <a href="javascript:void(0)" onclick="showBg(this)" txtid="@item.UserId" txtName="@item.DisplayName">
+                            配置</a>
+                    </td>
+                </tr>
+                }
+            }
+            <tr>
+                <td colspan="14" style="border: 1px solid #d4d4d4;">
+                    @ViewHelpers.Pager4("getUserRebate", ViewBag.pageNo, ViewBag.pageSize, list == null ? 0 : list.TotalCount)
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            $(".generalizeUser-table tr:odd:gt(0)").css("backgroundColor", "#f7f7f7");
+        })
+        var getUserRebate = function (pageNo, pageSize) {
+            location.search = "pageNo=" + pageNo + "&pageSize" + pageSize;
+        };
+    </script>
+    <script type="text/javascript">
+        //显示灰色 jQuery 遮罩层
+        function showBg(obj) {
+            var id = $(obj).attr("txtid");
+            var name = $(obj).attr("txtName")
+            var typeName = "下级代理";
+            $("#bet_confirm_show").load("/commissio/ConfigurationUserRebateNew", { userId: id, txtName: name, typeName: typeName });
+            $("#bet_confirm_show").css("display", "block");
+            $("#fullbg").css("display", "block");
+            $("#fullbg").width($(document).width());
+            $("#fullbg").height($(document).height());
+            $("#dialog").css("z-index", "1002");
+        }
+        //关闭灰色 jQuery 遮罩
+        function closeBg() {
+            $("#bet_confirm_show").css("display", "none");
+            $("#fullbg").css("display", "none");
+        } 
+    </script>
+</div>
+<div class="clearfix">
+</div>

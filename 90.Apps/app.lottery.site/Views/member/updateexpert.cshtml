@@ -1,0 +1,192 @@
+﻿@using GameBiz.Core
+@using app.lottery.site.Models
+@{
+    ViewBag.Title = "名家管理 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "名家管理, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var currentUser = ViewBag.User as ExperterInfo;
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+}
+<style type="text/css">
+    #imghead
+    {
+        filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=image);
+    }
+</style>
+<script type="text/javascript">
+    //图片上传预览    IE是用了滤镜。
+    function previewImage(file) {
+        var MAXWIDTH = 175;
+        var MAXHEIGHT = 227;
+        var div = document.getElementById('preview');
+        if (file.files && file.files[0]) {
+            div.innerHTML = '<img id=imghead>';
+            var img = document.getElementById('imghead');
+            img.onload = function () {
+                var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+                img.width = rect.width;
+                img.height = rect.height;
+                img.style.marginTop = rect.top + 'px';
+            }
+            var reader = new FileReader();
+            reader.onload = function (evt) { img.src = evt.target.result; }
+            reader.readAsDataURL(file.files[0]);
+        }
+        else //兼容IE
+        {
+            var sFilter = 'filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src="';
+            file.select();
+            var src = document.selection.createRange().text;
+            div.innerHTML = '<img id=imghead>';
+            var img = document.getElementById('imghead');
+            img.filters.item('DXImageTransform.Microsoft.AlphaImageLoader').src = src;
+            var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+            status = ('rect:' + rect.top + ',' + rect.left + ',' + rect.width + ',' + rect.height);
+            div.innerHTML = "<div id=divhead style='width:" + rect.width + "px;height:" + rect.height + "px;margin-top:" + rect.top + "px;" + sFilter + src + "\"'></div>";
+        }
+    }
+    function clacImgZoomParam(maxWidth, maxHeight, width, height) {
+        var param = { top: 0, left: 0, width: width, height: height };
+        if (width > maxWidth || height > maxHeight) {
+            rateWidth = width / maxWidth;
+            rateHeight = height / maxHeight;
+
+            if (rateWidth > rateHeight) {
+                param.width = maxWidth;
+                param.height = Math.round(height / rateWidth);
+            } else {
+                param.width = Math.round(width / rateHeight);
+                param.height = maxHeight;
+            }
+        }
+
+        param.left = Math.round((maxWidth - param.width) / 2);
+        param.top = Math.round((maxHeight - param.height) / 2);
+        return param;
+    }
+
+    function showCount() {
+        var strChar = document.getElementById('textArea').value;
+
+        var charCount = strChar.length;
+        if (charCount > 200) {
+            alert('最多输入200个字!');
+            document.getElementById('textArea').value = strChar.substring(0, 200);
+        }
+    }
+</script>
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>名家分析</li>
+    </ul>
+</div>
+<div class="center mt10">
+    @{Html.RenderAction("menu", "Member");}
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <ul class="mymenu">
+            <li class="myons"><a href="">修改名家资料</a></li>
+            <li><a href="/member/queryupdaterecord">资料修改记录</a></li>
+        </ul>
+        <div id="sctx">
+            <form action="/member/UpdateExpert" method="post" enctype="multipart/form-data" name="form1"
+            id="form1">
+            <div>
+                <div class="header_left">
+                    <div class="tx">
+                        当前头像</div>
+                    <div class="txtp">
+                        @if (currentUser.ExperterHeadImage != null)
+                        {
+                            <img id="imghead" width="175" height="227" border="0" src="@currentUser.ExperterHeadImage" />
+                        }
+                        else
+                        {
+                            <img id="imghead" width="175" height="227" border="0" src="@ViewHelpers.img("../images/expert/default_header.jpg")" />
+                        }
+                    </div>
+                </div>
+                <div class="header_right1">
+                    <div class="tx">
+                        更换头像</div>
+                    <div class="d_box">
+                        <div id="preview">
+                        </div>
+                        <input type="file" onchange="previewImage(this)" name="flPhoto" id="flPhoto" />
+                    </div>
+                    <div class="clear">
+                    </div>
+                    <div>
+                        仅支持JPG图片文件，且文件小于2MB</div>
+                    <div class="tou_img"><img src="@ViewHelpers.img("../images/expert/touxiang.png")" alt="头像像素" /></div>
+                </div>
+            </div>
+            <div class="clear">
+            </div>
+            <div style="margin-top: 20px;">
+                @{
+                    var showtype = currentUser.AdeptGameCode.Split('/');
+                    var type = "";
+                    if(showtype.Length > 1)
+                    {
+                        type = showtype[1];
+                    }
+                }
+                <div>
+                    擅长彩种：
+                    <input class="radio_btn" type="radio" name="jczq" value="JCZQ" id="jczq" checked="checked" />竞彩足球
+                    <input class="radio_btn" type="radio" name="cz" value="JCLQ" id="cclq"  @(!string.IsNullOrEmpty(type) && type == "竞彩篮球" ? "checked=checked" : "")/><label
+                        for="cclq">竞彩篮球</label>
+                    <input class="radio_btn" type="radio" name="cz" value="BJDC" id="bjdc"  @(!string.IsNullOrEmpty(type) && type == "北京单场" ? "checked=checked" : "")/><label
+                        for="bjdc">北京单场</label>
+                    <input class="radio_btn" type="radio" name="cz" value="CTZQ" id="ctzq"  @(!string.IsNullOrEmpty(type) && type == "传统足球" ? "checked=checked" : "")/><label
+                        for="ctzq">传统足球</label>
+                    <span style="margin: 50px;">（默认必选竞彩足球，您还可再选一种您擅长的彩种）</span>
+                </div>
+                <div style="margin-top: 10px;">
+                    个人描述：
+                    @if (currentUser.ExperterSummary != null)
+                    {
+                        <textarea id="textArea" name="textArea" class="text_miaoshu" onkeyup="showCount();">@currentUser.ExperterSummary</textarea>
+                    }
+                    else
+                    {
+                        <textarea id="textArea" name="textArea" class="text_miaoshu" onkeyup="showCount();"></textarea>
+                    }
+                </div>
+                <div style="width: 660px;">
+                    <input type="button" id="application" class="btn-cz" value="提交申请" />
+                    <div class="p_font">
+                        <p>
+                            您最多可以输入200个文字进行自我介绍描述</p>
+                        <p>
+                            提交申请后我们会在工作日24小时内给予审核验证，节假日除外</p>
+                    </div>
+                </div>
+            </div>
+            </form>
+        </div>
+        <div class="clearfix">
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+<script type="text/javascript">
+    $("#application").click(function () {
+        var miaoshu = $("#textArea").val();
+        var photo = $("#flPhoto").val();
+        if (photo == null || photo == "") {
+            alert("请选择上传头像！");
+            return false;
+        }
+        if (miaoshu == "") {
+            alert("请填写个人描述！");
+            return false;
+        }
+        document.getElementById('form1').submit();
+    });
+</script>

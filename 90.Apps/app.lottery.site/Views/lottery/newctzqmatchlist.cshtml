@@ -1,0 +1,312 @@
+﻿@using GameBiz.Core;
+@{
+    ViewBag.Title = "newctzqmatchlist";
+    var type = ViewBag.Type;
+    var match = ViewBag.match as CTZQMatchInfo_Collection;
+    var issuseNum = ViewBag.issuseNum;
+    var award = WCFService.QueryWinNumber("ctzq", issuseNum, type);
+    var prizedIssuse = WCFService.StoppedIssuseList("ctzq", type, 5);
+    if (match != null && match.ListInfo != null && match.ListInfo.Count > 0)
+    {
+        match.ListInfo = match.ListInfo.OrderBy(s => s.OrderNumber).ToList();
+    }
+    var gameCode = ViewBag.GameCode;
+}
+<div class="details_box">
+    <span class="icon_game @type"></span>
+    <div class="details_left">
+        <div class="details_title">
+            @(SiteConvert.GameName("ctzq", type))开奖结果</div>
+        <div>
+            <span class="details_search">第
+                <select name="dropIssueNum" id="dropIssueNumber" onchange="LoadPrize()">
+                    @{
+                        foreach (var item in prizedIssuse)
+                        {
+                        <option @(issuseNum == item ? "selected=selected" : string.Empty) value="@item">@item</option> 
+                        }
+                    }
+                </select>
+                期 </span><span>开奖日期&nbsp;&nbsp;&nbsp;&nbsp;@(award.AwardTime != null ? award.AwardTime.Date.ToLongDateString() : "未开奖")
+                    &nbsp;&nbsp;&nbsp;&nbsp;兑奖截止日期&nbsp;&nbsp;
+                    @(award.AwardTime != null ? award.AwardTime.Date.AddMonths(3).ToLongDateString() : "未开奖")</span>
+        </div>
+        <div class="winnumber">
+            <span class="opentime">@(award != null && !string.IsNullOrEmpty(award.WinNumber) ? award.WinNumber.Replace(",", "") : "--")</span>
+        </div>
+        <div id="bonusstr">
+            <div class="co_or">
+                本期销售：<span>￥0</span>元
+            </div>
+            <div class="co_or">
+                奖池滚存：<span>￥0</span>元
+            </div>
+        </div>
+        <div class="sell">
+            <script type="text/javascript">
+                var endtime = document.getElementById("endtime");
+                if (endtime != null) {
+                    endtime = endtime.value;
+                    endtime = new Date(endtime);
+                    var nowtime = new Date();
+                    var second = (endtime.getTime() - nowtime.getTime()) / 1000;
+
+                    function UpgradeTime() {
+                        if (second > 0) {
+                            var d = parseInt(second / 3600 / 24);
+                            var h = parseInt((second / 3600) % 24);
+                            var m = parseInt((second / 60) % 60);
+                            var s = parseInt(second % 60);
+                            if (d < 10) {
+                                d = "0" + d;
+                            }
+                            if (h < 10) {
+                                h = "0" + h;
+                            }
+                            if (m < 10) {
+                                m = "0" + m;
+                            }
+                            if (s < 10) {
+                                s = "0" + s;
+                            }
+                            var all = d + "天" + h + "小时" + m + "分" + s + "秒";
+                            document.getElementById("countdown").innerHTML = all;
+                            setTimeout(function () {
+                                second--;
+                                UpgradeTime();
+                            }, 1000);
+                        }
+                    }
+
+                    window.onload = function () {
+                        UpgradeTime();
+                    };
+                }
+
+            </script>
+        </div>
+    </div>
+    <div class="deatils_right">
+        <div class="ctzq_r_top">
+            <span>玩法介绍：<b>@GameHelper.GetGameIntroduce("CTZQ")</b></span>
+        </div>
+        <div>
+            <span>开奖时间：<b>@SiteString.lotteryDay("ctzq")</b></span>
+        </div>
+        <div class="deatils_btn">
+            <a href="/soccer/ctzq?gametype=@type" target="_blank">过关统计</a>
+        </div>
+        <a class="ctzq_promptly" href="/toto" target="_blank">立即购买 </a>
+    </div>
+</div>
+<div class="award">
+    <div class="ctzq_details_list">
+        <div class="list_title">
+            @(SiteConvert.GameName("ctzq", type))比赛详情</div>
+        <table cellspacing="0" cellpadding="0" width="100%" align="center" class="datatable">
+            @if (type.ToLower() == "t14c" || type.ToLower() == "tr9")
+            { 
+                <tr class="ctzq_title">
+                    <td style="width: 10%">
+                        场次
+                    </td>
+                    <td style="width: 15%">
+                        联赛
+                    </td>
+                    <td style="width: 15%">
+                        时间
+                    </td>
+                    <td style="width: 15%">
+                        主队
+                    </td>
+                    <td style="width: 15%">
+                        比分
+                    </td>
+                    <td style="width: 15%">
+                        客队
+                    </td>
+                    <td style="width: 15%">
+                        赛果
+                    </td>
+                </tr>
+                if (match != null)
+                {
+                    var count = 0;
+                    foreach (var item in match.ListInfo)
+                    {
+                        var c = count % 2;
+                <tr @(c == 0 ? "class=bgay" : "")>
+                    <td style="width: 10%">@(match.ListInfo.IndexOf(item) + 1)
+                    </td>
+                    <td style="width: 15%">@item.MatchName
+                    </td>
+                    <td style="width: 15%">@item.MatchStartTime.ToString("yyyy-MM-dd")
+                    </td>
+                    <td style="width: 15%">@Html.Raw(item.HomeTeamName)
+                    </td>
+                    <td style="width: 15%">@(item.HomeTeamScore)-@(item.GuestTeamScore)
+                    </td>
+                    <td style="width: 15%">@Html.Raw(item.GuestTeamName)
+                    </td>
+                    <td class="list_l" style="width: 15%">@item.MatchResult
+                    </td>
+                </tr>
+                        count++;
+                    }
+                }
+            }
+            else if (type.ToLower() == "t6bqc")
+            {
+                <tr class="ctzq_title">
+                    <td>
+                        场次
+                    </td>
+                    <td>
+                        联赛
+                    </td>
+                    <td>
+                        时间
+                    </td>
+                    <td>
+                        主队
+                    </td>
+                    <td colspan="2">
+                        比分
+                    </td>
+                    <td>
+                        客队
+                    </td>
+                    <td>
+                        赛果
+                    </td>
+                </tr>
+                if (match != null)
+                {
+                    var count = 0;
+                    foreach (var item in match.ListInfo)
+                    {
+                        var c = count % 2;
+                <tr @(c == 0 ? "class=bgay" : "")>
+                    <td rowspan="2">
+                        @(match.ListInfo.IndexOf(item) + 1)
+                    </td>
+                    <td rowspan="2">
+                        @item.MatchName
+                    </td>
+                    <td rowspan="2">
+                        @item.MatchStartTime.ToString("yyyy-MM-dd")
+                    </td>
+                    <td rowspan="2" class="hometeam">
+                        @Html.Raw(item.HomeTeamName)
+                    </td>
+                    <td>
+                        半场
+                    </td>
+                    <td>
+                        @(item.HomeTeamHalfScore)-@(item.GuestTeamHalfScore)
+                    </td>
+                    <td rowspan="2" class="guestteam">
+                        @Html.Raw(item.GuestTeamName)
+                    </td>
+                    <td class="bold list_l">
+                        @OrderManager.CTZQ_CG_T6BQC(item.HomeTeamHalfScore, item.GuestTeamHalfScore)
+                    </td>
+                </tr>  
+                <tr @(c == 0 ? "class=bgay" : "")>
+                    <td>
+                        全场
+                    </td>
+                    <td>
+                        @(item.HomeTeamScore)-@(item.GuestTeamScore)
+                    </td>
+                    <td class="bold list_l">
+                        @OrderManager.CTZQ_CG_T6BQC(item.HomeTeamScore, item.GuestTeamScore)
+                    </td>
+                </tr>
+                        count++;
+                    }
+                }
+            }
+            else if (type.ToLower() == "t4cjq")
+            {
+                <tr class="ctzq_title">
+                    <td>
+                        场次
+                    </td>
+                    <td>
+                        联赛
+                    </td>
+                    <td>
+                        时间
+                    </td>
+                    <td>
+                        主队
+                    </td>
+                    <td>
+                        比分
+                    </td>
+                    <td>
+                        彩果
+                    </td>
+                </tr>
+                if (match != null)
+                {
+                    var count = 0;
+                    foreach (var item in match.ListInfo)
+                    {
+                        var c = count % 2;
+                <tr @(c == 0 ? "class=bgay" : "")>
+                    <td rowspan="2">@(match.ListInfo.IndexOf(item) + 1)
+                    </td>
+                    <td rowspan="2">@item.MatchName
+                    </td>
+                    <td rowspan="2" class="time">@item.MatchStartTime.ToString("yyyy-MM-dd")
+                    </td>
+                    <td>@Html.Raw(item.HomeTeamName)
+                    </td>
+                    <td>@item.HomeTeamScore
+                    </td>
+                    <td class="bold list_l">@OrderManager.CTZQ_CG_T4CJQ(item.HomeTeamScore)
+                    </td>
+                </tr>
+                <tr @(c == 0 ? "class=bgay" : "")>
+                    <td>@Html.Raw(item.GuestTeamName)
+                    </td>
+                    <td>@item.GuestTeamScore
+                    </td>
+                    <td class="bold list_l">@OrderManager.CTZQ_CG_T4CJQ(item.GuestTeamScore)
+                    </td>
+                </tr>
+                        count++;
+                    }
+                }
+            }
+        </table>
+    </div>
+    <div class="ctzq_awardgrade">
+        <div class="grade_title">
+            @(SiteConvert.GameName("ctzq", type))开奖详情</div>
+        <div class="ctzq_title">
+            <span style="width: 25%">奖项</span><span style="width: 45%">中奖注数</span><span style="width: 30%">单注奖金(元)</span>
+        </div>
+        <div id="bonuslist">
+            <div class="bgay">
+                <span style="width: 25%">一等奖</span><span style="width: 45%">--</span><span style="width: 30%">--</span>
+            </div>
+            <div>
+                <span style="width: 25%">二等奖</span><span style="width: 45%">--</span><span style="width: 30%">--</span>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function LoadPrize() {
+        var type = '@type';
+        var issuse_slt = $("#dropIssueNumber option:selected").val()
+        var url = "/staticHtml/lottery/detail_" + type + "_" + issuse_slt + ".html";
+        location.href = url;
+        //console.warn(issuse_slt)
+//        var issuse = document.getElementById("dropIssueNumber").options[document.getElementById("dropIssueNumber").selectedIndex].value;
+//        location.search = "issusenumber=" + issuse;
+    }
+</script>

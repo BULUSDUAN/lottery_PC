@@ -1,0 +1,24 @@
+﻿@using app.lottery.site.Models;
+@{
+    var user = ViewBag.CurrentUser as CurrentUserInfo;
+}
+<div class="buylist">
+    <div class="mymodelList">
+    </div>
+    <div id="waitObj" class="newLoading" style="display: block;">
+        <img src="@ViewHelpers.img("/aritists/loading.gif")">
+        加载中...
+    </div>
+</div>
+<div class="pager3 clearfix" style="text-align: right"></div>
+<script type="text/javascript">
+    var userId = "@user.LoginInfo.UserId";
+    var nowtime;
+    var create = "create";
+    $.get("/home/getServerTime", function (t) {
+        if (t.servertime != null && t.servertime != "") {
+            nowtime = t.servertime;
+        }
+    });
+    getData();
+</script>

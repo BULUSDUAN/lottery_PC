@@ -1,0 +1,432 @@
+﻿<div class="boxbg" style="display: none;" id="avtivityBox">
+    <div class="boxtop">
+        <span>注册送红包</span><a class="boxdel">×</a>
+    </div>
+    <div class="boxtit">
+        <span class="on">活动详情</span> <span style="margin-left: 130px;">免费注册</span>
+    </div>
+    <div class="boxdetails boxdetails1 div_1" style="display: block;">
+        <div class="actime">
+            @*<span class="time_t">活动时间<cite>Activity time</cite></span><em class="time_e">+</em>
+            <span class="time_s">6月20日~7月31日</span>*@
+        </div>
+        <div class="divdown">
+            <span class="icon1">1</span>
+            <div class="title">
+                活动要求：</div>
+            <ul>
+                <li>1、6月20日~7月31日期间注册的用户</li>
+                <li>2、在本活动页面完成注册</li>
+                <li>3、完成实名信息认证、手机绑定</li>
+            </ul>
+        </div>
+        <div class="divdown1">
+            <span class="icon1">2</span>
+            <div class="title">
+                活动奖励：</div>
+            <ul>
+                <li>满足以上条件完成注册将获得<span style="color: #ff3c00">"5元红包"</span></li>
+            </ul>
+        </div>
+        <div>
+            <span class="icon1">3</span>
+            <div class="title">
+                友情提示：</div>
+            <ul>
+                <li style="margin: 0px; background: none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
+                    class="icon"></i>现阶段暂停网上彩票代购，本活动旨在开放网络购彩之日回馈用户；红包仅限用于购彩不能进行提款。本次活动最终解释权归网站所有。</li>
+            </ul>
+        </div>
+        <span class="icon3"></span>
+        <input type="button" id="promptly" class="promptly1" value="马上注册" />
+    </div>
+    <div class="boxcen div_1" style="display: none;">
+        <ul>
+            <li><span><em>*</em>用户名</span><input name="userName" id="NickName" type="text" class="input1"
+                value="用户名为4-20个字符，注册后不可修改" /><b id="nameTip" class=""></b></li>
+            <li><span><em>*</em>密码</span><input id="pwd" type="password" maxlength="18" class="input1" value="" /><b
+                id="pwdTip" class=""></b></li>
+            <li><span><em>*</em>确认密码</span><input id="affirm" type="password" maxlength="18" class="input1"
+                value="" /><b id="passwordTip" class=""></b></li>
+            <li><span><em>*</em>真实姓名</span><input id="realname" type="text" class="input1" value="" /><b
+                id="realnameTip" class=""></b></li>
+            <li><span><em>*</em>身份证</span><input id="idcode" type="text" maxlength="18" class="input1" value="" /><b
+                id="idCodeTip" class=""></b></li>
+            <li><span><em>*</em>手机号码</span><input id="mobile" name="mobile" class="input1" type="text"
+                value="请输入11位手机号码" maxlength="11" /><b id="phoneTip" class=""></b></li>
+            <li><span><em>*</em>验证码</span><input id="auth_code" type="text" value="" class="input1"
+                style="width: 135px;" />
+                <input type="button" value="获取验证码" class="auth_code" id="btn_authcode" />
+            </li>
+            <li><span class="textorg">带 * 必须填写内容</span></li>
+            <li><span></span>
+                <label for="regAgent" style="color: #919191;">
+                    <input type="checkbox" checked="checked" autocomplete="off" id="regAgent" name="regAgent" />
+                    我已年满18周岁并同意 <a target="_blank" href="/help/serviceAgreement1">《@(SiteString.getHZSiteName(Request)) 用户购彩协议》</a>
+                </label>
+            </li>
+            <li><span></span>
+                <input type="button" class="btnregst" value="完成注册" /></li>
+            @*<li class="lilast">我已经注册？<a href="javascript:void(0);" id="loginbtn_new">马上登录</a></li>*@
+        </ul>
+    </div>
+    <div class="boxsuccess" style="display: none;">
+        <div>
+            <div class="bs_font1">
+                恭喜您注册成功！
+                @*获得<em style="color: #ff3c00;">5元</em>红包*@
+                </div>
+            <div class="bs_font2">
+                现在充值还能再得红包</div>
+        </div>
+        <input type="button" class="bs_btn" value="充值送红包" />
+    </div>
+</div>
+<script type="text/javascript">
+
+    $(".promptly1").live("click", function () {
+        $(".boxdetails1").css("display", "none");
+        $(".boxcen").css("display", "block");
+        $(".boxtit").find("span").removeClass("on");
+        $(".boxtit").find("span").eq(1).addClass("on");
+    });
+
+    function bindcilck() {
+        $("#avtivityBox").css("display", "none");
+        loginDialog.Close();
+        $(".boxcen").find("input.input1").val("");
+        $("#NickName").val("用户名为4-20个字符，注册后不可修改");
+        $("#mobile").val("请输入11位手机号码");
+        $("#bg").css("display", "none");
+        $(".boxcen").find("li b").html("").removeClass("onCorrect");
+        $(".boxcen").find("li b").html("").removeClass("onError");
+    }
+    var wait = 60; //时间 
+    function time() {
+        var again = $("#btn_authcode");
+        if (wait == 0) {
+            again.removeAttr("disabled");
+            again.removeClass("auth_code1");
+            again.val("免费获取"); //改变按钮中value的值 
+            wait = 60;
+        } else {
+            again.addClass("auth_code1");
+            again.attr("disabled", true); //倒计时过程中禁止点击按钮 
+            again.val(wait + "秒后重获"); //改变按钮中value的值 
+            wait--;
+            setTimeout(function () {
+                time(); //循环调用 
+            }, 1000);
+        }
+    }
+
+    $("#loginbtn_new").click(function () {
+        //window.gt_captcha_obj && gt_captcha_obj.refresh();
+        loginDialog.Show();
+    });
+    $(".boxtop a.boxdel").click(function () {
+        bindcilck();
+    });
+    $(".boxsuccess input.bs_btn").click(function () {
+        $("#avtivityBox").css("display", "none");
+        $("#avtivityBox1").css("display", "block");
+    });
+
+    $(".boxtit span").click(function () {
+        $(".boxtit").find("span").removeClass("on");
+        $(".boxtit").find("span").eq($(this).index()).addClass("on");
+        $(".boxtit").find("span").removeClass("on");
+        $(".boxtit").find("span").eq($(this).index()).addClass("on");
+        $(".boxbg").find("div.div_1").css("display", "none");
+        $(".boxbg").find("div.div_1").eq($(this).index()).css("display", "block");
+    });
+    $(".btnregst").click(function () {
+        var displayname = $("#NickName").val();
+        var pwd = $("#pwd").val();
+        var affirm = $("#affirm").val();
+        var realname = $("#realname").val();
+        var idcode = $("#idcode").val();
+        var mobile = $("#mobile").val();
+        var auth_code = $("#auth_code").val();
+        if (displayname == "用户名为4-20个字符，注册后不可修改") {
+            displayname = "";
+        }
+        if (mobile == "请输入11位手机号码") {
+            mobile = "";
+        }
+
+        if (displayname.trim() == "" || pwd.trim() == "" || affirm.trim() == "" || realname.trim() == "" || idcode.trim() == "" || mobile.trim() == "" || auth_code.trim() == "") {
+            alertTip("信息未填写完整，请填写完整！");
+            return false;
+        }
+
+        if (pwd != affirm) {
+            alertTip("您两次输入的密码不一致，请重新输入");
+            return false;
+        }
+
+        var card = /^(\d{14}|\d{17})(\d|[xX])$/;
+        if (!card.test(idcode)) {
+            alertTip("身份证号格式输入有误");
+            return false;
+        }
+
+        var regmobile = /^0?1[34578][0-9]\d{8}$/; //手机
+        var mflag = regmobile.test(mobile);
+        if (!(mflag)) {
+            alertTip("请输入正确的11位手机号！");
+            return false;
+        }
+
+        if (!$('#regAgent').attr('checked')) {
+            alertTip('请认真阅读并同意" + SiteString.getHZSiteName(Request) + "用户购彩协议！');
+            return false;
+        }
+
+        var url = "/home/ActivityRegist";
+        var data = {
+            username: displayname,
+            password: pwd,
+            realname: realname,
+            idcode: idcode,
+            mobile: mobile,
+            auth_code: auth_code
+        };
+        $.post(url, data, function (date) {
+            if (date.IsSucess) {
+                $(".boxcen").find("input.input1").val("");
+                $("#NickName").val("用户名为4-20个字符，注册后不可修改");
+                $("#mobile").val("请输入11位手机号码");
+                $(".boxcen").css("display", "none");
+                $(".boxsuccess").css("display", "block");
+                user.refresh();
+            }
+            else {
+                alertTip(date.Message);
+            }
+        });
+
+    });
+    $("#btn_authcode").click(function () {
+        var regMobile = /^0?1[34578][0-9]\d{8}$/; //手机
+        var mobile = $("#mobile").val();
+        var userName = $("#NickName").val();
+        var url = "/home/addmobile";
+        var mflag = regMobile.test(mobile);
+        if (!(mflag)) {
+            alertTip("请输入正确的11位手机号！");
+            return false;
+        }
+        else {
+            $.post(url, { mobile: mobile,UserName:userName }, function (date) {
+                if (date.IsSucess) {
+                    time();
+                    alertTip(date.Message);
+                }
+                else {
+                    alertTip(date.Message);
+                }
+            });
+        }
+    });
+
+    $("#NickName").focus(function () {
+        var displayname = $("#NickName").val();
+        if (displayname == "用户名为4-20个字符，注册后不可修改") {
+            $("#NickName").val("");
+        }
+
+
+    });
+    $("#mobile").focus(function () {
+        var displayname = $("#mobile").val();
+        if (displayname == "请输入11位手机号码") {
+            $("#mobile").val("");
+        }
+    });
+
+    $("#NickName").blur(function () {
+        checkUsername();
+    });
+    $("#pwd").blur(function () {
+        checkPassword();
+    });
+    $("#affirm").blur(function () {
+        checkPassword2();
+    });
+    $("#realname").blur(function () {
+        var realname = $("#realname").val();
+        var reg = /^[\u4e00-\u9fa5·]+$/i;
+        if (!reg.test(realname)) {
+            $("#realnameTip").html("请输入真实姓名");
+            $("#realnameTip").removeClass("onCorrect").addClass("onError");
+        }
+        else {
+            $("#realnameTip").html("");
+            $("#realnameTip").removeClass("onError").addClass("onCorrect");
+        }
+
+    });
+    $("#mobile").blur(function () {
+        var phoneNoMobile = $("#mobile").val();
+        if (phoneNoMobile == null || phoneNoMobile == "") {
+            $("#phoneTip").html("请输入手机号");
+            $("#phoneTip").removeClass("onCorrect").addClass("onError");
+            return false;
+        }
+        var regmobile = /^0?1[34578][0-9]\d{8}$/; //手机
+        var mflag = regmobile.test(phoneNoMobile);
+        if (!(mflag)) {
+            $("#phoneTip").html("输入正确的手机号");
+            $("#phoneTip").removeClass("onCorrect").addClass("onError");
+            return false;
+        }
+
+        var url = "/home/QueryMobileByMobile";
+        $.post(url, { Mobile: phoneNoMobile }, function (data) {
+            if (data.IsSucess) {
+                $("#phoneTip").html("");
+                $("#phoneTip").removeClass("onError").addClass("onCorrect");
+            }
+            else {
+                $("#phoneTip").html(data.Message);
+                $("#phoneTip").removeClass("onCorrect").addClass("onError");
+            }
+        });
+    });
+    $("#idcode").blur(function () {
+        var idcode = $("#idcode").val();
+        if (idcode != "") {
+            var card = /^(\d{14}|\d{17})(\d|[xX])$/;
+            if (!card.test(idcode)) {
+                $("#idCodeTip").html("身份证号格式有误");
+                $("#idCodeTip").removeClass("onCorrect").addClass("onError");
+                return false;
+            }
+        }
+        else {
+            $("#idCodeTip").html("请输入身份证号");
+            $("#idCodeTip").removeClass("onCorrect").addClass("onError");
+            return false;
+        }
+
+        var url = "/home/QueryCardByIdCard";
+        $.post(url, { idcode: idcode }, function (data) {
+            if (data.IsSucess) {
+                $("#idCodeTip").html("");
+                $("#idCodeTip").removeClass("onError").addClass("onCorrect");
+            }
+            else {
+                $("#idCodeTip").html(data.Message);
+                $("#idCodeTip").removeClass("onCorrect").addClass("onError");
+            }
+        });
+    });
+
+    //含中文的字符串长度
+    function getStrLen(str) {
+        var len = 0;
+        var cnstrCount = 0;
+        for (var i = 0; i < str.length; i++) {
+            if (str.charCodeAt(i) > 255)
+                cnstrCount = cnstrCount + 1;
+        }
+        len = str.length + cnstrCount;
+        return len;
+    }
+    function checkUsername() {
+        var user = $("#NickName").val();
+
+        var len = getStrLen(user);
+        if (len < 4) {
+            $("#nameTip").html("至少4个字符");
+            $("#nameTip").removeClass("onCorrect").addClass("onError");
+            return false;
+        } else if (len > 20) {
+            $("#nameTip").html("最多20个字符");
+            $("#nameTip").removeClass("onCorrect").addClass("onError");
+            return false;
+        }
+        else {
+            $("#nameTip").removeClass("onError").addClass("onCorrect");
+        }
+
+        if (/^\d{4,20}$/.test(user)) {
+            $("#nameTip").html("不能全为数字");
+            $("#nameTip").removeClass("onCorrect").addClass("onError");
+            return false;
+        }
+        var val = user.replace(/[\u4E00-\u9FA5]/ig, '11');
+        if (!/^[a-zA-Z0-9_]{4,20}$/.test(val)) {
+            $("#nameTip").html("用户名不合法");
+            $("#nameTip").removeClass("onCorrect").addClass("onError");
+            return false;
+        }
+        if (user.indexOf('@(SiteString.getHZSiteName(Request))') != -1 || user.indexOf('iqucai') != -1 || user.indexOf('客服') != -1 || user.indexOf('网管') != -1 || user.indexOf('管理员') != -1 || user.indexOf('system') != -1 || user.indexOf('administrator') != -1 || user.indexOf('webmaster') != -1 || user.indexOf('master') != -1 || /彩票宝|中国|政府|中央|共产党|中华人民共和国|中华|法轮功|台独|习近平|李克强/g.test(user)) {
+            $("#nameTip").html("不能包含敏感词");
+            $("#nameTip").removeClass("onCorrect").addClass("onError");
+            return false;
+        }
+
+        var url = "/user/GetUserIdIsExsite";
+        $.post(url, { uid: user }, function (data) {
+            if (data.code) {
+                $("#nameTip").html("用户名存在");
+                $("#nameTip").removeClass("onCorrect").addClass("onError");
+            }
+            else {
+                $("#nameTip").html("");
+                $("#nameTip").removeClass("onError").addClass("onCorrect");
+            }
+        });
+    }
+
+    function checkPassword() {
+        var user = $("#NickName").val();
+        var pwd = $("#pwd").val();
+        var len = pwd.length;
+        if (len == 0) {
+            $("#pwdTip").html("请输入密码");
+            $("#pwdTip").removeClass("onCorrect").addClass("onError");
+            return false;
+        }
+        else if (len < 6) {
+            $("#pwdTip").html('密码不足6位');
+            $("#pwdTip").removeClass("onCorrect").addClass("onError");
+            return false;
+        } else if (len > 18) {
+            $("#pwdTip").html('密码不能超过18位');
+            $("#pwdTip").removeClass("onCorrect").addClass("onError");
+            return false;
+        } else if (pwd == user) {
+            $("#pwdTip").html("密码不能与用户名一致。");
+            $("#pwdTip").removeClass("onCorrect").addClass("onError");
+            return false;
+        }
+        var cat = /^[\x20-\x7f]+$$/;
+        if (!(cat.test(pwd))) {
+            $("#pwdTip").html('密码请勿包含中文');
+            $("#pwdTip").removeClass("onCorrect").addClass("onError");
+            return false;
+        }
+        $("#pwdTip").html("");
+        $("#pwdTip").removeClass("onError").addClass("onCorrect");
+        return true;
+    }
+    function checkPassword2() {
+        if ($("#affirm").val() == '') {
+            $("#passwordTip").html('请再次输入您的密码');
+            $("#passwordTip").removeClass("onCorrect").addClass("onError");
+            return false;
+        }
+        if ($("#pwd").val() != $("#affirm").val()) {
+            $("#passwordTip").html('两次输入的密码不一致');
+            $("#passwordTip").removeClass("onCorrect").addClass("onError");
+            return false;
+        } else {
+            $("#passwordTip").html("");
+            $("#passwordTip").removeClass("onError").addClass("onCorrect");
+            return true;
+        }
+    }
+</script>

@@ -1,0 +1,108 @@
+﻿@{
+    ViewBag.Here = "竞彩篮球玩法介绍";
+
+    ViewBag.Title = "竞彩篮球玩法介绍 - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "竞彩篮球玩法介绍, 帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}@section css{
+   @ViewHelpers.css("help.css")
+}
+
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">帮助中心</a> > </li>
+        <li>竞彩篮球玩法介绍</li>
+    </ul>
+</div>
+<div class="center mt10">
+    @{Html.RenderAction("left", "help");}
+    <div class="new_buy_right">
+<div class="help-content f_r">
+    <div class="help-cont">
+        <h1 class="hp-title">竞彩篮球玩法介绍</h1>
+        <h3>一、竞彩篮球胜负游戏</h3>
+        <div class="help_box">
+            <p>
+                玩法：竞猜全场比赛（含加时赛），主队的胜负情况。每一场比赛设置两种比赛结果选项：<br>
+                (1)“胜”：表示主队胜，客队负；<br>
+                (2)“负”：表示主队负，客队胜。
+            </p>
+            <p>
+                球队对阵：<br>
+                “主队：客队”，即主队在前，客队在后。
+            </p>
+            <p>
+                投注举例：<br>
+                对阵球队：休斯敦火箭vs洛杉矶湖人<br>
+                即休斯敦火箭队主场对阵洛杉矶湖人队<br>
+                若火箭100:99湖人 那么就是主胜；反之则客胜
+            </p>
+        </div>
+        <h3>二、竞彩篮球让分胜负游戏</h3>
+        <div class="help_box">
+            <p>
+                玩法：竞猜全场比赛（含加时赛），主队得分加减“让分数”后，主队的胜负情况。<br>
+                投注选项：<br>
+                (1)“胜”：主队胜，客队负<br>
+                (2)“负”：主队负，客队胜<br>
+                (3) 预设让分数=XX.5<br>
+                球队对阵：<br>
+                “主队：客队”，即主队在前，客队在后。<br>
+                投注举例：<br>
+                对阵球队：休斯敦火箭vs洛杉矶湖人(-2.5)<br>
+                即休斯敦火箭队主场对阵洛杉矶湖人队时让湖人队2.5分，在最终比分中火箭队减2.5分后依然比湖人队分高则主胜，反之则客胜；
+            </p>
+            <p>
+                若对阵球队：达拉斯小牛vs洛杉矶湖人(+3.5)<br>
+                即达拉斯小牛主场对阵洛杉矶湖人队时接受湖人队让3.5分，在最终比分中小牛队加3.5分后比湖人队分高则主胜，反之则客胜；
+            </p>
+            <p><font face="宋体" color="#ff0000"><strong>重要说明：</strong>竞彩篮球的让分玩法与足球不一样，足球的让球官方开出后会固定不变，但竞彩篮球的让分，官方会浮动变化（开赛前会停止），以用户出票时的让分盘口作为用户投注内容胜负的判断。</font></p>
+            <p><font face="宋体" color="#ff0000">比如说：A用户在“火箭主场让湖人3.5分”时投注了“主胜”；</font></p>
+            <p><font face="宋体" color="#ff0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;而B用户在“火箭主场让湖人2.5分”时投注了“主胜”； </font></p>
+            <p><font face="宋体" color="#ff0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;那么最后的比赛结果是“火箭102-99湖人”，虽然比赛结果是主胜，但依照A用户的投注盘口,A用户是不中奖的，而B用户则中奖。</font></p>
+            <p><font face="宋体" color="#ff0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;竞彩官方的让分盘口和赔率变化是没有固定的时间或规律的，如果投注的内容产生2张票或以上的时候，有可能发生出票的时间差刚好碰上官方盘口变化这种巧合，随着投注内容越复杂产生的票单越大，这个出现的几率就越大，用户如果购买竞彩篮球或足球前，必须理解这种风险，一切均以出票数据为准，这个是任何一个彩票网站的竞彩销售的原则。&nbsp;</font></p>
+        </div>
+        <h3>三、竞彩篮球大小分游戏</h3>
+        <div class="help_box">
+            <p>
+                玩法：竞猜全场比赛（含加时赛），比赛双方得分总数与预设总分数的大小关系。每一场比赛设置2种选项：<br>
+                (1)“大”：表示主队和客队得分总数大于预设总分数；<br>
+                (2)“小”：表示主队和客队得分总数小于预设总分数。
+            </p>
+            <p>
+                投注举例：<br>
+                例如：A队和B队比赛的预设总分数为178.5分。<br>
+                (1)“大”主队和客队得分总数大于178.5分；<br>
+                (2)“小”主队和客队得分总数小于178.5分。
+            </p>
+            <p>
+                <br>
+                <font color="#ff0000"><strong>重要说明：</strong><font color="#ff0000">由于预设大小分盘口是由官方设置，会出票浮动变化的情况，具体是以用户出票时的大小分盘口作为判断是否中奖。其中会发生的情况与让分胜负相类似，所存在的变化风险是一样的，详细可以参考让分胜负玩法介绍中的红字部分说明。</font></font>
+            </p>
+            <font color="#ff0000">&nbsp;</font>
+        </div>
+        <h3>四、竞彩篮球胜分差游戏</h3>
+        <p class="help_box">玩法：竞猜全场比赛（含加时赛），比赛两队的得分差。</p>
+        <p class="help_box">具体投注分差：1-5分、6-10分、11-15分、16-20分、21-25分、26分或以上</p>
+        <p class="help_box">具体可以通过投注时的主客位置，选择主队胜分还是客队胜分</p>
+        <p class="help_box">
+            投注举例：<br>
+            对阵球队：休斯敦火箭vs洛杉矶湖人<br>
+            如投注为“主1-5”则表示竞猜休斯敦火箭胜分在5分以内（含5分），“客1-5”则表示洛杉矶湖人胜分在5分以内（含5分）。
+        </p>
+        <h3>五、竞彩篮球关表</h3>
+        <div class="help_box">
+            <p>
+                <img height="1936" alt="" width="643" onload="imgresize(this);" src="@SiteString.img("help/dba9f06f-acd2-46bf-b6ac-1d7938b6f0b9.jpg")">&nbsp;
+            </p>
+            <p>
+                &nbsp;<br>
+                <br>
+                <font face="宋体"><font color="#000000">官方玩法介绍：<a href="http://www.sporttery.com/help/2957.html?gid=7" target="_blank">http://www.sporttery.com/help/2957.html?gid=7</a></font></font>
+            </p>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+<div class="clearfix"></div>

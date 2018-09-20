@@ -1,0 +1,68 @@
+﻿<div id="bet_confirm_addbd">
+      <table>
+        <tr>
+            <td class="itd-top-left"></td>
+            <td class="itd-top-center"></td>
+            <td class="itd-top-right"></td>
+        </tr>
+        <tr>
+            <td class="itd-mid-left"></td>
+            <td class="itd-mid-center">
+                <div class="dialogContent">
+      
+      <h3 id="drag_confirm_addbd" class="pop-comm-top">
+        追加保底 <a class="close" id="btn_confirm_close_bd">关闭</a>
+    </h3>
+    <div class="pop-comm-middle">
+        <div id="bet_confirm_content_addbd">
+            <p>
+                目前保底金额为： <strong class="red">0</strong> 元 所占比例 <strong>0.0</strong> %
+            </p>
+            <p>
+                <input id="some_baodi" type="radio" name="rbaodi" checked="checked">部分保底，保底份数为
+                <label>
+                    <input id="baodiNum" class="in_text1" type="text" onkeyup="this.value=this.value.replace(/[^\d]/g,'')">份</label>
+                所占比例为<strong id="some_rate">0</strong>% 需支付<strong id="some_amount" class="red">0</strong>元
+            </p>
+            <p>
+                <input id="all_baodi" type="radio" name="rbaodi">
+                全额保底 所占比例为 <strong id="all_rate">0</strong> % 需支付 <strong id="all_amount" class="red">0</strong> 元
+            </p>
+        </div>
+        <div class="buttonrow">
+            <input type="button" id="btn_confirm_yes_bd" value="确定" class="dialogBtn" />
+            <input type="button" id="btn_confirm_no_bd" value="取消" class="dialogBtn focusBtn" />
+        </div>
+    </div>
+                </div>
+            </td>
+            <td class="itd-mid-right"></td> 
+        </tr>
+        <tr>
+            <td class="itd-bot-left"></td>
+            <td class="itd-bot-center"></td>
+            <td class="itd-bot-right"></td>
+        </tr>
+    </table>
+  
+
+</div>
+<script type="text/javascript">
+    new Drag("bet_confirm_addbd", { Handle: "drag_confirm_addbd", Limit: true });
+    var confirmLightBoxBd = new LightBox("bet_confirm_addbd");
+
+    function confirmTipBd(func, func2) {
+        var confirmgg_no_Event = function () {
+            confirmLightBoxBd.Close();
+            func2();
+            $("#baodiNum").val("");
+            $("#input_pwd").remove();
+            //document.getElementById("bet_confirm_content_addbd").innerHTML = "";
+        };
+        func();
+        document.getElementById("btn_confirm_no_bd").onclick = confirmgg_no_Event;
+        document.getElementById("btn_confirm_close_bd").onclick = confirmgg_no_Event;
+        $("#btn_confirm_yes_gg").focus();
+    }
+  
+</script>

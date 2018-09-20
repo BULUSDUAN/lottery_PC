@@ -1,0 +1,20 @@
+﻿@{
+    var gameType = string.IsNullOrEmpty(Request["gameType"]) ? "" : Request["gameType"];
+    if (ViewBag.GameCode == "newindex")
+    {
+        ViewBag.Title = "彩票开奖-福利彩票开奖结果-体育彩票开奖结果-足彩开奖-" + SiteString.getHZSiteName(Request) + "开奖公告";
+    }
+    else
+    {
+        ViewBag.Title = SiteConvert.GameName(ViewBag.GameCode, gameType) + " - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    }
+
+    ViewBag.keywords = "彩票开奖,福利彩票开奖结果,体育彩票开奖结果,足彩开奖, ";
+    ViewBag.Description = SiteString.getHZSiteName(Request)+"开奖公告每天最及时的发布最新彩票开奖,其中包括福利彩票开奖结果、体育彩票开奖结果、足彩开奖等信息查询,让您第一时间了解各大彩票中奖情况.";
+}
+@section css
+{@UserHelper.css("newlottery.css")}
+<div>
+    @{Html.RenderAction("newdetail", "lottery", new { id = ViewBag.GameCode });}
+</div>
+

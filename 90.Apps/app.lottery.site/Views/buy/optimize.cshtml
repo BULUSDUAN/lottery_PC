@@ -1,0 +1,388 @@
+@using Common.Algorithms
+@using MatchBiz.Core;
+@using app.lottery.site.Models;
+@{
+    Layout = "../Shared/_Layout.cshtml";
+    var desc = string.Empty;
+    ViewBag.Title = "竞彩足球让球胜平负 - 订单投注 - 体育彩票 | 福利彩票 | 中国体育彩票";
+    ViewBag.KeyWords = "竞彩足球让球胜平负, 订单投注, 体育彩票, 福利彩票, 中国体育彩票";
+    ViewBag.Description = desc;
+    var acom = new ArrayCombination();
+    var com = new Combination();
+    var index = 0;
+    //计算方案截止时间
+    var multiple = ViewBag.Multiple;
+    var cost = ViewBag.SchemeCost;
+    var gg = ViewBag.Gg;
+    var contents = ViewBag.Contents as List<Optimization>;
+    var stopMintime =contents!=null? contents.Select(match => string.IsNullOrEmpty(match.stoptime) ? DateTime.MinValue : Convert.ToDateTime(match.stoptime)).ToList().Min():DateTime.MinValue; ;
+    var opType = ViewBag.OpType;
+}
+@section css{@UserHelper.css("optimize.css")}
+<div class="title_logo">
+    <span>方案截止时间：<em class="red">@(stopMintime.ToString("yyyy-MM-dd HH:mm"))</em></span>
+    <b>&nbsp;</b>
+</div>
+<div class="wrapper">
+    <div class="wrapper_left">
+        <div class="match_list">
+            <table border="0" class="tb_head">
+                <colgroup>
+                    <col width="139"/>
+                    <col width="38"/>
+                    <col width=""/>
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>主队 vs 客队</th>
+                        <th>玩法</th>
+                        <th>投注项</th>
+                    </tr>
+                </thead>
+            </table>
+            <table border="0" id="lot_con" class="lot_con">
+                <colgroup>
+                    <col width="139"/>
+                    <col width="38"/>
+                    <col width=""/>
+                </colgroup>
+                <tbody>
+                    @{
+                        var matchList = new List<GameMatch>();
+                        foreach (var match in contents)
+                        {
+                            var game = new GameMatch {id = match.id, dan = match.dan, host = match.host.Substring(0, 2)};
+                            var content = match.items.Split('|');
+                            <tr class="list_tr">
+                                <td class="team">
+                                    <code>@match.week</code>
+                                    <a class="home">@match.host</a>
+                                    <em>vs</em>
+                                    <a class="guest">@match.visit</a>
+                                </td>
+                                <td colspan="2">
+                                    <table cellpadding="0" cellspacing="0" width="100%">
+                                        @{
+                                                var array = new List<string>();
+                                                foreach (var i in content)
+                                                {
+                                                    var options = i.Split('^');
+
+                                                    var name = string.Empty;
+                                                    if (options[0].ToLower() == "brqspf")
+                                                    {
+                                                        name = "0";
+                                                    }
+                                                    else if (options[0].ToLower() == "spf")
+                                                    {
+                                                        name = "<em class=\"rq " + (match.lose > 0 ? "red" : "green") + "\">" + match.lose + "</em>";
+                                                    }
+                                                    else if (options[0] == "bf")
+                                                    {
+                                                        name = "比分";
+                                                    }
+                                                    else if (options[0] == "zjq")
+                                                    {
+                                                        name = "进球数";
+                                                    }
+                                                    else if (options[0] == "bqc")
+                                                    {
+                                                        name = "半全场";
+                                                    }
+                                                <tr>
+                                                    <td width="38">@Html.Raw(name)</td>
+                                                    <td class="bet_area">
+                                                        <ul>
+                                                            @{
+                                                              var c = options[1].Split(',');
+                                                              for (int j = 0, l = c.Count(); j < l; j++)
+                                                              {
+                                                                  index++;
+                                                                  var ccc = c[j].Split('-');
+                                                                  var type = SiteString.ANTECODES_NAME(options[0], ccc[0]);
+                                                                  array.Add(game.host + "|" + type + "|" + ccc[1] + "|" + match.lose + "|" + options[0] + "|" + index + "|" + game.id + "|" + ccc[0]);
+                                                                    <li id="li_@(index)" class="q">
+                                                                        <a href="javascript:void(0)" class="bet">
+                                                                            <em>@type</em><span class="sp">@ccc[1]</span>
+                                                                        </a>
+                                                                    </li>
+                                                              }
+                                                            }
+                                                        </ul>
+                                                    </td> 
+                                                </tr>
+                                                              game.matches = array.ToArray();
+                                                }
+                                        }
+                                    </table>
+                                </td>
+                            </tr>
+                                                matchList.Add(game);
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="op_help"><h3>提示说明：</h3>
+            1、有让球场次优化显示投注结果为 <i class="fred">红色</i>，显示“<i class="fred">[胜 平 负]</i>”；<br/> 2、无让球显示为<i class="fyellow">黄色</i>，显示“<i class="fyellow">[胜 平 负]</i>”；<br/> 3、受让为<i class="fgreen">绿色</i>显示“<i class="fgreen">[胜 平 负]</i>”。
+        </div>
+    </div>
+    <div class="opt_result">
+        <div class="opt_header">
+            <div id="optHead" class="opt_result_tit">
+                <strong>计划购买:</strong> <label for="yhSum"><input type="text" value="@cost" class="inputw" id="yhSum" name="yhSum"/></label>元<b>&nbsp;</b><a data-optype="2" class="abtn@(opType == 2 ? " on" : "")" href="javascript:void(0)">搏热优化</a><a data-optype="1" class="abtn@(opType == 1 ? " on" : "")" href="javascript:void(0)">平稳优化</a><a data-optype="3" class="abtn@(opType == 3 ? " on" : "")" href="javascript:void(0)">搏冷优化</a><!--<a href="javascript:void(0)">帮助</a>-->
+            </div>
+        </div>
+        <div id="optList" class="opt_list">
+            <ul class="title_ul">
+                <li class="liw0">&nbsp;</li>
+                <li class="liw1">拆分明细</li>
+                <li class="liw2">过关</li>
+                <li class="liw3">投注注数</li>
+                <li class="liw4">理论奖金</li>
+            </ul>
+            @{
+                //var lis = new Dictionary<decimal, string>();
+                var lis = new List<GameCombination>();
+                if (!string.IsNullOrEmpty(gg))
+                {
+                    var mode = gg.Split(',');
+                    var matchDanList = matchList.Where(o => o.dan);
+                    foreach (var g in mode)
+                    {
+                        int chang = Convert.ToInt32(g.Split('_')[0]);
+                        index = 0;
+                        com.Calculate(matchList.ToArray(), chang, y =>
+                        {
+                            //筛选出非胆的比赛
+                            var danCount = y.Count(gameMatch => gameMatch.dan);
+                            if (danCount != matchDanList.Count()) return;
+
+                            var list = y.Select(gameMatch => gameMatch.matches).ToList();
+                            acom.Calculate(list.ToArray(), x =>
+                                {
+                                    var item = new List<string>();
+                                    var mutiply = 0.00M;
+                                    var indexArray = new List<string>();
+                                    var data = new List<string>();
+                                    foreach (var xx in x)
+                                    {
+                                        var ggg = xx.Split('|');
+                                        //让球
+                                        var lose = Convert.ToInt32(ggg[3]);
+                                        //投注选项内容
+                                        item.Add("<b>" + ggg[0] + "</b><i" + (lose > 0 && ggg[4] == "spf" ? " class=red" : lose < 0 && ggg[4] == "spf" ? " class=green" : "") + ">[" + (lose != 0 && ggg[4] == "spf" ? "让" : "") + ggg[1] + "]</i>");
+                                        //赔率乘积
+                                        if (mutiply == 0) mutiply = Convert.ToDecimal(ggg[2]);
+                                        else mutiply *= Convert.ToDecimal(ggg[2]);
+                                        indexArray.Add(ggg[5]);  //选项索引
+                                        data.Add(ggg[6] + "_" + ggg[4] + "_" + ggg[7]);
+                                    }
+                                    mutiply = mutiply * 2;
+                                    index++;
+                                    var html = string.Format(@"<ul data-no='{2}' data-prize='{3}' data='{4}' class='content_ul whitebg'>
+                <li class='liw0'><i>@index</i></li>
+                <li class='liw1'><span>{0}</span></li>
+                <li class='liw2'>{1}</li>
+                <li class='liw3'>
+                    <input type='text' value='@multiple' size='5' class='multiple' oncontextmenu='return false;' onkeyup='Tool.tonumber(this,1,99999);jcpage.changeMutiple(this)'/>
+                    <input type='button' class='add_btn' onclick='jcpage.addMutiple(1,this)'/>
+                    <input type='button' class='sub_btn' onclick='jcpage.addMutiple(-1,this)'/> 
+                    <input type='button' value='清' class='cancel cancel_des'/>
+                </li>
+                <li class='liw4'>
+                    <input type='text' maxlength='9' data-no='1' data-sp='10.0' @money/>元
+                </li>
+            </ul>", string.Join("x", item) + "=" + mutiply.ToString("0.00"), g.Replace("_", "串"), string.Join(",", indexArray), mutiply.ToString("0.00"), string.Join("|", data));
+                                    //lis.Add(Convert.ToDecimal(mutiply.ToString("0.00")), html);
+                                    lis.Add(new GameCombination {money = mutiply, combination = html});
+                                });
+                        });
+                    }
+                }
+            }
+            @{
+                var itemMoney = new List<decimal>();
+                var lists = new List<GameCombination>();
+                var zhu = cost/2;
+                var z = 0;
+                var h = 0;
+                var add = 0.00M;
+                var dic = lis.OrderByDescending(o => o.money);
+                var count = dic.Count();
+                try
+                {
+                    add = lis.Sum(keyValuePair => 1 / keyValuePair.money);
+                }
+                catch (Exception)
+                {
+                        
+                }
+                foreach (var keyValuePair in dic)
+                {
+                    var multi = Convert.ToInt32(Math.Round(zhu / (keyValuePair.money * add)));
+                    multi = multi == 0 ? 1 : multi;
+                    var li = keyValuePair.combination.Replace("@index", (count - z).ToString());
+                    decimal mm;
+                    z++;
+                    if (z == count)
+                    {
+                        if (zhu - h <= 0)
+                        {
+                            mm = keyValuePair.money;
+                            li = li.Replace("@multiple", 1.ToString());
+                        }
+                        else
+                        {
+                            mm = keyValuePair.money * (zhu - h);
+                            li = li.Replace("@multiple", (zhu - h).ToString());
+                        }
+                    }
+                    else
+                    {
+                        h = h + multi;
+                        mm = keyValuePair.money * multi;
+                        li = li.Replace("@multiple", multi.ToString());
+                    }
+                    li = li.Replace("@money", "class=\"opmoney" + (mm >= cost ? " red" : "") + "\" value=\"" + mm.ToString("0.00") + "\"");
+                    itemMoney.Add(mm);
+                    //lists.Add(keyValuePair.money, li);
+                    lists.Add(new GameCombination {money = keyValuePair.money, combination = li});
+                }
+                if (opType == 1)
+                {
+
+                }
+                else if (opType == 2)
+                {
+                    var average = itemMoney.Average();
+                    //1、先计算出平稳优化每注的a=理论奖金之和/注数所得出的平均数
+                    //2、b=投注金额*2/投注倍数(2倍起开始优化)
+                    // a>b 执行搏冷优化的方案 a<=b执行平稳优化的方案
+                    if (average > (ViewBag.OrgMoney * 2) / ViewBag.Multiple)
+                    {
+                        lists = new List<GameCombination>();
+                        count = dic.Count();
+                        z = 0;
+                        h = 0;
+                        foreach (var keyValuePair in dic)
+                        {
+                            var multi = Convert.ToInt32(Math.Round(cost / keyValuePair.money));
+                            multi = multi == 0 ? 1 : multi;
+                            var li = keyValuePair.combination.Replace("@index", (count - z).ToString());
+                            decimal mm;
+                            z++;
+                            if (z == count)
+                            {
+                                if (zhu - h <= 0)
+                                {
+                                    mm = keyValuePair.money;
+                                    li = li.Replace("@multiple", 1.ToString());
+                                }
+                                else
+                                {
+                                    mm = keyValuePair.money * (zhu - h);
+                                    li = li.Replace("@multiple", (zhu - h).ToString());
+                                }
+                            }
+                            else
+                            {
+                                h = h + multi;
+                                mm = keyValuePair.money * multi;
+                                li = li.Replace("@multiple", multi.ToString());
+                            }
+                            li = li.Replace("@money", "class=\"opmoney" + (mm >= cost ? " red" : "") + "\" value=\"" + mm.ToString("0.00") + "\"");
+                            itemMoney.Add(mm);
+                            lists.Add(new GameCombination { money = keyValuePair.money, combination = li });
+                        }
+                    }
+                }
+                else if (opType == 3)
+                {
+                    dic = lis.OrderBy(o => o.money);
+                    var average = itemMoney.Average();
+                    //1、先计算出平稳优化每注的a=理论奖金之和/注数所得出的平均数
+                    //2、b=投注金额*2/投注倍数(2倍起开始优化)
+                    // a>b 执行搏冷优化的方案 a<=b执行平稳优化的方案
+                    if (average > (ViewBag.OrgMoney * 2) / ViewBag.Multiple)
+                    {
+                        lists = new List<GameCombination>();
+                        z = 0;
+                        h = 0;
+                        foreach (var keyValuePair in dic)
+                        {
+                            var multi = Convert.ToInt32(Math.Ceiling(cost / keyValuePair.money));
+                            multi = multi == 0 ? 1 : multi;
+                            decimal mm;
+                            z++;
+                            var li = keyValuePair.combination.Replace("@index", z.ToString());
+                            if (z == count)
+                            {
+                                if (zhu - h <= 0)
+                                {
+                                    mm = keyValuePair.money;
+                                    li = li.Replace("@multiple", 1.ToString());
+                                }
+                                else
+                                {
+                                    mm = keyValuePair.money * (zhu - h);
+                                    li = li.Replace("@multiple", (zhu - h).ToString());
+                                }
+                            }
+                            else
+                            {
+                                h = h + multi;
+                                mm = keyValuePair.money * multi;
+                                li = li.Replace("@multiple", multi.ToString());
+                            }
+                            li = li.Replace("@money", "class=\"opmoney" + (mm >= cost ? " red" : "") + "\" value=\"" + mm.ToString("0.00") + "\"");
+                            itemMoney.Add(mm);
+                            lists.Add(new GameCombination { money = keyValuePair.money, combination = li });
+                        }
+                    }
+                }
+                lists = lists.OrderBy(o => o.money).ToList();
+                foreach (var list in lists)
+                {
+                    @Html.Raw(list.combination)
+                }
+            }
+        </div>
+        <div class="opt_foot">
+            <div id="optFoot" class="opt_buy_area">
+                <p class="opt_buy_info">
+                    <strong>实际投入：<em id="totalSum" class="red">@cost</em></strong>元&nbsp;&nbsp;理论奖金：
+                    @{
+                        if (itemMoney.Count == 1)
+                        {
+                            @Html.Raw("<em title=\"" + itemMoney[0].ToString("0.00") + "\" id=\"winPrize\" class=\"red\">" + itemMoney[0].ToString("0.00") + "</em>")
+                        }
+                        else
+                        {
+                            @Html.Raw("<em title=\"" + itemMoney.Min().ToString("0.00") + "~" + itemMoney.Max().ToString("0.00") + "\" id=\"winPrize\" class=\"red\">" + itemMoney.Min().ToString("0.00") + " ~ " + itemMoney.Max().ToString("0.00") + "</em>")
+                        }
+                    }
+                 元 </p>
+                <p>
+                    <input type="button" class="dialogBtn" value="立即认购" id="single"/> 
+                    <input type="button" class="dialogBtn" value="发起合买" id="hemai"/>
+                </p>
+                    
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+<form target="_self" action="/buy/optimize" method="post" id="optimize">
+    <input type="hidden" value="@ViewBag.Multiple" name="optimizeForm.multiple" id="op_multiple"/>
+    <input type="hidden" value="" name="optimizeForm.periodId" id="op_period"/>
+    <input type="hidden" value="@count" name="optimizeForm.units" id="op_units"/>
+    <input type="hidden" value="@cost" name="optimizeForm.schemeCost" id="op_schemecost"/>
+    <input type="hidden" value="@ViewBag.OrgMoney" name="optimizeForm.orgMoney" id="orgMoney"/>
+    <input type="hidden" value="@gg" name="optimizeForm.passContent" id="op_pass"/>
+    <input type="hidden" value="@ViewBag.ItemsContent" name="optimizeForm.itemsContent" id="op_items"/>
+    <input type="hidden" value="HT" name="playType" id="op_playtype"/>
+    <input type="hidden" value="@opType" name="optimizeForm.opType" id="opType"/>
+</form>
+@UserHelper.js("optimize.js")
+@{Html.RenderPartial("box_confirm_gg");}

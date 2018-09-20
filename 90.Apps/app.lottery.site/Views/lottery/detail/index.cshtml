@@ -1,0 +1,931 @@
+﻿@{
+    var award = ViewBag.AwardList as LotteryData.Core.GameWinNumber_InfoCollection;
+    var FC3D = award.List.Where(p => p.GameCode.ToUpper() == "FC3D").FirstOrDefault();
+    var SSQ = award.List.Where(p => p.GameCode.ToUpper() == "SSQ").FirstOrDefault();
+    var DLT = award.List.Where(p => p.GameCode.ToUpper() == "DLT").FirstOrDefault();
+    var PL3 = award.List.Where(p => p.GameCode.ToUpper() == "PL3").FirstOrDefault();
+    var T14C = award.List.Where(p => p.GameCode.ToUpper() == "CTZQ" && (p.GameType.ToUpper() == "T14C"|| p.GameType.ToUpper()=="TR9")).FirstOrDefault();
+    var TR9 = award.List.Where(p => p.GameCode.ToUpper() == "CTZQ" && (p.GameType.ToUpper() == "TR9"||p.GameType.ToUpper()=="T14C")).FirstOrDefault();
+    var T4CJQ = award.List.Where(p => p.GameCode.ToUpper() == "CTZQ" && p.GameType.ToUpper() == "T4CJQ").FirstOrDefault();
+    var T6BQC = award.List.Where(p => p.GameCode.ToUpper() == "CTZQ" && p.GameType.ToUpper() == "T6BQC").FirstOrDefault();
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>开奖结果</li>
+    </ul>
+</div>
+<!--开奖公告-->
+<div class="lottery_notic mt10">
+    <div class="lottery_today">
+        <img src="@ViewHelpers.img("lottery/lb.gif")" title="今日开奖"/>
+        <span>今&nbsp;日&nbsp;开&nbsp;奖：
+            @{foreach (var item in SiteString.gameList("szc"))
+              {
+                  if (OrderManager.isTodayGame(item))
+                  {<em>@SiteConvert.GameName(item)</em>
+                  }
+              }}
+               </span>
+    </div>
+    <div class="lottery_search">
+        开奖查询:&nbsp;
+        <select id="dropDownListAllCPType" name="dropDownListAllCPType">
+            <optgroup label="传统足球">
+                <option value="ctzq|t14c">14场胜负彩 </option>
+                <option value="ctzq|tr9">胜负任选九场</option>
+                <option value="ctzq|t6bqc">六场半全场</option>
+                <option value="ctzq|t4cjq">四场进球彩</option>
+            </optgroup>
+            <optgroup label="北京单场">
+                <option value="bjdc|spf">胜平负</option>
+                <option value="bjdc|zjq">总进球</option>
+                <option value="bjdc|sxds">上下单双</option>
+                <option value="bjdc|bf">比分</option>
+                <option value="bjdc|bqc">半全场</option>
+            </optgroup>
+            <optgroup label="竞彩足球">
+                <option value="jczq|spf">让球胜平负</option>
+                <option value="jczq|brqspf">胜平负</option>
+                <option value="jczq|bf">比分</option>
+                <option value="jczq|zjq">总进球</option>
+                <option value="jczq|bqc">半全场</option>
+            </optgroup>
+            <optgroup label="竞彩篮球">
+                <option value="jclq|sf">胜负</option>
+                <option value="jclq|rfsf">让分胜负</option>
+                <option value="jclq|sfc">胜分差</option>
+                <option value="jclq|dxf">大小分</option>
+            </optgroup>
+        </select>
+         &nbsp;&nbsp;
+        <a href="javascript:void(0);" id="submit_btn" class="btn_lottery_submit">提交</a>
+    </div>
+</div>
+<!--数字彩-->
+<div class="lottery-content mt10">
+    <table class="lottery_mytable ">
+        <tr class="cu">
+            <td rowspan="5" width="7%" class="szc">
+                数<br />
+                字<br />
+                彩
+            </td>
+            <td width="8%">
+                彩种
+            </td>
+            <td width="8%">
+                期号
+            </td>
+            <td width="8%">
+                开奖日期
+            </td>
+            <td class="red" width="26%">
+                开奖号码
+            </td>
+            <td width="9%">
+                奖池滚存
+            </td>
+            <td width="7%">
+                开奖日
+            </td>
+            <td class="blue" width="5%">
+                历史
+            </td>
+            <td width="6%">
+                走势
+            </td>
+            <td width="5%">
+                详情
+            </td>
+            <td width="8%">
+                购买
+            </td>
+        </tr>
+        <tr>
+            @if (FC3D != null)
+            {
+                <td>
+                    @(SiteConvert.GameName(FC3D.GameCode))
+                </td>
+                <td>
+                    @FC3D.IssuseNumber
+                </td>
+                <td>
+                    @FC3D.CreateTime.ToString("yyyy-MM-dd ")
+                </td>
+                <td class="left">
+                    <span>
+                        @OrderHelper.WinNumberView(FC3D.WinNumber)</span>
+                </td>
+                <td>
+                    -
+                </td>
+                <td>
+                    @SiteString.lotteryDay(FC3D.GameCode)
+                </td>
+                <td>
+                    <a href="/lottery/history/@FC3D.GameCode.ToLower()"   target="blank" class="a-history" title="查看 @SiteConvert.GameName(FC3D.GameCode) 历史开奖号码">
+                    </a>
+                </td>
+                <td>
+                    <a class="a-trend hide" href="/trend/@FC3D.GameCode.ToLower()"   target="blank" title="@SiteConvert.GameName(FC3D.GameCode) 走势图">
+                    </a>-
+                </td>
+                <td>
+                    <a href="/lottery/index/@FC3D.GameCode.ToLower()" target="blank" class="a-detail" title="查看 @SiteConvert.GameName(FC3D.GameCode) 开奖详情">
+                    </a>
+                </td>
+                <td>
+                    <a  target="blank" href="/chipped/@FC3D.GameCode.ToLower()">合买</a><a   target="blank" href="/szc/@FC3D.GameCode.ToLower()">
+                        投注</a>
+                </td>
+                //}
+            }
+            else
+            { 
+                <td>
+                    福彩3D
+                </td>
+                <td >
+                    --
+                </td>
+                 <td>
+                  --
+                </td>
+                <td class="left">
+                    <span>@*<em class="lottery-ball">03</em> <em class="lottery-ball">05</em> <em class="lottery-ball">08</em>*@
+                       未开奖</span>
+                </td>
+                <td>
+                    -
+                </td>
+                <td>
+                       @SiteString.lotteryDay("fc3d")
+                </td>
+                <td>
+                    <a href="/lottery/history/fc3d"   target="blank" class="a-history" title="查看 @SiteConvert.GameName("fc3d") 历史开奖号码">
+                    </a>
+                </td>
+                <td>
+                    <a class="a-trend hide" href="/trend/fc3d"   target="blank" title="@SiteConvert.GameName("fc3d") 走势图">
+                    </a>-
+                </td>
+                <td>
+                    <a href="/lottery/index/fc3d" target="blank" class="a-detail" title="查看 @SiteConvert.GameName("fc3d") 开奖详情">
+                    </a>
+                </td>
+                <td>
+                    <a  target="blank" href="/chipped/fc3d">合买</a><a   target="blank" href="/szc/fc3d">
+                        投注</a>
+                </td>
+            }
+        </tr>
+        <tr class="n2">
+            @if (SSQ != null)
+            {
+                <td>
+                    @SiteConvert.GameName(SSQ.GameCode, SSQ.GameType)
+                </td>
+                <td>
+                    @SSQ.IssuseNumber
+                </td>
+                <td>
+                    @SSQ.CreateTime.ToString("yyyy-MM-dd")
+                </td>
+                <td class="left">
+                    <span>
+                        @OrderHelper.WinNumberView(SSQ.WinNumber)
+                    </span>
+                </td>
+                <td>
+                    -
+                </td>
+                <td>
+                    @SiteString.lotteryDay(SSQ.GameCode)
+                </td>
+                <td>
+                    <a href="/lottery/history/@SSQ.GameCode.ToLower()" target="blank" class="a-history" title="查看 @SiteConvert.GameName(SSQ.GameCode) 历史开奖号码">
+                    </a>
+                </td>
+                <td>
+                    <a class="a-trend hide" href="/trend/@SSQ.GameCode.ToLower()"  target="blank"  title="@SiteConvert.GameName(SSQ.GameCode) 走势图">
+                    </a>-
+                </td>
+                <td>
+                    <a href="/lottery/index/@SSQ.GameCode.ToLower()"  target="blank"  class="a-detail" title="查看 @SiteConvert.GameName(SSQ.GameCode) 开奖详情">
+                    </a>
+                </td>
+                <td>
+                    <a href="/chipped/@SSQ.GameCode.ToLower()"  target="blank">合买</a><a href="/szc/@SSQ.GameCode.ToLower()"  target="blank">
+                        投注</a>
+                </td>
+            }
+            else
+            { 
+                <td>
+                    双色球
+                </td>
+                <td >
+                    --
+                </td>
+                  <td>
+                 --
+                </td>
+                <td class="left">
+                    <span>
+                      未开奖
+                    </span>
+                </td>
+                <td>
+                    -
+                </td>
+                <td>
+                    @SiteString.lotteryDay("ssq")
+                </td>
+                <td>
+                    <a href="/lottery/history/ssq" target="blank" class="a-history" title="查看 @SiteConvert.GameName("ssq") 历史开奖号码">
+                    </a>
+                </td>
+                <td>
+                    <a class="a-trend hide" href="/trend/ssq"  target="blank"  title="@SiteConvert.GameName("ssq") 走势图">
+                    </a>-
+                </td>
+                <td>
+                    <a href="/lottery/index/ssq"  target="blank"  class="a-detail" title="查看 @SiteConvert.GameName("ssq") 开奖详情">
+                    </a>
+                </td>
+                <td>
+                    <a href="/chipped/ssq"  target="blank">合买</a><a href="/szc/ssq"  target="blank">
+                        投注</a>
+                </td>
+                
+            }
+        </tr>
+        <tr>
+            @if (DLT != null)
+            {
+                <td>
+                    @SiteConvert.GameName(DLT.GameCode)
+                </td>
+                <td>
+                    @DLT.IssuseNumber
+                </td>
+                <td>
+                    @DLT.CreateTime.ToString("yyyy-MM-dd")
+                </td>
+                <td class="left">
+                    <span>@OrderHelper.WinNumberView(DLT.WinNumber)</span>
+                </td>
+                <td>
+                    -
+                </td>
+                <td>
+                    @SiteString.lotteryDay(DLT.GameCode)
+                </td>
+                <td>
+                    <a href="/lottery/history/@DLT.GameCode.ToLower()" class="a-history"  target="blank" title="查看 @SiteConvert.GameName(DLT.GameCode) 历史开奖号码">
+                    </a>
+                </td>
+                <td>
+                    <a class="a-trend hide" href="/trend/@DLT.GameCode.ToLower()" target="blank" title="@SiteConvert.GameName(DLT.GameCode) 走势图">
+                    </a>-
+                </td>
+                <td>
+                    <a href="/lottery/index/@DLT.GameCode.ToLower()"  target="blank" class="a-detail" title="查看 @SiteConvert.GameName(DLT.GameCode.ToLower()) 开奖详情">
+                    </a>
+                </td>
+                <td>
+                    <a href="/chipped/@DLT.GameCode.ToLower()"  target="blank">合买</a><a href="/szc/@DLT.GameCode.ToLower()"  target="blank">
+                        投注</a>
+                </td>
+            }
+            else
+            { 
+                <td>
+                    大乐透
+                </td>
+              <td >
+                    --
+                </td>
+                  <td>
+                 --
+                </td>
+                <td class="left">
+                    <span>
+                      未开奖
+                    </span>
+                </td>
+                <td>
+                    -
+                </td>
+                <td>
+                    @SiteString.lotteryDay("dlt")
+                </td>
+                <td>
+                    <a href="/lottery/history/dlt" target="blank" class="a-history" title="查看 @SiteConvert.GameName("dlt") 历史开奖号码">
+                    </a>
+                </td>
+                <td>
+                    <a class="a-trend hide" href="/trend/dlt"  target="blank"  title="@SiteConvert.GameName("dlt") 走势图">
+                    </a>-
+                </td>
+                <td>
+                    <a href="/lottery/index/dlt"  target="blank"  class="a-detail" title="查看 @SiteConvert.GameName("dlt") 开奖详情">
+                    </a>
+                </td>
+                <td>
+                    <a href="/chipped/dlt"  target="blank">合买</a><a href="/szc/dlt"  target="blank">
+                        投注</a>
+                </td>
+            }
+        </tr>
+        <tr class="n2">
+            @if (PL3 != null)
+            {
+                <td>
+                    @SiteConvert.GameName(PL3.GameCode)
+                </td>
+                <td>
+                    @PL3.IssuseNumber
+                </td>
+                <td>
+                    @PL3.CreateTime.ToString("yyyy-MM-dd")
+                </td>
+                <td class="left">
+                    <span>@OrderHelper.WinNumberView(PL3.WinNumber)</span>
+                </td>
+                <td>
+                    -
+                </td>
+                <td>
+                    @SiteString.lotteryDay(PL3.GameCode)
+                </td>
+                <td>
+                    <a href="/lottery/history/@PL3.GameCode.ToLower()"  target="blank" class="a-history" title="查看 @SiteConvert.GameName(PL3.GameCode) 历史开奖号码">
+                    </a>
+                </td>
+                <td>
+                    <a class="a-trend hide" href="/trend/@PL3.GameCode.ToLower()"   target="blank" title="@SiteConvert.GameName(PL3.GameCode) 走势图">
+                    </a>-
+                </td>
+                <td>
+                    <a href="/lottery/index/@PL3.GameCode.ToLower()"   target="blank" class="a-detail" title="查看 @SiteConvert.GameName(PL3.GameCode) 开奖详情">
+                    </a>
+                </td>
+                <td>
+                    <a href="/chipped/@PL3.GameCode.ToLower()"   target="blank">合买</a><a href="/szc/@PL3.GameCode.ToLower()"   target="blank">
+                        投注</a>
+                </td>
+            }
+            else
+            { 
+                <td>
+                    排列三
+                </td>
+                 <td >
+                    --
+                </td>
+                  <td>
+                 --
+                </td>
+                <td class="left">
+                    <span>
+                      未开奖
+                    </span>
+                </td>
+                <td>
+                    -
+                </td>
+                <td>
+                    @SiteString.lotteryDay("pl3")
+                </td>
+                <td>
+                    <a href="/lottery/history/pl3" target="blank" class="a-history" title="查看 @SiteConvert.GameName("pl3") 历史开奖号码">
+                    </a>
+                </td>
+                <td>
+                    <a class="a-trend hide" href="/trend/pl3"  target="blank"  title="@SiteConvert.GameName("pl3") 走势图">
+                    </a>-
+                </td>
+                <td>
+                    <a href="/lottery/index/pl3"  target="blank"  class="a-detail" title="查看 @SiteConvert.GameName("pl3") 开奖详情">
+                    </a>
+                </td>
+                <td>
+                    <a href="/chipped/pl3"  target="blank">合买</a><a href="/szc/pl3"  target="blank">
+                        投注</a>
+                </td>
+            }
+        </tr>
+    </table>
+</div>
+<!--足彩-->
+<div class="lottery-content mt10">
+    <table class="lottery_mytable">
+        <!--足彩-->
+        <tr class="cu">
+            <td rowspan="5" width="7%" class="zc">
+                足<br />
+                彩
+            </td>
+            <td width="8%">
+                彩种
+            </td>
+            <td width="8%">
+                期号
+            </td>
+            <td width="8%">
+                开奖日期
+            </td>
+            <td class="red" width="26%">
+                开奖号码
+            </td>
+            <td width="9%">
+                奖池滚存
+            </td>
+            <td width="7%">
+                开奖日
+            </td>
+            <td class="blue" width="5%">
+                历史
+            </td>
+            <td width="6%">
+                走势
+            </td>
+            <td width="5%">
+                详情
+            </td>
+            <td width="8%">
+                购买
+            </td>
+        </tr>
+        <tr>
+            @if (T14C != null)
+            {
+                <td>
+                    @SiteConvert.GameName(T14C.GameCode, "T14C")
+                </td>
+                <td>
+                    @T14C.IssuseNumber
+                </td>
+                <td>
+                    @T14C.CreateTime.ToString("yyyy-MM-dd")
+                </td>
+                <td class="left">
+                    <span>@T14C.WinNumber</span>
+                </td>
+                <td>
+                    -
+                </td>
+                <td>
+                    @SiteString.lotteryDay(T14C.GameCode)
+                </td>
+                <td>
+                    <a href="/lottery/history/@T14C.GameCode.ToLower()?gameType=T14C"   target="blank" class="a-history" title="查看 @SiteConvert.GameName(T14C.GameCode) 历史开奖号码">
+                    </a>
+                </td>
+                <td>
+                    <a class="a-trend hide" href="/trend/@T14C.GameCode.ToLower()"   target="blank" title="@SiteConvert.GameName(T14C.GameCode) 走势图">
+                    </a>-
+                </td>
+                <td>
+                    <a href="/lottery/@T14C.GameCode.ToLower()/T14C"   target="blank" class="a-detail" title="查看 @SiteConvert.GameName(T14C.GameCode) 开奖详情">
+                    </a>
+                </td>
+                <td>
+                    <a href="/chipped/@T14C.GameCode.ToLower()/T14C"   target="blank">
+                        合买</a><a href="/toto/@T14C.GameCode.ToLower()"   target="blank"> 投注</a>
+                </td>
+            }
+            else
+            { 
+                <td>
+                    14场胜负
+                </td>
+               <td>
+                   --
+                </td>
+                <td>
+                  --
+                </td>
+                <td class="left">
+                    <span>未开奖</span>
+                </td>
+                <td>
+                    -
+                </td>
+                <td>
+                    @SiteString.lotteryDay("ctzq")
+                </td>
+                <td>
+                    <a href="/lottery/history/ctzq?gameType=t14c"   target="blank" class="a-history" title="查看 @SiteConvert.GameName("ctzq") 历史开奖号码">
+                    </a>
+                </td>
+                <td>
+                    <a class="a-trend hide" href="/trend/ctzq"   target="blank" title="@SiteConvert.GameName("ctzq") 走势图">
+                    </a>-
+                </td>
+                <td>
+                    <a href="/lottery/ctzq/t14c"   target="blank" class="a-detail" title="查看 @SiteConvert.GameName("ctzq") 开奖详情">
+                    </a>
+                </td>
+                <td>
+                    <a href="/chipped/ctzq/t14c"   target="blank"> 合买</a><a href="/toto/ctzq"   target="blank"> 投注</a>
+                </td>
+            }
+        </tr>
+        <tr class="n2">
+            @if (TR9 != null)
+            {
+                <td>
+                    @SiteConvert.GameName(T14C.GameCode, "TR9")
+                </td>
+                <td>
+                    @TR9.IssuseNumber
+                </td>
+                <td>
+                    @TR9.CreateTime.ToString("yyyy-MM-dd")
+                </td>
+                <td class="left">
+                    <span>@TR9.WinNumber</span>
+                </td>
+                <td>
+                    -
+                </td>
+                <td>
+                    @SiteString.lotteryDay(TR9.GameCode)
+                </td>
+                <td>
+                    <a href="/lottery/history/@TR9.GameCode.ToLower()?gameType=TR9" class="a-history"   target="blank" title="查看 @SiteConvert.GameName(TR9.GameCode) 历史开奖号码">
+                    </a>
+                </td>
+                <td>
+                    <a class="a-trend hide" href="/trend/@TR9.GameCode.ToLower()"   target="blank" title="@SiteConvert.GameName(TR9.GameCode) 走势图">
+                    </a>-
+                </td>
+                <td>
+                    <a href="/lottery/@TR9.GameCode.ToLower()/TR9"   target="blank" class="a-detail" title="查看 @SiteConvert.GameName(TR9.GameCode) 开奖详情">
+                    </a>
+                </td>
+                <td>
+                    <a href="/chipped/@TR9.GameCode.ToLower()/TR9"   target="blank">
+                        合买</a><a href="/toto/@TR9.GameCode.ToLower()"   target="blank"> 投注</a>
+                </td>
+                //}
+            }
+            else
+            { 
+                <td>
+                    胜负任9
+                </td>
+                  <td>
+                   --
+                </td>
+                <td>
+                  --
+                </td>
+                <td class="left">
+                    <span>未开奖</span>
+                </td>
+                <td>
+                    -
+                </td>
+                <td>
+                    @SiteString.lotteryDay("ctzq")
+                </td>
+                <td>
+                    <a href="/lottery/history/ctzq?gameType=tr9"   target="blank" class="a-history" title="查看 @SiteConvert.GameName("ctzq") 历史开奖号码">
+                    </a>
+                </td>
+                <td>
+                    <a class="a-trend hide" href="/trend/ctzq"   target="blank" title="@SiteConvert.GameName("ctzq") 走势图">
+                    </a>-
+                </td>
+                <td>
+                    <a href="/lottery/ctzq/tr9"   target="blank" class="a-detail" title="查看 @SiteConvert.GameName("ctzq") 开奖详情">
+                    </a>
+                </td>
+                <td>
+                    <a href="/chipped/ctzq/tr9"   target="blank"> 合买</a><a href="/toto/ctzq"   target="blank"> 投注</a>
+                </td>
+            }
+        </tr>
+        <tr>
+            @if (T4CJQ != null)
+            {
+                <td>
+                    @SiteConvert.GameName(T4CJQ.GameCode, T4CJQ.GameType)
+                </td>
+                <td>
+                    @T4CJQ.IssuseNumber
+                </td>
+                <td>
+                    @T4CJQ.CreateTime.ToString("yyyy-MM-dd")
+                </td>
+                <td class="left">
+                    <span>@T4CJQ.WinNumber</span>
+                </td>
+                <td>
+                    -
+                </td>
+                <td>
+                    @SiteString.lotteryDay(T4CJQ.GameCode)
+                </td>
+                <td>
+                    <a href="/lottery/history/@T4CJQ.GameCode.ToLower()?gameType=@T4CJQ.GameType.ToLower()"   target="blank" class="a-history" title="查看 @SiteConvert.GameName(T4CJQ.GameCode) 历史开奖号码">
+                    </a>
+                </td>
+                <td>
+                    <a class="a-trend hide" href="/trend/@T4CJQ.GameCode.ToLower()"   target="blank" title="@SiteConvert.GameName(T4CJQ.GameCode) 走势图">
+                    </a>-
+                </td>
+                <td>
+                    <a href="/lottery/@T4CJQ.GameCode.ToLower()/@T4CJQ.GameType.ToLower()"   target="blank" class="a-detail" title="查看 @SiteConvert.GameName(T4CJQ.GameCode) 开奖详情">
+                    </a>
+                </td>
+                <td>
+                    <a href="/@T4CJQ.GameCode.ToLower()/@T4CJQ.GameType.ToLower()"   target="blank">
+                        合买</a><a href="/toto/@T4CJQ.GameCode.ToLower()"   target="blank"> 投注</a>
+                </td>
+                   
+            }
+            else
+            { 
+                <td>
+                    4场进球
+                </td>
+                  <td>
+                   --
+                </td>
+                <td>
+                  --
+                </td>
+                <td class="left">
+                    <span>未开奖</span>
+                </td>
+                <td>
+                    -
+                </td>
+                <td>
+                    @SiteString.lotteryDay("ctzq")
+                </td>
+                <td>
+                    <a href="/lottery/history/ctzq?gameType=t4cjq"   target="blank" class="a-history" title="查看 @SiteConvert.GameName("ctzq") 历史开奖号码">
+                    </a>
+                </td>
+                <td>
+                    <a class="a-trend hide" href="/trend/ctzq"   target="blank" title="@SiteConvert.GameName("ctzq") 走势图">
+                    </a>-
+                </td>
+                <td>
+                    <a href="/lottery/ctzq/t4cjq"   target="blank" class="a-detail" title="查看 @SiteConvert.GameName("ctzq") 开奖详情">
+                    </a>
+                </td>
+                <td>
+                    <a href="/ctzq/t4cjq"   target="blank"> 合买</a><a href="/toto/ctzq"   target="blank"> 投注</a>
+                </td>
+            }
+        </tr>
+        <tr class="n2">
+            @if (T6BQC != null)
+            {
+                <td>
+                    @SiteConvert.GameName(T6BQC.GameCode, T6BQC.GameType)
+                </td>
+                <td>
+                    @T6BQC.IssuseNumber
+                </td>
+                <td>
+                    @T6BQC.CreateTime.ToString("yyyy-MM-dd")
+                </td>
+                <td class="left">
+                    <span>@T6BQC.WinNumber</span>
+                </td>
+                <td>
+                    -
+                </td>
+                <td>
+                    @SiteString.lotteryDay(T6BQC.GameCode)
+                </td>
+                <td>
+                    <a href="/lottery/history/@T6BQC.GameCode.ToLower()?gameType=@T6BQC.GameType.ToLower()" class="a-history"   target="blank" title="查看 @SiteConvert.GameName(T6BQC.GameCode) 历史开奖号码">
+                    </a>
+                </td>
+                <td>
+                    <a class="a-trend hide" href="/trend/@T6BQC.GameCode.ToLower()"   target="blank" title="@SiteConvert.GameName(T6BQC.GameCode) 走势图">
+                    </a>-
+                </td>
+                <td>
+                    <a href="/lottery/@T6BQC.GameCode.ToLower()/@T6BQC.GameType.ToLower()"   target="blank" class="a-detail" title="查看 @SiteConvert.GameName(T6BQC.GameCode) 开奖详情">
+                    </a>
+                </td>
+                <td>
+                    <a href="/chipped/@T6BQC.GameCode.ToLower()/@T6BQC.GameType.ToLower()"   target="blank">
+                        合买</a><a href="/toto/@T6BQC.GameCode.ToLower()"   target="blank"> 投注</a>
+                </td>
+            }
+            else
+            { 
+                <td>
+                    6场半全
+                </td>
+               <td>
+                   --
+                </td>
+                <td>
+                  --
+                </td>
+                <td class="left">
+                    <span>未开奖</span>
+                </td>
+                <td>
+                    -
+                </td>
+                <td>
+                    @SiteString.lotteryDay("ctzq")
+                </td>
+                <td>
+                    <a href="/lottery/history/ctzq?gameType=t6bqc"   target="blank" class="a-history" title="查看 @SiteConvert.GameName("ctzq") 历史开奖号码">
+                    </a>
+                </td>
+                <td>
+                    <a class="a-trend hide" href="/trend/ctzq"   target="blank" title="@SiteConvert.GameName("ctzq") 走势图">
+                    </a>-
+                </td>
+                <td>
+                    <a href="/lottery/ctzq/t6bqc"   target="blank" class="a-detail" title="查看 @SiteConvert.GameName("ctzq") 开奖详情">
+                    </a>
+                </td>
+                <td>
+                    <a href="/chipped/ctzq/t6bqc"   target="blank"> 合买</a><a href="/toto/ctzq"   target="blank"> 投注</a>
+                </td>
+            }
+        </tr>
+    </table>
+</div>
+<!--竞技彩-->
+<div class="lottery-content mt10">
+    <table class="lottery_mytable ">
+        <tr class="cu">
+            <td rowspan="4" width="7%" class="szc">
+                竞<br />
+                技<br />
+                彩
+            </td>
+            <td width="8%">
+                彩种
+            </td>
+            <td width="8%">
+                期号
+            </td>
+            <td width="8%">
+                开奖日期
+            </td>
+            <td class="red" width="26%">
+                开奖彩种
+            </td>
+            <td width="9%">
+                奖池滚存
+            </td>
+            <td width="7%">
+                开奖日
+            </td>
+            <td class="blue" width="5%">
+                历史
+            </td>
+            <td width="6%">
+                走势
+            </td>
+            <td width="5%">
+                详情
+            </td>
+            <td width="8%">
+                购买
+            </td>
+        </tr>
+        <tr>
+            <td>
+                竞彩足球
+            </td>
+            <td>
+                -
+            </td>
+            <td>
+                -
+            </td>
+            <td class="left2">
+                <a href="/lottery/jczq/spf" target="blank">让球胜平负</a> <a href="/lottery/jczq/brqspf"
+                    target="blank">胜平负</a> <a href="/lottery/jczq/zjq" target="blank">总进球</a> <a href="/lottery/jczq/bf"
+                        target="blank">比分</a> <a href="/lottery/jczq/bqc" target="blank">半全场</a>
+            </td>
+            <td>
+            </td>
+            <td>
+                每日
+            </td>
+            <td>
+            </td>
+            <td>
+            </td>
+            <td>
+                <a href="/lottery/jczq"   target="blank" class="a-detail" title="查看 @SiteConvert.GameName("jczq") 开奖详情">
+                </a>
+            </td>
+            <td>
+                <a href="/chipped/jczq" target="blank">合买</a><a href="/jingcai/spf" target="blank">
+                    投注</a>
+            </td>
+        </tr>
+        <tr class="n2">
+            <td>
+                竞彩篮球
+            </td>
+            <td>
+                -
+            </td>
+            <td>
+                -
+            </td>
+            <td class="left2">
+                <a href="/lottery/jclq/brqspf" target="blank">胜平负</a> <a href="/lottery/jclq/spf"
+                    target="blank">让球胜平负</a> <a target="blank" href="/lottery/jclq/bf">比分</a> <a href="/lottery/jclq/zjq"
+                        target="blank">进球数</a> <a href="/lottery/jclq/bqc" target="blank">半全场</a>
+            </td>
+            <td>
+                -
+            </td>
+            <td>
+                每日
+            </td>
+            <td>
+            </td>
+            <td>
+            </td>
+            <td>
+                <a href="/lottery/jclq"   target="blank" class="a-detail" title="查看 @SiteConvert.GameName("jclq") 开奖详情">
+                </a>
+            </td>
+            <td>
+                <a href="/chipped/jclq" target="blank">合买</a><a href="/jingcaibasket/spf"
+                    target="blank"> 投注</a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                足球单场
+            </td>
+            <td>
+                -
+            </td>
+            <td>
+                -
+            </td>
+            <td class="left2">
+                <a href="/lottery/bjdc/spf" target="blank">让球胜平负</a> <a href="/lottery/bjdc/zjq"
+                    target="blank">总进球</a> <a href="/lottery/bjdc/bf" target="blank">比分</a> <a href="/lottery/bjdc/bqc"
+                        target="blank">半全场</a> <a target="blank" href="/lottery/bjdc/sxds">上下单双</a>
+            </td>
+            <td>
+                -
+            </td>
+            <td>
+                每日
+            </td>
+            <td>
+            </td>
+            <td>
+            </td>
+            <td>
+                <a href="/lottery/bjdc"   target="blank" class="a-detail" title="查看 @SiteConvert.GameName("bjdc") 开奖详情">
+                </a>
+            </td>
+            <td>
+                <a href="/chipped/bjdc" target="blank">合买</a><a href="/danchang/spf" target="blank">
+                    投注</a>
+            </td>
+        </tr>
+        <tr class="lasttr">
+            <td colspan="13">
+                <span>友情提示：数据来源于彩票中心官方网站,请以彩票中心官方网站公布数据为准</span>
+            </td>
+        </tr>
+    </table>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("#submit_btn").click(function () {
+            var key = $("#dropDownListAllCPType").find("option:selected").val();
+            var game = key.split('|')[0];
+            var type = key.split('|')[1];
+            if (type != "" && type != null) {
+                location.href = "/soccer/" + game + "?gametype=" + type;
+            } else {
+                location.href = "/soccer/" + game;
+            }
+        });
+
+    });
+
+</script>

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>@ViewBag.Title</title>
+    <meta name="keywords" content="@ViewBag.KeyWords" />
+    <meta name="description" content="@ViewBag.Description" />
+    <meta name="baidu-site-verification" content="G3yjx3dBmE" />
+    <meta property="qc:admins" content="34400747776311226375" />
+    <meta name="360-site-verification" content="5fc59d0c2b686ee3ea83e35da560e3de" />
+    @UserHelper.csscdn("main.min.css", "0120")
+    @RenderSection("css", false)
+    <!--[if IE 7]> 
+    @UserHelper.js_share("json2.min.js")
+    <![endif]-->
+    @UserHelper.js_share("share.min.js")
+    @UserHelper.js("user.min.js")
+    @UserHelper.js("nav.js")
+    @ViewHelpers.js("onlinePhone.js")
+    @ViewHelpers.css("blog.css")
+    @RenderSection("js", false)
+    @{
+        var prouser = ViewBag.UserInfo as GameBiz.Core.ProfileUserInfo;
+        var data = ViewBag.DataReport as GameBiz.Core.ProfileDataReport;//数据统计
+        var bonuslevel = ViewBag.BonusLevel as GameBiz.Core.ProfileBonusLevelInfo;//获奖情况
+        var bonusListzj = ViewBag.BonusListZj as GameBiz.Core.ProfileLastBonusCollection;//最近中奖
+        var gdCount = ViewBag.Count;//被跟单人数
+        
+    }
+</head>
+<body>
+    <script type="text/javascript">
+        var ires = "@ViewHelpers.res()/images/";
+        var dres = "@ViewHelpers.jsonres()/matchdata/";
+    </script>
+    <div class="header">
+        @{Html.RenderAction("headerTop", "home");}
+        <div class="clearfix">
+        </div>
+        <div class="blog_header clearfix">
+            <div style="float: left; margin-left: 17.5%; margin-top: 20px;">
+                <table style="float: left;">
+                    <tr>
+                        <td>
+                            @{ if (prouser != null)
+                               {
+                                   var userleve = 1;
+                                   switch (bonuslevel.MaxLevelName)
+                                   {
+                                       case "百元":
+                                           userleve = 10;
+                                           break;
+                                       case "彩民":
+                                           userleve = 1;
+                                           break;
+                                       case "千元":
+                                           userleve = 2;
+                                           break;
+                                       case "万元":
+                                           userleve = 3;
+                                           break;
+                                       case "十万":
+                                           userleve = 4;
+                                           break;
+                                       case "百万":
+                                           userleve = 5;
+                                           break;
+                                       case "亿元":
+                                       case "千万":
+                                           userleve = 7;
+                                           break;
+                                   }
+                                <i class="touxiang hmmr_leve@(userleve)"></i>
+                               }}
+                        </td>
+                        <td>
+                            <span style="padding-left: 20px; font-size: 26px; font-weight: bold; color: Yellow;">@(prouser == null ? string.Empty : SiteString.HideUserName(prouser.UserDisplayName, prouser.HideNameCount))</span>
+                            <br />
+                            <span style="margin-left: 20px; color:White;">@string.Format("{0}/blog/standings/{1}", SiteString.getHZSiteUrl(), prouser.UserId)</span>
+                        </td>
+                    </tr>
+                </table>
+                <span style="margin-left: -15%; color: Yellow; font-size: 14px; font-weight: bold;
+                    margin-top: 20px; float: left;">历史战绩</span>
+            </div>
+            <ul class="nav-act" style="float: right; margin-right: 17.5%; margin-top: 70px;">
+                <li class="phone-click" style="position: relative"><span>客服电话：@SiteString.tel</span>
+                    <a title="首页" href="/">首页</a> <i style="display: none;" class="icon-i"></i><a title="手机购彩"
+                        href="/staticHtml/phonebuy/index.html">手机购彩</a> <i style="display: none;" class="icon-i"></i>
+                    <div style="display: none;" class="mobile-box">
+                        <div class="mobile-text">
+                            安全、便捷、随时随地购彩</div>
+                        <div class="mobile-code-img code-icon-i">
+                        </div>
+                    </div>
+                </li>
+                <li>?</li>
+                <li><a target="_blank" href="/staticHtml/bulletin/detail/2.html">活动</a></li>
+                <li>?</li>
+                <li><a title="会员中心" class="help-nav" target="_blank" href="/staticHtml/vip/index.html">
+                    会员</a></li>
+            </ul>
+        </div>
+        <script type="text/javascript">
+            setMenuClass3(".nav_right");
+
+        </script>
+    </div>
+    <div class="wrap_blog">
+        @if (prouser == null)
+        {
+            <p style="text-align: center; font-weight: bold; font-size: 18px;">
+                很抱歉，该用户不存在或者个人中心暂不能访问...<a href="/">返回主页</a>>></p>
+        }
+        else
+        {
+            <div id="user_left" class="dht">
+            <input type="hidden" id="hd_current_userId" value="@prouser.UserId" />
+                <div class="bj">
+                    <div class="standings_caizhong_hostoryzg" style="line-height: 38px; border: none ! important">
+                        <span class="rqtj_head"></span>人气统计</div>
+                    <ul class="rqtj">
+                        <li style="margin-top: 20px;"><i>发起人被跟单：@(gdCount) 人</i> <a
+                            href="javascript:;" class="under" id="login_gd"><span style="background: #0184cd;">+跟单</span></a>
+                        </li>
+                        <li class="judgment"><i>发起人被关注：@prouser.AttentionedCount 人</i>
+                         <a href="javascript:;" id="no_atention"  class="under"  >
+                            <span style="background: #fb5b00;">+关注</span></a>
+                            <div class="index_quxiao" id="yes_attention" style="display: none;">
+                                <span style="background: #fb5b00;" class="ygz">已关注</span> <a href="javascript:;"
+                                    class="under" style="display: none;"><span style="background: #0184cd;">取消？</span></a>
+                                <div style="top: -75px; display: none;" class="qxgz_box_c">
+                                    <p class="clearfix">
+                                        <i>确定不再关注 @(prouser == null ? string.Empty : SiteString.HideUserName(prouser.UserDisplayName, prouser.HideNameCount))
+                                            ？</i></p>
+                                    <p class="btn">
+                                        <a canclename="HUNt97jmRPrs0nqY" href="javascript:void(0)" onclick="user.cancelAttentionUser('false','@prouser.UserId')" class="btn_blue_l btn_blue_l_h18 confirmcc">
+                                            确定</a> <a href="javascript:void(0)" class="btn_gray btn_gray_h18 cancelcc">取消</a></p>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <script type="text/javascript">
+                    $(function () {
+                        $("#no_atention").click(function () {
+                            var p_user = $("#hd_current_userId").val();
+                            user.attentionLogin('true', p_user);
+                        })
+                    })
+                    $(".judgment").ready(function () {
+                        var UserId = $("#hd_current_userId").val();
+                        $.post("/member/AttentAndGd", { User: UserId }, function (result) {
+                            if (result.Issucse) {
+                                $("#yes_attention").show();
+                                $("#no_atention").hide();
+                                $(".qxgz_box_c").hide();
+                            }
+                        });
+                    })
+                </script>
+                <div class="clearfix">
+                </div>
+                <div class="standings_caizhong_hostoryzg" style="line-height: 38px">
+                    <span id="data" class="lb_limage"></span>数据统计</div>
+                <ul class="user_info lf_border">
+                    <li style="background-color: white;">发单次数：<b>@data.CreateSchemeCount</b></li>
+                    <li style="background-color: white;">发单成功率：@if (data.CreateSchemeCount == 0)
+                                                               {
+                        <b>0.00%</b>
+                                                               }
+                                                               else
+                                                               {
+                        <b>@((Convert.ToDouble(data.TotalBonusCount * 100) / Convert.ToDouble(data.CreateSchemeCount)).ToString("f"))
+                            %</b>}</li>
+                    <li style="background-color: white;">跟单次数：<b>@data.JoinSchemeCount</b></li>
+                    <li style="background-color: white;">总中奖次数：<b>@data.TotalBonusCount</b></li>
+                    <li style="background-color: white;">总中奖金额：<b>@data.TotalBonusMoney.ToString("f")</b></li>
+                </ul>
+                <div class="standings_caizhong_hostoryzg" style="line-height: 38px; margin-top: 10px;">
+                    <span id="record" class="lb_limage"></span>获奖情况</div>
+                <ul class="user_info lf_border">
+                    @if (bonuslevel.WinOneMillionCount > 0)
+                    {
+                        <li style="background-color: white;"><b>百万大奖：@bonuslevel.WinOneMillionCount</b>次</li>
+                    }
+                    else if (bonuslevel.WinOneHundredThousandCount > 0)
+                    {
+                        <li style="background-color: white;"><b>十万大奖：@bonuslevel.WinOneHundredThousandCount</b>次</li>
+                    }
+                    else if (bonuslevel.WinOneHundredThousandCount > 0)
+                    {
+                        <li style="background-color: white;"><b>万元大奖：@bonuslevel.WinOneHundredThousandCount</b>次</li>
+                    }
+                    else if (bonuslevel.WinOneThousandCount > 0)
+                    {
+                        <li style="background-color: white;"><b>千元大奖：@bonuslevel.WinOneThousandCount</b>次</li>
+                    }
+                    else if (bonuslevel.WinOneHundredCount > 0)
+                    {
+                        <li style="background-color: white;"><b>百元大奖：@bonuslevel.WinOneHundredCount</b>次</li>
+                    }
+                    else if (bonuslevel.WinTenMillionCount > 0)
+                    {
+                        <li style="background-color: white;"><b>千万大奖：@bonuslevel.WinTenMillionCount</b>次</li>
+                    }
+                    else if (bonuslevel.WinHundredMillionCount > 0)
+                    {
+                        <li style="background-color: white;"><b>亿元大奖：@bonuslevel.WinHundredMillionCount</b>次</li>
+                    }else{
+                        <li style="background-color: white;"><b>暂无任何中奖纪录</b>次</li>
+                    }
+                </ul>
+                <div class="standings_caizhong_hostoryzg" style="line-height: 38px; margin-top: 10px;">
+                    <span id="prize" class="lb_limage"></span>最近中奖</div>
+                <ul class="user_info lf_border" style="background-color: white;">
+                    @{
+                    if (bonusListzj != null)
+                    {
+                        foreach (var item in bonusListzj.List)
+                        {
+                            if (item.GameCode == "JCZQ" || item.GameCode == "JCLQ")
+                            {
+                        <li style="background-color: white;"><a style="color: #4B74B4;" href="/user/scheme/@item.SchemeId" target="_blank">@SiteConvert.GameName(item.GameCode, item.GameType)</a>
+                            @item.IssuseNumber <span class="u_red">@item.BonusMoney.ToString("f")</span>
+                        </li> 
+            
+                            }
+                            else
+                            {
+                        <li style="background-color: white;">
+                        <a style="color: #4B74B4;" href="/user/scheme/@item.SchemeId" target="_blank">@SiteConvert.GameName(item.GameCode, item.GameType)</a>
+                            @item.IssuseNumber 期 <span class="u_red">@item.BonusMoney.ToString("f")</span>
+                        </li>        
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <li style="text-align: left; background-color: white; color: #FD3D00;">暂无中奖记录</li>   
+                    }
+                
+                    }
+                </ul>
+                <ul class="user_info lf_border" style="color: black; background-color: white;">
+                    <li>数据在方案派奖后1-3天更新。</li>
+                    <li>上次更新： @DateTime.Now.ToString("yyyy-MM-dd") </li>
+                </ul>
+            </div> 
+    
+            @RenderBody()
+
+            <script type="text/javascript">
+                $(function () {
+                    $("#login_gd").live("click", function () {
+                        var p_user = $("#hd_current_userId").val();
+                        $.post("/member/Makeorder", { User: p_user }, function (result) {
+                            if (result.Issucse)
+                            location.href = "/blog/custombill/"+p_user;
+                        else{
+                            user.isLogin(function (islogin) {
+                                if (!islogin) {
+                                    if (!getVersionbylogin()) {
+                                        $("#loginLay").addClass("dialogAniCore dialogAnimate5");
+                                        var timer = setInterval(function () {
+                                            if (!$("#loginLay").hasClass("dialogAnimate5")) { $("#loginLay").removeClass("dialogAniCore"); clearInterval(timer); }
+                                            $("#loginLay").removeClass("dialogAnimate5");
+                                        }, 100);
+                                    }
+                                    loginDialog.Show();
+                                    $("#userName").focus();
+                                }
+                            });
+                            return false;
+
+                            }
+                        })
+                    });
+                    $(".under").click(function () {
+                        var edif = $(this).parent().find(".qxgz_box_c");
+                        edif.css("display", "block");
+                    });
+                    $(".btn_gray").click(function () {
+                        var edif = $(this).parent().parent().parent().find(".qxgz_box_c");
+                        edif.css("display", "none");
+                    });
+                    $(".index_quxiao").mouseover(function () {
+                        var self = ($(this));
+                        self.find(".ygz").hide();
+                        self.find(".under").show();
+                    }).mouseout(function () {
+                        var self = ($(this));
+                        self.find(".ygz").show();
+                        self.find(".under").hide();
+                    });
+                });
+            </script>
+            <div class="clearfix">
+            </div>
+        }
+    </div>
+    <div class="clearfix">
+    </div>
+    <div class="footer">
+        @{Html.RenderAction("footer", "home");}
+    </div>
+    @{Html.RenderPartial("tj", "Shared");}
+    @{Html.RenderPartial("box_doc");}
+    @{Html.RenderPartial("box_login");}
+    @{Html.RenderPartial("box_confirm");}
+    @{Html.RenderPartial("box_progress");}
+    @{Html.RenderPartial("box_alert");}
+</body>
+</html>

@@ -1,0 +1,87 @@
+﻿@{
+    ViewBag.Title = "名家管理 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "名家管理, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var updaterecord = ViewBag.UpdateRecord as GameBiz.Core.ExperterUpdateInfoCollection;
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>名家分析</li>
+    </ul>
+</div>
+<div class="center mt10">
+    @{Html.RenderAction("menu", "Member");}
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <ul class="mymenu">
+            <li><a href="/member/updateexpert">修改名家资料</a></li>
+            <li class="myons"><a href="">资料修改记录</a></li>
+        </ul>
+        <div id="mjgl">
+            <table class="betorder_table" width="100%">
+                <tr class="jjtb-tr1">
+                    <td width="15%" height="23" class="xian">
+                        申请时间
+                    </td>
+                    <td width="60%" class="xian">
+                        审核回复
+                    </td>
+                    <td width="15%">
+                        审核结果
+                    </td>
+                </tr>
+                @if (updaterecord != null)
+                {
+                    foreach (var item in updaterecord.List)
+                    {
+                    <tr class="tt">
+                        <td width="15%" height="23">
+                            @item.UpdateTime.ToString("yyyy-MM-dd")
+                        </td>
+                        <td width="60%">
+                            @item.DisposeOpinion
+                        </td>
+                        <td width="15%">
+                            @{
+                        var result = "";
+                        var deal = @item.DealWithType;
+                        switch (deal)
+                        {
+                            case GameBiz.Core.DealWithType.HasDealWith:
+                                result = "通过";
+                                break;
+                            case GameBiz.Core.DealWithType.NoneDealWith:
+                                result = "未审核";
+                                break;
+                            case GameBiz.Core.DealWithType.NoneThrough:
+                                result = "拒绝";
+                                break;
+                        }
+                            }
+                            @result
+                        </td>
+                    </tr>
+                    }
+                }
+                <tr>
+                    <td colspan="3" style="border: 1px solid #d4d4d4;">
+                        @ViewHelpers.Pager4("getUserRebate", ViewBag.pageNo, ViewBag.pageSize, updaterecord.TotalCount)
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="clearfix">
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+<script type="text/javascript">
+    var getUserRebate = function (pageNo, pageSize) {
+        location.search = "pageNo=" + pageNo + "&pageSize=" + pageSize;
+    };
+</script>

@@ -1,0 +1,269 @@
+﻿@using GameBiz.Core;
+@{
+    ViewBag.Title = "追号订单详情 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "追号订单详情, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var Scheme = ViewBag.ChaseSchemeInfo as BettingOrderInfoCollection;
+    var info = ViewBag.FirstItem as BettingOrderInfo;
+    var user = ViewBag.User as app.lottery.site.Models.CurrentUserInfo;
+    var chasefa = Scheme != null ? Scheme.OrderList.Count * 32 + 80 : 80;
+    var chasefa2 = Scheme != null ? Scheme.OrderList.Count * 32 + 45 : 45;
+    var anteList = ViewBag.FirstAnteCode as BettingAnteCodeInfoCollection;
+    var faxq = Scheme != null && anteList != null && anteList.AnteCodeList.Count > 0 ? 80 + anteList.AnteCodeList.Count * 32 : 80;
+    var sign = Request["sign"];
+}
+@if (Scheme != null && Scheme.TotalCount > 0)
+{
+       
+    <div class="crumb">
+        <ul>
+            <li class="a">您当前的位置：</li>
+            <li><a href="/">首页</a> > </li>
+            <li>追号订单详情</li>
+        </ul>
+    </div>
+    <div class="xq_split clearfix">
+        <b></b>
+        <div class="line-01 clearfix">
+            <span>方案信息</span> <i></i>
+        </div>
+    </div>
+        
+    <div class="xqtop clearfix">
+        <div class="xqtitle clearfix">
+            <div class="fl xq_tab">
+                <ul>
+                    <li class="li_0"><span>发&nbsp;&nbsp;起&nbsp;人：</span> <span><a href="/blog/standings/@info.UserId" class="td_blue" target="_blank">
+                        @(SiteString.HideUserName(info.CreatorDisplayName, info.HideDisplayNameCount))</a>
+                        <a href="javascript:void(0)" class="btn_gz underline" onclick=" user.attentionLogin(true, '@info.UserId'); ">
+                            关注</a> </span></li>
+                    <li><span>方案编号：</span> <span class="scheme_span">@ViewBag.SchemeId</span> </li>
+                    <li><span class="span_0">彩种期号：</span> <span class="game_issuse">@SiteConvert.GameName(info.GameCode)
+                        &nbsp;&nbsp;&nbsp;第@(info.IssuseNumber)期(追号方案)</span> </li>
+                    @if (info.SchemeSource == SchemeSource.Android)
+                    {  <li><span class="source_android"></span></li>
+                            
+                    }
+                    else if (info.SchemeSource == SchemeSource.Touch)
+                    {
+                        <li><span class="source_touch"></span></li>
+                    }
+                    else if (info.SchemeSource == SchemeSource.Iphone)
+                    {
+                        <li><span class="source_iphone"></span></li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <div class="xqname ">
+            @if (anteList != null && anteList.AnteCodeList.Count > 0)
+            {
+
+                <table class="xq_name_tab">
+                    <colgroup>
+                        <col width="250" />
+                        <col width="250" />
+                        <col width="250" />
+                        <col width="250" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <td>
+                                方案
+                            </td>
+                            <td>
+                                玩法
+                            </td>
+                            <td>
+                                注数
+                            </td>
+                            <td>
+                                金额(元)
+                            </td>
+                        </tr>
+                    </thead>
+                    @foreach (var item in anteList.AnteCodeList)
+                    {
+                        <tr class="ni">
+                            <td>@item.AnteCode
+                            </td>
+                            <td>@item.GameTypeName
+                            </td>
+                            <td>@SiteConvert.AnalyzeAnteCodeBetCount(item.GameCode, item.GameType, item.AnteCode)注
+                            </td>
+                            <td>
+                                ￥<em class="totalmoney">@(SiteConvert.AnalyzeAnteCodeBetCount(item.GameCode, item.GameType, item.AnteCode) * 2)</em>
+                            </td>
+                        </tr>
+                    }
+                </table>
+
+            }
+            else
+            {
+                <div style="background: #eef9ff; border: 1px solid #cbdded; line-height: 32px; text-align: center">
+                    @OrderManager.SecurityName(info.Security)
+                </div>
+
+            }
+        </div>
+    </div>
+    <div class="xq_split clearfix">
+        <b class="fajd_icon"></b>
+        <div class="line-01 clearfix">
+            <span>追号信息</span> <i></i>
+        </div>
+    </div>
+    <div class="xqmain clearfix">
+        <table width="100%" cellspacing="0" cellpadding="2" border="1" align="center" class="mtable"
+            style="border-collapse: collapse">
+            <tr class="thbg">
+                <th>
+                    期号
+                </th>
+                <th>
+                    开奖号码
+                </th>
+                <th>
+                    订单状态
+                </th>
+                <th>
+                    倍数
+                </th>
+                <th>
+                    投注金额/元
+                </th>
+                <th>
+                    中奖金额/元
+                </th>
+                @*<th>
+                    是否取消追号
+                </th>*@
+            </tr>
+            @{
+            foreach (var item in Scheme.OrderList)
+            {
+                <tr>
+                    <td class="hide">
+                        @{ if (item.TicketStatus == TicketStatus.Waitting)
+                           {
+                               if (info.ProgressStatus == ProgressStatus.Running || info.ProgressStatus == ProgressStatus.Waitting || (info.ProgressStatus == ProgressStatus.AutoStop && info.BonusStatus != BonusStatus.Win))
+                               {<input type="checkbox" value="@item.IssuseNumber" />}
+                           } 
+                        }
+                    </td>
+                    <td>
+                        <a href="/user/scheme/@item.SchemeId" target="_blank" class="under">@item.IssuseNumber</a>
+                    </td>
+                    <td>
+                        @item.WinNumber
+                    </td>
+                    <td class="@(item.ProgressStatus == ProgressStatus.AutoStop ? "red" : item.TicketStatus == TicketStatus.Ticketing ? "green" : item.BonusStatus == BonusStatus.Win ? "font_red" : "")">
+                        @OrderManager.OrderStatusName(item.SchemeType, item.ProgressStatus, item.TicketStatus, item.BonusStatus)
+                    </td>
+                    <td>
+                        @item.Amount
+                    </td>
+                    <td>
+                        ￥<em class="totalmoney">@item.TotalMoney.ToString("f")</em>
+                    </td>
+                    <td>
+                        @if (item.AfterTaxBonusMoney > 0)
+                        {
+                            <em class='font_red blod' style='font-size: 16px'>@((item.AfterTaxBonusMoney + item.AddMoney).ToString("f"))
+                                (@string.Format("加奖：{0}", item.AddMoney.ToString("f"))) </em>
+                        }
+                    </td>
+                    @*<td>
+                        @if (user != null && user.LoginInfo != null && user.LoginInfo.UserId == item.UserId && item.TicketStatus == TicketStatus.Waitting)
+                        {
+                            <a href="javascript:void(0)" class="cancel font_red" data-issueScheid="@item.SchemeId" style="display:@(item.ProgressStatus == ProgressStatus.Aborted ? "none" : "block")">
+                                取消追号</a>
+                        }
+                    </td>*@
+                </tr>}
+            }
+        </table>
+    </div>
+    <div class="xq_split clearfix">
+        <b class="faxq_icon"></b>
+        <div class="line-01">
+            <span>方案详情</span> <i></i>
+        </div>
+    </div>
+    <div class="xqmain clearfix">
+        <table width="100%" cellspacing="0" cellpadding="2" border="1" align="center" class="mtable"
+            style="border-collapse: collapse">
+            <tr class="thbg">
+                <th>
+                    开始时间
+                </th>
+                <th>
+                    总期数
+                </th>
+                <th>
+                    方案金额
+                </th>
+                <th>
+                    累计投入
+                </th>
+                <th>
+                    中奖金额
+                </th>
+                <th>
+                    合计利润
+                </th>
+                <th>
+                    订单后续
+                </th>
+            </tr>
+            <tr>
+                <td>@info.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")
+                </td>
+                <td>@Scheme.OrderList.Count 期
+                </td>
+                <td>@Scheme.TotalOrderMoney.ToString("f")
+                </td>
+                <td>@Scheme.TotalBuyMoney.ToString("f")
+                </td>
+                <td class="font_red">
+                    ￥@((Scheme.TotalAddMoney + Scheme.TotalAfterTaxBonusMoney).ToString("f"))
+                </td>
+                <td class="@(Scheme.TotalAfterTaxBonusMoney > Scheme.TotalBuyMoney ? "font_red bold" : "")">
+                    ￥@((Scheme.TotalAfterTaxBonusMoney - Scheme.TotalBuyMoney).ToString("f"))
+                </td>
+                <td>@(info.StopAfterBonus ? "中奖后停止" : "中奖后继续")
+                </td>
+            </tr>
+        </table>
+    </div>
+}
+else
+{
+    <div id="lay_bg">
+        <div class=" clearfix" id="lay_bg_img">
+            <div class="new_f_top">
+            </div>
+            <a href="/">去@(SiteString.getHZSiteName(Request))首页</a>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    $(".xq_split").click(function () {
+        if ($(this).hasClass("xq_show")) {
+            $(this).next("div").slideDown();
+            $(this).removeClass("xq_show");
+        } else {
+            $(this).next("div").slideUp();
+            $(this).addClass("xq_show");
+        }
+    });
+    $(".cancel").click(function () {
+        var schemeId = $(this).attr("data-issueScheid");
+        $.post("/user/cancel", { schemeId: schemeId }, function (flag) {
+            if (flag.Success) {
+                alert("取消追号成功！");
+                window.location.href = window.location.href;
+            } else { alert(flag.Msg); }
+        });
+    });
+</script>

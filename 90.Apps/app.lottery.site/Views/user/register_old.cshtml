@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "会员注册 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "会员注册, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+    @UserHelper.css("user.css")
+}
+@section js{
+@UserHelper.js("reg_new.js")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>注册</li>
+    </ul>
+</div>
+<div class="top mt10">
+    <div class="user-register-tip">
+        &nbsp;&nbsp;&nbsp;免费注册
+    </div>
+    <div class="user-register-right">
+        REGISTRATE GRATIS</div>
+</div>
+<div class="user-register-content mt10">
+<form name="regform" id="regform" method="post" onsubmit="return checkForm();">
+    <ul class="loginBox">
+        <li><span class="li-short">用户名：</span> <span class="li-center">
+            <input type="text" id="username" value="" class="normal"  name="username"/></span>
+             <span class="li-tip" id="username_tip">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;用户名为4-16个字符，注册后不能修改</span>
+             <div class="error red" id="username_err"></div>
+        </li>
+        <li><span class="li-short">登录密码：</span> <span class="li-center">
+            <input type="password" id="password" class="normal" name="password"/></span>
+            <span class="li-tip" id="password_tip" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;请输入6-18位密码</span>
+            <div class="error red" id="password_err"></div>
+        </li>
+       @* <li><span class="li-short"></span><span class="li-center" id="pwdstr"></span><span class="li-tip">
+            </span></li>*@
+        <li><span class="li-short">确认密码：</span> <span class="li-center">
+            <input type="password" id="password2" name="password2" /></span> <span class="li-tip" id="password2_tip">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;请再次输入密码</span><div class="error red" id="password2_err"></div>
+        </li>
+        <li><span class="li-short">验证码：</span> <span class="li-center">
+            <input type="text" class="validateCode" id="verifycode" name="verifycode"  maxlength="4" />
+            <img src="/user/createvalidatecode" class="code-img" id="CheckCode"  width="80" height="32" alt="点击刷新" onclick="refreshVerify()" />看不清?<a href="javascript:refreshVerify()" style=" color:#7c030c; margin-left:5px;">换一张</a></span> 
+            <span class="li-tip" id="verifycode_tip">  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;请输入验证码</span> <div class="error red" id="verifycode_err"></div></li>
+        <li style=" text-align:center"><span class="li-center" style="text-align: center !important; margin-top:20px; font-size: 12px; font-weight: bold;">
+          <label> <input type="checkbox" id="checkyears" checked="checked" />我已年满18周岁并同意<a href="/help/serviceAgreement1" class="red" target="_blank">《@(SiteString.getHZSiteName(Request))用户购彩协议》</a></label> </span></li>
+
+        <li class="li-submit"  style="text-align:center">
+            <input type="submit" value="立即注册" class="register-submit" /></li>
+        <li  style="text-align:center">我已经注册？<a href="javascript:void(0);" id="loginbtn_new" style=" color:#7c030c">马上登录</a></li>
+    </ul>
+    </form>
+</div>
+
+<script type="text/javascript">
+    initInput();
+</script>

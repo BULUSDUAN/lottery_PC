@@ -1,0 +1,189 @@
+﻿@using External.Core.Login
+@using GameBiz.Core
+@{
+    Layout = "../Shared/_LayoutFoud.cshtml";
+    ViewBag.Title = "返点明细";
+    var fund = ViewBag.Fund as UserFundDetailCollection;
+    var account = ViewBag.Account;
+    var payType = ViewBag.PayTypeList;
+    var pageIndex = ViewBag.PageIndex;
+    var begin = ViewBag.Begin;
+    var end = ViewBag.End;
+}
+<div class="center mt10">
+    @{Html.RenderPartial("menufoud", "Member");}
+     @{Html.RenderPartial("toptipFoud", "Member");}
+    <div class="new_buy_center">
+        <div class="betorder_top clearfix">
+            <ul>
+                <li class="betorder_topSelected"><a href="/member/integraldetail" >返点明细</a></li>
+                @*<li><a href="/member/integralextract" >返点提取</a></li>
+                <li><a href="/member/drawingsrecordfoud">提取记录</a></li>
+                <li><a href="/member/integralinto">返点转入</a></li>
+                 <li><a href="/member/integralintodetail">转入记录</a></li>*@
+                 <li><a href="/member/jf">我的返点</a></li>
+            </ul>
+        </div>
+        <div class="betorder_con clearfix">
+            <div class="chebox_tab">
+            交易类型：
+            <input type="checkbox" name="payType" value="20" id="jfsr" /><label for="jfsr">返点收入</label>&nbsp;&nbsp;
+            <input type="checkbox" name="payType" value="10" id="jftq" /><label for="jftq">返点支出</label>&nbsp;&nbsp;
+            <input type="checkbox" name="accountType" value="20" id="dj" /><label for="dj">提取冻结</label>&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp; 日期：@ViewHelpers.Calendar3("begin", begin)至 @ViewHelpers.Calendar3("end", end)
+            <input type="button" onclick="getFundRecord(0,10)" value="查询" />
+        </div>
+            <table class="betorder_table" border="0" cellspacing="0" cellpadding="0">
+                <thead>
+                    <tr class="tr_head">
+                        <th width="60">
+                            序号
+                        </th>
+                        <th width="80">
+                            账户类型
+                        </th>
+                        <th width="120">
+                            交易时间
+                        </th>
+                        <th width="100">
+                            收入
+                        </th>
+                        <th width="100">
+                            支出
+                        </th>
+                        <th width="120">
+                            返点余额
+                        </th>
+                        <th width="100">
+                            交易类型
+                        </th>
+                        <th width="" align="left" style="padding-left: 20px;">
+                            备注
+                        </th>
+                    </tr>
+                </thead>
+                @{
+                    if (fund != null)
+                    {
+                        for (var item = 0; item < fund.FundDetailList.Count;item++ )
+                        {
+                            var fundDetailist = fund.FundDetailList[item];
+                            <tr>
+                                <td>
+                                    @(pageIndex * 10 + item+ 1))
+                                </td>
+                                <td>
+                                    @SiteConvert.AccountTypeName(fundDetailist.AccountType)
+                                </td>
+                                <td>
+                                    @fundDetailist.CreateTime.ToString("yyyy-MM-dd HH:mm")
+                                </td>
+                                <td class="sr">
+                                    @(fundDetailist.PayType == Common.PayType.Payin ? fundDetailist.PayMoney.ToString("N2") : string.Empty)
+                                </td>
+                                <td class="green">
+                                    @(fundDetailist.PayType == Common.PayType.Payout ? fundDetailist.PayMoney.ToString("N2") : string.Empty)
+                                </td>
+                                <td class="ye">
+                                    @fundDetailist.AfterBalance.ToString("N")
+                                </td>
+                                <td>
+                                    @fundDetailist.Category
+                                </td>
+                                <td class="last_td tl" >
+                                    @fundDetailist.Summary
+                                    @{
+                            if (fundDetailist.Category == "购彩" || fundDetailist.Category == "奖金"
+                                   || fundDetailist.Category == "合买失败" || fundDetailist.Category == "方案提成"
+                                   || fundDetailist.Category == "出票失败" || fundDetailist.Category == "合买返点"
+                                   || fundDetailist.Category == "返还保底" || fundDetailist.Category == "撤单")
+                               {
+                                   if (fundDetailist.KeyLine.IndexOf("_") > 0)
+                                   {
+                                                <a href="javascript:void 0;"  class="under blue">@fundDetailist.KeyLine</a>
+                                   }
+                                   else
+                                   {
+                                                <a href="javascript:void 0;" class="under blue">@fundDetailist.KeyLine</a>
+                                   }
+
+                               }
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="8">
+                               暂无数据
+                            </td>
+                        </tr>
+                    }
+                }
+                <tr>
+                    <td colspan="8" class="betorder_number_money">
+                        <p>
+                            <b class="srjy"></b>收入交易：@(fund != null ? fund.TotalPayinCount : 0)
+                        笔 &nbsp;&nbsp;&nbsp;&nbsp; <b class="srje"></b>收入返点：@(fund != null ? fund.TotalPayinMoney.ToString("N2") : "0")
+                        &nbsp;&nbsp;&nbsp;&nbsp; <b class="zcjy"></b>支出交易：@(fund != null ? fund.TotalPayoutCount : 0)
+                        笔&nbsp;&nbsp;&nbsp;&nbsp; <b class="zcje"></b>支出返点：@(fund != null ? fund.TotalPayoutMoney.ToString("N2") : "0")
+                        
+                        </p>
+                        <p class="tip">注意：返点明细最多可查询一个月数据</p>
+                    </td>
+                </tr>
+            </table>
+             @ViewHelpers.Pager6("getFundRecord", pageIndex, 10, fund == null ? 0 : (fund.TotalPayinCount + fund.TotalPayoutCount))
+        </div>
+        
+        
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(".betorder_table tr:even:gt(0)").css("backgroundColor", "#f9f9f9");
+        var account = "@account";
+        var paytype = "@payType";
+        var accountType = account.split("|");
+        var payTypeList = paytype.split('|');
+        for (var i = 0; i < payTypeList.length; i++) {
+            if (payTypeList[i] == "20") {
+                $("#jfsr").attr("checked", true);
+            }
+            if (payTypeList[i] == "10") {
+                $("#jftq").attr("checked", true);
+            }
+        }
+        for (var j = 0; j < accountType.length; j++) {
+            if (accountType[j] == "20") {
+                $("#dj").attr("checked", true);
+            }
+        }
+    });
+
+    function getFundRecord(pageNo, pageSize) {
+        var L_list = $("input[name='accountType']:checked");
+        var P_list = $("input[name='payType']:checked");
+        var payType = "";
+        var accountType = ""; //这个保存取出的值
+        if (L_list.size() != 0) {
+            var array = new Array();
+            for (var i = 0; i < L_list.length; i++) {
+                array.push(L_list.eq(i).attr("value"));
+            }
+            accountType = array.join("|");
+        }
+        if (P_list.size() != 0) {
+            var array = new Array();
+            for (var i = 0; i < P_list.length; i++) {
+                array.push(P_list.eq(i).attr("value"));
+            }
+            payType = array.join("|");
+        }
+        var begin = $("#begin").val();
+        var end = $("#end").val();
+        location.search = "payType=" + payType + "&accountType=" + accountType + "&pageindex=" + pageNo + "&pagesize=" + pageSize + "&begin=" + begin + "&end=" + end + "&r=" + Math.random().toFixed(5);
+    }
+        </script>

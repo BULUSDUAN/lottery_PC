@@ -1,0 +1,80 @@
+﻿@{
+    string category = ViewBag.category;
+    var title = "";
+    switch (category)
+    {
+        case "jdxw":
+            title = "焦点新闻";
+            break;
+        case "ssdp":
+            title = "赛事点评";
+            break;
+        case "szczx":
+            title = "数字彩资讯";
+            break;
+        case "gpczx":
+            title = "高频彩资讯";
+            break;
+        case "jjczx":
+            title = "竞技彩资讯";
+            break;
+        case "ssq_dlt":
+            title = "双色球 大乐透";
+            break;
+        case "zc_siliu":
+            title = "足彩胜负 四场进球 六场半全场";
+            break;
+        case "zd_jl":
+            title = "足球单场 竞彩篮球";
+            break;
+        case "fc3d_pl3_pl5":
+            title = "福彩3D 排列三 排列五";
+            break;
+        case "zjxw":
+            title = "中奖新闻";
+            break;
+        case "cpbk":
+            title = "彩票百科";
+            break;
+        default:
+            break;
+    }
+
+    ViewBag.Title = title + " - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    var more_info = ViewBag.DataSource as External.Core.SiteMessage.ArticleInfo_QueryCollection;
+}
+@section css
+{@UserHelper.css("zixun.css")
+}
+<div class="crumb_">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a target="_blank" href="/">首页</a> > </li>
+        <li><a target="_blank" href="/staticHtml/zixun/index.html">彩票资讯</a></li>
+        <li><a  target="_blank" href="@string.Format("/staticHtml/zixun/{0}/{0}_0.html", category)">
+            &nbsp;&gt;@title</a> </li>
+    </ul>
+</div>
+<div id="zixun">
+    <div class="main" style="margin-top: 10px !important">
+        <div class="zx_left">
+            <div class="more_title">
+                <a class="on">@title</a>
+            </div>
+            <div class="more_content">
+                <ul>
+                    @{foreach (var item in more_info.ArticleList)
+                      { 
+                        <li>.<a target="_blank" href="@string.Format("/staticHtml/zixun/details/{0}/{1}.html", item.CreateTime.ToString("yyyyMMdd"), item.Id)" class="zx_blue">@(item.Title.Length > 25 ? item.Title.Substring(0, 25) + "…" : item.Title)
+                        </a><span class="show_time">@item.CreateTime.ToString("yyyy-MM-dd HH.mm.ss")</span></li>}}
+                </ul>
+                <div>@ViewHelpers.Pager_static(ViewBag.Url, ViewBag.PageIndex, ViewBag.PageSize, ViewBag.TotalCount)</div>
+            </div>
+        </div>
+        <div class="zx_right">
+            @{Html.RenderAction("zixunright", "zixun", new { id = category });}
+        </div>
+    </div>
+</div>
+<div style="clear: both">
+</div>

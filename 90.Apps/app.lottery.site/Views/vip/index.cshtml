@@ -1,0 +1,80 @@
+﻿@{
+    ViewBag.Title = @SiteString.getHZSiteName(Request)+"会员-VIP您的生活";
+    Layout = "~/Views/vip/_Layout.cshtml";
+    //var NewUserList = ViewBag.NewUserList as External.Core.Task.TaskHotTodayInfooCollection;
+}
+@section css{
+    @ViewHelpers.css("vip.css")
+}
+<div class="main_v">
+    @{Html.RenderAction("menu", "vip");}
+     <div class="right_con">
+          <div class="tequan pt_20">
+            <h1 class=" p_r">特权与服务<span>升级享有更多服务</span></h1>
+            <ul class="clearfix">
+              <li >
+                <a id="link94" class="js_5000" href="/vip/task">
+                  <h2>88元晋升红包</h2>
+                  <p>LV5晋升至LV6可获得88元红包奖励</p>
+                </a>
+              </li>
+              <li>
+                <a id="link95" class="js_20" href="/vip/task">
+                  <h2>账号异动通知</h2>
+                  <p>当您的账户提款、修改密码时将自动进行短信提醒</p>
+                </a>
+              </li>
+              <li class="last">
+                <a id="link96" class="xms " href="/vip/task">
+                  <h2>方案撤单通知</h2>
+                  <p>当您发起的方案被动撤单时将第一时间为您发送通知短信</p>
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="remen pt_25">
+            <h1 class=" p_r">推荐任务</h1>
+            <ul class="clearfix ul_p">
+              <li class="">
+                <a id="link97" href="/vip/task" class="smrz">
+                  <h2>实名认证</h2>
+                  <p>官方认证，做有身份的彩民</p>
+                 <p class="last">成长值奖励：+200点</p>
+                </a>
+              </li>
+              <li class="">
+                <a id="link98" href="/vip/task" class="yhk">
+                  <h2>银行卡绑定</h2>
+                  <p>账户资金提取唯一通道，账户安全的终极保镖</p>
+                  <p class="last">成长值奖励：+100点</p>
+                </a>
+              </li>
+              <li>
+                <a id="link99" href="/vip/task" class="wszl">
+                  <h2>手机绑定</h2>
+                  <p>绑定手机，帐户更安全</p>
+                  <p class="last">成长值奖励：+50点</p>
+                </a>
+              </li>
+              <li class="">
+                <a id="link100" href="/vip/task" class="mibao">
+                  <h2>设置资金密码</h2>
+                  <p>可用于控制资金密码使用风险，提升账户安全等级</p>
+                  <p class="last">成长值奖励：+50点</p>
+                </a>
+              </li>
+            </ul>
+          </div>
+       </div>  
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(".remen li").hover(function () {
+            $(this).addClass("hover")
+        }, function () {
+            $(this).removeClass("hover")
+        })
+    })
+</script>
+
+

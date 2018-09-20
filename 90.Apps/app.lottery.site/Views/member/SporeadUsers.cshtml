@@ -1,0 +1,105 @@
+﻿@using GameBiz.Core;
+@using app.lottery.site.Models;
+@{
+    ViewBag.Title = "推广管理 - 推广用户 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "推广管理, 推广用户, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var sporeds = ViewBag.Sporeds as External.Core.Agnet.SporeadUsersCollection;
+}
+@section css{
+    @ViewHelpers.css("mycenter.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>推广用户</li>
+    </ul>
+</div>
+<div class="center mt10">
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        @* <div class="info_zl">
+            推广用户</div>*@
+        <div class="mune_safe">
+            <div class="account_con">
+                <div class="search_tab">
+                    日期：@ControlHelper.Calendar("begin", ViewBag.Begin)至 @ControlHelper.Calendar("end", ViewBag.End)
+                    <input type="button" value="查&nbsp;&nbsp;询" onclick="getSporeadUsers(0, 10)" class="search_btn" />
+                </div>
+                <table class="account_box">
+                    <thead>
+                        <tr>
+                            <td>
+                                用户名
+                            </td>
+                            <td>
+                                注册时间
+                            </td>
+                            <td>
+                                传统足球
+                            </td>
+                            <td>
+                                北京单场
+                            </td>
+                            <td>
+                                竞彩足球
+                            </td>
+                            <td>
+                                竞彩篮球
+                            </td>
+                            <td>
+                                数字彩
+                            </td>
+                            <td>
+                                高频彩
+                            </td>
+                        </tr>
+                    </thead>
+                    @{
+                        if (sporeds != null && sporeds.BlogUserSpreadList.Count > 0)
+                        {
+                            foreach (var item in sporeds.BlogUserSpreadList)
+                            {
+                        <tr>
+                            <td>
+                                @item.userName
+                            </td>
+                            <td>@item.CrateTime.ToString("yyyy-MM-dd HH:mm")
+                            </td>
+                            <td>@item.CTZQ.ToString("###,##0.00")
+                            </td>
+                            <td>@item.BJDC.ToString("###,##0.00")
+                            </td>
+                            <td>@item.JCZQ.ToString("###,##0.00")
+                            </td>
+                            <td>@item.JCLQ.ToString("###,##0.00")
+                            </td>
+                            <td>@item.SZC.ToString("###,##0.00")
+                            </td>
+                            <td>@item.GPC.ToString("###,##0.00")
+                            </td>
+                        </tr>
+                            }
+                        }
+                    }
+                </table>
+                <div class="account_page  clearfix">
+                    @ViewHelpers.Pager4("getSporeadUsers", ViewBag.pageNo, ViewBag.PageSize, sporeds == null ? 0 : sporeds.TotalCount)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(".account_box tr:even:gt(0)").css("backgroundColor", "#f9f9f9");
+    });
+    var getSporeadUsers = function (pageNo, pageSize) {
+        var begin = $("#begin").val();
+        var end = $("#end").val();
+        var search = "pageNo=" + pageNo + "&pageSize=" + pageSize + "&begin=" + begin + "&end=" + end + "&r=" + Math.random().toFixed(5);
+        location.search = search;
+    }
+</script>

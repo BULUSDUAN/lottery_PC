@@ -1,0 +1,56 @@
+﻿@{
+    var agentuserinfo = ViewBag.AgentUserInfo as External.Core.Agnet.AgentUserInfoCollection;
+}
+@if (agentuserinfo != null && agentuserinfo.TotalCount > 0)
+{
+    foreach (var item in agentuserinfo.AgentUserList)
+    {    
+        <tr class="gu-bg-tr">
+        <td width="38">
+            @item.UserCount
+        </td>
+        <td width="66">
+            @item.UserId
+        </td>
+        <td width="67">
+            @item.DisplayName
+        </td>
+        <td width="35">
+            @item.RealName
+        </td>
+        <td width="36">
+            @item.Mobile
+        </td>
+        <td width="37">
+            @item.Email
+        </td>
+        <td width="103">
+            @item.CreateTime
+        </td>
+        <td width="55">
+            @item.CTZQ
+        </td>
+        <td width="58">
+            @item.BJDC
+        </td>
+        <td width="60">
+            @item.JCZQ
+        </td>
+        <td width="60">
+            @item.JCLQ
+        </td>
+        <td width="48">
+            @item.SZC
+        </td>
+        <td width="60">
+            @item.GPC
+        </td>
+        <td width="" class="unfoldorfold">
+            <a href="/commissio/setNewUserRebate" tx="@item.UserId">
+                配置</a>
+        </td>
+    </tr>
+        
+    }
+
+}

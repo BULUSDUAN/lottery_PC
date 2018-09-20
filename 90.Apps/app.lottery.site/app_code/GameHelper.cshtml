@@ -1,0 +1,1936 @@
+﻿@using System.Web.Mvc;
+@using System.Configuration;
+@using GameBiz.Core;
+@helper GetGameIntroduce(string gamecode)
+    {
+        //根据彩种编号获取彩种简介
+        switch (gamecode.ToUpper())
+        {
+            case "cqssc":
+    <span>白天 10:00至22:00 每10分钟一期，共72期<br />
+        夜间 22:00至次日01:55 每5分钟一期，共48期</span>               
+                break;
+            case "JXSSC":
+    @("每天9:00-23:00，10分钟一期，共84期")
+break;
+            case "SD11X5":
+    <span>9:05-21:55，10分半一期，共78期 <strong class="red">返奖率达</strong><strong class="b-top-info-fjl">59%</strong></span>
+break;
+            case "GD11X5":
+    @("每天9:00-23:00，10分钟一期，共84期")
+break;
+            case "jx11x5":
+    @("每天9:05-21:59，10分钟一期，共78期")
+break;
+            case "pl3":
+    @("固定奖，玩法简单，每晚20：30开奖")
+break;
+            case "fc3d":
+    @("固定奖，玩法简单，每晚20：30开奖")
+break;
+            case "ssq":
+    @("每周二、四、日晚21:30开奖，单注最高奖金1000万元")
+break;
+            case "QXC":
+    @("2元赢取500万，每周二、五、日晚20:30开奖")
+break;
+            case "QLC":
+    @("2元赢取500万，每周一、三、五晚21：30开奖")
+break;
+            case "dlt":
+    @("每周一,三,六晚20:30分开奖，3元赢取1600万元")
+break;
+            case "SDQYH":
+    @("每天9:00-17:00|20:00-22:00，15分钟一期，每天40期，返奖率59%")
+break;
+            case "GDKLSF":
+    @("每天9:00-23:00，10分钟一期，共84期")
+break;
+            case "GXKLSF":
+    @("每天9:00-21:30，10分钟销售，5分钟开奖，15分钟一期，每天50期")
+break;
+            case "JSKS":
+    @("每天82期，10分钟一期")
+break;
+            case "JCZQ":
+    @("返奖率高达69%，过关固定奖金！")
+break;
+            case "JCLQ":
+    @("返奖率高达69%，过关固定奖金！")
+break;
+            case "CTZQ":
+    @("单注最高奖金5,000,000元！")
+break;
+            case "BJDC":
+    @("5种玩法，30种过关方式，每天最多130场赛事不间断，奖金天天派。")
+break;
+            default:
+    @gamecode
+break;
+        }
+}
+@helper GameSelector(string gamecode)
+    {
+                //选择彩种列表框
+    <select id="game" name="game">
+        <option value="">全部彩种</option>
+        <optgroup label="竞技彩">
+            <option value="jczq" @(gamecode.ToLower() == "jczq" ? "selected='selected'" : string.Empty) >
+                竞彩足球</option>
+            <option value="jclq" @(gamecode.ToLower() == "jclq" ? "selected='selected'" : string.Empty) >
+                竞彩篮球</option>
+            <option value="bjdc" @(gamecode.ToLower() == "bjdc" ? "selected='selected'" : string.Empty) >
+                北京单场</option>
+            <option value="ctzq" @(gamecode.ToLower() == "ctzq" ? "selected='selected'" : string.Empty) >
+                传统足球</option>
+        </optgroup>
+        <optgroup label="高频彩">
+            <option value="cqssc" @(gamecode == "cqssc" ? "selected='selected'" : string.Empty) >
+                重庆时时彩</option>
+            <option value="jx11x5" @(gamecode == "jx11x5" ? "selected='selected'" : string.Empty) >
+                江西11选5</option>
+            <option value="sd11x5" @(gamecode == "sd11x5" ? "selected='selected'" : string.Empty) >山东11选5</option>
+            <option value="gd11x5" @(gamecode == "gd11x5" ? "selected='selected'" : string.Empty) >广东11选5</option>
+            <option value="gdklsf" @(gamecode == "gdklsf" ? "selected='selected'" : string.Empty) >广东快乐十分</option>
+            <option value="jsks" @(gamecode == "jsks" ? "selected='selected'" : string.Empty) >江苏快三</option>
+            <option value="sdklpk3" @(gamecode == "sdklpk3" ? "selected='selected'" : string.Empty) >山东快乐扑克3</option>
+
+        </optgroup>
+        <optgroup label="福彩">
+            <option value="ssq" @(gamecode == "ssq" ? "selected='selected'" : string.Empty) >双色球</option>
+            <option value="fc3d" @(gamecode == "fc3d" ? "selected='selected'" : string.Empty) >福彩3D</option>
+        </optgroup>
+        <optgroup label="体彩">
+            <option value="dlt" @(gamecode == "dlt" ? "selected='selected'" : string.Empty) >大乐透</option>
+            <option value="pl3" @(gamecode == "pl3" ? "selected='selected'" : string.Empty) >排列三</option>
+        </optgroup>
+    </select>
+}
+@helper GameSelectGame(string gamecode, string gametype)
+    {
+    
+    <select id="dropDownListAllCPType" name="dropDownListAllCPType">
+      <option value="all" @(gamecode == "all" && gametype == "" ? "selected='selected'" : string.Empty)>
+                查询所有</option>
+        <optgroup label="传统足球">
+            <option value="ctzq|t14c" @(gamecode == "ctzq" && gametype == "t14c" ? "selected='selected'" : string.Empty)>
+                14场胜负彩 </option>
+            <option value="ctzq|tr9" @(gamecode == "ctzq" && gametype == "tr9" ? "selected='selected'" : string.Empty)>
+                胜负任选九场</option>
+            <option value="ctzq|t6bqc" @(gamecode == "ctzq" && gametype == "t6bqc" ? "selected='selected'" : string.Empty)>
+                六场半全场</option>
+            <option value="ctzq|t4cjq" @(gamecode == "ctzq" && gametype == "t4cjq" ? "selected='selected'" : string.Empty)>
+                四场进球彩</option>
+        </optgroup>
+        <optgroup label="北京单场">
+            <option value="bjdc|spf" @(gamecode == "bjdc" && gametype == "spf" ? "selected='selected'" : string.Empty)>
+                胜平负</option>
+            <option value="bjdc|zjq" @(gamecode == "bjdc" && gametype == "zjq" ? "selected='selected'" : string.Empty)>
+                总进球</option>
+            <option value="bjdc|sxds" @(gamecode == "bjdc" && gametype == "sxds" ? "selected='selected'" : string.Empty)>
+                上下单双</option>
+            <option value="bjdc|bf" @(gamecode == "bjdc" && gametype == "bf" ? "selected='selected'" : string.Empty)>
+                比分</option>
+            <option value="bjdc|bqc" @(gamecode == "bjdc" && gametype == "bqc" ? "selected='selected'" : string.Empty)>
+                半全场</option>
+        </optgroup>
+        <optgroup label="竞彩足球">
+            <option value="jczq|spf" @(gamecode == "jczq" && gametype == "spf" ? "selected='selected'" : string.Empty)>
+                让球胜平负</option>
+            <option value="jczq|brqspf" @(gamecode == "jczq" && gametype == "brqspf" ? "selected='selected'" : string.Empty)>
+                胜平负</option>
+            <option value="jczq|bf" @(gamecode == "jczq" && gametype == "bf" ? "selected='selected'" : string.Empty)>
+                比分</option>
+            <option value="jczq|zjq" @(gamecode == "jczq" && gametype == "zjq" ? "selected='selected'" : string.Empty)>
+                总进球</option>
+            <option value="jczq|bqc" @(gamecode == "jczq" && gametype == "bqc" ? "selected='selected'" : string.Empty)>
+                半全场</option>
+        </optgroup>
+        <optgroup label="竞彩篮球">
+            <option value="jclq|sf"  @(gamecode == "jclq" && gametype == "sf" ? "selected='selected'" : string.Empty)>
+                胜负</option>
+            <option value="jclq|rfsf" @(gamecode == "jclq" && gametype == "rfsf" ? "selected='selected'" : string.Empty)>
+                让分胜负</option>
+            <option value="jclq|sfc"  @(gamecode == "jclq" && gametype == "sfc" ? "selected='selected'" : string.Empty)>
+                胜分差</option>
+            <option value="jclq|dxf"  @(gamecode == "jclq" && gametype == "dxf" ? "selected='selected'" : string.Empty)>
+                大小分</option>
+        </optgroup>
+        <optgroup label="数字彩">
+            <option value="ssq|"  @(gamecode == "ssq" ? "selected='selected'" : string.Empty)>双色球</option>
+            <option value="dlt|"  @(gamecode == "dlt" ? "selected='selected'" : string.Empty)>大乐透</option>
+            <option value="pl3|"  @(gamecode == "pl3" ? "selected='selected'" : string.Empty)>排列3</option>
+            <option value="fc3d|" @(gamecode == "fc3d" ? "selected='selected'" : string.Empty)>福彩3D
+            </option>
+        </optgroup>
+    </select>
+}
+@helper ChaseGameSelector(string gamecode)
+    {
+                //选择彩种列表框
+    <select id="game" name="game">
+        <option value="">全部彩种</option>
+        <optgroup label="高频彩">
+            <option value="cqssc" @(gamecode == "cqssc" ? "selected='selected'" : string.Empty) >
+                重庆时时彩</option>
+            <option value="jx11x5" @(gamecode == "jx11x5" ? "selected='selected'" : string.Empty) >
+                江西11选5</option>
+        </optgroup>
+        <optgroup label="福彩">
+            <option value="ssq" @(gamecode == "ssq" ? "selected='selected'" : string.Empty) >双色球</option>
+            <option value="fc3d" @(gamecode == "fc3d" ? "selected='selected'" : string.Empty) >福彩3D</option>
+        </optgroup>
+        <optgroup label="体彩">
+            <option value="dlt" @(gamecode == "dlt" ? "selected='selected'" : string.Empty) >大乐透</option>
+            <option value="pl3" @(gamecode == "pl3" ? "selected='selected'" : string.Empty) >排列三</option>
+        </optgroup>
+    </select>
+}
+@helper ProgressStatusSelector(string id, string status)
+    {
+    <select id='@id' name='@id'>
+        <option value="">订单状态</option>
+        <option value="0" @(status == "0" ? "selected='selected'" : string.Empty)>待开始</option>
+        <option value="10" @(status == "10" ? "selected='selected'" : string.Empty)>进行中</option>
+        <option value="20" @(status == "20" ? "selected='selected'" : string.Empty)>自动停止</option>
+        <option value="80" @(status == "80" ? "selected='selected'" : string.Empty)>撤单</option>
+        <option value="90" @(status == "90" ? "selected='selected'" : string.Empty)>已完成</option>
+    </select>    
+}
+@helper TimeFrame(int time)
+    {
+    <select id="timeFrame" name="timeFrame">
+        <option value="90" @(time == 90 ? "selected=selected" : "")>最近三个月 </option>
+        <option value="30" @(time == 30 ? "selected=selected" : "")>最近一个月 </option>
+        <option @(time == 7 ? "selected=selected" : "") value="7">最近七天 </option>
+    </select>
+}
+@helper GameTypeChoose(string gameCode)
+    {
+        //投注页面 - 玩法选择区域
+        switch (gameCode.ToLower())
+        {
+            case "cqssc":
+    <a class="middle_nav on" href="javascript:;" url="1XDX" val="1XDX"><span>一星单选</span></a>
+    <a class="middle_nav" href="javascript:;" url="2X_Group" val="2XDX"><span>二星单选</span></a>
+    <a class="middle_nav" href="javascript:;" url="3XDX_Group" val="3XDX"><span>三星单选</span></a>
+    <a class="middle_nav" href="javascript:;" url="5XDX" val="5XDX"><span>五星单选</span></a>
+    <a class="middle_nav" href="javascript:;" url="2XZX_Group" val="2XZX"><span>二星组选</span></a>
+@*<a title="" href="javascript:;" url="3XZX_Group" val="3XZX"><em>三星组选</em></a>*@
+    <a class="middle_nav" title="" href="javascript:;" url="ZX3_Group" val="ZX3"><span>组选三</span></a>
+    <a class="middle_nav" title="" href="javascript:;" url="ZX6_Group" val="ZX6"><span>组选六</span></a>
+    <a class="middle_nav" href="javascript:;" url="5XTX" val="5XTX"><span>五星通选</span></a>
+    <a class="middle_nav" href="javascript:;" url="DXDS" val="DXDS"><span>大小单双</span></a>  
+                break;
+            case "jxssc":
+    <a href="javascript:;" url="1XDX" val="1XDX"><em>一星直选</em></a>
+    <a href="javascript:;" url="2X_Group" val="2XDX"><em>二星直选</em></a>
+    <a href="javascript:;" url="3XDX_Group" val="3XDX"><em>三星直选</em></a>
+    <a href="javascript:;" url="4X_Group" val="4XDX"><em>四星直选</em></a>
+    <a href="javascript:;" url="5X_Group" val="5XDX"><em>五星直选</em></a>
+    <a href="javascript:;" url="2XZX_Group" val="2XZX"><em>二星组选</em></a>
+    <a href="javascript:;" url="ZX3_Group"><em>组选三</em></a>
+    <a href="javascript:;" url="ZX6_Group"><em>组选六</em></a>
+    <a href="javascript:;" url="5XTX_Group" val="5XTX"><em>五星通选</em></a>
+    <a href="javascript:;" url="DXDS" val="DXDS"><em>大小单双</em></a>
+    <a href="javascript:;" url="RX1" val="RX1" style="display: none;"><em>任选一</em></a>
+    <a href="javascript:;" url="RX2" val="RX2"><em>任选二</em></a>
+                break;
+            case "sd11x5":
+            case "gd11x5":
+    <a class="small_nav1" href="javascript:;" url="RX1" val="RX1"><span>前一直选</span></a>
+    <a class="small_nav1" href="javascript:;" url="RX2_Group" val="RX2"><span>任选二</span></a>
+    <a class="small_nav1" href="javascript:;" url="RX3_Group" val="RX3"><span>任选三</span></a>
+    <a class="small_nav1" href="javascript:;" url="RX4_Group" val="RX4"><span>任选四</span></a>
+    <a class="small_nav1" href="javascript:;" url="RX5_Group" val="RX5"><span>任选五</span></a>
+    <a class="small_nav1" href="javascript:;" url="RX6_Group" val="RX6"><span>任选六</span></a>
+    <a class="small_nav1" href="javascript:;" url="RX7_Group" val="RX7"><span>任选七</span></a>
+    <a class="small_nav1" href="javascript:;" url="RX8_Group" val="RX8"><span>任选八</span></a>
+    <a class="small_nav1" href="javascript:;" url="Q2ZHIX_Group" val="Q2ZHIX"><span>前二直选</span></a>
+    <a class="small_nav1" href="javascript:;" url="Q2ZUX_Group" val="Q2ZUX"><span>前二组选</span></a>
+    <a class="small_nav1" href="javascript:;" url="Q3ZHIX_Group" val="Q3ZHIX"><span>前三直选</span></a>
+    <a class="small_nav1" href="javascript:;" url="Q3ZUX_Group" val="Q3ZUX"><span>前三组选</span></a>
+                break;
+            case "jx11x5":
+    <a class="small_nav1" title="" href="javascript:;" url="RX1" val="RX1"><span>前一直选</span></a>
+    <a class="small_nav1" href="javascript:;" url="RX2_Group" val="RX2"><span>任选二</span></a>
+    <a class="small_nav1" href="javascript:;" url="RX3_Group" val="RX3"><span>任选三</span></a>
+    <a class="small_nav1" href="javascript:;" url="RX4_Group" val="RX4"><span>任选四</span></a>
+    <a class="small_nav1" href="javascript:;" url="RX5_Group" val="RX5"><span>任选五</span></a>
+    <a class="small_nav1" href="javascript:;" url="RX6_Group" val="RX6"><span>任选六</span></a>
+    <a class="small_nav1" href="javascript:;" url="RX7_Group" val="RX7"><span>任选七</span></a>
+    <a class="small_nav1" href="javascript:;" url="RX8_Group" val="RX8"><span>任选八</span></a>
+    <a class="small_nav1" href="javascript:;" url="Q2ZHIX_Group" val="Q2ZHIX"><span>前二直选</span></a>
+    <a class="small_nav1" href="javascript:;" url="Q2ZUX_Group" val="Q2ZUX"><span>前二组选</span></a>
+    <a class="small_nav1" href="javascript:;" url="Q3ZHIX_Group" val="Q3ZHIX"><span>前三直选</span></a>
+    <a class="small_nav1" href="javascript:;" url="Q3ZUX_Group" val="Q3ZUX"><span>前三组选</span></a>
+                break;
+            case "fc3d":
+            case "pl3":
+    <a href="javascript:void(0)" url="FS_Group" val="FS"><span>直选</span></a>
+    <a href="javascript:void(0)" url="ZX3_Group" val="ZX3"><span>组选三</span></a>
+    <a href="javascript:void(0)" url="ZX6_Group" val="ZX6"><span>组选六</span></a>
+@*<a href="javascript:void(0)" url="ZXHZ" val="ZXHZ" data-t="ZXHZ" way="3"><span>组选和值</span></a>*@
+                break;
+            case "sdqyh":
+    <a href="javascript:;" url="RX1" val="RX1"><em>任一</em></a>
+    <a href="javascript:;" url="RX2_Group" val="RX2"><em>任二</em></a>
+    <a href="javascript:;" url="RX3_Group" val="RX3"><em>任三</em></a>
+    <a href="javascript:;" url="RX4_Group" val="RX4"><em>任四</em></a>
+    <a href="javascript:;" url="RX5_Group" val="RX5"><em>任五</em></a>
+    <a href="javascript:;" url="RX6_Group" val="RX6"><em>任六</em></a>
+    <a href="javascript:;" url="RX7_Group" val="RX7"><em>任七</em></a>
+    <a href="javascript:;" url="RX8_Group" val="RX8"><em>任八</em></a>
+    <a href="javascript:;" url="RX9_Group" val="RX9"><em>任九</em></a>
+    <a href="javascript:;" url="RX10_Group" val="RX10"><em>任十</em></a>
+    <a href="javascript:;" url="W2_Group" val="W2"><em>围选二</em></a>
+    <a href="javascript:;" url="W3_Group" val="W3"><em>围选三</em></a>
+    <a href="javascript:;" url="W4_Group" val="W4"><em>围选四</em></a>
+    <a href="javascript:;" url="S1" val="S1"><em>顺选一</em></a>
+    <a href="javascript:;" url="S2_Group" val="S2"><em>顺选二</em></a>
+    <a href="javascript:;" url="S3_Group" val="S3"><em>顺选三</em></a>
+                break;
+            case "gxklsf":
+    <a href="javascript:;" url="ZXHYT" val="ZXHYT"><em>好运特</em></a>
+    <a href="javascript:;" url="ZXHY1" val="ZXHY1"><em>好运一</em></a>
+    <a href="javascript:;" url="ZXHY2_Group" val="ZXHY2"><em>好运二</em></a>
+    <a href="javascript:;" url="ZXHY3_Group" val="ZXHY3"><em>好运三</em></a>
+    <a href="javascript:;" url="ZXHY4_Group" val="ZXHY4"><em>好运四</em></a>
+    <a href="javascript:;" url="ZXHY5_Group" val="ZXHY5"><em>好运五</em></a>
+    <a href="javascript:;" url="TXHY3_Group" val="TXHY3"><em>通选好运三</em></a>
+    <a href="javascript:;" url="TXHY4_Group" val="TXHY4"><em>通选好运四</em></a>
+    <a href="javascript:;" url="TXHY5_Group" val="TXHY5"><em>通选好运五</em></a>
+                break;
+            case "gdklsf":
+    <a class="small_nav" href="javascript:;" url="X1ST" val="X1ST"><span>选一数投</span></a>
+    <a class="small_nav" href="javascript:;" url="X1HT" val="X1HT"><span>选一红投</span></a>
+    <a class="small_nav" href="javascript:;" url="RX2_Group" val="RX2"><span>任选二</span></a>
+    <a class="small_nav" href="javascript:;" url="X2LZHI_Group" val="X2LZHI"><span>选二连直</span></a>
+    <a class="small_nav" href="javascript:;" url="X2LZU_Group" val="X2LZU"><span>选二连组</span></a>
+    <a class="small_nav" href="javascript:;" url="RX3_Group" val="RX3"><span>任选三</span></a>
+    <a class="small_nav" href="javascript:;" url="X3QZHI_Group" val="X3QZHI"><span>选三前直</span></a>
+    <a class="small_nav" href="javascript:;" url="X3QZHI_Group" val="X3QZU"><span>选三前组</span></a>
+    <a class="small_nav" href="javascript:;" url="RX4_Group" val="RX4"><span>任选四</span></a>
+    <a class="small_nav" href="javascript:;" url="RX5_Group" val="RX5"><span>任选五</span></a>
+                break;
+            case "ssq":
+    <a href="javascript:;" url="BZXH" val="DS" data-t="DS"><span>标准选号</span></a>
+    <a href="javascript:;" url="TDTZ" val="DT" way="2" data-t="DT"><span>胆拖投注</span></a>
+    <a href="javascript:;" url="SGSR" val="DS" way="4" data-t="DS"><span>手工输入</span></a>
+                break;
+            case "dlt":
+    <a href="javascript:;" url="PTTZ" val="DS" data-t="DS"><span>标准选号</span></a>
+    <a href="javascript:;" url="TDTZ" val="DT" way="2" data-t="DT"><span>拖胆投注</span></a>
+    <a href="javascript:;" url="SGSR" val="DS" way="4" data-t="DS"><span>手工输入</span></a>
+@*<a title="" href="javascript:;" url="12X2" val="12X2DS"><em>12选2</em></a>*@
+                break;
+            case "jsks":
+    <a class="middle_nav" href="javascript:;" url="HZ" val="HZ"><span>和值</span></a>
+    <a class="middle_nav" url="3THTX" val="3THTX"><span>三同号通选</span></a>
+    <a class="middle_nav" url="3THDX" val="3THDX"><span>三同号单选</span></a>
+    <a class="middle_nav" url="2THFX" val="2THFX"><span>二同号复选</span></a>
+    <a class="middle_nav" url="2THDX" val="2THDX"><span>二同号单选</span></a>
+    <a class="middle_nav" url="3BTH" val="3BTH"><span>三不同号</span></a>
+    <a class="middle_nav" url="2BTH" val="2BTH"><span>二不同号</span></a>
+    <a class="middle_nav" url="3LHTX" val="3LHTX"><span>三连号通选</span></a>    
+                break;
+            case "sdklpk3":
+    <a class="middle_nav" href="javascript:;" url="TH" val="TH"><span>花色投注</span></a>
+    <a class="middle_nav" url="SZ" val="SZ"><span>连号投注</span></a>
+    <a class="middle_nav" url="DZ" val="DZ"><span>同号投注</span></a>
+    <a class="middle_nav" url="RX1" val="RX1"><span>任选一</span></a>
+    <a class="middle_nav" url="RX2" val="RX2"><span>任选二</span></a>
+    <a class="middle_nav" url="RX3" val="RX3"><span>任选三</span></a>
+    <a class="middle_nav" url="RX4" val="RX4"><span>任选四</span></a>
+    <a class="middle_nav" url="RX5" val="RX5"><span>任选五</span></a>
+    <a class="middle_nav" url="RX6" val="RX6"><span>任选六</span></a>   
+                break;
+        }
+}
+@helper GetZj(Dictionary<string, int> item)
+    {
+        
+        if (item["GoldStarCount"] > 0)
+        {
+    <i class=" zhanji lv@(item["GoldStarCount"])"></i>
+        }
+        if (item["GoldDiamondsCount"] > 0)
+        {
+    <i class=" zhanji lv@(4 + item["GoldDiamondsCount"])"></i>
+        }
+        if (item["GoldCupCount"] > 0)
+        {
+    <i class=" zhanji lv@(8 + item["GoldCupCount"])"></i>
+        }
+        if (item["SilverStarCount"] > 0)
+        {
+    <i class="zhanji hlv@(item["SilverStarCount"])"></i>
+        }
+        if (item["SilverDiamondsCount"] > 0)
+        {
+    <i class="zhanji hlv@(4 + item["SilverDiamondsCount"])"></i>
+        }
+        if (item["SilverCupCount"] > 0)
+        {
+    <i class="zhanji hlv@(8 + item["SilverCupCount"])"></i>
+        }
+}
+@helper BallsFilter(Dictionary<string, string> showlist = null)
+    {
+        //投注页面 - 投注号码筛选区域
+        if (showlist == null || showlist.Count <= 0)
+        {
+    <span class="ballsfilter"><a val="all" href="javascript:;">全</a><a val="big" href="javascript:;">大</a><a
+        val="small" href="javascript:;">小</a><a val="odd" href="javascript:;">奇</a><a val="even"
+            href="javascript:;">偶</a><a val="clear" href="javascript:;">清</a></span>
+        }
+        else
+        { 
+    <span class="ballsfilter">
+        @{
+            foreach (var item in showlist)
+            { 
+            <a val="@item.Key" href="javascript:;">@item.Value</a>
+            }
+        }
+    </span>
+        }
+}
+@helper ImportNumberArea(string demoNumber)
+    {
+                //投注页面 - 手工录入号码区域
+    <div class="import_numberarea">
+        <p class="tip2 gray">
+            <i></i>请把已有号码复制(导入)文本框，每注号码用空格或换行符(回车)隔开，每个号码用"," "." "+"分开，也可不使用符号 [仅支持单式]
+        </p>
+        <textarea id="import_numberarea" class="upload_body"></textarea>
+        <p class="rdesc gray">
+            <b>号码格式：</b><br />
+            @{foreach (var item in demoNumber.Split('#'))
+              {
+                @item<br />
+              }}
+        </p>
+        <div class="clearfix">
+        </div>
+        <div class="import_buttonrow">
+            <form method="post" action="/UploadNumber" enctype="multipart/form-data" id="importNumberForm">
+            <input type="file" id="import_filepath" name="import_file" size="30" />
+            </form>
+            <input type="button" class="upbtn" value="导入" id="btn_importnumber" /><span class="yellow">
+                [支持记事本，导入内容覆盖原有内容]</span>
+            <div class="clear">
+            </div>
+        </div>
+    </div>
+}
+@helper LotteryHeaderView(Issuse_QueryInfo issues, WinNumber_QueryInfo award, string gameType = "")
+    {   
+        //奖池数据
+        // var opendata = SiteString.GameOpenData(Server, award.GameCode, award.IssuseNumber);
+        // if(award==null){
+        var issuseList = award == null ? null : WCFService.PrizedIssuseList(award.GameCode, gameType, 10);
+                    //}
+    <div class="detail-top">
+        <div class="ste23">
+            第
+            <select name="dropIssueNum" id="dropIssueNum" onchange="LoadPrize()">
+                @{
+                    if (issuseList != null && issuseList.Count() > 0)
+                    {
+                        foreach (var item in issuseList)
+                        {
+                    <option @(Request["issusenumber"] == item ? "selected=selected" : string.Empty) value="@item">@item</option>      
+                        }
+                    }
+                    else
+                    {
+                    <option>暂无数据</option>      
+                    }
+                  
+                }
+            </select>
+            期
+        </div>
+        <i class="deico @(award == null ? "--" : award.GameCode.ToLower())">@(award == null ? "--" : SiteConvert.GameName(award.GameCode, gameType))@(gameType == "t14c" ? "(任九)" : "")开奖信息</i>
+        <span class="desc">正在销售： <b class="red">@issues.IssuseNumber</b> 期<br />
+            销售截止：@issues.LocalStopTime.ToLongDateString() @issues.LocalStopTime.ToLongTimeString()</span>
+        <script type="text/javascript">
+            var gamecode = '@(award == null ? "--" : award.GameCode)';
+            var issue = '@(award == null ? "--" : award.IssuseNumber)';
+            function LoadPrize() {
+                var issuse = document.getElementById("dropIssueNum").options[document.getElementById("dropIssueNum").selectedIndex].value;
+                location.search = "gameType=@gameType&issusenumber=" + issuse + "&r=" + Math.random().toFixed(5);
+            }
+        </script>
+    </div>
+    <div class="tabletitle">
+        <span style="float: right">开奖日期：@(award == null ? DateTime.Now.ToString("yyyy-MM-dd") : award.AwardTime.HasValue ? award.AwardTime.Value.ToLongDateString() : "未开奖")
+            兑奖截止日期：@(award == null ? DateTime.Now.ToString("yyyy-MM-dd") : award.AwardTime.HasValue ? award.AwardTime.Value.AddMonths(3).ToLongDateString() : "未开奖")</span>第
+        <b class="red">
+            @(award == null ? "00000" : string.IsNullOrEmpty(award.IssuseNumber) ? "00000" : award.IssuseNumber)</b>
+        期
+    </div>
+    <table cellspacing="0" cellpadding="0" width="100%" align="center" border="0" class="lot-tbl">
+        <tr>
+            <td width="14%" bgcolor="#F2F7FE">
+                开奖号码
+            </td>
+            <td width="86%" align="left" style="padding-left: 10px">
+                @if (award != null)
+                {
+                    //TODO
+                    //OrderHelper.WinNumberView(award.WinNumber);
+                }
+            </td>
+        </tr>
+        @if (award != null && SiteString.gameList("dpc").Contains(award.GameCode.ToLower()))
+        {
+            <tr id="bonus">
+                <td colspan="2" align="left">
+                    <span style="padding: 0 10px">本期销售：<b class="red big">￥0 元</b> 奖池滚存:<b class="red big">￥--</b>
+                    </span>
+                </td>
+            </tr>
+        }
+    </table>
+        if (award != null && SiteString.gameList("dpc").Contains(award.GameCode.ToLower()))
+        {
+    <div class="tabletitle" style="margin-top: 6px">
+        <b>开奖详情：</b></div>
+    <table style="background: #ffffff; border-collapse: collapse" bordercolor="#A8C9FF"
+        cellspacing="0" cellpadding="0" width="100%" align="center" border="1" class="datatable">
+        <tr class="tit2">
+            <td colspan="2">
+                奖项
+            </td>
+            <td width="23%">
+                中奖注数
+            </td>
+            <td width="47%">
+                单注奖金(元)
+            </td>
+        </tr>
+        <tbody id="bonuslist">
+            <tr>
+                <td colspan="2">
+                    --
+                </td>
+                <td>
+                    0
+                </td>
+                <td class="red big">
+                    0元
+                </td>
+            </tr>
+        </tbody>
+    </table>
+        }
+    @UserHelper.js("Issue.js")
+}
+@helper LotteryHeaderView(Issuse_QueryInfo issues, LotteryData.Core.GameWinNumber_Info award, string gameCode, string gameType = "")
+    {   
+        //奖池数据
+        // var opendata = SiteString.GameOpenData(Server, award.GameCode, award.IssuseNumber);
+        // if(award==null){
+        var issuseList = award == null || award.Id == 0 ? WCFService.PrizedIssuseList(gameCode, gameType, 10) : WCFService.PrizedIssuseList(award.GameCode, gameType, 10);
+                //}
+    <div class="lottery_notic detail-top mt10">
+        <div class="lottery_today" style="line-height: 30px; padding-top: 3px">
+            <span class="desc">@(award == null || award.Id == 0 ? SiteConvert.GameName(gameCode, gameType) : SiteConvert.GameName(award.GameCode, gameType))@(gameType == "t14c" ? "(任九)" : "")正在销售：
+                <b class="red">@(issues == null ? "--" : issues.IssuseNumber)</b> 期<br />
+                销售截止：@(issues == null ? "--" : issues.LocalStopTime.ToLongDateString())
+                @(issues == null ? "--" : issues.LocalStopTime.ToLongTimeString())</span>
+        </div>
+        <div class="lottery_search">
+            第
+            <select name="dropIssueNum" id="dropIssueNum" onchange="LoadPrize()">
+                @{
+                    if (issuseList != null && issuseList.Count() > 0)
+                    {
+                        foreach (var item in issuseList)
+                        {
+                    <option @(Request["issusenumber"] == item ? "selected=selected" : string.Empty) value="@item">@item</option>      
+                        }
+                    }
+                    else
+                    {
+                    <option>暂无数据</option>      
+                    }
+                  
+                }
+            </select>
+            期
+        </div>
+        <script type="text/javascript">
+            var gamecode = '@(award == null || award.Id == 0 ? gameCode.ToLower() : award.GameCode)';
+            var issue = '@(award == null || award.Id == 0 ? "--" : award.IssuseNumber)';
+            function LoadPrize() {
+                var issuse = document.getElementById("dropIssueNum").options[document.getElementById("dropIssueNum").selectedIndex].value;
+                location.search = "gameType=@gameType&issusenumber=" + issuse + "&r=" + Math.random().toFixed(5);
+            }
+        </script>
+    </div>
+    <div class="tabletitle">
+        <span style="float: right">开奖日期：@(award == null || award.Id == 0 ? "未开奖" : award.CreateTime.ToString("yyyy-MM-dd"))
+            兑奖截止日期：@(award == null || award.Id == 0 ? "未开奖" : award.CreateTime.AddMonths(3).ToString("yyyy-MM-dd"))</span>第
+        <b class="red">
+            @(award == null || award.Id == 0 ? Request["issusenumber"] : string.IsNullOrEmpty(award.IssuseNumber) ? Request["issusenumber"] : award.IssuseNumber)</b>
+        期
+    </div>
+    <table cellspacing="0" cellpadding="0" width="100%" align="center" border="0" class="lot-tbl">
+        <tr>
+            <td width="14%" bgcolor="#fff1ca">
+                开奖号码
+            </td>
+            <td width="86%" align="left" style="padding-left: 10px">
+                @if (award != null && award.Id != 0)
+                {
+
+                    // OrderHelper.WinNumberView(award.WinNumber);
+                    var winNumber = award.WinNumber;
+                    if (!string.IsNullOrEmpty(winNumber))
+                    {
+                        if (winNumber.Contains("|"))
+                        {
+                            var qNumber = winNumber.Split('|')[0];
+                            var bNumber = winNumber.Split('|')[1];
+                            foreach (var item in qNumber.Split(','))
+                            {
+                    <b class="lottery-ball">@item</b>
+                            }
+                            foreach (var item in bNumber.Split(','))
+                            {
+                    <b class="lottery-ball blue-ball">@item</b>
+                            }
+                        }
+                        else
+                        {
+                            foreach (var item in winNumber.Split(','))
+                            {
+                    <b class="lottery-ball">@item</b>
+                            }
+                        }
+                    }
+                    else
+                    {
+                    <b class="red">未开奖</b>
+                    }
+                }
+                else
+                {
+                    <b class="red">暂无数据</b>
+                }
+            </td>
+        </tr>
+        @if (award != null && award.Id != 0 && SiteString.gameList("dpc").Contains(award.GameCode.ToLower()))
+        {
+            <tr id="bonus">
+                <td colspan="2" align="left">
+                    <span style="padding: 0 10px">本期销售：<b class="red big">￥0 元</b> 奖池滚存:<b class="red big">￥--</b>
+                    </span>
+                </td>
+            </tr>
+        }
+    </table>
+        if (award != null && award.Id != 0 && SiteString.gameList("dpc").Contains(award.GameCode.ToLower()))
+        {
+    <div class="tabletitle" style="margin-top: 6px">
+        <b>开奖详情：</b></div>
+    <table style="background: #ffffff; border-collapse: collapse" bordercolor="#A8C9FF"
+        cellspacing="0" cellpadding="0" width="100%" align="center" border="1" class="datatable">
+        <tr class="tit2">
+            <td colspan="2">
+                奖项
+            </td>
+            <td width="23%">
+                中奖注数
+            </td>
+            <td width="47%">
+                单注奖金(元)
+            </td>
+        </tr>
+        <tbody id="bonuslist">
+            <tr>
+                <td colspan="2">
+                    --
+                </td>
+                <td>
+                    0
+                </td>
+                <td class="red big">
+                    0元
+                </td>
+            </tr>
+        </tbody>
+    </table>
+        }
+        if (gameCode.ToLower() == "ssq" || gameCode.ToLower() == "dlt")
+        {
+    @UserHelper.js("Issue.js")
+        }
+}
+@helper LotteryDescView(string gameCode, string gameType = "")
+    {
+        var socUrl = "";
+        var beturl = "/szc/" + gameCode.ToLower();
+
+        if (SiteString.gameList("szc").Contains(gameCode.ToLower()))
+        {
+            socUrl = "/soccer/" + gameCode.ToLower();
+        }
+
+        else if (gameCode.ToLower() == "ctzq")
+        {
+            beturl = "/toto/" + gameType.ToLower();
+            socUrl = "/soccer/" + gameCode.ToLower() + "/" + gameType.ToLower();
+        }
+        else if (SiteString.gameList("jjc").Contains(gameCode.ToLower()))
+        {
+            beturl = "/" + gameCode.ToLower() + "/" + gameType.ToLower();
+            socUrl = "/soccer/" + gameCode.ToLower() + "/" + gameType.ToLower();
+        }
+        if (gameType == "" && gameCode == "cqssc" || gameCode == "CQ11X5" || gameCode == "ssq" || gameCode == "fc3d" || gameCode == "pl3" || gameCode == "dlt")
+        {
+            socUrl = "/soccer/index";
+        }
+    <div class="td_div3 mt10">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td width="9%" valign="top">
+                    <div class="deico @gameCode.ToLower()">
+                    </div>
+                </td>
+                <td width="78%" valign="top" style="line-height: 20px">
+                    <b>@SiteConvert.GameName(gameCode.ToLower(), gameType.ToLower())</b><br>
+                    玩法介绍：@GetGameIntroduce(gameCode.ToUpper())<br>
+                    开奖时间：@SiteString.lotteryDay(gameCode)
+                </td>
+                <td width="13%">
+                    <ul class="szc_2nav">
+                        @{if (!SiteString.gameList("gpc").Contains(gameCode.ToLower()))
+                          {
+                            <li><a href="@socUrl" target="_blank">过关统计</a></li>
+                          }}
+                        <li><a href="@beturl" target="_blank">立即购买</a></li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+}
+@helper LotteryHeaderViewNew(Issuse_QueryInfo issues, LotteryData.Core.GameWinNumber_Info award, string gameCode, string gameType = "")
+    {   
+        //奖池数据
+        // var opendata = SiteString.GameOpenData(Server, award.GameCode, award.IssuseNumber);
+        // if(award==null){
+        var issuseList = award == null || award.Id == 0 ? WCFService.PrizedIssuseList(gameCode, gameType, 10) : WCFService.PrizedIssuseList(award.GameCode, gameType, 10);
+                //}
+    <div class="details_left">
+        <div class="details_title">
+            @(award == null || award.Id == 0 ? SiteConvert.GameName(gameCode, gameType) : SiteConvert.GameName(award.GameCode, gameType))@(gameType == "t14c" ? "(任九)" : "")开奖结果</div>
+        <div>
+            <span class="details_search">第
+                <select name="dropIssueNum" id="dropIssueNum" onchange="LoadPrize()">
+                    @{
+                        if (issuseList != null && issuseList.Count() > 0)
+                        {
+                            foreach (var item in issuseList)
+                            {
+                        <option @(award.IssuseNumber == item ? "selected=selected" : string.Empty) value="@item">@item</option>      
+                            }
+                        }
+                        else
+                        {
+                        <option>暂无数据</option>      
+                        }
+                    }
+                </select>
+                期 </span><span>开奖日期&nbsp;&nbsp;&nbsp;&nbsp;@(award == null || award.Id == 0 ? "未开奖" : award.CreateTime.ToString("MM月dd日"))&nbsp;&nbsp;&nbsp;&nbsp;20:40公布</span>
+            <script type="text/javascript">
+                var gamecode = '@(award == null || award.Id == 0 ? gameCode.ToLower() : award.GameCode)';
+                var issue = '@(award != null ? award.IssuseNumber : issues.IssuseNumber)';
+                // document.getElementById("dropIssueNum").options[document.getElementById("dropIssueNum").selectedIndex].value;
+                function LoadPrize() {
+                    var issuse_slt = $("#dropIssueNum option:selected").val()
+                    var url = "/staticHtml/lottery/detail_" + gamecode + "_" + issuse_slt + ".html";
+                    //console.warn(url)
+                    location.href = url;
+                    //var issuse = document.getElementById("dropIssueNum").options[document.getElementById("dropIssueNum").selectedIndex].value;
+                    //location.search = "gameType=@gameType&issusenumber=" + issuse + "&r=" + Math.random().toFixed(5);
+                }
+            </script>
+        </div>
+        <div class="winnumber" id="winnumber">
+            @*<span class="opentime">正在热购，今晚&nbsp;<b>20:40</b>开奖</span>*@
+            @if (award != null && !string.IsNullOrEmpty(award.WinNumber))
+            {
+                <span>@OrderHelper.WinNumberView(award.WinNumber)</span>
+            }
+            else
+            {
+                <span class="opentime">暂无数据</span>
+            }
+        </div>
+        <div id="bonusstr">
+            <div class="co_or">
+                本期销售：<span>￥0</span>元
+            </div>
+            <div class="co_or">
+                奖池滚存：<span>￥0</span>元
+            </div>
+        </div>
+        <div class="sell">
+            <span class="nowsell">正在销售：第@(issues == null ? "--" : issues.IssuseNumber)期</span>
+            <span>距离投注截止还有：<b id="countdown">00天00小时00分00秒</b></span>
+            <input type="hidden" id="endtime" value="@(issues == null ? DateTime.Now : issues.LocalStopTime)" />
+            <script type="text/javascript">
+                var endtime = document.getElementById("endtime").value;
+                endtime = new Date(endtime);
+                var nowtime = new Date();
+                var second = (endtime.getTime() - nowtime.getTime()) / 1000;
+
+                function UpgradeTime() {
+                    if (second > 0) {
+                        d = parseInt(second / 3600 / 24);
+                        h = parseInt((second / 3600) % 24);
+                        m = parseInt((second / 60) % 60);
+                        s = parseInt(second % 60);
+                        if (d < 10) {
+                            d = "0" + d;
+                        }
+                        if (h < 10) {
+                            h = "0" + h;
+                        }
+                        if (m < 10) {
+                            m = "0" + m;
+                        }
+                        if (s < 10) {
+                            s = "0" + s;
+                        }
+                        all = d + "天" + h + "小时" + m + "分" + s + "秒";
+                        document.getElementById("countdown").innerHTML = all;
+                        setTimeout(function () {
+                            second--;
+                            UpgradeTime();
+                        }, 1000);
+                    }
+                }
+                window.onload = function () {
+                    UpgradeTime();
+                }
+            </script>
+        </div>
+    </div>
+        if (gameCode.ToLower() == "ssq" || gameCode.ToLower() == "dlt")
+        {
+    @UserHelper.js("Issue.js")
+        }
+}
+@helper LotteryDescViewNew(string gameCode, string gameType = "")
+    {
+        var socUrl = "";
+        var beturl = "/szc/" + gameCode.ToLower();
+
+        if (SiteString.gameList("szc").Contains(gameCode.ToLower()))
+        {
+            socUrl = "/soccer/" + gameCode.ToLower();
+        }
+
+        else if (gameCode.ToLower() == "ctzq")
+        {
+            beturl = "/toto/" + gameType.ToLower();
+            socUrl = "/soccer/" + gameCode.ToLower() + "/" + gameType.ToLower();
+        }
+        else if (SiteString.gameList("jjc").Contains(gameCode.ToLower()))
+        {
+            beturl = "/" + gameCode.ToLower() + "/" + gameType.ToLower();
+            socUrl = "/soccer/" + gameCode.ToLower() + "/" + gameType.ToLower();
+        }
+        if (gameType == "" && gameCode == "cqssc" || gameCode == "CQ11X5" || gameCode == "ssq" || gameCode == "fc3d" || gameCode == "pl3" || gameCode == "dlt")
+        {
+            socUrl = "/soccer/index";
+        }
+    <div class="deatils_right">
+        <div>
+            <span>玩法介绍：<b>@SiteConvert.GameName(gameCode, gameType)</b></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>开奖时间：<b>@SiteString.lotteryDay(gameCode)</b></span>
+        </div>
+        <div class="deatils_btn">
+            @if (gameCode == "SSQ" || gameCode == "DLT" || gameCode == "PL3")
+            {
+                <a href="/statichtml/lotterytrend/@gameCode.ToLower()/jbzs30.html" target="_blank">走势图</a>@*<a href="@socUrl" target="_blank">过关统计</a>*@
+            }
+            else if (gameCode == "FC3D")
+            {
+                <a href="/statichtml/lotterytrend/@gameCode.ToLower()/zxzs30.html" target="_blank">走势图</a>
+            }
+        </div>
+        <a class="promptly" href="@beturl" target="_blank">立即购买 </a>
+    </div>
+}
+@helper MatchTitle_Daohang(string game, string gameType, int width = 842)
+    {
+    <div class="td_div" style="position: absolute; z-index: 9; width: @(width)px; display: none;" id="divDaohang">
+        <table width="100%" cellspacing="0" cellpadding="1" class="socai">
+            @{switch (game.ToLower())
+              {
+                  case "bjdc":
+                      switch (gameType.ToLower())
+                      {
+                          case "spf":
+                <tr style="height: 18px;" class="ttis">
+                    <td width="5%" rowspan="2">
+                        场
+                    </td>
+                    <td width="7%" rowspan="2">
+                        赛事
+                    </td>
+                    <td width="5%" rowspan="2">
+                        开赛<br>
+                        时间
+                    </td>
+                    <td width="5%" rowspan="2">
+                        截止<br>
+                        时间
+                    </td>
+                    <td width="12%" rowspan="2">
+                        主队
+                    </td>
+                    <td width="3%" rowspan="2">
+                        让<img align="absmiddle" onmouseover="this.style.cursor='pointer'" alt="负数表示主让客，正数表示客让主"
+                            src="@SiteString.img("users/f.gif")">
+                    </td>
+                    <td width="4%" rowspan="2">
+                        比分
+                    </td>
+                    <td width="12%" rowspan="2">
+                        客队
+                    </td>
+                    <td width="4%" rowspan="2">
+                        半场
+                    </td>
+                    <td width="13%" rowspan="2" colspan="3">
+                        <select name="oddsSelect" id="oddsSelect" onchange="SelectCompany(this.options[this.selectedIndex].value)"
+                            disabled="disabled">
+                            <option value="0">平均赔率</option>
+                        </select>
+                    </td>
+                    <td width="9%" rowspan="2">
+                        分析
+                    </td>
+                    <td align="center" class="itd" colspan="3">
+                        投注区 / 参考SP值
+                    </td>
+                </tr>
+                <tr style="height: 18px;" class="ttis">
+                    <td width="7%" align="center">
+                        主胜
+                    </td>
+                    <td width="7%" align="center">
+                        平局
+                    </td>
+                    <td width="7%" align="center">
+                        客胜
+                    </td>
+                </tr>
+                            break;
+                          case "bf":
+                <tr style="height: 18px;" class="ttis">
+                    <td width="4%">
+                        场
+                    </td>
+                    <td width="6%">
+                        赛事
+                    </td>
+                    <td width="5%">
+                        开赛<br>
+                        时间
+                    </td>
+                    <td width="5%">
+                        截止<br>
+                        时间
+                    </td>
+                    <td width="12%">
+                        主队
+                    </td>
+                    <td width="5%">
+                        比分
+                    </td>
+                    <td width="12%">
+                        客队
+                    </td>
+                    <td width="5%">
+                        半场
+                    </td>
+                    <td width="13%" colspan="3">
+                        <select name="oddsSelect" id="oddsSelect" onchange="SelectCompany(this.options[this.selectedIndex].value)"
+                            disabled="disabled">
+                            <option value="0">平均赔率</option>
+                        </select>
+                    </td>
+                    <td width="10%">
+                        分析
+                    </td>
+                    <td width="9%">
+                        开奖SP
+                    </td>
+                    <td width="14%">
+                        赛果/投注选项
+                    </td>
+                </tr>
+                            break;
+                          case "bqc":
+                <tr class="ttis">
+                    <td width="4%">
+                        场
+                    </td>
+                    <td width="4%">
+                        赛事
+                    </td>
+                    <td width="4%">
+                        开赛<br>
+                        时间
+                    </td>
+                    <td width="4%">
+                        截止<br>
+                        时间
+                    </td>
+                    <td width="5%">
+                        主队
+                    </td>
+                    <td width="5%">
+                        比分
+                    </td>
+                    <td width="5%">
+                        客队
+                    </td>
+                    <td width="4%">
+                        半
+                    </td>
+                    <td width="5%">
+                        分析
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE" style="border-left: solid 2px #2E70D1;">
+                        胜-胜
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE">
+                        胜-平
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE">
+                        胜-负
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE">
+                        平-胜
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE">
+                        平-平
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE">
+                        平-负
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE">
+                        负-胜
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE">
+                        负-平
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE">
+                        负-负
+                    </td>
+                </tr>
+                            break;
+                          case "zjq":
+                <tr style="height: 18px;" class="ttis">
+                    <td width="4%">
+                        场
+                    </td>
+                    <td width="6%">
+                        赛事
+                    </td>
+                    <td width="4%">
+                        开赛<br>
+                        时间
+                    </td>
+                    <td width="4%">
+                        截止<br>
+                        时间
+                    </td>
+                    <td width="10%">
+                        主队
+                    </td>
+                    <td width="5%">
+                        比分
+                    </td>
+                    <td width="10%">
+                        客队
+                    </td>
+                    <td width="3%">
+                        半场
+                    </td>
+                    <td width="4%">
+                        分析
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE" style="border-left: solid 2px #2E70D1;">
+                        0球
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE">
+                        1球
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE">
+                        2球
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE">
+                        3球
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE">
+                        4球
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE">
+                        5球
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE">
+                        6球
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE">
+                        7+球
+                    </td>
+                </tr>
+                            break;
+                          case "sxds":
+                <tr style="height: 18px;" class="ttis">
+                    <td width="4%">
+                        场
+                    </td>
+                    <td width="7%">
+                        赛事
+                    </td>
+                    <td width="5%">
+                        开赛<br>
+                        时间
+                    </td>
+                    <td width="5%">
+                        截止<br>
+                        时间
+                    </td>
+                    <td width="13%">
+                        主队
+                    </td>
+                    <td width="5%">
+                        比分
+                    </td>
+                    <td width="13%">
+                        客队
+                    </td>
+                    <td width="5%">
+                        半场
+                    </td>
+                    <td width="10%">
+                        分析
+                    </td>
+                    <td width="8%" bgcolor="#B3D8EE" style="border-left: solid 2px #2E70D1;">
+                        上+单
+                    </td>
+                    <td width="8%" bgcolor="#B3D8EE">
+                        上+双
+                    </td>
+                    <td width="8%" bgcolor="#B3D8EE">
+                        下+单
+                    </td>
+                    <td width="8%" bgcolor="#B3D8EE">
+                        下+双
+                    </td>
+                </tr>
+                            break;
+                      }
+                      break;
+                  case "jczq":
+                      switch (gameType.ToLower())
+                      {
+                          case "spf":
+                <tr style="height: 18px;" class="ttis">
+                    <td width="7%" rowspan="2">
+                        场
+                    </td>
+                    <td width="7%" rowspan="2">
+                        赛事
+                    </td>
+                    <td width="5%" rowspan="2">
+                        开赛<br>
+                        时间
+                    </td>
+                    <td width="5%" rowspan="2">
+                        截止<br>
+                        时间
+                    </td>
+                    <td width="12%" rowspan="2">
+                        主队
+                    </td>
+                    <td width="5%" rowspan="2">
+                        让球<img align="absmiddle" onmouseover="this.style.cursor='pointer'" alt="负数表示主让客，正数表示客让主"
+                            src="@SiteString.img("users/f.gif")">
+                    </td>
+                    <td width="4%" rowspan="2">
+                        比分
+                    </td>
+                    <td width="11%" rowspan="2">
+                        客队
+                    </td>
+                    <td width="14%" rowspan="2" colspan="3">
+                        <select name="oddsSelect" id="oddsSelect" onchange="SelectCompany(this.options[this.selectedIndex].value)"
+                            disabled="disabled">
+                            <option value="0">平均赔率</option>
+                        </select>
+                    </td>
+                    <td width="8%" rowspan="2">
+                        分析
+                    </td>
+                    <td align="center" class="itd" colspan="3">
+                        投注区 / 参考奖金
+                    </td>
+                </tr>
+                <tr style="height: 18px;" class="ttis">
+                    <td width="7%" align="center">
+                        主胜
+                    </td>
+                    <td width="7%" align="center">
+                        平局
+                    </td>
+                    <td width="7%" align="center">
+                        客胜
+                    </td>
+                </tr>
+                            break;
+                          case "brqspf":
+                <tr style="height: 18px;" class="ttis">
+                    <td width="7%" rowspan="2">
+                        场
+                    </td>
+                    <td width="7%" rowspan="2">
+                        赛事
+                    </td>
+                    <td width="5%" rowspan="2">
+                        开赛<br>
+                        时间
+                    </td>
+                    <td width="5%" rowspan="2">
+                        截止<br>
+                        时间
+                    </td>
+                    <td width="12%" rowspan="2">
+                        主队
+                    </td>
+                    <td width="4%" rowspan="2">
+                        比分
+                    </td>
+                    <td width="11%" rowspan="2">
+                        客队
+                    </td>
+                    <td width="14%" rowspan="2" colspan="3">
+                        <select name="oddsSelect" id="oddsSelect" onchange="SelectCompany(this.options[this.selectedIndex].value)"
+                            disabled="disabled">
+                            <option value="0">平均赔率</option>
+                        </select>
+                    </td>
+                    <td width="8%" rowspan="2">
+                        分析
+                    </td>
+                    <td align="center" class="itd" colspan="3">
+                        投注区 / 参考奖金
+                    </td>
+                </tr>
+                <tr style="height: 18px;" class="ttis">
+                    <td width="7%" align="center">
+                        主胜
+                    </td>
+                    <td width="7%" align="center">
+                        平局
+                    </td>
+                    <td width="7%" align="center">
+                        客胜
+                    </td>
+                </tr>
+                            break;
+                          case "bf":
+                <tr class="ttis">
+                    <td width="8%">
+                        场
+                    </td>
+                    <td width="7%">
+                        赛事
+                    </td>
+                    <td width="5%">
+                        开赛<br>
+                        时间
+                    </td>
+                    <td width="5%">
+                        截止<br>
+                        时间
+                    </td>
+                    <td width="12%">
+                        主队
+                    </td>
+                    <td width="5%">
+                        比分
+                    </td>
+                    <td width="12%">
+                        客队
+                    </td>
+                    <td width="13%" colspan="3">
+                        <select name="oddsSelect" id="oddsSelect" onchange="SelectCompany(this.options[this.selectedIndex].value)"
+                            disabled="disabled">
+                            <option value="0">平均赔率</option>
+                        </select>
+                    </td>
+                    <td width="10%">
+                        分析
+                    </td>
+                    <td width="6%" style="display: none">
+                        开奖SP
+                    </td>
+                    <td width="13%">
+                        赛果/投注选项
+                    </td>
+                </tr>
+                            break;
+                          case "bqc":
+                <tr class="ttis">
+                    <td width="8%">
+                        场
+                    </td>
+                    <td width="7%">
+                        赛事
+                    </td>
+                    <td width="5%">
+                        开赛<br>
+                        时间
+                    </td>
+                    <td width="5%">
+                        截止<br>
+                        时间
+                    </td>
+                    <td width="10%">
+                        主队
+                    </td>
+                    <td width="4%">
+                        比分
+                    </td>
+                    <td width="10%">
+                        客队
+                    </td>
+                    <td width="5%">
+                        分析
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE" style="border-left: solid 2px #2E70D1;">
+                        胜-胜
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE">
+                        胜-平
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE">
+                        胜-负
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE">
+                        平-胜
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE">
+                        平-平
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE">
+                        平-负
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE">
+                        负-胜
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE">
+                        负-平
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE">
+                        负-负
+                    </td>
+                </tr>
+                            break;
+                          case "zjq":
+                <tr class="ttis">
+                    <td width="7%">
+                        场
+                    </td>
+                    <td width="6%">
+                        赛事
+                    </td>
+                    <td width="5%">
+                        开赛<br>
+                        时间
+                    </td>
+                    <td width="5%">
+                        截止<br>
+                        时间
+                    </td>
+                    <td width="7%">
+                        主队
+                    </td>
+                    <td width="4%">
+                        比分
+                    </td>
+                    <td width="7%">
+                        客队
+                    </td>
+                    <td width="9%">
+                        分析
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE" style="border-left: solid 2px #2E70D1;">
+                        0球
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE">
+                        1球
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE">
+                        2球
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE">
+                        3球
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE">
+                        4球
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE">
+                        5球
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE">
+                        6球
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE">
+                        7+球
+                    </td>
+                </tr>
+                            break;
+                          case "hh":
+                <tr class="ttis">
+                    <td width="8%">
+                        场
+                    </td>
+                    <td width="7%">
+                        赛事
+                    </td>
+                    <td width="5%">
+                        开赛<br>
+                        时间
+                    </td>
+                    <td width="5%">
+                        截止<br>
+                        时间
+                    </td>
+                    <td width="12%">
+                        主队
+                    </td>
+                    <td width="4%">
+                        让球<img align="absmiddle" onmouseover="this.style.cursor='pointer'" alt="负数表示主让客，正数表示客让主"
+                            src="@SiteString.img("users/f.gif")">
+                    </td>
+                    <td width="5%">
+                        比分
+                    </td>
+                    <td width="12%">
+                        客队
+                    </td>
+                    <td width="5%">
+                        半场
+                    </td>
+                    <td width="13%" colspan="3">
+                        <select name="oddsSelect" id="oddsSelect" onchange="SelectCompany(this.options[this.selectedIndex].value)"
+                            disabled="disabled">
+                            <option value="0">平均赔率</option>
+                        </select>
+                    </td>
+                    <td width="6%">
+                        分析
+                    </td>
+                    <td width="6%" style="display: none">
+                        开奖SP
+                    </td>
+                    <td width="10%">
+                        赛果/投注选项
+                    </td>
+                </tr>
+                            break;
+                      }
+                      break;
+                  case "jclq":
+                      switch (gameType.ToLower())
+                      {
+                          case "dxf":
+                <tr class="ttis">
+                    <td width="7%">
+                        场
+                    </td>
+                    <td width="5%">
+                        赛事
+                    </td>
+                    <td width="8%">
+                        开场
+                    </td>
+                    <td width="5%">
+                        截止
+                    </td>
+                    <td width="12%">
+                        主队
+                    </td>
+                    <td width="7%">
+                        比分
+                    </td>
+                    <td width="12%">
+                        客队
+                    </td>
+                    <td width="12%" colspan="2">
+                        <select disabled="disabled" name="oddsSelect" id="oddsSelect" onchange="SelectCompany(this.options[this.selectedIndex].value)">
+                            <option value="d_4">平均赔率</option>
+                        </select>
+                    </td>
+                    <td width="10%">
+                        分析
+                    </td>
+                    <td width="6%" bgcolor="#B3D8EE" style="border-left: solid 1px #2E70D1;">
+                        大分
+                    </td>
+                    <td width="6%" bgcolor="#B3D8EE">
+                        总分
+                    </td>
+                    <td width="6%" bgcolor="#B3D8EE">
+                        小分
+                    </td>
+                    <td width="3%" bgcolor="#B3D8EE">
+                        包
+                    </td>
+                </tr>
+                              break;
+                          case "rfsf":
+                <tr class="ttis">
+                    <td width="7%">
+                        场
+                    </td>
+                    <td width="5%">
+                        赛事
+                    </td>
+                    <td width="5%">
+                        开场
+                    </td>
+                    <td width="5%">
+                        截止
+                    </td>
+                    <td width="11%">
+                        主队
+                    </td>
+                    <td width="7%">
+                        比分
+                    </td>
+                    <td width="11%">
+                        客队
+                    </td>
+                    <td width="15%" colspan="2">
+                        <select disabled="disabled" name="oddsSelect" id="oddsSelect" onchange="SelectCompany(this.options[this.selectedIndex].value)">
+                            <option value="y_1">平均赔率</option>
+                        </select>
+                    </td>
+                    <td width="10%">
+                        分析
+                    </td>
+                    <td width="7%" bgcolor="#B3D8EE" style="border-left: solid 1px #2E70D1;">
+                        主胜
+                    </td>
+                    <td width="5%" bgcolor="#B3D8EE">
+                        让分
+                    </td>
+                    <td width="7%" bgcolor="#B3D8EE">
+                        客胜
+                    </td>
+                    <td width="3%" bgcolor="#B3D8EE">
+                        包
+                    </td>
+                </tr>
+                              break;
+                          case "sf":
+                <tr class="ttis">
+                    <td width="8%">
+                        场
+                    </td>
+                    <td width="5%">
+                        赛事
+                    </td>
+                    <td width="8%">
+                        开场
+                    </td>
+                    <td width="5%">
+                        截止
+                    </td>
+                    <td width="12%">
+                        主队
+                    </td>
+                    <td width="7%">
+                        比分
+                    </td>
+                    <td width="12%">
+                        客队
+                    </td>
+                    <td width="15%" colspan="2">
+                        <select disabled="disabled" name="oddsSelect" id="oddsSelect" onchange="SelectCompany(this.options[this.selectedIndex].value)">
+                            <option value="y_1">平均赔率</option>
+                        </select>
+                    </td>
+                    <td width="9%">
+                        分析
+                    </td>
+                    <td width="7%" bgcolor="#B3D8EE" style="border-left: solid 1px #2E70D1;">
+                        主胜
+                    </td>
+                    <td width="7%" bgcolor="#B3D8EE">
+                        客胜
+                    </td>
+                    <td width="3%" bgcolor="#B3D8EE">
+                        包
+                    </td>
+                </tr>
+                              break;
+                          case "sfc":
+                <tr class="ttis">
+                    <td width="7%">
+                        场
+                    </td>
+                    <td width="6%">
+                        赛事
+                    </td>
+                    <td width="5%">
+                        开场
+                    </td>
+                    <td width="5%">
+                        截止
+                    </td>
+                    <td width="12%">
+                        对阵
+                    </td>
+                    <td width="5%">
+                        比分
+                    </td>
+                    <td width="10%">
+                        分析
+                    </td>
+                    <td width="7%" bgcolor="#B3D8EE" style="border-left: solid 1px #2E70D1;">
+                        胜1-5
+                    </td>
+                    <td width="7%" bgcolor="#B3D8EE">
+                        胜6-10
+                    </td>
+                    <td width="7%" bgcolor="#B3D8EE">
+                        胜11-15
+                    </td>
+                    <td width="7%" bgcolor="#B3D8EE">
+                        胜16-20
+                    </td>
+                    <td width="7%" bgcolor="#B3D8EE">
+                        胜21-25
+                    </td>
+                    <td width="7%" bgcolor="#B3D8EE">
+                        胜26+
+                    </td>
+                </tr>
+                              break;
+                          case "hh":
+                <tr class="ttis">
+                    <td width="7%">
+                        场
+                    </td>
+                    <td width="5%">
+                        赛事
+                    </td>
+                    <td width="5%">
+                        开场
+                    </td>
+                    <td width="5%">
+                        截止
+                    </td>
+                    <td width="11%">
+                        主队
+                    </td>
+                    <td width="7%">
+                        比分
+                    </td>
+                    <td width="11%">
+                        客队
+                    </td>
+                    <td width="15%" colspan="2">
+                        <select disabled="disabled" name="oddsSelect" id="oddsSelect" onchange="SelectCompany(this.options[this.selectedIndex].value)">
+                            <option value="y_1">平均赔率</option>
+                        </select>
+                    </td>
+                    <td width="10%">
+                        分析
+                    </td>
+                    <td width="6%" bgcolor="#B3D8EE">
+                        让分
+                    </td>
+                    <td width="6%" bgcolor="#B3D8EE">
+                        总分
+                    </td>
+                    <td width="10%" bgcolor="#B3D8EE">
+                        赛果/投注选项
+                    </td>
+                </tr>
+                              break;
+                      }
+                      break;
+              }}
+        </table>
+    </div>
+}
+@helper GetzoushiQiu(int count_3, int count_1, int count_0, int countQiu)
+    {
+        if (count_3 == countQiu && count_1 == countQiu && count_0 == countQiu)
+        {
+    <p>
+        @countQiu</p>
+    <span class="zhou_3 zhou_1 zhou_0">●</span>
+        }
+        else if (count_3 == countQiu && count_1 == countQiu)
+        {
+    <p>
+        @countQiu</p>
+    <span class="zhou_3 zhou_1">●</span>
+        }
+        else if (count_3 == countQiu && count_0 == countQiu)
+        {
+    <p>
+        @countQiu</p>
+    <span class="zhou_3 zhou_0">●</span>
+        }
+        else if (count_0 == countQiu && count_1 == countQiu)
+        {
+    <p>
+        @countQiu</p>
+    <span class="zhou_0 zhou_1">●</span>
+        }
+        else if (count_3 == countQiu)
+        { 
+    <p>
+        @countQiu</p>
+    <span class="zhou_3">●</span>
+        }
+        else if (count_1 == countQiu)
+        { 
+    <p>
+        @countQiu</p>
+    <span class="zhou_1">●</span>
+        }
+        else if (count_0 == countQiu)
+        { 
+    <p>
+        @countQiu</p>
+    <span class="zhou_0">●</span>
+        }
+}
+@helper Getzoushijiangjin(decimal min, decimal max, decimal bonusMoney, decimal bonusMoneyTr9)
+    {
+        var danwei = 10000;
+        //处理奖金为0的情况
+        if (min == 0 && max == 0)
+        {
+            if (bonusMoney == 0)
+            {
+    <p>
+        14场 0</p>
+    <span class="jiangjin_14">●</span>
+            }
+            if (bonusMoneyTr9 == 0)
+            {
+    <p>
+        9场 0</p>
+    <span class="jaingjin_9">●</span>
+            }
+            return;
+        }
+
+
+
+
+
+        if ((bonusMoney > min * danwei && bonusMoney <= max * danwei) && (bonusMoneyTr9 > min * danwei && bonusMoneyTr9 <= max * danwei))
+        {
+    <p>
+        14场 @bonusMoney.ToString("N0")</p>
+    <p>
+        9场 @bonusMoneyTr9.ToString("N0")</p>
+    <span class="jiangjin_14 jaingjin_9">●</span> 
+            return;
+        }
+        if (bonusMoney > min * danwei && bonusMoney <= max * danwei)
+        {
+    <p>
+        14场 @bonusMoney.ToString("N0")</p>
+    <span class="jiangjin_14">●</span>
+        }
+        if (bonusMoneyTr9 > min * danwei && bonusMoneyTr9 <= max * danwei)
+        {
+    <p>
+        9场 @bonusMoneyTr9.ToString("N0")</p>
+    <span class="jaingjin_9">●</span>
+        }
+        
+}
+@helper TrendList(string game)
+    {
+        switch (game)
+        {
+            case "ssq":
+    <a href="/statichtml/lotterytrend/ssq/jbzs30.html" target="_blank">双色球基本走势图</a>
+    <a href="/statichtml/lotterytrend/ssq/daxiao30.html" target="_blank">双色球大小走势图</a>
+    <a href="/statichtml/lotterytrend/ssq/jiou30.html" target="_blank">双色球奇偶走势图</a>
+    <a href="/statichtml/lotterytrend/ssq/kuadu_sw30.html" target="_blank">双色球首尾跨度走势图</a>
+    <a href="/statichtml/lotterytrend/ssq/kuadu_1230.html" target="_blank">双色球一二跨度走势</a>
+    <a href="/statichtml/lotterytrend/ssq/kuadu_2330.html" target="_blank">双色球二三跨度走势</a>
+    <a href="/statichtml/lotterytrend/ssq/kuadu_3430.html" target="_blank">双色球三四跨度走势</a>
+    <a href="/statichtml/lotterytrend/ssq/kuadu_4530.html" target="_blank">双色球四五跨度走势</a>
+    <a href="/statichtml/lotterytrend/ssq/kuadu_5630.html" target="_blank">双色球五六跨度走势</a>
+    <a href="/statichtml/lotterytrend/ssq/chu330.html" target="_blank">双色球除3走势图</a>
+    <a href="/statichtml/lotterytrend/ssq/hezhi30.html" target="_blank">双色球和值走势图</a>
+    <a href="/statichtml/lotterytrend/ssq/zhihe30.html" target="_blank">双色球质和走势图</a>
+                break;
+            case "dlt":
+    <a href="/statichtml/lotterytrend/dlt/jbzs30.html" target="_blank">大乐透基本走势</a>
+    <a href="/statichtml/lotterytrend/dlt/dx30.html" target="_blank">大乐透大小走势</a>
+    <a href="/statichtml/lotterytrend/dlt/jiou30.html" target="_blank">大乐透奇偶走势</a>
+    <a href="/statichtml/lotterytrend/dlt/zhihe30.html" target="_blank">大乐透质和走势</a>
+    <a href="/statichtml/lotterytrend/dlt/hezhi30.html" target="_blank">大乐透和值走势</a>
+    <a href="/statichtml/lotterytrend/dlt/chu330.html" target="_blank">大乐透除3走势</a>
+    <a href="/statichtml/lotterytrend/dlt/kuadu_sw30.html" target="_blank">大乐透首尾跨度走势</a>
+    <a href="/statichtml/lotterytrend/dlt/kuadu_1230.html" target="_blank">大乐透一二跨度走势</a>
+    <a href="/statichtml/lotterytrend/dlt/kuadu_2330.html" target="_blank">大乐透二三跨度走势</a>
+    <a href="/statichtml/lotterytrend/dlt/kuadu_3430.html" target="_blank">大乐透三四跨度走势</a>
+    <a href="/statichtml/lotterytrend/dlt/kuadu_4530.html" target="_blank">大乐透四五跨度走势</a>
+                break;
+            case "fc3d":
+    <a href="/statichtml/lotterytrend/fc3d/zxzs30.html" target="_blank">福彩3D直选走势</a>
+    <a href="/statichtml/lotterytrend/fc3d/chu3130.html" target="_blank">福彩3D除3余数走势一</a>
+    <a href="/statichtml/lotterytrend/fc3d/chu3230.html" target="_blank">福彩3D除3余数走势二</a>
+    <a href="/statichtml/lotterytrend/fc3d/chu3330.html" target="_blank">福彩3D除3余数走势三</a>
+    <a href="/statichtml/lotterytrend/fc3d/dxhm30.html" target="_blank">福彩3D大小号码分布</a>
+    <a href="/statichtml/lotterytrend/fc3d/dxxt30.html" target="_blank">福彩3D大小形态分布</a>
+    <a href="/statichtml/lotterytrend/fc3d/hwzs30.html" target="_blank">福彩3D和尾走势</a>
+    <a href="/statichtml/lotterytrend/fc3d/hzfb30.html" target="_blank">福彩3D和值分布</a>
+    <a href="/statichtml/lotterytrend/fc3d/hztz30.html" target="_blank">福彩3D和值特征</a>
+    <a href="/statichtml/lotterytrend/fc3d/johm30.html" target="_blank">福彩3D奇偶号码分布</a>
+    <a href="/statichtml/lotterytrend/fc3d/joxt30.html" target="_blank">福彩3D奇偶形态分布</a>
+    <a href="/statichtml/lotterytrend/fc3d/kuadu30.html" target="_blank">福彩3D总跨度</a>
+    <a href="/statichtml/lotterytrend/fc3d/kuadu1230.html" target="_blank">福彩3D百十跨度</a>
+    <a href="/statichtml/lotterytrend/fc3d/kuadu1330.html" target="_blank">福彩3D百个跨度</a>
+    <a href="/statichtml/lotterytrend/fc3d/kuadu2330.html" target="_blank">福彩3D十个跨度</a>
+    <a href="/statichtml/lotterytrend/fc3d/zhhm30.html" target="_blank">福彩3D质合号码分布</a>
+    <a href="/statichtml/lotterytrend/fc3d/zhxt30.html" target="_blank">福彩3D质合形态分布</a>
+    <a href="/statichtml/lotterytrend/fc3d/zuxzs30.html" target="_blank">福彩3D组选走势</a>
+                break;
+            case "pl3":
+    <a href="/statichtml/lotterytrend/pl3/jbzs30.html" target="_blank">排列三基本走势</a>
+    <a href="/statichtml/lotterytrend/pl3/jo30.html" target="_blank">排列三奇偶走势</a>
+    <a href="/statichtml/lotterytrend/pl3/chu3130.html" target="_blank">排列三除3一走势</a>
+    <a href="/statichtml/lotterytrend/pl3/chu3230.html" target="_blank">排列三除3二走势</a>
+    <a href="/statichtml/lotterytrend/pl3/chu3330.html" target="_blank">排列三除3三走势</a>
+    <a href="/statichtml/lotterytrend/pl3/dx30.html" target="_blank">排列三大小走势</a>
+    <a href="/statichtml/lotterytrend/pl3/dxhm30.html" target="_blank">排列三大小号码走势</a>
+    <a href="/statichtml/lotterytrend/pl3/hezhi30.html" target="_blank">排列三和值走势</a>
+    <a href="/statichtml/lotterytrend/pl3/hzhw30.html" target="_blank">排列三和尾走势</a>
+    <a href="/statichtml/lotterytrend/pl3/hztz30.html" target="_blank">排列三和值特征走势</a>
+    <a href="/statichtml/lotterytrend/pl3/johm30.html" target="_blank">排列三奇偶号码走势</a>
+    <a href="/statichtml/lotterytrend/pl3/kdbg30.html" target="_blank">排列三跨度百个走势</a>
+    <a href="/statichtml/lotterytrend/pl3/kdbs30.html" target="_blank">排列三跨度百十走势</a>
+    <a href="/statichtml/lotterytrend/pl3/kdsg30.html" target="_blank">排列三跨度十个走势</a>
+    <a href="/statichtml/lotterytrend/pl3/zhhm30.html" target="_blank">排列三质和号码走势</a>
+    <a href="/statichtml/lotterytrend/pl3/zhihe30.html" target="_blank">排列三质和走势</a>
+    <a href="/statichtml/lotterytrend/pl3/zxzs30.html" target="_blank">排列三组选走势</a>
+                break;
+            case "cqssc":
+    <a href="/statichtml/lotterytrend/cqssc/s3zxzs30.html" target="_blank">重庆时时彩三星直选走势</a>
+    <a href="/statichtml/lotterytrend/cqssc/dxds30.html" target="_blank">重庆时时彩大小单双</a>
+    <a href="/statichtml/lotterytrend/cqssc/s1zs30.html" target="_blank">重庆时时彩一星走势</a>
+    <a href="/statichtml/lotterytrend/cqssc/s2hzzs30.html" target="_blank">重庆时时彩二星和值走势</a>
+    <a href="/statichtml/lotterytrend/cqssc/s2zuxzs30.html" target="_blank">重庆时时彩二星组选走势</a>
+    <a href="/statichtml/lotterytrend/cqssc/s2zxzs30.html" target="_blank">重庆时时彩二星直选走势</a>
+    <a href="/statichtml/lotterytrend/cqssc/s3c3ys30.html" target="_blank">重庆时时彩三星除3余数</a>
+    <a href="/statichtml/lotterytrend/cqssc/s3dxzs30.html" target="_blank">重庆时时彩三星大小走势</a>
+    <a href="/statichtml/lotterytrend/cqssc/s3hzzs30.html" target="_blank">重庆时时彩三星和值走势</a>
+    <a href="/statichtml/lotterytrend/cqssc/s3jozs30.html" target="_blank">重庆时时彩三星奇偶走势</a>
+    <a href="/statichtml/lotterytrend/cqssc/s3kd30.html" target="_blank">重庆时时彩三星跨度走势</a>
+    <a href="/statichtml/lotterytrend/cqssc/s3zhzs30.html" target="_blank">重庆时时彩三星质合走势</a>
+    <a href="/statichtml/lotterytrend/cqssc/s3zuxzs30.html" target="_blank">重庆时时彩三星组选走势</a>
+    <a href="/statichtml/lotterytrend/cqssc/s5hzzs30.html" target="_blank">重庆时时彩五星和值走势</a>
+    <a href="/statichtml/lotterytrend/cqssc/s5jbzs30.html" target="_blank">重庆时时彩五星基本走势</a>
+                break;
+            case "jx11x5":
+    <a href="/statichtml/lotterytrend/jx11x5/rxjbzs30.html" target="_blank">江西十一选五任选基本走势</a>
+    <a href="/statichtml/lotterytrend/jx11x5/q2hz30.html" target="_blank">江西十一选五前2和值走势</a>
+    <a href="/statichtml/lotterytrend/jx11x5/q2zux30.html" target="_blank">江西十一选五前2组选走势</a>
+    <a href="/statichtml/lotterytrend/jx11x5/q2zx30.html" target="_blank">江西十一选五前2直选走势</a>
+    <a href="/statichtml/lotterytrend/jx11x5/q3chu330.html" target="_blank">江西十一选五前3除3走势</a>
+    <a href="/statichtml/lotterytrend/jx11x5/q3dx30.html" target="_blank">江西十一选五前3大小走势</a>
+    <a href="/statichtml/lotterytrend/jx11x5/q3hz30.html" target="_blank">江西十一选五前3和值走势</a>
+    <a href="/statichtml/lotterytrend/jx11x5/q3jo30.html" target="_blank">江西十一选五前3奇偶走势</a>
+    <a href="/statichtml/lotterytrend/jx11x5/q3zh30.html" target="_blank">江西十一选五前3质和走势</a>
+    <a href="/statichtml/lotterytrend/jx11x5/q3zx30.html" target="_blank">江西十一选五前3直选走势</a>
+    <a href="/statichtml/lotterytrend/jx11x5/q3zux30.html" target="_blank">江西十一选五前3组选走势</a>
+    <a href="/statichtml/lotterytrend/jx11x5/rx130.html" target="_blank">江西十一选五任选1走势</a>
+    <a href="/statichtml/lotterytrend/jx11x5/rx230.html" target="_blank">江西十一选五任选2走势</a>
+    <a href="/statichtml/lotterytrend/jx11x5/rx330.html" target="_blank">江西十一选五任选3走势</a>
+    <a href="/statichtml/lotterytrend/jx11x5/rx430.html" target="_blank">江西十一选五任选4走势</a>
+    <a href="/statichtml/lotterytrend/jx11x5/rx530.html" target="_blank">江西十一选五任选5走势</a>
+    <a href="/statichtml/lotterytrend/jx11x5/rxchu330.html" target="_blank">江西十一选五任选除3走势</a>
+    <a href="/statichtml/lotterytrend/jx11x5/rxdx30.html" target="_blank">江西十一选五任选大小走势</a>
+    <a href="/statichtml/lotterytrend/jx11x5/rxjo30.html" target="_blank">江西十一选五任选奇偶走势</a>
+    <a href="/statichtml/lotterytrend/jx11x5/rxzh30.html" target="_blank">江西十一选五任选质和走势</a>
+    <a href="/statichtml/lotterytrend/jx11x5/rxhz30.html" target="_blank">江西十一选五任选和值走势</a>
+                break;
+
+            case "sd11x5":
+    <a href="/statichtml/lotterytrend/sd11x5/jbzs30.html" target="_blank">山东十一选五基本走势</a>
+    <a href="/statichtml/lotterytrend/sd11x5/hzzs30.html" target="_blank">山东十一选五和值走势</a>
+    <a href="/statichtml/lotterytrend/sd11x5/kdzs30.html" target="_blank">山东十一选五跨度走势</a>
+    <a href="/statichtml/lotterytrend/sd11x5/lzzs30.html" target="_blank">山东十一选五012路比走势</a>
+    <a href="/statichtml/lotterytrend/sd11x5/q1jbzs30.html" target="_blank">山东十一选五前一基本走势</a>
+    <a href="/statichtml/lotterytrend/sd11x5/q2jbzs30.html" target="_blank">山东十一选五前二基本走势</a>
+    <a href="/statichtml/lotterytrend/sd11x5/q3jbzs30.html" target="_blank">山东十一选五前三基本走势</a>
+    <a href="/statichtml/lotterytrend/sd11x5/xtzs30.html" target="_blank">山东十一选五形态走势</a>
+                break;
+            case "gd11x5":
+    <a href="/statichtml/lotterytrend/gd11x5/jbzs30.html" target="_blank">广东十一选五基本走势</a>
+    <a href="/statichtml/lotterytrend/gd11x5/hzzs30.html" target="_blank">广东十一选五和值走势</a>
+    <a href="/statichtml/lotterytrend/gd11x5/kdzs30.html" target="_blank">广东十一选五跨度走势</a>
+    <a href="/statichtml/lotterytrend/gd11x5/lzzs30.html" target="_blank">广东十一选五012路比走势</a>
+    <a href="/statichtml/lotterytrend/gd11x5/q1jbzs30.html" target="_blank">广东十一选五前一基本走势</a>
+    <a href="/statichtml/lotterytrend/gd11x5/q2jbzs30.html" target="_blank">广东十一选五前二基本走势</a>
+    <a href="/statichtml/lotterytrend/gd11x5/q3jbzs30.html" target="_blank">广东十一选五前三基本走势</a>
+    <a href="/statichtml/lotterytrend/gd11x5/xtzs30.html" target="_blank">广东十一选五形态走势</a>
+                break;
+            case "gdklsf":
+    <a href="/statichtml/lotterytrend/gdklsf/jbzs30.html" target="_blank">广东快乐十分基本走势</a>
+    <a href="/statichtml/lotterytrend/gdklsf/dw130.html" target="_blank">广东快乐十分定位一走势</a>
+    <a href="/statichtml/lotterytrend/gdklsf/dw230.html" target="_blank">广东快乐十分定位二走势</a>
+    <a href="/statichtml/lotterytrend/gdklsf/dw330.html" target="_blank">广东快乐十分定位三走势</a>
+    <a href="/statichtml/lotterytrend/gdklsf/dx30.html" target="_blank">广东快乐十分大小走势</a>
+    <a href="/statichtml/lotterytrend/gdklsf/jo30.html" target="_blank">广东快乐十分奇偶走势</a>
+    <a href="/statichtml/lotterytrend/gdklsf/zh30.html" target="_blank">广东快乐十分质合走势</a>
+                break;
+            case "jsks":
+    <a href="/statichtml/lotterytrend/jsks/jbzs30.html" target="_blank" style=" width:200px;">江苏快三基本走势</a>
+    <a href="/statichtml/lotterytrend/jsks/hz30.html" target="_blank" style=" width:200px;">江苏快三和值走势</a>
+    <a href="/statichtml/lotterytrend/jsks/xt30.html" target="_blank" style=" width:200px;">江苏快三形态走势</a>
+    <a href="/statichtml/lotterytrend/jsks/zh30.html" target="_blank" style=" width:200px;">江苏快三组合走势</a>
+    <a href="/statichtml/lotterytrend/jsks/zhzs30.html" target="_blank" style=" width:200px;">江苏快三综合走势</a>
+                break;
+                case "sdklpk3":
+    <a href="/statichtml/lotterytrend/sdklpk3/jbzs30.html" target="_blank">山东快乐扑克3基本走势</a>
+    <a href="/statichtml/lotterytrend/sdklpk3/zhxzs30.html" target="_blank">山东快乐扑克3组选走势</a>
+    <a href="/statichtml/lotterytrend/sdklpk3/hszs30.html" target="_blank">山东快乐扑克3花色走势</a>
+    <a href="/statichtml/lotterytrend/sdklpk3/dxzs30.html" target="_blank">山东快乐扑克3大小走势</a>
+    <a href="/statichtml/lotterytrend/sdklpk3/jozs30.html" target="_blank">山东快乐扑克3奇偶走势</a>
+    <a href="/statichtml/lotterytrend/sdklpk3/zhzs30.html" target="_blank">山东快乐扑克3质合走势</a>
+    <a href="/statichtml/lotterytrend/sdklpk3/c3yzs30.html" target="_blank">山东快乐扑克3除3余走势</a>
+    <a href="/statichtml/lotterytrend/sdklpk3/hzzs30.html" target="_blank">山东快乐扑克3和值走势</a>
+    <a href="/statichtml/lotterytrend/sdklpk3/lxzs30.html" target="_blank">山东快乐扑克3类型走势</a>
+
+                break;
+        }
+}

@@ -1,0 +1,921 @@
+﻿@{
+    ViewBag.Title = "账户充值";
+    var currentUser = ViewBag.CurrentUser as app.lottery.site.Models.CurrentUserInfo;
+    var alipayuser = SiteString.GetAliPayAccount();
+    var gateWayArray = ((string)ViewBag.EnableGateWary).Split('|');
+    var realNameInfo = ViewBag.RealNameInfo == null ? new External.Core.Authentication.UserRealNameInfo() : ViewBag.RealNameInfo as External.Core.Authentication.UserRealNameInfo;
+    var bankCardInfo = ViewBag.BankCardInfo == null ? new GameBiz.Core.BankCardInfo() : ViewBag.BankCardInfo as GameBiz.Core.BankCardInfo;
+    var mobileInfo = ViewBag.MobileInfo == null ? new External.Core.Authentication.UserMobileInfo() : ViewBag.MobileInfo as External.Core.Authentication.UserMobileInfo;
+    var IsAuthenticationRealName = currentUser.IsAuthenticationRealName ? "true" : "false";
+}
+@section css{
+    @ViewHelpers.csscdn("mycenter.css", "20180328")
+    @UserHelper.csscdn("user.css", "20180328")
+}
+@section js{
+    @UserHelper.js_share("noreferrer.yui.js")
+    @UserHelper.jscdn("paydata.js","20180328")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>账户充值</li>
+    </ul>
+</div>
+<div class="center mt10">
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        @{Html.RenderPartial("box_confirm_wxpay");}
+        <div class="mune_safe">
+            <div class="account_menu clearfix">
+                <a href="/member/accountdetail">账户明细</a> <a href="/member/redBagList">红包明细</a> <a
+                    href="/member/paywizzard" class="select">账户充值</a> <a href="/member/drawingsguide">账户提款</a>
+            </div>
+            <div class="account_con">
+                <div class="betorder_top">
+                    <ul>
+                        <li><a href="paywizzard"><i></i>充值向导</a> </li>
+                        <li class="betorder_topSelected"><a href="pay"><i></i>账户充值</a> </li>
+                        <li class=""><a href="payrecord"><i></i>充值记录</a></li>
+                        <li class="pay_alert"><span class="alert1"></span>账户充值金额提现收取10%手续费</li>
+                    </ul>
+                </div>
+                <script type="text/javascript">
+                    $(function () {
+                        $(".betorder_topSelected").click(function () {
+                            $(".pay_alert").display();
+                        })
+                    })
+                </script>
+                <div class="pay_type">
+                    <ul id="btn_pay_type">
+                 @{
+                     foreach (var geteway in gateWayArray)
+                     {
+                         <li><a href="javascript:void 0;" data-v="@geteway.Split('=')[0]">@geteway.Split('=')[1]</a></li>
+                     }
+                     }
+                    </ul>
+                </div>
+                <input type="hidden" value="@ViewBag.MaxFillMoney" id="hd_maxFillMoney" />
+            
+  
+                    <div class="payDiv" id="payDiv">
+                    <form id="form_pay" target="_blank" method="post">
+                        <div class="clear" id="input_amount_div">
+                            <span class="span_money">请输入充值金额：</span>
+                            <input type="text" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')"
+                                onblur="if(this.value==''||parseInt(this.value)==0||parseInt(this.value)<10){this.value=10;}"
+                                class="fillmoney" size="15" value="100" name="money" id="money" />
+                            元 &nbsp;&nbsp; &nbsp;<em class="ye" id="ye"></em>
+                        </div>
+                        <div id="amount_list" style="display:none;">
+                            <span class="pay_list_left">请选择金额：</span>
+                            <div class="clearfix">
+                                <ul class="pay_list clearfix" id="ul_amount_list">
+
+                                </ul>
+                            </div>
+                        </div>
+                        <div id="bank_list" style="display: none;">
+                            <span class="pay_list_left">请选择银行：</span>
+                            <div class="clearfix">
+                                <ul class="pay_list clearfix" id="ul_bank_list">
+                                </ul>
+                            </div>
+                        </div>
+                        <div style="padding-left: 100px; margin-top: 20px;">
+                        <input type="hidden" id="payType" name="payType" value="" />
+                         <input type="hidden" name="no" value="@bankCardInfo.BankCardNumber" />
+                        <input type="hidden" id="fromDomain" name="fromDomain" value="@ViewBag.CurrentDomain"/>
+                        <input type="hidden" id="userId" name="userId" value="@currentUser.LoginInfo.UserId" />
+                            <div id="xianzhi">
+                                <input type="button" id="btn_pay" value="立即充值" class="btn_pay" onclick="doPay_Sumbit();" />
+                            </div>
+                            <div>
+                            </div>
+                        </div>
+                        <div id="tip" style="padding-left: 100px; margin-top: 20px; display: none;">
+                            <a href="" style="color: Red; text-decoration: underline;" target="_blank"></a>
+                        </div>
+                    </form>
+                </div>
+               @*人工充值*@
+                <div class="payDiv" id="p_rgcz" style="display: none;">
+                   <div style="line-height:22px">
+                    <span style="font-weight: bold;">人工大额充值使用说明</span><br />
+            	    <span>第一步：添加官方充值专用QQ5401694为好友；</span><br />
+                    <span>第二步：联系客服输入充值金额（需单笔充值金额1000元含及以上）与想要充值的渠道（目前只支持银行卡转账或支付宝转账）；</span><br />
+                    <span>第三步：进行转账，并备注大奖网用户名；</span><br />
+                    <span>第四步：等待5-10分钟内到账；</span><br />
+                    <em style="color: Red; text-decoration: underline;font-size: large;">*如一直未到账，请联系充值专用qq号提供充值时间，充值金额，备注用户名复查</em>
+                   </div>
+                </div>
+
+      
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+<div style="display: none;" id="box_user_info">
+    <div style="width: 605px; height: auto; padding: 0px; left: 488px; top: 13px;" id="box_user_info_div"
+        class="box">
+        <form onsubmit="return false" autocomplete="off" id="form_for_user" method="post">
+        <h3>
+            <a class="fr" onclick="hideBox()" href="javascript:void 0;">关闭</a>温馨提示：</h3>
+        <div class="margincont">
+            <div style="height: 35px; border-radius: 6px;" class="tz" id="insertHtml">
+                <p style="height: 30px; line-height: 30px; text-align: center">
+                    @currentUser.LoginInfo.DisplayName：您好,本站完善资料即可参加充值送彩金活动.<a href="/activity/register"
+                        style="color: #3C0EFF;" target="_blank"> 活动详情 </a>
+                </p>
+            </div>
+            <dl>
+                <dt>真实姓名：</dt>
+                @if (currentUser != null && currentUser.IsAuthenticationRealName == true)
+                {
+                    <dd>
+                        <label>
+                            @SiteString.AllHideUser(currentUser.RealNameInfo.RealName)
+                            <input type="hidden" value="@currentUser.RealNameInfo.RealName" id="realName" name="infoForm.realName">
+                        </label>
+                    </dd>
+                }
+                else
+                {
+                    <dd>
+                        <label>
+                            <input type="text" onblur="checkRealNameId('form_for_user')" class="text_input2"
+                                size="11" id="realName" name="infoForm.realName">
+                            <span class="com_tip onShow">领奖和提款的凭证，提交后不能修改</span>
+                        </label>
+                    </dd>
+                }
+                <dt>身份证号：</dt>
+                @if (currentUser != null && currentUser.IsAuthenticationRealName == true)
+                {
+                    <dd>
+                        <label>
+                            @SiteString.EncodeIdCardNumber(currentUser.RealNameInfo.IdCardNumber)
+                            <input type="hidden" value="@currentUser.RealNameInfo.IdCardNumber" id="idCard" name="infoForm.idCard">
+                        </label>
+                    </dd>
+                }
+                else
+                {
+                    <dd>
+                        <label>
+                            <input type="text" onblur="checkRealNameId('form_for_user')" class="text_input2"
+                                size="18" id="idCard" name="infoForm.idCard">
+                            <span class="com_tip onShow">领奖和提款的凭证，需与真实姓名一致</span>
+                        </label>
+                    </dd>
+                }
+                <dt>手机号码：</dt>
+                @if (currentUser.IsAuthenticationMobile == true)
+                {
+                    <dd>
+                        <label>
+                            @SiteString.EncodeMobile(currentUser.MobileInfo.Mobile)
+                        </label>
+                        <input type="hidden" value="@currentUser.MobileInfo.Mobile" id="phoneNumber" name="phoneNumber">
+                    </dd>
+                }
+                else
+                {
+                    <dd>
+                        <label>
+                            <input type="text" onblur="checkMobileNum('phoneNumber')" onkeyup="return isMobileBinded('phoneNumber','getMessage');"
+                                onpaste="return false;" class="text_input2" size="13" id="phoneNumber" name="phoneNumber">
+                            <span class="com_tip onShow">用于找回密码、修改信息</span>
+                        </label>
+                    </dd>
+                    <dt>获取验证：</dt>
+                    <dd>
+                        <div style="width: 380px; margin-top: 0" class="code_sender">
+                            <label>
+                                <input type="text" class="text_input2" id="codeNumber" name="codeNumber" style="width: 50px;" />
+                                <input type="button" class="getBtn" onclick="getTelRall(this, 'phoneNumber')" value="免费获取"
+                                    id="answer2" name="answer2">
+                            </label>
+                        </div>
+                    </dd>
+                }
+            </dl>
+            <div class="cont_center layerbtns">
+                <label>
+                    <input type="button" value="确 定" title="确定" class="layer_a" id="submit_btn"></label>
+                <label>
+                    <input type="button" onclick="hideBox()" value="取 消" title="取消" class="layer_b"></label>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+<a id="sendalipayurl" rel="noreferrer"></a>
+<script type="text/javascript">
+    var pay_json_data = paydata.data;
+    $(function () {
+        var first_a = $("#btn_pay_type li:eq(0) a");
+        first_a.addClass("selected");
+        //first_a.click();
+        var t = first_a.attr("data-v");
+        initPayForm(t);
+        apliyxianzhi(t);
+
+        $("#btn_pay_type a").click(function () {
+            if ($(this).hasClass("selected")) {
+                return;
+            }
+            $(this).addClass("selected").parent().siblings().children().removeClass("selected");
+            var type = $(this).attr("data-v");
+            initPayForm(type);
+            apliyxianzhi(type);
+
+        });
+
+
+        function apliyxianzhi(type) {
+            if (type == "slf_express") {
+                $("#xianzhi").html("<input type='button' id='btn_pay' value='立即充值' class='btn_pay' onclick='slf_express_Sumbit();' />");
+            } else if (type == "slf_weixin") {
+                $("#xianzhi").html("<input type='button' id='btn_pay' value='立即充值' class='btn_pay' onclick='doPayweixin_Sumbit();' />");
+            }
+            else if (type == "txf_qq" || type == "slf_qq") {
+                $("#xianzhi").html("<input type='button' id='btn_pay' value='立即充值' class='btn_pay' onclick='doPayqq_Sumbit();' />");
+            }
+            else {
+                $("#xianzhi").html("<input type='button' id='btn_pay' value='立即充值' class='btn_pay' onclick='doPay_Sumbit();' />");
+            }
+        }
+
+
+        $(".fillmoney").change(function () {
+            var maxMoney = parseInt($("#hd_maxFillMoney").val(), 10);
+            if (!$(this).val() || !parseInt($(this).val(), 10)) {
+                $(this).val(10);
+                return;
+            }
+            if (parseInt($(this).val(), 10) > maxMoney) {
+                $(this).val(maxMoney);
+                return;
+            }
+        })
+        $("#bt_alipay_pay").click(function () {
+            alert("为了即时到账，支付宝充值请备注大奖网登录名");
+            document.charset = 'gbk';
+            window.open("/staticHtml/help/chongzhi/AlipayPay.html")
+            return false;
+        })
+
+        $("#bt_wxpay_pay").click(function () {
+            //confirmTip("测试");
+            var money = $("#wxpay_pay_money").val();
+            var url = "/Member/GetWXPayOrder?requestMoney=" + money + "&r=" + Math.random();
+            $.getJSON(url, function (json) {
+                //                console.warn(json)
+                if (!json.IsSuccess) {
+                    alert(json.Message);
+                    return;
+                }
+                //生成订单号成功
+                var orderId = json.Message;
+                var wxPayUrl = "/member/LoadQRCode?requestMoney=" + money + "&orderId=" + orderId + "&r=" + Math.random();
+                confirmTipWXPay(wxPayUrl, orderId, money);
+            });
+        })
+    });
+
+    function initPayForm(id) {
+        //        if (id.toLowerCase() == "alipay") {
+        //            $("#p_alipay").show(); $("#payDiv,#p_rgcz").hide();
+        //            return;
+        //        }
+        if (id.toLowerCase() == "rgcz") {
+            $("#p_rgcz").show(); $("#payDiv").hide();
+            return;
+        }
+        $.each(pay_json_data, function (index, value) {
+            $("#p_rgcz").hide(); $("#payDiv").show();
+            if (value.id.toLowerCase() == id.toLowerCase()) {
+                //info
+                var url = value.url;
+                $("#form_pay").attr("action", url);
+
+                $("#ye").text(value.ye);
+                $("#payType").val(value.type);
+
+                if (value.amounts && value.amounts.length) {
+                    var htmls = [];
+                    $.each(value.amounts, function (i, a) {
+                        htmls.push("<li>",
+                                   "<a href='javascript:;' class='icon-box' onclick='selectAmount(this);' style='display:block;color:#ff3d00;font-size:20px;font-weight:bold;text-align:center;line-height:36px;' data-amount='" + a + "'>",
+                                   a.toFixed(0), "元",
+                                   "</a>",
+                                   "</li>")
+                    });
+                    $("#ul_amount_list").html(htmls.join(""));
+                    $("#amount_list").show();
+                    $("#input_amount_div").hide().find("#money").val("0");
+                } else {
+                    $("#money").val("100");
+                    $("#ul_amount_list").empty();
+                    $("#amount_list").hide();
+                    $("#input_amount_div").show();
+                }
+
+                //banklist
+                if (value.banklist) {
+                    $("#bank_list").show(); $("#ul_bank_list").empty();
+                    $.each(value.banklist, function (n, v) {
+                        var class_on = "";
+                        var checked = "";
+                        var li = "<li><span title='" + v.name + "'>";
+                        if (n == 0) {
+                            class_on = "icon-box-on", checked = "checked";
+                        }
+                        var id = "bank_type_" + v.val;
+                        li += "<label class='icon-box " + class_on + "' for='" + id + "'><input type='radio' " + (checked != "" ? "checked = 'checked'" : "") + " id='" + id + "' class='rdo3' value='" + v.val + "' name='payList'>";
+
+                        //others
+                        if (v.ab.indexOf("others") == -1) {
+                            li += "<span class='bank-icon" + v.ab + "'><i></i></span></label></span></li>";
+                        }
+                        else {
+                            li += "<span style='margin-top: 8px; float: left; font-size: 14px; font-weight: bold;'>&nbsp;&nbsp;更 多 银 行</span></label></span></li>";
+                        }
+
+                        $("#ul_bank_list").append(li);
+                    })
+                    //click event
+                    $("#ul_bank_list").delegate("input", "click", function () {
+                        $("#payType").val($(this).val());
+                        $(".icon-box-on").removeClass("icon-box-on");
+                        $(this).parent().addClass("icon-box-on");
+                    });
+                }
+                else {
+                    $("#bank_list").hide();
+                    $("#ul_bank_list").empty();
+                }
+
+                //help
+                if (value.tipurl && value.tipmsg) {
+                    $("#tip").show().children("a").attr("href", value.tipurl).html(value.tipmsg);
+                }
+                else {
+                    $("#tip").hide();
+                }
+
+                return false;
+            }
+        });
+
+    }
+
+    function doPay_Sumbit() {
+        var value = $("#money").val();
+        if (value < 10 || value > 10000) {
+            alertTip("金额必须大于10元，小于10000元！");
+            return;
+        }
+        else {
+            document.getElementById("form_pay").submit();
+            //$("#form_pay").attr("action", "");
+        }
+    }
+    function doPayxian_Sumbit() {
+        var value = $("#money").val();
+        document.getElementById("form_pay").submit();
+
+    }
+
+    function doPayweixin_Sumbit() {
+        var value = $("#money").val();
+        if (value < 10 || value > 200) {
+            alertTip("金额必须大于10元，小于200元！");
+            return;
+        }
+        else {
+            document.getElementById("form_pay").submit();
+            //$("#form_pay").attr("action", "");
+        }
+    }
+
+    function doPayqq_Sumbit() {
+        var value = $("#money").val();
+        if (value < 10 || value > 1000) {
+            alertTip("金额必须大于10元，小于1000元！");
+            return;
+        }
+        else {
+            document.getElementById("form_pay").submit();
+            //$("#form_pay").attr("action", "");
+        }
+    }
+    function selectAmount(t) {
+        $(t).addClass("icon-box-on").parent().siblings("li").find("a").removeClass("icon-box-on");
+        $("#money").val($(t).attr("data-amount"));
+    }
+          
+</script>
+
+<script type="text/javascript">
+    function slf_express_Sumbit() {
+        var value = $("#money").val();
+        var IsAuthenticationRealName = '@IsAuthenticationRealName';
+        if (IsAuthenticationRealName == "false") {
+            alert("未实名认证，请先实名认证！");
+            return;
+        }
+        if (value < 100 || value > 5000) {
+            alert("金额必须大于等于100元，小于5000元！");
+            return;
+        }
+        else {
+            $("#form_pay").attr("action", '@(bankCardInfo.BankCardNumber == null ? "/member/safe" : ViewBag.ZTPay_Url + "/user/redirectpay")');
+            document.getElementById("form_pay").submit();
+        }
+    }
+    var pay = {
+
+        moneyFormat: function (obj) {
+            if ($(obj).val() == "" || parseInt($(obj).val()) == 0)
+                $("#pay_txt_money").val(10);
+            else
+                $("#pay_txt_money").val($(obj).val().toNumber(10, 999999));
+        },
+        init: function () {
+            var type = $("#btn_pay_type  a.selected ").attr("data-v");
+            $("#" + type).show().siblings().hide();
+            $("#" + type + " :radio[name='payList']:eq(0)").click();
+        },
+        alipayurl: function (payAmount, orderId) {
+            var url = $.format("https://shenghuo.alipay.com/send/payment/fill.htm?optEmail={0}&payAmount={1}&title={2}", encodeURI("@alipayuser"), payAmount, orderId);
+            return url;
+        }
+    };
+
+    $(function () {
+        pay.init();
+        var IsIE = false;
+        if ((navigator.userAgent.indexOf('MSIE') >= 0) && (navigator.userAgent.indexOf('Opera') < 0)) {
+            IsIE = true;
+        }
+        $("#btn_pay").click(function () {
+            var curpaytype = $("#btn_pay_type  a.selected ").attr("data-v");
+            var money = $("#pay_txt_money").val();
+            if (curpaytype == "alipy") {
+                $("#btn_pay").removeAttr("href");
+                $("#btn_pay").removeAttr("target");
+                $.post("/member/redireAlipayUrl", { payType: "alipay|alipay", money: money }, function (result) {
+
+                    if (result.IsSucess) {
+
+                        var payurl = pay.alipayurl(result.PayMoney, result.OrderId);
+                        $("#sendalipayurl").attr("href", payurl);
+                        $("#sendalipayurl").attr("data-setnoreferrer", payurl);
+
+                        //ie浏览器
+                        if (IsIE) {
+                            $("#sendalipayurl").attr("target", "blank");
+                        } else {
+                            $("#sendalipayurl").removeAttr("target");
+                        }
+
+                        var timer = setInterval(function () {
+                            $.noreferrerReg();
+                            document.getElementById("sendalipayurl").click();
+                            clearInterval(timer);
+                        }, 500);
+                    } else {
+                        return alertTip(result.Message, "err");
+                    }
+
+                });
+            } else {
+                var radio = $(":radio[name='payList']:checked").val();
+                //var payMoney = $("#pay_txt_money").val();
+                var payUrl = "/member/redirectpay?money=" + money + "&payType=" + radio;
+                $("#btn_pay").attr("target", "_blank");
+                $("#btn_pay").attr("href", payUrl);
+            }
+
+        });
+    });
+</script>
+<script type="text/javascript">
+    //停售通知
+    $(".btn_pay_disabled").click(function () {
+        alertTip("暂不能充值", "err");
+    });
+    var Shader = function () {
+        var shade;
+        function _getShade() {
+            var div = document.createElement("div");
+            div.className = "dialogLayout";
+            div.style.zIndex = '1000';
+            div.id = "msg_shade_single";
+            return div;
+        }
+        function _show() {
+            if (shade === undefined) {
+                shade = _getShade();
+                document.body.appendChild(shade);
+            }
+        }
+        function _hide() {
+            if (shade) {
+                shade.parentNode.removeChild(shade);
+                shade = undefined;
+            }
+        }
+        function _adjustPostion(elem) {
+            if (elem && elem.nodeType && elem.nodeType === 1) {
+                var left = parseInt((document.documentElement.clientWidth - elem.offsetWidth) / 2);
+                var top = parseInt((document.documentElement.clientHeight - elem.offsetHeight) / 2);
+                elem.style.left = left + "px";
+                elem.style.top = top + "px";
+            }
+        }
+        return {
+            show: _show,
+            hide: _hide,
+            adjustPostion: _adjustPostion
+        }
+    } ();
+    function hideBox() {
+        $('#box_user_info').hide();
+        Shader.hide();
+    }
+
+    function checkRealNameId(fid) {
+        var name = $("#realName"), idCard = $("#idCard");
+        //$('#'+fid+' input').next('span.com_tip').remove();
+        name.next('.com_tip').remove();
+        //idCard.next('.com_tip').remove();
+        if (name.val() == "") {
+            name.focus().after('<span class="com_tip onShow">领奖和提款的凭证，提交后不能修改</span>');
+            return false;
+        }
+        if (!/^[\u4E00-\u9FA5·a-zA-Z]+$/.test(name.val().trim())) {
+            name.after('<span class="com_tip onShow">请输入汉字、字母或间隔符</span>');
+            return false;
+        }
+        idCard.next('.com_tip').remove();
+        if (idCard.val().trim() == "") {
+            idCard.after('<span class="com_tip onShow">领奖和提款的凭证，需与真实姓名一致</span>');
+            return false;
+        }
+        if (!/^(\d{14}|\d{17})(\d|[xX])$/.test(idCard.val())) {
+            idCard.after('<span class="com_tip onError">身份证号格式输入有误</span>');
+            return false;
+        }
+        var error = isIdCardNo && isIdCardNo(idCard.val());
+        if (error) {
+            idCard.after('<span class="com_tip onError">' + error + '</span>');
+            return false;
+        }
+        return true;
+    }
+    function checkMobileNum(mid) {
+        var mobile = $('#' + mid), val = mobile.val();
+        var tip = mobile.next('span.com_tip');
+        if (!tip[0]) tip = $('<span class="com_tip"></span>').insertAfter(mobile);
+        if (val == "") {
+            tip.addClass('onShow').html('用于找回密码、修改信息');
+            return false;
+        } else if (!/^\d{11}$/.test(val)) {
+            tip.addClass('onError').html('手机号码输入有误');
+            return false;
+        }
+        //tip.attr('class', 'com_tip onCorrect').html('&nbsp;');
+        return true;
+    }
+    function isMobileBinded(mid, gid) {
+        var t = $("#" + mid), g = $("#" + gid), number = t.val().trim();
+        t.next('.com_tip').remove();
+        if (number.length != 11) {
+            return false;
+        } else {
+            if (!checkMobileNum(mid)) return false;
+            t.next('.com_tip').addClass('onShow').html('正在检验手机号码是否被使用');
+            $.ajax({
+                type: 'POST',
+                url: '/user/isMobileBinded',
+                data: { mobile: number },
+                success: function (res) {
+                    if (res.code == true) {
+                        t.next('.com_tip').remove();
+                        t.after('<span class="com_tip onError">' + res.Msg + '</span>');
+                    } else {
+                        t.next('.com_tip').addClass('onCorrect').html('此手机号码可用');
+                    }
+                }
+            });
+            return false;
+        }
+    }
+    function checkPhoneRandom() {
+        var ran = $('#phoneRandomNum');
+        var getBtn = $('#getMessage');
+        var random = ran.val().trim();
+        getBtn.next('.com_tip').remove();
+        if (random == "" || random == null) {
+            getBtn.after('<span class="com_tip onShow">请输入短信验证码</span>');
+            return false;
+        }
+        return true;
+    }
+
+    var isSend = 0;
+    function senPhoneRandom(num, gid) {
+        if (isSend == 1) {
+            $.alert("刚下发短信，请耐心等待。");
+            return;
+        }
+        isSend = 1;
+        var input = $("#" + gid); //.hide();
+        input.removeClass('getBtn').addClass('getBtn_des').unbind();
+        $.ajax({
+            type: "POST",
+            url: '/user/getTelCode',
+            dataType: 'json',
+            data: { bindMobile: num },
+            success: function (msg) {
+                var content = $('#timer_content_user');
+                //content.html('<span id="timer_text">发送中</span>(<span id="timer">120</span>)秒');
+                input.val('倒计时(60)');
+                if (msg.msg == '下发成功' || msg.success) {
+                    //$("#timer_text").html('下发成功，倒计时');
+                    var timeCtr = setInterval(function () {
+                        var sec = +input.val().match(/\d+/)[0];
+                        if (sec > 0) {
+                            input.val('倒计时(' + (sec - 1) + ')');
+                        } else {
+                            clearInterval(timeCtr);
+                            input.val('获取短信');
+                            input.removeClass('getBtn_des').addClass('getBtn').click(function () { senPhoneRandom(num, gid) });
+                            isSend = 0;
+                            //input.show();
+                        }
+                    }, 1000);
+                } else {
+                    input.val('获取短信');
+                    input.removeClass('getBtn_des').addClass('getBtn').click(function () { senPhoneRandom(num, gid) });
+                    isSend = 0;
+                    //input.show();
+                    $.alert('下发失败，请重试');
+                }
+            }
+        });
+    }
+
+    function isIdCardNo(num) {
+        num = num.toUpperCase();
+        if (!(/(^\d{15}$)|(^\d{17}([0-9]|X)$)/.test(num))) {
+            return '输入的身份证号长度不对，或者不符合规定';
+            //'输入的身份证号长度不对，或者号码不符合规定！/n15位号码应全为数字，18位号码末位可以为数字或X。';
+        }
+        var len, re;
+        len = num.length;
+        if (len == 15) {
+            re = new RegExp(/^(\d{6})(\d{2})(\d{2})(\d{2})(\d{3})$/);
+            var arrSplit = num.match(re);
+            var dtmBirth = new Date('19' + arrSplit[2] + '/' + arrSplit[3] + '/' + arrSplit[4]);
+            var bGoodDay;
+            bGoodDay = (dtmBirth.getYear() == Number(arrSplit[2])) && ((dtmBirth.getMonth() + 1) == Number(arrSplit[3])) && (dtmBirth.getDate() == Number(arrSplit[4]));
+            if (!bGoodDay) {
+                return '输入的身份证号里出生日期不对！';
+            } else {
+                var arrInt = new Array(7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2);
+                var arrCh = new Array('1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2');
+                var nTemp = 0, i;
+                num = num.substr(0, 6) + '19' + num.substr(6, num.length - 6);
+                for (i = 0; i < 17; i++) {
+                    nTemp += num.substr(i, 1) * arrInt[i];
+                }
+                num += arrCh[nTemp % 11];
+            }
+        }
+        if (len == 18) {
+            re = new RegExp(/^(\d{6})(\d{4})(\d{2})(\d{2})(\d{3})([0-9]|X)$/);
+            var arrSplit = num.match(re);
+            var dtmBirth = new Date(arrSplit[2] + "/" + arrSplit[3] + "/" + arrSplit[4]);
+            var bGoodDay;
+            bGoodDay = (dtmBirth.getFullYear() == Number(arrSplit[2])) && ((dtmBirth.getMonth() + 1) == Number(arrSplit[3])) && (dtmBirth.getDate() == Number(arrSplit[4]));
+            if (!bGoodDay) {
+                return '输入的身份证号里出生日期不对！';
+            } else {
+                var valnum;
+                var arrInt = new Array(7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2);
+                var arrCh = new Array('1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2');
+                var nTemp = 0, i;
+                for (i = 0; i < 17; i++) {
+                    nTemp += num.substr(i, 1) * arrInt[i];
+                }
+                valnum = arrCh[nTemp % 11];
+                if (valnum != num.substr(17, 1)) {
+                    return '身份证号码输入有误';
+                }
+            }
+            //            判断年龄是否已满18周岁或者超过80周岁
+            var isLegal = filter18(num);
+            if (isLegal) {
+                return isLegal;
+            } else {
+                isLegal = filter80(num);
+                if (isLegal) return isLegal;
+            }
+        }
+        return false;
+    }
+    function filter18(num) {
+        var birthY = +num.slice(6, 10), birthM = +num.slice(10, 12), birthD = +num.slice(12, 14), today = new Date();
+        var thisY = today.getFullYear(), thisM = today.getMonth() + 1, thisD = today.getDate();
+        if (birthY + 18 > thisY) {
+            return '未满18周岁不能参与该活动';
+        } else if (birthY + 18 == thisY) {
+            if (birthM > thisM) {
+                return '未满18周岁不能参与该活动';
+            } else if (birthM == thisM) {
+                if (birthD > thisD) {
+                    return '未满18周岁不能参与该活动';
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+    function filter80(num) {
+        var birthY = +num.slice(6, 10), birthM = +num.slice(10, 12), birthD = +num.slice(12, 14), today = new Date();
+        var thisY = today.getFullYear(), thisM = today.getMonth() + 1, thisD = today.getDate();
+        if (birthY + 80 < thisY) {
+            return '超过80周岁不能参与该活动';
+        } else if (birthY + 80 == thisY) {
+            if (birthM < thisM) {
+                return '超过80周岁不能参与该活动';
+            } else if (birthM == thisM) {
+                if (birthD <= thisD) {
+                    return '超过80周岁不能参与该活动';
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+    function showUserInfoPanel(obj, index) {
+        $.ajax({
+            type: "post",
+            url: "/user/Info",
+            success: function (res) {
+                if (res.IsSuccess == true && res.isAuthentication == true && res.isAuthenticationMobile == true) {
+                    alertTip("您的信息已完善");
+                } else {
+                    $('#box_user_info').show();
+                    Shader.show();
+                    Shader.adjustPostion(document.getElementById('box_user_info_div'));
+                    if (index == 1) {
+                        var insertText = ' <p style="height: 30px; line-height: 30px; text-align: center">' + res.displayName + '：您好,本站完善资料即可参加充值送彩金活动.<a href="/activity/register" style="color:#3C0EFF;" target="_blank"> 活动详情 </a></p>';
+                        document.getElementById("insertHtml").innerHTML = insertText;
+                    } else {
+                        var insertText = ' <p style="height: 30px; line-height: 30px; text-align: center">' + res.displayName + '：您好,本站完善资料即可获赠<span class="red"> 3 </span>元彩金.</p>';
+                        document.getElementById("insertHtml").innerHTML = insertText;
+                    }
+                }
+            }
+        });
+    }
+
+    function checkRealNameId(fid) {
+        var name = $("#realName"), idCard = $("#idCard");
+        var name_tip = name.next('.com_tip');
+        if (!/^[\u4E00-\u9FA5·a-zA-Z]+$/.test(name.val())) {
+            name_tip.attr('class', 'com_tip onError').html('请输入汉字、字母或间隔符');
+            setTimeout(function () {
+                name_tip.attr('class', 'com_tip onShow').html('领奖和提款的凭证，提交后不能修改');
+            }, 2000);
+            return false;
+        } else {
+            name_tip.attr('class', 'com_tip onCorrect').html('输入的姓名正确。');
+        }
+        var id_tip = idCard.next('.com_tip'), id_error = '';
+        if (!/^(\d{14}|\d{17})(\d|[xX])$/.test(idCard.val())) {
+            id_error = '身份证号格式输入有误';
+        }
+        var error = isIdCardNo && isIdCardNo(idCard.val());
+        if (error) id_error = error;
+        if (id_error) {
+            id_tip.attr('class', 'com_tip onError').html(id_error);
+            setTimeout(function () {
+                id_tip.attr('class', 'com_tip onShow').html('领奖和提款的凭证，需与真实姓名一致');
+            }, 2000);
+            return false;
+        } else {
+            id_tip.attr('class', 'com_tip onCorrect').html('输入的身份证号码正确。');
+        }
+        return true;
+    }
+
+    function getTelRall(obj, phoneId) {
+        phoneId = phoneId || 'bindMobile';
+        var input = $(obj), form = input.closest('form'), inputP = input.parent();
+        var bindVal = $('#' + phoneId, form);
+        if (phoneId == 'phoneNumber') {
+            if (!checkRealNameId('form_for_user')) return false;
+        }
+        if (!checkMobileNum(phoneId)) {
+            bindVal.focus();
+            return false;
+        }
+
+        if (bindVal.next(".onError").length) return false;
+        if (!bindVal.next(".onCorrect").length) return false;
+        var mobile = bindVal.val(), tet = form.serialize(), surebtn = form.find('.layer_a:last').prev(':button');
+        if (phoneId == 'phoneNumber') tet = tet.replace(/phoneNumber/i, 'bindMobile');
+        $.post('/user/getTelCode', tet, function (msg) {
+            if (msg.code == true) {
+                time();
+            } else {
+                input.val('获取失败').attr('disabled', 0);
+            }
+        });
+    }
+
+    var wait = 60; //时间 
+    function time() {
+        var again = $("#answer2");
+        if (wait == 0) {
+            again.removeAttr("disabled");
+            again.removeClass("layer_b");
+            again.val("免费获取"); //改变按钮中value的值 
+            wait = 60;
+        } else {
+            again.addClass("layer_b");
+            again.attr("disabled", true); //倒计时过程中禁止点击按钮 
+            again.val(wait + "秒后重获"); //改变按钮中value的值 
+            wait--;
+            setTimeout(function () {
+                time(); //循环调用 
+            }, 1000);
+        }
+    }
+    //提交
+    $("#submit_btn").click(function () {
+        var bindVal = $("#phoneNumber"), codeNumer = $('#codeNumber').val(), realName = $("#realName").val(), idCard = $("#idCard").val();
+        if (!checkRealNameId('form_for_user')) return;
+        if (!checkMobileNum('phoneNumber')) return;
+        if (bindVal.next(".onError").length) return;
+        if (codeNumer == '') {
+            alertTip('请输入验证码！');
+            return;
+        }
+        //  $(this).val('正在验证').attr('disabled', 1);
+        $.post("/user/bindMobileOrRealname", { mobileCode: codeNumer, realName: realName, idCardNumber: idCard }, function (res) {
+            if (res.code == true) {
+                alertTip(res.Msg);
+                $("#boxAlertOkButton").click(function () {
+                    window.location.href = "/member/pay";
+                });
+            } else {
+                alertTip(res.Msg);
+                return;
+            }
+        });
+
+    });
+
+
+    var checkBoxs = $('input[name=joinactive]');
+    checkBoxs.change(function () {
+        checkBoxs.attr('checked', true);
+        $.ajax({
+            type: "post",
+            url: "/user/Info",
+            success: function (res) {
+                if (res.IsSuccess == true && res.isAuthentication == true && res.isAuthenticationMobile == true) {
+                    alertTip("您的信息已完善,可以参加。");
+                } else {
+                    $('#box_user_info').show();
+                    Shader.show();
+                    Shader.adjustPostion(document.getElementById('box_user_info_div'));
+
+                }
+            }
+        });
+    });
+</script>
+

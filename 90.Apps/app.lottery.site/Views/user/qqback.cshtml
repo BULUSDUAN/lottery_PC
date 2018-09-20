@@ -1,0 +1,192 @@
+﻿@{
+
+    ViewBag.Title = "QQ登录 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "QQ登录, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+
+    ViewBag.Here = "QQ登录";
+    //var _dic2 = ViewBag.QQInfoDic as Dictionary<string, string>;
+}
+@UserHelper.css("otherlogin.css")
+@*@{if (ViewBag.IsSuccess)
+  {
+    <div class="otherloginpage container_wrapper">
+        <div class="main_container f_l">
+            <form id="fReg1" method="post" name="fReg1" action="/user/qqbind">
+                <div id="other_first_step">
+                    <div class="formtitle">
+                        <h1>购彩账户基本信息设置<span class="ps_info">&nbsp;&nbsp;&nbsp;（<span style="color: red;">*</span>项为必填）</span></h1>
+                    </div>
+                    <div class="form_model pt_28">
+                        <span style="display: block; font-size: 12px; color: #a0a0a0; padding-bottom: 10px;">1、首次登陆可以设置绑定。
+                        </span>
+                        <span style="display: block; font-size: 12px; color: #a0a0a0; padding-bottom: 10px;">2、一个qq账号只能绑定一个新体网用户名，且不能修改此用户名。
+                        </span>
+                        <dl>
+                            <dt>
+                                <label for="RegUserName"><span style="color: red;">*&nbsp;</span>购彩用户名：</label></dt>
+                            <dd class="text">
+                                <input name="UserName" type="text" class="textinput" id="RegUserName" maxlength="16" value="@_dic2["nickname"]" title="用户名">
+                                <div id="info_for_regname" class="notice_msg"></div>
+                            </dd>
+                            <dd id="RegUserNameNotice"></dd>
+                            <div class="clear"></div>
+
+                        </dl>
+                        <dl>
+                            <dt>
+                                <label for="Password"><span style="color: red;">*&nbsp;</span>设置登录密码：</label></dt>
+                            <dd class="text">
+                                <input name="password" type="password" maxlength="20" class="textinput" id="Password" title="登录密码" value="" size="25">
+                                <div id="info_for_regpass" class="notice_msg"></div>
+                            </dd>
+                            <dd id="PasswordNotice"></dd>
+                            <div class="clear"></div>
+                        </dl>
+                        <dl>
+                            <dt>
+                                <label for="CPPassword"><span style="color: red;">*&nbsp;</span>确认密码：</label></dt>
+                            <dd class="text">
+                                <input name="CPPassword" type="password" class="textinput" maxlength="20" id="CPPassword" title="重复登录密码" value="">
+                            </dd>
+                            <dd id="CPPasswordNotice"></dd>
+                            <div class="clear"></div>
+                        </dl>
+                    </div>
+                    <div id="firststepbtn" class="regbtnbox">
+                        <input type="hidden" id="isQuickReg" value="false" />
+                        <input id="other_first_sub" type="button" value="下一步" onmouseout="this.className='regbtn'" onmouseover="this.className='regbtnselect'" class="regbtn">
+                        <input id="quickreg" type="button" value="不绑定，直接登录" style="padding:10px 20px;display:none;">
+                    </div>
+                </div>
+                <div id="other_second_step" style="display: none;">
+                    <div class="formtitle">
+                        <h1>选填信息<span class="ps_info">&nbsp;&nbsp;&nbsp;保证账户资金及领奖安全</span></h1>
+                    </div>
+                    <div class="form_model pt_28">
+                        <dl>
+                            <dt class="trueinfo">
+                                <label for="RealName">真实姓名：</label></dt>
+                            <dd class="text">
+                                <input name="RealName" type="text" class="textinput" id="RealName" title="真实姓名" value="" maxlength="32"></dd>
+                            <dd id="RealNameNotice"></dd>
+                            <div class="clear"></div>
+                        </dl>
+
+                        <dl>
+                            <dt class="trueinfo">
+                                <label for="idnum">身份证号码：</label></dt>
+                            <dd class="text">
+                                <input name="idnum" type="text" class="textinput" id="idnum" title="证件号码" value="" maxlength="18"></dd>
+                            <dd id="idnumNotice"></dd>
+                            <div class="clear"></div>
+                        </dl>
+
+
+                        <dl>
+                            <dt class="trueinfo">
+                                <label for="paypassword">资金密码：</label></dt>
+                            <dd class="text">
+                                <input name="paypassword" type="password" maxlength="20" class="textinput" id="paypassword" title="资金密码" value="">
+                                <div id="info_for_paypass" class="notice_msg"></div>
+                            </dd>
+                            <dd id="paypasswordNotice"></dd>
+                            <div class="clear"></div>
+                        </dl>
+                        <dl>
+                            <dt class="trueinfo">
+                                <label for="cpassword">确认资金密码：</label></dt>
+                            <dd class="text">
+                                <input name="cpassword" type="password" class="textinput" maxlength="20" id="cpassword" title="重复资金密码" value=""></dd>
+                            <dd id="cpasswordNotice"></dd>
+                            <div class="clear"></div>
+                        </dl>
+
+                    </div>
+                    <div class="regbtnbox">
+                        <input id="reg_submit" name="Submit" type="submit" value="提交信息" onmouseout="this.className='regbtn'" onmouseover="this.className='regbtnselect'" class="regbtn"><input id="agree_Statement" type="checkbox" name="checkRead" class="agree_Statement" value="1" checked="">我已年满十八周岁，并同意《<a href="/help/yhxy" target="_blank">@(SiteString.getHZSiteName(Request))用户服务协议</a>》
+                        @{foreach (var item in _dic2)
+                          {
+                            <input name="@item.Key" value="@item.Value" type="hidden" />
+                          }}
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!--regmain over-->
+        <div class="sub_container f_r" style="padding-top: 26px;">
+            <div class="otherlogin_help"></div>
+        </div>
+        <!--regother over-->
+    </div>
+  }
+  else
+  {
+    <div class="points-success" style="background: #FCEFE9;">
+        <i class="fail"></i>
+        <div class="res-content">
+            <h3>QQ登录失败。</h3>
+            <p>
+                @ViewBag.Message
+            </p>
+            <span class="morelink">您可能需要：<a href="/user/qqlogin">重新登录</a>
+                | <a href="@SiteString.root(Request)">网站首页</a> </span>
+        </div>
+        <div class="clear">
+        </div>
+    </div>  
+  }}*@
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>登录</li>
+    </ul>
+</div>
+@{if (ViewBag.IsSuccess)
+  {
+    <div class="other-lg-tip">
+        <span class="other-text">Q Q 登录</span>
+    </div>
+    <div class="other-lg-box">
+        <div class="other-u0">
+            <i class="u0-img"></i>
+            <div class="u0-text">
+                @(SiteString.getHZSiteName(Request))账户基本信息设置</div>
+        </div>
+        <div class="box-fr">
+            @{Html.RenderPartial("loginmenu");}
+        </div>
+        <div class="box-fl">
+            <div class="other-u1">
+                <p>
+                    1、首次通过"QQ登录"需绑定一个用户名，以后直接登录即可。</p>
+                <br />
+                <p>
+                    2、一个QQ帐号只能绑定一个@(SiteString.getHZSiteName(Request))用户名，且不能修改此用户名。</p>
+            </div>
+            <div class="other-u2">
+                <a href="/user/loginfirst" class="other-login-btn" id="btn-old">绑定已注册的用户名</a>
+                <a href="/user/loginsecond" class="other-login-btn" id="btn-new">绑定新注册的用户名</a>
+            </div>
+        </div>
+    </div>
+  }
+  else
+  {
+    <div class="points-success" style="background: #FCEFE9;">
+        <i class="fail"></i>
+        <div class="res-content">
+            <h3>
+                QQ登录失败。</h3>
+            <p>
+                @ViewBag.Message
+            </p>
+            <span class="morelink">您可能需要：<a href="/user/qqlogin">重新登录</a> | <a href="@SiteString.root(Request)">
+                网站首页</a> </span>
+        </div>
+        <div class="clear">
+        </div>
+    </div> 
+  }
+    
+}

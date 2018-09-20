@@ -1,0 +1,97 @@
+﻿@{
+    if (ViewBag.pageNo > 0)
+    {
+        ViewBag.Title = "足球赛事预测第" + (@ViewBag.pageNo + 1) + "页-" + SiteString.getHZSiteName(Request);
+        ViewBag.KeyWords = "足球赛事预测第" + (@ViewBag.pageNo + 1) + "页";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "足球赛事频道第" + (@ViewBag.pageNo + 1) + "页,查看更多足球推荐(预测)就上" + SiteString.getHZSiteName(Request) + "足球赛事频道";
+    }
+    else
+    {
+        ViewBag.Title = "足球赛事分析-足球专家推荐-今日足球预测-" + SiteString.getHZSiteName(Request);
+        ViewBag.KeyWords = "足球赛事点评,足球专家推荐,今日足球预测";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "足球赛事频道为您提供专业的足球赛事点评、足球专家推荐、今日足球预测等资讯信息, ,每日及时更新大量足球赛事资讯,查看更多足球推荐(预测)就上" + SiteString.getHZSiteName(Request) + "足球赛事频道";
+    }
+    var dptaSource = ViewBag.dpDataSource as External.Core.SiteMessage.ArticleInfo_QueryCollection;
+    @UserHelper.css("zixun.css")
+}
+<div class="crumb_">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li><a href="/zixun/competitiondian">赛事点评</a></li>
+    </ul>
+</div>
+<div id="zixun">
+    <input type="hidden" name="hdcategory" id="hdcategory" value="@ViewBag.category" />
+    <div class="zx_left">
+        <div class="zx_type">
+            <a href="/zixun/competitiondian" class="tab-title_dp" id="dp-all" category="">查看全部</a><a
+                href="/zixun/competitiondian_lqdp" class="tab-title_dp" category="LQDP" id="dp-lq">篮球点评</a><a
+                    href="/zixun/competitiondian_zqdp" class="tab-title_dp" id="dp-zq" category="ZQDP">足球点评</a>
+        </div>
+        <div class="zx_content">
+            <table border="0" cellpadding="0" cellspacing="0" class="zx_table">
+                <tr class="zx_title">
+                    <td width="20%">
+                        类型
+                    </td>
+                    <td width="65%">
+                        标题
+                    </td>
+                    <td width="15%">
+                        发布日期
+                    </td>
+                </tr>
+                @foreach (var item in dptaSource.ArticleList)
+                {
+                    <tr class="zx_con">
+                        <td width="20%">
+                            @SiteConvert.ZX_Category(item.Category)
+                        </td>
+                        <td width="65%">
+                            <a href="/zixun/textpart?Id=@item.Id&type=ssdp" class="zx_blue">@(item.Title.Length > 30 ? item.Title.Substring(0, 30) + "…" : item.Title)</a>
+                        </td>
+                        <td width="15%">
+                            @item.CreateTime.ToString("yyyy.MM.dd")
+                        </td>
+                    </tr>                   
+                }
+                <tr class="last-tr no-bottom">
+                    <td colspan="3">@ViewHelpers.Pager_z(ViewBag.pageNo, ViewBag.PageSize, dptaSource.TotalCount == null ? 0 : dptaSource.TotalCount)
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="zx_right">
+        @{Html.RenderAction("zixunright", "zixun");}
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        var category = $("#hdcategory").val();
+        if (category == "LQDP|ZQDP") {
+            $("#dp-all").addClass("on");
+            $("#dp-all").siblings().removeClass("on");
+        }
+        if (category == "ZQDP") {
+            $("#dp-zq").addClass("on");
+            $("#dp-zq").siblings().removeClass("on");
+        }
+        if (category == "LQDP") {
+            $("#dp-lq").addClass("on");
+            $("#dp-lq").siblings().removeClass("on");
+        }
+    })
+    //    $(".tab-title_dp").click(function () {
+    //        var category = $(this).attr("category");
+    //        location.search = "pageNo=" + 0 + "&pageSize=" + 25 + "&category=" + category + "&r=" + Math.random().toFixed(5);
+    //        $(this).addClass("on");
+    //        $(this).siblings().removeClass("on");
+    //    });
+    function getAlldata(pageNo, pageSize) {
+        location.search = "pageNo=" + pageNo + "&pageSize=" + pageSize;
+    }
+</script>
+<div style="clear: both">
+</div>

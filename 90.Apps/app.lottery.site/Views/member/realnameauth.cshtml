@@ -1,0 +1,81 @@
+﻿@using app.lottery.site.Models;
+@{
+    ViewBag.Title = "实名认证 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "实名认证, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var active = ViewBag.Active as External.Core.Task.ActivityListInfo;
+    var user = ViewBag.User as CurrentUserInfo;
+    //var user = ViewBag.CurrentUser as CurrentUserInfo;
+    Layout = null;
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+}
+        <div class="info_tt">实名认证</div>
+        <div class="xgmm_main" style="margin-top: 0px;">
+            
+              <div class="info_zl_ico">
+                <span class="member-safe @(user.IsAuthenticationRealName ? "member_safe_y" : "member_safe_w") safe_maggin"></span>
+                <span class="ml10 @(user.IsAuthenticationRealName ? "member_realy_y" : "member_realy_w")"></span>
+            </div>
+            @if (user.IsAuthenticationRealName)
+            {
+                <div class="info_wxts">
+                    <div class="info_wxts_show">
+                        <span>证件类型：身份证</span>
+                        <span>真实姓名：@SiteString.AllHideUser(user.RealNameInfo.RealName)</span>
+                        <span>身份证号：@SiteString.EncodeIdCardNumber(user.RealNameInfo.IdCardNumber)</span>    
+                         @{if (!user.IsAuthenticationEmail || !user.IsAuthenticationMobile)
+                          { 
+                              <div class="dotted gray">
+                                  @{
+                              if (!user.IsAuthenticationMobile)
+                              {
+
+                                  if (active != null && active.EndTime > DateTime.Now)
+                                  {
+                                              <span>您还没有绑定手机号码， 现在<a href="/member/safe" class="blue">绑定手机</a> 即可<a href="/member/safe"
+                                                                                                                      class="blue">领取3元起航基金</a>， 并且还可享受<span class="red">首次充值大于20元可获赠10元</span>的优惠活动哦！
+                                                  <a href="/member/safe" class="blue">立即绑定手机>></a> </span>
+                                  }
+                                  else
+                                  {
+                                              <span>您还没有绑定手机号码， 为保障您的账户安全，请立即绑定手机</span>
+                                  }
+                                          <br />
+                              }
+                              else
+                              {
+                                  if (active != null && active.EndTime > DateTime.Now)
+                                  {
+@*<text>您现在享受<a class="red" href="/member/GoPay">首次充值大于20元可获赠10元</a>的优惠活动哦！<br /></text>*@
+                                  }
+                              }
+                              
+                              
+                                  }
+                                  @*  @{if (!user.IsAuthenticationEmail)
+                              {<span>您还没有完善邮箱信息哦！<a href="/member/email" class="blue">完善邮箱信息>></a></span>}}*@
+                              </div>
+                          }
+                        }
+                    </div>
+             </div>
+            }
+            else
+            { 
+                <div class="info_wxts">
+                    <div class="info_wxts_show" style="margin-bottom: 0px;">
+                        <span><em style="color: Red">*</em>为保障您的账户安全，请填写您的真实身份信息</span>
+                    </div>
+                </div>  
+                @UserHelper.AuthRealName()
+            }
+        </div>
+<script type="text/javascript">
+    $(function () {
+        $(".member_realy_y").text("已实名认证").css("color", "#8ecc33");
+        $(".member_realy_w").text("未实名认证").css("color", "#ff5c00");
+    });
+</script>
+<div class="clearfix">
+</div>

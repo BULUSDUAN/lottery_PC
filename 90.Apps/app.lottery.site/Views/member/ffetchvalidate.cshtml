@@ -1,0 +1,91 @@
+﻿@using app.lottery.site.Models;
+@using GameBiz.Core
+@{
+    Layout = "../Shared/_LayoutFoud.cshtml";
+    ViewBag.Title = "返点提取";
+    CurrentUserInfo CurrentUser = ViewBag.CurrentUser;
+    var balance = ViewBag.CurrentUserBalance as GameBiz.Core.UserBalanceInfo;
+
+    var RequestWithdraw_1 = ViewBag.RequestWithdraw_1 as CheckWithdrawResult;
+}
+
+<div class="center mt10">
+    @{Html.RenderAction("menuFoud", "Member");}
+    @{Html.RenderAction("toptipFoud", "Member");}
+    <div class="new_buy_right">
+        <div class="betorder_top clearfix">
+            <ul>
+                <li ><a href="/member/integraldetail" >返点明细</a></li>
+                <li ><a href="/member/integralextract" >返点提取</a></li>
+                <li class="betorder_topSelected"><a  href="/member/drawingsrecord">提款记录</a></li>
+                <li><a href="/member/integralinto">返点转入</a></li>
+                <li><a href="/member/integralintodetail">转入记录</a></li>
+            </ul>
+        </div>
+        <div class="betorder_con clearfix">
+              <div class="alipay-content">
+            <p class="tip2">
+                <i>*</i>温馨提示：请确认以下信息，无误后请点击提交。
+            </p>
+            <form action="/member/ffetchsubmit" method="post" onsubmit="return checkInput();">
+            <input type="hidden" name="fetchType" value="@ViewBag.FetchType" />
+            <input type="hidden" name="money" value="@ViewBag.Money" />
+            <ul class="userinfo_list">
+         @*       <li style="display:none"><span class="sp120">提款类型：</span>@fetchTypeDis</li>*@
+                <li style="display:none"><span class="sp120">提款账号：</span>@(ViewBag.FetchType == "bank" ? SiteString.EncodeBankCardNumber(ViewBag.FetchAccont) : SiteString.EncodeEmail(ViewBag.FetchAccont))<input type="hidden" name="fetchAccount" value="@ViewBag.FetchAccont"/></li>
+                <li><span class="sp120">申请返点：</span><span style="color: #ff3c00;font-weight: bold">@RequestWithdraw_1.RequestMoney.ToString("N2") </span></li>
+                <li><span class="sp120">可成功提取返点：</span><span style="color: #ff3c00;font-weight: bold">@RequestWithdraw_1.ResponseMoney </span></li>
+                <li style="display:none"><span class="sp120">手&nbsp;&nbsp;续&nbsp;&nbsp;费：</span><span style="color: #ff3c00;font-weight: bold" id="fet-sxf">@(RequestWithdraw_1.RequestMoney >= RequestWithdraw_1.ResponseMoney ? RequestWithdraw_1.RequestMoney - RequestWithdraw_1.ResponseMoney : 0)</span></li>
+                <li style="display:none"><span class="sp120">类别：</span><span>@SiteConvert.WithdrawCategoryName(RequestWithdraw_1.WithdrawCategory)</span></li>
+                <li class="green"><span class="sp120">描述：</span><span style="display:inline-block;width:516px;">@Html.Raw(RequestWithdraw_1.Summary)</span></li>
+
+                @{if (balance.IsSetPwd && balance.NeedPwdPlace.Split('|').Contains("Withdraw"))
+                  {
+                    <li><span class="sp120 blue">资金密码：</span><input type="password" name="balancepwd" value="" maxlength="16" class="balancepwd" size="9" id="balancepwd" />@UserHelper.html_findzjmm()</li>
+                  }}
+                <li><span class="sp120">&nbsp;</span><input type="submit" value="提&nbsp;&nbsp;交" class="btn_next" />
+                    <a href="@(Request.UrlReferrer == null ? SiteString.root(Request) : Request.UrlReferrer.ToString())" onclick="history.go(-1);return false;" class="blue" style="margin-left: 10px;">返回修改</a> </li>
+                <li><span class="sp120">&nbsp;</span><span class="error-box" id="errbox"><i class="err-icon"></i><span class="msg" id="errMsgFetch"></span></span> </li>
+            </ul>
+            <input type="hidden" name="HdWcName" id="HdWcName" value="@SiteConvert.WithdrawCategoryName(RequestWithdraw_1.WithdrawCategory)" />
+            </form>
+            <script type="text/javascript">
+                $(function () {
+                    $("#balancepwd").val("");
+                    var HdWchName = $("#HdWcName").val();
+                    if (HdWchName != null && HdWchName == "返点提取错误") {
+                        $("#fet-sxf").html("0");
+                        $(".btn_next").hide();
+                    }
+                });
+                var msg = location.request("errMsg") ? location.request("errMsg") : "";
+                showMsg(msg);
+                function showMsg(msg) {
+                    if (msg.length > 0) {
+                        $("#errbox").show();
+                        $("#errMsgFetch").text(msg);
+                    }
+                    else {
+                        $("#errMsgFetch").text("");
+                        $("#errbox").hide();
+                    }
+                }
+                function checkInput() {
+                    msg = '';
+
+                    if (document.getElementById("balancepwd")) {
+                        if (!document.getElementById("balancepwd").value) {
+                            msg = "请输入您设置的资金密码。";
+                            document.getElementById("balancepwd").focus();
+                        }
+                    }
+                    showMsg(msg);
+                    return !msg.length > 0;
+                }
+            </script>
+        </div>
+        </div>
+      
+    </div>
+</div>
+

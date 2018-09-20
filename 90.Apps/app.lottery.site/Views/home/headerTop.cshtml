@@ -1,0 +1,81 @@
+﻿@using app.lottery.site.Models
+@{
+    CurrentUserInfo currentUser = ViewBag.CurrentUser;
+    var balance = ViewBag.CurrentUserBalance as GameBiz.Core.UserBalanceInfo;
+    var name = string.Empty;
+    var tmoney = string.Empty;
+    var isloged = currentUser != null;
+    if (isloged)
+    {
+        name = SiteString.HideUserName(currentUser.LoginInfo.DisplayName, currentUser.LoginInfo.HideDisplayNameCount);
+        tmoney = balance.GetTotalCashMoney() > 10000 ? (balance.GetTotalCashMoney() / 10000).ToString("N2") + "万" : balance.GetTotalCashMoney().ToString("N2");
+    }
+    var siteName = SiteString.getHZSiteName(Request);
+}
+<div class="wrap-header">
+    <div class="div_m">
+        <div class="toptray-plus clearfix auto990">
+            <div class="toptray-left fl">
+                <span>hi，欢迎来到@(siteName)彩票</span>
+            </div>
+            <div class="toptray-right fr">
+                <ul class="toptray clearfix" id="toptray_login" style="display: @(isloged ? "block" : "none")">
+                    <li><a id="toptray_username" href="@(isloged ? "/blog/standings/" + currentUser.LoginInfo.UserId : "javascript:void(0)")">@(name.Length > 10 ? name.Substring(0, 10) + "..." : name)</a><a
+                        class="ml14 color666" href="javascript:user.logOut(true);">退出</a></li>
+                    <li class="m14">|</li>
+                    <li class="header-show-money">
+                        <div id="wallet_container">
+                            <span style="font-family: Verdana,Arial;" class="span-login-rmb colorRed">￥</span>
+                            <span class="colorRed" id="header_user_money" data-sh="0">*****</span><input type="hidden" value="@tmoney" id="header_user_money_hidden"/>
+                            <div style="display: none;" id="wallet_detail">
+                                <p>
+                                    奖金账户：<strong class="red">￥0.00</strong></p>
+                                <p>
+                                    充值账户：<strong class="red">￥0.00</strong></p>
+                                <p>
+                                    彩金账户：<strong class="red">￥0.00</strong></p>
+                                <p>
+                                    <a href="javascript:void(0)" class="account_detail">账户明细&gt;&gt;</a></p>
+                                <div class="clear nospace">
+                                    &nbsp;</div>
+                            </div>
+                        </div>
+                        <a class="color666" id="header_show_money" href="javascript://">显示余额</a> <i class="img-login-refresh icon-i"
+                            id="rbalc"></i></li>
+                    <li id="mylottery" class="mylottery"><a class="my-lottery color666" target="_blank"
+                        href="/member/safe"><i id="header_sign" class="nosign-hd"></i>我的彩票</a> @*<div class="lot_list" style="display: none;" id="mylottery_dropdown">
+                        <ul>
+                            <li><a target="_blank" href="javascript:void(0)">投注记录</a></li>
+                            <li><a target="_blank" href="javascript:void(0)">中奖记录</a></li>
+                            <li><a target="_blank" href="javascript:void(0)">我的战绩</a></li>
+                            <li><a target="_blank" href="javascript:void(0)">我的彩贝</a></li>
+                            <li><a target="_blank" href="javascript:void(0)">账户信息</a></li>
+                            <li><a target="_blank" href="javascript:void(0)">未支付订单</a><span class="notpaid" id="header_notpaid_counter_hd"></span></li>
+                        </ul>
+                    </div>*@ </li>
+                    <li><a class="mr10 color666 mr" target="_blank" href="/member/pay">充值</a><a class="color666 mr10"
+                        target="_blank" href="/member/fetch_bank">提款</a></li>
+                    @*   <li><a href="/syncLogin" target="_blank">论坛</a></li>*@
+                </ul>
+                <ul class="toptray-plus clearfix" id="toptray_not_login"style="display: @(isloged ? "none" : "block")">
+                    <li><a class="colorRed" id="loginbtn_new" href="javascript:void(0)">登录</a> &nbsp; @*<a
+                         style="color:red;cursor:pointer;" id="Tourists" href="http://localhost:7999" target="_blank">
+                        游客试玩</a>&nbsp;*@ <a class="colorRed" href="/statichtml/register.html">注册</a> </li>
+                    <li class="m14">|</li>
+                    <li class="mylottery"><a class="my-lottery color666" href="javascript:void(0)" checklg="/member/safe">
+                        我的彩票</a></li>
+                    <li><a class="color666 mr10" href="javascript:void(0)" checklg="/member/pay">充值</a>
+                        <a class="color666 mr10" href="javascript:void(0)" checklg="/member/fetch_bank">提款</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div style="clear: both;">
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function funsflogin() {
+        window.open('http://localhost:7999/');
+    }
+</script>

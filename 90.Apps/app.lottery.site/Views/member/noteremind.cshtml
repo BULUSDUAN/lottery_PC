@@ -1,0 +1,75 @@
+﻿@{
+    ViewBag.Title = "短信提醒 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "短信提醒, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var money = ViewBag.Money;
+    var isEnable = ViewBag.IsEnable;
+    var id = ViewBag.Id;
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>我的票样</li>
+    </ul>
+</div>
+<div class="center mt10">
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mune_safe">
+        <div class="account_menu clearfix">
+            <a href="/member/innermail">站内消息</a> <a href="/member/mysuggestions">我的建议</a>
+            <a href="/member/noteremind" class="select">短信提醒</a>
+        </div>
+        <div class="account_con">
+            <div class="con_box">
+                <span class="con_icon @(isEnable ? "" : "icon")"></span>
+                <div class="con_title">
+                    提款通知</div>
+                <div>
+                    ≥@(money)的提款金额，转账成功后将收到一条到账通知短信</div>
+                <input type="hidden" id="money" value="@money" />
+                <input type="hidden" id="isDrawing" value="@isEnable" />
+                <input type="hidden" id="infoId" value="@id" />
+                <a class="con_btn" id="con_draw">@(isEnable ? "关闭" : "开启")</a>
+            </div>
+            <div class="con_box">
+                <span class="con_icon"></span>
+                <div class="con_title">
+                    撤单提醒</div>
+                <div>
+                    您的订单因某个原因无法完成出票时，您将收到一条短信通知</div>
+                <a class="con_btn" id="con_warn">关闭</a>
+            </div>
+        </div></div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+<script type="text/javascript">
+    $("#con_draw").click(function () {
+        var drawing = $("#isDrawing").val();
+        var money = $("#money").val();
+        var infoId = $("#infoId").val();
+        var isEnable = false;
+        if (drawing == "False") {
+            isEnable = true;
+        }
+        if (drawing == "True") {
+            isEnable = false;
+        }
+        $.post("/member/UpdateDrawingNotice?r=" + Math.random(), {isEnable: isEnable,infoId: infoId,Money: money}, function (result) {
+            if (result.IsSucess == true) {
+                window.location.href = window.location.href;
+            }
+            else {
+                alertTip(result.Message);
+            }
+        });
+    });
+    $("#con_warn").click(function () {
+        alertTip("暂时不能关闭撤单提醒");
+    });
+</script>

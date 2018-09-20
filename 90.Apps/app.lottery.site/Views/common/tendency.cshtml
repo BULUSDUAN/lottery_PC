@@ -1,0 +1,562 @@
+﻿@{
+    Layout = "~/Views/lotterytrend/_Layout.cshtml";
+    ViewBag.Title = @"彩票走势图-福利彩票走势图|体育彩票走势图|彩票走势图分析-" + SiteString.getHZSiteName(Request) + "";
+    ViewBag.Keywords = @"彩票走势图，福利彩票走势图，体育彩票走势图，彩票走势图分析";
+    ViewBag.Description = @"" + SiteString.getHZSiteName(Request) + "彩票网走势图频道提供最快、最全的各彩种彩票走势图,其中包括福彩走势图、体彩走势图、高频彩走势图等,并有更多不同形式的走势图供您选择,是您查看走势图的第一选择.";
+}
+<div class="trend-game-title">
+    <h2 class="ico-fc-s"><i></i>福利彩票走势图表</h2>
+    <a href="javascript:void 0;" class="shrink show_a"></a>
+</div>
+<div style="display: block;">
+    <div class="trend-game-item orange">
+        <div class="zs_box_l">
+             <big class="gameName cailogo ssq"></big><big class="gameName">双色球</big>
+        </div>
+        <div class="zs_box_r">
+            <ul>
+                <li><a title="双色球基本走势图" target="_blank" href="/lotterytrend/ssq/jbzs" class="l">基本走势图</a><i></i></li>
+                <li><a title="双色球大小走势图" target="_blank" href="/lotterytrend/ssq/daxiao" class="l">大小走势图</a></li>      
+                <li><a title="双色球除3走势图" target="_blank" href="/lotterytrend/ssq/chu3" class="l">除3走势图</a></li>
+                <li><a title="双色球奇偶走势图" target="_blank" href="/lotterytrend/ssq/jiou" class="l">奇偶走势图</a><s></s></li>
+                <li><a title="双色球首尾跨度走势图" target="_blank" href="/lotterytrend/ssq/kuadu_sw" class="l">首尾跨度走势图</a></li>
+                <li><a title="双色球和值走势图" target="_blank" href="/lotterytrend/ssq/hezhi" class="l">和值走势图</a><s></s></li>
+                <li><a title="双色球质合走势图" target="_blank" href="/lotterytrend/ssq/zhihe" class="l">质合走势图</a><s></s></li>
+                <li><a target="_blank" href="/lotterytrend/ssq" class="more">查看更多>></a></li>
+            </ul>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+    <div class="trend-game-item bblue">
+        <div class="zs_box_l">
+             <big class="gameName cailogo fc3d"></big><big class="gameName">福彩3D</big>
+        </div>
+        <div class="zs_box_r">
+            <ul>
+                <li><a title="福彩3D直选走势图" target="_blank" href="/lotterytrend/fc3d/zxzs" class="l">直选走势图</a><i></i></li>
+                <li><a title="福彩3D跨度走势图" target="_blank" href="/lotterytrend/fc3d/kuadu" class="l">跨度走势图</a></li>
+                <li><a title="福彩3D和尾走势图" target="_blank" href="/lotterytrend/fc3d/hwzs" class="l">和尾走势图</a></li>
+                <li><a title="福彩3D奇偶走势图" target="_blank" href="/lotterytrend/fc3d/johm" class="l">奇偶走势图</a></li>
+                <li><a title="福彩3D除3余数走势图" target="_blank" href="/lotterytrend/fc3d/chu31" class="l">除3余数走势图</a></li>
+                <li><a title="福彩3D大小走势图" target="_blank" href="/lotterytrend/fc3d/dxhm" class="l">大小号码走势图</a></li>
+                <li><a title="福彩3D组选走势图" target="_blank" href="/lotterytrend/fc3d/zuxzs" class="l">组选走势图</a></li>
+                <li><a href="/lotterytrend/fc3d/" target="_blank" class="more">查看更多>></a></li>
+            </ul>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+    <div class="trend-game-item orange">
+        <div class="zs_box_l">
+            <big class="gameName cailogo qlc"></big> <big class="gameName">七乐彩</big>
+        </div>
+        <div class="zs_box_r">
+            <ul>
+                <li><a title="七乐彩基本走势图" target="_blank" href="/lotterytrend/qlc/jbzs" class="l">基本走势图</a></li>
+                <li><a title="七乐彩大小走势图" target="_blank" href="/lotterytrend/qlc/dx" class="l">大小走势图</a><i></i></li>
+                <li><a title="七乐彩奇偶走势图" target="_blank" href="/lotterytrend/qlc/jo" class="l">奇偶走势图</a></li>
+                <li><a title="七乐彩质合走势图" target="_blank" href="/lotterytrend/qlc/zh" class="l">质合走势图</a></li>
+                <li><a title="七乐彩除3余数走势图" target="_blank" href="/lotterytrend/qlc/chu3" class="l">除3走势图</a></li>
+                <li><a href="/lotterytrend/qlc/" target="_blank" class="more">查看更多>></a></li>
+            </ul>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+    <div class="trend-game-item bblue">
+        <div class="zs_box_l">
+            <big class="gameName cailogo k3"></big> <big class="gameName">吉林快3</big>
+        </div>
+        <div class="zs_box_r">
+            <ul>
+                <li><a title="吉林快3和值走势图" target="_blank" href="/lotterytrend/jlk3/hz" class="l">和值走势图</a></li>
+                <li><a title="吉林快3基本走势图" target="_blank" href="/lotterytrend/jlk3/jbzs" class="l">基本走势图</a><i></i></li>
+                <li><a title="吉林快3形态走势图" target="_blank" href="/lotterytrend/jlk3/xt" class="l">形态走势图</a></li>
+                <li><a title="吉林快3组合走势图" target="_blank" href="/lotterytrend/jlk3/zh" class="l">组合走势图</a></li>
+                <li><a title="吉林快3综合走势图" target="_blank" href="/lotterytrend/jlk3/zhzs" class="l">综合走势</a></li>
+                <li><a href="/lotterytrend/JLK3/" target="_blank" class="more">查看更多>></a></li>
+            </ul>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+    <div class="trend-game-item orange">
+        <div class="zs_box_l">
+            <big class="gameName cailogo k3"></big> <big class="gameName">江苏快3</big>
+        </div>
+        <div class="zs_box_r">
+            <ul>
+                <li><a title="江苏快3和值走势图" target="_blank" href="/lotterytrend/jsks/hz" class="l">和值走势图</a></li>
+                <li><a title="江苏快3基本走势图" target="_blank" href="/lotterytrend/jsks/jbzs" class="l">基本走势图</a><i></i></li>
+                <li><a title="江苏快3形态走势图" target="_blank" href="/lotterytrend/jsks/xt" class="l">形态走势图</a></li>
+                <li><a title="江苏快3组合走势图" target="_blank" href="/lotterytrend/jsks/zh" class="l">组合走势图</a></li>
+                <li><a title="江苏快3综合走势图" target="_blank" href="/lotterytrend/jsks/zhzs" class="l">综合走势</a></li>
+                <li><a href="/lotterytrend/jsks/" target="_blank" class="more">查看更多>></a></li>
+            </ul>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+    <div class="trend-game-item bblue">
+        <div class="zs_box_l">
+          <big class="gameName cailogo k3"></big><big class="gameName">湖北快3</big> 
+        </div>
+        <div class="zs_box_r">
+            <ul>
+                <li><a title="湖北快3和值走势图" target="_blank" href="/lotterytrend/hbk3/hz" class="l">和值走势图</a></li>
+                <li><a title="湖北快3基本走势图" target="_blank" href="/lotterytrend/hbk3/jbzs" class="l">基本走势图</a><i></i></li>
+                <li><a title="湖北快3形态走势图" target="_blank" href="/lotterytrend/hbk3/xt" class="l">形态走势图</a></li>
+                <li><a title="湖北快3组合走势图" target="_blank" href="/lotterytrend/hbk3/zh" class="l">组合走势图</a></li>
+                <li><a title="湖北快3综合走势图" target="_blank" href="/lotterytrend/hbk3/zhzs" class="l">综合走势</a></li>
+                <li><a href="/lotterytrend/HBK3/" target="_blank" class="more">查看更多>></a></li>
+            </ul>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+    <div class="trend-game-item orange">
+        <div class="zs_box_l">
+            <big class="gameName cailogo sdqyh2"></big> <big class="gameName">群英会</big>
+        </div>
+        <div class="zs_box_r">
+            <ul>
+                <li><a title="山东群英会大小走势图" target="_blank" href="/lotterytrend/sdqyh/dx" class="l">大小走势图</a></li>
+                <li><a title="山东群英会除3走势图" target="_blank" href="/lotterytrend/sdqyh/chu3" class="l">
+                    除3走势图</a><i></i></li>
+                <li><a title="山东群英会奇偶走势图" target="_blank" href="/lotterytrend/sdqyh/jo" class="l">奇偶走势图</a></li>
+                <li><a title="山东群英会顺选1走势图" target="_blank" href="/lotterytrend/sdqyh/sx1" class="l">
+                    顺选1走势图</a></li>
+                <li><a title="山东群英会质合走势图" target="_blank" href="/lotterytrend/sdqyh/zh" class="l">质合走势图</a></li>
+                <li><a href="/lotterytrend/sdqyh" target="_blank" class="more">查看更多>></a></li>
+            </ul>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+    <div class="trend-game-item bblue">
+        <div class="zs_box_l">
+            <big class="gameName cailogo hc1"></big><big class="gameName">好 彩 1</big> 
+        </div>
+        <div class="zs_box_r">
+            <ul>
+                <li><a title="好彩1基本走势图" target="_blank" href="/lotterytrend/hc1/jbzs" class="l">基本走势图</a></li>
+                <li style="width: 128px"><a title="好彩1生肖季节方位走势图" target="_blank" href="/lotterytrend/hc1/sxjjfwzs" class="l">
+                    生肖季节方位走势图</a></li>
+                <li><a href="/lotterytrend/HC1" target="_blank" class="more">查看更多>></a></li>
+            </ul>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+    <div class="trend-game-item orange">
+        <div class="zs_box_l">
+           <big class="gameName cailogo hd15x5"></big> <big class="gameName">15选5</big> 
+        </div>
+        <div class="zs_box_r">
+            <ul>
+                <li><a title="华东15选5基本走势图" target="_blank" href="/lotterytrend/hd15x5/jbzs" class="l">
+                    基本走势图</a></li>
+                <li><a title="华东15选5重号走势图" target="_blank" href="/lotterytrend/hd15x5/chzs" class="l">
+                    重号走势图</a></li>
+                <li><a title="华东15选5大小走势图" target="_blank" href="/lotterytrend/hd15x5/dx" class="l">
+                    大小走势图</a></li>
+                <li><a title="华东15选5和值走势图" target="_blank" href="/lotterytrend/hd15x5/hz" class="l">
+                    和值走势图</a></li>
+                <li><a title="华东15选5奇偶走势图" target="_blank" href="/lotterytrend/hd15x5/jo" class="l">
+                    奇偶走势图</a></li>
+                <li><a title="华东15选5邻号走势图" target="_blank" href="/lotterytrend/hd15x5/lhzs" class="l">
+                    邻号走势图</a></li>
+                <li><a title="华东15选5质合走势图" target="_blank" href="/lotterytrend/hd15x5/zh" class="l">
+                    质合走势图</a></li>
+                <li><a href="/lotterytrend/hd15x5" target="_blank" class="more">查看更多>></a></li>
+            </ul>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+    <div class="trend-game-item bblue">
+        <div class="zs_box_l">
+             <big class="gameName cailogo df6j1"></big><big class="gameName">东方6+1</big>
+        </div>
+        <div class="zs_box_r">
+            <ul>
+                <li><a title="东方6+1基本走势图" target="_blank" href="/lotterytrend/df6j1/jbzs" class="l">
+                    基本走势图</a></li>
+                <li><a title="东方6+1大小走势图" target="_blank" href="/lotterytrend/df6j1/dxzs" class="l">
+                    大小走势图</a></li>
+                <li><a title="东方6+1和值走势图" target="_blank" href="/lotterytrend/df6j1/hzzs" class="l">
+                    和值走势图</a></li>
+                <li><a title="东方6+1奇偶走势图" target="_blank" href="/lotterytrend/df6j1/jozs" class="l">
+                    奇偶走势图</a></li>
+                <li><a title="东方6+1跨度走势图" target="_blank" href="/lotterytrend/df6j1/kdzs" class="l">
+                    跨度走势图</a></li>
+                <li><a title="东方6+1质合走势图" target="_blank" href="/lotterytrend/df6j1/zhzs" class="l">
+                    质合走势图</a></li>
+                <li><a href="/lotterytrend/df6j1" target="_blank" class="more">查看更多>></a></li>
+            </ul>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+</div>
+<div class="trend-game-title">
+    <h2 class="ico-tc-s">
+        <i></i>体育彩票走势图表</h2>
+    <a href="javascript:void 0;" class="shrink"></a>
+</div>
+<div style="display: none;">
+    <div class="trend-game-item orange">
+        <div class="zs_box_l">
+            <big class="gameName cailogo dlt"></big> <big class="gameName">大乐透</big>
+        </div>
+        <div class="zs_box_r">
+            <ul>
+                <li><a title="超级大乐透基本走势图" target="_blank" href="/lotterytrend/dlt/jbzs" class="l">基本走势图</a></li>
+                <li><a title="超级大乐透大小走势图" target="_blank" href="/lotterytrend/dlt/dx" class="l">大小走势图</a></li>
+                <li><a title="超级大乐透奇偶走势图" target="_blank" href="/lotterytrend/dlt/jiou" class="l">奇偶走势图</a></li>
+                <li><a title="超级大乐透质合走势图" target="_blank" href="/lotterytrend/dlt/zhihe" class="l">质合走势图</a></li>
+                <li><a title="超级大乐透和值走势图" target="_blank" href="/lotterytrend/dlt/hezhi" class="l">和值走势图</a></li>
+                <li><a title="超级大乐透除3走势图" target="_blank" href="/lotterytrend/dlt/chu3" class="l">除3走势图</a></li>
+                <li><a title="超级大乐透跨度走势图" target="_blank" href="/lotterytrend/dlt/kuadu_sw" class="l">
+                    跨度走势图</a></li>
+                <li><a href="/lotterytrend/dlt/" target="_blank" class="more">查看更多>></a></li>
+            </ul>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+    <div class="trend-game-item bblue">
+        <div class="zs_box_l">
+             <big class="gameName cailogo pl3"></big><big class="gameName">排列三</big>
+        </div>
+        <div class="zs_box_r">
+            <ul>
+                <li><a title="排列三基本走势图" target="_blank" href="/lotterytrend/pl3/jbzs" class="l">基本走势图</a></li>
+                <li><a title="排列三奇偶走势图" target="_blank" href="/lotterytrend/pl3/jo" class="l">奇偶走势图</a></li>
+                <li><a title="排列三除3走势图" target="_blank" href="/lotterytrend/pl3/chu31" class="l">除3走势图</a><s></s></li>
+                <li><a title="排列三大小走势图" target="_blank" href="/lotterytrend/pl3/dx" class="l">大小走势图</a><s></s></li>
+                <li><a title="排列三和值走势图" target="_blank" href="/lotterytrend/pl3/hezhi" class="l">和值走势图</a></li>
+                <li><a title="排列三跨度走势图" target="_blank" href="/lotterytrend/pl3/kdbg" class="l">跨度走势图</a></li>
+                <li><a title="排列三质合走势图" target="_blank" href="/lotterytrend/pl3/zhihe" class="l">质合走势图</a><s></s></li>
+                <li><a href="/lotterytrend/pl3/" target="_blank" class="more">查看更多>></a></li>
+            </ul>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+    <div class="trend-game-item orange">
+        <div class="zs_box_l">
+           <big class="gameName cailogo pl5"></big>  <big class="gameName">排列五</big>
+        </div>
+        <div class="zs_box_r">
+            <ul>
+                <li><a title="排列五基本走势图" target="_blank" href="/lotterytrend/pl5/jbzs" class="l">基本走势图</a></li>
+                <li><a title="排列五大小走势图" target="_blank" href="/lotterytrend/pl5/dx" class="l">大小走势图</a></li>
+                <li><a title="排列五奇偶走势图" target="_blank" href="/lotterytrend/pl5/jo" class="l">奇偶走势图</a></li>
+                <li><a title="排列五质合走势图" target="_blank" href="/lotterytrend/pl5/zh" class="l">质合走势图</a></li>
+                <li><a title="排列五除3走势图" target="_blank" href="/lotterytrend/pl5/chu3" class="l">除3走势图</a></li>
+                <li><a title="排列五和值走势图" target="_blank" href="/lotterytrend/pl5/hz" class="l">和值走势图</a></li>
+                <li><a href="/lotterytrend/pl5/" target="_blank" class="more">查看更多>></a></li>
+            </ul>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+    <div class="trend-game-item bblue">
+        <div class="zs_box_l">
+            <big class="gameName cailogo qxc"></big> <big class="gameName">七星彩</big>
+        </div>
+        <div class="zs_box_r">
+            <ul>
+                <li><a title="七星彩基本走势图" target="_blank" href="/lotterytrend/qxc/jbzs" class="l">基本走势图</a></li>
+                <li><a title="七星彩大小走势图" target="_blank" href="/lotterytrend/qxc/dx" class="l">大小走势图</a><s></s></li>
+                <li><a title="七星彩奇偶走势图" target="_blank" href="/lotterytrend/qxc/jo" class="l">奇偶走势图</a></li>
+                <li><a title="七星彩质合走势图" target="_blank" href="/lotterytrend/qxc/zh" class="l">质合走势图</a></li>
+                <li><a title="七星彩除3余数走势图" target="_blank" href="/lotterytrend/qxc/chu3" class="l">除3走势图</a></li>
+                <li><a href="/lotterytrend/qxc/" target="_blank" class="more">查看更多>></a></li>
+            </ul>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+</div>
+<div class="trend-game-title">
+    <h2 class="ico-gp-s">
+        <i></i>高频彩票走势图表</h2>
+    <a href="javascript:void 0;" class="shrink"></a>
+</div>
+<div style="display: none;">
+    <div class="trend-game-item orange">
+        <div class="zs_box_l">
+            <big class="gameName cailogo sd11x5"></big><big class="gameName">山东11选5</big>
+        </div>
+        <div class="zs_box_r">
+            <ul>
+                <li><a title="老11选5基本走势图" target="_blank" href="/lotterytrend/sd11x5/jbzs" class="l">
+                        基本走势图</a></li>
+                <li><a title="老11选5重号走势图" target="_blank" href="/lotterytrend/sd11x5/chzs" class="l">
+                        重号走势图</a></li>
+                <li><a title="老11选5多连走势图" target="_blank" href="/lotterytrend/sd11x5/dlzs" class="l">
+                        多连走势图</a></li>
+                <li><a title="老11选5012走势图" target="_blank" href="/lotterytrend/sd11x5/dwzs" class="l">
+                        012走势图</a></li>
+                <li><a title="老11选5隔号走势图" target="_blank" href="/lotterytrend/sd11x5/ghzs" class="l">
+                        隔号走势图</a></li>
+                <li><a title="老11选5和值走势图" target="_blank" href="/lotterytrend/sd11x5/hzzs" class="l">
+                        和值走势图</a></li>
+                <li><a title="老11选5跨度走势图" target="_blank" href="/lotterytrend/sd11x5/kdzs" class="l">
+                        跨度走势图</a></li>
+                <li><a href="/lotterytrend/sd11x5/" target="_blank" class="more">查看更多>></a></li>
+            </ul>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+    <div class="trend-game-item bblue">
+        <div class="zs_box_l">
+            <big class="gameName cailogo gd11x5"></big><big class="gameName">广东11选5</big>
+        </div>
+        <div class="zs_box_r">
+            <ul>
+                <li><a title="新11选5基本走势图" target="_blank" href="/lotterytrend/gd11x5/jbzs" class="l">
+                        基本走势图</a></li>
+                <li><a title="新11选5重号走势图" target="_blank" href="/lotterytrend/gd11x5/chzs/" class="l">
+                        重号走势图</a></li>
+                <li><a title="新11选5多连走势图" target="_blank" href="/lotterytrend/gd11x5/dlzs/" class="l">
+                        多连走势图</a></li>
+                <li><a title="新11选5012走势图" target="_blank" href="/lotterytrend/gd11x5/dwzs/" class="l">
+                        012走势图</a></li>
+                <li><a title="新11选5隔号走势图" target="_blank" href="/lotterytrend/gd11x5/ghzs/" class="l">
+                        隔号走势图</a></li>
+                <li><a title="新11选5和值走势图" target="_blank" href="/lotterytrend/gd11x5/hzzs/" class="l">
+                        和值走势图</a></li>
+                <li><a title="新11选5跨度走势图" target="_blank" href="/lotterytrend/gd11x5/kdzs/" class="l">
+                        跨度走势图</a></li>
+                <li><a href="/lotterytrend/gd11x5/" target="_blank" class="more">查看更多>></a></li>
+            </ul>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+     <div class="trend-game-item orange">
+        <div class="zs_box_l">
+            <big class="gameName cailogo jx11x5"></big> <big class="gameName">江西11选5</big>
+        </div>
+        <div class="zs_box_r">
+            <ul>
+                <li><a title="11选5基本走势图" target="_blank" href="/lotterytrend/jx11x5/rxjbzs" class="l">
+                        基本走势图</a></li>
+                <li><a title="11选5前2和值走势图" target="_blank" href="/lotterytrend/jx11x5/q2hz" class="l">
+                        前2和值走势图</a></li>
+                <li><a title="11选5前2组选走势图" target="_blank" href="/lotterytrend/jx11x5/q2zux" class="l">
+                        前2组选走势图</a></li>
+                <li><a title="11选5任选大小走势图" target="_blank" href="/lotterytrend/jx11x5/rxdx" class="l">
+                        任选大小走势图</a></li>
+                <li><a title="11选5任选奇偶走势图" target="_blank" href="/lotterytrend/jx11x5/rxjo" class="l">
+                        任选奇偶走势图</a></li>
+                <li><a title="11选5任选质合余数" target="_blank" href="/lotterytrend/jx11x5/rxzh" class="l">
+                        任选质合余数</a></li>
+                <li><a title="11选5任选和值走势图" target="_blank" href="/lotterytrend/jx11x5/rxhz" class="l">
+                        任选和值走势图</a></li>
+                <li><a href="/lotterytrend/jx11x5/" target="_blank" class="more">查看更多>></a></li>
+            </ul>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+    <div class="trend-game-item bblue">
+        <div class="zs_box_l">
+            <big class="gameName cailogo cq11x5"></big> <big class="gameName">重庆11选5</big>
+        </div>
+        <div class="zs_box_r">
+            <ul>
+                <li><a title="11选5基本走势图" target="_blank" href="/lotterytrend/cq11x5/jbzs" class="l">
+                        基本走势图</a></li>
+                <li><a title="11选5重号走势图" target="_blank" href="/lotterytrend/cq11x5/chzs" class="l">
+                        重号走势图</a></li>
+                <li><a title="11选5多连走势图" target="_blank" href="/lotterytrend/cq11x5/dlzs" class="l">
+                        多连走势图</a></li>
+                <li><a title="11选5定位走势图" target="_blank" href="/lotterytrend/cq11x5/dwzs" class="l">
+                        定位走势图</a></li>
+                <li><a title="11选5二连走势图" target="_blank" href="/lotterytrend/cq11x5/elzs" class="l">
+                        二连走势图</a></li>
+                <li><a title="11选5隔号余数" target="_blank" href="/lotterytrend/cq11x5/ghzs" class="l">隔号余数</a></li>
+                <li><a title="11选5和值走势图" target="_blank" href="/lotterytrend/cq11x5/hzzs" class="l">
+                        和值走势图</a></li>
+                <li><a href="/lotterytrend/cq11x5/" target="_blank" class="more">查看更多>></a></li>
+            </ul>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+       <div class="trend-game-item orange">
+        <div class="zs_box_l">
+            <big class="gameName cailogo ln11x5"></big><big class="gameName">辽宁11选5</big> 
+        </div>
+        <div class="zs_box_r">
+            <ul>
+                <li><a title="11选5基本走势图" target="_blank" href="/lotterytrend/ln11x5/jbzs" class="l">
+                        基本走势图</a></li>
+                <li><a title="11选5前2和值走势图" target="_blank" href="/lotterytrend/ln11x5/q2hz" class="l">
+                        前2和值走势图</a></li>
+                <li><a title="11选5前2组选走势图" target="_blank" href="/lotterytrend/ln11x5/q2zux" class="l">
+                        前2组选走势图</a></li>
+                <li><a title="11选5任选大小走势图" target="_blank" href="/lotterytrend/ln11x5/rxdx" class="l">
+                        任选大小走势图</a></li>
+                <li><a title="11选5任选奇偶走势图" target="_blank" href="/lotterytrend/ln11x5/rxjo" class="l">
+                        任选奇偶走势图</a></li>
+                <li><a title="11选5任选质合余数" target="_blank" href="/lotterytrend/ln11x5/rxzh" class="l">
+                        任选质合余数</a></li>
+                <li><a title="11选5任选和值走势图" target="_blank" href="/lotterytrend/ln11x5/rxhz" class="l">
+                        任选和值走势图</a></li>
+                <li><a href="/lotterytrend/ln11x5" target="_blank" class="more">查看更多>></a></li>
+            </ul>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+   <div class="trend-game-item bblue">
+        <div class="zs_box_l">
+            <big class="gameName cailogo cqssc"></big><big class="gameName">重庆时时彩</big> 
+        </div>
+        <div class="zs_box_r">
+            <ul>
+                <li><a title="老时时彩三星直选走势图" target="_blank" href="/lotterytrend/cqssc/s3zxzs" class="l">
+                        三星直选走势图</a></li>
+                <li><a title="老时时彩大小单双走势图" target="_blank" href="/lotterytrend/cqssc/dxds" class="l">
+                        大小单双走势图</a></li>
+                <li><a title="老时时彩一星走势图" target="_blank" href="/lotterytrend/cqssc/s1zs" class="l">一星走势图</a></li>
+                <li><a title="老时时二星和值走势图" target="_blank" href="/lotterytrend/cqssc/s2hzzs" class="l">
+                        二星和值走势图</a></li>
+                <li><a title="老时时彩二星组选走势图" target="_blank" href="/lotterytrend/cqssc/s2zuxzs" class="l">
+                        二星组选走势图</a></li>
+                <li><a title="老时时彩三星除3走势图" target="_blank" href="/lotterytrend/cqssc/s3c3ys" class="l">
+                        三星除3走势图</a></li>
+                <li><a title="老时时彩三星大小走势图" target="_blank" href="/lotterytrend/cqssc/s3dxzs" class="l">
+                        三星大小走势图</a></li>
+                <li><a href="/lotterytrend/cqssc" target="_blank" class="more">查看更多>></a></li>
+            </ul>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+    <div class="trend-game-item orange">
+        <div class="zs_box_l">
+            <big class="gameName cailogo jxssc"></big><big class="gameName">江西时时彩</big>
+        </div>
+        <div class="zs_box_r">
+            <ul>
+                <li><a title="新时时彩三星基本走势图" target="_blank" href="/lotterytrend/jxssc/s3zxzs" class="l">
+                        三星基本走势图</a></li>
+                <li><a title="新时时彩大小单双走势图" target="_blank" href="/lotterytrend/jxssc/dxds" class="l">
+                        大小单双走势图</a></li>
+                <li><a title="新时时一星走势图" target="_blank" href="/lotterytrend/jxssc/s1zs" class="l">一星走势图</a></li>
+                <li><a title="新时时彩二星和值走势图" target="_blank" href="/lotterytrend/jxssc/s2hzzs" class="l">
+                        二星和值走势图</a></li>
+                <li><a title="新时时彩二星组选走势图" target="_blank" href="/lotterytrend/jxssc/s2zuxzs" class="l">
+                        二星组选走势图</a></li>
+                <li><a title="新时时彩三星除3走势图" target="_blank" href="/lotterytrend/jxssc/s3c3ys" class="l">
+                        三星除3走势图</a></li>
+                <li><a title="新时时彩三星大小走势图" target="_blank" href="/lotterytrend/jxssc/s3dxzs" class="l">
+                        三星大小走势图</a></li>
+                <li><a href="/lotterytrend/jxssc/" target="_blank" class="more">查看更多>></a></li>
+            </ul>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+   <div class="trend-game-item bblue">
+        <div class="zs_box_l">
+            <big class="gameName cailogo gdklsf"></big><big class="gameName">广东快乐十分</big>
+        </div>
+        <div class="zs_box_r">
+            <ul>
+                <li><a title="广东快乐十分定位1走势图" target="_blank" href="/lotterytrend/gdklsf/dw1" class="l">
+                        定位1走势图</a></li>
+                <li><a title="广东快乐十分定位2走势图" target="_blank" href="/lotterytrend/gdklsf/dw2" class="l">
+                        定位2走势图</a></li>
+                <li><a title="广东快乐十分定位3走势图" target="_blank" href="/lotterytrend/gdklsf/dw3" class="l">
+                        定位3走势图</a></li>
+                <li><a title="广东快乐十分大小走势图" target="_blank" href="/lotterytrend/gdklsf/dx" class="l">
+                        大小走势图</a></li>
+                <li><a title="广东快乐十分基本走势图" target="_blank" href="/lotterytrend/gdklsf/jbzs" class="l">
+                        基本走势图</a></li>
+                <li><a title="广东快乐十分奇偶走势图" target="_blank" href="/lotterytrend/gdklsf/jo" class="l">
+                        奇偶走势图</a></li>
+                <li><a title="广东快乐十分质合走势图" target="_blank" href="/lotterytrend/gdklsf/zh" class="l">
+                        质合走势图</a></li>
+                <li><a href="/lotterytrend/gdklsf" target="_blank" class="more">查看更多>></a></li>
+            </ul>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+       <div class="trend-game-item orange">
+        <div class="zs_box_l">
+            <big class="gameName cailogo hnklsf"></big><big class="gameName">湖南快乐十分</big>
+        </div>
+        <div class="zs_box_r">
+            <ul>
+                <li><a title="湖南快乐十分基本走势图" target="_blank" href="/lotterytrend/hnklsf/jbzs" class="l">
+                        三星基本走势图</a></li>
+                <li><a title="湖南快乐十分二连走势图" target="_blank" href="/lotterytrend/hnklsf/elzs" class="l">
+                        二连走势图</a></li>
+                <li><a title="湖南快乐十分大小走势图" target="_blank" href="/lotterytrend/hnklsf/dxzs" class="l">
+                        大小走势图</a></li>
+                <li><a title="湖南快乐十分隔号走势图" target="_blank" href="/lotterytrend/hnklsf/ghzs" class="l">
+                        隔号走势图</a></li>
+                <li><a title="湖南快乐十分前1走势图" target="_blank" href="/lotterytrend/hnklsf/q1zs" class="l">
+                        前1走势图</a></li>
+                <li><a title="湖南快乐十分区间走势图" target="_blank" href="/lotterytrend/hnklsf/qjzs" class="l">
+                        区间走势图</a></li>
+                <li><a title="湖南快乐十分彩三星大小走势图" target="_blank" href="/lotterytrend/hnklsf/s3dxzs"
+                       class="l">三星大小走势图</a></li>
+                <li><a href="/lotterytrend/hnklsf" target="_blank" class="more">查看更多>></a></li>
+            </ul>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+    <div class="trend-game-item bblue">
+        <div class="zs_box_l">
+            <big class="gameName cailogo cqklsf"></big><big class="gameName">重庆快乐十分</big> 
+        </div>
+        <div class="zs_box_r">
+            <ul>
+                <li><a title="重庆快乐十分三星基本走势图" target="_blank" href="/lotterytrend/cqklsf/jbzs" class="l">
+                        三星基本走势图</a></li>
+                <li><a title="重庆快乐十分大小走势图" target="_blank" href="/lotterytrend/cqklsf/dxzs" class="l">
+                        大小走势图</a></li>
+                <li><a title="重庆快乐十分二连走势图" target="_blank" href="/lotterytrend/cqklsf/elzs" class="l">
+                        二连走势图</a></li>
+                <li><a title="重庆快乐十分隔号走势图" target="_blank" href="/lotterytrend/cqklsf/ghzs" class="l">
+                        隔号走势图</a></li>
+                <li><a title="重庆快乐十分奇偶走势图" target="_blank" href="/lotterytrend/cqklsf/jozs" class="l">
+                        奇偶走势图</a></li>
+                <li><a title="重庆快乐十分前1走势图" target="_blank" href="/lotterytrend/cqklsf/q1zs" class="l">
+                        前1走势图</a></li>
+                <li><a title="重庆快乐十分区间走势图" target="_blank" href="/lotterytrend/cqklsf/qjzs" class="l">
+                        区间走势图</a></li>
+                <li><a href="/lotterytrend/cqklsf/" target="_blank" class="more">查看更多>></a></li>
+            </ul>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+</div>
+<div class=" clearfix"> </div>
+<script type="text/javascript">
+    $(function() {
+        $(".shrink").click(function() {
+            var _div = $(this).parents("div").next("div:first");
+            if ($(this).hasClass("show_a")) {
+                _div.hide();
+                $(this).removeClass("show_a");
+            } else {
+                _div.show();
+                $(this).addClass("show_a");
+            }
+        });
+    });
+</script>

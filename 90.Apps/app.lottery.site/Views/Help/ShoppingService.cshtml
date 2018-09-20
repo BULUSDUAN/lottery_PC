@@ -1,0 +1,68 @@
+﻿@{
+    var Title = "合买";
+    ViewBag.Title = Title + " - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+   @ViewHelpers.css("help.css")
+} 
+  <div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">玩彩网</a> > </li>
+        <li><a href="/help/index">&nbsp;帮助中心</a> > </li>
+        <li>&nbsp;合买</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type = "buylottery", name = "ShoppingService" });}
+<div class="help_r">
+         
+
+       <div class="list_box">
+            	<div class="h_pub_t">
+                	<b class="t_l"></b>
+                    <div class="t_m"><h2>合买</h2></div>
+                    <b class="t_r"></b>
+                </div>
+                <div class="h_pub_m">
+                	<ul>
+                    
+                            <li><a href="/help/ShoppingService1" id="link151">合买奖金如何分配？</a></li>
+                            <li><a href="/help/ShoppingService2" id="link151">什么是合买？</a></li>
+                            <li><a href="/help/ShoppingService3" id="link151">什么是方案保底？</a></li>
+                            <li><a href="/help/ShoppingService4" id="link151">合买方案如何尽快满员？</a></li>
+                            <li><a href="/help/ShoppingService5" id="link151">合买提成？</a></li>
+                            <li><a href="/help/ShoppingService6" id="link151">什么是合买战绩？</a></li>
+                            <li><a href="/help/ShoppingService7" id="link151">竞技类彩票战绩规则</a></li>
+                            <li><a href="/help/ShoppingService8" id="link151">数字类彩票战绩规则</a></li>
+                            <li><a href="/help/ShoppingService9" id="link151">什么叫方案置顶？</a></li>
+                            <li><a href="/help/ShoppingService10" id="link151">方案置顶有哪些规则？</a></li>
+                            <li><a href="/help/ShoppingService11" id="link151">什么是清保？</a></li>
+                            <li><a href="/help/ShoppingService12" id="link151">什么是资金冻结</a></li>
+                            <li><a href="/help/ShoppingService13" id="link151">什么是网站保底？</a></li>
+                            <li><a href="/help/ShoppingService14" id="link151">发起方案时没有设置方案保密，发起之后可以修改吗？</a></li>
+                            <li><a href="/help/ShoppingService15" id="link151">什么是方案保密？</a></li>
+                            <li><a href="/help/ShoppingService17" id="link151">什么叫方案上传？</a></li>
+                            <li><a href="/help/ShoppingService18" id="link151">单式上传支持哪些格式？</a></li>
+                            <li><a href="/help/ShoppingService19" id="link151">如何参与合买？</a></li>
+                            <li><a href="/help/ShoppingService20" id="link151">发起合买方案是否有相关限制？</a></li>
+                            <li><a href="/help/ShoppingService21" id="link151">如何发起合买方案？</a></li>
+				            </ul>
+                </div>
+                <div class="page"><a class="h_l" href="index.shtml" id="pfirst" hidefocus="true">首页</a><a title="上一页" href="#" class="preno" hidefocus="true" id="link153"></a><a href="index" hidefocus="true" class="curpage" id="link154">1</a><a hidefocus="true" href="#" class="nextno" title="下一页" id="link155">下一页</a><a class="h_l" href="index" id="plast" hidefocus="true">尾页</a><span id="totalpage" class="gray">共1页</span>
+            </div>
+            </div>
+
+
+        </div>
+         </div>
+<div class="clearfix"></div>
+
+ @ViewHelpers.js("help.js")
+
+
+
+
+
+

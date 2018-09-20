@@ -1,0 +1,139 @@
+﻿@using GameBiz.Core;
+@{
+    ViewBag.Title = "自动跟单管理 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "自动跟单管理, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var followrecord = ViewBag.FollowRecord as TogetherFollowRecordInfoCollection;
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>自动跟单管理</li>
+    </ul>
+</div>
+<div class="center mt10">
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mune_safe">
+        <div class="account_menu clearfix">
+            <a href="/member/betorder"  >投注记录</a>
+            <a href="/member/saveProgram">保存方案</a>
+            <a href="/member/chaseorder">追号记录</a>
+            <a href="/member/autofollow" class="select">自动跟单</a>
+        </div>
+        <div class="account_con">
+             <div class="betorder_top">
+            <ul>
+                <li ><a href="/member/autofollow"><i></i>我的定制</a></li>
+                <li><a href="/member/followme?gamecode=ctzq&gametype=t14c"><i></i>定制我的</a></li>
+                <li class="betorder_topSelected"><a href="/member/followrecord" ><i></i>成功定制记录</a></li>
+            </ul>
+        </div>
+        <div class="search_tab">
+            按分类查看：<label><input type="radio" value="" name="followGame" class="check" onchange="getFollow(0,10)" />全部</label>
+            <label>
+                <input type="radio" value="bjdc" name="followGame" class="check" onchange="getFollow(0,10)" />北京单场</label>
+            <label>
+                <input type="radio" value="jczq" name="followGame" class="check" onchange="getFollow(0,10)" />竞彩足球</label>
+            <label>
+                <input type="radio" value="jclq" name="followGame" class="check" onchange="getFollow(0,10)" />竞彩篮球</label>
+            <label>
+                <input type="radio" value="ctzq" name="followGame" class="check" onchange="getFollow(0,10)" />传统足球</label>
+            <label>
+                <input type="radio" value="ssq" name="followGame" class="check" onchange="getFollow(0,10)" />双色球</label>
+            <label>
+                <input type="radio" value="dlt" name="followGame" class="check" onchange="getFollow(0,10)" />大乐透</label>
+            <label>
+                <input type="radio" value="fc3d" name="followGame" class="check" onchange="getFollow(0,10)" />福彩3D</label>
+            <label>
+                <input type="radio" value="pl3" name="followGame" class="check" onchange="getFollow(0,10)" />排列3</label>
+
+        </div>
+            <table class="account_box">
+                <thead>
+                    <tr >
+                        <td>序</td>
+                        <td>发起人</td>
+                        <td>期号</td>
+                        <td>彩种</td>
+                        <td>方案号</td>
+                        <td>方案金额</td>
+                        <td>方案奖金</td>
+                        <td>跟单金额</td>
+                        <td>跟单奖金</td>
+                        <td>认购时间</td>
+                        <td>状态</td>
+                    </tr>
+                </thead>
+                @{
+                    if (followrecord != null && followrecord.List.Count > 0)
+                    {
+                        foreach (var item in followrecord.List)
+                        {
+                            <tr class="nd2">
+                                <td>@(ViewBag.pageIndex*ViewBag.PageSize + followrecord.List.IndexOf(item) + 1)</td>
+                                <td>
+                                    <a href="/blog/standings/@item.CreaterUserId" class="orderId" target="_blank">@SiteString.HideUserName(item.CreaterDisplayName, item.CreaterHideDisplayNameCount)</a></td>
+              
+                                <td>@item.IssuseNumber</td>
+                                <td>@SiteConvert.GameName(item.GameCode, item.GameType)</td>
+                                <td><a target="_blank" href="/user/scheme/@item.SchemeId" class="orderId">@item.SchemeId</a></td>
+                                <td class="ye blod fszie">@item.SchemeMoney.ToString("f")</td>
+                                <td class="ye blod fszie">@item.SchemeBonusMoney.ToString("f")</td>
+                                <td class="ye blod fszie">@item.FollowMoney.ToString("f")</td>
+                                <td class="@(item.FollowBonusMoney > 0 ? "red" : string.Empty)">@(item.FollowBonusMoney > 0 ? item.FollowBonusMoney.ToString("f") : string.Empty)</td>
+                                <td> @item.CreateTime.ToShortDateString() @item.CreateTime.ToShortTimeString()</td>
+                                <td>@OrderManager.OrderStatusName(SchemeType.TogetherBetting, item.ProgressStatus)</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                           <tr >
+                        <td colspan="11">暂时没有找到你要的数据哦</td>
+                    </tr>
+                    }
+                }
+            </table>
+                  <div class="combined clearfix">
+                <div class="fl">
+                    <span><b class="b1"></b>方案数量：<strong class="zc blod fszie">@followrecord.TotalCount&nbsp;个</strong></span>
+                </div>
+                <div class="fr">
+                    <em class="xh">*</em>注意：成功定制记录最多可查询一个月数据
+                </div>
+                
+            </div>
+            <div class="account_page  clearfix">
+                @ViewHelpers.Pager4("getFollow", ViewBag.pageIndex, ViewBag.PageSize, followrecord.TotalCount)
+            </div>
+        </div></div>
+       
+    </div>
+    </div>
+    <div class="clearfix"></div>
+<script type="text/javascript">
+    $(function () {
+        $(".account_box tr:even:gt(0)").css("backgroundColor", "#f9f9f9");
+    });
+    var gamesObj = document.getElementsByName("followGame");
+    function getFollow(pageIndex, pageSize) {
+        var game = "";
+        for (var i = 0; i < gamesObj.length; i++) {
+            if (gamesObj[i].checked) {
+                game = gamesObj[i].value;
+            }
+        }
+
+        location.href = "/member/followrecord/" + game + "?pageIndex=" + pageIndex + "&pageSize=" + pageSize + "&r=" + Math.random().toFixed(5);
+    }
+
+    for (var i = 0; i < gamesObj.length; i++) {
+        if (gamesObj[i].value == '@ViewBag.GameCode') {
+            gamesObj[i].checked = true;
+        }
+    }
+</script>

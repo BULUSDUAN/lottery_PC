@@ -1,0 +1,58 @@
+﻿@using External.Core.Celebritys;
+@{
+    var att = ViewBag.MyAttention as WinnerModelRank_Collection;
+}
+<div class="buylist">
+    <table id="mymxObj">
+        <thead>
+            <tr>
+                <th width="213px">
+                    作者
+                </th>
+                <th width="165px">
+                    模型数量
+                </th>
+                <th width="165px">
+                    TA的关注
+                </th>
+                <th width="165px">
+                    TA的粉丝
+                </th>
+                <th width="280px">
+                    最高回报率
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (att != null && att.TotalCount > 0)
+            {
+                foreach (var item in att.ModelRankList)
+                {
+                    <tr>
+                        <td style="padding-left: 15px;">
+                            <div style="text-align: left">
+                                <i class="bg3 big_author_icon @(item.IsExperter ? "rz_author_icon" : "nrz_author_icon")"></i>
+                                <a class="author" href="/artists/mycenter/@item.UserId">@item.UserDisplayName</a>
+                            </div>
+                        </td>
+                        <td>
+                            <a href="javascript:void(0)" class="blue">@(item.TotalModelCount)个</a>
+                        </td>
+                        <td>
+                            @item.TotalFollowerCount
+                        </td>
+                        <td>
+                            @item.TotalAttentionCount
+                        </td>
+                        <td style="color: red">
+                            <em class="red">@(item.TotalRateReturn==0?"-":(item.TotalRateReturn * 100).ToString("0")+"%")</em>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<div style="text-align: right">
+    @ViewHelpers.Pager3("", ViewBag.PageIndex, ViewBag.PageSize, att != null && att.TotalCount > 0?att.TotalCount:0)
+</div>

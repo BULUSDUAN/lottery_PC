@@ -1,0 +1,148 @@
+﻿@using app.lottery.site.Models;
+@using GameBiz.Core
+
+@{
+    Layout = "../Shared/_LayoutFoud.cshtml";
+    ViewBag.Title = "提取记录" ;
+    ViewBag.keywords = "提取记录";
+    Withdraw_QueryInfoCollection WithdrawCollection = ViewBag.Fund;
+    var user = ViewBag.CurrentUser as CurrentUserInfo;
+    var balance = ViewBag.CurrentUserBalance as GameBiz.Core.UserBalanceInfo;
+}
+<div class="center mt10">
+    @{Html.RenderAction("menuFoud", "Member");}
+    @{Html.RenderAction("toptipFoud", "Member");}
+    <div class="new_buy_right">
+        <div class="betorder_top clearfix">
+            <ul>
+                <li ><a href="/member/integraldetail">返点明细</a></li>
+                <li ><a href="/member/integralextract">返点提取</a></li>
+                <li class="betorder_topSelected"><a href="/member/drawingsrecord">提取记录</a></li>
+                   <li><a href="/member/integralinto">返点转入</a></li>
+                 <li><a href="/member/integralintodetail">转入记录</a></li>
+                 <li><a href="/member/jf">我的返点</a></li>
+            </ul>
+        </div>
+        <div class="betorder_con clearfix">
+            <div class="chebox_tab">
+                订单号：<input type="text" id="orderId" class="orderId" value="@ViewBag.orderId"/>
+                &nbsp;&nbsp; 提款状态：
+                <select id="status">
+                    <option value="" @(ViewBag.Status == null ? "selected='selected'" : string.Empty)>全部状态</option>
+                    <option value="1" @(ViewBag.Status != null && ViewBag.Status == WithdrawStatus.Requesting ? "selected='selected'" : string.Empty)>
+                        审核中</option>
+                    <option value="3" @(ViewBag.Status != null && ViewBag.Status == WithdrawStatus.Success ? "selected='selected'" : string.Empty)>
+                        提款成功</option>
+                    <option value="4" @(ViewBag.Status != null && ViewBag.Status == WithdrawStatus.Refused ? "selected='selected'" : string.Empty)>
+                        提款失败</option>
+                </select>
+                &nbsp;&nbsp;日期： @ViewHelpers.Calendar3("begin", ViewBag.Begin)至 @ViewHelpers.Calendar3("end", ViewBag.End)
+                &nbsp;&nbsp;<input type="button" value="查询" style="width: 65px;" onclick="getFetchRecord(0, 30)" />
+            </div>
+            <table class="betorder_table" border="0" cellspacing="0" cellpadding="0">
+                <thead>
+                    <tr class="tr_head">
+                        <th width="50">
+                            序号
+                        </th>
+                        <th width="150">
+                            交易时间
+                        </th>
+                        <th width="120">
+                            提款金额
+                        </th>
+                        <th width="120">
+                            余额
+                        </th>
+                        <th width="100">
+                            提款方式
+                        </th>
+                        <th width="100">
+                            提款状态
+                        </th>
+                        <th width="150">
+                            订单号
+                        </th>
+                        <th>
+                            交易详情
+                        </th>
+                    </tr>
+                </thead>
+                @{
+                    if (WithdrawCollection != null && WithdrawCollection.WithdrawList.Count > 0)
+                    {
+                        var list = WithdrawCollection.WithdrawList.OrderByDescending(p => p.RequestTime).ToList();
+                        foreach (var item in list)
+                        {
+                    <tr>
+                        <td>
+                            @(ViewBag.PageIndex * ViewBag.PageSize + (list.IndexOf(item) + 1))
+                        </td>
+                        <td>
+                            @item.RequestTime.ToString("yyyy-MM-dd HH:mm")
+                        </td>
+                        <td class="sr">
+                            @item.RequestMoney.ToString("N")
+                        </td>
+                        <td class="ye">
+                            @balance.CommissionBalance.ToString("N2")
+                        </td>
+                        <td>
+                            @SiteConvert.WithdrawAgentTypeName(item.WithdrawAgent)
+                        </td>
+                        <td class="green">
+                            @SiteConvert.WithdrawStatusName(item.Status)
+                        </td>
+                        <td class="orderId">
+                            @item.OrderId
+                        </td>
+                        <td>
+                            @item.ResponseMessage
+                        </td>
+                    </tr>
+                        }
+                    }
+                    else
+                    {
+                    <tr>
+                        <td class="" colspan="8">
+                            没有找到你要的数据哦。
+                        </td>
+                    </tr>
+                    }
+                }
+                <tr>
+                    <td class="betorder_number_money" colspan="8">
+                        <p>
+                            @*<b class="srjy"></b>提现成功：@(WithdrawCollection == null ? 0 : WithdrawCollection.TotalCount)*@
+                            <b class="srjy"></b>提现成功：@(WithdrawCollection == null ? 0 : (WithdrawCollection.WithdrawList != null ? WithdrawCollection.WithdrawList.Where(s => s.Status == WithdrawStatus.Success).Count():0))
+                            笔 &nbsp;&nbsp;&nbsp;&nbsp;<b class="srje"></b>提现返点：@(WithdrawCollection == null ? "0.00" : WithdrawCollection.TotalWinMoney.ToString("N2"))
+                            &nbsp;&nbsp;&nbsp;&nbsp;<b class="zcjy"></b>提现失败：@(WithdrawCollection == null ? 0 : WithdrawCollection.RefusedCount)
+                            笔 &nbsp;&nbsp;&nbsp;&nbsp;<b class="zcje"></b>失败返点：@(WithdrawCollection == null ? "0.00" : WithdrawCollection.TotalRefusedMoney.ToString("N2"))
+                            
+                        </p>
+                        <p class="tip">
+                            注意：提款记录最多可查询一个月数据
+                        </p>
+                    </td>
+                </tr>
+            </table>
+            @ViewHelpers.Pager6("getFetchRecord", ViewBag.PageIndex, ViewBag.PageSize, WithdrawCollection == null ? 0 : WithdrawCollection.TotalCount)
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(".betorder_table tr:even:gt(0)").css("backgroundColor", "#f9f9f9");
+    });
+    function getFetchRecord(pageNo, pageSize) {
+        var begin = $("#begin").val();
+        var end = $("#end").val();
+        var search = "pageindex=" + pageNo + "&pagesize=" + pageSize + "&begin=" + begin + "&end=" + end;
+        var status = $("#status option:selected").val();
+        var orderId = $("#orderId").val();
+        if (status) search = search + "&status=" + status;
+        if (orderId) search = search + "&orderId=" + orderId;
+        location.search = search;
+    }
+</script>

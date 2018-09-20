@@ -1,0 +1,36 @@
+﻿@using app.lottery.site.cbbao.Models
+@section css{
+    @UserHelper.css("zixun.css")
+}
+@{
+    var list = ViewBag.content as List<ZixunComment>;
+    if (list != null)
+    {
+        if (list.Count() > 0)
+        {
+    <p class="com_top">
+        <span>该文章有</span>人参与评论，<span>共@(list.Count)</span>条评论</p>
+                                  foreach (var item in list)
+                                  {
+    <div class="comment_details">
+        <span class="user_tx hmmr hmmr_leve1"></span><span class="common_things">@SiteString.HideUserName(item.UserDisplayName)</span><span
+            class="common_things">发表于：@item.CreateTime</span>
+        <div class="c_details">@Html.Raw(item.Content)
+        </div>
+    </div>
+                                  }
+
+        }
+        else
+        {
+    <div class="comment_details">
+        该文章暂时没有评论！来做第一个评论的人吧！</div>
+        }
+
+    }
+    else
+    {
+    <div class="comment_details">
+        该文章暂时没有评论！来做第一个评论的人吧！</div>
+    }
+}

@@ -1,0 +1,73 @@
+﻿@using Activity.Core;
+@using app.lottery.site.Models;
+@{
+    ViewBag.Title = "彩票0元包邮送到家";
+    Layout = "../Shared/_HuoDong.cshtml";
+}
+
+<div id="cpmail">
+    <div class="cpmail_box">
+        <a class="cpmail_log" href="/"></a>
+        <div class="cpmail_center">
+            <p>
+                <span class="cpmail_time">活动时间为4月1日-4月30日</span>
+            </p>
+            <div class="cpmail_icon">
+                <ul>
+                    <li>
+                        <i class="money"></i>
+                    </li>
+                    <li>
+                        <i class="one-time"></i>
+                    </li>
+                    <li>
+                        <i class="kf"></i>
+                    </li>
+                </ul>
+            </div>
+            <div class="cpmail_tip clearfix">
+                <ul>
+                    <li class="money">
+                        <strong>用户购彩金额达</strong>
+                        <br/>
+                        <strong>￥<em>1000</em>元以上</strong>
+                    </li>
+                    <li class="jt_icon">
+                        <b class="first"></b>
+                    </li>
+                    <li class="one-time">
+                        <strong>可申请一次免费邮寄</strong>
+                        <br/>
+                        <strong>所购买的的彩票实票</strong>
+                    </li>
+                    <li class="jt_icon">
+                        <b class="secend"></b>
+                    </li>
+                    <li class="kf">
+                        <strong>申请方式</strong>
+                        <br/>
+                        <strong>详情联系在线客服</strong>
+                    </li>
+                </ul>
+            </div>
+            <div class="cpmail_bottom clearfix">
+                
+                <div class="kf_box clearfix">
+                   
+                    <span class="kf_tip">
+                    <a  href="javascript:void(0)" data="@SiteString.kefuUrl" class="link_kefu" title="点击联系在线客服"></a>
+                        <b>客服热线</b>&nbsp;<b>免长途费</b>
+                    </span>
+                </div>
+
+                <div class="tel_box clearfix">
+                    <i class="tel_icon"></i>
+                    @SiteString.tel
+                </div>
+                
+            </div>
+        </div>
+    </div>
+   
+</div>
+

@@ -1,0 +1,58 @@
+﻿@using GameBiz.Core;
+@using MatchBiz.Core;
+@{
+    string type = ViewBag.Type;
+    var issusenumber = Request["issusenumber"];
+    if (issusenumber != null && issusenumber!="")
+    {
+        ViewBag.Title = "足彩" + SiteConvert.GameName("ctzq", type) + "第" + issusenumber + "期开奖结果-" + SiteString.getHZSiteName(Request);
+        ViewBag.keywords = "足彩" + SiteConvert.GameName("ctzq", type) + "第" + issusenumber + "期开奖结果";
+        ViewBag.Description = SiteConvert.GameName("ctzq", type) + "第" + issusenumber + "期开奖结果,更多" + SiteConvert.GameName("ctzq", type) + "开奖结果请登录" + SiteString.getHZSiteName(Request) + "彩票网进行查看.";
+    }
+    else
+    {
+        ViewBag.Title = "足彩" + SiteConvert.GameName("ctzq", type) + "开奖号码-" + SiteConvert.GameName("ctzq", type) + "开奖结果-" + SiteConvert.GameName("ctzq", type) + "开奖详情-" + SiteString.getHZSiteName(Request);
+        ViewBag.keywords = "足彩" + SiteConvert.GameName("ctzq", type) + "开奖号码-" + SiteConvert.GameName("ctzq", type) + "开奖结果-" + SiteConvert.GameName("ctzq", type) + "开奖详情";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "开奖公告为您提供足彩" + SiteConvert.GameName("ctzq", type) + "开奖查询,最快的" + SiteConvert.GameName("ctzq", type) + "开奖结果,最全的" + SiteConvert.GameName("ctzq", type) + "开奖详情,查询足彩" + SiteConvert.GameName("ctzq", type) + "开奖号码就上" + SiteString.getHZSiteName(Request) + "彩票网.";
+    }
+    var prizedIssuse = WCFService.StoppedIssuseList("ctzq", type, 20);
+    var issuseNum = string.IsNullOrEmpty(Request["issuseNumber"]) ? prizedIssuse.FirstOrDefault() : Request["issuseNumber"];
+}
+@section css{
+@UserHelper.css("lottery.css")
+}
+<style>
+    .rank_tb li.on
+    {
+        border-top: 1px solid #ECDBBD;
+    }
+</style>
+<script type="text/javascript">
+    var issues = '@issuseNum';
+    var type = '@type';
+    var gamecode = 'ctzq';
+    var res = '@ViewHelpers.jsonres()';
+    var resS = '@ViewHelpers.jsonres()/iqucai';
+</script>
+<div class="lottery-right">
+    <div class="lottery_notic detail-top mt10">
+        <div class="lottery_today" style="line-height: 55px"><i class="deico">@(SiteConvert.GameName("ctzq", type))开奖信息</i></div>
+        <div class="lottery_search">
+            第
+            <select name="dropIssueNum" id="dropIssueNum" onchange="LoadPrize()">
+                @{foreach (var item in prizedIssuse)
+                {
+                    <option @(issuseNum == item ? "selected=selected" : string.Empty) value="@item">@item</option>      
+                }}
+            </select>
+            期
+        </div>
+    </div>
+       <div id="myload_ctzq">
+        
+    </div>
+    
+</div>
+<div class="clear">
+</div>
+  @UserHelper.js("bjdcbous.js")

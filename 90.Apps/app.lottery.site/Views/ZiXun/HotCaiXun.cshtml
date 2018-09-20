@@ -1,0 +1,329 @@
+﻿@using GameBiz.Core
+@{
+    ViewBag.Title = "赛事资讯 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    var hot = ViewBag.hotDataSource as External.Core.SiteMessage.ArticleInfo_QueryCollection;
+
+    var jd = ViewBag.jdxw as External.Core.SiteMessage.ArticleInfo_QueryCollection;
+    var ss = ViewBag.ssdp as External.Core.SiteMessage.ArticleInfo_QueryCollection;
+    var sz = ViewBag.szc as External.Core.SiteMessage.ArticleInfo_QueryCollection;
+    var gp = ViewBag.gpc as External.Core.SiteMessage.ArticleInfo_QueryCollection;
+    var jj = ViewBag.jjc as External.Core.SiteMessage.ArticleInfo_QueryCollection;
+    var sd = ViewBag.s_d as External.Core.SiteMessage.ArticleInfo_QueryCollection;
+    var zs = ViewBag.z_s_l as External.Core.SiteMessage.ArticleInfo_QueryCollection;
+    var zj = ViewBag.z_j as External.Core.SiteMessage.ArticleInfo_QueryCollection;
+    var fp = ViewBag.f_p as External.Core.SiteMessage.ArticleInfo_QueryCollection;
+    var xw = ViewBag.zjxw as External.Core.SiteMessage.ArticleInfo_QueryCollection;
+    var bk = ViewBag.r_cpbk as External.Core.SiteMessage.ArticleInfo_QueryCollection;
+    var lhlist = ViewBag.Ads as SiteMessageBannerInfo_Collection;
+}
+@section css
+{@UserHelper.css("zixun.css")
+}
+<div id="zixun">
+    <div class="news_title bg">
+        <img src="@ViewHelpers.img("member/zixun_title.jpg")"alt=""/>
+    </div>
+    <div class="main">
+        <div class="zx_left">
+        <div class="zx_t">
+            <div id="slideBox" class="slideBox">
+                <a class="prev" href="javascript:void(0);" style="display: none;"></a>
+                <a class="next" href="javascript:void(0);" style="display: none;"></a>
+                <div class="bd">
+                    <ul>
+                        @{
+                            var lists = lhlist.ListInfo.Where(o => o.IsEnable).ToList();
+                            foreach (var lhitem in lists)
+                            {
+                                <li _src="url(@lhitem.ImageUrl)" style="background: #ffffff center 0 no-repeat;"><a target="_blank" href="@lhitem.JumpUrl">
+                                                                                                                     <img src="@lhitem.ImageUrl"  alt="@lhitem.BannerTitle"/></a></li>
+                            }
+                        }
+                    </ul>
+                </div>
+                <div class="hd">
+                    <ul>
+                        @{
+                            for (var i = 0; i < lists.Count(); i++)
+                            {
+                                <li><a>@(i+1)</a></li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+             @*<div class="caption">
+                 <ul>
+                     <li><a>1</a></li>
+                     <li><a>2</a></li>
+                     <li><a>3</a></li>
+                     <li><a>4</a></li>
+                 </ul>
+            </div>*@
+        </div>
+            <div class="cpzj">
+                <h1 class="l_zj">
+                    焦点新闻</h1>
+                <div class="main_items" style="margin-top: -5px !important">
+                    <ul style="height: 185px !important;">
+                        @{foreach (var item in jd.ArticleList)
+                          { 
+                            <li>. <a href="/zixun/textpart?num=@item.Id&id=jdxw" class="zx_blue">@(item.Title.Length > 20 ? item.Title.Substring(0, 20) + "…" : item.Title)
+                            </a></li>}}
+                    </ul>
+                </div>
+                <a href="/zixun/more?id=jdxw" class="more" id="jdxw" style="color: #999999 !important">
+                    更多&gt;&gt</a></div>
+            <div class="clearfix">
+            </div>
+            <div class="rdcx ">
+                <div class="l_title">
+                    <span class="l_ima bg"></span>赛事点评<span><a href="/zixun/more?id=ssdp" id="ssdp" class="more">更多&gt;&gt</a></span></div>
+                <div class="main_items">
+                    <ul>
+                        @{foreach (var item in ss.ArticleList)
+                          { 
+                            <li>. <a href="@string.Format("/staticHtml/zixun/details/{0}/{1}.html", item.CreateTime.ToString("yyyyMMdd"), item.Id)" class="zx_blue">@(item.Title.Length > 20 ? item.Title.Substring(0, 20) + "…" : item.Title)
+                            </a></li>}}
+                    </ul>
+                </div>
+            </div>
+            <div class="cpbk rdcx" style="margin-left: 11px;">
+                <div class="l_title">
+                    <span class="sz_ima bg2"></span>数字彩资讯<span><a href="/zixun/more?id=szczx" id="szczx"
+                        class="more">更多&gt;&gt</a></span></div>
+                <div class="main_items">
+                    <ul>
+                        @{foreach (var item in sz.ArticleList)
+                          { 
+                            <li>. <a href="@string.Format("/staticHtml/zixun/details/{0}/{1}.html", item.CreateTime.ToString("yyyyMMdd"), item.Id)" class="zx_blue">@(item.Title.Length > 20 ? item.Title.Substring(0, 20) + "…" : item.Title)
+                            </a></li>}}
+                    </ul>
+                </div>
+            </div>
+            <div class="cc rdcx">
+                <div class="l_title">
+                    <span class="gpczx_ima bg2"></span>高频彩资讯<span><a href="/zixun/more?id=gpczx" id="gpczx"
+                        class="more">更多&gt;&gt</a></span></div>
+                <div class="main_items">
+                    <ul>
+                        @{foreach (var item in gp.ArticleList)
+                          { 
+                            <li>. <a href="@string.Format("/staticHtml/zixun/details/{0}/{1}.html", item.CreateTime.ToString("yyyyMMdd"), item.Id)" class="zx_blue">@(item.Title.Length > 20 ? item.Title.Substring(0, 20) + "…" : item.Title)
+                            </a></li>}}
+                    </ul>
+                </div>
+            </div>
+            <div class="rdcx" style="margin-left: 11px;">
+                <div class="l_title">
+                    <span class="jjczx_ima bg2"></span>竞技彩资讯<span><a href="/zixun/more?id=jjczx" id="jjczx"
+                        class="more">更多&gt;&gt</a></span></div>
+                <div class="main_items">
+                    <ul>
+                        @{foreach (var item in jj.ArticleList)
+                          { 
+                            <li>. <a href="@string.Format("/staticHtml/zixun/details/{0}/{1}.html", item.CreateTime.ToString("yyyyMMdd"), item.Id)" class="zx_blue">@(item.Title.Length > 20 ? item.Title.Substring(0, 20) + "…" : item.Title)
+                            </a></li>}}
+                    </ul>
+                </div>
+            </div>
+            <div class="cpbk rdcx">
+                <div class="l_title">
+                    <span class="l_ima bg"></span><span class="w_color">双色球&nbsp; 大乐透</span><span><a
+                        href="/zixun/more?id=ssq_dlt" id="ssq_dlt" class="more">更多&gt;&gt</a></span></div>
+                <div class="main_items">
+                    <ul>
+                        @{foreach (var item in sd.ArticleList)
+                          { 
+                            <li>. <a href="@string.Format("/staticHtml/zixun/details/{0}/{1}.html", item.CreateTime.ToString("yyyyMMdd"), item.Id)" class="zx_blue">@(item.Title.Length > 20 ? item.Title.Substring(0, 20) + "…" : item.Title)
+                            </a></li>}}
+                    </ul>
+                </div>
+            </div>
+            <div class="rdcx" style="margin-left: 11px;">
+                <div class="l_title">
+                    <span class="l_ima bg"></span><span class="w_color">足彩胜负&nbsp; 四场进球&nbsp; 六场半全场</span><span><a
+                        href="/zixun/more?id=zc_siliu" id="zc_siliu" class="more">更多&gt;&gt</a></span></div>
+                <div class="main_items">
+                    <ul>
+                        @{foreach (var item in zs.ArticleList)
+                          { 
+                            <li>. <a href="@string.Format("/staticHtml/zixun/details/{0}/{1}.html", item.CreateTime.ToString("yyyyMMdd"), item.Id)" class="zx_blue">@(item.Title.Length > 20 ? item.Title.Substring(0, 20) + "…" : item.Title)
+                            </a></li>}}
+                    </ul>
+                </div>
+            </div>
+            <div class="cpbk rdcx">
+                <div class="l_title">
+                    <span class="l_ima bg"></span><span class="w_color">足球单场&nbsp; 竞彩篮球</span><span><a
+                        href="/zixun/more?id=zd_jl" id="zd_jl" class="more">更多&gt;&gt</a></span></div>
+                <div class="main_items">
+                    <ul>
+                        @{foreach (var item in zj.ArticleList)
+                          { 
+                            <li>. <a href="@string.Format("/staticHtml/zixun/details/{0}/{1}.html", item.CreateTime.ToString("yyyyMMdd"), item.Id)" class="zx_blue">@(item.Title.Length > 20 ? item.Title.Substring(0, 20) + "…" : item.Title)
+                            </a></li>}}
+                    </ul>
+                </div>
+            </div>
+            <div class="rdcx" style="margin-left: 11px;">
+                <div class="l_title">
+                    <span class="l_ima bg"></span><span class="w_color">福彩3D&nbsp; 排列三&nbsp; 排列五&nbsp;</span>
+                    其它数字彩 <span><a href="/zixun/more?id=fc3d_pl3_pl5" id="fc3d_pl3_pl5" class="more">更多&gt;&gt</a></span></div>
+                <div class="main_items">
+                    <ul>
+                        @{foreach (var item in fp.ArticleList)
+                          { 
+                            <li>. <a href="@string.Format("/staticHtml/zixun/details/{0}/{1}.html", item.CreateTime.ToString("yyyyMMdd"), item.Id)" class="zx_blue">@(item.Title.Length > 20 ? item.Title.Substring(0, 20) + "…" : item.Title)
+                            </a></li>}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="zx_right">
+            <div class="today_prise">
+                @{foreach (var item in SiteString.gameList("szc"))
+                  {
+                      if (OrderManager.isTodayGame(item))
+                      {<a class="btn bg red" target="_blank" href="/lottery/newindex/@item/"><em>@SiteConvert.GameName(item)</em></a>
+                      }
+                  }}
+            </div>
+            <div class="data_news">
+                <div class="data_title">
+                    <ul class="column">
+                        <li class="c_ssq btn_li"><a href="javascript:void(0)">双色球</a></li>
+                        <li class="c_dlt"><a href="javascript:void(0)">大乐透</a></li>
+                        <li class="c_gpc"><a href="javascript:void(0)">高频彩</a></li>
+                        <li class="c_jjc"><a href="javascript:void(0)">竞技彩</a></li>
+                    </ul>
+                    <h1 class="data_inquire bg">
+                        <span class="d_inquire">数据查询</span></h1>
+                    <div class="list1" style="margin-top: 5px; height: 64px; width: 280px">
+                        <a href="/lotterytrend/ssq/jbzs" target="_blank">基本走势</a> &nbsp;| <a href="/lotterytrend/ssq/daxiao"
+                            target="_blank">大小走势</a> &nbsp;| <a href="/lotterytrend/ssq/jiou" target="_blank">奇偶走势</a>
+                        &nbsp;| <a href="/lotterytrend/ssq/zhihe" target="_blank">质合走势</a> <a href="/lotterytrend/ssq/chu3"
+                            target="_blank">除三余数</a> &nbsp;| <a href="/lotterytrend/ssq/hezhi" target="_blank">和值走势</a>
+                        &nbsp;| <a href="/lotterytrend/ssq/kuadu_sw" target="_blank">首尾跨度走势</a>
+                    </div>
+                    <div class="list2" style="margin-top: 5px; height: 64px; width: 280px">
+                        <a href="/lotterytrend/dlt/jbzs" target="_blank">基本走势</a> &nbsp;| <a href="/lotterytrend/dlt/dx"
+                            target="_blank">大小走势</a> &nbsp;| <a href="/lotterytrend/dlt/jiou" target="_blank">奇偶走势</a>
+                        &nbsp;| <a href="/lotterytrend/dlt/zhihe" target="_blank">质合走势</a> <a href="/lotterytrend/dlt/chu3"
+                            target="_blank">除三余数</a> &nbsp;| <a href="/lotterytrend/dlt/hezhi" target="_blank">和值走势</a>
+                        &nbsp;| <a href="/lotterytrend/dlt/kuadu_sw" target="_blank">跨度走势</a>
+                    </div>
+                    <div class="list3" style="margin-top: 5px; height: 64px; width: 280px">
+                        <a href="/lotterytrend/cqssc/s3zxzs" target="_blank">三星直选走势</a> &nbsp;| <a href="/lotterytrend/cqssc/dxds"
+                            target="_blank">大小单双走势</a> &nbsp;| <a href="/lotterytrend/cqssc/s1zs" target="_blank">
+                                一星走势</a> &nbsp;<br />
+                        <a href="/lotterytrend/cqssc/s2zuxzs" target="_blank">二星组选走势</a> &nbsp;| <a href="/lotterytrend/jx11x5/rxdx"
+                            target="_blank">任选大小走势</a> &nbsp;| <a href="/lotterytrend/jx11x5/rxhz" target="_blank">
+                                任选和值走势</a> &nbsp;
+                    </div>
+                    <div class="list4" style="margin-top: 5px; height: 64px; width: 280px">
+                        <a href="/soccer/jczq" target="_blank">足球数据</a> &nbsp;| <a href="http://www.kanbf.com"
+                            target="_blank">比分直播</a> &nbsp;| <a href="/soccer" target="_blank">过关统计</a>
+                        &nbsp;| <a href="" target="_blank">联赛专题</a> &nbsp;
+                    </div>
+                </div>
+                <div class="clearfix">
+                </div>
+                <h1 class="zj_news bg">
+                    <span class="z_news">中奖新闻</span></h1>
+                <div class="clearfix">
+                </div>
+                <ul class="news_content">
+                    @{foreach (var item in xw.ArticleList)
+                      { 
+                        <li>. <a href="@string.Format("/staticHtml/zixun/details/{0}/{1}.html", item.CreateTime.ToString("yyyyMMdd"), item.Id)" class="zx_blue">@(item.Title.Length > 15 ? item.Title.Substring(0, 15) + "…" : item.Title)
+                        </a></li>}}
+                </ul>
+                <h1 class="zj_news bg">
+                    <a href="/zixun/more?id=zjxw" id="zjxw" class="more" style="font-size: 12px !important;
+                        margin-right: 20px !important; color: #999999 !important">更多&gt;&gt</a></h1>
+            </div>
+            <div class="clearfix">
+            </div>
+            <div class="r_cpbk">
+                <h1 class="r_cpbk_title">
+                    <span class="ima_cpbk bg1"></span>彩票百科<a href="/zixun/more?id=cpbk" class="more"
+                        id="cpbk" style="font-size: 12px !important; color: #496ead !important">更多&gt;&gt</a></h1>
+                <ul class="en_ul">
+                    @{
+                        foreach (var item in bk.ArticleList)
+                        {
+                        <li><cite class="icon en_new"></cite><a target="_blank" href="@string.Format("/staticHtml/zixun/details/{0}/{1}.html", item.CreateTime.ToString("yyyyMMdd"), item.Id)">@(item.Title.Length > 15 ? item.Title.Substring(0, 15) + "…" : item.Title)</a></li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="clear: both">
+</div>
+@ViewHelpers.js("superslide.js")
+<script type="text/javascript">
+    //导航-焦点图
+    $(".slideBox").slide({ mainCell: ".bd ul", autoPlay: true, effect: "left", interTime: 10000 });
+    $(function () {
+        $(".list1").show();
+        $(".list2").hide();
+        $(".list3").hide();
+        $(".list4").hide();
+        
+        //        $(".c_ssq:onmouseover").display(".list1");
+        $(".c_ssq").click(function () {
+            $(".c_dlt").removeClass("btn_li");
+            $(".c_gpc").removeClass("btn_li");
+            $(".c_jjc").removeClass("btn_li");
+            $(this).addClass("btn_li");
+            $(".list2").hide();
+            $(".list3").hide();
+            $(".list4").hide();
+            $(".list1").show();
+        })
+        $(".c_dlt").click(function () {
+            $(".c_ssq").removeClass("btn_li");
+            $(".c_gpc").removeClass("btn_li");
+            $(".c_jjc").removeClass("btn_li");
+            $(this).addClass("btn_li");
+            $(".list1").hide();
+            $(".list3").hide();
+            $(".list4").hide();
+            $(".list2").show();
+        })
+        $(".c_gpc").click(function () {
+            $(".c_ssq").removeClass("btn_li");
+            $(".c_dlt").removeClass("btn_li");
+            $(".c_jjc").removeClass("btn_li");
+            $(this).addClass("btn_li");
+            $(".list1").hide();
+            $(".list2").hide();
+            $(".list4").hide();
+            $(".list3").show();
+        })
+        $(".c_jjc").click(function () {
+            $(".c_ssq").removeClass("btn_li");
+            $(".c_dlt").removeClass("btn_li");
+            $(".c_gpc").removeClass("btn_li");
+            $(this).addClass("btn_li");
+            $(".list1").hide();
+            $(".list2").hide();
+            $(".list3").hide();
+            $(".list4").show();
+        })
+
+    });
+    //    $(".tab-title_hot").click(function () {
+    //        var category = $(this).attr("category");
+    //        $(this).addClass("on");
+    //        $(this).siblings().removeClass("on");
+    //        location.search = "pageNo=" + 0 + "&pageSize=" + 25 + "&category=" + category + "&r=" + Math.random().toFixed(5);
+    //    });
+    function getAlldata(pageNo, pageSize) {
+        location.search = "pageNo=" + pageNo + "&pageSize=" + pageSize;
+    }
+
+</script>

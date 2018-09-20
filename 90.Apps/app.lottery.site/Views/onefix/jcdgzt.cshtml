@@ -1,0 +1,154 @@
+﻿@using app.lottery.site.Models
+@using External.Core.Popularity;
+@{
+    ViewBag.Title = "【竞彩足球单关专场】竞彩足球单关固赔_竞彩单关投注";
+    Layout = "../Shared/_OneFix.cshtml";
+    string type = ViewBag.Type;
+    var oddstype = string.IsNullOrEmpty(Request["oddstype"]) ? 2 : int.Parse(Request["oddstype"]);
+    var isYt = string.IsNullOrEmpty(Request["isYt"]) ? false : Convert.ToBoolean(int.Parse(Request["isYt"]));
+    var userId = ViewBag.UserId;
+    var yt = isYt ? "true" : "false";
+    var money = ViewBag.Money;
+    var schemeId = ViewBag.SchemeId;
+    var popularity = ViewBag.Result as PopularitysInfoCollection;
+    CurrentUserInfo currentUser = ViewBag.CurrentUser;
+    var balance = ViewBag.CurrentUserBalance as GameBiz.Core.UserBalanceInfo;
+
+}
+<header class="siof_header">
+	<div class="siof_siofbox">
+    	<span class="hedspan">您好，欢迎您！</span>
+        @if (currentUser != null)
+        {
+        <div class="siof_hedld" id="top_user_info">
+            <span class="hedld_sp2"><a href="javascript:void(0)" target="_blank" id="top_username">@SiteString.HideUserName(currentUser.LoginInfo.DisplayName, currentUser.LoginInfo.HideDisplayNameCount)</a></span>
+            <div class="hedld_sp3 cm_my_account" id="headaccount">
+                    <i>账户金额</i><i class="hedld_jtd siof_account_cs"></i>
+                    <aside class="hedld_open cm_my_account_open" style=" display:none;">
+                    <sub class="siof_openjt"></sub>
+                    <p>可用资金：<em id="money">￥@balance.GetTotalCashMoney().ToString("f")</em>元</p>
+                    <p>红包余额：<em id="redmoney">￥@balance.RedBagBalance.ToString("f")</em>元</p>
+                    </aside>
+            </div>
+            <span class="hedld_sp2"><a href="javascript:user.logOut();" id="logoutLink">退出</a></span>
+        </div>
+        }
+        else
+        {
+        <div class="siof_hedl" id="nologin_info">请<a href="javascript:void(0)" id="loginbtn_new">登录</a></div>
+        }
+        <nav class="siof_hedr">
+            <a title="' + SiteString.getHZSiteName(Request) + ' 彩票网首页" target="_blank" href="/">首页</a>｜<a href="/buy/jingcai/spf" target="_blank">购买彩票</a>｜<a href="/chipped" target="_blank">合买中心</a>｜
+            <a href="/staticHtml/lottery/index.html" target="_blank">开奖结果</a>｜<a href="/soccer" target="_blank">过关统计</a>｜<a href="/live/index.html" target="_blank">比分直播</a>｜
+            <a href="/staticHtml/phonebuy/index.html" target="_blank">手机购彩</a>
+        </nav>
+    </div>
+</header>
+<nav class="siof_nav">
+	<div class="siof_siofbox">
+        <h1>单关专场</h1>
+        <div class="siof_nava">
+            <a class="zqcon" href="/onefix/jcdgzt">足球-新手场</a>
+            <a class="zqc" href="/onefix/jcdg">足球-高手场</a>
+            <a class="lqc" href="/onefix/lcdg">篮球</a>
+        </div>
+    </div>
+</nav>
+<nav class="siof_navxs">
+    <div class="siof_siofbox">
+    	<a class="@(type == "spf" ? "on" : string.Empty)" href="/onefix/jcdgzt/spf">胜平负</a>
+        @*<a class="@(type == "rp" ? "on" : string.Empty)" href="/onefix/jcdgzt/rp">让球胜平负</a>*@
+        <a class="@(type == "zjq" ? "on" : string.Empty)" href="/onefix/jcdgzt/zjq">猜总进球</a>
+        <a class="@(type == "bf" ? "on" : string.Empty)" href="/onefix/jcdgzt/bf">猜比分</a>
+        <a class="@(type == "bqc" ? "on" : string.Empty)" href="/onefix/jcdgzt/bqc">半全场胜负</a>
+	</div>
+</nav>
+<article class="siof_box" id="siofbox" style="height:900px;">
+	<section class="siof_leftxs" id="siofleft">
+    	<h2>热门赛事</h2>
+        <div class="siof_ssa">
+            <i>暂无热门比赛</i>
+            @*<a class="on" href="javascript:void(0)" azid="150403001">
+                <span>西悉尼漫步者</span>
+                <em>VS</em>
+                <span>墨尔本城</span>
+            </a>*@
+        </div>
+    </section>
+	<section id="siofarticle" class="siof_articlexs">
+        @*<div etimes="1430233200000" gn="赫塔费" hn="巴塞罗那" zid="150428001" dtype="spf" class="siof_cbcbs">
+            <h2><span>西甲</span><strong>巴塞罗那<em>vs</em>赫塔费</strong><span>04-29 02:00开赛</span><i>购买截止时间：2015-04-28 23:00:00</i></h2>
+            <div class="siof_cbcbsbox">
+                <dl class="siof_cbcd1">
+                    <dt><p class="siof_p1">半场-全场</p><p class="siof_p2">赔率</p></dt>
+                </dl>
+                <dl class="siof_cbcd2">
+                    <dd><a value="3-3" sp="1.13" href="javascript:void(0)">胜-胜</a><em>1.13</em></dd>
+                    <dd><a value="3-1" sp="33.00" href="javascript:void(0)">胜-平</a><em>33.00</em></dd>
+                    <dd><a value="3-0" sp="150.00" href="javascript:void(0)">胜-负</a><em>150.00</em></dd>
+                    <dd><a value="1-3" sp="4.30" href="javascript:void(0)">平-胜</a><em>4.30</em></dd>
+                    <dd><a value="1-1" sp="19.00" href="javascript:void(0)">平-平</a><em>19.00</em></dd>
+                    <dd><a value="1-0" sp="100.00" href="javascript:void(0)">平-负</a><em>100.00</em></dd>
+                    <dd><a value="0-3" sp="21.00" href="javascript:void(0)">负-胜</a><em>21.00</em></dd>
+                    <dd><a value="0-1" sp="33.00" href="javascript:void(0)">负-平</a><em>33.00</em></dd>
+                    <dd><a value="0-0" sp="80.00" href="javascript:void(0)">负-负</a><em>80.00</em></dd>
+                </dl>
+            </div>
+        </div>*@
+    </section>
+    <section id="siofright" class="siof_right">
+    	<h2>投注单</h2>
+        <div id="chooselist" class="siof_rtzbox">
+        	<h3><span>主队<i>vs</i>客队</span><span>投注金额</span><em>预计奖金</em></h3> 
+            <div id="codemsg" class="siof_rtzw">请至少选择一个选项进行投注！</div>
+        </div>
+        <form target="_blank" action="/optimize" method="post" id="optimize">
+        <input type="hidden" value="0" name="optimizeForm.multiple" id="op_multiple" />
+        <input type="hidden" value="" name="optimizeForm.periodId" id="op_period" />
+        <input type="hidden" value="0" name="optimizeForm.units" id="op_units" />
+        <input type="hidden" value="0" name="optimizeForm.schemeCost" id="op_schemecost" />
+        <input type="hidden" value="" name="optimizeForm.passContent" id="op_pass" />
+        <input type="hidden" value="0" name="optimizeForm.itemsContent" id="op_items" />
+        <input type="hidden" value="HT" name="playType" id="op_playtype" />
+        </form>
+        <input type="hidden" value="2" name="activityType" id="activityType" />
+        <div class="siof_rhj">
+        	<h2>
+                <b id="scheme_betUnits" class="red" style=" display:none;">0</b>
+                <span class="siof_sp1">合计</span><span class="siof_sp2"><i id="totalmoney">￥0</i>元</span><span id="totalbonus" class="siof_sp3">￥0.00</span>
+            </h2>
+            <span id="betNormalPassmode" class="labels" style=" display:none;"><span class="noguoguan" id="noguoguan">请至少选择@(oddstype == 2 ? "两" : "一")场比赛</span></span>
+        	<div style="display:none" class="siof_mxgm" id="plgmdiv"><label>每项都买</label><input type="text" id="tzmoney">元</div>
+            <div class="siof_rhja">
+                
+            </div>
+            <div class="siof_rhjbtn">
+            	<a id="single" accesskey="9" style="background-color:#848383;" href="javascript:void(0)" class="siof_btnnow">立即购买</a>
+            	<a id="hemai" accesskey="0" href="javascript:void(0)" class="siof_btnhm">发起合买</a>
+            </div>
+            <p>注：预计奖金是根据当前选择时的赔率计算，实际中奖奖金按<span class="siof_hs">出票赔率</span>来计算。</p>
+        </div>
+    </section>
+</article>
+<script type="text/javascript">
+    var gameCode = "jczq";
+    var gameName = "竞彩足球";
+    var Ytmoney = "@money";
+    var isYt = @(yt == "false" ? 0 : 1);
+    var play = "@type";
+    var oddstype = @oddstype;
+    var schemeId = "@schemeId";
+    var userId = "@userId";
+    var nowtime;
+    //var popularity = @popularity;
+    var isexy = play == "exy" ? true : false;
+    $.get("/home/getServerTime", function (t) {
+    if (t.servertime != null && t.servertime != "") {
+        nowtime = t.servertime;
+    }
+    });
+</script>
+@UserHelper.js("global.min.js")
+@*@UserHelper.js("common.js")*@
+@UserHelper.js("onefix_xs.js")
+@{Html.RenderPartial("box_confirm_gg");}

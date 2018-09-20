@@ -1,0 +1,161 @@
+﻿@{
+    ViewBag.Title = "追号方案 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "追号方案, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var orders = ViewBag.Orders as GameBiz.Core.BettingOrderInfoCollection;
+    var count = 0;
+    var buy = 0;
+    var bonus = 0;
+}
+@section css{
+    @ViewHelpers.css("mycenter.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>追号方案</li>
+    </ul>
+</div>
+<div class="center mt10">
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mune_safe">
+            <div class="account_menu clearfix">
+                <a href="/member/betorder">投注记录</a><a href="/member/mycreatetogether">发起的合买</a>
+                <a href="/member/myjointogether">参与的合买</a><a href="/member/saveProgram">保存方案</a>
+                <a href="/member/chaseorder" class="select">追号记录</a> <a href="/member/autofollow">自动跟单</a>
+            </div>
+            <div class="account_con">
+                <div class="betorder_top">
+                    <ul>
+                        <li class="betorder_topSelected"><a href="chaseorder"><i></i>我的追号</a></li>
+                    </ul>
+                </div>
+                <div class="search_tab">
+                    查询：
+                    @GameHelper.ChaseGameSelector(ViewBag.GameCode)
+                    起始日期 @ControlHelper.Calendar("begin", ViewBag.Begin) @ControlHelper.Calendar("end", ViewBag.End)
+                    <input type="button" onclick="getChaseOrder(0, 10)" value="查&nbsp;&nbsp;询" class="search_btn" />
+                </div>
+                <table class="account_box">
+                    <thead>
+                        <tr>
+                            <td>
+                                彩种
+                            </td>
+                            <td>
+                                投注时间
+                            </td>
+                            <td>
+                                累计投入
+                            </td>
+                            <td>
+                                方案总额
+                            </td>
+                            <td>
+                                方案状态
+                            </td>
+                            <td>
+                                中奖状态
+                            </td>
+                            <td>
+                                方案说明
+                            </td>
+                            <td>
+                                详情
+                            </td>
+                        </tr>
+                    </thead>
+                    @{
+                        if (orders != null && orders.OrderList.Count > 0)
+                        {
+                            foreach (var item in orders.OrderList)
+                            {
+                        <tr>
+                            <td>
+                                @SiteConvert.GameName(item.GameCode)/ @item.GameTypeName
+                            </td>
+                            <td>
+                                @item.CreateTime.ToString("yyyy-MM-dd HH:mm")
+                            </td>
+                            <td class="blod fszie @(item.CurrentBettingMoney < item.TotalMoney ? "ye" : "zc")">
+                                @item.CurrentBettingMoney.ToString("f")
+                            </td>
+                            <td class="blod fszie ye">
+                                @item.TotalMoney.ToString("f")
+                            </td>
+                            <td>
+                                @OrderManager.OrderStatusName(item.SchemeType, item.ProgressStatus, item.TicketStatus, item.BonusStatus)
+                            </td>
+                            <td>
+                                @{
+                           if (item.AfterTaxBonusMoney + item.AddMoney > 0)
+                           {
+                               if (item.AfterTaxBonusMoney > 0)
+                               {
+                                    <span class="blod fszie ye">已中奖 ￥@item.AfterTaxBonusMoney.ToString("f")</span>
+
+                               }
+                               if (item.AddMoney > 0)
+                               {
+                                    <span class="blod fszie ye">+￥@item.AddMoney.ToString("f")</span>
+                               }
+                           }
+                           else
+                           {
+                                    <span>@OrderManager.BonusStatusName(item.BonusStatus)</span>
+                           }
+                                }
+                            </td>
+                            <td>
+                                @(item.StopAfterBonus ? "中奖后停止" : "---")
+                            </td>
+                            <td>
+                                <a href="/user/scheme/@item.SchemeId" target="_blank" class="orderId">查看</a>
+                            </td>
+                        </tr>
+                                                 buy = buy + Convert.ToInt32(item.CurrentBettingMoney);
+                                                 bonus = bonus + Convert.ToInt32(item.AfterTaxBonusMoney);
+                                                 count++;
+                            }
+                        }
+                        else
+                        {
+                        <tr>
+                            <td colspan="8">
+                                暂时没有找到你要的数据哦
+                            </td>
+                        </tr>
+                        }
+                    }
+                </table>
+                <div class="combined clearfix">
+                    <div class="fl">
+                        <span><b class="b1"></b>方案数量：<strong class="zc blod fszie">@(count)&nbsp;笔</strong></span>
+                        <span><b class="b2"></b>认购总金额：<strong class="srje blod fszie">@buy.ToString("f")&nbsp;元</strong></span>
+                        <span><b class="b4"></b>中奖金额：<strong class="ye blod fszie">@bonus.ToString("f")&nbsp;笔</strong></span>
+                    </div>
+                    <div class="fr">
+                        <em class="xh">*</em>注意：追号记录最多可查询一个月数据
+                    </div>
+                </div>
+                <div class="account_page  clearfix">
+                    @ViewHelpers.Pager4("getChaseOrder", ViewBag.pageNo, ViewBag.PageSize, orders == null ? 0 : orders.TotalCount)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(".account_box tr:even:gt(0)").css("backgroundColor", "#f9f9f9");
+    });
+    var getChaseOrder = function (pageNo, pageSize) {
+        var begintime = $("#begin").val();
+        var endtime = $("#end").val();
+        var game = $.trim($("#game option:selected").val());
+        location.search = "gameCode=" + game + "&begin=" + begintime + "&end=" + endtime + "&pageNo=" + pageNo + "&pageSize=" + pageSize;
+    }
+</script>
+<div class="clearfix">
+</div>

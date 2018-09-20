@@ -1,0 +1,71 @@
+﻿@{
+    var data = ViewBag.DataSource as External.Core.SiteMessage.ArticleInfo_QueryCollection;
+    string category = ViewBag.category;
+}
+<div class="right">
+    <div class="newly_kj">
+        <div class="kj_title">
+            <span class="ima_kj r_bg"></span>双色球最新开奖<span style="float: right; font-size: 12px;
+                font-weight: lighter; margin-right: 20px;">第<em id="preissue">0000-000</em>期</span>
+        </div>
+        <ul style="margin-top: -7px" id="winnumber">
+            <li class="ball" style="margin-left: 23px">--</li>
+            <li class="ball">--</li>
+            <li class="ball">--</li>
+            <li class="ball">--</li>
+            <li class="ball">--</li>
+            <li class="ball">--</li>
+            <li class="ball blue">--</li>
+            <li style="float: right;"><a href="" class="ball_detail">[详情]</a></li>
+        </ul>
+        <div class="clearfix">
+        </div>
+        <div class="dqjc">当前奖池：<span id="prizepool">0</span>元</div>
+    </div>
+    <div class="tz_ssq">
+        <h2 class="clearfix">
+            <b class="betting_title"><span id="ssq_issue">0000-000</span>期：大奖等你拿</b> 
+            <a href="javascript:void(0)" class="changeNum"><em class="changeNum_ima r_bg"></em>换一注</a>
+        </h2>
+        <div class="qb-selectnumber">
+            <ul id="qb_ssq_select" class="qb-selectnum clearfix">
+                <li class="qb-red icon-i"><input type="text" value="00" maxlength="2"/></li>
+                <li class="qb-red icon-i"><input type="text" value="00" maxlength="2"/></li>
+                <li class="qb-red icon-i"><input type="text" value="00" maxlength="2"/></li>
+                <li class="qb-red icon-i"><input type="text" value="00" maxlength="2"/></li>
+                <li class="qb-red icon-i"><input type="text" value="00" maxlength="2"/></li>
+                <li class="qb-red icon-i"><input type="text" value="00" maxlength="2"/></li>
+                <li class="qb-blue icon-i"><input type="text" value="00" maxlength="2"/></li>
+            </ul>
+         </div>
+         <p><a id="ssq_submit" class="tz_now" href="javascript:void(0)">立即投注</a></p>
+    </div>
+    <div class="trend">
+        <h2 class="trend_title">
+            <em class="trend_ima r_bg"></em>看走势</h2>
+        <ul class="trend_link clearfix">
+            <li><a class="sz" target="_blank" href="/statichtml/lotterytrend/ssq/jbzs30.html">基本走势</a></li>
+            <li><a class="sz" target="_blank" href="/statichtml/lotterytrend/ssq/jiou30.html">奇偶走势</a></li>
+            <li><a class="sz" target="_blank" href="/statichtml/lotterytrend/ssq/hezhi30.html">和值走势</a></li>
+            <li><a class="sz" target="_blank" href="/statichtml/lotterytrend/ssq/zhihe30.html">质合走势</a></li>
+            <li><a class="sz" target="_blank" href="/statichtml/lotterytrend/ssq/daxiao30.html">大小走势</a></li>
+            <li><a class="sz" target="_blank" href="/statichtml/lotterytrend/ssq/kuadu_sw30.html">跨度走势</a></li>
+        </ul>
+    </div>
+    <div class="analyse">
+        <img src="@ViewHelpers.img("member/banner(1).png")"  style="margin-left:-18px;width:280px"/>
+    </div>
+    <div class="szx">
+        <h2 class="szx_title">
+            本文章分类资讯</h2>
+        <ul>
+            @{foreach (var item in data.ArticleList)
+              { 
+                <li>.<a href="@string.Format("/staticHtml/zixun/details/{0}/{1}.html", item.CreateTime.ToString("yyyyMMdd"), item.Id)" class="zx_blue">@(item.Title.Length > 15 ? item.Title.Substring(0, 15) + "…" : item.Title)
+                </a></li>}
+            }
+        </ul>
+    </div>
+</div>
+
+@ViewHelpers.js("zbuy.min.js")

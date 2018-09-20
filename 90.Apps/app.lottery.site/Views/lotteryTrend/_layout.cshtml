@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xinticai="">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=7" />
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <meta name="keywords" content="@ViewBag.KeyWords" />
+    <meta name="description" content="@ViewBag.Description" />
+    <title>@ViewBag.Title</title>
+    <meta name="baidu-site-verification" content="G3yjx3dBmE" />
+    <meta property="qc:admins" content="14240177776773116375" />
+    <meta name="360-site-verification" content="5fc59d0c2b686ee3ea83e35da560e3de" />
+    <style>
+        xinticai\:*
+        {
+            behavior: url(#default#VML);
+            position: absolute;
+        }
+    </style>
+    @UserHelper.css("main.min.css")
+    @UserHelper.css("lotterytrend.css")
+    @UserHelper.css("/trend/chart.css")
+    @RenderSection("css", false)
+    @UserHelper.js_share("share.min.js")
+    @UserHelper.js("/trend/chart.line.min.js")
+    @ViewHelpers.js("onlinePhone.js")
+    @UserHelper.js("user.min.js")
+    @UserHelper.js("nav.js")
+    @RenderSection("js", false)
+</head>
+<body>
+    <script type="text/javascript">
+        var ires = "@ViewHelpers.res()/images/";
+        var dres = "@ViewHelpers.jsonres()/matchdata/";
+    </script>
+    <div class="header">
+        @{Html.RenderAction("header", "home");}
+    </div>
+    <div class="wrap">
+        @RenderBody()
+    </div>
+    <script>
+
+        $(function () {
+
+            $("#c_yl").click(function () {
+                if (!this.checked) {
+                    $(".y101").attr("style", "color:#FFFFFF");
+                }
+                else {
+                    $(".y101").removeAttr("style");
+                }
+            })
+
+
+            $("#help_line").click(function () {
+                if (!this.checked) {
+                    $(".tdbck").hide();
+                }
+                else {
+                    $(".tdbck").show();
+                }
+            })
+
+
+            $("#yl_zhu").click(function () {
+                if (!this.checked) {
+                    $(".y101").removeClass("cbg5");
+                    $(".y101").removeClass("cbg6");
+                    return;
+                }
+
+                var stopCols = new Array();
+                var rows = $("#tdata tr")
+
+                for (var i = rows.length - 1; i >= 0; i--) {
+                    var r = rows[i];
+                    var tds = $(r).find("td");
+
+                    for (var j = 0; j < tds.length; j++) {
+                        if ($.inArray(j, stopCols) >= 0) continue;
+
+                        var td = $(tds[j]);
+                        if (td.attr("class").indexOf("y101") >= 0) {
+                            var lastYL = parseInt($.trim(td.text()), 10);
+//                            if (lastYL == 1) {
+//                                stopCols.push(j);
+//                            }
+                            if (lastYL > 0) {
+                                td.addClass(j % 2 == 0 ? "cbg5" : "cbg6");
+                            }
+                        }
+                        else {
+                            stopCols.push(j);
+                        }
+                    }
+                }
+
+            })
+        })
+    </script>
+    <!--首页广告-->
+    <div class="footer" style="height: 0px;">
+        @{Html.RenderAction("footer", "home");}
+    </div>
+    @{Html.RenderPartial("box_doc");}
+    @{Html.RenderPartial("box_login");}
+    @{Html.RenderPartial("box_confirm");}
+    @{Html.RenderPartial("box_progress");}
+    @{Html.RenderPartial("box_alert");}
+</body>
+</html>

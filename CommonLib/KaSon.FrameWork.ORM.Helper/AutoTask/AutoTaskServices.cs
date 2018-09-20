@@ -29,6 +29,7 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
                         Init_Pool_Data(),
                         Repair_SZCAddToRedis_dp(),
                         Repair_SZCAddToRedis_gp()
+                        //PC相关跑数据方法，暂定写于此
             });
         }
 

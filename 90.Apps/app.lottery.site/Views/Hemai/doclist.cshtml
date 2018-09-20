@@ -1,0 +1,198 @@
+﻿@{
+    ViewBag.Title = "自动跟单-体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "自动跟单, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var game = ViewBag.Game;
+    var beedingList = ViewBag.BeedingList as GameBiz.Core.UserBeedingListInfoCollection;
+    var user = ViewBag.User as app.lottery.site.Models.CurrentUserInfo;
+}
+@section css{
+    @UserHelper.css("hemai.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>自动跟单</li>
+    </ul>
+</div>
+<div class="tabletitle2 mt10" style="vertical-align: middle">
+    <table width="100%">
+        <tr bgcolor="#FEE8BE">
+            <td style="font-weight: bold;">@SiteConvert.GameName(ViewBag.Game, ViewBag.GameType)
+            </td>
+            <td align="right" style="padding-bottom: 2px;">
+                彩种选择：
+                <select id="dropDownListAllCPType" name="dropDownListAllCPType">
+                    <optgroup label="传统足球">
+                        <option value="ctzq|t14c">14场胜负彩 </option>
+                        <option value="ctzq|tr9">胜负任选九场</option>
+                        <option value="ctzq|t6bqc">六场半全场</option>
+                        <option value="ctzq|t4cjq">四场进球彩</option>
+                    </optgroup>
+                    <optgroup label="北京单场">
+                        <option value="bjdc|spf">胜平负</option>
+                        <option value="bjdc|zjq">总进球</option>
+                        <option value="bjdc|sxds">上下单双</option>
+                        <option value="bjdc|bf">比分</option>
+                        <option value="bjdc|bqc">半全场</option>
+                    </optgroup>
+                    <optgroup label="竞彩足球">
+                        <option value="jczq|spf">让球胜平负</option>
+                        <option value="jczq|brqspf">胜平负</option>
+                        <option value="jczq|bf">比分</option>
+                        <option value="jczq|zjq">总进球</option>
+                        <option value="jczq|bqc">半全场</option>
+                    </optgroup>
+                    <optgroup label="竞彩篮球">
+                        <option value="jclq|sf">胜负</option>
+                        <option value="jclq|rfsf">让分胜负</option>
+                        <option value="jclq|sfc">胜分差</option>
+                        <option value="jclq|dxf">大小分</option>
+                    </optgroup>
+                </select>
+                搜索：<input type="text" onblur="oblur(this);" onclick="ofocus(this);" class="input_text"
+                    style="width: 135px; left: 0px !important; color: #999; vertical-align: bottom"
+                    value="@(string.IsNullOrEmpty(ViewBag.UserName) ? "输入用户名" : ViewBag.UserName)" id="txtSearch" name="txtSearch">
+                <input type="submit" id="btn-search" value="搜索" onclick="ReloadList(0, 30)" style="left: 2px;
+                    top: -2px;">
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="td_div">
+    <table width="100%">
+        <tr class="ttis2">
+            <th>
+                序
+            </th>
+            <th>
+                用户名
+            </th>
+            <th>
+                <a href="?type=@Request["type"]&orderByProperty=1@(ViewBag.orderByProperty == 1 ? "&orderByCategory=" + (ViewBag.orderByCategory == 0 ? 1 : 0) : string.Empty)" class="under">
+                    战绩<i class="@(ViewBag.orderByProperty == 1 ? ViewBag.orderByCategory == 0 ? "orderby_down" : "orderby_up" : string.Empty)"></i></a>
+            </th>
+            <th>
+                <a href="?type=@Request["type"]&orderByProperty=2@(ViewBag.orderByProperty == 2 ? "&orderByCategory=" + (ViewBag.orderByCategory == 0 ? 1 : 0) : string.Empty)" class="under">
+                    中奖次数<i class="@(ViewBag.orderByProperty == 2 ? ViewBag.orderByCategory == 0 ? "orderby_down" : "orderby_up" : string.Empty)"></i></a>
+            </th>
+            <th>
+                <a href="?type=@Request["type"]&orderByProperty=3@(ViewBag.orderByProperty == 3 ? "&orderByCategory=" + (ViewBag.orderByCategory == 0 ? 1 : 0) : string.Empty)" class="under">
+                    累计中奖金额<i class="@(ViewBag.orderByProperty == 3 ? ViewBag.orderByCategory == 0 ? "orderby_down" : "orderby_up" : string.Empty)"></i></a>
+            </th>
+            <th>
+                累计发单
+            </th>
+            <th>
+                累计中奖率
+            </th>
+            <th>
+                已定制
+            </th>
+            <th>
+                跟单总金额
+            </th>
+            <th>
+                当前方案
+            </th>
+            <th>
+                自动跟单
+            </th>
+        </tr>
+        @foreach (var item in beedingList.List)
+        {
+            Dictionary<string, int> items = new Dictionary<string, int>();
+            items.Add("GoldStarCount", item.GoldStarCount);
+            items.Add("GoldDiamondsCount", item.GoldDiamondsCount);
+            items.Add("GoldCupCount", item.GoldCupCount);
+            items.Add("GoldCrownCount", item.GoldCrownCount);
+            items.Add("SilverCrownCount", item.SilverCrownCount);
+            items.Add("SilverCupCount", item.SilverCupCount);
+            items.Add("SilverDiamondsCount", item.SilverDiamondsCount);
+            items.Add("SilverStarCount", item.SilverStarCount);
+            
+            
+            <tr class="@(beedingList.List.IndexOf(item) % 2 == 0 ? "" : "ni2")" style=" text-align:center;">
+                <td>
+                    @(beedingList.List.IndexOf(item) + 1)
+                </td>
+                <td>
+                    @SiteString.HideUserName(item.UserDisplayName, item.UserHideDisplayNameCount)
+                </td>
+                <td>
+                    @GameHelper.GetZj(items)
+                </td>
+                <td>@item.TotalBonusTimes
+                </td>
+                <td>@item.TotalBonusMoney
+                </td>
+                <td>@item.TotalOrderCount
+                </td>
+                <td>
+                    @(item.TotalOrderCount > 0 ? ((item.TotalBonusTimes / item.TotalOrderCount) * 100).ToString("0") + "%" : "--")
+                </td>
+                <td>@item.BeFollowerUserCount
+                </td>
+                <td>@item.BeFollowedTotalMoney
+                </td>
+                <td>
+                    <a href="/blog/standings/@(item.UserId)">查看</a>
+                </td>
+                <td>
+                    @if (user == null || user.LoginInfo.UserId != item.UserId)
+                    {
+                        <a href="javascript:void(0);" onclick="docBox.init({userName:'@SiteString.HideUserName(item.UserDisplayName, item.UserHideDisplayNameCount)',userId:'@item.UserId',gameCode:'@game',gameName:'@SiteConvert.GameName(game, Request["type"])',gameType:'@Request["type"]'});">
+                            定制</a>
+                    }
+                </td>
+            </tr>
+        }
+        <tr class="last-tr">
+            <td colspan="11">
+                @ViewHelpers.Pager3("ReloadList", ViewBag.PageIndex, ViewBag.PageSize, beedingList.TotalCount)
+            </td>
+        </tr>
+    </table>
+</div>
+<script type="text/javascript">
+    function ofocus(obj) {
+        if (obj.value == '输入用户名') {
+            obj.value = '';
+            obj.style.color = "#000";
+        }
+    }
+    function oblur(obj) {
+        if (obj.value == '') {
+            obj.value = '输入用户名';
+            obj.style.color = "#999";
+        }
+    }
+    function ReloadList(pageNo, pageSize) {
+        var games = document.getElementById("dropDownListAllCPType").value.split("|");
+        var userName = document.getElementById("txtSearch").value;
+
+        var search = "type=" + games[1] + "&pageNo=" + pageNo + "&pageSize=" + pageSize + "&r=" + Math.random().toFixed(5);
+        search = (userName && userName != "输入用户名") ? search + "&userName=" + userName : search;
+
+        location.href = "/hemai/doclist/" + games[0] + "?" + search;
+    }
+
+    var key = '@(game)|@(Request["type"])';
+    var ops = document.getElementById("dropDownListAllCPType").getElementsByTagName("option");
+    for (var i = 0; i < ops.length; i++) {
+        if (ops[i].value == key) {
+            ops[i].selected = true;
+        }
+    }
+    function setMenuClass() {
+        $.each($(".stul li"), function (k, v) {
+            if (location.href.indexOf($(v).find("a").attr("href")) >= 0) {
+                $(v).find("a").addClass("on");
+            }
+            else {
+                $(v).find("a").removeClass("on");
+            }
+        })
+    }
+    setMenuClass();
+</script>

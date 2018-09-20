@@ -1,0 +1,135 @@
+﻿@using app.lottery.site.Models;
+@{
+    ViewBag.Title = "资金密码 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "资金密码, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var user = ViewBag.CurrentUser as CurrentUserInfo;
+    var balance = ViewBag.CurrentUserBalance as GameBiz.Core.UserBalanceInfo;
+}
+        <div class="xgmm_main" >
+            
+            @if (balance.IsSetPwd)
+            {
+                <div class="betorder_top" style="margin-top: 10px">
+                    <ul>
+                        <li class="betorder_topSelected"><a href="javascript:void(0)" onclick=" modifyPwd_balancepwd(); " id="modTitle" style="width: 85px;"><i></i>修改资金密码</a></li>
+                    </ul>
+                </div>
+            }
+            <div class="info_zl_ico">
+                <span class="member-safe @(balance.IsSetPwd ? "member_safe_y" : "member_safe_w")  safe_maggin"></span>
+                <span class="ml10 @(balance.IsSetPwd ? "member_monery_y" : "member_monery_w")"></span>
+            </div>
+        
+            <div class="info_wxts @(balance.IsSetPwd ? "hide" : "")" id="modTips">
+                <div class="info_wxts_show">
+                    <span><em style="color: Red">*</em>温馨提示：只能使用0-9的6位数字。</span> 
+                </div>
+            </div>
+
+     
+            <ul class="userinfo_list" style="display:@(balance.IsSetPwd ? "none" : "")" id="modList">
+                @{if (balance.IsSetPwd)
+                {<li><span class="sp120"><em style="color: Red">*</em>旧资金密码：</span>
+                     <input type="password" name="OldPassword" id="txt_oldpassword_balacepwd" maxlength="16" size="30"
+                            class="login_input_1" />
+                 </li>
+                }}
+                <li><span class="sp120"><em style="color: Red">*</em>新资金密码：</span>
+                <input type="password" id="txt_newpassword_balacepwd" class="login_input_1" size="6" maxlength="6" name="NewPassword" /></li>
+                <li><span class="sp120"><em style="color: Red">*</em>确认资金密码：</span>
+                <input type="password" id="txt_newpassword_confirm_balaceped" class="login_input_1" size="6" maxlength="6" /></li>
+                <li><span class="sp120"></span>
+                    <input type="button"  class="btn-pwd-submit" value="确&nbsp;&nbsp认" onclick="checkInput_balancepwd();" /></li>
+                <li><span class="sp120">&nbsp;</span><span class="error-box" id="errbox1"><i class="err-icon"></i>
+                <span class="msg" id="modifyPwdERR1"></span></span> </li>
+            </ul>
+           
+            <table width="100%" class="account_box" style="margin-bottom: 20px; margin-top:10px;border-collapse: collapse;margin: 0 auto 10px;width: 95%;">
+                <thead>
+                    <tr>
+                        <th>
+                            保护项目
+                        </th>
+                        <th>
+                            服务说明
+                        </th>
+                        <th>
+                            费用
+                        </th>
+                        <th>
+                            状态
+                        </th>
+                        <th>
+                            开通
+                        </th>
+                    </tr>
+                </thead>
+                <tr>
+                    <td class="zjpwd-td1">
+                        投注
+                    </td>
+                    <td class="zjpwd-td1">
+                        当您投注时，需要验证资金密码。
+                    </td>
+                    <td>
+                        免费
+                    </td>
+                    <td>
+                        @(balance.CheckIsNeedPassword("Bet") ? "已开通" : "未开通")
+                    </td>
+                    <td>
+                        <input type="checkbox" value="Bet" name="placeList" @(balance.CheckIsNeedPassword("Bet") ? "checked=checked" : string.Empty) />
+                    </td>
+                </tr>
+                <tr style="background: #f9f9f9">
+                    <td class="zjpwd-td1">
+                        提现
+                    </td>
+                    <td class="zjpwd-td1">
+                        当您提现时，需要验证资金密码。
+                    </td>
+                    <td>
+                        免费
+                    </td>
+                    <td>
+                        @(balance.CheckIsNeedPassword("Withdraw") ? "已开通" : "未开通")
+                    </td>
+                    <td>
+                        <input type="checkbox" value="Withdraw" name="placeList" @(balance.CheckIsNeedPassword("Withdraw") ? "checked=checked" : string.Empty) />
+                    </td>
+                </tr>
+                <tr style="background: #f9f9f9">
+                    <td class="zjpwd-td1">
+                        豆豆兑换
+                    </td>
+                    <td class="zjpwd-td1">
+                        豆豆兑换，需要验证资金密码
+                    </td>
+                    <td>
+                        免费
+                    </td>
+                    <td>
+                        @(balance.CheckIsNeedPassword("ExchangeDouDou") ? "已开通" : "未开通")
+                    </td>
+                    <td>
+                        <input type="checkbox" value="ExchangeDouDou" name="placeList" @(balance.CheckIsNeedPassword("ExchangeDouDou") ? "checked=checked" : string.Empty) />
+                    </td>
+                </tr>
+                @{if (balance.IsSetPwd)
+                {
+                    <tr class="ko1">
+                        <td  style="height: 45px; border-right: none;">
+                            &nbsp
+                        </td>
+                        <td align="left" class="zjpwd-td1" colspan="4">
+                            <input type="password" id="config_pwd" class="balancepwd" size="14" style="color: #999999;"  />
+                            <input type="button" value="取消资金密码" onclick="cancelPwd_balacepwd();" class="btn_cancel_s" title="取消资金密码" />
+                            <br />
+                            <input type="button" value="保存设置" onclick="saveConfig_balacepwd();" class="btn_next" title="保存您的保护设置" />
+                            <input type="button" class="btn-pwd-back" id="btnback_balancepwd" value="返&nbsp;&nbsp回" onclick="btnback_balancepwdclick()"/>
+                        </td>
+                    </tr>
+                }}
+            </table>
+        </div>
+

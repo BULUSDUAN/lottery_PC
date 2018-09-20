@@ -1,0 +1,186 @@
+﻿@using app.lottery.site.Models
+@using External.Core.Agnet
+@using GameBiz.Core
+@{
+    Layout = "../Shared/_LayoutFoud.cshtml";
+    ViewBag.Title = "返点用户";
+    ViewBag.keywords = "返点用户";
+    var list = ViewBag.GeneralizeUser as AgentUserInfoCollection;
+}
+<div class="center mt10">
+    @{Html.RenderPartial("Mycommenu", "Member");}
+    @{Html.RenderPartial("toptipFoud", "Member");}
+    <div class="new_buy_right">
+        <div class="betorder_top">
+            <ul>
+                <li class="betorder_topSelected"><a href="/member/generalizeUser">返点用户</a> </li>
+                <li><a href="/member/CommissionRecord">返点结算</a></li>
+                <li><a href="/member/StatisticsQuery">统计查询</a></li>
+                <li><a href="/member/SchemeManage">方案管理</a></li>
+            </ul>
+        </div>
+        <div class="betorder_con clearfix">
+            <div class="scheme">
+                <div class="scheme-show" style="margin-left: 10px;">
+                    <a href="/member/generalizeUser" checklg="/member/generalizeUser">下级代理</a>
+                </div>
+                <div class="scheme-show xzscheme">
+                    <a href="/member/subordinateuser" checklg="/member/subordinateuser"><i></i>下级用户</a>
+                </div>
+                @if (ViewBag.IsAddAgent)
+                {
+                    <div class="scheme-show">
+                        <a href="/member/dealerMsg" checklg="/member/dealerMsg">添加代理</a>
+                    </div>
+                }
+                <div class="scheme-show">
+                    <a href="/member/setNewUserRebate" checklg="/member/setNewUserRebate">设置新用户返点</a>
+                </div>
+                <div class="scheme-show">
+                    <a href="/member/popularizeLink" checklg="/member/popularizeLink">推广链接</a>
+                </div>
+            </div>
+            <div class="search_tab clearfix">
+                <div style="width: 620px !important 540px; float: left; height: 40px; line-height: 40px;">
+                    &nbsp;&nbsp;&nbsp;&nbsp;关键字：<input type="text" name="txtKeyWord" class="orderId" id="txtKeyWord" value="@(ViewBag.Key == "" ? "" : ViewBag.Key)" />
+                </div>
+                &nbsp;&nbsp;
+                <input type="button" class="search_btn" value="查询" onclick="getUserRebate(0,10)" />
+            </div>
+            <table border="0" cellpadding="0" cellspacing="0" class="betorder_table">
+                <tr class="tr_head">
+                    <th width="66">
+                        用户编号
+                    </th>
+                    <th width="62">
+                        用户名
+                    </th>
+                    <th width="35">
+                        实名
+                    </th>
+                    <th width="36">
+                        手机
+                    </th>
+                    <th width="36">
+                        余额
+                    </th>
+                    <th width="108">
+                        注册时间
+                    </th>
+                    <th width="56">
+                        传统足球
+                    </th>
+                    <th width="57">
+                        北京单场
+                    </th>
+                    <th width="60">
+                        竞彩足球
+                    </th>
+                    <th width="60">
+                        竞彩篮球
+                    </th>
+                    <th width="45">
+                        数字彩
+                    </th>
+                    <th width="60">
+                        高频彩
+                    </th>
+                    <th width="60">
+                        操作
+                    </th>
+                </tr>
+                @if (list != null && list.AgentUserList.Count > 0)
+                {
+                    foreach (var item in list.AgentUserList)
+                    {
+                    <tr>
+                        <td class="blue">
+                            @item.UserId
+                        </td>
+                        <td class="blue">
+                            @item.DisplayName
+                        </td>
+                        <td>
+                            @(!string.IsNullOrEmpty(item.RealName) && item.IsSettedRealName ? "*" : "无")
+                        </td>
+                        <td>
+                            @(!string.IsNullOrEmpty(item.Mobile) && item.IsSettedMobile ? "*" : "无")
+                        </td>
+                        <td class="ye">
+                            @(item.TotalBalanceMoney.ToString("f"))
+                        </td>
+                        <td>
+                            @(item.CreateTime.ToString() == "0001/1/1 0:00:00" ? "" : item.CreateTime.ToString("yyyy-MM-dd HH:mm:ss"))
+                        </td>
+                        <td>
+                            @item.CTZQ.ToString("N2")%
+                        </td>
+                        <td>
+                            @item.BJDC.ToString("N2")%
+                        </td>
+                        <td>
+                            @item.JCZQ.ToString("N2")%
+                        </td>
+                        <td>
+                            @item.JCLQ.ToString("N2")%
+                        </td>
+                        <td>
+                            @item.SZC.ToString("N2")%
+                        </td>
+                        <td>
+                            @item.GPC.ToString("N2")%
+                        </td>
+                        <td>
+                            <a href="javascript:void(0)" onclick=" showBg(this) " txtid="@item.UserId" txtName="@item.DisplayName">
+                                配置</a>
+                        </td>
+                    </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="13">
+                            暂时没有找到你要的数据哦
+                        </td>
+                    </tr>
+                }
+            </table>
+            @ViewHelpers.Pager6("getUserRebate", ViewBag.pageNo, 10, list == null ? 0 : list.TotalCount)
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+<div id="bet_confirm_show_1" style="display: none;">
+</div>
+@ViewHelpers.js("LightBox.min.js")
+    <script type="text/javascript">
+        var alertBox = new LightBox("bet_confirm_show_1");
+        $(function () {
+            $(".generalizeUser-table tr:even:gt(0)").css("backgroundColor", "#f9f9f9");
+        });
+        var getUserRebate = function (pageNo, pageSize) {
+            var key = $("#txtKeyWord").val();
+            var search = "pageNo=" + pageNo + "&pageSize=" + pageSize;
+            if (key != null) {
+                search = search + "&key=" + key;
+            }
+            location.search = search;
+        };
+        //显示灰色 jQuery 遮罩层
+        function showBg(obj) {
+            var id = $(obj).attr("txtid");
+            var name = $(obj).attr("txtName");
+            var typeName = "下级用户";
+            $("#bet_confirm_show_1").load("/member/ConfigurationUserRebateNew", { userId: id, txtName: name, typeName: typeName }, function (response, status, xhr) {
+                if ("success" == status) {
+                    alertBox.Show();
+                }
+            });
+        }
+        //关闭灰色 jQuery 遮罩
+        function closeBg() {
+            alertBox.Close();
+        } 
+    </script>

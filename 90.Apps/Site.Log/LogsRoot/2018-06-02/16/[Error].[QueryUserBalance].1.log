@@ -1,0 +1,8 @@
+[0][2018-06-02 16:21:38] 查询我的余额出错 - 用户账户不存在
+    System.Exception: 查询我的余额出错 - 用户账户不存在 ---> System.ArgumentException: 用户账户不存在
+   at GameBiz.Business.FundBusiness.QueryUserBalance(String userId)
+   at GameBiz.Service.GameBizWcfService_Fund.QueryUserBalance(String userId)
+   --- End of inner exception stack trace ---
+   at Common.Communication.WcfService.DoWork(WcfInvokeInfo invokeInfo)
+    ----------------------------------------------------------------------------
+

@@ -1,0 +1,71 @@
+﻿@using app.lottery.site.Models;
+@using GameBiz.Core;
+@{
+    var history = ViewBag.LoginHistory as UserLoginHistoryCollection;
+    var user=ViewBag.User as CurrentUserInfo;
+    ViewBag.Title = "我的登录历史 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "我的登录历史, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>登录历史</li>
+    </ul>
+</div>
+<div class="center mt10">
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="info_zl"> 登录历史</div>
+          <div style=" width:785px; float:right;">
+         <div class="tips mt10">
+        <span class=""><span>网站为您自动记录最近20次登录的IP地址，若发现异常情况，请及时  <a href="/member/safe" class="orderId" style="text-decoration: underline">修改密码</a> ！</span><br>
+           @{if(user.IsAuthenticationMobile==false)
+             {
+            <span>请尽快  <a href="/member/safe" class="orderId" style="text-decoration: underline">绑定手机</a> ，以确保您的密码安全及第一时间获悉账户资金变动消息。</span><br />
+               }
+               }
+            <span class="ye">如果您在以下时间没有登录过@(SiteString.getHZSiteName(Request))，请您及时联系客服，客服热线：@SiteString.tel。</span></span>
+    </div>
+        <table width="100%" class="account_box" style="margin-bottom: 20px; margin-top: 10px;">
+            <thead>
+                      <tr>
+                <th >
+                    <span class="icon_log"><b>登录时间</b></span>
+                </th>
+                <th>
+                    <b>登录IP</b>
+                </th>
+                <th>
+                    <b>IP地区</b>
+                </th>
+            </tr>
+            </thead>
+            @foreach (var item in history)
+            {
+                <tr>
+                    <td height="28">
+                        <span class="icon_log">@item.LoginTime.ToString("yyyy-MM-dd HH:mm:ss")</span>
+                    </td>
+                    <td>
+                        @app.lottery.site.iqucai.api.CommonAPI.FormatIP(item.LoginIp)
+                    </td>
+                    <td>
+                        @item.IpDisplayName
+                    </td>
+                </tr>
+            }
+        </table>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(".account_box tr:even:gt(0)").css("backgroundColor", "#F9F9F9");
+    })
+</script>

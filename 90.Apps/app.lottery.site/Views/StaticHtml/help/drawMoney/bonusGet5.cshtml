@@ -1,0 +1,76 @@
+﻿@{
+    var Title = "如何派奖？";
+    ViewBag.Title = Title + " - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+   @ViewHelpers.css("help.css")
+} 
+  <div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">玩彩网</a> > </li>
+        <li><a href="/staticHtml/help/index.html">&nbsp;帮助中心</a> > </li>
+        <li>&nbsp;如何派奖？</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type = "drawMoney", name = "bonusGet" });}
+<div class="help_r">
+         
+         <div class="det_box">
+            	<h2>如何派奖？</h2>
+                <div class="det_c"><div class="det_c">
+<p>会员参与合买中奖后，本站将会代为办理领奖，财务核对无误之后进行派奖&mdash;&mdash;将税后奖金按以下分配标准派发到合买会员的预付款中。</p>
+<p><strong>现行奖金分配标准：</strong></p>
+<p>1、网站不收取任何手续费及返点，中奖后亦不提成。</p>
+<p>2、代购方案中奖后，税后奖金将全部派送到中奖方案发起人的玩彩网账户中。</p>
+<p>3、合买方案中奖后，税后奖金将按参与份额比例分配到方案的各参与用户的玩彩网账户中。</p>
+<p>4、在方案盈利(中奖奖金减方案本金大于0)的情况下,方案发起人可对税后奖金进行提成(用户在发起方案时可设置"发起返点"为0%-10%),则其余奖金按用户参与份额比例分配发送到用户的玩彩网账户中。</p>
+<p>此流程需要一段时间，请会员耐心等候。</p>
+</div>                </div>
+               @* 
+                <div class="det_a feedback">
+                <div>以上内容是否解决了您的问题呢？</div>
+                              
+                <div>
+                <a id="btn_a_yes" class="btn"><span class="feedback_yes">是，已经解决。</span></a> <a class="btn" id="btn_a_no" href="javascript:void(0);"><span class="feedback_no">否，尚未解决。</span></a>
+                    <div style="display:none;" class="feedback_form clearfix" id="feed_div">                  
+                    <a id="fclose" class="feedback-close" href="javascript:void(0);">关闭</a>     
+                    <span style="display:none;" id="feed_detail"> 
+	                    <form method="post" name="feed_dtl" id="feed_dtlf">             
+		                    <span class="fb-input"><input type="radio" value="1" name="nodtl"> 描述不清晰</span>
+		                    <span class="fb-input"><input type="radio" value="2" name="nodtl"> 字太多，不想看</span>
+		                    <span class="fb-input"><input type="radio" value="3" name="nodtl"> 太复杂，看不懂</span>
+		                    <span class="fb-input"><input type="button" value="提交" name="fsbmt"></span>
+		                </form>    
+	                </span>
+                    <div style="display:none;" class="feedback-suc l" id="feed_result">您的反馈信息已经提交，谢谢您的反馈。</div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                  
+                </script>                                           
+                </div>
+                
+                <div class="det_a">
+                	<div class="det_a_l">相关问题：</div>
+                    <div class="det_a_r">
+                    	<ul>
+                        	                    	</ul>    
+                    </div>
+                </div>*@
+            </div>
+
+
+        </div>
+         </div>
+<div class="clearfix"></div>
+
+ @ViewHelpers.js("help.js")
+
+
+
+
+
+

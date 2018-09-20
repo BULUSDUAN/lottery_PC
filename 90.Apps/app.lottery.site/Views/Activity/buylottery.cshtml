@@ -1,0 +1,297 @@
+﻿@{
+    //ViewBag.Title = "buylottery";
+    ViewBag.Title = "安全购彩";
+    Layout = "../Shared/_HuoDong.cshtml";
+    @UserHelper.js("SuperSlide.js")
+}
+@ViewHelpers.css("buylottery.css")
+<div class="header_box_con">
+    <div class="header_box">
+        <a href="/" class="xg logo">@SiteString.getHZSiteName(Request)</a>
+    </div>
+</div>
+<div style="margin-top: 0px;" class="J_lottery_content lottery-content-feature hidetrans J_feature_body">
+    <div style="transform: translate3d(0px, 0px, 0px);" class="main J_feature_main">
+        @*安全购彩*@
+        <div class="slide lottery-content-feature-a">
+            <div class="safetybuy">
+            </div>
+            <div class="feature-forward J_feature_turndown_a hide">
+            </div>
+        </div>
+        <div class="slide lottery-content-feature-b">
+            <div class="centent">
+                <dl class="article my_iqucai">
+                    <div class="myiqucai">
+                        <ul class="my_box">
+                            <li class="image sexangle"><a href="javascript:;">
+                                <p>
+                                    形象</p>
+                                <span>Image</span></a></li>
+                            <li class="qualty sexangle"><a href="javascript:;">
+                                <p>
+                                    资质</p>
+                                <span>Qualty</span></a></li>
+                            <li class="buy_fund sexangle"><a href="javascript:;">
+                                <p>
+                                    基金</p>
+                                <span>Fund</span></a></li>
+                            <li class="authority sexangle"><a href="javascript:;">
+                                <p>
+                                    权威</p>
+                                <span>Authority</span></a></li>
+                            <li class="safe sexangle"><a href="javascript:;">
+                                <p>
+                                    隐私</p>
+                                <span>Safe</span></a></li>
+                            <li class="funds sexangle"><a href="javascript:;">
+                                <p>
+                                    资金</p>
+                                <span>Funds</span></a></li>
+                            <li class="infor sexangle"><a href="javascript:;">
+                                <p>
+                                    信息</p>
+                                <span>Infor</span></a></li>
+                        </ul>
+                    </div>
+                </dl>
+                <dl class="article my_image">
+                    <dt class="getback  img_ret">返&nbsp;回</dt>
+                    <div class="mBan2 fullSlide">
+                        <div id="slideBox" class="slideBox">
+                            <div class="hd">
+                                <ul>
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                </ul>
+                            </div>
+                            <div class="bd">
+                                <ul>
+                                    <li class="iqucai_image1"></li>
+                                    <li class="iqucai_image2"></li>
+                                    <li class="iqucai_image3"></li>
+                                    <li class="iqucai_image4"></li>
+                                    <li class="iqucai_image5"></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                        jQuery(".slideBox").slide({ mainCell: ".bd ul", effect: "fold", autoPlay: true, trigger: "click" });
+                    </script>
+                </dl>
+                <dl class="article my_qualty">
+                    <dt class="getback qua_ret">返&nbsp;回</dt>
+                    <div class="aptitude_img_box">
+                        <span class="aptitude_img" value="1"></span>
+                        <span class="aptitude_img2" value="2"></span>
+                        <span class="aptitude_img" value="3"></span>
+                    </div>
+                </dl>
+                <dl class="article my_buyfund">
+                    <dt class="getback fud_ret">返&nbsp;回</dt>
+                </dl>
+                <dl class="article my_authority">
+                    <dt class="getback aut_ret">返&nbsp;回</dt>
+                    <div class="authority_img_box">
+                        <span class="authority_img1" value="1"></span>
+                        <span class="authority_img2" value="2"></span>
+                        <span class="authority_img3" value="3"></span>
+                        <span class="authority_img4" value="4"></span>
+                    </div>
+                </dl>
+                <dl class="article my_safe">
+                    <dt class="getback saf_ret">返&nbsp;回</dt>
+                </dl>
+                <dl class="article my_funds">
+                    <dt class="getback fun_ret">返&nbsp;回</dt>
+                </dl>
+                <dl class="article my_infor">
+                    <dt class="getback inf_ret">返&nbsp;回</dt>
+                    <dt class="infoimg"></dt>
+                </dl>
+            </div>
+            <div class="feature-forward J_feature_turndown_b hide">
+            </div>
+        </div>
+        @*简单购彩*@
+        <div class="slide lottery-content-feature-c">
+            <div class="briefnessbuy">
+            </div>
+            <div class="feature-forward J_feature_turndown_c hide">
+            </div>
+        </div>
+        @*多功能*@
+        <div class="slide lottery-content-feature-d">
+            <div class="centent">
+                <dl class="article mul_tifunction">
+                    <div class="multifunction">
+                        <ul class="mul_box">
+                            <li class="image sexangle"><a href="javascript:;">
+                                <p>
+                                    注册</p>
+                                <span>Register</span></a></li>
+                            <li class="qualty sexangle"><a href="javascript:;">
+                                <p>
+                                    提款</p>
+                                <span>Funds</span></a></li>
+                            <li class="buy_fund sexangle"><a href="javascript:;">
+                                <p>
+                                    充值</p>
+                                <span>Qualty</span></a></li>
+                            <li class="authority sexangle"><a href="javascript:;">
+                                <p>
+                                    自助</p>
+                                <span>Fund</span></a></li>
+                            <li class="safe sexangle"><a href="javascript:;">
+                                <p>
+                                    中奖</p>
+                                <span>Authority</span></a></li>
+                            <li class="funds sexangle"><a href="javascript:;">
+                                <p>
+                                    兑奖</p>
+                                <span>Safe</span></a></li>
+                        </ul>
+                    </div>
+                </dl>
+                <dl class="article mul_image">
+                    <dt class="getback img_mul">返&nbsp;回</dt>
+                </dl>
+                <dl class="article mul_qualty">
+                    <dt class="getback qua_mul">返&nbsp;回</dt>
+                </dl>
+                <dl class="article mul_buyfund">
+                    <dt class="getback fud_mul">返&nbsp;回</dt>
+                </dl>
+                <dl class="article mul_authority">
+                    <dt class="getback aut_mul">返&nbsp;回</dt>
+                </dl>
+                <dl class="article mul_safe">
+                    <dt class="getback saf_mul">返&nbsp;回</dt>
+                </dl>
+                <dl class="article mul_funds">
+                    <dt class="getback fun_mul">返&nbsp;回</dt>
+                </dl>
+            </div>
+            <div class="feature-forward J_feature_turndown_d hide">
+            </div>
+        </div>
+        @*优惠*@
+        <div class="slide lottery-content-feature-e">
+            <div class="favorablebuy">
+            </div>
+            <div class="feature-forward J_feature_turndown_e hide">
+            </div>
+        </div>
+        @*好服务*@
+        <div class="slide lottery-content-feature-f">
+            <div class="centent">
+                <dl class="article service_iqucai">
+                    <div class="serviceiqucai">
+                        <ul class="ser_box">
+                            <li><a class="ser_1"></a></li>
+                            <li><a class="ser_2"></a></li>
+                            <li><a class="ser_3"></a></li>
+                            <li><a class="ser_4"></a></li>
+                            <li><a class="ser_5"></a></li>
+                            <li><a class="ser_6"></a></li>
+                        </ul>
+                    </div>
+                </dl>
+                <dl class="article ser_register">
+                    <dt class="getback ser_reg">返&nbsp;回</dt>
+                </dl>
+                <dl class="article ser_returnprofit">
+                    <dt class="getback ser_ret">返&nbsp;回</dt>
+                </dl>
+                <dl class="article ser_appendaward">
+                    <dt class="getback ser_app">返&nbsp;回</dt>
+                </dl>
+                <dl class="article ser_hemai">
+                    <dt class="getback ser_hem">返&nbsp;回</dt>
+                </dl>
+                <dl class="article ser_footer">
+                    <dt class="getback ser_foo">返&nbsp;回</dt>
+                </dl>
+                <dl class="article ser_wechat">
+                    <dt class="getback ser_wec">返&nbsp;回</dt>
+                </dl>
+            </div>
+            <div class="feature-forward J_feature_turndown_f hide">
+            </div>
+        </div>
+        @*公益购彩*@
+        <div class="slide lottery-content-feature-g">
+            <div class="publicbenefit">
+            </div>
+            <div class="feature-forward J_feature_turndown_g hide">
+            </div>
+        </div>
+        @*公益在身边*@
+        <div class="slide lottery-content-feature-h">
+            <div class="centent">
+                <dl class="article by_myside">
+                    <div class="bymyside">
+                        <ul class="bymy_box">
+                            <li class="image sexangle"><a href="javascript:;">
+                                <p>
+                                    公益销售</p>
+                                <span>Public sales</span></a></li>
+                            <li class="qualty sexangle"><a href="javascript:;">
+                                <p>
+                                    公益支出</p>
+                                <span>Expenditure</span></a></li>
+                            <li class="buy_fund sexangle"><a href="javascript:;">
+                                <p>
+                                    公益收入</p>
+                                <span>Revenue</span></a></li>
+                            <li class="authority sexangle"><a href="javascript:;">
+                                <p>
+                                    公益项目</p>
+                                <span>Project</span></a></li>
+                            <li class="safe sexangle"><a href="javascript:;">
+                                <p>
+                                    公益爱心</p>
+                                <span>Public love</span></a></li>
+                        </ul>
+                    </div>
+                </dl>
+                <dl class="article public_sales">
+                    <dt class="getback bymy_sales">返&nbsp;回</dt>
+                </dl>
+                <dl class="article expenditure">
+                    <dt class="getback bymy_expen">返&nbsp;回</dt>
+                </dl>
+                <dl class="article revenue">
+                    <dt class="getback bymy_reve">返&nbsp;回</dt>
+                </dl>
+                <dl class="article project">
+                    <dt class="getback bymy_proj">返&nbsp;回</dt>
+                </dl>
+                <dl class="article public_love">
+                    <dt class="getback bymy_love">返&nbsp;回</dt>
+                </dl>
+            </div>
+            <div class="feature-forward J_feature_turndown_h hide">
+            </div>
+        </div>
+    </div>
+    <ul class="nav-btns J_feature_nav">
+        <li class="current first"><b>安全购彩</b> </li>
+        <li class=""><b>你我的 @SiteString.getHZSiteName(Request)</b> </li>
+        <li><b>简单购彩</b> </li>
+        <li><b>多功能 @SiteString.getHZSiteName(Request)</b> </li>
+        <li><b>优惠购彩</b> </li>
+        <li><b>好服务 @SiteString.getHZSiteName(Request)</b> </li>
+        <li><b>公益购彩</b> </li>
+        <li><b>公益在身边</b> </li>
+    </ul>
+</div>
+<div class="buy_lottery">
+    @{Html.RenderAction("footer", "activity");}
+</div>
+@ViewHelpers.js("jquery_003.js")
+@ViewHelpers.js("buylottery.js")

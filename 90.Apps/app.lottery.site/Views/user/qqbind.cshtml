@@ -1,0 +1,59 @@
+@using app.lottery.site.Models;
+@{
+    ViewBag.Title = "QQ登录 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "QQ登录, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    ViewBag.Here = "QQ登录账号绑定";
+}
+@UserHelper.css("otherlogin.css")
+@{if (ViewBag.IsSuccess)
+  {
+      var user = ViewBag.CurrentUser as CurrentUserInfo;
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>绑定已注册的用户名</li>
+    </ul>
+</div>
+ <div class="other-lg-tip">
+        <span class="other-text">Q Q 登录</span>
+    </div>
+    <div class="other-lg-box">
+        <div class="other-u0">
+            <i class="u0-img"></i>
+            <div class="u0-text">
+                @(SiteString.getHZSiteName(Request))账户基本信息设置</div>
+        </div>
+        <div class="box-fr">
+            @{Html.RenderPartial("loginmenu");}
+        </div>
+        <div class="box-fl" style=" border-radius:3px;border: 1px solid #d5d5d5;border-radius: 15px;height: 350px;width: 490px;">
+           <p class="bd-ok">
+           <span></span>恭喜您，绑定成功
+           </p>
+           <p class="bd-u0">尊敬的QQ登录用户，您的用户名为：@user.LoginInfo.LoginName</p>
+           <p class="bd-u1">温馨提示：请牢记您的账户信息，您随时可使用此用户像是偶安全又快捷的的购彩乐趣</p>
+           <br />
+           <p class="bd-u2"><span></span>您可能需要：</p>
+           <p class="bd-u3"><span></span><a href="/member/mobile">立即绑定手机</a>&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp<span></span><a href="/member/realnameauth">立即实名认证</a>&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp<span></span><a href="/member/pay">进行账户充值</a></p>
+        </div>
+    </div>
+
+  }
+  else
+  {
+    <div class="points-success" style="background: #FCEFE9;">
+        <i class="fail"></i>
+        <div class="res-content">
+            <h3>QQ登录账号绑定失败</h3>
+            <p>
+                @ViewBag.Message
+            </p>
+            <span class="morelink">您可能需要：<a href="/user/qqlogin">重新登录</a>
+                | <a href="@SiteString.root(Request)">网站首页</a> </span>
+        </div>
+        <div class="clear">
+        </div>
+    </div>  
+  }}
+

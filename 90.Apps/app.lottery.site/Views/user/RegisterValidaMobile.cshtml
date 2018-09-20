@@ -1,0 +1,173 @@
+﻿@{
+    ViewBag.Title = "会员注册 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "会员注册, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var isCode = Session["IsCode"] == null ? false : Convert.ToBoolean(Session["IsCode"]);
+    var mobile = Session["mobile"] == null ? string.Empty : Session["mobile"].ToString();
+}
+@section css{
+    @UserHelper.css("user.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>注册</li>
+    </ul>
+</div>
+<div class="user-register-box mt10 suc">
+    <div class="suc-box">
+        @if (!isCode)
+        {
+            <div id="div_mobile">
+                <div class="user_reg_item" style="padding-top: 26px;">
+                    <span class="reg_label">
+                        <label for="mobileNumber">
+                            验证手机：</label></span>
+                    <input type="text" style="ime-mode: auto" value="" onkeyup="value=value.replace(/[^\d]/g,'') "
+                        name="mobileNumber" id="txt_MobileNumber" class="reg_in_text" maxlength="11">
+                    <span id="NickNameTip" class="onShow"><b>请输入手机号码</b></span><br />
+                    <span style="margin: 10px 0px 0px 109px;">
+                        <input type="button" value="发送验证码" title="发送验证码" id="SubmitBtn" class="btn_next" /></span>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div id="div_code">
+                <div class="user_reg_item" style="padding-top: 26px;">
+                    <span class="reg_label">
+                        <label for="mobileNumber">
+                            手机号码：</label></span><span id="txt_MobileNum" style="font-size: 15px; color: Black;
+                                font-weight: bold;">@mobile</span><span><input type="button" id="btn_getCode" value="重发验证码"
+                                    style="margin-left: 15px; cursor: pointer;"  />
+                                </span>
+                    <br />
+                    <span class="reg_label">
+                        <label for="mobileNumber">
+                            验证码：</label></span><input type="text" style="ime-mode: auto" value="" onkeyup="value=value.replace(/[^\d]/g,'') "
+                                name="code" id="txt_Code" class="reg_in_text" maxlength="11"><span id="NickNameTip"
+                                    class="onShow"><b>请输入验证码</b></span><br />
+                    <span style="margin: 10px 0px 0px 109px;">
+                        <input type="button" value="确认" title="确认" id="btn_Sumb" class="btn_next" /></span><span><a
+                            id="a_Send" style="margin: 5px; margin-top: 10px; float: left;">更换手机</a></span></div>
+                <input type="hidden" id="hid_Mobile" value="@mobile" />
+            </div>
+        }
+        <input type="hidden" value="@isCode" id="hid_isCode" />
+    </div>
+</div>
+<script type="text/javascript">
+    var countdown = 60;
+    function settime() {
+        var isCode = $("#hid_isCode").val();
+        if (isCode.toLowerCase() == "true") {
+            if (getCookie("CurrCode") <= 0) {
+                addCookies("CurrCode", countdown);
+            }
+            else {
+                countdown = getCookie("CurrCode");
+            }
+            if (getCookie("CurrCode") == 0) {
+                $("#btn_getCode").attr("disabled", "");
+                $("#btn_getCode").val("重发验证码");
+                countdown = 60;
+                addCookies("CurrCode", 0);
+                addCookies("IsZX", 1);
+                return;
+            } else {
+                $("#btn_getCode").attr("disabled", "disabled");
+                $("#btn_getCode").val("重新发送(" + getCookie("CurrCode") + ")");
+                countdown--;
+                addCookies("CurrCode", countdown);
+            }
+            setTimeout(function () {
+                settime()
+            }
+    , 1000)
+        }
+    }
+    function addCookies(key, val) {
+        document.cookie = "" + key + "=" + val + ";";
+    }
+    function getCookie(name) {
+        var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+        if (arr = document.cookie.match(reg))
+            return unescape(arr[2]);
+        else
+            return null;
+    }
+    $(window).load(function () {
+        var count = getCookie("IsZX");
+        if (count <= 0) {
+            settime();
+        }
+    })
+    $(document).ready(function () {
+        function requestCode(mobile) {
+            $("#SubmitBtn").attr("disabled", "disabled");
+            //            var mobile = $("#txt_MobileNum").text();
+            if (!mobile) {
+                alert("请输入手机号码");
+                $("#SubmitBtn").attr("disabled", "");
+                return false;
+            }
+            else if (mobile.length < 11) {
+                alert("输入手机号码格式错误");
+                $("#SubmitBtn").attr("disabled", "");
+                return false;
+            }
+            var url = "/user/RegisterSendMobileCode?r=" + Math.random();
+            $.post(url, { "mobile": mobile }, function (callback) {
+                if (callback.Succuss) {
+                    $("#SubmitBtn").attr("disabled", "");
+                    location.href = "/user/RegisterValidaMobile?r=" + Math.random();
+                }
+                else {
+                    $("#SubmitBtn").attr("disabled", "");
+                    alert(callback.Msg);
+                }
+            })
+        }
+        $("#SubmitBtn").click(function () {
+            var mobile = $("#txt_MobileNumber").val();
+            requestCode(mobile);
+        });
+        $("#btn_getCode").click(function () {
+            settime();
+            var mobile = $("#txt_MobileNum").text();
+            requestCode(mobile);
+        });
+
+        $("#btn_Sumb").click(function () {
+            var mobile = $("#hid_Mobile").val();
+            if (!mobile) {
+                alert("请输入手机号码");
+                return false;
+            }
+            var code = $("#txt_Code").val();
+            if (!code) {
+                alert("请输入验证码");
+                return false;
+            }
+            var url = "/user/RegisterResponseMobile?r=" + Math.random();
+            $.post(url, { "validateCode": code, "mobile": mobile }, function (callback) {
+                if (callback.Succuss) {
+                    addCookies("IsZX", 0);
+                    location.href = "/user/newregistersuc";
+                }
+                else {
+                    alert(callback.Msg);
+                }
+            })
+        });
+        $("#a_Send").click(function () {
+            var url = "/user/ClearSession?r=" + Math.random();
+            $.post(url, null, function (callback) {
+                if (callback.Succuss) {
+                    addCookies("IsZX", 0);
+                    location.href = "/user/RegisterValidaMobile?r=" + Math.random();
+                }
+            })
+        });
+    });
+</script>

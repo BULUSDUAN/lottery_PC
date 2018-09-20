@@ -1,0 +1,164 @@
+﻿@using GameBiz.Core;
+@using app.lottery.site.Models;
+@{
+    var user = ViewBag.User as CurrentUserInfo;
+    var togList = ViewBag.TogList as Sports_TogetherSchemeQueryInfoCollection;
+    var balance = ViewBag.CurrentUserBalance as GameBiz.Core.UserBalanceInfo;
+}
+<table width="100%" border="0" cellpadding="0" cellspacing="0" class="socai" style="border-top: none; border-left: none; border-right: none;">
+    <tr class="ttis">
+        <th align="center">序
+        </th>
+        <th>彩种
+        </th>
+        <th>
+            <a onclick="setOrderBy(1,@(ViewBag.orderByProperty == 1 ? (ViewBag.orderByCategory == 0 ? 1 : 0) : 0));" href="javascript:;" class="under">发起人<i class="@(ViewBag.orderByProperty == 1 ? ViewBag.orderByCategory == 0 ? "orderby_down" : "orderby_up" : string.Empty)"></i></a>
+        </th>
+        <th width="10%">
+            <a onclick="setOrderBy(2,@(ViewBag.orderByProperty == 2 ? (ViewBag.orderByCategory == 0 ? 1 : 0) : 0));" href="javascript:;" class="under">战绩<i class="@(ViewBag.orderByProperty == 2 ? ViewBag.orderByCategory == 0 ? "orderby_down" : "orderby_up" : string.Empty)"></i></a>
+        </th>
+        <th>方案内容
+        </th>
+        <th>
+            <a onclick="setOrderBy(3,@(ViewBag.orderByProperty == 3 ? (ViewBag.orderByCategory == 0 ? 1 : 0) : 0));" href="javascript:;" class="under">总份数<i class="@(ViewBag.orderByProperty == 3 ? ViewBag.orderByCategory == 0 ? "orderby_down" : "orderby_up" : string.Empty)"></i></a>
+        </th>
+        <th>发起人认购
+        </th>
+        <th><a onclick="setOrderBy(4,@(ViewBag.orderByProperty == 4 ? (ViewBag.orderByCategory == 0 ? 1 : 0) : 0));" class="under" href="javascript:;">进度<i class="@(ViewBag.orderByProperty == 4 ? ViewBag.orderByCategory == 0 ? "orderby_down" : "orderby_up" : string.Empty)"></i></a>
+        </th>
+        <th width="6%">
+            <a onclick="setOrderBy(6,@(ViewBag.orderByProperty == 6 ? (ViewBag.orderByCategory == 0 ? 1 : 0) : 0));" href="javascript:;" class="under">截止<i class="@(ViewBag.orderByProperty == 6 ? ViewBag.orderByCategory == 0 ? "orderby_down" : "orderby_up" : string.Empty)"></i></a>
+        </th>
+        <th width="9%">方案|<font style="border-bottom: #000 dotted 1px;" title="方案盈利后发起人收取盈利奖金的一定比例作为提成">提成</font>
+        </th>
+        <th align="center">认购(份)
+        </th>
+    </tr>
+    @for (int i = 0; i < 12; i++)
+    {
+        if (togList.List.Count > 0 && togList.List.Count > i)
+        {
+        <tr class="@(i % 2 == 0 ? "ni" : "ni2") @(i == 11 ? "last_tr" : string.Empty)">
+            <td height="30" class="@(togList.List.IndexOf(togList.List[i]) < 7 && OrderManager.IsCanBuy(togList.List[i]) ? "red" : "black")" align="center">@(togList.List.IndexOf(togList.List[i]) < 7 && OrderManager.IsCanBuy(togList.List[i]) ? "顶" : (togList.List.IndexOf(togList.List[i]) + 1).ToString())
+            </td>
+            <td>@SiteConvert.GameName(togList.List[i].GameCode, togList.List[i].GameType)
+            </td>
+            <td style="line-height: 15px;">
+                @{if (togList.List[i].ShowLuck)
+                  { <img align="absmiddle" src="@SiteString.img("public/luck.gif")" title="近10次投注盈利超过1倍" />}}
+                <a class="under" target="_blank" href="/blog/standings/@togList.List[i].CreateUserId">@(SiteString.HideUserName(togList.List[i].CreaterDisplayName, togList.List[i].CreaterHideDisplayNameCount))</a>
+            </td>
+            <td style="line-height: 12px;">
+                <a href="/blog/standings/@togList.List[i].CreateUserId" target="_blank" title="历史战绩">@(UserHelper.UserBeeding(togList.List[i].TogetherSchemeSuccessGainMoney, togList.List[i].TogetherSchemeFailGainMoney))</a>
+            </td>
+            <td title="@OrderManager.SchemeCategoryName(togList.List[i].SchemeBettingCategory)">@{if (togList.List[i].Security == TogetherSchemeSecurity.Public)
+                                                                                                  {<a href="/user/scheme/@togList.List[i].SchemeId" target="_blank" class="under blue">查看</a>}
+                                                                                                  else
+                                                                                                  { @(OrderManager.SecurityName(togList.List[i].Security)) }}
+                <span class="green small">@OrderManager.SchemeCategoryName(togList.List[i].SchemeBettingCategory, true)</span>
+            </td>
+            <td class="red">@(togList.List[i].TotalCount.ToString("0"))份(@(togList.List[i].TotalMoney.ToString("0"))元)
+            </td>
+            <td>@((togList.List[i].Subscription * togList.List[i].Price / togList.List[i].TotalMoney * 100).ToString("0.##"))% @{if (togList.List[i].Guarantees > 0)
+                                                                                                                              {<span class="green small">保@((togList.List[i].Guarantees * togList.List[i].Price / togList.List[i].TotalMoney * 100).ToString("f"))%</span>}}
+            </td>
+            <td class="bold @(togList.List[i].Progress * 100 > 80 ? "red" : togList.List[i].Progress * 100 > 30 ? "violet" : "green")">@((togList.List[i].Progress * 100).ToString("f"))%
+            </td>
+            <td title="@togList.List[i].StopTime.ToString("yyyy-MM-dd HH:mm")">
+                <b>@(OrderManager.IsCanBuy(togList.List[i]) ? togList.List[i].StopTime > DateTime.Today.AddDays(1) ? togList.List[i].StopTime.ToString("MM-dd") : togList.List[i].StopTime.ToString("HH:mm") : "截止")</b>
+            </td>
+            <td align="left">
+                <a style="margin: 0 2px 0 7px;" target="_blank" class="dl" href="/user/scheme/@togList.List[i].SchemeId">详情</a><span style="background-color: @(togList.List[i].BonusDeduct > 0 ? "#b00" : "gray"); color: white; font-size: 10px;">@(togList.List[i].BonusDeduct > 0 ? togList.List[i].BonusDeduct + "%" : "无")</span>
+            </td>
+            <td>
+                @{if (OrderManager.IsCanBuy(togList.List[i]))
+                  {
+                    <input type="text" supls="@togList.List[i].SurplusCount" onfocus="setBuyInput(this)" onblur="setBuyInput(this)" onkeydown="number_check(this,event)" onkeyup="Tool.tonumber(this,0,@(togList.List[i].SurplusCount))" class="input_text gray" size="8" value="剩@(togList.List[i].SurplusCount)份" id="txt_@(togList.List[i].SchemeId)" />
+                    <a href="javascript:;" onclick="CheckLogin('@togList.List[i].SchemeId',@((!string.IsNullOrEmpty(togList.List[i].JoinPwd)).ToString().ToLower()),@(user == null ? "false" : balance.CheckIsNeedPassword("Bet").ToString().ToLower()))" class="btn-buy"></a>  
+                    <input type="hidden" id="price_@(togList.List[i].SchemeId)" value="@togList.List[i].Price" />
+                  }
+                  else if (togList.List[i].TotalMoney <= togList.List[i].SoldCount)
+                  {
+                    <span class="red">满员</span>
+                  }}
+            </td>
+        </tr>
+        }
+        else
+        {
+        <tr onmouseover="this.style.backgroundColor='#fffde7';" onmouseout="this.style.backgroundColor='';" @(i == 11 ? "class=last_tr" : string.Empty)>
+            <td colspan="11" height="30"></td>
+            <td class="last_td"></td>
+        </tr>
+        }
+    }
+</table>
+<script type="text/javascript">
+    orbP = '@ViewBag.orderByProperty';
+    orbC = '@ViewBag.orderByCategory';
+    function CheckLogin(schemeId, isNeedBuyPwd, isNeedBetPwd) {
+        //投注前判断登录状态
+        user.isLogin(function (isLogin) {
+            if (!isLogin) {
+                user.LoginCallBack = function () { showConfirm(schemeId, isNeedBuyPwd, isNeedBetPwd); };
+                loginDialog.Show();
+                $("#userName").focus();
+                return false;
+            }
+            else {
+                showConfirm(schemeId, isNeedBuyPwd, isNeedBetPwd);
+            }
+        })
+    }
+    function showConfirm(schemeId, isNeedBuyPwd, isNeedBetPwd) {
+        var buy = document.getElementById("txt_" + schemeId).value;
+        var price = document.getElementById("price_" + schemeId).value;
+        if (isNaN(buy) || buy < 1) {
+            alert("请输入正确的购买份数", "warning");
+            return false;
+        }
+
+        var confTxt = "认购份数：<b class='red'>" + buy + "</b>份(" + buy * price + "元)，确定购买吗？";
+
+        if (isNeedBuyPwd) {
+            confTxt = confTxt + "<div class='mt10' style='border:1px dotted #d3d3d3;border-width:1px 0;padding:10px 0;text-align:center;'><span class='blue bold'>请输入认购密码：</span><input type='password' value='' id='joinpwd' class='balancepwd red'/></div>";
+        }
+        if (isNeedBetPwd) {
+            confTxt = confTxt + "<div class='mt10' style='border:1px dotted #d3d3d3;border-width:1px 0;padding:10px 0;text-align:center;'><span class='blue bold'>请输入资金密码：</span><input type='password' value='' id='balancepwd' class='balancepwd'/></div>";
+        }
+
+        confirmTip(confTxt, function () {
+            join(schemeId, isNeedBuyPwd, isNeedBetPwd);
+        }, function () { });
+    }
+    function join(schemeId, isNeedBuyPwd, isNeedBetPwd) {
+        var url = "/hemai/join_sports/" + schemeId;
+        var buy = document.getElementById("txt_" + schemeId).value;
+        var jpwd = isNeedBuyPwd ? document.getElementById("joinpwd").value : "";
+        var bpwd = isNeedBetPwd ? document.getElementById("balancepwd").value : "";
+        var data = { buyCount: buy, joinpwd: jpwd, balancepwd: bpwd };
+        $.post(url, data, function (res) {
+            if (res.IsSuccess) {
+                alert(res.Message);
+                location.href = location.href;
+            }
+            else {
+                alert(res.Message, "warning");
+                return false;
+            }
+        });
+    }
+    function setBuyInput(obj) {
+        var val = obj.value;
+        var css = obj.className;
+        var sy = obj.getAttribute("supls");
+        if (val == "剩" + sy + "份") {
+            obj.value = "";
+            obj.className = obj.className.substring(0, css.indexOf("gray"));
+        }
+        else if (val == "") {
+            obj.value = "剩" + sy + "份";
+            obj.className = obj.className + " gray";
+        }
+    }
+</script>

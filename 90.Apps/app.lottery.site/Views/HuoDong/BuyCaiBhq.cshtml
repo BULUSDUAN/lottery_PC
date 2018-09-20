@@ -1,0 +1,116 @@
+﻿@using Activity.Core;
+@using app.lottery.site.Models;
+@{
+    ViewBag.Title = "买彩票不花钱";
+    Layout = "../Shared/_HuoDong.cshtml";
+    var BuyCpBhq = ViewBag.BuyCpBhq as A20140902InfoCollection;
+}
+<div id="Buycp">
+    <div class="bhq_content">
+        <div class="top">
+            <p>
+                活动时间：2014年9月1日0:00至9月10日24:00</p>
+            <p>
+                活动对象：@(SiteString.getHZSiteName(Request))所有注册用户</p>
+        </div>
+        <div class="guize">
+            <div class="font">
+                活动规则</div>
+            <div class="guize_nr">
+                <p>
+                    1、参与对象必须是@(SiteString.getHZSiteName(Request))实名认证、手机绑定的注册用户；</p>
+                <p style="height: 85px;">
+                    2、<span class="day">每天<br />
+                        9:00~24:00</span> <span class="fang">前10个发起的方案金额</span> <span class="fu">≥</span>
+                    <span class="bai">100元的满员合买订单</span> <span class="jing">仅限竞彩北京单场传统足彩</span></p>
+                <p>
+                    3、方案发起时间以网站系统显示的时间为准；</p>
+                <p>
+                    4、方案内容必须完全公开、不允许某场赛事出现≥3个选项；</p>
+                <p>
+                    5、每天每个用户限一个方案参与活动。
+                </p>
+            </div>
+        </div>
+        <div class="neirong">
+            <div class="font">
+                活动内容</div>
+            <div class="neirong_xq">
+                <p class="pp">
+                    满足活动规则条件的方案我们将在该方案成功出票后以彩金红包的方</p>
+                <p>
+                    &nbsp;&nbsp;&nbsp;&nbsp;式将100元派发给方案发起人</p>
+                <p class="pp">
+                    用户所中奖的金额由用户按购买比例所得所有</p>
+                <p class="pp">
+                    方案必须不包含网站保底，且出票成功</p>
+                <span class="hongbao"></span>
+            </div>
+        </div>
+        <div class="fangan">
+            <div>
+                <span class="font1">每日获奖方案</span>
+                <div class="day">
+                    <span>第</span> <span>一</span> <span>天</span>
+                </div>
+            </div>
+            <div style="clear: both;">
+            </div>
+            <div class="fangan_lb">
+                <div class="size">
+                    <ul>
+                        <li><span class="on">1</span></li>
+                        <li><span>2</span></li>
+                        <li><span>3</span></li>
+                        <li><span>4</span></li>
+                        <li><span>5</span></li>
+                        <li><span>6</span></li>
+                        <li><span>7</span></li>
+                        <li><span>8</span></li>
+                        <li><span>9</span></li>
+                        <li style="margin: none; width: 100px;"><span>10</span></li>
+                    </ul>
+                </div>
+                <div style="clear: both;">
+                </div>
+                <div class="bhq_title">
+                    <ul>
+                        <li>用户ID</li>
+                        <li>方案编号</li>
+                        <li>中奖金额</li>
+                        <li>购买时间</li>
+                        <li>是否领奖</li>
+                    </ul>
+                </div>
+                <div style="clear: both;">
+                </div>
+                <table>
+                    @foreach (var item in BuyCpBhq.List)
+                    {
+                        <tr>
+                            <td class="orange">
+                                @item.UserId
+                            </td>
+                            <td class="blue">
+                                @item.OrderId
+                            </td>
+                            <td class="red">
+                                @item.FillMoney.ToString("N2")
+                            </td>
+                            <td class="black">
+                                @item.CurrentTime
+                            </td>
+                            <td>
+                                @if (!item.IsGive)
+                                {<span>否</span>}
+                                else
+                                {<span>是</span>}
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+    @{Html.RenderAction("Footer", "HuoDong");}
+</div>

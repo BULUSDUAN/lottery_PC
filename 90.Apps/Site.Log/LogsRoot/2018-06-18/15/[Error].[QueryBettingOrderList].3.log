@@ -1,0 +1,23 @@
+[0][2018-06-18 15:59:52] 查询投注订单列表出错 - 为过程或函数 P_Order_QueryOrderList 指定了过多的参数。
+    System.Exception: 查询投注订单列表出错 - 为过程或函数 P_Order_QueryOrderList 指定了过多的参数。 ---> System.Data.SqlClient.SqlException: 为过程或函数 P_Order_QueryOrderList 指定了过多的参数。
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at System.Data.SqlClient.SqlDataReader.get_MetaData()
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   at System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   at System.Data.Common.DbDataAdapter.FillInternal(DataSet dataset, DataTable[] datatables, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataSet dataSet, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataSet dataSet)
+   at Common.Database.NHibernate.OutputQuery.GetDataSet()
+   at GameBiz.Domain.Managers.SqlQueryManager.QueryBettingOrderList(String userIdOrName, Nullable`1 schemeType, Nullable`1 progressStatus, Nullable`1 bonusStatus, Nullable`1 betCategory, Nullable`1 isVirtual, String gameCode, DateTime startTime, DateTime endTime, Int32 sortType, String agentId, Int32 pageIndex, Int32 pageSize, String fieldName, Int32& totalCount, Int32& totalUserCount, Decimal& totalBuyMoney, Decimal& totalPreTaxBonusMoney, Decimal& totalAfterTaxBonusMoney, Decimal& totalAddMoney, Decimal& totalRedbagMoney, Decimal& totalRealPayRebateMoney, Decimal& totalBonusAwardsMoney, Decimal& totalRedBagAwardsMoney, Nullable`1 ticketStatus, Nullable`1 schemeSource)
+   at GameBiz.Business.SqlQueryBusiness.QueryBettingOrderList(String userIdOrName, Nullable`1 schemeType, Nullable`1 progressStatus, Nullable`1 bonusStatus, Nullable`1 betCategory, Nullable`1 isVirtual, String gameCode, DateTime startTime, DateTime endTime, Int32 sortType, String agentId, Int32 pageIndex, Int32 pageSize, String fieldName, Nullable`1 ticketStatus, Nullable`1 schemeSource)
+   at GameBiz.Service.GameBizWcfService_Query.QueryBettingOrderList(String userIdOrName, Nullable`1 schemeType, Nullable`1 progressStatus, Nullable`1 bonusStatus, Nullable`1 betCategory, Nullable`1 isVirtual, String gameCode, DateTime startTime, DateTime endTime, Int32 sortType, Int32 pageIndex, Int32 pageSize, String userToken, String fieldName, Nullable`1 ticketStatus, Nullable`1 schemeSource)
+   --- End of inner exception stack trace ---
+   at Common.Communication.WcfService.DoWork(WcfInvokeInfo invokeInfo)
+    ----------------------------------------------------------------------------
+

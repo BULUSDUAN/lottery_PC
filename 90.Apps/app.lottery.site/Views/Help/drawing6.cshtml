@@ -1,0 +1,78 @@
+﻿@{
+    var Title = "如何将钱从玩彩网帐号中提取出来（如何提款）？";
+    ViewBag.Title = Title + " - 帮助中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.Keywords = "帮助中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+}
+@section css{
+   @ViewHelpers.css("help.css")
+} 
+  <div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">玩彩网</a> > </li>
+        <li><a href="/help/index">&nbsp;帮助中心</a> > </li>
+        <li>&nbsp;如何将钱从玩彩网帐号中提取出来（如何提款）？</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type = "drawMoney", name = "drawing" });}
+<div class="help_r">
+         
+         <div class="det_box">
+            	<h2>如何将钱从玩彩网帐号中提取出来（如何提款）？</h2>
+                <div class="det_c"><span class="Apple-style-span" style="widows:2;text-transform:none;text-indent:0px;font:14px/24px 宋体, tahoma;white-space:normal;orphans:2;letter-spacing:normal;color:#333333;word-spacing:0px;-webkit-text-decorations-in-effect:none;-webkit-text-size-adjust:auto;-webkit-text-stroke-width:0px;"> <p class="dotted" style="border-bottom:#cccccc 1px dotted;padding-bottom:0px;margin:15px 0px;padding-left:0px;padding-right:0px;font-size:14px;padding-top:0px;">1、登录玩彩网账户，进入"我的账户"；<br>
+@*<img width="445" height="240" border="0" src="http://img.玩彩网/upimages/new/help/20130812160749_6325.jpg" alt="">*@</p>
+<p class="dotted" style="border-bottom:#cccccc 1px dotted;padding-bottom:0px;margin:15px 0px;padding-left:0px;padding-right:0px;font-size:14px;padding-top:0px;">2、选择“提款”；<br>
+@*<img width="672" height="224" border="0" src="http://img.玩彩网/upimages/new/help/20130815170626_4700.jpg" alt="">*@</p>
+<p class="dotted" style="border-bottom:#cccccc 1px dotted;padding-bottom:0px;margin:15px 0px;padding-left:0px;padding-right:0px;font-size:14px;padding-top:0px;">3、通过手机获取验证码；</p>
+<p class="dotted" style="border-bottom:#cccccc 1px dotted;padding-bottom:0px;margin:15px 0px;padding-left:0px;padding-right:0px;font-size:14px;padding-top:0px;">4、输入您的真实姓名和提现金额；确认填写无误后点击"下一步"；<br>
+@*<img width="728" height="481" border="0" src="http://img.玩彩网/upimages/new/help/20130815172054_9184.jpg" alt="" style="width:695px;height:481px;">*@</p>
+<p style="padding-bottom:0px;margin:15px 0px;padding-left:0px;padding-right:0px;font-size:14px;padding-top:0px;">5、提款申请已经提交，您可以在"提款记录"中查看您的提款是否成功到账。<br>
+@*<img width="846" height="486" border="0" src="http://img.玩彩网/upimages/new/help/20130815172251_8166.jpg" alt="" style="width:694px;height:443px;">*@</p>
+</span>                </div>
+                
+               @* <div class="det_a feedback">
+                <div>以上内容是否解决了您的问题呢？</div>
+                              
+                <div>
+                <a id="btn_a_yes" class="btn"><span class="feedback_yes">是，已经解决。</span></a> <a class="btn" id="btn_a_no" href="javascript:void(0);"><span class="feedback_no">否，尚未解决。</span></a>
+                    <div style="display:none;" class="feedback_form clearfix" id="feed_div">                  
+                    <a id="fclose" class="feedback-close" href="javascript:void(0);">关闭</a>     
+                    <span style="display:none;" id="feed_detail"> 
+	                    <form method="post" name="feed_dtl" id="feed_dtlf">             
+		                    <span class="fb-input"><input type="radio" value="1" name="nodtl"> 描述不清晰</span>
+		                    <span class="fb-input"><input type="radio" value="2" name="nodtl"> 字太多，不想看</span>
+		                    <span class="fb-input"><input type="radio" value="3" name="nodtl"> 太复杂，看不懂</span>
+		                    <span class="fb-input"><input type="button" value="提交" name="fsbmt"></span>
+		                </form>    
+	                </span>
+                    <div style="display:none;" class="feedback-suc l" id="feed_result">您的反馈信息已经提交，谢谢您的反馈。</div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                  
+                </script>                                           
+                </div>
+                
+                <div class="det_a">
+                	<div class="det_a_l">相关问题：</div>
+                    <div class="det_a_r">
+                    	<ul>
+                        	                    	</ul>    
+                    </div>
+                </div>*@
+            </div>
+     
+
+
+        </div>
+         </div>
+<div class="clearfix"></div>
+
+ @ViewHelpers.js("help.js")
+
+
+
+
+
+

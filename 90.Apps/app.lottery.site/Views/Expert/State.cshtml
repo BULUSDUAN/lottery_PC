@@ -1,0 +1,44 @@
+﻿@using GameBiz.Core
+@using app.lottery.site.Models
+@{
+    CurrentUserInfo currentUser = ViewBag.CurrentUser;
+    var balance = ViewBag.CurrentUserBalance as GameBiz.Core.UserBalanceInfo;
+    @UserHelper.js("user.min.js")
+}
+<div id="state">
+    <div style="width: 1000px; margin: 0px auto;">
+        <div class="left">
+            @if (currentUser != null)
+            {
+                <span class="fl">欢迎您,</span>                
+                <div class="after-lg fl">
+                    <a style="margin-left: 5px;" title="个人主页" class="name fl" href="/blog/standings/@currentUser.LoginInfo.UserId" target="_blank">@(SiteString.HideUserName(currentUser.LoginInfo.DisplayName, currentUser.LoginInfo.HideDisplayNameCount))</a>
+                    <span class="fl" style="margin-left: 5px;">余额：</span><a style="margin-left: 5px;"
+                        class="red bold fl" href="/member/fundrecord" title="资金明细" target="_top">@balance.GetTotalCashMoney().ToString("f")元</a>
+                    <span style="margin-left: 5px" class="fl">红包：</span><a style="margin-left: 5px;"
+                        class="bold red fl" href="/member/bonuspoint" title="红包" target="_top">@balance.RedBagBalance.ToString("f")元</a>
+                    <a class="log-out red fr" href="javascript:;" onclick="user.logOut();" title="退出登录">
+                        退出</a>
+                </div>
+            }
+            else
+            {
+                <div>
+                    欢迎来到@(SiteString.getHZSiteName(Request))！&nbsp;&nbsp;请<a href="" class="login">登录</a><a href="/statichtml/register.html">注册</a>|<a href="/user/forget">忘记密码</a></div>
+                }
+        </div>
+        <div class="right">
+            <ul>
+                <li><a href="/" target="_blank">首页</a><span>|</span></li>
+                <li><a href="" target="_blank">购买彩票</a><span>|</span></li>
+                <li><a href="/hemai/index" target="_blank">合买大厅</a><span>|</span></li>
+                <li><a href="/soccer/index" target="_blank">过关统计</a><span>|</span></li>
+                <li><a href="/lottery/index" target="_blank">全国开奖</a><span>|</span></li>
+                <li><a href="/bonus/Index" target="_blank">中奖排行</a><span>|</span></li>
+                <li><a href="" target="_blank">帮助中心</a></li>
+            </ul>
+        </div>
+    </div>
+    <div style="clear: both;">
+    </div>
+</div>

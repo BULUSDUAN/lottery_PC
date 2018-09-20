@@ -1,0 +1,52 @@
+﻿@using app.lottery.site.Models
+@{
+    CurrentUserInfo currentUser = ViewBag.CurrentUser;
+    var balance = ViewBag.CurrentUserBalance as GameBiz.Core.UserBalanceInfo;
+
+    string type = ViewBag.Type;
+    var oddstype = string.IsNullOrEmpty(Request["oddstype"]) ? 2 : int.Parse(Request["oddstype"]);
+    var isYt = string.IsNullOrEmpty(Request["isYt"]) ? false : Convert.ToBoolean(int.Parse(Request["isYt"]));
+    var userId = ViewBag.UserId;
+    var yt = isYt ? "true" : "false";
+    var money = ViewBag.Money;
+    var schemeId = ViewBag.SchemeId;
+}
+<header class="siof_header">
+	<div class="siof_siofbox">
+    	<span class="hedspan">您好，欢迎您！</span>
+        @if (currentUser != null)
+        {
+        <div class="siof_hedld" id="top_user_info">
+            <span class="hedld_sp2"><a href="javascript:void(0)" target="_blank" id="top_username">@SiteString.HideUserName(currentUser.LoginInfo.DisplayName, currentUser.LoginInfo.HideDisplayNameCount)</a></span>
+            <div class="hedld_sp3 cm_my_account" id="headaccount">
+                 <i>账户金额</i><i class="hedld_jtd siof_account_cs"></i>
+                 <aside class="hedld_open cm_my_account_open">
+                    <sub class="siof_openjt"></sub>
+                    <p>可用资金：<em id="money">￥@balance.GetTotalCashMoney().ToString("f")</em>元</p>
+                    <p>红包余额：<em id="redmoney">￥@balance.RedBagBalance.ToString("f")</em>元</p>
+                 </aside>
+            </div>
+            <span class="hedld_sp2"><a href="javascript:user.logOut();" id="logoutLink">退出</a></span>
+        </div>
+        }
+        else
+        {
+        <div class="siof_hedl" id="nologin_info">请<a href="javascript:void(0)" id="loginbtn_new">登录</a></div>
+        }
+        <nav class="siof_hedr">
+            <a title="'+ SiteString.getHZSiteName(Request) +' 彩票网首页" target="_blank" href="/">首页</a>｜<a href="/buy/jingcai/spf" target="_blank">购买彩票</a>｜<a href="/hemai/index" target="_blank">合买中心</a>｜
+            <a href="/lottery/index" target="_blank">开奖结果</a>｜<a href="/soccer/index" target="_blank">过关统计</a>｜<a href="/live/index.html" target="_blank">比分直播</a>｜
+            <a href="/phonebuy/phonebuy" target="_blank">手机购彩</a>
+        </nav>
+    </div>
+</header>
+<nav class="siof_nav">
+	<div class="siof_siofbox">
+        <h1>单关专场</h1>
+        <div class="siof_nava">
+            <a class="zqcon" href="/onefix/jcdgzt">足球-新手场</a>
+            <a class="zqc" href="">足球-高手场</a>
+            <a class="lqc" href="">篮球</a>
+        </div>
+    </div>
+</nav>

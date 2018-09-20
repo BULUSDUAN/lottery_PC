@@ -1,0 +1,100 @@
+﻿<div id="box_activity_div" class="tips-fetch" style="display: none;">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" class="my_tbl recadd">
+        <tr>
+            <th class="tl">
+                <b>发单返利</b>
+            </th>
+        </tr>
+        <tr>
+            <td class="tl">
+                <p style="margin-left: 30px;">
+                    采取发单返利方式（方案只要出票就返利给发起人，跟单人没有返利，网站保底部分不计算）：<br />
+                    足彩：胜负彩、任选九、六场半全、进球彩------------返利 8%<br />
+                    单场：胜平负、上下单双、比分、半全场、总进球------返利 7%<br />
+                    体彩：排列3、排列5、大乐透、七星彩----------------返利 6%<br />
+                    福彩：3D、七乐彩、双色球--------------------------返利 6%<br />
+                    高频：十一运、夺金、时时彩、新疆11选5-------------返利 6%<br />
+                    竞彩：胜平负、比分、半全场、总进球、单关比分------返利 7.5%<br />
+                    篮彩：单关胜分差、胜负、胜分差、让分胜负、大小分--返利 7.5%
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <th class="tl">
+                <b>加奖活动</b>
+            </th>
+        </tr>
+        <tr>
+            <td class="tl">
+                <p style="margin-left: 30px;">
+                    竞彩足球、单场奖金≥2000加奖 5%<br />
+                    足彩88彩金奖励
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <th class="tl">
+                <b>充值奖励</b>
+            </th>
+        </tr>
+        <tr>
+            <td class="tl">
+                <p style="margin-left: 30px;">
+                    VIP充值1000元或奖金转入以上额外获赠 2% 彩金<br />
+                    奖金转入赠送 1% 彩金
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <th class="tl">
+                <b>实名认证</b>
+            </th>
+        </tr>
+        <tr>
+            <td class="tl">
+                <p style="margin-left: 30px;">
+                    首次注册用户，绑定手机及身份证信息可获得额外充20送10元的红包一个，限5000人（得到一个验证码，会员输入验证码，当首次充值≥20元后会额外获得10元彩金）。
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <th class="tl">
+                <b>合买围剿1888</b>
+            </th>
+        </tr>
+        <tr>
+            <td class="tl">
+                <p style="margin-left: 30px;">
+                    2012年10.1—10.7期间，凡在新系统网站发起合买，中奖盈利金额最高者分享1888元彩金（每天产生一位，奖励彩金269元），无限制用户账号、不限发单数量，按中奖单盈利金额最高的一单计算（盈利金额=中奖金额-本金）。获奖者将于10月8日公布并发放奖励。
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <th class="tl">
+                <b>足彩百万还有礼</b>
+            </th>
+        </tr>
+        <tr>
+            <td class="tl">
+                <p style="margin-left: 30px;">
+                    2012年10.1—12.31期间，凡在新系统网站发起常规足球14场胜负彩方案并获得百万以上大奖的用户在领取官方奖金的同时还可获得本站提供的8888元彩金奖励；发起足彩任选九场方案并获得50万以上大奖的用户在领取官方奖金的同时还可获得本站提供的3888元彩金奖励。
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <th class="tl yellow">
+                <span>您还可以在 <a href="/member/safe" target="_blank">我的账户</a> > <a href="/member/activity" target="_blank">优惠活动</a> 栏目里查看当前网站活动（需实名认证）</span>
+            </th>
+        </tr>
+    </table>
+    <center class="mt10">
+        <input type="button" value="知道了" class="btn_ok" onclick="activityBox.Close();" />
+    </center>
+</div>
+<script type="text/javascript">
+    var activityBox = new LightBox("box_activity_div");
+    if ($.cookie("cookie_box_activity") != "show") {
+        activityBox.Show();
+        $.cookie("cookie_box_activity", "show");
+    }
+</script>

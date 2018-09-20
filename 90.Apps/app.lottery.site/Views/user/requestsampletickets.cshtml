@@ -1,0 +1,159 @@
+﻿@using app.lottery.site.Models
+@using External.Core
+@using External.Core.SampleTicket
+@{
+    var user = ViewBag.User as CurrentUserInfo;
+    var sampleTicketInfo = ViewBag.SampleTicket as SampleTicketInfo;
+    var balance = ViewBag.CurrentUserBalance as GameBiz.Core.UserBalanceInfo;
+
+}
+@if (sampleTicketInfo == null)
+{
+    <div class="sqpy-div" id="sttest">
+        <table border="0" cellpadding="0" cellspacing="0" class="tb-request1" width="99%">
+            <tr class="bg-tr1">
+                <td colspan="2">
+                    申请邮寄票样 <a class="gbck" id="gbck"></a>
+                </td>
+            </tr>
+            <tr>
+                <td align="right" width="100px">
+                    方案编号：
+                </td>
+                <td align="left">
+                    <span class="B32A22" id="st-schemeid">@(ViewBag.SchemeId)</span>
+                </td>
+            </tr>
+        </table>
+        <table border="0" cellpadding="0" cellspacing="0" class="tb-request2" width="99%">
+            <tr>
+                <td align="right" width="100px">
+                    快递地址：
+                </td>
+                <td colspan="2" align="left">
+                    <select id="province" onchange="select('province','city')">
+                    </select>
+                    <select id="city">
+                    </select>
+                    快递费用:<em id="address-money" class="B32A22">15</em>元
+                    <input type="hidden" name="hdaddressmoney" id="hdaddressmoney" />
+                </td>
+            </tr>
+            <tr height="100px;">
+                <td width="100px">
+                </td>
+                <td align="left">
+                    <textarea cols="45" rows="5" id="text-address">详细乡镇，街道/村路地址及门牌号</textarea>
+                </td>
+                <td align="left" width="280px;" valign="top">
+                    <span>用户名：@(user.LoginInfo.DisplayName)</span> <span>账户余额：<em class="B32A22">@(balance.GetTotalCashMoney().ToString("N2"))</em>
+                    </span><span><a class="btn-a mr10" id="btn-addST">确认</a><a class="btn-a" id="btn-close">取消</a></span>
+                </td>
+            </tr>
+            <tr>
+                <td width="100px">
+                </td>
+                <td align="left" colspan="2">
+                    <em class="sm-wjx"></em><i>说明：各省份主要城市到件时间为3-7天，港澳台及境外地区，偏远地区不支持邮寄取票。</i>
+                </td>
+            </tr>
+        </table>
+    </div>
+}
+else
+{
+    <div class="sqpy-div" id="sttest">
+        <table border="0" cellpadding="0" cellspacing="0" class="tb-request1" width="99%">
+            <tr class="bg-tr1">
+                <td colspan="3">
+                    查看邮寄票样详情 <a class="gbck" id="gbck"></a>
+                </td>
+            </tr>
+            <tr>
+                <td align="center">
+                    订单编号：<span class="bule" id="st-schemeid">@(sampleTicketInfo.OrderFormCode)</span>
+                </td>
+                <td align="left">
+                    快递名称：中通快递(默认)
+                </td>
+                <td align="left">
+                    状态： <span class="@(sampleTicketInfo.ApplyState == ApplyState.Pending ? "" : (sampleTicketInfo.ApplyState == ApplyState.Refusal ? "red" : (sampleTicketInfo.ApplyState == ApplyState.SendCarryout ? "green" : (sampleTicketInfo.ApplyState == ApplyState.Sending ? "blue" : ""))))">
+                        @ViewHelpers.ConvertApplyState(sampleTicketInfo.ApplyState)
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td align="center">
+                    方案编号：<span class="bule" id="st-schemeid">@(sampleTicketInfo.SchemeCode)</span>
+                </td>
+                <td align="left">
+                    快递单号： <span class="B32A22" id="st-schemeid">@(sampleTicketInfo.ExpressNumber)</span>
+                </td>
+                <td align="left">
+                </td>
+            </tr>
+        </table>
+        <table border="0" cellpadding="0" cellspacing="0" class="tb-request2" width="99%">
+            <tr>
+                <td align="right" width="100px">
+                    快递地址：
+                </td>
+                <td colspan="2" align="left">
+                    <div style="display: none">
+                        <select id="province" onchange="select('province','city')">
+                        </select>
+                        <select id="city">
+                        </select>
+                    </div>
+                    @sampleTicketInfo.ExpressAddress
+                    快递费用:<em id="address-money" class="B32A22">@(sampleTicketInfo.DeliveryCosts.ToString("N2"))</em>元
+                    <input type="hidden" name="hdaddressmoney" id="hdaddressmoney" />
+                </td>
+            </tr>
+            <tr height="100px;">
+                <td width="100px">
+                </td>
+                <td align="left">
+                    <textarea cols="45" rows="5" id="text-address" readonly="readonly">@sampleTicketInfo.ExpressAddress</textarea>
+                </td>
+                <td align="left" width="280px;" valign="top">
+                    <span>用户名：<em class="bule">@(user.LoginInfo.DisplayName)</em> </span><span>账户余额：<em
+                        class="B32A22">@(balance.GetTotalCashMoney().ToString("N2"))</em> </span>
+                    <span>
+                        <input type="hidden" name="hdstId" id="hdstId" value="@sampleTicketInfo.Id"/>
+                        @if (sampleTicketInfo.ApplyState == ApplyState.Pending)
+                        {
+                            <a class="btn-a mr10" id="btn-qxsq">取消申请</a>
+                            <a class="btn-a" id="btn-close">确定</a>
+                        }
+                        else if (sampleTicketInfo.ApplyState == ApplyState.Sending)
+                        {
+                            <a class="btn-a mr10" id="btn-qrsh">确认收货</a>
+                            <a class="btn-a" id="btn-close">取消</a>
+                        }
+                        else
+                        {
+                            <a class="btn-a ml73" id="btn-close">确认</a>
+                        }
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td width="100px">
+                </td>
+                <td align="left" colspan="2">
+                    <em class="sm-wjx"></em><i>说明：各省份主要城市到件时间为3-7天，港澳台及境外地区，偏远地区不支持邮寄取票。</i>
+                </td>
+            </tr>
+            <tr>
+                <td width="100px">
+                    处理意见:
+                </td>
+                <td align="left" colspan="2">
+                    <i>@sampleTicketInfo.Description</i>
+                </td>
+            </tr>
+        </table>
+    </div>
+}
+@ViewHelpers.js("addressld.js")

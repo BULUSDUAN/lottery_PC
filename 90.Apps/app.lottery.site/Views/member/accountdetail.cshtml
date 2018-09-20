@@ -1,0 +1,194 @@
+﻿@{
+    ViewBag.Title = "账户明细 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    var fund = ViewBag.FundDetails as GameBiz.Core.UserFundDetailCollection;
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>账户明细</li>
+    </ul>
+</div>
+<div class="center mt10">
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mune_safe">
+        <div class="account_menu clearfix">
+            <a href="/member/accountdetail"  class="select">账户明细</a>
+            <a href="/member/redBagList">红包明细</a>
+            <a href="/member/paywizzard">账户充值</a>
+            <a href="/member/drawingsguide">账户提款</a>
+        </div>
+        <div class="account_con">
+            <div class="betorder_top">
+                <ul>
+                    <li class="betorder_topSelected"><a href="/member/accountdetail"><i></i>账户明细</a></li>
+                    <li><a href="/member/RechargeRecord"><i></i>充值记录</a></li>
+                    <li><a href="/member/gcrecord"><i></i>购彩记录</a></li>
+                    <li><a href="/member/WinningRecord"><i></i>中奖记录</a></li>
+                    <li><a href="/member/drawingsrecord"><i></i>提款记录</a></li>
+                </ul>
+            </div>
+            <div class="search_tab">
+                交易类型：
+                <input type="checkbox" name="accountType" value="10" id="jj" /><label for="jj">奖金</label>&nbsp;&nbsp;<input type="checkbox" name="accountType" value="20" id="dj" /><label for="dj">冻结</label>&nbsp;&nbsp;
+                <input type="checkbox" name="accountType" value="50" id="cz" /><label for="cz">充值</label>&nbsp;&nbsp;
+                <input type="checkbox" name="accountType" value="70" id="hb" /><label for="hb">红包</label>
+                &nbsp;&nbsp;&nbsp;&nbsp; 日期： @ControlHelper.Calendar("begin", ViewBag.Begin)至 @ControlHelper.Calendar("end", ViewBag.End)
+                <input type="button" onclick="getFundRecord(0,10)" value="查&nbsp;&nbsp;询" class="search_btn"/>
+                <input type="hidden" id="accountType" value="@ViewBag.AccountType" />
+            </div>
+            <table class="account_box">
+                <thead>
+                    <tr >
+                        <td width="50">
+                            序号
+                        </td>
+                        <td width="55">
+                            账户类型
+                        </td>
+                        <td width="135">
+                            交易时间
+                        </td>
+                        <td width="80">
+                            收入
+                        </td>
+                        <td width="80">
+                            支出
+                        </td>
+                        <td width="108">
+                            账户余额
+                        </td>
+                        <td width="55">
+                            交易类型
+                        </td>
+                        <td width="" align="left" style="padding-left: 20px;">
+                            备注
+                        </td>
+                    </tr>
+                </thead>
+                @{
+                    if (fund != null && fund.FundDetailList.Count > 0)
+                    {
+                        foreach (var item in fund.FundDetailList)
+                        {
+                            <tr>
+                                <td>
+                                    @(ViewBag.pageNo*ViewBag.PageSize + (fund.FundDetailList.IndexOf(item) + 1))
+                                </td>
+                                <td>
+                                    @SiteConvert.AccountTypeName(item.AccountType)
+                                </td>
+                                <td>
+                                    @item.CreateTime.ToString("yyyy-MM-dd HH:mm")
+                                </td>
+                                <td class="ye blod fszie">
+                                    @(item.PayType == Common.PayType.Payin ? item.PayMoney.ToString("N2") : string.Empty)
+                                </td>
+                                <td class="zc blod fszie">
+                                    @(item.PayType == Common.PayType.Payout ? item.PayMoney.ToString("N2") : string.Empty)
+                                </td>
+                                <td class="ye blod fszie">
+                                    @item.AfterBalance.ToString("N")
+                                </td>
+                                <td>
+                                    @item.Category
+                                </td>
+                                <td class="last_td tl" style="padding-left: 20px;">
+                                    @item.Summary
+                                    @{
+                                        if (item.Category == "购彩" || item.Category == "奖金"
+                                            || item.Category == "合买失败" || item.Category == "方案提成"
+                                            || item.Category == "出票失败" || item.Category == "合买返点"
+                                            || item.Category == "返还保底" || item.Category == "撤单")
+                                        {
+                                            if (item.KeyLine.IndexOf("_") > 0)
+                                            {
+                                                <a href="/user/scheme/@item.KeyLine.Substring(0, item.KeyLine.IndexOf("_"))" target="_blank" class="under blue">@item.KeyLine</a>
+                                            }
+                                            else
+                                            {
+                                                <a href="/user/scheme/@item.KeyLine" target="_blank" class="under blue">@item.KeyLine</a>
+                                            }
+
+                                        }
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="8">暂时没有找到你要的数据哦</td>
+                        </tr>
+                    }
+                }
+        
+            </table>
+            <div class="combined clearfix">
+                <div class="fl">
+                    <span><b class="b1"></b>收入交易：<strong class="zc blod fszie">@(fund != null ? fund.TotalPayinCount : 0)&nbsp;笔</strong></span>
+                    <span><b class="b2"></b>收入金额：<strong class="srje blod fszie">@(fund != null ? fund.TotalPayinMoney.ToString("N2") : string.Empty)&nbsp;元</strong></span>
+                    <span><b class="b3"></b>支出交易：<strong class="zcjy blod fszie">@(fund != null ? fund.TotalPayoutCount : 0)&nbsp;笔</strong></span>
+                    <span><b class="b4"></b>支出金额：<strong class="ye blod fszie">@(fund != null ? fund.TotalPayoutMoney.ToString("N2") : string.Empty)元</strong></span>
+                </div>
+                <div class="fr">
+                    <em class="xh">*</em>注意：账户明细最多可查询一个月数据
+                </div>
+                
+            </div>
+            <div class="account_page  clearfix">
+                @ViewHelpers.Pager4("getFundRecord", ViewBag.pageNo, ViewBag.PageSize, fund == null ? 0 : (fund.TotalPayinCount + fund.TotalPayoutCount))
+            </div>
+        </div>
+       </div>
+
+        <script type="text/javascript">
+            $(function () {
+                $(".account_box tr:even:gt(0)").css("backgroundColor", "#F9F9F9");
+            })
+            //判断复选款是否选中
+            $(function () {
+                var accountType = $("#accountType").val().split("|");
+                for (var i = 0; i < accountType.length; i++) {
+                    if (accountType[i] == "10") {
+                        $("#jj").attr("checked", true);
+                    } if (accountType[i] == "20") {
+                        $("#dj").attr("checked", true);
+                    } if (accountType[i] == "30") {
+                        $("#yj").attr("checked", true);
+                    } if (accountType[i] == "50") {
+                        $("#cz").attr("checked", true);
+                    } if (accountType[i] == "60") {
+                        $("#mj").attr("checked", true);
+                    } if (accountType[i] == "70") {
+                        $("#hb").attr("checked", true);
+                    }
+                }
+
+            });
+
+
+            function getFundRecord(pageNo, pageSize) {
+                var L_list = $("input[name='accountType']:checked");
+                var accountType = ""; //这个保存取出的值
+                if (L_list.size() != 0) {
+                    var array = new Array();
+                    for (var i = 0; i < L_list.length; i++) {
+                        array.push(L_list.eq(i).attr("value"));
+                    }
+                    accountType = array.join("|");
+                }
+                var begin = $("#begin").val();
+                var end = $("#end").val();
+                location.search = "accountType=" + accountType + "&pageNo=" + pageNo + "&pageSize=" + pageSize + "&begin=" + begin + "&end=" + end + "&r=" + Math.random().toFixed(5);
+            }
+        </script>
+    </div>
+</div>
+<div class="clearfix">
+</div>

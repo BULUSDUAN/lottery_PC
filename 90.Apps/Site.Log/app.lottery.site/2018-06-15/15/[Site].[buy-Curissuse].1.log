@@ -1,0 +1,5 @@
+[0][2018-06-15 15:03:43] 查询当前奖期出错
+    System.Exception: 查询奖期错误
+   at app.lottery.site.Controllers.BuyController.Curissuse(String id) in H:\work\gongcheng\projects\caipiao\90.Apps\app.lottery.site.iqucai\Controllers\BuyController.cs:line 302
+    ----------------------------------------------------------------------------
+

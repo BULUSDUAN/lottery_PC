@@ -1,0 +1,705 @@
+﻿@{
+    Layout = "~/Views/lotteryTrend/_Layout.cshtml";
+    var pageSize = Request["pageSize"];
+    if (pageSize != "" && pageSize != null)
+    {
+        ViewBag.Title = "福彩3d和值特征走势图近" + pageSize + "期" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "福彩3d和值特征走势图近" + pageSize + "期";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "福彩3d和值特征走势图三近" + pageSize + "期,查看更多福彩3d和值特征走势图请登录" + SiteString.getHZSiteName(Request) + "彩票网.";
+    }
+    else
+    {
+        ViewBag.Title = "福彩3d和值特征走势图-" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "福彩3d和值特征走势图";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "彩票网提供最新的福彩3d和值特征走势图,其中包括所和值的大小、奇偶、质合、趋势、除3余数、除4余数、除5余数等分布走势图,让彩民朋友更直观的分析福彩3d和值特征走势图.";
+    }
+    var hztz = ViewBag.DataList as List<LotteryData.Core.FC3D_HZTZ_Info>;
+    var a = 0;  
+}
+@{Html.RenderAction("ThendLink_2", "lotteryTrend", new { id = "hztz_fc3d" });}
+<div id="container">
+    <div class="cont_box" style="width: 1003px;">
+        <table width="100%" cellspacing="1" cellpadding="0" border="0" class="table_box"
+            style="width: 1003px;" id="chartsTable">
+            <tbody>
+                <tr>
+                    <td align="center" class="tab_top" colspan="27">
+                        标注形式选择：
+                        <input type="checkbox" checked="checked" id="c_yl">
+                        <label for="c_yl">
+                            遗漏</label>
+                        <input type="checkbox" checked="checked" id="has_line">
+                        <label for="has_line">
+                            折线</label>
+                        <input type="checkbox" checked="checked" id="help_line">
+                        <label for="help_line">
+                            分隔线</label>
+                        <input type="checkbox" id="yl_zhu">
+                        <label for="yl_zhu">
+                            遗漏分层</label>
+                    </td>
+                </tr>
+                <tr class="tabbg weight" id="menuitem">
+                    <td width="80" class="line_r" rowspan="2">
+                        日期
+                    </td>
+                    <td width="63" rowspan="2">
+                        期号
+                    </td>
+                    <td class="line_r" rowspan="2" colspan="3">
+                        开奖号码
+                    </td>
+                    <td width="30" class="line_r" rowspan="2">
+                        和值
+                    </td>
+                    <td class="line_r" colspan="2">
+                        大小
+                    </td>
+                    <td class="line_r" colspan="2">
+                        奇偶
+                    </td>
+                    <td class="line_r" colspan="2">
+                        质合
+                    </td>
+                    <td class="line_r" colspan="3">
+                        趋势
+                    </td>
+                    <td class="line_r" colspan="3">
+                        除3余数
+                    </td>
+                    <td class="line_r" colspan="4">
+                        除4余数
+                    </td>
+                    <td colspan="5">
+                        除5余数
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td width="34">
+                        大
+                    </td>
+                    <td width="34" class="line_r">
+                        小
+                    </td>
+                    <td width="34">
+                        奇
+                    </td>
+                    <td width="34" class="line_r">
+                        偶
+                    </td>
+                    <td width="34">
+                        质
+                    </td>
+                    <td width="34" class="line_r">
+                        合
+                    </td>
+                    <td width="34">
+                        升
+                    </td>
+                    <td width="34">
+                        平
+                    </td>
+                    <td width="34" class="line_r">
+                        降
+                    </td>
+                    <td width="34">
+                        余0
+                    </td>
+                    <td width="34">
+                        余1
+                    </td>
+                    <td width="34" class="line_r">
+                        余2
+                    </td>
+                    <td width="34">
+                        余0
+                    </td>
+                    <td width="34">
+                        余1
+                    </td>
+                    <td width="34">
+                        余2
+                    </td>
+                    <td width="34" class="line_r">
+                        余3
+                    </td>
+                    <td width="34">
+                        余0
+                    </td>
+                    <td width="34">
+                        余1
+                    </td>
+                    <td width="34">
+                        余2
+                    </td>
+                    <td width="34">
+                        余3
+                    </td>
+                    <td width="34">
+                        余4
+                    </td>
+                </tr>
+            </tbody>
+            <tbody id="tdata">
+                @foreach (var item in hztz)
+                {
+                    a++;
+                    if (a % 5 == 0)
+                    {
+                    <tr class="tdbck">
+                        <td colspan="27">
+                        </td>
+                    </tr>
+                    }
+                    <tr>
+                        <td align="center" class="line_r">
+                            @item.CreateTime.ToString("yyyy-MM-dd")
+                        </td>
+                        <td align="center" class="line_r">
+                            @item.IssuseNumber
+                        </td>
+                        <td class="hot12">
+                            @item.RedBall1
+                        </td>
+                        <td class="hot12">
+                            @item.RedBall2
+                        </td>
+                        <td class="hot12 line_r">
+                            @item.RedBall3
+                        </td>
+                        <td align="center" class="line_r">
+                            @item.HeZhi
+                        </td>
+                        <td class="@(item.DX_HeZhi_D == 0 ? "cbg purple2" : "y101")">
+                            @(item.DX_HeZhi_D == 0 ? "大" : item.DX_HeZhi_D.ToString())
+                        </td>
+                        <td class="@(item.DX_HeZhi_X == 0 ? "cbg purple2 line_r" : "y101 line_r")">
+                            @(item.DX_HeZhi_X == 0 ? "小" : item.DX_HeZhi_X.ToString())
+                        </td>
+                        <td class="@(item.JO_HeZhi_J == 0 ? "cbg gray1" : "y101")">
+                            @(item.JO_HeZhi_J == 0 ? "奇" : item.JO_HeZhi_J.ToString())
+                        </td>
+                        <td class="@(item.JO_HeZhi_O == 0 ? "cbg gray1 line_r" : "y101 line_r")">
+                            @(item.JO_HeZhi_O == 0 ? "偶" : item.JO_HeZhi_O.ToString())
+                        </td>
+                        <td class="@(item.ZH_HeZhi_Z == 0 ? "cbg orange1" : "y101")">
+                            @(item.ZH_HeZhi_Z == 0 ? "质" : item.ZH_HeZhi_Z.ToString())
+                        </td>
+                        <td class="@(item.ZH_HeZhi_H == 0 ? "cbg orange1 line_r" : "y101 line_r")">
+                            @(item.ZH_HeZhi_H == 0 ? "合" : item.ZH_HeZhi_H.ToString())
+                        </td>
+                        <td class="@(item.QS_HeZhi_Sheng == 0 ? "cbg tbg2" : "y101")">
+                            @(item.QS_HeZhi_Sheng == 0 ? "升" : item.QS_HeZhi_Sheng.ToString())
+                        </td>
+                        <td class="@(item.QS_HeZhi_Ping == 0 ? "cbg tbg2" : "y101")">
+                            @(item.QS_HeZhi_Ping == 0 ? "平" : item.QS_HeZhi_Ping.ToString())
+                        </td>
+                        <td class="@(item.QS_HeZhi_Jiang == 0 ? "cbg tbg2 line_r" : "y101 line_r")">
+                            @(item.QS_HeZhi_Jiang == 0 ? "降" : item.QS_HeZhi_Jiang.ToString())
+                        </td>
+                        <td class="@(item.O_C3_Y0 == 0 ? "cbg big" : "y101")">
+                            @(item.O_C3_Y0 == 0 ? "0" : item.O_C3_Y0.ToString())
+                        </td>
+                        <td class="@(item.O_C3_Y1 == 0 ? "cbg big" : "y101")">
+                            @(item.O_C3_Y1 == 0 ? "1" : item.O_C3_Y1.ToString())
+                        </td>
+                        <td class="@(item.O_C3_Y2 == 0 ? "cbg big line_r" : "y101 line_r")">
+                            @(item.O_C3_Y2 == 0 ? "2" : item.O_C3_Y2.ToString())
+                        </td>
+                        <td class="@(item.O_C4_Y0 == 0 ? "cbg purple1" : "y101")">
+                            @(item.O_C4_Y0 == 0 ? "0" : item.O_C4_Y0.ToString())
+                        </td>
+                        <td class="@(item.O_C4_Y1 == 0 ? "cbg purple1" : "y101")">
+                            @(item.O_C4_Y1 == 0 ? "1" : item.O_C4_Y1.ToString())
+                        </td>
+                        <td class="@(item.O_C4_Y2 == 0 ? "cbg purple1" : "y101")">
+                            @(item.O_C4_Y2 == 0 ? "2" : item.O_C4_Y2.ToString())
+                        </td>
+                        <td class="@(item.O_C4_Y3 == 0 ? "cbg purple1 line_r" : "y101 line_r")">
+                            @(item.O_C4_Y3 == 0 ? "3" : item.O_C4_Y3.ToString())
+                        </td>
+                        <td class="@(item.O_C5_Y0 == 0 ? "cbg cbg5" : "y101")">
+                            @(item.O_C5_Y0 == 0 ? "0" : item.O_C5_Y0.ToString())
+                        </td>
+                        <td class="@(item.O_C5_Y1 == 0 ? "cbg cbg5" : "y101")">
+                            @(item.O_C5_Y1 == 0 ? "1" : item.O_C5_Y1.ToString())
+                        </td>
+                        <td class="@(item.O_C5_Y2 == 0 ? "cbg cbg5" : "y101")">
+                            @(item.O_C5_Y2 == 0 ? "2" : item.O_C5_Y2.ToString())
+                        </td>
+                        <td class="@(item.O_C5_Y3 == 0 ? "cbg cbg5" : "y101")">
+                            @(item.O_C5_Y3 == 0 ? "3" : item.O_C5_Y3.ToString())
+                        </td>
+                        <td class="@(item.O_C5_Y4 == 0 ? "cbg cbg5" : "y101")">
+                            @(item.O_C5_Y4 == 0 ? "4" : item.O_C5_Y4.ToString())
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tbody>
+                <tr>
+                    <td align="center" class="bdtop line_r">
+                        出现次数
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop">
+                        @(hztz.Count(p => p.DX_HeZhi_D == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(hztz.Count(p => p.DX_HeZhi_X == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(hztz.Count(p => p.JO_HeZhi_J == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(hztz.Count(p => p.JO_HeZhi_O == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(hztz.Count(p => p.ZH_HeZhi_Z == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(hztz.Count(p => p.ZH_HeZhi_H == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(hztz.Count(p => p.QS_HeZhi_Sheng == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(hztz.Count(p => p.QS_HeZhi_Ping == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(hztz.Count(p => p.QS_HeZhi_Jiang == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(hztz.Count(p => p.O_C3_Y0 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(hztz.Count(p => p.O_C3_Y1 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(hztz.Count(p => p.O_C3_Y2 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(hztz.Count(p => p.O_C4_Y0 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(hztz.Count(p => p.O_C4_Y1 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(hztz.Count(p => p.O_C4_Y2 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(hztz.Count(p => p.O_C4_Y3 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(hztz.Count(p => p.O_C5_Y0 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(hztz.Count(p => p.O_C5_Y1 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(hztz.Count(p => p.O_C5_Y2 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(hztz.Count(p => p.O_C5_Y3 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(hztz.Count(p => p.O_C5_Y4 == 0))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        平均遗漏
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td class="">
+                        @(hztz.Sum(p => p.DX_HeZhi_D) / hztz.Count)
+                    </td>
+                    <td class="line_r">
+                        @(hztz.Sum(p => p.DX_HeZhi_X) / hztz.Count)
+                    </td>
+                    <td class="">
+                        @(hztz.Sum(p => p.JO_HeZhi_J) / hztz.Count)
+                    </td>
+                    <td class="line_r">
+                        @(hztz.Sum(p => p.JO_HeZhi_O) / hztz.Count)
+                    </td>
+                    <td class="">
+                        @(hztz.Sum(p => p.ZH_HeZhi_Z) / hztz.Count)
+                    </td>
+                    <td class="line_r">
+                        @(hztz.Sum(p => p.ZH_HeZhi_H) / hztz.Count)
+                    </td>
+                    <td class="">
+                        @(hztz.Sum(p => p.QS_HeZhi_Sheng) / hztz.Count)
+                    </td>
+                    <td class="">
+                        @(hztz.Sum(p => p.QS_HeZhi_Ping) / hztz.Count)
+                    </td>
+                    <td class="line_r">
+                        @(hztz.Sum(p => p.QS_HeZhi_Jiang) / hztz.Count)
+                    </td>
+                    <td class="">
+                        @(hztz.Sum(p => p.O_C3_Y0) / hztz.Count)
+                    </td>
+                    <td class="">
+                        @(hztz.Sum(p => p.O_C3_Y1) / hztz.Count)
+                    </td>
+                    <td class="line_r">
+                        @(hztz.Sum(p => p.O_C3_Y2) / hztz.Count)
+                    </td>
+                    <td class="">
+                        @(hztz.Sum(p => p.O_C4_Y0) / hztz.Count)
+                    </td>
+                    <td class="">
+                        @(hztz.Sum(p => p.O_C4_Y1) / hztz.Count)
+                    </td>
+                    <td class="">
+                        @(hztz.Sum(p => p.O_C4_Y2) / hztz.Count)
+                    </td>
+                    <td class="line_r">
+                        @(hztz.Sum(p => p.O_C4_Y3) / hztz.Count)
+                    </td>
+                    <td class="">
+                        @(hztz.Sum(p => p.O_C5_Y0) / hztz.Count)
+                    </td>
+                    <td class="">
+                        @(hztz.Sum(p => p.O_C5_Y1) / hztz.Count)
+                    </td>
+                    <td class="">
+                        @(hztz.Sum(p => p.O_C5_Y2) / hztz.Count)
+                    </td>
+                    <td class="">
+                        @(hztz.Sum(p => p.O_C5_Y3) / hztz.Count)
+                    </td>
+                    <td class="line_r">
+                        @(hztz.Sum(p => p.O_C5_Y4) / hztz.Count)
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        最大遗漏
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                        @(hztz.Max(p => p.DX_HeZhi_D))
+                    </td>
+                    <td class="line_r">
+                        @(hztz.Max(p => p.DX_HeZhi_X))
+                    </td>
+                    <td>
+                        @(hztz.Max(p => p.JO_HeZhi_J))
+                    </td>
+                    <td class="line_r">
+                        @(hztz.Max(p => p.JO_HeZhi_O))
+                    </td>
+                    <td>
+                        @(hztz.Max(p => p.ZH_HeZhi_Z))
+                    </td>
+                    <td class="line_r">
+                        @(hztz.Max(p => p.ZH_HeZhi_H))
+                    </td>
+                    <td>
+                        @(hztz.Max(p => p.QS_HeZhi_Sheng))
+                    </td>
+                    <td>
+                        @(hztz.Max(p => p.QS_HeZhi_Ping))
+                    </td>
+                    <td class="line_r">
+                        @(hztz.Max(p => p.QS_HeZhi_Jiang))
+                    </td>
+                    <td>
+                        @(hztz.Max(p => p.O_C3_Y0))
+                    </td>
+                    <td>
+                        @(hztz.Max(p => p.O_C3_Y1))
+                    </td>
+                    <td class="line_r">
+                        @(hztz.Max(p => p.O_C3_Y2))
+                    </td>
+                    <td>
+                        @(hztz.Max(p => p.O_C4_Y0))
+                    </td>
+                    <td>
+                        @(hztz.Max(p => p.O_C4_Y1))
+                    </td>
+                    <td>
+                        @(hztz.Max(p => p.O_C4_Y2))
+                    </td>
+                    <td class="line_r">
+                        @(hztz.Max(p => p.O_C4_Y3))
+                    </td>
+                    <td>
+                        @(hztz.Max(p => p.O_C5_Y0))
+                    </td>
+                    <td>
+                        @(hztz.Max(p => p.O_C5_Y1))
+                    </td>
+                    <td>
+                        @(hztz.Max(p => p.O_C5_Y2))
+                    </td>
+                    <td class="">
+                        @(hztz.Max(p => p.O_C5_Y3))
+                    </td>
+                    <td class="line_r">
+                        @(hztz.Max(p => p.O_C5_Y4))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        当前遗漏
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td valign="bottom">
+                        @(hztz[hztz.Count - 1].DX_HeZhi_D)<br>
+                        <img width="8px" height="@(hztz[hztz.Count - 1].DX_HeZhi_D)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(hztz[hztz.Count - 1].DX_HeZhi_X)<br>
+                        <img width="8px" height="@(hztz[hztz.Count - 1].DX_HeZhi_X)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(hztz[hztz.Count - 1].JO_HeZhi_J)<br>
+                        <img width="8px" height="@(hztz[hztz.Count - 1].JO_HeZhi_J)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(hztz[hztz.Count - 1].JO_HeZhi_O)<br>
+                        <img width="8px" height="@(hztz[hztz.Count - 1].JO_HeZhi_O)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(hztz[hztz.Count - 1].ZH_HeZhi_Z)<br>
+                        <img width="8px" height="@(hztz[hztz.Count - 1].ZH_HeZhi_Z)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(hztz[hztz.Count - 1].ZH_HeZhi_H)<br>
+                        <img width="8px" height="@(hztz[hztz.Count - 1].ZH_HeZhi_H)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(hztz[hztz.Count - 1].QS_HeZhi_Sheng)<br>
+                        <img width="8px" height="@(hztz[hztz.Count - 1].QS_HeZhi_Sheng)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(hztz[hztz.Count - 1].QS_HeZhi_Ping)<br>
+                        <img width="8px" height="@(hztz[hztz.Count - 1].QS_HeZhi_Ping)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(hztz[hztz.Count - 1].QS_HeZhi_Jiang)<br>
+                        <img width="8px" height="@(hztz[hztz.Count - 1].QS_HeZhi_Jiang)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(hztz[hztz.Count - 1].O_C3_Y0)<br>
+                        <img width="8px" height="@(hztz[hztz.Count - 1].O_C3_Y0)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(hztz[hztz.Count - 1].O_C3_Y1)<br>
+                        <img width="8px" height="@(hztz[hztz.Count - 1].O_C3_Y1)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(hztz[hztz.Count - 1].O_C3_Y2)<br>
+                        <img width="8px" height="@(hztz[hztz.Count - 1].O_C3_Y2)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(hztz[hztz.Count - 1].O_C4_Y0)<br>
+                        <img width="8px" height="@(hztz[hztz.Count - 1].O_C4_Y0)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(hztz[hztz.Count - 1].O_C4_Y1)<br>
+                        <img width="8px" height="@(hztz[hztz.Count - 1].O_C4_Y1)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(hztz[hztz.Count - 1].O_C4_Y2)<br>
+                        <img width="8px" height="@(hztz[hztz.Count - 1].O_C4_Y2)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(hztz[hztz.Count - 1].O_C4_Y3)<br>
+                        <img width="8px" height="@(hztz[hztz.Count - 1].O_C4_Y3)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(hztz[hztz.Count - 1].O_C5_Y0)<br>
+                        <img width="8px" height="@(hztz[hztz.Count - 1].O_C5_Y0)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(hztz[hztz.Count - 1].O_C5_Y1)<br>
+                        <img width="8px" height="@(hztz[hztz.Count - 1].O_C5_Y1)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(hztz[hztz.Count - 1].O_C5_Y2)<br>
+                        <img width="8px" height="@(hztz[hztz.Count - 1].O_C5_Y2)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(hztz[hztz.Count - 1].O_C5_Y3)<br>
+                        <img width="8px" height="@(hztz[hztz.Count - 1].O_C5_Y3)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(hztz[hztz.Count - 1].O_C5_Y4)<br>
+                        <img width="8px" height="@(hztz[hztz.Count - 1].O_C5_Y4)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr class="tabbg weight">
+                    <td align="center" rowspan="2" class="line_r">
+                        日期
+                    </td>
+                    <td align="center" rowspan="2" class="line_r">
+                        期号
+                    </td>
+                    <td rowspan="2" class="line_r" colspan="3">
+                        开奖号码
+                    </td>
+                    <td rowspan="2" class="line_r">
+                        和值
+                    </td>
+                    <td>
+                        大
+                    </td>
+                    <td class="line_r">
+                        小
+                    </td>
+                    <td>
+                        奇
+                    </td>
+                    <td class="line_r">
+                        偶
+                    </td>
+                    <td>
+                        质
+                    </td>
+                    <td class="line_r">
+                        合
+                    </td>
+                    <td>
+                        升
+                    </td>
+                    <td>
+                        平
+                    </td>
+                    <td class="line_r">
+                        降
+                    </td>
+                    <td>
+                        余0
+                    </td>
+                    <td>
+                        余1
+                    </td>
+                    <td class="line_r">
+                        余2
+                    </td>
+                    <td>
+                        余0
+                    </td>
+                    <td>
+                        余1
+                    </td>
+                    <td>
+                        余2
+                    </td>
+                    <td class="line_r">
+                        余3
+                    </td>
+                    <td>
+                        余0
+                    </td>
+                    <td>
+                        余1
+                    </td>
+                    <td>
+                        余2
+                    </td>
+                    <td>
+                        余3
+                    </td>
+                    <td>
+                        余4
+                    </td>
+                </tr>
+                <tr class="tabbg">
+                    <td class="line_r" colspan="2">
+                        大小
+                    </td>
+                    <td class="line_r" colspan="2">
+                        奇偶
+                    </td>
+                    <td class="line_r" colspan="2">
+                        质合
+                    </td>
+                    <td class="line_r" colspan="3">
+                        趋势
+                    </td>
+                    <td class="line_r" colspan="3">
+                        除3余数
+                    </td>
+                    <td class="line_r" colspan="4">
+                        除4余数
+                    </td>
+                    <td colspan="5">
+                        除5余数
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $(function () {
+        var allLines = new Array();
+        allLines.push({ line: $(".cbg5"), color: "Red" });
+        allLines.push({ line: $(".tbg1"), color: "#05650E" });
+        allLines.push({ line: $(".purple2"), color: "#36006F" });
+        allLines.push({ line: $(".gray1"), color: "#FF590B" });
+        allLines.push({ line: $(".big"), color: "red" });
+        allLines.push({ line: $(".orange1"), color: "#FF590B" });
+        allLines.push({ line: $(".green1"), color: "#004F00" });
+        allLines.push({ line: $(".purple1"), color: "#0000FE" });
+        allLines.push({ line: $(".tbg2"), color: "FFFF00" });
+        var line = new XTLine();
+        for (i = 0; i < allLines.length; i++) {
+            var l = allLines[i];
+
+            line.color = l.color;
+            line.arrayBalls = l.line;
+            line.showrect();
+        }
+
+
+        $("#has_line").click(function () {
+            line.display(this.checked);
+        })
+    })
+</script>

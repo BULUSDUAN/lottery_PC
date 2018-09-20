@@ -1,0 +1,232 @@
+﻿@{
+    ViewBag.Title = "返点结算, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "返点结算, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    var collection = ViewBag.AgentPayDetailReport as External.Core.Agnet.AgentPayDetailReportInfoCollection;
+}
+@section css{
+    @UserHelper.css("mycenter.css")
+    @UserHelper.css("commissio.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>返点结算</li>
+    </ul>
+</div>
+<div class="center mt10">
+    @{Html.RenderAction("menu", "Member");}
+    <div class="new_buy_right">
+        @{Html.RenderAction("toptip", "Member");}
+        <div class="mycommenu">
+            <a href="javascript:void(0);" checklg="/commissio/myTc">我的提成</a> <a href="javascript:void(0);"
+                checklg="/commissio/generalizeUser">推广用户</a> <a href="javascript:void(0);" checklg="/commissio/CommissionRecord"
+                    class="up">返点结算</a> <a href="javascript:void(0);" checklg="/commissio/StatisticsQuery">
+                        统计查询</a> <a href="javascript:void(0);" checklg="/commissio/SchemeManage">方案管理</a>
+        </div>
+        <div class="scheme">
+            <div class="scheme-show xzscheme" style="margin-left: 10px;">
+                <a href="javascript:void(0)" checklg="/commissio/CommissionManage">结算报表</a>
+            </div>
+            <div class="scheme-show">
+                <a href="javascript:void(0)" checklg="/commissio/CommissionRecord">返点记录</a>
+            </div>
+        </div>
+        <div class="scheme-titile">
+            <span class="bgimg"></span>
+            <label class="lbfa">
+                结算报表</label>
+        </div>
+        <table border="0" cellpadding="0" cellspacing="0" class="commissionM-table">
+            <tr class="t-tr1">
+                <td colspan="18">
+                    <div style="width: 620px !important 540px; float: left; height: 40px; line-height: 40px;">
+                        &nbsp;&nbsp;&nbsp;&nbsp; 日期 @ControlHelper.Calendar("begin", ViewBag.Begin)至 @ControlHelper.Calendar("end", ViewBag.End)
+                    </div>
+                    <div style="width: 60px; float: left; height: 40px;">
+                        &nbsp;&nbsp;<a class="Query" href="javascript:void(0)" onclick="getAgentPayDetailRepor()"></a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th width="10%">
+                    返点类别 <span class="commissionM-table-sx"></span>
+                </th>
+                <th align="right" width="8%">
+                    发生额￥ <span class="commissionM-table-sx"></span>
+                </th>
+                <th align="right" width="8%">
+                    返点￥ <span class="commissionM-table-sx"></span>
+                </th>
+                <th width="5px">
+                </th>
+                <th width="8%">
+                    返点类别
+                      <span class="commissionM-table-sx"></span>
+                </th>
+                <th align="right" width="8%">
+                    发生额￥
+                      <span class="commissionM-table-sx"></span>
+                </th>
+                <th align="right" width="8%">
+                    返点￥
+                      <span class="commissionM-table-sx"></span>
+                </th>
+                <th width="5px">
+                </th>
+                <th width="8%">
+                    返点类别
+                      <span class="commissionM-table-sx"></span>
+                </th>
+                <th align="right" width="8%">
+                    发生额￥
+                      <span class="commissionM-table-sx"></span>
+                </th>
+                <th align="right" width="8%">
+                    返点￥
+                      <span class="commissionM-table-sx"></span>
+                </th>
+                <th width="5px">
+                </th>
+                <th width="10%">
+                    返点类别
+                      <span class="commissionM-table-sx"></span>
+                </th>
+                <th align="right" width="8%">
+                    发生额￥
+                      <span class="commissionM-table-sx"></span>
+                </th>
+                <th align="right" width="8%">
+                    返点￥
+                </th>
+            </tr>
+            @if (collection != null)
+            {
+                for (int i = 0; i < collection.List.Count; i += 4)
+                {
+                <tr>
+                    <td align="center">
+                        @SiteConvert.GameName(collection.List[i].GameCode, collection.List[i].GameType)
+                    </td>
+                    <td align="right">
+                        @collection.List[i].TotalMoney.ToString("N2")
+                    </td>
+                    <td align="right">
+                        @collection.List[i].CommissionMoney.ToString("N2")
+                    </td>
+                    <td>
+                         <span class="commissionM-table-sx"></span>
+                    </td>
+                    @if (i + 1 < collection.List.Count)
+                    {
+                        <td align="center">
+                            @SiteConvert.GameName(collection.List[i + 1].GameCode, collection.List[i + 1].GameType)
+                        </td>
+                        <td align="right">
+                            @collection.List[i].TotalMoney.ToString("N2")
+                        </td>
+                        <td align="right">
+                            @collection.List[i].CommissionMoney.ToString("N2")
+                        </td>
+                        <td>
+                         <span class="commissionM-table-sx"></span>
+                        </td>
+                       if (i + 2 < collection.List.Count)
+                       {
+                        <td align="center">
+                            @SiteConvert.GameName(collection.List[i + 2].GameCode, collection.List[i + 2].GameType)
+                        </td>
+                        <td align="right">
+                            @collection.List[i].TotalMoney.ToString("N2")
+                        </td>
+                        <td align="right">
+                            @collection.List[i].CommissionMoney.ToString("N2")
+                        </td>
+                        <td>
+                         <span class="commissionM-table-sx"></span>
+                        </td>
+                       if (i + 3 < collection.List.Count)
+                       {
+                        <td align="center">
+                            @SiteConvert.GameName(collection.List[i + 3].GameCode, collection.List[i + 3].GameType)
+                        </td>
+                        <td align="right">
+                            @collection.List[i].TotalMoney.ToString("N2")
+                        </td>
+                        <td align="right">
+                            @collection.List[i].CommissionMoney.ToString("N2")
+                        </td>
+                       }
+                       else
+                       {
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                       }
+
+                       }
+                       else
+                       {
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                       }
+                    }
+                    else
+                    { 
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                    }
+                </tr>
+                }
+            }
+        </table>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(".commissionM-table tr:even:gt(0)").css("backgroundColor", "#f7f7f7");
+    })
+    function getAgentPayDetailRepor() {
+        var begin = $("#begin").val();
+        var end = $("#end").val();
+        var search = "begin=" + begin + "&end=" + end + "&r=" + Math.random().toFixed(5);
+        location.search = search;
+    }   
+</script>
+<div class="clearfix">
+</div>

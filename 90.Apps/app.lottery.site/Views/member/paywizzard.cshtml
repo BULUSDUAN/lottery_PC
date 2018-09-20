@@ -1,0 +1,114 @@
+﻿@{
+    ViewBag.Title = "充值向导";
+}
+@section css{
+    @ViewHelpers.css("mycenter.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a> > </li>
+        <li>充值向导</li>
+    </ul>
+</div>
+<div class="center mt10">
+  <div class="new_buy_right">
+      @{Html.RenderAction("toptip", "Member");}
+      <div class="mune_safe">
+      <div class="account_menu clearfix">
+          <a href="/member/accountdetail"  >账户明细</a>
+          <a href="/member/redBagList">红包明细</a>
+          <a href="/member/paywizzard" class="select">账户充值</a>
+          <a href="/member/drawingsguide">账户提款</a>
+      </div>
+      <div class="account_con">
+          <div class="betorder_top">
+              <ul>
+                  <li class="betorder_topSelected"> <a href="paywizzard"><i></i>充值向导</a></li>
+                  <li><a href="pay"><i></i>账户充值</a></li>      
+                   <li><a href="payrecord"><i></i>转移充值</a></li>           
+                  <li><a href="payrecord"><i></i>充值记录</a></li>
+              </ul>
+          </div>
+          <table width="100%" cellspacing="0" cellpadding="0" border="0" class="account_box">
+              <thead>
+                  <tr>
+                      <th width="30%">
+                          <b>充值方式</b>
+                      </th>
+                      <th width="40%">
+                          <b>适合的人群</b>
+                      </th>
+                      <th width="40%">
+                          <b>特点</b>
+                      </th>
+                  </tr>
+              </thead>
+              <tr>
+                  <td>
+                      <span class="orderId fszie">网上银行</span>
+                  </td>
+                  <td>
+                      开通了网上银行的用户
+                  </td>
+                  <td>
+                      可以使用各支付平台进行充值
+                  </td>
+              </tr>
+           @*   <tr style="background-color: #F9F9F9">
+                  <td class="zc fszie">
+                      <span style="color: #090;">银行转账</span>
+                  </td>
+                  <td >
+                      不方便使用以上方式的用户
+                  </td>
+                  <td>
+                      需要到银行柜台或ATM进行转账
+                  </td>
+              </tr>*@
+          </table>
+          
+          <div class="czxd">
+              <div class="cz_title"><b></b>网上银行充值说明</div>
+              <div class="czxd_con clearfix">
+                  <ul>
+                      <li class="clearfix"><span class="li1"><i></i>一、</span><span class="li2">网上银行充值手续费由本站支付，用户无须支付任何网银手续费。一般从支付完毕到资金进入本站账户只需几秒钟。</span></li>
+                      <li class="clearfix"><span class="li1"><i></i>二、</span><span class="li2">网上银行充值需要您已经开通对应银行卡的网上银行业务。（具体可到各相应银行营业点咨询）</span>
+                          <span class="li3">1、在银行柜台办理开通网上支付业务，需提供如下资料：申请人本人有效身份证件、所需注册的本地银行卡；</span>
+                          <span class="li3">2、银行经办员审核上述资料无误后，将与客户签署《网上银行个人客户服务协议》，办理注册资料录入、设置网上银行密码等注册手续。</span>
+                           <span class="li3">3、下一银行工作日客户即可使用个人网上银行系统。</span>
+                 
+                      </li>
+                      <li class="clearfix">
+                          <span class="li1"><i></i>三、</span><span class="li2">各银行官方网站</span>
+                         
+                      <span class="li3">工商银行网上银行官方网站：<a href="http://www.icbc.com.cn" target="_blank">http://www.icbc.com.cn</a></span>
+                      <span class="li3">建设银行网上银行官方网站：<a href="http://www.ccb.cn" target="_blank">http://www.ccb.cn</a></span>
+                      <span class="li3">农业银行网上银行官方网站：<a href="http://www.95599.cn" target="_blank">http://www.95599.cn </a></span>
+                      <span class="li3">中国银行网上银行官方网站：<a href="http://www.boc.cn" target="_blank">http://www.boc.cn</a></span>
+                      <span class="li3">招商银行网上银行官方网站：<a href="http://www.cmbchina.com" target="_blank">http://www.cmbchina.com</a></span>
+                      <span class="li3">交通银行网上银行官方网站：<a href="http://www.bankcomm.com" target="_blank">http://www.bankcomm.com</a></span>
+                      <span class="li3">民生银行网上银行官方网站：<a href="http://www.cmbc.com.cn" target="_blank">http://www.cmbc.com.cn</a></span>
+                  
+                      </li>
+                  </ul>
+               
+          
+              </div>
+          </div>
+        @*   <div class="czxd clearfix">
+              <div class="cz_title"><b></b>银行汇款说明</div>
+               <div class="czxd_con">
+                   <ul>
+                       <li><span class="li1"><i></i>一、</span><span class="li2">目前国内大部分银行都支持实时到款。请您仔细核对汇款账户、收款人和开户行。汇款时请增加角分零头，比如169.89元，便于客服快速核实处理，您的汇款会更快速到账。</span></li>
+                       <li><span class="li1"><i></i>二、</span><span class="li2">汇款后请务必使用客服系统，<a href="http://chat.5251.net/client.jsp?companyId=32513&amp;style=66203" target="_blank">通知客服</a></span></li>
+                   </ul>
+               </div>
+          </div>*@
+
+      </div>
+      </div>
+    </div>
+ </div>   
+ <div class="clearfix"></div>
+

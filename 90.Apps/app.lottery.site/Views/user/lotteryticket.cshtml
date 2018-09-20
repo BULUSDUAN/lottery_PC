@@ -1,0 +1,75 @@
+﻿@{
+  ViewBag.Title = "彩金券 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+  ViewBag.keywords = "彩金券, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+  
+  ViewBag.Here = SiteString.getHZSiteName(Request) + "彩金券";
+  }
+<div class="body-main clearfix">
+    @{Html.RenderPartial("box_login");}
+   @UserHelper.css("main.min.css")
+    @UserHelper.css("lotteryticket.css")
+    @UserHelper.js_share("share.min.js")
+    @UserHelper.js("user.min.js")
+    <div class="lotteryticketBox f_l">
+        <h1>@(SiteString.getHZSiteName(Request))票彩金券</h1>
+        <form onsubmit="return submitTicket();" id="postForm">
+            <label class="red">*</label>彩金券：<input type="text" name="ticket" size="40" class="login_input2" /><br />
+            <em>请输入彩金券编码</em><br />
+            <br />
+            <label class="red">*</label>验证码：<input type="text" name="verifycode" size="10" class="login_input2" style=" width:100px;" maxlength="4" />
+            <img src="/user/createvalidatecode" onclick='refreshCode_ticket();' id="vcodeimg" />
+            <a href="javascript:;" onclick="refreshCode_ticket();">看不清?刷新图片</a><br />
+            <br />
+            <input type="submit" value="确定使用" class="login_btn" style="margin-left: 66px;" />
+        </form>
+        <p class="description">
+            彩金券使用说明：<br />
+            1、每张彩金券只能使用一次，必须在彩金券有效期内使用，过期无效。<br />
+            2、每个账号可使用n张彩金券，用户可到彩金券活动页面查看彩金券获取方法。
+        </p>
+    </div>
+    <div class="lg_banner f_r">
+        <a href="/buy/jingcai/spf" class="blue loginbet" title="立即投注" target="_blank"></a>
+    </div>
+    <script type="text/javascript">
+        function submitTicket() {
+            user.isLogin(function (data) {
+                if (data) {
+                    ticket();
+                }
+                else {
+                    user.LoginCallBack = function () { refreshCode_ticket(); ticket(); };
+                    loginDialog.Show();
+                    $("#userName").focus();
+                    return false;
+                }
+            })
+            function ticket() {
+                $.ajax({
+                    type: "post",
+                    url: "/user/uselotteryticket",
+                    data: $("#postForm").serialize(),
+                    success: function (data) {
+                        if (data.state == 1) {
+                            alert(data.msg);
+                            location.href = "/member/fundrecord";
+                        }
+                        else {
+                            alert(data.msg);
+                            $("#postForm input[name=verifycode]").val("");
+                            refreshCode_ticket();
+                        }
+                    }
+                })
+            }
+
+            return false;
+        }
+        function refreshCode_ticket() {
+            $("#vcodeimg").attr("src", "/user/createvalidatecode?r=" + Math.random());
+        }
+    </script>
+</div>
+<div class="clearfix"></div>
+
+

@@ -1,0 +1,82 @@
+﻿<!--信息确认框 开始-->
+<div id="confirm_wxpay">
+    <table>
+        <tr>
+            <td class="itd-top-left">
+            </td>
+            <td class="itd-top-center">
+            </td>
+            <td class="itd-top-right">
+            </td>
+        </tr>
+        <tr>
+            <td class="itd-mid-left">
+            </td>
+            <td class="itd-mid-center">
+                <div class="dialogContent">
+                    <h3 id="drag_confirm" class="pop-comm-top">
+                        请打开客户端扫描下面的图片继续支付 <a class="close" id="btn_confirm_close">关闭</a>
+                    </h3>
+                    <div class="pop-comm-middle">
+                        <div id="confirm_wxpay_content" style="text-align: center;">
+                            <img id="confirm_wxpay_img" alt="扫我支付" />
+                        </div>
+                        <div class="buttonrow">
+                            <span>请打开客户端扫描上面的图片继续支付</span> @*<input type="button" id="btn_confirm_yes" value="确定" class="dialogBtn"/>*@
+                            @*<input type="button" id="btn_confirm_no" value="取消" class="dialogBtn focusBtn"/>*@
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td class="itd-mid-right">
+            </td>
+        </tr>
+        <tr>
+            <td class="itd-bot-left">
+            </td>
+            <td class="itd-bot-center">
+            </td>
+            <td class="itd-bot-right">
+            </td>
+        </tr>
+    </table>
+</div>
+<script type="text/javascript">
+    var confirmLightBox_WXPay = new LightBox("confirm_wxpay");
+
+    var checkPayResult = function (orderId, money) {
+        var url = "/member/QueryWXPayOrder?orderId=" + orderId + "&r=" + Math.random();
+        $.getJSON(url, function (json) {
+            //console.warn(json)
+            if (json.IsSuccess && json.Message == "0") {
+                //支付成功
+                //                confirmLightBox_WXPay.Close();
+                //                clearInterval(t);
+                window.location.href = "/member/WXPayComplate?orderId=" + orderId + "&money=" + money + "&r=" + Math.random();
+            }
+        });
+    }
+
+    var t;
+    var startFor = function (orderId, money) {
+        t = setInterval(function () {
+            checkPayResult(orderId, money);
+        }, 1000);
+    }
+
+    function confirmTipWXPay(url, orderid, money) {
+
+        var confirm_no_Event = function () {
+            confirmLightBox_WXPay.Close();
+            clearInterval(t);
+        };
+        document.getElementById("confirm_wxpay_img").src = url;
+        document.getElementById("btn_confirm_close").onclick = confirm_no_Event;
+        confirmLightBox_WXPay.Show();
+        $("#btn_confirm_yes").focus();
+
+        //开始轮询
+        startFor(orderid, money);
+    } 
+</script>
+<!--信息确认框 结束-->

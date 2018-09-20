@@ -1,0 +1,177 @@
+@using MatchBiz.Core;
+@using app.lottery.site.Models;
+@using GameBiz.Core;
+@{
+    Layout = "../Shared/_Layout.cshtml";
+    string type = ViewBag.Type;
+    var title = string.Empty;
+    var keywords = string.Empty;
+    var desc = string.Empty;
+    var count = 0;
+    var gameName = SiteConvert.GameName("ctzq", type);
+    var issues = Request["IssuesNum"];
+    if (issues != null && issues != "")
+    {
+        title = "足彩" + gameName + "第" + issues + "期投注信息-" + SiteString.getHZSiteName(Request);
+        keywords = "足彩" + gameName + "第" + issues + "期投注信息";
+        desc = SiteString.getHZSiteName(Request)+"彩票网为您提供足彩" + gameName + "第" + issues + "期投注信息，方面彩民朋友查看往期投注信息";
+    }
+    else
+    {
+        switch (type.ToLower())
+        {
+            case "t14c":
+                title = "足彩网上投注-14场胜负彩投注-网上购买十四场胜负彩-14场胜负彩赔率-" + SiteString.getHZSiteName(Request);
+                keywords = "足彩网上投注,14场胜负彩投注,网上购买十四场胜负彩,14场胜负彩赔率";
+                desc = "网上购买足彩首选" + SiteString.getHZSiteName(Request) + "彩票网," + SiteString.getHZSiteName(Request) + "彩票网提供专业的足彩14场胜负彩投注,更有足彩十四场最新赔率信息,这里是足彩的中奖福地.【" + SiteString.getHZSiteName(Request) + "彩票网-专业、安全的网上购彩平台】";
+                count = 14;
+                break;
+            case "tr9":
+                title = "足彩任选9场投注-网上购买任选九场-任选9赔率-" + SiteString.getHZSiteName(Request);
+                keywords = "足彩任选9场投注,网上购买任选九场,任选9赔率";
+                desc = "网上购买足彩任选9场首选" + SiteString.getHZSiteName(Request) + "彩票网," + SiteString.getHZSiteName(Request) + "彩票网提供专业的足彩任选九场投注,更有任选9最新赔率信息,这里是足彩任选九的中奖福地.【" + SiteString.getHZSiteName(Request) + "彩票网-专业、安全的网上购彩平台】";
+                count = 14;
+                break;
+            case "t6bqc":
+                title = "足彩半全场投注-网上购买6场半全场-六场半全场赔率-" + SiteString.getHZSiteName(Request);
+                keywords = "足彩半全场投注,网上购买6场半全场,六场半全场赔率";
+                desc = "网上购买足彩6场半全场首选" + SiteString.getHZSiteName(Request) + "彩票网," + SiteString.getHZSiteName(Request) + "彩票网提供专业的足彩六场半全场投注,更有6场半全场最新赔率信息,这里是足彩半全场的中奖福地.【" + SiteString.getHZSiteName(Request) + "彩票网-专业、安全的网上购彩平台】";
+                count = 6;
+                break;
+            case "t4cjq":
+                title = "4场进球数投注-足彩进球数网上购买-四场进球数赔率-" + SiteString.getHZSiteName(Request);
+                keywords = "4场进球数投注,足彩进球数网上购买,四场进球数赔率";
+                desc = "网上购买足彩4场进球数首选" + SiteString.getHZSiteName(Request) + "彩票网," + SiteString.getHZSiteName(Request) + "彩票网提供专业的足彩四场进球数投注,更有4场进球数最新赔率信息,这里是足彩进球数的中奖福地.【" + SiteString.getHZSiteName(Request) + "彩票网-专业、安全的网上购彩平台】";
+                count = 4;
+                break;
+        }
+    }
+    ViewBag.Title = title;
+    ViewBag.KeyWords = keywords;
+    ViewBag.Description = desc;
+    CurrentUserInfo user = ViewBag.CurrentUser;
+}
+@section css{@UserHelper.css("jc.min.css")}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">首页</a>&nbsp;&gt; &nbsp;</li>
+        <li><a target="_blank" href="#">购彩大厅</a>&nbsp;&gt;&nbsp;</li>
+        <li>@gameName</li>
+    </ul>
+</div>
+<div class="nav @(type.ToLower())_banner">
+    <div class="nav_logo">
+    </div>
+    <div class="nav_box">
+        <h3>@gameName</h3>
+        <a href="/toto/t14c">14场胜负</a> <a href="/toto/t6bqc">6场半全</a> <a href="/toto/tr9">
+            任9场</a> <a href="/toto/t4cjq">4场进球</a>
+    </div>
+    <div class="nav_menu">
+        <p class="nav_links">
+            <a target="_blank" href="http://" + SiteString.getHZSiteUrl(Request) + "/live/index.html">比赛直播</a>| <a target="_blank" href="/lottery/ctzq/@gameName">
+                开奖公告</a>| <a target="_blank" href="/help/zcsfc">玩法介绍</a>
+        </p>
+    </div>
+</div>
+<div class="menus">
+    <div class="nav_menu_a">
+        <a style="margin-left: 0px;*margin-left:110px;" href="/toto/@type" class=cur>复式投注</a> <a href="/hemai/ctzq?PlayType=@type" target="_blank">
+            参与合买</a>
+    </div>
+    <div class="sub_nav">
+        <div class="sub_nav_b">
+            <div class="sub_nav_in" id="GameTypeList">
+                <a href="javascript:void(0)" class="cur"><span>选号投注</span></a>
+                <div class="float_two">
+                    <span>复式投注截止时间：<b id="sysEndTime">0000-00-00 00:00:00</b></span> <span>离截止时间:</span>
+                    <span id="sysClock" class="sys_clocks"><em>00</em>天<em>00</em>时<em>00</em>分<em>00</em>秒</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="content">
+    <div id="lotteryWrapper" class="conbox">
+        <div class="sub_banner">
+            <div class="tabcontext">
+                <p class="tabtip">
+                    当前热卖：</p>
+                <p class="tabissues fl">
+                    <a class="issueBtn" href="javascript:void(0)"></a>
+                </p>
+                <p name="issue" class="dropdown fr">
+                    <cite class="issueselect" data-key=""></cite><em style="display: none;"></em>
+                </p>
+                <span class="fr">赛事回查 </span>
+            </div>
+        </div>
+        <div class="sfc">
+            @{ Html.RenderAction("Ctzq", "buy", new { type });}
+            <div class="sfc_area">
+                @{
+                    if (type == "t14c" || type == "tr9")
+                    {
+                    <div class="sfc_area_c">
+                        <span>投注内容：</span>
+                        <ul id="sfc_nums">
+                            @for (int i = 0; i < count; i++)
+                            {
+                                <li><i title="-"></i></li>
+                            }
+                        </ul>
+                    </div>
+                    }
+                }
+                <div class="sfc_area_a">
+                    <ul>
+                        <li id="bet_info">您选了 <span class="red" id="betNum">0</span>&nbsp;场，<span class="red betinfp"
+                            id="u1">0</span> 个单选， <span class="red betinfp" id="u2">0</span> 个双选，<span class="red betinfp"
+                                id="u3">0</span> 个全选，共 ：<span class="red" id="items">0</span> 注，<span class="red">￥<span
+                                    id="sum">0</span>.00</span> 元&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @*<a id="filterBtn" class="onlinefilter" href="javascript:void 0">在线过滤</a>*@
+                        </li>
+                        <li><b>投注倍数：</b>
+                            <input type="text" class="muti_input" maxlength="5" size="4" value="1" id="multiple"
+                                onmouseover="this.select();" onkeyup="Tool.tonumber(this,1,99);ctzqpage.input_.changeMutiple();"
+                                oncontextmenu="return false;" />
+                            <input type="button" accesskey="=" id="beiUp" class="add_btn" onclick="ctzqpage.input_.addMutiple(1);" />
+                            <input type="button" accesskey="-" id="beiDown" class="sub_btn sub_btn_des" onclick="ctzqpage.input_.addMutiple(-1);" />
+                            (最高99倍) </li>
+                    </ul>
+                </div>
+                <p class="sfc_area_b buyBtns">
+                    <input type="button" value="立即认购" id="singleBuyBtn" class="dialogBtn" onclick="ctzqpage.input_.dealBuy('single')" />
+                    <input type="button" value="发起合买" id="multBuyBtn" class="dialogBtn" onclick="ctzqpage.input_.dealBuy('hemai')" />
+                </p>
+            </div>
+        </div>
+        <input type="hidden" value="2" name="activityType" id="activityType" />
+        <!-- 投注参数 -->
+        <div style="display: none;">
+            <input type="hidden" id="issueState" value="" />
+            <input type="hidden" id="gameName" value="@SiteConvert.GameName("ctzq", type)" />
+            <input type="hidden" id="game" value="ctzq" />
+            <input type="hidden" id="type" value="@type" />
+            <input type="hidden" id="issuseNumber" value="" />
+            <input type="hidden" id="Action" value="prebuy" />
+            <input type="hidden" id="matchLength" value="@((type == "t14c" || type == "tr9") ? 14 : type == "t4cjq" ? 4 : 12)" />
+            <input type="hidden" id="itemLength" value="@(type == "t14c" ? 3 : 4)" />
+            <input type="hidden" id="betUnits" value="" />
+            <input type="hidden" id="betCost" value="" />
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var gameCode = "ctzq";
+    var type = "@(type)";
+    var IssuesNum = '@issues';
+    var nowtime;
+    $.get("/home/getServerTime", function (t) {
+        if (t.servertime != null && t.servertime != "") {
+            nowtime = t.servertime;
+        }
+    });
+</script>
+@UserHelper.js("ctzq.js")
+@{Html.RenderPartial("box_confirm_gg");}

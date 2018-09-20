@@ -1,0 +1,45 @@
+﻿@{
+    ViewBag.Title = "足彩胜负任九场-" + SiteString.getHZSiteName(Request) + "帮助中心";
+    ViewBag.Keywords = "足彩胜负任九场";
+    ViewBag.Description = SiteString.getHZSiteName(Request) + "帮助中心为您介绍“足彩胜负任九场”,如果想查看更多关于网上购买彩票的注意事项，请登录" + SiteString.getHZSiteName(Request) + "彩票网.";
+}
+@section css{
+    @ViewHelpers.css("help.css")
+}
+<div class="crumb">
+    <ul>
+        <li class="a">您当前的位置：</li>
+        <li><a href="/">@(SiteString.getHZSiteName(Request))</a> > </li>
+        <li><a href="/help/index">&nbsp;帮助中心</a> > </li>
+        <li>&nbsp;足彩胜负任九场</li>
+    </ul>
+</div>
+<div class="clearfix">
+    @{Html.RenderAction("left", "help", new { type = "howToPlay", name = "tr9" });}
+    <div class="help_r">
+        <div class="list_box">
+            <div class="h_pub_t">
+                <b class="t_l"></b>
+                <div class="t_m">
+                    <h2>
+                       足彩胜负任九场</h2>
+                </div>
+                <b class="t_r"></b>
+            </div>
+            <div class="h_pub_m">
+                <ul>
+                    <li><a href="/help/tr91" id="link151">足彩胜负任九场玩法规则</a></li>
+                </ul>
+            </div>
+            <div class="page">
+                <a class="h_l" href="javascript:void(0)" id="pfirst" hidefocus="true">首页</a><a 
+                    href="javascript:void(0)" class="preno" hidefocus="true" id="link159">上一页</a><a href="javascript:void(0)"
+                        hidefocus="true" class="curpage" id="link160">1</a><a hidefocus="true" href="javascript:void(0)"
+                            class="nextno"  id="link161">下一页</a><a class="h_l" href="javascript:void(0)"
+                                id="plast" hidefocus="true">尾页</a><span id="totalpage" class="gray">共1页</span></div>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+@ViewHelpers.js("help.js")

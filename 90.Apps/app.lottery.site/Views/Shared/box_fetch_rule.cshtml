@@ -1,0 +1,9 @@
+﻿<div id="user_ispayed" class="tips-fetch" style="display: none;">
+    @{Html.RenderPartial("fetch_rule_content");}
+    <center class="mt10">
+        <input type="button" value="已阅读并同意以上风险控制规则" class="btn-agree" onclick="ispayedBox.Close();" />
+    </center>
+</div>
+<script type="text/javascript">
+    var ispayedBox = new LightBox("user_ispayed");
+</script>

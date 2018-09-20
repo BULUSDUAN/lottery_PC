@@ -1,0 +1,104 @@
+﻿@{
+    Layout = null;
+    var nr = ViewBag.dayNR as GameBiz.Core.BDFXNRRankList_Collection;
+    //专家推荐
+    var expert = ViewBag.Expert as GameBiz.Core.WebUserSchemeShareExpert_Collection;
+}
+<div class="baodan_niu niu_tjian">
+            <h2><span class="niuren"></span></h2>
+            <ul>
+                @if (nr != null && nr.TotalCount> 0)
+                {
+                    var totalcount = expert.TotalCount;
+                    var comefrom = ViewBag.ComeFrom;
+                    var level = 1; //用户等级
+                    var uname = string.Empty;
+                    var href = string.Empty;
+                    var userCustomerImgUrl = string.Empty;
+                    foreach (var item in nr.RanList)
+                    {
+                        //href = "?uimg=" + HttpUtility.HtmlEncode(item.UserCustomerImgUrl) + "&ulvl=" + item.MaxLevelName;
+                        //level = SiteConvert.GetUserLevel(item.MaxLevelName);
+                        uname = SiteString.HideUserName(item.UserName);
+                        //uname = SiteString.FormatCharacterStr(item.UserName);
+                        //userCustomerImgUrl = item.UserCustomerImgUrl;
+                        //if (item.CurrProfitRate != 0)
+                        //{
+                        //    href += "&LastweekProfitRate=" + item.CurrProfitRate;
+                        //}
+                        <li>
+                            <a target="_blank" href="/baodan/redanauthorhome/@item.UserId@href">
+                                @if (string.IsNullOrEmpty(userCustomerImgUrl))
+                                {
+                                    <span class="luic user_logo icon-lv3 left-img"></span>
+                                }
+                                else
+                                {
+                                    <img src="@userCustomerImgUrl" class="left-img" alt="上传" title="上传头像"/>
+                                }
+                                <span class="hod left-user">@uname</span>
+                            </a>
+                        </li>
+                       
+                    }
+                }
+            </ul>
+        </div>
+        <div class="baodan_tjian niu_tjian">
+            <h2><span class="recomment"></span></h2>
+            <ul>
+            @if (expert != null && expert.TotalCount > 0)
+            {
+                var totalcount = expert.TotalCount;
+                var comefrom = ViewBag.ComeFrom;
+                var level = 1; //用户等级
+                var uname = string.Empty;
+                var userCustomerImgUrl = string.Empty;
+                var href = string.Empty;
+                foreach (var item in expert.UserSchemeShareExpertList)
+                {
+                    //level = SiteConvert.GetUserLevel(item.MaxLevelName);
+                    uname = SiteString.HideUserName(item.UserName, item.HideDisplayNameCount);
+                    href = "?uimg=" + HttpUtility.HtmlEncode(item.UserCustomerImgUrl) + "&ulvl=" + item.MaxLevelName;
+                    userCustomerImgUrl = item.UserCustomerImgUrl;
+                    //uname = SiteString.FormatCharacterStr(item.UserName);
+                    //if (item.LastweekProfitRate != 0)
+                    //{
+                    //    href += "&LastweekProfitRate=" + item.LastweekProfitRate;
+                    //}
+                    <li><a target="_blank" href="/baodan/redanauthorhome/@(item.UserId)@href">
+                    @if (String.IsNullOrEmpty(userCustomerImgUrl))
+                    {
+                        <span class="luic user_logo icon-lv@(level) left-img"></span>
+                    }
+                    else
+                    {
+                        <img src="@userCustomerImgUrl" class="left-img" alt="上传" title="上传头像"/>
+                    }
+                     <span class="hod left-user">@uname</span>
+                    </a></li>
+                }
+            }
+                
+               @* <li><a target="_blank" href="#">
+                    <span class="luic user_logo icon-lv3 left-img"></span>
+                    <span class="hod left-user">test920</span>
+                </a></li>
+                <li><a target="_blank" href="#">
+                    <span class="luic user_logo icon-lv3 left-img"></span>
+                    <span class="hod left-user">test920</span>
+                </a></li>
+                <li><a target="_blank" href="#">
+                    <span class="luic user_logo icon-lv3 left-img"></span>
+                    <span class="hod left-user">test920</span>
+                </a></li>
+                <li><a target="_blank" href="#">
+                    <span class="luic user_logo icon-lv3 left-img"></span>
+                    <span class="hod left-user">test920</span>
+                </a></li>
+                <li><a target="_blank" href="#">
+                    <span class="luic user_logo icon-lv3 left-img"></span>
+                    <span class="hod left-user">test920</span>
+                </a></li>*@
+            </ul>
+        </div>

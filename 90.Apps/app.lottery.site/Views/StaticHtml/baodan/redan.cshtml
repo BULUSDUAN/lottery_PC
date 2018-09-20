@@ -1,0 +1,115 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layoutbaodan.cshtml";
+    var sitename = SiteString.getHZSiteName(Request);
+    
+    ViewBag.Title = "神单-什么是神单-什么是抄单- " + sitename;
+    ViewBag.KeyWords = "神单,什么是神单,什么是抄单";
+    ViewBag.Description = sitename + "“神单”首页为广大彩民朋友介绍什么是神单,什么是抄单。“神单”是由较有把握的发起人发起,然后彩民朋友进行复制抄单的一种全新玩法。";
+}
+@section css
+{
+    @UserHelper.css("redan.css")
+}
+@section js{
+    @UserHelper.js("radialIndicator.js")
+}
+<div>
+    <div class="introduce_top">
+    <div class="introducediv div1">
+            <div class="introducedivtext">
+                <span class="font-title">
+                    <i class="ml5"><b>今日神单</b></i></span>
+                <span class="ml15">安逸买彩，轻松中奖</span>
+                <a href="/baodan/redantoday"><span class="tubiao"></span></a>
+            </div>
+     </div>
+    <div class="introducediv div2">
+            <div class="introducedivtext">
+                <span class="font-title">
+                    <i class="ml5"><b>神单排行</b> </i></span>
+                <span class="ml15">每天更新重量级排名</span>
+                  <a href="/baodan/redanrank"><span class="tubiao"></span></a>
+            </div>
+        </div>
+    <div class="introducediv1 div3">
+        <div class="introducedivtext1">
+            <span class="font-title">
+                <i class="ml5"><b>昨日牛人</b></i></span>
+                <div id="yesterdaynr">
+            </div>          
+        </div>
+       </div>
+    <div class="introducediv div4">
+            <div class="introducedivtext">
+                <span class="font-title">
+                    <i class="ml5"><b>我的关注</b></i></span><span class="ml15">关注颜值NX的玩家</span>
+                          <a checklg="/baodan/redanmyattention" href="javascript:void(0)">
+                          <span class="tubiao"></span></a>
+            </div>
+        </div>
+    <div class="introducediv div5">
+            <div class="introducedivtext">
+                <span class="font-title">
+                    <i class="ml5"><b>我的神单</b></i></span><span class="ml15" style=" margin-left:-25px;">
+                        我分享我自豪，每天好心情</span>
+                  <a style="margin-right: 0px;" checklg="/baodan/redanmy" href="javascript:void(0)"> 
+                  <span class="tubiao"></span></a>
+            </div>
+        </div>
+    <div class="introducediv1 div6">
+            <div class="introducedivtext1">
+                <span class="font-title">
+                    <i class="ml5"><b>我的主页</b></i></span><span class="ml15">
+                        我的神单，我的分享</span>
+                      <a  style="margin-right: 0px;" checklg="" id="myindex" href="javascript:void(0)"> <span class="tubiao"></span></a>
+            </div>
+        </div>
+          
+        <div class="clearfloat">
+        </div>
+    </div>
+    <div class="introdece_bottom">
+        <div class="introdece_bottom_header">
+            <ul>
+                <li class="summary">什么是神单？</li>
+                <li class="summary">什么是抄单？</li>
+                <li class="summary">什么是奖金盈利提成？</li>
+                <li class="summary">为什么抄单后看不到方案详情？</li>
+            </ul>
+        </div>
+        <div class="introdece_bottom_header_bottom">
+        <span class="touzpng pic pic1"></span>
+        <div class="detail" style=" display:block;">
+            <span class="itr3">“神单”是由彩民或资深专业人员将自己较有把握的购彩方案通过分享平台展示给全体彩民，以此来帮助彩民在没有可选投注内容时可直接对“神单”方案内容进行复制抄单购买，辅助提升彩民的购彩盈利率。</span>
+        </div>
+        <div class="detail">
+            <span class="itr3">“抄单”是指彩民对某个神单获得心理认可后对该神单进行直接复制购买，购买的内容与该神单内容相同；抄单购买成功后彩民要自己承担所抄单方案内容不中奖的风险。</span>
+        </div>
+        <div class="detail">
+            <span class="itr3">“奖金盈利提成”是指彩民通过该神单方案抄单购买后产生的税后奖金盈利部分要提取给神单作者，彩民只能获得剩余部分的奖金金额；<br />
+                    <label style="margin-left: 24px;">
+                        举例说明：订单中奖10000元，税后奖金8000元，订单金额1000元，奖金盈利提成5%</label></span> <span class="itr3" style="margin-top: 10px;">
+                            奖金盈利提成金额计算公式为：<b>（8000-1000）*5%=350元</b>，彩民实际所得金额为：<b>8000-350=7650元</b>。</span>
+         </div>
+         <div class="detail">
+            <span class="itr3">神单方案保密类型分为<b>【公开】</b>与<b>【截止公开】</b>；如果神单作者将方案保密类型设置为<b>【截止公开】</b>，那么彩民抄单后在赛事未开始前依然看不到方案的具体内容，只有在最近的一场比赛开始进行中后才能查看方案内容。</span>
+         </div>
+        </div>
+    </div>
+<script type="text/javascript">
+    $(function () {
+        $(".summary").click(function () {
+            var index = $(this).index();
+            $(".introdece_bottom_header_bottom div:eq(" + index + ")").show().siblings().hide();
+            $(".touzpng").show().attr("class", "touzpng pic pic" + (index + 1));
+        });
+        $("#yesterdaynr").ready(function () {
+            var url = "/baodan/LoadYesterdayNR";
+            $.get(url, function (result) {
+                $("#yesterdaynr").html(result);
+            }
+            )
+        })
+    })
+</script>
+</div>

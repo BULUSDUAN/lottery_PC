@@ -1,0 +1,109 @@
+﻿@using System.Web.UI.WebControls
+@{
+    var needPassword = ViewBag.NeedPassword;
+    var bonus = ViewBag.Bonus;
+    var bonusRatio = ViewBag.BonusRatio;
+    var kind = ViewBag.Kind;
+}
+<div class="mask_state mask_content">
+    <div class="project_cont">
+        <dl>
+            <dt>方案属性：</dt>
+            <dd class="project_attr">
+                该方案总共<em id="ggcount">0</em>注，<em id="ggmutiply">0</em>倍，共 ￥<em id="ggmoney">0</em>元
+            </dd>
+            <dt id="serType">保密类型：</dt>
+            <dd id="serType_dd">
+                <p id="secrecy_dg" class="secrecy_lab">
+                    <label for="rad1">
+                        <input type="radio" checked="checked" value="1" id="rad1" name="Secret" />公开
+                    </label>
+                    <label for="rad2">
+                        <input type="radio" value="2" id="rad2" name="Secret" />跟单公开
+                    </label>
+                    <label for="rad3">
+                        <input type="radio" value="3" id="rad3" name="Secret" />截止公开
+                    </label>
+                    <label for="rad4">
+                        <input type="radio" value="4" id="rad4" name="Secret" />永久保密
+                    </label>
+                </p>
+            </dd>
+            @{
+                if (needPassword && ViewBag.Kind != 0)
+                {
+                    <dt>资金密码：</dt>
+                    <dd><input type="password" id="balancepwd" class="balancepwd" /></dd>
+                }
+                if (bonus > 0 && bonusRatio > 0 && kind != 0)
+                {
+                    <dt>使用红包金额：</dt><dd>
+                <span id="rgspn"><input type="text" onkeyup="checkRb(this)" onafterpaste="checkRb(this)" class="balancepwd" id="kybanlance" style="width:50px"/>(红包<em id="ttbanlance">@bonus.ToString("0.00")</em>元，最大可使用红包<em id="maxbanlance" data-ratio="@bonusRatio">0</em>元)</span></dd>
+                    @*<dt>使用红包金额：</dt>                    
+                    <dd>
+                        <span id="rgspn">
+                            <em id="kybanlance" style="color:Red;font-size:22px;margin:10px;"></em>元 &nbsp  <input type="radio" name="useRedBag" value="1" checked="checked" />是
+                            <input type="radio" name="useRedBag" value="0" />否  <span>(红包<em id="ttbanlance" style="color:red;">@bonus.ToString("0.00")</em>元,订单最大可使用红包<em id="maxbanlance" data-ratio="@bonusRatio" style="color:red;">0</em>元)</span>
+                        </span>
+                    </dd>*@
+                        }
+                        }
+                </dl>
+        <div class="project_area">
+            <p>
+                <label for="userAgent0">
+                    <input type="checkbox" id="userAgent0" checked="checked" value="1"/>
+                    我已阅读了《<a target="_blank" href="/help/serviceAgreement1">用户合买代购协议</a>》并同意其中条款。
+                </label>
+            </p>
+            @{
+                if (ViewBag.FlagCtzq)
+                {
+            <p style="line-height: 14px; padding-bottom: 10px;">
+                <label for="lotteryLimit0">
+                    <input type="checkbox" id="lotteryLimit0" checked="checked" value="1"/>
+                    彩票发行中心对竞彩过关组合进行阶段性限制投注管理，我已阅读并同意《
+                   <a target="_blank" href="/help/betNotice1">竞彩投注风险须知</a>》。</label>
+            </p>
+                }
+            }
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function checkRb(obj) {
+        var ttbanlance = $("#ttbanlance");
+        var maxbanlance = $("#maxbanlance").html();
+        var kybanlance = obj.value;
+        obj.value = kybanlance.replace(/[^\d.]/g, '');
+        kybanlance = obj.value;
+        if (parseFloat(kybanlance) > parseFloat(maxbanlance)) {
+            obj.value = maxbanlance;
+        }
+        if (parseFloat(obj.value) > parseFloat(ttbanlance.text())) {
+            obj.value = ttbanlance.text();
+        }
+    }
+//    $(function () {
+//        if ($("#balancepwd").length == 0) {
+//            if (user.info.isNeedBetPwd) {
+//                $(".project_cont dl").append("<dt>资金密码：</dt><dt><input type=\"password\" id=\"balancepwd\" class=\"balancepwd\"/></dt>");
+//            }
+//        }
+    //    });
+    $("input[type=radio][name=useRedBag]").change(function () {
+        if (this.value == 1) {
+            var ttbanlance = $("#ttbanlance").text();
+            var maxbanlance=$("#maxbanlance").text();  
+            if(Number(ttbanlance)>Number(maxbanlance)){
+                $("#kybanlance").html(maxbanlance);
+            }else{
+                $("#kybanlance").html(ttbanlance);
+            }     
+            
+        }
+        else {
+            $("#kybanlance").html(0);
+        }
+    });   
+</script>

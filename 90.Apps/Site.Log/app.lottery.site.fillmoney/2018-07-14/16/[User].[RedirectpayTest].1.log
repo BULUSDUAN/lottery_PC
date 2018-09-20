@@ -1,0 +1,38 @@
+[0][2018-07-14 16:02:09] Redirectpay
+    UFM0714160209024164462986_<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=System.Text.UTF8Encoding" /></head>
+<body onload="OnLoadSubmit();">
+<form id="pay_form" action=" https://cashier.hefupal.com/paygate/v1/web/pay" method="post"><input type="hidden" name="YUL1" id="YUL1" value="" /><input type="hidden" name="amount" id="amount" value="20000" /><input type="hidden" name="bankId" id="bankId" value="alipay_wap" /><input type="hidden" name="bizType" id="bizType" value="01" /><input type="hidden" name="buyerId" id="buyerId" value="10000" /><input type="hidden" name="buyerName" id="buyerName" value="JqzKE6Apw9aeTi8rw0p5ZK/MHR9XZnvg19i/ZnNsojMFDxc+r0ycs0RO1BlUuRMgzxbNbvxXihyZ5kNyIootF9n7Ipf21dbn7lToypiDMU2FfTMwMdmFC18R7ofeVp48n+2Ik3ao4p3l5vqm4EcGwN/AZlyznfnn8s7K3o4S8DY=" /><input type="hidden" name="cardType" id="cardType" value="01" /><input type="hidden" name="channelNo" id="channelNo" value="03" /><input type="hidden" name="contact" id="contact" value="" /><input type="hidden" name="currency" id="currency" value="CNY" /><input type="hidden" name="goodsInfo" id="goodsInfo" value="" /><input type="hidden" name="goodsName" id="goodsName" value="充值卡" /><input type="hidden" name="goodsNum" id="goodsNum" value="" /><input type="hidden" name="ip" id="ip" value="::1" /><input type="hidden" name="merchantNo" id="merchantNo" value="S20180104019919" /><input type="hidden" name="notifyUrl" id="notifyUrl" value="http://www.baidu.com/user/HFBNotifyUrl" /><input type="hidden" name="referer" id="referer" value="" /><input type="hidden" name="remark" id="remark" value="" /><input type="hidden" name="returnUrl" id="returnUrl" value="http://www.wancai.com/member/safe" /><input type="hidden" name="sign" id="sign" value="Ykaf3z3iJYJugqRIaMOWhuXyYalafOJ04Ah+LKTWgwh/qN24nU5gkPKXuTB46QbfTwQyioYuXTUHF5twWEo29ybNWsAPAGv7JSm7WyYjnYMmPVliFOxiDwW2Aix0vqnhmKsQF0pytwJfdwdZYBN7RQHKvVsdl/LTznCZ594PELY=" /><input type="hidden" name="tranSerialNum" id="tranSerialNum" value="UFM0714160209024164462986" /><input type="hidden" name="tranTime" id="tranTime" value="20180714160209" /><input type="hidden" name="valid" id="valid" value="60" /><input type="hidden" name="version" id="version" value="v1" /></form>
+<script type="text/javascript">
+<!--
+function OnLoadSubmit()
+{
+document.getElementById("pay_form").submit();
+}
+//-->
+</script>
+</body>
+</html>
+
+    ----------------------------------------------------------------------------
+
+[0][2018-07-14 16:24:17] Redirectpay
+    UFM0714162417242113873196_<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=System.Text.UTF8Encoding" /></head>
+<body onload="OnLoadSubmit();">
+<form id="pay_form" action=" https://cashier.hefupal.com/paygate/v1/web/pay" method="post"><input type="hidden" name="YUL1" id="YUL1" value="" /><input type="hidden" name="amount" id="amount" value="20000" /><input type="hidden" name="bankId" id="bankId" value="alipay_wap" /><input type="hidden" name="bizType" id="bizType" value="01" /><input type="hidden" name="buyerId" id="buyerId" value="10000" /><input type="hidden" name="buyerName" id="buyerName" value="UhYiQHpgegwg/yeSZGAlIZp1ANUKCKN50jCzV1OMVPZN2Kq243VGvFmUovgMa2zDMiB5an4hhGHXVPh/60UyX/HAW/ErPjxvmhT094L93LG7uw/CCZDTwUBX8tmfaI0ul+0psjnY3Vv8vm8Y1TUXEbwEidQTqyUS2TkrJw9Pigk=" /><input type="hidden" name="cardType" id="cardType" value="01" /><input type="hidden" name="channelNo" id="channelNo" value="03" /><input type="hidden" name="contact" id="contact" value="" /><input type="hidden" name="currency" id="currency" value="CNY" /><input type="hidden" name="goodsInfo" id="goodsInfo" value="" /><input type="hidden" name="goodsName" id="goodsName" value="充值卡" /><input type="hidden" name="goodsNum" id="goodsNum" value="" /><input type="hidden" name="ip" id="ip" value="::1" /><input type="hidden" name="merchantNo" id="merchantNo" value="S20180104019919" /><input type="hidden" name="notifyUrl" id="notifyUrl" value="http://www.baidu.com/user/HFBNotifyUrl" /><input type="hidden" name="referer" id="referer" value="" /><input type="hidden" name="remark" id="remark" value="" /><input type="hidden" name="returnUrl" id="returnUrl" value="http://www.wancai.com/member/safe" /><input type="hidden" name="sign" id="sign" value="g7JKIlVpgkIpbUMh+XPZHAiY9Q6fSVGKkI55ps76zJnLctwGuZ3pZOWo7ksIyEqmfoyRmdfByKojIWkwckOpugWP+t4ykeJtVLJkhwSWADxbX+z8etnSllysgAjNaKbIYRgdEOq7F5glJ4IcQamdTNUt10adpAeFUMLSZGdjQCU=" /><input type="hidden" name="tranSerialNum" id="tranSerialNum" value="UFM0714162417242113873196" /><input type="hidden" name="tranTime" id="tranTime" value="20180714162417" /><input type="hidden" name="valid" id="valid" value="60" /><input type="hidden" name="version" id="version" value="v1" /></form>
+<script type="text/javascript">
+<!--
+function OnLoadSubmit()
+{
+document.getElementById("pay_form").submit();
+}
+//-->
+</script>
+</body>
+</html>
+
+    ----------------------------------------------------------------------------
+

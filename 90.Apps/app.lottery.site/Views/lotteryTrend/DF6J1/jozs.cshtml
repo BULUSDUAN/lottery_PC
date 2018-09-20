@@ -1,0 +1,706 @@
+﻿@{
+    Layout = "~/Views/lotteryTrend/_Layout.cshtml";
+    var pageSize = Request["pageSize"];
+    if (pageSize != "" && pageSize != null)
+    {
+        ViewBag.Title = "东方6+1奇偶走势图近" + pageSize + "期" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "东方6+1奇偶走势图近" + pageSize + "期";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "东方6+1奇偶走势图近" + pageSize + "期,查看更多东方6+1奇偶走势图请登录" + SiteString.getHZSiteName(Request) + "彩票网.";
+    }
+    else
+    {
+        ViewBag.Title = "东方6+1奇偶走势图-" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "东方6+1奇偶走势图";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "彩票网提供最新的东方6+1奇偶走势图,其中包括第一位到第六位的各号码奇偶分布和奇偶比例分布情况,让彩民朋友更直观的分析东方6+1奇偶走势图.";
+    }
+    var jozs = ViewBag.DataList as LotteryData.Core.DF6_1_JOZS_InfoCollection;
+    var a = 0;  
+}
+@{Html.RenderAction("ThendLink", "lotteryTrend");}
+<div id="container">
+    <div class="cont_box" style="width: 1003px;">
+        <table width="100%" cellspacing="1" cellpadding="0" border="0" class="table_box"
+            style="width: 1002px;" id="chartsTable">
+            <tbody>
+                <tr>
+                    <td align="center" class="tab_top" colspan="27">
+                        标注形式选择：
+                        <input type="checkbox" checked="checked" id="c_yl">
+                        <label for="c_yl">
+                            遗漏</label>
+                        <input type="checkbox" checked="checked" id="has_line">
+                        <label for="has_line">
+                            折线</label>
+                        <input type="checkbox" checked="checked" id="help_line">
+                        <label for="help_line">
+                            分隔线</label>
+                        <input type="checkbox" id="yl_zhu">
+                        <label for="yl_zhu">
+                            遗漏分层</label>
+                    </td>
+                </tr>
+                <tr class="tabbg">
+                    <td width="60" rowspan="2" class="line_r">
+                        期号
+                    </td>
+                    <td width="69" rowspan="2" class="line_r">
+                        出号
+                    </td>
+                    <td colspan="3" class="line_r">
+                        十万位
+                    </td>
+                    <td colspan="3" class="line_r">
+                        万位
+                    </td>
+                    <td colspan="3" class="line_r">
+                        千位
+                    </td>
+                    <td colspan="3" class="line_r">
+                        百位
+                    </td>
+                    <td colspan="3" class="line_r">
+                        十位
+                    </td>
+                    <td colspan="3" class="line_r">
+                        个位
+                    </td>
+                    <td colspan="7" class="line_r">
+                        奇偶比
+                    </td>
+                </tr>
+                <tr class="tabbg">
+                    <td width="35">
+                        号码
+                    </td>
+                    <td width="35">
+                        奇
+                    </td>
+                    <td width="35" class="line_r">
+                        偶
+                    </td>
+                    <td width="35">
+                        号码
+                    </td>
+                    <td width="35">
+                        奇
+                    </td>
+                    <td width="35" class="line_r">
+                        偶
+                    </td>
+                    <td width="35">
+                        号码
+                    </td>
+                    <td width="35">
+                        奇
+                    </td>
+                    <td width="35" class="line_r">
+                        偶
+                    </td>
+                    <td width="35">
+                        号码
+                    </td>
+                    <td width="35">
+                        奇
+                    </td>
+                    <td width="35" class="line_r">
+                        偶
+                    </td>
+                    <td width="35">
+                        号码
+                    </td>
+                    <td width="35">
+                        奇
+                    </td>
+                    <td width="35" class="line_r">
+                        偶
+                    </td>
+                    <td width="35">
+                        号码
+                    </td>
+                    <td width="35">
+                        奇
+                    </td>
+                    <td width="35" class="line_r">
+                        偶
+                    </td>
+                    <td width="30">
+                        0:6
+                    </td>
+                    <td width="30">
+                        1:5
+                    </td>
+                    <td width="30">
+                        2:4
+                    </td>
+                    <td width="30">
+                        3:3
+                    </td>
+                    <td width="30">
+                        2:4
+                    </td>
+                    <td width="30">
+                        5:1
+                    </td>
+                    <td width="30" class="line_r">
+                        6:0
+                    </td>
+                </tr>
+            </tbody>
+            <tbody id="tdata" style="font-size: 12px; font-family: '宋体',Tahoma,Consolas,Arial,Simsun;">
+                @foreach (var item in jozs)
+                {
+                    a++;
+                    if (a % 5 == 0)
+                    {
+                    <tr class="tdbck">
+                        <td colspan="27">
+                        </td>
+                    </tr>
+                    }
+                    <tr>
+                        <td align="center" class="line_r">
+                            @item.IssuseNumber
+                        </td>
+                        <td>
+                            @item.WinNumber
+                        </td>
+                        <td class="hot08">
+                            @item.WinNumber.Split(',')[0]
+                        </td>
+                        <td class="@(item.JO_J == 0 ? "cbg tbg1" : "y101")">
+                            @(item.JO_J == 0 ? "奇" : item.JO_J.ToString())
+                        </td>
+                        <td class="@(item.JO_O == 0 ? "cbg tbg1 line_r" : "y101 line_r")">
+                            @(item.JO_O == 0 ? "偶" : item.JO_O.ToString())
+                        </td>
+                        <td class="hot08">
+                            @item.WinNumber.Split(',')[1]
+                        </td>
+                        <td class="@(item.JO1_J == 0 ? "cbg orange1" : "y101")">
+                            @(item.JO1_J == 0 ? "奇" : item.JO1_J.ToString())
+                        </td>
+                        <td class="@(item.JO1_O == 0 ? "cbg orange1 line_r" : "y101 line_r")">
+                            @(item.JO1_O == 0 ? "偶" : item.JO1_O.ToString())
+                        </td>
+                        <td class="hot08">
+                            @item.WinNumber.Split(',')[2]
+                        </td>
+                        <td class="@(item.JO2_J == 0 ? "cbg green1" : "y101")">
+                            @(item.JO2_J == 0 ? "奇" : item.JO2_J.ToString())
+                        </td>
+                        <td class="@(item.JO2_O == 0 ? "cbg green1 line_r" : "y101 line_r")">
+                            @(item.JO2_O == 0 ? "偶" : item.JO2_O.ToString())
+                        </td>
+                        <td class="hot08">
+                            @item.WinNumber.Split(',')[3]
+                        </td>
+                        <td class="@(item.JO3_J == 0 ? "cbg purple1" : "y101")">
+                            @(item.JO3_J == 0 ? "奇" : item.JO3_J.ToString())
+                        </td>
+                        <td class="@(item.JO3_O == 0 ? "cbg purple1 line_r" : "y101 line_r")">
+                            @(item.JO3_O == 0 ? "偶" : item.JO3_O.ToString())
+                        </td>
+                        <td class="hot08">
+                            @item.WinNumber.Split(',')[4]
+                        </td>
+                        <td class="@(item.JO4_J == 0 ? "cbg purple2" : "y101")">
+                            @(item.JO4_J == 0 ? "奇" : item.JO4_J.ToString())
+                        </td>
+                        <td class="@(item.JO4_O == 0 ? "cbg purple2 line_r" : "y101 line_r")">
+                            @(item.JO4_O == 0 ? "偶" : item.JO4_O.ToString())
+                        </td>
+                        <td class="hot08">
+                            @item.WinNumber.Split(',')[5]
+                        </td>
+                        <td class="@(item.JO5_J == 0 ? "cbg gray1" : "y101")">
+                            @(item.JO5_J == 0 ? "奇" : item.JO5_J.ToString())
+                        </td>
+                        <td class="@(item.JO5_O == 0 ? "cbg gray1 line_r" : "y101 line_r")">
+                            @(item.JO5_O == 0 ? "偶" : item.JO5_O.ToString())
+                        </td>
+                        <td class="@(item.O_JO_Proportion06 == 0 ? "cbg3 big" : "y101")">
+                            @(item.O_JO_Proportion06 == 0 ? item.JO_Proportion : item.O_JO_Proportion06.ToString())
+                        </td>
+                        <td class="@(item.O_JO_Proportion15 == 0 ? "cbg3 big" : "y101")">
+                            @(item.O_JO_Proportion15 == 0 ? item.JO_Proportion : item.O_JO_Proportion15.ToString())
+                        </td>
+                        <td class="@(item.O_JO_Proportion24 == 0 ? "cbg3 big" : "y101")">
+                            @(item.O_JO_Proportion24 == 0 ? item.JO_Proportion : item.O_JO_Proportion24.ToString())
+                        </td>
+                        <td class="@(item.O_JO_Proportion33 == 0 ? "cbg3 big" : "y101")">
+                            @(item.O_JO_Proportion33 == 0 ? item.JO_Proportion : item.O_JO_Proportion33.ToString())
+                        </td>
+                        <td class="@(item.O_JO_Proportion42 == 0 ? "cbg3 big" : "y101")">
+                            @(item.O_JO_Proportion42 == 0 ? item.JO_Proportion : item.O_JO_Proportion42.ToString())
+                        </td>
+                        <td class="@(item.O_JO_Proportion51 == 0 ? "cbg3 big" : "y101")">
+                            @(item.O_JO_Proportion51 == 0 ? item.JO_Proportion : item.O_JO_Proportion51.ToString())
+                        </td>
+                        <td class="@(item.O_JO_Proportion60 == 0 ? "cbg3 big line_r" : "y101 line_r")">
+                            @(item.O_JO_Proportion60 == 0 ? item.JO_Proportion : item.O_JO_Proportion60.ToString())
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tbody>
+                <tr>
+                    <td align="center" class="bdtop line_r">
+                        出现次数
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                        @(jozs.Count(p => p.JO_J == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(jozs.Count(p => p.JO_O == 0))
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                        @(jozs.Count(p => p.JO1_J == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(jozs.Count(p => p.JO1_O == 0))
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                        @(jozs.Count(p => p.JO2_J == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(jozs.Count(p => p.JO2_O == 0))
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                        @(jozs.Count(p => p.JO3_J == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(jozs.Count(p => p.JO3_O == 0))
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                        @(jozs.Count(p => p.JO4_J == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(jozs.Count(p => p.JO4_O == 0))
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                        @(jozs.Count(p => p.JO5_J == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(jozs.Count(p => p.JO5_O == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(jozs.Count(p => p.O_JO_Proportion06 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(jozs.Count(p => p.O_JO_Proportion15 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(jozs.Count(p => p.O_JO_Proportion24 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(jozs.Count(p => p.O_JO_Proportion33 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(jozs.Count(p => p.O_JO_Proportion42 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(jozs.Count(p => p.O_JO_Proportion51 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(jozs.Count(p => p.O_JO_Proportion60 == 0))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        平均遗漏
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                        @(jozs.Count == 0 ? 0 : jozs.Sum(p => p.JO_J) / jozs.Count)
+                    </td>
+                    <td class="line_r">
+                        @(jozs.Count == 0 ? 0 : jozs.Sum(p => p.JO_O) / jozs.Count)
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                        @(jozs.Count == 0 ? 0 : jozs.Sum(p => p.JO1_J) / jozs.Count)
+                    </td>
+                    <td class="line_r">
+                        @(jozs.Count == 0 ? 0 : jozs.Sum(p => p.JO1_O) / jozs.Count)
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                        @(jozs.Count == 0 ? 0 : jozs.Sum(p => p.JO2_J) / jozs.Count)
+                    </td>
+                    <td class="line_r">
+                        @(jozs.Count == 0 ? 0 : jozs.Sum(p => p.JO2_O) / jozs.Count)
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                        @(jozs.Count == 0 ? 0 : jozs.Sum(p => p.JO3_J) / jozs.Count)
+                    </td>
+                    <td class="line_r">
+                        @(jozs.Count == 0 ? 0 : jozs.Sum(p => p.JO3_O) / jozs.Count)
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                        @(jozs.Count == 0 ? 0 : jozs.Sum(p => p.JO4_J) / jozs.Count)
+                    </td>
+                    <td class="line_r">
+                        @(jozs.Count == 0 ? 0 : jozs.Sum(p => p.JO4_O) / jozs.Count)
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                        @(jozs.Count == 0 ? 0 : jozs.Sum(p => p.JO5_J) / jozs.Count)
+                    </td>
+                    <td class="line_r">
+                        @(jozs.Count == 0 ? 0 : jozs.Sum(p => p.JO5_O) / jozs.Count)
+                    </td>
+                    <td>
+                        @(jozs.Count == 0 ? 0 : jozs.Sum(p => p.O_JO_Proportion06) / jozs.Count)
+                    </td>
+                    <td class="">
+                        @(jozs.Count == 0 ? 0 : jozs.Sum(p => p.O_JO_Proportion15) / jozs.Count)
+                    </td>
+                    <td>
+                        @(jozs.Count == 0 ? 0 : jozs.Sum(p => p.O_JO_Proportion24) / jozs.Count)
+                    </td>
+                    <td class="">
+                        @(jozs.Count == 0 ? 0 : jozs.Sum(p => p.O_JO_Proportion33) / jozs.Count)
+                    </td>
+                    <td>
+                        @(jozs.Count == 0 ? 0 : jozs.Sum(p => p.O_JO_Proportion42) / jozs.Count)
+                    </td>
+                    <td>
+                        @(jozs.Count == 0 ? 0 : jozs.Sum(p => p.O_JO_Proportion51) / jozs.Count)
+                    </td>
+                    <td class="line_r">
+                        @(jozs.Count == 0 ? 0 : jozs.Sum(p => p.O_JO_Proportion60) / jozs.Count)
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        最大遗漏
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                        @(jozs.Count == 0 ? 0 : jozs.Max(p => p.JO_J))
+                    </td>
+                    <td class="line_r">
+                        @(jozs.Count == 0 ? 0 : jozs.Max(p => p.JO_O))
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                        @(jozs.Count == 0 ? 0 : jozs.Max(p => p.JO1_J))
+                    </td>
+                    <td class="line_r">
+                        @(jozs.Count == 0 ? 0 : jozs.Max(p => p.JO1_O))
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                        @(jozs.Count == 0 ? 0 : jozs.Max(p => p.JO2_J))
+                    </td>
+                    <td class="line_r">
+                        @(jozs.Count == 0 ? 0 : jozs.Max(p => p.JO2_O))
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                        @(jozs.Count == 0 ? 0 : jozs.Max(p => p.JO3_J))
+                    </td>
+                    <td class="line_r">
+                        @(jozs.Count == 0 ? 0 : jozs.Max(p => p.JO3_O))
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                        @(jozs.Count == 0 ? 0 : jozs.Max(p => p.JO4_J))
+                    </td>
+                    <td class="line_r">
+                        @(jozs.Count == 0 ? 0 : jozs.Max(p => p.JO4_O))
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                        @(jozs.Count == 0 ? 0 : jozs.Max(p => p.JO5_J))
+                    </td>
+                    <td class="line_r">
+                        @(jozs.Count == 0 ? 0 : jozs.Max(p => p.JO5_O))
+                    </td>
+                    <td>
+                        @(jozs.Count == 0 ? 0 : jozs.Max(p => p.O_JO_Proportion06))
+                    </td>
+                    <td class="">
+                        @(jozs.Count == 0 ? 0 : jozs.Max(p => p.O_JO_Proportion15))
+                    </td>
+                    <td>
+                        @(jozs.Count == 0 ? 0 : jozs.Max(p => p.O_JO_Proportion24))
+                    </td>
+                    <td class="">
+                        @(jozs.Count == 0 ? 0 : jozs.Max(p => p.O_JO_Proportion33))
+                    </td>
+                    <td>
+                        @(jozs.Count == 0 ? 0 : jozs.Max(p => p.O_JO_Proportion42))
+                    </td>
+                    <td>
+                        @(jozs.Count == 0 ? 0 : jozs.Max(p => p.O_JO_Proportion51))
+                    </td>
+                    <td class="line_r">
+                        @(jozs.Count == 0 ? 0 : jozs.Max(p => p.O_JO_Proportion60))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        当前遗漏
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                    </td>
+                    <td valign="bottom">
+                        @(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].JO_J)<br>
+                        <img width="8px" height="@(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].JO_J)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].JO_O)<br>
+                        <img width="8px" height="@(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].JO_O)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td>
+                    </td>
+                    <td valign="bottom">
+                        @(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].JO1_J)<br>
+                        <img width="8px" height="@(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].JO1_J)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].JO1_O)<br>
+                        <img width="8px" height="@(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].JO1_O)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td>
+                    </td>
+                    <td valign="bottom">
+                        @(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].JO2_J)<br>
+                        <img width="8px" height="@(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].JO2_J)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].JO2_O)<br>
+                        <img width="8px" height="@(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].JO2_O)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td>
+                    </td>
+                    <td valign="bottom">
+                        @(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].JO3_J)<br>
+                        <img width="8px" height="@(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].JO3_J)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].JO3_O)<br>
+                        <img width="8px" height="@(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].JO3_O)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td>
+                    </td>
+                    <td valign="bottom">
+                        @(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].JO4_J)<br>
+                        <img width="8px" height="@(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].JO4_J)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].JO4_O)<br>
+                        <img width="8px" height="@(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].JO4_O)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td>
+                    </td>
+                    <td valign="bottom">
+                        @(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].JO5_J)<br>
+                        <img width="8px" height="@(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].JO5_J)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].JO5_O)<br>
+                        <img width="8px" height="@(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].JO5_O)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].O_JO_Proportion06)<br>
+                        <img width="8px" height="@(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].O_JO_Proportion06)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].O_JO_Proportion15)<br>
+                        <img width="8px" height="@(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].O_JO_Proportion15)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].O_JO_Proportion24)<br>
+                        <img width="8px" height="@(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].O_JO_Proportion24)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].O_JO_Proportion33)<br>
+                        <img width="8px" height="@(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].O_JO_Proportion33)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].O_JO_Proportion42)<br>
+                        <img width="8px" height="@(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].O_JO_Proportion42)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].O_JO_Proportion51)<br>
+                        <img width="8px" height="@(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].O_JO_Proportion51)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].O_JO_Proportion60)<br>
+                        <img width="8px" height="@(jozs.Count == 0 ? 0 : jozs[jozs.Count - 1].O_JO_Proportion60)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr class="tabbg">
+                    <td width="60" rowspan="2" class="line_r">
+                        期号
+                    </td>
+                    <td width="69" rowspan="2" class="line_r">
+                        出号
+                    </td>
+                    <td width="35">
+                        号码
+                    </td>
+                    <td width="35">
+                        奇
+                    </td>
+                    <td width="35" class="line_r">
+                        偶
+                    </td>
+                    <td width="35">
+                        号码
+                    </td>
+                    <td width="35">
+                        奇
+                    </td>
+                    <td width="35" class="line_r">
+                        偶
+                    </td>
+                    <td width="35">
+                        号码
+                    </td>
+                    <td width="35">
+                        奇
+                    </td>
+                    <td width="35" class="line_r">
+                        偶
+                    </td>
+                    <td width="35">
+                        号码
+                    </td>
+                    <td width="35">
+                        奇
+                    </td>
+                    <td width="35" class="line_r">
+                        偶
+                    </td>
+                    <td width="35">
+                        号码
+                    </td>
+                    <td width="35">
+                        奇
+                    </td>
+                    <td width="35" class="line_r">
+                        偶
+                    </td>
+                    <td width="35">
+                        号码
+                    </td>
+                    <td width="35">
+                        奇
+                    </td>
+                    <td width="35" class="line_r">
+                        偶
+                    </td>
+                    <td width="30">
+                        0:6
+                    </td>
+                    <td width="30">
+                        1:5
+                    </td>
+                    <td width="30">
+                        2:4
+                    </td>
+                    <td width="30">
+                        3:3
+                    </td>
+                    <td width="30">
+                        2:4
+                    </td>
+                    <td width="30">
+                        5:1
+                    </td>
+                    <td width="30" class="line_r">
+                        6:0
+                    </td>
+                </tr>
+                <tr class="tabbg">
+                    <td colspan="3" class="line_r">
+                        十万位
+                    </td>
+                    <td colspan="3" class="line_r">
+                        万位
+                    </td>
+                    <td colspan="3" class="line_r">
+                        千位
+                    </td>
+                    <td colspan="3" class="line_r">
+                        百位
+                    </td>
+                    <td colspan="3" class="line_r">
+                        十位
+                    </td>
+                    <td colspan="3" class="line_r">
+                        个位
+                    </td>
+                    <td colspan="7" class="line_r">
+                        奇偶比
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $(function () {
+
+        var allLines = new Array();
+        allLines.push({ line: $(".tbg1"), color: "#05650E" });
+        allLines.push({ line: $(".orange1"), color: "#FF590B" });
+        allLines.push({ line: $(".green1"), color: "#004F00" });
+        allLines.push({ line: $(".purple1"), color: "#0000FE" });
+        allLines.push({ line: $(".purple2"), color: "#36006F" });
+        allLines.push({ line: $(".gray1"), color: "#FF590B" });
+        allLines.push({ line: $(".big"), color: "red" });
+        var line = new XTLine();
+        for (i = 0; i < allLines.length; i++) {
+            var l = allLines[i];
+
+            line.color = l.color;
+            line.arrayBalls = l.line;
+            line.showrect();
+        }
+
+
+        $("#has_line").click(function () {
+            line.display(this.checked);
+        })
+    })
+</script>

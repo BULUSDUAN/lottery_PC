@@ -1,0 +1,149 @@
+﻿@{
+    var needPassword = ViewBag.NeedPassword;
+    var game = ViewBag.Game;
+    var count = 0;
+    if (game == "t14c")
+    {
+        count = 4;
+    }else if (game=="tr9")
+    {
+  
+    }
+}
+<div class="mask_state mask_content">
+    <div style="padding-top: 5px" id="buyHm" class="project_cont buyhm">
+        <dl>
+            <dt>方案属性：</dt>
+            <dd class="project_attr">
+                该方案总共<em id="ggcount">0</em>注，<em id="ggmutiply">0</em>倍，共 ￥<em id="ggmoney">0</em>元</dd>
+            <dt style="display: none;"><em class="red">* </em>我要分为：</dt>
+            <dd style="display: none;">
+                <label for="splitCount">
+                    <input type="text" name="splitCount" id="splitCount"size="3" disabled="disabled" onkeydown="number_check(this,event)" onchange="hemai.calInvestment()" class="in_text"/>份
+                </label>
+                <span class="project_per">每份<em class="fred" id="splitCountPercent">0</em>元</span>
+            </dd>
+            <dt><em class="red">* </em>我要认购：</dt>
+            <dd>
+                <label for="masterBuy">
+                    <input value="1" title="1" type="text" name="masterBuy" id="masterBuy" size="3" onblur="onblr(this);hemai.calInvestment();" onkeydown="number_check(this,event)" onkeyup="hemai.calInvestment()" class="in_text"/>元
+                </label>
+                <span>
+                    (<i class="fred" id="masterBuy_percent">0%</i>)
+                </span>
+            </dd>
+            <dt><em class="red">* </em>我要保底：</dt>
+            <dd>
+                <label for="baodi">
+                    <input type="text" class="in_text" onkeyup="hemai.calInvestment()" onkeydown="number_check(this,event)" size="3" id="baodi" name="baodi"/>元
+                </label>
+                <span>(<i class="fred" id="baodi_percent">0</i>)</span>
+                <input style="vertical-align: -2px;" type="checkbox" onclick="hemai.calInvestment();" class="check" value="all" id="baodiAll" name="baodiAll"/>全额保底
+                <a class="notice bottom" href="javascript:void 0">
+                    <label style="display: none;">
+                        <code class="notice-inner">保底：合买保底发起时，系统将会先从发起人账户内扣除相应的金额，若合买失败，或者合买未全部认购满，则会使用设置的保底金额自动购买未满部分保证合买成功，若设置的保底金额还有剩余资金，将自动返回到发起人账户内。<br />
+                            注：全额保底的方案不可撤单</code><i></i>
+                        <i class="i"></i>
+                    </label>
+                </a></dd>
+                <dt>保密类型：</dt>
+                <dd>
+                    <p class="secrecy_lab">
+                        <label  style="cursor: pointer;display: none">
+                            <input type="radio" class="check" onclick="hemai.SelectRadio('Secret', this);"  value="5" name="Secret"/>上传后公开
+                        </label>
+                        <label class="red" style="cursor: pointer">
+                            <input type="radio" class="check" onclick="hemai.SelectRadio('Secret', this);" checked="checked" value="1" name="Secret"/>公开
+                        </label>
+                        <label style="cursor: pointer" class="">
+                            <input type="radio" class="check" onclick="hemai.SelectRadio('Secret', this);" value="2" name="Secret"/>跟单公开
+                        </label>
+                        <label style="cursor: pointer" class="">
+                            <input type="radio" class="check" onclick="hemai.SelectRadio('Secret', this);" value="3" name="Secret"/>截止公开
+                        </label>
+                        <label style="cursor: pointer" class="">
+                            <input type="radio" class="check" onclick="hemai.SelectRadio('Secret', this);" value="4" name="Secret"/>永久保密
+                        </label>
+                    </p>
+                </dd>
+            <dt>中奖提成：</dt>
+            <dd>
+                <label for="Deduct">
+                    <select class="p_deduct" id="Deduct">
+                        <option selected="selected" value="0">无提成</option>
+                        <option value="1">1%</option>
+                        <option value="2">2%</option>
+                        <option value="3">3%</option>
+                        <option value="4">4%</option>
+                        <option value="5">5%</option>
+                        <option value="6">6%</option>
+                        <option value="7">7%</option>
+                        <option value="8">8%</option>
+                        <option value="9">9%</option>
+                        <option value="10">10%</option>
+                    </select>
+                    %
+                </label>
+                <span class="project_cont_tip">盈利提成 = (税后奖金 - 方案金额) x 提成比例</span>
+            </dd>
+            <dt>招股对象：</dt>
+            <dd>
+                <p class="secrecy_lab">
+                    <label class="red" style="cursor: pointer">
+                        <input type="radio" onclick="hemai.SelectRadio('zgdx', this); document.getElementById('Password').style.display = 'none';" checked="checked" value="1" name="zgdx" class="check"/>所有人可认购
+                    </label>
+                    <label style="cursor: pointer" class="">
+                        <input type="radio" onclick="hemai.SelectRadio('zgdx', this); document.getElementById('Password').style.display = '';" value="2" class="check" name="zgdx"/>凭密码认购
+                    </label>
+                    <input type="text" onkeyup="hemai.isPassWordBuy(this)" class="input_text" style="display: none;width: 45px;" maxlength="8" size="8" id="Password" name="Password"/>
+                </p>
+            </dd>
+            <dt>方案标题：</dt>
+            <dd >
+                <input type="text" class="p_title" id="project_title" maxlength="20" onkeyup="hemai.leftword(this,'project_title_left',20)" title="" onblur="onblr(this)"/>
+                <span class="p_title_tip"><em id="project_title_left" class="num">16</em>个字</span>可以输入</dd>
+            <dt>合买宣言：</dt>
+            <dd>
+                <textarea maxlength="150" title="一起玩，中大奖！" onblur="onblr(this)" onkeyup="hemai.leftword(this,'project_description_left',150)" class="p_description " id="project_description"></textarea><span class="p_description_tip"><em id="project_description_left">142</em>个字可以输入</span></dd>
+            <dt>付款金额：</dt>
+            <dd>
+                <span>总共<em class="fred" id="needMoney">0</em>元</span>
+                <span class="project_cont_tip">方案进度 + 保底 ≥ 95% ，即可出票</span>
+            </dd>
+            @{
+                if (needPassword)
+                {
+                    <dt>资金密码：</dt><dt><input type="password" id="balancepwd" class="balancepwd"/></dt>
+                }
+            }
+        </dl>
+        <div class="project_area">
+            <p>
+                <label for="userAgent0">
+                    <input type="checkbox" id="userAgent0" checked="checked" value="1"/>
+                    我已阅读了《<a target="_blank" href="/help/serviceAgreement1">用户合买代购协议</a>》并同意其中条款。
+                </label>
+            </p>
+            @{
+                if (ViewBag.FlagCtzq)
+                {
+            <p style="line-height: 14px; padding-bottom: 10px;">
+                <label for="lotteryLimit0">
+                    <input type="checkbox" id="lotteryLimit0" checked="checked" value="1"/>
+                    彩票发行中心对竞彩过关组合进行阶段性限制投注管理，我已阅读并同意《
+                    <a target="_blank" href="/help/betNotice1">竞彩投注风险须知</a>》。</label>
+            </p>
+                }
+            }
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        if ($("#balancepwd").length == 0) {
+            if (user.info.isNeedBetPwd) {
+                $(".project_cont dl").append("<dt>资金密码：</dt><dt><input type=\"password\" id=\"balancepwd\" class=\"balancepwd\"/></dt>");
+            }
+        }
+    });
+</script>

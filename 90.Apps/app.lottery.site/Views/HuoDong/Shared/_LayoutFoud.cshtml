@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>@ViewBag.Title</title>
+        @UserHelper.css("main.min.css")
+        @UserHelper.css("member.css")
+        @RenderSection("css", false)
+        @UserHelper.js_share("share.min.js")
+        @RenderSection("js", false)
+    </head>
+    <body>
+        <div style="border: 1px solid #3b72cc"></div>
+        <div class="wrap">
+            @RenderBody()
+        </div>
+    </body>
+</html>

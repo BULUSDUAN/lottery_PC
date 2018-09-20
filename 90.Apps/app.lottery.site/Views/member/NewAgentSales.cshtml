@@ -1,0 +1,158 @@
+﻿@using app.lottery.site.Models
+@using External.Core.Agnet
+@{
+    Layout = "../Shared/_LayoutFoud.cshtml";
+    ViewBag.Title = "统计查询";
+    ViewBag.keywords = "统计查询";
+
+    var list = ViewBag.AgentSales as AgentLottoTopCollection;
+    CurrentUserInfo currentUser = ViewBag.CurrentUser;
+}
+
+<div class="center mt10">
+    @{Html.RenderAction("Mycommenu", "Member");}
+    @{Html.RenderAction("toptipFoud", "Member");}
+    <div class="new_buy_right">
+        
+        <div class="betorder_top">
+            <ul>
+                @*<li ><a href="/member/myTc" checklg="/member/myTc">我的返点</a></li>*@
+                <li><a href="/member/generalizeUser" >返点用户</a></li>
+                <li> <a href="/member/CommissionRecord">返点结算</a></li>
+                <li class="betorder_topSelected"><a href="/member/StatisticsQuery">统计查询</a></li>
+                <li> <a href="/member/SchemeManage">方案管理</a></li>
+            </ul>
+        </div>
+        <div class="betorder_con clearfix">
+            <div class="scheme">
+                <div class="scheme-show">
+                    <a href="/member/StatisticsQuery">用户购彩</a>
+                </div>
+                <div class="scheme-show ">
+                    <a href="/member/PaySeniority">充值排行</a>
+                </div>
+                <div class="scheme-show">
+                    <a href="/member/agentsales">推广销量</a>
+                </div>
+                @*<div class="scheme-show xzscheme">
+                    <a href="/member/newagentsales" checklg="/member/newagentsales"><i></i>新推广销量(试运行)</a>
+                </div>*@
+            </div>
+            <div class="scheme-titile">
+                <span class="dot"></span>
+                <label class="lbfa">
+                    推广销量</label>
+            </div>
+            <div class="tab_box">
+                  <div style="width: 620px !important 540px; float: left; height: 40px; line-height: 40px;">
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                用户编号：<input type="text" name="txtuserId" id="txtuserId"  class="orderId" value=" @(string.IsNullOrEmpty(ViewBag.userId) ? "" : ViewBag.userId)"/>
+                                用户名：<input type="text" name="txtKey" id="txtKey"  class="orderId" value=" @(string.IsNullOrEmpty(ViewBag.key) ? "" : ViewBag.key)"/>
+                                日期： @ViewHelpers.Calendar3("begin", ViewBag.Begin)至 @ViewHelpers.Calendar3("end", ViewBag.End)
+                      <input class="search_btn" type="button" onclick="getAgentLotto(0,10)" value="查询"/>
+                  </div>
+                <table border="0" cellpadding="0" cellspacing="0" class="betorder_table">
+                    <tr class="tr_head">
+                        <th width="102">
+                            用户编号
+                        </th>
+                        <th width="67">
+                            用户名
+                        </th>
+                        <th width="90">
+                            常规足球
+                        </th>
+                        <th width="75">
+                            北京单场
+                        </th>
+                        <th width="85">
+                            竞彩足球
+                        </th>
+                        <th width="78">
+                            竞彩篮球
+                        </th>
+                        <th width="75">
+                            数字彩
+                        </th>
+                        <th width="90">
+                            高频彩
+                        </th>
+                        <th width="120">
+                            购彩总金额
+                        </th>
+                    </tr>
+                    @if (list != null && list.AgentLottoTopList.Count > 0)
+                    {
+                        foreach (var item in list.AgentLottoTopList)
+                        {
+                            <tr>
+                                <td  class="orderId">
+                                    @item.UserId
+                                </td>
+                                <td class="orderId">
+                                    @item.DisplayName
+                                </td>
+                                <td>
+                                    @item.CTZQ.ToString("N2")
+                                </td>
+                                <td>
+                                    @item.BJDC.ToString("N2")
+                                </td>
+                                <td>
+                                    @item.JCZQ.ToString("N2")
+                                </td>
+                                <td>
+                                    @item.JCLQ.ToString("N2")
+                                </td>
+                                <td>
+                                    @item.SZC.ToString("N2")
+                                </td>
+                                <td>
+                                    @item.GPC.ToString("N2")
+                                </td>
+                                <td class="ye">
+                                    @item.TotalMoney.ToString("N2")
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="9">
+                                暂时没有找到你要的数据哦
+                            </td>
+                        </tr>
+                    }
+                </table>
+                <p class="tip" style="margin-top: 10px;">注意：代理销量最多可查询一个月数据</p>
+                <div style="margin-top: -15px;">
+                    @ViewHelpers.Pager6("getAgentLotto", ViewBag.pageNo, ViewBag.pageSize, list==null?0:list.TotalCount)
+                </div>
+            </div>
+        </div>
+       
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(".scheme-table tr:even:gt(0)").css("backgroundColor", "#f9f9f9");
+    });
+    function getAgentLotto(pageNo, pageSize) {
+        var begin = $("#begin").val();
+        var end = $("#end").val();
+        var key = $("#txtKey").val().trim();
+        var userId = $("#txtuserId").val().trim();
+        var search = "pageNo=" + pageNo + "&pageSize=" + pageSize + "&begin=" + begin + "&end=" + end + "&r=" + Math.random().toFixed(5);
+
+        if (key.length > 0) {
+            search = search + "&key=" + key.trim();
+        }
+        if (userId.length > 0) {
+            search = search + "&userId=" + userId.trim();
+        }
+        location.search = search;
+    }   
+</script>
+<div class="clearfix">
+</div>

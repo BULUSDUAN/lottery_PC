@@ -1,0 +1,271 @@
+﻿
+<div id="box_doc"  style="position: fixed; z-index: 5024; display: block; left: 50%; top: 10%; margin-top: -1000px; margin-left: -299.5px;">
+     <table>
+        <tr>
+            <td class="itd-top-left"></td>
+            <td class="itd-top-center"></td>
+            <td class="itd-top-right"></td>
+        </tr>
+        <tr>
+            <td class="itd-mid-left"></td>
+            <td class="itd-mid-center">
+                <div class="dialogContent">
+      
+    <h3 class="pop-comm-top">
+       定制跟单
+    </h3>
+    <div class="pop-comm-middle " style="text-align:center; font-weight:normal;">
+        <table width="560" border="1" bordercolor="#d3d3d3" cellpadding="3" cellspacing="1" bgcolor="#F8F8F8" style=" margin-left:10px;">
+            <tr>
+                <td width="168" height="22" align="right"  class="stys">发起人：</td>
+                <td width="137"  style="padding-left: 5px"><span style="text-align: left">
+                                                               <a id="lbApplicant" target="_blank" href="javascript:;"></a>
+                                                           </span></td>
+                <td width="103" align="right"  class="stys">彩种：</td>
+                <td width="114"  style="padding-left: 5px"><span style="text-align: left">
+                                                               <span id="lbLotType"></span>
+                                                           </span></td>
+            </tr>
+            <tr>
+                <td height="22" align="right"  class="stys">跟单类型：</td>
+                <td  colspan="3" align="left">
+                    <label>
+                        <input type="radio" name="DocType" class="check" value="0" checked="checked" />金额</label>
+                    <label>
+                        <input type="radio" name="DocType" class="check" value="1"/>百分比</label></td>
+            </tr>
+            <tr>
+                <td height="22" align="right"  class="stys">我每次认购：</td>
+                <td bgcolor="#FFFFFF" colspan="3"><span style="float: left; padding-left: 5px">
+                                                      <input name="txtBuyMoney" type="text" id="txtBuyMoney" class="number" onkeypress="if(event.keyCode&lt;48 ||event.keyCode&gt;57) event.returnValue=false;" size="5" value="1" />
+                                                      元/百分比 <span style="color: #999">(最低1元/1%)</span></span></td>
+            </tr>
+            <tr>
+
+                <td align="right"  class="stys">认购方案总数：</td>
+                <td bgcolor="#FFFFFF" colspan="3"><span style="float: left; padding-left: 5px;">
+                                                      <input name="txtLotNum" type="text" id="txtLotNum" class="number" onkeypress="if(event.keyCode&lt;48 ||event.keyCode&gt;57) event.returnValue=false;" onfocus="if(this.value=='不限')this.value='';" onblur="if(this.value==''|| parseInt(this.value)==0) this.value='不限';" style="width: 30px;" value="不限">
+                                                      <span style="vertical-align: bottom">个</span></span></td>
+            </tr>
+            <tr>
+                <td height="22" align="right"  class="stys">发单人方案金额大小：</td>
+                <td colspan="3" bgcolor="#FFFFFF" valign="bottom"><span style="float: left; padding-left: 5px; vertical-align: text-bottom;">最低&nbsp;
+                                                                      <input name="txtMinMoney" type="text" id="txtMinMoney" style="vertical-align: bottom" class="number" size="4" value="不限" onkeypress="if(event.keyCode&lt;48 ||event.keyCode&gt;57) event.returnValue=false;" onfocus="if(this.value=='不限')this.value='';" onblur="if(this.value==''|| parseInt(this.value)==0) this.value='不限';">
+                                                                      元 --
+                                                                      最高&nbsp;
+                                                                      <input name="txtMaxMoney" type="text" id="txtMaxMoney" style="vertical-align: bottom" class="number" size="3" value="不限" onkeypress="if(event.keyCode&lt;48 ||event.keyCode&gt;57) event.returnValue=false;" onfocus="if(this.value=='不限')this.value='';" onblur="if(this.value==''|| parseInt(this.value)==0) this.value='不限';">
+                                                                      元</span></td>
+            </tr>
+            <tr>
+
+                <td align="right"  class="stys">用户余额不足：</td>
+                <td bgcolor="#FFFFFF" colspan="3"><span style="float: left; padding-left: 5px;">
+                                                      <input name="txtLotNum" type="text" id="txtMinBalance" class="number" onkeypress="if(event.keyCode&lt;48 ||event.keyCode&gt;57) event.returnValue=false;" onfocus="if(this.value=='不限')this.value='';" onblur="if(this.value==''|| parseInt(this.value)==0) this.value='不限';" size="5" value="不限">
+                                                      <span style="vertical-align: bottom">元 时停止跟单</span></span></td>
+            </tr>
+            <tr>
+                <td height="22" align="right"  class="stys">方案剩余金额不足定制金额时：</td>
+                <td height="22" colspan="3" bgcolor="#FFFFFF" style=""><span style="float: left;">
+                                                                           <span id="rdListMoneyNotEns" class="jg">
+                                                                               <label>
+                                                                                   <input value="true" name="rdListMoneyNotEn" type="radio" class="check">认购</label>
+                                                                               <label>
+                                                                                   <input value="false" name="rdListMoneyNotEn" type="radio" class="check" checked="checked">不认购</label></span>
+                                                                       </span></td>
+            </tr>
+            <tr>
+                <td height="22" align="right"  class="stys" style="padding-left: 10px">是否启用：</td>
+                <td height="22" colspan="3" bgcolor="#FFFFFF" style=""><span style="float: left;">
+                                                                           <span id="Span1" class="jg">
+                                                                               <label>
+                                                                                   <input value="true" name="rdLis" type="radio" class="check" checked="checked">启 用</label>
+                                                                               <label>
+                                                                                   <input value="false" name="rdLis" type="radio" class="check">停 用</label></span>
+                                                                       </span></td>
+            </tr>
+            <tr style=" display:none;">
+                <td height="28" colspan="4" align="left" bgcolor="#FFFFFF" style="padding-left: 150px;">
+                    <input id="chkBoxNoInCome" type="checkbox" name="chkBoxNoInCome" class="check" onclick="docBox.changeStopStatus();">若连续
+                    <input name="txtNoInCome" type="text" id="txtNoInCome" value="10" disabled="disabled" class="number" onkeypress="if(event.keyCode&lt;48 ||event.keyCode&gt;57) event.returnValue=false;" style="background-color: #CCCCCC; width: 30px;">
+                    个方案均无盈利，则自动取消定制</td>
+            </tr>
+            @* <tr>
+            <td height="26" colspan="4" bgcolor="#F6F6F6" align="left" style="padding-left: 150px;">
+                <input type="button" class="btn_ok" value="确定" onclick="docBox.submitDoc();" />
+            </td>
+        </tr>*@
+        </table>
+   
+        <div class="buttonrow">
+            <input type="button" class="btn_ok dialogBtn" value="确定" onclick="docBox.submitDoc();" />
+            <input type="button" class="dialogBtn focusBtn" value="取消" onclick="docBox.closeDocBox();" />
+        </div>
+    </div>
+                </div>
+            </td>
+            <td class="itd-mid-right"></td> 
+        </tr>
+        <tr>
+            <td class="itd-bot-left"></td>
+            <td class="itd-bot-center"></td>
+            <td class="itd-bot-right"></td>
+        </tr>
+    </table>
+   
+  
+</div>
+<script type="text/javascript">
+    var docBox = {
+        //当前定制信息
+        options: {
+            userName: "",
+            userId: "",
+            gameCode: "",
+            gameName: "",
+            gameType: "",
+            docType: "0",
+            buyCount: 1,
+            allBuy: "不限",
+            minMoney: "不限",
+            maxMoney: "不限",
+            isBuySchemeMoneyNot: false,
+            isUsed: true,
+            isAutoStop: false,
+            autoStopCount: 10,
+            minBalance: "不限"
+        },
+        //默认定制信息
+        _default: {
+            userName: "",
+            userId: "",
+            gameCode: "",
+            gameName: "",
+            gameType: "",
+            docType: "0",
+            buyCount: 1,
+            allBuy: "不限",
+            minMoney: "不限",
+            maxMoney: "不限",
+            isBuySchemeMoneyNot: false,
+            isUsed: true,
+            isAutoStop: false,
+            autoStopCount: 10,
+            minBalance: "不限"
+        },
+        szcList: ["ssq", "dlt", "fc3d", "pl3"],
+        //设置定制信息
+        setDocBox: function () {
+            document.getElementById("lbApplicant").innerHTML = this.options.userName;
+            document.getElementById("lbApplicant").href = "/blog/standings/" + this.options.userId;
+            document.getElementById("lbLotType").innerHTML = this.options.gameName;
+            document.getElementsByName("DocType")[this.options.docType].checked = true;
+            document.getElementById("txtBuyMoney").value = this.options.buyCount < 0 ? "不限" : this.options.buyCount;
+            document.getElementById("txtLotNum").value = this.options.allBuy < 0 ? "不限" : this.options.allBuy;
+            document.getElementById("txtMinMoney").value = this.options.minMoney < 0 ? "不限" : this.options.minMoney;
+            document.getElementById("txtMaxMoney").value = this.options.maxMoney < 0 ? "不限" : this.options.maxMoney;
+            document.getElementById("txtMinBalance").value = this.options.minBalance < 0 ? "不限" : this.options.minBalance;
+            document.getElementsByName("rdListMoneyNotEn")[this.options.isBuySchemeMoneyNot ? 0 : 1].checked = true;
+            document.getElementsByName("rdLis")[this.options.isUsed ? 0 : 1].checked = true;
+            document.getElementById("chkBoxNoInCome").checked = this.options.isAutoStop;
+            document.getElementById("txtNoInCome").disabled = !this.options.isAutoStop;
+            document.getElementById("txtNoInCome").style.backgroundColor = this.options.isAutoStop ? "#ffffff" : "#cccccc";
+            document.getElementById("txtNoInCome").value = this.options.autoStopCount < 0 ? 10 : this.options.autoStopCount;
+        },
+        //对话框拖动对象
+        //drag: new Drag("box_doc", { Handle: "drag_box_doc", Limit: true }),
+        intance: new LightBox("box_doc"),
+        //初始化定制对话框
+        init: function (options) {
+            $.extend(this.options, options);
+            if (this.szcList._indexOf(this.options.gameCode.toLowerCase()) >= 0) {
+                this.options.gameType = "";
+            }
+            this.setDocBox();
+            this.showLogin();
+        },
+        //关闭定制对话框
+        closeDocBox: function () {
+            $.extend(this.options, this._default);
+            this.intance.Close();
+            this.setDocBox();
+        },
+        //切换是否自动取消定制状态
+        changeStopStatus: function () {
+            var isCheck = document.getElementById("chkBoxNoInCome").checked;
+            document.getElementById("txtNoInCome").disabled = !isCheck;
+            document.getElementById("txtNoInCome").style.backgroundColor = isCheck ? "#ffffff" : "#cccccc";
+            this.options.isAutoStop = isCheck;
+        },
+        //定制前判断是否登录
+        showLogin: function () {
+            //投注前判断登录状态
+            user.isLogin(function (isLogin) {
+                if (!isLogin) {
+                    user.LoginCallBack = function () { docBox.intance.Show(); };
+                    loginDialog.Show();
+                    $("#userName").focus();
+                    return false;
+                }
+                else {
+                    docBox.intance.Show();
+                }
+            })
+        },
+        //提交定制
+        submitDoc: function () {
+            //跟单类型
+            var docTypes = document.getElementsByName("DocType");
+            for (var i = 0; i < docTypes.length; i++) {
+                if (docTypes[i].checked) {
+                    this.options.docType = docTypes[i].value;
+                }
+            }
+
+            //每次认购数量
+            this.options.buyCount = document.getElementById("txtBuyMoney").value;
+            //认购方案总数
+            this.options.allBuy = document.getElementById("txtLotNum").value;
+            //方案金额限制
+            this.options.minMoney = document.getElementById("txtMinMoney").value;
+            this.options.maxMoney = document.getElementById("txtMaxMoney").value;
+            //余额不足停止跟单
+            this.options.minBalance = document.getElementById("txtMinBalance").value;
+
+            //方案余额不足时是否认购
+            var notS = document.getElementsByName("rdListMoneyNotEn");
+            for (var i = 0; i < notS.length; i++) {
+                if (notS[i].checked) {
+                    this.options.isBuySchemeMoneyNot = notS[i].value;
+                }
+            }
+
+            //是否停用
+            var useds = document.getElementsByName("rdLis");
+            for (var i = 0; i < useds.length; i++) {
+                if (useds[i].checked) {
+                    this.options.isUsed = useds[i].value;
+                }
+            }
+
+            //方案无盈利自动取消定制
+            this.options.autoStopCount = document.getElementById("txtNoInCome").value;
+
+            var tagUrl = "/doc_setup";
+            $.post(tagUrl, this.options, function(result) {
+                if (result.IsSuccess) {
+                    alertTip("操作成功", "ok");
+                    $("#boxAlertOkButton").click(function() {
+                        alertClose();
+                        location.href = location.href;
+                    });
+                    //setTimeout(function () { location.href = location.href; }, 500)
+                } else {
+                    alertTip(result.Message, "err");
+                    return false;
+                }
+            });
+
+            this.closeDocBox();
+        }
+    }
+</script>

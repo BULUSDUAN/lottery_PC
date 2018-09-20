@@ -1,0 +1,533 @@
+﻿@{
+    Layout = "~/Views/lotteryTrend/_Layout.cshtml";
+    var pageSize = Request["pageSize"];
+    if (pageSize != "" && pageSize != null)
+    {
+        ViewBag.Title = "【山东11选5】山东十一选五012路比走势图近" + pageSize + "期" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "山东十一选五012路比走势图近" + pageSize + "期";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "山东十一选五012路比走势图近" + pageSize + "期,查看更多请登录" + SiteString.getHZSiteName(Request) + "彩票网.";
+    }
+    else
+    {
+        ViewBag.Title = "【山东11选5】山东十一选五012路比走势图-" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "山东十一选五012路比走势图";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "彩票网提供最新的【山东11选5】012路比走势图,其中包括所有号码的012路比例分配走势,让彩民朋友更直观的分析【山东11选5】012路比走势图.";
+    }
+    var lzzs = ViewBag.DataList as LotteryData.Core.YDJ11_012LZZS_InfoCollection;
+    var a = 0;  
+}
+@{Html.RenderAction("ThendLink", "lotteryTrend");}
+<div id="container">
+    <div class="cont_box">
+        <table width="100%" cellspacing="1" cellpadding="0" border="0" align="center" class="table_box"
+            style="width: 1002px;" id="chartsTable">
+            <tbody>
+                <tr>
+                    <td align="center" class="tab_top" colspan="22">
+                        标注形式选择：
+                        <input type="checkbox" checked="checked" id="c_yl">
+                        <label for="c_yl">
+                            遗漏</label>
+                        <input type="checkbox" checked="checked" id="has_line">
+                        <label for="has_line">
+                            折线</label>
+                        <input type="checkbox" checked="checked" id="help_line">
+                        <label for="help_line">
+                            分隔线</label>
+                        <input type="checkbox" id="yl_zhu">
+                        <label for="yl_zhu">
+                            遗漏分层</label>
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td width="83" class="line_r">
+                        期号
+                    </td>
+                    <td colspan="5" class="line_r">
+                        出号
+                    </td>
+                    <td width="46" class="head">
+                        3:2:0
+                    </td>
+                    <td width="46" class="head">
+                        3:1:1
+                    </td>
+                    <td width="46" class="head">
+                        3:0:2
+                    </td>
+                    <td width="46" class="head">
+                        2:2:1
+                    </td>
+                    <td width="46" class="head">
+                        2:1:2
+                    </td>
+                    <td width="46" class="head">
+                        2:3:0
+                    </td>
+                    <td width="46" class="head">
+                        2:0:3
+                    </td>
+                    <td width="46" class="head">
+                        1:4:0
+                    </td>
+                    <td width="46" class="head">
+                        1:3:1
+                    </td>
+                    <td width="46" class="head">
+                        1:2:2
+                    </td>
+                    <td width="46" class="head">
+                        1:1:3
+                    </td>
+                    <td width="46" class="head">
+                        1:0:4
+                    </td>
+                    <td width="46" class="head">
+                        0:4:1
+                    </td>
+                    <td width="46" class="head">
+                        0:3:2
+                    </td>
+                    <td width="46" class="head">
+                        0:2:3
+                    </td>
+                    <td width="46" class="head">
+                        0:1:4
+                    </td>
+                </tr>
+            </tbody>
+            <tbody id="tdata" style="font-size: 12px; font-family: '宋体',Tahoma,Consolas,Arial,Simsun;">
+                @foreach (var item in lzzs)
+                {
+                    a++;
+                    if (a % 5 == 0)
+                    {
+                    <tr class="tdbck">
+                        <td colspan="22">
+                        </td>
+                    </tr>
+                    }
+                    <tr>
+                        <td align="center" class="line_r">
+                            @item.IssuseNumber
+                        </td>
+                        <td class="hot12">
+                            @item.WinNumber.Split(',')[0]
+                        </td>
+                        <td class="hot12">
+                            @item.WinNumber.Split(',')[1]
+                        </td>
+                        <td class="hot12">
+                            @item.WinNumber.Split(',')[2]
+                        </td>
+                        <td class="hot12">
+                            @item.WinNumber.Split(',')[3]
+                        </td>
+                        <td class="hot12 line_r">
+                            @item.WinNumber.Split(',')[4]
+                        </td>
+                        <td class="@(item.C_320 == 0 ? "cbg big" : "y101")">
+                            @(item.C_320 == 0 ? "3:2:0" : item.C_320.ToString())
+                        </td>
+                        <td class="@(item.C_311 == 0 ? "cbg big" : "y101")">
+                            @(item.C_311 == 0 ? "3:1:1" : item.C_311.ToString())
+                        </td>
+                        <td class="@(item.C_302 == 0 ? "cbg big" : "y101")">
+                            @(item.C_302 == 0 ? "3:0:2" : item.C_302.ToString())
+                        </td>
+                        <td class="@(item.C_221 == 0 ? "cbg big" : "y101")">
+                            @(item.C_221 == 0 ? "2:2:1" : item.C_221.ToString())
+                        </td>
+                        <td class="@(item.C_212 == 0 ? "cbg big" : "y101")">
+                            @(item.C_212 == 0 ? "2:1:2" : item.C_212.ToString())
+                        </td>
+                        <td class="@(item.C_230 == 0 ? "cbg big" : "y101")">
+                            @(item.C_230 == 0 ? "2:3:0" : item.C_230.ToString())
+                        </td>
+                        <td class="@(item.C_203 == 0 ? "cbg big" : "y101")">
+                            @(item.C_203 == 0 ? "2:0:3" : item.C_203.ToString())
+                        </td>
+                        <td class="@(item.C_140 == 0 ? "cbg big" : "y101")">
+                            @(item.C_140 == 0 ? "1:4:0" : item.C_140.ToString())
+                        </td>
+                        <td class="@(item.C_131 == 0 ? "cbg big" : "y101")">
+                            @(item.C_131 == 0 ? "1:3:1" : item.C_131.ToString())
+                        </td>
+                        <td class="@(item.C_122 == 0 ? "cbg big" : "y101")">
+                            @(item.C_122 == 0 ? "1:2:2" : item.C_122.ToString())
+                        </td>
+                        <td class="@(item.C_113 == 0 ? "cbg big" : "y101")">
+                            @(item.C_113 == 0 ? "1:1:3" : item.C_113.ToString())
+                        </td>
+                        <td class="@(item.C_104 == 0 ? "cbg big" : "y101")">
+                            @(item.C_104 == 0 ? "1:0:4" : item.C_104.ToString())
+                        </td>
+                        <td class="@(item.C_041 == 0 ? "cbg big" : "y101")">
+                            @(item.C_041 == 0 ? "0:4:1" : item.C_041.ToString())
+                        </td>
+                        <td class="@(item.C_032 == 0 ? "cbg big" : "y101")">
+                            @(item.C_032 == 0 ? "0:3:2" : item.C_032.ToString())
+                        </td>
+                        <td class="@(item.C_023 == 0 ? "cbg big" : "y101")">
+                            @(item.C_023 == 0 ? "0:2:3" : item.C_023.ToString())
+                        </td>
+                        <td class="@(item.C_014 == 0 ? "cbg big" : "y101")">
+                            @(item.C_014 == 0 ? "0:1:4" : item.C_014.ToString())
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tbody>
+                <tr>
+                    <td align="center" class="bdtop line_r">
+                        出现次数
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop line_r">
+                    </td>
+                    <td class="bdtop">
+                        @(lzzs.Count(p => p.C_320 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(lzzs.Count(p => p.C_311 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(lzzs.Count(p => p.C_302 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(lzzs.Count(p => p.C_221 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(lzzs.Count(p => p.C_212 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(lzzs.Count(p => p.C_230 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(lzzs.Count(p => p.C_203 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(lzzs.Count(p => p.C_140 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(lzzs.Count(p => p.C_131 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(lzzs.Count(p => p.C_122 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(lzzs.Count(p => p.C_113 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(lzzs.Count(p => p.C_104 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(lzzs.Count(p => p.C_041 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(lzzs.Count(p => p.C_032 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(lzzs.Count(p => p.C_023 == 0))
+                    </td>
+                    <td class="bdtop line_r">
+                        @(lzzs.Count(p => p.C_014 == 0))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        平均遗漏
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                        @(lzzs.Sum(p => p.C_320) / lzzs.Count)
+                    </td>
+                    <td>
+                        @(lzzs.Sum(p => p.C_311) / lzzs.Count)
+                    </td>
+                    <td class="">
+                        @(lzzs.Sum(p => p.C_302) / lzzs.Count)
+                    </td>
+                    <td>
+                        @(lzzs.Sum(p => p.C_221) / lzzs.Count)
+                    </td>
+                    <td class="">
+                        @(lzzs.Sum(p => p.C_212) / lzzs.Count)
+                    </td>
+                    <td>
+                        @(lzzs.Sum(p => p.C_230) / lzzs.Count)
+                    </td>
+                    <td class="">
+                        @(lzzs.Sum(p => p.C_203) / lzzs.Count)
+                    </td>
+                    <td class="">
+                        @(lzzs.Sum(p => p.C_140) / lzzs.Count)
+                    </td>
+                    <td class="">
+                        @(lzzs.Sum(p => p.C_131) / lzzs.Count)
+                    </td>
+                    <td class="">
+                        @(lzzs.Sum(p => p.C_122) / lzzs.Count)
+                    </td>
+                    <td class="">
+                        @(lzzs.Sum(p => p.C_113) / lzzs.Count)
+                    </td>
+                    <td>
+                        @(lzzs.Sum(p => p.C_104) / lzzs.Count)
+                    </td>
+                    <td class="">
+                        @(lzzs.Sum(p => p.C_041) / lzzs.Count)
+                    </td>
+                    <td>
+                        @(lzzs.Sum(p => p.C_032) / lzzs.Count)
+                    </td>
+                    <td class="">
+                        @(lzzs.Sum(p => p.C_023) / lzzs.Count)
+                    </td>
+                    <td class="line_r">
+                        @(lzzs.Sum(p => p.C_014) / lzzs.Count)
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        最大遗漏
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td>
+                        @(lzzs.Max(p => p.C_320))
+                    </td>
+                    <td>
+                        @(lzzs.Max(p => p.C_311))
+                    </td>
+                    <td>
+                        @(lzzs.Max(p => p.C_302))
+                    </td>
+                    <td>
+                        @(lzzs.Max(p => p.C_221))
+                    </td>
+                    <td>
+                        @(lzzs.Max(p => p.C_212))
+                    </td>
+                    <td>
+                        @(lzzs.Max(p => p.C_230))
+                    </td>
+                    <td class="">
+                        @(lzzs.Max(p => p.C_203))
+                    </td>
+                    <td>
+                        @(lzzs.Max(p => p.C_140))
+                    </td>
+                    <td class="">
+                        @(lzzs.Max(p => p.C_131))
+                    </td>
+                    <td>
+                        @(lzzs.Max(p => p.C_122))
+                    </td>
+                    <td class="">
+                        @(lzzs.Max(p => p.C_113))
+                    </td>
+                    <td>
+                        @(lzzs.Max(p => p.C_104))
+                    </td>
+                    <td>
+                        @(lzzs.Max(p => p.C_041))
+                    </td>
+                    <td class="">
+                        @(lzzs.Max(p => p.C_032))
+                    </td>
+                    <td>
+                        @(lzzs.Max(p => p.C_023))
+                    </td>
+                    <td class="line_r">
+                        @(lzzs.Max(p => p.C_014))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="line_r">
+                        当前遗漏
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="line_r">
+                    </td>
+                    <td valign="bottom">
+                        @(lzzs[lzzs.Count - 1].C_320)<br>
+                        <img width="8px" height="@(lzzs[lzzs.Count - 1].C_320)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(lzzs[lzzs.Count - 1].C_311)<br>
+                        <img width="8px" height="@(lzzs[lzzs.Count - 1].C_311)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(lzzs[lzzs.Count - 1].C_302)<br>
+                        <img width="8px" height="@(lzzs[lzzs.Count - 1].C_302)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(lzzs[lzzs.Count - 1].C_221)<br>
+                        <img width="8px" height="@(lzzs[lzzs.Count - 1].C_221)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(lzzs[lzzs.Count - 1].C_212)<br>
+                        <img width="8px" height="@(lzzs[lzzs.Count - 1].C_212)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(lzzs[lzzs.Count - 1].C_230)<br>
+                        <img width="8px" height="@(lzzs[lzzs.Count - 1].C_230)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(lzzs[lzzs.Count - 1].C_203)<br>
+                        <img width="8px" height="@(lzzs[lzzs.Count - 1].C_203)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(lzzs[lzzs.Count - 1].C_140)<br>
+                        <img width="8px" height="@(lzzs[lzzs.Count - 1].C_140)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(lzzs[lzzs.Count - 1].C_131)<br>
+                        <img width="8px" height="@(lzzs[lzzs.Count - 1].C_131)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(lzzs[lzzs.Count - 1].C_122)<br>
+                        <img width="8px" height="@(lzzs[lzzs.Count - 1].C_122)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(lzzs[lzzs.Count - 1].C_113)<br>
+                        <img width="8px" height="@(lzzs[lzzs.Count - 1].C_113)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(lzzs[lzzs.Count - 1].C_104)<br>
+                        <img width="8px" height="@(lzzs[lzzs.Count - 1].C_104)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(lzzs[lzzs.Count - 1].C_041)<br>
+                        <img width="8px" height="@(lzzs[lzzs.Count - 1].C_041)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(lzzs[lzzs.Count - 1].C_032)<br>
+                        <img width="8px" height="@(lzzs[lzzs.Count - 1].C_032)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom">
+                        @(lzzs[lzzs.Count - 1].C_023)<br>
+                        <img width="8px" height="@(lzzs[lzzs.Count - 1].C_023)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                    <td valign="bottom" class="line_r">
+                        @(lzzs[lzzs.Count - 1].C_014)<br>
+                        <img width="8px" height="@(lzzs[lzzs.Count - 1].C_014)px" src="@ViewHelpers.img("/trend/zzt02.gif")">
+                    </td>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr class="tabbg weight">
+                    <td width="83" class="line_r">
+                        期号
+                    </td>
+                    <td colspan="5" class="line_r">
+                        出号
+                    </td>
+                    <td width="46" class="head">
+                        3:2:0
+                    </td>
+                    <td width="46" class="head">
+                        3:1:1
+                    </td>
+                    <td width="46" class="head">
+                        3:0:2
+                    </td>
+                    <td width="46" class="head">
+                        2:2:1
+                    </td>
+                    <td width="46" class="head">
+                        2:1:2
+                    </td>
+                    <td width="46" class="head">
+                        2:3:0
+                    </td>
+                    <td width="46" class="head">
+                        2:0:3
+                    </td>
+                    <td width="46" class="head">
+                        1:4:0
+                    </td>
+                    <td width="46" class="head">
+                        1:3:1
+                    </td>
+                    <td width="46" class="head">
+                        1:2:2
+                    </td>
+                    <td width="46" class="head">
+                        1:1:3
+                    </td>
+                    <td width="46" class="head">
+                        1:0:4
+                    </td>
+                    <td width="46" class="head">
+                        0:4:1
+                    </td>
+                    <td width="46" class="head">
+                        0:3:2
+                    </td>
+                    <td width="46" class="head">
+                        0:2:3
+                    </td>
+                    <td width="46" class="head">
+                        0:1:4
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $(function () {
+
+        var allLines = new Array();
+        allLines.push({ line: $(".big"), color: "red" });
+
+
+
+        var line = new XTLine();
+        for (i = 0; i < allLines.length; i++) {
+            var l = allLines[i];
+
+            line.color = l.color;
+            line.arrayBalls = l.line;
+            line.showrect();
+        }
+
+
+        $("#has_line").click(function () {
+            line.display(this.checked);
+        })
+    })
+</script>

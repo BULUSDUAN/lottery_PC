@@ -1,0 +1,617 @@
+﻿@{
+    Layout = "~/Views/lotteryTrend/_Layout.cshtml";
+    var pageSize = Request["pageSize"];
+    if (pageSize != "" && pageSize != null)
+    {
+        ViewBag.Title = "大乐透和值走势图近" + pageSize + "期" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "大乐透和值走势图近" + pageSize + "期";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "大乐透和值走势图近" + pageSize + "期,查看更多大乐透和值走势图请登录" + SiteString.getHZSiteName(Request) + "彩票网.";
+    }
+    else
+    {
+        ViewBag.Title = "大乐透和值走势图-大乐透走势图分析-" + SiteString.getHZSiteName(Request);
+        ViewBag.Keywords = "大乐透和值走势图,大乐透走势图分析";
+        ViewBag.Description = SiteString.getHZSiteName(Request) + "彩票网为您提供大乐透走势图2-大乐透和值走势图,主要包括大乐透前区号码的和值分布连线图和和尾分布连线图,帮助彩民朋友更好的分析大乐透和值走势.";
+    }
+    var DataList = ViewBag.DataList as LotteryData.Core.DLT_HeZhi_InfoCollection;
+    var a = 0;  
+}
+@{Html.RenderAction("ThendLink", "lotteryTrend");}
+<div id="container">
+    <div class="cont_box" style="width: 1003px; overflow-x: scroll;">
+        <table width="100%" style="width: 1003px;" cellspacing="1" cellpadding="0" border="0"
+            id="chartsTable" class="table_box">
+            <tbody>
+                <tr>
+                    <td align="center" class="tab_top" colspan="28">
+                        标注形式选择：
+                        <input type="checkbox" checked="checked" id="c_yl">
+                        <label for="c_yl">
+                            遗漏</label>
+                        <input type="checkbox" checked="checked" id="has_line">
+                        <label for="has_line">
+                            折线</label>
+                        <input type="checkbox" checked="checked" id="help_line">
+                        <label for="help_line">
+                            分隔线</label>
+                        <input type="checkbox" id="yl_zhu">
+                        <label for="yl_zhu">
+                            遗漏分层</label>
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td width="75" align="center" rowspan="2">
+                        期号
+                    </td>
+                    <td class="tred line_r" colspan="5" rowspan="2">
+                        前区
+                    </td>
+                    <td colspan="12">
+                        和值分布
+                    </td>
+                    <td colspan="11" class="line_r">
+                        和尾分布
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td width="40">
+                        和值
+                    </td>
+                    <td>
+                        15-49
+                    </td>
+                    <td>
+                        50-59
+                    </td>
+                    <td>
+                        60-69
+                    </td>
+                    <td>
+                        70-79
+                    </td>
+                    <td>
+                        80-89
+                    </td>
+                    <td>
+                        90-99
+                    </td>
+                    <td>
+                        100-109
+                    </td>
+                    <td>
+                        110-119
+                    </td>
+                    <td>
+                        120-129
+                    </td>
+                    <td>
+                        130-165
+                    </td>
+                    <td width="40">
+                        和尾
+                    </td>
+                    <td>
+                        0
+                    </td>
+                    <td>
+                        1
+                    </td>
+                    <td>
+                        2
+                    </td>
+                    <td>
+                        3
+                    </td>
+                    <td>
+                        4
+                    </td>
+                    <td>
+                        5
+                    </td>
+                    <td>
+                        6
+                    </td>
+                    <td>
+                        7
+                    </td>
+                    <td>
+                        8
+                    </td>
+                    <td>
+                        9
+                    </td>
+                </tr>
+            </tbody>
+            <tbody id="tdata">
+                @foreach (var item in DataList)
+                {
+                    a++;
+                    if (a % 5 == 0)
+                    {
+                    <tr class="tdbck">
+                        <td colspan="28">
+                        </td>
+                    </tr>
+                    }
+                    <tr>
+                        <td align="center">
+                            @item.IssuseNumber
+                        </td>
+                        <td align="center" class="hot08">
+                            @item.QianQu.Substring(0, 2)
+                        </td>
+                        <td align="center" class="hot08">
+                            @item.QianQu.Substring(3, 2)
+                        </td>
+                        <td align="center" class="hot08">
+                            @item.QianQu.Substring(6, 2)
+                        </td>
+                        <td align="center" class="hot08">
+                            @item.QianQu.Substring(9, 2)
+                        </td>
+                        <td align="center" class="hot08 line_r">
+                            @item.QianQu.Substring(12, 2)
+                        </td>
+                        <td align="center" class="gray1">
+                            @item.HeZhi
+                        </td>
+                        <td class="@(item.HZ_15_49 == 0 ? "big" : "y101")">
+                            @(item.HZ_15_49 == 0 ? item.HeZhi : item.HZ_15_49)
+                        </td>
+                        <td class="@(item.HZ_50_59 == 0 ? "big" : "y101")">
+                            @(item.HZ_50_59 == 0 ? item.HeZhi : item.HZ_50_59)
+                        </td>
+                        <td class="@(item.HZ_60_69 == 0 ? "big" : "y101")">
+                            @(item.HZ_60_69 == 0 ? item.HeZhi : item.HZ_60_69)
+                        </td>
+                        <td class="@(item.HZ_70_79 == 0 ? "big" : "y101")">
+                            @(item.HZ_70_79 == 0 ? item.HeZhi : item.HZ_70_79)
+                        </td>
+                        <td class="@(item.HZ_80_89 == 0 ? "big" : "y101")">
+                            @(item.HZ_80_89 == 0 ? item.HeZhi : item.HZ_80_89)
+                        </td>
+                        <td class="@(item.HZ_90_99 == 0 ? "big" : "y101")">
+                            @(item.HZ_90_99 == 0 ? item.HeZhi : item.HZ_90_99)
+                        </td>
+                        <td class="@(item.HZ_100_109 == 0 ? "big" : "y101")">
+                            @(item.HZ_100_109 == 0 ? item.HeZhi : item.HZ_100_109)
+                        </td>
+                        <td class="@(item.HZ_110_119 == 0 ? "big" : "y101")">
+                            @(item.HZ_110_119 == 0 ? item.HeZhi : item.HZ_110_119)
+                        </td>
+                        <td class="@(item.HZ_120_129 == 0 ? "big" : "y101")">
+                            @(item.HZ_120_129 == 0 ? item.HeZhi : item.HZ_120_129)
+                        </td>
+                        <td class="@(item.HZ_130_165 == 0 ? "big" : "y101")">
+                            @(item.HZ_130_165 == 0 ? item.HeZhi : item.HZ_130_165)
+                        </td>
+                        <td class="small line_r" align="center">
+                            @item.HeWei
+                        </td>
+                        <td class="@(item.HW_0 == 0 ? "cbg tbg11" : "y101")">
+                            @(item.HW_0 == 0 ? item.HeWei : item.HW_0)
+                        </td>
+                        <td class="@(item.HW_1 == 0 ? "cbg tbg1" : "y101")">
+                            @(item.HW_1 == 0 ? item.HeWei : item.HW_1)
+                        </td>
+                        <td class="@(item.HW_2 == 0 ? "cbg tbg1" : "y101")">
+                            @(item.HW_2 == 0 ? item.HeWei : item.HW_2)
+                        </td>
+                        <td class="@(item.HW_3 == 0 ? "cbg tbg1" : "y101")">
+                            @(item.HW_3 == 0 ? item.HeWei : item.HW_3)
+                        </td>
+                        <td class="@(item.HW_4 == 0 ? "cbg tbg1" : "y101")">
+                            @(item.HW_4 == 0 ? item.HeWei : item.HW_4)
+                        </td>
+                        <td class="@(item.HW_5 == 0 ? "cbg tbg1" : "y101")">
+                            @(item.HW_5 == 0 ? item.HeWei : item.HW_5)
+                        </td>
+                        <td class="@(item.HW_6 == 0 ? "cbg tbg1" : "y101")">
+                            @(item.HW_6 == 0 ? item.HeWei : item.HW_6)
+                        </td>
+                        <td class="@(item.HW_7 == 0 ? "cbg tbg1" : "y101")">
+                            @(item.HW_7 == 0 ? item.HeWei : item.HW_7)
+                        </td>
+                        <td class="@(item.HW_8 == 0 ? "cbg tbg1" : "y101")">
+                            @(item.HW_8 == 0 ? item.HeWei : item.HW_8)
+                        </td>
+                        <td class="@(item.HW_9 == 0 ? "cbg tbg1" : "y101")">
+                            @(item.HW_9 == 0 ? item.HeWei : item.HW_9)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tbody id="calculate">
+                <tr>
+                    <td align="center" colspan="6" class="bdtop line_r">
+                        出现次数
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.HZ_15_49 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.HZ_50_59 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.HZ_60_69 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.HZ_70_79 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.HZ_80_89 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.HZ_90_99 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.HZ_100_109 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.HZ_110_119 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.HZ_120_129 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.HZ_130_165 == 0))
+                    </td>
+                    <td class="bdtop">
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.HW_0 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.HW_1 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.HW_2 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.HW_3 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.HW_4 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.HW_5 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.HW_6 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.HW_7 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.HW_8 == 0))
+                    </td>
+                    <td class="bdtop">
+                        @(DataList.Count(p => p.HW_9 == 0))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" colspan="6" class="line_r">
+                        平均遗漏
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                        @(DataList.Sum(p => p.HZ_15_49) / DataList.Count)
+                    </td>
+                    <td>
+                        @(DataList.Sum(p => p.HZ_50_59) / DataList.Count)
+                    </td>
+                    <td>
+                        @(DataList.Sum(p => p.HZ_60_69) / DataList.Count)
+                    </td>
+                    <td>
+                        @(DataList.Sum(p => p.HZ_70_79) / DataList.Count)
+                    </td>
+                    <td>
+                        @(DataList.Sum(p => p.HZ_80_89) / DataList.Count)
+                    </td>
+                    <td>
+                        @(DataList.Sum(p => p.HZ_90_99) / DataList.Count)
+                    </td>
+                    <td>
+                        @(DataList.Sum(p => p.HZ_100_109) / DataList.Count)
+                    </td>
+                    <td>
+                        @(DataList.Sum(p => p.HZ_110_119) / DataList.Count)
+                    </td>
+                    <td>
+                        @(DataList.Sum(p => p.HZ_120_129) / DataList.Count)
+                    </td>
+                    <td>
+                        @(DataList.Sum(p => p.HZ_130_165) / DataList.Count)
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                        @(DataList.Sum(p => p.HW_0) / DataList.Count)
+                    </td>
+                    <td>
+                        @(DataList.Sum(p => p.HW_1) / DataList.Count)
+                    </td>
+                    <td>
+                        @(DataList.Sum(p => p.HW_2) / DataList.Count)
+                    </td>
+                    <td>
+                        @(DataList.Sum(p => p.HW_3) / DataList.Count)
+                    </td>
+                    <td>
+                        @(DataList.Sum(p => p.HW_4) / DataList.Count)
+                    </td>
+                    <td>
+                        @(DataList.Sum(p => p.HW_5) / DataList.Count)
+                    </td>
+                    <td>
+                        @(DataList.Sum(p => p.HW_6) / DataList.Count)
+                    </td>
+                    <td>
+                        @(DataList.Sum(p => p.HW_7) / DataList.Count)
+                    </td>
+                    <td>
+                        @(DataList.Sum(p => p.HW_8) / DataList.Count)
+                    </td>
+                    <td>
+                        @(DataList.Sum(p => p.HW_9) / DataList.Count)
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" colspan="6" class="line_r">
+                        最大遗漏
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                        @(DataList.Max(p => p.HZ_15_49))
+                    </td>
+                    <td>
+                        @(DataList.Max(p => p.HZ_50_59))
+                    </td>
+                    <td>
+                        @(DataList.Max(p => p.HZ_60_69))
+                    </td>
+                    <td>
+                        @(DataList.Max(p => p.HZ_70_79))
+                    </td>
+                    <td>
+                        @(DataList.Max(p => p.HZ_80_89))
+                    </td>
+                    <td>
+                        @(DataList.Max(p => p.HZ_90_99))
+                    </td>
+                    <td>
+                        @(DataList.Max(p => p.HZ_100_109))
+                    </td>
+                    <td>
+                        @(DataList.Max(p => p.HZ_110_119))
+                    </td>
+                    <td>
+                        @(DataList.Max(p => p.HZ_120_129))
+                    </td>
+                    <td>
+                        @(DataList.Max(p => p.HZ_130_165))
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                        @(DataList.Max(p => p.HW_0))
+                    </td>
+                    <td>
+                        @(DataList.Max(p => p.HW_1))
+                    </td>
+                    <td>
+                        @(DataList.Max(p => p.HW_2))
+                    </td>
+                    <td>
+                        @(DataList.Max(p => p.HW_3))
+                    </td>
+                    <td>
+                        @(DataList.Max(p => p.HW_4))
+                    </td>
+                    <td>
+                        @(DataList.Max(p => p.HW_5))
+                    </td>
+                    <td>
+                        @(DataList.Max(p => p.HW_6))
+                    </td>
+                    <td>
+                        @(DataList.Max(p => p.HW_7))
+                    </td>
+                    <td>
+                        @(DataList.Max(p => p.HW_8))
+                    </td>
+                    <td>
+                        @(DataList.Max(p => p.HW_9))
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" colspan="6" class="line_r">
+                        当前遗漏
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                        @(DataList[DataList.Count - 1].HZ_15_49)
+                    </td>
+                    <td>
+                        @(DataList[DataList.Count - 1].HZ_50_59)
+                    </td>
+                    <td>
+                        @(DataList[DataList.Count - 1].HZ_60_69)
+                    </td>
+                    <td>
+                        @(DataList[DataList.Count - 1].HZ_70_79)
+                    </td>
+                    <td>
+                        @(DataList[DataList.Count - 1].HZ_80_89)
+                    </td>
+                    <td>
+                        @(DataList[DataList.Count - 1].HZ_90_99)
+                    </td>
+                    <td>
+                        @(DataList[DataList.Count - 1].HZ_100_109)
+                    </td>
+                    <td>
+                        @(DataList[DataList.Count - 1].HZ_110_119)
+                    </td>
+                    <td>
+                        @(DataList[DataList.Count - 1].HZ_120_129)
+                    </td>
+                    <td>
+                        @(DataList[DataList.Count - 1].HZ_130_165)
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                        @(DataList[DataList.Count - 1].HW_0)
+                    </td>
+                    <td>
+                        @(DataList[DataList.Count - 1].HW_1)
+                    </td>
+                    <td>
+                        @(DataList[DataList.Count - 1].HW_2)
+                    </td>
+                    <td>
+                        @(DataList[DataList.Count - 1].HW_3)
+                    </td>
+                    <td>
+                        @(DataList[DataList.Count - 1].HW_4)
+                    </td>
+                    <td>
+                        @(DataList[DataList.Count - 1].HW_5)
+                    </td>
+                    <td>
+                        @(DataList[DataList.Count - 1].HW_6)
+                    </td>
+                    <td>
+                        @(DataList[DataList.Count - 1].HW_7)
+                    </td>
+                    <td>
+                        @(DataList[DataList.Count - 1].HW_8)
+                    </td>
+                    <td>
+                        @(DataList[DataList.Count - 1].HW_9)
+                    </td>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr class="tabbg weight">
+                    <td width="75" align="center" rowspan="2">
+                        &nbsp;
+                    </td>
+                    <td class="tred" colspan="5" rowspan="2">
+                        前区
+                    </td>
+                    <td width="40">
+                        和值
+                    </td>
+                    <td>
+                        15-49
+                    </td>
+                    <td>
+                        50-59
+                    </td>
+                    <td>
+                        60-69
+                    </td>
+                    <td>
+                        70-79
+                    </td>
+                    <td>
+                        80-89
+                    </td>
+                    <td>
+                        90-99
+                    </td>
+                    <td>
+                        100-109
+                    </td>
+                    <td>
+                        110-119
+                    </td>
+                    <td>
+                        120-129
+                    </td>
+                    <td>
+                        130-165
+                    </td>
+                    <td width="40">
+                        和尾
+                    </td>
+                    <td width="18">
+                        0
+                    </td>
+                    <td width="18">
+                        1
+                    </td>
+                    <td width="18">
+                        2
+                    </td>
+                    <td width="18">
+                        3
+                    </td>
+                    <td width="18">
+                        4
+                    </td>
+                    <td width="18">
+                        5
+                    </td>
+                    <td width="18">
+                        6
+                    </td>
+                    <td width="18">
+                        7
+                    </td>
+                    <td width="18">
+                        8
+                    </td>
+                    <td width="18">
+                        9
+                    </td>
+                </tr>
+                <tr class="tabbg weight">
+                    <td colspan="12">
+                        和值分布
+                    </td>
+                    <td colspan="11">
+                        和尾分布
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $(function () {
+
+        var allLines = new Array();
+        allLines.push({ line: $(".small"), color: "#CE7B00" });
+        allLines.push({ line: $(".big"), color: "#CE7B00" });
+        allLines.push({ line: $(".tbg1"), color: "#CE7B00" });
+
+        allLines.push({ line: $(".orange1"), color: "#FF590B" });
+        allLines.push({ line: $(".green1"), color: "#004F00" });
+        allLines.push({ line: $(".purple1"), color: "#0000FE" });
+        allLines.push({ line: $(".purple2"), color: "#36006F" });
+        allLines.push({ line: $(".gray1"), color: "#FF590B" });
+
+        var line = new XTLine();
+        for (i = 0; i < allLines.length; i++) {
+            var l = allLines[i];
+
+            line.color = l.color;
+            line.arrayBalls = l.line;
+            line.showrect();
+        }
+
+
+        $("#has_line").click(function () {
+            line.display(this.checked);
+        })
+    })
+</script>

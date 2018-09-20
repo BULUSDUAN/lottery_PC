@@ -1,0 +1,28 @@
+@{
+
+    ViewBag.Title = "QQ登录 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
+    ViewBag.keywords = "QQ登录, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
+    
+    ViewBag.Here = "QQ登录账号绑定";
+}
+@{if (ViewBag.IsSuccess)
+  {
+      Response.Redirect("/user/register2");
+  }
+  else
+  {
+    <div class="points-success" style="background: #FCEFE9;">
+        <i class="fail"></i>
+        <div class="res-content">
+            <h3>QQ登录账号绑定失败</h3>
+            <p>
+                @ViewBag.Message
+            </p>
+            <span class="morelink">您可能需要：<a href="/user/qqlogin">重新登录</a>
+                | <a href="@SiteString.root(Request)">网站首页</a> </span>
+        </div>
+        <div class="clear">
+        </div>
+    </div>  
+  }}
+
