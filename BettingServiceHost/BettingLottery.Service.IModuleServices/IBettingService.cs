@@ -23,7 +23,7 @@ using EntityModel.CoreModel;
 namespace BettingLottery.Service.IModuleServices
 {
     [ServiceBundle("api/{Service}")]
-    public interface IBettingService: IServiceKey
+    public interface IBettingService : IServiceKey
     {
         [Service(Date = "2018-7-15", Director = "lidi", Name = "北单，竞彩投注")]
         //
@@ -67,10 +67,10 @@ namespace BettingLottery.Service.IModuleServices
         Task<CommonActionResult> ExistTogetherFollower(long followerId, string userid);
 
 
-        [Service(Date = "2018-7-15", Director = "lidi", Name = "宝单分享-创建宝单")] 
+        [Service(Date = "2018-7-15", Director = "lidi", Name = "宝单分享-创建宝单")]
         Task<CommonActionResult> SaveOrderSportsBetting_DBFX(Sports_BetingInfo info, string userId);
 
-        [Service(Date = "2018-7-15", Director = "lidi", Name = "宝单分享-抄单")] 
+        [Service(Date = "2018-7-15", Director = "lidi", Name = "宝单分享-抄单")]
         Task<CommonActionResult> Sports_BettingAndChase_BDFX(Sports_BetingInfo info, string password, string userId);
 
         [Service(Date = "2018-7-15", Director = "lidi", Name = "世界杯投注")]
@@ -80,9 +80,12 @@ namespace BettingLottery.Service.IModuleServices
         Task<string> ReadSqlTimeLog(string FileName);
 
         [Service(Date = "2018-7-15", Director = "kason", Name = "日志")]
-        Task<string> ReadLog(string DicName,string ApiDicTypeName);
+        Task<string> ReadLog(string DicName, string ApiDicTypeName);
 
         [Service(Date = "2018-9-7", Director = "lidi", Name = "查询合买大厅")]
         Task<List<Sports_TogetherSchemeQueryInfo>> QueryTogetherHall();
+
+        [Service(Date = "2018-9-18", Director = "renjun", Name = "查询合买大厅首页PC")]
+        Task<List<TogetherHotUserInfo>> QueryTogetherHallLoad();
     }
 }

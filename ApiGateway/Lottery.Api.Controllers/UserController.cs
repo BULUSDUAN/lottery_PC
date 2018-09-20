@@ -201,7 +201,7 @@ namespace Lottery.Api.Controllers
                 string userToken = p.UserToken;
                 string userId = p.UserId;
                 Dictionary<string, object> param = new Dictionary<string, object>();
-              
+
                 if (string.IsNullOrEmpty(oldPassword))
                     throw new LogicException("旧密码不能为空");
                 if (string.IsNullOrEmpty(newPassword))
@@ -213,7 +213,7 @@ namespace Lottery.Api.Controllers
                     throw new LogicException("Token验证失败");
                 param["newPassword"] = newPassword;
                 param["userId"] = userId;
-             
+
                 var chkPwd = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/CheckIsSame2BalancePassword");
                 if (chkPwd.ReturnValue == "T" || chkPwd.ReturnValue == "N")
                     throw new LogicException("登录密码不能和资金密码一样");
@@ -387,6 +387,7 @@ namespace Lottery.Api.Controllers
                 //string cfrom = "";
                 string pid = p.pid;
                 string fxid = p.fxid;
+                string yqid = p.yqid;
                 string schemeId = p.schemeId;
                 SchemeSource schemeSource = entity.SourceCode;
                 //if (!string.IsNullOrEmpty(cfrom) && cfrom == "ios")
@@ -425,7 +426,8 @@ namespace Lottery.Api.Controllers
                 {
                     userInfo.AgentId = pid;
                 }
-                param["fxid"] = string.IsNullOrEmpty(fxid) ? "0" : fxid;
+                param["fxid"] = string.IsNullOrEmpty(fxid) ? "" : fxid;
+                param["yqid"] = string.IsNullOrEmpty(yqid) ? "" : yqid;
                 var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/User/RegisterResponseMobile");
                 param.Clear();
                 if (result.Message.Contains("手机认证成功") || result.Message.Contains("恭喜您注册成功"))
@@ -561,7 +563,7 @@ namespace Lottery.Api.Controllers
                 //string codeValue = KaSon.FrameWork.Common.Redis.RedisHelperEx.DB_Other.Get(key);
                 var codeParam = new Dictionary<string, object>();
                 codeParam.Add("Key", key);
-                var codeValue= await _serviceProxyProvider.Invoke<string>(codeParam, "api/user/GetRedisByOtherDbKey");
+                var codeValue = await _serviceProxyProvider.Invoke<string>(codeParam, "api/user/GetRedisByOtherDbKey");
                 if (codeValue != verifyCode)
                 {
                     returnResult.Code = ResponseCode.ValiteCodeError;
@@ -697,7 +699,7 @@ namespace Lottery.Api.Controllers
                     param.Add("Key", key);
                     param.Add("RValue", num.ToString());
                     param.Add("TotalSeconds", 60 * 10);
-                    var flag= await _serviceProxyProvider.Invoke<bool>(param, "api/user/SetRedisOtherDbKey"); 
+                    var flag = await _serviceProxyProvider.Invoke<bool>(param, "api/user/SetRedisOtherDbKey");
                     string base64 = Convert.ToBase64String(img);
                     //data:image/gif;base64,
                     if (!base64.StartsWith("data:image"))
@@ -715,8 +717,8 @@ namespace Lottery.Api.Controllers
                 {
                     Code = ResponseCode.失败,
                     Message = ex.ToGetMessage() + "●" + ex.ToString(),
-                   // MsgId = entity.MsgId,
-                   //Value = ex.ToGetMessage(),
+                    // MsgId = entity.MsgId,
+                    //Value = ex.ToGetMessage(),
                 });
             }
             //return vlimg;
@@ -963,7 +965,7 @@ namespace Lottery.Api.Controllers
                 string newPwd = p.NewPwd;
                 bool isSet = Convert.ToBoolean(p.IsSet);
                 string userToken = p.UserToken;
-                string strPlace = string.IsNullOrEmpty((string)p.StrPlace)?"": p.StrPlace ;
+                string strPlace = string.IsNullOrEmpty((string)p.StrPlace) ? "" : p.StrPlace;
                 if (string.IsNullOrEmpty(userToken))
                     throw new LogicException("您还未登录，请登录！");
                 else if (string.IsNullOrEmpty(newPwd))

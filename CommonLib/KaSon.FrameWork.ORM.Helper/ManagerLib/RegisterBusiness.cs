@@ -13,7 +13,7 @@ using System.Text;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
-   public class RegisterBusiness:DBbase
+    public class RegisterBusiness : DBbase
     {
         public void RegisterUser(SystemUser user, string[] roleIds)
         {
@@ -56,7 +56,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 DB.Rollback();
                 throw ex;
             }
-        
+
 
         }
 
@@ -65,10 +65,11 @@ namespace KaSon.FrameWork.ORM.Helper
             var list = "";
             foreach (var roleId in roleIds)
             {
-                var AR = DB.CreateQuery<C_Auth_Roles>().Where(p=>p.RoleId==roleId).ToList().Select(p=>new SystemRole {
-                     RoleId=p.RoleId,
-                }) .FirstOrDefault();
-                list=AR.RoleId;
+                var AR = DB.CreateQuery<C_Auth_Roles>().Where(p => p.RoleId == roleId).ToList().Select(p => new SystemRole
+                {
+                    RoleId = p.RoleId,
+                }).FirstOrDefault();
+                list = AR.RoleId;
             }
             return list;
         }
@@ -79,7 +80,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var maxRule = DB.CreateQuery<C_Auth_KeyRule>().Where(p => p.RuleKey == "MAXKEY").FirstOrDefault();
             maxRule.RuleValue = userKey;
             DB.GetDal<C_Auth_KeyRule>().Update(maxRule);
-            
+
             var regCountRule = DB.CreateQuery<C_Auth_KeyRule>().Where(p => p.RuleKey == "REGCOUNT").FirstOrDefault();
             if (regCountRule == null)
             {
@@ -95,7 +96,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 regCountRule.RuleValue = (int.Parse(regCountRule.RuleValue) + 1).ToString();
                 DB.GetDal<C_Auth_KeyRule>().Update(regCountRule);
             }
-           
+
             var skipCountRule = DB.CreateQuery<C_Auth_KeyRule>().Where(p => p.RuleKey == "SKIPCOUNT").FirstOrDefault();
             if (skipCountRule == null)
             {
@@ -129,7 +130,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 list.Add(item);
             }
             DB.GetDal<C_Auth_BeautyKey>().Add(list.ToArray());
-           
+
         }
 
         public void RegisterUser(SystemUser user, UserRegInfo regInfo)
@@ -212,18 +213,18 @@ namespace KaSon.FrameWork.ORM.Helper
 
         }
 
-     
+
 
         /// <summary>
         /// 查询某个赠送记录
         /// </summary>
         public E_TaskList QueryTaskListByCategory(string userId, TaskCategory taskCategory)
         {
-            
+
             return DB.CreateQuery<E_TaskList>().Where(p => p.UserId == userId && p.TaskCategory == (int)taskCategory).FirstOrDefault();
         }
 
-        public CommonActionResult UserRegister(RegisterInfo_Local regInfo,string fxid)
+        public CommonActionResult UserRegister(RegisterInfo_Local regInfo, string fxid, string yqid)
         {
             DB.Begin();
             try
@@ -312,7 +313,26 @@ namespace KaSon.FrameWork.ORM.Helper
                     });
                 }
                 #endregion
-
+                #region 普通用户推广数据
+                if (!string.IsNullOrEmpty(yqid))
+                {
+                    var manager = new BlogManager();
+                    manager.AddBlog_UserSpread(new E_Blog_UserSpread
+                    {
+                        UserId = userId,
+                        AgentId = yqid,
+                        userName = regInfo.LoginName,
+                        CrateTime = DateTime.Now,
+                        CTZQ = 0,
+                        BJDC = 0,
+                        JCZQ = 0,
+                        JCLQ = 0,
+                        SZC = 0,
+                        GPC = 0,
+                        UpdateTime = DateTime.Now
+                    });
+                }
+                #endregion
                 DB.Commit();
 
                 return new CommonActionResult
@@ -322,7 +342,8 @@ namespace KaSon.FrameWork.ORM.Helper
                     ReturnValue = userId,
                 };
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
 
                 DB.Rollback();
                 throw ex;

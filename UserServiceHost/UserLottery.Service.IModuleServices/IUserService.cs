@@ -25,7 +25,7 @@ using EntityModel.Enum;
 namespace UserLottery.Service.IModuleServices
 {
     [ServiceBundle("api/{Service}")]
-    public interface IUserService: IServiceKey
+    public interface IUserService : IServiceKey
     {
         [Service(Date = "2018-6-06", Director = "renjun", Name = "登录")]
         Task<LoginInfo> User_Login(string loginName, string password, string IPAddress);
@@ -55,7 +55,7 @@ namespace UserLottery.Service.IModuleServices
         Task<int> GetMyUnreadInnerMailCount(string userId);
 
         [Service(Date = "2018-6-14", Director = "renjun", Name = "注册")]
-        Task<CommonActionResult> RegisterResponseMobile(string validateCode, string mobile, SchemeSource source, RegisterInfo_Local info, string fxid);
+        Task<CommonActionResult> RegisterResponseMobile(string validateCode, string mobile, SchemeSource source, RegisterInfo_Local info, string fxid, string yqid);
 
         [Service(Date = "2018-6-19", Director = "renjun", Name = "注册验证手机")]
         Task<CommonActionResult> RegisterRequestMobile(string mobile);
