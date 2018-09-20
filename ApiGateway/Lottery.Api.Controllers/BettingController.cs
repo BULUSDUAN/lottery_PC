@@ -1366,7 +1366,7 @@ namespace Lottery.Api.Controllers
                 string schemeBetting = p.SchemeBetting;
                 string schemeProgress = p.SchemeProgress;
                 string orderByName = p.orderByName;
-                string orderBySort = p.orderByName;
+                string orderBySort = p.orderBySort;
                 string userToken = p.userToken;
                 string key = p.key;
                 string pageNo = p.pageNo;
@@ -1399,10 +1399,10 @@ namespace Lottery.Api.Controllers
                 //保底和进度
                 var orderBy = "";
 
-                if (ViewBag.orderByName == "0")
-                    orderBy = "ManYuan desc,ISTOP DESC,Progress " + ViewBag.orderBySort + ",TotalMoney DESC";
-                else if (ViewBag.orderByName == "1")
-                    orderBy = "ManYuan desc,ISTOP DESC,TotalMoney " + ViewBag.orderBySort + ", Progress DESC";
+                if (OrderByName == "0")
+                    orderBy = "ManYuan desc,ISTOP DESC,Progress " + OrderBySort + ",TotalMoney DESC";
+                else if (OrderByName == "1")
+                    orderBy = "ManYuan desc,ISTOP DESC,TotalMoney " + OrderBySort + ", Progress DESC";
 
                 //关键字
                 var searchKey = string.IsNullOrEmpty(key) ? "" : key;
@@ -1422,8 +1422,8 @@ namespace Lottery.Api.Controllers
                 var betC = !SchemeBetting.HasValue ? -1 : (int)SchemeBetting.Value;
                 var strPro = !SchemeProgress.HasValue ? "10|20|30" : ((int)SchemeProgress.Value).ToString();
                 var arrProg = strPro.Split('|');
-                if (!string.IsNullOrEmpty(issuseNumber))
-                    issuseNumber = issuseNumber.ToUpper();
+                if (!string.IsNullOrEmpty(Game))
+                    Game = Game.ToUpper();
                 if (!string.IsNullOrEmpty(GameType))
                     GameType = GameType.ToUpper();
                 var cache = new Sports_TogetherSchemeQueryInfoCollection();
@@ -1432,7 +1432,7 @@ namespace Lottery.Api.Controllers
                               && (betC == -1 || Convert.ToInt32(s.SchemeBettingCategory) == betC)
                               && (issuseNumber == string.Empty || s.IssuseNumber == issuseNumber)
                               && (s.StopTime >= DateTime.Now)
-                              && (issuseNumber == string.Empty || s.GameCode == issuseNumber)
+                              && (Game == string.Empty || s.GameCode == Game)
                               && (GameType == string.Empty || s.GameType == GameType)
                               && (minMoney == -1 || s.TotalMoney >= minMoney)
                               && (maxMoney == -1 || s.TotalMoney <= maxMoney)

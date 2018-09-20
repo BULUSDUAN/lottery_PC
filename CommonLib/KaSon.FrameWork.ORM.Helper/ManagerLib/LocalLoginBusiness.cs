@@ -799,6 +799,18 @@ namespace KaSon.FrameWork.ORM.Helper
             return array;
         }
 
-       
+        public string GetLoginNameIsExsite(string loginName)
+        {
+                var user = DB.CreateQuery<E_Login_Local>().Where(p => (p.LoginName == loginName || p.mobile == loginName)).FirstOrDefault();
+                if (user == null)
+                {
+                    return "";
+                }
+                else
+                {
+                    return user.LoginName;
+                }
+            
+        }
     }
 }

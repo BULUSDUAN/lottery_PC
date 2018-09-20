@@ -132,5 +132,8 @@ namespace UserLottery.Service.IModuleServices
 
         [Service(Date = "2018-9-7", Director = "lidi", Name = "设置RedisKey")]
         Task<bool> SetRedisOtherDbKey(string Key, string RValue, int TotalSeconds);
+
+        [Service(Date = "2018-9-20", Director = "renjun", Name = "检查登录名是否存在")]
+        Task<string> GetLoginNameIsExsite(string loginName);
     }
 }

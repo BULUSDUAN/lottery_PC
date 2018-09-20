@@ -1521,6 +1521,19 @@ namespace UserLottery.Service.ModuleServices
             }
         }
 
+
+        /// <summary>
+        /// 检查登录名是否存在
+        /// </summary>
+        /// <param name="loginName"></param>
+        /// <returns></returns>
+        public Task<string> GetLoginNameIsExsite(string loginName)
+        {
+            var loginBiz = new LocalLoginBusiness();
+
+            return Task.FromResult(loginBiz.GetLoginNameIsExsite(loginName));
+
+        }
         //public Task<string> ReadSevTimeLog(string FileName)
         //{
         //    if (string.IsNullOrEmpty(FileName)) FileName = "SQLInfo";//SevTimeIoginfo 服务时间
