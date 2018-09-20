@@ -54,16 +54,16 @@
       <HintPath>..\Outputs\Common\Activity.Core.dll</HintPath>
     </Reference>
     <Reference Include="Common">
-      <HintPath>..\..\00.ReferenceDlls\Common.dll</HintPath>
+      <HintPath>..\Outputs\Common.dll</HintPath>
     </Reference>
     <Reference Include="Common.Lottery">
-      <HintPath>..\..\00.ReferenceDlls\Common.Lottery.dll</HintPath>
+      <HintPath>..\Outputs\Common.Lottery.dll</HintPath>
     </Reference>
     <Reference Include="Common.Lottery.Redis">
-      <HintPath>..\..\00.ReferenceDlls\Common.Lottery.Redis.dll</HintPath>
+      <HintPath>..\Outputs\Common.Lottery.Redis.dll</HintPath>
     </Reference>
     <Reference Include="DS.Web.UCenter">
-      <HintPath>..\..\00.ReferenceDlls\DS.Web.UCenter.dll</HintPath>
+      <HintPath>..\Outputs\DS.Web.UCenter.dll</HintPath>
     </Reference>
     <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
@@ -79,7 +79,7 @@
       <HintPath>..\Outputs\Client\GameBiz.Client.dll</HintPath>
     </Reference>
     <Reference Include="GameBiz.Core">
-      <HintPath>..\..\00.ReferenceDlls\20.GameBiz.Service\GameBiz.Core.dll</HintPath>
+      <HintPath>..\Outputs\Common\GameBiz.Core.dll</HintPath>
     </Reference>
     <Reference Include="LotteryData.Client">
       <HintPath>..\Outputs\Client\LotteryData.Client.dll</HintPath>
@@ -159,7 +159,7 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="ThoughtWorks.QRCode">
-      <HintPath>..\..\00.ReferenceDlls\ThoughtWorks.QRCode.dll</HintPath>
+      <HintPath>..\Outputs\ThoughtWorks.QRCode.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
