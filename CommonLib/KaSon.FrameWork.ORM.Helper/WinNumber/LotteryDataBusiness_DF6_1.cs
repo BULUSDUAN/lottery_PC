@@ -20,7 +20,6 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
                 return "DF6J1";
             }
         }
-
         public void ImportWinNumber(string issuseNumber, string winNumber)
         {
             if (string.IsNullOrEmpty(issuseNumber)) return;

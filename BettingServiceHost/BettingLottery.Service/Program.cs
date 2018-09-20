@@ -63,8 +63,8 @@ namespace BettingLottery.Service.Host
                         //option.UseZooKeeperManager(new ConfigInfo("127.0.0.1:2181"));
                         .UseConsulManager(config)
                         .UseDotNettyTransport()
-                        .UseRabbitMQTransport()
-                        .AddRabbitMQAdapt()
+                        //.UseRabbitMQTransport()
+                        //.AddRabbitMQAdapt()
 
                        // .AddCache()
                         //.UseKafkaMQTransport(kafkaOption =>
@@ -81,26 +81,22 @@ namespace BettingLottery.Service.Host
                         builder.Register(p => new CPlatformContainer(ServiceLocator.Current));
                     });
                 })
-                .SubscribeAt()
+                //.SubscribeAt()
                // .UseLog4net(LogLevel.Error, "Config/log4net.config")
                // .UseNLog(LogLevel.Error, "Config/NLog.config")
                .UseLog4net("Config/log4net.config")
-                //.UseServer("127.0.0.1", 98)
-                //.UseServer("127.0.0.1", 98，“true”) //自动生成Token
-                //.UseServer("127.0.0.1", 98，“123456789”) //固定密码Token
+          
                 .UseServer(options =>
                 {
-                    //  options.IpEndpoint = new IPEndPoint(IPAddress.Any, 98);  
-                    // options.Port = 10098;
-                    // options.Ip = "127.0.0.1";
+                  
                     options.Token = "True";
                     options.ExecutionTimeoutInMilliseconds = 30000;
 
                     options.MaxConcurrentRequests = 2000;
                 })
                 // .UseServiceCache()
-                .Configure(build =>
-                build.AddEventBusJson(RebbitMqSettings))
+                //.Configure(build =>
+                //build.AddEventBusJson(RebbitMqSettings))
                 .Configure(build =>
                 //build.AddCacheFile("cacheSettings.json", optional: false, reloadOnChange: true))
                 //  .Configure(build =>
@@ -117,11 +113,6 @@ namespace BettingLottery.Service.Host
             // InitConfigInfo.logFactory = ServiceLocator.GetService<ILoggerProvider>();
           
 
-            //Log4Log.Info("测试测试测试");
-            //Log4Log.Info("测试测试测试");
-            //Log4Log.Info("测试测试测试");
-            //Log4Log.Info("测试测试测试");
-            //Log4Log.Info("测试测试测试");
 
             using (host.Run())
             {
@@ -140,6 +131,9 @@ namespace BettingLottery.Service.Host
             //清空打印
 
             ConsoleHelper.Clear();
+
+            //这个要保留，认主线程一直运行
+            Console.ReadLine();
 
 
         }

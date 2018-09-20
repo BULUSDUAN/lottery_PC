@@ -26,12 +26,6 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             if (string.IsNullOrEmpty(issuseNumber)) return;
             if (string.IsNullOrEmpty(winNumber)) return;
 
-            //var msg = string.Empty;
-            //AnalyzerFactory.GetWinNumberAnalyzer(this.CurrentGameCode).CheckWinNumber(winNumber, out msg);
-            //if (!string.IsNullOrEmpty(msg))
-            //    throw new Exception(msg);
-
-
             //开启事务
             using (LottertDataDB)
             {

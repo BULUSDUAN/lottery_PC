@@ -2345,7 +2345,6 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         }
 
         #endregion
-
         /// <summary>
         /// 查询开奖数据
         /// </summary>
