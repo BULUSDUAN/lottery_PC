@@ -1,4 +1,5 @@
 ﻿
+using EntityModel.CoreModel;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,6 +18,14 @@ namespace KaSon.FrameWork.ORM.Helper
             var manager = new SqlQueryManager();
             
              return manager.QueryYqidRegisterByAgentId(AgentId);
+            
+        }
+
+        public BettingOrderInfo QueryOrderDetailBySchemeId(string schemeId)
+        {
+           var manager = new SqlQueryManager();
+            
+          return manager.QueryOrderDetailBySchemeId(schemeId);
             
         }
     }

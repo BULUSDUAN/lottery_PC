@@ -398,5 +398,52 @@ namespace OrderLottery.Service.ModuleServices
         {
             return Task.FromResult(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\SQLInfo", "LogTime_"));
         }
+
+        /// <summary>
+        /// 根据订单号查询，订单信息
+        /// </summary>
+        /// <param name="schemeId"></param>
+        /// <returns></returns>
+        public Task<BettingOrderInfo> QueryOrderDetailBySchemeId(string schemeId)
+        {
+            try
+            {
+                return Task.FromResult(new SqlQueryBusiness().QueryOrderDetailBySchemeId(schemeId));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        #region 定制跟单
+
+        /// <summary>
+        /// 查询已跟单数
+        /// </summary>
+        public Task<int> QueryProfileFollowedCount(string userId, string gameCode, string gameType)
+        {
+            var biz = new Sports_Manager();
+            return Task.FromResult(biz.QueryTogetherFollowerRecord(userId, gameCode, gameType));
+        }
+        #endregion
+
+        /// <summary>
+        /// 查询订单票数据
+        /// </summary>
+        public Task<Sports_TicketQueryInfoCollection> QuerySportsTicketList(string schemeId, int pageIndex, int pageSize, string userToken)
+        {
+           
+            try
+            {
+                var collection = new Sports_Business().QuerySchemeTicketList(schemeId, pageIndex, pageSize);
+
+                return Task.FromResult(collection);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
     }
 }

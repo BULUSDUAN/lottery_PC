@@ -5954,5 +5954,28 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             return result;
         }
+
+        /// <summary>
+        /// 查询订单票数据
+        /// </summary>
+        public Sports_TicketQueryInfoCollection QuerySchemeTicketList(string schemeId, int pageIndex, int pageSize)
+        {
+            var result = new Sports_TicketQueryInfoCollection();
+
+            var totalCount = 0;
+            var sportManager = new Sports_Manager();
+            var list = sportManager.QueryTicketInfoList(schemeId, pageIndex, pageSize, out totalCount);
+            if (list.Count <= 0)
+            {
+                //可能已移动到历史数据表
+                var detail = new SchemeManager().QueryOrderDetail(schemeId);
+                if (detail != null && detail.ProgressStatus == (int)ProgressStatus.Complate)
+                    list = sportManager.QueryTicketHisgoryInfoList(schemeId, pageIndex, pageSize, out totalCount);
+            }
+            result.TotalCount = totalCount;
+            result.TicketList = list;
+
+            return result;
+        }
     }
 }
