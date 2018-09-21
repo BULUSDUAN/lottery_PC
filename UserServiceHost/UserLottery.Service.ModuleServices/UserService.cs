@@ -1556,7 +1556,7 @@ namespace UserLottery.Service.ModuleServices
         /// 获取用户手机认证信息
         /// todo:后台权限
         /// </summary>
-        public UserMobileInfo GetUserMobileInfo(string userId, string userToken)
+        public Task<UserMobileInfo> GetUserMobileInfo(string userId, string userToken)
         {
             var authenticationBiz = new MobileAuthenticationBusiness();
             var mobileEntity = authenticationBiz.GetAuthenticatedMobile(userId);
@@ -1564,11 +1564,57 @@ namespace UserLottery.Service.ModuleServices
             {
                 return null;
             }
-            return new UserMobileInfo
+            return Task.FromResult(new UserMobileInfo
             {
                 AuthFrom = mobileEntity.AuthFrom,
                 Mobile = mobileEntity.Mobile,
-            };
+            });
+        }
+
+        /// <summary>
+        /// 关注用户
+        /// </summary>
+        public Task<CommonActionResult> AttentionUser(string beAttentionUserId, string userToken)
+        {
+            // 验证用户身份及权限
+            var currentUserId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                new Sports_Business().AttentionUser(currentUserId, beAttentionUserId);
+
+                //! 执行扩展功能代码 - 提交事务后
+                BusinessHelper.ExecPlugin<IAttention_AfterTranCommit>(new object[] { currentUserId, beAttentionUserId });
+                return Task.FromResult(new CommonActionResult(true, "关注用户成功"));
+            }
+            catch (LogicException ex)
+            {
+                return Task.FromResult(new CommonActionResult(false, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 取消关注用户
+        /// </summary>
+        public Task<CommonActionResult> CancelAttentionUser(string beAttentionUserId, string userToken)
+        {
+            // 验证用户身份及权限
+            var currentUserId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                new Sports_Business().CancelAttentionUser(currentUserId, beAttentionUserId);
+
+                //! 执行扩展功能代码 - 提交事务后
+                BusinessHelper.ExecPlugin<ICancelAttention_AfterTranCommit>(new object[] { currentUserId, beAttentionUserId });
+                return Task.FromResult(new CommonActionResult(true, "操作成功"));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
         }
     }
 }

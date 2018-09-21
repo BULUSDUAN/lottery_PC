@@ -462,5 +462,20 @@ namespace OrderLottery.Service.ModuleServices
                 throw new Exception(ex.Message, ex);
             }
         }
+
+        /// <summary>
+        /// 查询宝单奖金提成信息
+        /// </summary>
+        public Task<BDFXCommisionInfo> QueryBDFXCommision(string schemeId)
+        {
+            try
+            {
+                return Task.FromResult(new BDFXManager().QueryBDFXCommision(schemeId));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
     }
 }
