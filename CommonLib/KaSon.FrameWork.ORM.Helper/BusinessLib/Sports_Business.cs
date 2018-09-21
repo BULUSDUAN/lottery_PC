@@ -5977,5 +5977,27 @@ namespace KaSon.FrameWork.ORM.Helper
 
             return result;
         }
+
+        /// <summary>
+        /// 查询单式上传的文件路径
+        /// </summary>
+        public SingleScheme_AnteCodeQueryInfo QuerySingleSchemeFullFileName(string schemeId)
+        {
+            var sportsManager = new Sports_Manager();
+            var entity = sportsManager.QuerySingleScheme_AnteCode(schemeId);
+            if (entity == null) return new SingleScheme_AnteCodeQueryInfo();
+            return new SingleScheme_AnteCodeQueryInfo
+            {
+                AllowCodes = entity.AllowCodes,
+                PlayType = entity.PlayType,
+                //AnteCodeFullFileName = entity.AnteCodeFullFileName,
+                ContainsMatchId = entity.ContainsMatchId,
+                CreateTime = entity.CreateTime,
+                SchemeId = entity.SchemeId,
+                SelectMatchId = entity.SelectMatchId,
+                FileBuffer = entity.FileBuffer,
+
+            };
+        }
     }
 }

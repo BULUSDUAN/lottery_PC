@@ -445,5 +445,22 @@ namespace OrderLottery.Service.ModuleServices
                 throw new Exception(ex.Message, ex);
             }
         }
+
+        /// <summary>
+        /// 查询单式上传全路径名
+        /// </summary>
+        public Task<SingleScheme_AnteCodeQueryInfo> QuerySingleSchemeFullFileName(string schemeId, string userToken)
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                return Task.FromResult(new Sports_Business().QuerySingleSchemeFullFileName(schemeId));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
     }
 }
