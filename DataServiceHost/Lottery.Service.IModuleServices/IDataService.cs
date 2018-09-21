@@ -150,5 +150,32 @@ namespace Lottery.Service.IModuleServices
 
         [Service(Date = "2018-9-13", Director = "lidi", Name = "首页快速购买彩种奖期数据")]
         Task<QuickBuyModel> GetQuickBuy_PC(List<string> GameCodeList);
+
+        [Service(Date = "2018-9-21", Director = "lidi", Name = "大奖排行榜")]
+        Task<RankReportCollection_BettingProfit_Sport> QueryRankReport_BigBonus_Sport(QueryBonusBase QueryBase);
+
+        [Service(Date = "2018-9-21", Director = "lidi", Name = "发单盈利排行榜 - 竞彩类")]
+        Task<RankReportCollection_BettingProfit_Sport> QueryRankReport_BettingProfit_Sport(QueryBonusBase QueryBase);
+
+        [Service(Date = "2018-9-21", Director = "lidi", Name = "跟单盈利排行榜 - 竞彩类")]
+        Task<RankReportCollection_BettingProfit_Sport> QueryRankReport_JoinProfit_Sport(QueryBonusBase QueryBase);
+
+        [Service(Date = "2018-9-21", Director = "lidi", Name = "合买人气排行")]
+        Task<RankReportCollection_RankInfo_HotTogether> QueryRankInfoList_HotTogether(QueryBonusBase QueryBase);
+
+        [Service(Date = "2018-9-21", Director = "lidi", Name = "成功的战绩排行_竞彩类")]
+        Task<RankReportCollection_BettingProfit_Sport> QueryRankInfoList_SuccessOrder_Sport(QueryBonusBase QueryBase);
+
+        [Service(Date = "2018-9-21", Director = "lidi", Name = "跟单排行榜")]
+        Task<RankReportCollection_RankInfo_BeFollower> QueryRankInfoList_BeFollowerCount(QueryBonusBase QueryBase);
+
+        [Service(Date = "2018-9-21", Director = "lidi", Name = "累积中奖排行榜 - 竞彩类")]
+        Task<RankReportCollection_TotalBonus_Sport> QueryRankReport_TotalBonus_Sport(QueryBonusBase QueryBase);
+
+        [Service(Date = "2018-9-21", Director = "lidi", Name = "查询成功派奖列表")]
+        Task<string> QueryPrizedIssuseList(string gameCode, string gameType, int length);
+
+        [Service(Date = "2018-9-21", Director = "lidi", Name = "中奖查询，公共数据")]
+        Task<BonusOrderInfoCollection> QueryBonusInfoList(string userId, string gameCode, string gameType, string issuseNumber, string completeData, string key, int pageIndex, int pageSize);
     }
 }

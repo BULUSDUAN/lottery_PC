@@ -855,6 +855,9 @@ namespace Lottery.Service.ModuleServices
                 throw new Exception("获取出错", ex);
             }
         }
+
+
+        #region PC端相关接口
         /// <summary>
         /// 获取快速投注数据，后期可能修改redis
         /// </summary>
@@ -922,6 +925,167 @@ namespace Lottery.Service.ModuleServices
                 throw new Exception("获取出错", ex);
             }
         }
+
+        /// <summary>
+        /// 大奖排行榜
+        /// </summary>
+        /// <param name="QueryBase"></param>
+        /// <returns></returns>
+        public Task<RankReportCollection_BettingProfit_Sport> QueryRankReport_BigBonus_Sport(QueryBonusBase QueryBase)
+        {
+            try
+            {
+                return Task.FromResult(new DataQuery().QueryRankInfoList_BigBonus_Sport(QueryBase));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("大奖排行榜查询出错 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 发单盈利排行榜 - 竞彩类
+        /// </summary>
+        /// <param name="QueryBase"></param>
+        /// <returns></returns>
+        public Task<RankReportCollection_BettingProfit_Sport> QueryRankReport_BettingProfit_Sport(QueryBonusBase QueryBase)
+        {
+            try
+            {
+                return Task.FromResult(new DataQuery().QueryRankReport_BettingProfit_Sport(QueryBase));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("发单盈利排行榜查询出错 - " + ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 跟单盈利排行榜 - 竞彩类
+        /// </summary>
+        /// <param name="QueryBase"></param>
+        /// <returns></returns>
+        public Task<RankReportCollection_BettingProfit_Sport> QueryRankReport_JoinProfit_Sport(QueryBonusBase QueryBase)
+        {
+            try
+            {
+                return Task.FromResult(new DataQuery().QueryRankReport_JoinProfit_Sport(QueryBase));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("跟单盈利排行榜查询出错 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 合买人气排行
+        /// </summary>
+        /// <param name="QueryBase"></param>
+        /// <returns></returns>
+        public Task<RankReportCollection_RankInfo_HotTogether> QueryRankInfoList_HotTogether(QueryBonusBase QueryBase)
+        {
+            try
+            {
+                return Task.FromResult(new DataQuery().QueryRankInfoList_HotTogether(QueryBase));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("合买人气排行查询出错 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 成功的战绩排行_竞彩类
+        /// </summary>
+        /// <param name="QueryBase"></param>
+        /// <returns></returns>
+        public Task<RankReportCollection_BettingProfit_Sport> QueryRankInfoList_SuccessOrder_Sport(QueryBonusBase QueryBase)
+        {
+            try
+            {
+                return Task.FromResult(new DataQuery().QueryRankInfoList_SuccessOrder_Sport(QueryBase));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("成功的战绩排行查询出错 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 跟单排行榜
+        /// </summary>
+        /// <param name="QueryBase"></param>
+        /// <returns></returns>
+        public Task<RankReportCollection_RankInfo_BeFollower> QueryRankInfoList_BeFollowerCount(QueryBonusBase QueryBase)
+        {
+            try
+            {
+                return Task.FromResult(new DataQuery().QueryRankInfoList_BeFollowerCount(QueryBase));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("成功的战绩排行查询出错 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 累积中奖排行榜 - 竞彩类
+        /// </summary>
+        /// <param name="QueryBase"></param>
+        /// <returns></returns>
+        public Task<RankReportCollection_TotalBonus_Sport> QueryRankReport_TotalBonus_Sport(QueryBonusBase QueryBase)
+        {
+            try
+            {
+                return Task.FromResult(new DataQuery().QueryRankReport_TotalBonus_Sport(QueryBase));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("累积中奖排行榜查询出错 - " + ex.Message, ex);
+            }
+        }
+
+
+        /// <summary>
+        /// 查询成功派奖列表
+        /// </summary>
+        public Task<string> QueryPrizedIssuseList(string gameCode, string gameType, int length)
+        {
+            try
+            {
+                return Task.FromResult(new DataQuery().QueryPrizedIssuseList(gameCode, gameType, length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询成功派奖列表出错", ex);
+            }
+        }
+
+        /// <summary>
+        /// 中奖查询，公共数据
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="gameCode"></param>
+        /// <param name="gameType"></param>
+        /// <param name="issuseNumber"></param>
+        /// <param name="completeData"></param>
+        /// <param name="key"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public Task<BonusOrderInfoCollection> QueryBonusInfoList(string userId, string gameCode, string gameType, string issuseNumber, string completeData, string key, int pageIndex, int pageSize)
+        {
+            try
+            {
+                return Task.FromResult(new DataQuery().QueryBonusInfoList(userId, gameCode, gameType, issuseNumber, completeData, key, pageIndex, pageSize));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询成功派奖列表出错", ex);
+            }
+        }
+        #endregion
+
+
     }
 
 

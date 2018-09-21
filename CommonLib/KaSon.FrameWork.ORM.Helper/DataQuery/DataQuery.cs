@@ -8,6 +8,7 @@ using EntityModel.Enum;
 using EntityModel.CoreModel;
 using System.Linq;
 using KaSon.FrameWork.ORM.Provider;
+using KaSon.FrameWork.Common.Sport;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
@@ -634,5 +635,252 @@ namespace KaSon.FrameWork.ORM.Helper
             RedBagMoneyTotal = 0;
             return new List<Blog_UserShareSpread>();
         }
+
+
+        #region PC端接口
+        /// <summary>
+        /// 大奖排行榜
+        /// </summary>
+        public RankReportCollection_BettingProfit_Sport QueryRankInfoList_BigBonus_Sport(QueryBonusBase QueryBase)
+        {
+            //原执行存储过程改为直接执行SQL
+            var result = new RankReportCollection_BettingProfit_Sport();
+            QueryBase.pageIndex = QueryBase.pageIndex < 0 ? 0 : QueryBase.pageIndex;
+            QueryBase.pageSize = QueryBase.pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : QueryBase.pageSize;
+            string BonusSport_sql = SqlModule.DataModule.FirstOrDefault(x => x.Key == "Data_QueryRankReportBigBonusSport").SQL;
+            var collection = DB.CreateSQLQuery(BonusSport_sql)
+              .SetString("@fromDate", QueryBase.fromDate.ToString("yyyy-MM-dd"))
+              .SetString("@toDate", QueryBase.toDate.ToString("yyyy-MM-dd"))
+              .SetString("@gameCode", QueryBase.gameCode)
+              .SetString("@gameType", QueryBase.gameType)
+              .SetInt("@pageIndex", QueryBase.pageIndex)
+              .SetInt("@pagePage", QueryBase.pageSize).List<RankInfo_BettingProfit_Sport>().ToList();
+            
+            string BonusSport_Total_sql = SqlModule.DataModule.FirstOrDefault(x => x.Key == "Data_QueryRankReportBigBonusSport_Total").SQL;
+            var total = DB.CreateSQLQuery(BonusSport_Total_sql)
+             .SetString("@fromDate", QueryBase.fromDate.ToString("yyyy-MM-dd"))
+              .SetString("@toDate", QueryBase.toDate.ToString("yyyy-MM-dd"))
+              .SetString("@gameCode", QueryBase.gameCode)
+              .SetString("@gameType", QueryBase.gameType)
+             .First<int>();
+
+            result.RankInfoList = collection;
+            result.TotalCount = total;
+            return result;
+        }
+
+        /// <summary>
+        /// 发单盈利排行榜 - 竞彩类
+        /// </summary>
+        /// <param name="QueryBase"></param>
+        /// <returns></returns>
+        public RankReportCollection_BettingProfit_Sport QueryRankReport_BettingProfit_Sport(QueryBonusBase QueryBase)
+        {
+            //原执行存储过程改为直接执行SQL
+            var result = new RankReportCollection_BettingProfit_Sport();
+            QueryBase.pageIndex = QueryBase.pageIndex < 0 ? 0 : QueryBase.pageIndex;
+            QueryBase.pageSize = QueryBase.pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : QueryBase.pageSize;
+            string BonusSport_sql = SqlModule.DataModule.FirstOrDefault(x => x.Key == "Data_QueryRankReportBettingProfitSport").SQL;
+            var collection = DB.CreateSQLQuery(BonusSport_sql)
+              .SetString("@fromDate", QueryBase.fromDate.ToString("yyyy-MM-dd"))
+              .SetString("@toDate", QueryBase.toDate.ToString("yyyy-MM-dd"))
+              .SetString("@gameCode", QueryBase.gameCode)
+              .SetString("@gameType", QueryBase.gameType)
+              .SetInt("@pageIndex", QueryBase.pageIndex)
+              .SetInt("@pagePage", QueryBase.pageSize).List<RankInfo_BettingProfit_Sport>().ToList();
+            result.RankInfoList = collection;
+            //原代码已注释总条数
+            result.TotalCount = 100;
+            return result;
+        }
+
+        /// <summary>
+        /// 跟单盈利排行榜_竞彩类
+        /// </summary>
+        /// <param name="QueryBase"></param>
+        /// <returns></returns>
+        public RankReportCollection_BettingProfit_Sport QueryRankReport_JoinProfit_Sport(QueryBonusBase QueryBase)
+        {
+            //原执行存储过程改为直接执行SQL
+            var result = new RankReportCollection_BettingProfit_Sport();
+            QueryBase.pageIndex = QueryBase.pageIndex < 0 ? 0 : QueryBase.pageIndex;
+            QueryBase.pageSize = QueryBase.pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : QueryBase.pageSize;
+            string BonusSport_sql = SqlModule.DataModule.FirstOrDefault(x => x.Key == "Data_QueryRankReportJoinProfitSport").SQL;
+            var collection = DB.CreateSQLQuery(BonusSport_sql)
+              .SetString("@fromDate", QueryBase.fromDate.ToString("yyyy-MM-dd"))
+              .SetString("@toDate", QueryBase.toDate.ToString("yyyy-MM-dd"))
+              .SetString("@gameCode", QueryBase.gameCode)
+              .SetString("@gameType", QueryBase.gameType)
+              .SetInt("@pageIndex", QueryBase.pageIndex)
+              .SetInt("@pagePage", QueryBase.pageSize).List<RankInfo_BettingProfit_Sport>().ToList();
+
+            string BonusSport_Total_sql = SqlModule.DataModule.FirstOrDefault(x => x.Key == "Data_QueryRankReportJoinProfitSport_Total").SQL;
+            var total = DB.CreateSQLQuery(BonusSport_Total_sql)
+             .SetString("@fromDate", QueryBase.fromDate.ToString("yyyy-MM-dd"))
+              .SetString("@toDate", QueryBase.toDate.ToString("yyyy-MM-dd"))
+              .SetString("@gameCode", QueryBase.gameCode)
+              .SetString("@gameType", QueryBase.gameType)
+             .First<int>();
+            result.RankInfoList = collection;
+            result.TotalCount = total;
+            return result;
+        }
+
+        /// <summary>
+        /// 合买人气排行
+        /// </summary>
+        /// <param name="QueryBase"></param>
+        /// <returns></returns>
+        public RankReportCollection_RankInfo_HotTogether QueryRankInfoList_HotTogether(QueryBonusBase QueryBase)
+        {
+            //原执行存储过程改为直接执行SQL
+            var result = new RankReportCollection_RankInfo_HotTogether();
+            QueryBase.pageIndex = QueryBase.pageIndex < 0 ? 0 : QueryBase.pageIndex;
+            QueryBase.pageSize = QueryBase.pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : QueryBase.pageSize;
+            string BonusSport_sql = SqlModule.DataModule.FirstOrDefault(x => x.Key == "Data_QueryRankInfoListHotTogether").SQL;
+            var collection = DB.CreateSQLQuery(BonusSport_sql)
+              .SetString("@fromDate", QueryBase.fromDate.ToString("yyyy-MM-dd"))
+              .SetString("@toDate", QueryBase.toDate.ToString("yyyy-MM-dd"))
+              .SetString("@gameCode", QueryBase.gameCode).List<RankInfo_HotTogether>().ToList();
+            result.RankInfoList = collection;
+            result.TotalCount = collection==null ? 0 : collection.Count;
+            return result;
+        }
+
+        /// <summary>
+        /// 成功的战绩排行_竞彩类
+        /// </summary>
+        /// <param name="QueryBase"></param>
+        /// <returns></returns>
+        public RankReportCollection_BettingProfit_Sport QueryRankInfoList_SuccessOrder_Sport(QueryBonusBase QueryBase)
+        {
+            //原执行存储过程改为直接执行SQL
+            var result = new RankReportCollection_BettingProfit_Sport();
+            QueryBase.pageIndex = QueryBase.pageIndex < 0 ? 0 : QueryBase.pageIndex;
+            QueryBase.pageSize = QueryBase.pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : QueryBase.pageSize;
+            string BonusSport_sql = SqlModule.DataModule.FirstOrDefault(x => x.Key == "Data_QueryRankInfoListSuccessOrderSport").SQL;
+            var collection = DB.CreateSQLQuery(BonusSport_sql)
+              .SetString("@fromDate", QueryBase.fromDate.ToString("yyyy-MM-dd"))
+              .SetString("@toDate", QueryBase.toDate.ToString("yyyy-MM-dd"))
+              .SetString("@gameCode", QueryBase.gameCode).List<RankInfo_BettingProfit_Sport>().ToList();
+            result.RankInfoList = collection;
+            result.TotalCount = collection == null ? 0 : collection.Count;
+            return result;
+        }
+
+        /// <summary>
+        /// 跟单排行榜
+        /// </summary>
+        /// <param name="QueryBase"></param>
+        /// <returns></returns>
+        public RankReportCollection_RankInfo_BeFollower QueryRankInfoList_BeFollowerCount(QueryBonusBase QueryBase)
+        {
+            var result = new RankReportCollection_RankInfo_BeFollower();
+            if (BettingHelper.CheckSQLCondition(QueryBase.gameCode) || BettingHelper.CheckSQLCondition(QueryBase.gameType))
+                throw new Exception("传入彩种或玩法含有特殊字符");
+            QueryBase.pageIndex = QueryBase.pageIndex < 0 ? 0 : QueryBase.pageIndex;
+            QueryBase.pageSize = QueryBase.pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : QueryBase.pageSize;
+            //Data_QueryRankInfoListBeFollowerCount
+            string BonusSport_sql = SqlModule.DataModule.FirstOrDefault(x => x.Key == "Data_QueryRankInfoListBeFollowerCount").SQL;
+            var collection = DB.CreateSQLQuery(BonusSport_sql)
+              .SetString("@fromDate", QueryBase.fromDate.ToString("yyyy-MM-dd"))
+              .SetString("@toDate", QueryBase.toDate.ToString("yyyy-MM-dd"))
+              .SetString("@gameCode", QueryBase.gameCode).List<RankInfo_BeFollower>().ToList();
+            result.RankInfoList = collection;
+            result.TotalCount = collection == null ? 0 : collection.Count;
+            return result;
+        }
+
+        /// <summary>
+        ///  累积中奖排行榜 - 竞彩类
+        /// </summary>
+        public RankReportCollection_TotalBonus_Sport QueryRankReport_TotalBonus_Sport(QueryBonusBase QueryBase)
+        {
+            var result = new RankReportCollection_TotalBonus_Sport();
+            QueryBase.pageIndex = QueryBase.pageIndex < 0 ? 0 : QueryBase.pageIndex;
+            QueryBase.pageSize = QueryBase.pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : QueryBase.pageSize;
+            string BonusSport_sql = SqlModule.DataModule.FirstOrDefault(x => x.Key == "Data_QueryRankReportTotalBonusSport").SQL;
+            var collection = DB.CreateSQLQuery(BonusSport_sql)
+              .SetString("@fromDate", QueryBase.fromDate.ToString("yyyy-MM-dd"))
+              .SetString("@toDate", QueryBase.toDate.ToString("yyyy-MM-dd"))
+              .SetString("@gameCode", QueryBase.gameCode)
+              .SetString("@gameType", QueryBase.gameType)
+              .SetInt("@pageIndex", QueryBase.pageIndex)
+              .SetInt("@pagePage", QueryBase.pageSize).List<RankInfo_TotalBonus_Sport>().ToList();
+
+            string BonusSport_Total_sql = SqlModule.DataModule.FirstOrDefault(x => x.Key == "Data_QueryRankReportTotalBonusSport_Total").SQL;
+            var total = DB.CreateSQLQuery(BonusSport_Total_sql)
+             .SetString("@fromDate", QueryBase.fromDate.ToString("yyyy-MM-dd"))
+              .SetString("@toDate", QueryBase.toDate.ToString("yyyy-MM-dd"))
+              .SetString("@gameCode", QueryBase.gameCode)
+              .SetString("@gameType", QueryBase.gameType)
+             .First<int>();
+            result.RankInfoList = collection;
+            result.TotalCount = total;
+            return result;
+        }
+
+
+        /// <summary>
+        /// 成功派奖列表
+        /// </summary>
+        /// <param name="gameCode"></param>
+        /// <param name="gameType"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public string QueryPrizedIssuseList(string gameCode, string gameType, int length)
+        {
+            var query = from g in DB.CreateQuery<C_Game_Issuse>()
+                        where g.GameCode == gameCode
+                        && (gameType == ""|| gameType==null || gameType == g.GameType)
+                        && g.Status == (int)IssuseStatus.Stopped
+                        orderby g.IssuseNumber descending
+                        select g.IssuseNumber;
+            return string.Join(",", query.Take(length).ToList());
+        }
+
+        /// <summary>
+        /// 中奖查询，公共数据
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="gameCode"></param>
+        /// <param name="gameType"></param>
+        /// <param name="issuseNumber"></param>
+        /// <param name="completeData"></param>
+        /// <param name="key"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public BonusOrderInfoCollection QueryBonusInfoList(string userId, string gameCode, string gameType, string issuseNumber, string completeData, string key, int pageIndex, int pageSize)
+        {
+            var result = new BonusOrderInfoCollection();
+            pageIndex = pageIndex < 0 ? 0 : pageIndex;
+            pageSize = pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : pageSize;
+            string QueryBonusInfo_sql = SqlModule.DataModule.FirstOrDefault(x => x.Key == "Data_QueryBonusInfoList").SQL;
+            var BonusOrderList = DB.CreateSQLQuery(QueryBonusInfo_sql)
+              .SetString("@userId", userId)
+              .SetString("@gameCode", gameCode)
+              .SetString("@gameType", gameType)
+              .SetString("@issuseNumber", issuseNumber)
+              .SetString("@completeData", completeData)
+              .SetString("@key", key)
+              .SetInt("@pageIndex", pageIndex)
+              .SetInt("@pageSize", pageSize).List<BonusOrderInfo>().ToList();
+
+            string QueryBonusInfoTotal_sql = SqlModule.DataModule.FirstOrDefault(x => x.Key == "Data_QueryBonusInfoList_Total").SQL;
+            var total = DB.CreateSQLQuery(QueryBonusInfoTotal_sql)
+               .SetString("@userId", userId)
+              .SetString("@gameCode", gameCode)
+              .SetString("@gameType", gameType)
+              .SetString("@issuseNumber", issuseNumber)
+              .SetString("@completeData", completeData)
+              .SetString("@key", key)
+             .First<int>();
+            result.BonusOrderList = BonusOrderList;
+            result.TotalCount = total;
+            return result;
+
+        }
+        #endregion
     }
 }

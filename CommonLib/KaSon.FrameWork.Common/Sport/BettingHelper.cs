@@ -1948,5 +1948,62 @@ namespace KaSon.FrameWork.Common.Sport
     .Replace("6场半全场", "六场半全场")
     .Replace("4场进球", "四场进球彩");
         }
+        /// <summary>
+        /// 检查sql条件中特殊字符
+        /// </summary>
+        /// <param name="sqlCondition"></param>
+        /// <returns></returns>
+        public static bool CheckSQLCondition(string sqlCondition)
+        {
+            var charList = new List<string>();
+
+            #region 特殊字符
+
+            charList.Add("'");
+            charList.Add("\"");
+            charList.Add("&");
+            charList.Add("<");
+            charList.Add(">");
+            charList.Add("delete");
+            charList.Add("update");
+            charList.Add("insert");
+            charList.Add("'");
+            charList.Add(";");
+            charList.Add("(");
+            charList.Add(")");
+            charList.Add("Exec");
+            charList.Add("Execute");
+            charList.Add("xp_");
+            charList.Add("sp_");
+            charList.Add("0x");
+            charList.Add("?");
+            charList.Add("<");
+            charList.Add(">");
+            charList.Add("(");
+            charList.Add(")");
+            charList.Add("@");
+            charList.Add("=");
+            charList.Add("+");
+            charList.Add("*");
+            charList.Add("&");
+            charList.Add("#");
+            charList.Add("%");
+            charList.Add("$");
+            charList.Add("and");
+            charList.Add("net user");
+            charList.Add("or");
+            charList.Add("net");
+            charList.Add("drop");
+            charList.Add("script");
+            charList.Add(";");
+            charList.Add("*/");
+            charList.Add("\r\n");
+
+            #endregion
+
+            if (charList.Contains(sqlCondition))
+                return true;
+            return false;
+        }
     }
 }
