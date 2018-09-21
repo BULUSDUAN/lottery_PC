@@ -1,4 +1,5 @@
 ﻿using EntityModel;
+using EntityModel.CoreModel;
 using EntityModel.Enum;
 using System;
 using System.Collections.Generic;
@@ -580,5 +581,88 @@ namespace KaSon.FrameWork.ORM.Helper
             //   Session.Clear();
             return DB.CreateQuery<C_Sports_Order_Complate>().Where(p => schemeIdArray.Contains(p.SchemeId)).ToList();
         }
+
+        /// <summary>
+        /// 查询被跟单人数
+        /// </summary>
+        public int QueryTogetherFollowerRecord(string userId, string gameCode, string gameType)
+        {
+          
+            return DB.CreateQuery<C_Together_FollowerRule>().Where(p => p.CreaterUserId == userId && p.GameCode == gameCode && p.GameType == gameType).Count();
+        }
+
+        public List<Sports_TicketQueryInfo> QueryTicketInfoList(string schemeId, int pageIndex, int pageSize, out int totalCount)
+        {
+        
+            var query = (from p in DB.CreateQuery<C_Sports_Ticket>()
+                        where p.SchemeId == schemeId
+                        orderby p.TicketId ascending
+                        select p).ToList().Select(t=>new Sports_TicketQueryInfo
+                        {
+                            AfterTaxBonusMoney = t.AfterTaxBonusMoney,
+                            Amount = t.Amount,
+                            BetMoney = t.BetMoney,
+                            BetUnits = t.BetUnits,
+                            BonusStatus = (BonusStatus)t.BonusStatus,
+                            CreateTime = t.CreateTime,
+                            GameCode = t.GameCode,
+                            GameType = t.GameType,
+                            IssuseNumber = t.IssuseNumber,
+                            PlayType = t.PlayType,
+                            PreTaxBonusMoney = t.PreTaxBonusMoney,
+                            BarCode = t.BarCode,
+                            PrintNumber1 = t.PrintNumber1,
+                            PrintNumber2 = t.PrintNumber2,
+                            PrintNumber3 = t.PrintNumber3,
+                            SchemeId = t.SchemeId,
+                            TicketId = t.TicketId,
+                            TicketStatus = (TicketStatus)t.TicketStatus,
+                            BetContent = t.BetContent,
+                            LocOdds = t.LocOdds,
+                            PrintDateTime = t.PrintDateTime,
+                        });
+
+            totalCount = query.Count();
+            if (pageSize == -1)
+                return query.ToList();
+            return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+        }
+        public List<Sports_TicketQueryInfo> QueryTicketHisgoryInfoList(string schemeId, int pageIndex, int pageSize, out int totalCount)
+        {
+          
+            var query = (from p in DB.CreateQuery<C_Sports_Ticket_History>()
+                        where p.SchemeId == schemeId
+                        orderby p.TicketId ascending
+                        select p).ToList().Select(t=> new Sports_TicketQueryInfo
+                        {
+                            AfterTaxBonusMoney = t.AfterTaxBonusMoney,
+                            Amount = t.Amount,
+                            BetMoney = t.BetMoney,
+                            BetUnits = t.BetUnits,
+                            BonusStatus = (BonusStatus)t.BonusStatus,
+                            CreateTime = t.CreateTime,
+                            GameCode = t.GameCode,
+                            GameType = t.GameType,
+                            IssuseNumber = t.IssuseNumber,
+                            PlayType = t.PlayType,
+                            PreTaxBonusMoney = t.PreTaxBonusMoney,
+                            BarCode = t.BarCode,
+                            PrintNumber1 = t.PrintNumber1,
+                            PrintNumber2 = t.PrintNumber2,
+                            PrintNumber3 = t.PrintNumber3,
+                            SchemeId = t.SchemeId,
+                            TicketId = t.TicketId,
+                            TicketStatus = (TicketStatus)t.TicketStatus,
+                            BetContent = t.BetContent,
+                            LocOdds = t.LocOdds,
+                            PrintDateTime = t.PrintDateTime,
+                        });
+
+            totalCount = query.Count();
+            if (pageSize == -1)
+                return query.ToList();
+            return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+        }
+
     }
 }

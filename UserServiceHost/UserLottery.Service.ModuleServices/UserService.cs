@@ -1521,11 +1521,54 @@ namespace UserLottery.Service.ModuleServices
             }
         }
 
+
+        /// <summary>
+        /// 检查登录名是否存在
+        /// </summary>
+        /// <param name="loginName"></param>
+        /// <returns></returns>
+        public Task<string> GetLoginNameIsExsite(string loginName)
+        {
+            var loginBiz = new LocalLoginBusiness();
+
+            return Task.FromResult(loginBiz.GetLoginNameIsExsite(loginName));
+
+        }
         //public Task<string> ReadSevTimeLog(string FileName)
         //{
         //    if (string.IsNullOrEmpty(FileName)) FileName = "SQLInfo";//SevTimeIoginfo 服务时间
 
         //    return Task.FromResult(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\SQLInfo", "LogTime_"));
         //}
+
+        /// <summary>
+        /// 检查用户是否设置手机号码
+        /// todo:后台权限
+        /// </summary>
+        public Task<bool> CheckIsAuthenticatedUserMobile(string userId)
+        {
+            var authenticationBiz = new MobileAuthenticationBusiness();
+            var mobileEntity = authenticationBiz.GetAuthenticatedMobile(userId);
+            return Task.FromResult((mobileEntity != null && mobileEntity.IsSettedMobile));
+        }
+
+        /// <summary>
+        /// 获取用户手机认证信息
+        /// todo:后台权限
+        /// </summary>
+        public UserMobileInfo GetUserMobileInfo(string userId, string userToken)
+        {
+            var authenticationBiz = new MobileAuthenticationBusiness();
+            var mobileEntity = authenticationBiz.GetAuthenticatedMobile(userId);
+            if (mobileEntity == null || !mobileEntity.IsSettedMobile)
+            {
+                return null;
+            }
+            return new UserMobileInfo
+            {
+                AuthFrom = mobileEntity.AuthFrom,
+                Mobile = mobileEntity.Mobile,
+            };
+        }
     }
 }

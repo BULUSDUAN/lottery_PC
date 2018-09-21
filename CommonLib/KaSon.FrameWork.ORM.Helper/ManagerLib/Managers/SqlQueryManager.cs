@@ -136,5 +136,46 @@ namespace KaSon.FrameWork.ORM.Helper
             return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
         }
 
+        public BettingOrderInfo QueryOrderDetailBySchemeId(string schemeId)
+        {
+          
+            var query = (from P in DB.CreateQuery<C_OrderDetail>()
+                        where (P.SchemeId == schemeId)
+                        select P).ToList().Select(o=>new BettingOrderInfo
+                        {
+                            TicketStatus = (TicketStatus)o.TicketStatus,
+                            IsVirtualOrder = o.IsVirtualOrder,
+                            IssuseNumber = o.CurrentIssuseNumber,
+                            CurrentBettingMoney = o.CurrentBettingMoney,
+                            TotalMoney = o.TotalMoney,
+                            ProgressStatus = (ProgressStatus)o.ProgressStatus,
+                            SchemeId = o.SchemeId,
+                            AfterTaxBonusMoney = o.AfterTaxBonusMoney,
+                            PreTaxBonusMoney = o.PreTaxBonusMoney,
+                            BonusStatus = (BonusStatus)o.BonusStatus,
+                            SchemeBettingCategory = (SchemeBettingCategory)o.SchemeBettingCategory,
+                            SchemeSource = (SchemeSource)o.SchemeSource,
+                            SchemeType = (SchemeType)o.SchemeType,
+                            AddMoney = o.AddMoney,
+                            AgentId = o.AgentId,
+                            Amount = o.Amount,
+                            BetTime = o.BetTime,
+                            BonusAwardsMoney = o.BonusAwardsMoney,
+                            CreateTime = o.CreateTime,
+                            GameCode = o.GameCode,
+                            GameTypeName = o.GameTypeName,
+                            PlayType = o.PlayType,
+                            RealPayRebateMoney = o.RealPayRebateMoney,
+                            RedBagAwardsMoney = o.RedBagAwardsMoney,
+                            RedBagMoney = o.RedBagMoney,
+                            Security = TogetherSchemeSecurity.Public,
+                            StopAfterBonus = o.StopAfterBonus,
+                            TotalIssuseCount = o.TotalIssuseCount,
+                            UserId = o.UserId,
+                            VipLevel = 0,
+                            WinNumber = string.Empty,
+                        });
+            return query.FirstOrDefault();
+        }
     }
 }

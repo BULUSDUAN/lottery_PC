@@ -108,5 +108,13 @@ namespace OrderLottery.Service.IModuleServices
 
         [Service(Date = "2018-7-15", Director = "lidi", Name = "日志")]
         Task<string> ReadSqlTimeLog(string FileName);
+
+        [Service(Date = "2018-9-20", Director = "renjun", Name = "根据订单号查询订单信息")]
+        Task<BettingOrderInfo> QueryOrderDetailBySchemeId(string schemeId);
+
+        [Service(Date = "2018-9-20", Director = "renjun", Name = "查询已跟单数")]
+        Task<int> QueryProfileFollowedCount(string userId, string gameCode, string gameType);
+        [Service(Date = "2018-9-20", Director = "renjun", Name = "查询订单票数据")]
+        Task<Sports_TicketQueryInfoCollection> QuerySportsTicketList(string schemeId, int pageIndex, int pageSize, string userToken);
     }
 }
