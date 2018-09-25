@@ -426,12 +426,29 @@ namespace OrderLottery.Service.ModuleServices
             var biz = new Sports_Manager();
             return Task.FromResult(biz.QueryTogetherFollowerRecord(userId, gameCode, gameType));
         }
+
+        /// <summary>
+        /// 查询 定制我的 跟单规则
+        /// </summary>
+        public Task<TogetherFollowerRuleQueryInfoCollection> QueryUserFollowRule(string gameCode, string gameType, int pageIndex, int pageSize, string UserId)
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                return Task.FromResult(new Sports_Business().QueryUserFollowRule(false, UserId, gameCode, gameType, pageIndex, pageSize));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
         #endregion
 
         /// <summary>
         /// 查询订单票数据
         /// </summary>
-        public Task<Sports_TicketQueryInfoCollection> QuerySportsTicketList(string schemeId, int pageIndex, int pageSize, string userToken)
+        public Task<Sports_TicketQueryInfoCollection> QuerySportsTicketList(string schemeId, int pageIndex, int pageSize)
         {
            
             try
@@ -449,7 +466,7 @@ namespace OrderLottery.Service.ModuleServices
         /// <summary>
         /// 查询单式上传全路径名
         /// </summary>
-        public Task<SingleScheme_AnteCodeQueryInfo> QuerySingleSchemeFullFileName(string schemeId, string userToken)
+        public Task<SingleScheme_AnteCodeQueryInfo> QuerySingleSchemeFullFileName(string schemeId)
         {
             // 验证用户身份及权限
             //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);

@@ -690,5 +690,77 @@ namespace KaSon.FrameWork.ORM.Helper
        
             return DB.CreateQuery<C_User_Attention_Summary>().Where(p => p.UserId == currentUserId).FirstOrDefault();
         }
+
+        public List<TogetherFollowerRuleQueryInfo> QueryUserFollowRule(bool byFollower, string userId, string gameCode, string gameType, int pageIndex, int pageSize, out int totalCount)
+        {
+           
+            pageIndex = pageIndex < 0 ? 0 : pageIndex;
+            pageSize = pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : pageSize;
+
+            var query = byFollower ? (from f in DB.CreateQuery<C_Together_FollowerRule>()
+                                      join u in DB.CreateQuery<C_User_Register>() on f.CreaterUserId equals u.UserId
+                                      where (gameCode == string.Empty || f.GameCode == gameCode)
+                                      && (gameType == string.Empty || f.GameType == gameType)
+                                      && (userId == string.Empty || f.FollowerUserId == userId)
+                                      select new { f,u}).ToList().Select(b=> new TogetherFollowerRuleQueryInfo
+                                      {
+                                          RuleId = b.f.Id,
+                                          BonusMoney = b.f.TotalBonusMoney,
+                                          BuyMoney = b.f.TotalBetMoney,
+                                          CancelNoBonusSchemeCount = b.f.CancelNoBonusSchemeCount,
+                                          CancelWhenSurplusNotMatch = b.f.CancelWhenSurplusNotMatch,
+                                          CreaterUserId = b.f.CreaterUserId,
+                                          CreateTime = b.f.CreateTime,
+                                          FollowerCount = b.f.FollowerCount,
+                                          FollowerIndex = b.f.FollowerIndex,
+                                          FollowerPercent = b.f.FollowerPercent,
+                                          FollowerUserId = b.f.FollowerUserId,
+                                          GameCode = b.f.GameCode,
+                                          GameType = b.f.GameType,
+                                          IsEnable = b.f.IsEnable,
+                                          MaxSchemeMoney = b.f.MaxSchemeMoney,
+                                          MinSchemeMoney = b.f.MinSchemeMoney,
+                                          SchemeCount = b.f.SchemeCount,
+                                          StopFollowerMinBalance = b.f.StopFollowerMinBalance,
+                                          UserId = b.u.UserId,
+                                          UserDisplayName = b.u.DisplayName,
+                                          HideDisplayNameCount = b.u.HideDisplayNameCount,
+                                      }) :
+                                    (from f in DB.CreateQuery<C_Together_FollowerRule>()
+                                     join u in DB.CreateQuery<C_User_Register>() on f.FollowerUserId equals u.UserId
+                                     where (gameCode == string.Empty || f.GameCode == gameCode)
+                                     && (gameType == string.Empty || f.GameType == gameType)
+                                     && (userId == string.Empty || f.CreaterUserId == userId)
+                                     orderby f.FollowerIndex ascending
+                                     select new { f, u }).ToList().Select(b => new TogetherFollowerRuleQueryInfo
+                                     {
+                                         RuleId = b.f.Id,
+                                         BonusMoney = b.f.TotalBonusMoney,
+                                         BuyMoney = b.f.TotalBetMoney,
+                                         CancelNoBonusSchemeCount = b.f.CancelNoBonusSchemeCount,
+                                         CancelWhenSurplusNotMatch = b.f.CancelWhenSurplusNotMatch,
+                                         CreaterUserId = b.f.CreaterUserId,
+                                         CreateTime = b.f.CreateTime,
+                                         FollowerCount = b.f.FollowerCount,
+                                         FollowerIndex = b.f.FollowerIndex,
+                                         FollowerPercent = b.f.FollowerPercent,
+                                         FollowerUserId = b.f.FollowerUserId,
+                                         GameCode = b.f.GameCode,
+                                         GameType = b.f.GameType,
+                                         IsEnable = b.f.IsEnable,
+                                         MaxSchemeMoney = b.f.MaxSchemeMoney,
+                                         MinSchemeMoney = b.f.MinSchemeMoney,
+                                         SchemeCount = b.f.SchemeCount,
+                                         StopFollowerMinBalance = b.f.StopFollowerMinBalance,
+                                         UserId = b.u.UserId,
+                                         UserDisplayName = b.u.DisplayName,
+                                         HideDisplayNameCount = b.u.HideDisplayNameCount,
+                                     });
+
+            totalCount = query.Count();
+            return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+
+        }
+
     }
 }

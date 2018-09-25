@@ -6114,5 +6114,30 @@ namespace KaSon.FrameWork.ORM.Helper
             DB.Commit();
             
         }
+
+        /// <summary>
+        /// 查询是否有关注
+        /// </summary>
+        public bool QueryIsAttention(string currentUserId, string beAttentionUserId)
+        {
+            var sportsManager = new Sports_Manager();
+            var entity = sportsManager.QueryUserAttention(currentUserId, beAttentionUserId);
+            if (entity == null)
+                return false;
+            return true;
+        }
+
+        /// <summary>
+        /// 查询我的定制  或 定制我的
+        /// </summary>
+        public TogetherFollowerRuleQueryInfoCollection QueryUserFollowRule(bool byFollower, string userId, string gameCode, string gameType, int pageIndex, int pageSize)
+        {
+            var result = new TogetherFollowerRuleQueryInfoCollection();
+            var totalCount = 0;
+            result.List.AddRange(new Sports_Manager().QueryUserFollowRule(byFollower, userId, gameCode, gameType, pageIndex, pageSize, out totalCount));
+            result.TotalCount = totalCount;
+            return result;
+        }
+
     }
 }

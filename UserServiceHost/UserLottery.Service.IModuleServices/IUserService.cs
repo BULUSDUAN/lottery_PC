@@ -143,5 +143,9 @@ namespace UserLottery.Service.IModuleServices
         Task<CommonActionResult> AttentionUser(string beAttentionUserId, string userToken);
         [Service(Date = "2018-9-21", Director = "renjun", Name = "取消关注用户")]
         Task<CommonActionResult> CancelAttentionUser(string beAttentionUserId, string userToken);
+        [Service(Date = "2018-9-25", Director = "renjun", Name = "查询是否有关注")]
+        Task<bool> QueryIsAttention(string beAttentionUserId, string currentUserId);
+        [Service(Date = "2018-9-25", Director = "renjun", Name = "查询用户历史登录")]
+        Task<UserLoginHistoryCollection> QueryCache_UserLoginHistoryCollection(string UserId);
     }
 }

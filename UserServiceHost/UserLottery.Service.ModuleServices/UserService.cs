@@ -1574,16 +1574,16 @@ namespace UserLottery.Service.ModuleServices
         /// <summary>
         /// 关注用户
         /// </summary>
-        public Task<CommonActionResult> AttentionUser(string beAttentionUserId, string userToken)
+        public Task<CommonActionResult> AttentionUser(string beAttentionUserId, string UserId)
         {
             // 验证用户身份及权限
-            var currentUserId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            //var currentUserId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
-                new Sports_Business().AttentionUser(currentUserId, beAttentionUserId);
+                new Sports_Business().AttentionUser(UserId, beAttentionUserId);
 
                 //! 执行扩展功能代码 - 提交事务后
-                BusinessHelper.ExecPlugin<IAttention_AfterTranCommit>(new object[] { currentUserId, beAttentionUserId });
+                BusinessHelper.ExecPlugin<IAttention_AfterTranCommit>(new object[] { UserId, beAttentionUserId });
                 return Task.FromResult(new CommonActionResult(true, "关注用户成功"));
             }
             catch (LogicException ex)
@@ -1599,21 +1599,54 @@ namespace UserLottery.Service.ModuleServices
         /// <summary>
         /// 取消关注用户
         /// </summary>
-        public Task<CommonActionResult> CancelAttentionUser(string beAttentionUserId, string userToken)
+        public Task<CommonActionResult> CancelAttentionUser(string beAttentionUserId, string UserId)
         {
             // 验证用户身份及权限
-            var currentUserId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            //var currentUserId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
-                new Sports_Business().CancelAttentionUser(currentUserId, beAttentionUserId);
+                new Sports_Business().CancelAttentionUser(UserId, beAttentionUserId);
 
                 //! 执行扩展功能代码 - 提交事务后
-                BusinessHelper.ExecPlugin<ICancelAttention_AfterTranCommit>(new object[] { currentUserId, beAttentionUserId });
+                BusinessHelper.ExecPlugin<ICancelAttention_AfterTranCommit>(new object[] { UserId, beAttentionUserId });
                 return Task.FromResult(new CommonActionResult(true, "操作成功"));
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询是否有关注
+        /// </summary>
+        public Task<bool> QueryIsAttention(string beAttentionUserId, string currentUserId)
+        {
+            try
+            {
+                return Task.FromResult(new Sports_Business().QueryIsAttention(currentUserId, beAttentionUserId));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询用户历史登录
+        /// </summary>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public Task<UserLoginHistoryCollection> QueryCache_UserLoginHistoryCollection(string UserId)
+        {
+            // 验证用户身份及权限
+            try
+            {
+                return Task.FromResult(new CacheDataBusiness().QueryUserLoginHistoryCollection(UserId));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("获取最近登录 - " + ex.Message, ex);
             }
         }
     }
