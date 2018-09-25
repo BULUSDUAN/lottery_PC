@@ -848,7 +848,7 @@ namespace Lottery.Service.ModuleServices
                 {
                     return Task.FromResult(RedisValue);
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -856,6 +856,23 @@ namespace Lottery.Service.ModuleServices
             }
         }
 
+        public Task<WinNumber_QueryInfo> GetWinNumber(string gameCode, string gameType, string issuseNumber)
+        {
+            try
+            {
+                var entity = new IssuseBusiness().QueryWinNumberByIssuseNumber(gameCode, gameType, issuseNumber);
+                return Task.FromResult(new WinNumber_QueryInfo
+                {
+                    GameCode = gameCode,
+                    IssuseNumber = issuseNumber,
+                    WinNumber = entity == null ? string.Empty : entity.WinNumber,
+                });
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("获取出错", ex);
+            }
+        }
 
         #region PC端相关接口
         /// <summary>
@@ -1081,6 +1098,80 @@ namespace Lottery.Service.ModuleServices
             catch (Exception ex)
             {
                 throw new Exception("查询成功派奖列表出错", ex);
+            }
+        }
+
+
+        /// <summary>
+        /// 中奖排行榜_按彩种查
+        /// </summary>
+        public Task<RankReportCollection_TotalBonus_Sport> QueryRankReport_BonusByGameCode_All(DateTime fromDate, DateTime toDate, int topCount, string gameCode)
+        {
+            try
+            {
+                return Task.FromResult(new DataQuery().QueryRankReport_BonusByGameCode_All(fromDate, toDate, topCount, gameCode));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("中奖查询出错 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询开奖历史(存到redis，三分钟)
+        /// </summary>
+        /// <param name="gameCode"></param>
+        /// <param name="startTime"></param>
+        /// <param name="endTime"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public Task<WinNumber_QueryInfoCollection> QueryWinNumberHistory(string gameCode, DateTime startTime, DateTime endTime, int pageIndex, int pageSize)
+        {
+            try
+            {
+                var RedisKey = RedisKeys.PC_QueryWinNumberHistory;
+                var Key = $"{RedisKey}_{gameCode}_{startTime.ToString("yyyyMMdd")}_{endTime.ToString("yyyyMMdd")}_{pageIndex}_{pageSize}";
+                var db = RedisHelperEx.DB_Other;
+                var OldRedisList = db.GetObj<WinNumber_QueryInfoCollection>(RedisKey);
+                if (OldRedisList != null)
+                {
+                    return Task.FromResult(OldRedisList);
+                }
+                var Model = new IssuseBusiness().QueryWinNumber(gameCode, startTime, endTime, pageIndex, pageSize);
+                db.SetObj(Key, Model, TimeSpan.FromMinutes(3));
+                return Task.FromResult(Model);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询开奖历史出错 - " + ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 查询开奖历史(存到redis，三分钟)
+        /// </summary>
+        /// <param name="gameCode"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public Task<WinNumber_QueryInfoCollection> QueryWinNumberHistoryByCount(string gameCode, int count)
+        {
+            try
+            {
+                var RedisKey = RedisKeys.PC_QueryWinNumberHistoryByCount;
+                var Key = $"{RedisKey}_{gameCode}_{count}";
+                var db = RedisHelperEx.DB_Other;
+                var OldRedisList = db.GetObj<WinNumber_QueryInfoCollection>(RedisKey);
+                if (OldRedisList != null)
+                {
+                    return Task.FromResult(OldRedisList);
+                }
+                var Model = new IssuseBusiness().QueryWinNumber(gameCode, count);
+                db.SetObj(Key, Model, TimeSpan.FromMinutes(3));
+                return Task.FromResult(Model);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询开奖历史出错 - " + ex.Message, ex);
             }
         }
         #endregion

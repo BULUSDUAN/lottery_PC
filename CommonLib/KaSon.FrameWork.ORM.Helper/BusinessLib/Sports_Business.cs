@@ -5977,5 +5977,219 @@ namespace KaSon.FrameWork.ORM.Helper
 
             return result;
         }
+
+        #region PC端接口
+        /// <summary>
+        /// 欧洲杯投注
+        /// </summary>
+        public string BetOZB(LotteryBettingInfo info, string userId, string balancePassword, string place, decimal redBagMoney)
+        {
+            var userManager = new UserBalanceManager();
+            var user = userManager.LoadUserRegister(userId);
+            if (!user.IsEnable)
+                throw new LogicException("用户已禁用");
+            var gameType = string.Empty;
+            //Redis订单列表
+            var redisOrderList = new RedisWaitTicketOrderList();
+            var schemeId = info.SchemeId;
+
+            #region 数据验证
+
+            if (info.GameCode != "OZB")
+                throw new Exception("彩种编码不正确");
+            if (info.IssuseNumberList == null || info.IssuseNumberList.Count != 1)
+                throw new Exception("期号信息不能为空");
+            if (info.AnteCodeList == null || info.AnteCodeList.Count <= 0)
+                throw new Exception("投注号码不能为空");
+
+            var lotteryManager = new LotteryGameManager();
+            var totalNumberZhu = 0;
+            foreach (var item in info.AnteCodeList)
+            {
+                try
+                {
+                    //检查投注内容
+                    CheckOZBMatch(item.GameType, item.AnteCode);
+                    gameType = item.GameType.ToUpper();
+
+                    var zhu = AnalyzerFactory.GetAntecodeAnalyzer(info.GameCode, item.GameType).AnalyzeAnteCode(item.AnteCode);
+                    totalNumberZhu += zhu;
+                }
+                catch (Exception ex)
+                {
+                    throw new LogicException("投注号码出错 - " + ex.Message);
+                }
+            }
+            var codeMoney = 0M;
+            info.IssuseNumberList.ForEach(item =>
+            {
+                //检查期号
+                var currentIssuse = lotteryManager.QueryCurrentIssuse(info.GameCode, gameType);
+                if (currentIssuse == null)
+                    throw new Exception("当前无奖期数据");
+                if (currentIssuse.Status != (int)IssuseStatus.OnSale)
+                    throw new Exception("投注已截止");
+                if (currentIssuse.IssuseNumber != item.IssuseNumber)
+                    throw new Exception(string.Format("当前期应该是{0}，实际是{1}", currentIssuse.IssuseNumber, item.IssuseNumber));
+
+                if (item.Amount < 1)
+                    throw new LogicException("倍数不能小于1");
+                var currentMoney = item.Amount * totalNumberZhu * 2M;
+                if (currentMoney != item.IssuseTotalMoney)
+                    throw new LogicException(string.Format("第{0}期投注金额应该是{1},实际是{2}", item.IssuseNumber, currentMoney, item.IssuseTotalMoney));
+                codeMoney += currentMoney;
+            });
+
+            if (codeMoney != info.TotalMoney)
+                throw new LogicException("投注期号总金额与方案总金额不匹配");
+
+            #endregion
+
+            //开启事务
+            DB.Begin();
+            try
+            {
+
+                var schemeManager = new SchemeManager();
+                var sportsManager = new Sports_Manager();
+
+                var totalBetMoney = 0M;
+                var issuse = info.IssuseNumberList[0];
+                if (string.IsNullOrEmpty(schemeId))
+                    schemeId = BettingHelper.GetSportsBettingSchemeId(info.GameCode);
+                lock (schemeId)
+                {
+                    var anteCodeList = new List<C_Sports_AnteCode>();
+                    var gameTypeList = new List<string>();
+                    foreach (var item in info.AnteCodeList)
+                    {
+                        var codeEntity = new C_Sports_AnteCode
+                        {
+                            AnteCode = item.AnteCode,
+                            BonusStatus = (int)BonusStatus.Waitting,
+                            CreateTime = DateTime.Now,
+                            GameCode = info.GameCode,
+                            GameType = item.GameType.ToUpper(),
+                            IsDan = item.IsDan,
+                            IssuseNumber = issuse.IssuseNumber,
+                            MatchId = string.Empty,
+                            Odds = string.Empty,
+                            PlayType = string.Empty,
+                            SchemeId = schemeId,
+                        };
+                        anteCodeList.Add(codeEntity);
+                        sportsManager.AddSports_AnteCode(codeEntity);
+                        var gameTypeName = item.GameType.ToUpper() == "GJ" ? "冠军" : "冠亚军";
+                        if (!gameTypeList.Contains(gameTypeName))
+                        {
+                            gameTypeList.Add(gameTypeName);
+                        }
+                    }
+
+                    var currentIssuseMoney = totalNumberZhu * issuse.Amount * ((info.IsAppend && info.GameCode == "DLT") ? 3M : 2M);
+
+                    var canTicket = BettingHelper.CanRequestBet(info.GameCode);
+                    var entity = AddRunningOrderAndOrderDetail(schemeId, info.BettingCategory, info.GameCode, string.Join(",", gameTypeList.ToArray()),
+                          string.Empty, info.StopAfterBonus, issuse.IssuseNumber, issuse.Amount, totalNumberZhu, 0, currentIssuseMoney, GetOZB_StopBetTime(gameType), info.SchemeSource, info.Security,
+                          info.IssuseNumberList.Count == 1 ? SchemeType.GeneralBetting : SchemeType.ChaseBetting, true, false, user.UserId, user.AgentId,
+                           info.CurrentBetTime, info.ActivityType, "", info.IsAppend, redBagMoney,
+                          (canTicket ? ProgressStatus.Running : ProgressStatus.Waitting),
+                          (canTicket ? TicketStatus.Ticketed : TicketStatus.Waitting));
+                    totalBetMoney += currentIssuseMoney;
+
+                    //启用了Redis
+                    if (RedisHelperEx.EnableRedis)
+                    {
+                        var runningOrder = new RedisWaitTicketOrder
+                        {
+                            AnteCodeList = anteCodeList,
+                            RunningOrder = entity,
+                            KeyLine = string.Empty,
+                            StopAfterBonus = info.StopAfterBonus,
+                            SchemeType = info.IssuseNumberList.Count == 1 ? SchemeType.GeneralBetting : SchemeType.ChaseBetting
+                        };
+                        //追号方式 存入Redis订单列表
+                        redisOrderList.OrderList.Add(runningOrder);
+                    }
+                }
+
+                #region 支付
+
+                //摇钱树订单，不扣用户的钱，扣代理商余额
+                if (info.SchemeSource != SchemeSource.YQS
+                    && info.SchemeSource != SchemeSource.YQS_Advertising
+                    && info.SchemeSource != SchemeSource.NS_Bet
+                    && info.SchemeSource != SchemeSource.YQS_Bet
+                    && info.SchemeSource != SchemeSource.Publisher_0321
+                    && info.SchemeSource != SchemeSource.WX_GiveLottery
+                    && info.SchemeSource != SchemeSource.Web_GiveLottery
+                    && info.SchemeSource != SchemeSource.LuckyDraw)
+                {
+                    // 消费资金
+                    //普通投注
+                    var msg = string.Format("{0}第{1}期投注", GetOZB_DisplayName(gameType), info.IssuseNumberList[0].IssuseNumber);
+                    if (redBagMoney > 0M)
+                    {
+                        var fundManager = new FundManager();
+                        var percent = fundManager.QueryRedBagUseConfig(info.GameCode);
+                        var maxUseMoney = info.TotalMoney * percent / 100;
+                        if (redBagMoney > maxUseMoney)
+                            throw new LogicException(string.Format("本彩种只允许使用红包为订单总金额的{0:N2}%，即{1:N2}元", percent, maxUseMoney));
+                        //红包支付
+                        BusinessHelper.Payout_RedBag_To_End(BusinessHelper.FundCategory_Betting, userId, schemeId, redBagMoney, msg, "Bet", balancePassword);
+                    }
+                    //其它账户支付
+                    BusinessHelper.Payout_To_End(BusinessHelper.FundCategory_Betting, userId, schemeId, totalBetMoney - redBagMoney
+                        , msg, "Bet", balancePassword);
+                }
+
+                #endregion
+
+                DB.Commit();
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw ex;
+            }
+            if (RedisHelperEx.EnableRedis)
+            {
+                //普通投注
+                if (redisOrderList.OrderList.Count > 0)
+                    RedisOrderBusiness.AddOrderToRedis(info.GameCode, redisOrderList.OrderList[0]);
+            }
+
+            //拆票
+            if (!RedisHelperEx.EnableRedis)
+                DoSplitOrderTickets(schemeId);
+
+            //刷新用户在Redis中的余额
+            BusinessHelper.RefreshRedisUserBalance(userId);
+
+            return schemeId;
+        }
+
+        private void CheckOZBMatch(string gameType, string anteCode)
+        {
+            var matchIdArray = anteCode.Split(',');
+            var matchList = new JCZQMatchManager().QueryJCZQ_OZBMatchList(gameType, matchIdArray);
+            if (matchList.Where(p => p.BetState != "开售").Count() > 0)
+                throw new Exception("比赛中有包括未开售或过期的比赛");
+        }
+
+        private DateTime GetOZB_StopBetTime(string gameType)
+        {
+            switch (gameType.ToUpper())
+            {
+                case "GJ":
+                    return new DateTime(2016, 7, 11, 0, 0, 0);
+                case "GYJ":
+                    return new DateTime(2016, 7, 8, 0, 0, 0);
+                default:
+                    break;
+            }
+            return DateTime.Now;
+        }
+        #endregion
     }
 }
