@@ -256,6 +256,15 @@ namespace KaSon.FrameWork.ORM.Helper
             DB.GetDal<C_User_Attention_Summary>().Add(UserAttentionSummary);
 
         }
+        public void UpdateUserAttentionSummary(C_User_Attention_Summary entity)
+        {
+            DB.GetDal<C_User_Attention_Summary>().Update(entity);
+        }
+
+        public void DeleteUserAttention(C_User_Attention entity)
+        {
+            DB.GetDal<C_User_Attention>().Delete(entity);
+        }
 
         public C_SingleScheme_AnteCode QuerySingleScheme_AnteCode(string schemeId)
         {
@@ -664,5 +673,22 @@ namespace KaSon.FrameWork.ORM.Helper
             return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
         }
 
+        public C_User_Attention QueryUserAttention(string currentUserId, string beAttentionUserId)
+        {
+        
+            return DB.CreateQuery<C_User_Attention>().Where(p => p.BeAttentionUserId == beAttentionUserId
+                && p.FollowerUserId == currentUserId).FirstOrDefault();
+        }
+
+        public void AddUserAttention(C_User_Attention entity)
+        {
+            DB.GetDal<C_User_Attention>().Add(entity);
+        }
+
+        public C_User_Attention_Summary QueryUserAttentionSummary(string currentUserId)
+        {
+       
+            return DB.CreateQuery<C_User_Attention_Summary>().Where(p => p.UserId == currentUserId).FirstOrDefault();
+        }
     }
 }

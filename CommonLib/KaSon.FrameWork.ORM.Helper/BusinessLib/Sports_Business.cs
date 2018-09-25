@@ -6191,5 +6191,142 @@ namespace KaSon.FrameWork.ORM.Helper
             return DateTime.Now;
         }
         #endregion
+
+        /// <summary>
+        /// 查询单式上传的文件路径
+        /// </summary>
+        public SingleScheme_AnteCodeQueryInfo QuerySingleSchemeFullFileName(string schemeId)
+        {
+            var sportsManager = new Sports_Manager();
+            var entity = sportsManager.QuerySingleScheme_AnteCode(schemeId);
+            if (entity == null) return new SingleScheme_AnteCodeQueryInfo();
+            return new SingleScheme_AnteCodeQueryInfo
+            {
+                AllowCodes = entity.AllowCodes,
+                PlayType = entity.PlayType,
+                //AnteCodeFullFileName = entity.AnteCodeFullFileName,
+                ContainsMatchId = entity.ContainsMatchId,
+                CreateTime = entity.CreateTime,
+                SchemeId = entity.SchemeId,
+                SelectMatchId = entity.SelectMatchId,
+                FileBuffer = entity.FileBuffer,
+
+            };
+        }
+
+        public void AttentionUser(string currentUserId, string beAttentionUserId)
+        {
+            if (currentUserId == beAttentionUserId)
+                throw new LogicException("不能关注自己");
+            //开启事务
+           
+                DB.Begin();
+
+                var sportsManager = new Sports_Manager();
+                var entity = sportsManager.QueryUserAttention(currentUserId, beAttentionUserId);
+                if (entity != null)
+                    throw new LogicException("已对该用户发起过关注");
+
+                sportsManager.AddUserAttention(new C_User_Attention
+                {
+                    BeAttentionUserId = beAttentionUserId,
+                    FollowerUserId = currentUserId,
+                    CreateTime = DateTime.Now,
+                });
+
+                var currentEntity = sportsManager.QueryUserAttentionSummary(currentUserId);
+                if (currentEntity == null)
+                {
+                    sportsManager.AddUserAttentionSummary(new C_User_Attention_Summary
+                    {
+                        UserId = currentUserId,
+                        FollowerUserCount = 1,
+                        BeAttentionUserCount = 0,
+                        UpdateTime = DateTime.Now,
+                    });
+                }
+                else
+                {
+                    currentEntity.UpdateTime = DateTime.Now;
+                    currentEntity.FollowerUserCount++;
+                    sportsManager.UpdateUserAttentionSummary(currentEntity);
+                }
+
+                var beAttenEntity = sportsManager.QueryUserAttentionSummary(beAttentionUserId);
+                if (beAttenEntity == null)
+                {
+                    sportsManager.AddUserAttentionSummary(new C_User_Attention_Summary
+                    {
+                        UserId = beAttentionUserId,
+                        FollowerUserCount = 0,
+                        BeAttentionUserCount = 1,
+                        UpdateTime = DateTime.Now,
+                    });
+                }
+                else
+                {
+                    beAttenEntity.UpdateTime = DateTime.Now;
+                    beAttenEntity.BeAttentionUserCount++;
+                    sportsManager.UpdateUserAttentionSummary(beAttenEntity);
+                }
+
+                DB.Commit();
+            
+        }
+
+        /// <summary>
+        /// 取消关注用户
+        /// </summary>
+        public void CancelAttentionUser(string currentUserId, string beAttentionUserId)
+        {
+            //开启事务
+          
+                DB.Begin();
+
+                var sportsManager = new Sports_Manager();
+                var entity = sportsManager.QueryUserAttention(currentUserId, beAttentionUserId);
+                if (entity == null)
+                    throw new Exception("没有关注过该用户");
+                sportsManager.DeleteUserAttention(entity);
+
+                var currentEntity = sportsManager.QueryUserAttentionSummary(currentUserId);
+                if (currentEntity == null)
+                {
+                    sportsManager.AddUserAttentionSummary(new C_User_Attention_Summary
+                    {
+                        UserId = currentUserId,
+                        FollowerUserCount = 0,
+                        BeAttentionUserCount = 0,
+                        UpdateTime = DateTime.Now,
+                    });
+                }
+                else
+                {
+                    currentEntity.UpdateTime = DateTime.Now;
+                    currentEntity.FollowerUserCount--;
+                    sportsManager.UpdateUserAttentionSummary(currentEntity);
+                }
+
+                var beAttenEntity = sportsManager.QueryUserAttentionSummary(beAttentionUserId);
+                if (beAttenEntity == null)
+                {
+                    sportsManager.AddUserAttentionSummary(new C_User_Attention_Summary
+                    {
+                        UserId = beAttentionUserId,
+                        FollowerUserCount = 0,
+                        BeAttentionUserCount = 0,
+                        UpdateTime = DateTime.Now,
+                    });
+                }
+                else
+                {
+                    beAttenEntity.UpdateTime = DateTime.Now;
+                    beAttenEntity.BeAttentionUserCount--;
+                    sportsManager.UpdateUserAttentionSummary(beAttenEntity);
+                }
+
+            DB.Commit();
+            
+        }
     }
 }

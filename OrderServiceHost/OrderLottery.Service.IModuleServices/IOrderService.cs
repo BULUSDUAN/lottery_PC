@@ -115,6 +115,10 @@ namespace OrderLottery.Service.IModuleServices
         [Service(Date = "2018-9-20", Director = "renjun", Name = "查询已跟单数")]
         Task<int> QueryProfileFollowedCount(string userId, string gameCode, string gameType);
         [Service(Date = "2018-9-20", Director = "renjun", Name = "查询订单票数据")]
-        Task<Sports_TicketQueryInfoCollection> QuerySportsTicketList(string schemeId, int pageIndex, int pageSize, string userToken);
+        Task<Sports_TicketQueryInfoCollection> QuerySportsTicketList(string schemeId, int pageIndex, int pageSize, string userToken);\
+           [Service(Date = "2018-9-21", Director = "renjun", Name = "查询单式上传全路径名")]
+        Task<SingleScheme_AnteCodeQueryInfo> QuerySingleSchemeFullFileName(string schemeId, string userToken);
+        [Service(Date = "2018-9-21", Director = "renjun", Name = "查询宝单奖金提成信息")]
+        Task<BDFXCommisionInfo> QueryBDFXCommision(string schemeId);
     }
 }
