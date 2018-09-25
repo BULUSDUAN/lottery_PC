@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using EntityModel.CoreModel;
 using KaSon.FrameWork.Common.Net;
+using System.Globalization;
 
 namespace KaSon.FrameWork.Common.Sport
 {
@@ -2004,6 +2005,139 @@ namespace KaSon.FrameWork.Common.Sport
             if (charList.Contains(sqlCondition))
                 return true;
             return false;
+        }
+
+        /// <summary>
+        /// 日期当天是否有奖期数据 （春节无奖期）
+        /// </summary>
+        public static bool CheckIsOpenDay(DateTime date)
+        {
+            var calendar = new ChineseLunisolarCalendar();
+            var lMonth = calendar.GetMonth(date);
+            var lDay = calendar.GetDayOfMonth(date);
+            if (lMonth == 1 && lDay < 7)
+            {
+                return false;
+            }
+            else
+            {
+                date = date.AddDays(1);
+                lMonth = calendar.GetMonth(date);
+                lDay = calendar.GetDayOfMonth(date);
+                if (lMonth == 1 && lDay == 1)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public static string BuildLastIssuseNumber(string gameName, string currentIssuseNumber)
+        {
+            int maxIssuseCount = MaxIssuseCount(gameName);
+            string[] issuseNumberArray = currentIssuseNumber.Split('-');
+            int index = int.Parse(issuseNumberArray[1]);
+            DateTime dtPart = DateTime.Now;
+            switch (gameName.ToUpper())
+            {
+                case "CQSSC":
+                case "JXSSC":
+                case "JX11X5":
+                case "SD11X5":
+                case "GD11X5":
+                case "SDQYH":
+                case "GDKLSF":
+                case "JSKS":
+                    dtPart = DateTime.ParseExact(issuseNumberArray[0], "yyyyMMdd", null);
+                    if (index == 1)
+                    {
+                        dtPart = dtPart.AddDays(-1);
+                        index = maxIssuseCount;
+                    }
+                    else
+                    {
+                        index = index - 1;
+                    }
+
+                    //屏蔽春节7天奖期数据
+                    if (!CheckIsOpenDay(dtPart))
+                    {
+                        dtPart = dtPart.AddDays(-1);
+                    }
+                    //while (dtPart >= minDate && dtPart <= maxDate)
+                    //{
+                    //    dtPart = dtPart.AddDays(-1);
+                    //}
+
+                    return string.Format("{0}-{1}", dtPart.ToString("yyyyMMdd"), index.ToString().PadLeft(issuseNumberArray[1].Length, '0'));
+                case "GXKLSF":
+                    int fech = int.Parse(issuseNumberArray[0]);
+                    if (index == 1)
+                    {
+                        fech = fech - 1;
+                        index = maxIssuseCount;
+                    }
+                    else
+                    {
+                        index = index - 1;
+                    }
+                    return string.Format("{0}-{1}", fech.ToString(), index.ToString().PadLeft(issuseNumberArray[1].Length, '0'));
+                case "FC3D":
+                case "PL3":
+                case "SSQ":
+                case "DLT":
+                    dtPart = DateTime.ParseExact(issuseNumberArray[0], "yyyy", null);
+                    if (index == 1)
+                    {
+                        dtPart = dtPart.AddYears(-1);
+                        index = maxIssuseCount;
+                    }
+                    else
+                    {
+                        index = index - 1;
+                    }
+                    return string.Format("{0}-{1}", dtPart.ToString("yyyy"), index.ToString().PadLeft(issuseNumberArray[1].Length, '0'));
+                default:
+                    return currentIssuseNumber;
+            }
+        }
+
+        public static int MaxIssuseCount(string gameCode)
+        {
+            switch (gameCode.ToUpper())
+            {
+                case "CQSSC":
+                    return 120;
+                case "JXSSC":
+                    return 84;
+                case "JX11X5":
+                    return 84;
+                case "SD11X5":
+                    return 87;
+                case "GD11X5":
+                    return 84;
+                case "FC3D":
+                case "PL3":
+                case "PL5":
+                    return 358;
+                case "SDQYH":
+                    return 40;
+                case "GDKLSF":
+                    return 84;
+                case "GXKLSF":
+                    return 50;
+                case "SSQ":
+                case "DLT":
+                    return 156;
+                case "JSKS":
+                    return 82;
+                case "CTZQ":
+                    return 50;
+                case "SDKLPK3":
+                    return 88;
+                default:
+                    return 0;
+            }
         }
     }
 }

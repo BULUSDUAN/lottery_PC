@@ -458,6 +458,14 @@
       "Director": "lili",
       "SQL": "SELECT * FROM( SELECT ROW_NUMBER () OVER(ORDER BY BonusMoney DESC) RowIndex,T.* ,R.VipLevel,DisplayName,R.HideDisplayNameCount ,B.GoldCrownCount,B.GoldCupCount,B.GoldDiamondsCount,B.GoldStarCount ,B.SilverCrownCount,B.SilverCupCount,B.SilverDiamondsCount,B.SilverStarCount\t\t\t FROM ( SELECT UserId,GameCode,GameType,COUNT(1) TotalCount,SUM(TotalMoney) TotalMoney,SUM(AfterTaxBonusMoney) BonusMoney FROM C_OrderDetail WHERE BonusStatus=20 AND IsVirtualOrder=0 AND ComplateTime BETWEEN @ReportFromDate AND @ReportToDate AND (@GameCode=N'' OR GameCode=@GameCode) AND (@GameType=N'' OR GameType=@GameType) GROUP BY UserId,GameCode,GameType ) T LEFT OUTER JOIN C_User_Register R ON T.UserId=R.UserId LEFT OUTER JOIN C_User_Beedings B ON T.GameCode=B.GameCode AND T.GameType=B.GameType AND T.UserId=B.UserId ) TMP WHERE RowIndex > @PageIndex * @PageSize AND RowIndex <= (@PageIndex + 1) * @PageSize",
       "Remark": ""
+    },
+    {
+      "key": "Data_QueryRankReportBonusByGameCodeAll",
+      "Desc": "中奖排行榜_按彩种查",
+      "ParamDesc": "@ReportFromDate:fromDate,@ReportToDate:toDate,@TopCount:topCount,@GameCode:gameCode",
+      "Director": "lili",
+      "SQL": "SELECT * FROM( SELECT ROW_NUMBER()OVER(ORDER BY BonusMoney DESC) RowIndex,T.* ,R.VipLevel,DisplayName,R.HideDisplayNameCount FROM ( SELECT UserId,COUNT(1) TotalCount, SUM(TotalMoney) TotalMoney,SUM(AfterTaxBonusMoney) BonusMoney FROM C_Sports_Order_Complate WHERE BonusStatus=20 AND IsVirtualOrder=0 AND ComplateDateTime BETWEEN @ReportFromDate AND @ReportToDate AND (@GameCode=N'' OR GameCode IN (SELECT A FROM F_Common_SplitString(@GameCode, ','))) GROUP BY UserId ) T LEFT OUTER JOIN C_User_Register R ON T.UserId=R.UserId ) TMP WHERE RowIndex<=@TopCount",
+      "Remark": ""
     }
   ]
 }

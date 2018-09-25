@@ -23,6 +23,7 @@ using EntityModel.Redis;
 using Microsoft.Extensions.Caching.Distributed;
 using CSRedis;
 using KaSon.FrameWork.Common.Net;
+using KaSon.FrameWork.Common.Sport;
 
 namespace Lottery.Api.Controllers
 {
@@ -3032,6 +3033,120 @@ namespace Lottery.Api.Controllers
         }
 
         #endregion
+
+        public async Task<IActionResult> QueryGameIssuseInfo_App([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                string gameCode = p.GameCode;
+
+                param.Add("key", "Site.GameDelay." + gameCode.ToUpper());
+                var configtask = _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/Data/QueryCoreConfigByKey");
+                param.Clear();
+
+                param.Add("gameCode", gameCode);
+                var gameIssuseInfo = await _serviceProxyProvider.Invoke<Issuse_QueryInfo>(param, "api/Data/QueryCurrentIssuseInfo");
+
+                string DelayTime = string.Empty;
+                var config = await configtask;
+                if (config != null)
+                {
+                    DelayTime = config.ConfigValue;
+                }
+                if (gameIssuseInfo != null && !string.IsNullOrEmpty(DelayTime))
+                {
+                    var list = new List<object>();
+                    DateTime? OpeningTime = null;
+                    if (gameCode.ToUpper() == "FC3D" || gameCode.ToUpper() == "PL3")
+                    {
+                        OpeningTime = gameIssuseInfo.LocalStopTime.Date.AddHours(21).AddMinutes(30);
+                    }
+                    var LastIssuse = BettingHelper.BuildLastIssuseNumber(gameCode, gameIssuseInfo.IssuseNumber);
+                    param.Clear();
+                    param.Add("gameCode", gameCode);
+                    param.Add("gameType", "");
+                    param.Add("issuseNumber", LastIssuse);
+                    var theLastIssuseWinNumber = await _serviceProxyProvider.Invoke<WinNumber_QueryInfo>(param, "api/Data/GetWinNumber");
+                    list.Add(new
+                    {
+                        CurrIssuseNumber = gameIssuseInfo.IssuseNumber,
+                        LocalStopTime = gameIssuseInfo.LocalStopTime,
+                        OfficialStopTime = gameIssuseInfo.OfficialStopTime,
+                        DelayTime = DelayTime,
+                        ServiceTime = DateTime.Now,
+                        OpeningTime = OpeningTime,
+                        LastIssuseNumber = LastIssuse,
+                        LastIssuseWinNumber = string.IsNullOrEmpty(theLastIssuseWinNumber.WinNumber) ? "---" : theLastIssuseWinNumber.WinNumber
+                    });
+                    return Json(new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.成功,
+                        Message = "查询彩种奖期信息成功",
+                        MsgId = entity.MsgId,
+                        Value = list,
+                    });
+                }
+                else
+                    throw new ArgumentException("查询彩种奖期信息失败");
+            }
+            catch (ArgumentException ex)
+            {
+                //Log4Log.LogEX(KLogLevel.APIError, "API或服务错误***", ex);
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "业务参数错误" + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = "",
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "获取失败" + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = "获取失败",
+                });
+            }
+
+        }
+
+        public async Task<IActionResult> GetWinNumber([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                string gameCode = p.GameCode;
+                string gameType = p.GameType;
+                string issuseNumber = p.IssuseNumber;
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param.Add("gameCode", gameCode);
+                param.Add("gameType", string.IsNullOrEmpty(gameType) ? "" : gameType);
+                param.Add("issuseNumber", issuseNumber);
+                var IssuseWinNumber = await _serviceProxyProvider.Invoke<WinNumber_QueryInfo>(param, "api/Data/GetWinNumber");
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询彩种奖期信息成功",
+                    MsgId = entity.MsgId,
+                    Value = IssuseWinNumber,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "获取失败" + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = "获取失败",
+                });
+            }
+        }
 
         #region PC端快速购买（足球数据从redis获取）
         public async Task<IActionResult> QuickBuy_PC([FromServices]IServiceProxyProvider _serviceProxyProvider)

@@ -24,6 +24,7 @@ using System.Threading.Tasks;
 using KaSon.FrameWork.Common.ExceptionEx;
 using System.Diagnostics;
 using EntityModel.ExceptionExtend;
+using EntityModel;
 
 namespace Lottery.Api.Controllers
 {

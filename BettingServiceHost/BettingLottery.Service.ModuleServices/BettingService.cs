@@ -1343,5 +1343,40 @@ namespace BettingLottery.Service.ModuleServices
 
             return Task.FromResult(v);
         }
+
+        #region PC端接口
+        /// <summary>
+        /// 欧洲杯投注
+        /// </summary>
+        public Task<CommonActionResult> BetOZB(LotteryBettingInfo info, string balancePassword, decimal redBagMoney, string userId)
+        {
+            // 验证用户身份及权限
+            //检查彩种是否暂停销售
+            BusinessHelper.CheckGameEnable(info.GameCode.ToUpper());
+            try
+            {
+                var keyLine = string.Empty;
+                keyLine = new Sports_Business().BetOZB(info, userId, balancePassword, "Bet", redBagMoney);
+
+                return Task.FromResult(new CommonActionResult(true, "方案提交成功")
+                {
+                    ReturnValue = keyLine + "|" + info.TotalMoney,
+                });
+            }
+            catch (AggregateException ex)
+            {
+                throw new AggregateException(ex.Message);
+            }
+            catch (LogicException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("订单投注异常，请重试 ", ex);
+            }
+        }
+
+        #endregion
     }
 }

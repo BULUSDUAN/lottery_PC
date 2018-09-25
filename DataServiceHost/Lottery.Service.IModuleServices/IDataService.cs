@@ -148,6 +148,9 @@ namespace Lottery.Service.IModuleServices
         [Service(Date = "2018-9-13", Director = "lidi", Name = "获取首页按钮广告列表")]
         Task<List<APP_Advertising>> GetGameInfoIndex();
 
+        [Service(Date = "2018-9-13", Director = "lidi", Name = "获取此期的开奖号")]
+        Task<WinNumber_QueryInfo> GetWinNumber(string gameCode, string gameType, string issuseNumber);
+
         [Service(Date = "2018-9-13", Director = "lidi", Name = "首页快速购买彩种奖期数据")]
         Task<QuickBuyModel> GetQuickBuy_PC(List<string> GameCodeList);
 
@@ -177,5 +180,14 @@ namespace Lottery.Service.IModuleServices
 
         [Service(Date = "2018-9-21", Director = "lidi", Name = "中奖查询，公共数据")]
         Task<BonusOrderInfoCollection> QueryBonusInfoList(string userId, string gameCode, string gameType, string issuseNumber, string completeData, string key, int pageIndex, int pageSize);
+
+        [Service(Date = "2018-9-25", Director = "lidi", Name = "中奖排行榜_按彩种查")]
+        Task<RankReportCollection_TotalBonus_Sport> QueryRankReport_BonusByGameCode_All(DateTime fromDate, DateTime toDate, int topCount, string gameCode);
+
+        [Service(Date = "2018-9-25", Director = "lidi", Name = "查询开奖记录")]
+        Task<WinNumber_QueryInfoCollection> QueryWinNumberHistory(string gameCode, DateTime startTime, DateTime endTime, int pageIndex, int pageSize);
+
+        [Service(Date = "2018-9-25", Director = "lidi", Name = "根据条数查询开奖记录")]
+        Task<WinNumber_QueryInfoCollection> QueryWinNumberHistoryByCount(string gameCode, int count);
     }
 }

@@ -881,6 +881,27 @@ namespace KaSon.FrameWork.ORM.Helper
             return result;
 
         }
+
+        /// <summary>
+        /// 中奖排行榜_按彩种查
+        /// </summary>
+        /// <param name="fromDate"></param>
+        /// <param name="toDate"></param>
+        /// <param name="topCount"></param>
+        /// <param name="gameCode"></param>
+        /// <returns></returns>
+        public RankReportCollection_TotalBonus_Sport QueryRankReport_BonusByGameCode_All(DateTime fromDate, DateTime toDate, int topCount, string gameCode)
+        {
+            var Result = new RankReportCollection_TotalBonus_Sport();
+            string QueryBonusInfo_sql = SqlModule.DataModule.FirstOrDefault(x => x.Key == "Data_QueryRankReportBonusByGameCodeAll").SQL;
+            var BonusOrderList = DB.CreateSQLQuery(QueryBonusInfo_sql)
+              .SetString("@fromDate", fromDate.ToString("yyyy-MM-dd"))
+              .SetString("@toDate", toDate.ToString("yyyy-MM-dd"))
+              .SetInt("@topCount", topCount)
+              .SetString("@gameCode", gameCode).List<RankInfo_TotalBonus_Sport>();
+            Result.RankInfoList = BonusOrderList;
+            return Result;
+        }
         #endregion
     }
 }

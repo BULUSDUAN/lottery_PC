@@ -1,4 +1,5 @@
 ﻿using EntityModel.Enum;
+using ProtoBuf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,13 +44,20 @@ namespace EntityModel.CoreModel
     }
 
 
+    [ProtoContract]
     public class WinNumber_QueryInfo
     {
+        [ProtoMember(1)]
         public string GameCode { get; set; }
+        [ProtoMember(2)]
         public string DisplayName { get; set; }
+        [ProtoMember(3)]
         public string GameType { get; set; }
+        [ProtoMember(4)]
         public string IssuseNumber { get; set; }
+        [ProtoMember(5)]
         public string WinNumber { get; set; }
+        [ProtoMember(6)]
         public DateTime? AwardTime { get; set; }
     }
 
