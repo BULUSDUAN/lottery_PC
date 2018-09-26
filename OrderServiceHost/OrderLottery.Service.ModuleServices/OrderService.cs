@@ -206,6 +206,8 @@ namespace OrderLottery.Service.ModuleServices
         {
             return Task.FromResult(_order.QueryUserFollowRule(Model));
         }
+
+    
         /// <summary>
         ///  查询跟单信息
         /// </summary>
@@ -437,6 +439,20 @@ namespace OrderLottery.Service.ModuleServices
             try
             {
                 return Task.FromResult(new Sports_Business().QueryUserFollowRule(false, UserId, gameCode, gameType, pageIndex, pageSize));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        public Task<TogetherFollowRecordInfoCollection> QuerySucessFolloweRecord(string gameCode, long ruleId, int pageIndex, int pageSize, string UserId)
+        {
+            // 验证用户身份及权限
+            
+            try
+            {
+                return Task.FromResult(new Sports_Business().QuerySucessFolloweRecord(UserId, ruleId, gameCode, pageIndex, pageSize));
             }
             catch (Exception ex)
             {

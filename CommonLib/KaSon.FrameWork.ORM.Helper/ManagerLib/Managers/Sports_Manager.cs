@@ -1,6 +1,7 @@
 ﻿using EntityModel;
 using EntityModel.CoreModel;
 using EntityModel.Enum;
+using KaSon.FrameWork.Common.Sport;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -761,6 +762,37 @@ namespace KaSon.FrameWork.ORM.Helper
             return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
 
         }
-
+        public List<TogetherFollowRecordInfo> QuerySucessFolloweRecord(string userId, long ruleId, string gameCode, int pageIndex, int pageSize, out int totalCount)
+        {
+          
+            pageIndex = pageIndex < 0 ? 0 : pageIndex;
+            pageSize = pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : pageSize;
+            var query = (from r in DB.CreateQuery<C_Together_FollowerRecord>()
+                        join u in DB.CreateQuery<C_User_Register>() on r.CreaterUserId equals u.UserId
+                        join o in DB.CreateQuery<C_OrderDetail>() on r.SchemeId equals o.SchemeId
+                        where r.FollowerUserId == userId && (ruleId < 1 || r.RuleId == ruleId)
+                        && (gameCode == string.Empty || r.GameCode == gameCode)
+                        orderby r.CreateTime descending
+                        select new {r,u,o }).ToList().Select(p=> new TogetherFollowRecordInfo
+                        {
+                            CreaterDisplayName = p.u.DisplayName,
+                            CreaterUserId = p.u.UserId,
+                            CreaterHideDisplayNameCount = p.u.HideDisplayNameCount,
+                            CreateTime = p.r.CreateTime,
+                            FollowBonusMoney = p.r.BonusMoney,
+                            FollowMoney = p.r.BuyMoney,
+                            GameCode = p.r.GameCode,
+                            GameType = p.r.GameType,
+                            GameCodeDisplayName = BettingHelper.FormatGameCode(p.r.GameCode),
+                            GameTypeDisplayName = BettingHelper.FormatGameType(p.r.GameCode, p.r.GameType),
+                            IssuseNumber = p.o.CurrentIssuseNumber,
+                            ProgressStatus = (ProgressStatus)p.o.ProgressStatus,
+                            SchemeId = p.o.SchemeId,
+                            SchemeMoney = p.o.TotalMoney,
+                            SchemeBonusMoney = p.o.AfterTaxBonusMoney,
+                        });
+            totalCount = query.Count();
+            return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+        }
     }
 }

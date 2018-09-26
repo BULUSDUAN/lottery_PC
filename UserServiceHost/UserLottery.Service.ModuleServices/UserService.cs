@@ -1700,5 +1700,26 @@ namespace UserLottery.Service.ModuleServices
                 throw new Exception("获取最近登录 - " + ex.Message, ex);
             }
         }
+
+        /// <summary>
+        /// 查询我的用户意见列表
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public Task<UserIdeaInfo_QueryCollection> QueryMyUserIdeaList(int pageIndex, int pageSize, string UserId)
+        {
+          
+            try
+            {
+                var biz = new SiteMessageBusiness();
+                return Task.FromResult(biz.QueryMyUserIdeaList(UserId, pageIndex, pageSize));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
     }
 }

@@ -153,5 +153,7 @@ namespace UserLottery.Service.IModuleServices
         Task<SiteMessageInnerMailListNew_Collection> QueryMyInnerMailList(int pageIndex, int pageSize, string UserId);
         [Service(Date = "2018-9-25", Director = "renjun", Name = "阅读站内信")]
         Task<InnerMailInfo_Query> ReadInnerMail(string innerMailId, string UserId);
+        [Service(Date = "2018-9-26", Director = "renjun", Name = "查询我的用户意见列表")]
+        Task<UserIdeaInfo_QueryCollection> QueryMyUserIdeaList(int pageIndex, int pageSize, string UserId);
     }
 }

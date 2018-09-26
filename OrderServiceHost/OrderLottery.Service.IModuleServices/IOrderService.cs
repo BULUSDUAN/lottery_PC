@@ -122,5 +122,7 @@ namespace OrderLottery.Service.IModuleServices
         Task<BDFXCommisionInfo> QueryBDFXCommision(string schemeId);
         [Service(Date = "2018-9-25", Director = "renjun", Name = "查询定制我的跟单规则")]
         Task<TogetherFollowerRuleQueryInfoCollection> QueryUserFollowRule(string gameCode, string gameType, int pageIndex, int pageSize, string UserId);
+        [Service(Date = "2018-9-26", Director = "renjun", Name = "成功定制跟单记录")]
+        Task<TogetherFollowRecordInfoCollection> QuerySucessFolloweRecord(string gameCode, long ruleId, int pageIndex, int pageSize, string UserId);
     }
 }
