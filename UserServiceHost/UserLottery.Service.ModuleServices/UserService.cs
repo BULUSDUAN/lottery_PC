@@ -450,6 +450,57 @@ namespace UserLottery.Service.ModuleServices
 
         }
 
+        /// <summary>
+        /// 根据用户编号，查询总的站内信条数
+        /// </summary>
+        public Task<int> GetUserInnerMailCount(string UserId)
+        {
+            try
+            {
+                return Task.FromResult(new SiteMessageControllBusiness().GetUserInnerMailCount(UserId));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        ///// <summary>
+        ///// 查询我的站内信
+        ///// </summary>
+        public Task<SiteMessageInnerMailListNew_Collection> QueryMyInnerMailList(int pageIndex, int pageSize, string UserId)
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+
+            var siteBiz = new SiteMessageControllBusiness();
+            return Task.FromResult(siteBiz.QueryInnerMailListByReceiver(UserId, pageIndex, pageSize));
+        }
+
+        /// <summary>
+        /// 阅读站内信
+        /// </summary>
+        public Task<InnerMailInfo_Query> ReadInnerMail(string innerMailId, string UserId)
+        {
+          
+                var siteBiz = new SiteMessageControllBusiness();
+                var info = siteBiz.ReadInnerMail(innerMailId,UserId);
+                return Task.FromResult(info);
+            
+        }
+
+
+        /// <summary>
+        /// 删除站内信
+        /// </summary>
+        public Task<CommonActionResult> DeleteInnerMail(string innerMailId, string userId)
+        {
+
+            var siteBiz = new SiteMessageControllBusiness();
+            siteBiz.DeleteInnerMail(innerMailId,userId);
+
+            return Task.FromResult(new CommonActionResult(true, "删除站内信完成。"));
+        }
 
         #region 修改密码
 
