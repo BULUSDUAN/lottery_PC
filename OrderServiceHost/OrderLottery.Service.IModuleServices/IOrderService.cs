@@ -124,5 +124,7 @@ namespace OrderLottery.Service.IModuleServices
         Task<TogetherFollowerRuleQueryInfoCollection> QueryUserFollowRule(string gameCode, string gameType, int pageIndex, int pageSize, string UserId);
         [Service(Date = "2018-9-26", Director = "renjun", Name = "成功定制跟单记录")]
         Task<TogetherFollowRecordInfoCollection> QuerySucessFolloweRecord(string gameCode, long ruleId, int pageIndex, int pageSize, string UserId);
+        [Service(Date = "2018-9-27", Director = "renjun", Name = "查询已停止的期号信息")]
+        Task<string> QueryStopIssuseList(string gameCode, string gameType, int length);
     }
 }

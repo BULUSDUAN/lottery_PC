@@ -794,5 +794,119 @@ namespace KaSon.FrameWork.ORM.Helper
             totalCount = query.Count();
             return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
         }
+
+        public ProfileUserInfo QueryProfileUserInfo(string userId)
+        {
+        
+            var query = (from r in DB.CreateQuery<C_User_Register>()
+                        join u in DB.CreateQuery<C_User_Attention_Summary>() on r.UserId equals u.UserId
+                        where r.UserId == userId
+                        select new {r,u }).ToList().Select(p=> new ProfileUserInfo
+                        {
+                            UserId = p.r.UserId,
+                            AttentionCount = p.u.FollowerUserCount,
+                            AttentionedCount = p.u.BeAttentionUserCount,
+                            HideNameCount = p.r.HideDisplayNameCount,
+                            UserDisplayName = p.r.DisplayName,
+                            CreateTime = p.r.CreateTime,
+                        });
+            return query.FirstOrDefault();
+        }
+
+        public List<UserBeedingListInfo> QueryUserBeedingList(string gameCode, string gameType, string userId, string userDisplayName, int pageIndex, int pageSize,
+      QueryUserBeedingListOrderByProperty orderByProperty, OrderByCategory orderByCategory, out int totalCount)
+        {
+           
+            pageIndex = pageIndex < 0 ? 0 : pageIndex;
+            pageSize = pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : pageSize;
+
+            var query = (from b in DB.CreateQuery<C_User_Beedings>()
+                        join u in DB.CreateQuery<C_User_Register>() on b.UserId equals u.UserId
+                        where b.TotalBonusMoney > 0M && b.TotalBonusTimes > 0
+                        && (string.Empty == gameCode || b.GameCode == gameCode)
+                        && (string.Empty == gameType || b.GameType == gameType)
+                        && (string.Empty == userId || u.UserId == userId)
+                        && (string.Empty == userDisplayName || u.DisplayName == userDisplayName)
+                        select new {b,u }).ToList().Select(p=>new UserBeedingListInfo
+                        {
+                            BeFollowedTotalMoney = p.b.BeFollowedTotalMoney,
+                            BeFollowerUserCount = p.b.BeFollowerUserCount,
+                            GameCode = p.b.GameCode,
+                            GameType = p.b.GameType,
+                            GoldCrownCount = p.b.GoldCrownCount,
+                            GoldCupCount = p.b.GoldCupCount,
+                            GoldDiamondsCount = p.b.GoldDiamondsCount,
+                            GoldStarCount = p.b.GoldStarCount,
+                            SilverCrownCount = p.b.SilverCrownCount,
+                            SilverCupCount = p.b.SilverCupCount,
+                            SilverDiamondsCount = p.b.SilverDiamondsCount,
+                            SilverStarCount = p.b.SilverStarCount,
+                            TotalBetMoney = p.b.TotalBetMoney,
+                            TotalOrderCount = p.b.TotalOrderCount,
+                            TotalBonusMoney = p.b.TotalBonusMoney,
+                            TotalBonusTimes = p.b.TotalBonusTimes,
+                            UserDisplayName = p.u.DisplayName,
+                            UserHideDisplayNameCount = p.u.HideDisplayNameCount,
+                            UserId = p.b.UserId,
+                        });
+
+            #region 排序
+
+            switch (orderByProperty)
+            {
+                case QueryUserBeedingListOrderByProperty.TotalBonusMoney:
+                    switch (orderByCategory)
+                    {
+                        case OrderByCategory.DESC:
+                            query.OrderByDescending(p => p.TotalBonusMoney);
+                            break;
+                        case OrderByCategory.ASC:
+                            query.OrderBy(p => p.TotalBonusMoney);
+                            break;
+                    }
+                    break;
+                case QueryUserBeedingListOrderByProperty.TotalBonusTimes:
+                    switch (orderByCategory)
+                    {
+                        case OrderByCategory.DESC:
+                            query.OrderByDescending(p => p.TotalBonusTimes);
+                            break;
+                        case OrderByCategory.ASC:
+                            query.OrderBy(p => p.TotalBonusTimes);
+                            break;
+                    }
+                    break;
+                case QueryUserBeedingListOrderByProperty.BeFollowedTotalMoney:
+                    switch (orderByCategory)
+                    {
+                        case OrderByCategory.DESC:
+                            query.OrderByDescending(p => p.BeFollowedTotalMoney);
+                            break;
+                        case OrderByCategory.ASC:
+                            query.OrderBy(p => p.BeFollowedTotalMoney);
+                            break;
+                    }
+                    break;
+                case QueryUserBeedingListOrderByProperty.BeFollowerUserCount:
+                    switch (orderByCategory)
+                    {
+                        case OrderByCategory.DESC:
+                            query.OrderByDescending(p => p.BeFollowerUserCount);
+                            break;
+                        case OrderByCategory.ASC:
+                            query.OrderBy(p => p.BeFollowerUserCount);
+                            break;
+                    }
+                    break;
+            }
+
+            #endregion
+
+            totalCount = query.Count();
+            return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+
+
+        }
+
     }
 }

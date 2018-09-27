@@ -301,5 +301,61 @@ namespace KaSon.FrameWork.ORM.Helper
             result.AddRange(new BlogManager().QueryBlog_UserLoginHistory(userId));
             return result;
         }
+
+        public ProfileUserInfo QueryProfileUserInfo(string userId)
+        {
+            var manager = new Sports_Manager();
+            var info = manager.QueryProfileUserInfo(userId);
+         
+            return info;
+        }
+
+        public ProfileBonusLevelInfo QueryProfileBonusLevelInfo(string userId)
+        {
+            var result = new ProfileBonusLevelInfo();
+            var pb = new BlogManager().QueryBlog_ProfileBonusLevel(userId);
+            if (pb == null)
+                return new ProfileBonusLevelInfo();
+            return new ProfileBonusLevelInfo
+            {
+                UserId = pb.UserId,
+                MaxLevelName = pb.MaxLevelName,
+                MaxLevelValue = pb.MaxLevelValue,
+                WinHundredMillionCount = pb.WinHundredMillionCount,
+                WinOneHundredCount = pb.WinOneHundredCount,
+                WinOneHundredThousandCount = pb.WinOneHundredThousandCount,
+                WinOneMillionCount = pb.WinOneMillionCount,
+                WinOneThousandCount = pb.WinOneThousandCount,
+                WinTenMillionCount = pb.WinTenMillionCount,
+                WinTenThousandCount = pb.WinTenThousandCount,
+            };
+        }
+
+        public ProfileLastBonusCollection QueryProfileLastBonusCollection(string userId)
+        {
+            var result = new ProfileLastBonusCollection();
+            var totalCount = 0;
+            result.List.AddRange(new BlogManager().QueryProfileLastBonusList(userId, out totalCount));
+            result.TotalCount = totalCount;
+            return result;
+        }
+
+        public ProfileDataReport QueryProfileDataReport(string userId)
+        {
+            var manager = new BlogManager();
+            var dataReport = manager.QueryBlog_DataReport(userId);
+            if (dataReport == null)
+                return new ProfileDataReport();
+            return new ProfileDataReport
+            {
+                UserId = dataReport.UserId,
+                CreateSchemeCount = dataReport.CreateSchemeCount,
+                JoinSchemeCount = dataReport.JoinSchemeCount,
+                TotalBonusCount = dataReport.TotalBonusCount,
+                TotalBonusMoney = dataReport.TotalBonusMoney,
+                UpdateTime = dataReport.UpdateTime,
+            };
+
+        }
     }
 }

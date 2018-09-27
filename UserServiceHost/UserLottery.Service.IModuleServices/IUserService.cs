@@ -155,5 +155,19 @@ namespace UserLottery.Service.IModuleServices
         Task<InnerMailInfo_Query> ReadInnerMail(string innerMailId, string UserId);
         [Service(Date = "2018-9-26", Director = "renjun", Name = "查询我的用户意见列表")]
         Task<UserIdeaInfo_QueryCollection> QueryMyUserIdeaList(int pageIndex, int pageSize, string UserId);
+        [Service(Date = "2018-9-27", Director = "renjun", Name = "查询普通用户下所有销量")]
+        Task<SporeadUsersCollection> QuerySporeadUsers(string agentId, DateTime startTime, DateTime endTime, int pageIndex, int pageSize);
+        [Service(Date = "2018-9-27", Director = "renjun", Name = "查询用户基础信息")]
+        Task<ProfileUserInfo> QueryProfileUserInfo(string UserId);
+        [Service(Date = "2018-9-27", Director = "renjun", Name = "查询获奖级别")]
+        Task<ProfileBonusLevelInfo> QueryProfileBonusLevelInfo(string UserId);
+        [Service(Date = "2018-9-27", Director = "renjun", Name = "查询最新中奖")]
+        Task<ProfileLastBonusCollection> QueryProfileLastBonusCollection(string UserId);
+        [Service(Date = "2018-9-27", Director = "renjun", Name = "查询个人数据")]
+        Task<ProfileDataReport> QueryProfileDataReport(string UserId);
+        [Service(Date = "2018-9-27", Director = "renjun", Name = "查询用户跟单人数")]
+        Task<int> QueryTogetherFollowerCount(string createUserId);
+        [Service(Date = "2018-9-27", Director = "renjun", Name = "查询用户战绩")]
+        Task<UserBeedingListInfoCollection> QueryUserBeedingList(string gameCode, string gameType, string userId, string userDisplayName, int pageIndex, int pageSize, QueryUserBeedingListOrderByProperty property, OrderByCategory category);
     }
 }

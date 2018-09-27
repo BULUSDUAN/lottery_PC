@@ -1721,5 +1721,125 @@ namespace UserLottery.Service.ModuleServices
                 throw new Exception(ex.Message, ex);
             }
         }
+
+        /// <summary>
+        /// 查询普通用户下所有销量
+        /// </summary>
+        public Task<SporeadUsersCollection> QuerySporeadUsers(string agentId, DateTime startTime, DateTime endTime, int pageIndex, int pageSize)
+        {
+            try
+            {
+                int TotalCount = 0;
+                var siteBiz = new SporeadUsersCollection();
+                var result = new BlogManager().QueryBlog_UserSpreadList(agentId, pageIndex, pageSize, startTime, endTime, out TotalCount);
+                siteBiz.TotalCount = TotalCount;
+                foreach (var item in result)
+                {
+                    siteBiz.BlogUserSpreadList.Add(new BlogUserSpread()
+                    {
+                        Id = item.Id,
+                        UserId = item.UserId,
+                        userName = item.userName,
+                        AgentId = item.AgentId,
+                        CrateTime = item.CrateTime,
+                        CTZQ = item.CTZQ,
+                        BJDC = item.BJDC,
+                        JCZQ = item.JCZQ,
+                        JCLQ = item.JCLQ,
+                        SZC = item.SZC,
+                        GPC = item.GPC,
+                        UpdateTime = item.UpdateTime
+
+                    });
+                }
+                return Task.FromResult(siteBiz);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询用户基础信息
+        /// </summary>
+        public Task<ProfileUserInfo> QueryProfileUserInfo(string UserId)
+        {
+            var biz = new CacheDataBusiness();
+            return Task.FromResult(biz.QueryProfileUserInfo(UserId));
+        }
+
+        /// <summary>
+        /// 查询获奖级别
+        /// </summary>
+        public Task<ProfileBonusLevelInfo> QueryProfileBonusLevelInfo(string UserId)
+        {
+            var biz = new CacheDataBusiness();
+            return Task.FromResult(biz.QueryProfileBonusLevelInfo(UserId));
+        }
+
+        #region 最新中奖
+
+        /// <summary>
+        /// 查询最新中奖
+        /// </summary>
+        /// <param name="UserId"></param>
+        /// <returns></returns>
+        public Task<ProfileLastBonusCollection> QueryProfileLastBonusCollection(string UserId)
+        {
+            var biz = new CacheDataBusiness();
+            return Task.FromResult(biz.QueryProfileLastBonusCollection(UserId));
+        }
+        #endregion
+
+
+        #region 数据统计
+
+        /// <summary>
+        /// 查询统计数据
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public Task<ProfileDataReport> QueryProfileDataReport(string UserId)
+        {
+            var biz = new CacheDataBusiness();
+            return Task.FromResult(biz.QueryProfileDataReport(UserId));
+        }
+        #endregion
+
+        /// <summary>
+        /// 查询发起人被跟单总人数
+        /// </summary>
+        /// <param name="createUserId"></param>
+        /// <returns></returns>
+        public Task<int> QueryTogetherFollowerCount(string createUserId)
+        {
+            try
+            {
+                return Task.FromResult(new SqlQueryBusiness().QueryTogetherFollowerCount(createUserId));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询用户战绩
+        /// </summary>
+        public Task<UserBeedingListInfoCollection> QueryUserBeedingList(string gameCode, string gameType, string userId, string userDisplayName, int pageIndex, int pageSize, QueryUserBeedingListOrderByProperty property, OrderByCategory category)
+        {
+           
+            try
+            {
+                return Task.FromResult(new Sports_Business().QueryUserBeedingList(gameCode, gameType, userId, userDisplayName, pageIndex, pageSize, property, category));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+
     }
 }

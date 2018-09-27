@@ -510,5 +510,28 @@ namespace OrderLottery.Service.ModuleServices
                 throw new Exception(ex.Message, ex);
             }
         }
+
+
+        /// <summary>
+        /// 查询派奖失败列表
+        /// </summary>
+        /// <param name="gameCode"></param>
+        /// <param name="gameType"></param>
+        /// <param name="length"></param>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public string QueryStopIssuseList(string gameCode, string gameType, int length, string userToken)
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                return new Sports_Business().QueryStopIssuseList(gameCode, gameType, length);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
     }
 }
