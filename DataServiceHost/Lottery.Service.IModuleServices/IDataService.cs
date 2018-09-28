@@ -150,5 +150,17 @@ namespace Lottery.Service.IModuleServices
 
         [Service(Date = "2018-9-13", Director = "lidi", Name = "获取此期的开奖号")]
         Task<WinNumber_QueryInfo> GetWinNumber(string gameCode, string gameType, string issuseNumber);
+
+        [Service(Date = "2018-9-27", Director = "lidi", Name = "冻结需要充值的金额")]
+        Task<CommonActionResult> FreezeGameRecharge(string userId, decimal money, string userDisplayName);
+
+        [Service(Date = "2018-9-27", Director = "lidi", Name = "游戏充值完成后操作")]
+        Task<CommonActionResult> EndFreezeGameRecharge(string orderId, bool isSuccess, string providerSerialNo);
+
+        [Service(Date = "2018-9-27", Director = "lidi", Name = "游戏提现前存入交易表")]
+        Task<CommonActionResult> AddGameWithdraw(string userId, decimal money, string userDisplayName, string orderId, string providerSerialNo);
+
+        //[Service(Date = "2018-9-27", Director = "lidi", Name = "提款完成，修改交易表")]
+        //Task<CommonActionResult> EndAddGameWithdraw(string OrderId, bool IsSuccess);
     }
 }

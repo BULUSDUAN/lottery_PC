@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using System.Linq;
 using EntityModel.Redis;
 using EntityModel;
+using EntityModel.Enum;
+using KaSon.FrameWork.Common.Net;
 
 namespace KaSon.FrameWork.ORM.Helper.AutoTask
 {
@@ -28,7 +30,8 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
                         StartTaskByWriteChaseOrderToDb(seconds),
                         Init_Pool_Data(),
                         Repair_SZCAddToRedis_dp(),
-                        Repair_SZCAddToRedis_gp()
+                        Repair_SZCAddToRedis_gp(),
+                        GameRechargeRepair()
             });
         }
 
@@ -636,7 +639,75 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
             return null;
         }
 
+        public static async Task GameRechargeRepair()
+        {
+            var min = 10;
+            var OperatorCode = ConfigHelper.AllConfigInfo["GameApi"]["OperatorCode"].ToString();
+            var SecretKey = ConfigHelper.AllConfigInfo["GameApi"]["SecretKey"].ToString();
+            var PreName = ConfigHelper.AllConfigInfo["GameApi"]["PreName"].ToString();
+            var GameUrl = ConfigHelper.AllConfigInfo["GameApi"]["URL"].ToString();
+            var GamePassWord = ConfigHelper.AllConfigInfo["GameApi"]["GamePassWord"].ToString();
+            var dataQuery = new DataQuery();
+            while (true)
+            {
+                try
+                {
+                    //查找十分钟前未完成的交易
+                    var NotFinishGameTransfer = dataQuery.QueryNotFinishGame(min);
+                    if (NotFinishGameTransfer.Count > 0)
+                    {
+                        foreach (var item in NotFinishGameTransfer)
+                        {
+                            var gameLoginName = PreName + item.UserDisplayName;
+                            //var confirmSign = MD5Helper.UpperMD5($"{OperatorCode}&{GamePassWord}&{gameLoginName}&{SecretKey}");
+                            //var confirmParam = JsonHelper.Serialize(new
+                            //{
+                            //    command = "CHECK_TRANSFER_STATUS",
+                            //    gameprovider = "2",
+                            //    sign = confirmSign,
+                            //    @params = new
+                            //    {
+                            //        username = gameLoginName,
+                            //        operatorcode = OperatorCode,
+                            //        password = pwd,
+                            //        serialNo = item.OrderId,
+                            //    }
+                            //});
+                            //var confirmResult = PostManager.HttpPost(GameUrl, confirmParam, "utf-8");
+                            //var jsonConfirmResult = JsonHelper.Decode(confirmResult);
+                            //if (item.TransferType == (int)GameTransferType.Recharge)
+                            //{
+                            //    var IsSuccess = false;
+                            //    if (jsonConfirmResult.ErrorCode == 0)
+                            //    {
+                            //        IsSuccess = true;
+                            //    }
+                            //    dataQuery.EndFreezeGameRecharge(item.OrderId, IsSuccess);
+                            //}
+                            //if (item.TransferType == (int)GameTransferType.Withdraw)
+                            //{
+                            //    var IsSuccess = false;
+                            //    if (jsonConfirmResult.ErrorCode == 0)
+                            //    {
+                            //        IsSuccess = true;
+                            //    }
+                            //    dataQuery.EndAddGameWithdraw(item.OrderId, IsSuccess);
+                            //}
+                            if (item.TransferType == (int)GameTransferType.Recharge)
+                            {
+                                var IsSuccess = false;
+                                dataQuery.EndFreezeGameRecharge(item.OrderId, IsSuccess,"");
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
 
+                }
+                await Task.Delay(30000);
+            }
+        }
     }
 }
 

@@ -106,6 +106,32 @@ namespace KaSon.FrameWork.Common.Net
             }
         }
 
+        /// <summary>
+        /// post请求到指定地址并获取返回的信息内容
+        /// </summary>
+        /// <param name="url">请求地址</param>
+        /// <param name="postData">请求参数</param>
+        /// <param name="encodeType">编码类型如：UTF-8</param>
+        /// <returns>返回响应内容</returns>
+        public static string HttpPost(string URL, string strPostdata, string strEncoding)
+        {
+            Encoding encoding = Encoding.Default;
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(URL);
+            request.Method = "post";
+            request.Accept = "text/html, application/xhtml+xml, */*";
+            request.ContentType = "application/json"; //application/x-www-form-urlencoded
+            request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36";
+            byte[] buffer = encoding.GetBytes(strPostdata);
+            request.ContentLength = buffer.Length;
+            request.GetRequestStream().Write(buffer, 0, buffer.Length);
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            using (StreamReader reader = new StreamReader(response.GetResponseStream(), System.Text.Encoding.GetEncoding(strEncoding)))
+            {
+                return reader.ReadToEnd();
+            }
+        }
+
+
         public static string PostCustomer(string url, string requestString, Encoding encoding, Action<HttpWebRequest> requestHandler = null)
         {
             try

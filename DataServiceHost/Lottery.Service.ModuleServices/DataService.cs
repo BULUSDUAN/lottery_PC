@@ -874,6 +874,103 @@ namespace Lottery.Service.ModuleServices
                 throw new Exception("获取出错", ex);
             }
         }
+
+        /// <summary>
+        /// 判断余额是否足够充值
+        /// 冻结需要充值的金额，并生成一条游戏充值数据存入游戏交易表中，返回订单号
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="money"></param>
+        /// <returns></returns>
+        public Task<CommonActionResult> FreezeGameRecharge(string userId, decimal money, string userDisplayName)
+        {
+            try
+            {
+                var loginBiz = new LocalLoginBusiness();
+                var entity = loginBiz.QueryUserBalance(userId);
+                var totalMoney = entity.GetTotalCashMoney();
+                if (totalMoney < money) //余额不足
+                {
+                    return Task.FromResult(new CommonActionResult()
+                    {
+                        IsSuccess = false,
+                        Message = "余额不足"
+                    });
+                }
+                //存入游戏交易表中
+                return Task.FromResult(new DataQuery().FreezeGameRecharge(userId, money, userDisplayName));
+            }
+            catch (LogicException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("执行出错", ex);
+            }
+        }
+
+        /// <summary>
+        /// 充值完成或失败，扣除冻结金额或返还冻结金额
+        /// </summary>
+        /// <param name="OrderId"></param>
+        /// <param name="IsSuccess"></param>
+        /// <returns></returns>
+        public Task<CommonActionResult> EndFreezeGameRecharge(string orderId, bool isSuccess,string providerSerialNo)
+        {
+            try
+            {
+                return Task.FromResult(new DataQuery().EndFreezeGameRecharge(orderId, isSuccess, providerSerialNo));
+            }
+            catch (LogicException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("执行出错", ex);
+            }
+        }
+
+
+
+        /// <summary>
+        /// 增加游戏交易信息到交易表
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="money"></param>
+        /// <returns></returns>
+        public Task<CommonActionResult> AddGameWithdraw(string userId, decimal money, string userDisplayName, string orderId, string providerSerialNo)
+        {
+            try
+            {
+                return Task.FromResult(new DataQuery().AddGameWithdraw(userId, money, userDisplayName, orderId, providerSerialNo));
+            }
+            catch (LogicException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("执行出错", ex);
+            }
+        }
+
+        public Task<CommonActionResult> EndAddGameWithdraw(string OrderId, bool IsSuccess)
+        {
+            try
+            {
+                return Task.FromResult(new DataQuery().EndAddGameWithdraw(OrderId, IsSuccess));
+            }
+            catch (LogicException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("执行出错", ex);
+            }
+        }
     }
 
 

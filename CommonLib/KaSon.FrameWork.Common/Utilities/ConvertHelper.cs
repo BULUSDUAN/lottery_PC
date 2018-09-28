@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using System.Text.RegularExpressions;
+
 namespace KaSon.FrameWork.Common.Utilities { 
     public class ConvertHelper
     {
@@ -1195,6 +1197,20 @@ namespace KaSon.FrameWork.Common.Utilities {
                 Output += Input.Substring(8, Input.Length - 8);
             }
             return Output;
+        }
+
+        /// <summary>
+        /// 替换第一个
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="oldValue"></param>
+        /// <param name="newValue"></param>
+        /// <returns></returns>
+        public static string ReplaceFirst(string input, string oldValue, string newValue)
+        {
+            Regex regEx = new Regex(oldValue, RegexOptions.Multiline);
+            return regEx.Replace(input, newValue == null ? "" : newValue, 1);
+
         }
     }
 }

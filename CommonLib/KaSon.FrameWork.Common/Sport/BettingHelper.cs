@@ -25,6 +25,16 @@ namespace KaSon.FrameWork.Common.Sport
             string prefix = "MWD";
             return prefix + UsefullHelper.UUID();
         }
+
+        /// <summary>
+        /// 第三方游戏交易订单号
+        /// </summary>
+        /// <returns></returns>
+        public static string GetGameTransferId()
+        {
+            string prefix = "GTD";
+            return prefix + UsefullHelper.UUID();
+        }
         public static string ConvertGameType(string gameCode, string gameType, string betType, int betCount)
         {
             switch (gameCode.ToLower())

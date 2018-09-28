@@ -117,4 +117,6 @@
     </None>
   </ItemGroup>
 
+  <ProjectExtensions><VisualStudio><UserProperties Config_4AllConfig_1json__JSONSchema="http://json.schemastore.org/bootstraprc" Config_4gatewaySettings_1json__JSONSchema="http://json.schemastore.org/babelrc" /></VisualStudio></ProjectExtensions>
+
 </Project>
