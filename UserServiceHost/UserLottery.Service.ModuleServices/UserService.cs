@@ -1840,6 +1840,19 @@ namespace UserLottery.Service.ModuleServices
             }
         }
 
-
+        /// <summary>
+        /// 查询用户总数
+        /// </summary>
+        public Task<int> QueryUserRegisterCount()
+        {
+            try
+            {
+                return Task.FromResult(new RegisterBusiness().QueryUserRegisterCount());
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
     }
 }

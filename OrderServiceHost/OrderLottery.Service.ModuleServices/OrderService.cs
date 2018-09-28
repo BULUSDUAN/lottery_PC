@@ -520,17 +520,63 @@ namespace OrderLottery.Service.ModuleServices
         /// <param name="length"></param>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public string QueryStopIssuseList(string gameCode, string gameType, int length, string userToken)
+        public Task<string> QueryStopIssuseList(string gameCode, string gameType, int length)
         {
-            // 验证用户身份及权限
-            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+           
             try
             {
-                return new Sports_Business().QueryStopIssuseList(gameCode, gameType, length);
+                return Task.FromResult(new Sports_Business().QueryStopIssuseList(gameCode, gameType, length));
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message, ex);
+            }
+        }
+
+        public Task<JCZQMatchResult_Collection> QueryJCZQMatchResultByTime(DateTime time)
+        {
+            try
+            {
+                return Task.FromResult(new IssuseBusiness().QueryJCZQMatchResult(time));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        public Task<JCLQMatchResult_Collection> QueryJCLQMatchResultByTime(DateTime time)
+        {
+            try
+            {
+                return Task.FromResult(new IssuseBusiness().QueryJCLQMatchResult(time));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        public Task<string> QueryBJDCLastIssuseNumber(int count)
+        {
+            return Task.FromResult(new IssuseBusiness().QueryBJDCLastIssuseNumber(count));
+        }
+
+        /// <summary>
+        /// 北京单场查询开奖结果
+        /// </summary>
+        /// <param name="issuseNumber"></param>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public Task<BJDCMatchResultInfo_Collection> QueryBJDC_MatchResultList(string issuseNumber)
+        {
+            try
+            {
+                return Task.FromResult(new IssuseBusiness().QueryBJDC_MatchResultList(issuseNumber));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("北京单场查询开奖结果异常 - " + ex.Message, ex);
             }
         }
     }

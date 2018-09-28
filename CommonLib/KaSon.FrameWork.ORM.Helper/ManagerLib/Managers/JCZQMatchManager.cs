@@ -206,44 +206,44 @@ namespace KaSon.FrameWork.ORM.Helper
         public List<JCZQMatchResult> QueryJCZQMatchResult(DateTime time)
         {
          
-            var query = from r in DB.CreateQuery<C_JCZQ_MatchResult>()
+            var query = (from r in DB.CreateQuery<C_JCZQ_MatchResult>()
                         join m in DB.CreateQuery<C_JCZQ_Match>() on r.MatchId equals m.MatchId
                         where r.CreateTime >= time && r.CreateTime < time.AddDays(1)
                         && (r.SPF_SP != 1M && r.BRQSPF_SP != 1M && r.ZJQ_SP != 1M && r.BF_SP != 1M && r.BQC_SP != 1M)
                         orderby r.MatchId descending
-                        select new JCZQMatchResult
+                        select new {r,m }).ToList().Select(p=> new JCZQMatchResult
                         {
-                            MatchId = m.MatchId,
-                            MatchIdName = m.MatchIdName,
-                            StartTime = m.StartDateTime,
-                            LeagueId = m.LeagueId,
-                            LeagueName = m.LeagueName,
-                            LeagueColor = m.LeagueColor,
-                            HomeTeamId = m.HomeTeamId,
-                            HomeTeamName = m.HomeTeamName,
-                            GuestTeamId = m.GuestTeamId,
-                            GuestTeamName = m.GuestTeamName,
-                            LetBall = m.LetBall,
-                            WinOdds = m.WinOdds,
-                            FlatOdds = m.FlatOdds,
-                            LoseOdds = m.LoseOdds,
-                            MatchState = r.MatchState,
-                            HalfHomeTeamScore = r.HalfHomeTeamScore,
-                            HalfGuestTeamScore = r.HalfGuestTeamScore,
-                            FullHomeTeamScore = r.FullHomeTeamScore,
-                            FullGuestTeamScore = r.FullGuestTeamScore,
-                            SPF_Result = r.SPF_Result,
-                            SPF_SP = r.SPF_SP,
-                            BRQSPF_Result = r.BRQSPF_Result,
-                            BRQSPF_SP = r.BRQSPF_SP,
-                            ZJQ_Result = r.ZJQ_Result,
-                            ZJQ_SP = r.ZJQ_SP,
-                            BF_Result = r.BF_Result,
-                            BF_SP = r.BF_SP,
-                            BQC_Result = r.BQC_Result,
-                            BQC_SP = r.BQC_SP,
-                            CreateTime = r.CreateTime,
-                        };
+                            MatchId = p.m.MatchId,
+                            MatchIdName = p.m.MatchIdName,
+                            StartTime = p.m.StartDateTime,
+                            LeagueId = p.m.LeagueId,
+                            LeagueName = p.m.LeagueName,
+                            LeagueColor = p.m.LeagueColor,
+                            HomeTeamId = p.m.HomeTeamId,
+                            HomeTeamName = p.m.HomeTeamName,
+                            GuestTeamId = p.m.GuestTeamId,
+                            GuestTeamName = p.m.GuestTeamName,
+                            LetBall = p.m.LetBall,
+                            WinOdds = p.m.WinOdds,
+                            FlatOdds = p.m.FlatOdds,
+                            LoseOdds = p.m.LoseOdds,
+                            MatchState = p.r.MatchState,
+                            HalfHomeTeamScore = p.r.HalfHomeTeamScore,
+                            HalfGuestTeamScore = p.r.HalfGuestTeamScore,
+                            FullHomeTeamScore = p.r.FullHomeTeamScore,
+                            FullGuestTeamScore = p.r.FullGuestTeamScore,
+                            SPF_Result = p.r.SPF_Result,
+                            SPF_SP = p.r.SPF_SP,
+                            BRQSPF_Result = p.r.BRQSPF_Result,
+                            BRQSPF_SP = p.r.BRQSPF_SP,
+                            ZJQ_Result = p.r.ZJQ_Result,
+                            ZJQ_SP = p.r.ZJQ_SP,
+                            BF_Result = p.r.BF_Result,
+                            BF_SP = p.r.BF_SP,
+                            BQC_Result = p.r.BQC_Result,
+                            BQC_SP = p.r.BQC_SP,
+                            CreateTime = p.r.CreateTime,
+                        });
             return query.ToList();
         }
 

@@ -6382,5 +6382,10 @@ namespace KaSon.FrameWork.ORM.Helper
             result.TotalCount = totalCount;
             return result;
         }
+
+        public string QueryStopIssuseList(string gameCode, string gameType, int length)
+        {
+            return new LotteryGameManager().QueryStopIssuseList(gameCode, gameType, length);
+        }
     }
 }

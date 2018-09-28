@@ -69,5 +69,38 @@ namespace KaSon.FrameWork.ORM.Helper
             Result.List= query.Take(count).ToList();
             return Result;
         }
+
+        public JCZQMatchResult_Collection QueryJCZQMatchResult(DateTime time)
+        {
+            var result = new JCZQMatchResult_Collection();
+            var manager = new JCZQMatchManager();
+            result.MatchResultList = manager.QueryJCZQMatchResult(time);
+            return result;
+        }
+
+        public JCLQMatchResult_Collection QueryJCLQMatchResult(DateTime time)
+        {
+            var result = new JCLQMatchResult_Collection();
+            var manager = new JCLQMatchManager();
+            result.MatchResultList = manager.QueryJCLQMatchResult(time);
+            return result;
+        }
+
+        public string QueryBJDCLastIssuseNumber(int count)
+        {
+            var manager = new BJDCMatchManager();
+            var array = manager.QueryBJDCLastIssuseNumber(count);
+            return string.Join("|", array);
+        }
+
+        public BJDCMatchResultInfo_Collection QueryBJDC_MatchResultList(string issuseNumber)
+        {
+            var manager = new BJDCMatchManager();
+            {
+                BJDCMatchResultInfo_Collection collection = new BJDCMatchResultInfo_Collection();
+                collection.ListInfo = manager.QueryBJDC_MatchResultListByissuseNumber(issuseNumber);
+                return collection;
+            }
+        }
     }
 }

@@ -126,5 +126,12 @@ namespace OrderLottery.Service.IModuleServices
         Task<TogetherFollowRecordInfoCollection> QuerySucessFolloweRecord(string gameCode, long ruleId, int pageIndex, int pageSize, string UserId);
         [Service(Date = "2018-9-27", Director = "renjun", Name = "查询已停止的期号信息")]
         Task<string> QueryStopIssuseList(string gameCode, string gameType, int length);
+        [Service(Date = "2018-9-28", Director = "renjun", Name = "竞彩足球开奖明细")]
+        Task<JCZQMatchResult_Collection> QueryJCZQMatchResultByTime(DateTime time);
+        [Service(Date = "2018-9-28", Director = "renjun", Name = "竞彩篮球开奖明细")]
+        Task<JCLQMatchResult_Collection> QueryJCLQMatchResultByTime(DateTime time);
+
+        [Service(Date = "2018-9-28", Director = "renjun", Name = "北京单场期号")]
+        Task<string> QueryBJDCLastIssuseNumber(int count);
     }
 }

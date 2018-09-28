@@ -169,5 +169,9 @@ namespace UserLottery.Service.IModuleServices
         Task<int> QueryTogetherFollowerCount(string createUserId);
         [Service(Date = "2018-9-27", Director = "renjun", Name = "查询用户战绩")]
         Task<UserBeedingListInfoCollection> QueryUserBeedingList(string gameCode, string gameType, string userId, string userDisplayName, int pageIndex, int pageSize, QueryUserBeedingListOrderByProperty property, OrderByCategory category);
+        [Service(Date = "2018-9-28", Director = "renjun", Name = "查询注册用户总数")]
+        Task<int> QueryUserRegisterCount();
+
+
     }
 }

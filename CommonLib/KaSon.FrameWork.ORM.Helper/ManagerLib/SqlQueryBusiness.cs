@@ -28,5 +28,13 @@ namespace KaSon.FrameWork.ORM.Helper
           return manager.QueryOrderDetailBySchemeId(schemeId);
             
         }
+
+        public int QueryTogetherFollowerCount(string createUserId)
+        {
+             var manager = new SqlQueryManager();
+            
+             return manager.QueryTogetherFollowerCount(createUserId);
+            
+        }
     }
 }

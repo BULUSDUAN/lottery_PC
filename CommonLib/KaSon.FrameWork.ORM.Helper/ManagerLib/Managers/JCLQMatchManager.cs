@@ -152,37 +152,37 @@ namespace KaSon.FrameWork.ORM.Helper
         public List<JCLQMatchResult> QueryJCLQMatchResult(DateTime time)
         {
          
-            var query = from r in DB.CreateQuery<C_JCLQ_MatchResult>()
+            var query = (from r in DB.CreateQuery<C_JCLQ_MatchResult>()
                         join m in DB.CreateQuery<C_JCLQ_Match>() on r.MatchId equals m.MatchId
                         where r.CreateTime >= time && r.CreateTime < time.AddDays(1)
                         && (r.SF_SP != 1M && r.RFSF_SP != 1M && r.SFC_SP != 1M && r.DXF_SP != 1M)
                         orderby r.MatchId descending
-                        select new JCLQMatchResult
+                        select new {r,m}).ToList().Select(p=>new JCLQMatchResult
                         {
-                            MatchId = m.MatchId,
-                            MatchIdName = m.MatchIdName,
-                            StartTime = m.StartDateTime,
-                            LeagueId = m.LeagueId,
-                            LeagueName = m.LeagueName,
-                            LeagueColor = m.LeagueColor,
-                            HomeTeamName = m.HomeTeamName,
-                            GuestTeamName = m.GuestTeamName,
-                            MatchState = r.MatchState,
-                            HomeTeamScore = r.HomeScore,
-                            GuestTeamScore = r.GuestScore,
+                            MatchId = p.m.MatchId,
+                            MatchIdName = p.m.MatchIdName,
+                            StartTime = p.m.StartDateTime,
+                            LeagueId = p.m.LeagueId,
+                            LeagueName = p.m.LeagueName,
+                            LeagueColor = p.m.LeagueColor,
+                            HomeTeamName = p.m.HomeTeamName,
+                            GuestTeamName = p.m.GuestTeamName,
+                            MatchState = p.r.MatchState,
+                            HomeTeamScore = p.r.HomeScore,
+                            GuestTeamScore = p.r.GuestScore,
 
-                            SF_Result = r.SF_Result,
-                            SF_SP = r.SF_SP,
-                            RFSF_Result = r.RFSF_Result,
-                            RFSF_SP = r.RFSF_SP,
-                            DXF_Result = r.DXF_Result,
-                            DXF_SP = r.DXF_SP,
-                            SFC_Result = r.SFC_Result,
-                            SFC_SP = r.SFC_SP,
-                            RFSF_Trend = r.RFSF_Trend,
-                            DXF_Trend = r.DXF_Trend,
-                            CreateTime = r.CreateTime,
-                        };
+                            SF_Result = p.r.SF_Result,
+                            SF_SP = p.r.SF_SP,
+                            RFSF_Result = p.r.RFSF_Result,
+                            RFSF_SP = p.r.RFSF_SP,
+                            DXF_Result = p.r.DXF_Result,
+                            DXF_SP = p.r.DXF_SP,
+                            SFC_Result = p.r.SFC_Result,
+                            SFC_SP = p.r.SFC_SP,
+                            RFSF_Trend = p.r.RFSF_Trend,
+                            DXF_Trend = p.r.DXF_Trend,
+                            CreateTime = p.r.CreateTime,
+                        });
             return query.ToList();
         }
 
