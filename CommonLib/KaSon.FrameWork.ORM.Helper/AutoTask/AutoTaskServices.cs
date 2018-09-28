@@ -642,11 +642,11 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
         public static async Task GameRechargeRepair()
         {
             var min = 10;
-            var OperatorCode = ConfigHelper.AllConfigInfo["GameApi"]["OperatorCode"].ToString();
-            var SecretKey = ConfigHelper.AllConfigInfo["GameApi"]["SecretKey"].ToString();
-            var PreName = ConfigHelper.AllConfigInfo["GameApi"]["PreName"].ToString();
-            var GameUrl = ConfigHelper.AllConfigInfo["GameApi"]["URL"].ToString();
-            var GamePassWord = ConfigHelper.AllConfigInfo["GameApi"]["GamePassWord"].ToString();
+            //var OperatorCode = ConfigHelper.AllConfigInfo["GameApi"]["OperatorCode"].ToString();
+            //var SecretKey = ConfigHelper.AllConfigInfo["GameApi"]["SecretKey"].ToString();
+            //var PreName = ConfigHelper.AllConfigInfo["GameApi"]["PreName"].ToString();
+            //var GameUrl = ConfigHelper.AllConfigInfo["GameApi"]["URL"].ToString();
+            //var GamePassWord = ConfigHelper.AllConfigInfo["GameApi"]["GamePassWord"].ToString();
             var dataQuery = new DataQuery();
             while (true)
             {
@@ -658,7 +658,7 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
                     {
                         foreach (var item in NotFinishGameTransfer)
                         {
-                            var gameLoginName = PreName + item.UserDisplayName;
+                            //var gameLoginName = PreName + item.UserDisplayName;
                             //var confirmSign = MD5Helper.UpperMD5($"{OperatorCode}&{GamePassWord}&{gameLoginName}&{SecretKey}");
                             //var confirmParam = JsonHelper.Serialize(new
                             //{
