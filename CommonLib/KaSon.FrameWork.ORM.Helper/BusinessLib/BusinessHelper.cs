@@ -2284,5 +2284,14 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             return false;
         }
+
+        public static void CheckGameCodeAndType(string gameCode, string gameType)
+        {
+            if (gameCode.ToUpper() == "BJDC")
+            {
+                if (new string[] { "ZJQ", "SXDS", "BQC", "BF" }.Contains(gameType.ToUpper()))
+                    throw new LogicException("该玩法暂停销售");
+            }
+        }
     }
 }

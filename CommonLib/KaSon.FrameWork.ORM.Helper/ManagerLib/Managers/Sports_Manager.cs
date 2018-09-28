@@ -690,5 +690,25 @@ namespace KaSon.FrameWork.ORM.Helper
        
             return DB.CreateQuery<C_User_Attention_Summary>().Where(p => p.UserId == currentUserId).FirstOrDefault();
         }
+
+        public void DeleteUserSaveOrder_Sports(C_UserSaveOrder entity)
+        {
+            DB.GetDal<C_UserSaveOrder>().Delete(entity);
+        }
+
+        public List<C_Sports_TogetherJoin> QuerySports_JoinTogetherList(string schemeId)
+        {
+            return DB.CreateQuery<C_Sports_TogetherJoin>().Where(p => p.SchemeId == schemeId).ToList();
+        }
+
+        public List<C_JCZQ_Match> QueryJCZQDSSaleMatchCount(string[] matchIdArray)
+        {
+            var query = from m in DB.CreateQuery<C_JCZQ_Match>()
+                        where matchIdArray.Contains(m.MatchId)
+                        && m.FSStopBettingTime > DateTime.Now
+                        //&& m.DSStopBettingTime > DateTime.Now
+                        select m;
+            return query.ToList();
+        }
     }
 }
