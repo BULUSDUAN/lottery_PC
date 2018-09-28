@@ -177,5 +177,14 @@ namespace KaSon.FrameWork.ORM.Helper
                         });
             return query.FirstOrDefault();
         }
+
+        public int QueryTogetherFollowerCount(string createUserId)
+        {
+          
+            var result = DB.CreateQuery<C_Together_FollowerRule>().Where(s => s.CreaterUserId == createUserId);
+            if (result != null && result.Count() > 0)
+                return result.Count();
+            return 0;
+        }
     }
 }

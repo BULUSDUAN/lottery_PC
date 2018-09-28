@@ -206,6 +206,8 @@ namespace OrderLottery.Service.ModuleServices
         {
             return Task.FromResult(_order.QueryUserFollowRule(Model));
         }
+
+    
         /// <summary>
         ///  查询跟单信息
         /// </summary>
@@ -426,12 +428,43 @@ namespace OrderLottery.Service.ModuleServices
             var biz = new Sports_Manager();
             return Task.FromResult(biz.QueryTogetherFollowerRecord(userId, gameCode, gameType));
         }
+
+        /// <summary>
+        /// 查询 定制我的 跟单规则
+        /// </summary>
+        public Task<TogetherFollowerRuleQueryInfoCollection> QueryUserFollowRule(string gameCode, string gameType, int pageIndex, int pageSize, string UserId)
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                return Task.FromResult(new Sports_Business().QueryUserFollowRule(false, UserId, gameCode, gameType, pageIndex, pageSize));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        public Task<TogetherFollowRecordInfoCollection> QuerySucessFolloweRecord(string gameCode, long ruleId, int pageIndex, int pageSize, string UserId)
+        {
+            // 验证用户身份及权限
+            
+            try
+            {
+                return Task.FromResult(new Sports_Business().QuerySucessFolloweRecord(UserId, ruleId, gameCode, pageIndex, pageSize));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
         #endregion
 
         /// <summary>
         /// 查询订单票数据
         /// </summary>
-        public Task<Sports_TicketQueryInfoCollection> QuerySportsTicketList(string schemeId, int pageIndex, int pageSize, string userToken)
+        public Task<Sports_TicketQueryInfoCollection> QuerySportsTicketList(string schemeId, int pageIndex, int pageSize)
         {
            
             try
@@ -449,7 +482,7 @@ namespace OrderLottery.Service.ModuleServices
         /// <summary>
         /// 查询单式上传全路径名
         /// </summary>
-        public Task<SingleScheme_AnteCodeQueryInfo> QuerySingleSchemeFullFileName(string schemeId, string userToken)
+        public Task<SingleScheme_AnteCodeQueryInfo> QuerySingleSchemeFullFileName(string schemeId)
         {
             // 验证用户身份及权限
             //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
@@ -475,6 +508,75 @@ namespace OrderLottery.Service.ModuleServices
             catch (Exception ex)
             {
                 throw new Exception(ex.Message, ex);
+            }
+        }
+
+
+        /// <summary>
+        /// 查询派奖失败列表
+        /// </summary>
+        /// <param name="gameCode"></param>
+        /// <param name="gameType"></param>
+        /// <param name="length"></param>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public Task<string> QueryStopIssuseList(string gameCode, string gameType, int length)
+        {
+           
+            try
+            {
+                return Task.FromResult(new Sports_Business().QueryStopIssuseList(gameCode, gameType, length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        public Task<JCZQMatchResult_Collection> QueryJCZQMatchResultByTime(DateTime time)
+        {
+            try
+            {
+                return Task.FromResult(new IssuseBusiness().QueryJCZQMatchResult(time));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        public Task<JCLQMatchResult_Collection> QueryJCLQMatchResultByTime(DateTime time)
+        {
+            try
+            {
+                return Task.FromResult(new IssuseBusiness().QueryJCLQMatchResult(time));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        public Task<string> QueryBJDCLastIssuseNumber(int count)
+        {
+            return Task.FromResult(new IssuseBusiness().QueryBJDCLastIssuseNumber(count));
+        }
+
+        /// <summary>
+        /// 北京单场查询开奖结果
+        /// </summary>
+        /// <param name="issuseNumber"></param>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public Task<BJDCMatchResultInfo_Collection> QueryBJDC_MatchResultList(string issuseNumber)
+        {
+            try
+            {
+                return Task.FromResult(new IssuseBusiness().QueryBJDC_MatchResultList(issuseNumber));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("北京单场查询开奖结果异常 - " + ex.Message, ex);
             }
         }
     }

@@ -6849,5 +6849,64 @@ namespace KaSon.FrameWork.ORM.Helper
                 }
             }
         }
+
+        /// <summary>
+        /// 查询是否有关注
+        /// </summary>
+        public bool QueryIsAttention(string currentUserId, string beAttentionUserId)
+        {
+            var sportsManager = new Sports_Manager();
+            var entity = sportsManager.QueryUserAttention(currentUserId, beAttentionUserId);
+            if (entity == null)
+                return false;
+            return true;
+        }
+
+        /// <summary>
+        /// 查询我的定制  或 定制我的
+        /// </summary>
+        public TogetherFollowerRuleQueryInfoCollection QueryUserFollowRule(bool byFollower, string userId, string gameCode, string gameType, int pageIndex, int pageSize)
+        {
+            var result = new TogetherFollowerRuleQueryInfoCollection();
+            var totalCount = 0;
+            result.List.AddRange(new Sports_Manager().QueryUserFollowRule(byFollower, userId, gameCode, gameType, pageIndex, pageSize, out totalCount));
+            result.TotalCount = totalCount;
+            return result;
+        }
+
+        /// <summary>
+        /// 用户成功订制跟单记录
+        /// </summary>
+        public TogetherFollowRecordInfoCollection QuerySucessFolloweRecord(string userId, long ruleId, string gameCode, int pageIndex, int pageSize)
+        {
+            var result = new TogetherFollowRecordInfoCollection();
+            var totalCount = 0;
+            result.List.AddRange(new Sports_Manager().QuerySucessFolloweRecord(userId, ruleId, gameCode, pageIndex, pageSize, out totalCount));
+            result.TotalCount = totalCount;
+            return result;
+        }
+
+        /// <summary>
+        /// 查询网站彩种战绩，自动跟单列表用
+        /// </summary>
+        public UserBeedingListInfoCollection QueryUserBeedingList(string gameCode, string gameType, string userId, string userDisplayName, int pageIndex, int pageSize, QueryUserBeedingListOrderByProperty property, OrderByCategory category)
+        {
+            if (string.IsNullOrEmpty(gameCode))
+                gameCode = string.Empty;
+            if (string.IsNullOrEmpty(gameType))
+                gameType = string.Empty;
+            if (string.IsNullOrEmpty(userDisplayName))
+                userDisplayName = string.Empty;
+            var result = new UserBeedingListInfoCollection();
+            var totalCount = 0;
+            result.List.AddRange(new Sports_Manager().QueryUserBeedingList(gameCode, gameType, userId, userDisplayName, pageIndex, pageSize, property, category, out totalCount));
+            result.TotalCount = totalCount;
+            return result;
+        }
+
+        public string QueryStopIssuseList(string gameCode, string gameType, int length)
+        {
+            return new LotteryGameManager().QueryStopIssuseList(gameCode, gameType, length);
+        }
     }
 }

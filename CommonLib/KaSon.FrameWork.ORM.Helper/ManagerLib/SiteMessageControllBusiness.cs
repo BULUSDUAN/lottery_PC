@@ -6,6 +6,8 @@ using System.Text;
 using EntityModel;
 using EntityModel.CoreModel;
 using KaSon.FrameWork.Common.SMS;
+using System.Linq;
+using EntityModel.Communication;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
@@ -156,6 +158,108 @@ namespace KaSon.FrameWork.ORM.Helper
             }
           
            
+        }
+
+        public int GetUserInnerMailCount(string userId)
+        {
+            var query = DB.CreateQuery<E_SiteMessage_InnerMail_List_new>().Where(s => (s.ReceiverId == userId || s.ReceiverId == "U:" + userId) && s.HandleType != (int)InnerMailHandleType.Deleted);
+            if (query != null) return query.Count();
+            return 0;
+        }
+
+        public SiteMessageInnerMailListNew_Collection QueryInnerMailListByReceiver(string userId, int pageIndex, int pageSize)
+        {
+          
+            SiteMessageInnerMailListNew_Collection collection = new SiteMessageInnerMailListNew_Collection();
+            collection.TotalCount = 0;
+
+            var query = (from m in DB.CreateQuery<E_SiteMessage_InnerMail_List_new>()
+                        where (m.ReceiverId == userId || m.ReceiverId == "U:" + userId)
+                        && m.HandleType != (int)InnerMailHandleType.Deleted
+                        select m).ToList().Select(m=> new SiteMessageInnerMailListNewInfo
+                        {
+                            HandleType = (InnerMailHandleType)m.HandleType,
+                            MailId = m.MailId,
+                            MsgContent = m.MsgContent,
+                            ReadTime = m.ReadTime,
+                            ReceiverId = m.ReceiverId,
+                            SenderId = m.SenderId,
+                            SendTime = m.SendTime,
+                            Title = m.Title,
+                        });
+            if (query != null)
+            {
+                collection.TotalCount = query.Count();
+                collection.MailList = query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+            }
+            return collection;
+        }
+
+
+        public bool IsMyInnerMail(string innerMailId, string userId)
+        {
+                var manager = new InnerMailManager();           
+                var count = manager.GetMailContainsReceiverCount(innerMailId, userId);
+                return (count > 0);
+            
+        }
+
+       
+
+        public InnerMailInfo_Query QueryInnerMailDetailById(string innerMailId)
+        {
+            var manager = new InnerMailManager();
+
+            var mail = manager.QuerySiteMessageInnerMailListNewByMailId(innerMailId);
+            var info = new InnerMailInfo_Query
+            {
+                MailId = mail.MailId,
+                Title = mail.Title,
+                Content = mail.MsgContent,
+                SenderId = mail.SenderId,
+                SendTime = mail.SendTime,
+            };
+            return info;
+
+        }
+
+        public InnerMailInfo_Query ReadInnerMail(string innerMailId, string UserId)
+        {
+            DB.Begin();
+            if (!IsMyInnerMail(innerMailId, UserId))
+            {
+                throw new SiteMessageException(string.Format("此站内信不属于指定用户。站内信：{0}；用户：{1}。", innerMailId, UserId));
+            }
+            var read = new DataQuery();
+            read.ReadInnerMail(innerMailId, UserId);
+            var info = QueryInnerMailDetailById(innerMailId);
+            DB.Commit();
+            return info;
+        }
+
+        public CommonActionResult DeleteInnerMail(string innerMailId, string userId)
+        {
+
+            DB.Begin();
+            if (!IsMyInnerMail(innerMailId, userId))
+            {
+                throw new SiteMessageException(string.Format("此站内信不属于指定用户。站内信：{0}；用户：{1}。", innerMailId, userId));
+            }
+            deleteInnerMail(innerMailId, userId);
+            DB.Commit();
+            return new CommonActionResult(true, "删除站内信完成。");
+        }
+
+        public void deleteInnerMail(string innerMailId, string userId)
+        {
+            var manager = new InnerMailManager();
+            var mail = manager.QuerySiteMessageInnerMailListNewByMailId(innerMailId);
+            if (mail != null)
+            {
+                mail.HandleType = (int)InnerMailHandleType.Deleted;           
+                    mail.ReadTime = DateTime.Now;
+                manager.UpdateSiteMessageInnerMailListNew(mail);
+            }
         }
     }
 }

@@ -129,41 +129,41 @@ namespace KaSon.FrameWork.ORM.Helper
         public List<BJDCMatchResultInfo> QueryBJDC_MatchResultListByissuseNumber(string issuseNumber)
         {
            
-            var query = from r in DB.CreateQuery<C_BJDC_MatchResult>()
+            var query = (from r in DB.CreateQuery<C_BJDC_MatchResult>()
                         join m in DB.CreateQuery<C_BJDC_Match>() on r.Id equals m.Id
                         where r.IssuseNumber == issuseNumber
                         orderby r.Id descending
-                        select new BJDCMatchResultInfo
+                        select new {r,m }).ToList().Select(p=> new BJDCMatchResultInfo
                         {
-                            BF_Result = r.BF_Result == null ? "" : r.BF_Result,
-                            BF_SP = r.BF_SP == 0 ? 0 : r.BF_SP,
-                            BQC_Result = r.BQC_Result == null ? "" : r.BQC_Result,
-                            BQC_SP = r.BQC_SP == 0 ? 0 : r.BQC_SP,
-                            CreateTime = r.CreateTime,
-                            FlatOdds = m.FlatOdds == 0 ? 0 : m.FlatOdds,
-                            GuestFull_Result = r.GuestFull_Result == null ? "" : r.GuestFull_Result,
-                            GuestHalf_Result = r.GuestHalf_Result == null ? "" : r.GuestHalf_Result,
-                            GuestTeamName = m.GuestTeamName,
-                            HomeFull_Result = r.HomeFull_Result == null ? "" : r.HomeFull_Result,
-                            HomeHalf_Result = r.HomeHalf_Result == null ? "" : r.HomeHalf_Result,
-                            HomeTeamName = m.HomeTeamName,
-                            Id = r.Id,
-                            IssuseNumber = r.IssuseNumber,
-                            LetBall = m.LetBall,
-                            LoseOdds = m.LoseOdds,
-                            MatchColor = m.MatchColor,
-                            MatchName = m.MatchName,
-                            MatchOrderId = r.MatchOrderId,
-                            MatchStartTime = m.MatchStartTime,
-                            MatchState = r.MatchState,
-                            SPF_Result = r.SPF_Result == null ? "" : r.SPF_Result,
-                            SPF_SP = r.SPF_SP,
-                            SXDS_Result = r.SXDS_Result == null ? "" : r.SXDS_Result,
-                            SXDS_SP = r.SXDS_SP,
-                            WinOdds = m.WinOdds,
-                            ZJQ_Result = r.ZJQ_Result == null ? "" : r.ZJQ_Result,
-                            ZJQ_SP = r.ZJQ_SP
-                        };
+                            BF_Result = p.r.BF_Result == null ? "" : p.r.BF_Result,
+                            BF_SP = p.r.BF_SP == 0 ? 0 : p.r.BF_SP,
+                            BQC_Result = p.r.BQC_Result == null ? "" : p.r.BQC_Result,
+                            BQC_SP = p.r.BQC_SP == 0 ? 0 : p.r.BQC_SP,
+                            CreateTime = p.r.CreateTime,
+                            FlatOdds = p.m.FlatOdds == 0 ? 0 : p.m.FlatOdds,
+                            GuestFull_Result = p.r.GuestFull_Result == null ? "" : p.r.GuestFull_Result,
+                            GuestHalf_Result = p.r.GuestHalf_Result == null ? "" : p.r.GuestHalf_Result,
+                            GuestTeamName = p.m.GuestTeamName,
+                            HomeFull_Result = p.r.HomeFull_Result == null ? "" : p.r.HomeFull_Result,
+                            HomeHalf_Result = p.r.HomeHalf_Result == null ? "" : p.r.HomeHalf_Result,
+                            HomeTeamName = p.m.HomeTeamName,
+                            Id = p.r.Id,
+                            IssuseNumber = p.r.IssuseNumber,
+                            LetBall = p.m.LetBall,
+                            LoseOdds = p.m.LoseOdds,
+                            MatchColor = p.m.MatchColor,
+                            MatchName = p.m.MatchName,
+                            MatchOrderId = p.r.MatchOrderId,
+                            MatchStartTime = p.m.MatchStartTime,
+                            MatchState = p.r.MatchState,
+                            SPF_Result = p.r.SPF_Result == null ? "" : p.r.SPF_Result,
+                            SPF_SP = p.r.SPF_SP,
+                            SXDS_Result = p.r.SXDS_Result == null ? "" : p.r.SXDS_Result,
+                            SXDS_SP = p.r.SXDS_SP,
+                            WinOdds = p.m.WinOdds,
+                            ZJQ_Result = p.r.ZJQ_Result == null ? "" : p.r.ZJQ_Result,
+                            ZJQ_SP = p.r.ZJQ_SP
+                        });
             if (query != null)
                 return query.ToList();
             return new List<BJDCMatchResultInfo>();
@@ -288,6 +288,8 @@ namespace KaSon.FrameWork.ORM.Helper
                         select r;
             return query.ToList();
         }
+
+    
 
     }
 }

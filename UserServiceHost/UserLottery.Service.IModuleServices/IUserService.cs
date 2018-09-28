@@ -143,5 +143,35 @@ namespace UserLottery.Service.IModuleServices
         Task<CommonActionResult> AttentionUser(string beAttentionUserId, string userToken);
         [Service(Date = "2018-9-21", Director = "renjun", Name = "取消关注用户")]
         Task<CommonActionResult> CancelAttentionUser(string beAttentionUserId, string userToken);
+        [Service(Date = "2018-9-25", Director = "renjun", Name = "查询是否有关注")]
+        Task<bool> QueryIsAttention(string beAttentionUserId, string currentUserId);
+        [Service(Date = "2018-9-25", Director = "renjun", Name = "查询用户历史登录")]
+        Task<UserLoginHistoryCollection> QueryCache_UserLoginHistoryCollection(string UserId);
+        [Service(Date = "2018-9-25", Director = "renjun", Name = "根据用户编号，查询总的站内信条数")]
+        Task<int> GetUserInnerMailCount(string UserId);
+        [Service(Date = "2018-9-25", Director = "renjun", Name = "查询我的站内信")]
+        Task<SiteMessageInnerMailListNew_Collection> QueryMyInnerMailList(int pageIndex, int pageSize, string UserId);
+        [Service(Date = "2018-9-25", Director = "renjun", Name = "阅读站内信")]
+        Task<InnerMailInfo_Query> ReadInnerMail(string innerMailId, string UserId);
+        [Service(Date = "2018-9-26", Director = "renjun", Name = "查询我的用户意见列表")]
+        Task<UserIdeaInfo_QueryCollection> QueryMyUserIdeaList(int pageIndex, int pageSize, string UserId);
+        [Service(Date = "2018-9-27", Director = "renjun", Name = "查询普通用户下所有销量")]
+        Task<SporeadUsersCollection> QuerySporeadUsers(string agentId, DateTime startTime, DateTime endTime, int pageIndex, int pageSize);
+        [Service(Date = "2018-9-27", Director = "renjun", Name = "查询用户基础信息")]
+        Task<ProfileUserInfo> QueryProfileUserInfo(string UserId);
+        [Service(Date = "2018-9-27", Director = "renjun", Name = "查询获奖级别")]
+        Task<ProfileBonusLevelInfo> QueryProfileBonusLevelInfo(string UserId);
+        [Service(Date = "2018-9-27", Director = "renjun", Name = "查询最新中奖")]
+        Task<ProfileLastBonusCollection> QueryProfileLastBonusCollection(string UserId);
+        [Service(Date = "2018-9-27", Director = "renjun", Name = "查询个人数据")]
+        Task<ProfileDataReport> QueryProfileDataReport(string UserId);
+        [Service(Date = "2018-9-27", Director = "renjun", Name = "查询用户跟单人数")]
+        Task<int> QueryTogetherFollowerCount(string createUserId);
+        [Service(Date = "2018-9-27", Director = "renjun", Name = "查询用户战绩")]
+        Task<UserBeedingListInfoCollection> QueryUserBeedingList(string gameCode, string gameType, string userId, string userDisplayName, int pageIndex, int pageSize, QueryUserBeedingListOrderByProperty property, OrderByCategory category);
+        [Service(Date = "2018-9-28", Director = "renjun", Name = "查询注册用户总数")]
+        Task<int> QueryUserRegisterCount();
+
+
     }
 }
