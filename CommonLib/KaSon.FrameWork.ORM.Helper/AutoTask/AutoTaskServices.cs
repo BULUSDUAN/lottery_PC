@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using EntityModel.Redis;
 using EntityModel;
+using EntityModel.Enum;
 
 namespace KaSon.FrameWork.ORM.Helper.AutoTask
 {
@@ -28,8 +29,8 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
                         StartTaskByWriteChaseOrderToDb(seconds),
                         Init_Pool_Data(),
                         Repair_SZCAddToRedis_dp(),
-                        Repair_SZCAddToRedis_gp()
-                        //PC相关跑数据方法，暂定写于此
+                        Repair_SZCAddToRedis_gp(),
+                        GameRechargeRepair()
             });
         }
 
@@ -637,7 +638,35 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
             return null;
         }
 
+        public static async Task GameRechargeRepair()
+        {
+            var min = 10;
+            var dataQuery = new DataQuery();
+            while (true)
+            {
+                try
+                {
+                    //查找十分钟前未完成的交易
+                    var NotFinishGameTransfer = dataQuery.QueryNotFinishGame(min);
+                    if (NotFinishGameTransfer.Count > 0)
+                    {
+                        foreach (var item in NotFinishGameTransfer)
+                        {
+                            if (item.TransferType == (int)GameTransferType.Recharge)
+                            {
+                                var IsSuccess = false;
+                                dataQuery.EndFreezeGameRecharge(item.OrderId, IsSuccess, "");
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
 
+                }
+                await Task.Delay(30000);
+            }
+        }
     }
 }
 

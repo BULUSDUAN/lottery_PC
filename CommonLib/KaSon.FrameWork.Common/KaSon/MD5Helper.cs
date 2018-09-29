@@ -26,6 +26,31 @@ namespace KaSon.FrameWork.Common
             }
             return builder.ToString();
         }
+
+        public static string UpperMD5(string encypStr, string charset = "UTF-8")
+        {
+            string retStr;
+            MD5CryptoServiceProvider m5 = new MD5CryptoServiceProvider();
+
+            //创建md5对象
+            byte[] inputBye;
+            byte[] outputBye;
+
+            //使用GB2312编码方式把字符串转化为字节数组．
+            try
+            {
+                inputBye = Encoding.GetEncoding(charset).GetBytes(encypStr);
+            }
+            catch (Exception ex)
+            {
+                inputBye = Encoding.GetEncoding("utf-8").GetBytes(encypStr);
+            }
+            outputBye = m5.ComputeHash(inputBye);
+
+            retStr = System.BitConverter.ToString(outputBye);
+            retStr = retStr.Replace("-", "").ToUpper();
+            return retStr;
+        }
     }
 }
 

@@ -9,6 +9,10 @@ using EntityModel.CoreModel;
 using System.Linq;
 using KaSon.FrameWork.ORM.Provider;
 using KaSon.FrameWork.Common.Sport;
+using EntityModel.Communication;
+using KaSon.FrameWork.Common.Sport;
+using EntityModel.ExceptionExtend;
+
 
 namespace KaSon.FrameWork.ORM.Helper
 {
@@ -637,6 +641,159 @@ namespace KaSon.FrameWork.ORM.Helper
         }
 
 
+        /// <summary>
+        /// 冻结需要充值的金额，并生成一条游戏充值数据存入游戏交易表中，返回订单号
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="money"></param>
+        /// <returns></returns>
+        public CommonActionResult FreezeGameRecharge(string userId, decimal money, string userDisplayName)
+        {
+            var orderId = BettingHelper.GetGameTransferId();
+            var msg = string.Format("游戏充值订单号{0}", orderId);
+            DB.Begin();
+            try
+            {
+                BusinessHelper.Payout_To_Frozen(BusinessHelper.FundCategory_GameRecharge, userId, orderId, money, msg, "GameTransfer", "");
+                DB.GetDal<C_Game_Transfer>().Add(new C_Game_Transfer()
+                {
+                    OrderId = orderId,
+                    RequestMoney = money,
+                    RequestTime = DateTime.Now,
+                    Status = (int)FillMoneyStatus.Requesting,
+                    UserId = userId,
+                    TransferType = (int)GameTransferType.Recharge,
+                    UserDisplayName = userDisplayName
+                });
+                DB.Commit();
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw ex;
+            }
+            return new CommonActionResult() { IsSuccess = true, ReturnValue = orderId };
+        }
+
+        /// <summary>
+        /// 充值完成或失败，扣除冻结金额或返还冻结金额
+        /// </summary>
+        /// <param name="OrderId"></param>
+        /// <param name="IsSuccess"></param>
+        /// <returns></returns>
+        public CommonActionResult EndFreezeGameRecharge(string orderId, bool isSuccess, string providerSerialNo)
+        {
+            var oldModel = DB.CreateQuery<C_Game_Transfer>().Where(p => p.OrderId == orderId).FirstOrDefault();
+            if (oldModel == null) throw new LogicException("发生错误，找不到相关订单");
+            if (oldModel.Status != (int)FillMoneyStatus.Requesting) throw new LogicException("相关订单已被处理，无需重复操作");
+            DB.Begin();
+            try
+            {
+                if (isSuccess)
+                {
+                    oldModel.Status = (int)FillMoneyStatus.Success;
+                    oldModel.UpdateTime = DateTime.Now;
+                    oldModel.ProviderSerialNo = providerSerialNo;
+                    DB.GetDal<C_Game_Transfer>().Update(oldModel);
+                    BusinessHelper.Payout_Frozen_To_End(BusinessHelper.FundCategory_GameRecharge, oldModel.UserId, orderId, string.Format("游戏充值成功，扣除冻结{1:N2}元", orderId, oldModel.RequestMoney), oldModel.RequestMoney);
+                }
+                else
+                {
+                    oldModel.Status = (int)FillMoneyStatus.Failed;
+                    oldModel.UpdateTime = DateTime.Now;
+                    oldModel.ProviderSerialNo = providerSerialNo;
+                    DB.GetDal<C_Game_Transfer>().Update(oldModel);
+                    BusinessHelper.Payin_FrozenBack(BusinessHelper.FundCategory_GameRecharge, oldModel.UserId, orderId, oldModel.RequestMoney, string.Format("游戏充值不成功，返还资金{0:N2}元", oldModel.RequestMoney));
+                }
+                DB.Commit();
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw ex;
+            }
+            return new CommonActionResult() { IsSuccess = true, ReturnValue = orderId };
+        }
+
+        public CommonActionResult AddGameWithdraw(string userId, decimal money, string userDisplayName, string orderId, string providerSerialNo)
+        {
+            //var orderId = BettingHelper.GetGameTransferId();
+            DB.Begin();
+            try
+            {
+                //if (IsSuccess)
+                //{
+                DB.GetDal<C_Game_Transfer>().Add(new C_Game_Transfer()
+                {
+                    OrderId = orderId,
+                    RequestMoney = money,
+                    RequestTime = DateTime.Now,
+                    Status = (int)FillMoneyStatus.Success,
+                    UserId = userId,
+                    TransferType = (int)GameTransferType.Withdraw,
+                    UserDisplayName = userDisplayName,
+                    UpdateTime = DateTime.Now,
+                    ProviderSerialNo = providerSerialNo
+                });
+                //oldModel.Status = (int)FillMoneyStatus.Success;
+                //    oldModel.UpdateTime = DateTime.Now;
+                //    DB.GetDal<C_Game_Transfer>().Update(oldModel);
+                BusinessHelper.Payin_To_Balance(AccountType.Bonus, BusinessHelper.FundCategory_GameWithdraw, userId, orderId, money,
+                string.Format("游戏提款成功，金额：{0:N2}元存入账号", money));
+                //}
+                //else
+                //{
+                //    oldModel.Status = (int)FillMoneyStatus.Failed;
+                //    oldModel.UpdateTime = DateTime.Now;
+                //    DB.GetDal<C_Game_Transfer>().Update(oldModel);
+                //}
+                DB.Commit();
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw ex;
+            }
+            return new CommonActionResult() { IsSuccess = true, ReturnValue = orderId };
+        }
+
+        public CommonActionResult EndAddGameWithdraw(string OrderId, bool IsSuccess)
+        {
+            var oldModel = DB.CreateQuery<C_Game_Transfer>().Where(p => p.OrderId == OrderId).FirstOrDefault();
+            if (oldModel == null) throw new LogicException("发生错误，找不到相关订单");
+            if (oldModel.Status != (int)FillMoneyStatus.Requesting) throw new LogicException("相关订单已被处理，无需重复操作");
+            DB.Begin();
+            try
+            {
+                if (IsSuccess)
+                {
+                    oldModel.Status = (int)FillMoneyStatus.Success;
+                    oldModel.UpdateTime = DateTime.Now;
+                    DB.GetDal<C_Game_Transfer>().Update(oldModel);
+                    BusinessHelper.Payin_To_Balance(AccountType.Bonus, BusinessHelper.FundCategory_ManualFillMoney, oldModel.UserId, oldModel.OrderId, oldModel.RequestMoney,
+                    string.Format("游戏提款成功，金额：{0:N2}元存入账号", oldModel.RequestMoney));
+                }
+                else
+                {
+                    oldModel.Status = (int)FillMoneyStatus.Failed;
+                    oldModel.UpdateTime = DateTime.Now;
+                    DB.GetDal<C_Game_Transfer>().Update(oldModel);
+                }
+                DB.Commit();
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw ex;
+            }
+            return new CommonActionResult() { IsSuccess = true, ReturnValue = OrderId };
+        }
+
+        public List<C_Game_Transfer> QueryNotFinishGame(int minutes)
+        {
+            var now = DateTime.Now;
+            return DB.CreateQuery<C_Game_Transfer>().Where(p => p.RequestTime < now.AddMinutes(-minutes) && p.Status == (int)FillMoneyStatus.Requesting).ToList();
+        }
         #region PC端接口
         /// <summary>
         /// 大奖排行榜

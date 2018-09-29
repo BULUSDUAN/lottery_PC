@@ -1586,4 +1586,16 @@ namespace EntityModel.Enum
         CIB = 15
     }
     #endregion
+
+    public enum GameTransferType
+    {
+        /// <summary>
+        /// 充值
+        /// </summary>
+        Recharge = 0,
+        /// <summary>
+        /// 提款
+        /// </summary>
+        Withdraw = 1
+    }
 }
