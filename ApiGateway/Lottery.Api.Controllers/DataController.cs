@@ -3183,6 +3183,7 @@ namespace Lottery.Api.Controllers
         /// <returns></returns>
         public async Task<IActionResult> LoginGame([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
+            var testparam = "";
             try
             {
                 InitGameParam();
@@ -3214,6 +3215,7 @@ namespace Lottery.Api.Controllers
                         language = "CN"
                     }
                 }.ToJson();
+                testparam = loginParam;
                 var loginResult = PostManager.HttpPost(GameUrl, loginParam, "utf-8");
                 if (loginResult.Contains("Bad Request"))
                 {
@@ -3253,7 +3255,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = "",
-                    Value = ex.ToGetMessage(),
+                    Value = ex.ToGetMessage()+ testparam+ ";地址:"+ GameUrl,
                 });
             }
         }
@@ -3266,6 +3268,7 @@ namespace Lottery.Api.Controllers
         /// <returns></returns>
         public async Task<IActionResult> GetGameBalance([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
+            var testparam = "";
             try
             {
                 InitGameParam();
@@ -3291,6 +3294,7 @@ namespace Lottery.Api.Controllers
                         password = pwd,
                     }
                 }.ToJson();
+                testparam = strParam;
                 var result = PostManager.HttpPost(GameUrl, strParam, "utf-8");
                 if (result.Contains("Bad Request"))
                 {
@@ -3354,7 +3358,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = "",
-                    Value = ex.ToGetMessage(),
+                    Value = ex.ToGetMessage()+ testparam + ";地址:" + GameUrl,
                 });
             }
         }
@@ -3371,6 +3375,7 @@ namespace Lottery.Api.Controllers
             //3.充值到游戏平台，提交订单号
             //4.判断返回的数据，如果充值成功则扣除冻结金额（修改交易表数据）
             //5.如果充值失败则继续请求转账确认接口，返回成功则扣钱，失败则返还冻结金额给用户（修改交易表数据）
+            var testparam = "";
             try
             {
                 InitGameParam();
@@ -3408,6 +3413,7 @@ namespace Lottery.Api.Controllers
                             amount = money.ToString()
                         }
                     }.ToJson();
+                    testparam = rechargeParam;
                     var result = PostManager.HttpPost(GameUrl, rechargeParam, "utf-8");
                     if (result.Contains("Bad Request"))
                     {
@@ -3486,7 +3492,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = "",
-                    Value = ex.ToGetMessage(),
+                    Value = ex.ToGetMessage()+ testparam + ";地址:" + GameUrl,
                 });
             }
         }
@@ -3685,32 +3691,45 @@ namespace Lottery.Api.Controllers
 
         public async Task<IActionResult> TestCreateAccount()
         {
-            InitGameParam();
-            string gameprovider = "2";
-            string userName = $"DJW18588515737";
-            string password = "1";
-            var oldsign = MD5Helper.UpperMD5($"{OperatorCode}&{password}&{userName}&{SecretKey}");
-            var obj = new
+            try
             {
-                gameprovider = gameprovider,
-                command = "GET_BALANCE",
-                sign = oldsign,
-                @params = new
+                InitGameParam();
+                string gameprovider = "2";
+                string userName = $"DJW18588515737";
+                string password = "1";
+                var oldsign = MD5Helper.UpperMD5($"{OperatorCode}&{password}&{userName}&{SecretKey}");
+                var obj = new
                 {
-                    username = userName,
-                    operatorcode = OperatorCode,
-                    password = password,
-                },
-            };
-            string json = obj.ToJson();
-            var result = PostManager.HttpPost(GameUrl, json, "utf-8");
-            return Json(new LotteryServiceResponse
+                    gameprovider = gameprovider,
+                    command = "GET_BALANCE",
+                    sign = oldsign,
+                    @params = new
+                    {
+                        username = userName,
+                        operatorcode = OperatorCode,
+                        password = password,
+                    },
+                };
+                string json = obj.ToJson();
+                var result = PostManager.HttpPost(GameUrl, json, "utf-8");
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = result,
+                    MsgId = "",
+                    Value = result,
+                });
+            }
+            catch (Exception ex)
             {
-                Code = ResponseCode.成功,
-                Message = result,
-                MsgId = "",
-                Value = result,
-            });
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                    MsgId = "",
+                    Value = "请求失败",
+                });
+            }
         }
         #endregion
     }
