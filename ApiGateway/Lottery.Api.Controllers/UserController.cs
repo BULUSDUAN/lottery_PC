@@ -1755,13 +1755,13 @@ namespace Lottery.Api.Controllers
                 string fillMoney_Enable_GateWay = ConfigHelper.AllConfigInfo["FillMoney_Enable_GateWay"] != null ? ConfigHelper.AllConfigInfo["FillMoney_Enable_GateWay"].ToString() : "";
                 //var p = WebHelper.Decode(entity.Param);//FillMoney_Enable_GateWay
                 //string userToken = p.UserToken;
-                //Dictionary<string, object> param2 = new Dictionary<string, object>();
-                //param2.Add("key", "FillMoney_Enable_GateWay");
-                //var FillMoney_Enable_GateWay = await _serviceProxyProvider.Invoke<C_Core_Config>(param2, "api/user/QueryCoreConfigByKey");
-                //if (FillMoney_Enable_GateWay != null)
-                //{
-                //    fillMoney_Enable_GateWay = FillMoney_Enable_GateWay.ConfigValue;
-                //}
+                Dictionary<string, object> param2 = new Dictionary<string, object>();
+                param2.Add("key", "FillMoney_Enable_GateWay");
+                var FillMoney_Enable_GateWay = await _serviceProxyProvider.Invoke<C_Core_Config>(param2, "api/Data/QueryCoreConfigByKey");
+                if (FillMoney_Enable_GateWay != null)
+                {
+                    fillMoney_Enable_GateWay = FillMoney_Enable_GateWay.ConfigValue;
+                }
                 string[] gateWayArray = fillMoney_Enable_GateWay.ToLower().Split('|');
                 return JsonEx(new LotteryServiceResponse
                 {
@@ -1770,7 +1770,6 @@ namespace Lottery.Api.Controllers
                     MsgId = entity.MsgId,
                     Value = LoadPayConfig("ios", gateWayArray),
                 });
-
             }
             catch (Exception ex)
             {
