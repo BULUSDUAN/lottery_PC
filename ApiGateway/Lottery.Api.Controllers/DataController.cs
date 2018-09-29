@@ -3215,6 +3215,16 @@ namespace Lottery.Api.Controllers
                     }
                 }.ToJson();
                 var loginResult = PostManager.HttpPost(GameUrl, loginParam, "utf-8");
+                if (loginResult.Contains("Bad Request"))
+                {
+                    return Json(new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.失败,
+                        Message = loginResult,
+                        MsgId = "",
+                        Value = "传入参数" + loginParam + "",
+                    });
+                }
                 var jsonLoginResult = JsonHelper.Decode(loginResult);
                 if (jsonLoginResult.ErrorCode == 0)
                 {
@@ -3282,6 +3292,16 @@ namespace Lottery.Api.Controllers
                     }
                 }.ToJson();
                 var result = PostManager.HttpPost(GameUrl, strParam, "utf-8");
+                if (result.Contains("Bad Request"))
+                {
+                    return Json(new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.失败,
+                        Message = result,
+                        MsgId = "",
+                        Value = "传入参数"+ strParam+"",
+                    });
+                }
                 var jsonResult = JsonHelper.Decode(result);
                 if (jsonResult.ErrorCode == 0)
                 {
@@ -3358,8 +3378,6 @@ namespace Lottery.Api.Controllers
                 string userToken = p.UserToken;
                 decimal money = p.Money;
                 if (money <= 0) throw new Exception("参数错误");
-                //测试使用，上线前去掉
-                if (money > 2) money = 2;
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 var param = new Dictionary<string, object>();
                 param["userId"] = userId;
@@ -3391,6 +3409,16 @@ namespace Lottery.Api.Controllers
                         }
                     }.ToJson();
                     var result = PostManager.HttpPost(GameUrl, rechargeParam, "utf-8");
+                    if (result.Contains("Bad Request"))
+                    {
+                        return Json(new LotteryServiceResponse
+                        {
+                            Code = ResponseCode.失败,
+                            Message = rechargeParam,
+                            MsgId = "",
+                            Value = "传入参数" + rechargeParam + "",
+                        });
+                    }
                     var jsonResult = JsonHelper.Decode(result);
                     var providerSerialNo = "";
                     if (jsonResult.ErrorCode == 0)
@@ -3653,6 +3681,36 @@ namespace Lottery.Api.Controllers
                     Value = ex.ToGetMessage(),
                 });
             }
+        }
+
+        public async Task<IActionResult> TestCreateAccount()
+        {
+            InitGameParam();
+            string gameprovider = "2";
+            string userName = $"DJW18588515737";
+            string password = "1";
+            var oldsign = MD5Helper.UpperMD5($"{OperatorCode}&{password}&{userName}&{SecretKey}");
+            var obj = new
+            {
+                gameprovider = gameprovider,
+                command = "GET_BALANCE",
+                sign = oldsign,
+                @params = new
+                {
+                    username = userName,
+                    operatorcode = OperatorCode,
+                    password = password,
+                },
+            };
+            string json = obj.ToJson();
+            var result = PostManager.HttpPost(GameUrl, json, "utf-8");
+            return Json(new LotteryServiceResponse
+            {
+                Code = ResponseCode.成功,
+                Message = result,
+                MsgId = "",
+                Value = result,
+            });
         }
         #endregion
     }
