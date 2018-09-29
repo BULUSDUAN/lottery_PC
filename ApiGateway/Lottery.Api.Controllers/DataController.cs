@@ -3255,7 +3255,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = "",
-                    Value = ex.ToGetMessage()+ testparam+ ";地址:"+ GameUrl,
+                    Value = ex.ToGetMessage() + testparam + ";地址:" + GameUrl,
                 });
             }
         }
@@ -3303,7 +3303,7 @@ namespace Lottery.Api.Controllers
                         Code = ResponseCode.失败,
                         Message = result,
                         MsgId = "",
-                        Value = "传入参数"+ strParam+"",
+                        Value = "传入参数" + strParam + "",
                     });
                 }
                 var jsonResult = JsonHelper.Decode(result);
@@ -3358,7 +3358,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = "",
-                    Value = ex.ToGetMessage()+ testparam + ";地址:" + GameUrl,
+                    Value = ex.ToGetMessage() + testparam + ";地址:" + GameUrl,
                 });
             }
         }
@@ -3492,7 +3492,7 @@ namespace Lottery.Api.Controllers
                     Code = ResponseCode.失败,
                     Message = ex.ToGetMessage() + "●" + ex.ToString(),
                     MsgId = "",
-                    Value = ex.ToGetMessage()+ testparam + ";地址:" + GameUrl,
+                    Value = ex.ToGetMessage() + testparam + ";地址:" + GameUrl,
                 });
             }
         }
@@ -3539,16 +3539,16 @@ namespace Lottery.Api.Controllers
                 //var jsonResult = JsonHelper.Decode(result);
                 //if (jsonResult.ErrorCode == 0 || jsonResult.ErrorCode == 12)//注册成功或已注册
                 //{
-                    //2.获取游戏列表
-                    var AKey = "AppGameList";
-                    var AValue = await GetAppConfigByKey(_serviceProxyProvider, AKey);
-                    return Json(new LotteryServiceResponse
-                    {
-                        Code = ResponseCode.成功,
-                        Message = "查询配置成功",
-                        MsgId = entity.MsgId,
-                        Value = JsonHelper.Deserialize<object>(AValue)
-                    });
+                //2.获取游戏列表
+                var AKey = "AppGameList";
+                var AValue = await GetAppConfigByKey(_serviceProxyProvider, AKey);
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询配置成功",
+                    MsgId = entity.MsgId,
+                    Value = JsonHelper.Deserialize<object>(AValue)
+                });
                 //}
                 //throw new Exception("获取失败★" + result);
             }
@@ -3691,33 +3691,34 @@ namespace Lottery.Api.Controllers
 
         public async Task<IActionResult> TestCreateAccount()
         {
+            InitGameParam();
+            string gameprovider = "2";
+            string userName = $"DJW18588515737";
+            string password = "1";
+            var oldsign = MD5Helper.UpperMD5($"{OperatorCode}&{password}&{userName}&{SecretKey}");
+            var obj = new
+            {
+                gameprovider = gameprovider,
+                command = "GET_BALANCE",
+                sign = oldsign,
+                @params = new
+                {
+                    username = userName,
+                    operatorcode = OperatorCode,
+                    password = password,
+                },
+            };
+            string json = obj.ToJson();
+            string msg = $"{GameUrl}--{json}--{OperatorCode}&{password}&{userName}&{SecretKey}";
             try
             {
-                InitGameParam();
-                string gameprovider = "2";
-                string userName = $"DJW18588515737";
-                string password = "1";
-                var oldsign = MD5Helper.UpperMD5($"{OperatorCode}&{password}&{userName}&{SecretKey}");
-                var obj = new
-                {
-                    gameprovider = gameprovider,
-                    command = "GET_BALANCE",
-                    sign = oldsign,
-                    @params = new
-                    {
-                        username = userName,
-                        operatorcode = OperatorCode,
-                        password = password,
-                    },
-                };
-                string json = obj.ToJson();
                 var result = PostManager.HttpPost(GameUrl, json, "utf-8");
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
-                    Message = result,
+                    Message = msg + result,
                     MsgId = "",
-                    Value = result,
+                    Value = msg + result,
                 });
             }
             catch (Exception ex)
@@ -3725,9 +3726,9 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.Message,
+                    Message = ex.Message + msg,
                     MsgId = "",
-                    Value = "请求失败",
+                    Value = ex.Message + msg,
                 });
             }
         }

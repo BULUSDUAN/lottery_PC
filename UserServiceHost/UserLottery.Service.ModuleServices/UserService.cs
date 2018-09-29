@@ -526,14 +526,12 @@ namespace UserLottery.Service.ModuleServices
         /// <summary>
         /// 配置项
         /// </summary>
-        private static C_Core_Config _coreConfigList = new C_Core_Config();
         public Task<C_Core_Config> QueryCoreConfigByKey(string key)
         {
             try
             {
                 var loginBiz = new MobileAuthenticationBusiness();
-                _coreConfigList = loginBiz.BanRegistrMobile(key);
-
+                var _coreConfigList = loginBiz.BanRegistrMobile(key);
                 return Task.FromResult(_coreConfigList);
             }
             catch (Exception ex)

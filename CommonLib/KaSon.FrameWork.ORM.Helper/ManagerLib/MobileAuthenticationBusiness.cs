@@ -12,7 +12,7 @@ namespace KaSon.FrameWork.ORM.Helper
     public class MobileAuthenticationBusiness : DBbase
     {
         /// <summary>
-        /// 手机黑名单
+        /// 获取配置文件
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>

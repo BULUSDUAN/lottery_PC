@@ -1761,6 +1761,8 @@ namespace Lottery.Api.Controllers
                     Dictionary<string, object> param2 = new Dictionary<string, object>();
                     param2.Add("key", "FillMoney_Enable_GateWay");
                     var FillMoney_Enable_GateWay = await _serviceProxyProvider.Invoke<C_Core_Config>(param2, "api/user/QueryCoreConfigByKey");
+                    if (FillMoney_Enable_GateWay == null)
+                        throw new Exception("未获取到FillMoney_Enable_GateWay配置");
                     string[] gateWayArray = FillMoney_Enable_GateWay.ConfigValue.ToLower().Split('|');
                     return JsonEx(new LotteryServiceResponse
                     {
