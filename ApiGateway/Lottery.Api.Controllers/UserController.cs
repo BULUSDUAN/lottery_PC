@@ -201,7 +201,7 @@ namespace Lottery.Api.Controllers
                 string userToken = p.UserToken;
                 string userId = p.UserId;
                 Dictionary<string, object> param = new Dictionary<string, object>();
-              
+
                 if (string.IsNullOrEmpty(oldPassword))
                     throw new LogicException("旧密码不能为空");
                 if (string.IsNullOrEmpty(newPassword))
@@ -213,7 +213,7 @@ namespace Lottery.Api.Controllers
                     throw new LogicException("Token验证失败");
                 param["newPassword"] = newPassword;
                 param["userId"] = userId;
-             
+
                 var chkPwd = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/CheckIsSame2BalancePassword");
                 if (chkPwd.ReturnValue == "T" || chkPwd.ReturnValue == "N")
                     throw new LogicException("登录密码不能和资金密码一样");
@@ -561,7 +561,7 @@ namespace Lottery.Api.Controllers
                 //string codeValue = KaSon.FrameWork.Common.Redis.RedisHelperEx.DB_Other.Get(key);
                 var codeParam = new Dictionary<string, object>();
                 codeParam.Add("Key", key);
-                var codeValue= await _serviceProxyProvider.Invoke<string>(codeParam, "api/user/GetRedisByOtherDbKey");
+                var codeValue = await _serviceProxyProvider.Invoke<string>(codeParam, "api/user/GetRedisByOtherDbKey");
                 if (codeValue != verifyCode)
                 {
                     returnResult.Code = ResponseCode.ValiteCodeError;
@@ -697,7 +697,7 @@ namespace Lottery.Api.Controllers
                     param.Add("Key", key);
                     param.Add("RValue", num.ToString());
                     param.Add("TotalSeconds", 60 * 10);
-                    var flag= await _serviceProxyProvider.Invoke<bool>(param, "api/user/SetRedisOtherDbKey"); 
+                    var flag = await _serviceProxyProvider.Invoke<bool>(param, "api/user/SetRedisOtherDbKey");
                     string base64 = Convert.ToBase64String(img);
                     //data:image/gif;base64,
                     if (!base64.StartsWith("data:image"))
@@ -715,8 +715,8 @@ namespace Lottery.Api.Controllers
                 {
                     Code = ResponseCode.失败,
                     Message = ex.ToGetMessage() + "●" + ex.ToString(),
-                   // MsgId = entity.MsgId,
-                   //Value = ex.ToGetMessage(),
+                    // MsgId = entity.MsgId,
+                    //Value = ex.ToGetMessage(),
                 });
             }
             //return vlimg;
@@ -963,7 +963,7 @@ namespace Lottery.Api.Controllers
                 string newPwd = p.NewPwd;
                 bool isSet = Convert.ToBoolean(p.IsSet);
                 string userToken = p.UserToken;
-                string strPlace = string.IsNullOrEmpty((string)p.StrPlace)?"": p.StrPlace ;
+                string strPlace = string.IsNullOrEmpty((string)p.StrPlace) ? "" : p.StrPlace;
                 if (string.IsNullOrEmpty(userToken))
                     throw new LogicException("您还未登录，请登录！");
                 else if (string.IsNullOrEmpty(newPwd))
@@ -1752,36 +1752,24 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
-                string userToken = p.UserToken;
-                if (!string.IsNullOrEmpty(userToken))
+                string fillMoney_Enable_GateWay = ConfigHelper.AllConfigInfo["FillMoney_Enable_GateWay"] != null ? ConfigHelper.AllConfigInfo["FillMoney_Enable_GateWay"].ToString() : "";
+                //var p = WebHelper.Decode(entity.Param);//FillMoney_Enable_GateWay
+                //string userToken = p.UserToken;
+                Dictionary<string, object> param2 = new Dictionary<string, object>();
+                param2.Add("key", "FillMoney_Enable_GateWay");
+                var FillMoney_Enable_GateWay = await _serviceProxyProvider.Invoke<C_Core_Config>(param2, "api/user/QueryCoreConfigByKey");
+                if (FillMoney_Enable_GateWay != null)
                 {
-                    userToken = userToken.Replace("%2B", "+").Replace("%26", "&");
-                    string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
-                    Dictionary<string, object> param2 = new Dictionary<string, object>();
-                    param2.Add("key", "FillMoney_Enable_GateWay");
-                    var FillMoney_Enable_GateWay = await _serviceProxyProvider.Invoke<C_Core_Config>(param2, "api/user/QueryCoreConfigByKey");
-                    if (FillMoney_Enable_GateWay == null)
-                        throw new Exception("未获取到FillMoney_Enable_GateWay配置");
-                    string[] gateWayArray = FillMoney_Enable_GateWay.ConfigValue.ToLower().Split('|');
-                    return JsonEx(new LotteryServiceResponse
-                    {
-                        Code = ResponseCode.成功,
-                        Message = "获取成功",
-                        MsgId = entity.MsgId,
-                        Value = LoadPayConfig("ios", gateWayArray),
-                    });
+                    fillMoney_Enable_GateWay = FillMoney_Enable_GateWay.ConfigValue;
                 }
-                else
+                string[] gateWayArray = fillMoney_Enable_GateWay.ToLower().Split('|');
+                return JsonEx(new LotteryServiceResponse
                 {
-                    return JsonEx(new LotteryServiceResponse
-                    {
-                        Code = ResponseCode.失败,
-                        Message = "验证用户失败，传入参数有误",
-                        MsgId = entity.MsgId,
-                        Value = "验证用户失败",
-                    });
-                }
+                    Code = ResponseCode.成功,
+                    Message = "获取成功",
+                    MsgId = entity.MsgId,
+                    Value = LoadPayConfig("ios", gateWayArray),
+                });
 
             }
             catch (Exception ex)
@@ -1794,6 +1782,39 @@ namespace Lottery.Api.Controllers
                     Value = ex.ToGetMessage(),
                 });
             }
+        }
+
+
+        public async Task<IActionResult> TestConfig([FromServices]IServiceProxyProvider _serviceProxyProvider)
+        {
+            try
+            {
+                Dictionary<string, object> param2 = new Dictionary<string, object>();
+                param2.Add("key", "FillMoney_Enable_GateWay");
+                var FillMoney_Enable_GateWay = await _serviceProxyProvider.Invoke<C_Core_Config>(param2, "api/user/QueryCoreConfigByKey");
+                if (FillMoney_Enable_GateWay == null)
+                    throw new Exception("未获取到FillMoney_Enable_GateWay配置");
+                string[] gateWayArray = FillMoney_Enable_GateWay.ConfigValue.ToLower().Split('|');
+                return JsonEx(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "获取成功",
+                    MsgId = "",
+                    Value = LoadPayConfig("ios", gateWayArray),
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return JsonEx(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = "",
+                    Value = ex.ToGetMessage(),
+                });
+            }
+
         }
 
 

@@ -3731,7 +3731,7 @@ namespace Lottery.Api.Controllers
                     Value = ex.Message + msg,
                 });
             }
-        }
+        }        
         #endregion
     }
 }
