@@ -2039,7 +2039,8 @@ namespace Lottery.Api.Controllers
                 }
             }.ToJson();
             //var postParam = ConvertHelper.ReplaceFirst(strParam, "theparams", "params");
-            var result = PostManager.HttpPost(DataController.GameUrl, strParam, "utf-8");
+            //var result = PostManager.HttpPost(DataController.GameUrl, strParam, "utf-8");
+            var result = PostManager.Post(DataController.GameUrl, strParam, Encoding.UTF8, 30, null, "application/json");
         }
     }
 }
