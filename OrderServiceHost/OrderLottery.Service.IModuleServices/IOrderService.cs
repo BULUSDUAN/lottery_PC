@@ -133,5 +133,11 @@ namespace OrderLottery.Service.IModuleServices
 
         [Service(Date = "2018-9-28", Director = "renjun", Name = "北京单场期号")]
         Task<string> QueryBJDCLastIssuseNumber(int count);
+        [Service(Date = "2018-9-28", Director = "renjun", Name = "北京单场查询开奖结果")]
+        Task<BJDCMatchResultInfo_Collection> QueryBJDC_MatchResultList(string issuseNumber);
+        [Service(Date = "2018-9-29", Director = "renjun", Name = "查询文章")]
+        Task<ArticleInfo_QueryCollection> QueryNoStaticPathArticleList(int pageIndex, int pageSize);
+        [Service(Date = "2018-9-29", Director = "renjun", Name = "文章资讯")]
+        Task<CommonActionResult> UpdateArticleStaticPath(string articleId, string staticPath, string preId, string nextId);
     }
 }

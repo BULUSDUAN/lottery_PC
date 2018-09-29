@@ -579,5 +579,18 @@ namespace OrderLottery.Service.ModuleServices
                 throw new Exception("北京单场查询开奖结果异常 - " + ex.Message, ex);
             }
         }
+
+        public Task<ArticleInfo_QueryCollection> QueryNoStaticPathArticleList(int pageIndex, int pageSize)
+        {
+            var siteBiz = new SiteMessageBusiness();
+            return Task.FromResult(siteBiz.QueryNoStaticPathArticleList(pageIndex, pageSize));
+        }
+
+        public Task<CommonActionResult> UpdateArticleStaticPath(string articleId, string staticPath, string preId, string nextId)
+        {
+            var siteBiz = new SiteMessageBusiness();
+            siteBiz.UpdateArticleStaticPath(articleId, staticPath, preId, nextId);
+            return Task.FromResult(new CommonActionResult(true, "提交文章成功") { });
+        }
     }
 }
