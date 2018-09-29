@@ -120,7 +120,7 @@ namespace KaSon.FrameWork.Common.Net
             request.Method = "post";
             request.Accept = "text/html, application/xhtml+xml, */*";
             request.ContentType = "application/json"; //application/x-www-form-urlencoded
-            request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36";
+            //request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36";
             byte[] buffer = encoding.GetBytes(strPostdata);
             request.ContentLength = buffer.Length;
             request.GetRequestStream().Write(buffer, 0, buffer.Length);
