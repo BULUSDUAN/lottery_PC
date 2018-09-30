@@ -513,7 +513,6 @@ namespace KaSon.FrameWork.ORM.Helper
         /// </summary>
         public int QueryUserRegisterCount()
         {
-          
             return DB.CreateQuery<C_User_Register>().Count();
         }
     }

@@ -197,5 +197,11 @@ namespace Lottery.Service.IModuleServices
 
         [Service(Date = "2018-9-27", Director = "lidi", Name = "游戏提现前存入交易表")]
         Task<CommonActionResult> AddGameWithdraw(string userId, decimal money, string userDisplayName, string orderId, string providerSerialNo);
+
+        [Service(Date = "2018-9-29", Director = "renjun", Name = "查询开奖号码")]
+        Task<GameWinNumber_Info> QueryNewWinNumber(string gameCode);
+
+        [Service(Date = "2018-9-29", Director = "renjun", Name = "查询开奖号码")]
+        Task<GameWinNumber_InfoCollection> QueryGameWinNumber(string gameCode, int pageIndex, int pageSize);
     }
 }

@@ -1270,6 +1270,98 @@ namespace Lottery.Service.ModuleServices
                 throw new Exception("查询开奖历史出错 - " + ex.Message, ex);
             }
         }
+
+        /// <summary>
+        /// 查询开奖号码
+        /// </summary>
+        /// <param name="gameCode"></param>
+        /// <returns></returns>
+        public Task<GameWinNumber_Info> QueryNewWinNumber(string gameCode)
+        {
+            var list =new OrderQuery().QueryGameWinNumber(gameCode, 0, 1);
+            if (list.List.Count == 0)
+            return Task.FromResult(new GameWinNumber_Info());
+            return Task.FromResult(list.List[0]);
+        }
+
+        /// <summary>
+        /// 查询开奖号码
+        /// </summary>
+        /// <param name="gameType">仅传统足球需要传玩法</param>
+        /// <returns></returns>
+        public Task<GameWinNumber_InfoCollection> QueryGameWinNumber(string gameCode, int pageIndex, int pageSize)
+        {
+            try
+            {
+                switch (gameCode.ToUpper())
+                {
+                    case "CQ11X5":
+                        return Task.FromResult(new LotteryDataBusiness_CQ11X5().QueryCQ11X5_GameWinNumber(pageIndex, pageSize));
+                    case "CQKLSF":
+                        return Task.FromResult(new LotteryDataBusiness_CQKLSF().QueryCQKLSF_GameWinNumber(pageIndex, pageSize));
+                    case "CQSSC":
+                        return Task.FromResult(new LotteryDataBusiness_CQSSC().QueryCQSSC_GameWinNumber(pageIndex, pageSize));
+                    case "DF6J1":
+                        return Task.FromResult(new LotteryDataBusiness_DF6_1().QueryDF6_1_GameWinNumber(pageIndex, pageSize));
+                    case "DLT":
+                        return Task.FromResult(new LotteryDataBusiness_DLT().QueryDLT_GameWinNumber(pageIndex, pageSize));
+                    case "FC3D":
+                        return Task.FromResult(new LotteryDataBusiness_FC3D().QueryFC3D_GameWinNumber(pageIndex, pageSize));
+                    case "GD11X5":
+                        return Task.FromResult(new LotteryDataBusiness_GD11X5().QueryGD11X5_GameWinNumber(pageIndex, pageSize));
+                    case "GDKLSF":
+                        return Task.FromResult(new LotteryDataBusiness_GDKLSF().QueryGDKLSF_GameWinNumber(pageIndex, pageSize));
+                    case "HBK3":
+                        return Task.FromResult(new LotteryDataBusiness_HBK3().QueryHBK3_GameWinNumber(pageIndex, pageSize));
+                    case "HC1":
+                        return Task.FromResult(new LotteryDataBusiness_HC1().QueryHC1_GameWinNumber(pageIndex, pageSize));
+                    case "HD15X5":
+                        return Task.FromResult(new LotteryDataBusiness_HD15X5().QueryHD15X5_GameWinNumber(pageIndex, pageSize));
+                    case "HNKLSF":
+                        return Task.FromResult(new LotteryDataBusiness_HNKLSF().QueryHNKLSF_GameWinNumber(pageIndex, pageSize));
+                    case "JLK3":
+                        return Task.FromResult(new LotteryDataBusiness_JLK3().QueryJLK3_GameWinNumber(pageIndex, pageSize));
+                    case "JSKS":
+                        return Task.FromResult(new LotteryDataBusiness_JSK3().QueryJSK3_GameWinNumber(pageIndex, pageSize));
+                    case "JX11X5":
+                        return Task.FromResult(new LotteryDataBusiness_JX11X5().QueryJX11X5_GameWinNumber(pageIndex, pageSize));
+                    case "JXSSC":
+                        return Task.FromResult(new LotteryDataBusiness_JXSSC().QueryJXSSC_GameWinNumber(pageIndex, pageSize));
+                    case "LN11X5":
+                        return Task.FromResult(new LotteryDataBusiness_LN11X5().QueryLN11X5_GameWinNumber(pageIndex, pageSize));
+                    case "PL3":
+                        return Task.FromResult(new LotteryDataBusiness_PL3().QueryPL3_GameWinNumber(pageIndex, pageSize));
+                    case "PL5":
+                        return Task.FromResult(new LotteryDataBusiness_PL5().QueryPL5_GameWinNumber(pageIndex, pageSize));
+                    case "QLC":
+                        return Task.FromResult(new LotteryDataBusiness_QLC().QueryQLC_GameWinNumber(pageIndex, pageSize));
+                    case "QXC":
+                        return Task.FromResult(new LotteryDataBusiness_QXC().QueryQXC_GameWinNumber(pageIndex, pageSize));
+                    case "SDQYH":
+                        return Task.FromResult(new LotteryDataBusiness_SDQYH().QuerySDQYH_GameWinNumber(pageIndex, pageSize));
+                    case "SSQ":
+                        return Task.FromResult(new LotteryDataBusiness_SSQ().QuerySSQ_GameWinNumber(pageIndex, pageSize));
+                    case "SD11X5":
+                        return Task.FromResult(new LotteryDataBusiness_YDJ11().QueryYDJ11_GameWinNumber(pageIndex, pageSize));
+                    case "SDKLPK3":
+                        return Task.FromResult(new LotteryDataBusiness_SDKLPK3().QuerySDKLPK3_GameWinNumber(pageIndex, pageSize));
+                    case "CTZQ_T14C":
+                    case "CTZQ_TR9":
+                    case "CTZQ_T6BQC":
+                    case "CTZQ_T4CJQ":
+                        return Task.FromResult(new LotteryDataBusiness_CTZQ(gameCode).QueryCTZQ_GameWinNumber(pageIndex, pageSize));
+                    default:
+                        break;
+                }
+                throw new Exception("没有匹配的彩种: " + gameCode);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询号码数据 - " + ex.Message, ex);
+            }
+        }
+
+
         #endregion
 
 
