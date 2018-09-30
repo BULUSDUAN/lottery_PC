@@ -2588,12 +2588,7 @@ namespace KaSon.FrameWork.ORM.Helper
             return collection;
         }
 
-        public GameWinNumber_Info QueryNewWinNumber(string gameCode)
-        {
-            var list = QueryGameWinNumber(gameCode, 0, 1);
-            if (list.List.Count == 0) return new GameWinNumber_Info();
-            return list.List[0];
-        }
+      
         public KJGameIssuse QueryKJGameIssuse(string gameCode, string issuseNumber)
         {
             return DB.CreateQuery<KJGameIssuse>().Where(p => p.GameCode == gameCode && p.IssuseNumber == issuseNumber).FirstOrDefault();
