@@ -3211,7 +3211,8 @@ namespace Lottery.Api.Controllers
                         language = "CN"
                     }
                 }.ToJson();
-                var loginResult = PostManager.HttpPost(GameUrl, loginParam, "utf-8");
+                var loginResult = PostManager.Post(GameUrl, loginParam, Encoding.UTF8, 45, null, "application/json");
+                //var loginResult = PostManager.HttpPost(GameUrl, loginParam, "utf-8");
                 var jsonLoginResult = JsonHelper.Decode(loginResult);
                 if (jsonLoginResult.ErrorCode == 0)
                 {
@@ -3278,7 +3279,8 @@ namespace Lottery.Api.Controllers
                         password = pwd,
                     }
                 }.ToJson();
-                var result = PostManager.HttpPost(GameUrl, strParam, "utf-8");
+                var result = PostManager.Post(GameUrl, strParam, Encoding.UTF8, 45, null, "application/json");
+                //var result = PostManager.HttpPost(GameUrl, strParam, "utf-8");
                 var jsonResult = JsonHelper.Decode(result);
                 if (jsonResult.ErrorCode == 0)
                 {
@@ -3307,7 +3309,8 @@ namespace Lottery.Api.Controllers
                             password = pwd,
                         }
                     }.ToJson();
-                    var createResult = PostManager.HttpPost(GameUrl, strCreateParam, "utf-8");
+                    var createResult = PostManager.Post(GameUrl, strCreateParam, Encoding.UTF8, 45, null, "application/json");
+                    //var createResult = PostManager.HttpPost(GameUrl, strCreateParam, "utf-8");
                     return Json(new LotteryServiceResponse
                     {
                         Code = ResponseCode.成功,
@@ -3355,8 +3358,6 @@ namespace Lottery.Api.Controllers
                 string userToken = p.UserToken;
                 decimal money = p.Money;
                 if (money <= 0) throw new Exception("参数错误");
-                //测试使用，上线前去掉
-                if (money > 2) money = 2;
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 var param = new Dictionary<string, object>();
                 param["userId"] = userId;
@@ -3387,7 +3388,9 @@ namespace Lottery.Api.Controllers
                             amount = money.ToString()
                         }
                     }.ToJson();
-                    var result = PostManager.HttpPost(GameUrl, rechargeParam, "utf-8");
+                    var result = PostManager.Post(GameUrl, rechargeParam, Encoding.UTF8, 45, null, "application/json");
+
+                    //var result = PostManager.HttpPost(GameUrl, rechargeParam, "utf-8");
                     var jsonResult = JsonHelper.Decode(result);
                     var providerSerialNo = "";
                     if (jsonResult.ErrorCode == 0)
@@ -3408,7 +3411,8 @@ namespace Lottery.Api.Controllers
                                 serialNo = providerSerialNo,
                             }
                         }.ToJson();
-                        var confirmResult = PostManager.HttpPost(GameUrl, confirmParam, "utf-8");
+                        var confirmResult = PostManager.Post(GameUrl, confirmParam, Encoding.UTF8, 45, null, "application/json");
+                        //var confirmResult = PostManager.HttpPost(GameUrl, confirmParam, "utf-8");
                         var jsonConfirmResult = JsonHelper.Decode(confirmResult);
                         if (jsonConfirmResult.ErrorCode == 0) //确认
                         {
@@ -3577,7 +3581,8 @@ namespace Lottery.Api.Controllers
                         amount = money.ToString()
                     }
                 }.ToJson();
-                var result = PostManager.HttpPost(GameUrl, withdrawParam, "utf-8");
+                var result = PostManager.Post(GameUrl, withdrawParam, Encoding.UTF8, 45, null, "application/json");
+                //var result = PostManager.HttpPost(GameUrl, withdrawParam, "utf-8");
                 var jsonResult = JsonHelper.Decode(result);
                 var flag = false;
                 var providerSerialNo = "";
@@ -3599,7 +3604,8 @@ namespace Lottery.Api.Controllers
                             serialNo = providerSerialNo,
                         }
                     }.ToJson();
-                    var confirmResult = PostManager.HttpPost(GameUrl, confirmParam, "utf-8");
+                    var confirmResult = PostManager.Post(GameUrl, confirmParam, Encoding.UTF8, 45, null, "application/json");
+                    //var confirmResult = PostManager.HttpPost(GameUrl, confirmParam, "utf-8");
                     var jsonConfirmResult = JsonHelper.Decode(confirmResult);
                     if (jsonConfirmResult.ErrorCode == 0) //确认
                     {

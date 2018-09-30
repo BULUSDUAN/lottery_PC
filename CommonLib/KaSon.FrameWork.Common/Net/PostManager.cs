@@ -115,20 +115,30 @@ namespace KaSon.FrameWork.Common.Net
         /// <returns>返回响应内容</returns>
         public static string HttpPost(string URL, string strPostdata, string strEncoding)
         {
-            Encoding encoding = Encoding.Default;
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(URL);
-            request.Method = "post";
-            request.Accept = "text/html, application/xhtml+xml, */*";
-            request.ContentType = "application/json"; //application/x-www-form-urlencoded
-            request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36";
-            byte[] buffer = encoding.GetBytes(strPostdata);
-            request.ContentLength = buffer.Length;
-            request.GetRequestStream().Write(buffer, 0, buffer.Length);
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-            using (StreamReader reader = new StreamReader(response.GetResponseStream(), System.Text.Encoding.GetEncoding(strEncoding)))
+            HttpWebResponse response = null;
+            try
             {
-                return reader.ReadToEnd();
+                Encoding encoding = Encoding.Default;
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(URL);
+                request.Method = "post";
+                request.Accept = "text/html, application/xhtml+xml, */*";
+                request.ContentType = "application/json"; //application/x-www-form-urlencoded
+                                                          //request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36";
+                byte[] buffer = encoding.GetBytes(strPostdata);
+                request.ContentLength = buffer.Length;
+                request.GetRequestStream().Write(buffer, 0, buffer.Length);
+                response = (HttpWebResponse)request.GetResponse();
+                using (StreamReader reader = new StreamReader(response.GetResponseStream(), System.Text.Encoding.GetEncoding(strEncoding)))
+                {
+                    return reader.ReadToEnd();
+                }
             }
+            catch (WebException ex)
+            {
+                response = (HttpWebResponse)ex.Response;
+            }
+            StreamReader sr = new StreamReader(response.GetResponseStream(), System.Text.Encoding.GetEncoding(strEncoding));
+            return sr.ReadToEnd();
         }
 
         public static string PostCustomer(string url, string requestString, Encoding encoding, Action<HttpWebRequest> requestHandler = null)
