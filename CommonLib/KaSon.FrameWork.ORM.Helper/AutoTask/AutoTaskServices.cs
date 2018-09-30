@@ -23,16 +23,20 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
         /// </summary>
         public static void AutoCaheData(int seconds)
         {
-            Task.WhenAll(new Task[] {
+            Task.Run(() => StartTaskByWriteChaseOrderToDb(seconds));
+            bool flag = ConfigHelper.AllConfigInfo["AutoTask"] == null ? false : Convert.ToBoolean(ConfigHelper.AllConfigInfo["AutoTask"].ToString());
+            if (flag)
+            {
+                Task.WhenAll(new Task[] {
                      CTZQ_BJDC(),
                         JCLQ(),
                         JCZQ(),
-                        StartTaskByWriteChaseOrderToDb(seconds),
                         Init_Pool_Data(),
                         Repair_SZCAddToRedis_dp(),
                         Repair_SZCAddToRedis_gp(),
                         GameRechargeRepair()
-            });
+                });
+            }
         }
 
         public static async Task CTZQ_BJDC()
@@ -696,7 +700,7 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
                             if (item.TransferType == (int)GameTransferType.Recharge)
                             {
                                 var IsSuccess = false;
-                                dataQuery.EndFreezeGameRecharge(item.OrderId, IsSuccess,"");
+                                dataQuery.EndFreezeGameRecharge(item.OrderId, IsSuccess, "");
                             }
                         }
                     }
