@@ -3212,7 +3212,11 @@ namespace Lottery.Api.Controllers
                         gamecode = gameCode,
                         isfreegame = "true",
                         ismobile = "true",
-                        language = "CN"
+                        language = "CN",
+                        extraparameter = new
+                        {
+                            type = "SMG"
+                        }
                     }
                 }.ToJson();
                 //testparam = loginParam;
@@ -3293,6 +3297,10 @@ namespace Lottery.Api.Controllers
                         username = gameLoginName,
                         operatorcode = OperatorCode,
                         password = pwd,
+                        extraparameter = new
+                        {
+                            type = "SMG"
+                        }
                     }
                 }.ToJson();
                 //testparam = strParam;
@@ -3334,6 +3342,10 @@ namespace Lottery.Api.Controllers
                             username = gameLoginName,
                             operatorcode = OperatorCode,
                             password = pwd,
+                            extraparameter = new
+                            {
+                                type = "SMG"
+                            }
                         }
                     }.ToJson();
                     //var createResult = PostManager.HttpPost(GameUrl, strCreateParam, "utf-8");
@@ -3351,7 +3363,7 @@ namespace Lottery.Api.Controllers
                 }
                 else
                 {
-                    throw new Exception("查询失败★" + result);
+                    throw new Exception("查询失败★" + result+ ";传入参数" + strParam);
                 }
             }
             catch (Exception ex)
@@ -3413,7 +3425,11 @@ namespace Lottery.Api.Controllers
                             operatorcode = OperatorCode,
                             password = pwd,
                             serialNo = freezeResult.ReturnValue,
-                            amount = money.ToString()
+                            amount = money.ToString(),
+                            extraparameter = new
+                            {
+                                type = "SMG"
+                            }
                         }
                     }.ToJson();
                     //testparam = rechargeParam;
@@ -3426,7 +3442,7 @@ namespace Lottery.Api.Controllers
                             Code = ResponseCode.失败,
                             Message = rechargeParam,
                             MsgId = "",
-                            Value = "传入参数" + rechargeParam + "",
+                            Value = "传入参数" + rechargeParam,
                         });
                     }
                     var jsonResult = JsonHelper.Decode(result);
@@ -3616,7 +3632,11 @@ namespace Lottery.Api.Controllers
                         operatorcode = OperatorCode,
                         password = pwd,
                         serialNo = orderId,
-                        amount = money.ToString()
+                        amount = money.ToString(),
+                        extraparameter = new
+                        {
+                            type = "SMG"
+                        }
                     }
                 }.ToJson();
                 var result = PostManager.Post(GameUrl, withdrawParam, Encoding.UTF8, 30, null, "application/json");
@@ -3640,6 +3660,10 @@ namespace Lottery.Api.Controllers
                             operatorcode = OperatorCode,
                             password = pwd,
                             serialNo = providerSerialNo,
+                            //extraparameter = new
+                            //{
+                            //    type = "SMG"
+                            //}
                         }
                     }.ToJson();
                     var confirmResult = PostManager.Post(GameUrl, confirmParam, Encoding.UTF8, 30, null, "application/json");

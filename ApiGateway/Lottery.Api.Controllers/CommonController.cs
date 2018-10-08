@@ -448,7 +448,7 @@ namespace Lottery.Api.Controllers
             /// <param name="SerName"></param>
             /// <param name="FileName"></param>
             /// <returns></returns>
-            public async Task<IActionResult> GetLogInfo([FromServices]IServiceProxyProvider _serviceProxyProvider,int PlamtType=1, int DicType = 1, string SerName="Order")
+            public async Task<IActionResult> GetLogInfo([FromServices]IServiceProxyProvider _serviceProxyProvider,int PlamtType=1, int DicType = 1, string SerName="Order",string FileName="")
         {
             string config = "";
             string DicTypeName = "APILogError";
@@ -497,7 +497,15 @@ namespace Lottery.Api.Controllers
                 sb.Append("新的日志******************\r\n");
                 sb.Append("新的日志******************\r\n");
                 sb.Append("新的日志******************\r\n");
-                sb.Append(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\" + ApiDicTypeName, ""));
+                if (!string.IsNullOrEmpty(FileName))
+                {
+                    sb.Append(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfoByDate("Log_Log\\" + ApiDicTypeName, FileName));
+                }
+                else
+                {
+                    sb.Append(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\" + ApiDicTypeName, ""));
+                }
+                
             }
             else {
                 Dictionary<string, object> param = new Dictionary<string, object>();

@@ -92,17 +92,17 @@ namespace KaSon.FrameWork.Common.Utilities
         }
 
 
-        public static string GetLogInfo(string dicPath,string fileName)
+        public static string GetLogInfo(string dicPath, string fileName)
         {
             var sb = new StringBuilder();
 
-          
+
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, dicPath);
             DirectoryInfo root = new DirectoryInfo(path);
 
             if (!root.Exists) return dicPath + ",目录不存在";
             FileInfo[] files = root.GetFiles();
-          
+
             foreach (var item in files)
             {
                 sb.Append(item.Name + "\r\n");
@@ -127,6 +127,43 @@ namespace KaSon.FrameWork.Common.Utilities
             }
 
 
+            return sb.ToString();
+        }
+
+
+        public static string GetLogInfoByDate(string dicPath, string fileName)
+        {
+            var sb = new StringBuilder();
+
+
+            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, dicPath);
+            DirectoryInfo root = new DirectoryInfo(path);
+
+            if (!root.Exists) return dicPath + ",目录不存在";
+            FileInfo[] files = root.GetFiles();
+
+            foreach (var item in files)
+            {
+                sb.Append(item.Name + "\r\n");
+                if (item.Name.StartsWith("_" + fileName) || item.Name.StartsWith(fileName))
+                {
+                    try
+                    {
+                        lock (ReadLock)
+                        {
+                            var txtData = System.IO.File.ReadAllText(item.FullName, Encoding.Default);
+                            sb.Append(txtData + "|");
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        sb.Append(ex.ToString() + "\r\n");
+                        continue;
+                    }
+
+                }
+            }
             return sb.ToString();
         }
     }
