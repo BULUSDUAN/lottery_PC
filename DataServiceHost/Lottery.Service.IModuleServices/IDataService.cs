@@ -16,6 +16,7 @@ using Kason.Sg.Core.CPlatform.Support;
 using Kason.Sg.Core.CPlatform.Support.Attributes;
 using Kason.Sg.Core.ProxyGenerator.Implementation;
 using Kason.Sg.Core.System.Intercept;
+using KaSon.FrameWork.ORM.Helper.WinNumber.ModelCollection;
 using Lottery.Service.Model;
 using System;
 using System.Collections.Generic;
@@ -203,5 +204,58 @@ namespace Lottery.Service.IModuleServices
 
         [Service(Date = "2018-9-29", Director = "renjun", Name = "查询开奖号码")]
         Task<GameWinNumber_InfoCollection> QueryGameWinNumber(string gameCode, int pageIndex, int pageSize);
+
+        #region 时时彩走势
+        [Service(Date = "2018-10-08", Director = "renjun", Name = "基本走势")]
+        Task<SSQ_JiBenZouSi_InfoCollection> QueryCache_SSQ_JiBenZouSi_Info(int index);
+        [Service(Date = "2018-10-08", Director = "renjun", Name = "大小走势")]
+        Task<SSQ_DX_InfoCollection> QueryCache_SSQ_DX_Info(int index);
+
+        [Service(Date = "2018-10-08", Director = "renjun", Name = "除3走势")]
+        Task<SSQ_C3_InfoCollection> QueryCache_SSQ_C3_Info(int index);
+        [Service(Date = "2018-10-08", Director = "renjun", Name = "奇偶走势")]
+        Task<SSQ_JiOu_InfoCollection> QueryCache_SSQ_JiOu_Info(int index);
+
+        [Service(Date = "2018-10-08", Director = "renjun", Name = "跨度SW走势")]
+        Task<SSQ_KuaDu_SW_InfoCollection> QueryCache_SSQ_KuaDu_SW_Info(int index);
+
+        [Service(Date = "2018-10-08", Director = "renjun", Name = "和值走势")]
+        Task<SSQ_HeZhi_InfoCollection> QueryCache_SSQ_HeZhi_Info(int index);
+        [Service(Date = "2018-10-08", Director = "renjun", Name = "质合走势")]
+        Task<SSQ_ZhiHe_InfoCollection> QueryCache_SSQ_ZhiHe_Info(int index);        
+        [Service(Date = "2018-10-08", Director = "renjun", Name = "跨度1_6走势")]
+        Task<SSQ_KuaDu_1_6_InfoCollection> QueryCache_SSQ_KuaDu_1_6_Info(int index);
+        #endregion
+
+        #region 大乐透走势
+        [Service(Date = "2018-10-08", Director = "renjun", Name = "查询除3走势")]
+        Task<DLT_Chu3_InfoCollection> QueryDLT_Chu3_Info(int length);
+
+        [Service(Date = "2018-10-08",  Director = "renjun", Name = "查询大小走势")]
+        Task<DLT_DX_InfoCollection> QueryDLT_DX_Info(int length);
+        [Service(Date = "2018-10-08", Director = "renjun", Name = "查询和值走势")]
+        Task<DLT_HeZhi_InfoCollection> QueryDLT_HeZhi_Info(int length);
+        [Service(Date = "2018-10-08", Director = "renjun", Name = "查询基本走势")]
+        Task<DLT_JiBenZouSi_InfoCollection> QueryDLT_JiBenZouSi_Info(int length);
+        [Service(Date = "2018-10-08", Director = "renjun", Name = "查询奇偶走势")]
+        Task<DLT_JiOu_InfoCollection> QueryDLT_JiOu_Info(int length);
+
+        [Service(Date = "2018-10-08", Director = "renjun", Name = "查询12走势列表按时间倒叙")]
+        Task<DLT_KuaDu_12_InfoCollection> QueryDLT_KuaDu_12_Info(int length);
+
+        [Service(Date = "2018-10-08", Director = "renjun", Name = "查询23走势列表按时间倒叙")]
+        Task<DLT_KuaDu_23_InfoCollection> QueryDLT_KuaDu_23_Info(int length);
+
+        [Service(Date = "2018-10-08", Director = "renjun", Name = "查询34走势列表按时间倒叙")]
+        Task<DLT_KuaDu_34_InfoCollection> QueryDLT_KuaDu_34_Info(int length);
+        [Service(Date = "2018-10-08", Director = "renjun", Name = "查询45走势列表按时间倒叙")]
+        Task<DLT_KuaDu_45_InfoCollection> QueryDLT_KuaDu_45_Info(int length);
+        [Service(Date = "2018-10-08", Director = "renjun", Name = "查询首尾走势列表按时间倒叙")]
+        Task<DLT_KuaDu_SW_InfoCollection> QueryDLT_KuaDu_SW_Info(int length);
+        [Service(Date = "2018-10-08", Director = "renjun", Name = "查询质和走势")]
+        Task<DLT_ZhiHe_InfoCollection> QueryDLT_ZhiHe_Info(int length);
+        #endregion
+
+
     }
 }
