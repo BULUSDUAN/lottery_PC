@@ -928,5 +928,20 @@ namespace KaSon.FrameWork.ORM.Helper
 
         }
 
+        public List<C_JCLQ_Match> QueryJCLQDSSaleMatchCount(string[] matchIdArray)
+        {
+            var query = from m in DB.CreateQuery<C_JCLQ_Match>()
+                        where matchIdArray.Contains(m.MatchId)
+                        && m.FSStopBettingTime > DateTime.Now
+                        //&& m.DSStopBettingTime > DateTime.Now
+                        select m;
+            return query.ToList();
+        }
+
+        public void AddSingleScheme_AnteCode(C_SingleScheme_AnteCode entity)
+        {
+            DB.GetDal<C_SingleScheme_AnteCode>().Add(entity);
+        }
+
     }
 }

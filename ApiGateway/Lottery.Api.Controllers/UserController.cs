@@ -2018,6 +2018,10 @@ namespace Lottery.Api.Controllers
                     username = gameLoginName,
                     operatorcode = DataController.OperatorCode,
                     password = pwd,
+                    extraparameter = new
+                    {
+                        type = "SMG"
+                    }
                 }
             }.ToJson();
             //var postParam = ConvertHelper.ReplaceFirst(strParam, "theparams", "params");
