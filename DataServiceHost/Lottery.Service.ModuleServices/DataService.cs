@@ -11,6 +11,7 @@ using KaSon.FrameWork.Common.Redis;
 using KaSon.FrameWork.Common.Utilities;
 using KaSon.FrameWork.ORM.Helper;
 using KaSon.FrameWork.ORM.Helper.WinNumber;
+using KaSon.FrameWork.ORM.Helper.WinNumber.ModelCollection;
 using Lottery.Service.IModuleServices;
 using Lottery.Service.ModuleBaseServices;
 using System;
@@ -1363,7 +1364,125 @@ namespace Lottery.Service.ModuleServices
 
 
         #endregion
+        /// <summary>
+        /// 基本走势
+        /// </summary>
+        public SSQ_JiBenZouSi_InfoCollection QueryCache_SSQ_JiBenZouSi_Info(int index)
+        {
+            try
+            {
+                return new LotteryDataBusiness_SSQ().QuerySSQ_JiBenZouSi(index);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询双色球基本走势 - " + ex.Message, ex);
+            }
+        }
 
+        /// <summary>
+        /// 大小走势
+        /// </summary>
+        public SSQ_DX_InfoCollection QueryCache_SSQ_DX_Info(int index)
+        {
+            try
+            {
+                return new LotteryDataBusiness_SSQ().QuerySSQ_DX(index);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询大小基本走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 除3走势
+        /// </summary>
+        public SSQ_C3_InfoCollection QueryCache_SSQ_C3_Info(int index)
+        {
+            try
+            {
+                return new LotteryDataBusiness_SSQ().QuerySSQ_C3(index);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询除3基本走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 奇偶走势
+        /// </summary>
+        public SSQ_JiOu_InfoCollection QueryCache_SSQ_JiOu_Info(int index)
+        {
+            try
+            {
+                return new LotteryDataBusiness_SSQ().QuerySSQ_JiOu(index);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询奇偶基本走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 跨度SW走势
+        /// </summary>
+        public SSQ_KuaDu_SW_InfoCollection QueryCache_SSQ_KuaDu_SW_Info(int index)
+        {
+            try
+            {
+                return new LotteryDataBusiness_SSQ().QuerySSQ_KuaDu_SW(index);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询跨度SW基本走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 和值走势
+        /// </summary>
+        public SSQ_HeZhi_InfoCollection QueryCache_SSQ_HeZhi_Info(int index)
+        {
+            try
+            {
+                return new LotteryDataBusiness_SSQ().QuerySSQ_HeZhi(index);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询和值基本走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 质合走势
+        /// </summary>
+        public SSQ_ZhiHe_InfoCollection QueryCache_SSQ_ZhiHe_Info(int index)
+        {
+            try
+            {
+                return new LotteryDataBusiness_SSQ().QuerySSQ_ZhiHe(index);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询质合基本走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 跨度1_6走势
+        /// </summary>
+        public SSQ_KuaDu_1_6_InfoCollection QueryCache_SSQ_KuaDu_1_6_Info(int index)
+        {
+            try
+            {
+                return new LotteryDataBusiness_SSQ().QuerySSQ_KuaDu_1_6(index);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询跨度1_6基本走势 - " + ex.Message, ex);
+            }
+        }
 
     }
 
