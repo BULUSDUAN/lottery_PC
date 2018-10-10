@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\CommonLib\EntityModel\EntityModel.csproj" />
+    <ProjectReference Include="..\..\CommonLib\KaSon.FrameWork.Common\KaSon.FrameWork.Common.csproj" />
+  </ItemGroup>
+
+
+
+  <ItemGroup>
+    <Reference Include="Kason.Sg.Core.Caching">
+      <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.Caching.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
