@@ -1212,5 +1212,45 @@ namespace KaSon.FrameWork.Common.Utilities {
             return regEx.Replace(input, newValue == null ? "" : newValue, 1);
 
         }
+
+
+        public static string HideByCount(string Input, int HideCount)
+        {
+            if (string.IsNullOrEmpty(Input)) return Input;
+            string Output="";
+            if (IsInt(Input) && Input.Length == 11)
+            {
+                Output = Input.Substring(0, 5);
+                for (int i = 5; i < 8; i++)
+                {
+                    Output += "*";
+                }
+                Output += Input.Substring(8, Input.Length - 8);
+            }
+            else
+            {
+                if (Input.Length > HideCount)
+                {
+                    Output = Input.Substring(0, Input.Length - HideCount);
+                    for (int i = 0; i < HideCount; i++)
+                    {
+                        Output += "*";
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < Input.Length; i++)
+                    {
+                        Output += "*";
+                    }
+                }
+            }
+            return Output;
+        }
+
+        public static bool IsInt(string value)
+        {
+            return Regex.IsMatch(value, @"^[0-9]*$");
+        }
     }
 }
