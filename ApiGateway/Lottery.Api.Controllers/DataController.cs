@@ -3192,11 +3192,12 @@ namespace Lottery.Api.Controllers
                 string gameCode = p.GameCode;
                 if (string.IsNullOrEmpty(gameCode) || string.IsNullOrEmpty(userToken)) throw new Exception("参数出错");
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
-                var param = new Dictionary<string, object>();
-                param["userId"] = userId;
-                var loginInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/GetLocalLoginByUserId");
-                if (loginInfo == null || string.IsNullOrEmpty(loginInfo.DisplayName)) throw new Exception("获取到用户信息有误");
-                var gameLoginName = PreName + loginInfo.DisplayName;
+                //var param = new Dictionary<string, object>();
+                //param["userId"] = userId;
+                //var loginInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/GetLocalLoginByUserId");
+                //if (loginInfo == null || string.IsNullOrEmpty(loginInfo.DisplayName)) throw new Exception("获取到用户信息有误");
+                //var gameLoginName = PreName + loginInfo.DisplayName;
+                var gameLoginName = PreName + userId;
                 var pwd = GamePassWord;
                 var sign = MD5Helper.UpperMD5($"{OperatorCode}&{pwd}&{gameLoginName}&{SecretKey}");
                 var loginParam = new
@@ -3280,11 +3281,12 @@ namespace Lottery.Api.Controllers
                 var p = JsonHelper.Decode(entity.Param);
                 string userToken = p.UserToken;
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
-                var param = new Dictionary<string, object>();
-                param["userId"] = userId;
-                var loginInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/GetLocalLoginByUserId");
-                if (loginInfo == null || string.IsNullOrEmpty(loginInfo.DisplayName)) throw new Exception("获取到用户信息有误");
-                var gameLoginName = PreName + loginInfo.DisplayName;
+                //var param = new Dictionary<string, object>();
+                //param["userId"] = userId;
+                //var loginInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/GetLocalLoginByUserId");
+                //if (loginInfo == null || string.IsNullOrEmpty(loginInfo.DisplayName)) throw new Exception("获取到用户信息有误");
+                //var gameLoginName = PreName + loginInfo.DisplayName;
+                var gameLoginName = PreName + userId;
                 var pwd = GamePassWord;
                 var sign = MD5Helper.UpperMD5($"{OperatorCode}&{pwd}&{gameLoginName}&{SecretKey}");
                 var strParam = new
@@ -3411,7 +3413,7 @@ namespace Lottery.Api.Controllers
                 var flag = false;
                 if (freezeResult.IsSuccess)
                 {
-                    var gameLoginName = PreName + loginInfo.DisplayName;
+                    var gameLoginName = PreName + userId;
                     var pwd = GamePassWord;
                     var sign = MD5Helper.UpperMD5($"{money.ToString()}&{OperatorCode}&{pwd}&{freezeResult.ReturnValue}&{gameLoginName}&{SecretKey}");
                     var rechargeParam = new
@@ -3618,7 +3620,7 @@ namespace Lottery.Api.Controllers
                 //if (withdrawInfo.IsSuccess)
                 //{
                 var orderId = BettingHelper.GetGameTransferId();
-                var gameLoginName = PreName + loginInfo.DisplayName;
+                var gameLoginName = PreName + userId;
                 var pwd = GamePassWord;
                 var sign = MD5Helper.UpperMD5($"{money.ToString()}&{OperatorCode}&{pwd}&{orderId}&{gameLoginName}&{SecretKey}");
                 var withdrawParam = new
