@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 namespace KaSon.FrameWork.ORM.Helper
 {
-    public class DBbase
+    public class DBbase: IDisposable
     {
 
         private static readonly string  _DBType= "SqlServer";
@@ -47,6 +47,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
         private DbProvider db = null;
         private static DbProvider sdb = null;
+        private DbProvider lottertdataDB = null;
         public DbProvider DB
         {
             get
@@ -119,7 +120,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }
 
         }
-        private DbProvider lottertdataDB = null;
+      
         /// <summary>
         /// LottertData数据库连接DB
         /// </summary>
@@ -141,15 +142,15 @@ namespace KaSon.FrameWork.ORM.Helper
                         lottertdataDB.Init("SqlServer.ECP_LottertData");
                     }
                 }
-                else if (!sdb.HasDbKey())
+                else if (!lottertdataDB.HasDbKey())
                 {
                     if (_DBType == "MySql")
                     {
-                        sdb.Init("MySql.ECP_LottertData");
+                        lottertdataDB.Init("MySql.ECP_LottertData");
                     }
                     else
                     {
-                        sdb.Init("SqlServer.ECP_LottertData");
+                        lottertdataDB.Init("SqlServer.ECP_LottertData");
                     }
                 }
                 return lottertdataDB;
@@ -171,7 +172,21 @@ namespace KaSon.FrameWork.ORM.Helper
 
         }
 
-
-
+        public void Dispose()
+        {
+            if (lottertdataDB != null) {
+                
+                lottertdataDB.Dispose();
+              // lottertdataDB = null;
+            }
+            if (db != null) {
+                db.Dispose();
+                //db = null;
+            }
+        }
+        ~DBbase()
+        {
+            Dispose();
+        }
     }
 }
