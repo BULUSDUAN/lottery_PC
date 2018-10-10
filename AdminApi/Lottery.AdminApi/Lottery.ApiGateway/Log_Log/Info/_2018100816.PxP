@@ -1,0 +1,9 @@
+2018-10-08 16:34:10,794 [15] INFO  Microsoft.AspNetCore.Hosting.Internal.WebHost [(null)] - Request starting HTTP/1.1 GET http://127.0.0.1:729/home/getindex  
+2018-10-08 16:34:10,949 [15] INFO  Microsoft.AspNetCore.Hosting.Internal.WebHost [(null)] - Request finished in 187.1142ms 404 
+2018-10-08 16:34:33,190 [16] INFO  Microsoft.AspNetCore.Hosting.Internal.WebHost [(null)] - Request starting HTTP/1.1 GET http://127.0.0.1:729/api/home/getindex  
+2018-10-08 16:34:33,381 [16] INFO  Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker [(null)] - Executing action method Lottery.AdminApi.Controllers.HomeController.GetIndex (Lottery.AdminApi.Controllers) with arguments ((null)) - ModelState is Valid
+2018-10-08 16:34:36,804 [16] INFO  Microsoft.AspNetCore.Mvc.Formatters.Json.Internal.JsonResultExecutor [(null)] - Executing JsonResult, writing value { IsSuccess = True }.
+2018-10-08 16:34:36,926 [16] INFO  Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker [(null)] - Executed action Lottery.AdminApi.Controllers.HomeController.GetIndex (Lottery.AdminApi.Controllers) in 3676.5549ms
+2018-10-08 16:34:36,932 [16] INFO  Microsoft.AspNetCore.Hosting.Internal.WebHost [(null)] - Request finished in 3740.9489ms 200 application/json; charset=utf-8
+2018-10-08 16:34:37,032 [22] INFO  Microsoft.AspNetCore.Hosting.Internal.WebHost [(null)] - Request starting HTTP/1.1 GET http://127.0.0.1:729/favicon.ico  
+2018-10-08 16:34:37,036 [22] INFO  Microsoft.AspNetCore.Hosting.Internal.WebHost [(null)] - Request finished in 3.5677ms 404 
