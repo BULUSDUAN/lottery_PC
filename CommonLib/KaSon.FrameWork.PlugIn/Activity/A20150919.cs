@@ -110,7 +110,6 @@ namespace KaSon.FrameWork.PlugIn.Activity
                     , string.Format("用户首次绑定银行卡赠送彩金{0}元", giveFillMoney), RedBagCategory.Activity);
 
                 record.IsBonus = true;
-                record.IsGiveRedBag = true;
                 record.GiveBonusMoney = giveFillMoney;
                 manager.UpdateA20150919_注册绑定送红包(record);
             }
