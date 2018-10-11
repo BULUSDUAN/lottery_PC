@@ -2906,6 +2906,509 @@ namespace Lottery.Service.ModuleServices
         }
         #endregion
 
+        #region 广东11选5
+
+        public Task<GD11X5_012DWZS_InfoCollection> QueryCache_GD11X5_012DWZS_Info(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_GD11X5().QueryGD11X5_012DWZS(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询012定位走势 - " + ex.Message, ex);
+            }
+        }
+        public Task<GD11X5_012LZZS_InfoCollection> QueryCache_GD11X5_012LZZS_Info(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_GD11X5().QueryGD11X5_012LZZS(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询路比值走势 - " + ex.Message, ex);
+            }
+        }
+        public Task<GD11X5_2LZS_InfoCollection> QueryCache_GD11X5_2LZS_Info(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_GD11X5().QueryGD11X5_2LZS(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询2连走势 - " + ex.Message, ex);
+            }
+        }
+        public Task<GD11X5_CHZS_InfoCollection> QueryCache_GD11X5_CHZS_Info(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_GD11X5().QueryGD11X5_CHZS(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询重号走势 - " + ex.Message, ex);
+            }
+        }
+        public Task<GD11X5_DLZS_InfoCollection> QueryCache_GD11X5_DLZS_Info(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_GD11X5().QueryGD11X5_DLZS(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询多连走势 - " + ex.Message, ex);
+            }
+        }
+        public Task<GD11X5_GHZS_InfoCollection> QueryCache_GD11X5_GHZS_Info(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_GD11X5().QueryGD11X5_GHZS(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询隔号走势 - " + ex.Message, ex);
+            }
+        }
+        public Task<GD11X5_HZZS_InfoCollection> QueryCache_GD11X5_HZZS_Info(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_GD11X5().QueryGD11X5_HZZS(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询和值走势 - " + ex.Message, ex);
+            }
+        }
+        public Task<GD11X5_JBZS_InfoCollection> QueryCache_GD11X5_JBZS_Info(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_GD11X5().QueryGD11X5_JBZS(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询基本走势 - " + ex.Message, ex);
+            }
+        }
+        public Task<GD11X5_KDZS_InfoCollection> QueryCache_GD11X5_KDZS_Info(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_GD11X5().QueryGD11X5_KDZS(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询跨度走势 - " + ex.Message, ex);
+            }
+        }
+        public Task<GD11X5_Q1JBZS_InfoCollection> QueryCache_GD11X5_Q1JBZS_Info(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_GD11X5().QueryGD11X5_Q1JBZS(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询前1基本走势 - " + ex.Message, ex);
+            }
+        }
+        public Task<GD11X5_Q1XTZS_InfoCollection> QueryCache_GD11X5_Q1XTZS_Info(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_GD11X5().QueryGD11X5_Q1XTZS(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询前1形态走势 - " + ex.Message, ex);
+            }
+        }
+        public Task<GD11X5_Q2JBZS_InfoCollection> QueryCache_GD11X5_Q2JBZS_Info(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_GD11X5().QueryGD11X5_Q2JBZS(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询前2基本走势 - " + ex.Message, ex);
+            }
+        }
+        public Task<GD11X5_Q2XTZS_InfoCollection> QueryCache_GD11X5_Q2XTZS_Info(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_GD11X5().QueryGD11X5_Q2XTZS(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询前2形态走势 - " + ex.Message, ex);
+            }
+        }
+        public Task<GD11X5_Q3JBZS_InfoCollection> QueryCache_GD11X5_Q3JBZS_Info(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_GD11X5().QueryGD11X5_Q3JBZS(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询前3基本走势 - " + ex.Message, ex);
+            }
+        }
+        public Task<GD11X5_Q3XTZS_InfoCollection> QueryCache_GD11X5_Q3XTZS_Info(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_GD11X5().QueryGD11X5_Q3XTZS(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询前3形态走势 - " + ex.Message, ex);
+            }
+        }
+        public Task<GD11X5_XTZS_InfoCollection> QueryCache_GD11X5_XTZS_Info(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_GD11X5().QueryGD11X5_XTZS(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询形态走势 - " + ex.Message, ex);
+            }
+        }
+
+        #endregion
+
+        #region 广东快乐10分
+        /// <summary>
+        /// 基本走势
+        /// </summary>
+        public Task<GDKLSF_JBZS_InfoCollection> QueryGDKLSF_JBZS(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_GDKLSF().QueryGDKLSF_JBZS(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询基本走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        ///  定位第一位走势
+        /// </summary>
+        public Task<GDKLSF_DW1_InfoCollection> QueryGDKLSF_DW1(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_GDKLSF().QueryGDKLSF_DW1(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询定位第一位走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        ///  定位第二位走势
+        /// </summary>
+        public Task<GDKLSF_DW2_InfoCollection> QueryGDKLSF_DW2(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_GDKLSF().QueryGDKLSF_DW2(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询定位第二位走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        ///  定位第三位走势
+        /// </summary>
+        public Task<GDKLSF_DW3_InfoCollection> QueryGDKLSF_DW3(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_GDKLSF().QueryGDKLSF_DW3(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询定位第三位走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 大小走势
+        /// </summary>
+        public Task<GDKLSF_DX_InfoCollection> QueryGDKLSF_DX(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_GDKLSF().QueryGDKLSF_DX(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询大小走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 奇偶走势
+        /// </summary>
+        public Task<GDKLSF_JO_InfoCollection> QueryGDKLSF_JO(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_GDKLSF().QueryGDKLSF_JO(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询奇偶走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 质和走势
+        /// </summary>
+        public Task<GDKLSF_ZH_InfoCollection> QueryGDKLSF_ZH(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_GDKLSF().QueryGDKLSF_ZH(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询质和走势 - " + ex.Message, ex);
+            }
+        }
+        #endregion
+
+        #region 江苏快3走势图
+        /// <summary>
+        /// 查询基本走势
+        /// </summary>
+        public Task<JSK3_JBZS_InfoCollection> QueryJSK3_JBZS_Info(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_JSK3().QueryJSK3_JBZS_Info(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询江苏快3基本走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询和值走势
+        /// </summary>
+        public Task<JSK3_HZ_InfoCollection> QueryJSK3_HZ_Info(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_JSK3().QueryJSK3_HZ_Info(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询江苏快3和值走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询形态走势
+        /// </summary>
+        public Task<JSK3_XT_InfoCollection> QueryJSK3_XT_Info(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_JSK3().QueryJSK3_XT_Info(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询江苏快3形态走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询组合走势
+        /// </summary>
+        public Task<JSK3_ZH_InfoCollection> QueryJSK3_ZH_Info(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_JSK3().QueryJSK3_ZH_Info(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询江苏快3组合走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询综合走势
+        /// </summary>
+        public Task<JSK3_ZHZS_InfoCollection> QueryJSK3_ZHZS_Info(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_JSK3().QueryJSK3_ZHZS_Info(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询江苏快3综合走势 - " + ex.Message, ex);
+            }
+        }
+
+        #endregion
+
+        #region 山东快乐扑克3走势图
+
+        /// <summary>
+        /// 查询基本走势
+        /// </summary>
+        public Task<SDKLPK3_JBZS_InfoCollection> QueryCache_SDKLPK3_JBZS_Info(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_SDKLPK3().QuerySDKLPK3_JBZS_Info(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询基本走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询组选走势
+        /// </summary>
+        public Task<SDKLPK3_ZHXZS_InfoCollection> QueryCache_SDKLPK3_ZHXZS_Info(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_SDKLPK3().QuerySDKLPK3_ZHXZS_Info(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询组选走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询花色走势
+        /// </summary>
+        public Task<SDKLPK3_HSZS_InfoCollection> QueryCache_SDKLPK3_HSZS_Info(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_SDKLPK3().QuerySDKLPK3_HSZS_Info(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询花色走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询大小走势
+        /// </summary>
+        public Task<SDKLPK3_DXZS_InfoCollection> QueryCache_SDKLPK3_DXZS_Info(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_SDKLPK3().QuerySDKLPK3_DXZS_Info(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询大小走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询奇偶走势
+        /// </summary>
+        public Task<SDKLPK3_JOZS_InfoCollection> QueryCache_SDKLPK3_JOZS_Info(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_SDKLPK3().QuerySDKLPK3_JOZS_Info(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询奇偶走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询质合走势
+        /// </summary>
+        public Task<SDKLPK3_ZHZS_InfoCollection> QueryCache_SDKLPK3_ZHZS_Info(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_SDKLPK3().QuerySDKLPK3_ZHZS_Info(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询质合走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询除3余走势
+        /// </summary>
+        public Task<SDKLPK3_C3YZS_InfoCollection> QueryCache_SDKLPK3_C3YZS_Info(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_SDKLPK3().QuerySDKLPK3_C3YZS_Info(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询除3余走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询和值走势
+        /// </summary>
+        public Task<SDKLPK3_HZZS_InfoCollection> QueryCache_SDKLPK3_HZZS_Info(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_SDKLPK3().QuerySDKLPK3_HZZS_Info(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询和值走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询类型走势
+        /// </summary>
+        public Task<SDKLPK3_LXZS_InfoCollection> QueryCache_SDKLPK3_LXZS_Info(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_SDKLPK3().QuerySDKLPK3_LXZS_Info(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询类型走势 - " + ex.Message, ex);
+            }
+        }
+        #endregion
     }
 
 
