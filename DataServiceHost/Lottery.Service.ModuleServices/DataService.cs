@@ -3409,6 +3409,473 @@ namespace Lottery.Service.ModuleServices
             }
         }
         #endregion
+
+        #region 七乐彩走势图
+        /// <summary>
+        /// 查询基本走势
+        /// </summary>
+        public Task<QLC_JBZS_InfoCollection> QueryQLC_JBZS(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_QLC().QueryQLC_JBZS(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询七乐彩基本走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询大小走势
+        /// </summary>
+        public Task<QLC_DX_InfoCollection> QueryQLC_DX(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_QLC().QueryQLC_DX(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询七乐彩大小走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询奇偶走势
+        /// </summary>
+        public Task<QLC_JO_InfoCollection> QueryQLC_JO(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_QLC().QueryQLC_JO(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询七乐彩奇偶走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询质和走势
+        /// </summary>
+        public Task<QLC_ZH_InfoCollection> QueryQLC_ZH(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_QLC().QueryQLC_ZH(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询七乐彩质和走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询除3走势
+        /// </summary>
+        public Task<QLC_Chu3_InfoCollection> QueryQLC_Chu3(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_QLC().QueryQLC_Chu3(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询七乐彩除3走势 - " + ex.Message, ex);
+            }
+        }
+        #endregion
+
+        #region 江苏快3
+        /// <summary>
+        /// 查询基本走势
+        /// </summary>
+        public Task<JLK3_JBZS_InfoCollection> QueryJLK3_JBZS_Info(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_JLK3().QueryJLK3_JBZS_Info(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询江苏快3基本走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询和值走势
+        /// </summary>
+        public Task<JLK3_HZ_InfoCollection> QueryJLK3_HZ_Info(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_JLK3().QueryJLK3_HZ_Info(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询江苏快3和值走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询形态走势
+        /// </summary>
+        public Task<JLK3_XT_InfoCollection> QueryJLK3_XT_Info(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_JLK3().QueryJLK3_XT_Info(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询江苏快3形态走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询组合走势
+        /// </summary>
+        public Task<JLK3_ZH_InfoCollection> QueryJLK3_ZH_Info(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_JLK3().QueryJLK3_ZH_Info(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询江苏快3组合走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询综合走势
+        /// </summary>
+        public Task<JLK3_ZHZS_InfoCollection> QueryJLK3_ZHZS_Info(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_JLK3().QueryJLK3_ZHZS_Info(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询江苏快3综合走势 - " + ex.Message, ex);
+            }
+        }
+        #endregion
+
+        #region 湖北快3
+        /// <summary>
+        /// 查询基本走势
+        /// </summary>
+        public Task<HBK3_JBZS_InfoCollection> QueryHBK3_JBZS_Info(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_HBK3().QueryHBK3_JBZS_Info(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询湖北快3基本走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询和值走势
+        /// </summary>
+        public Task<HBK3_HZ_InfoCollection> QueryHBK3_HZ_Info(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_HBK3().QueryHBK3_HZ_Info(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询湖北快3和值走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询形态走势
+        /// </summary>
+        public Task<HBK3_XT_InfoCollection> QueryHBK3_XT_Info(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_HBK3().QueryHBK3_XT_Info(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询湖北快3形态走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询组合走势
+        /// </summary>
+        public Task<HBK3_ZH_InfoCollection> QueryHBK3_ZH_Info(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_HBK3().QueryHBK3_ZH_Info(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询湖北快3组合走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询综合走势
+        /// </summary>
+        public Task<HBK3_ZHZS_InfoCollection> QueryHBK3_ZHZS_Info(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_HBK3().QueryHBK3_ZHZS_Info(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询湖北快3综合走势 - " + ex.Message, ex);
+            }
+        }
+        #endregion
+
+
+        #region 山东群英会走势图
+
+        /// <summary>
+        /// 山东群英会奇偶走势
+        /// </summary>
+        public Task<SDQYH_RXJO_InfoCollection> QuerySDQYH_RXJO_Info(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_SDQYH().QuerySDQYH_RXJO_Info(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询山东群英会奇偶走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 山东群英会质和走势
+        /// </summary>
+        public Task<SDQYH_RXZH_InfoCollection> QuerySDQYH_RXZH_Info(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_SDQYH().QuerySDQYH_RXZH_Info(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询山东群英会质和走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 山东群英会大小走势
+        /// </summary>
+        public Task<SDQYH_RXDX_InfoCollection> QuerySDQYH_RXDX_Info(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_SDQYH().QuerySDQYH_RXDX_Info(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询山东群英会大小走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 山东群英会除3走势
+        /// </summary>
+        public Task<SDQYH_Chu3_InfoCollection> QuerySDQYH_Chu3_Info(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_SDQYH().QuerySDQYH_Chu3_Info(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询山东群英会除3走势 - " + ex.Message, ex);
+            }
+        }
+
+
+        /// <summary>
+        /// 山东群英会顺选1走势
+        /// </summary>
+        public Task<SDQYH_SX1_InfoCollection> QuerySDQYH_SX1_Info(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_SDQYH().QuerySDQYH_SX1_Info(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询山东群英会顺选1走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 山东群英会顺选2走势
+        /// </summary>
+        public Task<SDQYH_SX2_InfoCollection> QuerySDQYH_SX2_Info(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_SDQYH().QuerySDQYH_SX2_Info(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询山东群英会顺选2走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 山东群英会顺选3走势
+        /// </summary>
+        public Task<SDQYH_SX3_InfoCollection> QuerySDQYH_SX3_Info(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_SDQYH().QuerySDQYH_SX3_Info(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询山东群英会顺选3走势 - " + ex.Message, ex);
+            }
+        }
+        #endregion
+
+        #region 好彩1走势图
+
+        public Task<HC1_JBZS_InfoCollection> QueryCache_HC1_JBZS_Info(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_HC1().QueryHC1_JBZS(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询基本走势 - " + ex.Message, ex);
+            }
+        }
+        public Task<HC1_SXJJFWZS_InfoCollection> QueryCache_HC1_SXJJFWZS_Info(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_HC1().QueryHC1_SXJJFWZS(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询生肖季节方位 - " + ex.Message, ex);
+            }
+        }
+        #endregion
+
+        #region 华东15选5走势图
+        /// <summary>
+        /// 查询和值走势
+        /// </summary>
+        public Task<HD15X5_HZ_InfoCollection> QueryHD15X5_HZ(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_HD15X5().QueryHD15X5_HZ(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询华东15选5和值走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询基本走势
+        /// </summary>
+        public Task<HD15X5_JBZS_InfoCollection> QueryHD15X5_JBZS(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_HD15X5().QueryHD15X5_JBZS(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询华东15选5基本走势 - " + ex.Message, ex);
+            }
+        }
+
+        public Task<HD15X5_CH_InfoCollection> QueryCache_HD15X5_CH_Info(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_HD15X5().QueryHD15X5_CH(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询华东15选5重号走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询大小走势
+        /// </summary>
+        public Task<HD15X5_DX_InfoCollection> QueryHD15X5_DX(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_HD15X5().QueryHD15X5_DX(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询华东15选5大小走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询奇偶走势
+        /// </summary>
+        public Task<HD15X5_JO_InfoCollection> QueryHD15X5_JO(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_HD15X5().QueryHD15X5_JO(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询华东15选5奇偶走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询质和走势
+        /// </summary>
+        public Task<HD15X5_ZH_InfoCollection> QueryHD15X5_ZH(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_HD15X5().QueryHD15X5_ZH(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询华东15选5质和走势 - " + ex.Message, ex);
+            }
+        }
+        public Task<HD15X5_LH_InfoCollection> QueryCache_HD15X5_LH_Info(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_HD15X5().QueryHD15X5_LH(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询华东15选5连号走势 - " + ex.Message, ex);
+            }
+        }
+        #endregion
     }
 
 
