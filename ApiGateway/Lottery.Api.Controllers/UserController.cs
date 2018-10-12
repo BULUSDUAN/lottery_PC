@@ -1252,7 +1252,7 @@ namespace Lottery.Api.Controllers
                 {
                     BankCode = bankCode,
                     BankName = resultbankCode.BankName,
-                    BankSubName = subBankName,
+                    BankSubName = string.IsNullOrEmpty(subBankName)? resultbankCode.BankName : subBankName,
                     BankCardNumber = cardnumber,
                     ProvinceName = province,
                     CityName = city,
