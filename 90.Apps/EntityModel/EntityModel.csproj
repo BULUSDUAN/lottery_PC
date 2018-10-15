@@ -33,7 +33,7 @@
   <ItemGroup>
     <Reference Include="KaSon.FrameWork.Services, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\KaSon.Dll\KaSon.FrameWork.Services.dll</HintPath>
+      <HintPath>..\MicSeivceDLL\KaSon.FrameWork.Services.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\Kason.Sg.Core.ServiceHosting\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -707,7 +707,6 @@
     <Compile Include="Xml\XmlMappingAttribute.cs" />
     <Compile Include="Xml\XmlMappingObject.cs" />
   </ItemGroup>
-
   <ItemGroup>
     <Compile Remove="ConvertHelper.cs" />
     <Compile Remove="CoreModel\BetingEntities\RedisWaitTicket.cs" />
