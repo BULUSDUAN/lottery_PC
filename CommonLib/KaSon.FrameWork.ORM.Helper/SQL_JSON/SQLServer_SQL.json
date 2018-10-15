@@ -378,6 +378,94 @@
       "Director": "lili",
       "SQL": "select i.* from C_Game_Issuse i inner join( select min(GameCode_IssuseNumber) as GameCode_IssuseNumber from C_Game_Issuse where GameCode=@GameCode and GameType=@GameType and Status=10 and OfficialStopTime > GETDATE() ) b on i.GameCode_IssuseNumber = b.GameCode_IssuseNumber",
       "Remark": ""
+    },
+    {
+      "key": "Data_QueryRankReportBigBonusSport_Total",
+      "Desc": "大奖排行榜_总条数",
+      "ParamDesc": "@ReportFromDate:fromDate,@ReportToDate:reportToDate,@GameCode:gameCode,@GameType:gameType",
+      "Director": "lili",
+      "SQL": "SELECT COUNT(1) FROM C_Sports_Order_Complate WHERE AfterTaxBonusMoney>0 AND IsVirtualOrder=0 AND ComplateDateTime BETWEEN @ReportFromDate AND @ReportToDate AND (@GameCode=N'' OR GameCode=@GameCode) AND (@GameType=N'' OR GameType=@GameType) ",
+      "Remark": ""
+    },
+    {
+      "key": "Data_QueryRankReportBigBonusSport",
+      "Desc": "大奖排行榜",
+      "ParamDesc": "@ReportFromDate:fromDate,@ReportToDate:toDate,@GameCode:gameCode,@GameType:gameType,@PageIndex:pageIndex,@PageSize:pageSize",
+      "Director": "lili",
+      "SQL": "SELECT * FROM(  SELECT ROW_NUMBER() OVER (ORDER BY BonusMoney DESC) RowIndex,T.* ,DisplayName,R.HideDisplayNameCount ,B.GoldCrownCount,B.GoldCupCount,B.GoldDiamondsCount,B.GoldStarCount ,B.SilverCrownCount,B.SilverCupCount,B.SilverDiamondsCount,B.SilverStarCount  FROM ( SELECT SchemeId,UserId,GameCode,GameType,TotalMoney,AfterTaxBonusMoney BonusMoney FROM C_Sports_Order_Complate WHERE AfterTaxBonusMoney>0 AND IsVirtualOrder=0 AND ComplateDateTime BETWEEN @ReportFromDate AND @ReportToDate AND (@GameCode=N'' OR GameCode=@GameCode) AND (@GameType=N'' OR GameType=@GameType) ) T LEFT OUTER JOIN C_User_Register R ON T.UserId=R.UserId LEFT OUTER JOIN C_User_Beedings B on T.UserId=B.UserId and T.GameCode=B.GameCode and T.GameType=B.GameType ) TMP WHERE RowIndex > @PageIndex * @PageSize AND RowIndex <= (@PageIndex + 1) * @PageSize",
+      "Remark": ""
+    },
+    {
+      "key": "Data_QueryRankReportBettingProfitSport",
+      "Desc": "发单盈利排行榜 - 竞彩类",
+      "ParamDesc": "@ReportFromDate:fromDate,@ReportToDate:toDate,@GameCode:gameCode,@GameType:gameType,@PageIndex:pageIndex,@PageSize:pageSize",
+      "Director": "lili",
+      "SQL": "SELECT * FROM( SELECT ROW_NUMBER()OVER(ORDER BY ProfitMoney DESC) RowIndex,T.* ,DisplayName,R.HideDisplayNameCount ,B.GoldCrownCount,B.GoldCupCount,B.GoldDiamondsCount,B.GoldStarCount ,B.SilverCrownCount,B.SilverCupCount,B.SilverDiamondsCount,B.SilverStarCount FROM ( SELECT UserId,'' GameCode,'' GameType,Count(1) TotalOrderCount,SUM(BetCount) BetCount,SUM(TotalMoney) TotalMoney,SUM(BonusCount) BonusCount,SUM(AfterTaxBonusMoney) BonusMoney,SUM(AfterTaxBonusMoney)-SUM(TotalMoney) ProfitMoney FROM C_Sports_Order_Complate WHERE BonusStatus=20 AND IsVirtualOrder=0 and SchemeType=3 AND ComplateDateTime BETWEEN @ReportFromDate AND @ReportToDate AND (@GameCode=N'' OR GameCode=@GameCode) AND (@GameType=N'' OR GameType=@GameType) GROUP BY UserId --,GameCode,GameType ) T LEFT OUTER JOIN C_User_Register R ON T.UserId=R.UserId LEFT OUTER JOIN C_User_Beedings B on T.GameCode=B.GameCode and T.GameType=B.GameType and T.UserId=B.UserId WHERE ProfitMoney>0 ) TMP WHERE  RowIndex > @PageIndex * @PageSize AND RowIndex <= (@PageIndex + 1) * @PageSize",
+      "Remark": ""
+    },
+    {
+      "key": "Data_QueryRankReportJoinProfitSport_Total",
+      "Desc": "跟单盈利排行榜 - 竞彩类_总条数",
+      "ParamDesc": "@ReportFromDate:fromDate,@ReportToDate:toDate,@GameCode:gameCode,@GameType:gameType",
+      "Director": "lili",
+      "SQL": "SELECT COUNT(1) FROM ( SELECT J.JoinUserId,T.GameCode,T.GameType,SUM(J.AfterTaxBonusMoney)-SUM(J.TotalMoney) ProfitMoney FROM C_Sports_TogetherJoin J INNER JOIN C_Sports_Order_Complate T ON T.SchemeId=J.SchemeId WHERE J.JoinType IN (2,3) AND T.BonusStatus=20 AND T.ComplateDateTime BETWEEN @ReportFromDate AND @ReportToDate AND (@GameCode=N'' OR GameCode=@GameCode) AND (@GameType=N'' OR GameType=@GameType) GROUP BY J.JoinUserId,T.GameCode,T.GameType ) T WHERE ProfitMoney>0",
+      "Remark": ""
+    },
+    {
+      "key": "Data_QueryRankReportJoinProfitSport",
+      "Desc": "跟单盈利排行榜 - 竞彩类",
+      "ParamDesc": "@ReportFromDate:fromDate,@ReportToDate:toDate,@GameCode:gameCode,@GameType:gameType,@PageIndex:pageIndex,@PageSize:pageSize",
+      "Director": "lili",
+      "SQL": "SELECT * FROM( SELECT ROW_NUMBER()OVER(ORDER BY ProfitMoney DESC) RowIndex,T.* ,DisplayName,R.HideDisplayNameCount ,B.GoldCrownCount,B.GoldCupCount,B.GoldDiamondsCount,B.GoldStarCount ,B.SilverCrownCount,B.SilverCupCount,B.SilverDiamondsCount,B.SilverStarCount FROM ( SELECT J.JoinUserId,T.GameCode,T.GameType,Count(1)TotalOrderCount,SUM(RealBuyCount) RealBuyCount,SUM(J.TotalMoney) TotalMoney,SUM(J.AfterTaxBonusMoney) BonusMoney,SUM(J.AfterTaxBonusMoney)-SUM(J.TotalMoney) ProfitMoney FROM C_Sports_TogetherJoin J INNER JOIN C_Sports_Order_Complate T ON T.SchemeId=J.SchemeId WHERE J.JoinType IN (2,3) AND T.BonusStatus=20 AND T.ComplateDateTime BETWEEN @ReportFromDate AND @ReportToDate AND (@GameCode=N'' OR GameCode=@GameCode) AND (@GameType=N'' OR GameType=@GameType) GROUP BY J.JoinUserId,T.GameCode,T.GameType ) T LEFT OUTER JOIN C_User_Register R ON T.JoinUserId=R.UserId LEFT OUTER JOIN C_User_Beedings B on T.GameCode=B.GameCode and T.GameType=B.GameType and T.JoinUserId=B.UserId WHERE ProfitMoney>0 ) TMP WHERE RowIndex > @PageIndex * @PageSize AND RowIndex <= (@PageIndex + 1) * @PageSize ",
+      "Remark": ""
+    },
+    {
+      "key": "Data_QueryRankInfoListHotTogether",
+      "Desc": "合买人气排行榜",
+      "ParamDesc": "@StartTime:fromDate,@EndTime:toDate,@GameCode:gameCode",
+      "Director": "lili",
+      "SQL": "select FollowerCount,SucessOrderCount,ctable.UserId,DisplayName,u.HideDisplayNameCount from  ( select c.UserId,c.GameCode,COUNT(SchemeId) SucessOrderCount from C_Sports_Order_Complate c where c.ProgressStatus=90 and c.GameCode=:GameCode and SchemeType=3 and c.ComplateDateTime>=:StartTime and c.ComplateDateTime<:EndTime group by c.UserId,c.GameCode )ctable inner join ( select f.CreaterUserId,f.GameCode,COUNT(1) FollowerCount from C_Together_FollowerRecord f where f.GameCode=:GameCode group by f.CreaterUserId,f.GameCode ) ftable on ctable.UserId=ftable.CreaterUserId inner join C_User_Register u on ctable.UserId=u.UserId",
+      "Remark": ""
+    },
+    {
+      "key": "Data_QueryRankInfoListSuccessOrderSport",
+      "Desc": "成功的战绩排行_竞彩类",
+      "ParamDesc": "@StartTime:fromDate,@EndTime:toDate,@GameCode:gameCode",
+      "Director": "lili",
+      "SQL": "select orderTable.BonusMoney,orderTable.TotalMoney,orderTable.TotalOrderCount,orderTable.UserId,orderTable.GameCode,orderTable.GameType,(orderTable.BonusMoney-orderTable.TotalMoney) ProfitMoney,orderTable.DisplayName,orderTable.HideDisplayNameCount,userBeedTable.GoldCrownCount,userBeedTable.GoldCupCount,userBeedTable.GoldDiamondsCount,userBeedTable.GoldStarCount,userBeedTable.SilverCrownCount,userBeedTable.SilverCupCount,userBeedTable.SilverDiamondsCount,userBeedTable.SilverStarCount from  ( select c.UserId,u.DisplayName,u.HideDisplayNameCount,COUNT(c.SchemeId) TotalOrderCount,c.GameCode,c.GameType,SUM(c.AfterTaxBonusMoney) BonusMoney,SUM(c.TotalMoney) TotalMoney from C_Sports_Order_Complate c inner join C_Sports_Together t on c.SchemeId=t.SchemeId inner join C_User_Register u on c.UserId=u.UserId where ComplateDate>=:StartTime and ComplateDate<:EndTime group by c.GameCode,c.GameType,c.UserId ,u.DisplayName,u.HideDisplayNameCount  ) orderTable left join  ( select UserId,GameCode,GameType,GoldCrownCount,GoldCupCount,GoldDiamondsCount,GoldStarCount,SilverCrownCount,SilverCupCount,SilverDiamondsCount,SilverStarCount from C_User_Beedings where GameCode=:GameCode ) userBeedTable on orderTable.UserId=userBeedTable.UserId and orderTable.GameType=userBeedTable.GameType where orderTable.GameCode=:GameCode order by orderTable.BonusMoney desc",
+      "Remark": ""
+    },
+    {
+      "key": "Data_QueryRankInfoListBeFollowerCount",
+      "Desc": "跟单排行榜",
+      "ParamDesc": "@StartTime:fromDate,@EndTime:toDate,@GameCode:gameCode",
+      "Director": "lili",
+      "SQL": "select followTable.f_userCount,followTable.CreaterUserId,u.DisplayName,u.HideDisplayNameCount,b.GoldCrownCount,b.GoldCupCount,b.GoldDiamondsCount,b.GoldStarCount,b.SilverCrownCount,b.SilverCupCount,b.SilverDiamondsCount,b.SilverStarCount from  ( select COUNT(1) as f_userCount,CreaterUserId from C_Together_FollowerRecord where GameCode=:GameCode and CreateTime>=:StartTime and CreateTime<:EndTime group by CreaterUserId ) followTable inner join C_User_Register u on followTable.CreaterUserId=u.UserId  inner join  ( select UserId,sum(b.GoldCrownCount) GoldCrownCount,sum(b.GoldCupCount)GoldCupCount,sum(b.GoldDiamondsCount)GoldDiamondsCount,sum(b.GoldStarCount)GoldStarCount,sum(b.SilverCrownCount)SilverCrownCount,sum(b.SilverCupCount)SilverCupCount,sum(b.SilverDiamondsCount)SilverDiamondsCount,sum(b.SilverStarCount)SilverStarCount  from C_User_Beedings b where b.GameCode=:GameCode group by UserId)b on followTable.CreaterUserId=b.UserId order by followTable.f_userCount desc",
+      "Remark": ""
+    },
+    {
+      "key": "Data_QueryRankReportTotalBonusSport_Total",
+      "Desc": "查询累积中奖排行榜 - 竞彩类_总条数",
+      "ParamDesc": "@ReportFromDate:fromDate,@ReportToDate:toDate,@GameCode:gameCode,@GameType:gameType",
+      "Director": "lili",
+      "SQL": "SELECT Count(1) FROM C_OrderDetail WHERE BonusStatus=20 AND IsVirtualOrder=0 AND ComplateTime BETWEEN @ReportFromDate AND @ReportToDate AND (@GameCode=N'' OR GameCode=@GameCode) AND (@GameType=N'' OR GameType=@GameType) GROUP BY UserId,GameCode,GameType",
+      "Remark": ""
+    },
+    {
+      "key": "Data_QueryRankReportTotalBonusSport",
+      "Desc": "查询累积中奖排行榜 - 竞彩类",
+      "ParamDesc": "@ReportFromDate:fromDate,@ReportToDate:toDate,@GameCode:gameCode,@GameType:gameType,@PageIndex:pageIndex,@PageSize:pageSize",
+      "Director": "lili",
+      "SQL": "SELECT * FROM( SELECT ROW_NUMBER () OVER(ORDER BY BonusMoney DESC) RowIndex,T.* ,R.VipLevel,DisplayName,R.HideDisplayNameCount ,B.GoldCrownCount,B.GoldCupCount,B.GoldDiamondsCount,B.GoldStarCount ,B.SilverCrownCount,B.SilverCupCount,B.SilverDiamondsCount,B.SilverStarCount\t\t\t FROM ( SELECT UserId,GameCode,GameType,COUNT(1) TotalCount,SUM(TotalMoney) TotalMoney,SUM(AfterTaxBonusMoney) BonusMoney FROM C_OrderDetail WHERE BonusStatus=20 AND IsVirtualOrder=0 AND ComplateTime BETWEEN @ReportFromDate AND @ReportToDate AND (@GameCode=N'' OR GameCode=@GameCode) AND (@GameType=N'' OR GameType=@GameType) GROUP BY UserId,GameCode,GameType ) T LEFT OUTER JOIN C_User_Register R ON T.UserId=R.UserId LEFT OUTER JOIN C_User_Beedings B ON T.GameCode=B.GameCode AND T.GameType=B.GameType AND T.UserId=B.UserId ) TMP WHERE RowIndex > @PageIndex * @PageSize AND RowIndex <= (@PageIndex + 1) * @PageSize",
+      "Remark": ""
+    },
+    {
+      "key": "Data_QueryRankReportBonusByGameCodeAll",
+      "Desc": "中奖排行榜_按彩种查",
+      "ParamDesc": "@ReportFromDate:fromDate,@ReportToDate:toDate,@TopCount:topCount,@GameCode:gameCode",
+      "Director": "lili",
+      "SQL": "SELECT * FROM( SELECT ROW_NUMBER()OVER(ORDER BY BonusMoney DESC) RowIndex,T.* ,R.VipLevel,DisplayName,R.HideDisplayNameCount FROM ( SELECT UserId,COUNT(1) TotalCount, SUM(TotalMoney) TotalMoney,SUM(AfterTaxBonusMoney) BonusMoney FROM C_Sports_Order_Complate WHERE BonusStatus=20 AND IsVirtualOrder=0 AND ComplateDateTime BETWEEN @ReportFromDate AND @ReportToDate AND (@GameCode=N'' OR GameCode IN (SELECT A FROM F_Common_SplitString(@GameCode, ','))) GROUP BY UserId ) T LEFT OUTER JOIN C_User_Register R ON T.UserId=R.UserId ) TMP WHERE RowIndex<=@TopCount",
+      "Remark": ""
     }
   ]
 }

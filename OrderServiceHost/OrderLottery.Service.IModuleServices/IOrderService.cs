@@ -115,6 +115,29 @@ namespace OrderLottery.Service.IModuleServices
         [Service(Date = "2018-9-20", Director = "renjun", Name = "查询已跟单数")]
         Task<int> QueryProfileFollowedCount(string userId, string gameCode, string gameType);
         [Service(Date = "2018-9-20", Director = "renjun", Name = "查询订单票数据")]
-        Task<Sports_TicketQueryInfoCollection> QuerySportsTicketList(string schemeId, int pageIndex, int pageSize, string userToken);
+        Task<Sports_TicketQueryInfoCollection> QuerySportsTicketList(string schemeId, int pageIndex, int pageSize);
+           [Service(Date = "2018-9-21", Director = "renjun", Name = "查询单式上传全路径名")]
+        Task<SingleScheme_AnteCodeQueryInfo> QuerySingleSchemeFullFileName(string schemeId);
+        [Service(Date = "2018-9-21", Director = "renjun", Name = "查询宝单奖金提成信息")]
+        Task<BDFXCommisionInfo> QueryBDFXCommision(string schemeId);
+        [Service(Date = "2018-9-25", Director = "renjun", Name = "查询定制我的跟单规则")]
+        Task<TogetherFollowerRuleQueryInfoCollection> QueryUserFollowRule(string gameCode, string gameType, int pageIndex, int pageSize, string UserId);
+        [Service(Date = "2018-9-26", Director = "renjun", Name = "成功定制跟单记录")]
+        Task<TogetherFollowRecordInfoCollection> QuerySucessFolloweRecord(string gameCode, long ruleId, int pageIndex, int pageSize, string UserId);
+        [Service(Date = "2018-9-27", Director = "renjun", Name = "查询已停止的期号信息")]
+        Task<string> QueryStopIssuseList(string gameCode, string gameType, int length);
+        [Service(Date = "2018-9-28", Director = "renjun", Name = "竞彩足球开奖明细")]
+        Task<JCZQMatchResult_Collection> QueryJCZQMatchResultByTime(DateTime time);
+        [Service(Date = "2018-9-28", Director = "renjun", Name = "竞彩篮球开奖明细")]
+        Task<JCLQMatchResult_Collection> QueryJCLQMatchResultByTime(DateTime time);
+
+        [Service(Date = "2018-9-28", Director = "renjun", Name = "北京单场期号")]
+        Task<string> QueryBJDCLastIssuseNumber(int count);
+        [Service(Date = "2018-9-28", Director = "renjun", Name = "北京单场查询开奖结果")]
+        Task<BJDCMatchResultInfo_Collection> QueryBJDC_MatchResultList(string issuseNumber);
+        [Service(Date = "2018-9-29", Director = "renjun", Name = "查询文章")]
+        Task<ArticleInfo_QueryCollection> QueryNoStaticPathArticleList(int pageIndex, int pageSize);
+        [Service(Date = "2018-9-29", Director = "renjun", Name = "文章资讯")]
+        Task<CommonActionResult> UpdateArticleStaticPath(string articleId, string staticPath, string preId, string nextId);
     }
 }

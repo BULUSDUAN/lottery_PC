@@ -1,0 +1,9 @@
+{
+  "EventBusConnection": "10.0.3.27",
+  "EventBusUserName": "guest",
+  "EventBusPassword": "guest",
+  "VirtualHost": "/",
+  "BrokerName": "Kason.Sg",
+  "Port": "5672"
+}
+

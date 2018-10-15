@@ -15,11 +15,15 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\CommonLib\EntityModel\EntityModel.csproj" />
+    <ProjectReference Include="..\..\CommonLib\KaSon.FrameWork.ORM.Helper\KaSon.FrameWork.ORM.Helper.csproj" />
    
     <ProjectReference Include="..\Lottery.Service.Model\Lottery.Service.Model.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="KaSon.FrameWork.ORM">
+      <HintPath>..\..\FramWorkDLL\KaSon.FrameWork.ORM.dll</HintPath>
+    </Reference>
     <Reference Include="Kason.Sg.Core.Caching">
       <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.Caching.dll</HintPath>
     </Reference>

@@ -1,0 +1,35 @@
+{
+  //redis配置
+  "RedisConfig": {
+    "EnableRedis": true,
+    "RedisHost": "10.0.3.6",
+    "RedisPost": 6379,
+    "RedisPassword": "redis123"
+
+  },
+  //Https 配置
+  "HttpsConfig": {
+    "pfxFilePath": "Config\\server.p12",
+    "pfxPassword": "123456",
+    "httpsPost": 10457
+  },
+  "SelfDomain": "http://10.0.3.6:729",
+  "MobileDomain": "http://10.0.3.6:729",
+  "ResSiteUrl": "http://10.0.3.6:888",
+  "ResourceSiteUrl_res": "http://10.0.3.6:788/test.touch",
+  "ISConsoleLog": true,
+  "Host": "http://*:729",
+
+  //必须配置 服务发现配置
+  "ConsulSettings": {
+    "IpAddrs": "127.0.0.1:8500", //服务启动IP 10.0.3.27:8501
+    "Token": "16c5413b-276c-45ab-9b0e-9664126f1163"
+  },
+  "GameApi": {
+    "OperatorCode": "3D6A71F4AFB44EB0AAC28832666197CA",
+    "SecretKey": "5A25DDBC66964BD7BFFB59A30635C2F3",
+    "PreName": "DJW",
+    "URL": "http://api.mtechgame.com/generic"
+  },
+  "FillMoney_Enable_GateWay": "yifulian_express=快捷支付|yifulian_upay=银联扫码|jinxin_bank=网银支付|jinxin_express=快捷支付|lagou_h5alipaywap=支付宝(扫码)|Alipay=支付宝(转账)"
+}

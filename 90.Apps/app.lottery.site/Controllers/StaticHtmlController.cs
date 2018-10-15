@@ -428,7 +428,7 @@ namespace app.lottery.site.Controllers
             //神单排行
             var now = DateTime.Now;
             ViewBag.RankList = WCFClients.ExternalClient.QueryGSRankList(now.ToString("MM.dd"), now.ToString("MM.dd"), "", "");
-            //焦点新闻
+            //焦点新闻想     
             ViewBag.FocusCMS = WCFClients.ExternalClient.QueryArticleList_YouHua("FocusCMS", "", 0, 10);
             //中奖新闻
             ViewBag.BonusCMS = WCFClients.ExternalClient.QueryArticleList_YouHua("BonusCMS", "", 0, 10);

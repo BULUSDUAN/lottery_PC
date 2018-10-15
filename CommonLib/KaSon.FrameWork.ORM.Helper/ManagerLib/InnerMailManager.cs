@@ -36,5 +36,28 @@ namespace KaSon.FrameWork.ORM.Helper
             DB.GetDal<E_SiteMessage_InnerMail_List_new>().Add(entity);
         }
 
+        public void UpdateSiteMessageInnerMailListNew(E_SiteMessage_InnerMail_List_new entity)
+        {
+            DB.GetDal<E_SiteMessage_InnerMail_List_new>().Update(entity);
+        }
+        /// <summary>
+        /// 获取指定站内信包含接收者的数量
+        /// </summary>
+        /// <param name="innerMailId">站内信编号</param>
+        /// <param name="userId">用户编号</param>
+        /// <returns>包含数量</returns>
+        public int GetMailContainsReceiverCount(string innerMailId, string userId)
+        {
+         
+             var query = DB.CreateQuery<E_SiteMessage_InnerMail_List_new>().Where(s => s.MailId == innerMailId && (s.ReceiverId == userId || s.ReceiverId == "U:" + userId));
+            if (query != null) return query.Count();
+            return 0;
+        }
+
+        public E_SiteMessage_InnerMail_List_new QuerySiteMessageInnerMailListNewByMailId(string mailId)
+        {
+
+            return DB.CreateQuery<E_SiteMessage_InnerMail_List_new>().Where(s => s.MailId == mailId).FirstOrDefault();
+        }
     }
 }

@@ -1343,5 +1343,206 @@ namespace BettingLottery.Service.ModuleServices
 
             return Task.FromResult(v);
         }
+
+        #region PC端接口
+        /// <summary>
+        /// 欧洲杯投注
+        /// </summary>
+        public Task<CommonActionResult> BetOZB(LotteryBettingInfo info, string balancePassword, decimal redBagMoney, string userId)
+        {
+            // 验证用户身份及权限
+            //检查彩种是否暂停销售
+            BusinessHelper.CheckGameEnable(info.GameCode.ToUpper());
+            try
+            {
+                var keyLine = string.Empty;
+                keyLine = new Sports_Business().BetOZB(info, userId, balancePassword, "Bet", redBagMoney);
+
+                return Task.FromResult(new CommonActionResult(true, "方案提交成功")
+                {
+                    ReturnValue = keyLine + "|" + info.TotalMoney,
+                });
+            }
+            catch (AggregateException ex)
+            {
+                throw new AggregateException(ex.Message);
+            }
+            catch (LogicException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("订单投注异常，请重试 ", ex);
+            }
+        }
+
+
+        /// <summary>
+        /// 购买用户保存订单
+        /// </summary>
+        public Task<CommonActionResult> BettingUserSavedOrder(string schemeId, string balancePassword, decimal redBagMoney, string userId)
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                new Sports_Business().BettingUserSavedOrder(schemeId, userId, balancePassword, redBagMoney);
+
+                return Task.FromResult(new CommonActionResult(true, "投注成功"));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 发起单式合买
+        /// </summary>
+        public CommonActionResult CreateSingleSchemeTogether(SingleScheme_TogetherSchemeInfo info, string balancePassword, string userId)
+        {
+            //检查彩种是否暂停销售
+            BusinessHelper.CheckGameEnable(info.BettingInfo.GameCode.ToUpper());
+            BusinessHelper.CheckGameCodeAndType(info.BettingInfo.GameCode, info.BettingInfo.GameType);
+            try
+            {
+                CheckSingTogetherRepeatBetting(userId, info);//检查重复投注
+                CheckSchemeOrder(info);
+                var isTop = false;
+                var sysGuarantees = int.Parse(new CacheDataBusiness().QueryCoreConfigFromRedis("Site.Together.SystemGuarantees"));
+                Sports_BetingInfo schemeInfo = new Sports_BetingInfo();
+
+                string schemeId;
+                DateTime stopTime;
+                var canChase = false;
+                schemeId = new Sports_Business().CreateSingleSchemeTogether(info, 0, userId, balancePassword, sysGuarantees, isTop, out canChase, out stopTime, ref schemeInfo);
+
+                //! 执行扩展功能代码 - 提交事务后
+                BusinessHelper.ExecPlugin<ICreateTogether_AfterTranCommit>(new object[] { userId, schemeId, info.BettingInfo.GameCode, info.BettingInfo.GameType, info.BettingInfo.IssuseNumber, info.BettingInfo.TotalMoney, stopTime });
+
+                //参与合买后
+                BusinessHelper.ExecPlugin<IJoinTogether_AfterTranCommit>(new object[] { userId, schemeId, schemeInfo.SoldCount, schemeInfo.GameCode, schemeInfo.GameType, schemeInfo.IssuseNumber, schemeInfo.TotalMoney, schemeInfo.SchemeProgress });
+
+                return new CommonActionResult(true, "发起合买成功")
+                {
+                    ReturnValue = schemeId + "|" + info.TotalMoney,
+                };
+            }
+            catch (LogicException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("发起合买异常，请重试 ", ex);
+            }
+        }
+
+        /// <summary>
+        /// 单式合买
+        /// </summary>
+        private static Dictionary<string, SingleScheme_TogetherSchemeInfo> _singTogether = new Dictionary<string, SingleScheme_TogetherSchemeInfo>();
+
+        /// <summary>
+        /// 检查合买订单频繁投注
+        /// </summary>
+        private void CheckSingTogetherRepeatBetting(string currUserId, SingleScheme_TogetherSchemeInfo info)
+        {
+            try
+            {
+
+                if (_singTogether == null || !_singTogether.ContainsKey(currUserId))
+                {
+                    info.BettingInfo.CurrentBetTime = DateTime.Now;
+                    _singTogether.Add(currUserId, info);
+                    return;
+                }
+                var cacheInfo = _singTogether.FirstOrDefault(s => s.Key == currUserId && s.Value.BettingInfo.GameCode == info.BettingInfo.GameCode.ToUpper() && s.Value.BettingInfo.SchemeSource == info.BettingInfo.SchemeSource && s.Value.BettingInfo.BettingCategory == info.BettingInfo.BettingCategory);
+                if (string.IsNullOrEmpty(cacheInfo.Key) || cacheInfo.Value == null)
+                {
+                    _singTogether.Remove(currUserId);
+                    info.BettingInfo.CurrentBetTime = DateTime.Now;
+                    _singTogether.Add(currUserId, info);
+                    return;
+                }
+                if (!info.Equals(cacheInfo.Value))
+                {
+                    //不重复
+                    _singTogether.Remove(currUserId);
+                    info.BettingInfo.CurrentBetTime = DateTime.Now;
+                    _singTogether.Add(currUserId, info);
+                    return;
+                }
+                //投注内容相同
+                if (info.BettingInfo.IsRepeat)
+                {
+                    _singTogether.Remove(currUserId);
+                    info.BettingInfo.CurrentBetTime = DateTime.Now;
+                    _singTogether.Add(currUserId, info);
+                    return;
+                }
+                var timeSpan = DateTime.Now - cacheInfo.Value.BettingInfo.CurrentBetTime;
+                if (timeSpan.TotalSeconds > 5)
+                {
+                    //大于间隔时间
+                    _singTogether.Remove(currUserId);
+                    info.BettingInfo.CurrentBetTime = DateTime.Now;
+                    _singTogether.Add(currUserId, info);
+                    return;
+                }
+            }
+            catch (Exception)
+            {
+                _singTogether.Clear();
+                return;
+            }
+            throw new LogicException("Repeat");
+        }
+
+        private void CheckSchemeOrder(SingleScheme_TogetherSchemeInfo info)
+        {
+            var allowGameCodeArray = "SSQ,DLT,FC3D,PL3,CTZQ,BJDC,JCZQ,JCLQ".Split(',');
+            if (!allowGameCodeArray.Contains(info.BettingInfo.GameCode.ToUpper()))
+                throw new LogicException("当前彩种不支持合买投注");
+            var maxDeduct = 10;
+            if (info.BonusDeduct > maxDeduct || info.BonusDeduct < 0)
+                throw new LogicException("合买提成有误，请确认后重新提交");
+
+            if (info.BettingInfo.Amount <= 0)
+                throw new ArgumentException("订单倍数错误");
+            if (info.TotalMoney <= 0M)
+                throw new ArgumentException("订单金额错误");
+            if (info.BettingInfo.AllowCodes == null || info.BettingInfo.AllowCodes.Length == 0)
+                throw new ArgumentException("允许的投注号码不能为空");
+            //if (string.IsNullOrEmpty(info.BettingInfo.AnteCodeFullFileName))
+            //    throw new ArgumentException("上传的文件路径不能为空");
+            if (info.BettingInfo.FileBuffer.Length == 0)
+                throw new ArgumentException("上传的文件字节不能为0");
+            if (info.TotalCount <= 0)
+                throw new ArgumentException("合买总份数不能小于0");
+
+            var minMoney = info.TotalMoney * 5 / 100;
+            minMoney = Math.Ceiling(minMoney);
+            if (info.Subscription * info.Price < minMoney)
+                throw new ArgumentException(string.Format("合买发起人认购金额必须大于等于{0}%，即：{1:N2}元。", 5, minMoney));
+
+
+            if (info.BettingInfo.GameType != null && info.BettingInfo.GameType.ToUpper() != "HH")
+            {
+                if (info.BettingInfo.AnteCodeList != null)
+                {
+                    foreach (var item in info.BettingInfo.AnteCodeList)
+                    {
+                        if (item.GameType != null)
+                        {
+                            if (item.GameType.ToUpper() != info.BettingInfo.GameType.ToUpper())
+                                throw new Exception("彩种玩法有误，应该是:" + BettingHelper.FormatGameType(info.BettingInfo.GameCode, info.BettingInfo.GameType) + ",但实际是:" + BettingHelper.FormatGameType(info.BettingInfo.GameCode, item.GameType));
+                        }
+                    }
+                }
+            }
+        }
+        #endregion
     }
 }

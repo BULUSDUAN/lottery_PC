@@ -507,5 +507,13 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             return new string[] { };
         }
+
+        /// <summary>
+        /// 查询用户总数
+        /// </summary>
+        public int QueryUserRegisterCount()
+        {
+            return DB.CreateQuery<C_User_Register>().Count();
+        }
     }
 }

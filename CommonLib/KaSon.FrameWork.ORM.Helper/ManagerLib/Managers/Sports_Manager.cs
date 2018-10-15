@@ -1,6 +1,7 @@
 ﻿using EntityModel;
 using EntityModel.CoreModel;
 using EntityModel.Enum;
+using KaSon.FrameWork.Common.Sport;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -255,6 +256,15 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             DB.GetDal<C_User_Attention_Summary>().Add(UserAttentionSummary);
 
+        }
+        public void UpdateUserAttentionSummary(C_User_Attention_Summary entity)
+        {
+            DB.GetDal<C_User_Attention_Summary>().Update(entity);
+        }
+
+        public void DeleteUserAttention(C_User_Attention entity)
+        {
+            DB.GetDal<C_User_Attention>().Delete(entity);
         }
 
         public C_SingleScheme_AnteCode QuerySingleScheme_AnteCode(string schemeId)
@@ -662,6 +672,275 @@ namespace KaSon.FrameWork.ORM.Helper
             if (pageSize == -1)
                 return query.ToList();
             return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+        }
+
+        public C_User_Attention QueryUserAttention(string currentUserId, string beAttentionUserId)
+        {
+        
+            return DB.CreateQuery<C_User_Attention>().Where(p => p.BeAttentionUserId == beAttentionUserId
+                && p.FollowerUserId == currentUserId).FirstOrDefault();
+        }
+
+        public void AddUserAttention(C_User_Attention entity)
+        {
+            DB.GetDal<C_User_Attention>().Add(entity);
+        }
+
+        public C_User_Attention_Summary QueryUserAttentionSummary(string currentUserId)
+        {
+       
+            return DB.CreateQuery<C_User_Attention_Summary>().Where(p => p.UserId == currentUserId).FirstOrDefault();
+        }
+
+        public void DeleteUserSaveOrder_Sports(C_UserSaveOrder entity)
+        {
+            DB.GetDal<C_UserSaveOrder>().Delete(entity);
+        }
+
+        public List<C_Sports_TogetherJoin> QuerySports_JoinTogetherList(string schemeId)
+        {
+            return DB.CreateQuery<C_Sports_TogetherJoin>().Where(p => p.SchemeId == schemeId).ToList();
+        }
+
+        public List<C_JCZQ_Match> QueryJCZQDSSaleMatchCount(string[] matchIdArray)
+        {
+            var query = from m in DB.CreateQuery<C_JCZQ_Match>()
+                        where matchIdArray.Contains(m.MatchId)
+                        && m.FSStopBettingTime > DateTime.Now
+                        //&& m.DSStopBettingTime > DateTime.Now
+                        select m;
+            return query.ToList();
+        }
+
+        public List<TogetherFollowerRuleQueryInfo> QueryUserFollowRule(bool byFollower, string userId, string gameCode, string gameType, int pageIndex, int pageSize, out int totalCount)
+        {
+           
+            pageIndex = pageIndex < 0 ? 0 : pageIndex;
+            pageSize = pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : pageSize;
+
+            var query = byFollower ? (from f in DB.CreateQuery<C_Together_FollowerRule>()
+                                      join u in DB.CreateQuery<C_User_Register>() on f.CreaterUserId equals u.UserId
+                                      where (gameCode == string.Empty || f.GameCode == gameCode)
+                                      && (gameType == string.Empty || f.GameType == gameType)
+                                      && (userId == string.Empty || f.FollowerUserId == userId)
+                                      select new { f,u}).ToList().Select(b=> new TogetherFollowerRuleQueryInfo
+                                      {
+                                          RuleId = b.f.Id,
+                                          BonusMoney = b.f.TotalBonusMoney,
+                                          BuyMoney = b.f.TotalBetMoney,
+                                          CancelNoBonusSchemeCount = b.f.CancelNoBonusSchemeCount,
+                                          CancelWhenSurplusNotMatch = b.f.CancelWhenSurplusNotMatch,
+                                          CreaterUserId = b.f.CreaterUserId,
+                                          CreateTime = b.f.CreateTime,
+                                          FollowerCount = b.f.FollowerCount,
+                                          FollowerIndex = b.f.FollowerIndex,
+                                          FollowerPercent = b.f.FollowerPercent,
+                                          FollowerUserId = b.f.FollowerUserId,
+                                          GameCode = b.f.GameCode,
+                                          GameType = b.f.GameType,
+                                          IsEnable = b.f.IsEnable,
+                                          MaxSchemeMoney = b.f.MaxSchemeMoney,
+                                          MinSchemeMoney = b.f.MinSchemeMoney,
+                                          SchemeCount = b.f.SchemeCount,
+                                          StopFollowerMinBalance = b.f.StopFollowerMinBalance,
+                                          UserId = b.u.UserId,
+                                          UserDisplayName = b.u.DisplayName,
+                                          HideDisplayNameCount = b.u.HideDisplayNameCount,
+                                      }) :
+                                    (from f in DB.CreateQuery<C_Together_FollowerRule>()
+                                     join u in DB.CreateQuery<C_User_Register>() on f.FollowerUserId equals u.UserId
+                                     where (gameCode == string.Empty || f.GameCode == gameCode)
+                                     && (gameType == string.Empty || f.GameType == gameType)
+                                     && (userId == string.Empty || f.CreaterUserId == userId)
+                                     orderby f.FollowerIndex ascending
+                                     select new { f, u }).ToList().Select(b => new TogetherFollowerRuleQueryInfo
+                                     {
+                                         RuleId = b.f.Id,
+                                         BonusMoney = b.f.TotalBonusMoney,
+                                         BuyMoney = b.f.TotalBetMoney,
+                                         CancelNoBonusSchemeCount = b.f.CancelNoBonusSchemeCount,
+                                         CancelWhenSurplusNotMatch = b.f.CancelWhenSurplusNotMatch,
+                                         CreaterUserId = b.f.CreaterUserId,
+                                         CreateTime = b.f.CreateTime,
+                                         FollowerCount = b.f.FollowerCount,
+                                         FollowerIndex = b.f.FollowerIndex,
+                                         FollowerPercent = b.f.FollowerPercent,
+                                         FollowerUserId = b.f.FollowerUserId,
+                                         GameCode = b.f.GameCode,
+                                         GameType = b.f.GameType,
+                                         IsEnable = b.f.IsEnable,
+                                         MaxSchemeMoney = b.f.MaxSchemeMoney,
+                                         MinSchemeMoney = b.f.MinSchemeMoney,
+                                         SchemeCount = b.f.SchemeCount,
+                                         StopFollowerMinBalance = b.f.StopFollowerMinBalance,
+                                         UserId = b.u.UserId,
+                                         UserDisplayName = b.u.DisplayName,
+                                         HideDisplayNameCount = b.u.HideDisplayNameCount,
+                                     });
+
+            totalCount = query.Count();
+            return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+
+        }
+        public List<TogetherFollowRecordInfo> QuerySucessFolloweRecord(string userId, long ruleId, string gameCode, int pageIndex, int pageSize, out int totalCount)
+        {
+          
+            pageIndex = pageIndex < 0 ? 0 : pageIndex;
+            pageSize = pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : pageSize;
+            var query = (from r in DB.CreateQuery<C_Together_FollowerRecord>()
+                        join u in DB.CreateQuery<C_User_Register>() on r.CreaterUserId equals u.UserId
+                        join o in DB.CreateQuery<C_OrderDetail>() on r.SchemeId equals o.SchemeId
+                        where r.FollowerUserId == userId && (ruleId < 1 || r.RuleId == ruleId)
+                        && (gameCode == string.Empty || r.GameCode == gameCode)
+                        orderby r.CreateTime descending
+                        select new {r,u,o }).ToList().Select(p=> new TogetherFollowRecordInfo
+                        {
+                            CreaterDisplayName = p.u.DisplayName,
+                            CreaterUserId = p.u.UserId,
+                            CreaterHideDisplayNameCount = p.u.HideDisplayNameCount,
+                            CreateTime = p.r.CreateTime,
+                            FollowBonusMoney = p.r.BonusMoney,
+                            FollowMoney = p.r.BuyMoney,
+                            GameCode = p.r.GameCode,
+                            GameType = p.r.GameType,
+                            GameCodeDisplayName = BettingHelper.FormatGameCode(p.r.GameCode),
+                            GameTypeDisplayName = BettingHelper.FormatGameType(p.r.GameCode, p.r.GameType),
+                            IssuseNumber = p.o.CurrentIssuseNumber,
+                            ProgressStatus = (ProgressStatus)p.o.ProgressStatus,
+                            SchemeId = p.o.SchemeId,
+                            SchemeMoney = p.o.TotalMoney,
+                            SchemeBonusMoney = p.o.AfterTaxBonusMoney,
+                        });
+            totalCount = query.Count();
+            return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+        }
+
+        public ProfileUserInfo QueryProfileUserInfo(string userId)
+        {
+        
+            var query = (from r in DB.CreateQuery<C_User_Register>()
+                        join u in DB.CreateQuery<C_User_Attention_Summary>() on r.UserId equals u.UserId
+                        where r.UserId == userId
+                        select new {r,u }).ToList().Select(p=> new ProfileUserInfo
+                        {
+                            UserId = p.r.UserId,
+                            AttentionCount = p.u.FollowerUserCount,
+                            AttentionedCount = p.u.BeAttentionUserCount,
+                            HideNameCount = p.r.HideDisplayNameCount,
+                            UserDisplayName = p.r.DisplayName,
+                            CreateTime = p.r.CreateTime,
+                        });
+            return query.FirstOrDefault();
+        }
+
+        public List<UserBeedingListInfo> QueryUserBeedingList(string gameCode, string gameType, string userId, string userDisplayName, int pageIndex, int pageSize,
+      QueryUserBeedingListOrderByProperty orderByProperty, OrderByCategory orderByCategory, out int totalCount)
+        {
+           
+            pageIndex = pageIndex < 0 ? 0 : pageIndex;
+            pageSize = pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : pageSize;
+
+            var query = (from b in DB.CreateQuery<C_User_Beedings>()
+                        join u in DB.CreateQuery<C_User_Register>() on b.UserId equals u.UserId
+                        where b.TotalBonusMoney > 0M && b.TotalBonusTimes > 0
+                        && (string.Empty == gameCode || b.GameCode == gameCode)
+                        && (string.Empty == gameType || b.GameType == gameType)
+                        && (string.Empty == userId || u.UserId == userId)
+                        && (string.Empty == userDisplayName || u.DisplayName == userDisplayName)
+                        select new {b,u }).ToList().Select(p=>new UserBeedingListInfo
+                        {
+                            BeFollowedTotalMoney = p.b.BeFollowedTotalMoney,
+                            BeFollowerUserCount = p.b.BeFollowerUserCount,
+                            GameCode = p.b.GameCode,
+                            GameType = p.b.GameType,
+                            GoldCrownCount = p.b.GoldCrownCount,
+                            GoldCupCount = p.b.GoldCupCount,
+                            GoldDiamondsCount = p.b.GoldDiamondsCount,
+                            GoldStarCount = p.b.GoldStarCount,
+                            SilverCrownCount = p.b.SilverCrownCount,
+                            SilverCupCount = p.b.SilverCupCount,
+                            SilverDiamondsCount = p.b.SilverDiamondsCount,
+                            SilverStarCount = p.b.SilverStarCount,
+                            TotalBetMoney = p.b.TotalBetMoney,
+                            TotalOrderCount = p.b.TotalOrderCount,
+                            TotalBonusMoney = p.b.TotalBonusMoney,
+                            TotalBonusTimes = p.b.TotalBonusTimes,
+                            UserDisplayName = p.u.DisplayName,
+                            UserHideDisplayNameCount = p.u.HideDisplayNameCount,
+                            UserId = p.b.UserId,
+                        });
+
+            #region 排序
+
+            switch (orderByProperty)
+            {
+                case QueryUserBeedingListOrderByProperty.TotalBonusMoney:
+                    switch (orderByCategory)
+                    {
+                        case OrderByCategory.DESC:
+                            query.OrderByDescending(p => p.TotalBonusMoney);
+                            break;
+                        case OrderByCategory.ASC:
+                            query.OrderBy(p => p.TotalBonusMoney);
+                            break;
+                    }
+                    break;
+                case QueryUserBeedingListOrderByProperty.TotalBonusTimes:
+                    switch (orderByCategory)
+                    {
+                        case OrderByCategory.DESC:
+                            query.OrderByDescending(p => p.TotalBonusTimes);
+                            break;
+                        case OrderByCategory.ASC:
+                            query.OrderBy(p => p.TotalBonusTimes);
+                            break;
+                    }
+                    break;
+                case QueryUserBeedingListOrderByProperty.BeFollowedTotalMoney:
+                    switch (orderByCategory)
+                    {
+                        case OrderByCategory.DESC:
+                            query.OrderByDescending(p => p.BeFollowedTotalMoney);
+                            break;
+                        case OrderByCategory.ASC:
+                            query.OrderBy(p => p.BeFollowedTotalMoney);
+                            break;
+                    }
+                    break;
+                case QueryUserBeedingListOrderByProperty.BeFollowerUserCount:
+                    switch (orderByCategory)
+                    {
+                        case OrderByCategory.DESC:
+                            query.OrderByDescending(p => p.BeFollowerUserCount);
+                            break;
+                        case OrderByCategory.ASC:
+                            query.OrderBy(p => p.BeFollowerUserCount);
+                            break;
+                    }
+                    break;
+            }
+
+            #endregion
+
+            totalCount = query.Count();
+            return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+
+
+        }
+
+        public List<C_JCLQ_Match> QueryJCLQDSSaleMatchCount(string[] matchIdArray)
+        {
+            var query = from m in DB.CreateQuery<C_JCLQ_Match>()
+                        where matchIdArray.Contains(m.MatchId)
+                        && m.FSStopBettingTime > DateTime.Now
+                        //&& m.DSStopBettingTime > DateTime.Now
+                        select m;
+            return query.ToList();
+        }
+
+        public void AddSingleScheme_AnteCode(C_SingleScheme_AnteCode entity)
+        {
+            DB.GetDal<C_SingleScheme_AnteCode>().Add(entity);
         }
 
     }

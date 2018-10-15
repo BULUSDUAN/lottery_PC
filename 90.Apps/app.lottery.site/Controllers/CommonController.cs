@@ -1469,6 +1469,12 @@ namespace app.lottery.site.Controllers
                     var fxbonusdeduct = string.IsNullOrEmpty(Request["bonusdeductfx"]) ? 0 : Decimal.Parse(Request["bonusdeductfx"]); //提成比例
                     var fxdesc = string.IsNullOrEmpty(Request["descriptionfx"]) ? amount + "倍，共" + totalMoney + "元" : Request["descriptionfx"];
 
+                    var BDFXCommissionStr = WCFClients.GameClient.QueryConfigByKey("BDFXCommission");
+                    if (fxbonusdeduct > Convert.ToInt32(BDFXCommissionStr.ConfigValue))
+                    {
+                        return Json(new {IsSuccess=false,Message="神单提成比例最大值为:" + BDFXCommissionStr.ConfigValue });
+                    }
+
                     //投注对象
                     Sports_BetingInfo fxinfo = new Sports_BetingInfo()
                     {

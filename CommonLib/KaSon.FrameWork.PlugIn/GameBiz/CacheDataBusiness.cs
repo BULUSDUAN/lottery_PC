@@ -376,23 +376,7 @@ namespace KaSon.FrameWork.PlugIn.GameBiz
                 manager.UpdateBlog_DataReport(man);
             }
         }
-        public E_Blog_DataReport QueryProfileDataReport(string userId)
-        {
-            var manager = new BlogManager();
-            var dataReport = manager.QueryBlog_DataReport(userId);
-            if (dataReport == null)
-                return new E_Blog_DataReport();
-            return new E_Blog_DataReport
-            {
-                UserId = dataReport.UserId,
-                CreateSchemeCount = dataReport.CreateSchemeCount,
-                JoinSchemeCount = dataReport.JoinSchemeCount,
-                TotalBonusCount = dataReport.TotalBonusCount,
-                TotalBonusMoney = dataReport.TotalBonusMoney,
-                UpdateTime = dataReport.UpdateTime,
-            };
-
-        }
+      
         public void UpdateSporeadUserData(string userId, string gamecode, decimal totalmoney)
         {
             var manager = new BlogManager();
@@ -684,26 +668,7 @@ namespace KaSon.FrameWork.PlugIn.GameBiz
             return result;
         }
 
-        public ProfileBonusLevelInfo QueryProfileBonusLevelInfo(string userId)
-        {
-            var result = new ProfileBonusLevelInfo();
-            var pb = new BlogManager().QueryBlog_ProfileBonusLevel(userId);
-            if (pb == null)
-                return new ProfileBonusLevelInfo();
-            return new ProfileBonusLevelInfo
-            {
-                UserId = pb.UserId,
-                MaxLevelName = pb.MaxLevelName,
-                MaxLevelValue = pb.MaxLevelValue,
-                WinHundredMillionCount = pb.WinHundredMillionCount,
-                WinOneHundredCount = pb.WinOneHundredCount,
-                WinOneHundredThousandCount = pb.WinOneHundredThousandCount,
-                WinOneMillionCount = pb.WinOneMillionCount,
-                WinOneThousandCount = pb.WinOneThousandCount,
-                WinTenMillionCount = pb.WinTenMillionCount,
-                WinTenThousandCount = pb.WinTenThousandCount,
-            };
-        }
+    
 
         #endregion
 
@@ -735,14 +700,7 @@ namespace KaSon.FrameWork.PlugIn.GameBiz
             }
             
         }
-        public ProfileLastBonusCollection QueryProfileLastBonusCollection(string userId)
-        {
-            var result = new ProfileLastBonusCollection();
-            var totalCount = 0;
-            result.List.AddRange(new BlogManager().QueryProfileLastBonusList(userId, out totalCount));
-            result.TotalCount = totalCount;
-            return result;
-        }
+    
         #endregion
 
         #region 历史战绩

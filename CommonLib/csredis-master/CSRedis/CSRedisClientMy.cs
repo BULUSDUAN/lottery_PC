@@ -82,6 +82,6 @@ namespace CSRedis
         /// <param name="key">不含prefix前辍</param>
         /// <param name="value">一个或多个值</param>
         /// <returns></returns>
-        public long RPush(string key, params object[] value) => value == null || value.Any() == false ? 0 : ExecuteScalar(key, (c, k) => c.RPush(k, value));
+        public long RPush(string key, params object[] value) => value == null || value.Any() == false ? 0 : ExecuteScalar(key, (c, k) => c.Client.RPush(k, value));
     }
 }

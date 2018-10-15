@@ -26,6 +26,7 @@ using System.Web;
 using KaSon.FrameWork.Common.ExceptionEx;
 using System.Diagnostics;
 using EntityModel.ExceptionExtend;
+using KaSon.FrameWork.Common.Expansion;
 
 namespace Lottery.Api.Controllers
 {
@@ -75,6 +76,7 @@ namespace Lottery.Api.Controllers
                 //if (bankInfo == null) bankInfo = new C_BankCard();
                 //balanceParam.Clear();
                 var unReadCount = await _serviceProxyProvider.Invoke<int>(balanceParam, "api/user/GetMyUnreadInnerMailCount");
+                Task.Run(() => ToCreateGameAccount(loginInfo.DisplayName));
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
@@ -2000,6 +2002,31 @@ namespace Lottery.Api.Controllers
             return defaultmoney;
         }
 
-
+        public void ToCreateGameAccount(string DisplayName)
+        {
+            DataController.InitGameParam();
+            var gameLoginName = DataController.PreName + DisplayName;
+            var pwd = DataController.GamePassWord;
+            var sign = MD5Helper.UpperMD5($"{DataController.OperatorCode}&{pwd}&{gameLoginName}&{DataController.SecretKey}");
+            var strParam = new
+            {
+                command = "CREATE_ACCOUNT",
+                gameprovider = "2",
+                sign = sign,
+                @params = new
+                {
+                    username = gameLoginName,
+                    operatorcode = DataController.OperatorCode,
+                    password = pwd,
+                    extraparameter = new
+                    {
+                        type = "SMG"
+                    }
+                }
+            }.ToJson();
+            //var postParam = ConvertHelper.ReplaceFirst(strParam, "theparams", "params");
+            //var result = PostManager.HttpPost(DataController.GameUrl, strParam, "utf-8");
+            var result = PostManager.Post(DataController.GameUrl, strParam, Encoding.UTF8, 45, null, "application/json");
+        }
     }
 }

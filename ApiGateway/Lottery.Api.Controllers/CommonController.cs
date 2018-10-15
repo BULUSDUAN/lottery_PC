@@ -241,12 +241,16 @@ namespace Lottery.Api.Controllers
                 var APP_ServicePhone_Key = "Site.Service.Phone";
                 var APP_ScoreURL_Key = "APP_ScoreURL";
                 var APP_ExternalLinks_Key = "APP_ExternalLinks";
+                var APP_RechargeActivityUrl_Key = "APP_RechargeActivityUrl_Key";
+                var APP_NormalShareable_Key = "APP_NormalShareable";
                 var APP_Common_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_Common_Key);
                 var APP_UserCenter_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_UserCenter_Key);
                 var APP_Index_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_Index_Key);
                 var APP_ServicePhone_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_ServicePhone_Key);
                 var APP_ScoreURL_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_ScoreURL_Key);
                 var APP_ExternalLinks_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_ExternalLinks_Key);
+                var APP_RechargeActivityUrl_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_RechargeActivityUrl_Key);
+                var APP_NormalShareable_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_NormalShareable_Key);
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
@@ -260,6 +264,8 @@ namespace Lottery.Api.Controllers
                         APP_ServicePhone = APP_ServicePhone_Value,
                         APP_ScoreURL = APP_ScoreURL_Value,
                         APP_ExternalLinks = JsonHelper.Deserialize<object>(APP_ExternalLinks_Value),
+                        APP_RechargeActivityUrl = APP_RechargeActivityUrl_Value,
+                        APP_NormalShareable = APP_NormalShareable_Value
                     },
                 });
             }
@@ -448,7 +454,7 @@ namespace Lottery.Api.Controllers
             /// <param name="SerName"></param>
             /// <param name="FileName"></param>
             /// <returns></returns>
-            public async Task<IActionResult> GetLogInfo([FromServices]IServiceProxyProvider _serviceProxyProvider,int PlamtType=1, int DicType = 1, string SerName="Order")
+            public async Task<IActionResult> GetLogInfo([FromServices]IServiceProxyProvider _serviceProxyProvider,int PlamtType=1, int DicType = 1, string SerName="Order", string FileName = "")
         {
             string config = "";
             string DicTypeName = "APILogError";
@@ -497,7 +503,14 @@ namespace Lottery.Api.Controllers
                 sb.Append("新的日志******************\r\n");
                 sb.Append("新的日志******************\r\n");
                 sb.Append("新的日志******************\r\n");
-                sb.Append(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\" + ApiDicTypeName, ""));
+                if (!string.IsNullOrEmpty(FileName))
+                {
+                    sb.Append(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfoByDate("Log_Log\\" + ApiDicTypeName, FileName));
+                }
+                else
+                {
+                    sb.Append(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\" + ApiDicTypeName, ""));
+                }
             }
             else {
                 Dictionary<string, object> param = new Dictionary<string, object>();

@@ -144,5 +144,14 @@ namespace EntityModel.Redis
         public const string APP_Advertising_V2 = "APP_Advertising_V2";
 
         public const string PC_Index_QuickBuy = "PC_Index_QuickBuy";
+
+        /// <summary>
+        /// 查询开奖历史
+        /// </summary>
+        public const string PC_QueryWinNumberHistory = "PC_WNH";
+        /// <summary>
+        /// 根据条数获取开奖历史
+        /// </summary>
+        public const string PC_QueryWinNumberHistoryByCount = "PC_WNHBC";
     }
 }

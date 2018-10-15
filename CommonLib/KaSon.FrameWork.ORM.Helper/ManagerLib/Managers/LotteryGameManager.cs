@@ -240,5 +240,17 @@ namespace KaSon.FrameWork.ORM.Helper
           
             return DB.CreateQuery<C_Game_Issuse>().Where(p => p.GameCode == gameCode && p.IssuseNumber == issuseNumber).FirstOrDefault();
         }
+
+        public string QueryStopIssuseList(string gameCode, string gameType, int length)
+        {
+         
+            var query = from g in DB.CreateQuery<C_Game_Issuse>()
+                        where g.GameCode == gameCode
+                        && (gameType == "" || gameType == g.GameType)
+                        && g.OfficialStopTime < DateTime.Now.AddHours(-1)
+                        orderby g.IssuseNumber descending
+                        select g.IssuseNumber;
+            return string.Join(",", query.Take(length).ToList());
+        }
     }
 }
