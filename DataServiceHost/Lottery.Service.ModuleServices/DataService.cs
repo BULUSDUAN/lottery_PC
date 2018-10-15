@@ -3876,6 +3876,76 @@ namespace Lottery.Service.ModuleServices
             }
         }
         #endregion
+
+        #region 东方6+1走势图
+        public Task<DF6_1_DXZS_InfoCollection> QueryCache_DF6_1_DXZS_Info(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_DF6_1().QueryDF6_1_DXZS(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询大小走势 - " + ex.Message, ex);
+            }
+        }
+        public Task<DF6_1_HZZS_InfoCollection> QueryCache_DF6_1_HZZS_Info(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_DF6_1().QueryDF6_1_HZZS(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询和值走势 - " + ex.Message, ex);
+            }
+        }
+        public Task<DF6_1_JBZS_InfoCollection> QueryCache_DF6_1_JBZS_Info(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_DF6_1().QueryDF6_1_JBZS(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询基本走势 - " + ex.Message, ex);
+            }
+        }
+        public Task<DF6_1_JOZS_InfoCollection> QueryCache_DF6_1_JOZS_Info(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_DF6_1().QueryDF6_1_JOZS(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询奇偶走势 - " + ex.Message, ex);
+            }
+        }
+        public Task<DF6_1_KDZS_InfoCollection> QueryCache_DF6_1_KDZS_Info(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_DF6_1().QueryDF6_1_KDZS(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询跨度走势 - " + ex.Message, ex);
+            }
+        }
+        public Task<DF6_1_ZHZS_InfoCollection> QueryCache_DF6_1_ZHZS_Info(int index)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_DF6_1().QueryDF6_1_ZHZS(index));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询质合走势 - " + ex.Message, ex);
+            }
+        }
+        #endregion
+
     }
 
 

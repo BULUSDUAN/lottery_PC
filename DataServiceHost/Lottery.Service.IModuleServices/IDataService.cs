@@ -686,5 +686,26 @@ namespace Lottery.Service.IModuleServices
         [Service(Date = "2018-10-12", Director = "renjun", Name = "查询华东15选5连号走势")]
         Task<HD15X5_LH_InfoCollection> QueryCache_HD15X5_LH_Info(int index);
         #endregion
+
+        #region 东方6+1走势图
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询大小走势")]
+        Task<DF6_1_DXZS_InfoCollection> QueryCache_DF6_1_DXZS_Info(int index);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询和值走势")]
+        Task<DF6_1_HZZS_InfoCollection> QueryCache_DF6_1_HZZS_Info(int index);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询基本走势")]
+        Task<DF6_1_JBZS_InfoCollection> QueryCache_DF6_1_JBZS_Info(int index);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询奇偶走势")]
+        Task<DF6_1_JOZS_InfoCollection> QueryCache_DF6_1_JOZS_Info(int index);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询跨度走势")]
+        Task<DF6_1_KDZS_InfoCollection> QueryCache_DF6_1_KDZS_Info(int index);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询质和走势")]
+        Task<DF6_1_ZHZS_InfoCollection> QueryCache_DF6_1_ZHZS_Info(int index);
+
+        #endregion
     }
 }
