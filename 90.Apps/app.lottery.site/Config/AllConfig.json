@@ -1,0 +1,70 @@
+{
+  "RedisConfig": {
+    "EnableRedis": true,
+    "RedisHost": "10.0.3.6",
+    "RedisPost": 6379,
+    "RedisPassword": "redis123"
+
+  },
+
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "noEmitOnError": true,
+    "removeComments": false,
+    "sourceMap": true,
+    "target": "es5"
+  },
+  "exclude": [
+    "node_modules",
+    "wwwroot"
+  ],
+  "PageRegisterDefaultRole": "User",
+  "Sports_SchemeJobSeconds": 20, //追号作业时间间隔，秒单位
+  //  //彩种不出票时间段 从星期天 到 星期六
+  "CTZQ_StopTicketing": "01:00-09:00|01:00-09:00|00:00-09:00|00:00-09:00|00:00-09:00|00:00-09:00|00:00-09:00",
+  "BJDC_StopTicketing": "05:50-09:00|05:50-09:00|05:50-09:00|05:50-09:00|05:50-09:00|05:50-09:00|05:50-09:00",
+  "JCZQ_StopTicketing": "01:00-09:00|01:00-09:00|00:00-09:00|00:00-09:00|00:00-09:00|00:00-09:00|00:00-09:00",
+  "JCLQ_StopTicketing": "01:00-09:00|01:00-09:00|00:00-09:00|00:00-07:30|00:00-07:30|00:00-09:00|00:00-09:00",
+  "SSQ_StopTicketing": "19:40-21:00",
+  "DLT_StopTicketing": "19:40-21:00",
+  "FC3D_StopTicketing": "19:40-21:00",
+  "PL3_StopTicketing": "19:40-21:00",
+  "JCGJ_StopTicketing": "19:40-21:00",
+
+
+  "SelfDomain": "http://localhost:729",
+  "MobileDomain": "http://localhost:729",
+  "ResSiteUrl": "http://10.0.3.6:888",
+  "Max_BetListCount": 6, //投注队列最大个数
+  "Max_PrizeListCount": 11, //派奖队列最大个数
+  "WaitingOrderListCount": 10, //早上自动拆票最大队列
+
+  "QueryUserFundDetailFromCache": false,
+  //缓存配置文件，暂时没用到默认
+
+  //必须配置
+  "HostSettings": {
+    "Ip": "127.0.0.1", //服务启动IP
+    "WatchInterval": 30,
+    "Port": 10109, //服务启动端口
+    "Token": "true",
+    "RequestCacheEnabled": false
+  },
+  //必须配置  RebbitMq 启动地址
+  "RebbitMqSettings": {
+    "EventBusConnection": "127.0.0.1",
+    "EventBusUserName": "guest",
+    "EventBusPassword": "guest",
+    "VirtualHost": "/",
+    "BrokerName": "Kason.Sg",
+    "Port": "5672"
+  },
+  //必须配置 服务发现配置
+  "ConsulSettings": {
+
+    "IpAddrs": "127.0.0.1:8500", //服务启动IP 10.0.3.27:8501
+    "Token": "16c5413b-276c-45ab-9b0e-9664126f1162"
+
+  },
+  "AutoTask": false
+}

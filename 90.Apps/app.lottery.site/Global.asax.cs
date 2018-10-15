@@ -4,8 +4,18 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Autofac;
+using Autofac.Integration.Mvc;
 using Common.Log;
 using Common.Net;
+using Kason.Net.Common;
+using Kason.Sg.Core.Codec.MessagePack;
+using Kason.Sg.Core.Consul;
+using Kason.Sg.Core.CPlatform;
+using Kason.Sg.Core.CPlatform.Utilities;
+using Kason.Sg.Core.DotNetty;
+using Kason.Sg.Core.Log;
+using Kason.Sg.Core.ProxyGenerator;
 
 namespace app.lottery.site.iqucai
 {
@@ -145,6 +155,7 @@ namespace app.lottery.site.iqucai
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
+            Application_Autofac();
         }
         protected void Application_Error(object sender, EventArgs e)
         {
@@ -228,6 +239,48 @@ namespace app.lottery.site.iqucai
             {
                 Context.RewritePath("index.html");
             }
+        }
+
+        public void Application_Autofac()
+        {
+            string consul = ConfigHelper.AllConfigInfo["ConsulSettings"]["IpAddrs"].ToString();
+            string Token = ConfigHelper.AllConfigInfo["ConsulSettings"]["Token"] != null ? ConfigHelper.AllConfigInfo["ConsulSettings"]["Token"].ToString() : "";
+            var config = new ConfigInfo(consul);
+            config.Token = Token;
+            var builder = new ContainerBuilder();
+            // ILog log = LogManager.GetLogger("Logger");
+
+            //注册您的MVC控制器。 （MvcApplication是Global.asax中类的名称。）
+            builder.RegisterControllers(typeof(MvcApplication).Assembly);
+
+            //可选：注册需要DI的模型绑定器
+            builder.RegisterModelBinders(typeof(MvcApplication).Assembly);
+            builder.RegisterModelBinderProvider();
+
+            builder.AddMicroService(option =>
+            {
+                option.AddClient();
+
+
+                option.UseLog4();
+
+                // option.AddCache();
+
+                //  option.AddClientIntercepted(typeof(CacheProviderInterceptor));
+                //option.UseZooKeeperManager(new ConfigInfo("127.0.0.1:2181"));
+                option.UseConsulManager(config);
+
+                //else if (registerConfig.Provider == RegisterProvider.Zookeeper)
+                //    option.UseZooKeeperManager(new ZookeeperConfigInfo(registerConfig.Address));
+                option.UseDotNettyTransport();
+                //  option.AddApiGateWay();
+                //option.UseProtoBufferCodec();
+                option.UseMessagePackCodec();
+                builder.Register(m => new CPlatformContainer(ServiceLocator.Current));
+            });
+            ServiceLocator.Current = builder.Build();
+            DependencyResolver.SetResolver(new AutofacDependencyResolver(ServiceLocator.Current));
+
         }
     }
 }
