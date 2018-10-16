@@ -128,6 +128,10 @@ namespace app.lottery.site.iqucai
             "Error/{action}",
             new { controller = "Error" });
 
+            routes.MapRoute("Test",
+        "Test/{action}",
+        new { controller = "Test" });
+
             routes.MapRoute(
              "common",
              "{action}",
@@ -138,7 +142,11 @@ namespace app.lottery.site.iqucai
                "{action}/{id}",
                new { controller = "common" }
                );
-
+            //routes.MapRoute(
+            // "Test",
+            // "Test/{action}",
+            // new { controller = "Test" }
+            // );
 
             routes.MapRoute(
                 "Default", // 默认路由名称

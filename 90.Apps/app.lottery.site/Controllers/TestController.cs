@@ -35,7 +35,7 @@ namespace app.lottery.site.iqucai.Controllers
             Dictionary<string, object> model = new Dictionary<string, object>();
             model["id"] = "123";
             var str = await serviceProxyProvider.Invoke<object>(model, "apiUsers/User/GetUserName");
-            return View();
+            return  Content("testtesttesttesttesttest");
         }
     }
 }
