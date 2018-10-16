@@ -12,9 +12,12 @@ using KaSon.FrameWork.Common.Utilities;
 using KaSon.FrameWork.ORM.Helper.Admin;
 using KaSon.FrameWork.Common.Net;
 using EntityModel;
+using Lottery.AdminApi.Controllers.CommonFilterActtribute;
 
 namespace Lottery.AdminApi.Controllers
 {
+    [Area("api")]
+    [ReusltFilter]
     public class HomeController:BaseController
     {
         #region 验证码相关函数
