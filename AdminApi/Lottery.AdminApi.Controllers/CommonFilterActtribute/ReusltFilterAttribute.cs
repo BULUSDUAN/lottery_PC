@@ -31,7 +31,7 @@ namespace Lottery.AdminApi.Controllers.CommonFilterActtribute
             {
                 string url = context.HttpContext.Request.Path;
                 var resp = result.Value as LotteryServiceResponse;
-                if (resp != null && resp.Code == ResponseCode.失败 && resp.Message.Contains(cxin))
+                if (resp != null && resp.Code == AdminResponseCode.失败 && resp.Message.Contains(cxin))
                 {
                     //日志记录
                     //  using ()【】
@@ -52,7 +52,7 @@ namespace Lottery.AdminApi.Controllers.CommonFilterActtribute
                     //   Microsoft.AspNetCore.Mvc.JsonResult 
                     // context.Result
                 }
-                else if (resp.Code == ResponseCode.失败 && !resp.Message.Contains(cxin))
+                else if (resp.Code == AdminResponseCode.失败 && !resp.Message.Contains(cxin))
                 {
                     var temp = resp.Message.Split(cyuan);
                     //  string url = context.HttpContext.Request.Path;

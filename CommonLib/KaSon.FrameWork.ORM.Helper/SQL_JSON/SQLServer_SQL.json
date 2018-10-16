@@ -467,5 +467,15 @@
       "SQL": "SELECT * FROM( SELECT ROW_NUMBER()OVER(ORDER BY BonusMoney DESC) RowIndex,T.* ,R.VipLevel,DisplayName,R.HideDisplayNameCount FROM ( SELECT UserId,COUNT(1) TotalCount, SUM(TotalMoney) TotalMoney,SUM(AfterTaxBonusMoney) BonusMoney FROM C_Sports_Order_Complate WHERE BonusStatus=20 AND IsVirtualOrder=0 AND ComplateDateTime BETWEEN @ReportFromDate AND @ReportToDate AND (@GameCode=N'' OR GameCode IN (SELECT A FROM F_Common_SplitString(@GameCode, ','))) GROUP BY UserId ) T LEFT OUTER JOIN C_User_Register R ON T.UserId=R.UserId ) TMP WHERE RowIndex<=@TopCount",
       "Remark": ""
     }
+  ],
+  "AdminModule": [
+    {
+      "key": "Admin_QueryMenuListByUserId",
+      "Desc": "根据用户查询菜单列表",
+      "ParamDesc": "@UserId:UserId",
+      "Director": "lili",
+      "SQL": "SELECT * FROM [E_Menu_List] WHERE [FunctionId] IS NULL OR [FunctionId] IN ( SELECT [FunctionId] FROM [C_Auth_RoleFunction] WHERE [RoleId] IN ( SELECT [RoleId] FROM [C_Auth_UserRole] WHERE [UserId] = @UserId ) AND [Status] = 0 ) and MenuType in (10,1) and IsEnable=1 ORDER BY [MenuId]",
+      "Remark": ""
+    }
   ]
 }

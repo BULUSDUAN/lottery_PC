@@ -19,5 +19,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// 
         /// </summary>
         public IList<SQLModel> DataModule { get; set; }
+
+        public IList<SQLModel> AdminModule { get; set; }
     }
 }

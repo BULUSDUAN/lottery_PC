@@ -632,5 +632,36 @@ namespace KaSon.FrameWork.ORM.Helper
 
         //#endregion
 
+        private static List<MethodFunction> _allMethodFunctionList = new List<MethodFunction>();
+
+        public static string ValidateUserAuthentication_Admin(string userToken)
+        {
+            if (_allMethodFunctionList == null || _allMethodFunctionList.Count == 0)
+            {
+                var userManager = new UserManager();
+                _allMethodFunctionList = userManager.LoadAllMethodFunction();
+            }
+            var method = new System.Diagnostics.StackFrame(1).GetMethod();
+            var currentFullName = string.Format("{0}.{1}", method.ReflectedType.FullName, method.Name);
+            var config = _allMethodFunctionList.FirstOrDefault(p => p.MethodFullName == currentFullName);
+            if (config == null)
+                throw new Exception(string.Format("没有配置方法 {0} 的调用权限数据", currentFullName));
+
+            var userId = string.Empty;
+            ValidateAuthentication(userToken, config.Mode, config.FunctionId, out userId);
+            return userId;
+        }
+
+        public static bool CheckIsAdmin(string userToken)
+        {
+            try
+            {
+                return UserTokenHandler.IsAdmin(userToken);
+            }
+            catch (Exception ex)
+            {
+                throw new AuthException("用户身份验证失败，请检查是否已登录", ex);
+            }
+        }
     }
 }

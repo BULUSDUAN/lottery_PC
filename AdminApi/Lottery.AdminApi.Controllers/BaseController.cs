@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using EntityModel.CoreModel;
 using KaSon.FrameWork.Common;
 using KaSon.FrameWork.Common.Net;
+using KaSon.FrameWork.ORM.Helper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -73,17 +79,22 @@ namespace Lottery.AdminApi.Controllers
         {
             get
             {
-                var userInfo = HttpContext.Session["CurrentUser"] as LoginInfo;
+                var userInfo = HttpContext.Session.GetObj<LoginInfo>("CurrentUser");
                 return userInfo;
             }
             set
             {
-                Session["CurrentUser"] = value;
-                Session.Timeout = 120;
                 if (value == null)
                 {
-                    Session.Clear();
+                    HttpContext.Session.Clear();
                 }
+                else
+                {
+                    HttpContext.Session.SetObj<LoginInfo>("CurrentUser", value);
+                }
+               
+                //Session.Timeout = 120;
+                
             }
         }
         /// <summary>
@@ -112,133 +123,112 @@ namespace Lottery.AdminApi.Controllers
 
         //public string AdminAgentToken
         //{
-        //    get { return ConfigurationManager.AppSettings["AdminAgentToken"]; }
+        //    get { return ConfigHelper.AllConfigInfo.GetString("AdminAgentToken"]; }
         //}
         //public string GatewayAdminToken
         //{
-        //    get { return ConfigurationManager.AppSettings["GatewayAdminToken"]; }
+        //    get { return ConfigHelper.AllConfigInfo.GetString("GatewayAdminToken"]; }
         //}
 
         public string SiteName
         {
-            get { return ConfigurationManager.AppSettings["SiteName"]; }
+            get { return ConfigHelper.AllConfigInfo.GetString("SiteName"); }
         }
         public string WebSiteName
         {
-            get { return ConfigurationManager.AppSettings["WebSiteName"]; }
+            get { return ConfigHelper.AllConfigInfo.GetString("WebSiteName"); }
         }
-        public string WithdrawRemarkConfigFile
-        {
-            get { return Server.MapPath("~/Configurations/" + SiteName + "/xmls/WithdrawRemark.Config.xml"); }
-        }
+        //public string WithdrawRemarkConfigFile
+        //{
+        //    get { return Server.MapPath("~/Configurations/" + SiteName + "/xmls/WithdrawRemark.Config.xml"); }
+        //}
         public bool IsTest
         {
             get
             {
-                if (string.IsNullOrEmpty(ConfigurationManager.AppSettings["IsTest"]))
+                if (string.IsNullOrEmpty(ConfigHelper.AllConfigInfo.GetString("IsTest")))
                 { return false; }
 
-                return bool.Parse(ConfigurationManager.AppSettings["IsTest"]);
-            }
-        }
-
-        /// <summary>
-        /// 当前站点路径
-        /// </summary>
-        public string SiteRoot
-        {
-            get
-            {
-                string UrlAuthority = this.Request.Url.GetLeftPart(UriPartial.Authority);
-                if (this.Request.ApplicationPath == null || this.Request.ApplicationPath == "/")
-                {
-                    //直接安装在Web站点
-                    return UrlAuthority;
-                }
-                else
-                {
-                    //安装在虚拟子目录下
-                    return UrlAuthority + this.Request.ApplicationPath;
-                }
+                return bool.Parse(ConfigHelper.AllConfigInfo.GetString("IsTest"));
             }
         }
 
         #endregion
 
-        #region 获取接口配置信息
-        /// <summary>
-        /// 解析接口配置文件，并返回配置信息
-        /// </summary>
-        /// <param name="gatewayType">接口类型，必须与Config.xml里的子项名称一致</param>
-        /// <returns>配置信息</returns>
-        protected Dictionary<string, string> GetGatewayConfig(string gatewayType)
-        {
-            var ret = new Dictionary<string, string>();
-            XmlDocument doc = new XmlDocument();
-            doc.Load(Server.MapPath("~/Mappings/Account.Config.xml"));
-            var mappings = doc.GetElementsByTagName(gatewayType);
-            foreach (XmlElement e in mappings)
-            {
-                ret.Add(e.Attributes["key"].Value, e.Attributes["value"].Value);
-            }
-            return ret;
-        }
-        #endregion
+        //#region 获取接口配置信息
+        ///// <summary>
+        ///// 解析接口配置文件，并返回配置信息
+        ///// </summary>
+        ///// <param name="gatewayType">接口类型，必须与Config.xml里的子项名称一致</param>
+        ///// <returns>配置信息</returns>
+        //protected Dictionary<string, string> GetGatewayConfig(string gatewayType)
+        //{
+        //    var ret = new Dictionary<string, string>();
+        //    XmlDocument doc = new XmlDocument();
+        //    doc.Load(Server.MapPath("~/Mappings/Account.Config.xml"));
+        //    var mappings = doc.GetElementsByTagName(gatewayType);
+        //    foreach (XmlElement e in mappings)
+        //    {
+        //        ret.Add(e.Attributes["key"].Value, e.Attributes["value"].Value);
+        //    }
+        //    return ret;
+        //}
+        //#endregion
 
-        #region 导出excel
-        public void ExportExcelFromDataSet(DataSet ds, string fileName, string typeid = "1")
-        {
-            var resp = Response;
-            resp.ContentEncoding = System.Text.Encoding.GetEncoding("GB2312");
-            resp.ContentType = "application/ms-excel";
+        //#region 导出excel
+        //public void ExportExcelFromDataSet(DataSet ds, string fileName, string typeid = "1")
+        //{
+        //    var resp = Response;
+        //    resp.ContentEncoding = System.Text.Encoding.GetEncoding("GB2312");
+        //    resp.ContentType = "application/ms-excel";
 
-            resp.AddHeader("Content-Disposition", "attachment; filename=" + System.Web.HttpUtility.UrlEncode(fileName, System.Text.Encoding.UTF8) + ".xls");
+        //    resp.AddHeader("Content-Disposition", "attachment; filename=" + System.Web.HttpUtility.UrlEncode(fileName, Encoding.UTF8) + ".xls");
 
-            string colHeaders = "", Is_item = "";
-            int i = 0;
+        //    string colHeaders = "", Is_item = "";
+        //    int i = 0;
 
-            //定义表对象与行对象，同时使用DataSet对其值进行初始化
-            DataTable dt = ds.Tables[0];
-            DataRow[] myRow = dt.Select("");
-            //typeid=="1"时导出为Excel格式文件;typeid=="2"时导出为XML文件
-            if (typeid == "1")
-            {
-                //取得数据表各列标题，标题之间以\t分割，最后一个列标题后加回车符
-                for (i = 0; i < dt.Columns.Count; i++)
-                {
-                    colHeaders += dt.Columns[i].Caption.ToString() + "\t";
-                }
-                colHeaders += "\n";
+        //    //定义表对象与行对象，同时使用DataSet对其值进行初始化
+        //    DataTable dt = ds.Tables[0];
+        //    DataRow[] myRow = dt.Select("");
+        //    //typeid=="1"时导出为Excel格式文件;typeid=="2"时导出为XML文件
+        //    if (typeid == "1")
+        //    {
+        //        //取得数据表各列标题，标题之间以\t分割，最后一个列标题后加回车符
+        //        for (i = 0; i < dt.Columns.Count; i++)
+        //        {
+        //            colHeaders += dt.Columns[i].Caption.ToString() + "\t";
+        //        }
+        //        colHeaders += "\n";
 
-                resp.Write(colHeaders);
-                //逐行处理数据
-                foreach (DataRow row in myRow)
-                {
-                    //在当前行中，逐列取得数据，数据之间以\t分割，结束时加回车符\n
-                    for (i = 0; i < dt.Columns.Count; i++)
-                    {
-                        Is_item += row[i].ToString() + "\t";
-                    }
-                    Is_item += "\n";
-                    resp.Write(Is_item);
-                    Is_item = "";
-                }
-            }
-            else
-            {
-                if (typeid == "2")
-                {
-                    //从DataSet中直接导出XML数据并且写到HTTP输出流中
-                    resp.Write(ds.GetXml());
-                }
-            }
-            //写缓冲区中的数据到HTTP头文件中
-            resp.End();
-        }
-        #endregion
+        //        resp.Write(colHeaders);
+        //        //逐行处理数据
+        //        foreach (DataRow row in myRow)
+        //        {
+        //            //在当前行中，逐列取得数据，数据之间以\t分割，结束时加回车符\n
+        //            for (i = 0; i < dt.Columns.Count; i++)
+        //            {
+        //                Is_item += row[i].ToString() + "\t";
+        //            }
+        //            Is_item += "\n";
+        //            resp.Write(Is_item);
+        //            Is_item = "";
+        //        }
+        //    }
+        //    else
+        //    {
+        //        if (typeid == "2")
+        //        {
+        //            //从DataSet中直接导出XML数据并且写到HTTP输出流中
+        //            resp.Write(ds.GetXml());
+        //        }
+        //    }
+        //    //写缓冲区中的数据到HTTP头文件中
+        //    resp.End();
+        //}
+        //#endregion
 
 
-        public string LoadImageFile(HttpPostedFileBase file, string uploadfile, string imgName = "")
+        public string LoadImageFile(IFormFile file, string uploadfile, string imgName = "")
         {
             try
             {
@@ -247,16 +237,16 @@ namespace Lottery.AdminApi.Controllers
                     nameImg = DateTime.Now.ToString("yyyyMMddHHmmssff");
                 else nameImg = imgName;
 
-                string resourceSiteUrl = ConfigurationManager.AppSettings["ResourceSiteUrl"].ToString();
-                string resourceSitePostUrl = ConfigurationManager.AppSettings["ResourceSitePostUrl"].ToString();
+                string resourceSiteUrl = ConfigHelper.AllConfigInfo.GetString("ResourceSiteUrl");
+                string resourceSitePostUrl = ConfigHelper.AllConfigInfo.GetString("ResourceSitePostUrl");
 
                 string upLoadFile = uploadfile;  // "/images/add/";
-                string upLoadPostPath = ConfigurationManager.AppSettings["UpLoadPostPath"].ToString();
+                string upLoadPostPath = ConfigHelper.AllConfigInfo.GetString("UpLoadPostPath");
 
                 nameImg += file.FileName.Substring(file.FileName.LastIndexOf(".")).ToLower();
                 string url = string.Format("{0}{1}{2}", resourceSiteUrl, upLoadFile, nameImg);
 
-                upLoadFile = "/" + ConfigurationManager.AppSettings["WebSiteEName"].ToString() + upLoadFile;
+                upLoadFile = "/" + ConfigHelper.AllConfigInfo.GetString("WebSiteEName") + upLoadFile;
 
                 string postUrl = string.Format("{0}{1}?filename={2}&upLoadFile={3}", resourceSitePostUrl, upLoadPostPath, nameImg, upLoadFile);
 
@@ -264,8 +254,10 @@ namespace Lottery.AdminApi.Controllers
                 request.Method = "POST";
                 request.AllowAutoRedirect = false;
                 request.ContentType = "multipart/form-data";
-                byte[] bytes = new byte[file.InputStream.Length];
-                file.InputStream.Read(bytes, 0, (int)file.InputStream.Length);
+                byte[] bytes = new byte[file.Length];
+                var st = new MemoryStream();
+                file.CopyTo(st);
+                st.Read(bytes, 0, (int)file.Length);
                 request.ContentLength = bytes.Length;
                 using (Stream requestStream = request.GetRequestStream())
                 {
@@ -289,22 +281,22 @@ namespace Lottery.AdminApi.Controllers
         /// <param name="file"></param>
         /// <param name="uploadfile"></param>
         /// <returns></returns>
-        public string LoadImageFile_Tgbank(HttpPostedFileBase file, string uploadfile)
+        public string LoadImageFile_Tgbank(IFormFile file, string uploadfile)
         {
             try
             {
                 string nameImg = DateTime.Now.ToString("yyyyMMddHHmmssff");
 
-                string resourceSiteUrl = ConfigurationManager.AppSettings["ResourceSiteUrl_Tgbank"].ToString();
-                string resourceSitePostUrl = ConfigurationManager.AppSettings["ResourceSitePostUrl_Tgbank"].ToString();
+                string resourceSiteUrl = ConfigHelper.AllConfigInfo.GetString("ResourceSiteUrl_Tgbank");
+                string resourceSitePostUrl = ConfigHelper.AllConfigInfo.GetString("ResourceSitePostUrl_Tgbank");
 
                 string upLoadFile = uploadfile;  // "/images/add/";
-                string upLoadPostPath = ConfigurationManager.AppSettings["UpLoadPostPath"].ToString();
+                string upLoadPostPath = ConfigHelper.AllConfigInfo.GetString("UpLoadPostPath");
 
                 nameImg += file.FileName.Substring(file.FileName.LastIndexOf(".")).ToLower();
                 string url = string.Format("{0}{1}{2}", resourceSiteUrl, upLoadFile, nameImg);
 
-                upLoadFile = "/" + ConfigurationManager.AppSettings["WebSiteEName_Tgbank"].ToString() + upLoadFile;
+                upLoadFile = "/" + ConfigHelper.AllConfigInfo.GetString("WebSiteEName_Tgbank") + upLoadFile;
 
                 string postUrl = string.Format("{0}{1}?filename={2}&upLoadFile={3}", resourceSitePostUrl, upLoadPostPath, nameImg, upLoadFile);
 
@@ -312,8 +304,10 @@ namespace Lottery.AdminApi.Controllers
                 request.Method = "POST";
                 request.AllowAutoRedirect = false;
                 request.ContentType = "multipart/form-data";
-                byte[] bytes = new byte[file.InputStream.Length];
-                file.InputStream.Read(bytes, 0, (int)file.InputStream.Length);
+                byte[] bytes = new byte[file.Length];
+                var st = new MemoryStream();
+                file.CopyTo(st);
+                st.Read(bytes, 0, (int)file.Length);
                 request.ContentLength = bytes.Length;
                 using (Stream requestStream = request.GetRequestStream())
                 {
@@ -418,7 +412,7 @@ namespace Lottery.AdminApi.Controllers
         /// </summary>
         public void SendBuildStaticDataNotice(string pageType, string key)
         {
-            var urlArray = ConfigurationManager.AppSettings["BuildStaticFileSendUrl"].Split('|');
+            var urlArray = ConfigHelper.AllConfigInfo.GetString("BuildStaticFileSendUrl").Split('|');
             foreach (var url in urlArray)
             {
                 if (string.IsNullOrEmpty(url))
@@ -440,7 +434,8 @@ namespace Lottery.AdminApi.Controllers
                 string defalutValue = "";
                 try
                 {
-                    var v = GameClient.QueryCoreConfigByKey("FillMoney.CallBackDomain").ConfigValue;
+                    var business = new CacheDataBusiness();
+                    var v = business.QueryCoreConfigByKey("FillMoney.CallBackDomain").ConfigValue;
                     if (string.IsNullOrEmpty(v))
                     {
                         return defalutValue;

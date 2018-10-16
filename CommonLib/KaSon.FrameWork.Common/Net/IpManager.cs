@@ -29,6 +29,10 @@ namespace KaSon.FrameWork.Common.Net
             {
                 ip = context.Connection.RemoteIpAddress.ToString();
             }
+            if (ip == null)
+            {
+                ip = context.Request.Host.Host;
+            }
             return ip;
 
         }
@@ -53,6 +57,7 @@ namespace KaSon.FrameWork.Common.Net
             }
             return null;
         }
+
 
         /// <summary>
         /// IP地址对象

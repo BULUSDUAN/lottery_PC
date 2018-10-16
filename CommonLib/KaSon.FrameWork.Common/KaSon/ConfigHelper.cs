@@ -32,6 +32,10 @@ namespace KaSon.FrameWork.Common
           
         }
 
-
+        public static string GetString(this JObject obj, string Key)
+        {
+            if (obj[Key] == null) return string.Empty;
+            else return obj[Key].ToString();
+        }
     }
 }

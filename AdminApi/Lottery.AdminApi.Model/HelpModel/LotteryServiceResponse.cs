@@ -6,14 +6,14 @@ namespace Lottery.AdminApi.Model.HelpModel
 {
     public class LotteryServiceResponse
     {
-        /// <summary>
-        /// 消息序号（与传入时一样）
-        /// </summary>
-        public string MsgId { get; set; }
+        ///// <summary>
+        ///// 消息序号（与传入时一样）
+        ///// </summary>
+        //public string MsgId { get; set; }
         /// <summary>
         /// 结果码
         /// </summary>
-        public ResponseCode Code { get; set; }
+        public AdminResponseCode Code { get; set; }
         /// <summary>
         /// 处理提示消息
         /// </summary>
@@ -25,19 +25,20 @@ namespace Lottery.AdminApi.Model.HelpModel
         /// <summary>
         /// 加密串（（msgId+code + message + value 并MD5加密））
         /// </summary>
-        public string Sign
-        {
-            get
-            {
-                //var valList=new List<string>();
-                string strJson = string.Empty;
-                if (Value != null && !string.IsNullOrEmpty(Value.ToString()))
-                    strJson = JsonHelper.Serialize(Value);
+        //public string Sign
+        //{
+        //    get
+        //    {
+        //        //var valList=new List<string>();
+        //        //string strJson = string.Empty;
+        //        //if (Value != null && !string.IsNullOrEmpty(Value.ToString()))
+        //        //    strJson = JsonHelper.Serialize(Value);
 
-                string sourceString = "caipiao" + MsgId + (int)Code + Message + strJson;
-                return Encipherment.MD5(sourceString,Encoding.UTF8);
-            }
-        }
+        //        //string sourceString = "caipiao" + MsgId + (int)Code + Message + strJson;
+        //        //return Encipherment.MD5(sourceString,Encoding.UTF8);
+        //        return "";
+        //    }
+        //}
 
     }
 }

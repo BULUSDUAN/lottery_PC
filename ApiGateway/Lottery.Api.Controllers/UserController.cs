@@ -76,7 +76,7 @@ namespace Lottery.Api.Controllers
                 //if (bankInfo == null) bankInfo = new C_BankCard();
                 //balanceParam.Clear();
                 var unReadCount = await _serviceProxyProvider.Invoke<int>(balanceParam, "api/user/GetMyUnreadInnerMailCount");
-                Task.Run(() => ToCreateGameAccount(loginInfo.DisplayName));
+                Task.Run(() => ToCreateGameAccount(loginInfo.UserId));
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
@@ -2002,10 +2002,10 @@ namespace Lottery.Api.Controllers
             return defaultmoney;
         }
 
-        public void ToCreateGameAccount(string DisplayName)
+        public void ToCreateGameAccount(string UserId)
         {
             DataController.InitGameParam();
-            var gameLoginName = DataController.PreName + DisplayName;
+            var gameLoginName = DataController.PreName + UserId;
             var pwd = DataController.GamePassWord;
             var sign = MD5Helper.UpperMD5($"{DataController.OperatorCode}&{pwd}&{gameLoginName}&{DataController.SecretKey}");
             var strParam = new
