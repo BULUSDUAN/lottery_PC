@@ -13,28 +13,32 @@ using System.Threading.Tasks;
 
 namespace app.lottery.site.iqucai.Controllers
 {
-    public class TestController : BaseController
+    public class TestController : Controller
     {
         #region 调用服务使用示例
         private readonly ILog logger = null;
         private readonly IServiceProxyProvider serviceProxyProvider;
-        public TestController(IServiceProxyProvider _serviceProxyProvider, ILog log)
+        public TestController( ILog log, IServiceProxyProvider _serviceProxyProvider)
         {
             serviceProxyProvider = _serviceProxyProvider;
             logger = log;
 
         }
         #endregion
-        /// <summary>
-        /// 神单主题活动
-        /// </summary>
-        public async Task<ActionResult> Index()
+        public ActionResult Index1()
+        {
+            return Content("Index1Index1Index1Index1");
+        }
+            /// <summary>
+            /// 神单主题活动
+            /// </summary>
+            public async Task<ActionResult> Index()
         {
             logger.Info("记录日志！！！");
 
             Dictionary<string, object> model = new Dictionary<string, object>();
             model["id"] = "123";
-            var str = await serviceProxyProvider.Invoke<object>(model, "apiUsers/User/GetUserName");
+            //var str = await serviceProxyProvider.Invoke<object>(model, "apiUsers/User/GetUserName");
             return  Content("testtesttesttesttesttest");
         }
     }

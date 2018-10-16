@@ -105,20 +105,30 @@ namespace app.lottery.site.iqucai
         private static List<LotteryIssuse_QueryInfo> QueryNextIssuseListByKey(string key)
         {
             var list = new List<LotteryIssuse_QueryInfo>();
-            var db = RedisHelper.DB_CoreCacheData;
-            var jsonList = db.ListRangeAsync(key).Result;
-            foreach (var json in jsonList)
+            try
             {
-                if (!json.HasValue) continue;
-                try
+           
+                var db = RedisHelper.DB_CoreCacheData;
+                var jsonList = db.ListRangeAsync(key).Result;
+                foreach (var json in jsonList)
                 {
-                    var issuse = JsonSerializer.Deserialize<LotteryIssuse_QueryInfo>(json);
-                    list.Add(issuse);
-                }
-                catch (Exception)
-                {
+                    if (!json.HasValue) continue;
+                    try
+                    {
+                        var issuse = JsonSerializer.Deserialize<LotteryIssuse_QueryInfo>(json);
+                        list.Add(issuse);
+                    }
+                    catch (Exception)
+                    {
+                    }
                 }
             }
+            catch 
+            {
+
+              
+            }
+           
             return list;
         }
 
