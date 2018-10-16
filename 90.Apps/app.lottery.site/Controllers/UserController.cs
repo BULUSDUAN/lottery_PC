@@ -3468,7 +3468,7 @@ namespace app.lottery.site.iqucai.Controllers
 
         // 本地账号登录系统
         [HttpPost]
-        public JsonResult LoginUser123()
+        public async Task<JsonResult> LoginUser123()
         {
             try
             {
@@ -3484,12 +3484,12 @@ namespace app.lottery.site.iqucai.Controllers
                 //}
 
                 Session["userCurrentPassWord"] = passWord;
-                //Dictionary<string, object> param = new Dictionary<string, object>();
-                //param["loginName"] = userName;
-                //param["password"] = passWord;
-                //param["IPAddress"] = IpManager.IPAddress;
-                //LoginInfo loginInfo = await serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/user_login");
-                LoginInfo loginInfo = WCFClients.ExternalClient.LoginLocal(userName, passWord, IpManager.IPAddress);
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["loginName"] = userName;
+                param["password"] = passWord;
+                param["IPAddress"] = IpManager.IPAddress;
+                LoginInfo loginInfo = await serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/user_login");
+                //LoginInfo loginInfo = WCFClients.ExternalClient.LoginLocal(userName, passWord, IpManager.IPAddress);
                 if (loginInfo.IsSuccess)
                 {
                     #region 调用UCenter注册用户
