@@ -2,10 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using GameBiz.Business;
-using NHibernate.Linq;
-using Activity.Domain.Entities;
-using Activity.Core;
 using GameBiz.Domain.Entities;
 using EntityModel;
 
@@ -15,29 +11,27 @@ namespace KaSon.FrameWork.ORM.Helper.Admin
     {
         public void AddA20131105_优惠券(A20131105_优惠券 entity)
         {
-            this.Add<A20131105_优惠券>(entity);
+            DB.GetDal<A20131105_优惠券>().Add(entity);
         }
 
         public void UpdateA20131105_优惠券(A20131105_优惠券 entity)
         {
-            this.Update<A20131105_优惠券>(entity);
+            DB.GetDal<A20131105_优惠券>().Add(entity);
         }
 
         public A20131105_优惠券 QueryA20131105_优惠券(string number)
         {
-            return DB.CreateQuery<A20131105_优惠券>().FirstOrDefault(p => p.Number == number);
+            return DB.CreateQuery<A20131105_优惠券>().Where(p => p.Number == number).FirstOrDefault();
         }
 
         public A20131105_优惠券 QueryA20131105_优惠券(string summary, string userId)
         {
-            this.Session.Clear();
-            return this.Session.Query<A20131105_优惠券>().FirstOrDefault(p => p.Summary == summary && p.BelongUserId == userId);
+            return DB.CreateQuery<A20131105_优惠券>().Where(p => p.Summary == summary && p.BelongUserId == userId).FirstOrDefault();
         }
 
         public List<A20131105CouponsInfo> QueryCouponsList(string summary, bool? canUsable, string belongUserId, int pageIndex, int pageSize, out int totalCount)
         {
-            this.Session.Clear();
-            var query = from c in this.Session.Query<A20131105_优惠券>()
+            var query = from c in DB.CreateQuery<A20131105_优惠券>()
                         where (string.IsNullOrEmpty(summary) || c.Summary.Contains(summary))
                         && (!canUsable.HasValue || c.CanUsable == canUsable.Value)
                         && (string.IsNullOrEmpty(belongUserId) || c.BelongUserId == belongUserId)

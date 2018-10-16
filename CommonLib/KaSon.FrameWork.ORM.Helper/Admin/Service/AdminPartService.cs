@@ -6,6 +6,7 @@ using System.Text;
 using System.Linq;
 using EntityModel;
 using Lottery.AdminApi.Model.HelpModel;
+using EntityModel.Communication;
 
 namespace KaSon.FrameWork.ORM.Helper.Admin
 {
@@ -19,9 +20,29 @@ namespace KaSon.FrameWork.ORM.Helper.Admin
             var list = activityManager.QueryCouponsList(summary, canUsable, belongUserId, pageIndex, pageSize, out totalCount);
             result.TotalCount = totalCount;
             result.List.AddRange(list);
-
             return result;
-            return new A20131105CouponsInfoCollection();
+        }
+        /// <summary>
+        /// 生成优惠券
+        /// </summary>
+        /// <param name="summary"></param>
+        /// <param name="money"></param>
+        /// <param name="count"></param>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public CommonActionResult BuildCoupons(string summary, decimal money, int count, string userToken)
+        {
+            // 验证用户身份及权限
+            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                new A20131105().BuildCoupons(summary, money, count);
+                return new CommonActionResult(true, "生成完成");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("生成优惠券出错 - " + ex.ToString());
+            }
         }
     }
 }
