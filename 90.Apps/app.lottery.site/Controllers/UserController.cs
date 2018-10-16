@@ -33,12 +33,24 @@ using Common.Gateway.Alipay.Login;
 using System.Configuration;
 using System.Web.Security;
 using app.lottery.site.iqucai.api;
-
+using log4net;
+using Kason.Sg.Core.ProxyGenerator;
+using System.Threading.Tasks;
 
 namespace app.lottery.site.iqucai.Controllers
 {
     public class UserController : BaseController
     {
+        #region 调用服务使用示例
+        private readonly ILog logger = null;
+        private readonly IServiceProxyProvider serviceProxyProvider;
+        public UserController(IServiceProxyProvider _serviceProxyProvider, ILog log)
+        {
+            serviceProxyProvider = _serviceProxyProvider;
+            logger = log;
+
+        }
+        #endregion
 
         #region 配置
         /// <summary>
@@ -3472,6 +3484,11 @@ namespace app.lottery.site.iqucai.Controllers
                 //}
 
                 Session["userCurrentPassWord"] = passWord;
+                //Dictionary<string, object> param = new Dictionary<string, object>();
+                //param["loginName"] = userName;
+                //param["password"] = passWord;
+                //param["IPAddress"] = IpManager.IPAddress;
+                //LoginInfo loginInfo = await serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/user_login");
                 LoginInfo loginInfo = WCFClients.ExternalClient.LoginLocal(userName, passWord, IpManager.IPAddress);
                 if (loginInfo.IsSuccess)
                 {
