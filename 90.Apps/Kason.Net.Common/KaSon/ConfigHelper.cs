@@ -22,7 +22,7 @@ namespace Kason.Net.Common
             //string npath = @"E:\wokerFiler\Net FramWork SG\WebApp\WebApp\Config\AllConfig.json";
             string dic = Directory.GetCurrentDirectory();
 #if DEBUG
-            dic= @"E:\gongchengwl\new_surging\Lottery_02\90.Apps\app.lottery.site\";
+            dic= @"E:\wokerFiler\Lettery\Lottery_PC\Lottery_02\90.Apps\app.lottery.site\";
 #endif
 
             string path = Path.Combine(dic, @"Config\AllConfig.json");

@@ -287,6 +287,9 @@ namespace app.lottery.site.iqucai
                 builder.Register(m => new CPlatformContainer(ServiceLocator.Current));
             });
             ServiceLocator.Current = builder.Build();
+
+           IServiceProxyProvider ser = ServiceLocator.Current.Resolve<IServiceProxyProvider>();
+
             DependencyResolver.SetResolver(new AutofacDependencyResolver(ServiceLocator.Current));
 
         }
