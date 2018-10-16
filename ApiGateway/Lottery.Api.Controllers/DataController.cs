@@ -3274,7 +3274,7 @@ namespace Lottery.Api.Controllers
         /// <returns></returns>
         public async Task<IActionResult> GetGameBalance([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
-            //var testparam = "";
+            var gameresult = "";
             try
             {
                 InitGameParam();
@@ -3307,6 +3307,7 @@ namespace Lottery.Api.Controllers
                 }.ToJson();
                 //testparam = strParam;
                 var result = PostManager.Post(GameUrl, strParam, Encoding.UTF8, 30, null, "application/json");
+                gameresult = result;
                 //var result = PostManager.HttpPost(GameUrl, strParam, "utf-8");
                 if (result.Contains("Bad Request"))
                 {
@@ -3373,7 +3374,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString()+"|"+ gameresult,
                     MsgId = "",
                     Value = ex.ToGetMessage(),
                 });
@@ -3392,7 +3393,7 @@ namespace Lottery.Api.Controllers
             //3.充值到游戏平台，提交订单号
             //4.判断返回的数据，如果充值成功则扣除冻结金额（修改交易表数据）
             //5.如果充值失败则继续请求转账确认接口，返回成功则扣钱，失败则返还冻结金额给用户（修改交易表数据）
-            //var testparam = "";
+            var gameresult = "";
             try
             {
                 InitGameParam();
@@ -3437,6 +3438,7 @@ namespace Lottery.Api.Controllers
                     //testparam = rechargeParam;
                     var result = PostManager.Post(GameUrl, rechargeParam, Encoding.UTF8, 30, null, "application/json");
                     //var result = PostManager.HttpPost(GameUrl, rechargeParam, "utf-8");
+                    gameresult = result;
                     if (result.Contains("Bad Request"))
                     {
                         return Json(new LotteryServiceResponse
@@ -3469,6 +3471,7 @@ namespace Lottery.Api.Controllers
                         }.ToJson();
                         var confirmResult = PostManager.Post(GameUrl, confirmParam, Encoding.UTF8, 30, null, "application/json");
                         //var confirmResult = PostManager.HttpPost(GameUrl, confirmParam, "utf-8");
+                        gameresult += confirmResult;
                         var jsonConfirmResult = JsonHelper.Decode(confirmResult);
                         if (jsonConfirmResult.ErrorCode == 0) //确认
                         {
@@ -3513,7 +3516,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString()+ "|"+gameresult ,
                     MsgId = "",
                     Value = ex.ToGetMessage(),
                 });
@@ -3600,6 +3603,7 @@ namespace Lottery.Api.Controllers
             ////3.判断返回数据，如果成功则直接增加到余额中，并记录，修改交易表数据
             ////4.如果返回失败，则再次请求确认转账接口，如果成功则加到余额，失败则修改交易表数据
             //执行后才插入数据库
+            var gameresult = "";
             try
             {
                 InitGameParam();
@@ -3643,6 +3647,7 @@ namespace Lottery.Api.Controllers
                 }.ToJson();
                 var result = PostManager.Post(GameUrl, withdrawParam, Encoding.UTF8, 30, null, "application/json");
                 //var result = PostManager.HttpPost(GameUrl, withdrawParam, "utf-8");
+                gameresult = result;
                 var jsonResult = JsonHelper.Decode(result);
                 var flag = false;
                 var providerSerialNo = "";
@@ -3715,7 +3720,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + ex.ToString()+ "|"+gameresult,
                     MsgId = "",
                     Value = ex.ToGetMessage(),
                 });
