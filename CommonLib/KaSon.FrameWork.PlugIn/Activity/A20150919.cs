@@ -110,7 +110,6 @@ namespace KaSon.FrameWork.PlugIn.Activity
                     , string.Format("用户首次绑定银行卡赠送彩金{0}元", giveFillMoney), RedBagCategory.Activity);
 
                 record.IsBonus = true;
-                record.IsGiveRedBag = true;
                 record.GiveBonusMoney = giveFillMoney;
                 manager.UpdateA20150919_注册绑定送红包(record);
             }
@@ -165,6 +164,7 @@ namespace KaSon.FrameWork.PlugIn.Activity
         private void DoGiveMoney(string userId, E_A20150919_注册绑定送红包 record, A20150919Manager manager)
         {
             var giveFillMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.RegistAndBindGiveFillMoney"));
+            var RealNameGiveMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.BindRealNameGiveMoney"));
             if (giveFillMoney > 0)
             {
                 BusinessHelper.Payin_To_Balance(AccountType.RedBag, BusinessHelper.FundCategory_Activity, userId, Guid.NewGuid().ToString("N"), giveFillMoney
@@ -174,6 +174,12 @@ namespace KaSon.FrameWork.PlugIn.Activity
                 record.GiveRedBagMoney = giveFillMoney;
                 manager.UpdateA20150919_注册绑定送红包(record);
             }
+            if (RealNameGiveMoney > 0)
+            {
+                BusinessHelper.Payin_To_Balance(AccountType.Bonus, BusinessHelper.FundCategory_Activity, userId, Guid.NewGuid().ToString("N"), RealNameGiveMoney
+                   , string.Format("新注册用户实名验证送{0}元现金", RealNameGiveMoney), RedBagCategory.Activity);
+            }
+
         }
 
         public object ExecPlugin(string type, object inputParam)

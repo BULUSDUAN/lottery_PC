@@ -256,6 +256,496 @@ namespace Lottery.Service.IModuleServices
         Task<DLT_ZhiHe_InfoCollection> QueryDLT_ZhiHe_Info(int length);
         #endregion
 
+        #region 福彩3D走势
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "直选走势")]
+        Task<FC3D_ZhiXuanZouSi_InfoCollection> QueryCache_FC3D_ZhiXuanZouSi_Info(int index);
 
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "总跨度")]
+        Task<FC3D_KuaDu_Z_InfoCollection> QueryCache_FC3D_KuaDu_Z_Info(int index);
+
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "和值走势")]
+        Task<FC3D_HZZS_InfoCollection> QueryCache_FC3D_HZZS_Info(int index);
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "奇偶号码")]
+        Task<FC3D_JOHM_InfoCollection> QueryCache_FC3D_JOHM_Info(int index);
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "除3_3")]
+        Task<FC3D_Chu33_InfoCollection> QueryCache_FC3D_Chu33_Info(int index);
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "大小号码")]
+        Task<FC3D_DXHM_InfoCollection> QueryCache_FC3D_DXHM_Info(int index);   
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "组选走势")]
+        Task<FC3D_ZuXuanZouSi_InfoCollection> QueryCache_FC3D_ZuXuanZouSi_Info(int index);
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "除3_1")]
+        Task<FC3D_Chu31_InfoCollection> QueryCache_FC3D_Chu31_Info(int index);
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "除3_2")]
+        Task<FC3D_Chu32_InfoCollection> QueryCache_FC3D_Chu32_Info(int index);
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "跨度百位、十位")]
+        Task<FC3D_KuaDu_12_InfoCollection> QueryCache_FC3D_KuaDu_12_Info(int index);
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "跨度百位、个位")]
+        Task<FC3D_KuaDu_13_InfoCollection> QueryCache_FC3D_KuaDu_13_Info(int index);
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "跨度十位、个位")]
+        Task<FC3D_KuaDu_23_InfoCollection> QueryCache_FC3D_KuaDu_23_Info(int index);
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "大小形态走势")]
+        Task<FC3D_DXXT_InfoCollection> QueryCache_FC3D_DXXT_Info(int index);
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "和值分布")]
+        Task<FC3D_HZFB_InfoCollection> QueryCache_FC3D_HZFB_Info(int index);
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "和值特征")]
+        Task<FC3D_HZTZ_InfoCollection> QueryCache_FC3D_HZTZ_Info(int index);
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "奇偶形态")]
+        Task<FC3D_JOXT_InfoCollection> QueryCache_FC3D_JOXT_Info(int index);
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "质合号码")]
+        Task<FC3D_ZHHM_InfoCollection> QueryCache_FC3D_ZHHM_Info(int index);
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "质合形态")]
+        Task<FC3D_ZHXT_InfoCollection> QueryCache_FC3D_ZHXT_Info(int index);
+        #endregion
+
+        #region 排列3走势
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "查询基本走势")]
+        Task<PL3_JiBenZouSi_InfoCollection> QueryPL3_JiBenZouSi_Info(int length);
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "查询组选走势")]
+        Task<PL3_ZuXuanZouSi_InfoCollection> QueryPL3_ZuXuanZouSi_info(int length);
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "查询大小走势")]
+        Task<PL3_DX_InfoCollection> QueryPL3_DX_info(int length);
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "查询大小号码走势")]
+        Task<PL3_DXHM_InfoCollection> QueryPL3_DXHM_info(int length);
+
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "查询奇偶走势")]
+        Task<PL3_JIOU_InfoCollection> QueryPL3_JIOU_info(int length);
+
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "查询奇偶号码走势")]
+        Task<PL3_JOHM_InfoCollection> QueryPL3_JOHM_info(int length);
+
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "查询质和走势")]
+        Task<PL3_ZhiHe_InfoCollection> QueryPL3_ZhiHe_info(int length);
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "查询质和号码走势")]
+        Task<PL3_ZHHM_InfoCollection> QueryPL3_ZHHM_info(int length);
+
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "查询和值走势")]
+        Task<PL3_HeiZhi_InfoCollection> QueryPL3_HeiZhi_Info(int length);
+
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "查询跨度百位、十位走势")]
+        Task<PL3_KuaDu_12_InfoCollection> QueryPL3_KuaDu_12_Info(int length);
+
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "查询跨度百位、个位走势")]
+        Task<PL3_KuaDu_13_InfoCollection> QueryPL3_KuaDu_13_Info(int length);
+
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "查询跨度十位、个位走势")]
+        Task<PL3_KuaDu_23_InfoCollection> QueryPL3_KuaDu_23_Info(int length);
+
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "查询除3 走势1走势")]
+        Task<PL3_Chu31_InfoCollection> QueryPL3_PL3_Chu31_Info(int length);
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "查询除3 走势2走势")]
+        Task<PL3_Chu32_InfoCollection> QueryPL3_PL3_Chu32_Info(int length);
+
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "查询除3 走势3走势")]
+        Task<PL3_Chu33_InfoCollection> QueryPL3_PL3_Chu33_Info(int length);
+
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "查询和值特征 走势3走势")]
+        Task<PL3_HZTZ_InfoCollection> QueryPL3_PL3_HZTZ_Info(int length);
+        [Service(Date = "2018-10-09", Director = "renjun", Name = "查询和值合尾 走势3走势")]
+        Task<PL3_HZHW_InfoCollection> QueryPL3_PL3_HZHW_Info(int length);
+        #endregion
+
+        #region 重新时时彩走势
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "大小单双")]
+        Task<CQSSC_DXDS_InfoCollection> QueryCache_CQSSC_DXDS_Info(int index);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "重庆1星走势")]
+        Task<CQSSC_1X_ZS_InfoCollection> QueryCache_CQSSC_1X_ZS_Info(int index);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "重庆2星和值走势")]
+        Task<CQSSC_2X_HZZS_InfoCollection> QueryCache_CQSSC_2X_HZZS_Info(int index);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "重庆2星组选走势")]
+        Task<CQSSC_2X_ZuXZS_InfoCollection> QueryCache_CQSSC_2X_ZuXZS_Info(int index);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "重庆2星直选走势")]
+        Task<CQSSC_2X_ZXZS_InfoCollection> QueryCache_CQSSC_2X_ZXZS_Info(int index);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "除3")]
+        Task<CQSSC_3X_C3YS_InfoCollection> QueryCache_CQSSC_3X_C3YS_Info(int index);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "大小走势")]
+        Task<CQSSC_3X_DXZS_InfoCollection> QueryCache_CQSSC_3X_DXZS_Info(int index);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "和值走势")]
+        Task<CQSSC_3X_HZZS_InfoCollection> QueryCache_CQSSC_3X_HZZS_Info(int index);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "奇偶走势")]
+        Task<CQSSC_3X_JOZS_InfoCollection> QueryCache_CQSSC_3X_JOZS_Info(int index);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "跨度")]
+        Task<CQSSC_3X_KD_InfoCollection> QueryCache_CQSSC_3X_KD_Info(int index);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "质合走势")]
+        Task<CQSSC_3X_ZHZS_InfoCollection> QueryCache_CQSSC_3X_ZHZS_Info(int index);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "重庆3星组选走势")]
+        Task<CQSSC_3X_ZuXZS_InfoCollection> QueryCache_CQSSC_3X_ZuXZS_Info(int index);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "重庆3星直选走势")]
+        Task<CQSSC_3X_ZXZS_InfoCollection> QueryCache_CQSSC_3X_ZXZS_Info(int index);
+
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "和值走势")]
+        Task<CQSSC_5X_HZZS_InfoCollection> QueryCache_CQSSC_5X_HZZS_Info(int index);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "重庆5星基本走势")]
+        Task<CQSSC_5X_JBZS_InfoCollection> QueryCache_CQSSC_5X_JBZS_Info(int index);
+        #endregion
+        #region  江西11选5
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "查询基本走势")]
+        Task<JX11X5_RXJBZS_InfoCollection> QueryJX11X5_RXJBZS_Info(int length);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "任选大小")]
+        Task<JX11X5_RXDX_InfoCollection> QueryJX11X5_RXDX_Info(int length);
+
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "任选奇偶")]
+        Task<JX11X5_RXJO_InfoCollection> QueryJX11X5_RXJO_Info(int length);
+
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "任选质和")]
+        Task<JX11X5_RXZH_InfoCollection> QueryJX11X5_RXZH_Info(int length);
+
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "任选和值")]
+        Task<JX11X5_RXHZ_InfoCollection> QueryJX11X5_RXHZ_Info(int length);
+
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "任选除3")]
+        Task<JX11X5_Chu3_InfoCollection> QueryJX11X5_Chu3_Info(int length);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "任选第一位")]
+        Task<JX11X5_RX1_InfoCollection> QueryJX11X5_RX1_Info(int length);
+
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "任选第二位")]
+        Task<JX11X5_RX2_InfoCollection> QueryJX11X5_RX2_Info(int length);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "任选第三位")]
+        Task<JX11X5_RX3_InfoCollection> QueryJX11X5_RX3_Info(int length);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "任选第四位")]
+        Task<JX11X5_RX4_InfoCollection> QueryJX11X5_RX4_Info(int length);
+
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "任选第五位")]
+        Task<JX11X5_RX5_InfoCollection> QueryJX11X5_RX5_Info(int length);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "前三直选")]
+        Task<JX11X5_Q3ZS_InfoCollection> QueryJX11X5_Q3ZS_Info(int length);
+
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "前三组选")]
+        Task<JX11X5_Q3ZUS_InfoCollection> QueryJX11X5_Q3ZUS_Info(int length);
+
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "前三大小")]
+        Task<JX11X5_Q3DX_InfoCollection> QueryJX11X5_Q3DX_Info(int length);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "前三基偶")]
+        Task<JX11X5_Q3JO_InfoCollection> QueryJX11X5_Q3JO_Info(int length);
+
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "前三质和")]
+        Task<JX11X5_Q3ZH_InfoCollection> QueryJX11X5_Q3ZH_Info(int length);
+
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "前三除3")]
+        Task<JX11X5_Q3Chu3_InfoCollection> QueryJX11X5_Q3Chu3_Info(int length);
+
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "前三和值")]
+        Task<JX11X5_Q3HZ_InfoCollection> QueryJX11X5_Q3HZ_Info(int length);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "前2直选")]
+        Task<JX11X5_Q2ZS_InfoCollection> QueryJX11X5_Q2ZS_Info(int length);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "前2组选")]
+        Task<JX11X5_Q2ZUS_InfoCollection> QueryJX11X5_Q2ZUS_Info(int length);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "前2和值")]
+        Task<JX11X5_Q2HZ_InfoCollection> QueryJX11X5_Q2HZ_Info(int length);
+
+
+        #endregion
+
+        #region 山东11选5
+
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "012定位走势")]
+        Task<YDJ11_012DWZS_InfoCollection> QueryCache_YDJ11_012DWZS_Info(int index);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "路比值走势")]
+        Task<YDJ11_012LZZS_InfoCollection> QueryCache_YDJ11_012LZZS_Info(int index);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "查询2连走势")]
+        Task<YDJ11_2LZS_InfoCollection> QueryCache_YDJ11_2LZS_Info(int index);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "查询重号走势")]
+        Task<YDJ11_CHZS_InfoCollection> QueryCache_YDJ11_CHZS_Info(int index);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "查询多连走势")]
+        Task<YDJ11_DLZS_InfoCollection> QueryCache_YDJ11_DLZS_Info(int index);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "查询隔号走势")]
+        Task<YDJ11_GHZS_InfoCollection> QueryCache_YDJ11_GHZS_Info(int index);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "查询和值走势")]
+        Task<YDJ11_HZZS_InfoCollection> QueryCache_YDJ11_HZZS_Info(int index);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "查询基本走势")]
+        Task<YDJ11_JBZS_InfoCollection> QueryCache_YDJ11_JBZS_Info(int index);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "查询跨度走势")]
+        Task<YDJ11_KDZS_InfoCollection> QueryCache_YDJ11_KDZS_Info(int index);
+
+
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "查询前1基本走势")]
+        Task<YDJ11_Q1JBZS_InfoCollection> QueryCache_YDJ11_Q1JBZS_Info(int index);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "查询前1形态走势")]
+        Task<YDJ11_Q1XTZS_InfoCollection> QueryCache_YDJ11_Q1XTZS_Info(int index);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "查询前2基本走势")]
+        Task<YDJ11_Q2JBZS_InfoCollection> QueryCache_YDJ11_Q2JBZS_Info(int index);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "查询前2形态走势")]
+        Task<YDJ11_Q2XTZS_InfoCollection> QueryCache_YDJ11_Q2XTZS_Info(int index);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "查询前3基本走势")]
+        Task<YDJ11_Q3JBZS_InfoCollection> QueryCache_YDJ11_Q3JBZS_Info(int index);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "查询前3形态走势")]
+        Task<YDJ11_Q3XTZS_InfoCollection> QueryCache_YDJ11_Q3XTZS_Info(int index);
+        [Service(Date = "2018-10-10", Director = "renjun", Name = "查询形态走势")]
+        Task<YDJ11_XTZS_InfoCollection> QueryCache_YDJ11_XTZS_Info(int index);
+        #endregion
+
+        #region 广东11选5
+
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询012定位走势")]
+        Task<GD11X5_012DWZS_InfoCollection> QueryCache_GD11X5_012DWZS_Info(int index);
+
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询路比值走势")]
+        Task<GD11X5_012LZZS_InfoCollection> QueryCache_GD11X5_012LZZS_Info(int index);
+
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询2连走势")]
+        Task<GD11X5_2LZS_InfoCollection> QueryCache_GD11X5_2LZS_Info(int index);
+
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询重号走势")]
+        Task<GD11X5_CHZS_InfoCollection> QueryCache_GD11X5_CHZS_Info(int index);
+
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询多连走势")]
+        Task<GD11X5_DLZS_InfoCollection> QueryCache_GD11X5_DLZS_Info(int index);
+
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询隔号走势")]
+        Task<GD11X5_GHZS_InfoCollection> QueryCache_GD11X5_GHZS_Info(int index);
+
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询和值走势")]
+        Task<GD11X5_HZZS_InfoCollection> QueryCache_GD11X5_HZZS_Info(int index);
+
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询基本走势")]
+        Task<GD11X5_JBZS_InfoCollection> QueryCache_GD11X5_JBZS_Info(int index);
+
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询跨度走势")]
+        Task<GD11X5_KDZS_InfoCollection> QueryCache_GD11X5_KDZS_Info(int index);
+
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询前1基本走势")]
+        Task<GD11X5_Q1JBZS_InfoCollection> QueryCache_GD11X5_Q1JBZS_Info(int index);
+
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询前1形态走势")]
+        Task<GD11X5_Q1XTZS_InfoCollection> QueryCache_GD11X5_Q1XTZS_Info(int index);
+
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询前2基本走势")]
+        Task<GD11X5_Q2JBZS_InfoCollection> QueryCache_GD11X5_Q2JBZS_Info(int index);
+
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询前2形态走势")]
+        Task<GD11X5_Q2XTZS_InfoCollection> QueryCache_GD11X5_Q2XTZS_Info(int index);
+
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询前3基本走势")]
+        Task<GD11X5_Q3JBZS_InfoCollection> QueryCache_GD11X5_Q3JBZS_Info(int index);
+
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询前3形态走势")]
+        Task<GD11X5_Q3XTZS_InfoCollection> QueryCache_GD11X5_Q3XTZS_Info(int index);
+
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询形态走势")]
+        Task<GD11X5_XTZS_InfoCollection> QueryCache_GD11X5_XTZS_Info(int index);
+        #endregion
+
+        #region  广东快乐10分
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "基本走势")]
+        Task<GDKLSF_JBZS_InfoCollection> QueryGDKLSF_JBZS(int index);
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询定位第一位走势")]
+        Task<GDKLSF_DW1_InfoCollection> QueryGDKLSF_DW1(int index);
+
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "定位第二位走势")]
+        Task<GDKLSF_DW2_InfoCollection> QueryGDKLSF_DW2(int index);
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询定位第三位走势")]
+        Task<GDKLSF_DW3_InfoCollection> QueryGDKLSF_DW3(int index);
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询大小走势")]
+        Task<GDKLSF_DX_InfoCollection> QueryGDKLSF_DX(int index);
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询基偶走势")]
+        Task<GDKLSF_JO_InfoCollection> QueryGDKLSF_JO(int index);
+
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询质和走势")]
+        Task<GDKLSF_ZH_InfoCollection> QueryGDKLSF_ZH(int index);
+        #endregion
+
+        #region 江苏快3走势图
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询质和走势")]
+        Task<JSK3_JBZS_InfoCollection> QueryJSK3_JBZS_Info(int length);
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询和值走势")]
+        Task<JSK3_HZ_InfoCollection> QueryJSK3_HZ_Info(int length);
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询江苏快3形态走势")]
+        Task<JSK3_XT_InfoCollection> QueryJSK3_XT_Info(int length);
+
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询江苏快3组合走势")]
+        Task<JSK3_ZH_InfoCollection> QueryJSK3_ZH_Info(int length);
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询江苏快3综合走势")]
+        Task<JSK3_ZHZS_InfoCollection> QueryJSK3_ZHZS_Info(int length);
+        #endregion
+
+        #region  山东快乐扑克3走势图
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询基本走势")]
+        Task<SDKLPK3_JBZS_InfoCollection> QueryCache_SDKLPK3_JBZS_Info(int length);
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询组选走势")]
+        Task<SDKLPK3_ZHXZS_InfoCollection> QueryCache_SDKLPK3_ZHXZS_Info(int length);
+
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询花色走势")]
+        Task<SDKLPK3_HSZS_InfoCollection> QueryCache_SDKLPK3_HSZS_Info(int length);
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询大小走势")]
+        Task<SDKLPK3_DXZS_InfoCollection> QueryCache_SDKLPK3_DXZS_Info(int length);
+
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询奇偶走势")]
+        Task<SDKLPK3_JOZS_InfoCollection> QueryCache_SDKLPK3_JOZS_Info(int length);
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询质合走势")]
+        Task<SDKLPK3_ZHZS_InfoCollection> QueryCache_SDKLPK3_ZHZS_Info(int length);
+
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询除3余走势")]
+        Task<SDKLPK3_C3YZS_InfoCollection> QueryCache_SDKLPK3_C3YZS_Info(int length);
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询和值走势")]
+        Task<SDKLPK3_HZZS_InfoCollection> QueryCache_SDKLPK3_HZZS_Info(int length);
+
+        [Service(Date = "2018-10-11", Director = "renjun", Name = "查询类型走势")]
+        Task<SDKLPK3_LXZS_InfoCollection> QueryCache_SDKLPK3_LXZS_Info(int length);
+        #endregion
+
+        #region 七乐彩走势图
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询七乐彩基本走势")]
+        Task<QLC_JBZS_InfoCollection> QueryQLC_JBZS(int length);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询七乐彩大小走势")]
+        Task<QLC_DX_InfoCollection> QueryQLC_DX(int length);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询七乐彩奇偶走势")]
+        Task<QLC_JO_InfoCollection> QueryQLC_JO(int length);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询七乐彩质和走势")]
+        Task<QLC_ZH_InfoCollection> QueryQLC_ZH(int length);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询七乐彩除3走势")]
+        Task<QLC_Chu3_InfoCollection> QueryQLC_Chu3(int length);
+        #endregion
+
+        #region 江苏快3
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询江苏快3基本走势")]
+        Task<JLK3_JBZS_InfoCollection> QueryJLK3_JBZS_Info(int length);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询江苏快3和值走势")]
+        Task<JLK3_HZ_InfoCollection> QueryJLK3_HZ_Info(int length);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询江苏快3形态走势")]
+        Task<JLK3_XT_InfoCollection> QueryJLK3_XT_Info(int length);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询江苏快3组合走势")]
+        Task<JLK3_ZH_InfoCollection> QueryJLK3_ZH_Info(int length);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询江苏快3综合走势")]
+        Task<JLK3_ZHZS_InfoCollection> QueryJLK3_ZHZS_Info(int length);
+        #endregion
+
+        #region 湖北快3
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询湖北快3基本走势")]
+        Task<HBK3_JBZS_InfoCollection> QueryHBK3_JBZS_Info(int length);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询湖北快3和值走势")]
+        Task<HBK3_HZ_InfoCollection> QueryHBK3_HZ_Info(int length);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询湖北快3形态走势")]
+        Task<HBK3_XT_InfoCollection> QueryHBK3_XT_Info(int length);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询湖北快3组合走势")]
+        Task<HBK3_ZH_InfoCollection> QueryHBK3_ZH_Info(int length);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询湖北快3综合走势")]
+        Task<HBK3_ZHZS_InfoCollection> QueryHBK3_ZHZS_Info(int length);
+
+        #endregion
+
+        #region 山东群英会走势图
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询山东群英会奇偶走势")]
+        Task<SDQYH_RXJO_InfoCollection> QuerySDQYH_RXJO_Info(int index);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "山东群英会质和走势")]
+        Task<SDQYH_RXZH_InfoCollection> QuerySDQYH_RXZH_Info(int index);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询山东群英会大小走势")]
+        Task<SDQYH_RXDX_InfoCollection> QuerySDQYH_RXDX_Info(int index);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询山东群英会除3走势")]
+        Task<SDQYH_Chu3_InfoCollection> QuerySDQYH_Chu3_Info(int index);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询山东群英会顺选1走势")]
+        Task<SDQYH_SX1_InfoCollection> QuerySDQYH_SX1_Info(int index);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询山东群英会除3走势")]
+        Task<SDQYH_SX2_InfoCollection> QuerySDQYH_SX2_Info(int index);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询山东群英会顺选1走势")]
+        Task<SDQYH_SX3_InfoCollection> QuerySDQYH_SX3_Info(int index);
+        #endregion
+
+        #region 好彩1走势图
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询基本走势")]
+        Task<HC1_JBZS_InfoCollection> QueryCache_HC1_JBZS_Info(int index);
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询生肖季节方位")]
+        Task<HC1_SXJJFWZS_InfoCollection> QueryCache_HC1_SXJJFWZS_Info(int index);
+        #endregion
+
+        #region 华东15选5走势图
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询华东15选5和值走势")]
+        Task<HD15X5_HZ_InfoCollection> QueryHD15X5_HZ(int length);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询华东15选5基本走势")]
+        Task<HD15X5_JBZS_InfoCollection> QueryHD15X5_JBZS(int length);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询华东15选5重号走势")]
+        Task<HD15X5_CH_InfoCollection> QueryCache_HD15X5_CH_Info(int index);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询华东15选5大小走势")]
+        Task<HD15X5_DX_InfoCollection> QueryHD15X5_DX(int length);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询华东15选5奇偶走势")]
+        Task<HD15X5_JO_InfoCollection> QueryHD15X5_JO(int length);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询华东15选5质和走势")]
+        Task<HD15X5_ZH_InfoCollection> QueryHD15X5_ZH(int length);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询华东15选5连号走势")]
+        Task<HD15X5_LH_InfoCollection> QueryCache_HD15X5_LH_Info(int index);
+        #endregion
+
+        #region 东方6+1走势图
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询大小走势")]
+        Task<DF6_1_DXZS_InfoCollection> QueryCache_DF6_1_DXZS_Info(int index);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询和值走势")]
+        Task<DF6_1_HZZS_InfoCollection> QueryCache_DF6_1_HZZS_Info(int index);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询基本走势")]
+        Task<DF6_1_JBZS_InfoCollection> QueryCache_DF6_1_JBZS_Info(int index);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询奇偶走势")]
+        Task<DF6_1_JOZS_InfoCollection> QueryCache_DF6_1_JOZS_Info(int index);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询跨度走势")]
+        Task<DF6_1_KDZS_InfoCollection> QueryCache_DF6_1_KDZS_Info(int index);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询质和走势")]
+        Task<DF6_1_ZHZS_InfoCollection> QueryCache_DF6_1_ZHZS_Info(int index);
+
+        #endregion
+
+        #region 排列5
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询排列5基本走势")]
+        Task<PL5_JBZS_InfoCollection> QueryPL5_JBZS(int length);
+
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询排列5大小走势")]
+        Task<PL5_DX_InfoCollection> QueryPL5_DX(int length);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询排列5奇偶走势")]
+        Task<PL5_JO_InfoCollection> QueryPL5_JO(int length);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询排列5质和走势")]
+        Task<PL5_ZH_InfoCollection> QueryPL5_ZH(int length);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询排列5除3走势")]
+        Task<PL5_Chu3_InfoCollection> QueryPL5_Chu3(int length);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询排列5和值走势")]
+        Task<PL5_HZ_InfoCollection> QueryPL5_HZ(int length);
+        #endregion
+
+        #region 七星彩走势
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询七星彩基本走势")]
+        Task<QXC_JBZS_InfoCollection> QueryQXC_JBZS(int length);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询七星彩大小走势")]
+        Task<QXC_DX_InfoCollection> QueryQXC_DX(int length);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询七星彩奇偶走势")]
+        Task<QXC_JO_InfoCollection> QueryQXC_JO(int length);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询七星彩质和走势")]
+        Task<QXC_ZH_InfoCollection> QueryQXC_ZH(int length);
+
+        [Service(Date = "2018-10-12", Director = "renjun", Name = "查询七星彩除3走势")]
+        Task<QXC_Chu3_InfoCollection> QueryQXC_Chu3(int length);
+
+        #endregion
     }
 }
