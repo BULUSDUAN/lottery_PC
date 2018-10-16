@@ -127,6 +127,16 @@ namespace EntityModel.Enum
         //验证码错误
         ValiteCodeError = 301,
     }
+
+    public enum AdminResponseCode
+    {
+        成功 = 101,
+        失败 = 201,
+
+        //验证码错误
+        ValiteCodeError = 301,
+        未登录 = 501
+    }
     /// <summary>
     /// 中奖状态
     /// </summary>
@@ -1597,5 +1607,23 @@ namespace EntityModel.Enum
         /// 提款
         /// </summary>
         Withdraw = 1
+    }
+    /// <summary>
+    /// 菜单类型
+    /// </summary>
+    public enum MenuType
+    {
+        /// <summary>
+        /// 所有站点都显示
+        /// </summary>
+        All = 1,
+        /// <summary>
+        /// caibb网站管理后台菜单
+        /// </summary>
+        Web_Menu = 10,
+        /// <summary>
+        /// 代理商管理后台菜单
+        /// </summary>
+        Agent_Menu = 20,
     }
 }

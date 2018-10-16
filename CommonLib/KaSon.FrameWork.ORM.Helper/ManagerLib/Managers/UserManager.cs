@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using EntityModel.CoreModel;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
@@ -44,6 +45,11 @@ namespace KaSon.FrameWork.ORM.Helper
                 }
             }
             return strBud.ToString();
+        }
+
+        public List<MethodFunction> LoadAllMethodFunction()
+        {
+            return DB.CreateQuery<MethodFunction>().ToList();
         }
     }
 }

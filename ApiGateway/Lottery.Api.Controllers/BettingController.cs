@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using KaSon.FrameWork.Common.ExceptionEx;
 using System.Diagnostics;
+using KaSon.FrameWork.Common.Utilities;
 
 namespace Lottery.Api.Controllers
 {
@@ -1247,6 +1248,13 @@ namespace Lottery.Api.Controllers
                 else if (!string.IsNullOrEmpty(OrderBy) && OrderBy.ToLower() == "pdesc")
                 {
                     result = query.OrderByDescending(c => c.Progress).Skip(pageIndex * PageSize).Take(PageSize).ToList();
+                }
+                if (result != null && result.Count > 0)
+                {
+                    foreach (var item in result)
+                    {
+                        item.CreaterDisplayName = ConvertHelper.HideByCount(item.CreaterDisplayName, item.CreaterHideDisplayNameCount);
+                    }
                 }
                 return Json(new LotteryServiceResponse
                 {

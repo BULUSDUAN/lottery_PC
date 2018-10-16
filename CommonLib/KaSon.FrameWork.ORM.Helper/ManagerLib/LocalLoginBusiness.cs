@@ -812,5 +812,36 @@ namespace KaSon.FrameWork.ORM.Helper
                 }
             
         }
+
+        public List<string> QueryFunctionByRole(string[] arrayRole)
+        {
+            if (arrayRole == null || arrayRole.Length == 0)
+            {
+                return new List<string>();
+            }
+            else
+            {
+                string strSql = "select FunctionId from C_Auth_RoleFunction where RoleId in ({0})";
+                var sb = new StringBuilder();
+                foreach (var item in arrayRole)
+                {
+                    sb.Append("'");
+                    sb.Append(item);
+                    sb.Append("',");
+                }
+                var result = DB.CreateSQLQuery(string.Format(strSql,sb.ToString().Trim(',')))
+                   .List<C_Auth_RoleFunction>();
+                List<string> _fun = new List<string>();
+                if (result != null)
+                {
+                    foreach (var item in result)
+                    {
+                        _fun.Add(item.ToString());
+                    }
+                }
+                return _fun;
+            }
+            
+        }
     }
 }

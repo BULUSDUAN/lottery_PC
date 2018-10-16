@@ -23,6 +23,7 @@
     <ProjectReference Include="..\..\CommonLib\csredis-master\CSRedisCore.csproj" />
     <ProjectReference Include="..\..\CommonLib\EntityModel\EntityModel.csproj" />
     <ProjectReference Include="..\..\CommonLib\KaSon.FrameWork.Analyzer\KaSon.FrameWork.Analyzer.csproj" />
+    <ProjectReference Include="..\..\CommonLib\KaSon.FrameWork.ORM.Helper\KaSon.FrameWork.ORM.Helper.csproj" />
     <ProjectReference Include="..\Lottery.AdminApi.Model\Lottery.AdminApi.Model.csproj" />
  
   </ItemGroup>
