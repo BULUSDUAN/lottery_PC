@@ -3946,6 +3946,174 @@ namespace Lottery.Service.ModuleServices
         }
         #endregion
 
+        #region 排列五走势
+        /// <summary>
+        /// 查询基本走势
+        /// </summary>
+        public Task<PL5_JBZS_InfoCollection> QueryPL5_JBZS(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_PL5().QueryPL5_JBZS(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询排列5基本走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询大小走势
+        /// </summary>
+        public Task<PL5_DX_InfoCollection> QueryPL5_DX(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_PL5().QueryPL5_DX(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询排列5大小走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询奇偶走势
+        /// </summary>
+        public Task<PL5_JO_InfoCollection> QueryPL5_JO(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_PL5().QueryPL5_JO(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询排列5奇偶走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询质和走势
+        /// </summary>
+        public Task<PL5_ZH_InfoCollection> QueryPL5_ZH(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_PL5().QueryPL5_ZH(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询排列5质和走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询除3走势
+        /// </summary>
+        public Task<PL5_Chu3_InfoCollection> QueryPL5_Chu3(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_PL5().QueryPL5_Chu3(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询排列5除3走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询和值走势
+        /// </summary>
+        public Task<PL5_HZ_InfoCollection> QueryPL5_HZ(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_PL5().QueryPL5_HZ(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询排列5和值走势 - " + ex.Message, ex);
+            }
+        }
+        #endregion
+
+        #region 七星彩走势图
+        /// <summary>
+        /// 查询基本走势
+        /// </summary>
+        public Task<QXC_JBZS_InfoCollection> QueryQXC_JBZS(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_QXC().QueryQXC_JBZS(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询七星彩基本走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询大小走势
+        /// </summary>
+        public Task<QXC_DX_InfoCollection> QueryQXC_DX(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_QXC().QueryQXC_DX(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询七星彩大小走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询奇偶走势
+        /// </summary>
+        public Task<QXC_JO_InfoCollection> QueryQXC_JO(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_QXC().QueryQXC_JO(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询七星彩奇偶走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询质和走势
+        /// </summary>
+        public Task<QXC_ZH_InfoCollection> QueryQXC_ZH(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_QXC().QueryQXC_ZH(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询七星彩质和走势 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询除3走势
+        /// </summary>
+        public Task<QXC_Chu3_InfoCollection> QueryQXC_Chu3(int length)
+        {
+            try
+            {
+                return Task.FromResult(new LotteryDataBusiness_QXC().QueryQXC_Chu3(length));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询七星彩除3走势 - " + ex.Message, ex);
+            }
+        }
+        #endregion
     }
 
 
