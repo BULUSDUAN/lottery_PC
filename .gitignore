@@ -37,6 +37,12 @@ LogError
 node_modules
 *launchSettings.json
 *.orig
+/AdminApi/Lottery.AdminApi/Lottery.ApiGateway/bin
+/AdminApi/.vs
+/AdminApi/Lottery.AdminApi/DLL
+
+/AdminApi/Lottery.AdminApi/Lottery.ApiGateway/web.config
+/AdminApi/Lottery.AdminApi/Lottery.ApiGateway/Log_Log
 /ApiGateway/Lottery.ApiGateway/Lottery.ApiGateway/bin
 /ApiGateway/.vs
 /ApiGateway/Lottery.ApiGateway/DLL

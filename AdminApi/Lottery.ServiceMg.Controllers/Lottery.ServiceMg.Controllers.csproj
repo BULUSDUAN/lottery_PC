@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Lottery.AdminApi.Controllers\Lottery.AdminApi.Controllers.csproj" />
     <ProjectReference Include="..\Lottery.AdminApi.Model\Lottery.AdminApi.Model.csproj" />
   </ItemGroup>
 
