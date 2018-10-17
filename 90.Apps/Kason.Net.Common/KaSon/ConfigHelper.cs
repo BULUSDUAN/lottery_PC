@@ -20,9 +20,11 @@ namespace Kason.Net.Common
             //string jsonText = FileHelper.txtReader(path);
             //ConfigInfo = (JObject)JsonConvert.DeserializeObject(jsonText);
             //string npath = @"E:\wokerFiler\Net FramWork SG\WebApp\WebApp\Config\AllConfig.json";
-            string dic = Directory.GetCurrentDirectory();
+            string dic = AppDomain.CurrentDomain.BaseDirectory;
 #if DEBUG
-            dic= @"E:\gongchengwl\new_surging\Lottery_02\90.Apps\app.lottery.site\";
+            //E:\wokerFiler\Lettery\Lottery_PC\Lottery_02\90.Apps\app.lottery.site\
+            //E:\gongchengwl\new_surging\Lottery_02\90.Apps\app.lottery.site\
+          //  dic = AppDomain.CurrentDomain.BaseDirectory; //+ @"E:\gongchengwl\new_surging\Lottery_02\90.Apps\app.lottery.site\";
 #endif
 
             string path = Path.Combine(dic, @"Config\AllConfig.json");
