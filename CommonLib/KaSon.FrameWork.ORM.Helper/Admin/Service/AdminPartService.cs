@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using EntityModel;
-using Lottery.AdminApi.Model.HelpModel;
 using EntityModel.Communication;
 
 namespace KaSon.FrameWork.ORM.Helper.Admin

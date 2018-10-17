@@ -34,7 +34,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\AdminApi\Lottery.AdminApi.Model\Lottery.AdminApi.Model.csproj" />
     <ProjectReference Include="..\EntityModel\EntityModel.csproj" />
     <ProjectReference Include="..\KaSon.FrameWork.Analyzer\KaSon.FrameWork.Analyzer.csproj" />
     <ProjectReference Include="..\KaSon.FrameWork.Common\KaSon.FrameWork.Common.csproj" />
