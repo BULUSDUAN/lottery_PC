@@ -144,9 +144,6 @@
     <Reference Include="MatchBiz.Core">
       <HintPath>..\Outputs\Common\MatchBiz.Core.dll</HintPath>
     </Reference>
-    <Reference Include="MessagePack">
-      <HintPath>..\MicSeivceDLL\MessagePack.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.1.1.0\lib\netstandard1.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
     </Reference>
@@ -2438,6 +2435,10 @@
     <ProjectReference Include="..\Kason.Net.Common\Kason.Net.Common.csproj">
       <Project>{019b230f-1778-4680-ba6b-f727fb5e93b1}</Project>
       <Name>Kason.Net.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MessagePack\MessagePack.csproj">
+      <Project>{790a14c0-22d5-4fd1-877a-10f3184369f0}</Project>
+      <Name>MessagePack</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
