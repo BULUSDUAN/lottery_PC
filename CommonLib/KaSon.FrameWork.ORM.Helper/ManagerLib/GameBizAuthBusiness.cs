@@ -663,5 +663,30 @@ namespace KaSon.FrameWork.ORM.Helper
                 throw new AuthException("用户身份验证失败，请检查是否已登录", ex);
             }
         }
+
+        /// <summary>
+        /// 查询角色的所有信息及权限
+        /// </summary>
+        /// <param name="roleId"></param>
+        /// <returns></returns>
+        public RoleInfo_Query GetSystemRoleById(string roleId)
+        {
+            var roleManager = new RoleManager();
+            var role = roleManager.GetRoleById(roleId);
+            var functionlist = roleManager.GetFunctionListByRoleId(roleId);
+            var info = new RoleInfo_Query();
+            if (role != null)
+            {
+                info.IsAdmin = role.IsAdmin;
+                info.RoleId = role.RoleId;
+                info.RoleName = role.RoleName;
+                info.RoleType = role.RoleType;
+            }
+            if (functionlist != null && functionlist.Count > 0)
+            {
+                info.FunctionList = functionlist;
+            }
+            return info;
+        }
     }
 }
