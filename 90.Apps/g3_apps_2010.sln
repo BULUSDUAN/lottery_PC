@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityModel", "EntityModel\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kason.Net.Common", "Kason.Net.Common\Kason.Net.Common.csproj", "{019B230F-1778-4680-BA6B-F727FB5E93B1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessagePack", "MessagePack\MessagePack.csproj", "{790A14C0-22D5-4FD1-877A-10F3184369F0}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,24 +73,6 @@ Global
 		{019B230F-1778-4680-BA6B-F727FB5E93B1}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{019B230F-1778-4680-BA6B-F727FB5E93B1}.Release|x86.ActiveCfg = Release|Any CPU
 		{019B230F-1778-4680-BA6B-F727FB5E93B1}.Release|x86.Build.0 = Release|Any CPU
-		{790A14C0-22D5-4FD1-877A-10F3184369F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{790A14C0-22D5-4FD1-877A-10F3184369F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{790A14C0-22D5-4FD1-877A-10F3184369F0}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{790A14C0-22D5-4FD1-877A-10F3184369F0}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{790A14C0-22D5-4FD1-877A-10F3184369F0}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{790A14C0-22D5-4FD1-877A-10F3184369F0}.Debug|x86.Build.0 = Debug|Any CPU
-		{790A14C0-22D5-4FD1-877A-10F3184369F0}.Publish|Any CPU.ActiveCfg = Release|Any CPU
-		{790A14C0-22D5-4FD1-877A-10F3184369F0}.Publish|Any CPU.Build.0 = Release|Any CPU
-		{790A14C0-22D5-4FD1-877A-10F3184369F0}.Publish|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{790A14C0-22D5-4FD1-877A-10F3184369F0}.Publish|Mixed Platforms.Build.0 = Release|Any CPU
-		{790A14C0-22D5-4FD1-877A-10F3184369F0}.Publish|x86.ActiveCfg = Release|Any CPU
-		{790A14C0-22D5-4FD1-877A-10F3184369F0}.Publish|x86.Build.0 = Release|Any CPU
-		{790A14C0-22D5-4FD1-877A-10F3184369F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{790A14C0-22D5-4FD1-877A-10F3184369F0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{790A14C0-22D5-4FD1-877A-10F3184369F0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{790A14C0-22D5-4FD1-877A-10F3184369F0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{790A14C0-22D5-4FD1-877A-10F3184369F0}.Release|x86.ActiveCfg = Release|Any CPU
-		{790A14C0-22D5-4FD1-877A-10F3184369F0}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
