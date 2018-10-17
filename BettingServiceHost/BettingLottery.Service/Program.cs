@@ -63,8 +63,8 @@ namespace BettingLottery.Service.Host
                         //option.UseZooKeeperManager(new ConfigInfo("127.0.0.1:2181"));
                         .UseConsulManager(config)
                         .UseDotNettyTransport()
-                        .UseRabbitMQTransport()
-                        .AddRabbitMQAdapt()
+                       // .UseRabbitMQTransport()
+                        //.AddRabbitMQAdapt()
 
                        // .AddCache()
                         //.UseKafkaMQTransport(kafkaOption =>
@@ -81,7 +81,7 @@ namespace BettingLottery.Service.Host
                         builder.Register(p => new CPlatformContainer(ServiceLocator.Current));
                     });
                 })
-                .SubscribeAt()
+                //.SubscribeAt()
                // .UseLog4net(LogLevel.Error, "Config/log4net.config")
                // .UseNLog(LogLevel.Error, "Config/NLog.config")
                .UseLog4net("Config/log4net.config")
