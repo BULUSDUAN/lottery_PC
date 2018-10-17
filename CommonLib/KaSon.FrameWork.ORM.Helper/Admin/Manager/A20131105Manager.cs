@@ -5,7 +5,7 @@ using System.Text;
 using GameBiz.Domain.Entities;
 using EntityModel;
 
-namespace KaSon.FrameWork.ORM.Helper.Admin
+namespace KaSon.FrameWork.ORM.Helper
 {
     public class A20131105Manager : DBbase
     {

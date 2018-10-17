@@ -4,7 +4,7 @@ using KaSon.FrameWork.Common;
 using EntityModel;
 using EntityModel.Enum;
 
-namespace KaSon.FrameWork.ORM.Helper.Admin
+namespace KaSon.FrameWork.ORM.Helper
 {
     /// <summary>
     /// 优惠券相关

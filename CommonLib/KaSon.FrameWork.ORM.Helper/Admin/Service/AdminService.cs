@@ -6,9 +6,9 @@ using System.Text;
 using System.Linq;
 using EntityModel;
 
-namespace KaSon.FrameWork.ORM.Helper.Admin
+namespace KaSon.FrameWork.ORM.Helper
 {
-    public class AdminService
+    public partial class AdminService
     {
         public LoginInfo LoginAdmin(string loginName, string password, string loginIp)
         {
