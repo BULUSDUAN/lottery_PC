@@ -738,7 +738,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 //oldModel.Status = (int)FillMoneyStatus.Success;
                 //    oldModel.UpdateTime = DateTime.Now;
                 //    DB.GetDal<C_Game_Transfer>().Update(oldModel);
-                BusinessHelper.Payin_To_Balance(AccountType.Bonus, BusinessHelper.FundCategory_GameWithdraw, userId, orderId, money,
+                BusinessHelper.Payin_To_Balance(AccountType.FillMoney, BusinessHelper.FundCategory_GameWithdraw, userId, orderId, money,
                 string.Format("游戏提款成功，金额：{0:N2}元存入账号", money));
                 //}
                 //else
@@ -770,7 +770,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     oldModel.Status = (int)FillMoneyStatus.Success;
                     oldModel.UpdateTime = DateTime.Now;
                     DB.GetDal<C_Game_Transfer>().Update(oldModel);
-                    BusinessHelper.Payin_To_Balance(AccountType.Bonus, BusinessHelper.FundCategory_ManualFillMoney, oldModel.UserId, oldModel.OrderId, oldModel.RequestMoney,
+                    BusinessHelper.Payin_To_Balance(AccountType.FillMoney, BusinessHelper.FundCategory_ManualFillMoney, oldModel.UserId, oldModel.OrderId, oldModel.RequestMoney,
                     string.Format("游戏提款成功，金额：{0:N2}元存入账号", oldModel.RequestMoney));
                 }
                 else

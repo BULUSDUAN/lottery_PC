@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -12,6 +13,9 @@ using Kason.Net.Common;
 using Kason.Sg.Core.Codec.MessagePack;
 using Kason.Sg.Core.Consul;
 using Kason.Sg.Core.CPlatform;
+using Kason.Sg.Core.CPlatform.Runtime.Client.Address.Resolvers;
+using Kason.Sg.Core.CPlatform.Runtime.Client.HealthChecks;
+using Kason.Sg.Core.CPlatform.Transport;
 using Kason.Sg.Core.CPlatform.Utilities;
 using Kason.Sg.Core.DotNetty;
 using Kason.Sg.Core.Log;
@@ -162,8 +166,9 @@ namespace app.lottery.site.iqucai
             AreaRegistration.RegisterAllAreas();
 
             RegisterGlobalFilters(GlobalFilters.Filters);
-            RegisterRoutes(RouteTable.Routes);
             Application_Autofac();
+            RegisterRoutes(RouteTable.Routes);
+           
         }
         protected void Application_Error(object sender, EventArgs e)
         {
@@ -248,11 +253,21 @@ namespace app.lottery.site.iqucai
                 Context.RewritePath("index.html");
             }
         }
-
+        public async Task<object> invokeStart(IContainer Current, string key)
+        {
+            IServiceProxyProvider _serviceProxyProvider = Current.Resolve<IServiceProxyProvider>();
+            Dictionary<string, object> model = new Dictionary<string, object>();
+            model["DicName"] = "123";
+            model["ApiDicTypeName"] = "123";
+            return await _serviceProxyProvider.Invoke<object>(model, "api/Betting/ReadLog");
+        }
         public void Application_Autofac()
         {
             string consul = ConfigHelper.AllConfigInfo["ConsulSettings"]["IpAddrs"].ToString();
             string Token = ConfigHelper.AllConfigInfo["ConsulSettings"]["Token"] != null ? ConfigHelper.AllConfigInfo["ConsulSettings"]["Token"].ToString() : "";
+            string path = AppDomain.CurrentDomain.BaseDirectory;
+            string LogPath = path+ @"Config\log4net.Config";
+
             var config = new ConfigInfo(consul);
             config.Token = Token;
             var builder = new ContainerBuilder();
@@ -270,7 +285,7 @@ namespace app.lottery.site.iqucai
                 option.AddClient();
 
 
-                option.UseLog4();
+                option.UseLog4(LogPath);
 
                 // option.AddCache();
 
@@ -288,9 +303,33 @@ namespace app.lottery.site.iqucai
             });
             ServiceLocator.Current = builder.Build();
 
-           IServiceProxyProvider ser = ServiceLocator.Current.Resolve<IServiceProxyProvider>();
-
+            // IServiceProxyProvider ser = ServiceLocator.Current.Resolve<IServiceProxyProvider>();
             DependencyResolver.SetResolver(new AutofacDependencyResolver(ServiceLocator.Current));
+            DependencyResolver.Current.GetService<IServiceProxyProvider>();
+            DependencyResolver.Current.GetService<IAddressResolver>();
+            //var Current = ServiceLocator.Current;
+            //IServiceProxyProvider ser = ServiceLocator.Current.Resolve<IServiceProxyProvider>();
+            //var b1 = Current.Resolve<ISerializer<byte[]>>();
+            //IAddressResolver a1 = Current.Resolve<IAddressResolver>();
+            //ITransportClientFactory a2 = Current.Resolve<ITransportClientFactory>();
+            //IHealthCheckService a3 = Current.Resolve<IHealthCheckService>();
+
+            //Task.Factory.StartNew(async delegate
+            //{
+            //    try
+            //    {
+            //        object s1 = await invokeStart(ServiceLocator.Current, "a100" + 0);
+            //        Console.WriteLine(s1);
+            //    }
+            //    catch (Exception e)
+            //    {
+
+            //        throw e;
+            //    }
+
+
+            //});
+            //DependencyResolver.SetResolver(new AutofacDependencyResolver(ServiceLocator.Current));
 
         }
     }

@@ -43,3 +43,11 @@ node_modules
 
 /AdminApi/Lottery.AdminApi/Lottery.ApiGateway/web.config
 /AdminApi/Lottery.AdminApi/Lottery.ApiGateway/Log_Log
+/ApiGateway/Lottery.ApiGateway/Lottery.ApiGateway/bin
+/ApiGateway/.vs
+/ApiGateway/Lottery.ApiGateway/DLL
+
+/ApiGateway/Lottery.ApiGateway/Lottery.ApiGateway/web.config
+/ApiGateway/Lottery.ApiGateway/Lottery.ApiGateway/Log_Log
+/BettingServiceHost/BettingLottery.Service/CacheData
+/90.Apps/app.lottery.site/Log_Log

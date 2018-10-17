@@ -10,18 +10,21 @@ using System.Text.RegularExpressions;
 using Kason.Sg.Core.ProxyGenerator;
 using log4net;
 using System.Threading.Tasks;
+using Kason.Sg.Core.CPlatform.Runtime.Client.Address.Resolvers;
 
 namespace app.lottery.site.iqucai.Controllers
 {
     public class TestController : Controller
     {
         #region 调用服务使用示例
-        private readonly ILog logger = null;
-        private readonly IServiceProxyProvider serviceProxyProvider;
-        public TestController( ILog log, IServiceProxyProvider _serviceProxyProvider)
+        public ILog logger = null;
+        public IServiceProxyProvider serviceProxyProvider;
+        public IAddressResolver addrre;
+        public TestController(ILog log, IServiceProxyProvider _serviceProxyProvider, IAddressResolver _addrre)
         {
             serviceProxyProvider = _serviceProxyProvider;
             logger = log;
+            addrre = _addrre;
 
         }
         #endregion
@@ -34,12 +37,15 @@ namespace app.lottery.site.iqucai.Controllers
             /// </summary>
             public async Task<ActionResult> Index()
         {
-            logger.Info("记录日志！！！");
-
             Dictionary<string, object> model = new Dictionary<string, object>();
-            model["id"] = "123";
-            //var str = await serviceProxyProvider.Invoke<object>(model, "apiUsers/User/GetUserName");
-            return  Content("testtesttesttesttesttest");
+            model["DicName"] = "123";
+            model["ApiDicTypeName"] = "123";
+            string serviceId = "BettingLottery.Service.IModuleServices.IBettingService.ReadLog_DicName_ApiDicTypeName";
+            var descriptors = await addrre.ResolverEx();
+            var descriptor = descriptors.FirstOrDefault(i => i.ServiceDescriptor.Id == serviceId);
+            // c.Where(b=>b.Address)
+            var str = await serviceProxyProvider.Invoke<object>(model, "api/Betting/ReadLog");
+            return Content(str.ToString() + "testtesttesttesttesttest");
         }
     }
 }
