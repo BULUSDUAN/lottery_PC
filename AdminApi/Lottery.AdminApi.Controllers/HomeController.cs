@@ -9,7 +9,7 @@ using Lottery.AdminApi.Model.HelpModel;
 using System.DrawingCore;
 using KaSon.FrameWork.Common.ExceptionEx;
 using KaSon.FrameWork.Common.Utilities;
-using KaSon.FrameWork.ORM.Helper.Admin;
+using KaSon.FrameWork.ORM.Helper;
 using KaSon.FrameWork.Common.Net;
 using EntityModel;
 using Lottery.AdminApi.Controllers.CommonFilterActtribute;

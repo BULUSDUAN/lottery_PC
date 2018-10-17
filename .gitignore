@@ -50,3 +50,4 @@ node_modules
 /ApiGateway/Lottery.ApiGateway/Lottery.ApiGateway/web.config
 /ApiGateway/Lottery.ApiGateway/Lottery.ApiGateway/Log_Log
 /BettingServiceHost/BettingLottery.Service/CacheData
+/90.Apps/app.lottery.site/Log_Log

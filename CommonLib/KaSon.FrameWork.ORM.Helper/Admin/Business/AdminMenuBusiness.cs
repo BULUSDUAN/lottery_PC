@@ -5,7 +5,7 @@ using System.Text;
 using System.Linq;
 using EntityModel.Enum;
 
-namespace KaSon.FrameWork.ORM.Helper.Admin
+namespace KaSon.FrameWork.ORM.Helper
 {
     public class AdminMenuBusiness
     {

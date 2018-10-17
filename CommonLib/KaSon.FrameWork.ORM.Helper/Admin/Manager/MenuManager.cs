@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 
-namespace KaSon.FrameWork.ORM.Helper.Admin
+namespace KaSon.FrameWork.ORM.Helper
 {
     public class MenuManager:DBbase
     {

@@ -306,6 +306,7 @@ namespace app.lottery.site.iqucai
             // IServiceProxyProvider ser = ServiceLocator.Current.Resolve<IServiceProxyProvider>();
             DependencyResolver.SetResolver(new AutofacDependencyResolver(ServiceLocator.Current));
             DependencyResolver.Current.GetService<IServiceProxyProvider>();
+            DependencyResolver.Current.GetService<IAddressResolver>();
             //var Current = ServiceLocator.Current;
             //IServiceProxyProvider ser = ServiceLocator.Current.Resolve<IServiceProxyProvider>();
             //var b1 = Current.Resolve<ISerializer<byte[]>>();
