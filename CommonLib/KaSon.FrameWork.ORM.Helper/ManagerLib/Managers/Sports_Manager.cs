@@ -943,5 +943,45 @@ namespace KaSon.FrameWork.ORM.Helper
             DB.GetDal<C_SingleScheme_AnteCode>().Add(entity);
         }
 
+        public List<UserCurrentOrderInfo> QueryUserCurrentOrderList(string userId, string gameCode, int pageIndex, int pageSize)
+        {
+          
+            var list = new List<UserCurrentOrderInfo>();
+         
+            var query = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "P_Order_QueryUserCurrentOrderList").SQL;
+            list=DB.CreateSQLQuery(query).SetString("UserId", userId)
+                .SetString("GameCode", gameCode)
+                .SetInt("PageIndex", pageIndex)
+                .SetInt("PageSize", pageSize)
+                .List<UserCurrentOrderInfo>().ToList();
+                   //.AddInParameter("UserId", userId)
+                   //.AddInParameter("GameCode", gameCode)
+                   //.AddInParameter("PageIndex", pageIndex)
+                   //.AddInParameter("PageSize", pageSize)
+                   //.AddOutParameter("TotalCount", "Int32");
+
+            //var dt = query.GetDataTable(out outputs);
+            //totalCount = (int)outputs["TotalCount"];
+            //foreach (DataRow row in dt.Rows)
+            //{
+            //    list.Add(new UserCurrentOrderInfo
+            //    {
+            //        UserId = UsefullHelper.GetDbValue<string>(row[0]),
+            //        UserDisplayName = UsefullHelper.GetDbValue<string>(row[1]),
+            //        HideDisplayNameCount = UsefullHelper.GetDbValue<int>(row[2]),
+            //        SchemeId = UsefullHelper.GetDbValue<string>(row[3]),
+            //        IssuseNumber = UsefullHelper.GetDbValue<string>(row[4]),
+            //        GameCode = UsefullHelper.GetDbValue<string>(row[5]),
+            //        GameCodeName = BusinessHelper.FormatGameCode(UsefullHelper.GetDbValue<string>(row[5])),
+            //        GameTypeName = UsefullHelper.GetDbValue<string>(row[6]),
+            //        SchemeType = UsefullHelper.GetDbValue<SchemeType>(row[7]),
+            //        TotalMoney = UsefullHelper.GetDbValue<decimal>(row[8]),
+            //        Progress = row[9] == DBNull.Value ? 1M : UsefullHelper.GetDbValue<decimal>(row[9]),
+            //        JoinType = TogetherJoinType.Join,
+            //    });
+            //}
+            return list;
+        }
+
     }
 }

@@ -335,7 +335,16 @@
       "Director": "renjun",
       "SQL": "select sum(RedBagMoney) from C_Fund_RedBagDetail where RedBagCategory=5 and UserId=@AgentId;",
       "Remark": ""
+    },
+    {
+      "key": "P_Order_QueryUserCurrentOrderList",
+      "Desc": "用户订单",
+      "ParamDesc": "@UserId:UserId,@GameCode:GameCode,@PageIndex:PageIndex,@PageSize:PageSize;",
+      "Director": "renjun",
+      "SQL": "SELECT FROM C_OrderDetail o LEFT JOIN C_User_Register u ON o.UserId=u.UserId LEFT JOIN C_Sports_Together t ON o.SchemeId=t.SchemeId WHERE o.ProgressStatus=10 AND o.TicketStatus=90 AND o.UserId=@UserId AND  (@GameCode='' OR o.GameCode=@GameCode) AND o.SchemeType=3 SELECT t.UserId,t.DisplayName,t.HideDisplayNameCount,t.SchemeId,t.CurrentIssuseNumber,t.GameCode,t.GameTypeName,t.SchemeType,t.TotalMoney,t.Progress FROM(SELECT ROW_NUMBER() OVER(ORDER BY o.CreateTime DESC) AS [RowNumber], u.UserId,u.DisplayName,u.HideDisplayNameCount,o.SchemeId,o.CurrentIssuseNumber,o.GameCode,o.GameTypeName,o.SchemeType,o.TotalMoney,t.Progress FROM C_OrderDetail o LEFT JOIN C_User_Register u ON o.UserId=u.UserId LEFT JOIN C_Sports_Together t ON o.SchemeId=t.SchemeId WHERE o.ProgressStatus=10 AND o.TicketStatus=90 AND o.UserId=@UserId AND (@GameCode='' OR o.GameCode=@GameCode) AND o.SchemeType=3 )as t WHERE [RowNumber] > @PageIndex * @PageSize AND [RowNumber] <= (@PageIndex + 1) * @PageSize",
+      "Remark": ""
     }
+
   ],
 
   "DataModule": [

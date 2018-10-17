@@ -1852,5 +1852,32 @@ namespace UserLottery.Service.ModuleServices
                 throw new Exception(ex.Message, ex);
             }
         }
+
+        /// <summary>
+        /// 查询用户当前订单列表
+        /// </summary>
+        public Task<UserCurrentOrderInfoCollection> QueryUserCurrentOrderList(string UserId, string gameCode, string userToken, int pageIndex, int pageSize)
+        {
+            // 验证用户身份及权限
+            //var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                return Task.FromResult(new Sports_Business().QueryUserCurrentOrderList(UserId, gameCode, pageIndex, pageSize));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询红人的合买订单
+        /// </summary>
+        public Task<TogetherHotUserInfoCollection> QueryHotUserTogetherOrderList(string UserId)
+        {
+            //if (string.IsNullOrEmpty(userId) || !BusinessHelper.CheckIsShowHM(userId))//检查是否在白名单
+            //    return new TogetherHotUserInfoCollection();
+            return Task.FromResult(new Sports_Business().QueryHotUserTogetherOrderList());
+        }
     }
 }
