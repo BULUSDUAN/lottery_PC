@@ -2436,10 +2436,6 @@
       <Project>{019b230f-1778-4680-ba6b-f727fb5e93b1}</Project>
       <Name>Kason.Net.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MessagePack\MessagePack.csproj">
-      <Project>{790a14c0-22d5-4fd1-877a-10f3184369f0}</Project>
-      <Name>MessagePack</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
