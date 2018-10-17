@@ -1,0 +1,42 @@
+2018-10-17 10:28:43,455 [9] ERROR Logger [(null)] - 无法连接，
+Kason.Sg.Core.CPlatform.Exceptions.CPlatformException: 无法解析服务Id：BettingLottery.Service.IModuleServices.IBettingService.ReadLog_DicName_ApiDicTypeName的地址信息。
+   在 Kason.Sg.Core.CPlatform.Runtime.Client.Implementation.RemoteInvokeService.<ResolverAddress>d__8.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Threading.Tasks.ValueTask`1.get_Result()
+   在 System.Runtime.CompilerServices.ValueTaskAwaiter`1.GetResult()
+   在 Kason.Sg.Core.CPlatform.Runtime.Client.Implementation.RemoteInvokeService.<InvokeAsync>d__7.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   在 Kason.Sg.Core.CPlatform.Support.Implementation.BreakeRemoteInvokeService.<MonitorRemoteInvokeAsync>d__6.MoveNext()
+2018-10-17 10:28:43,455 [11] ERROR Logger [(null)] - 无法连接，
+Kason.Sg.Core.CPlatform.Exceptions.CPlatformException: 无法解析服务Id：BettingLottery.Service.IModuleServices.IBettingService.ReadLog_DicName_ApiDicTypeName的地址信息。
+   在 Kason.Sg.Core.CPlatform.Runtime.Client.Implementation.RemoteInvokeService.<ResolverAddress>d__8.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Threading.Tasks.ValueTask`1.get_Result()
+   在 System.Runtime.CompilerServices.ValueTaskAwaiter`1.GetResult()
+   在 Kason.Sg.Core.CPlatform.Runtime.Client.Implementation.RemoteInvokeService.<InvokeAsync>d__7.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   在 Kason.Sg.Core.CPlatform.Support.Implementation.BreakeRemoteInvokeService.<MonitorRemoteInvokeAsync>d__6.MoveNext()
+2018-10-17 10:31:54,886 [13] ERROR Logger [(null)] - 无法连接，
+Kason.Sg.Core.CPlatform.Exceptions.CPlatformException: 无法解析服务Id：BettingLottery.Service.IModuleServices.IBettingService.ReadLog_DicName_ApiDicTypeName的地址信息。
+   在 Kason.Sg.Core.CPlatform.Runtime.Client.Implementation.RemoteInvokeService.<ResolverAddress>d__8.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Threading.Tasks.ValueTask`1.get_Result()
+   在 System.Runtime.CompilerServices.ValueTaskAwaiter`1.GetResult()
+   在 Kason.Sg.Core.CPlatform.Runtime.Client.Implementation.RemoteInvokeService.<InvokeAsync>d__7.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   在 Kason.Sg.Core.CPlatform.Support.Implementation.BreakeRemoteInvokeService.<MonitorRemoteInvokeAsync>d__6.MoveNext()

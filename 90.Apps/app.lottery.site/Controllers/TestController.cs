@@ -37,9 +37,16 @@ namespace app.lottery.site.iqucai.Controllers
             logger.Info("记录日志！！！");
 
             Dictionary<string, object> model = new Dictionary<string, object>();
-            model["id"] = "123";
-            //var str = await serviceProxyProvider.Invoke<object>(model, "apiUsers/User/GetUserName");
-            return  Content("testtesttesttesttesttest");
+            model["DicName"] = "123";
+            model["ApiDicTypeName"] = "123";
+            var str1 = await serviceProxyProvider.Invoke<object>(model, "api/Betting/ReadLog");
+           // str1.Wait();
+            //Task.Factory.StartNew(async delegate
+            //{
+            //    var str = await serviceProxyProvider.Invoke<object>(model, "api/Betting/ReadLog");
+            //});
+
+            return  Content(str1+"testtesttesttesttesttest");
         }
     }
 }
