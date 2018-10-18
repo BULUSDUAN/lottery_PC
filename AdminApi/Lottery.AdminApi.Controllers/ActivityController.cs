@@ -13,16 +13,17 @@ namespace Lottery.AdminApi.Controllers
     /// <summary>
     /// 活动管理控制器
     /// </summary>
+    [Area("api")]
+    [ReusltFilter]
     public class ActivityController : BaseController
     {
-        public static readonly AdminService _service = new AdminService();
-        [Area("api")]
-        [ReusltFilter]
+        private static readonly AdminService _service = new AdminService();
+        
         #region 活动管理 
         /// <summary>
         /// 网站活动配置
         /// </summary>
-        public IActionResult ActivityConfig()
+        public IActionResult GetActivityConfigList()
         {
             try
             {
@@ -61,7 +62,7 @@ namespace Lottery.AdminApi.Controllers
         /// <summary>
         /// 充值赠送红包配置
         /// </summary>
-        public IActionResult FillGiveRedBagConfig()
+        public IActionResult GetFillGiveRedBagConfigList()
         {
             try
             {
@@ -136,7 +137,7 @@ namespace Lottery.AdminApi.Controllers
         /// <summary>
         /// 红包使用规则
         /// </summary>
-        public IActionResult RedBagUseConfig()
+        public IActionResult GetRedBagUseConfigList()
         {
             try
             {
@@ -195,7 +196,7 @@ namespace Lottery.AdminApi.Controllers
         /// <summary>
         /// 彩种加奖配置
         /// </summary>
-        public IActionResult AddBonusMoneyConfig()
+        public IActionResult GetAddBonusMoneyConfigList()
         {
             try
             {
@@ -257,7 +258,7 @@ namespace Lottery.AdminApi.Controllers
         /// <summary>
         /// 彩种取消加奖用户列表
         /// </summary>
-        public IActionResult UserGameCodeNotAddMoney(LotteryServiceRequest entity)
+        public IActionResult GetUserGameCodeNotAddMoneyList(LotteryServiceRequest entity)
         {
             try
             {
@@ -323,8 +324,10 @@ namespace Lottery.AdminApi.Controllers
             }
         }
 
-        #region 充值类型赠送配置
-        public IActionResult PayRedBagConfig()
+        /// <summary>
+        /// 充值类型赠送配置
+        /// </summary>
+        public IActionResult GetPayRedBagConfigList()
         {
             try
             {
@@ -372,7 +375,8 @@ namespace Lottery.AdminApi.Controllers
                 return JsonEx(new LotteryServiceResponse { Code = AdminResponseCode.失败, Message = ex.Message });
             }
         }
-        #endregion
+
+
         #endregion
     }
 }

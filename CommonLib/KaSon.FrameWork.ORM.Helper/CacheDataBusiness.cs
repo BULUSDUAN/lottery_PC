@@ -325,5 +325,18 @@ namespace KaSon.FrameWork.ORM.Helper
             };
 
         }
+        /// <summary>
+        /// 更新系统配置
+        /// </summary>
+        public void UpdateCoreConfigInfo(C_Core_Config info)
+        {
+            var manager = new UserIntegralManager();
+            var entity = manager.QueryCoreConfig(info.Id);
+            if (entity == null) return;
+            entity.ConfigName = info.ConfigName;
+            entity.ConfigValue = info.ConfigValue;
+            entity.CreateTime = DateTime.Now;
+            manager.UpdateCoreConfig(entity);
+        }
     }
 }

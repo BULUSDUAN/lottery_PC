@@ -1,6 +1,8 @@
 ﻿using EntityModel;
 using EntityModel.Ticket;
 using KaSon.FrameWork.Analyzer.AnalyzerFactory;
+using KaSon.FrameWork.Common.JSON;
+using KaSon.FrameWork.Common.Net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +15,11 @@ namespace KaSon.FrameWork.ORM.Helper
     /// </summary>
     public partial class TicketGatewayAdmin
     {
+        private static string _baseDir;
+        public static void SetMatchConfigBaseDir(string dir)
+        {
+            _baseDir = dir;
+        }
         //public string PrizeBJDCTicket(int num)
         //{
         //    var successCount = 0;
@@ -483,7 +490,35 @@ namespace KaSon.FrameWork.ORM.Helper
         //        }
         //    }
         //}
+        private IList<T> GetOddsList_JingCai<T>(string gameCode, string gameType, string flag)
+            where T : JingCaiMatchBase
+        {
+            var fileName = string.Format(@"{3}/{0}/{1}_SP{2}.json", gameCode, gameType, flag, _baseDir);
+            var json = ReadFileString(fileName);
+            var resultList = JsonSerializer.Deserialize<List<T>>(json);
+            return resultList;
+        }
+        private string ReadFileString(string fileName)
+        {
+            string strResult = PostManager.Get(fileName, Encoding.UTF8);
 
+            if (!string.IsNullOrEmpty(strResult))
+            {
+                if (strResult.ToLower().StartsWith("var"))
+                {
+                    string[] strArray = strResult.Split('=');
+                    if (strArray != null && strArray.Length == 2)
+                    {
+                        if (strArray[1].ToString().Trim().EndsWith(";"))
+                        {
+                            return strArray[1].ToString().Trim().TrimEnd(';');
+                        }
+                        return strArray[1].ToString().Trim();
+                    }
+                }
+            }
+            return strResult;
+        }
         public List<string> RequestTicket_BJDCSingleScheme(GatewayTicketOrder_SingleScheme order, out List<string> realMatchIdArray)
         {
             var selectMatchIdArray = order.SelectMatchId.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);

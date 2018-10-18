@@ -6,6 +6,5 @@ namespace KaSon.FrameWork.ORM.Helper.ManagerLib
 {
     public class GameBizWcfServiceCache
     {
-
     }
 }
