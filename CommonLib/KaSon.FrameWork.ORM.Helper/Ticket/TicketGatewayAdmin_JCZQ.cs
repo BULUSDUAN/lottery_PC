@@ -513,7 +513,7 @@ namespace KaSon.FrameWork.ORM.Helper
                             CreateTime = DateTime.Now,
                         };
                         entity.SetOdds(odds);
-                        oddsManager.AddOdds(entity);
+                        oddsManager.AddOdds<TEntity>(entity);
                     }
                     else if (!entity.Equals(odds))
                     {
