@@ -7214,7 +7214,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 config.ConfigKey = configKey;
                 config.ConfigValue = configValue;
                 config.CreateTime = DateTime.Now;
-               // new CacheDataBusiness().UpdateCoreConfigInfo(config);
+                new CacheDataBusiness().UpdateCoreConfigInfo(config);
             }
         }
     }

@@ -6,11 +6,13 @@ using System.Text;
 using System.Linq;
 using EntityModel;
 using EntityModel.Communication;
+using KaSon.FrameWork.ORM.Helper.ManagerLib;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
    public partial class AdminService
     {
+        #region 活动管理模块
         #region 优惠券相关
         /// <summary>
         /// 查询优惠券列表
@@ -283,6 +285,89 @@ namespace KaSon.FrameWork.ORM.Helper
                 return new CommonActionResult(false, ex.Message);
             }
         }
+        #endregion
+        #endregion
+
+        #region 比赛管理模块
+
+        //北京单场
+        #region 北京单场数据信息更新
+        public CommonActionResult ManualUpdate_BJDC_MatchList(string issuseNumber, string userToken)
+        {
+            // 验证用户身份及权限
+            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                new IssuseBusiness().ManualUpdate_BJDC_MatchList(issuseNumber);
+                return new CommonActionResult(true, "操作成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        #endregion
+
+        #region 北京单场比赛结果更新
+        public CommonActionResult ManualUpdate_BJDC_MatchResultList(string issuseNumber, string userToken)
+        {
+            // 验证用户身份及权限
+            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                new IssuseBusiness().ManualUpdate_BJDC_MatchResultList(issuseNumber);
+                return new CommonActionResult(true, "操作成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        #endregion
+        //竞彩足球
+        #region 竞彩足球数据更新
+        public CommonActionResult ManualUpdate_JCZQ_MatchList(string userToken)
+        {
+            try
+            {
+                new IssuseBusiness().ManualUpdate_JCZQ_MatchList();
+                return new CommonActionResult(true, "操作成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        #endregion
+
+        #region 竞彩足球SP更新
+        public CommonActionResult UpdateOddsList_JCZQ_Manual()
+        {
+            try
+            {
+                new TicketGatewayAdmin().UpdateOddsList_JCZQ_Manual();
+
+                return new CommonActionResult(true, "处理数据成功");
+            }
+            catch (Exception ex)
+            {
+                return new CommonActionResult(true, "处理数据过程发生异常 - " + ex.Message);
+            }
+        }
+        #endregion
+        //竞彩篮球
+        #region 竞彩篮球数据更新
+
+        #endregion
+
+        #region 竞彩篮球P更新
+
+        #endregion
+        //传统足球
+        #region 传统足球数据更新
+
+        #endregion
+
         #endregion
     }
 }
