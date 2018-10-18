@@ -5,7 +5,7 @@
 
 //namespace Lottery.AdminApi.Controllers
 //{
-//    public class ContentManageController:BaseController
+//    public class ContentManageController : BaseController
 //    {
 //        #region 公告管理
 //        /// <summary>

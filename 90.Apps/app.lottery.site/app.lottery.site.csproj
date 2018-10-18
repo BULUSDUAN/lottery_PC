@@ -144,7 +144,8 @@
     <Reference Include="MatchBiz.Core">
       <HintPath>..\Outputs\Common\MatchBiz.Core.dll</HintPath>
     </Reference>
-    <Reference Include="MessagePack">
+    <Reference Include="MessagePack, Version=1.7.3.4, Culture=neutral, PublicKeyToken=b4a0369545f0a1be, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\MicSeivceDLL\MessagePack.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">

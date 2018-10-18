@@ -139,9 +139,9 @@ namespace BettingLottery.Service.Host
 
             //清空打印
 
-            ConsoleHelper.Clear();
+          //  ConsoleHelper.Clear();
 
-
+            Console.ReadLine();
         }
     }
 

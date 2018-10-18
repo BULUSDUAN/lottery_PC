@@ -111,5 +111,20 @@ namespace KaSon.FrameWork.ORM.Helper
             }).ToList();
             return result;
         }
+
+        /// <summary>
+        /// 查询角色的信息及所有权限
+        /// </summary>
+        /// <param name="roleId"></param>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public RoleInfo_Query GetSystemRoleById(string roleId, string userToken)
+        {
+            // 验证用户身份及权限
+            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+
+            var authBiz = new GameBizAuthBusiness();
+            return authBiz.GetSystemRoleById(roleId);
+        }
     }
 }

@@ -7217,5 +7217,38 @@ namespace KaSon.FrameWork.ORM.Helper
                 new CacheDataBusiness().UpdateCoreConfigInfo(config);
             }
         }
+
+        public UserCurrentOrderInfoCollection QueryUserCurrentOrderList(string userId, string gameCode, int pageIndex, int pageSize)
+        {
+            var sportsManager = new Sports_Manager();
+            int totalCount = 1;
+            var list = sportsManager.QueryUserCurrentOrderList(userId, gameCode, pageIndex, pageSize);
+            var result = new UserCurrentOrderInfoCollection();
+            result.TotalCount = totalCount;
+            result.List.AddRange(list);
+            return result;
+        }
+
+        /// <summary>
+        /// 查询红人的合买订单
+        /// </summary>
+        public TogetherHotUserInfoCollection QueryHotUserTogetherOrderList()
+        {
+            TogetherHotUserInfoCollection colleciton = new TogetherHotUserInfoCollection();
+
+            var manager = new TogetherHotUserManager();
+            var userList = manager.QueryTogetherHotUserInfo();
+            var orderList = manager.QueryTogetherHotUserOrderInfo(userList.Select(p => p.UserId).ToArray());
+            foreach (var item in userList)
+            {
+                var l = new TogetherHotUserOrderInfoCollection();
+                l.AddRange(orderList.Where(p => p.CreateUserId == item.UserId).ToList());
+                item.OrderList = l;
+            }
+            colleciton.AddRange(userList);
+            return colleciton;
+        }
+
+
     }
 }
