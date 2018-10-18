@@ -36,6 +36,7 @@ using app.lottery.site.iqucai.api;
 using log4net;
 using Kason.Sg.Core.ProxyGenerator;
 using System.Threading.Tasks;
+using Kason.Sg.Core.CPlatform.Runtime.Client.Address.Resolvers;
 
 namespace app.lottery.site.iqucai.Controllers
 {
@@ -44,10 +45,12 @@ namespace app.lottery.site.iqucai.Controllers
         #region 调用服务使用示例
         private readonly ILog logger = null;
         private readonly IServiceProxyProvider serviceProxyProvider;
-        public UserController(IServiceProxyProvider _serviceProxyProvider, ILog log)
+        public IAddressResolver addrre;
+        public UserController(IServiceProxyProvider _serviceProxyProvider, ILog log, IAddressResolver _addrre)
         {
             serviceProxyProvider = _serviceProxyProvider;
             logger = log;
+            addrre = _addrre;
 
         }
         #endregion
@@ -3488,7 +3491,8 @@ namespace app.lottery.site.iqucai.Controllers
                 param["loginName"] = userName;
                 param["password"] = passWord;
                 param["IPAddress"] = IpManager.IPAddress;
-                LoginInfo loginInfo = await serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/user_login");
+              
+                var loginInfo = await serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/User_Login");
                 //LoginInfo loginInfo = WCFClients.ExternalClient.LoginLocal(userName, passWord, IpManager.IPAddress);
                 if (loginInfo.IsSuccess)
                 {
