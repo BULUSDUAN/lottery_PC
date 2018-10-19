@@ -35,7 +35,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public CommonActionResult BuildCoupons(string summary, decimal money, int count, string userToken)
         {
             // 验证用户身份及权限
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 new A20131105().BuildCoupons(summary, money, count);
@@ -295,7 +295,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public CommonActionResult ManualUpdate_BJDC_MatchList(string issuseNumber, string userToken)
         {
             // 验证用户身份及权限
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+           // var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 new IssuseBusiness().ManualUpdate_BJDC_MatchList(issuseNumber);
@@ -312,7 +312,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public CommonActionResult ManualUpdate_BJDC_MatchResultList(string issuseNumber, string userToken)
         {
             // 验证用户身份及权限
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 new IssuseBusiness().ManualUpdate_BJDC_MatchResultList(issuseNumber);
@@ -393,7 +393,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public CommonActionResult ManualUpdate_CTZQ_MatchList(string gameCode, string issuseNumber, string userToken)
         {
             // 验证用户身份及权限
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 new IssuseBusiness().ManualUpdate_CTZQ_MatchList(gameCode, issuseNumber);
@@ -465,7 +465,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public CommonActionResult UpdateJCZQMatchInfo(string matchId, string privilegesType, string userToken)
         {
             // 验证用户身份及权限
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 new IssuseBusiness().UpdateJCZQMatchInfo(matchId, privilegesType);
@@ -479,7 +479,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public CommonActionResult UpdateJCLQMatchInfo(string matchId, string privilegesType, string userToken)
         {
             // 验证用户身份及权限
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 new IssuseBusiness().UpdateJCLQMatchInfo(matchId, privilegesType);
