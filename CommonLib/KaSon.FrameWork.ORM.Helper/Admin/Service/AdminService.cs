@@ -15,7 +15,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public LoginInfo LoginAdmin(string loginName, string password, string loginIp)
         {
             var loginBiz = new LocalLoginBusiness();
-            var loginEntity = loginBiz.Login(loginName, password);
+            var loginEntity = loginBiz.AdminLogin(loginName, password);
             if (loginEntity == null)
             {
                 return new LoginInfo { IsSuccess = false, Message = "登录名或密码错误", LoginFrom = "ADMIN", };

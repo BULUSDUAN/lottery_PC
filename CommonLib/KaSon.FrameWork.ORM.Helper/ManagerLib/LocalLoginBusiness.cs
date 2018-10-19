@@ -31,6 +31,12 @@ namespace KaSon.FrameWork.ORM.Helper
             LoginLocal loginInfo = UserLogin(loginName, password);
             return loginInfo;
         }
+        public LoginLocal AdminLogin(string loginName, string password)
+        {
+            password = MD5Helper.MD5(string.Format("{0}{1}", password, _gbKey)).ToUpper();
+            LoginLocal loginInfo = AdminUserLogin(loginName, password);
+            return loginInfo;
+        }
         public LoginLocal LoginAPP(string loginName, string password)
         {
             LoginLocal loginInfo = UserLogin(loginName, password);
@@ -370,6 +376,73 @@ namespace KaSon.FrameWork.ORM.Helper
             return LoginUsers;
         }
 
+        public LoginLocal AdminUserLogin(string loginName, string password)
+        {
+            var LoginUser = DB.CreateQuery<E_Login_Local>();
+            LoginLocal LoginUsers = (from p in LoginUser
+                          where p.LoginName == loginName && p.Password == password
+                          select new LoginLocal()
+                          {
+                              CreateTime = p.CreateTime,
+                              LoginName = p.LoginName,
+                              mobile = p.mobile,
+                              Password = p.Password,
+                              UserId = p.UserId,
+
+                          }).FirstOrDefault();
+            if (LoginUsers != null)
+            {
+                string userId = LoginUsers.UserId;
+                LoginUsers.User = (from d in DB.CreateQuery<C_Auth_Users>()
+                                   where d.UserId == userId
+                                   select new SystemUser()
+                                   {
+                                       CreateTime = d.CreateTime,
+                                       AgentId = d.AgentId,
+                                       RegFrom = d.RegFrom,
+                                       UserId = d.UserId,
+                                   }).FirstOrDefault();
+                if (LoginUsers.User != null)
+                {
+                    LoginUsers.User.RoleList = (from d in DB.CreateQuery<C_Auth_Roles>()
+                                                join c in DB.CreateQuery<C_Auth_UserRole>()
+                                                on d.RoleId equals c.RoleId
+                                                where c.UserId == userId
+                                                select new SystemRole()
+                                                {
+                                                    IsAdmin = d.IsAdmin,
+                                                    IsInner = d.IsInner,
+                                                    RoleId = d.RoleId,
+                                                    RoleName = d.RoleName,
+                                                    RoleType = (RoleType)d.RoleType
+                                                }).ToList();
+                }
+                LoginUsers.Register = (from p in DB.CreateQuery<C_User_Register>()
+                                       where p.UserId == userId
+                                       select new UserRegister()
+                                       {
+
+                                           AgentId = p.AgentId,
+                                           ComeFrom = p.ComeFrom,
+                                           CreateTime = p.CreateTime,
+                                           DisplayName = p.DisplayName,
+                                           HideDisplayNameCount = p.HideDisplayNameCount,
+                                           IsAgent = p.IsAgent,
+                                           IsEnable = p.IsEnable,
+                                           IsFillMoney = p.IsFillMoney,
+                                           IsIgnoreReport = p.IsIgnoreReport,
+                                           ParentPath = p.ParentPath,
+                                           Referrer = p.Referrer,
+                                           ReferrerUrl = p.ReferrerUrl,
+                                           RegisterIp = p.RegisterIp,
+                                           RegType = p.RegType,
+                                           UserId = p.UserId,
+                                           UserType = p.UserType,
+                                           VipLevel = p.VipLevel
+                                       }).FirstOrDefault();
+            }
+            return LoginUsers;
+        }
 
         public void GetSystemUser(SystemUser user)
         {
