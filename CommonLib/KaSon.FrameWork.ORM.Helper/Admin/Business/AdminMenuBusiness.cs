@@ -21,5 +21,11 @@ namespace KaSon.FrameWork.ORM.Helper
             var list= menuManager.QueryMenuListByUserId(userId);
             return list;
         }
+
+        public List<C_Auth_Function_List> QueryLowerLevelFuncitonList()
+        {
+            var manager = new MenuManager();
+            return manager.QueryLowerLevelFuncitonList();   
+        }
     }
 }

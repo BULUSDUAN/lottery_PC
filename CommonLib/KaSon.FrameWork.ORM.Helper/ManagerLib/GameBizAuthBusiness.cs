@@ -160,116 +160,148 @@ namespace KaSon.FrameWork.ORM.Helper
         //        biz.CommitTran();
         //    }
         //}
-        //public void AddSystemRole(RoleInfo_Add roleInfo)
-        //{
-        //    using (var biz = new GameBizAuthBusinessManagement())
-        //    {
-        //        biz.BeginTran();
-        //        using (var roleManager = new RoleManager())
-        //        {
-        //            var role = roleManager.GetRoleById(roleInfo.RoleId);
-        //            if (role != null)
-        //            {
-        //                throw new ArgumentException("指定编号的角色已经存在 - " + role.RoleId);
-        //            }
-        //            role = new SystemRole
-        //            {
-        //                RoleId = roleInfo.RoleId,
-        //                RoleName = roleInfo.RoleName,
-        //                IsAdmin = roleInfo.IsAdmin,
-        //                IsInner = false,
-        //                RoleType = roleInfo.RoleType,
-        //                FunctionList = new List<RoleFunction>(),
-        //            };
-        //            if (!role.IsAdmin)
-        //            {
-        //                foreach (var item in roleInfo.FunctionList)
-        //                {
-        //                    var roleFunction = new RoleFunction
-        //                    {
-        //                        Role = role,
-        //                        FunctionId = item.FunctionId,
-        //                        Function = roleManager.LoadFunctionById(item.FunctionId),
-        //                        Status = EnableStatus.Enable,
-        //                        Mode = item.Mode,
-        //                    };
-        //                    role.FunctionList.Add(roleFunction);
-        //                }
-        //                var list = roleManager.QueryFixFunctionList(roleInfo.RoleType);
-        //                foreach (var item in list)
-        //                {
-        //                    var roleFunction = new RoleFunction
-        //                    {
-        //                        Role = role,
-        //                        FunctionId = item.FunctionId,
-        //                        Function = item,
-        //                        Status = EnableStatus.Enable,
-        //                        Mode = "RW",
-        //                    };
-        //                    role.FunctionList.Add(roleFunction);
-        //                }
-        //            }
-        //            roleManager.AddRole(role);
-        //        }
-        //        biz.CommitTran();
-        //    }
-        //}
-        //public void UpdateSystemRole(RoleInfo_Update roleInfo)
-        //{
-        //    using (var biz = new GameBizAuthBusinessManagement())
-        //    {
-        //        biz.BeginTran();
-        //        using (var roleManager = new RoleManager())
-        //        {
-        //            var role = roleManager.GetRoleById(roleInfo.RoleId);
-        //            if (role == null)
-        //            {
-        //                throw new ArgumentException("指定编号的角色不存在 - " + roleInfo.RoleId);
-        //            }
-        //            role.RoleId = roleInfo.RoleId;
-        //            role.RoleName = roleInfo.RoleName;
-        //            roleManager.UpdateRole(role);
-
-        //            foreach (var item in roleInfo.AddFunctionList)
-        //            {
-        //                var roleFunction = roleManager.GetRoleFunction(role, item.FunctionId);
-        //                if (roleFunction != null)
-        //                {
-        //                    throw new ArgumentException("添加权限到角色错误 - 已经包含权限\"" + roleFunction.Function.FunctionId + " - " + roleFunction.Function.DisplayName + "\"");
-        //                }
-        //                roleFunction = new RoleFunction
-        //                {
-        //                    Role = role,
-        //                    FunctionId = item.FunctionId,
-        //                    Function = roleManager.LoadFunctionById(item.FunctionId),
-        //                    Status = EnableStatus.Enable,
-        //                    Mode = item.Mode,
-        //                };
-        //                roleManager.AddRoleFunction(roleFunction);
-        //            }
-        //            foreach (var item in roleInfo.ModifyFunctionList)
-        //            {
-        //                var roleFunction = roleManager.GetRoleFunction(role, item.FunctionId);
-        //                if (roleFunction == null)
-        //                {
-        //                    throw new ArgumentException("修改权限错误 - 此角色尚未包含权限\"" + roleFunction.Function.FunctionId + " - " + roleFunction.Function.DisplayName + "\"");
-        //                }
-        //                roleFunction.Mode = item.Mode;
-        //                roleManager.UpdateRoleFunction(roleFunction);
-        //            }
-        //            foreach (var item in roleInfo.RemoveFunctionList)
-        //            {
-        //                var roleFunction = roleManager.GetRoleFunction(role, item.FunctionId);
-        //                if (roleFunction == null)
-        //                {
-        //                    throw new ArgumentException("移除权限错误 - 此角色尚未包含权限\"" + roleFunction.Function.FunctionId + " - " + roleFunction.Function.DisplayName + "\"");
-        //                }
-        //                roleManager.DeleteRoleFunction(roleFunction);
-        //            }
-        //        }
-        //        biz.CommitTran();
-        //    }
-        //}
+        public CommonActionResult AddSystemRole(RoleInfo_Add roleInfo)
+        {
+            //新增逻辑，超级管理员角色只能有一个，如果再新增超级管理员则失败
+            //增加超级管理员时只给他基础权限，增加普通角色时增加传过来的权限
+            //GameBizAuthBusinessManagement()
+            var roleManager = new RoleManager();
+            DB.Begin();
+            try
+            {
+                var role = roleManager.GetRoleById(roleInfo.RoleId);
+                if (role != null)
+                {
+                    throw new ArgumentException("指定编号的角色已经存在 - " + role.RoleId);
+                }
+                var addRole = new SystemRole
+                {
+                    RoleId = roleInfo.RoleId,
+                    RoleName = roleInfo.RoleName,
+                    IsAdmin = roleInfo.IsAdmin,
+                    IsInner = false,
+                    RoleType = roleInfo.RoleType,
+                    FunctionList = new List<RoleFunction>(),
+                };
+                var BaseFunctionId = "Q101";
+                if (addRole.IsAdmin)
+                {
+                    addRole.FunctionList.Add(new RoleFunction()
+                    {
+                        Mode = "RW",
+                        Status = EnableStatus.Enable,
+                        FunctionId = BaseFunctionId
+                    });
+                }
+                if (!addRole.IsAdmin)
+                {
+                    foreach (var item in roleInfo.FunctionList)
+                    {
+                        var roleFunction = new RoleFunction
+                        {
+                            FunctionId = item.FunctionId,
+                            Status = EnableStatus.Enable,
+                            Mode = item.Mode,
+                        };
+                        addRole.FunctionList.Add(roleFunction);
+                    }
+                    var list = roleManager.QueryFixFunctionList(roleInfo.RoleType);
+                    foreach (var item in list)
+                    {
+                        var roleFunction = new RoleFunction
+                        {
+                            FunctionId = item.FunctionId,
+                            Status = EnableStatus.Enable,
+                            Mode = "RW",
+                        };
+                        addRole.FunctionList.Add(roleFunction);
+                    }
+                    if (!addRole.FunctionList.Any(p => p.FunctionId == BaseFunctionId))
+                    {
+                        addRole.FunctionList.Add(new RoleFunction()
+                        {
+                            Mode = "RW",
+                            Status = EnableStatus.Enable,
+                            FunctionId = BaseFunctionId
+                        });
+                    }
+                }
+                roleManager.AddRole(addRole);
+                DB.Commit();
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw new Exception("执行事务出错-" + ex.Message, ex);
+            }
+            return new CommonActionResult() { IsSuccess = true, Message = "添加成功" };
+        }
+        public void UpdateSystemRole(RoleInfo_Update roleInfo)
+        {
+            var roleManager = new RoleManager();
+            DB.Begin();
+            try
+            {
+                    var role = roleManager.GetRoleById(roleInfo.RoleId);
+                    if (role == null)
+                    {
+                        throw new ArgumentException("指定编号的角色不存在 - " + roleInfo.RoleId);
+                    }
+                    role.RoleId = roleInfo.RoleId;
+                    role.RoleName = roleInfo.RoleName;
+                    roleManager.UpdateRole(role);
+                if (roleInfo.AddFunctionList == null) roleInfo.AddFunctionList = new List<RoleFunctionInfo>();
+                //if (roleInfo.ModifyFunctionList == null) roleInfo.ModifyFunctionList = new List<RoleFunctionInfo>();
+                if (roleInfo.RemoveFunctionList == null) roleInfo.RemoveFunctionList = new List<RoleFunctionInfo>();
+                    foreach (var item in roleInfo.AddFunctionList)
+                    {
+                        var roleFunction = roleManager.GetRoleFunction(roleInfo.RoleId, item.FunctionId);
+                        if (roleFunction != null)
+                        {
+                            throw new ArgumentException("添加权限到角色错误 - 已经包含权限\"" + roleFunction.FunctionId + " - " + roleFunction.Function.DisplayName + "\"");
+                        }
+                        var addFunction = new C_Auth_RoleFunction
+                        {
+                            
+                            FunctionId = item.FunctionId,
+                            RoleId= roleInfo.RoleId,
+                            Status = (int)EnableStatus.Enable,
+                            Mode = item.Mode,
+                        };
+                        roleManager.AddRoleFunction(addFunction);
+                    }
+                    //foreach (var item in roleInfo.ModifyFunctionList)
+                    //{
+                    //    var roleFunction = roleManager.GetRoleFunction(role, item.FunctionId);
+                    //    if (roleFunction == null)
+                    //    {
+                    //        throw new ArgumentException("修改权限错误 - 此角色尚未包含权限\"" + roleFunction.Function.FunctionId + " - " + roleFunction.Function.DisplayName + "\"");
+                    //    }
+                    //    roleFunction.Mode = item.Mode;
+                    //    roleManager.UpdateRoleFunction(roleFunction);
+                    //}
+                    foreach (var item in roleInfo.RemoveFunctionList)
+                    {
+                        var roleFunction = roleManager.GetRoleFunction(roleInfo.RoleId, item.FunctionId);
+                        if (roleFunction == null)
+                        {
+                            throw new ArgumentException("移除权限错误 - 此角色尚未包含权限\"" + roleFunction.Function.FunctionId + " - " + roleFunction.Function.DisplayName + "\"");
+                        }
+                    roleManager.DeleteRoleFunction(new C_Auth_RoleFunction()
+                    {
+                        FunctionId = roleFunction.FunctionId,
+                        RoleId = role.RoleId,
+                        IId = roleFunction.IId
+                    });
+                    }
+                DB.Commit();
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw new Exception("执行事务出错-" + ex.Message, ex);
+            }
+        }
         //public bool IsSystemRoleAdmin(string roleId)
         //{
         //    using (var roleManager = new RoleManager())
