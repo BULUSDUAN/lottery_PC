@@ -160,14 +160,14 @@ namespace KaSon.FrameWork.ORM.Helper
         //        biz.CommitTran();
         //    }
         //}
-        //public void AddSystemRole(RoleInfo_Add roleInfo)
+        //public CommonActionResult AddSystemRole(RoleInfo_Add roleInfo)
         //{
-        //    using (var biz = new GameBizAuthBusinessManagement())
-        //    {
-        //        biz.BeginTran();
-        //        using (var roleManager = new RoleManager())
-        //        {
-        //            var role = roleManager.GetRoleById(roleInfo.RoleId);
+        //    //新增逻辑，超级管理员角色只能有一个，如果再新增超级管理员则失败
+        //    //增加超级管理员时只给他基础权限，增加普通角色时增加传过来的权限
+        //    //GameBizAuthBusinessManagement()
+        //    var roleManager = new RoleManager();
+        //    DB.Begin();
+        //    var role = roleManager.GetRoleById(roleInfo.RoleId);
         //            if (role != null)
         //            {
         //                throw new ArgumentException("指定编号的角色已经存在 - " + role.RoleId);
@@ -181,6 +181,7 @@ namespace KaSon.FrameWork.ORM.Helper
         //                RoleType = roleInfo.RoleType,
         //                FunctionList = new List<RoleFunction>(),
         //            };
+        //    if
         //            if (!role.IsAdmin)
         //            {
         //                foreach (var item in roleInfo.FunctionList)
@@ -210,9 +211,7 @@ namespace KaSon.FrameWork.ORM.Helper
         //                }
         //            }
         //            roleManager.AddRole(role);
-        //        }
         //        biz.CommitTran();
-        //    }
         //}
         //public void UpdateSystemRole(RoleInfo_Update roleInfo)
         //{

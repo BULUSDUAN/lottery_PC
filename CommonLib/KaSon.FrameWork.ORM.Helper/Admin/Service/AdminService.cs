@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using EntityModel;
+using KaSon.FrameWork.Common.Utilities;
+using EntityModel.Communication;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
@@ -79,6 +81,7 @@ namespace KaSon.FrameWork.ORM.Helper
             return false;
         }
 
+        #region 权限的增删改查
         /// <summary>
         /// 查询后台菜单
         /// </summary>
@@ -99,7 +102,7 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                 list = biz.QueryMenuListByUserId(userId);
             }
-            var result= list.Select(p => new MenuInfo()
+            var result = list.Select(p => new MenuInfo()
             {
                 Description = p.Description,
                 DisplayName = p.DisplayName,
@@ -126,5 +129,41 @@ namespace KaSon.FrameWork.ORM.Helper
             var authBiz = new GameBizAuthBusiness();
             return authBiz.GetSystemRoleById(roleId);
         }
+
+        /// <summary>
+        /// 查询菜单下级功能权限点
+        /// </summary>
+        /// <param name="parentId"></param>
+        /// <returns></returns>
+        public List<C_Auth_Function_List> QueryLowerLevelFuncitonList()
+        {
+            try
+            {
+                return new AdminMenuBusiness().QueryLowerLevelFuncitonList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 新增系统角色
+        /// todo:后台权限
+        /// </summary>
+        //public CommonActionResult AddSystemRole(RoleInfo_Add roleInfo, string userToken)
+        //{
+        //    // 验证用户身份及权限
+        //    var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+
+        //    PreconditionAssert.IsNotEmptyString(roleInfo.RoleId, "添加的角色编号不能为空");
+        //    PreconditionAssert.IsNotEmptyString(roleInfo.RoleName, "添加的角色名称不能为空");
+        //    PreconditionAssert.IsNotNull(roleInfo.FunctionList, "传入角色的权限列表不能为null");
+
+        //    var authBiz = new GameBizAuthBusiness();
+        //    var result= authBiz.AddSystemRole(roleInfo);
+        //    return new CommonActionResult(true, "添加角色成功");
+        //}
+        #endregion
     }
 }

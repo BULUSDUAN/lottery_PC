@@ -32,5 +32,14 @@ namespace KaSon.FrameWork.ORM.Helper
                         select caf;
             return query.ToList();
         }
+
+        /// <summary>
+        /// 是否已存在超级管理员角色
+        /// </summary>
+        /// <returns></returns>
+        public bool HasSurperAdmin()
+        {
+            return DB.CreateQuery<C_Auth_Roles>().Where(p => p.IsAdmin).FirstOrDefault()!=null;
+        }
     }
 }
