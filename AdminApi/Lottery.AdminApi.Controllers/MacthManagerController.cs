@@ -222,7 +222,7 @@ namespace Lottery.AdminApi.Controllers
                 return JsonEx(new LotteryServiceResponse { Code = AdminResponseCode.失败, Message = ex.Message });
             }
         }
-        public JsonResult UpdateLotteryGame(LotteryServiceRequest entity)
+        public IActionResult UpdateLotteryGame(LotteryServiceRequest entity)
         {
             try
             {
@@ -239,7 +239,7 @@ namespace Lottery.AdminApi.Controllers
             }
 
         }
-        public ActionResult QueryIndexMatchList(LotteryServiceRequest entity)
+        public IActionResult QueryIndexMatchList(LotteryServiceRequest entity)
         {
             try
             {
@@ -262,7 +262,7 @@ namespace Lottery.AdminApi.Controllers
                 return JsonEx(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
             }
         }
-        public ActionResult IndexMatchInfo(LotteryServiceRequest entity)
+        public IActionResult IndexMatchInfo(LotteryServiceRequest entity)
         {
             try
             {
