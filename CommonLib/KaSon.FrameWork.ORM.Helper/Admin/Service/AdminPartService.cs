@@ -290,7 +290,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
         #region 比赛管理模块
 
-        //北京单场
+        #region 队伍数据更新
         #region 北京单场数据信息更新
         public CommonActionResult ManualUpdate_BJDC_MatchList(string issuseNumber, string userToken)
         {
@@ -324,7 +324,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }
         }
         #endregion
-        //竞彩足球
+
         #region 竞彩足球数据更新
         public CommonActionResult ManualUpdate_JCZQ_MatchList(string userToken)
         {
@@ -355,19 +355,207 @@ namespace KaSon.FrameWork.ORM.Helper
             }
         }
         #endregion
-        //竞彩篮球
+
         #region 竞彩篮球数据更新
-
+        public CommonActionResult ManualUpdate_JCLQ_MatchList(string userToken)
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                new IssuseBusiness().ManualUpdate_JCLQ_MatchList();
+                return new CommonActionResult(true, "操作成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
         #endregion
 
-        #region 竞彩篮球P更新
+        #region 竞彩篮球SP更新
+        public CommonActionResult UpdateOddsList_JCLQ_Manual()
+        {
+            try
+            {
+                new TicketGatewayAdmin().UpdateOddsList_JCLQ_Manual();
 
+                return new CommonActionResult(true, "处理数据成功");
+            }
+            catch (Exception ex)
+            {
+                return new CommonActionResult(true, "处理数据过程发生异常 - " + ex.Message);
+            }
+        }
         #endregion
-        //传统足球
+
         #region 传统足球数据更新
-
+        public CommonActionResult ManualUpdate_CTZQ_MatchList(string gameCode, string issuseNumber, string userToken)
+        {
+            // 验证用户身份及权限
+            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                new IssuseBusiness().ManualUpdate_CTZQ_MatchList(gameCode, issuseNumber);
+                return new CommonActionResult(true, "操作成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
         #endregion
 
+        #region 根据彩种更新比赛为取消
+        public CommonActionResult DoMatchCancel(string gameCode, string matchId, string issuse)
+        {
+            try
+            {
+                new Sports_Business().DoMatchCancel(gameCode, matchId, issuse);
+                return new CommonActionResult(true, "更新成功");
+            }
+            catch (Exception ex)
+            {
+                return new CommonActionResult(true, "更新数据过程发生异常 - " + ex.Message);
+            }
+        }
         #endregion
+        #endregion
+
+        #region 禁用比赛
+        public CoreJCZQMatchInfoCollection QueryCurrentJCZQMatchInfo(string userToken)
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                return new IssuseBusiness().QueryCurrentJCZQMatchInfo();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        public CoreJCLQMatchInfoCollection QueryCurrentJCLQMatchInfo(string userToken)
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+
+            try
+            {
+                return new IssuseBusiness().QueryCurrentJCLQMatchInfo();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        public CoreBJDCMatchInfoCollection QueryCurrentBJDCMatchInfo(string userToken)
+        {
+            try
+            {
+                return new IssuseBusiness().QueryCurrentBJDCMatchInfo();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+
+        }
+        public CommonActionResult UpdateJCZQMatchInfo(string matchId, string privilegesType, string userToken)
+        {
+            // 验证用户身份及权限
+            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                new IssuseBusiness().UpdateJCZQMatchInfo(matchId, privilegesType);
+                return new CommonActionResult(true, "更新成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        public CommonActionResult UpdateJCLQMatchInfo(string matchId, string privilegesType, string userToken)
+        {
+            // 验证用户身份及权限
+            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                new IssuseBusiness().UpdateJCLQMatchInfo(matchId, privilegesType);
+                return new CommonActionResult(true, "更新成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        public CommonActionResult UpdateBJDCMatchInfo(string Id, string privilegesType)
+        {
+            try
+            {
+                new IssuseBusiness().UpdateBJDCMatchInfo(Id, privilegesType);
+                return new CommonActionResult(true, "更新成功！");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        public CommonActionResult UpdateLotteryGame(string userToken, string gameCode, int enableStatus)
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                new GameBusiness().UpdateLotteryGame(gameCode, enableStatus);
+
+                return new CommonActionResult(true, string.Format("更新彩种状态成功"));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        #endregion
+
+        #region 队伍图标更新
+        public IndexMatch_Collection QueryIndexMatchCollection(string matchId, string hasImg, int pageIndex, int pageSize)
+        {
+            try
+            {
+                return new Sports_Business().QueryIndexMatchCollection(matchId, hasImg, pageIndex, pageSize);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        public IndexMatchInfo QueryIndexMatchInfo(int id)
+        {
+            try
+            {
+                return new Sports_Business().QueryIndexMatchInfo(id);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        public CommonActionResult UpdateIndexMatch(int id, string imgPath)
+        {
+            try
+            {
+                new Sports_Business().UpdateIndexMatch(id, imgPath);
+                return new CommonActionResult(true, "修改队伍图标成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        #endregion
+        #endregion
+
     }
 }

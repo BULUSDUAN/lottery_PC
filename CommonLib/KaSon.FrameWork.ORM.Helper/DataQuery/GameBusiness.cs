@@ -200,5 +200,14 @@ namespace KaSon.FrameWork.ORM.Helper
         //        TotalBonusMoney = m.TotalBonusMoney,
         //    };
         //}
+        public void UpdateLotteryGame(string gameCode, int enableStatus)
+        {
+            var manager = new LotteryGameManager();
+            var entity = manager.QueryLotteryGame(gameCode);
+            if (entity == null)
+                throw new Exception("没有查到该彩种！");
+            entity.EnableStatus = enableStatus;
+            manager.UpdateLotteryGame(entity);
+        }
     }
 }

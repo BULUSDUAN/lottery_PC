@@ -491,7 +491,6 @@ namespace KaSon.FrameWork.ORM.Helper
         //    }
         //}
         private IList<T> GetOddsList_JingCai<T>(string gameCode, string gameType, string flag)
-            where T : JingCaiMatchBase
         {
             var fileName = string.Format(@"{3}/{0}/{1}_SP{2}.json", gameCode, gameType, flag, _baseDir);
             var json = ReadFileString(fileName);

@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using EntityModel.CoreModel;
+
 namespace KaSon.FrameWork.ORM.Helper
 {
     /// <summary>
@@ -10,10 +12,25 @@ namespace KaSon.FrameWork.ORM.Helper
     /// </summary>
    public class JCZQ_OddsManager : DBbase
     {
-        public void AddOdds<T>(T odds)
-            where T : JingCai_Odds
+        public void AddOdds(T_JCZQ_Odds_SPF odds)
         {
-            this.Add(odds);
+            DB.GetDal<T_JCZQ_Odds_SPF>().Add(odds);
+        }
+        public void AddOdds(T_JCZQ_Odds_BRQSPF odds)
+        {
+            DB.GetDal<T_JCZQ_Odds_BRQSPF>().Add(odds);
+        }
+        public void AddOdds(T_JCZQ_Odds_ZJQ odds)
+        {
+            DB.GetDal<T_JCZQ_Odds_ZJQ>().Add(odds);
+        }
+        public void AddOdds(T_JCZQ_Odds_BQC odds)
+        {
+            DB.GetDal<T_JCZQ_Odds_BQC>().Add(odds);
+        }
+        public void AddOdds(T_JCZQ_Odds_BF odds)
+        {
+            DB.GetDal<T_JCZQ_Odds_BF>().Add(odds);
         }
         /// <summary>
         /// 存错过程查询

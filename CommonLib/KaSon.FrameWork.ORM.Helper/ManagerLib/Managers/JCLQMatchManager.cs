@@ -88,12 +88,11 @@ namespace KaSon.FrameWork.ORM.Helper
             return DB.CreateQuery<C_JCLQ_MatchResult_Prize>().Where(p => p.MatchId == matchId).FirstOrDefault();
         }
 
-        public List<C_JCLQ_Match> QueryCurrentJCLQMatchInfo()
+        public List<CoreJCLQMatchInfo> QueryCurrentJCLQMatchInfo()
         {
-           
             var query = from m in DB.CreateQuery<C_JCLQ_Match>()
                         where m.FSStopBettingTime >= DateTime.Now
-                        select new C_JCLQ_Match
+                        select new CoreJCLQMatchInfo
                         {
                             FSStopBettingTime = m.FSStopBettingTime,
                             GuestTeamName = m.GuestTeamName,
