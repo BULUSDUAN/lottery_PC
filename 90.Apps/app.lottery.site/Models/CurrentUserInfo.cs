@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using GameBiz.Core;
 using System.Xml;
 using Common.Net;
 using System.Text;
@@ -11,15 +10,16 @@ using Common.Utilities;
 using System.IO;
 using Common.Log;
 using System.Collections;
-using External.Core.Login;
+using EntityModel;
 using External.Core.Authentication;
+using EntityModel.CoreModel.AuthEntities;
+using External.Core.Login;
 
 namespace app.lottery.site.Models
 {
     /// <summary>
     /// 当前登录用户对象
     /// </summary>
-    [Serializable]
     public class CurrentUserInfo
     {
         /// <summary>
@@ -49,15 +49,15 @@ namespace app.lottery.site.Models
         /// <summary>
         /// 用户实名认证信息
         /// </summary>
-        public UserRealNameInfo RealNameInfo { get; set; }
+        public EntityModel.CoreModel.UserRealNameInfo RealNameInfo { get; set; }
         /// <summary>
         /// 用户邮箱认证信息
         /// </summary>
-        public UserEmailInfo EmailInfo { get; set; }
+        public EntityModel.CoreModel.UserEmailInfo EmailInfo { get; set; }
         /// <summary>
         /// 用户手机认证信息
         /// </summary>
-        public UserMobileInfo MobileInfo { get; set; }
+        public EntityModel.CoreModel.UserMobileInfo MobileInfo { get; set; }
         /// <summary>
         /// 绑定银行卡信息
         /// </summary>

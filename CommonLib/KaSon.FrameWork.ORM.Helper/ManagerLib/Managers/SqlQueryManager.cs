@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using static EntityModel.CoreModel.ReportInfo;
 
 namespace KaSon.FrameWork.ORM.Helper
 
@@ -186,5 +187,81 @@ namespace KaSon.FrameWork.ORM.Helper
                 return result.Count();
             return 0;
         }
+
+        #region 过关统计
+
+        /// <summary>
+        /// 查询过关统计
+        /// </summary>
+        public List<SportsOrder_GuoGuanInfo> QueryReportInfoList_GuoGuan(bool? isVirtualOrder, SchemeBettingCategory? category, string key, string gameCode, string gameType,
+            string issuseNumber, DateTime startTime, DateTime endTime, int pageIndex, int pageSize)
+        {
+           
+
+            #region linq
+
+            //var query = from c in this.Session.Query<Sports_Order_Complate>()
+            //            join u in this.Session.Query<UserRegister>() on c.UserId equals u.UserId
+            //            join b in this.Session.Query<UserBeedings>() on new { GameCode = c.GameCode, GameType = c.GameType, UserId = c.UserId } equals new { GameCode = b.GameCode, GameType = b.GameType, UserId = b.UserId }
+            //            where c.IsVirtualOrder == isVirtualOrder
+            //            && (key == string.Empty || (c.SchemeId == key || u.DisplayName == key))
+            //            && (c.GameCode == gameCode)
+            //            && (gameType == string.Empty || c.GameType == gameType)
+            //            && (issuseNumber == string.Empty || c.IssuseNumber == issuseNumber)
+            //            && (complateDate == string.Empty || c.ComplateDate == complateDate)
+            //            && (category == null || c.SchemeBettingCategory == category)
+            //            orderby c.AfterTaxBonusMoney, c.TotalMoney descending
+            //            select new SportsOrder_GuoGuanInfo
+            //            {
+            //                BetCount = c.BetCount,
+            //                BonusMoney = c.AfterTaxBonusMoney,
+            //                BonusStatus = c.BonusStatus,
+            //                Error1Count = c.Error1Count,
+            //                Error2Count = c.Error2Count,
+            //                GameCode = c.GameCode,
+            //                GameType = c.GameType,
+            //                HitMatchCount = c.HitMatchCount,
+            //                IssuseNumber = c.IssuseNumber,
+            //                SchemeId = c.SchemeId,
+            //                RightCount = c.RightCount,
+            //                SchemeType = c.SchemeType,
+            //                TotalMoney = c.TotalMoney,
+            //                UserId = c.UserId,
+            //                UserDisplayName = u.DisplayName,
+            //                UserHideDisplayNameCount = u.HideDisplayNameCount,
+            //                GoldCrownCount = b.GoldCrownCount,
+            //                GoldCupCount = b.GoldCupCount,
+            //                GoldDiamondsCount = b.GoldDiamondsCount,
+            //                GoldStarCount = b.GoldStarCount,
+            //                SilverCrownCount = b.SilverCrownCount,
+            //                SilverCupCount = b.SilverCupCount,
+            //                SilverDiamondsCount = b.SilverDiamondsCount,
+            //                SilverStarCount = b.SilverStarCount,
+            //            };
+
+            //totalCount = query.Count();
+            //return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+
+            #endregion
+
+            startTime = startTime.Date;
+            endTime = endTime.AddDays(1).Date;
+            var query = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "P_Report_GuoGuanTongJi_Sport").SQL;
+            var listInfo =DB.CreateSQLQuery(query).
+                SetInt("isVirtualOrder", !isVirtualOrder.HasValue ? -1 : Convert.ToInt32(isVirtualOrder.Value))
+               .SetInt("bettingCategory", !category.HasValue ? -1 : (int)category.Value)
+               .SetString("key_UID_UName_SchemeId", key)
+               .SetString("gameCode", gameCode.ToUpper())
+               .SetString("gameType", gameType.ToUpper())
+               .SetString("issuseNumber", issuseNumber)
+               .SetString("startTime", startTime.ToString("yyyy-MM-dd HH:mm"))
+               .SetString("endTime", endTime.ToString("yyyy-MM-dd HH:mm"))
+               .SetInt("pageIndex", pageIndex)
+               .SetInt("pageSize", pageSize)
+               .SetString("TotalCount", "Int32").List<SportsOrder_GuoGuanInfo>().ToList();
+            return listInfo;
+        }
+
+        #endregion
     }
 }

@@ -3491,7 +3491,6 @@ namespace app.lottery.site.iqucai.Controllers
                 param["loginName"] = userName;
                 param["password"] = passWord;
                 param["IPAddress"] = IpManager.IPAddress;
-              
                 var loginInfo = await serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/User_Login");
                 //LoginInfo loginInfo = WCFClients.ExternalClient.LoginLocal(userName, passWord, IpManager.IPAddress);
                 if (loginInfo.IsSuccess)
