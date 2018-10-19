@@ -48,8 +48,9 @@ namespace Lottery.AdminApi.Controllers
                     throw new LogicException("对不起，您的权限不足！");
                 }
                 var p = JsonHelper.Decode(entity.Param);
-                var key = p.config_key;
-                var value = p.config_value;
+                
+                string key = p.config_key;
+                string value = p.config_value;
                 var r = _service.UpdateActivityConfig(key, value);
                 return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功, Message = r.Message });
             }
@@ -83,8 +84,8 @@ namespace Lottery.AdminApi.Controllers
             try
             {
                 var p = JsonHelper.Decode(entity.Param);
-                var fillMoney = decimal.Parse(p.fillMoney);
-                var giveMoney = decimal.Parse(p.giveMoney);
+                decimal fillMoney = p.fillMoney;
+                decimal giveMoney = p.giveMoney;
                 var r =_service.AddFillMoneyGiveRedBagConfig(fillMoney, giveMoney);
                 return Json(new LotteryServiceResponse{ Code = AdminResponseCode.成功, Message = r.Message });
             }
@@ -103,9 +104,9 @@ namespace Lottery.AdminApi.Controllers
                     throw new LogicException("对不起，您的权限不足！");
                 }
                 var p = JsonHelper.Decode(entity.Param);
-                var id = int.Parse(p.id);
-                var fillMoney = decimal.Parse(p.fillMoney);
-                var giveMoney = decimal.Parse(p.giveMoney);
+                int id = p.id;
+                decimal fillMoney = p.fillMoney;
+                decimal giveMoney = p.giveMoney;
                 var r = _service.UpdateFillMoneyGiveRedBagConfig(id, fillMoney, giveMoney);
                 return Json(new LotteryServiceResponse{ Code = AdminResponseCode.成功, Message = r.Message });
             }
@@ -124,13 +125,13 @@ namespace Lottery.AdminApi.Controllers
                     throw new LogicException("对不起，您的权限不足！");
                 }
                 var p = JsonHelper.Decode(entity.Param);
-                var id = int.Parse(p.id);
+                int id = p.id;
                 var r = _service.DeleteFillMoneyGiveRedBagConfig(id);
                 return Json(new LotteryServiceResponse{ Code = AdminResponseCode.成功, Message = r.Message });
             }
             catch (Exception ex)
             {
-                return Json(new { Code = AdminResponseCode.失败, Msg = ex.Message });
+                return JsonEx(new { Code = AdminResponseCode.失败, Msg = ex.Message });
             }
         }
 
@@ -163,8 +164,8 @@ namespace Lottery.AdminApi.Controllers
                     throw new LogicException("对不起，您的权限不足！");
                 }
                 var p = JsonHelper.Decode(entity.Param);
-                var gameCode = p.gameCode;
-                var percent = decimal.Parse(p.percent);
+                string gameCode = p.gameCode;
+                decimal percent = p.percent;
                 var r =_service.AddRedBagUseConfig(gameCode, percent);
                 return Json(new LotteryServiceResponse{ Code =AdminResponseCode.成功, Message = r.Message });
             }
@@ -183,7 +184,7 @@ namespace Lottery.AdminApi.Controllers
                     throw new LogicException("对不起，您的权限不足！");
                 }
                 var p = JsonHelper.Decode(entity.Param);
-                var id = int.Parse(p.id);
+                int id = p.id;
                 var r =_service.DeleteRedBagUseConfig(id);
                 return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功, Message = r.Message });
             }
@@ -220,13 +221,13 @@ namespace Lottery.AdminApi.Controllers
                     throw new LogicException("对不起，您的权限不足！");
                 }
                 var p = JsonHelper.Decode(entity.Param);
-                var orderIndex = int.Parse(p.orderIndex);
-                var gameCode = p.gameCode;
-                var gameType = p.gameType;
-                var playType = p.playType;
-                var percent = decimal.Parse(p.percent);
-                var maxMoney = decimal.Parse(p.maxMoney);
-                var addMoneyWay = p.addMoneyWay;
+                int orderIndex = int.Parse(p.orderIndex);
+                string gameCode = p.gameCode;
+                string gameType = p.gameType;
+                string playType = p.playType;
+                decimal percent = decimal.Parse(p.percent);
+                decimal maxMoney = decimal.Parse(p.maxMoney);
+                string addMoneyWay = p.addMoneyWay;
                 var r = _service.AddAddBonusMoneyConfig(gameCode, gameType, playType, percent, maxMoney, orderIndex, addMoneyWay);
                 return Json(new LotteryServiceResponse { Code =AdminResponseCode.成功, Message = r.Message });
             }
@@ -245,7 +246,7 @@ namespace Lottery.AdminApi.Controllers
                     throw new LogicException("对不起，您的权限不足！");
                 }
                 var p = JsonHelper.Decode(entity.Param);
-                var id = int.Parse(p.id);
+                int id = int.Parse(p.id);
                 var r = _service.DeleteAddBonusMoneyConfig(id);
                 return Json(new LotteryServiceResponse{ Code = AdminResponseCode.成功, Message = r.Message });
             }
@@ -263,7 +264,7 @@ namespace Lottery.AdminApi.Controllers
             try
             {
                 var p = JsonHelper.Decode(entity.Param);
-                var UserId = string.IsNullOrWhiteSpace(p.userId) ? string.Empty : p.userId.ToString();
+                string UserId = string.IsNullOrWhiteSpace(p.userId) ? string.Empty : p.userId.ToString();
                 var UserGameCodeNotAddMoneyList = _service.QueryUserGameCodeNotAddMoneyList(ViewBag.UserId);
                 return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Value = UserGameCodeNotAddMoneyList });
             }
@@ -278,12 +279,12 @@ namespace Lottery.AdminApi.Controllers
             try
             {
                 var p = JsonHelper.Decode(entity.Param);
-                var userIdList = p.userId;
-                var gameCode = p.gameCode;
-                var gameType = p.gameType;
-                var playType = p.playType;
+                string userIdList = p.userId;
+                string gameCode = p.gameCode;
+                string gameType = p.gameType;
+                string playType = p.playType;
                 if (string.IsNullOrEmpty(gameCode))
-                    throw new Exception("彩种传入不能为空。");
+                    throw new LogicException("彩种传入不能为空。");
 
                 var msgList = new List<string>();
                 foreach (var userId in userIdList.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries))
@@ -314,7 +315,7 @@ namespace Lottery.AdminApi.Controllers
             try
             {
                 var p = JsonHelper.Decode(entity.Param);
-                var id = int.Parse(p.id);
+                int id = int.Parse(p.id);
                 var r =_service.DeleteUserGameCodeNotAddMoney(id);
                 return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Message = r.Message });
             }
@@ -368,7 +369,7 @@ namespace Lottery.AdminApi.Controllers
                 if (result.IsSuccess)
                     return Json(new LotteryServiceResponse{ Code =AdminResponseCode.成功, Message = "更新数据成功" });
                 else
-                    return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功, Message = "更新数据失败" + result.Message });
+                    return Json(new LotteryServiceResponse { Code = AdminResponseCode.失败, Message = "更新数据失败" + result.Message });
             }
             catch (Exception ex)
             {

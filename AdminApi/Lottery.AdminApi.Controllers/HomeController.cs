@@ -112,9 +112,12 @@ namespace Lottery.AdminApi.Controllers
             try
             {
                 var p = JsonHelper.Decode(entity.Param);
-                string userName = PreconditionAssert.IsNotEmptyString(p.userName, "登录账号不能为空！");
-                string passWord = PreconditionAssert.IsNotEmptyString(p.passWord, "登录密码不能为空！");
-                string verifyCode = PreconditionAssert.IsNotEmptyString(p.verifyCode, "验证码不能为空！");
+                string userNamestr = p.userName;
+                string passWordstr = p.passWord;
+                string verifyCodestr = p.verifyCode;
+                string userName = PreconditionAssert.IsNotEmptyString(userNamestr, "登录账号不能为空！");
+                string passWord = PreconditionAssert.IsNotEmptyString(passWordstr, "登录密码不能为空！");
+                string verifyCode = PreconditionAssert.IsNotEmptyString(verifyCodestr, "验证码不能为空！");
                 var vCode = HttpContext.Session.GetObj<string>("ValidateCode");
                 if (vCode != verifyCode)
                 { 

@@ -28,6 +28,10 @@ namespace Lottery.AdminApi.Controllers
         {
             try
             {
+                if (!CheckRights("B101"))
+                {
+                    throw new LogicException("对不起，您的权限不足！");
+                }
                 var p = JsonHelper.Decode(entity.Param);
                 var IssueNum = PreconditionAssert.IsNotEmptyString(p.IssueNum, "北单期号不能为空");
                 var result = _service.ManualUpdate_BJDC_MatchList(IssueNum, CurrentUser.UserToken);
@@ -46,6 +50,10 @@ namespace Lottery.AdminApi.Controllers
         {
             try
             {
+                if (!CheckRights("B101"))
+                {
+                    throw new LogicException("对不起，您的权限不足！");
+                }
                 var p = JsonHelper.Decode(entity.Param);
                 var IssueNum = PreconditionAssert.IsNotEmptyString(p.IssueNum, "北单期号不能为空");
                 var result = _service.ManualUpdate_BJDC_MatchResultList(IssueNum, CurrentUser.UserToken);
@@ -116,6 +124,10 @@ namespace Lottery.AdminApi.Controllers
         {
             try
             {
+                if (!CheckRights("B101"))
+                {
+                    throw new LogicException("对不起,您的权限不足!");
+                }
                 var p = JsonHelper.Decode(entity.Param);
                 var gameType = PreconditionAssert.IsNotEmptyString(p.GameType, "玩法不能为空");
                 var IssueNum = PreconditionAssert.IsNotEmptyString(p.IssueNum, "期号不能为空");
@@ -178,6 +190,10 @@ namespace Lottery.AdminApi.Controllers
         {
             try
             {
+                if (!CheckRights("B102"))
+                {
+                    throw new LogicException("对不起，您的权限不足");
+                }
                 if (!CheckRights("JYBS100"))
                     throw new LogicException("对不起，您的权限不足！");
                 var p = JsonHelper.Decode(entity.Param);

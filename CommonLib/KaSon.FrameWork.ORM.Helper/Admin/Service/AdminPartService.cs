@@ -18,34 +18,34 @@ namespace KaSon.FrameWork.ORM.Helper
         /// 查询优惠券列表
         /// </summary>
         /// <returns></returns>
-        public A20131105CouponsInfoCollection QueryCouponsList(string summary, bool? canUsable, string belongUserId, int pageIndex, int pageSize, string userToken)
-        {
-            var result = new A20131105CouponsInfoCollection();
-            var totalCount = 0;
-            var activityManager = new A20131105Manager();
-            var list = activityManager.QueryCouponsList(summary, canUsable, belongUserId, pageIndex, pageSize, out totalCount);
-            result.TotalCount = totalCount;
-            result.List.AddRange(list);
-            return result;
-        }
+        //public A20131105CouponsInfoCollection QueryCouponsList(string summary, bool? canUsable, string belongUserId, int pageIndex, int pageSize, string userToken)
+        //{
+        //    var result = new A20131105CouponsInfoCollection();
+        //    var totalCount = 0;
+        //    var activityManager = new A20131105Manager();
+        //    var list = activityManager.QueryCouponsList(summary, canUsable, belongUserId, pageIndex, pageSize, out totalCount);
+        //    result.TotalCount = totalCount;
+        //    result.List.AddRange(list);
+        //    return result;
+        //}
         /// <summary>
         /// 生成优惠券
         /// </summary>
         /// <returns></returns>
-        public CommonActionResult BuildCoupons(string summary, decimal money, int count, string userToken)
-        {
-            // 验证用户身份及权限
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
-            try
-            {
-                new A20131105().BuildCoupons(summary, money, count);
-                return new CommonActionResult(true, "生成完成");
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("生成优惠券出错 - " + ex.ToString());
-            }
-        }
+        //public CommonActionResult BuildCoupons(string summary, decimal money, int count, string userToken)
+        //{
+        //    // 验证用户身份及权限
+        //    var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+        //    try
+        //    {
+        //        new A20131105().BuildCoupons(summary, money, count);
+        //        return new CommonActionResult(true, "生成完成");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception("生成优惠券出错 - " + ex.ToString());
+        //    }
+        //}
         #endregion
 
         #region 活动配置相关
@@ -295,7 +295,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public CommonActionResult ManualUpdate_BJDC_MatchList(string issuseNumber, string userToken)
         {
             // 验证用户身份及权限
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 new IssuseBusiness().ManualUpdate_BJDC_MatchList(issuseNumber);
@@ -312,7 +312,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public CommonActionResult ManualUpdate_BJDC_MatchResultList(string issuseNumber, string userToken)
         {
             // 验证用户身份及权限
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 new IssuseBusiness().ManualUpdate_BJDC_MatchResultList(issuseNumber);
@@ -393,7 +393,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public CommonActionResult ManualUpdate_CTZQ_MatchList(string gameCode, string issuseNumber, string userToken)
         {
             // 验证用户身份及权限
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 new IssuseBusiness().ManualUpdate_CTZQ_MatchList(gameCode, issuseNumber);
@@ -465,7 +465,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public CommonActionResult UpdateJCZQMatchInfo(string matchId, string privilegesType, string userToken)
         {
             // 验证用户身份及权限
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 new IssuseBusiness().UpdateJCZQMatchInfo(matchId, privilegesType);
@@ -479,7 +479,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public CommonActionResult UpdateJCLQMatchInfo(string matchId, string privilegesType, string userToken)
         {
             // 验证用户身份及权限
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 new IssuseBusiness().UpdateJCLQMatchInfo(matchId, privilegesType);
