@@ -10,14 +10,31 @@ using Common.Lottery.Redis;
 using app.lottery.site.Controllers;
 using Common.Utilities;
 using Common.Cryptography;
+using System.Threading.Tasks;
+using log4net;
+using Kason.Sg.Core.ProxyGenerator;
+using Kason.Sg.Core.CPlatform.Runtime.Client.Address.Resolvers;
 
 namespace app.lottery.site.iqucai
 {
     /// <summary>
     /// Redis访问类
     /// </summary>
-    public class WebRedisHelper
+    public class WebRedisHelper:BaseController
     {
+        #region 调用服务使用示例
+        private readonly ILog logger = null;
+        private static  IServiceProxyProvider serviceProxyProvider;
+        public IAddressResolver addrre;
+        public WebRedisHelper(IServiceProxyProvider _serviceProxyProvider, ILog log, IAddressResolver _addrre)
+        {
+            serviceProxyProvider = _serviceProxyProvider;
+            logger = log;
+            addrre = _addrre;
+
+        }
+        #endregion
+
         private static string _cacheRedisHost = string.Empty;
         /// <summary>
         /// 缓存Redis的ip
@@ -1347,29 +1364,32 @@ namespace app.lottery.site.iqucai
         /// <summary>
         /// 查询用户余额
         /// </summary>
-        public static UserBalanceInfo QueryUserBalance(string userId)
+        public static async Task<EntityModel.CoreModel.UserBalanceInfo> QueryUserBalanceAsync(string userId)
         {
             try
             {
                 var db = RedisHelper.DB_UserBalance;
                 string key = string.Format("UserBalance_{0}", userId);
-                UserBalanceInfo userBalance = null;
+                EntityModel.CoreModel.UserBalanceInfo userBalance = null;
                 var v = db.StringGetAsync(key).Result;
                 if (!v.HasValue)
                 {
-                    userBalance = WCFClients.GameFundClient.QueryUserBalance(userId);
+                    Dictionary<string, object> balanceParam = new Dictionary<string, object>();
+                    balanceParam["userId"] = userId;
+                    userBalance = await serviceProxyProvider.Invoke<EntityModel.CoreModel.UserBalanceInfo>(balanceParam, "api/user/QueryMyBalance");
+                    
                     var json = JsonSerializer.Serialize(userBalance);
-                    db.StringSetAsync(key, json, TimeSpan.FromSeconds(60 * 2));
+                    await db.StringSetAsync(key, json, TimeSpan.FromSeconds(60 * 2));
                 }
                 else
                 {
-                    userBalance = JsonSerializer.Deserialize<UserBalanceInfo>(v.ToString());
+                    userBalance = JsonSerializer.Deserialize<EntityModel.CoreModel.UserBalanceInfo>(v.ToString());
                 }
                 return userBalance;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new UserBalanceInfo();
+                return new EntityModel.CoreModel.UserBalanceInfo();
             }
         }
 
@@ -1459,7 +1479,7 @@ namespace app.lottery.site.iqucai
         /// <summary>
         /// 检查投注时的资金密是否正确
         /// </summary>
-        public static void CheckBalancePwd(UserBalanceInfo info, string pwd)
+        public static void CheckBalancePwd(EntityModel.CoreModel.UserBalanceInfo info, string pwd)
         {
             if (!info.CheckIsNeedPassword("Bet"))
                 return;

@@ -843,5 +843,15 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             
         }
+
+        public int GetTodayRegisterCount(DateTime date, string ip)
+        {
+          
+            var hql = "SELECT COUNT(*) FROM LoginLocal WHERE CreateTime >= :CreateTime AND Register.RegisterIp = :Ip";
+            var result = DB.CreateSQLQuery(hql)
+                .SetString("CreateTime", date.ToLongDateString())
+                .SetString("Ip", ip).Excute();
+            return (int)result;
+        }
     }
 }

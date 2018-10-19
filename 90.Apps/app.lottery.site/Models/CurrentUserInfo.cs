@@ -13,7 +13,7 @@ using System.Collections;
 using EntityModel;
 using External.Core.Authentication;
 using EntityModel.CoreModel.AuthEntities;
-using External.Core.Login;
+using EntityModel.CoreModel;
 
 namespace app.lottery.site.Models
 {

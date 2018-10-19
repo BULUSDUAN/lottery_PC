@@ -410,7 +410,7 @@ namespace app.lottery.site.Controllers
                     var loginInfo = WCFClients.ExternalClient.LoginLocal(userName, passWord, IpManager.IPAddress);
                     if (loginInfo.IsSuccess)
                     {
-                        CurrentUser = new CurrentUserInfo() { LoginInfo = loginInfo };
+                        //CurrentUser = new CurrentUserInfo() { LoginInfo = loginInfo };
                     }
                 }
                 return Json(new { IsSucess = true, Message = "注册成功！" });

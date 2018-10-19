@@ -37,6 +37,8 @@ using log4net;
 using Kason.Sg.Core.ProxyGenerator;
 using System.Threading.Tasks;
 using Kason.Sg.Core.CPlatform.Runtime.Client.Address.Resolvers;
+using EntityModel;
+using EntityModel.Communication;
 
 namespace app.lottery.site.iqucai.Controllers
 {
@@ -187,27 +189,27 @@ namespace app.lottery.site.iqucai.Controllers
         /// 新注册成功页面
         /// </summary>
         /// <returns></returns>
-        public ActionResult NewRegistersuc()
-        {
-            string userName = Request["userName"];
-            string passWord = Request["passWord"];
-            if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(passWord))
-            {
-                LoginInfo loginInfo = WCFClients.ExternalClient.LoginLocal(userName, passWord, IpManager.IPAddress);
-                if (loginInfo.IsSuccess)
-                {
-                    CurrentUser = new CurrentUserInfo() { LoginInfo = loginInfo };
-                }
-            }
-            if (CurrentUser == null)
-            {
-                Response.Redirect("/statichtml/register.html");
-                return null;
-            }
-            //ViewBag.UserRegister = WCFClients.ExternalClient.QueryUserRegisterCount();
-            ViewBag.CurrentUser = CurrentUser;
-            return View();
-        }
+        //public ActionResult NewRegistersuc()
+        //{
+        //    string userName = Request["userName"];
+        //    string passWord = Request["passWord"];
+        //    if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(passWord))
+        //    {
+        //        LoginInfo loginInfo = WCFClients.ExternalClient.LoginLocal(userName, passWord, IpManager.IPAddress);
+        //        if (loginInfo.IsSuccess)
+        //        {
+        //            CurrentUser = new CurrentUserInfo() { LoginInfo = loginInfo };
+        //        }
+        //    }
+        //    if (CurrentUser == null)
+        //    {
+        //        Response.Redirect("/statichtml/register.html");
+        //        return null;
+        //    }
+        //    //ViewBag.UserRegister = WCFClients.ExternalClient.QueryUserRegisterCount();
+        //    ViewBag.CurrentUser = CurrentUser;
+        //    return View();
+        //}
 
         /// <summary>
         /// 指定代理注册
@@ -266,7 +268,7 @@ namespace app.lottery.site.iqucai.Controllers
                         loginInfo = WCFClients.ExternalClient.LoginLocal(userName, passWord, IpManager.IPAddress);
                         if (loginInfo.IsSuccess)
                         {
-                            CurrentUser = new CurrentUserInfo() { LoginInfo = loginInfo };
+                            //CurrentUser = new CurrentUserInfo() { LoginInfo = loginInfo };
                             Session["userCurrentPassWord"] = passWord;
                         }
                         string userToken = loginInfo.UserToken.Replace("+", "%2B");
@@ -2223,7 +2225,7 @@ namespace app.lottery.site.iqucai.Controllers
                     LoginInfo loginInfo = WCFClients.ExternalClient.ResponseAuthenticationEmail(code, SchemeSource.Web);
                     if (loginInfo.IsSuccess)
                     {
-                        CurrentUser = new CurrentUserInfo() { LoginInfo = loginInfo };
+                        //CurrentUser = new CurrentUserInfo() { LoginInfo = loginInfo };
                         ViewBag.CurrentUser = CurrentUser;
                     }
                 }
@@ -2494,7 +2496,7 @@ namespace app.lottery.site.iqucai.Controllers
                             //  LoginInfo loginInfo = WCFClients.ExternalClient.LoginByAlipay(user_id);
                             if (isExist.IsSuccess)
                             {
-                                CurrentUser = new CurrentUserInfo() { LoginInfo = isExist };
+                                //CurrentUser = new CurrentUserInfo() { LoginInfo = isExist };
                                 //重新加载用户等级
                                 LoadUserLeve();
                             }
@@ -2591,7 +2593,7 @@ namespace app.lottery.site.iqucai.Controllers
                     var com = WCFClients.ExternalClient.BindAlipayExistUser(userId, user_id, IpManager.IPAddress);
                     if (com.IsSuccess)
                     {
-                        CurrentUser = new CurrentUserInfo() { LoginInfo = com };
+                       // CurrentUser = new CurrentUserInfo() { LoginInfo = com };
                         LoadUserLeve();
                     }
                 }
@@ -2603,7 +2605,7 @@ namespace app.lottery.site.iqucai.Controllers
                         LoginInfo logininfo = WCFClients.ExternalClient.LoginLocal(userName, pwd, IpManager.IPAddress);
                         if (logininfo.IsSuccess)
                         {
-                            CurrentUser = new CurrentUserInfo() { LoginInfo = logininfo };
+                           // CurrentUser = new CurrentUserInfo() { LoginInfo = logininfo };
                             LoadUserLeve();
                         }
                     }
@@ -3098,7 +3100,7 @@ namespace app.lottery.site.iqucai.Controllers
                         // LoginInfo loginInfo = WCFClients.ExternalClient.
                         if (isExist.IsSuccess)
                         {
-                            CurrentUser = new CurrentUserInfo() { LoginInfo = isExist };
+                            //CurrentUser = new CurrentUserInfo() { LoginInfo = isExist };
                             //重新加载vip等级
                             LoadUserLeve();
                         }
@@ -3229,7 +3231,7 @@ namespace app.lottery.site.iqucai.Controllers
                     var loginInfo = WCFClients.ExternalClient.BindQQExistUser(userId, openid, IpManager.IPAddress);
                     if (loginInfo.IsSuccess)
                     {
-                        CurrentUser = new CurrentUserInfo() { LoginInfo = loginInfo, QQVipLevel = vip_level };
+                       // CurrentUser = new CurrentUserInfo() { LoginInfo = loginInfo, QQVipLevel = vip_level };
                         LoadUserLeve();
                     }
                 }
@@ -3239,7 +3241,7 @@ namespace app.lottery.site.iqucai.Controllers
                     if (comm.IsSuccess)
                     {
                         LoginInfo loginInfo = WCFClients.ExternalClient.LoginLocal(userName, pwd, IpManager.IPAddress);
-                        CurrentUser = new CurrentUserInfo() { LoginInfo = loginInfo, QQVipLevel = vip_level };
+                        //CurrentUser = new CurrentUserInfo() { LoginInfo = loginInfo, QQVipLevel = vip_level };
                     }
                 }
 
@@ -3384,30 +3386,40 @@ namespace app.lottery.site.iqucai.Controllers
         /// <param name="postForm"></param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult LoacalUserRegister(FormCollection postForm)
+        public async Task<JsonResult> LoacalUserRegisterAsync(FormCollection postForm)
         {
             try
             {
-                int brfipCount = BanRegistrFrequencyIPCount;//限制IP注册次数时间分
-                int brfipTime = BanRegistrFrequencyIPTime;//限制分钟数
-                //var count=WCFClients.ExternalClient.GetTodayRegisterCount(DateTime.Now.AddHours(-10), IpManager.IPAddress);
-                string banRegistrIP = BanRegistrIP;
+                
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["key"] = "BanRegistrFrequencyIPCount";
+
+                var brfipCount = await serviceProxyProvider.Invoke<C_Core_Config>(param, "api/user/QueryCoreConfigByKey");//限制IP注册次数时间分
+                param.Clear();
+                param["key"] = "BanRegistrFrequencyIPTime";
+                var brfipTime = await serviceProxyProvider.Invoke<C_Core_Config>(param, "api/user/QueryCoreConfigByKey");//限制分钟数
+                param.Clear();
+                param["key"] = "BanRegistrIP";
+                var banRegistrIP = await serviceProxyProvider.Invoke<C_Core_Config>(param, "api/user/QueryCoreConfigByKey");//禁止注册IP
                 string localIP = IpManager.IPAddress;
-                if (banRegistrIP.Contains(localIP))
+                if (banRegistrIP.ConfigValue.Contains(localIP))
                 {
                     return Json(new { IsSuccess = false, Message = "因检测到该IP地址异常，无法注册用户，请联系在线客服。" });
                 }
-                if (brfipCount > 0 && brfipTime > 0)
+                if (Convert.ToInt32(brfipCount.ConfigValue) > 0 && Convert.ToInt32(brfipTime) > 0)
                 {
-                    DateTime dt = DateTime.Now.AddMinutes(-brfipTime);
-                    var count = WCFClients.ExternalClient.GetTodayRegisterCount(dt, localIP);
-                    if (count > brfipCount)
+                    DateTime date = DateTime.Now.AddMinutes(-Convert.ToInt32(brfipTime));
+                    param.Clear();
+                    param["date"] = date;
+                    param["localIP"] = localIP;
+                    var count = await serviceProxyProvider.Invoke<int>(param, "api/user/GetTodayRegisterCount");//禁止注册IP
+                    if (count > Convert.ToInt32(brfipCount))
                     {
-                        return Json(new { IsSuccess = false, Message = string.Format("同一IP，在{0}分钟内只能注册{1}个账号", brfipTime, brfipCount) });
+                        return Json(new { IsSuccess = false, Message = string.Format("同一IP，在{0}分钟内只能注册{1}个账号", brfipTime.ConfigValue, brfipCount.ConfigValue) });
                     }
                 }
 
-                Common.Communication.CommonActionResult result = null;
+                CommonActionResult result = null;
 
                 if (Session["ValidateCode"] == null || Session["ValidateCode"].ToString() == "")
                 {
@@ -3420,7 +3432,7 @@ namespace app.lottery.site.iqucai.Controllers
                 var passWord = PreconditionAssert.IsNotEmptyString(Request["password"], "账户密码不能为空");
                 var ipinfo = IpManager.GetIpDisplayname_Sina(localIP);
                 string ipaddress = ipinfo == null ? "" : ipinfo.ToString();
-                RegisterInfo_Local registerInfo = new RegisterInfo_Local()
+                EntityModel.CoreModel.RegisterInfo_Local registerInfo = new EntityModel.CoreModel.RegisterInfo_Local()
                 {
                     RegType = "LOCAL",
                     LoginName = mobile,
@@ -3430,32 +3442,40 @@ namespace app.lottery.site.iqucai.Controllers
                     ReferrerUrl = Session["RefferUrl"] == null ? "" : Session["RefferUrl"].ToString(),
                     Mobile = mobile
                 };
-
-
-               
+                param.Clear();
 
                 if (Session["pid"] != null)
+                {
                     registerInfo.AgentId = Session["pid"].ToString();
+                }
+              
                 if (Session["yqid"] != null)//yqid是普通会员推广
                 {
                     string yqid = Session["yqid"].ToString();
-                    result = WCFClients.ExternalClient.RegisterResponseMobile_Spread(validateCode, mobile, SchemeSource.Web, registerInfo, yqid);
-
-                }
+                 }
+                
                 else if (Session["fxid"] != null)//fxid是分享链接推广
                 {
                     string fxid = Session["fxid"].ToString();
-                    result = WCFClients.ExternalClient.RegisterResponseMobile_ShareSpread(validateCode, mobile, SchemeSource.Web, registerInfo, fxid);
                 }
-                else
-                {
-                    result = WCFClients.ExternalClient.RegisterResponseMobile(validateCode, mobile, SchemeSource.Web, registerInfo);
-                }
+                param["validateCode"] = validateCode;
+                param["mobile"] = mobile;
+                param["source"] = EntityModel.Enum.SchemeSource.NewWeb;
+
+                param["info"] = registerInfo;
+                param["fxid"] = Session["fxid"];
+                param["yqid"] = Session["yqid"];
+
+                result = await serviceProxyProvider.Invoke<CommonActionResult>(param, "api/User/RegisterResponseMobile");
 
                 if (result.IsSuccess)
                 {
-                    LoginInfo loginInfo = WCFClients.ExternalClient.LoginLocal(registerInfo.LoginName, passWord, IpManager.IPAddress);
-                    if (loginInfo.IsSuccess)
+                    param.Clear();
+                    param["loginName"] = registerInfo.LoginName;
+                    param["password"] = passWord;
+                    param["IPAddress"] = IpManager.IPAddress;
+                    EntityModel.CoreModel.LoginInfo loginInfo = await serviceProxyProvider.Invoke<EntityModel.CoreModel.LoginInfo>(param, "api/user/user_login");
+                    if (loginInfo.IsSuccess) 
                         CurrentUser = new CurrentUserInfo() { LoginInfo = loginInfo };
                     else
                         return Json(new { IsSuccess = false, Message = loginInfo.Message, userToken = loginInfo.UserToken }, JsonRequestBehavior.AllowGet);
@@ -3491,7 +3511,7 @@ namespace app.lottery.site.iqucai.Controllers
                 param["loginName"] = userName;
                 param["password"] = passWord;
                 param["IPAddress"] = IpManager.IPAddress;
-                var loginInfo = await serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/User_Login");
+                var loginInfo = await serviceProxyProvider.Invoke<EntityModel.CoreModel.LoginInfo>(param, "api/User/User_Login");
                 //LoginInfo loginInfo = WCFClients.ExternalClient.LoginLocal(userName, passWord, IpManager.IPAddress);
                 if (loginInfo.IsSuccess)
                 {
@@ -3872,7 +3892,7 @@ namespace app.lottery.site.iqucai.Controllers
                     var lInfo = WCFClients.ExternalClient.LoginByUserToken(token);
                     if (lInfo.IsSuccess)
                     {
-                        CurrentUser = new CurrentUserInfo() { LoginInfo = lInfo };
+                        //CurrentUser = new CurrentUserInfo() { LoginInfo = lInfo };
                         Response.Redirect("/");
                     }
                     else
@@ -4453,7 +4473,7 @@ namespace app.lottery.site.iqucai.Controllers
         /// 发送手机验证码
         /// </summary>
         /// <returns></returns>
-        public JsonResult RegisterSendMobileCode()
+        public async Task<JsonResult> RegisterSendMobileCodeAsync()
         {
             try
             {
@@ -4471,8 +4491,12 @@ namespace app.lottery.site.iqucai.Controllers
                 }
                 //Session["ValidateCode"] = num;
                 #region "20171108增加配置（禁止注册的手机号码）"
-                string banRegistrMobile = BanRegistrMobile;
-                if (banRegistrMobile.Contains(mobile))
+                Dictionary<string, object> Keyparam = new Dictionary<string, object>();
+                Keyparam["key"] = "BanRegistrMobile";
+
+                var banRegistrMobile = await serviceProxyProvider.Invoke<C_Core_Config>(Keyparam, "api/user/QueryCoreConfigByKey");
+                //string banRegistrMobile = BanRegistrMobile;
+                if (banRegistrMobile.ConfigValue.Contains(mobile))
                 {
                     return Json(new { IsSuccess = false, Msg = "因检测到该号码在黑名单中，无法注册用户，请联系在线客服。" });
                 }
@@ -4484,7 +4508,7 @@ namespace app.lottery.site.iqucai.Controllers
                 {
                     return Json(new { IsSuccess = false, Msg = "因检测到该号码在黑名单中，无法注册用户，请联系在线客服。" });
                 }
-                foreach (var item in banRegistrMobile.Split('|'))
+                foreach (var item in banRegistrMobile.ConfigValue.Split('|'))
                 {
                     if (mobile.StartsWith(item))
                     {
@@ -4509,10 +4533,13 @@ namespace app.lottery.site.iqucai.Controllers
                 //        return Json(new { Succuss = false, Msg = "请拖动验证滑块到正确位置!" }, JsonRequestBehavior.AllowGet);
                 //    }
                 //}
-                var resutl = WCFClients.ExternalClient.RegisterRequestMobile(mobile);
-                Session["IsCode"] = resutl.IsSuccess;
+                Keyparam.Clear();
+                Keyparam["mobile"] = mobile;
+                var result = await serviceProxyProvider.Invoke<CommonActionResult>(Keyparam, "api/user/RegisterRequestMobile");
+                //var resutl = WCFClients.ExternalClient.RegisterRequestMobile(mobile);
+                Session["IsCode"] = result.IsSuccess;
                 Session["mobile"] = mobile;
-                return Json(new { Succuss = resutl.IsSuccess, Msg = resutl.Message }, JsonRequestBehavior.AllowGet);
+                return Json(new { Succuss = result.IsSuccess, Msg = result.Message }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -4562,8 +4589,8 @@ namespace app.lottery.site.iqucai.Controllers
                     Session["tempUserId"] = string.Empty;
                     Session["TempRegisterInfo"] = null;
                     LoginInfo loginInfo = WCFClients.ExternalClient.LoginLocal(userName, passWord, IpManager.IPAddress);
-                    if (loginInfo.IsSuccess)
-                        CurrentUser = new CurrentUserInfo() { LoginInfo = loginInfo };
+                    if (loginInfo.IsSuccess) { }
+                    //CurrentUser = new CurrentUserInfo() { LoginInfo = loginInfo };
                     else
                         return Json(new { IsSuccess = false, Message = loginInfo.Message, userToken = loginInfo.UserToken }, JsonRequestBehavior.AllowGet);
                 }
