@@ -1,8 +1,10 @@
 ﻿
 using EntityModel.CoreModel;
+using EntityModel.Enum;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using static EntityModel.CoreModel.ReportInfo;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
@@ -36,5 +38,21 @@ namespace KaSon.FrameWork.ORM.Helper
              return manager.QueryTogetherFollowerCount(createUserId);
             
         }
+
+        #region 过关统计
+
+        /// <summary>
+        /// 查询过关统计
+        /// </summary>
+        public SportsOrder_GuoGuanInfoCollection QueryReportInfoList_GuoGuan(bool? isVirtualOrder, SchemeBettingCategory? category, string key, string gameCode, string gameType, string issuseNumber, DateTime startTime, DateTime endTime, int pageIndex, int pageSize)
+        {
+            var result = new SportsOrder_GuoGuanInfoCollection();
+            var totalCount = 0;
+            result.ReportItemList.AddRange(new SqlQueryManager().QueryReportInfoList_GuoGuan(isVirtualOrder, category, key, gameCode, gameType, issuseNumber, startTime, endTime, pageIndex, pageSize));
+            result.TotalCount = totalCount;
+            return result;
+        }
+
+        #endregion
     }
 }

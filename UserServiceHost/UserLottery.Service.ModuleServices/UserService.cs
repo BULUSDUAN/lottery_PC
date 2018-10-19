@@ -79,12 +79,12 @@ namespace UserLottery.Service.ModuleServices
         private UserAuthentication userAuthentication = new UserAuthentication();
         LoginLocal loginEntity = new LoginLocal();
         //private BusinessHelper businessHelper;
-        public Task<LoginInfo> User_Login(string loginName, string password, string loginIp)
+        public Task<LoginInfo> User_Login(string loginName, string password, string IPAddress)
         {
 
             try
             {
-                string IPAddress = loginIp;
+                string IPAddres = IPAddress;
                 var loginBiz = new LocalLoginBusiness();
                 if (IPAddress == "Client")//移动端登录时，密码已经MD5
                     loginEntity = loginBiz.LoginAPP(loginName, password);
@@ -110,7 +110,7 @@ namespace UserLottery.Service.ModuleServices
                 ////清理用户绑定数据缓存
                 ////ClearUserBindInfoCache(loginEntity.UserId);
                 //!执行扩展功能代码 - 提交事务前
-                BusinessHelper.ExecPlugin<IUser_AfterLogin>(new object[] { loginEntity.UserId, "LOCAL", loginIp, DateTime.Now });
+                BusinessHelper.ExecPlugin<IUser_AfterLogin>(new object[] { loginEntity.UserId, "LOCAL", IPAddres, DateTime.Now });
                 //刷新用户在Redis中的余额
                 BusinessHelper.RefreshRedisUserBalance(loginEntity.UserId);
 
