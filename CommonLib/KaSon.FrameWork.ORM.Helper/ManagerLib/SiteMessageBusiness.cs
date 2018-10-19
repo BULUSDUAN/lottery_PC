@@ -1,11 +1,12 @@
-﻿using EntityModel.CoreModel;
+﻿using EntityModel;
+using EntityModel.CoreModel;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
-     public class SiteMessageBusiness:DBbase
+    public class SiteMessageBusiness : DBbase
     {
         public UserIdeaInfo_QueryCollection QueryMyUserIdeaList(string createUserId, int pageIndex, int pageSize)
         {
@@ -30,35 +31,48 @@ namespace KaSon.FrameWork.ORM.Helper
         public void UpdateArticleStaticPath(string articleId, string staticPath, string preId, string nextId)
         {
 
-                 DB.Begin();
-                var manager = new ArticleManager();
-                var entity = manager.QueryArticle(articleId);
-                if (entity == null)
-                    throw new ArgumentException("指定编号的文章不存在");
-                var pre = manager.QueryArticle(preId);
-                var next = manager.QueryArticle(nextId);
+            DB.Begin();
+            var manager = new ArticleManager();
+            var entity = manager.QueryArticle(articleId);
+            if (entity == null)
+                throw new ArgumentException("指定编号的文章不存在");
+            var pre = manager.QueryArticle(preId);
+            var next = manager.QueryArticle(nextId);
 
-                entity.StaticPath = staticPath;
-                entity.PreStaticPath = pre == null ? string.Empty : pre.StaticPath;
-                entity.NextStaticPath = next == null ? string.Empty : next.StaticPath;
-                manager.UpdateArticle(entity);
+            entity.StaticPath = staticPath;
+            entity.PreStaticPath = pre == null ? string.Empty : pre.StaticPath;
+            entity.NextStaticPath = next == null ? string.Empty : next.StaticPath;
+            manager.UpdateArticle(entity);
 
-                if (pre != null)
-                {
-                    pre.NextStaticPath = staticPath;
-                    pre.NextId = entity.Id;
-                    pre.NextTitle = entity.Title.Length > 50 ? entity.Title.Substring(0, 50) : entity.Title;
-                    manager.UpdateArticle(pre);
-                }
-                if (next != null)
-                {
-                    next.PreStaticPath = staticPath;
-                    next.PreId = entity.Id;
-                    next.PreTitle = entity.Title.Length > 50 ? entity.Title.Substring(0, 50) : entity.Title;
-                    manager.UpdateArticle(next);
-                }
-              DB.Commit();
-            
+            if (pre != null)
+            {
+                pre.NextStaticPath = staticPath;
+                pre.NextId = entity.Id;
+                pre.NextTitle = entity.Title.Length > 50 ? entity.Title.Substring(0, 50) : entity.Title;
+                manager.UpdateArticle(pre);
+            }
+            if (next != null)
+            {
+                next.PreStaticPath = staticPath;
+                next.PreId = entity.Id;
+                next.PreTitle = entity.Title.Length > 50 ? entity.Title.Substring(0, 50) : entity.Title;
+                manager.UpdateArticle(next);
+            }
+            DB.Commit();
+
+        }
+
+        public void AddSysOperationLog(string userId, string operUserId, string menuName, string desc)
+        {
+            var manager = new SysLogManager();
+            manager.AddSysOperationLog(new C_Sys_OperationLog
+            {
+                UserId = userId,
+                OperUserId = operUserId,
+                CreateTime = DateTime.Now,
+                Description = desc,
+                MenuName = menuName,
+            });
         }
     }
 }
