@@ -123,7 +123,7 @@ namespace KaSon.FrameWork.ORM.Helper
                             MatchIdName = "",
                             MatchNumber = m.MatchOrderId != 0 ? m.MatchOrderId.ToString().Trim() : "",
                             StartDateTime = m.MatchStartTime,
-                            //PrivilegesType = m.PrivilegesType != null ? m.PrivilegesType : ""
+                            PrivilegesType = m.PrivilegesType != null ? m.PrivilegesType : ""
                         };
             return query.ToList();
         }
