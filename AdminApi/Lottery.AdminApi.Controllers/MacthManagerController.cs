@@ -195,7 +195,7 @@ namespace Lottery.AdminApi.Controllers
                 var p = JsonHelper.Decode(entity.Param);
                 var gameCode = PreconditionAssert.IsNotEmptyString((string)p.GameCode, "请选择彩种");
                 var matchId = PreconditionAssert.IsNotEmptyString((string)p.matchId, "比赛编号不能为空");
-                var privilegesType = p.privilegesType;
+                var privilegesType = (string)p.privilegesType;
                 switch (gameCode)
                 {
                     case "JCZQ":

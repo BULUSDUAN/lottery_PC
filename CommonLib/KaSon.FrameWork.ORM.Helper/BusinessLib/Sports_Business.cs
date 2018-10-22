@@ -7557,7 +7557,7 @@ namespace KaSon.FrameWork.ORM.Helper
             if (query != null && query.Count() > 0)
             {
                 collection.TotalCount = query.Count();
-                collection.IndexMatchList = query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+                collection.IndexMatchList = query.ToList().Skip(pageIndex * pageSize).Take(pageSize).ToList();
             }
             return collection;
         }

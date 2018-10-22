@@ -105,27 +105,34 @@ namespace KaSon.FrameWork.ORM.Helper
         }
         public List<CoreBJDCMatchInfo> QueryCurrentBJDCMatchInfo()
         {
-       
-            var query = from m in DB.CreateQuery<C_BJDC_Match>()
-                        where m.LocalStopTime >= DateTime.Now
-                        select new CoreBJDCMatchInfo()
-                        {
-                            Id = m.Id,
-                            MatchOrderId = m.MatchOrderId != 0 ? m.MatchOrderId.ToString().Trim() : "",
-                            FSStopBettingTime = m.LocalStopTime,
-                            GuestTeamName = m.GuestTeamName,
-                            HomeTeamName = m.HomeTeamName,
-                            LeagueColor = m.MatchColor,
-                            //
-                            LeagueName = m.MatchName,
-                            MatchData = m.IssuseNumber,
-                            MatchId = m.MatchId != 0 ? m.MatchId.ToString().Trim() : "",
-                            MatchIdName = "",
-                            MatchNumber = m.MatchOrderId != 0 ? m.MatchOrderId.ToString().Trim() : "",
-                            StartDateTime = m.MatchStartTime,
-                            PrivilegesType = m.PrivilegesType != null ? m.PrivilegesType : ""
-                        };
-            return query.ToList();
+            try
+            {
+                var List = DB.CreateQuery<C_BJDC_Match>().Where(x => x.LocalStopTime >= DateTime.Now).ToList();
+                List<CoreBJDCMatchInfo> resultList = new List<CoreBJDCMatchInfo>();
+                foreach (var m in List)
+                {
+                    CoreBJDCMatchInfo model = new CoreBJDCMatchInfo();
+                    model.Id = m.Id;
+                    model.MatchOrderId = m.MatchOrderId > 0 ? m.MatchOrderId.ToString().Trim() : "";
+                    model.FSStopBettingTime = m.LocalStopTime;
+                    model.GuestTeamName = m.GuestTeamName;
+                    model.HomeTeamName = m.HomeTeamName;
+                    model.LeagueColor = m.MatchColor;
+                    model.LeagueName = m.MatchName;
+                    model.MatchData = m.IssuseNumber;
+                    model.MatchId = m.MatchId > 0 ? m.MatchId.ToString().Trim() : "";
+                    model.MatchIdName = "";
+                    model.MatchNumber = m.MatchOrderId > 0 ? m.MatchOrderId.ToString().Trim() : "";
+                    model.StartDateTime = m.MatchStartTime;
+                    model.PrivilegesType = m.PrivilegesType != null ? m.PrivilegesType : "";
+                    resultList.Add(model);
+                }
+                return resultList;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
         public List<BJDCMatchResultInfo> QueryBJDC_MatchResultListByissuseNumber(string issuseNumber)
         {
