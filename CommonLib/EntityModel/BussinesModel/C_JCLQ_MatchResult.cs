@@ -1,4 +1,5 @@
-﻿using KaSon.FrameWork.Services.Attribute;
+﻿using EntityModel.Interface;
+using KaSon.FrameWork.Services.Attribute;
 using KaSon.FrameWork.Services.Enum;
 using ProtoBuf;
 using System;
@@ -12,7 +13,7 @@ namespace EntityModel
     ///</summary>
     [ProtoContract]
     [Entity("C_JCLQ_MatchResult",Type = EntityType.Table)]
-    public class C_JCLQ_MatchResult
+    public class C_JCLQ_MatchResult: ISportResult
     { 
         public C_JCLQ_MatchResult()
         {
@@ -120,5 +121,55 @@ namespace EntityModel
             [ProtoMember(17)]
             [Field("CreateTime")]
             public DateTime CreateTime{ get; set; }
+
+        public virtual string GetMatchId(string gameCode)
+        {
+            return MatchId;
+        }
+        public virtual string GetFullMatchScore(string gameCode)
+        {
+            return HomeScore + ":" + GuestScore;
+        }
+        public virtual string GetMatchResult(string gameCode, string gameType, decimal offset = -1)
+        {
+            switch (gameType)
+            {
+                case "SF":
+                    return SF_Result;
+                case "RFSF":
+                    if (offset != -1)
+                    {
+                        var host1 = (decimal)HomeScore;
+                        var guest1 = (decimal)GuestScore;
+                        if (host1 + offset > guest1)
+                        {
+                            return "3";
+                        }
+                        else if (host1 + offset < guest1)
+                        {
+                            return "0";
+                        }
+                    }
+                    return RFSF_Result;
+                case "SFC":
+                    return SFC_Result;
+                case "DXF":
+                    if (offset != -1)
+                    {
+                        var host2 = (decimal)HomeScore;
+                        var guest2 = (decimal)GuestScore;
+                        if (host2 + guest2 > offset)
+                        {
+                            return "3";
+                        }
+                        else if (host2 + guest2 < offset)
+                        {
+                            return "0";
+                        }
+                    }
+                    return DXF_Result;
+            }
+            return string.Empty;
+        }
     }
 }

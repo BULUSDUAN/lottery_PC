@@ -47,7 +47,8 @@
     "Token": "true",
     "RequestCacheEnabled": false
   },
-//"数字彩开奖配置"
+ 
+  //"采集配置配置"
   "CrawSettings": {
 
     "SZC_OPEN_URL": "http://101.37.126.96:5633/newly.do?token=f9e18eb66b794d91&code={0}&format=json&random={1}",
@@ -58,16 +59,44 @@
     "ZHM_ServiceUrl": "",
     "ZHM_Key": "",
     "ZHM_PartnerId": "",
-    "ZHM_Version": ""
+    "ZHM_Version": "",
+    "DataSiteUrl": "http://10.0.3.6:888/MatchData",
+    //奖池采集
+    "BonusPoolSettings": {
+      "CollectBonusPool_InterfaceType_SSQ": "cailele",
+      "CollectBonusPool_InterfaceType_DLT": "aicaipiao,cailele"
+    },
+    "MatchSettings": {
+
+
+    },
+    //数字彩 彩种采集停留时间间隔 单位秒
+    "NumLettory_SleepTimeSpanSettings": {
+      "CQSSC": 40,
+      "JX11X5": 20,
+      "SD11X5": 20,
+      "GDKLSF": 20,
+      "JSKS": 20,
+      "SDKLPK3": 20,
+      "FC3D": 20,
+      "PL3": 20,
+      "SSQ": 20,
+      "DLT": 20
+     
+
+    }
   },
-  //必须配置  RebbitMq 启动地址
-  "RebbitMqSettings": {
-    "EventBusConnection": "10.0.3.27",
-    "EventBusUserName": "guest",
-    "EventBusPassword": "guest",
-    "VirtualHost": "/",
-    "BrokerName": "Kason.Sg",
-    "Port": "5672"
+  //Mongo 数据库配置
+  "MongoSettings": {
+    "connectionString": "mongodb://10.0.3.6:27017",
+    "SingleInstance": false,
+    "dbName": "CrawDB",
+    //mogodb 采集表命名
+    "TableNamesSettings": {
+      "CreawPool": "NumLottery",//数字彩表名
+      "CTZQMatch": "CTZQMatch"   //传统足球表名
+    }
+    
   },
   //必须配置 服务发现配置
   "ConsulSettings": {

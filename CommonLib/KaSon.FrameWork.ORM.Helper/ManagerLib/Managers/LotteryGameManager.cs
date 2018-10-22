@@ -5,6 +5,8 @@ using System.Text;
 using System.Linq;
 using EntityModel.Enum;
 using EntityModel.CoreModel;
+using KaSon.FrameWork.Common.Redis;
+using EntityModel.Redis;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
@@ -21,7 +23,11 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             this.DB.GetDal<C_Lottery_GameType>().Add(entity);
         }
-       
+        public void UpdateGameIssuse(C_Game_Issuse issuse)
+        {
+           // this.Update<GameIssuse>(issuse);
+            this.DB.GetDal<C_Game_Issuse>().Update(issuse);
+        }
         public void UpdateLotteryGame(C_Lottery_Game lotteryGame)
         {
             this.DB.GetDal<C_Lottery_Game>().Update(lotteryGame);
@@ -48,6 +54,40 @@ namespace KaSon.FrameWork.ORM.Helper
                         select g;
             return query.Take(count).ToList();
         }
+        /// <summary>
+        /// 加载数字彩开奖号码
+        /// </summary>
+        public static void LoadSZCWinNumber(string gameCode)
+        {
+            var gameCodeArray = new string[] { "CQSSC", "JX11X5", "SSQ", "DLT", "FC3D", "PL3", "OZB", "SD11X5", "GD11X5", "GDKLSF", "JSKS", "SDKLPK3", "SJB" };
+            if (!gameCodeArray.Contains(gameCode))
+                return;
+
+            if (gameCode == "OZB")
+            {
+              //  LoadOZBWinNumber();
+            }
+            else if (gameCode == "SJB")
+            {
+               // LoadSJBWinNumber();
+            }
+            else
+            {
+                var lastOpenIssuse = new LotteryGameManager().QueryLastOpenIssuse(gameCode, 100);
+                var db = RedisHelperEx.DB_Match;
+                var fullKey = string.Format("{0}_{1}", gameCode, RedisKeys.Key_MatchResult_List);
+                //清空Key对应的value值
+                db.Del(fullKey);
+
+                //写入redis库
+                //格式：期号^开奖号
+                var array = lastOpenIssuse.Select(p =>string.Format("{0}^{1}", p.IssuseNumber, p.WinNumber)).ToArray();
+                //  db.ListRightPushAsync(fullKey, array);
+                db.RPush(fullKey, array);
+            }
+        }
+
+
         public IList<LotteryIssuse_QueryInfo> QueryAllGameCurrentIssuse(bool byOfficial)
         {
             //  Session.Clear();

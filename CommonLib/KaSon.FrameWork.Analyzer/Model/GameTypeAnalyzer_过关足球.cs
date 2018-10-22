@@ -278,6 +278,8 @@ namespace  KaSon.FrameWork.Analyzer.Model
             }
             return result;
         }
+
+  
         private int GetBonusCount(Dictionary<string, int> cancelList, string[] anteList)
         {
             var count = 1;

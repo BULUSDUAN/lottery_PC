@@ -6,7 +6,7 @@
     <Provider>SqlServer</Provider>
     <CommandTimeout>300</CommandTimeout>
     <FactoryType>KaSon.ORM.Factory.SQLServerFactory</FactoryType>
-    <OpenMinLink>true</OpenMinLink>
+    <OpenMinLink>false</OpenMinLink>
   
   </OrmConfigInfo>
   <OrmConfigInfo>
@@ -15,7 +15,7 @@
     <Provider>SqlServer</Provider>
     <CommandTimeout>300</CommandTimeout>
     <FactoryType>KaSon.ORM.Factory.SQLServerFactory</FactoryType>
-    <OpenMinLink>true</OpenMinLink>
+    <OpenMinLink>false</OpenMinLink>
     <smstemplate>
     </smstemplate>
   </OrmConfigInfo>

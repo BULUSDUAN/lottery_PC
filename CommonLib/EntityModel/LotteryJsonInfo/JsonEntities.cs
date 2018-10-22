@@ -952,6 +952,8 @@ namespace EntityModel.LotteryJsonInfo
         public int Mid { get; set; }
         public int OrderNumber { get; set; }
         public string UpdateTime { get; set; }
+
+        //public string GuestTeamStanding { get; set; }
     }
     /// <summary>
     /// 北单队伍信息

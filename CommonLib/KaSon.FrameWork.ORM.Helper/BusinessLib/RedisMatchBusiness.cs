@@ -482,6 +482,10 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                 LoadOZBWinNumber();
             }
+            else if (gameCode == "SJB")
+            {
+                LoadSJBWinNumber();
+            }
             else
             {
                 var lastOpenIssuse = new LotteryGameManager().QueryLastOpenIssuse(gameCode, 100);

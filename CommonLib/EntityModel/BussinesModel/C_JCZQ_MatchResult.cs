@@ -1,4 +1,5 @@
-﻿using KaSon.FrameWork.Services.Attribute;
+﻿using EntityModel.Interface;
+using KaSon.FrameWork.Services.Attribute;
 using KaSon.FrameWork.Services.Enum;
 using ProtoBuf;
 using System;
@@ -12,7 +13,7 @@ namespace EntityModel
     ///</summary>
     [ProtoContract]
     [Entity("C_JCZQ_MatchResult",Type = EntityType.Table)]
-    public class C_JCZQ_MatchResult
+    public class C_JCZQ_MatchResult: ISportResult
     { 
         public C_JCZQ_MatchResult()
         {

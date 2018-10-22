@@ -122,7 +122,7 @@ namespace BettingLottery.Service.Host
                 #endregion
 
                 Console.WriteLine($"服务端启动成功，{DateTime.Now}。");
-                //AutoTaskServices.AutoCaheData(int.Parse(Sports_SchemeJobSeconds));
+               //AutoTaskServices.AutoCaheData(int.Parse(Sports_SchemeJobSeconds));
             }
             //初始化内存期号 k_todo，可用彩种类型,执行一次
             //LotteryGameManager lotGm = new LotteryGameManager();
@@ -130,7 +130,7 @@ namespace BettingLottery.Service.Host
 
             //清空打印
 
-            ConsoleHelper.Clear();
+           // ConsoleHelper.Clear();
 
             //这个要保留，认主线程一直运行
             Console.ReadLine();

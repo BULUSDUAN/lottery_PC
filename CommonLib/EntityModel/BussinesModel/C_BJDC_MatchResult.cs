@@ -1,4 +1,5 @@
-﻿using KaSon.FrameWork.Services.Attribute;
+﻿using EntityModel.Interface;
+using KaSon.FrameWork.Services.Attribute;
 using KaSon.FrameWork.Services.Enum;
 using ProtoBuf;
 using System;
@@ -12,7 +13,7 @@ namespace EntityModel
     ///</summary>
     [ProtoContract]
     [Entity("C_BJDC_MatchResult",Type = EntityType.Table)]
-    public class C_BJDC_MatchResult
+    public class C_BJDC_MatchResult:ISportResult
     { 
         public C_BJDC_MatchResult()
         {
@@ -132,5 +133,31 @@ namespace EntityModel
             [ProtoMember(19)]
             [Field("CreateTime")]
             public DateTime CreateTime{ get; set; }
+
+    public virtual string GetMatchId(string gameCode)
+    {
+        return this.MatchOrderId.ToString();
     }
+    public virtual string GetFullMatchScore(string gameCode)
+    {
+        return HomeFull_Result + ":" + GuestFull_Result;
+    }
+    public virtual string GetMatchResult(string gameCode, string gameType, decimal offset = -1)
+    {
+        switch (gameType)
+        {
+            case "SPF":
+                return SPF_Result;
+            case "ZJQ":
+                return ZJQ_Result;
+            case "SXDS":
+                return SXDS_Result;
+            case "BF":
+                return BF_Result;
+            case "BQC":
+                return BQC_Result;
+        }
+        return string.Empty;
+    }
+}
 }

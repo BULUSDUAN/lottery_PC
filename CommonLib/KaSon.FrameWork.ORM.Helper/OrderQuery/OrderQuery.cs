@@ -265,9 +265,9 @@ namespace KaSon.FrameWork.ORM.Helper
             else
                 Model.pageSize = Model.pageSize > Model.MaxPageSize ? Model.MaxPageSize : Model.pageSize;
 
-            var agentTypeList = string.Format("{0}", string.Join(',', (Model.agentTypeList ?? "").Split('|', StringSplitOptions.RemoveEmptyEntries))).ToString();
-            var statusList = string.Format("{0}", string.Join(',', (Model.statusList ?? "").Split('|', StringSplitOptions.RemoveEmptyEntries))).ToString();
-            var sourceList = string.Format("{0}", string.Join(',', (Model.sourceList ?? "").Split('|', StringSplitOptions.RemoveEmptyEntries))).ToString();
+            var agentTypeList = string.Format("{0}", string.Join(",", (Model.agentTypeList ?? "").Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries))).ToString();
+            var statusList = string.Format("{0}", string.Join(",", (Model.statusList ?? "").Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries))).ToString();
+            var sourceList = string.Format("{0}", string.Join(",", (Model.sourceList ?? "").Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries))).ToString();
             //string sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_TotalRequestMoney").SQL;
             //sql = string.Format(sql, agentTypeList, statusList, sourceList);
             //Collection = DB.CreateSQLQuery(sql)

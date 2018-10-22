@@ -99,6 +99,7 @@ namespace Lottery.CrawGetters
                 if (Parse(gameCode, PostManagerWithProxy.Get(url, Encoding.UTF8), dic) == 0)
                     succeed = false;
             }
+
             //if (succeed)
             //    cache.SetKey(gameCode, TimeSpan.FromMinutes(49), 0);
             return dic;

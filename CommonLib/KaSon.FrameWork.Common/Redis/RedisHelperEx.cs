@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections;
+using KaSon.FrameWork.Common.FileOperate;
 
 namespace KaSon.FrameWork.Common.Redis
 {
