@@ -151,19 +151,55 @@ namespace KaSon.FrameWork.ORM.Helper
         /// 新增系统角色
         /// todo:后台权限
         /// </summary>
-        //public CommonActionResult AddSystemRole(RoleInfo_Add roleInfo, string userToken)
-        //{
-        //    // 验证用户身份及权限
-        //    var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+        public CommonActionResult AddSystemRole(RoleInfo_Add roleInfo, string userToken)
+        {
+            // 验证用户身份及权限
+            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
 
-        //    PreconditionAssert.IsNotEmptyString(roleInfo.RoleId, "添加的角色编号不能为空");
-        //    PreconditionAssert.IsNotEmptyString(roleInfo.RoleName, "添加的角色名称不能为空");
-        //    PreconditionAssert.IsNotNull(roleInfo.FunctionList, "传入角色的权限列表不能为null");
+            //PreconditionAssert.IsNotEmptyString(roleInfo.RoleId, "添加的角色编号不能为空");
+            //PreconditionAssert.IsNotEmptyString(roleInfo.RoleName, "添加的角色名称不能为空");
+            //PreconditionAssert.IsNotNull(roleInfo.FunctionList, "传入角色的权限列表不能为null");
 
-        //    var authBiz = new GameBizAuthBusiness();
-        //    var result= authBiz.AddSystemRole(roleInfo);
-        //    return new CommonActionResult(true, "添加角色成功");
-        //}
+            var authBiz = new GameBizAuthBusiness();
+            var result = authBiz.AddSystemRole(roleInfo);
+            return new CommonActionResult(true, "添加角色成功");
+        }
+
+
+        /// <summary>
+        /// 修改系统角色
+        /// todo:后台权限
+        /// </summary>
+        public CommonActionResult UpdateSystemRole(RoleInfo_Update roleInfo, string userToken)
+        {
+            // 验证用户身份及权限
+            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+
+            PreconditionAssert.IsNotEmptyString(roleInfo.RoleId, "修改的角色编号不能为空");
+            PreconditionAssert.IsNotEmptyString(roleInfo.RoleName, "修改的角色名称不能为空");
+            //PreconditionAssert.IsNotNull(roleInfo.AddFunctionList, "传入角色的新增权限列表不能为null");
+            //PreconditionAssert.IsNotNull(roleInfo.ModifyFunctionList, "传入角色的修改权限列表不能为null");
+            //PreconditionAssert.IsNotNull(roleInfo.RemoveFunctionList, "传入角色的移除权限列表不能为null");
+
+            var authBiz = new GameBizAuthBusiness();
+            authBiz.UpdateSystemRole(roleInfo);
+            return new CommonActionResult(true, "修改角色成功");
+        }
+        #endregion
+
+        #region 管理端操作日志
+        public CommonActionResult AddSysOperationLog(string userId, string operUserId, string menuName, string desc)
+        {
+            try
+            {
+                new SiteMessageBusiness().AddSysOperationLog(userId, operUserId, menuName, desc);
+                return new CommonActionResult(true, "新增日志成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
         #endregion
     }
 }
