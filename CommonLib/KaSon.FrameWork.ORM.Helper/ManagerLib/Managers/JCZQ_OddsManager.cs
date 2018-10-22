@@ -13,7 +13,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public void AddOdds<T>(T odds)
             where T : JingCai_Odds
         {
-            this.Add(odds);
+         //   this.Add(odds);
         }
         /// <summary>
         /// 存错过程查询

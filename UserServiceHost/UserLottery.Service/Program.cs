@@ -19,7 +19,6 @@ using Kason.Sg.Core.ServiceHosting;
 using Kason.Sg.Core.ServiceHosting.Internal.Implementation;
 using System;
 using System.Text;
-using Kason.Sg.Core.EventBusRabbitMQ.Configurations;
 using KaSon.FrameWork.Common;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration.Memory;
@@ -63,10 +62,10 @@ namespace UserLottery.Service.Host
                         //option.UseZooKeeperManager(new ConfigInfo("127.0.0.1:2181"));
                         .UseConsulManager(config)
                         .UseDotNettyTransport()
-                        .UseRabbitMQTransport()
-                        .AddRabbitMQAdapt()
+                        //.UseRabbitMQTransport()
+                        //.AddRabbitMQAdapt()
                         
-                        .AddCache()
+                        //.AddCache()
                         //.UseKafkaMQTransport(kafkaOption =>
                         //{
                         //    kafkaOption.Servers = "127.0.0.1";
@@ -81,7 +80,7 @@ namespace UserLottery.Service.Host
                         builder.Register(p => new CPlatformContainer(ServiceLocator.Current));
                     });
                 })
-                .SubscribeAt()
+                //  .SubscribeAt()
                 // .UseLog4net(LogLevel.Error, "Config/log4net.config")
                 .UseNLog(LogLevel.Error, "Config/NLog.config")
                 //.UseServer("127.0.0.1", 98)
@@ -98,10 +97,10 @@ namespace UserLottery.Service.Host
                     options.MaxConcurrentRequests = 2000;
                 })
                 // .UseServiceCache()
-                .Configure(build =>
-                build.AddEventBusJson(RebbitMqSettings))
-                .Configure(build =>
-                build.AddCacheFile("cacheSettings.json", optional: false, reloadOnChange: true))
+                //.Configure(build =>
+                //build.AddEventBusJson(RebbitMqSettings))
+                //.Configure(build =>
+                //build.AddCacheFile("cacheSettings.json", optional: false, reloadOnChange: true))
                   .Configure(build =>
                 build.AddCPlatformJSON(HostSettings))
                 .UseProxy()
@@ -120,6 +119,7 @@ namespace UserLottery.Service.Host
                 #endregion
                 Console.WriteLine($"服务端启动成功，{DateTime.Now}。");
             }
+            Console.ReadKey();
         }
     }
 

@@ -486,44 +486,44 @@ namespace KaSon.FrameWork.ORM.Helper
         //}
         public void UpdateOddsList_JCZQ_Manual()
         {
-            UpdateOddsList_JCZQ_Manual<JCZQ_SPF_SPInfo, JCZQ_Odds_SPF>("JCZQ", "SPF");
-            UpdateOddsList_JCZQ_Manual<JCZQ_BRQSPF_SPInfo, JCZQ_Odds_BRQSPF>("JCZQ", "BRQSPF");
-            UpdateOddsList_JCZQ_Manual<JCZQ_ZJQ_SPInfo, JCZQ_Odds_ZJQ>("JCZQ", "ZJQ");
-            UpdateOddsList_JCZQ_Manual<JCZQ_BQC_SPInfo, JCZQ_Odds_BQC>("JCZQ", "BQC");
-            UpdateOddsList_JCZQ_Manual<JCZQ_BF_SPInfo, JCZQ_Odds_BF>("JCZQ", "BF");
+            //UpdateOddsList_JCZQ_Manual<JCZQ_SPF_SPInfo, JCZQ_Odds_SPF>("JCZQ", "SPF");
+            //UpdateOddsList_JCZQ_Manual<JCZQ_BRQSPF_SPInfo, JCZQ_Odds_BRQSPF>("JCZQ", "BRQSPF");
+            //UpdateOddsList_JCZQ_Manual<JCZQ_ZJQ_SPInfo, JCZQ_Odds_ZJQ>("JCZQ", "ZJQ");
+            //UpdateOddsList_JCZQ_Manual<JCZQ_BQC_SPInfo, JCZQ_Odds_BQC>("JCZQ", "BQC");
+            //UpdateOddsList_JCZQ_Manual<JCZQ_BF_SPInfo, JCZQ_Odds_BF>("JCZQ", "BF");
         }
-        public void UpdateOddsList_JCZQ_Manual<TInfo, TEntity>(string gameCode, string gameType)
-           where TInfo :  EntityModel.Ticket.JingCaiMatchBase, EntityModel.Ticket.I_JingCai_Odds
-           where TEntity : EntityModel.CoreModel.JingCai_Odds, new()
-        {
-            var oddsList = GetOddsList_JingCai<TInfo>(gameCode, gameType, string.Empty);
-                DB.Begin();
-                var oddsManager = new JCZQ_OddsManager();
-                foreach (var odds in oddsList)
-                {
-                    if (!odds.CheckIsValidate())
-                        continue;
-                    var entity = oddsManager.GetLastOdds<TEntity>(gameType, odds.MatchId, false);
-                    if (entity == null)
-                    {
+        //public void UpdateOddsList_JCZQ_Manual<TInfo, TEntity>(string gameCode, string gameType)
+        //   where TInfo :  EntityModel.Ticket.JingCaiMatchBase, EntityModel.Ticket.I_JingCai_Odds
+        //   where TEntity : EntityModel.CoreModel.JingCai_Odds, new()
+        //{
+        //    var oddsList = GetOddsList_JingCai<TInfo>(gameCode, gameType, string.Empty);
+        //        DB.Begin();
+        //        var oddsManager = new JCZQ_OddsManager();
+        //        foreach (var odds in oddsList)
+        //        {
+        //            if (!odds.CheckIsValidate())
+        //                continue;
+        //            var entity = oddsManager.GetLastOdds<TEntity>(gameType, odds.MatchId, false);
+        //            if (entity == null)
+        //            {
 
-                        entity = new TEntity
-                        {
-                            MatchId = odds.MatchId,
-                            CreateTime = DateTime.Now,
-                        };
-                        entity.SetOdds(odds);
-                        oddsManager.AddOdds<TEntity>(entity);
-                    }
-                    else if (!entity.Equals(odds))
-                    {
-                        entity.CreateTime = DateTime.Now;
-                        entity.SetOdds(odds);
-                        oddsManager.UpdateOdds<TEntity>(entity);
-                    }
-                }
-                DB.Commit();
-        }
+        //                entity = new TEntity
+        //                {
+        //                    MatchId = odds.MatchId,
+        //                    CreateTime = DateTime.Now,
+        //                };
+        //                entity.SetOdds(odds);
+        //                oddsManager.AddOdds<TEntity>(entity);
+        //            }
+        //            else if (!entity.Equals(odds))
+        //            {
+        //                entity.CreateTime = DateTime.Now;
+        //                entity.SetOdds(odds);
+        //                oddsManager.UpdateOdds<TEntity>(entity);
+        //            }
+        //        }
+        //        DB.Commit();
+        //}
         public List<string> RequestTicket_JCZQSingleScheme(GatewayTicketOrder_SingleScheme order, out List<string> realMatchIdArray)
         {
             var selectMatchIdArray = order.SelectMatchId.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);

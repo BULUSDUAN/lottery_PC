@@ -45,12 +45,12 @@ namespace app.lottery.site.iqucai.Controllers
         #region 调用服务使用示例
         private readonly ILog logger = null;
         private readonly IServiceProxyProvider serviceProxyProvider;
-        public IAddressResolver addrre;
-        public UserController(IServiceProxyProvider _serviceProxyProvider, ILog log, IAddressResolver _addrre)
+        //public IAddressResolver addrre;
+        public UserController(IServiceProxyProvider _serviceProxyProvider, ILog log)
         {
             serviceProxyProvider = _serviceProxyProvider;
             logger = log;
-            addrre = _addrre;
+            //addrre = _addrre;
 
         }
         #endregion
@@ -3491,8 +3491,8 @@ namespace app.lottery.site.iqucai.Controllers
                 param["loginName"] = userName;
                 param["password"] = passWord;
                 param["IPAddress"] = IpManager.IPAddress;
-              
-                var loginInfo = await serviceProxyProvider.Invoke<LoginInfo>(param, "api/User/User_Login");
+
+                var loginInfo = await serviceProxyProvider.Invoke<EntityModel.CoreModel.LoginInfo>(param, "api/User/User_Login");
                 //LoginInfo loginInfo = WCFClients.ExternalClient.LoginLocal(userName, passWord, IpManager.IPAddress);
                 if (loginInfo.IsSuccess)
                 {
