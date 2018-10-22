@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.Serialization.Json;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace KaSon.FrameWork.Common.JSON
 {
@@ -34,6 +35,17 @@ namespace KaSon.FrameWork.Common.JSON
                 T obj = (T)ser.ReadObject(ms);
                 return obj;
             }
+        }
+
+        public static T DeserializeOldDate<T>(string json)
+        {
+            JsonSerializerSettings jsSettings = new JsonSerializerSettings();
+            jsSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            jsSettings.DateFormatHandling = DateFormatHandling.MicrosoftDateFormat;
+            //忽略空值
+            jsSettings.NullValueHandling = NullValueHandling.Ignore;
+            var result = JsonConvert.DeserializeObject<T>(json, jsSettings);
+            return result;
         }
     }
 }

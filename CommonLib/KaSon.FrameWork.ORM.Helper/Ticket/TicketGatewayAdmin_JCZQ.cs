@@ -25,117 +25,173 @@ namespace KaSon.FrameWork.ORM.Helper
         public void UpdateOddsList_JCZQ_Manual_SPF(string gameCode, string gameType)
         {
             var oddsList = GetOddsList_JingCai<T_JCZQ_Odds_SPF>(gameCode, gameType, string.Empty);
-            DB.Begin();
-            var oddsManager = new JCZQ_OddsManager();
-            foreach (var odds in oddsList)
+            try
             {
-                if (!odds.CheckIsValidate())
-                    continue;
-                var entity = oddsManager.GetLastOdds<T_JCZQ_Odds_SPF>(gameType, odds.MatchId, false);
-                if (entity == null)
+                DB.Begin();
+                var oddsManager = new JCZQ_OddsManager();
+                List<T_JCZQ_Odds_SPF> entityList = new List<T_JCZQ_Odds_SPF>();
+                foreach (var odds in oddsList)
                 {
-
-                    entity = new T_JCZQ_Odds_SPF
+                    if (!odds.CheckIsValidate())
+                        continue;
+                    var entity = oddsManager.GetLastOdds<T_JCZQ_Odds_SPF>(gameType, odds.MatchId, false);
+                    if (entity == null)
                     {
-                        MatchId = odds.MatchId,
-                        CreateTime = DateTime.Now,
-                    };
-                    entity.SetOdds(odds);
-                    oddsManager.AddOdds(entity);
+
+                        entity = new T_JCZQ_Odds_SPF
+                        {
+                            MatchId = odds.MatchId,
+                            CreateTime = DateTime.Now,
+                        };
+                        entity.SetOdds(odds);
+                        entityList.Add(entity);
+                    }
                 }
+                if (entityList != null && entityList.Any())
+                {
+                    oddsManager.AddOdds(entityList);
+                }
+                DB.Commit();
             }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw ex;
+            }
+            
         }
         public void UpdateOddsList_JCZQ_Manual_BRQSPF(string gameCode, string gameType)
         {
             var oddsList = GetOddsList_JingCai<T_JCZQ_Odds_BRQSPF>(gameCode, gameType, string.Empty);
-            DB.Begin();
-            var oddsManager = new JCZQ_OddsManager();
-            foreach (var odds in oddsList)
+            try
             {
-                if (!odds.CheckIsValidate())
-                    continue;
-                var entity = oddsManager.GetLastOdds<T_JCZQ_Odds_BRQSPF>(gameType, odds.MatchId, false);
-                if (entity == null)
+                DB.Begin();
+                var oddsManager = new JCZQ_OddsManager();
+                foreach (var odds in oddsList)
                 {
-
-                    entity = new T_JCZQ_Odds_BRQSPF
+                    if (!odds.CheckIsValidate())
+                        continue;
+                    var entity = oddsManager.GetLastOdds<T_JCZQ_Odds_BRQSPF>(gameType, odds.MatchId, false);
+                    if (entity == null)
                     {
-                        MatchId = odds.MatchId,
-                        CreateTime = DateTime.Now,
-                    };
-                    entity.SetOdds(odds);
-                    oddsManager.AddOdds(entity);
+
+                        entity = new T_JCZQ_Odds_BRQSPF
+                        {
+                            MatchId = odds.MatchId,
+                            CreateTime = DateTime.Now,
+                        };
+                        entity.SetOdds(odds);
+                        oddsManager.AddOdds(entity);
+                    }
                 }
+                DB.Commit();
             }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw;
+            }
+           
         }
         public void UpdateOddsList_JCZQ_Manual_ZJQ(string gameCode, string gameType)
         {
             var oddsList = GetOddsList_JingCai<T_JCZQ_Odds_ZJQ>(gameCode, gameType, string.Empty);
-            DB.Begin();
-            var oddsManager = new JCZQ_OddsManager();
-            foreach (var odds in oddsList)
+            try
             {
-                if (!odds.CheckIsValidate())
-                    continue;
-                var entity = oddsManager.GetLastOdds<T_JCZQ_Odds_ZJQ>(gameType, odds.MatchId, false);
-                if (entity == null)
+                DB.Begin();
+                var oddsManager = new JCZQ_OddsManager();
+                foreach (var odds in oddsList)
                 {
-
-                    entity = new T_JCZQ_Odds_ZJQ
+                    if (!odds.CheckIsValidate())
+                        continue;
+                    var entity = oddsManager.GetLastOdds<T_JCZQ_Odds_ZJQ>(gameType, odds.MatchId, false);
+                    if (entity == null)
                     {
-                        MatchId = odds.MatchId,
-                        CreateTime = DateTime.Now,
-                    };
-                    entity.SetOdds(odds);
-                    oddsManager.AddOdds(entity);
+
+                        entity = new T_JCZQ_Odds_ZJQ
+                        {
+                            MatchId = odds.MatchId,
+                            CreateTime = DateTime.Now,
+                        };
+                        entity.SetOdds(odds);
+                        oddsManager.AddOdds(entity);
+                    }
                 }
+                DB.Commit();
             }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw;
+            }
+           
         }
         public void UpdateOddsList_JCZQ_Manual_BQC(string gameCode, string gameType)
         {
             var oddsList = GetOddsList_JingCai<T_JCZQ_Odds_BQC>(gameCode, gameType, string.Empty);
-            DB.Begin();
-            var oddsManager = new JCZQ_OddsManager();
-            foreach (var odds in oddsList)
+            try
             {
-                if (!odds.CheckIsValidate())
-                    continue;
-                var entity = oddsManager.GetLastOdds<T_JCZQ_Odds_BQC>(gameType, odds.MatchId, false);
-                if (entity == null)
+                DB.Begin();
+                var oddsManager = new JCZQ_OddsManager();
+                foreach (var odds in oddsList)
                 {
-
-                    entity = new T_JCZQ_Odds_BQC
+                    if (!odds.CheckIsValidate())
+                        continue;
+                    var entity = oddsManager.GetLastOdds<T_JCZQ_Odds_BQC>(gameType, odds.MatchId, false);
+                    if (entity == null)
                     {
-                        MatchId = odds.MatchId,
-                        CreateTime = DateTime.Now,
-                    };
-                    entity.SetOdds(odds);
-                    oddsManager.AddOdds(entity);
+
+                        entity = new T_JCZQ_Odds_BQC
+                        {
+                            MatchId = odds.MatchId,
+                            CreateTime = DateTime.Now,
+                        };
+                        entity.SetOdds(odds);
+                        oddsManager.AddOdds(entity);
+                    }
                 }
+                DB.Commit();
             }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw;
+            }
+            
         }
         public void UpdateOddsList_JCZQ_Manual_BF(string gameCode, string gameType)
         {
             var oddsList = GetOddsList_JingCai<T_JCZQ_Odds_BF>(gameCode, gameType, string.Empty);
-            DB.Begin();
-            var oddsManager = new JCZQ_OddsManager();
-            foreach (var odds in oddsList)
+            try
             {
-                if (!odds.CheckIsValidate())
-                    continue;
-                var entity = oddsManager.GetLastOdds<T_JCZQ_Odds_BF>(gameType, odds.MatchId, false);
-                if (entity == null)
+                DB.Begin();
+                var oddsManager = new JCZQ_OddsManager();
+                foreach (var odds in oddsList)
                 {
-
-                    entity = new T_JCZQ_Odds_BF
+                    if (!odds.CheckIsValidate())
+                        continue;
+                    var entity = oddsManager.GetLastOdds<T_JCZQ_Odds_BF>(gameType, odds.MatchId, false);
+                    if (entity == null)
                     {
-                        MatchId = odds.MatchId,
-                        CreateTime = DateTime.Now,
-                    };
-                    entity.SetOdds(odds);
-                    oddsManager.AddOdds(entity);
+
+                        entity = new T_JCZQ_Odds_BF
+                        {
+                            MatchId = odds.MatchId,
+                            CreateTime = DateTime.Now,
+                        };
+                        entity.SetOdds(odds);
+                        oddsManager.AddOdds(entity);
+                    }
                 }
+                DB.Commit();
+
             }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw;
+            }
+            
         }
         public List<string> RequestTicket_JCZQSingleScheme(GatewayTicketOrder_SingleScheme order, out List<string> realMatchIdArray)
         {

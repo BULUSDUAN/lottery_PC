@@ -22,6 +22,7 @@ using EntityModel.CoreModel;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using System.Threading;
+using KaSon.FrameWork.ORM.Helper;
 
 namespace Lottery.ApiGateway
 {
@@ -59,7 +60,8 @@ namespace Lottery.ApiGateway
                 .Build();
 
             ConsoleHelper.Clear();
-
+            new IssuseBusiness().SetMatchConfigBaseDir(ConfigHelper.AllConfigInfo["DataSiteUrl"].ToString());
+            new TicketGatewayAdmin().SetMatchConfigBaseDir(ConfigHelper.AllConfigInfo["DataSiteUrl"].ToString());
             host.Run();
             
             
