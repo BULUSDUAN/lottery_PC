@@ -983,5 +983,9 @@ namespace KaSon.FrameWork.ORM.Helper
             return list;
         }
 
+        public C_Sports_AnteCode QueryAnteCode(string schemeId, string macthId, string gameType)
+        {
+            return DB.CreateQuery<C_Sports_AnteCode>().Where(s => s.SchemeId == schemeId && s.MatchId == macthId && s.GameType == gameType).FirstOrDefault();
+        }
     }
 }

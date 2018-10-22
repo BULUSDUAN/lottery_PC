@@ -68,9 +68,6 @@
     <Reference Include="Common.Lottery">
       <HintPath>..\Outputs\Common.Lottery.dll</HintPath>
     </Reference>
-    <Reference Include="Common.Lottery.Redis">
-      <HintPath>..\Outputs\Common.Lottery.Redis.dll</HintPath>
-    </Reference>
     <Reference Include="Consul, Version=0.7.2.6, Culture=neutral, PublicKeyToken=20a6ad9a81df1d95, processorArchitecture=MSIL">
       <HintPath>..\packages\Consul.0.7.2.6\lib\net45\Consul.dll</HintPath>
     </Reference>
@@ -2434,6 +2431,10 @@
     <Content Include="Views\StaticHtml\help\playRules\sdklpk31.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\gongcheng\old_caipiao\10.Common\Common.Lottery.Redis\Common.Lottery.Redis.csproj">
+      <Project>{4ec4118b-fe8a-4569-a0e2-69cbcced9ecd}</Project>
+      <Name>Common.Lottery.Redis</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EntityModel\EntityModel.csproj">
       <Project>{3f31dcbe-9402-434f-8d8e-6cbf65f17c05}</Project>
       <Name>EntityModel</Name>

@@ -301,28 +301,28 @@ namespace app.lottery.site.iqucai.Controllers
                 #region 通过json文件查询数据
 
                 ViewBag.User = CurrentUser;
-                var info = WebRedisHelper.QuerySportsSchemeInfo(id);// this.QuerySportsSchemeInfo(id);
+                var info = WebRedisHelper.QuerySportsSchemeInfo(id).Result;// this.QuerySportsSchemeInfo(id);
                 ViewBag.SchemeInfo = info;
                 ViewBag.OrderDetail = WebRedisHelper.QueryOrderDetailBySchemeId(id);// this.QueryOrderDetailBySchemeId(id);
                 ViewBag.PageSize = string.IsNullOrEmpty(Request["pageSize"]) ? 5 : int.Parse(Request["pageSize"].ToString());
                 ViewBag.FollowedCount = WebRedisHelper.QueryProfileFollowedCount(info.UserId, info.GameCode, info.GameType);// WCFClients.GameClient.QueryProfileFollowedCount(info.UserId, info.GameCode, info.GameType);
-                ViewBag.SportsTicket = WebRedisHelper.QuerySportsTicketList(info.SchemeId, 0, 5).TicketList;// this.QuerySportsTicketList(info.SchemeId, 0, 5, UserToken, out totalTicketCount);
-                if (info.SchemeType == SchemeType.SingleCopy)
+                ViewBag.SportsTicket = WebRedisHelper.QuerySportsTicketList(info.SchemeId, 0, 5).Result.TicketList;// this.QuerySportsTicketList(info.SchemeId, 0, 5, UserToken, out totalTicketCount);
+                if (info.SchemeType ==EntityModel.Enum.SchemeType.SingleCopy)
                     ViewBag.BDFXCommision = WebRedisHelper.QueryBDFXCommision(id, info.BonusStatus);// this.QueryBDFXCommision(id, info.BonusStatus);
 
                 var sign = string.IsNullOrEmpty(Request["sign"]) ? "" : Request["sign"];
                 var mySign = Encipherment.MD5(id);
                 if (sign == mySign
                     || (CurrentUser != null && CurrentUser.LoginInfo.UserId == info.UserId)
-                    || info.Security == TogetherSchemeSecurity.Public
+                    || info.Security == EntityModel.Enum.TogetherSchemeSecurity.Public
                     //|| (info.Security == TogetherSchemeSecurity.JoinPublic && WCFClients.GameClient.IsUserJoinSportsTogether(id, UserToken))
-                    || (info.Security == TogetherSchemeSecurity.CompletePublic && info.StopTime <= DateTime.Now)
-                    || (info.Security == TogetherSchemeSecurity.FirstMatchStopPublic && info.StopTime <= DateTime.Now))
+                    || (info.Security == EntityModel.Enum.TogetherSchemeSecurity.CompletePublic && info.StopTime <= DateTime.Now)
+                    || (info.Security == EntityModel.Enum.TogetherSchemeSecurity.FirstMatchStopPublic && info.StopTime <= DateTime.Now))
                 {
                     var ante = WebRedisHelper.QuerySportsOrderAnteCodeList(id, info.BonusStatus);// this.QuerySportsOrderAnteCodeList(id, UserToken, info.BonusStatus);
                     ViewBag.AnteList = ante;
 
-                    if (info.SchemeBettingCategory == SchemeBettingCategory.SingleBetting || info.SchemeBettingCategory == SchemeBettingCategory.FilterBetting)
+                    if (info.SchemeBettingCategory == EntityModel.Enum.SchemeBettingCategory.SingleBetting || info.SchemeBettingCategory == EntityModel.Enum.SchemeBettingCategory.FilterBetting)
                     {
                         // 查询单式上传
                         var singleInfo = WebRedisHelper.QuerySingleSchemeFullFileName(info.SchemeId, info.BonusStatus);// this.QuerySingleSchemeFullFileName(info.SchemeId, UserToken, info.BonusStatus);
@@ -345,7 +345,7 @@ namespace app.lottery.site.iqucai.Controllers
 
                 ViewBag.SchemeId = id;
                 ViewBag.User = CurrentUser;
-                var detailResult = WebRedisHelper.QueryBettingOrderListByChaseKeyLine(id);// this.QueryBettingOrderListByChaseKeyLine(id, UserToken);
+                var detailResult = WebRedisHelper.QueryBettingOrderListByChaseKeyLine(id).Result;// this.QueryBettingOrderListByChaseKeyLine(id, UserToken);
                 ViewBag.ChaseSchemeInfo = detailResult;
                 ViewBag.PageIndex = string.IsNullOrEmpty(Request["pageIndex"]) ? 0 : int.Parse(Request["pageIndex"].ToString());
                 ViewBag.PageSize = string.IsNullOrEmpty(Request["pageSize"]) ? 5 : int.Parse(Request["pageSize"].ToString());
@@ -355,7 +355,7 @@ namespace app.lottery.site.iqucai.Controllers
                     ViewBag.FirstItem = first;
                     var sign = string.IsNullOrEmpty(Request["sign"]) ? "" : Request["sign"];
                     var mySign = Encipherment.MD5(id);
-                    if (mySign == sign || first.Security != TogetherSchemeSecurity.KeepSecrecy)
+                    if (mySign == sign || first.Security != EntityModel.Enum.TogetherSchemeSecurity.KeepSecrecy)
                     {
                         ViewBag.FirstAnteCode = WebRedisHelper.QueryAnteCodeListBySchemeId(first.SchemeId, detailResult.OrderList[0].BonusStatus);// this.QueryAnteCodeListBySchemeId(first.SchemeId, UserToken, detailResult.OrderList[0].BonusStatus);
                     }
@@ -416,7 +416,7 @@ namespace app.lottery.site.iqucai.Controllers
             ViewBag.UserId = string.IsNullOrEmpty(Request["userId"]) ? "" : Request["userId"];
             ViewBag.schemeStatus = string.IsNullOrEmpty(Request["status"]) ? "" : Request["status"];
             ViewBag.SchemeId = id;
-            var collection = WebRedisHelper.QuerySportsTicketList(id, (int)ViewBag.PageIndex, (int)ViewBag.PageSize);// this.QuerySportsTicketList(id, ViewBag.PageIndex, ViewBag.PageSize, UserToken, out  totalTicketCount);
+            var collection = WebRedisHelper.QuerySportsTicketList(id, (int)ViewBag.PageIndex, (int)ViewBag.PageSize).Result;// this.QuerySportsTicketList(id, ViewBag.PageIndex, ViewBag.PageSize, UserToken, out  totalTicketCount);
             ViewBag.SportsTicket = collection.TicketList;
             ViewBag.TotalTicketCount = collection.TotalCount;
             return PartialView();
@@ -431,9 +431,9 @@ namespace app.lottery.site.iqucai.Controllers
             var pageIndex = string.IsNullOrEmpty(Request["pageIndex"]) ? 0 : int.Parse(Request["pageIndex"].ToString());
             var pageSize = string.IsNullOrEmpty(Request["pageSize"]) ? 5 : int.Parse(Request["pageSize"].ToString());
             // var bonus = string.IsNullOrEmpty(Request["BonusStatus"]) ? BonusStatus.Waitting : (BonusStatus)int.Parse(Request["BonusStatus"]);
-            var info = WebRedisHelper.QuerySportsTogetherDetail(schemeId);// this.QuerySportsTogetherDetail(id);
-            var allJoinInfo = WebRedisHelper.QuerySportsTogetherJoinList(schemeId, info.BonusStatus);// this.QuerySportsTogetherJoinList(schemeId, UserToken, bonus);
-            var joinInfo = new Sports_TogetherJoinInfoCollection();
+            var info = WebRedisHelper.QuerySportsTogetherDetail(schemeId).Result;// this.QuerySportsTogetherDetail(id);
+            var allJoinInfo = WebRedisHelper.QuerySportsTogetherJoinList(schemeId, info.BonusStatus).Result;// this.QuerySportsTogetherJoinList(schemeId, UserToken, bonus);
+            var joinInfo = new EntityModel.CoreModel.Sports_TogetherJoinInfoCollection();
             joinInfo.TotalCount = allJoinInfo.TotalCount;
             joinInfo.List = allJoinInfo.List.Skip(pageIndex * pageSize).Take(pageSize).ToList();
 
@@ -458,7 +458,7 @@ namespace app.lottery.site.iqucai.Controllers
 
             try
             {
-                var info = WebRedisHelper.QuerySportsTogetherDetail(id);// this.QuerySportsTogetherDetail(id);
+                var info = WebRedisHelper.QuerySportsTogetherDetail(id).Result;// this.QuerySportsTogetherDetail(id);
                 var join = WebRedisHelper.QuerySportsTogetherJoinList(id, info.BonusStatus);// WCFClients.GameClient.QuerySportsTogetherJoinList(id, PageIndex, PageSize, UserToken);
                 return Json(new { Issucess = true, msg = join, PageIndex = PageIndex, PageSize = PageSize, SchemeId = id });
             }
@@ -468,37 +468,38 @@ namespace app.lottery.site.iqucai.Controllers
             }
         }
         //合买方案详情
-        public PartialViewResult Hmdetail(string id)
+        public async Task<PartialViewResult> Hmdetail(string id)
         {
             try
             {
                 #region 通过json文件查询数据
-
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["schemeId"] = id; param["userId"] = UserToken;
                 ViewBag.SchemeId = id;
                 ViewBag.user = CurrentUser;
                 ViewBag.CurrentUserBalance = CurrentUserBalance;
 
-                var info = WebRedisHelper.QuerySportsTogetherDetail(id);// this.QuerySportsTogetherDetail(id);
+                var info = WebRedisHelper.QuerySportsTogetherDetail(id).Result;// this.QuerySportsTogetherDetail(id);
                 ViewBag.Detail = info;
                 var allJoinInfo = WebRedisHelper.QuerySportsTogetherJoinList(id, info.BonusStatus);// this.QuerySportsTogetherJoinList(id, UserToken, info.BonusStatus);
                 ViewBag.JoinAllList = allJoinInfo;
                 ViewBag.OrderDetail = WebRedisHelper.QueryOrderDetailBySchemeId(id);// this.QueryOrderDetailBySchemeId(id);
                 ViewBag.FollowedCount = WebRedisHelper.QueryProfileFollowedCount(info.CreateUserId, info.GameCode, info.GameType);// WCFClients.GameClient.QueryProfileFollowedCount(info.CreateUserId, info.GameCode, info.GameType);
-                var collection = WebRedisHelper.QuerySportsTicketList(info.SchemeId, 0, 5);
+                var collection = WebRedisHelper.QuerySportsTicketList(info.SchemeId, 0, 5).Result;
                 ViewBag.SportsTicket = collection.TicketList;
                 var sign = string.IsNullOrEmpty(Request["sign"]) ? "" : Request["sign"];
                 var mySign = Encipherment.MD5(id);
                 if (sign == mySign
                     || (CurrentUser != null && CurrentUser.LoginInfo.UserId == info.CreateUserId)
-                    || info.Security == TogetherSchemeSecurity.Unkown
-                    || info.Security == TogetherSchemeSecurity.Public
-                    || (info.Security == TogetherSchemeSecurity.JoinPublic && WCFClients.GameClient.IsUserJoinSportsTogether(id, UserToken))
-                    || (info.Security == TogetherSchemeSecurity.CompletePublic && info.StopTime <= DateTime.Now))
+                    || info.Security == EntityModel.Enum.TogetherSchemeSecurity.Unkown
+                    || info.Security == EntityModel.Enum.TogetherSchemeSecurity.Public
+                    || (info.Security == EntityModel.Enum.TogetherSchemeSecurity.JoinPublic && await serviceProxyProvider.Invoke<bool>(param, "api/order/IsUserJoinSportsTogether"))
+                    || (info.Security == EntityModel.Enum.TogetherSchemeSecurity.CompletePublic && info.StopTime <= DateTime.Now))
                 {
                     var ante = WebRedisHelper.QuerySportsOrderAnteCodeList(id, info.BonusStatus);// this.QuerySportsOrderAnteCodeList(id, UserToken, info.BonusStatus);
                     ViewBag.AnteList = ante;
 
-                    if (info.SchemeBettingCategory == SchemeBettingCategory.SingleBetting || info.SchemeBettingCategory == SchemeBettingCategory.FilterBetting || info.SchemeBettingCategory == SchemeBettingCategory.XianFaQiHSC)
+                    if (info.SchemeBettingCategory == EntityModel.Enum.SchemeBettingCategory.SingleBetting || info.SchemeBettingCategory == EntityModel.Enum.SchemeBettingCategory.FilterBetting || info.SchemeBettingCategory == EntityModel.Enum.SchemeBettingCategory.XianFaQiHSC)
                     {
                         var singleInfo = WebRedisHelper.QuerySingleSchemeFullFileName(info.SchemeId, info.BonusStatus);// this.QuerySingleSchemeFullFileName(info.SchemeId, UserToken, info.BonusStatus);
                         ViewBag.SingleInfo = singleInfo;
@@ -513,7 +514,7 @@ namespace app.lottery.site.iqucai.Controllers
         }
 
         //单式方案详情
-        public ActionResult SchemeFile(string id)
+        public async Task<ActionResult> SchemeFile(string id)
         {
             try
             {
@@ -522,12 +523,14 @@ namespace app.lottery.site.iqucai.Controllers
                 var mySign = Encipherment.MD5(id, Encoding.UTF8).ToLower();
                 if (id.StartsWith("TSM"))
                 {
-                    var info = WebRedisHelper.QuerySportsTogetherDetail(id);// this.QuerySportsTogetherDetail(id);
+                    Dictionary<string, object> param = new Dictionary<string, object>();
+                    param["schemeId"] = id; param["userId"] = UserToken;
+                    var info = WebRedisHelper.QuerySportsTogetherDetail(id).Result;// this.QuerySportsTogetherDetail(id);
                     if (sign == mySign
                         || (CurrentUser != null && CurrentUser.LoginInfo.UserId == info.CreateUserId)
-                        || info.Security == TogetherSchemeSecurity.Public
-                        || (info.Security == TogetherSchemeSecurity.JoinPublic && WCFClients.GameClient.IsUserJoinSportsTogether(id, UserToken))
-                        || (info.Security == TogetherSchemeSecurity.CompletePublic && info.StopTime <= DateTime.Now))
+                        || info.Security == EntityModel.Enum.TogetherSchemeSecurity.Public
+                        || (info.Security == EntityModel.Enum.TogetherSchemeSecurity.JoinPublic && await serviceProxyProvider.Invoke<bool>(param, "api/order/IsUserJoinSportsTogether"))
+                        || (info.Security == EntityModel.Enum.TogetherSchemeSecurity.CompletePublic && info.StopTime <= DateTime.Now))
                     {
                         var singleInfo = WebRedisHelper.QueryOrderSingleScheme(id, info.BonusStatus);// this.QueryOrderSingleScheme(id, info.BonusStatus);
                         ViewBag.SingleInfo = singleInfo;
@@ -539,12 +542,14 @@ namespace app.lottery.site.iqucai.Controllers
                 }
                 else
                 {
-                    var singleinfo = WebRedisHelper.QuerySportsSchemeInfo(id);//this.QuerySportsSchemeInfo(id);
+                    var singleinfo = WebRedisHelper.QuerySportsSchemeInfo(id).Result;//this.QuerySportsSchemeInfo(id);
+                    Dictionary<string, object> param = new Dictionary<string, object>();
+                    param["schemeId"] = id; param["userId"] = UserToken;
                     if (sign == mySign
                         || (CurrentUser != null && CurrentUser.LoginInfo.UserId == singleinfo.UserId)
-                        || singleinfo.Security == TogetherSchemeSecurity.Public
-                        || (singleinfo.Security == TogetherSchemeSecurity.JoinPublic && WCFClients.GameClient.IsUserJoinSportsTogether(id, UserToken))
-                        || (singleinfo.Security == TogetherSchemeSecurity.CompletePublic && singleinfo.StopTime <= DateTime.Now))
+                        || singleinfo.Security == EntityModel.Enum.TogetherSchemeSecurity.Public
+                        || (singleinfo.Security == EntityModel.Enum.TogetherSchemeSecurity.JoinPublic && await serviceProxyProvider.Invoke<bool>(param, "api/order/IsUserJoinSportsTogether"))
+                        || (singleinfo.Security == EntityModel.Enum.TogetherSchemeSecurity.CompletePublic && singleinfo.StopTime <= DateTime.Now))
                     {
                         var singleInfo = WebRedisHelper.QueryOrderSingleScheme(id, singleinfo.BonusStatus);// this.QueryOrderSingleScheme(id, singleinfo.BonusStatus);
                         ViewBag.SingleInfo = singleInfo;
@@ -3910,7 +3915,7 @@ namespace app.lottery.site.iqucai.Controllers
 
         private static List<string> _cache_UserIdIsExsite = new List<string>();
         //用户名是否存在
-        public JsonResult GetUserIdIsExsite()
+        public async Task<JsonResult> GetUserIdIsExsite()
         {
             try
             {
@@ -3927,8 +3932,10 @@ namespace app.lottery.site.iqucai.Controllers
                 string userName = PreconditionAssert.IsNotEmptyString(Request["uid"], "用户名不能为空。");
                 if (_cache_UserIdIsExsite.Exists(p => p == userName))
                     return Json(new { code = false, msg = "用户名不存在" }, JsonRequestBehavior.AllowGet);
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["loginName"] = userName;
 
-                string loginName = WCFClients.ExternalClient.GetLoginNameIsExsite(userName);
+                string loginName = await serviceProxyProvider.Invoke<string>(param, "api/user/GetLoginNameIsExsite"); ;
                 if (string.IsNullOrEmpty(loginName))
                 {
                     _cache_UserIdIsExsite.Add(userName);
