@@ -96,14 +96,16 @@
     <Reference Include="External.Client">
       <HintPath>..\Outputs\Client\External.Client.dll</HintPath>
     </Reference>
-    <Reference Include="External.Core">
-      <HintPath>..\Outputs\Common\External.Core.dll</HintPath>
+    <Reference Include="External.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\External.Core.dll</HintPath>
     </Reference>
     <Reference Include="GameBiz.Client">
       <HintPath>..\Outputs\Client\GameBiz.Client.dll</HintPath>
     </Reference>
-    <Reference Include="GameBiz.Core">
-      <HintPath>..\Outputs\Common\GameBiz.Core.dll</HintPath>
+    <Reference Include="GameBiz.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\GameBiz.Core.dll</HintPath>
     </Reference>
     <Reference Include="Kason.Sg.Code.ProxyGenerator, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

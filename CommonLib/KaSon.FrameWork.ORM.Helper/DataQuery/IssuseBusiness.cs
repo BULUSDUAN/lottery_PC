@@ -13,7 +13,7 @@ namespace KaSon.FrameWork.ORM.Helper
     public class IssuseBusiness:DBbase
     {
         private static string _baseDir;
-        public static void SetMatchConfigBaseDir(string dir)
+        public void SetMatchConfigBaseDir(string dir)
         {
             _baseDir = dir;
         }
@@ -117,7 +117,6 @@ namespace KaSon.FrameWork.ORM.Helper
             var matchInfoList = LoadBJDCMatchList(issuseNumber);
             var matchIdArray = matchInfoList.Select(p => p.MatchOrderId.ToString()).ToArray();
             UpdateBJDCMatch(issuseNumber, matchIdArray, matchInfoList);
-
             //重新加载比赛到缓存
             RedisMatchBusiness.ReloadCurrentBJDCMatch();
         }
@@ -125,18 +124,39 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             var matchResultList = LoadBJDCMatchResultList(issuseNumber);
             var matchIdArray = matchResultList.Select(p => p.MatchOrderId.ToString()).ToArray();
-            Update_BJDC_MatchResultList(issuseNumber, matchIdArray);
+             Update_BJDC_MatchResultList(issuseNumber, matchIdArray);
         }
         public void ManualUpdate_JCZQ_MatchList()
         {
             var matchInfoList = LoadJCZQMatchList();
             var matchIdArray = matchInfoList.Select(p => p.MatchId).ToArray();
-            UpdateJCZQMatch(matchIdArray, matchInfoList);
-
+            if (matchIdArray != null && matchIdArray.Count() > 0)
+            {
+                UpdateJCZQMatch(matchIdArray, matchInfoList);
+            }
             //重新加载比赛到缓存
             RedisMatchBusiness.ReloadCurrentJCZQMatch();
         }
-        
+        public void ManualUpdate_JCLQ_MatchList()
+        {
+            var matchInfoList = LoadJCLQMatchList();
+            var matchIdArray = matchInfoList.Select(p => p.MatchId).ToArray();
+            if (matchIdArray != null && matchIdArray.Count() > 0)
+            {
+                UpdateJCLQMatch(matchIdArray, matchInfoList);
+            }
+            //重新加载比赛到缓存
+            RedisMatchBusiness.ReloadCurrentJCLQMatch();
+        }
+        public void ManualUpdate_CTZQ_MatchList(string gameCode, string issuseNumber)
+        {
+            var list = LoadCTZQMatchList(issuseNumber, gameCode);
+            var matchIdArray = list.Select(p => p.Id).ToArray();
+            if (matchIdArray != null && matchIdArray.Count() > 0)
+            {
+                UpdateCTZQMatchList(matchIdArray, list);
+            }
+        }
         #region 私有方法
         private List<BJDC_MatchInfo> LoadBJDCMatchList(string issuseNumber)
         {
@@ -503,7 +523,214 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             DB.Commit();
         }
+        private List<JCLQ_MatchInfo> LoadJCLQMatchList()
+        {
+            var fileName = string.Format(@"{1}\{0}\Match_List.json", "JCLQ", _baseDir);
+            var json = ReadFileString(fileName);
+            if (string.IsNullOrEmpty(json))
+                return new List<JCLQ_MatchInfo>();
+            return JsonSerializer.Deserialize<List<JCLQ_MatchInfo>>(json);
+        }
+        private void UpdateJCLQMatch(string[] matchIdArray, List<JCLQ_MatchInfo> matchInfoList)
+        {
+            //开启事务
+            DB.Begin();
+            var manager = new JCLQMatchManager();
+            var oldList = manager.QueryJCLQ_MatchListByMatchId(matchIdArray);
+            var oldResultList = manager.QueryJCLQ_MatchResult_PrizeListByMatchId(matchIdArray);
+            foreach (var item in matchIdArray)
+            {
+                var old = oldList.FirstOrDefault(p => p.MatchId == item);
+                var oldResult = oldResultList.FirstOrDefault(p => p.MatchId == item);
+                var current = matchInfoList.FirstOrDefault(p => p.MatchId == item);
+                if (current == null)
+                    continue;
+                if (old == null)
+                {
+                    //重新添加
+                    manager.AddJCLQ_Match(new C_JCLQ_Match
+                    {
+                        StartDateTime = DateTime.Parse(current.StartDateTime),
+                        DSStopBettingTime = DateTime.Parse(current.DSStopBettingTime),
+                        FSStopBettingTime = DateTime.Parse(current.FSStopBettingTime),
+                        AverageLose = current.AverageLose,
+                        AverageWin = current.AverageWin,
+                        GuestTeamName = current.GuestTeamName,
+                        HomeTeamName = current.HomeTeamName,
+                        MatchState = current.MatchState,
+                        PrivilegesType = current.PrivilegesType,
+                        CreateTime = DateTime.Parse(current.CreateTime),
+                        GuestTeamId = current.GuestTeamId,
+                        HomeTeamId = current.HomeTeamId,
+                        LeagueColor = current.LeagueColor,
+                        LeagueId = current.LeagueId,
+                        LeagueName = current.LeagueName,
+                        MatchData = current.MatchData,
+                        MatchId = current.MatchId,
+                        MatchIdName = current.MatchIdName,
+                        MatchNumber = current.MatchNumber,
+                        Mid = current.Mid,
+                    });
+                }
+                else
+                {
+                    old.StartDateTime = DateTime.Parse(current.StartDateTime);
+                    old.DSStopBettingTime = DateTime.Parse(current.DSStopBettingTime);
+                    old.FSStopBettingTime = DateTime.Parse(current.FSStopBettingTime);
+                    old.AverageLose = current.AverageLose;
+                    old.AverageWin = current.AverageWin;
+                    old.GuestTeamName = current.GuestTeamName;
+                    old.HomeTeamName = current.HomeTeamName;
+                    old.MatchState = current.MatchState;
+                    //old.PrivilegesType = current.PrivilegesType;
+                    manager.UpdateJCLQ_Match(old);
+                }
 
+                if (oldResult == null)
+                {
+                    manager.AddJCLQ_MatchResult_Prize(new C_JCLQ_MatchResult_Prize
+                    {
+                        MatchState = "0",
+                        CreateTime = DateTime.Parse(current.CreateTime),
+                        MatchData = current.MatchData,
+                        MatchId = current.MatchId,
+                        MatchNumber = current.MatchNumber,
+                        GuestScore = 0,
+                        HomeScore = 0,
+                        SFC_Result = "-",
+                        DXF_Result = "-",
+                        RFSF_Result = "-",
+                        SF_Result = "-",
+                        DXF_Trend = "-",
+                        RFSF_Trend = "-",
+                        DXF_SP = 0M,
+                        RFSF_SP = 0M,
+                        SF_SP = 0M,
+                        SFC_SP = 0M,
+                    });
+                }
+            }
+            DB.Commit();
+        }
+        private List<CTZQ_MatchInfo> LoadCTZQMatchList(string issuseNumber, string gameType)
+        {
+            var fileName = string.Format(@"{3}\{0}\{1}\Match_{2}_List.json", "CTZQ", issuseNumber, gameType, _baseDir);
+            var json = ReadFileString(fileName);
+            if (string.IsNullOrEmpty(json))
+                return new List<CTZQ_MatchInfo>();
+            return JsonSerializer.Deserialize<List<CTZQ_MatchInfo>>(json);
+        }
+        private void UpdateCTZQMatchList(string[] array, List<CTZQ_MatchInfo> list)
+        {
+            //开启事务
+                DB.Begin();
+                var manager = new CTZQMatchManager();
+                var oldList = manager.QueryCTZQMatchListById(array);
+                foreach (var item in array)
+                {
+                    var old = oldList.FirstOrDefault(p => p.Id == item);
+                    var current = list.FirstOrDefault(p => p.Id == item);
+                    if (current == null)
+                        continue;
+                    if (old == null)
+                    {
+                        //重新添加
+                        manager.AddCTZQ_Match(new C_CTZQ_Match
+                        {
+                            Color = current.Color,
+                            GuestTeamHalfScore = current.GuestTeamHalfScore,
+                            GuestTeamScore = current.GuestTeamScore,
+                            GuestTeamStanding = int.Parse(current.GuestTeamStanding),
+                            GuestTeamId = current.GuestTeamId,
+                            GuestTeamName = current.GuestTeamName,
+                            HomeTeamHalfScore = current.HomeTeamHalfScore,
+                            HomeTeamId = current.HomeTeamId,
+                            HomeTeamName = current.HomeTeamName,
+                            HomeTeamScore = current.HomeTeamScore,
+                            HomeTeamStanding = int.Parse(current.HomeTeamStanding),
+                            MatchResult = current.MatchResult,
+                            MatchStartTime = DateTime.Parse(current.MatchStartTime),
+                            MatchState = (int)current.MatchState,
+                            UpdateTime = DateTime.Parse(current.UpdateTime),
+                            GameCode = current.GameCode,
+                            GameType = current.GameType,
+                            Id = current.Id,
+                            IssuseNumber = current.IssuseNumber,
+                            MatchId = current.MatchId,
+                            MatchName = current.MatchName,
+                            Mid = current.Mid,
+                            OrderNumber = current.OrderNumber,
+                        });
+                        continue;
+                    }
+                    
+                    old.Color = current.Color;
+                    old.GuestTeamHalfScore = current.GuestTeamHalfScore;
+                    old.GuestTeamScore = current.GuestTeamScore;
+                    old.GuestTeamStanding = int.Parse(current.GuestTeamStanding);
+                    old.GuestTeamId = current.GuestTeamId;
+                    old.GuestTeamName = current.GuestTeamName;
+                    old.HomeTeamHalfScore = current.HomeTeamHalfScore;
+                    old.HomeTeamId = current.HomeTeamId;
+                    old.HomeTeamName = current.HomeTeamName;
+                    old.HomeTeamScore = current.HomeTeamScore;
+                    old.HomeTeamStanding = int.Parse(current.HomeTeamStanding);
+                    old.MatchResult = current.MatchResult;
+                    old.MatchStartTime = DateTime.Parse(current.MatchStartTime);
+                    old.MatchState =(int)current.MatchState;
+                    old.UpdateTime = DateTime.Parse(current.UpdateTime);
+                    manager.UpdateCTZQ_Match(old);
+                }
+                DB.Commit();
+        }
         #endregion
+        public CoreJCZQMatchInfoCollection QueryCurrentJCZQMatchInfo()
+        {
+            var collection = new CoreJCZQMatchInfoCollection();
+            var manager = new JCZQMatchManager();
+            collection.AddRange(manager.QueryCurrentJCZQMatchInfo());
+            return collection;
+        }
+        public CoreJCLQMatchInfoCollection QueryCurrentJCLQMatchInfo()
+        {
+            var collection = new CoreJCLQMatchInfoCollection();
+            var manager = new JCLQMatchManager();
+            collection.AddRange(manager.QueryCurrentJCLQMatchInfo());
+            return collection;
+        }
+        public CoreBJDCMatchInfoCollection QueryCurrentBJDCMatchInfo()
+        {
+            var collection = new CoreBJDCMatchInfoCollection();
+            var manager = new BJDCMatchManager();
+            collection.AddRange(manager.QueryCurrentBJDCMatchInfo());
+            return collection;
+        }
+        public void UpdateJCZQMatchInfo(string matchId, string privilegesType)
+        {
+            var manager = new JCZQMatchManager();
+            var entity = manager.GetJCZQMatch(matchId);
+            if (entity == null)
+                throw new Exception(string.Format("比赛{0}不存在", matchId));
+            entity.PrivilegesType = privilegesType;
+            manager.UpdateJCZQ_Match(entity);
+        }
+        public void UpdateJCLQMatchInfo(string matchId, string privilegesType)
+        {
+            var manager = new JCLQMatchManager();
+            var entity = manager.GetJCLQMatch(matchId);
+            if (entity == null)
+                throw new Exception(string.Format("比赛{0}不存在", matchId));
+            entity.PrivilegesType = privilegesType;
+            manager.UpdateJCLQ_Match(entity);
+        }
+        public void UpdateBJDCMatchInfo(string Id, string privilegesType)
+        {
+            var manager = new BJDCMatchManager();
+            var entity = manager.GetBJDCMatchById(Id);
+            if (entity == null)
+                throw new Exception(string.Format("比赛{0}不存在", Id));
+            entity.PrivilegesType = privilegesType;
+            manager.UpdateBJDC_Match(entity);
+        }
     }
 }

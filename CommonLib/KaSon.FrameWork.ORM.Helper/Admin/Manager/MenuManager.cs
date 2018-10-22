@@ -20,6 +20,10 @@ namespace KaSon.FrameWork.ORM.Helper
             return DB.CreateQuery<E_Menu_List>().OrderBy(p=>p.MenuId).ToList();
         }
 
-
+        public List<C_Auth_Function_List> QueryLowerLevelFuncitonList()
+        {
+            var result = DB.CreateQuery<C_Auth_Function_List>().ToList();
+            return result;
+        }
     }
 }

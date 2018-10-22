@@ -108,7 +108,7 @@ namespace KaSon.FrameWork.ORM.Helper
        
             var query = from m in DB.CreateQuery<C_BJDC_Match>()
                         where m.LocalStopTime >= DateTime.Now
-                        select new CoreBJDCMatchInfo
+                        select new CoreBJDCMatchInfo()
                         {
                             Id = m.Id,
                             MatchOrderId = m.MatchOrderId != 0 ? m.MatchOrderId.ToString().Trim() : "",
@@ -116,13 +116,14 @@ namespace KaSon.FrameWork.ORM.Helper
                             GuestTeamName = m.GuestTeamName,
                             HomeTeamName = m.HomeTeamName,
                             LeagueColor = m.MatchColor,
+                            //
                             LeagueName = m.MatchName,
                             MatchData = m.IssuseNumber,
                             MatchId = m.MatchId != 0 ? m.MatchId.ToString().Trim() : "",
                             MatchIdName = "",
                             MatchNumber = m.MatchOrderId != 0 ? m.MatchOrderId.ToString().Trim() : "",
                             StartDateTime = m.MatchStartTime,
-                            PrivilegesType = m.PrivilegesType != null ? m.PrivilegesType : "",
+                            PrivilegesType = m.PrivilegesType != null ? m.PrivilegesType : ""
                         };
             return query.ToList();
         }

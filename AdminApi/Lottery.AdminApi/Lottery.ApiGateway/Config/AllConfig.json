@@ -19,6 +19,7 @@
   "ResourceSiteUrl_res": "http://10.0.3.6:788/test.touch",
   "ISConsoleLog": true,
   "Host": "http://*:729",
+  "DataSiteUrl":"http://10.0.3.6:888/MatchData",
 
   //必须配置 服务发现配置
   "ConsulSettings": {

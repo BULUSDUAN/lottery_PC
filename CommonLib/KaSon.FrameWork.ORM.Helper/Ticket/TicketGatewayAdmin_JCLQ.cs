@@ -8,9 +8,6 @@ using System.Text;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
-    /// <summary>
-    /// BJDC
-    /// </summary>
     public partial class TicketGatewayAdmin
     {
         //public string PrizeBJDCTicket(int num)
@@ -483,7 +480,174 @@ namespace KaSon.FrameWork.ORM.Helper
         //        }
         //    }
         //}
-
+        public void UpdateOddsList_JCLQ_Manual()
+        {
+            UpdateOddsList_JCLQ_Manual_SF("JCLQ", "SF");
+            UpdateOddsList_JCLQ_Manual_RFSF("JCLQ", "RFSF");
+            UpdateOddsList_JCLQ_Manual_SFC("JCLQ", "SFC");
+            UpdateOddsList_JCLQ_Manual_DXF("JCLQ", "DXF");
+        }
+        public void UpdateOddsList_JCLQ_Manual_SF(string gameCode, string gameType) 
+        {
+            var oddsList = GetOddsList_JingCai<T_JCLQ_Odds_SF>(gameCode, gameType, string.Empty);
+            try
+            {
+                DB.Begin();
+                var oddsManager = new JCLQ_OddsManager();
+                foreach (var odds in oddsList)
+                {
+                    if (!odds.CheckIsValidate())
+                    {
+                        continue;
+                    }
+                    var entity = oddsManager.GetLastOdds<T_JCLQ_Odds_SF>(gameType, odds.MatchId, false);
+                    if (entity == null)
+                    {
+                        entity = new T_JCLQ_Odds_SF
+                        {
+                            MatchId = odds.MatchId,
+                            CreateTime = DateTime.Now,
+                        };
+                        entity.SetOdds(odds);
+                        oddsManager.AddOdds(entity);
+                    }
+                    else if (!entity.Equals(odds))
+                    {
+                        entity.CreateTime = DateTime.Now;
+                        entity.SetOdds(odds);
+                        oddsManager.UpdateOdds(entity);
+                    }
+                }
+                DB.Commit();
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw;
+            }
+           
+        }
+        public void UpdateOddsList_JCLQ_Manual_RFSF(string gameCode, string gameType)
+        {
+            var oddsList = GetOddsList_JingCai<T_JCLQ_Odds_RFSF>(gameCode, gameType, string.Empty);
+            try
+            {
+                DB.Begin();
+                var oddsManager = new JCLQ_OddsManager();
+                foreach (var odds in oddsList)
+                {
+                    if (!odds.CheckIsValidate())
+                    {
+                        continue;
+                    }
+                    var entity = oddsManager.GetLastOdds<T_JCLQ_Odds_RFSF>(gameType, odds.MatchId, false);
+                    if (entity == null)
+                    {
+                        entity = new T_JCLQ_Odds_RFSF
+                        {
+                            MatchId = odds.MatchId,
+                            CreateTime = DateTime.Now,
+                        };
+                        entity.SetOdds(odds);
+                        oddsManager.AddOdds(entity);
+                    }
+                    else if (!entity.Equals(odds))
+                    {
+                        entity.CreateTime = DateTime.Now;
+                        entity.SetOdds(odds);
+                        oddsManager.UpdateOdds(entity);
+                    }
+                }
+                DB.Commit();
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw;
+            }
+            
+        }
+        public void UpdateOddsList_JCLQ_Manual_SFC(string gameCode, string gameType)
+        {
+            var oddsList = GetOddsList_JingCai<T_JCLQ_Odds_SFC>(gameCode, gameType, string.Empty);
+            try
+            {
+                DB.Begin();
+                var oddsManager = new JCLQ_OddsManager();
+                foreach (var odds in oddsList)
+                {
+                    if (!odds.CheckIsValidate())
+                    {
+                        continue;
+                    }
+                    var entity = oddsManager.GetLastOdds<T_JCLQ_Odds_SFC>(gameType, odds.MatchId, false);
+                    if (entity == null)
+                    {
+                        entity = new T_JCLQ_Odds_SFC
+                        {
+                            MatchId = odds.MatchId,
+                            CreateTime = DateTime.Now,
+                        };
+                        entity.SetOdds(odds);
+                        oddsManager.AddOdds(entity);
+                    }
+                    else if (!entity.Equals(odds))
+                    {
+                        entity.CreateTime = DateTime.Now;
+                        entity.SetOdds(odds);
+                        oddsManager.UpdateOdds(entity);
+                    }
+                }
+                DB.Commit();
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw;
+            }
+           
+        }
+        public void UpdateOddsList_JCLQ_Manual_DXF(string gameCode, string gameType)
+        {
+            var oddsList = GetOddsList_JingCai<T_JCLQ_Odds_DXF>(gameCode, gameType, string.Empty);
+            try
+            {
+                DB.Begin();
+                var oddsManager = new JCLQ_OddsManager();
+                foreach (var odds in oddsList)
+                {
+                    if (!odds.CheckIsValidate())
+                    {
+                        continue;
+                    }
+                    var entity = oddsManager.GetLastOdds<T_JCLQ_Odds_DXF>(gameType, odds.MatchId, false);
+                    if (entity == null)
+                    {
+                        entity = new T_JCLQ_Odds_DXF
+                        {
+                            MatchId = odds.MatchId,
+                            CreateTime = DateTime.Now,
+                        };
+                        entity.SetOdds(odds);
+                        oddsManager.AddOdds(entity);
+                    }
+                    else if (!entity.Equals(odds))
+                    {
+                        entity.CreateTime = DateTime.Now;
+                        entity.SetOdds(odds);
+                        oddsManager.UpdateOdds(entity);
+                    }
+                }
+                DB.Commit();
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw;
+            }
+            
+        }
+       
         public List<string> RequestTicket_JCLQSingleScheme(GatewayTicketOrder_SingleScheme order, out List<string> realMatchIdArray)
         {
             var selectMatchIdArray = order.SelectMatchId.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);

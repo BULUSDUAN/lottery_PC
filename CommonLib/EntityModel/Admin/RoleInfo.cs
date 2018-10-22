@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EntityModel.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -55,7 +56,7 @@ namespace EntityModel
         /// <summary>
         /// 类型
         /// </summary>
-        public int RoleType { get; set; }
+        public RoleType RoleType { get; set; }
         /// <summary>
         /// 是否超级管理员。如果是，在系统中将不判断权限，可以执行左右操作
         /// </summary>

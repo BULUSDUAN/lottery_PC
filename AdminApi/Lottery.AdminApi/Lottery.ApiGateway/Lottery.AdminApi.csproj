@@ -6,6 +6,8 @@
 
   <ItemGroup>
     <Content Remove="Redis\redisSettings.json" />
+    <Content Remove="SQL_JSON\MyServer_SQL.json" />
+    <Content Remove="SQL_JSON\SQLServer_SQL.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -14,6 +16,12 @@
 
   <ItemGroup>
     <None Include="Redis\redisSettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SQL_JSON\MyServer_SQL.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SQL_JSON\SQLServer_SQL.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -111,6 +119,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Config\KaSon.FrameWork.ORM.Config.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Config\log4net.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

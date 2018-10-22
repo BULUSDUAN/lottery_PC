@@ -16,7 +16,7 @@ namespace KaSon.FrameWork.ORM.Helper
     public partial class TicketGatewayAdmin
     {
         private static string _baseDir;
-        public static void SetMatchConfigBaseDir(string dir)
+        public void SetMatchConfigBaseDir(string dir)
         {
             _baseDir = dir;
         }
@@ -491,11 +491,10 @@ namespace KaSon.FrameWork.ORM.Helper
         //    }
         //}
         private IList<T> GetOddsList_JingCai<T>(string gameCode, string gameType, string flag)
-            where T : JingCaiMatchBase
         {
             var fileName = string.Format(@"{3}/{0}/{1}_SP{2}.json", gameCode, gameType, flag, _baseDir);
             var json = ReadFileString(fileName);
-            var resultList = JsonSerializer.Deserialize<List<T>>(json);
+            var resultList = JsonSerializer.DeserializeOldDate<List<T>>(json);
             return resultList;
         }
         private string ReadFileString(string fileName)

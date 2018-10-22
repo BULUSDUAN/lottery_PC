@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using KaSon.FrameWork.ORM.Helper;
 using KaSon.FrameWork.Common;
 using EntityModel.ExceptionExtend;
+using static EntityModel.CoreModel.ReportInfo;
 
 namespace OrderLottery.Service.ModuleServices
 {
@@ -592,5 +593,25 @@ namespace OrderLottery.Service.ModuleServices
             siteBiz.UpdateArticleStaticPath(articleId, staticPath, preId, nextId);
             return Task.FromResult(new CommonActionResult(true, "提交文章成功") { });
         }
+
+
+        #region 过关统计
+
+        /// <summary>
+        /// 查询过关统计
+        /// </summary>
+        public SportsOrder_GuoGuanInfoCollection QueryReportInfoList_GuoGuan(bool isVirtualOrder, SchemeBettingCategory? category, string key, string gameCode, string gameType, string issuseNumber, DateTime startTime, DateTime endTime, int pageIndex, int pageSize)
+        {
+            try
+            {
+                return new SqlQueryBusiness().QueryReportInfoList_GuoGuan(isVirtualOrder, category, key, gameCode, gameType, issuseNumber, startTime, endTime, pageIndex, pageSize);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        #endregion
     }
 }

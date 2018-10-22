@@ -284,6 +284,7 @@
     <Compile Include="CoreModel\ApiEntities\APP_Advertising.cs" />
     <Compile Include="CoreModel\ApiEntities\Record_AppAd.cs" />
     <Compile Include="CoreModel\AuthEntities\AccessControlItem.cs" />
+    <Compile Include="CoreModel\AuthEntities\BankCardInfo.cs" />
     <Compile Include="CoreModel\AuthEntities\Function.cs" />
     <Compile Include="CoreModel\AuthEntities\FundDetailInfo.cs" />
     <Compile Include="CoreModel\AuthEntities\IPluginHandler.cs" />
@@ -297,8 +298,10 @@
     <Compile Include="CoreModel\AuthEntities\SystemUser.cs" />
     <Compile Include="CoreModel\AuthEntities\TotalSingleTreasureInfo.cs" />
     <Compile Include="CoreModel\AuthEntities\UserBalance.cs" />
+    <Compile Include="CoreModel\AuthEntities\UserEmailInfo.cs" />
     <Compile Include="CoreModel\AuthEntities\UserFunction.cs" />
     <Compile Include="CoreModel\AuthEntities\UserMobile.cs" />
+    <Compile Include="CoreModel\AuthEntities\UserMobileInfo.cs" />
     <Compile Include="CoreModel\AuthEntities\UserRealNameInfo.cs" />
     <Compile Include="CoreModel\AuthEntities\UserRegInfo.cs" />
     <Compile Include="CoreModel\AuthEntities\WithdrawApplyInfo.cs" />

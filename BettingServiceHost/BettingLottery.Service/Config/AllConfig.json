@@ -31,6 +31,9 @@
   "PL3_StopTicketing": "19:40-21:00",
   "JCGJ_StopTicketing": "19:40-21:00",
 
+  //必须配置 服务发现配置
+  "ConsulSettings": {
+    "IpAddrs": "10.0.3.27:8501", 
 
   "SelfDomain": "http://localhost:729",
   "MobileDomain": "http://localhost:729",
@@ -58,10 +61,7 @@
     "VirtualHost": "/",
     "BrokerName": "Kason.Sg",
     "Port": "5672"
-  },
-  //必须配置 服务发现配置
-  "ConsulSettings": {
-    "IpAddrs": "10.0.3.27:8501", //服务启动IP 10.0.3.27:8501
+  },//服务启动IP 10.0.3.27:8501
     "Token": "16c5413b-276c-45ab-9b0e-9664126f1163"
 
   }

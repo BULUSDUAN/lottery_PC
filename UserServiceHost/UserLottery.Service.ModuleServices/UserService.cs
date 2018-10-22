@@ -1879,5 +1879,18 @@ namespace UserLottery.Service.ModuleServices
             //    return new TogetherHotUserInfoCollection();
             return Task.FromResult(new Sports_Business().QueryHotUserTogetherOrderList());
         }
+
+        /// <summary>
+        /// 同一IP，一定时间内的注册次数
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="ip"></param>
+        /// <returns></returns>
+        public Task<int> GetTodayRegisterCount(DateTime date, string localIP)
+        {
+            var loginBiz = new LocalLoginBusiness();
+            var count = loginBiz.GetTodayRegisterCount(date, localIP);
+            return Task.FromResult(count);
+        }
     }
 }

@@ -134,12 +134,11 @@ namespace KaSon.FrameWork.ORM.Helper
             return DB.CreateQuery<C_JCZQ_MatchResult_Prize>().Where(p => p.MatchId == matchId).FirstOrDefault();
         }
 
-        public List<C_JCZQ_Match> QueryCurrentJCZQMatchInfo()
+        public List<CoreJCZQMatchInfo> QueryCurrentJCZQMatchInfo()
         {
-          
             var query = from m in DB.CreateQuery<C_JCZQ_Match>()
                         where m.FSStopBettingTime >= DateTime.Now
-                        select new C_JCZQ_Match
+                        select new CoreJCZQMatchInfo
                         {
                             FSStopBettingTime = m.FSStopBettingTime,
                             GuestTeamName = m.GuestTeamName,
@@ -257,6 +256,5 @@ namespace KaSon.FrameWork.ORM.Helper
             return DB.CreateQuery<C_JCZQ_SJBMatch>().Where(p => p.MatchId == matchId && p.GameType == gameType).FirstOrDefault();
         }
 
-      
     }
 }

@@ -7249,6 +7249,348 @@ namespace KaSon.FrameWork.ORM.Helper
             return colleciton;
         }
 
+        public void DoMatchCancel(string gameCode, string matchId, string issuse)
+        {
+            switch (gameCode.ToUpper())
+            {
+                case "JCZQ":
+                    #region jczq
+                    var manager_JCZQ = new JCZQMatchManager();
+                    var old_JCZQ = manager_JCZQ.QueryJCZQ_MatchResultByMatchId(matchId);
+                    var oldResult_JCZQ = manager_JCZQ.QueryJCZQ_MatchResult_PrizeByMatchId(matchId);
+                    if (old_JCZQ == null)
+                    {
+                        manager_JCZQ.AddJCZQ_MatchResult(new C_JCZQ_MatchResult
+                        {
+                            HalfGuestTeamScore = -1,
+                            HalfHomeTeamScore = -1,
+                            FullGuestTeamScore = -1,
+                            FullHomeTeamScore = -1,
+                            MatchState = "2",
+                            SPF_Result = "-1",
+                            SPF_SP = 1M,
+                            BRQSPF_Result = "-1",
+                            BRQSPF_SP = 1M,
+                            BF_Result = "-1",
+                            BF_SP = 1M,
+                            ZJQ_Result = "-1",
+                            ZJQ_SP = 1M,
+                            BQC_Result = "-1",
+                            BQC_SP = 1M,
+                            CreateTime = DateTime.Now,
+                            MatchData = matchId.Substring(0, 6),
+                            MatchId = matchId,
+                            MatchNumber = matchId.Substring(6),
+                        });
+                    }
+                    else
+                    {
+                        old_JCZQ.HalfGuestTeamScore = -1;
+                        old_JCZQ.HalfHomeTeamScore = -1;
+                        old_JCZQ.FullGuestTeamScore = -1;
+                        old_JCZQ.FullHomeTeamScore = -1;
+                        old_JCZQ.MatchState = "2";
+                        old_JCZQ.SPF_Result = "-1";
+                        old_JCZQ.SPF_SP = 1M;
+                        old_JCZQ.BRQSPF_Result = "-1";
+                        old_JCZQ.BRQSPF_SP = 1M;
+                        old_JCZQ.BF_Result = "-1";
+                        old_JCZQ.BF_SP = 1M;
+                        old_JCZQ.ZJQ_Result = "-1";
+                        old_JCZQ.ZJQ_SP = 1M;
+                        old_JCZQ.BQC_Result = "-1";
+                        old_JCZQ.BQC_SP = 1M;
+                        manager_JCZQ.UpdateJCZQ_MatchResult(old_JCZQ);
+                    }
 
+                    if (oldResult_JCZQ == null)
+                    {
+                        manager_JCZQ.AddJCZQ_MatchResult_Prize(new C_JCZQ_MatchResult_Prize
+                        {
+                            HalfGuestTeamScore = -1,
+                            HalfHomeTeamScore = -1,
+                            FullGuestTeamScore = -1,
+                            FullHomeTeamScore = -1,
+                            MatchState = "2",
+                            SPF_Result = "-1",
+                            SPF_SP = 1M,
+                            BRQSPF_Result = "-1",
+                            BRQSPF_SP = 1M,
+                            BF_Result = "-1",
+                            BF_SP = 1M,
+                            ZJQ_Result = "-1",
+                            ZJQ_SP = 1M,
+                            BQC_Result = "-1",
+                            BQC_SP = 1M,
+                            CreateTime = DateTime.Now,
+                            MatchData = matchId.Substring(0, 6),
+                            MatchId = matchId,
+                            MatchNumber = matchId.Substring(6)
+                        });
+                    }
+                    else
+                    {
+                        oldResult_JCZQ.HalfGuestTeamScore = -1;
+                        oldResult_JCZQ.HalfHomeTeamScore = -1;
+                        oldResult_JCZQ.FullGuestTeamScore = -1;
+                        oldResult_JCZQ.FullHomeTeamScore = -1;
+                        oldResult_JCZQ.MatchState = "2";
+                        oldResult_JCZQ.SPF_Result = "-1";
+                        oldResult_JCZQ.SPF_SP = 1M;
+                        oldResult_JCZQ.BRQSPF_Result = "-1";
+                        oldResult_JCZQ.BRQSPF_SP = 1M;
+                        oldResult_JCZQ.BF_Result = "-1";
+                        oldResult_JCZQ.BF_SP = 1M;
+                        oldResult_JCZQ.ZJQ_Result = "-1";
+                        oldResult_JCZQ.ZJQ_SP = 1M;
+                        oldResult_JCZQ.BQC_Result = "-1";
+                        oldResult_JCZQ.BQC_SP = 1M;
+                        manager_JCZQ.UpdateJCZQ_MatchResult_Prize(oldResult_JCZQ);
+                    }
+                    #endregion
+                    break;
+                case "JCLQ":
+                    #region jclq
+                    var manager_JCLQ = new JCLQMatchManager();
+                    var old_JCLQ = manager_JCLQ.QueryJCLQ_MatchResultByMatchId(matchId);
+                    var oldResult_JCLQ = manager_JCLQ.QueryJCLQ_MatchResult_PrizeByMatchId(matchId);
+                    if (old_JCLQ == null)
+                    {
+                        manager_JCLQ.AddJCLQ_MatchResult(new C_JCLQ_MatchResult
+                        {
+                            HomeScore = -1,
+                            GuestScore = -1,
+                            MatchState = "2",
+                            RFSF_Trend = "1",
+                            DXF_Trend = "1",
+                            SF_Result = "-1",
+                            SF_SP = 1M,
+                            RFSF_Result = "-1",
+                            RFSF_SP = 1M,
+                            SFC_Result = "-1",
+                            SFC_SP = 1M,
+                            DXF_Result = "-1",
+                            DXF_SP = 1M,
+                            CreateTime = DateTime.Now,
+                            MatchData = matchId.Substring(0, 6),
+                            MatchId = matchId,
+                            MatchNumber = matchId.Substring(6),
+                        });
+                    }
+                    else
+                    {
+                        old_JCLQ.HomeScore = -1;
+                        old_JCLQ.GuestScore = -1;
+                        old_JCLQ.MatchState = "2";
+                        old_JCLQ.RFSF_Trend = "1";
+                        old_JCLQ.DXF_Trend = "1";
+                        old_JCLQ.SF_Result = "-1";
+                        old_JCLQ.SF_SP = 1M;
+                        old_JCLQ.RFSF_Result = "-1";
+                        old_JCLQ.RFSF_SP = 1M;
+                        old_JCLQ.SFC_Result = "-1";
+                        old_JCLQ.SFC_SP = 1M;
+                        old_JCLQ.DXF_Result = "-1";
+                        old_JCLQ.DXF_SP = 1M;
+                        manager_JCLQ.UpdateJCLQ_MatchResult(old_JCLQ);
+                    }
+
+                    if (oldResult_JCLQ == null)
+                    {
+                        manager_JCLQ.AddJCLQ_MatchResult_Prize(new C_JCLQ_MatchResult_Prize
+                        {
+
+                            HomeScore = -1,
+                            GuestScore = -1,
+                            MatchState = "2",
+                            RFSF_Trend = "1",
+                            DXF_Trend = "1",
+                            SF_Result = "-1",
+                            SF_SP = 1M,
+                            RFSF_Result = "-1",
+                            RFSF_SP = 1M,
+                            SFC_Result = "-1",
+                            SFC_SP = 1M,
+                            DXF_Result = "-1",
+                            DXF_SP = 1M,
+                            CreateTime = DateTime.Now,
+                            MatchData = matchId.Substring(0, 6),
+                            MatchId = matchId,
+                            MatchNumber = matchId.Substring(6),
+                        });
+                    }
+                    else
+                    {
+                        oldResult_JCLQ.HomeScore = -1;
+                        oldResult_JCLQ.GuestScore = -1;
+                        oldResult_JCLQ.MatchState = "2";
+                        oldResult_JCLQ.RFSF_Trend = "1";
+                        oldResult_JCLQ.DXF_Trend = "1";
+                        oldResult_JCLQ.SF_Result = "-1";
+                        oldResult_JCLQ.SF_SP = 1M;
+                        oldResult_JCLQ.RFSF_Result = "-1";
+                        oldResult_JCLQ.RFSF_SP = 1M;
+                        oldResult_JCLQ.SFC_Result = "-1";
+                        oldResult_JCLQ.SFC_SP = 1M;
+                        oldResult_JCLQ.DXF_Result = "-1";
+                        oldResult_JCLQ.DXF_SP = 1M;
+                        manager_JCLQ.UpdateJCLQ_MatchResult_Prize(oldResult_JCLQ);
+                    }
+                    #endregion
+                    break;
+                case "BJDC":
+                    #region bjdc
+                    var manager_BJDC = new BJDCMatchManager();
+                    var old_BJDC = manager_BJDC.QueryBJDC_MatchResult(issuse, int.Parse(matchId));
+                    var oldResult_BJDC = manager_BJDC.QueryBJDC_MatchResult_Prize(issuse, int.Parse(matchId));
+                    if (old_BJDC == null)
+                    {
+                        manager_BJDC.AddBJDC_MatchResult(new C_BJDC_MatchResult
+                        {
+                            CreateTime = DateTime.Now,
+                            Id = string.Format("{0}|{1}", issuse, matchId),
+                            IssuseNumber = issuse,
+                            BF_Result = "-1",
+                            BF_SP = 1M,
+                            BQC_Result = "-1",
+                            BQC_SP = 1M,
+                            SPF_Result = "-1",
+                            SPF_SP = 1M,
+                            SXDS_Result = "-1",
+                            SXDS_SP = 1M,
+                            ZJQ_Result = "-1",
+                            ZJQ_SP = 1M,
+                            GuestFull_Result = "-1",
+                            GuestHalf_Result = "-1",
+                            HomeFull_Result = "-1",
+                            HomeHalf_Result = "-1",
+                            MatchOrderId = int.Parse(matchId),
+                            MatchState = "2",
+                        });
+                    }
+                    else
+                    {
+                        old_BJDC.BF_Result = "-1";
+                        old_BJDC.BF_SP = 1M;
+                        old_BJDC.BQC_Result = "-1";
+                        old_BJDC.BQC_SP = 1M;
+                        old_BJDC.GuestFull_Result = "-1";
+                        old_BJDC.GuestHalf_Result = "-1";
+                        old_BJDC.HomeFull_Result = "-1";
+                        old_BJDC.HomeHalf_Result = "-1";
+                        old_BJDC.MatchState = "2";
+                        old_BJDC.SPF_Result = "-1";
+                        old_BJDC.SPF_SP = 1M;
+                        old_BJDC.SXDS_Result = "-1";
+                        old_BJDC.SXDS_SP = 1M;
+                        old_BJDC.ZJQ_Result = "-1";
+                        old_BJDC.ZJQ_SP = 1M;
+                        manager_BJDC.UpdateBJDC_MatchResult(old_BJDC);
+                    }
+
+                    if (oldResult_BJDC == null)
+                    {
+                        manager_BJDC.AddBJDC_MatchResult_Prize(new C_BJDC_MatchResult_Prize
+                        {
+                            CreateTime = DateTime.Now,
+                            Id = string.Format("{0}|{1}", issuse, matchId),
+                            IssuseNumber = issuse,
+                            BF_Result = "-1",
+                            BF_SP = 1M,
+                            BQC_Result = "-1",
+                            BQC_SP = 1M,
+                            SPF_Result = "-1",
+                            SPF_SP = 1M,
+                            SXDS_Result = "-1",
+                            SXDS_SP = 1M,
+                            ZJQ_Result = "-1",
+                            ZJQ_SP = 1M,
+                            GuestFull_Result = "-1",
+                            GuestHalf_Result = "-1",
+                            HomeFull_Result = "-1",
+                            HomeHalf_Result = "-1",
+                            MatchOrderId = int.Parse(matchId),
+                            MatchState = "2",
+                        });
+                    }
+                    else
+                    {
+                        oldResult_BJDC.BF_Result = "-1";
+                        oldResult_BJDC.BF_SP = 1M;
+                        oldResult_BJDC.BQC_Result = "-1";
+                        oldResult_BJDC.BQC_SP = 1M;
+                        oldResult_BJDC.GuestFull_Result = "-1";
+                        oldResult_BJDC.GuestHalf_Result = "-1";
+                        oldResult_BJDC.HomeFull_Result = "-1";
+                        oldResult_BJDC.HomeHalf_Result = "-1";
+                        oldResult_BJDC.MatchState = "2";
+                        oldResult_BJDC.SPF_Result = "-1";
+                        oldResult_BJDC.SPF_SP = 1M;
+                        oldResult_BJDC.SXDS_Result = "-1";
+                        oldResult_BJDC.SXDS_SP = 1M;
+                        oldResult_BJDC.ZJQ_Result = "-1";
+                        oldResult_BJDC.ZJQ_SP = 1M;
+                        manager_BJDC.UpdateBJDC_MatchResult_Prize(oldResult_BJDC);
+                    }
+                    #endregion
+                    break;
+                default:
+                    throw new Exception("传入彩种异常 - " + gameCode);
+            }
+        }
+        public IndexMatch_Collection QueryIndexMatchCollection(string matchId, string hasImg, int pageIndex, int pageSize)
+        {
+            IndexMatch_Collection collection = new IndexMatch_Collection
+            {
+                TotalCount = 0
+            };
+            var query = from s in DB.CreateQuery<C_Index_Match>()
+                        where (matchId == string.Empty || s.MatchId == matchId || s.MatchName == matchId) && (hasImg == "-1" || s.ImgPath == string.Empty)
+                        select new IndexMatchInfo
+                        {
+                            Id = s.Id,
+                            ImgPath = s.ImgPath,
+                            MatchId = s.MatchId,
+                            MatchName = s.MatchName,
+                            CreateTime = s.CreateTime,
+                        };
+            if (query != null && query.Count() > 0)
+            {
+                collection.TotalCount = query.Count();
+                collection.IndexMatchList = query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+            }
+            return collection;
+        }
+        public IndexMatchInfo QueryIndexMatchInfo(int id)
+        {
+            IndexMatchInfo info = new IndexMatchInfo();
+            var entiy = QueryIndexMatchById(id);
+            if (entiy != null)
+            {
+                info.Id = entiy.Id;
+                info.ImgPath = entiy.ImgPath;
+                info.MatchId = entiy.MatchId;
+                info.MatchName = entiy.MatchName;
+                info.CreateTime = entiy.CreateTime;
+            }
+            return info;
+        }
+        public C_Index_Match QueryIndexMatchById(int id)
+        {
+            return DB.CreateQuery<C_Index_Match>().Where(s => s.Id == id).FirstOrDefault();
+        }
+        public void UpdateIndexMatch(int Id, string imgPath)
+        {
+            if (Id <= 0)
+                throw new Exception("编号不能为空");
+            var entiy = QueryIndexMatchById(Id);
+            if (entiy == null) throw new Exception("未查询到相关比赛信息");
+            entiy.ImgPath = imgPath;
+            UpdateIndexMatch(entiy);
+        }
+        public void UpdateIndexMatch(C_Index_Match entity)
+        {
+            DB.GetDal<C_Index_Match>().Update(entity);
+        }
     }
 }

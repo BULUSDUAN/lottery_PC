@@ -10,6 +10,39 @@ namespace KaSon.FrameWork.ORM.Helper
     /// </summary>
    public class JCLQ_OddsManager : DBbase
     {
+        public void AddOdds(T_JCLQ_Odds_SF odds)
+        {
+            DB.GetDal<T_JCLQ_Odds_SF>().Add(odds);
+        }
+        public void AddOdds(T_JCLQ_Odds_RFSF odds)
+        {
+            DB.GetDal<T_JCLQ_Odds_RFSF>().Add(odds);
+        }
+        public void AddOdds(T_JCLQ_Odds_SFC odds)
+        {
+            DB.GetDal<T_JCLQ_Odds_SFC>().Add(odds);
+        }
+        public void AddOdds(T_JCLQ_Odds_DXF odds)
+        {
+            DB.GetDal<T_JCLQ_Odds_DXF>().Add(odds);
+        }
+
+        public void UpdateOdds(T_JCLQ_Odds_SF odds)
+        {
+            DB.GetDal<T_JCLQ_Odds_SF>().Update(odds);
+        }
+        public void UpdateOdds(T_JCLQ_Odds_RFSF odds)
+        {
+            DB.GetDal<T_JCLQ_Odds_RFSF>().Update(odds);
+        }
+        public void UpdateOdds(T_JCLQ_Odds_SFC odds)
+        {
+            DB.GetDal<T_JCLQ_Odds_SFC>().Update(odds);
+        }
+        public void UpdateOdds(T_JCLQ_Odds_DXF odds)
+        {
+            DB.GetDal<T_JCLQ_Odds_DXF>().Update(odds);
+        }
         /// <summary>
         /// 存错过程查询
         /// </summary>

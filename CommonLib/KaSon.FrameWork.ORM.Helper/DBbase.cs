@@ -23,7 +23,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// 全局配置信息
         /// </summary>
       // public static JObject GlobalConfig = new JObject();
-        static DBbase() {
+       static DBbase() {
 
            string path = Directory.GetCurrentDirectory();
             if (_DBType == "MySql")
