@@ -100,11 +100,11 @@ namespace KaSon.FrameWork.Common.Net
             {
                 var exr= (HttpWebResponse)ex.Response;
                 StreamReader srr = new StreamReader(exr.GetResponseStream(), encoding);
-                return srr.ReadToEnd();
+                throw new Exception(srr.ReadToEnd());
             }
             catch (Exception ex)
             {
-                return ex.ToString();
+                throw ex;
             }
         }
 
