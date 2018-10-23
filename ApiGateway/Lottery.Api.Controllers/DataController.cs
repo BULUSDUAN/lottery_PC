@@ -2523,8 +2523,10 @@ namespace Lottery.Api.Controllers
                 {
                     startDate = Convert.ToDateTime(theissuse.StartTime);
                 }
-
-                list.Add(new { issuse = cur.IssuseNumber, stoptime = cur.LocalStopTime, servertime = DateTime.Now, starttime = startDate != null ? startDate.Value : cur.StartTime });
+                if (cur != null)
+                {
+                    list.Add(new { issuse = cur.IssuseNumber, stoptime = cur.LocalStopTime, servertime = DateTime.Now, starttime = startDate != null ? startDate.Value : cur.StartTime });
+                }
 
                 return Json(new LotteryServiceResponse
                 {

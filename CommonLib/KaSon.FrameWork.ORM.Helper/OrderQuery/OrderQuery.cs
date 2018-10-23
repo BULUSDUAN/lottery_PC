@@ -1007,7 +1007,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     if (matchResult != null)
                     {
                         //halfResult = string.Format("{0}:{1}", matchResult.HomeScore, matchResult.GuestHalf_Result);
-                        fullResult = string.Format("{0}:{1}", matchResult.HomeScore, matchResult.GuestScore);
+                        fullResult = string.Format("{0}:{1}", matchResult.GuestScore, matchResult.HomeScore);
                         matchState = matchResult.MatchState;
                         switch (item.GameType.ToUpper())
                         {
