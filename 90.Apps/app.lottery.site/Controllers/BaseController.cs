@@ -4780,7 +4780,7 @@ namespace app.lottery.site.Controllers
                 //查数据
                 var schemeInfo = WCFClients.ExternalClient.QueryBDFXCommision(schemeId);
                 //写文件
-                var isBuildCache = bool.Parse(ConfigurationManager.AppSettings["IsBuildCache"].ToString());
+                var  isBuildCache = bool.Parse(ConfigurationManager.AppSettings["IsBuildCache"].ToString());
                 if (isBuildCache && schemeInfo != null && (bonusStatus == BonusStatus.Lose || bonusStatus == BonusStatus.Win))
                 {
                     var content = JsonSerializer.Serialize<BDFXCommisionInfo>(schemeInfo);

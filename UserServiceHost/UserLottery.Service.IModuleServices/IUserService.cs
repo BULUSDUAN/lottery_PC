@@ -138,7 +138,7 @@ namespace UserLottery.Service.IModuleServices
         [Service(Date = "2018-9-20", Director = "renjun", Name = "检查用户是否设置手机号码")]
         Task<bool> CheckIsAuthenticatedUserMobile(string userId);
         [Service(Date = "2018-9-20", Director = "renjun", Name = "获取用户手机认证信息")]
-        Task<UserMobileInfo> GetUserMobileInfo(string userId, string userToken);
+        Task<UserMobileInfo> GetUserMobileInfo(string userId);
         [Service(Date = "2018-9-21", Director = "renjun", Name = "关注用户")]
         Task<CommonActionResult> AttentionUser(string beAttentionUserId, string userToken);
         [Service(Date = "2018-9-21", Director = "renjun", Name = "取消关注用户")]

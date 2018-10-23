@@ -2247,20 +2247,24 @@ namespace app.lottery.site.iqucai.Controllers
 
         #region 找回密码
         [HttpPost]
-        public JsonResult FindPwd_Mobile()
+        public async Task<JsonResult> FindPwd_Mobile()
         {
             try
             {
                 string username = PreconditionAssert.IsNotEmptyString(Request.Form["userName"], "找回密码的用户名不能为空。");
                 string mobile = PreconditionAssert.IsNotEmptyString(Request.Form["mobile"], "手机号码不能为空。");
-                string uid = WCFClients.ExternalClient.GetUserIdByLoginName(username);
-                var isAuthMobile = WCFClients.ExternalClient.CheckIsAuthenticatedUserMobile(uid, UserToken);
-                PreconditionAssert.IsTrue(isAuthMobile, "用户未认证手机，无法使用手机找回密码。");
 
-                var mobileinfo = WCFClients.ExternalClient.GetUserMobileInfo(uid, UserToken);
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["loginName"] = username;
+                string uid = await serviceProxyProvider.Invoke<string>(param, "api/user/GetUserIdByLoginName");
+                param.Clear();
+                param["userId"] = uid;
+                var isAuthMobile = await serviceProxyProvider.Invoke<bool>(param, "api/user/CheckIsAuthenticatedUserMobile");
+                PreconditionAssert.IsTrue(isAuthMobile, "用户未认证手机，无法使用手机找回密码。");
+                var mobileinfo = await serviceProxyProvider.Invoke<EntityModel.CoreModel.UserMobileInfo>(param, "api/user/GetUserMobileInfo");
                 PreconditionAssert.IsTrue(mobileinfo.Mobile == mobile, "认证手机不匹配，无法找回密码。");
 
-                var result = WCFClients.ExternalClient.FindPassword(uid);
+                var result = await serviceProxyProvider.Invoke<EntityModel.Communication.CommonActionResult>(param, "api/user/FindPassword");
                 string code = result.ReturnValue;
 
                 #region 发送站内消息：手机短信或站内信
@@ -2275,7 +2279,9 @@ namespace app.lottery.site.iqucai.Controllers
                         pList.Add(string.Format("{0}={1}", "[UserPassword]", pwdArray[0]));
                         pList.Add(string.Format("{0}={1}", "[UserPassword_2]", pwdArray[1]));
                         //发送短信
-                        WCFClients.GameQueryClient.DoSendSiteMessage("", mobile, "ON_User_Find_Password", string.Join("|", pList.ToArray()));
+                        param.Clear();
+                        param["userId"] = ""; param["mobile"] = mobile; param["sceneKey"] = "ON_User_Find_Password"; param["msgTemplateParams"] = string.Join("|", pList.ToArray());
+                        await serviceProxyProvider.Invoke<EntityModel.CoreModel.UserMobileInfo>(param, "api/user/DoSendSiteMessage");
                     }
                 }
                 #endregion
