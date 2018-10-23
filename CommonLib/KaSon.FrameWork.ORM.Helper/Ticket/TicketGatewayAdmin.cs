@@ -484,6 +484,8 @@ namespace KaSon.FrameWork.ORM.Helper
         //    }
         //}
 
+      
+
         public List<string> RequestTicket_BJDCSingleScheme(GatewayTicketOrder_SingleScheme order, out List<string> realMatchIdArray)
         {
             var selectMatchIdArray = order.SelectMatchId.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);

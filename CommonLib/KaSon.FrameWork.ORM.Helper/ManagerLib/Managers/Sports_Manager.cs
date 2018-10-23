@@ -1,5 +1,7 @@
 ﻿using EntityModel;
+using EntityModel.CoreModel;
 using EntityModel.Enum;
+using KaSon.FrameWork.Common.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -580,5 +582,87 @@ namespace KaSon.FrameWork.ORM.Helper
             //   Session.Clear();
             return DB.CreateQuery<C_Sports_Order_Complate>().Where(p => schemeIdArray.Contains(p.SchemeId)).ToList();
         }
+
+        public IList<TicketPrizeInfo> QuerySZCUnPrizeTicket(string gameCode, int count)
+        {
+            if (count <= 0)
+                count = 100;
+          //  Session.Clear();
+            var sql = string.Format(@"select top {0} t.ticketId as TicketId,
+                                       t.gamecode as GameCode,t.gametype as GameType,
+                                       t.betcontent as BetContent,t.amount as Amount,t.isappend as IsAppend,
+                                        t.issusenumber as IssuseNumber,i.WinNumber,t.id as Id
+                                        from C_Sports_Ticket t
+                                        left join C_Game_Issuse i on t.gamecode=i.gamecode and t.IssuseNumber=i.IssuseNumber
+                                        where t.BonusStatus=0 and t.TicketStatus=90 
+                                        and i.WinNumber is not null 
+                                        and i.Status=30
+                                        and  i.WinNumber<>''
+                                        and i.gamecode='{1}'
+                                        order by t.issusenumber asc", count, gameCode);
+            var list = this.DB.CreateSQLQuery(sql).List<TicketPrizeInfo>();
+            //var ticketList = new List<TicketPrizeInfo>();
+            //foreach (var item in list)
+            //{
+            //    if (item == null)
+            //        continue;
+            //    var array = item as object[];
+            //    ticketList.Add(new TicketPrizeInfo
+            //    {
+            //        TicketId = UsefullHelper.GetDbValue<string>(array[0]),
+            //        GameCode = UsefullHelper.GetDbValue<string>(array[1]),
+            //        GameType = UsefullHelper.GetDbValue<string>(array[2]),
+            //        BetContent = UsefullHelper.GetDbValue<string>(array[3]),
+            //        Amount = UsefullHelper.GetDbValue<int>(array[4]),
+            //        IsAppend = UsefullHelper.GetDbValue<bool>(array[5]),
+            //        IssuseNumber = UsefullHelper.GetDbValue<string>(array[6]),
+            //        WinNumber = UsefullHelper.GetDbValue<string>(array[7]),
+            //        Id = UsefullHelper.GetDbValue<long>(array[8]),
+            //    });
+            //}
+            return list;
+        }
+
+        public IList<TicketPrizeInfo> QueryCTZQUnPrizeticket(string gameType, int count)
+        {
+            if (count <= 0)
+                count = 100;
+          //  Session.Clear();
+            
+            var sql = string.Format(@"select top {0}
+                                        t.ticketId as TicketId,
+                                       t.gamecode as GameCode,t.gametype as GameType,
+                                       t.betcontent as BetContent,t.amount as Amount,t.isappend as IsAppend,
+                                        t.issusenumber as IssuseNumber,i.WinNumber,t.id as Id
+                                    from C_Sports_Ticket t
+                                    left join [T_Ticket_BonusPool] p on t.gamecode=p.gamecode and t.gametype=p.gametype and t.issusenumber =p.issusenumber
+                                    where t.gamecode='ctzq' and t.gametype='{1}' and t.bonusstatus=0 and t.TicketStatus=90 
+                                    and p.bonuslevel=1 and p.BonusCount>0 and p.BonusMoney>0
+                                    and p.WinNumber<>''
+                                    order by t.issusenumber asc ", count, gameType);
+            var list = this.DB.CreateSQLQuery(sql).List<TicketPrizeInfo>();
+            //var ticketList = new List<TicketPrizeInfo>();
+            //foreach (var item in list)
+            //{
+            //    if (item == null)
+            //        continue;
+            //    var array = item as object[];
+            //    ticketList.Add(new TicketPrizeInfo
+            //    {
+            //        TicketId = UsefullHelper.GetDbValue<string>(array[0]),
+            //        GameCode = UsefullHelper.GetDbValue<string>(array[1]),
+            //        GameType = UsefullHelper.GetDbValue<string>(array[2]),
+            //        BetContent = UsefullHelper.GetDbValue<string>(array[3]),
+            //        Amount = UsefullHelper.GetDbValue<int>(array[4]),
+            //        IsAppend = UsefullHelper.GetDbValue<bool>(array[5]),
+            //        IssuseNumber = UsefullHelper.GetDbValue<string>(array[6]),
+            //        WinNumber = UsefullHelper.GetDbValue<string>(array[7]),
+            //        Id = UsefullHelper.GetDbValue<long>(array[8]),
+            //    });
+            //}
+            return list;
+        }
+
+
     }
 }

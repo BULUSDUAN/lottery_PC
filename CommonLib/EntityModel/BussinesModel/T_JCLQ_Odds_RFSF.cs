@@ -1,4 +1,5 @@
-﻿using EntityModel.Ticket;
+﻿using EntityModel.CoreModel;
+using EntityModel.Ticket;
 using KaSon.FrameWork.Services.Attribute;
 using KaSon.FrameWork.Services.Enum;
 using ProtoBuf;
@@ -13,7 +14,7 @@ namespace EntityModel
     ///</summary>
     [ProtoContract]
     [Entity("T_JCLQ_Odds_RFSF",Type = EntityType.Table)]
-    public class T_JCLQ_Odds_RFSF: JingCai_Odds
+    public class T_JCLQ_Odds_RFSF : EntityModel.CoreModel.JingCai_Odds
     { 
         public T_JCLQ_Odds_RFSF()
         {

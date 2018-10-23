@@ -1,4 +1,5 @@
-﻿using EntityModel.Ticket;
+﻿using EntityModel.CoreModel;
+using EntityModel.Ticket;
 using KaSon.FrameWork.Services.Attribute;
 using KaSon.FrameWork.Services.Enum;
 using ProtoBuf;

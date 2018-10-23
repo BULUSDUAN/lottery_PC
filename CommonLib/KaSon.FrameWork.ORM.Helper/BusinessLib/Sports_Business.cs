@@ -53,17 +53,17 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                 #region 北京单场
                 case NoticeType.BJDC_Issuse:
-                    new IssuseBusiness().Update_BJDC_IssuseList();
+                    new IssuseBusiness(mDB).Update_BJDC_IssuseList();
                     break;
                 case NoticeType.BJDC_Match:
                     var matchParamArray = text.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
                     var matchIdArray = matchParamArray[1].Split(new string[] { "_" }, StringSplitOptions.RemoveEmptyEntries);
-                    new IssuseBusiness().Update_BJDC_MatchList(matchParamArray[0], matchIdArray);
+                    new IssuseBusiness(mDB).Update_BJDC_MatchList(matchParamArray[0], matchIdArray);
                     break;
                 case NoticeType.BJDC_Match_SFGG:
                     var SFGGParamArray = text.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
                     var SFGGdMatchIdArray = SFGGParamArray[1].Split(new string[] { "_" }, StringSplitOptions.RemoveEmptyEntries);
-                    new IssuseBusiness().Update_SFGG_MatchList(SFGGParamArray[0], SFGGdMatchIdArray);
+                    new IssuseBusiness(mDB).Update_SFGG_MatchList(SFGGParamArray[0], SFGGdMatchIdArray);
                     break;
                 case NoticeType.BJDC_MatchResult:
                     var matchResultParamArray = text.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
@@ -83,7 +83,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 case NoticeType.BJDC_MatchResult_SFGG:
                     var SFGGmatchResultParamArray = text.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
                     var SFGGmatchResultIdArray = SFGGmatchResultParamArray[1].Split(new string[] { "#" }, StringSplitOptions.RemoveEmptyEntries);
-                    var SFGGbjdzBiz = new IssuseBusiness();
+                    var SFGGbjdzBiz = new IssuseBusiness(mDB);
                     var SFGGstr_array = from s in SFGGmatchResultIdArray select s.Split('_')[0];
 
                     SFGGbjdzBiz.Update_SFGG_MatchResultList(SFGGmatchResultParamArray[0], SFGGstr_array.ToArray());
@@ -118,7 +118,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 #region 竞彩足球
                 case NoticeType.JCZQ_Match:
                     var jczq_array = text.Split(new string[] { "_" }, StringSplitOptions.RemoveEmptyEntries);
-                    new IssuseBusiness().Update_JCZQ_MatchList(jczq_array);
+                    new IssuseBusiness(mDB).Update_JCZQ_MatchList(jczq_array);
                     break;
                 case NoticeType.JCZQ_MatchResult:
                     var jczq_match_result_array = text.Split(new string[] { "#" }, StringSplitOptions.RemoveEmptyEntries);
@@ -135,31 +135,37 @@ namespace KaSon.FrameWork.ORM.Helper
                     break;
                 //过关
                 case NoticeType.JCZQ_SPF_SP:
-                    new TicketGatewayAdmin().UpdateOddsList_JCZQ<JCZQ_SPF_SPInfo, JCZQ_Odds_SPF>("JCZQ", "SPF", text.Split('_'), false);
+                    new TicketGatewayAdmin().UpdateOddsList_JCZQ_SPF("JCZQ", "SPF", text.Split('_'), false);
+                  //  new TicketGatewayAdmin().UpdateOddsList_JCZQ<JCZQ_SPF_SPInfo, JCZQ_Odds_SPF>("JCZQ", "SPF", text.Split('_'), false);
                     break;
                 case NoticeType.JCZQ_BRQSPF_SP:
-                    new TicketGatewayAdmin().UpdateOddsList_JCZQ<JCZQ_BRQSPF_SPInfo, JCZQ_Odds_BRQSPF>("JCZQ", "BRQSPF", text.Split('_'), false);
+                    //UpdateOddsList_JCLQ_RFSFF
+                    // new TicketGatewayAdmin().UpdateOddsList_JCLQ_RFSFF<JCZQ_BRQSPF_SPInfo, JCZQ_Odds_BRQSPF>("JCZQ", "BRQSPF", text.Split('_'), false);
+                    new TicketGatewayAdmin().UpdateOddsList_JCZQ_BRQSPF("JCZQ", "BRQSPF", text.Split('_'), false);
                     break;
                 case NoticeType.JCZQ_ZJQ_SP:
-                    new TicketGatewayAdmin().UpdateOddsList_JCZQ<JCZQ_ZJQ_SPInfo, JCZQ_Odds_ZJQ>("JCZQ", "ZJQ", text.Split('_'), false);
+                    new TicketGatewayAdmin().UpdateOddsList_JCZQ_ZJQ("JCZQ", "ZJQ", text.Split('_'), false);
+                   // new TicketGatewayAdmin().UpdateOddsList_JCZQ<JCZQ_ZJQ_SPInfo, JCZQ_Odds_ZJQ>("JCZQ", "ZJQ", text.Split('_'), false);
+
+
                     break;
                 case NoticeType.JCZQ_BQC_SP:
-                    new TicketGatewayAdmin().UpdateOddsList_JCZQ<JCZQ_BQC_SPInfo, JCZQ_Odds_BQC>("JCZQ", "BQC", text.Split('_'), false);
+                    new TicketGatewayAdmin().UpdateOddsList_JCZQ_BQC("JCZQ", "BQC", text.Split('_'), false);
                     break;
                 case NoticeType.JCZQ_BF_SP:
-                    new TicketGatewayAdmin().UpdateOddsList_JCZQ<JCZQ_BF_SPInfo, JCZQ_Odds_BF>("JCZQ", "BF", text.Split('_'), false);
+                    new TicketGatewayAdmin().UpdateOddsList_JCZQ_BF("JCZQ", "BF", text.Split('_'), false);
                     break;
                 #endregion
 
                 #region 竞彩篮球
                 case NoticeType.JCLQ_Match:
                     var jclq_array = text.Split(new string[] { "_" }, StringSplitOptions.RemoveEmptyEntries);
-                    new IssuseBusiness().Update_JCLQ_MatchList(jclq_array);
+                    new IssuseBusiness(mDB).Update_JCLQ_MatchList(jclq_array);
                     break;
                 case NoticeType.JCLQ_MatchResult:
                     var jclq_match_result_array = text.Split(new string[] { "#" }, StringSplitOptions.RemoveEmptyEntries);
                     var jclq_result_array = from s in jclq_match_result_array select s.Split('_')[0];
-                    var jclqBiz = new IssuseBusiness();
+                    var jclqBiz = new IssuseBusiness(mDB);
                     jclqBiz.Update_JCLQ_MatchResultList(jclq_result_array.ToArray());
                     new Thread(() =>
                     {
@@ -171,23 +177,23 @@ namespace KaSon.FrameWork.ORM.Helper
                     break;
                 //过关
                 case NoticeType.JCLQ_SF_SP:
-                    new TicketGatewayAdmin().UpdateOddsList_JCLQ<JCLQ_SF_SPInfo, JCLQ_Odds_SF>("JCLQ", "SF", text.Split('_'), false);
+                    new TicketGatewayAdmin().UpdateOddsList_JCLQ<JCLQ_SF_SPInfo, T_JCLQ_Odds_SF>("JCLQ", "SF", text.Split('_'), false);
                     break;
                 case NoticeType.JCLQ_RFSF_SP:
-                    new TicketGatewayAdmin().UpdateOddsList_JCLQ<JCLQ_RFSF_SPInfo, JCLQ_Odds_RFSF>("JCLQ", "RFSF", text.Split('_'), false);
+                    new TicketGatewayAdmin().UpdateOddsList_JCLQ<JCLQ_RFSF_SPInfo, T_JCLQ_Odds_RFSF>("JCLQ", "RFSF", text.Split('_'), false);
                     break;
                 case NoticeType.JCLQ_SFC_SP:
-                    new TicketGatewayAdmin().UpdateOddsList_JCLQ<JCLQ_SFC_SPInfo, JCLQ_Odds_SFC>("JCLQ", "SFC", text.Split('_'), false);
+                    new TicketGatewayAdmin().UpdateOddsList_JCLQ<JCLQ_SFC_SPInfo, T_JCLQ_Odds_SFC>("JCLQ", "SFC", text.Split('_'), false);
                     break;
                 case NoticeType.JCLQ_DXF_SP:
-                    new TicketGatewayAdmin().UpdateOddsList_JCLQ<JCLQ_DXF_SPInfo, JCLQ_Odds_DXF>("JCLQ", "DXF", text.Split('_'), false);
+                    new TicketGatewayAdmin().UpdateOddsList_JCLQ<JCLQ_DXF_SPInfo, T_JCLQ_Odds_DXF>("JCLQ", "DXF", text.Split('_'), false);
                     break;
                 #endregion
 
                 #region 数字彩奖池：双色球、大乐透
                 case NoticeType.SZC_MatchPool:
                     var tmpSZC_MatchPool = text.Split('_');
-                    new TicketGatewayAdmin().UpdateBonusPool_SZC(tmpSZC_MatchPool[0], tmpSZC_MatchPool[1]);
+                    new IssuseBusiness(mDB).UpdateBonusPool_SZC(tmpSZC_MatchPool[0], tmpSZC_MatchPool[1]);
                     break;
                 #endregion
 
@@ -195,11 +201,11 @@ namespace KaSon.FrameWork.ORM.Helper
 
                 case NoticeType.JCOZB_GJ:
                     var gjMatchIdArray = text.Split(new string[] { "_" }, StringSplitOptions.RemoveEmptyEntries);
-                    new IssuseBusiness().Update_JCZQ_OZB_GJ(gjMatchIdArray);
+                    new IssuseBusiness(mDB).Update_JCZQ_OZB_GJ(gjMatchIdArray);
                     break;
                 case NoticeType.JCOZB_GYJ:
                     var gyjMatchIdArray = text.Split(new string[] { "_" }, StringSplitOptions.RemoveEmptyEntries);
-                    new IssuseBusiness().Update_JCZQ_OZB_GYJ(gyjMatchIdArray);
+                    new IssuseBusiness(mDB).Update_JCZQ_OZB_GYJ(gyjMatchIdArray);
                     break;
 
                 #endregion
@@ -207,11 +213,11 @@ namespace KaSon.FrameWork.ORM.Helper
                 #region 世界杯
                 case NoticeType.JCSJB_GJ:
                     var sjbgjMatchIdArray = text.Split(new string[] { "_" }, StringSplitOptions.RemoveEmptyEntries);
-                    new IssuseBusiness().Update_JCZQ_SJB_GJ(sjbgjMatchIdArray);
+                    new IssuseBusiness(mDB).Update_JCZQ_SJB_GJ(sjbgjMatchIdArray);
                     break;
                 case NoticeType.JCSJB_GYJ:
                     var sjbgyjMatchIdArray = text.Split(new string[] { "_" }, StringSplitOptions.RemoveEmptyEntries);
-                    new IssuseBusiness().Update_JCZQ_SJB_GYJ(sjbgyjMatchIdArray);
+                    new IssuseBusiness(mDB).Update_JCZQ_SJB_GYJ(sjbgyjMatchIdArray);
                     break;
                 #endregion
 
@@ -238,7 +244,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var poolManager = new Ticket_BonusManager();
 
             var szcArray = new string[] { "SSQ", "DLT", "FC3D", "PL3", "CQSSC", "JX11X5", "SD11X5", "GD11X5", "GDKLSF", "JSKS", "SDKLPK3" };
-            var poolList = new List<Ticket_BonusPool>();
+            var poolList = new List<T_Ticket_BonusPool>();
             var ticketList = new List<TicketPrizeInfo>();
             watch.Start();
             if (szcArray.Contains(gameCode.ToUpper()))
@@ -316,6 +322,66 @@ namespace KaSon.FrameWork.ORM.Helper
             log.Insert(0, string.Format("成功派奖票：{0}条，失败派奖票：{1}条", successCount, failCount));
             return string.Join(Environment.NewLine, log.ToArray());
         }
+        private void DoComputeTicketBonusMoney(string ticketId, string gameCode, string gameType, string betContent, int amount, bool isAppend, string issuseNumber, string winNumber, List<T_Ticket_BonusPool> poolList, out decimal totalPreMoney, out decimal totalAfterMoney)
+        {
+            totalPreMoney = 0M;
+            totalAfterMoney = 0M;
+            if (winNumber == "-")
+            {
+                totalPreMoney = -1M;
+                totalAfterMoney = -1M;
+                return;
+            }
+            var ruleManaager = new BonusRuleManager();
+            var bonusManager = new Ticket_BonusManager();
+            foreach (var item in betContent.Split('/'))
+            {
+                var ticketPreMoney = 0M;
+                var ticketAfterMoney = 0M;
+                var analyzer = AnalyzerFactory.GetAntecodeAnalyzer(gameCode, gameType);
+                var bonusLevelList = analyzer.CaculateBonus(item, winNumber);
+                //HCount += AnalyzerFactory.GetHitCount(item, winNumber);
+                foreach (var level in bonusLevelList)
+                {
+                    //取中奖规则
+                    var rule = ruleManaager.GetBonusRule(gameCode, gameType, level);
+                    if (rule == null)
+                        throw new Exception(string.Format("票{0}找不到对应的奖金规则{1}", ticketId, level));
+                    var money = rule.BonusMoney;
+                    if (money == -1M)
+                    {
+                        var pGameType = (gameCode == "SSQ" || gameCode == "DLT") ? "" : gameType;
+                        var pool = poolList.FirstOrDefault(p => p.GameCode == gameCode && (pGameType == "" || p.GameType == pGameType) && p.IssuseNumber == issuseNumber && p.BonusLevel == level.ToString());
+                        if (pool == null)
+                        {
+                            throw new Exception("未更新奖池数据 - " + gameCode + "." + gameType);
+                        }
+                        money = pool.BonusMoney;
+                    }
+
+                    //追加投注
+                    var appendMoney = 0M;
+                    if (level <= 3 && isAppend)
+                        appendMoney = money * 0.6M;
+                    else if (level > 3 && level <= 5 && isAppend)
+                        appendMoney = money * 0.5M;
+
+                    var bonusMoney = (money + appendMoney) * amount;
+                    ticketPreMoney += bonusMoney;
+                    var taxMoney = 0M;
+                    //扣税
+                    if ((money + appendMoney) >= 10000M)
+                    {
+                        taxMoney = (money + appendMoney) * 0.2M * amount;
+                    }
+                    ticketAfterMoney += bonusMoney - taxMoney;
+                }
+
+                totalPreMoney += ticketPreMoney;
+                totalAfterMoney += ticketAfterMoney;
+            }
+        }
+
         /// <summary>
         /// 传统足球、数字彩奖期派奖
         /// </summary>
