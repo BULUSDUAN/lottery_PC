@@ -131,10 +131,10 @@ namespace Lottery.CrawGetters.Auto
                // return false;
             }
            
-            foreach (var item in dict)
-            {
-                all.TryAdd(item.Key, item.Value);
-            }
+            //foreach (var item in dict)
+            //{
+            //    all.TryAdd(item.Key, item.Value);
+            //}
             return dict;
 
         }
@@ -181,8 +181,19 @@ namespace Lottery.CrawGetters.Auto
                         dic= Process(gameName, all, new ISZCWinNumberCrawler[] { new SZCWinNumberCommercial(), new SZCWinNumberQCW() });
                         var Nfn = Fn as Func<string, ConcurrentDictionary<string, string>, Dictionary<string, string>, bool>;
 
-                        Nfn(gameName, all, dic);
-                      
+                      var bol=  Nfn(gameName, all, dic);
+                        if (bol)
+                        {
+                            foreach (var item in dic)
+                            {
+                                all.TryAdd(item.Key, item.Value);
+                                Console.WriteLine("采集到数据"+item.Key+item.Value);
+                            }
+
+                        }
+                        
+                       // return false;
+
                     }
                     catch (Exception ex)
                     {

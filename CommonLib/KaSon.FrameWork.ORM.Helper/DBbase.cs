@@ -1,6 +1,7 @@
 ﻿
 
 using KaSon.FrameWork.Common;
+using KaSon.FrameWork.Common.FileOperate;
 using KaSon.FrameWork.ORM.Provider;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -184,9 +185,9 @@ namespace KaSon.FrameWork.ORM.Helper
                 //db = null;
             }
         }
-        ~DBbase()
-        {
-            Dispose();
-        }
+        //~DBbase()
+        //{
+        //    Dispose();
+        //}
     }
 }

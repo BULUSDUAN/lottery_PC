@@ -12,6 +12,18 @@ namespace Lottery.CrawGetters
     /// </summary>
     public class InitConfigInfo
     {
+        /// <summary>
+        /// 奖金池配置
+        /// </summary>
+        public static JToken BonusPoolSetting { get; set; }
+
+        public static JToken MatchSettings { get; set; }
+
+        public static JToken MongoSettings { get; set; }
+        //mogodb 采集表命名
+        public static JToken MongoTableSettings { get; set; }
+        //数字彩 彩种采集停留时间间隔 单位秒
+        public static JToken NumLettory_SleepTimeSpanSettings { get; set; }
 
         public static string SZC_OPEN_URL { get; set; }
         public static string SZC_OPEN_URL_DAY { get; set; }
@@ -24,6 +36,8 @@ namespace Lottery.CrawGetters
         public static string SZC_OPEN_MIRROR_URL { get; set; }
 
         public static ILoggerFactory logFactory { get; set; }
+
+      
 
         /// <summary>
         /// 通知站点构建静态数据

@@ -43,6 +43,8 @@ namespace EntityModel.CoreModel
         /// 比赛投注开始时间
         /// </summary>
         public string StartTime { get; set; }
+
+        public string WinNumber { get; set; }
     }
     /// <summary>
     /// 传统足球奖池信息

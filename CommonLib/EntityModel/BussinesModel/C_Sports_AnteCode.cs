@@ -1,4 +1,5 @@
-﻿using KaSon.FrameWork.Services.Attribute;
+﻿using EntityModel.Interface;
+using KaSon.FrameWork.Services.Attribute;
 using KaSon.FrameWork.Services.Enum;
 using ProtoBuf;
 using System;
@@ -12,7 +13,7 @@ namespace EntityModel
     ///</summary>
     [ProtoContract]
     [Entity("C_Sports_AnteCode",Type = EntityType.Table)]
-    public class C_Sports_AnteCode
+    public class C_Sports_AnteCode: ISportAnteCode
     { 
         public C_Sports_AnteCode()
         {
@@ -90,5 +91,80 @@ namespace EntityModel
             [ProtoMember(12)]
             [Field("CreateTime")]
             public DateTime CreateTime{ get; set; }
+        public virtual int Length { get { return AnteCode.Split(',', '|').Length; } }
+        public virtual string GetMatchResult(string gameCode, string gameType, string score)
+        {
+            if (gameCode.ToLower() != "jclq")
+            {
+                return "";
+            }
+            if (score == "-" || score == "*")
+            {
+                //return "*"; old
+                return "";
+            }
+            var tmp = score.Split(':');
+            if (tmp.Length != 2)
+            {
+                throw new ArgumentException("比分格式错误");
+            }
+            if (tmp[0] == "-" || tmp[1] == "-" || tmp[0] == "-1" || tmp[1] == "-1")
+            {
+                //return "*"; old
+                return "";
+            }
+            var score1 = decimal.Parse(tmp[0]);
+            var score2 = decimal.Parse(tmp[1]);
+            var total = score1 + score2;
+            if (gameType.ToLower() == "rfsf")
+            {
+                var rf = GetResultOdds("rf");
+                if (score1 + rf > score2)
+                {
+                    return "3";
+                }
+                else if (score1 + rf < score2)
+                {
+                    return "0";
+                }
+                else
+                {
+                    return "1";
+                }
+            }
+            else if (gameType.ToLower() == "dxf")
+            {
+                var yszf = GetResultOdds("yszf");
+                if (total > yszf)
+                {
+                    return "3";
+                }
+                else if (total < yszf)
+                {
+                    return "0";
+                }
+                else
+                {
+                    return "1";
+                }
+            }
+            else
+            {
+                return "";
+            }
+        }
+        public virtual decimal GetResultOdds(string matchResult)
+        {
+            var tmp = Odds.Split(',');
+            foreach (var item in tmp)
+            {
+                var p = item.Split('|');
+                if (p[0].Equals(matchResult, StringComparison.OrdinalIgnoreCase))
+                {
+                    return decimal.Parse(p[1]);
+                }
+            }
+            throw new Exception(string.Format("没找到比赛{0}结果对应的赔率 - {1}", MatchId, matchResult));
+        }
     }
 }

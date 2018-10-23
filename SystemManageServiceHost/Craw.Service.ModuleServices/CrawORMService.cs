@@ -6,12 +6,31 @@ using System.Linq;
 using KaSon.FrameWork.ORM.Helper.WinNumber;
 using KaSon.FrameWork.Common;
 using KaSon.FrameWork.Common.Net;
+using KaSon.FrameWork.ORM.Helper.BonusPool;
+using EntityModel.BonusPool;
+using MongoDB.Driver;
+using KaSon.FrameWork.Common.JSON;
+using MongoDB.Bson;
 
 namespace Craw.Service.ModuleServices
 {
+    /// <summary>
+    /// 采集到数据要做处理
+    /// </summary>
   public  class CrawORMService
     {
-
+        private IMongoDatabase mDB;
+        public CrawORMService(IMongoDatabase _mDB)
+        {
+            mDB = _mDB;
+        }
+        /// <summary>
+        /// 数字彩录入
+        /// </summary>
+        /// <param name="gameName"></param>
+        /// <param name="all"></param>
+        /// <param name="dic"></param>
+        /// <returns></returns>
         public bool Start(string gameName,ConcurrentDictionary<string, string> all, Dictionary<string, string> dic) {
 
 
@@ -28,7 +47,6 @@ namespace Craw.Service.ModuleServices
                     ILotteryDataBusiness instan = KaSon.FrameWork.ORM.Helper.WinNumber.LotteryDataBusiness.GetTypeImport(gameName);// = new LotteryDataBusiness();
                     instan.ImportWinNumber( item.Key, item.Value);
 
-
                     //奖期派奖
                     new KJGameIssuseBusiness().IssusePrize(gameName, item.Key, item.Value);
                 }
@@ -40,44 +58,108 @@ namespace Craw.Service.ModuleServices
                     //  this.WriteLog("开始生成静态相关数据.");
 
                     //this.WriteLog("1.生成最新开奖号");
-                    var log = this.SendBuildStaticFileNotice("401", gameName);
-                    // this.WriteLog("1.生成最新开奖号结果:" + log);
+                    //var log = this.SendBuildStaticFileNotice("401", gameName);
+                    //// this.WriteLog("1.生成最新开奖号结果:" + log);
 
-                    //if (dpc.Contains(gameCode))
+                    ////if (dpc.Contains(gameCode))
+                    ////{
+                    ////  this.WriteLog("2.生成开奖结果首页");
+                    //log = this.SendBuildStaticFileNotice("301");
+                    //// this.WriteLog("2.生成开奖结果首页结果：" + log);
+                    ////}
+
+                    ////  this.WriteLog("3.生成彩种开奖历史");
+                    //log = this.SendBuildStaticFileNotice("302", gameName);
+                    ////    this.WriteLog("3.生成彩种开奖历史结果：" + log);
+
+                    ////  this.WriteLog("4.生成彩种开奖详细");
+                    //log = this.SendBuildStaticFileNotice("303", gameName);
+                    ////   this.WriteLog("4.生成彩种开奖详细结果：" + log);
+
+                    //if (dpc.Contains(gameName))
                     //{
-                    //  this.WriteLog("2.生成开奖结果首页");
-                    log = this.SendBuildStaticFileNotice("301");
-                    // this.WriteLog("2.生成开奖结果首页结果：" + log);
+                    //    //   this.WriteLog("5.生成网站首页");
+                    //    log = this.SendBuildStaticFileNotice("10");
+                    //    //  this.WriteLog("5.生成网站首页结果：" + log);
                     //}
 
-                    //  this.WriteLog("3.生成彩种开奖历史");
-                    log = this.SendBuildStaticFileNotice("302", gameName);
-                    //    this.WriteLog("3.生成彩种开奖历史结果：" + log);
-
-                    //  this.WriteLog("4.生成彩种开奖详细");
-                    log = this.SendBuildStaticFileNotice("303", gameName);
-                    //   this.WriteLog("4.生成彩种开奖详细结果：" + log);
-
-                    if (dpc.Contains(gameName))
-                    {
-                        //   this.WriteLog("5.生成网站首页");
-                        log = this.SendBuildStaticFileNotice("10");
-                        //  this.WriteLog("5.生成网站首页结果：" + log);
-                    }
-
-                    // this.WriteLog("6.生成走势图");
-                    log = this.SendBuildStaticFileNotice("900", gameName);
+                    //// this.WriteLog("6.生成走势图");
+                    //log = this.SendBuildStaticFileNotice("900", gameName);
                     //  this.WriteLog("6.生成走势图结果：" + log);
 
                     //  this.WriteLog("生成静态相关数据完成.");
                 }
                 catch (Exception ex)
                 {
-                   // this.WriteLog("生成静态数据异常：" + ex.Message);
+                    // this.WriteLog("生成静态数据异常：" + ex.Message);
+                    return false;
                 }
+
+                return true;
             }
             return false;
         }
+
+        /// <summary>
+        /// 奖金池录入
+        /// </summary>
+        /// <param name="gameName"></param>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        public bool BonusPoolStart(string gameName, OpenDataInfo  info)
+        {
+            bool bol = true;
+            string tablename = Lottery.CrawGetters.InitConfigInfo.MongoSettings["BonusPoolTableName"].ToString();
+            string content = KaSon.FrameWork.Common.JSON.JsonHelper.Serialize(info);
+            BsonDocument bson = new BsonDocument();
+            bson.Add("GameCode", info.GameCode);
+            bson.Add("IssuseNumber", info.IssuseNumber);
+            bson.Add("Content", content);
+            //  new BsonDocument { { "GameCode", info.GameCode }, { "Age", 20 } }
+            var fileName = string.Format("{0}_{1}.json", info.GameCode, info.IssuseNumber);
+            //  this.WriteLog(string.Format("已成功采集到{0}第{1}期奖池数据，开始写入文件{2}", info.GameCode, info.IssuseNumber, fileName));
+            var coll = mDB.GetCollection<BsonDocument>(tablename);
+            //var options = new UpdateOptions { IsUpsert = true };
+            var mFilter = MongoDB.Driver.Builders<MongoDB.Bson.BsonDocument>.Filter.Eq("GameCode", info.GameCode) & Builders<BsonDocument>.Filter.Eq("IssuseNumber", info.IssuseNumber);
+            // var mUpdateDocument =Builders<MongoDB.Bson.BsonDocument>.Update.Set("Content", content);
+
+            var count = coll.Find(mFilter).CountDocuments();
+            try
+            {
+                if (count > 0)
+                {
+                    //Thread.Sleep(2000);
+
+                }
+                else
+                {
+                    coll.DeleteMany(mFilter);
+                    coll.InsertOne(bson);
+                }
+                try
+                {
+                    BonusPoolManager bm = new BonusPoolManager(content);
+                    bm.UpdateBonusPool_SZC(info.GameCode, info.IssuseNumber);
+                }
+                catch (Exception)
+                {
+
+                    bol = false;
+                }
+            }
+            catch (Exception)
+            {
+
+                bol = false;
+            }
+          
+
+
+
+           
+            return bol;
+        }
+
         /// <summary>
         /// 发送通知到网站生成静态页或静态数据
         /// </summary>
