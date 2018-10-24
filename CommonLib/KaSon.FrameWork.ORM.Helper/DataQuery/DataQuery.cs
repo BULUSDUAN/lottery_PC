@@ -789,7 +789,8 @@ namespace KaSon.FrameWork.ORM.Helper
         public List<C_Game_Transfer> QueryNotFinishGame(int minutes)
         {
             var now = DateTime.Now;
-            return DB.CreateQuery<C_Game_Transfer>().Where(p => p.RequestTime < now.AddMinutes(-minutes) && p.Status == (int)FillMoneyStatus.Requesting).ToList();
+            var date = now.AddMinutes(-minutes);
+            return DB.CreateQuery<C_Game_Transfer>().Where(p => p.RequestTime < date && p.Status == 0).ToList();
         }
     }
 }
