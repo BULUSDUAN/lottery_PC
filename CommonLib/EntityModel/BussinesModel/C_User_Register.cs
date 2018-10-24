@@ -120,5 +120,8 @@ namespace EntityModel
             [ProtoMember(17)]
             [Field("UserType")]
             public int UserType{ get; set; }
+           [ProtoMember(18)]
+           [Field("UserCreditType")]
+           public int UserCreditType { get; set; }
     }
 }

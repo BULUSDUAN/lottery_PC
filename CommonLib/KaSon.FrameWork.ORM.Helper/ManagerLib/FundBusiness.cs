@@ -489,5 +489,101 @@ namespace KaSon.FrameWork.ORM.Helper
 
           return DB.CreateQuery<C_Bank_Info>().Where(p => p.BankCode == bankCode && p.Disabled==false).FirstOrDefault();
         }
+        public UserBalanceFreezeCollection QueryUserBalanceFreezeListByUser(string userId, int pageIndex, int pageSize)
+        {
+            var balanceManager = new UserBalanceManager();
+
+            int totalCount;
+            decimal totalMoney;
+            var list = balanceManager.QueryUserBalanceFreezeListByUser(userId, pageIndex, pageSize, out totalCount, out totalMoney);
+            var result = new UserBalanceFreezeCollection
+            {
+                TotalCount = totalCount,
+                TotalMoney = totalMoney,
+                FreezeList = list,
+            };
+            return result;
+        }
+        public string ManualFillMoney(UserFillMoneyAddInfo info, string userId, string requestBy, out int vipLevel)
+        {
+            var orderId = string.Empty;
+            //开启事务
+                DB.Begin();
+                if (info.RequestMoney <= 0) throw new Exception("充值金额必须大于0");
+                var user = new UserBalanceManager().QueryUserRegister(userId);
+                if (user == null) throw new Exception(string.Format("用户账户{0}不存在", userId));
+                #region 判断充值金额是否在财务员执行范围
+                var manage = new FundManager();
+                C_FinanceSettings FinanceInfo = manage.GetFinanceSettingsInfo(requestBy, "20");
+                if (FinanceInfo == null || FinanceInfo.FinanceId <= 0)
+                {
+                    throw new Exception("您还未设置财务员充值金额范围！");
+                }
+                if (info.RequestMoney < FinanceInfo.MinMoney || info.RequestMoney > FinanceInfo.MaxMoney)
+                {
+                    throw new Exception("当前充值金额必须在" + FinanceInfo.MinMoney.ToString("N2") + "--" + FinanceInfo.MaxMoney.ToString("N2") + "之间");
+                }
+                #endregion
+                vipLevel = user.VipLevel;
+                orderId = BusinessHelper.GetManualFillMoneyId();
+                new FundManager().AddFillMoney(new C_FillMoney
+                {
+                    FillMoneyAgent = (int)info.FillMoneyAgent,
+                    GoodsDescription = info.GoodsDescription,
+                    GoodsName = info.GoodsName,
+                    GoodsType = info.GoodsType,
+                    IsNeedDelivery = info.IsNeedDelivery,
+                    NotifyUrl = info.NotifyUrl,
+                    OrderId = orderId,
+                    RequestBy = requestBy,
+                    RequestMoney = info.RequestMoney,
+                    RequestTime = DateTime.Now,
+                    ReturnUrl = info.ReturnUrl,
+                    ShowUrl = info.ShowUrl,
+                    Status = (int)FillMoneyStatus.Success,
+                    UserId = user.UserId,
+                    PayMoney = info.PayMoney,
+                    SchemeSource = (int)info.SchemeSource,
+                    ResponseBy = requestBy,
+                    ResponseMessage = "手工充值完成",
+                    ResponseMoney = info.RequestMoney,
+                    ResponseTime = DateTime.Now,
+                    ResponseCode = "ManualFillMoney",
+                });
+
+                BusinessHelper.Payin_To_Balance(AccountType.FillMoney, BusinessHelper.FundCategory_ManualFillMoney, user.UserId, orderId, info.RequestMoney,
+                    string.Format("手工充值，发生额：{0:N2}元，{1}", info.RequestMoney, info.GoodsDescription), operatorId: requestBy);
+            DB.Commit();
+            return orderId;
+        }
+        public void ManualHandleMoney(string keyLine, string orderId, decimal actionMoney, AccountType accountType, PayType payType, string userId, string description, string financeId = "")
+        {
+            //开启事务
+            DB.Begin();
+            if (actionMoney <= 0) throw new Exception("手工处理金额必须大于0");
+            #region 判断充值金额是否在财务员执行范围
+            var manage = new FundManager();
+            C_FinanceSettings FinanceInfo = manage.GetFinanceSettingsInfo(financeId, "20");
+            if (FinanceInfo == null || FinanceInfo.FinanceId <= 0)
+            {
+                throw new Exception("您还未设置财务员充值金额范围！");
+            }
+            if (actionMoney < FinanceInfo.MinMoney || actionMoney > FinanceInfo.MaxMoney)
+            {
+                throw new Exception("当前充值金额必须在" + FinanceInfo.MinMoney.ToString("N2") + "--" + FinanceInfo.MaxMoney.ToString("N2") + "之间");
+            }
+            #endregion
+            if (payType == PayType.Payin)
+            {
+                BusinessHelper.Payin_To_Balance(accountType, BusinessHelper.FundCategory_ManualRemitMoney, userId, orderId, actionMoney,
+                    string.Format("手工打款，发生额：{0:N2}元。{1}", actionMoney, description), operatorId: financeId);
+            }
+            else
+            {
+                BusinessHelper.Payout_To_End(accountType, BusinessHelper.FundCategory_ManualDeductMoney, userId, orderId, actionMoney,
+                    string.Format("手工扣款，发生额：{0:N2}元。{1}", actionMoney, description), operatorId: financeId);
+            }
+            DB.Commit();
+        }
     }
 }
