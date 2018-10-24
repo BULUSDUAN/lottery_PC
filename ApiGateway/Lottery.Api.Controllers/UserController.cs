@@ -1252,7 +1252,7 @@ namespace Lottery.Api.Controllers
                 {
                     BankCode = bankCode,
                     BankName = resultbankCode.BankName,
-                    BankSubName = string.IsNullOrEmpty(subBankName)? resultbankCode.BankName : subBankName,
+                    BankSubName = string.IsNullOrEmpty(subBankName) ? resultbankCode.BankName : subBankName,
                     BankCardNumber = cardnumber,
                     ProvinceName = province,
                     CityName = city,
@@ -1494,6 +1494,11 @@ namespace Lottery.Api.Controllers
         {
             try
             {
+                if ((DateTime.Now.Hour < 8 || (DateTime.Now.Hour == 8 && DateTime.Now.Minute < 50))
+                && (DateTime.Now.Hour > 1 || (DateTime.Now.Hour == 1 && DateTime.Now.Minute > 10)))
+                {
+                    throw new Exception("提现时间早上9点到凌晨1点，请您明天9点再来，感谢配合");
+                }
                 //读取json数据
                 var p = WebHelper.Decode(entity.Param);
                 string userToken = p.token;
@@ -1558,6 +1563,11 @@ namespace Lottery.Api.Controllers
             try
             {
                 //读取json数据
+                if ((DateTime.Now.Hour < 8 || (DateTime.Now.Hour == 8 && DateTime.Now.Minute < 50))
+                 && (DateTime.Now.Hour > 1 || (DateTime.Now.Hour == 1 && DateTime.Now.Minute > 10)))
+                {
+                    throw new Exception("提现时间早上9点到凌晨1点，请您明天9点再来，感谢配合");
+                }
                 var p = WebHelper.Decode(entity.Param);
                 string userToken = p.token;
                 string client = p.client;
