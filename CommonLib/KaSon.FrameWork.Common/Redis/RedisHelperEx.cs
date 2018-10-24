@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections;
 using KaSon.FrameWork.Common.FileOperate;
+using CSRedis;
 
 namespace KaSon.FrameWork.Common.Redis
 {
@@ -40,29 +41,38 @@ namespace KaSon.FrameWork.Common.Redis
                 string jsonText = FileHelper.txtReader(path);
                 var alljson = (JObject)JsonConvert.DeserializeObject(jsonText);
                 RdConfigInfo = (JObject)JsonConvert.DeserializeObject(alljson["RedisConfig"].ToString());
-                List<CSRedis.CSRedisConfig> list = new List<CSRedis.CSRedisConfig>(){
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=0,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=1,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=2,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=3,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=4,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=5,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=6,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=7,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=8,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=9,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=10,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=11,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=12,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=13,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=14,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=15,C_PoolSize=50,c_Writebuffer=10240 }
-                };
-                foreach (var item in list)
+                var connectionString = $"{ServerHost}:{ServerPort},password={ServerPassword},poolsize=50,ssl=false,writeBuffer=10240";
+                var redis = new CSRedisClient[14]; //定义成单例
+                for (var a = 0; a < redis.Length; a++)
                 {
-                    string key = $"{item.C_IP}:{item.C_Post}/{item.C_Defaultdatabase}";
-                    RedisHas[key] = new CSRedis.CSRedisClient(item);
+                    var key = $"{ServerHost}:{ServerPort}/{a}";
+                    RedisHas[key] = new CSRedisClient(connectionString + "; defualtDatabase=" + a);
                 }
+                #region old
+                //List<CSRedis.CSRedisConfig> list = new List<CSRedis.CSRedisConfig>(){
+                //     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=0,C_PoolSize=50,c_Writebuffer=10240 },
+                //     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=1,C_PoolSize=50,c_Writebuffer=10240 },
+                //     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=2,C_PoolSize=50,c_Writebuffer=10240 },
+                //     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=3,C_PoolSize=50,c_Writebuffer=10240 },
+                //     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=4,C_PoolSize=50,c_Writebuffer=10240 },
+                //     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=5,C_PoolSize=50,c_Writebuffer=10240 },
+                //     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=6,C_PoolSize=50,c_Writebuffer=10240 },
+                //     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=7,C_PoolSize=50,c_Writebuffer=10240 },
+                //     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=8,C_PoolSize=50,c_Writebuffer=10240 },
+                //     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=9,C_PoolSize=50,c_Writebuffer=10240 },
+                //     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=10,C_PoolSize=50,c_Writebuffer=10240 },
+                //     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=11,C_PoolSize=50,c_Writebuffer=10240 },
+                //     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=12,C_PoolSize=50,c_Writebuffer=10240 },
+                //     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=13,C_PoolSize=50,c_Writebuffer=10240 },
+                //     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=14,C_PoolSize=50,c_Writebuffer=10240 },
+                //     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=15,C_PoolSize=50,c_Writebuffer=10240 }
+                //};
+                //foreach (var item in list)
+                //{
+                //    string key = $"{item.C_IP}:{item.C_Post}/{item.C_Defaultdatabase}";
+                //    RedisHas[key] = new CSRedis.CSRedisClient(item);
+                //} 
+                #endregion
             }
 
         }
