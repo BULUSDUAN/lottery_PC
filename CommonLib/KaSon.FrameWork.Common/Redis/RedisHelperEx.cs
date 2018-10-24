@@ -41,7 +41,7 @@ namespace KaSon.FrameWork.Common.Redis
                 string jsonText = FileHelper.txtReader(path);
                 var alljson = (JObject)JsonConvert.DeserializeObject(jsonText);
                 RdConfigInfo = (JObject)JsonConvert.DeserializeObject(alljson["RedisConfig"].ToString());
-                var connectionString = $"{ServerHost}:{ServerPort},password={ServerPassword},poolsize=100,ssl=false,writeBuffer=10240";
+                var connectionString = $"{ServerHost}:{ServerPort},password={ServerPassword},poolsize=50,ssl=false,writeBuffer=10240";
                 var redis = new CSRedisClient[14]; //定义成单例
                 for (var a = 0; a < redis.Length; a++)
                 {
