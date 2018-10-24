@@ -1273,7 +1273,7 @@ namespace BettingLottery.Service.ModuleServices
                 var redisKey_TogetherList = RedisKeys.Key_Core_Togegher_OrderList;
                 //生成列表
                 //var list = new List<Sports_TogetherSchemeQueryInfo>();
-                var list = db.GetRange<Sports_TogetherSchemeQueryInfo>(redisKey_TogetherList);
+                var list = db.LRange<Sports_TogetherSchemeQueryInfo>(redisKey_TogetherList,0,-1).ToList();
                 if (list == null) list = new List<Sports_TogetherSchemeQueryInfo>();
                 return Task.FromResult(list);
             }

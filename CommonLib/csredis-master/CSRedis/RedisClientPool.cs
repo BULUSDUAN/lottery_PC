@@ -81,35 +81,38 @@ namespace CSRedis {
 		
 
 		private string _connectionString;
-		public string ConnectionString {
-			get => _connectionString;
-			set {
-				_connectionString = value;
-				if (string.IsNullOrEmpty(_connectionString)) return;
-				var vs = _connectionString.Split(',');
-				foreach (var v in vs) {
-					if (v.IndexOf('=') == -1) {
-						var host = v.Split(':');
-						_ip = string.IsNullOrEmpty(host[0].Trim()) == false ? host[0].Trim() : "127.0.0.1";
-						if (host.Length < 2 || int.TryParse(host[1].Trim(), out _port) == false) _port = 6379;
-						continue;
-					}
-					var kv = v.Split(new[] { '=' }, 2);
-					if (kv[0].ToLower().Trim() == "password") _password = kv.Length > 1 ? kv[1] : "";
-					else if (kv[0].ToLower().Trim() == "prefix") Prefix = kv.Length > 1 ? kv[1] : "";
-					else if (kv[0].ToLower().Trim() == "defaultdatabase") _database = int.TryParse(kv.Length > 1 ? kv[1] : "0", out _database) ? _database : 0;
-					else if (kv[0].ToLower().Trim() == "poolsize") PoolSize = int.TryParse(kv.Length > 1 ? kv[1] : "0", out var poolsize) == false || poolsize <= 0 ? 50 : poolsize;
-					else if (kv[0].ToLower().Trim() == "ssl") _ssl = kv.Length > 1 ? kv[1] == "true" : false;
-					else if (kv[0].ToLower().Trim() == "writebuffer") _writebuffer = int.TryParse(kv.Length > 1 ? kv[1] : "10240", out _writebuffer) ? _writebuffer : 10240;
-				}
+        public string ConnectionString
+        {
+            get => _connectionString;
+            set
+            {
+                _connectionString = value;
+                if (string.IsNullOrEmpty(_connectionString)) return;
+                var vs = Regex.Split(_connectionString, @"\,([\w \t\r\n]+)=", RegexOptions.Multiline);
 
-				if (isPreheat) {
-					var initConns = new Object<RedisClient>[PoolSize];
-					for (var a = 0; a < PoolSize; a++) try { initConns[a] = _pool.Get(); } catch { }
-					foreach (var conn in initConns) _pool.Return(conn);
-				}
-			}
-		}
+                var host = vs[0].Split(':');
+                _ip = string.IsNullOrEmpty(host[0].Trim()) == false ? host[0].Trim() : "127.0.0.1";
+                if (host.Length < 2 || int.TryParse(host[1].Trim(), out _port) == false) _port = 6379;
+
+                for (var a = 1; a < vs.Length; a += 2)
+                {
+                    var kv = new[] { vs[a], vs[a + 1] };
+                    if (kv[0].ToLower().Trim() == "password") _password = kv.Length > 1 ? kv[1] : "";
+                    else if (kv[0].ToLower().Trim() == "prefix") Prefix = kv.Length > 1 ? kv[1] : "";
+                    else if (kv[0].ToLower().Trim() == "defaultdatabase") _database = int.TryParse(kv.Length > 1 ? kv[1] : "0", out _database) ? _database : 0;
+                    else if (kv[0].ToLower().Trim() == "poolsize") PoolSize = int.TryParse(kv.Length > 1 ? kv[1] : "0", out var poolsize) == false || poolsize <= 0 ? 50 : poolsize;
+                    else if (kv[0].ToLower().Trim() == "ssl") _ssl = kv.Length > 1 ? kv[1] == "true" : false;
+                    else if (kv[0].ToLower().Trim() == "writebuffer") _writebuffer = int.TryParse(kv.Length > 1 ? kv[1] : "10240", out _writebuffer) ? _writebuffer : 10240;
+                }
+
+                if (isPreheat)
+                {
+                    var initConns = new Object<RedisClient>[PoolSize];
+                    for (var a = 0; a < PoolSize; a++) try { initConns[a] = _pool.Get(); } catch { }
+                    foreach (var conn in initConns) _pool.Return(conn);
+                }
+            }
+        }
 
 		public bool OnCheckAvailable(Object<RedisClient> obj) {
 			obj.ResetValue();

@@ -158,7 +158,7 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
                         list[list.Count - 1].name = "TR9";
                         list[list.Count - 1].type = "任选9";
                     }
-                    RedisHelperEx.DB_Match.SetObj(key, list, TimeSpan.FromSeconds(30 * 60));
+                    RedisHelperEx.DB_Match.Set(key, list, 30 * 60);
                 }
                 catch (Exception ex)
                 {
@@ -519,7 +519,7 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
                     for (int i = 0; i < max; i++)
                     {
                         var fullKey = $"{key}_{i}";
-                        var list = db.LRang(fullKey, 0, -1);
+                        var list = db.LRange(fullKey, 0, -1);
                         if (list.Length > 0)
                             orderInfoList.AddRange(list);
                     }
@@ -527,7 +527,7 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
                 }
                 else
                 {
-                    var list = db.LRang(key, 0, -1);
+                    var list = db.LRange(key, 0, -1);
                     orderInfoList.AddRange(list);
                     return orderInfoList;
                 }
@@ -572,7 +572,7 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
                     for (int i = 0; i < max; i++)
                     {
                         var fullKey = $"{key}_{i}";
-                        var list = db.LRang(fullKey, 0, -1);
+                        var list = db.LRange(fullKey, 0, -1);
                         if (list.Length > 0)
                             orderInfoList.AddRange(list);
                     }
@@ -580,7 +580,7 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
                 }
                 else
                 {
-                    var list = db.LRang(key, 0, -1);
+                    var list = db.LRange(key, 0, -1);
                     orderInfoList.AddRange(list);
                     return orderInfoList;
                 }
@@ -627,7 +627,7 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
                     for (int i = 0; i < max; i++)
                     {
                         var fullKey = $"{key}_{i}";
-                        var list = db.LRang(fullKey, 0, -1);
+                        var list = db.LRange(fullKey, 0, -1);
                         if (list.Length > 0)
                             orderInfoList.AddRange(list);
                     }
@@ -635,7 +635,7 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
                 }
                 else
                 {
-                    var list = db.LRang(key, 0, -1);
+                    var list = db.LRange(key, 0, -1);
                     orderInfoList.AddRange(list);
                     return orderInfoList;
                 }

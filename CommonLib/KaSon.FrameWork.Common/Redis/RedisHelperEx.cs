@@ -361,106 +361,106 @@ namespace KaSon.FrameWork.Common.Redis
     public static class SampleStackExchangeRedisExtensions
     {
 
-        public static T GetObj<T>(this CSRedis.CSRedisClient cache, string key)
-        {
-            return Deserialize<T>(cache.GetBytes(key));
-        }
+        //public static T GetObj<T>(this CSRedis.CSRedisClient cache, string key)
+        //{
+        //    return Deserialize<T>(cache.GetBytes(key));
+        //}
 
-        public static List<T> GetObjs<T>(this CSRedis.CSRedisClient cache, string key)
-        {
-            return Deserializes<T>(cache.GetBytes(key));
-        }
+        //public static List<T> GetObjs<T>(this CSRedis.CSRedisClient cache, string key)
+        //{
+        //    return Deserializes<T>(cache.GetBytes(key));
+        //}
 
-        public static object GetObj(this CSRedis.CSRedisClient cache, string key)
-        {
-            return Deserialize<object>(cache.GetBytes(key));
-        }
+        //public static object GetObj(this CSRedis.CSRedisClient cache, string key)
+        //{
+        //    return Deserialize<object>(cache.GetBytes(key));
+        //}
 
-        public static string GetString(this CSRedis.CSRedisClient cache, string key)
-        {
-            return cache.Get(key);
-        }
+        //public static string GetString(this CSRedis.CSRedisClient cache, string key)
+        //{
+        //    return cache.Get(key);
+        //}
 
-        public static void SetString(this CSRedis.CSRedisClient cache, string key, string value)
-        {
-            cache.Set(key, value);
-            //var result = cache.Set(key, value);
-            //if (!result)
-            //    Log4Log.Info($"{key}插入失败,value={value}");
-        }
+        //public static void SetString(this CSRedis.CSRedisClient cache, string key, string value)
+        //{
+        //    cache.Set(key, value);
+        //    //var result = cache.Set(key, value);
+        //    //if (!result)
+        //    //    Log4Log.Info($"{key}插入失败,value={value}");
+        //}
 
-        public static void SetString(this CSRedis.CSRedisClient cache, string key, string value, TimeSpan timeSpan)
-        {
-            cache.Set(key, value, (int)timeSpan.TotalSeconds);
-        }
+        //public static void SetString(this CSRedis.CSRedisClient cache, string key, string value, TimeSpan timeSpan)
+        //{
+        //    cache.Set(key, value, (int)timeSpan.TotalSeconds);
+        //}
 
-        public static void SetObj(this CSRedis.CSRedisClient cache, string key, object value)
-        {
-            cache.SetBytes(key, Serialize(value));
-        }
+        //public static void SetObj(this CSRedis.CSRedisClient cache, string key, object value)
+        //{
+        //    cache.SetBytes(key, Serialize(value));
+        //}
 
-        public static void SetObj(this CSRedis.CSRedisClient cache, string key, object value, TimeSpan timeSpan)
-        {
-            cache.SetBytes(key, Serialize(value), (int)timeSpan.TotalSeconds);
-        }
-        public static void Del(this CSRedis.CSRedisClient cache, params string[] key)
-        {
-            cache.Remove(key);
-        }
-        public static List<T> GetRange<T>(this CSRedis.CSRedisClient cache, string key)
-        {
-            var index = cache.LLen(key);
-            if (index == 0)
-                return null;
-            var array = cache.LRang(key, 0, index);
-            List<T> list = new List<T>();
-            foreach (var item in array)
-            {
-                list.Add(JsonHelper.Deserialize<T>(item.ToString()));
-            }
-            return list;
-        }
+        //public static void SetObj(this CSRedis.CSRedisClient cache, string key, object value, TimeSpan timeSpan)
+        //{
+        //    cache.SetBytes(key, Serialize(value), (int)timeSpan.TotalSeconds);
+        //}
+        //public static void Del(this CSRedis.CSRedisClient cache, params string[] key)
+        //{
+        //    cache.Remove(key);
+        //}
+        //public static List<T> GetRange<T>(this CSRedis.CSRedisClient cache, string key)
+        //{
+        //    var index = cache.LLen(key);
+        //    if (index == 0)
+        //        return null;
+        //    var array = cache.LRang(key, 0, index);
+        //    List<T> list = new List<T>();
+        //    foreach (var item in array)
+        //    {
+        //        list.Add(JsonHelper.Deserialize<T>(item.ToString()));
+        //    }
+        //    return list;
+        //}
 
-        public static List<T> GetRange<T>(this CSRedis.CSRedisClient cache, string key, int start, int end)
-        {
-            var array = cache.LRang(key, start, end);
-            List<T> list = new List<T>();
-            foreach (var item in array)
-            {
-                list.Add(JsonHelper.Deserialize<T>(item.ToString()));
-            }
-            return list;
-        }
+        //public static List<T> GetRange<T>(this CSRedis.CSRedisClient cache, string key, int start, int end)
+        //{
+        //    var array = cache.LRang(key, start, end);
+        //    List<T> list = new List<T>();
+        //    foreach (var item in array)
+        //    {
+        //        list.Add(JsonHelper.Deserialize<T>(item.ToString()));
+        //    }
+        //    return list;
+        //}
 
-        public static string[] GetRangeArr(this CSRedis.CSRedisClient cache, string key)
-        {
-            var index = cache.LLen(key);
-            if (index == 0)
-                return null;
-            var array = cache.LRang(key, 0, index);
+        //public static string[] GetRangeArr(this CSRedis.CSRedisClient cache, string key)
+        //{
+        //    var index = cache.LLen(key);
+        //    if (index == 0)
+        //        return null;
+        //    var array = cache.LRang(key, 0, index);
 
-            return array;
-        }
+        //    return array;
+        //}
         /// <summary>
         /// 插入到集合最后一条
         /// </summary>
         /// <param name="cache"></param>
         /// <param name="key"></param>
         /// <param name="obj"></param>
-        public static void SetRPush(this CSRedis.CSRedisClient cache, string key, object obj)
-        {
-            cache.RPush(key, obj);
-        }
+        //public static void SetRPush(this CSRedis.CSRedisClient cache, string key, object obj)
+        //{           
+        //    cache.RPush(key, obj);
+        //}
         /// <summary>
         /// 插入到集合第一条
         /// </summary>
         /// <param name="cache"></param>
         /// <param name="key"></param>
         /// <param name="obj"></param>
-        public static void SetLPush(this CSRedis.CSRedisClient cache, string key, object obj)
-        {
-            cache.RPush(key, obj);
-        }
+        //public static void SetLPush(this CSRedis.CSRedisClient cache, string key, object obj)
+        //{
+        //    cache.RPush(key, obj);
+        //}
 
 
 

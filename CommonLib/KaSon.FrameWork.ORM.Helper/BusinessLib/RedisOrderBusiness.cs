@@ -407,7 +407,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 TicketList = ticketList,
             };
             //var json = JsonHelper.Serialize<RedisOrderInfo>(orderInfo);
-            var json= orderInfo.ToJsonDataFormat(true);
+            var json = orderInfo.ToJsonDataFormat(true);
             //以订单号为key 订单内容为value保存
             db.Set(orderId, json);
         }
@@ -523,7 +523,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     //检查keyline在Redis库中存不存在
                     var db = RedisHelperEx.DB_Chase_Order;
                     var fullKey = string.Format("{0}_{1}", RedisKeys.Key_Waiting_Chase_Order_List, order.GameCode);
-                    var chaseKeyLineArray = db.GetRangeArr(fullKey);//.Result;
+                    var chaseKeyLineArray = db.LRange(fullKey, 0, -1);//.Result;
                     foreach (var k in chaseKeyLineArray)
                     {
                         if (string.IsNullOrEmpty(k))
@@ -532,7 +532,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         {
                             logList.Add("追号列表中已存在KeyLine.");
                             //取出所有追号列表
-                            var chaseList = db.GetRange<RedisWaitTicketOrder>(scheme.KeyLine);//.Result;
+                            var chaseList = db.LRange<RedisWaitTicketOrder>(scheme.KeyLine, 0, -1);//.Result;
                             //清空key
                             db.Del(scheme.KeyLine);
                             //修改canchase为true后，添加key
