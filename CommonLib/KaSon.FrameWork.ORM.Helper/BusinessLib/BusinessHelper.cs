@@ -2508,5 +2508,13 @@ namespace KaSon.FrameWork.ORM.Helper
             //balanceManager.UpdateUserBalance(userBalance);
             balanceManager.PayToUserBalance(userId, payDetailList.ToArray());
         }
+        /// <summary>
+        /// 手工充值编号
+        /// </summary>
+        public static string GetManualFillMoneyId()
+        {
+            string prefix = "MFM";
+            return prefix + UsefullHelper.UUID();
+        }
     }
 }

@@ -7,10 +7,11 @@ using System.Linq;
 using EntityModel;
 using EntityModel.Communication;
 using KaSon.FrameWork.ORM.Helper.ManagerLib;
+using EntityModel.ExceptionExtend;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
-   public partial class AdminService
+    public partial class AdminService
     {
         #region 活动管理模块
         #region 优惠券相关
@@ -557,5 +558,379 @@ namespace KaSon.FrameWork.ORM.Helper
         #endregion
         #endregion
 
+        #region 会员管理模块
+        public UserQueryInfoCollection QueryUserList(DateTime regFrom, DateTime regTo, string keyType, string keyValue, bool? isEnable, bool? isFillMoney, bool? IsUserType, bool? isAgent
+            , string commonBlance, string bonusBlance, string freezeBlance, string vipRange, string comeFrom, string agentId, int pageIndex, int pageSize, string userToken, string strOrderBy, int UserCreditType = -1)
+        {
+            var siteBiz = new LocalLoginBusiness();
+            return siteBiz.QueryUserList(regFrom, regTo, keyType, keyValue, isEnable, isFillMoney, IsUserType, isAgent, commonBlance, bonusBlance, freezeBlance, vipRange, comeFrom, agentId, pageIndex, pageSize, strOrderBy, UserCreditType);
+        }
+
+        public CommonActionResult DisableUser(string userId, string userToken)
+        {
+            //// 验证用户身份及权限
+            //var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                new LocalLoginBusiness().DisableUser(userId);
+                return new CommonActionResult(true, "操作成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 启用用户
+        /// todo:后台权限
+        /// </summary>
+        public CommonActionResult EnableUser(string userId, string userToken)
+        {
+            //// 验证用户身份及权限
+            //var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                new LocalLoginBusiness().EnableUser(userId);
+                return new CommonActionResult(true, "操作成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 批量设置用户为内部员工
+        /// </summary>
+        /// <param name="userIds"></param>
+        public CommonActionResult BatchSetInnerUser(string userIds)
+        {
+            try
+            {
+                new LocalLoginBusiness().BatchSetInnerUser(userIds);
+                return new CommonActionResult(true, "操作成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        public NotOnlineUserCollection QueryNotOnlineRecentlyList(int days, int pageIndex, int pageSize)
+        {
+            return new LocalLoginBusiness().QueryNotOnlineRecentlyList(days, pageIndex, pageSize);
+        }
+        public string GiveMoneyToStayUser(string userId, string operatorId)
+        {
+            return new LocalLoginBusiness().GiveMoneyToStayUser(userId, operatorId);
+        }
+        public NotOnlineUserCollection QueryNotOnlineRecentlyList(int days, int pageIndex, int pageSize, string theEarnings)
+        {
+            return new LocalLoginBusiness().QueryNotOnlineRecentlyList(days, pageIndex, pageSize, theEarnings);
+        }
+        public NotOnlineUserCollection QueryExcelNotOnlineRecentlyList(int days, string theEarnings)
+        {
+            var siteBiz = new LocalLoginBusiness();
+            return siteBiz.QueryExcelNotOnlineRecentlyList(days, theEarnings);
+        }
+        /// <summary>
+        /// 根据登录名查询用户Id
+        /// </summary>
+        /// <param name="loginName"></param>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public string GetUserIdByLoginName(string loginName)
+        {
+            var loginBiz = new LocalLoginBusiness();
+            var user = loginBiz.GetUserByLoginName(loginName);
+            return user.UserId;
+        }
+        /// <summary>
+        /// 根据Key值查询用户列表
+        /// todo:后台权限
+        /// </summary>
+        public UserQueryInfo QueryUserByKey(string userKey, string userToken)
+        {
+            var siteBiz = new LocalLoginBusiness();
+            return siteBiz.QueryUserByKey(userKey, string.Empty);
+        }
+        /// <summary>
+        /// 根据用户编号查询用户历史登录
+        /// </summary>
+        public UserLoginHistoryCollection QueryCache_UserLoginHistoryCollectionByUserId(string userId, string userToken)
+        {
+            try
+            {
+                return new CacheDataBusiness().QueryUserLoginHistoryCollection(userId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("获取最近登录 - " + ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 根据用户编号查询银行卡信息
+        /// </summary>
+        public C_BankCard QueryBankCardByUserId(string userId, string userToken)
+        {
+            return new BankCardBusiness().BankCardById(userId);
+        }
+        /// <summary>
+        /// 获取口令
+        /// todo:后台权限
+        /// </summary>
+        public CommonActionResult GetUserTokenByKey(string userId, string userToken)
+        {
+            // 验证用户身份及权限
+            var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            return GetUserToken(userId);
+        }
+        public CommonActionResult GetUserToken(string userId)
+        {
+            var biz = new GameBizAuthBusiness();
+            var token = biz.GetUserToken(userId);
+            return new CommonActionResult(true, "获取用户口令密文成功") { ReturnValue = token };
+        }
+        /// <summary>
+        /// 查询用户冻结明细
+        /// </summary>
+        public UserBalanceFreezeCollection QueryUserBalanceFreezeListByUser(string userId, int pageIndex, int pageSize, string userToken)
+        {
+            // 验证用户身份及权限
+            var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                return new FundBusiness().QueryUserBalanceFreezeListByUser(userId, pageIndex, pageSize);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询用户冻结明细出错 - " + ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 检查用户是否实名认证
+        /// todo:后台权限
+        /// </summary>
+        public bool CheckIsAuthenticatedUserRealName(string userId, string userToken)
+        {
+            var biz = new RealNameAuthenticationBusiness();
+            var realName = biz.GetAuthenticatedRealName(userId);
+            return (realName != null && realName.IsSettedRealName);
+        }
+        /// <summary>
+        /// 获取用户实名认证信息
+        /// todo:后台权限
+        /// </summary>
+        public UserRealNameInfo GetUserRealNameInfo(string userId, string userToken)
+        {
+            // 验证用户身份及权限
+            var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+
+            var biz = new RealNameAuthenticationBusiness();
+            var realName = biz.GetAuthenticatedRealName(userId);
+            if (realName == null || !realName.IsSettedRealName)
+            {
+                return null;
+            }
+            return new UserRealNameInfo
+            {
+                AuthFrom = realName.AuthFrom,
+                RealName = realName.RealName,
+                CardType = realName.CardType,
+                IdCardNumber = realName.IdCardNumber,
+            };
+        }
+        /// <summary>
+        /// 检查用户是否设置手机号码
+        /// todo:后台权限
+        /// </summary>
+        public bool CheckIsAuthenticatedUserMobile(string userId, string userToken)
+        {
+            var authenticationBiz = new MobileAuthenticationBusiness();
+            var mobileEntity = authenticationBiz.GetAuthenticatedMobile(userId);
+            return (mobileEntity != null && mobileEntity.IsSettedMobile);
+        }
+        /// <summary>
+        /// 获取用户手机认证信息
+        /// todo:后台权限
+        /// </summary>
+        public UserMobileInfo GetUserMobileInfo(string userId, string userToken)
+        {
+            var authenticationBiz = new MobileAuthenticationBusiness();
+            var mobileEntity = authenticationBiz.GetAuthenticatedMobile(userId);
+            if (mobileEntity == null || !mobileEntity.IsSettedMobile)
+            {
+                return null;
+            }
+            return new UserMobileInfo
+            {
+                AuthFrom = mobileEntity.AuthFrom,
+                Mobile = mobileEntity.Mobile,
+            };
+        }
+        /// <summary>
+        /// 检测用户是否设置邮箱
+        /// todo:后台权限
+        /// </summary>
+        public bool CheckIsAuthenticatedUserEmail(string userId, string userToken)
+        {
+            var authenticationBiz = new EmailAuthenticationBusiness();
+            var emailEntity = authenticationBiz.GetAuthenticatedEmail(userId);
+            return (emailEntity != null && emailEntity.IsSettedEmail);
+        }
+        /// <summary>
+        /// 获取用户邮箱信息
+        /// todo:后台权限
+        /// </summary>
+        public E_Authentication_Email GetUserEmailInfo(string userId, string userToken)
+        {
+            var authenticationBiz = new EmailAuthenticationBusiness();
+            var emailEntity = authenticationBiz.GetAuthenticatedEmail(userId);
+            if (emailEntity == null || !emailEntity.IsSettedEmail)
+            {
+                return null;
+            }
+            return new E_Authentication_Email
+            {
+                AuthFrom = emailEntity.AuthFrom,
+                Email = emailEntity.Email,
+            };
+        }
+        /// <summary>
+        /// 重置用户密码
+        /// todo:后台权限
+        /// </summary>
+        public CommonActionResult ResetUserPassword(string userId, string userToken)
+        {
+            // 验证用户身份及权限
+           // var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+
+            var loginBiz = new LocalLoginBusiness();
+            loginBiz.ResetUserPassword(userId);
+
+            return new CommonActionResult(true, "重置用户密码成功");
+        }
+        /// <summary>
+        /// 重置用户账户密码
+        /// todo:后台权限
+        /// </summary>
+        public CommonActionResult ResetUserBalancePwd(string currUserId, string userToken)
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                var newPwd = new MobileAuthenticationBusiness().ResetUserBalancePwd(currUserId);
+                return new CommonActionResult
+                {
+                    IsSuccess = true,
+                    Message = "重置成功",
+                    ReturnValue = newPwd,
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 修改用户VIP级别
+        /// </summary>
+        public CommonActionResult UpdateUserVipLevel(string userId, int vipLevel, string userToken)
+        {
+            // 验证用户身份及权限
+            //var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                var biz = new UserBusiness();
+                biz.UpdateUserVipLevel(userId, vipLevel);
+                return new CommonActionResult(true, "修改用户VIP级别完成");
+            }
+            catch (Exception ex)
+            {
+                //! 执行扩展功能代码 - 发生异常
+                throw new Exception(string.Format("修改用户VIP级别失败 - {0} ! ", ex.Message), ex);
+            }
+        }
+        /// <summary>
+        /// 手工充值
+        /// </summary>
+        public CommonActionResult ManualFillMoney(UserFillMoneyAddInfo info, string userId, string userToken)
+        {
+            // 验证用户身份及权限
+            var requestUserId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+
+            try
+            {
+                var orderId = string.Empty;
+                var vipLevel = 0;
+                orderId = new FundBusiness().ManualFillMoney(info, userId, requestUserId, out vipLevel);
+
+                BusinessHelper.ExecPlugin<ICompleteFillMoney_AfterTranCommit>(new object[] { orderId, FillMoneyStatus.Success, FillMoneyAgentType.ManualFill, info.RequestMoney, userId, vipLevel });
+                return new CommonActionResult
+                {
+                    IsSuccess = true,
+                    Message = "手工充值完成",
+                    ReturnValue = orderId,
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("手工充值出现错误 - " + ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 手工打款
+        /// </summary>
+        public CommonActionResult ManualAddMoney(string keyLine, decimal money, AccountType accountType, string userId, string message, string userToken)
+        {
+            // 验证用户身份及权限
+            var requestUserId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                var orderId = string.Empty;
+                if (string.IsNullOrEmpty(keyLine))
+                {
+                    keyLine = BusinessHelper.GetManualFillMoneyId();
+                }
+                new FundBusiness().ManualHandleMoney(keyLine, keyLine, money, accountType,PayType.Payin, userId, message, requestUserId);
+                return new CommonActionResult
+                {
+                    IsSuccess = true,
+                    Message = "手工打款完成",
+                    ReturnValue = orderId,
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("手工打款出现错误 - " + ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 手工扣款
+        /// </summary>
+        public CommonActionResult ManualDeductMoney(string keyLine, decimal money, AccountType accountType, string userId, string message, string userToken)
+        {
+            // 验证用户身份及权限
+            var requestUserId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                var orderId = string.Empty;
+                if (string.IsNullOrEmpty(keyLine))
+                {
+                    keyLine = BusinessHelper.GetManualFillMoneyId();
+                }
+                new FundBusiness().ManualHandleMoney(keyLine, keyLine, money, accountType,PayType.Payout, userId, message, requestUserId);
+                return new CommonActionResult
+                {
+                    IsSuccess = true,
+                    Message = "手工扣款完成",
+                    ReturnValue = orderId,
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("手工扣款出现错误 - " + ex.Message, ex);
+            }
+        }
+        #endregion
     }
 }

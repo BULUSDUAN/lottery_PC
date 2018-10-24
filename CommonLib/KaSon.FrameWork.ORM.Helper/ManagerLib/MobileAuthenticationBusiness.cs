@@ -2,6 +2,7 @@
 using EntityModel.CoreModel.AuthEntities;
 using EntityModel.Enum;
 using EntityModel.ExceptionExtend;
+using KaSon.FrameWork.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,8 @@ namespace KaSon.FrameWork.ORM.Helper
 {
     public class MobileAuthenticationBusiness : DBbase
     {
+        private const string C_DefaultPassword = "123456";
+        private string _gbKey = "Q56GtyNkop97H334TtyturfgErvvv98a";
         /// <summary>
         /// 手机黑名单
         /// </summary>
@@ -246,5 +249,21 @@ namespace KaSon.FrameWork.ORM.Helper
             }
         }
         #endregion
+
+        public string ResetUserBalancePwd(string userId)
+        {
+            var newPwd = string.Empty;
+            //开启事务
+            DB.Begin();
+            var manager = new UserMobileManager();
+            var balanceManager = new UserBalanceManager();
+            var balance = balanceManager.QueryUserBalance(userId);
+            if (balance == null)
+                throw new ArgumentException("用户资金信息查询出错");
+            balance.Password = Encipherment.MD5(string.Format("{0}{1}", C_DefaultPassword, _gbKey)).ToUpper();
+            balanceManager.UpdateUserBalance(balance);
+            DB.Commit();
+            return newPwd;
+        }
     }
 }

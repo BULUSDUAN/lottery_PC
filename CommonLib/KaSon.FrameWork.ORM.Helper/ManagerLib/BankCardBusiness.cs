@@ -10,24 +10,7 @@ namespace KaSon.FrameWork.ORM.Helper
     {
         public C_BankCard BankCardById(string userId)
         {
-            var entity = new BankCardManager().BankCardById(userId);
-            if (entity == null)
-                return null;
-            //throw new LogicException(string.Format("查不到{0}的银行卡信息", userId));
-            return new C_BankCard()
-            {
-                UserId = entity.UserId,
-                BankCardNumber = entity.BankCardNumber,
-                BankCode = entity.BankCode,
-                BankName = entity.BankName,
-                BankSubName = entity.BankSubName,
-                BId = entity.BId,
-                CityName = entity.CityName,
-                CreateTime = entity.CreateTime,
-                ProvinceName = entity.ProvinceName,
-                RealName = entity.RealName,
-                UpdateTime = entity.UpdateTime
-            };
+            return new BankCardManager().BankCardById(userId);
         }
 
         public void AddBankCard(C_BankCard bankCard)

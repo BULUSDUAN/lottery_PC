@@ -44,5 +44,9 @@ namespace KaSon.FrameWork.ORM.Helper
             realName.UpdateTime = DateTime.Now;
             DB.GetDal<E_Authentication_RealName>().Add(realName);
         }
+        public E_Authentication_RealName GetUserRealName(string userId)
+        {
+            return DB.CreateQuery<E_Authentication_RealName>().Where(x=>x.UserId==userId).FirstOrDefault();
+        }
     }
 }
