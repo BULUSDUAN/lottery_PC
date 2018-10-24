@@ -18,6 +18,7 @@ using EntityModel.ExceptionExtend;
 using UserLottery.Service.ModuleServices;
 using KaSon.FrameWork.Common.Redis;
 using EntityModel.Redis;
+using KaSon.FrameWork.Common.FileOperate;
 
 namespace BettingLottery.Service.ModuleServices
 {
@@ -1315,8 +1316,9 @@ namespace BettingLottery.Service.ModuleServices
             {
                 sb.Append("redis连接成功");
             }
-            var allConfigStr = ConfigHelper.AllConfigInfo == null ? "" : JsonHelper.Serialize(ConfigHelper.AllConfigInfo);
-            sb.Append("AllConfig:" + allConfigStr);
+            string path = Path.Combine(Directory.GetCurrentDirectory(), @"Config\AllConfig.json");
+            string jsonText = FileHelper.txtReader(path);
+            sb.Append("AllConfig:" + jsonText);
             var query = new DataQuery();
             var list= query.QueryNotFinishGame(10);
             var liststr = "";

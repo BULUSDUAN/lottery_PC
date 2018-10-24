@@ -541,23 +541,36 @@ namespace Lottery.Api.Controllers
         {
             var p = JsonHelper.Decode(entity.Param);
             var userName = p.userName;
-            if (userName != "xgadmin")
+            try
+            {
+                if (userName != "xgadmin")
+                {
+                    return Json(new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.失败,
+                        Message = "不存在此接口",
+                        MsgId = entity.MsgId
+                    });
+                }
+                var str = await _serviceProxyProvider.Invoke<string>(new Dictionary<string, object>(), "api/betting/GetAllConfigValue");
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查找成功",
+                    MsgId = entity.MsgId,
+                    Value = str
+                });
+            }
+            catch (Exception ex)
             {
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = "不存在此接口",
-                    MsgId = entity.MsgId
+                    Message = "查询配置失败" + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage()
                 });
             }
-            var bindInfo = await _serviceProxyProvider.Invoke<LoginInfo>(new Dictionary<string, object>(), "api/betting/GetAllConfigValue");
-            return Json(new LotteryServiceResponse
-            {
-                Code = ResponseCode.成功,
-                Message = "查找成功",
-                MsgId = entity.MsgId,
-                Value = bindInfo
-            });
         }
     }
 }
