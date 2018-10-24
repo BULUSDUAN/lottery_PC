@@ -1526,9 +1526,9 @@ namespace Lottery.Api.Controllers
             try
             {
                 if ((DateTime.Now.Hour < 8 || (DateTime.Now.Hour == 8 && DateTime.Now.Minute < 50))
-                   && (DateTime.Now.Hour > 1 || (DateTime.Now.Hour == 1 && DateTime.Now.Minute > 10)))
+                && (DateTime.Now.Hour > 1 || (DateTime.Now.Hour == 1 && DateTime.Now.Minute > 10)))
                 {
-                    throw new LogicException("提现时间早上9点到凌晨1点，请您明天9点再来，感谢配合");
+                    throw new Exception("提现时间早上9点到凌晨1点，请您明天9点再来，感谢配合");
                 }
                 //读取json数据
                 var p = WebHelper.Decode(entity.Param);
@@ -1537,7 +1537,11 @@ namespace Lottery.Api.Controllers
                 if (string.IsNullOrEmpty(userToken))
                     throw new LogicException("token不能为空");
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
-              
+                if ((DateTime.Now.Hour < 8 || (DateTime.Now.Hour == 8 && DateTime.Now.Minute < 50))
+                    && (DateTime.Now.Hour > 1 || (DateTime.Now.Hour == 1 && DateTime.Now.Minute > 10)))
+                {
+                    throw new LogicException("提现时间早上9点到凌晨1点，请您明天9点再来，感谢配合");
+                }
                 //Dictionary<string, object> param = new Dictionary<string, object>();
                 //param["userToken"] = token;
                 //var userinfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/LoginByUserToken");
@@ -1593,7 +1597,7 @@ namespace Lottery.Api.Controllers
                 if ((DateTime.Now.Hour < 8 || (DateTime.Now.Hour == 8 && DateTime.Now.Minute < 50))
                  && (DateTime.Now.Hour > 1 || (DateTime.Now.Hour == 1 && DateTime.Now.Minute > 10)))
                 {
-                    throw new LogicException("提现时间早上9点到凌晨1点，请您明天9点再来，感谢配合");
+                    throw new Exception("提现时间早上9点到凌晨1点，请您明天9点再来，感谢配合");
                 }
                 var p = WebHelper.Decode(entity.Param);
                 string userToken = p.token;
@@ -1674,12 +1678,6 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                //读取json数据
-                if ((DateTime.Now.Hour < 8 || (DateTime.Now.Hour == 8 && DateTime.Now.Minute < 50))
-                 && (DateTime.Now.Hour > 1 || (DateTime.Now.Hour == 1 && DateTime.Now.Minute > 10)))
-                {
-                    throw new LogicException("提现时间早上9点到凌晨1点，请您明天9点再来，感谢配合");
-                }
                 //读取json数据
                 var p = WebHelper.Decode(entity.Param);
                 string userToken = p.token;
