@@ -1605,7 +1605,7 @@ namespace UserLottery.Service.ModuleServices
         /// 获取用户手机认证信息
         /// todo:后台权限
         /// </summary>
-        public Task<UserMobileInfo> GetUserMobileInfo(string userId, string userToken)
+        public Task<UserMobileInfo> GetUserMobileInfo(string userId)
         {
             var authenticationBiz = new MobileAuthenticationBusiness();
             var mobileEntity = authenticationBiz.GetAuthenticatedMobile(userId);

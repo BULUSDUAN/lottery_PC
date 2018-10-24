@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using static EntityModel.CoreModel.ReportInfo;
 
 namespace OrderLottery.Service.IModuleServices
 {
@@ -139,5 +140,10 @@ namespace OrderLottery.Service.IModuleServices
         Task<ArticleInfo_QueryCollection> QueryNoStaticPathArticleList(int pageIndex, int pageSize);
         [Service(Date = "2018-9-29", Director = "renjun", Name = "文章资讯")]
         Task<CommonActionResult> UpdateArticleStaticPath(string articleId, string staticPath, string preId, string nextId);
+        [Service(Date = "2018-10-19", Director = "renjun", Name = "过关统计")]
+        Task<SportsOrder_GuoGuanInfoCollection> QueryReportInfoList_GuoGuan(bool isVirtualOrder, SchemeBettingCategory? category, string key, string gameCode, string gameType, string issuseNumber, DateTime startTime, DateTime endTime, int pageIndex, int pageSize);
+
+        [Service(Date = "2018-10-22", Director = "renjun", Name = "查询单式上传方案详情")]
+        Task<OrderSingleSchemeCollection> QuerySingSchemeDetail(string schemeId);
     }
 }

@@ -32,13 +32,29 @@ using app.lottery.site.iqucai;
 using Common.Lottery.Redis;
 using Common.Pay.mobao;
 using System.Web.Script.Serialization;
-
+using System.Threading.Tasks;
+using log4net;
+using Kason.Sg.Core.ProxyGenerator;
+using Kason.Sg.Core.CPlatform.Runtime.Client.Address.Resolvers;
+using EntityModel.RequestModel;
 
 namespace app.lottery.site.Controllers
 {
     [CheckLogin]
     public class MemberController : BaseController
     {
+        #region 调用服务使用示例
+        private readonly ILog logger = null;
+        private readonly IServiceProxyProvider serviceProxyProvider;
+        public IAddressResolver addrre;
+        public MemberController(IServiceProxyProvider _serviceProxyProvider, ILog log, IAddressResolver _addrre)
+        {
+            serviceProxyProvider = _serviceProxyProvider;
+            logger = log;
+            addrre = _addrre;
+
+        }
+        #endregion
         /// <summary>
         /// 会员中心左侧菜单
         /// </summary>
@@ -449,7 +465,7 @@ namespace app.lottery.site.Controllers
         /// 红包明细
         /// </summary>
         /// <returns></returns>
-        public ActionResult RedBagList()
+        public async Task<ActionResult> RedBagList()
         {
             string fundType = string.IsNullOrEmpty(Request["fundType"]) ? "" : Request["fundType"];
             var cateList = "";
@@ -473,7 +489,11 @@ namespace app.lottery.site.Controllers
             var beginTime = ViewBag.Begin;
             if (beginTime < DateTime.Now.AddMonths(-1))
                 ViewBag.Begin = DateTime.Now.AddMonths(-1);
-            ViewBag.RedBag = WCFClients.GameQueryClient.QueryMyFundDetailList(ViewBag.Begin, ViewBag.End, "70", cateList, ViewBag.pageNo, ViewBag.PageSize, UserToken);
+
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            var Model = new EntityModel.RequestModel.QueryUserFundDetailParam() { viewtype = "", userid = UserToken, fromDate = ViewBag.Begin, toDate = ViewBag.End, pageIndex = ViewBag.pageNo, pageSize = ViewBag.PageSize, accountTypeList = "70" };
+            param["Model"] = Model;
+            ViewBag.RedBag = await serviceProxyProvider.Invoke<EntityModel.CoreModel.UserFundDetailCollection>(param, "api/order/QueryMyFundDetailList");
             return View();
         }
         #endregion
@@ -483,7 +503,7 @@ namespace app.lottery.site.Controllers
         /// 充值记录
         /// </summary>
         /// <returns></returns>
-        public ActionResult payrecord()
+        public async Task<ActionResult> payrecord()
         {
             try
             {
@@ -496,7 +516,10 @@ namespace app.lottery.site.Controllers
                 var beginTime = ViewBag.Begin;
                 if (beginTime < DateTime.Now.AddMonths(-1))
                     ViewBag.Begin = DateTime.Now.AddMonths(-1);
-                ViewBag.FillMoneyCollection = WCFClients.GameQueryClient.QueryMyFillMoneyList("", ViewBag.Begin, ViewBag.End.AddDays(1), ViewBag.pageNo, ViewBag.PageSize, UserToken);
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                var Model = new QueryFillMoneyListParam() { userid = UserToken, startTime = ViewBag.Begin, endTime = ViewBag.End.AddDays(1), pageIndex = ViewBag.pageNo, pageSize = ViewBag.PageSize, statusList = "1" };
+                param["Model"] = Model;
+                ViewBag.FillMoneyCollection = await serviceProxyProvider.Invoke<EntityModel.CoreModel.FillMoneyQueryInfoCollection>(param, "api/Order/QueryMyFillMoneyList");
             }
             catch (Exception ex)
             {
@@ -1114,9 +1137,11 @@ namespace app.lottery.site.Controllers
         #endregion
 
         #region 登录历史记录
-        public ActionResult Loginhistory()
+        public async Task<ActionResult> Loginhistory()
         {
-            ViewBag.LoginHistory = WCFClients.GameClient.QueryCache_UserLoginHistoryCollection(UserToken);
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            param["UserId"] = UserToken;
+            ViewBag.LoginHistory = await serviceProxyProvider.Invoke<EntityModel.UserLoginHistoryCollection>(param, "api/user/QueryCache_UserLoginHistoryCollection");
             ViewBag.User = CurrentUser;
             return View();
         }
@@ -2115,7 +2140,7 @@ namespace app.lottery.site.Controllers
         }
 
         //账户明细
-        public ActionResult AccountDetail()
+        public async Task<ActionResult> AccountDetail()
         {
             string accountType = string.IsNullOrEmpty(Request["accountType"]) ? "" : Request["accountType"];
             ViewBag.CurrentUser = CurrentUser;
@@ -2126,7 +2151,10 @@ namespace app.lottery.site.Controllers
             ViewBag.PageSize = string.IsNullOrEmpty(Request.QueryString["pageSize"]) ? 10 : int.Parse(Request.QueryString["pageSize"]);
             if (ViewBag.Begin < DateTime.Now.AddMonths(-1))
                 ViewBag.Begin = DateTime.Now.AddMonths(-1);
-            ViewBag.FundDetails = WCFClients.GameQueryClient.QueryMyFundDetailList(ViewBag.Begin, ViewBag.End, accountType, "", ViewBag.pageNo, ViewBag.PageSize, UserToken);
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            var Model = new EntityModel.RequestModel.QueryUserFundDetailParam() { viewtype = "", userid = UserToken, fromDate = ViewBag.Begin, toDate = ViewBag.End, pageIndex = ViewBag.pageNo, pageSize = ViewBag.PageSize, accountTypeList = accountType };
+            param["Model"] = Model;
+            ViewBag.FundDetails = await serviceProxyProvider.Invoke<EntityModel.CoreModel.UserFundDetailCollection>(param, "api/order/QueryMyFundDetailList");
             return View();
         }
 
@@ -3774,25 +3802,28 @@ namespace app.lottery.site.Controllers
         #region 关注用户
         //关注用户-关注和取消关注
         [HttpPost]
-        public JsonResult attentionExec(string id)
+        public async Task<JsonResult> attentionExec(string id)
         {
             try
             {
                 var attUser = PreconditionAssert.IsNotEmptyString(Request["attentionUserId"], "被关注用户编号错误");
                 var isAttention = string.IsNullOrEmpty(id) ? true : bool.Parse(id);
                 var usrList = attUser.Split('|');
-                var result = new CommonActionResult() { IsSuccess = false, Message = "未执行操作" };
+                var result = new EntityModel.Communication.CommonActionResult() { IsSuccess = false, Message = "未执行操作" };
                 foreach (var item in usrList)
                 {
                     if (!string.IsNullOrEmpty(item))
                     {
+                        Dictionary<string, object> param = new Dictionary<string, object>();
+                        param["beAttentionUserId"] = item;
+                        param["UserId"] = UserToken;
                         if (isAttention)
                         {
-                            result = WCFClients.GameClient.AttentionUser(item, UserToken);
+                            result = await serviceProxyProvider.Invoke<EntityModel.Communication.CommonActionResult>(param, "api/user/AttentionUser");
                         }
                         else
                         {
-                            result = WCFClients.GameClient.CancelAttentionUser(item, UserToken);
+                            result = await serviceProxyProvider.Invoke<EntityModel.Communication.CommonActionResult>(param, "api/user/CancelAttentionUser");
                         }
                     }
                 }
@@ -3804,15 +3835,19 @@ namespace app.lottery.site.Controllers
             }
         }
 
-        public JsonResult AttentAndGd()
+        public async Task<JsonResult> AttentAndGd()
         {
             try
             {
                 var user = Request["User"];
                 var result = false;
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["beAttentionUserId"] = CurrentUser.LoginInfo.UserId;
+                param["currentUserId"] = user;
                 if (CurrentUser.LoginInfo.UserId != null)
                 {
-                    result = WCFClients.GameClient.QueryIsAttention(CurrentUser.LoginInfo.UserId, user);
+
+                    result = await serviceProxyProvider.Invoke<bool>(param, "api/user/QueryIsAttention");
                     if (result)
                     {
                         return Json(new { Issucse = true, Msg = "关注成功" });

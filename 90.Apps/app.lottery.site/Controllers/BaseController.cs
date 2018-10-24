@@ -29,6 +29,9 @@ using Common.JSON;
 using System.Globalization;
 using app.lottery.site.iqucai;
 using Common.Lottery.Redis;
+using log4net;
+using Kason.Sg.Core.ProxyGenerator;
+using Kason.Sg.Core.CPlatform.Runtime.Client.Address.Resolvers;
 
 namespace app.lottery.site.Controllers
 {
@@ -36,7 +39,7 @@ namespace app.lottery.site.Controllers
     [ErrorHandle]
     public class BaseController : Controller
     {
-
+      
         #region Action执行前判断
         /// <summary>
         /// Action执行前判断
@@ -52,7 +55,7 @@ namespace app.lottery.site.Controllers
         //    contextActionName = filterContext.ActionDescriptor.ActionName;
 
         //    StartProcessRequest(filterContext);
-           
+
         //    base.OnActionExecuting(filterContext);
         //}
 
@@ -216,7 +219,7 @@ namespace app.lottery.site.Controllers
                     }
                     return _guestToken;
                 }
-                return (Session["CurrentUser"] as LoginInfo).UserToken;
+                return (Session["CurrentUser"] as LoginInfo).UserId;
             }
         }
 
@@ -4442,6 +4445,9 @@ namespace app.lottery.site.Controllers
         }
         private static SportsOrder_GuoGuanInfoCollection _cache_ggtj = new SportsOrder_GuoGuanInfoCollection();
         private static object _ggtjdLock = new object();
+        private IServiceProxyProvider _serviceProxyProvider;
+        private ILog log;
+
         /// <summary>
         /// 过关统计查询
         /// </summary>
@@ -4774,7 +4780,7 @@ namespace app.lottery.site.Controllers
                 //查数据
                 var schemeInfo = WCFClients.ExternalClient.QueryBDFXCommision(schemeId);
                 //写文件
-                var isBuildCache = bool.Parse(ConfigurationManager.AppSettings["IsBuildCache"].ToString());
+                var  isBuildCache = bool.Parse(ConfigurationManager.AppSettings["IsBuildCache"].ToString());
                 if (isBuildCache && schemeInfo != null && (bonusStatus == BonusStatus.Lose || bonusStatus == BonusStatus.Win))
                 {
                     var content = JsonSerializer.Serialize<BDFXCommisionInfo>(schemeInfo);

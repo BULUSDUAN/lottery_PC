@@ -600,11 +600,11 @@ namespace OrderLottery.Service.ModuleServices
         /// <summary>
         /// 查询过关统计
         /// </summary>
-        public SportsOrder_GuoGuanInfoCollection QueryReportInfoList_GuoGuan(bool isVirtualOrder, SchemeBettingCategory? category, string key, string gameCode, string gameType, string issuseNumber, DateTime startTime, DateTime endTime, int pageIndex, int pageSize)
+        public Task<SportsOrder_GuoGuanInfoCollection> QueryReportInfoList_GuoGuan(bool isVirtualOrder, SchemeBettingCategory? category, string key, string gameCode, string gameType, string issuseNumber, DateTime startTime, DateTime endTime, int pageIndex, int pageSize)
         {
             try
             {
-                return new SqlQueryBusiness().QueryReportInfoList_GuoGuan(isVirtualOrder, category, key, gameCode, gameType, issuseNumber, startTime, endTime, pageIndex, pageSize);
+                return Task.FromResult(new SqlQueryBusiness().QueryReportInfoList_GuoGuan(isVirtualOrder, category, key, gameCode, gameType, issuseNumber, startTime, endTime, pageIndex, pageSize));
             }
             catch (Exception ex)
             {
@@ -613,5 +613,22 @@ namespace OrderLottery.Service.ModuleServices
         }
 
         #endregion
+
+        /// <summary>
+        /// 查询单式上传方案详情
+        /// </summary>
+        /// <param name="schemeId"></param>
+        /// <returns></returns>
+        public Task<OrderSingleSchemeCollection> QuerySingSchemeDetail(string schemeId)
+        {
+            try
+            {
+                return Task.FromResult(new SqlQueryBusiness().QuerySingSchemeDetail(schemeId));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
     }
 }
