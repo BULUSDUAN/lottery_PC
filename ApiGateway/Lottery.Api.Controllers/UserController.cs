@@ -139,6 +139,37 @@ namespace Lottery.Api.Controllers
 
         }
 
+        public async Task<IActionResult> LoginGiveRedEnvelopes([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                var p = WebHelper.Decode(entity.Param);
+                string userToken = p.UserToken;
+                string UserId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+                param["UserId"] = UserId;
+                param["IPAddress"] = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
+                var GiveRedEnvelopes = await _serviceProxyProvider.Invoke<string>(param, "api/user/LoginGiveRedEnvelopes");
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "每天登录送红包",
+                    MsgId = entity.MsgId,
+                    Value = "每天登录送红包"
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage(),
+                });
+            }
+        }
+
         #region 还需要的成长值
 
         private decimal GrowthStatus(decimal UserGrowth)
