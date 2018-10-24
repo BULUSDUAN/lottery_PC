@@ -18,6 +18,7 @@ using EntityModel.ExceptionExtend;
 using UserLottery.Service.ModuleServices;
 using KaSon.FrameWork.Common.Redis;
 using EntityModel.Redis;
+using KaSon.FrameWork.Common.FileOperate;
 
 namespace BettingLottery.Service.ModuleServices
 {
