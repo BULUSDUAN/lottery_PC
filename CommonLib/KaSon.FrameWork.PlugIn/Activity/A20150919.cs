@@ -376,7 +376,7 @@ namespace KaSon.FrameWork.PlugIn.Activity
             //if (old == null) return;
             //if (!old.IsBindRealName) return;
             //if (!old.IsBindMobile) return;
-
+                                                                              
             decimal giveMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.BindedUserLoginGiveRedBag"));
             if (user.VipLevel >= 0)
             {
