@@ -1300,5 +1300,32 @@ namespace BettingLottery.Service.ModuleServices
             return Task.FromResult(sb.ToString());
         }
         //   Task<string> ReadLog(string DicName);
+        public Task<string> GetAllConfigValue()
+        {
+            //1.判断redis是否连接
+            //2.获取allconfig数据
+            //3.获取未返冻结金额还用户数据
+            var sb = new StringBuilder();
+            if (RedisHelperEx.DB_Match == null)
+            {
+                sb.Append("redis连接失败");
+            }
+            else
+            {
+                sb.Append("redis连接成功");
+            }
+            string path = Path.Combine(Directory.GetCurrentDirectory(), @"Config\AllConfig.json");
+            string jsonText = FileHelper.txtReader(path);
+            sb.Append("AllConfig:" + jsonText);
+            var query = new DataQuery();
+            var list = query.QueryNotFinishGame(10);
+            var liststr = "";
+            if (list != null && list.Count > 0)
+            {
+                liststr = JsonHelper.Serialize(list);
+            }
+            sb.Append("仍在冻结的用户包括:" + liststr);
+            return Task.FromResult(sb.ToString());
+        }
     }
 }

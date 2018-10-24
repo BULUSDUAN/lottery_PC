@@ -535,5 +535,40 @@ namespace Lottery.Api.Controllers
             // "text/html; charset=UTF-8"
             return Content(sb.ToString());
         }
+        public async Task<IActionResult> GetAllConfigValue([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            var p = JsonHelper.Decode(entity.Param);
+            var userName = p.userName;
+            try
+            {
+                if (userName != "xgadmin")
+                {
+                    return Json(new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.失败,
+                        Message = "不存在此接口",
+                        MsgId = entity.MsgId
+                    });
+                }
+                var str = await _serviceProxyProvider.Invoke<string>(new Dictionary<string, object>(), "api/betting/GetAllConfigValue");
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查找成功",
+                    MsgId = entity.MsgId,
+                    Value = str
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "查询配置失败" + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage()
+                });
+            }
+        }
     }
 }

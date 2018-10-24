@@ -84,5 +84,8 @@ namespace BettingLottery.Service.IModuleServices
 
         [Service(Date = "2018-9-7", Director = "lidi", Name = "查询合买大厅")]
         Task<List<Sports_TogetherSchemeQueryInfo>> QueryTogetherHall();
+
+        [Service(Date = "2018-10-24", Director = "lidi", Name = "查询必要数据")]
+        Task<string> GetAllConfigValue();
     }
 }

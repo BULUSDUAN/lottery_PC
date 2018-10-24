@@ -1516,5 +1516,21 @@ namespace UserLottery.Service.ModuleServices
 
         //    return Task.FromResult(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\SQLInfo", "LogTime_"));
         //}
+        public Task<string> LoginGiveRedEnvelopes(string UserId, string IPAddress)
+        {
+            try
+            {
+                BusinessHelper.ExecPlugin<IUser_AfterLogin>(new object[] { UserId, "LOCAL", IPAddress, DateTime.Now });
+                //刷新用户在Redis中的余额
+                BusinessHelper.RefreshRedisUserBalance(UserId);
+
+                return Task.FromResult("每天登录送红包");
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message, ex);
+            }
+        }
     }
 }
