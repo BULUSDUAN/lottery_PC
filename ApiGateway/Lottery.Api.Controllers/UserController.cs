@@ -149,7 +149,7 @@ namespace Lottery.Api.Controllers
                 string UserId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 param["UserId"] = UserId;
                 param["IPAddress"] = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
-                var unReadCount = await _serviceProxyProvider.Invoke<int>(param, "api/user/LoginGiveRedEnvelopes");
+                var GiveRedEnvelopes = await _serviceProxyProvider.Invoke<string>(param, "api/user/LoginGiveRedEnvelopes");
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
