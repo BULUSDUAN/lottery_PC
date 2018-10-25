@@ -48,5 +48,9 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             return DB.CreateQuery<E_Authentication_RealName>().Where(x=>x.UserId==userId).FirstOrDefault();
         }
+        public void DeleteUserRealName(E_Authentication_RealName entity)
+        {
+            DB.GetDal<E_Authentication_RealName>().Delete(entity);
+        }
     }
 }

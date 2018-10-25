@@ -107,7 +107,11 @@ namespace EntityModel.CoreModel
         /// 回复时间
         /// </summary>
         public DateTime? ResponseTime { get; set; }
-  
+        /// <summary>
+        /// 用户卡类型
+        /// </summary>
+        public int UserCreditType { get; set; }
+
     }
 
 }

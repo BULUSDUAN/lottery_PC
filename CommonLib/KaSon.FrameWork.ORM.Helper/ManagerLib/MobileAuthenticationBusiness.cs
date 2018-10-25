@@ -265,5 +265,80 @@ namespace KaSon.FrameWork.ORM.Helper
             DB.Commit();
             return newPwd;
         }
+        /// <summary>
+        /// 更新手机认证
+        /// </summary>
+        public void UpdateMobileAuthen(string userId, string mobile, string updateBy)
+        {
+            //开启事务
+            DB.Begin();
+            var manager = new UserMobileManager();
+            var mobileInfo = manager.GetMobileInfoByMobile(mobile);
+            var entity = manager.GetUserMobile(userId);
+            if (entity == null)
+                throw new ArgumentException("此用户从未进行过手机认证");
+            if (mobileInfo != null && mobileInfo.UserId != userId)
+            {
+                if (!string.IsNullOrEmpty(mobileInfo.Mobile) && mobileInfo.IsSettedMobile)
+                    throw new Exception("当前手机号码已被他人占用！");
+            }
+            entity.Mobile = mobile;
+            entity.IsSettedMobile = true;
+            entity.UpdateBy = updateBy;
+            entity.UpdateTime = DateTime.Now;
+            manager.UpdateUserMobile(entity);
+            DB.Commit();
+        }
+        /// <summary>
+        /// 注销手机认证
+        /// </summary>
+        public void LogOffMobileAuthen(string userId)
+        {
+            //开启事务
+                DB.Begin();
+                var manager = new UserMobileManager();
+                var entity = manager.GetUserMobile(userId);
+                if (entity == null)
+                    throw new ArgumentException("此用户从未进行过手机认证");
+                manager.DeleteUserMobile(entity);
+            DB.Commit();
+        }
+        public void AddAuthenticationMobile(string authFrom, string userId, string mobile, string createBy)
+        {
+
+            var manager = new UserMobileManager();
+                var mobileInfo = manager.GetMobileInfoByMobile(mobile);
+                if (mobileInfo != null && !string.IsNullOrEmpty(mobileInfo.Mobile) && mobileInfo.UserId != userId)
+                    throw new ArgumentException(string.Format("此手机号【{0}】已被其他用户认证。", mobile));
+                if (mobileInfo != null && !string.IsNullOrEmpty(mobileInfo.Mobile) && !mobileInfo.IsSettedMobile)
+                {
+                    //mobileInfo.UserId = userId;
+                    mobileInfo.UpdateBy = userId;
+                    mobileInfo.UpdateTime = DateTime.Now;
+                    mobileInfo.Mobile = mobile;
+                    mobileInfo.IsSettedMobile = true;
+                    manager.UpdateUserMobile(mobileInfo);
+                }
+                else
+                {
+                    if (mobileInfo == null)
+                    {
+                        mobileInfo = new E_Authentication_Mobile
+                        {
+                            UserId = userId,
+                            //User = manager.LoadUser(userId),
+                            AuthFrom = authFrom,
+                            Mobile = mobile,
+                            IsSettedMobile = true,
+                            CreateBy = createBy,
+                            UpdateBy = createBy,
+                        };
+                        manager.AddUserMobile(mobileInfo);
+                    }
+                    else
+                        throw new ArgumentException(string.Format("此用户已于【{0:yyyy-MM-dd HH:mm:ss}】进行过手机认证", mobileInfo.CreateTime));
+                }
+        }
+       
     }
 }

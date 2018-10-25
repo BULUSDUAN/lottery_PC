@@ -9,7 +9,8 @@ namespace EntityModel.CoreModel
     [Serializable]
     [ProtoContract]
    public class BettingOrderInfoCollection:Page
-    {      [ProtoMember(1)]
+    {
+        [ProtoMember(1)]
         public int TotalUserCount { get; set; }
         [ProtoMember(2)]
         public decimal TotalBuyMoney { get; set; }

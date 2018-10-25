@@ -100,45 +100,60 @@ namespace KaSon.FrameWork.ORM.Helper
                 gv.AddTaskList(addTaskList);
               
             }
-
-
         }
-
-
         public void UpdateAuthenticationRealName(string authFrom, string userId, string realName, string cardType, string idCardNumber, string updateBy)
         {
-            //DB.Begin();
-            //try
-            //{
-              
-
-                var manager = new UserRealNameManager();
-                var entity = GetAuthenticatedRealName(userId);
-                //var realNameInfo = manager.GetRealNameInfoByName(realName, idCardNumber);
-                if (entity == null)
-                {
-                    DB.Rollback();
-                    throw new LogicException("此用户从未进行过实名认证");
-
-                }
-                entity.AuthFrom = authFrom;
-                entity.RealName = realName;
-                entity.CardType = cardType;
-                entity.IdCardNumber = idCardNumber;
-                entity.UpdateBy = updateBy;
-                entity.IsSettedRealName = true;
-                manager.UpdateUserRealName(entity);
-            //    DB.Commit();
-            //}
-            //catch (Exception ex)
-            //{
-            //    DB.Rollback();
-            //    throw ex;
-            //}
-              
-            
-               
-
+            var manager = new UserRealNameManager();
+            var entity = GetAuthenticatedRealName(userId);
+            if (entity == null)
+            {
+                DB.Rollback();
+                throw new LogicException("此用户从未进行过实名认证");
+            }
+            entity.AuthFrom = authFrom;
+            entity.RealName = realName;
+            entity.CardType = cardType;
+            entity.IdCardNumber = idCardNumber;
+            entity.UpdateBy = updateBy;
+            entity.IsSettedRealName = true;
+            manager.UpdateUserRealName(entity);
+        }
+        /// <summary>
+        /// 更新实名认证
+        /// </summary>
+        public void UpdateRealNameAuthentication(string userId, string realName, string idCard, string updateBy)
+        {
+            var other = new UserRealNameManager().QueryUserRealName(idCard);
+            if (other != null)
+                throw new ArgumentException(string.Format("此证件号【{0}】已被其他用户认证。", idCard));
+            //开启事务
+            DB.Begin();
+            var manager = new UserRealNameManager();
+            var entity = manager.GetUserRealName(userId);
+            var realNameInfo = manager.GetRealNameInfoByName(realName, idCard);
+            if (entity == null)
+                throw new ArgumentException("此用户从未进行过实名认证");
+            entity.RealName = realName;
+            entity.IsSettedRealName = true;
+            entity.IdCardNumber = idCard;
+            entity.UpdateBy = updateBy;
+            entity.UpdateTime = DateTime.Now;
+            manager.UpdateUserRealName(entity);
+            DB.Commit();
+        }
+        /// <summary>
+        /// 注销实名认证
+        /// </summary>
+        public void LogOffRealNameAuthen(string userId)
+        {
+            //开启事务
+            DB.Begin();
+            var manager = new UserRealNameManager();
+            var entity = manager.GetUserRealName(userId);
+            if (entity == null)
+                throw new ArgumentException("此用户从未进行过实名认证");
+            manager.DeleteUserRealName(entity);
+            DB.Commit();
         }
     }
 }

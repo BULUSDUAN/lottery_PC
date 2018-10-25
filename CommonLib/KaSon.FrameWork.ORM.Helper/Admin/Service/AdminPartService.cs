@@ -8,6 +8,10 @@ using EntityModel;
 using EntityModel.Communication;
 using KaSon.FrameWork.ORM.Helper.ManagerLib;
 using EntityModel.ExceptionExtend;
+using EntityModel.Redis;
+using KaSon.FrameWork.Common.Redis;
+using KaSon.FrameWork.Common.JSON;
+using KaSon.FrameWork.Common.Utilities;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
@@ -929,6 +933,548 @@ namespace KaSon.FrameWork.ORM.Helper
             catch (Exception ex)
             {
                 throw new Exception("手工扣款出现错误 - " + ex.Message, ex);
+            }
+        }
+        public CommonActionResult UpdateRealNameAuthentication(string userId, string realName, string idCard, string userToken)
+        {
+            // 验证用户身份及权限
+            var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                var biz = new RealNameAuthenticationBusiness();
+                biz.UpdateRealNameAuthentication(userId, realName, idCard, myId);
+                return new CommonActionResult(true, "操作成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 注销实名认证
+        /// todo:后台权限
+        /// </summary>
+        public CommonActionResult LogOffRealNameAuthen(string userId, string userToken)
+        {
+            // 验证用户身份及权限
+            var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                new RealNameAuthenticationBusiness().LogOffRealNameAuthen(userId);
+                return new CommonActionResult(true, "操作成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 更新手机认证
+        /// todo:后台权限
+        /// </summary>
+        public CommonActionResult UpdateMobileAuthen(string userId, string mobile, string userToken)
+        {
+            // 验证用户身份及权限
+            var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                new MobileAuthenticationBusiness().UpdateMobileAuthen(userId, mobile, myId);
+                return new CommonActionResult(true, "操作成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 注销手机认证
+        /// todo:后台权限
+        /// </summary>
+        public CommonActionResult LogOffMobileAuthen(string userId, string userToken)
+        {
+            // 验证用户身份及权限
+            //var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                new MobileAuthenticationBusiness().LogOffMobileAuthen(userId);
+                return new CommonActionResult(true, "操作成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 修改银行卡信息
+        /// </summary>
+        public CommonActionResult UpdateBankCard(C_BankCard bankCard, string userToken)
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                new BankCardBusiness().UpdateBankCard(bankCard, bankCard.UserId);
+                return new CommonActionResult(true, "修改银行卡信息成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("修改银行卡信息出错 - " + ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 解除银行卡绑定
+        /// </summary>
+        /// <returns></returns>
+        public CommonActionResult CancelBankCard(string userId)
+        {
+            try
+            {
+                new BankCardBusiness().CancelBankCard(userId);
+                return new CommonActionResult(true, "银行解除绑定成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("银行卡解除出错 - " + ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 查询用户资金明细
+        /// </summary>
+        public UserFundDetailCollection QueryUserFundDetailList(string userId, string keyLine, DateTime fromDate, DateTime toDate, string accountTypeList, string categoryList, int pageIndex, int pageSize, string userToken)
+        {
+            try
+            {
+                return new SqlQueryBusiness().QueryUserFundDetail(userId, keyLine, fromDate, toDate, accountTypeList, categoryList, pageIndex, pageSize);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询用户资金明细出错 - " + ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 查询彩种
+        /// </summary>
+        public GameInfoCollection QueryGameList(string userToken)
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                return new GameBusiness().QueryGameInfoCollection();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询彩种出错", ex);
+            }
+        }
+        public BettingOrderInfoCollection QueryBettingOrderList(string userIdOrName, SchemeType? schemeType, ProgressStatus? progressStatus, BonusStatus? bonusStatus, SchemeBettingCategory? betCategory, bool? isVirtual, string gameCode
+            , DateTime startTime, DateTime endTime, int sortType, int pageIndex, int pageSize, string userToken, string fieldName, TicketStatus? ticketStatus = null, SchemeSource? schemeSource = null)
+        {
+            // 验证用户身份及权限
+            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                var agentId = "";
+                return new SqlQueryBusiness().QueryBettingOrderList(userIdOrName, schemeType, progressStatus, bonusStatus, betCategory, isVirtual, gameCode, startTime, endTime, sortType, agentId, pageIndex, pageSize, fieldName, ticketStatus, schemeSource);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询投注订单列表出错 - " + ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 查询充值记录
+        /// </summary>
+        public FillMoneyQueryInfoCollection QueryFillMoneyList(string userKey, string agentTypeList, string statusList, string sourceList, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string orderId, string userToken)
+        {
+            // 验证用户身份及权限
+            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+
+            try
+            {
+                return new SqlQueryBusiness().QueryFillMoneyList(userKey, agentTypeList, statusList, sourceList, startTime, endTime, pageIndex, pageSize, orderId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询充值记录出错", ex);
+            }
+        }
+        /// <summary>
+        /// 根据key查询配置
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public C_Core_Config QueryConfigByKey(string key)
+        {
+            try
+            {
+                return new Sports_Business().QueryConfigByKey(key);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 查询提现记录列表
+        /// </summary>
+        public Withdraw_QueryInfoCollection QueryWithdrawList(string userKey, WithdrawAgentType? agent, WithdrawStatus? status, decimal minMoney, decimal maxMoney, DateTime startTime, DateTime endTime, int sortType, string operUserId, int pageIndex, int pageSize, string bankcode, string userToken)
+        {
+            try
+            {
+                return new AdminMenuBusiness().QueryWithdrawList(userKey, agent, status, minMoney, maxMoney, startTime, endTime, sortType, operUserId, pageIndex, pageSize, bankcode);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询提现记录列表 - " + ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 清理用户绑定数据缓存
+        /// </summary>
+        public CommonActionResult ManualClearUserBindCache(string userId)
+        {
+            ClearUserBindInfoCache(userId);
+            return new CommonActionResult(true, "清理成功");
+        }
+        public CommonActionResult ManualBuildUserBindCache(string userId)
+        {
+            var info = new LocalLoginBusiness().QueryUserBindInfos(userId);
+            if (info == null)
+                return new CommonActionResult(false, "查询数据失败");
+
+            //添加缓存到文件
+            SaveUserBindInfoCache(userId, info);
+            return new CommonActionResult(true, "生成成功");
+        }
+        /// <summary>
+        /// 增加银行卡信息
+        /// </summary>
+        /// <param name="bankCard"></param>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public CommonActionResult AddBankCard(C_BankCard bankCard, string userToken)
+        {
+            // 验证用户身份及权限
+            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+
+            try
+            {
+                var entity = new BankCardManager().BankCardByCode(bankCard.BankCardNumber);
+                if (entity != null)
+                {
+                    throw new Exception("该银行卡号已经被其他用户绑定，请选择其它银行卡号");
+                }
+                if (string.IsNullOrEmpty(bankCard.UserId) || bankCard.UserId == null || bankCard.UserId.Length == 0)
+                    bankCard.UserId = userId;
+
+                var bankcarduser = new BankCardManager().BankCardById(userId);
+                if (bankcarduser != null)
+                    throw new Exception("您已绑定了银行卡，请不要重复绑定！");
+                new BankCardBusiness().AddBankCard(bankCard);
+                //绑定银行卡之后实现接口
+                BusinessHelper.ExecPlugin<IAddBankCard>(new object[] { bankCard.UserId, bankCard.BankCardNumber, bankCard.BankCode, bankCard.BankName, bankCard.BankSubName, bankCard.CityName, bankCard.ProvinceName, bankCard.RealName });
+                return new CommonActionResult(true, "添加银行卡信息成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("添加银行卡信息出错 - " + ex.Message, ex);
+            }
+        }
+        public bool UpdateUserCreditType(string userId, int updateUserCreditType)
+        {
+            return new FundBusiness().UpdateUserCreditType(userId, updateUserCreditType);
+        }
+        public CommonActionResult AuthenticateUserRealName_BackSite(string userId, string realName, string idCard, string userToken)
+        {
+            // 验证用户身份及权限
+            var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            var biz = new RealNameAuthenticationBusiness();
+            biz.AddAuthenticationRealName("LOCAL", userId, realName, "0", idCard, myId, false);
+            //! 执行扩展功能代码 - 提交事务后
+            BusinessHelper.ExecPlugin<IResponseAuthentication_AfterTranCommit>(new object[] { userId, "RealName", realName + "|0|" + idCard, SchemeSource.Web });
+            return new CommonActionResult(true, "实名认证成功。");
+        }
+        /// <summary>
+        /// 用户手机认证
+        /// todo:后台权限
+        /// </summary>
+        public CommonActionResult AuthenticationUserMobile(string userId, string mobile, SchemeSource source, string userToken)
+        {
+            // 验证用户身份及权限
+            var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+
+            try
+            {
+                var validateCode = GetRandomMobileValidateCode();
+
+                    var authenticationBiz = new MobileAuthenticationBusiness();
+                    var mobileInfo = authenticationBiz.GetAuthenticatedMobile(userId);
+                    authenticationBiz.AddAuthenticationMobile("LOCAL", userId, mobile, myId);
+                
+                //! 执行扩展功能代码 - 提交事务后
+                BusinessHelper.ExecPlugin<IResponseAuthentication_AfterTranCommit>(new object[] { userId, "Mobile", mobile, source });
+
+                return new CommonActionResult(true, "手机认证成功。") { ReturnValue = validateCode };
+            }
+            catch (Exception ex)
+            {
+                return new CommonActionResult(false, ex.Message);
+            }
+        }
+        private string GetRandomMobileValidateCode()
+        {
+            var validateCode = "8888";
+            if (!UsefullHelper.IsInTest)
+            {
+                // 生成随机密码
+                Random random = new Random(DateTime.Now.Millisecond * DateTime.Now.Second);
+                validateCode = random.Next(100, 999999).ToString().PadLeft(6, '0');
+                //return RndNum(6);
+            }
+            return validateCode;
+        }
+        /// <summary>
+        /// 清理用户绑定数据缓存
+        /// </summary>
+        private void ClearUserBindInfoCache(string userId)
+        {
+            try
+            {
+                var fullKey = string.Format("{0}_{1}", RedisKeys.Key_UserBind, userId);
+                var db = RedisHelperEx.DB_UserBindData;
+                db.Del(fullKey);
+            }
+            catch (Exception)
+            {
+            }
+          
+        }
+        /// <summary>
+        /// 保存用户绑定数据的缓存
+        /// </summary>
+        private void SaveUserBindInfoCache(string userId, UserBindInfos info)
+        {
+
+            try
+            {
+                var content = JsonSerializer.Serialize<UserBindInfos>(info);
+                var fullKey = string.Format("{0}_{1}", RedisKeys.Key_UserBind, userId);
+                var db = RedisHelperEx.DB_UserBindData;
+                db.SetAsync(fullKey, content);
+            }
+            catch (Exception ex)
+            {
+                throw new LogicException("QueryUserBindInfos_Write:" + userId, ex);
+            }
+        }
+        /// <summary>
+        /// 用户添加qq
+        /// </summary>
+        public CommonActionResult AddUserQQ(string userId, string qq)
+        {
+            try
+            {
+                new QQAuthenticationBusiness().AddUserQQ(userId, qq);
+
+                //清理用户绑定数据缓存
+                ClearUserBindInfoCache(userId);
+                return new CommonActionResult(true, "操作成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 后台取消绑定QQ号码
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="qq"></param>
+        /// <returns></returns>
+        public CommonActionResult CancelUserQQ(string userId)
+        {
+            try
+            {
+                new QQAuthenticationBusiness().CancelUserQQ(userId);
+                return new CommonActionResult(true, "操作成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 后台会员详情，更新经销商
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="agentId"></param>
+        public CommonActionResult UpdateUserAgentId(string userId, string agentId, string userToken)
+        {
+            try
+            {
+                new OCAgentBusiness().UpdateUserAgentId(userId, agentId);
+                return new CommonActionResult(true, "更新经销商成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 注销代理商
+        /// </summary>
+        public CommonActionResult LogOffUserAgent(string userId, string userToken)
+        {
+            // 验证用户身份及权限
+            var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                new UserBusiness().LogOffUserAgent(userId);
+                return new CommonActionResult(true, "操作成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 绑定支付宝
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="alipay"></param>
+        /// <returns></returns>
+        public CommonActionResult AddUserAlipay(string userId, string alipay)
+        {
+            try
+            {
+                new AlipayAuthenticationBusiness().AddUserAlipay(userId, alipay);
+
+                //清理用户绑定数据缓存
+                ClearUserBindInfoCache(userId);
+                return new CommonActionResult(true, "操作成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 后台解除绑定支付宝
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public CommonActionResult CancelUserAlipay(string userId)
+        {
+            try
+            {
+                new AlipayAuthenticationBusiness().CancelUserAlipay(userId);
+                return new CommonActionResult(true, "操作成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 手工完成充值
+        /// </summary>
+        public CommonActionResult ManualCompleteFillMoneyOrder(string orderId, FillMoneyStatus status, string myId)
+        {
+            // 验证用户身份及权限
+            //var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            string userId = "";
+            try
+            {
+                var vipLevel = 0;
+                FillMoneyAgentType agentType;
+                decimal money;
+                //! 执行扩展功能代码 - 启动事务后
+                userId = new FundBusiness().ManualCompleteFillMoneyOrder(orderId, status, out agentType, out money, out vipLevel, myId);
+                //! 执行扩展功能代码 - 提交事务后
+                BusinessHelper.ExecPlugin<ICompleteFillMoney_AfterTranCommit>(new object[] { orderId, status, agentType, money, userId, vipLevel });
+                return new CommonActionResult
+                {
+                    IsSuccess = true,
+                    Message = "手工完成充值成功",
+                };
+            }
+            catch (LogicException ex)
+            {
+                //! 执行扩展功能代码 - 发生异常
+                BusinessHelper.ExecPlugin<ICompleteFillMoney_OnError>(new object[] { orderId, status, userId, ex });
+                return new CommonActionResult
+                {
+                    IsSuccess = true,
+                    Message = "充值订单重复处理",
+                };
+            }
+            catch (Exception ex)
+            {
+                //! 执行扩展功能代码 - 发生异常
+                BusinessHelper.ExecPlugin<ICompleteFillMoney_OnError>(new object[] { orderId, status, userId, ex });
+
+                throw new Exception("手工完成充值 出现错误 - " + ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 查询提现记录列表execl
+        /// </summary>
+        public Withdraw_QueryInfoCollection QueryWithdrawList2(decimal minMoney, decimal maxMoney, DateTime startTime, DateTime endTime, WithdrawStatus? status, string userToken)
+        {
+            try
+            {
+                return new AdminMenuBusiness().QueryWithdrawList2(minMoney, maxMoney, startTime, endTime, status);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询提现记录列表 - " + ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 成功提现
+        /// </summary>
+        public CommonActionResult CompleteWithdraw(string orderId, string responseMsg, string userId)
+        {
+            try
+            {
+                //! 执行扩展功能代码 - 启动事务后
+                new ExternalIntegralBusiness().CompleteWithdraw(orderId, responseMsg, userId);
+                return new CommonActionResult(true, "完成提现成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("完成提现出错 - " + ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 查询提现记录
+        /// </summary>
+        public Withdraw_QueryInfo GetWithdrawById(string orderId)
+        {
+            try
+            {
+                return new FundBusiness().GetWithdrawById(orderId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询提现记录列表 - " + ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 拒绝提现
+        /// </summary>
+        public CommonActionResult RefusedWithdraw(string orderId, string refusedMsg, string userId)
+        {
+            try
+            {
+                //! 执行扩展功能代码 - 启动事务后
+                new ExternalIntegralBusiness().RefusedWithdraw(orderId, refusedMsg, userId);
+                return new CommonActionResult(true, "拒绝提现成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("拒绝提现出错 - " + ex.Message, ex);
             }
         }
         #endregion

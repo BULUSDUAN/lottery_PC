@@ -585,5 +585,72 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             DB.Commit();
         }
+        public bool UpdateUserCreditType(string userId, int updateUserCreditType)
+        {
+            return new FundManager().UpdateUserCreditType(userId, updateUserCreditType);
+        }
+        public string ManualCompleteFillMoneyOrder(string orderId, FillMoneyStatus status, out FillMoneyAgentType agentType, out decimal money, out int vipLevel, string financeId = "")
+        {
+            var userId = string.Empty;
+            //开启事务
+                DB.Begin();
+                vipLevel = 0;
+                var fundManager = new FundManager();
+                var entity = fundManager.QueryFillMoney(orderId);
+                if (entity == null)
+                    throw new Exception("订单号错误");
+
+                #region 判断充值金额是否在财务员执行范围
+
+                var manage = new FundManager();
+                C_FinanceSettings FinanceInfo = fundManager.GetFinanceSettingsInfo(financeId, "20");
+                if (FinanceInfo == null || FinanceInfo.FinanceId <= 0)
+                {
+                    throw new Exception("您还未设置财务员充值金额范围！");
+                }
+                if (entity.RequestMoney < FinanceInfo.MinMoney || entity.RequestMoney > FinanceInfo.MaxMoney)
+                {
+                    throw new Exception("当前充值金额必须在" + FinanceInfo.MinMoney.ToString("N2") + "--" + FinanceInfo.MaxMoney.ToString("N2") + "之间");
+                }
+                #endregion
+                agentType = (FillMoneyAgentType)entity.FillMoneyAgent;
+                money = entity.RequestMoney;
+                if (entity.Status != (int)FillMoneyStatus.Requesting)
+                    throw new LogicException("充值订单的状态不是请求中 - " + entity.Status);
+                entity.Status = (int)status;
+                entity.ResponseMoney = entity.RequestMoney;
+                entity.ResponseTime = DateTime.Now;
+                entity.ResponseMessage = "手工完成充值";
+                entity.ResponseCode = status.ToString();
+                fundManager.UpdateFillMoney(entity);
+
+                if (status == FillMoneyStatus.Success)
+                {
+                    var userManager = new UserBalanceManager();
+                    var user = userManager.GetUserRegister(entity.UserId);
+                    user.IsFillMoney = true;
+                    vipLevel = user.VipLevel;
+                    userManager.UpdateUserRegister(user);
+                    BusinessHelper.Payin_To_Balance(AccountType.FillMoney, BusinessHelper.FundCategory_ManualFillMoney, user.UserId, orderId, money, string.Format("用户充值{0:N2}元", money));
+                    if (money >= 5000)
+                    {
+                        try
+                        {
+                            var _mobile_financial = new CacheDataBusiness().QueryCoreConfigFromRedis("Site.Financial.Mobile");
+                            foreach (var item in _mobile_financial.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries))
+                            {
+                                BusinessHelper.SendMsg(item, string.Format("财务人员请注意：用户{0}的充值订单{1}已成功充值{2:N}元，请注意出票平台账户余额。", userId, orderId, money), string.Empty, 4, entity.UserId, orderId);
+                            }
+                        }
+                        catch
+                        {
+                        }
+                    }
+                userId = entity.UserId;
+                DB.Commit();
+            }
+            return userId;
+
+        }
     }
 }
