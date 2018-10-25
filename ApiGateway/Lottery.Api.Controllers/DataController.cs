@@ -3457,7 +3457,7 @@ namespace Lottery.Api.Controllers
                     var gameLoginName = PreName + userId;
                     var pwd = GamePassWord;
                     var providerSerialNo = "";
-                    try //调用第三方接口第一步（过程中有失败则直接当做失败）
+                    try //调用第三方接口第一步（过程中有失败则直接返回失败）
                     {
                         var sign = MD5Helper.UpperMD5($"{money.ToString()}&{OperatorCode}&{pwd}&{orderId}&{gameLoginName}&{SecretKey}");
                         var rechargeParam = new
@@ -3487,15 +3487,23 @@ namespace Lottery.Api.Controllers
                             providerSerialNo = jsonResult.Params.providerSerialNo;
                             param.Clear();
                             param.Add("orderId", orderId);
-                            param.Add("userId",userId);
+                            param.Add("isSuccess", true);
                             param.Add("providerSerialNo", providerSerialNo);
-                            var pResult = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/data/GameRecharge_Step2");
+                            var pResult = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/data/EndFreezeGameRecharge");
+                            return Json(new LotteryServiceResponse
+                            {
+                                Code = ResponseCode.成功,
+                                Message = "充值成功",
+                                MsgId = "",
+                                Value = "",
+                            });
                         }
                         else //失败，返还冻结金额并返回
                         {
                             param.Clear();
                             param.Add("orderId", orderId);
                             param.Add("isSuccess", false);
+                            param.Add("providerSerialNo", providerSerialNo);
                             var endResult = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/data/EndFreezeGameRecharge");
                             return Json(new LotteryServiceResponse
                             {
@@ -3508,10 +3516,10 @@ namespace Lottery.Api.Controllers
                     }
                     catch (Exception ex)
                     {
-                        param.Clear();
-                        param.Add("orderId", orderId);
-                        param.Add("isSuccess", false);
-                        var endResult = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/data/EndFreezeGameRecharge");
+                        //param.Clear();
+                        //param.Add("orderId", orderId);
+                        //param.Add("isSuccess", false);
+                        //var endResult = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/data/EndFreezeGameRecharge");
                         return Json(new LotteryServiceResponse
                         {
                             Code = ResponseCode.失败,
@@ -3520,66 +3528,66 @@ namespace Lottery.Api.Controllers
                             Value = "",
                         });
                     }
-                    try //充值第二步，确认转账，成功则扣钱
-                    {
-                        //确认转账
-                        var confirmSign = MD5Helper.UpperMD5($"{OperatorCode}&{pwd}&{providerSerialNo}&{gameLoginName}&{SecretKey}");
-                        var confirmParam = new
-                        {
-                            command = "CHECK_TRANSFER_STATUS",
-                            gameprovider = "2",
-                            sign = confirmSign,
-                            @params = new
-                            {
-                                username = gameLoginName,
-                                operatorcode = OperatorCode,
-                                password = pwd,
-                                serialNo = providerSerialNo,
-                            }
-                        }.ToJson();
-                        gamerechargeParam = "step2.param:" + confirmParam;
-                        var confirmResult = PostManager.Post(GameUrl, confirmParam, Encoding.UTF8, 45, null, "application/json");
-                        gameresult = "step2.result:" + confirmResult;
-                        var jsonConfirmResult = JsonHelper.Decode(confirmResult);
-                        if (jsonConfirmResult.ErrorCode == 0) //确认成功
-                        {
-                            param.Clear();
-                            param.Add("orderId", freezeResult.ReturnValue);
-                            param.Add("isSuccess", true);
-                            var endResult = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/data/EndFreezeGameRecharge");
-                            return Json(new LotteryServiceResponse
-                            {
-                                Code = ResponseCode.成功,
-                                Message = "充值成功",
-                                MsgId = "",
-                                Value = ""
-                            });
-                        }
-                        else
-                        {
-                            param.Clear();
-                            param.Add("orderId", freezeResult.ReturnValue);
-                            param.Add("isSuccess", false);
-                            var endResult = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/data/EndFreezeGameRecharge");
-                            return Json(new LotteryServiceResponse
-                            {
-                                Code = ResponseCode.成功,
-                                Message = "充值失败",
-                                MsgId = "",
-                                Value = ""
-                            });
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        return Json(new LotteryServiceResponse
-                        {
-                            Code = ResponseCode.失败,
-                            Message = ex.ToGetMessage() + "●" + "游戏充值第二步参数：" + gamerechargeParam + ";游戏充值第二步返回：" + gameresult + ";" + ex.ToString(),
-                            MsgId = "",
-                            Value = "",
-                        });
-                    }
+                    //try //充值第二步，确认转账，成功则扣钱
+                    //{
+                    //    //确认转账
+                    //    var confirmSign = MD5Helper.UpperMD5($"{OperatorCode}&{pwd}&{providerSerialNo}&{gameLoginName}&{SecretKey}");
+                    //    var confirmParam = new
+                    //    {
+                    //        command = "CHECK_TRANSFER_STATUS",
+                    //        gameprovider = "2",
+                    //        sign = confirmSign,
+                    //        @params = new
+                    //        {
+                    //            username = gameLoginName,
+                    //            operatorcode = OperatorCode,
+                    //            password = pwd,
+                    //            serialNo = providerSerialNo,
+                    //        }
+                    //    }.ToJson();
+                    //    gamerechargeParam = "step2.param:" + confirmParam;
+                    //    var confirmResult = PostManager.Post(GameUrl, confirmParam, Encoding.UTF8, 45, null, "application/json");
+                    //    gameresult = "step2.result:" + confirmResult;
+                    //    var jsonConfirmResult = JsonHelper.Decode(confirmResult);
+                    //    if (jsonConfirmResult.ErrorCode == 0) //确认成功
+                    //    {
+                    //        param.Clear();
+                    //        param.Add("orderId", freezeResult.ReturnValue);
+                    //        param.Add("isSuccess", true);
+                    //        var endResult = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/data/EndFreezeGameRecharge");
+                    //        return Json(new LotteryServiceResponse
+                    //        {
+                    //            Code = ResponseCode.成功,
+                    //            Message = "充值成功",
+                    //            MsgId = "",
+                    //            Value = ""
+                    //        });
+                    //    }
+                    //    else
+                    //    {
+                    //        param.Clear();
+                    //        param.Add("orderId", freezeResult.ReturnValue);
+                    //        param.Add("isSuccess", false);
+                    //        var endResult = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/data/EndFreezeGameRecharge");
+                    //        return Json(new LotteryServiceResponse
+                    //        {
+                    //            Code = ResponseCode.成功,
+                    //            Message = "充值失败",
+                    //            MsgId = "",
+                    //            Value = ""
+                    //        });
+                    //    }
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    return Json(new LotteryServiceResponse
+                    //    {
+                    //        Code = ResponseCode.失败,
+                    //        Message = ex.ToGetMessage() + "●" + "游戏充值第二步参数：" + gamerechargeParam + ";游戏充值第二步返回：" + gameresult + ";" + ex.ToString(),
+                    //        MsgId = "",
+                    //        Value = "",
+                    //    });
+                    //}
                 }
                 else
                 {
@@ -3670,7 +3678,7 @@ namespace Lottery.Api.Controllers
                 param.Clear();
                 param.Add("userId", userId);
                 param.Add("money", money);
-                param.Add("UserDisplayName", loginInfo.DisplayName);
+                param.Add("userDisplayName", loginInfo.DisplayName);
                 var withdrawInfo = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/data/AddGameWithdraw_Step1");
                 if (withdrawInfo.IsSuccess)
                 {
@@ -3708,13 +3716,25 @@ namespace Lottery.Api.Controllers
                             providerSerialNo = jsonResult.Params.providerSerialNo;
                             //把订单号update到数据库
                             param.Clear();
-                            param.Add("userId", userId);
-                            param.Add("orderId", orderId);
+                            param.Add("OrderId", orderId);
+                            param.Add("IsSuccess", true);
                             param.Add("providerSerialNo", providerSerialNo);
-                            var com = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/data/AddGameWithdraw_Step2");
+                            var com = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/data/EndAddGameWithdraw");
+                            return Json(new LotteryServiceResponse
+                            {
+                                Code = ResponseCode.成功,
+                                Message = "提款成功",
+                                MsgId = "",
+                                Value = "",
+                            });
                         }
                         else
                         {
+                            param.Clear();
+                            param.Add("OrderId", orderId);
+                            param.Add("IsSuccess", false);
+                            param.Add("providerSerialNo", providerSerialNo);
+                            var com = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/data/EndAddGameWithdraw");
                             return Json(new LotteryServiceResponse
                             {
                                 Code = ResponseCode.失败,
@@ -3726,10 +3746,6 @@ namespace Lottery.Api.Controllers
                     }
                     catch (Exception ex)
                     {
-                        param.Clear();
-                        param.Add("OrderId", orderId);
-                        param.Add("IsSuccess", false);
-                        var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/data/EndAddGameWithdraw");
                         return Json(new LotteryServiceResponse
                         {
                             Code = ResponseCode.失败,
@@ -3738,68 +3754,68 @@ namespace Lottery.Api.Controllers
                             Value = ex.ToGetMessage(),
                         });
                     }
-                    try //调用第三方接口第二步（过程中有失败则返回失败，在任务中继续请求）
-                    {
-                        //确认转账
-                        var confirmSign = MD5Helper.UpperMD5($"{OperatorCode}&{pwd}&{providerSerialNo}&{gameLoginName}&{SecretKey}");
-                        var confirmParam = new
-                        {
-                            command = "CHECK_TRANSFER_STATUS",
-                            gameprovider = "2",
-                            sign = confirmSign,
-                            @params = new
-                            {
-                                username = gameLoginName,
-                                operatorcode = OperatorCode,
-                                password = pwd,
-                                serialNo = providerSerialNo,
-                            }
-                        }.ToJson();
-                        gameParam += "|step2.param:" + confirmParam;
-                        var confirmResult = PostManager.Post(GameUrl, confirmParam, Encoding.UTF8, 45, null, "application/json");
-                        gameResult += "|step2.result:" + confirmResult;
-                        var jsonConfirmResult = JsonHelper.Decode(confirmResult);
-                        if (jsonConfirmResult.ErrorCode == 0) //确认
-                        {
-                            //确认后发钱
-                            param.Clear();
-                            param.Add("OrderId", orderId);
-                            param.Add("IsSuccess", true);
-                            var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/data/EndAddGameWithdraw");
-                            return Json(new LotteryServiceResponse
-                            {
-                                Code = ResponseCode.失败,
-                                Message = "提款成功",
-                                MsgId = "",
-                                Value = "",
-                            });
-                        }
-                        else
-                        {
-                            //返回失败
-                            param.Clear();
-                            param.Add("OrderId", orderId);
-                            param.Add("IsSuccess", false);
-                            var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/data/EndAddGameWithdraw");
-                            return Json(new LotteryServiceResponse
-                            {
-                                Code = ResponseCode.失败,
-                                Message = "提款失败" + "●" + "游戏提款第二步参数：" + gameParam + ";游戏提款第二步返回：" + gameResult,
-                                MsgId = "",
-                                Value = "",
-                            });
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        return Json(new LotteryServiceResponse
-                        {
-                            Code = ResponseCode.失败,
-                            Message = "提款失败" + "●" +  "游戏提款第二步参数：" + gameParam + ";游戏提款第二步返回：" + gameResult,
-                            MsgId = "",
-                            Value = "",
-                        });
-                    }
+                    //try //调用第三方接口第二步（过程中有失败则返回失败，在任务中继续请求）
+                    //{
+                    //    //确认转账
+                    //    var confirmSign = MD5Helper.UpperMD5($"{OperatorCode}&{pwd}&{providerSerialNo}&{gameLoginName}&{SecretKey}");
+                    //    var confirmParam = new
+                    //    {
+                    //        command = "CHECK_TRANSFER_STATUS",
+                    //        gameprovider = "2",
+                    //        sign = confirmSign,
+                    //        @params = new
+                    //        {
+                    //            username = gameLoginName,
+                    //            operatorcode = OperatorCode,
+                    //            password = pwd,
+                    //            serialNo = providerSerialNo,
+                    //        }
+                    //    }.ToJson();
+                    //    gameParam += "|step2.param:" + confirmParam;
+                    //    var confirmResult = PostManager.Post(GameUrl, confirmParam, Encoding.UTF8, 45, null, "application/json");
+                    //    gameResult += "|step2.result:" + confirmResult;
+                    //    var jsonConfirmResult = JsonHelper.Decode(confirmResult);
+                    //    if (jsonConfirmResult.ErrorCode == 0) //确认
+                    //    {
+                    //        //确认后发钱
+                    //        param.Clear();
+                    //        param.Add("OrderId", orderId);
+                    //        param.Add("IsSuccess", true);
+                    //        var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/data/EndAddGameWithdraw");
+                    //        return Json(new LotteryServiceResponse
+                    //        {
+                    //            Code = ResponseCode.失败,
+                    //            Message = "提款成功",
+                    //            MsgId = "",
+                    //            Value = "",
+                    //        });
+                    //    }
+                    //    else
+                    //    {
+                    //        //返回失败
+                    //        param.Clear();
+                    //        param.Add("OrderId", orderId);
+                    //        param.Add("IsSuccess", false);
+                    //        var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/data/EndAddGameWithdraw");
+                    //        return Json(new LotteryServiceResponse
+                    //        {
+                    //            Code = ResponseCode.失败,
+                    //            Message = "提款失败" + "●" + "游戏提款第二步参数：" + gameParam + ";游戏提款第二步返回：" + gameResult,
+                    //            MsgId = "",
+                    //            Value = "",
+                    //        });
+                    //    }
+                    //}
+                    //catch (Exception)
+                    //{
+                    //    return Json(new LotteryServiceResponse
+                    //    {
+                    //        Code = ResponseCode.失败,
+                    //        Message = "提款失败" + "●" +  "游戏提款第二步参数：" + gameParam + ";游戏提款第二步返回：" + gameResult,
+                    //        MsgId = "",
+                    //        Value = "",
+                    //    });
+                    //}
                 }
                 else
                 {

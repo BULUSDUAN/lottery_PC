@@ -35,7 +35,8 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
                         Init_Pool_Data(),
                         Repair_SZCAddToRedis_dp(),
                         Repair_SZCAddToRedis_gp(),
-                        GameRechargeRepair()
+                        GameRechargeRepair(),
+                        GameWithdraw()
                 });
             }
         }
@@ -646,7 +647,7 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
 
         public static async Task GameRechargeRepair()
         {
-            var min = 3;
+            var min = 2;
             var OperatorCode = ConfigHelper.AllConfigInfo["GameApi"]["OperatorCode"].ToString();
             var SecretKey = ConfigHelper.AllConfigInfo["GameApi"]["SecretKey"].ToString();
             var PreName = ConfigHelper.AllConfigInfo["GameApi"]["PreName"].ToString();
@@ -657,23 +658,42 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
             {
                 try
                 {
-                    //查找3分钟前未完成的交易
+                    //查找2分钟前未完成的交易
                     var NotFinishGameTransfer = dataQuery.QueryNotFinishGame(min);
                     var theList = NotFinishGameTransfer.Where(p => p.TransferType == (int)GameTransferType.Recharge).ToList();
                     if (theList != null && theList.Count > 0)
                     {
                         foreach (var item in theList)
                         {
+                            string providerSerialNo = "";
                             try
                             {
-                                if (string.IsNullOrEmpty(item.ProviderSerialNo))
+                                var gameLoginName = PreName + item.UserId;
+                                var sign = MD5Helper.UpperMD5($"{item.RequestMoney.ToString()}&{OperatorCode}&{pwd}&{item.OrderId}&{gameLoginName}&{SecretKey}");
+                                var rechargeParam = new
                                 {
-                                    dataQuery.EndFreezeGameRecharge(item.OrderId, false);
-                                }
-                                else
+                                    command = "DEPOSIT",
+                                    gameprovider = "2",
+                                    sign = sign,
+                                    @params = new
+                                    {
+                                        username = gameLoginName,
+                                        operatorcode = OperatorCode,
+                                        password = pwd,
+                                        serialNo = item.OrderId,
+                                        amount = item.RequestMoney.ToString(),
+                                        extraparameter = new
+                                        {
+                                            type = "SMG"
+                                        }
+                                    }
+                                }.ToJson();
+                                var result = PostManager.Post(GameUrl, rechargeParam, Encoding.UTF8, 45, null, "application/json");
+                                var jsonResult = JsonHelper.Decode(result);
+                                if (jsonResult.ErrorCode == 0)
                                 {
-                                    var gameLoginName = PreName + item.UserId;
-                                    var confirmSign = MD5Helper.UpperMD5($"{OperatorCode}&{pwd}&{item.ProviderSerialNo}&{gameLoginName}&{SecretKey}");
+                                    providerSerialNo = jsonResult.Params.providerSerialNo;
+                                    var confirmSign = MD5Helper.UpperMD5($"{OperatorCode}&{pwd}&{providerSerialNo}&{gameLoginName}&{SecretKey}");
                                     var confirmParam = new
                                     {
                                         command = "CHECK_TRANSFER_STATUS",
@@ -684,19 +704,23 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
                                             username = gameLoginName,
                                             operatorcode = OperatorCode,
                                             password = pwd,
-                                            serialNo = item.ProviderSerialNo,
+                                            serialNo = providerSerialNo,
                                         }
                                     }.ToJson();
                                     var confirmResult = PostManager.Post(GameUrl, confirmParam, Encoding.UTF8, 45, null, "application/json");
                                     var jsonConfirmResult = JsonHelper.Decode(confirmResult);
                                     if (jsonConfirmResult.ErrorCode == 0) //确认
                                     {
-                                        dataQuery.EndFreezeGameRecharge(item.OrderId, true);
+                                        dataQuery.EndFreezeGameRecharge(item.OrderId, true, providerSerialNo);
                                     }
                                     else
                                     {
-                                        dataQuery.EndFreezeGameRecharge(item.OrderId, false);
+                                        dataQuery.EndFreezeGameRecharge(item.OrderId, false, providerSerialNo);
                                     }
+                                }
+                                else
+                                {
+                                    dataQuery.EndFreezeGameRecharge(item.OrderId, false, providerSerialNo);
                                 }
                             }
                             catch (Exception)
@@ -716,7 +740,7 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
 
         public static async Task GameWithdraw()
         {
-            var min = 3;
+            var min = 2;
             var OperatorCode = ConfigHelper.AllConfigInfo["GameApi"]["OperatorCode"].ToString();
             var SecretKey = ConfigHelper.AllConfigInfo["GameApi"]["SecretKey"].ToString();
             var PreName = ConfigHelper.AllConfigInfo["GameApi"]["PreName"].ToString();
@@ -732,18 +756,37 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
                     var theList = NotFinishGameTransfer.Where(p => p.TransferType == (int)GameTransferType.Withdraw).ToList();
                     if (theList != null && theList.Count > 0)
                     {
+                        var providerSerialNo = "";
                         foreach (var item in theList)
                         {
                             try
                             {
-                                if (string.IsNullOrEmpty(item.ProviderSerialNo))
+                                var gameLoginName = PreName + item.UserId;
+                                var sign = MD5Helper.UpperMD5($"{item.RequestMoney.ToString()}&{OperatorCode}&{pwd}&{item.OrderId}&{gameLoginName}&{SecretKey}");
+                                var withdrawParam = new
                                 {
-                                    dataQuery.EndAddGameWithdraw(item.OrderId, false);
-                                }
-                                else
+                                    command = "WITHDRAW",
+                                    gameprovider = "2",
+                                    sign = sign,
+                                    @params = new
+                                    {
+                                        username = gameLoginName,
+                                        operatorcode = OperatorCode,
+                                        password = pwd,
+                                        serialNo = item.OrderId,
+                                        amount = item.RequestMoney.ToString(),
+                                        extraparameter = new
+                                        {
+                                            type = "SMG"
+                                        }
+                                    }
+                                }.ToJson();
+                                var result = PostManager.Post(GameUrl, withdrawParam, Encoding.UTF8, 45, null, "application/json");
+                                var jsonResult = JsonHelper.Decode(result);
+                                if (jsonResult.ErrorCode == 0)
                                 {
-                                    var gameLoginName = PreName + item.UserId;
-                                    var confirmSign = MD5Helper.UpperMD5($"{OperatorCode}&{pwd}&{item.ProviderSerialNo}&{gameLoginName}&{SecretKey}");
+                                    providerSerialNo = jsonResult.Params.providerSerialNo;
+                                    var confirmSign = MD5Helper.UpperMD5($"{OperatorCode}&{pwd}&{providerSerialNo}&{gameLoginName}&{SecretKey}");
                                     var confirmParam = new
                                     {
                                         command = "CHECK_TRANSFER_STATUS",
@@ -754,19 +797,23 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
                                             username = gameLoginName,
                                             operatorcode = OperatorCode,
                                             password = pwd,
-                                            serialNo = item.ProviderSerialNo,
+                                            serialNo = providerSerialNo,
                                         }
                                     }.ToJson();
                                     var confirmResult = PostManager.Post(GameUrl, confirmParam, Encoding.UTF8, 45, null, "application/json");
                                     var jsonConfirmResult = JsonHelper.Decode(confirmResult);
                                     if (jsonConfirmResult.ErrorCode == 0) //确认
                                     {
-                                        dataQuery.EndAddGameWithdraw(item.OrderId, true);
+                                        dataQuery.EndAddGameWithdraw(item.OrderId, true, providerSerialNo);
                                     }
                                     else
                                     {
-                                        dataQuery.EndAddGameWithdraw(item.OrderId, false);
+                                        dataQuery.EndAddGameWithdraw(item.OrderId, false, providerSerialNo);
                                     }
+                                }
+                                else
+                                {
+                                    dataQuery.EndAddGameWithdraw(item.OrderId, false, providerSerialNo);
                                 }
                             }
                             catch (Exception)

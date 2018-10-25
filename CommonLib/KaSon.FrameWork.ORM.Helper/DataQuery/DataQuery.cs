@@ -678,7 +678,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <param name="OrderId"></param>
         /// <param name="IsSuccess"></param>
         /// <returns></returns>
-        public CommonActionResult EndFreezeGameRecharge(string orderId, bool isSuccess)
+        public CommonActionResult EndFreezeGameRecharge(string orderId, bool isSuccess, string providerSerialNo)
         {
             var oldModel = DB.CreateQuery<C_Game_Transfer>().Where(p => p.OrderId == orderId).FirstOrDefault();
             if (oldModel == null) throw new LogicException("发生错误，找不到相关订单");
@@ -690,7 +690,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 {
                     oldModel.Status = (int)FillMoneyStatus.Success;
                     oldModel.UpdateTime = DateTime.Now;
-                    //oldModel.ProviderSerialNo = providerSerialNo;
+                    oldModel.ProviderSerialNo = providerSerialNo;
                     DB.GetDal<C_Game_Transfer>().Update(oldModel);
                     BusinessHelper.Payout_Frozen_To_End(BusinessHelper.FundCategory_GameRecharge, oldModel.UserId, orderId, string.Format("游戏充值成功，扣除冻结{1:N2}元", orderId, oldModel.RequestMoney), oldModel.RequestMoney);
                 }
@@ -698,7 +698,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 {
                     oldModel.Status = (int)FillMoneyStatus.Failed;
                     oldModel.UpdateTime = DateTime.Now;
-                    //oldModel.ProviderSerialNo = providerSerialNo;
+                    oldModel.ProviderSerialNo = providerSerialNo;
                     DB.GetDal<C_Game_Transfer>().Update(oldModel);
                     BusinessHelper.Payin_FrozenBack(BusinessHelper.FundCategory_GameRecharge, oldModel.UserId, orderId, oldModel.RequestMoney, string.Format("游戏充值不成功，返还资金{0:N2}元", oldModel.RequestMoney));
                 }
@@ -771,18 +771,39 @@ namespace KaSon.FrameWork.ORM.Helper
             return new CommonActionResult() { IsSuccess = true, ReturnValue = orderId };
         }
 
-        public CommonActionResult AddGameWithdraw_Step2(string userId, string orderId, string providerSerialNo)
-        {
-            //var orderId = BettingHelper.GetGameTransferId();
-            var oldmodel = DB.CreateQuery<C_Game_Transfer>().Where(p => p.OrderId == orderId && p.UserId == userId).FirstOrDefault();
-            if (oldmodel == null) throw new LogicException("发生错误，找不到相关订单");
-            oldmodel.ProviderSerialNo = providerSerialNo;
-            oldmodel.UpdateTime = DateTime.Now;
-            DB.GetDal<C_Game_Transfer>().Update(oldmodel);
-            return new CommonActionResult() { IsSuccess = true, ReturnValue = orderId };
-        }
+        //public CommonActionResult AddGameWithdraw_Step2(string orderId, string providerSerialNo)
+        //{
+        //    ////var orderId = BettingHelper.GetGameTransferId();
+        //    //var oldmodel = DB.CreateQuery<C_Game_Transfer>().Where(p => p.OrderId == orderId).FirstOrDefault();
+        //    //if (oldmodel == null) throw new LogicException("发生错误，找不到相关订单");
+        //    //oldmodel.ProviderSerialNo = providerSerialNo;
+        //    //oldmodel.UpdateTime = DateTime.Now;
+        //    //DB.GetDal<C_Game_Transfer>().Update(oldmodel);
+        //    //return new CommonActionResult() { IsSuccess = true, ReturnValue = orderId };
 
-        public CommonActionResult EndAddGameWithdraw(string OrderId, bool IsSuccess)
+        //    var oldModel = DB.CreateQuery<C_Game_Transfer>().Where(p => p.OrderId == orderId).FirstOrDefault();
+        //    if (oldModel == null) throw new LogicException("发生错误，找不到相关订单");
+        //    if (oldModel.Status != (int)FillMoneyStatus.Requesting) throw new LogicException("相关订单已被处理，无需重复操作");
+        //    DB.Begin();
+        //    try
+        //    {
+        //        oldModel.Status = (int)FillMoneyStatus.Success;
+        //        oldModel.UpdateTime = DateTime.Now;
+        //        oldModel.ProviderSerialNo = providerSerialNo;
+        //        DB.GetDal<C_Game_Transfer>().Update(oldModel);
+        //        BusinessHelper.Payin_To_Balance(AccountType.FillMoney, BusinessHelper.FundCategory_GameWithdraw, oldModel.UserId, oldModel.OrderId, oldModel.RequestMoney,
+        //        string.Format("游戏提款成功，金额：{0:N2}元存入账号", oldModel.RequestMoney));
+        //        DB.Commit();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        DB.Rollback();
+        //        throw ex;
+        //    }
+        //    return new CommonActionResult() { IsSuccess = true, ReturnValue = orderId };
+        //}
+
+        public CommonActionResult EndAddGameWithdraw(string OrderId, bool IsSuccess,string providerSerialNo)
         {
             var oldModel = DB.CreateQuery<C_Game_Transfer>().Where(p => p.OrderId == OrderId).FirstOrDefault();
             if (oldModel == null) throw new LogicException("发生错误，找不到相关订单");
@@ -794,6 +815,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 {
                     oldModel.Status = (int)FillMoneyStatus.Success;
                     oldModel.UpdateTime = DateTime.Now;
+                    oldModel.ProviderSerialNo = providerSerialNo;
                     DB.GetDal<C_Game_Transfer>().Update(oldModel);
                     BusinessHelper.Payin_To_Balance(AccountType.FillMoney, BusinessHelper.FundCategory_GameWithdraw, oldModel.UserId, oldModel.OrderId, oldModel.RequestMoney,
                     string.Format("游戏提款成功，金额：{0:N2}元存入账号", oldModel.RequestMoney));
@@ -802,6 +824,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 {
                     oldModel.Status = (int)FillMoneyStatus.Failed;
                     oldModel.UpdateTime = DateTime.Now;
+                    oldModel.ProviderSerialNo = providerSerialNo;
                     DB.GetDal<C_Game_Transfer>().Update(oldModel);
                 }
                 DB.Commit();
@@ -821,21 +844,40 @@ namespace KaSon.FrameWork.ORM.Helper
             return DB.CreateQuery<C_Game_Transfer>().Where(p => p.RequestTime < date && p.Status == 0).ToList();
         }
 
-        /// <summary>
-        /// 第二步把外部订单号存入数据库
-        /// </summary>
-        /// <param name="orderId"></param>
-        /// <param name="userId"></param>
-        /// <param name="providerSerialNo"></param>
-        /// <returns></returns>
-        public CommonActionResult GameRecharge_Step2(string orderId, string userId, string providerSerialNo)
-        {
-            var oldModel = DB.CreateQuery<C_Game_Transfer>().Where(p => p.OrderId == orderId && p.UserId == userId).FirstOrDefault();
-            if (oldModel == null) throw new LogicException("发生错误，找不到相关订单");
-            oldModel.ProviderSerialNo = providerSerialNo;
-            oldModel.UpdateTime = DateTime.Now;
-            DB.GetDal<C_Game_Transfer>().Update(oldModel);
-            return new CommonActionResult() { IsSuccess = true, ReturnValue = orderId };
-        }
+        ///// <summary>
+        ///// 第二步把外部订单号存入数据库
+        ///// </summary>
+        ///// <param name="orderId"></param>
+        ///// <param name="userId"></param>
+        ///// <param name="providerSerialNo"></param>
+        ///// <returns></returns>
+        //public CommonActionResult GameRecharge_Step2(string orderId, string providerSerialNo)
+        //{
+        //    //var oldModel = DB.CreateQuery<C_Game_Transfer>().Where(p => p.OrderId == orderId && p.UserId == userId).FirstOrDefault();
+        //    //if (oldModel == null) throw new LogicException("发生错误，找不到相关订单");
+        //    //oldModel.ProviderSerialNo = providerSerialNo;
+        //    //oldModel.UpdateTime = DateTime.Now;
+        //    //DB.GetDal<C_Game_Transfer>().Update(oldModel);
+        //    //return new CommonActionResult() { IsSuccess = true, ReturnValue = orderId };
+        //    var oldModel = DB.CreateQuery<C_Game_Transfer>().Where(p => p.OrderId == orderId).FirstOrDefault();
+        //    if (oldModel == null) throw new LogicException("发生错误，找不到相关订单");
+        //    if (oldModel.Status != (int)FillMoneyStatus.Requesting) throw new LogicException("相关订单已被处理，无需重复操作");
+        //    DB.Begin();
+        //    try
+        //    {
+        //        oldModel.Status = (int)FillMoneyStatus.Success;
+        //        oldModel.UpdateTime = DateTime.Now;
+        //        oldModel.ProviderSerialNo = providerSerialNo;
+        //        DB.GetDal<C_Game_Transfer>().Update(oldModel);
+        //        BusinessHelper.Payout_Frozen_To_End(BusinessHelper.FundCategory_GameRecharge, oldModel.UserId, orderId, string.Format("游戏充值成功，扣除冻结{1:N2}元", orderId, oldModel.RequestMoney), oldModel.RequestMoney);
+        //        DB.Commit();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        DB.Rollback();
+        //        throw ex;
+        //    }
+        //    return new CommonActionResult() { IsSuccess = true, ReturnValue = orderId };
+        //}
     }
 }

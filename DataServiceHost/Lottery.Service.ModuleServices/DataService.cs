@@ -909,25 +909,25 @@ namespace Lottery.Service.ModuleServices
                 throw new Exception("执行出错", ex);
             }
         }
-        /// <summary>
-        /// 把外部订单号存入数据库
-        /// </summary>
-        /// <returns></returns>
-        public Task<CommonActionResult> GameRecharge_Step2(string orderId, string userId, string providerSerialNo)
-        {
-            try
-            {
-                return Task.FromResult(new DataQuery().GameRecharge_Step2(orderId, userId, providerSerialNo));
-            }
-            catch (LogicException ex)
-            {
-                throw ex;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("执行出错", ex);
-            }
-        }
+        ///// <summary>
+        ///// 把外部订单号存入数据库
+        ///// </summary>
+        ///// <returns></returns>
+        //public Task<CommonActionResult> GameRecharge_Step2(string orderId, string providerSerialNo)
+        //{
+        //    try
+        //    {
+        //        return Task.FromResult(new DataQuery().GameRecharge_Step2(orderId, providerSerialNo));
+        //    }
+        //    catch (LogicException ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception("执行出错", ex);
+        //    }
+        //}
 
         /// <summary>
         /// 充值完成或失败，扣除冻结金额或返还冻结金额
@@ -935,11 +935,11 @@ namespace Lottery.Service.ModuleServices
         /// <param name="OrderId"></param>
         /// <param name="IsSuccess"></param>
         /// <returns></returns>
-        public Task<CommonActionResult> EndFreezeGameRecharge(string orderId, bool isSuccess)
+        public Task<CommonActionResult> EndFreezeGameRecharge(string orderId, bool isSuccess, string providerSerialNo)
         {
             try
             {
-                return Task.FromResult(new DataQuery().EndFreezeGameRecharge(orderId, isSuccess));
+                return Task.FromResult(new DataQuery().EndFreezeGameRecharge(orderId, isSuccess, providerSerialNo));
             }
             catch (LogicException ex)
             {
@@ -991,27 +991,27 @@ namespace Lottery.Service.ModuleServices
             }
         }
 
-        public Task<CommonActionResult> AddGameWithdraw_Step2(string userId, string orderId, string providerSerialNo)
-        {
-            try
-            {
-                return Task.FromResult(new DataQuery().AddGameWithdraw_Step2(userId, orderId, providerSerialNo));
-            }
-            catch (LogicException ex)
-            {
-                throw ex;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("执行出错", ex);
-            }
-        }
+        //public Task<CommonActionResult> AddGameWithdraw_Step2(string orderId, string providerSerialNo)
+        //{
+        //    try
+        //    {
+        //        return Task.FromResult(new DataQuery().AddGameWithdraw_Step2(orderId, providerSerialNo));
+        //    }
+        //    catch (LogicException ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception("执行出错", ex);
+        //    }
+        //}
 
-        public Task<CommonActionResult> EndAddGameWithdraw(string OrderId, bool IsSuccess)
+        public Task<CommonActionResult> EndAddGameWithdraw(string OrderId, bool IsSuccess, string providerSerialNo)
         {
             try
             {
-                return Task.FromResult(new DataQuery().EndAddGameWithdraw(OrderId, IsSuccess));
+                return Task.FromResult(new DataQuery().EndAddGameWithdraw(OrderId, IsSuccess,providerSerialNo));
             }
             catch (LogicException ex)
             {
