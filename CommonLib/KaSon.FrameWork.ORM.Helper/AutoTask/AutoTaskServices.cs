@@ -13,6 +13,7 @@ using EntityModel.Redis;
 using EntityModel;
 using EntityModel.Enum;
 using KaSon.FrameWork.Common.Net;
+using KaSon.FrameWork.Common.Expansion;
 
 namespace KaSon.FrameWork.ORM.Helper.AutoTask
 {
@@ -645,67 +646,137 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
 
         public static async Task GameRechargeRepair()
         {
-            var min = 10;
-            //var OperatorCode = ConfigHelper.AllConfigInfo["GameApi"]["OperatorCode"].ToString();
-            //var SecretKey = ConfigHelper.AllConfigInfo["GameApi"]["SecretKey"].ToString();
-            //var PreName = ConfigHelper.AllConfigInfo["GameApi"]["PreName"].ToString();
-            //var GameUrl = ConfigHelper.AllConfigInfo["GameApi"]["URL"].ToString();
-            //var GamePassWord = ConfigHelper.AllConfigInfo["GameApi"]["GamePassWord"].ToString();
+            var min = 3;
+            var OperatorCode = ConfigHelper.AllConfigInfo["GameApi"]["OperatorCode"].ToString();
+            var SecretKey = ConfigHelper.AllConfigInfo["GameApi"]["SecretKey"].ToString();
+            var PreName = ConfigHelper.AllConfigInfo["GameApi"]["PreName"].ToString();
+            var GameUrl = ConfigHelper.AllConfigInfo["GameApi"]["URL"].ToString();
+            var pwd = ConfigHelper.AllConfigInfo["GameApi"]["GamePassWord"].ToString();
             var dataQuery = new DataQuery();
             while (true)
             {
                 try
                 {
-                    //查找十分钟前未完成的交易
+                    //查找3分钟前未完成的交易
                     var NotFinishGameTransfer = dataQuery.QueryNotFinishGame(min);
-                    if (NotFinishGameTransfer.Count > 0)
+                    var theList = NotFinishGameTransfer.Where(p => p.TransferType == (int)GameTransferType.Recharge).ToList();
+                    if (theList != null && theList.Count > 0)
                     {
-                        foreach (var item in NotFinishGameTransfer)
+                        foreach (var item in theList)
                         {
-                            //var gameLoginName = PreName + item.UserDisplayName;
-                            //var confirmSign = MD5Helper.UpperMD5($"{OperatorCode}&{GamePassWord}&{gameLoginName}&{SecretKey}");
-                            //var confirmParam = JsonHelper.Serialize(new
-                            //{
-                            //    command = "CHECK_TRANSFER_STATUS",
-                            //    gameprovider = "2",
-                            //    sign = confirmSign,
-                            //    @params = new
-                            //    {
-                            //        username = gameLoginName,
-                            //        operatorcode = OperatorCode,
-                            //        password = pwd,
-                            //        serialNo = item.OrderId,
-                            //    }
-                            //});
-                            //var confirmResult = PostManager.HttpPost(GameUrl, confirmParam, "utf-8");
-                            //var jsonConfirmResult = JsonHelper.Decode(confirmResult);
-                            //if (item.TransferType == (int)GameTransferType.Recharge)
-                            //{
-                            //    var IsSuccess = false;
-                            //    if (jsonConfirmResult.ErrorCode == 0)
-                            //    {
-                            //        IsSuccess = true;
-                            //    }
-                            //    dataQuery.EndFreezeGameRecharge(item.OrderId, IsSuccess);
-                            //}
-                            //if (item.TransferType == (int)GameTransferType.Withdraw)
-                            //{
-                            //    var IsSuccess = false;
-                            //    if (jsonConfirmResult.ErrorCode == 0)
-                            //    {
-                            //        IsSuccess = true;
-                            //    }
-                            //    dataQuery.EndAddGameWithdraw(item.OrderId, IsSuccess);
-                            //}
-                            if (item.TransferType == (int)GameTransferType.Recharge)
+                            try
                             {
-                                var IsSuccess = false;
-                                dataQuery.EndFreezeGameRecharge(item.OrderId, IsSuccess, "");
+                                if (string.IsNullOrEmpty(item.ProviderSerialNo))
+                                {
+                                    dataQuery.EndFreezeGameRecharge(item.OrderId, false);
+                                }
+                                else
+                                {
+                                    var gameLoginName = PreName + item.UserId;
+                                    var confirmSign = MD5Helper.UpperMD5($"{OperatorCode}&{pwd}&{item.ProviderSerialNo}&{gameLoginName}&{SecretKey}");
+                                    var confirmParam = new
+                                    {
+                                        command = "CHECK_TRANSFER_STATUS",
+                                        gameprovider = "2",
+                                        sign = confirmSign,
+                                        @params = new
+                                        {
+                                            username = gameLoginName,
+                                            operatorcode = OperatorCode,
+                                            password = pwd,
+                                            serialNo = item.ProviderSerialNo,
+                                        }
+                                    }.ToJson();
+                                    var confirmResult = PostManager.Post(GameUrl, confirmParam, Encoding.UTF8, 45, null, "application/json");
+                                    var jsonConfirmResult = JsonHelper.Decode(confirmResult);
+                                    if (jsonConfirmResult.ErrorCode == 0) //确认
+                                    {
+                                        dataQuery.EndFreezeGameRecharge(item.OrderId, true);
+                                    }
+                                    else
+                                    {
+                                        dataQuery.EndFreezeGameRecharge(item.OrderId, false);
+                                    }
+                                }
+                            }
+                            catch (Exception)
+                            {
+
                             }
                         }
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
+                {
+
+                }
+                await Task.Delay(30000);
+            }
+        }
+
+        public static async Task GameWithdraw()
+        {
+            var min = 3;
+            var OperatorCode = ConfigHelper.AllConfigInfo["GameApi"]["OperatorCode"].ToString();
+            var SecretKey = ConfigHelper.AllConfigInfo["GameApi"]["SecretKey"].ToString();
+            var PreName = ConfigHelper.AllConfigInfo["GameApi"]["PreName"].ToString();
+            var GameUrl = ConfigHelper.AllConfigInfo["GameApi"]["URL"].ToString();
+            var pwd = ConfigHelper.AllConfigInfo["GameApi"]["GamePassWord"].ToString();
+            var dataQuery = new DataQuery();
+            while (true)
+            {
+                try
+                {
+                    //查找3分钟前未完成的交易
+                    var NotFinishGameTransfer = dataQuery.QueryNotFinishGame(min);
+                    var theList = NotFinishGameTransfer.Where(p => p.TransferType == (int)GameTransferType.Withdraw).ToList();
+                    if (theList != null && theList.Count > 0)
+                    {
+                        foreach (var item in theList)
+                        {
+                            try
+                            {
+                                if (string.IsNullOrEmpty(item.ProviderSerialNo))
+                                {
+                                    dataQuery.EndAddGameWithdraw(item.OrderId, false);
+                                }
+                                else
+                                {
+                                    var gameLoginName = PreName + item.UserId;
+                                    var confirmSign = MD5Helper.UpperMD5($"{OperatorCode}&{pwd}&{item.ProviderSerialNo}&{gameLoginName}&{SecretKey}");
+                                    var confirmParam = new
+                                    {
+                                        command = "CHECK_TRANSFER_STATUS",
+                                        gameprovider = "2",
+                                        sign = confirmSign,
+                                        @params = new
+                                        {
+                                            username = gameLoginName,
+                                            operatorcode = OperatorCode,
+                                            password = pwd,
+                                            serialNo = item.ProviderSerialNo,
+                                        }
+                                    }.ToJson();
+                                    var confirmResult = PostManager.Post(GameUrl, confirmParam, Encoding.UTF8, 45, null, "application/json");
+                                    var jsonConfirmResult = JsonHelper.Decode(confirmResult);
+                                    if (jsonConfirmResult.ErrorCode == 0) //确认
+                                    {
+                                        dataQuery.EndAddGameWithdraw(item.OrderId, true);
+                                    }
+                                    else
+                                    {
+                                        dataQuery.EndAddGameWithdraw(item.OrderId, false);
+                                    }
+                                }
+                            }
+                            catch (Exception)
+                            {
+
+                            }
+                        }
+                    }
+                }
+                catch (Exception)
                 {
 
                 }
