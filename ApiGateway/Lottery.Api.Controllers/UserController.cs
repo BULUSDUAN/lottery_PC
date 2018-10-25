@@ -2069,14 +2069,27 @@ namespace Lottery.Api.Controllers
                 string UserId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 param["UserId"] = UserId;
                 param["IPAddress"] = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
-                var unReadCount = await _serviceProxyProvider.Invoke<string>(param, "api/user/LoginGiveRedEnvelopes");
-                return Json(new LotteryServiceResponse
+                var GiveRedEnvelopes = await _serviceProxyProvider.Invoke<bool>(param, "api/user/LoginGiveRedEnvelopes");
+                if (GiveRedEnvelopes)
                 {
-                    Code = ResponseCode.成功,
-                    Message = "每天登录送红包",
-                    MsgId = entity.MsgId,
-                    Value = "每天登录送红包"
-                });
+                    return Json(new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.成功,
+                        Message = "恭喜获取登录红包，请在资金明细，查收",
+                        MsgId = entity.MsgId,
+                        Value = "恭喜获取登录红包，请在资金明细，查收"
+                    });
+                }
+                else
+                {
+                    return Json(new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.成功,
+                        Message = "",
+                        MsgId = entity.MsgId,
+                        Value = ""
+                    });
+                }
             }
             catch (Exception ex)
             {
@@ -2089,5 +2102,7 @@ namespace Lottery.Api.Controllers
                 });
             }
         }
+
     }
+
 }
