@@ -651,7 +651,7 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
             var SecretKey = ConfigHelper.AllConfigInfo["GameApi"]["SecretKey"].ToString();
             var PreName = ConfigHelper.AllConfigInfo["GameApi"]["PreName"].ToString();
             var GameUrl = ConfigHelper.AllConfigInfo["GameApi"]["URL"].ToString();
-            var pwd = ConfigHelper.AllConfigInfo["GameApi"]["GamePassWord"].ToString();
+            var pwd = "DJW7389a9";
             var dataQuery = new DataQuery();
             while (true)
             {
@@ -721,7 +721,7 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
             var SecretKey = ConfigHelper.AllConfigInfo["GameApi"]["SecretKey"].ToString();
             var PreName = ConfigHelper.AllConfigInfo["GameApi"]["PreName"].ToString();
             var GameUrl = ConfigHelper.AllConfigInfo["GameApi"]["URL"].ToString();
-            var pwd = ConfigHelper.AllConfigInfo["GameApi"]["GamePassWord"].ToString();
+            var pwd = "DJW7389a9";
             var dataQuery = new DataQuery();
             while (true)
             {

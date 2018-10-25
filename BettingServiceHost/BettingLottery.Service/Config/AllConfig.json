@@ -66,5 +66,11 @@
     "Token": "16c5413b-276c-45ab-9b0e-9664126f1162"
 
   },
+  "GameApi": {
+    "OperatorCode": "3D6A71F4AFB44EB0AAC28832666197CA",
+    "SecretKey": "5A25DDBC66964BD7BFFB59A30635C2F3",
+    "PreName": "DJW",
+    "URL": "http://api.mtechgame.com/generic"
+  },
   "AutoTask": false
 }
