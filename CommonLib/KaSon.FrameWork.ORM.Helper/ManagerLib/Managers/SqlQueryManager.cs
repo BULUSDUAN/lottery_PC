@@ -137,6 +137,65 @@ namespace KaSon.FrameWork.ORM.Helper
             return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
         }
 
+        public List<Withdraw_QueryInfo> QueryWithdrawList(string userId, WithdrawAgentType? agent, int status, decimal minMoney, decimal maxMoney, DateTime startTime, DateTime endTime, int sortType, int pageIndex, int pageSize, string orderId,
+        out int winCount, out int refusedCount, out decimal totalWinMoney, out decimal totalRefusedMoney, out decimal totalResponseMoney, out int totalCount, out decimal totalMoney)
+        {
+         
+            endTime = endTime.AddDays(1).Date;
+            pageIndex = pageIndex < 0 ? 0 : pageIndex;
+            pageSize = pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : pageSize;
+            int? Agent = (int?)agent;
+            var query = (from r in DB.CreateQuery<C_Withdraw>()
+                         join u in DB.CreateQuery<C_User_Register>() on r.UserId equals u.UserId
+                         where (userId == string.Empty || r.UserId == userId)
+                        && r.RequestTime >= startTime && r.RequestTime < endTime
+                        && (status == -1 || r.Status == status)
+                        && (orderId == string.Empty || r.BankCode == orderId)
+                        && (agent == null || r.WithdrawAgent == Agent)
+                        && (minMoney == -1 || r.RequestMoney >= minMoney)
+                        && (maxMoney == -1 || r.RequestMoney <= maxMoney)
+                         select new { r, u })
+                         .ToList().OrderByDescending(p => p.r.RequestTime).Select(b => new Withdraw_QueryInfo
+                         {
+                             BankCardNumber = ConvertHelper.GetBankCardNumberxxxString(b.r.BankCardNumber),
+                             BankCode = b.r.BankCode,
+                             BankName = b.r.BankName,
+                             BankSubName = b.r.BankSubName,
+                             CityName = b.r.CityName,
+                             OrderId = b.r.OrderId,
+                             ProvinceName = b.r.ProvinceName,
+                             RequestMoney = b.r.RequestMoney,
+                             RequestTime = b.r.RequestTime,
+                             ResponseTime = b.r.ResponseTime,
+                             ResponseMoney = b.r.ResponseMoney,
+                             WithdrawAgent = b.r.WithdrawAgent,
+                             Status = b.r.Status,
+                             ResponseMessage = b.r.ResponseMessage,
+                             RequesterDisplayName = b.u.DisplayName,
+                             RequesterUserKey = b.u.UserId,
+                         });
+            winCount = query.Where(p => p.Status == (int)WithdrawStatus.Success).Count();
+            refusedCount = query.Where(p => p.Status == (int)WithdrawStatus.Refused).Count();
+
+            totalWinMoney = winCount == 0 ? 0M : query.Where(p => p.Status == (int)WithdrawStatus.Success).Sum(p => p.RequestMoney);
+            totalRefusedMoney = refusedCount == 0 ? 0M : query.Where(p => p.Status == (int)WithdrawStatus.Refused).Sum(p => p.RequestMoney);
+            totalCount = query.Count();
+            totalMoney = query.Count() == 0 ? 0M : query.Sum(p => p.RequestMoney);
+            totalResponseMoney = winCount == 0 ? 0M : query.Where(p => p.ResponseMoney.HasValue == true).Sum(p => p.ResponseMoney.Value);
+
+            if (sortType == -1)
+                query = query.OrderBy(p => p.RequestTime);
+            if (sortType == 0)
+                query = query.OrderBy(p => p.RequestMoney);
+            if (sortType == 1)
+                query = query.OrderByDescending(p => p.RequestMoney);
+
+            if (pageSize == -1)
+                return query.ToList();
+            return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+        }
+
+
         public BettingOrderInfo QueryOrderDetailBySchemeId(string schemeId)
         {
           

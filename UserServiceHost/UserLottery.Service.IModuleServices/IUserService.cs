@@ -179,5 +179,7 @@ namespace UserLottery.Service.IModuleServices
 
         [Service(Date = "2018-10-19", Director = "renjun", Name = "同一IP，一定时间内的注册次数")]
         Task<int> GetTodayRegisterCount(DateTime date, string localIP);
+        [Service(Date = "2018-10-24", Director = "renjun", Name = "PC端账户提款")]
+        Task<Withdraw_QueryInfoCollection> QueryMyWithdrawList(int status, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string UserId);
     }
 }

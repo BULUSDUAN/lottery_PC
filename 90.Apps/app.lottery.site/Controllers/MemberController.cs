@@ -37,6 +37,7 @@ using log4net;
 using Kason.Sg.Core.ProxyGenerator;
 using Kason.Sg.Core.CPlatform.Runtime.Client.Address.Resolvers;
 using EntityModel.RequestModel;
+using EntityModel;
 
 namespace app.lottery.site.Controllers
 {
@@ -292,6 +293,8 @@ namespace app.lottery.site.Controllers
             ViewBag.GameType = string.IsNullOrEmpty(Request["gametype"]) ? "" : Request["gametype"];
             ViewBag.pageIndex = string.IsNullOrEmpty(Request["pageIndex"]) ? 0 : int.Parse(Request["pageIndex"]);
             ViewBag.PageSize = string.IsNullOrEmpty(Request["pageSize"]) ? 10 : int.Parse(Request["pageSize"]);
+
+
             ViewBag.FollowList = WCFClients.GameClient.QueryUserFollowRuleByCreater(ViewBag.GameCode, ViewBag.GameType, ViewBag.pageIndex, ViewBag.PageSize, UserToken);
             return View();
         }
@@ -389,7 +392,7 @@ namespace app.lottery.site.Controllers
 
         #region 我的投注
 
-        public ActionResult betorder()
+        public async Task<ActionResult> betorder()
         {
             var beginDate = string.IsNullOrEmpty(Request["begin"]) ? DateTime.Today.AddMonths(-1) : DateTime.Parse(Request["begin"]);
             var endDate = string.IsNullOrEmpty(Request["end"]) ? DateTime.Today : DateTime.Parse(Request["end"]);
@@ -405,11 +408,14 @@ namespace app.lottery.site.Controllers
             ViewBag.CurrentUser = CurrentUser;
             ViewBag.Begin = beginDate;
             ViewBag.End = endDate;
-            ViewBag.Orders = WCFClients.GameQueryClient.QueryMyBettingOrderList(ViewBag.BonusStatus, ViewBag.GameCode, ViewBag.Begin, ViewBag.End, ViewBag.pageNo, ViewBag.PageSize, UserToken);
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            var Model = new QueryMyBettingOrderParam() { UserID = UserToken, startTime = beginDate, endTime = endDate, pageIndex = ViewBag.pageNo, pageSize = ViewBag.PageSize, bonusStatus = ViewBag.BonusStatus, gameCode = ViewBag.GameCode };
+            param["Model"] = Model;
+            ViewBag.Orders = await serviceProxyProvider.Invoke<EntityModel.CoreModel.MyBettingOrderInfoCollection>(param, "api/Order/QueryMyBettingOrderList");
             return View();
         }
 
-        public ActionResult myCreateTogether()
+        public async Task<ActionResult> myCreateTogether()
         {
             var beginDate = string.IsNullOrEmpty(Request["begin"]) ? DateTime.Today.AddMonths(-1) : DateTime.Parse(Request["begin"]);
             var endDate = string.IsNullOrEmpty(Request["end"]) ? DateTime.Today : DateTime.Parse(Request["end"]);
@@ -425,13 +431,17 @@ namespace app.lottery.site.Controllers
             ViewBag.Begin = beginDate;
             ViewBag.End = endDate;
 
-            ViewBag.CreateTogegher = WCFClients.GameQueryClient.QueryCreateTogetherOrderListByUserId(this.CurrentUser.LoginInfo.UserId, null, ViewBag.GameCode, ViewBag.Begin, ViewBag.End, ViewBag.pageNo, ViewBag.PageSize);
-
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            var Model = new QueryCreateTogetherOrderParam() { userId = this.CurrentUser.LoginInfo.UserId, startTime = ViewBag.Begin, endTime = ViewBag.End, gameCode = ViewBag.GameCode, pageIndex = ViewBag.pageNo, pageSize = ViewBag.PageSize, bonus = null };
+            param["Model"] = Model;
+            //发起的合买
+            ViewBag.CreateTogegher = await serviceProxyProvider.Invoke<EntityModel.CoreModel.TogetherOrderInfoCollection>(param, "api/Order/QueryCreateTogetherOrderListByUserId");
             return View();
         }
 
-        public ActionResult myJoinTogether()
+        public async Task<ActionResult> myJoinTogether()
         {
+
             var beginDate = string.IsNullOrEmpty(Request["begin"]) ? DateTime.Today.AddMonths(-1) : DateTime.Parse(Request["begin"]);
             var endDate = string.IsNullOrEmpty(Request["end"]) ? DateTime.Today : DateTime.Parse(Request["end"]);
             if ((endDate - beginDate).TotalDays > 30)
@@ -445,8 +455,11 @@ namespace app.lottery.site.Controllers
             ViewBag.GameCode = string.IsNullOrEmpty(Request["gameCode"]) ? string.Empty : Request["gameCode"];
             ViewBag.Begin = beginDate;
             ViewBag.End = endDate;
-
-            ViewBag.JoinTogether = WCFClients.GameQueryClient.QueryJoinTogetherOrderListByUserId(this.CurrentUser.LoginInfo.UserId, null, ViewBag.GameCode, ViewBag.Begin, ViewBag.End, ViewBag.pageNo, ViewBag.PageSize);
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            var Model = new QueryCreateTogetherOrderParam() { pageIndex = ViewBag.pageNo, pageSize = ViewBag.PageSize, gameCode = ViewBag.GameCode, userId = this.CurrentUser.LoginInfo.UserId, startTime = ViewBag.Begin, endTime = ViewBag.End, bonus = null };
+            param["Model"] = Model;
+            //参与的合买
+            ViewBag.JoinTogether = await serviceProxyProvider.Invoke<EntityModel.CoreModel.TogetherOrderInfoCollection>(param, "api/Order/QueryJoinTogetherOrderListByUserId");
             return View();
         }
 
@@ -540,7 +553,7 @@ namespace app.lottery.site.Controllers
         #endregion
 
         #region 我的追号
-        public ActionResult chaseorder()
+        public async Task<ActionResult> chaseorder()
         {
             var beginDate = string.IsNullOrEmpty(Request["begin"]) ? DateTime.Today.AddMonths(-1) : DateTime.Parse(Request["begin"]);
             var endDate = string.IsNullOrEmpty(Request["end"]) ? DateTime.Today : DateTime.Parse(Request["end"]);
@@ -556,8 +569,18 @@ namespace app.lottery.site.Controllers
             ViewBag.CurrentUser = CurrentUser;
             ViewBag.Begin = beginDate;
             ViewBag.End = endDate;
-            ViewBag.Orders = WCFClients.GameQueryClient.QueryMyChaseOrderList(ViewBag.GameCode, ViewBag.Begin, ViewBag.End, ViewBag.pageNo, ViewBag.PageSize, UserToken);
 
+            Dictionary<string, object> param = new Dictionary<string, object>()
+                {
+                    {"gameCode",ViewBag.GameCode },
+                    { "startTime",ViewBag.Begin},
+                    { "endTime",ViewBag.End},
+                    { "pageIndex",ViewBag.pageNo},
+                    { "pageSize",ViewBag.PageSize },
+                    { "userId",UserToken },
+                    { "ProgressStatusType",0 }
+                };
+            var result = await serviceProxyProvider.Invoke<EntityModel.CoreModel.BettingOrderInfoCollection>(param, "api/Order/QueryMyChaseOrderList");
             return View();
         }
         #endregion
@@ -632,7 +655,7 @@ namespace app.lottery.site.Controllers
             return View();
         }
         //提款验证页面
-        public ActionResult Fetchvalidate()
+        public async Task<ActionResult> Fetchvalidate()
         {
             var bkUrl = string.IsNullOrEmpty(Request.Form["backurl"]) ? "/member/fetch_bank" : Request.Form["backurl"];
             try
@@ -653,8 +676,11 @@ namespace app.lottery.site.Controllers
                 if (money.IndexOf(".") > 0)
                     throw new Exception("提款金额不能为小数");
                 //最小金额
-                var minmoney = WCFClients.GameClient.QueryCoreConfigByKey("Site.Financial.MinWithDrwaMoney").ConfigValue;
-                PreconditionAssert.IsTrue(ViewBag.Money >= int.Parse(minmoney), "提款金额不能小于" + minmoney + "元");
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["key"] = "Site.Financial.MinWithDrwaMoney";
+
+                var minmoney = await serviceProxyProvider.Invoke<C_Core_Config>(param, "api/user/QueryCoreConfigByKey");
+                PreconditionAssert.IsTrue(ViewBag.Money >= int.Parse(minmoney.ConfigValue), "提款金额不能小于" + minmoney.ConfigValue + "元");
 
                 ViewBag.FetchAccont = string.Empty;
                 switch ((string)ViewBag.FetchType)
@@ -672,16 +698,12 @@ namespace app.lottery.site.Controllers
                         ViewBag.FetchAccont = CurrentUser.BankCardInfo.BankCardNumber;
                         break;
                 }
-                ViewBag.RequestWithdraw_1 = WCFClients.GameFundClient.RequestWithdraw_Step1(CurrentUser.LoginInfo.UserId, decimal.Parse(money));
 
-                //var result = WCFClients.GameFundClient.ValidateWithdraw(CurrentUser.MobileInfo.Mobile, UserToken);
+                param.Clear();
+                param["userId"] = CurrentUser.LoginInfo.UserId;
+                param["requestMoney"] = decimal.Parse(money);
+                ViewBag.RequestWithdraw_1 = await serviceProxyProvider.Invoke<EntityModel.CoreModel.CheckWithdrawResult>(param, "api/user/RequestWithdraw_Step1");
 
-                //if (result.IsSuccess)
-                //{
-                //    string code = result.ReturnValue;
-                //    string msgContent = "您本次提现校验码：" + code;
-                //    var smsResult = SMSSenderFactory.SendSMS(CurrentUser.MobileInfo.Mobile, msgContent);
-                //}
             }
             catch (Exception ex)
             {
@@ -692,7 +714,7 @@ namespace app.lottery.site.Controllers
         }
 
         //提款提交结果页
-        public ActionResult Fetchsubmit()
+        public async Task<ActionResult> Fetchsubmit()
         {
             ViewBag.CurrentUser = CurrentUser;
             ViewBag.CurrentUserBalance = CurrentUserBalance;
@@ -719,7 +741,7 @@ namespace app.lottery.site.Controllers
                 PreconditionAssert.IsTrue(ViewBag.Money >= 10, "提款金额不能小于10元");
                 //var validateCode = PreconditionAssert.IsNotEmptyString(Request.Form["validatecode"], "提款校验码不能为空");
                 var balancepwd = Request["balancepwd"];
-                Withdraw_RequestInfo withdrawinfo = new Withdraw_RequestInfo();
+                EntityModel.CoreModel.Withdraw_RequestInfo withdrawinfo = new EntityModel.CoreModel.Withdraw_RequestInfo();
 
                 switch ((string)ViewBag.FetchType)
                 {
@@ -733,7 +755,7 @@ namespace app.lottery.site.Controllers
                         withdrawinfo.BankCode = "Alipay";
                         withdrawinfo.BankName = "支付宝";
                         withdrawinfo.RequestMoney = ViewBag.Money;
-                        withdrawinfo.WithdrawAgent = WithdrawAgentType.Alipay;
+                        withdrawinfo.WithdrawAgent = EntityModel.Enum.WithdrawAgentType.Alipay;
                         break;
                     case "bank":
                         ViewBag.FetchAccount = CurrentUser.BankCardInfo.BankCardNumber;
@@ -745,13 +767,17 @@ namespace app.lottery.site.Controllers
                         withdrawinfo.ProvinceName = CurrentUser.BankCardInfo.ProvinceName;
                         withdrawinfo.RequestMoney = ViewBag.Money;
                         withdrawinfo.userRealName = CurrentUser.RealNameInfo.RealName;
-                        withdrawinfo.WithdrawAgent = WithdrawAgentType.BankCard;
+                        withdrawinfo.WithdrawAgent = EntityModel.Enum.WithdrawAgentType.BankCard;
                         break;
                     default:
                         throw new Exception("未知提款类型");
                 }
 
-                var result = WCFClients.GameFundClient.RequestWithdraw_Step2(withdrawinfo, CurrentUser.LoginInfo.UserId, balancepwd);
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["info"] = withdrawinfo;
+                param["userId"] = CurrentUser.LoginInfo.UserId;
+                param["balancepwd"] = balancepwd;
+                var result = await serviceProxyProvider.Invoke<EntityModel.Communication.CommonActionResult>(param, "api/user/RequestWithdraw_Step2");
                 //提款成功给财务人员发送短信
                 //if (money >= decimal.Parse(WithdrawMoney))
                 //{
@@ -1153,12 +1179,16 @@ namespace app.lottery.site.Controllers
         /// 我的投诉建议
         /// </summary>
         /// <returns></returns>
-        public ActionResult Mysuggestions()
+        public async Task<ActionResult> Mysuggestions()
         {
 
             ViewBag.PageIndex = string.IsNullOrEmpty(Request["pageIndex"]) ? 0 : int.Parse(Request["pageIndex"]);
             ViewBag.PageSize = string.IsNullOrEmpty(Request["pageSize"]) ? 30 : int.Parse(Request["pageSize"]);
-            ViewBag.UserIdea = WCFClients.ExternalClient.QueryMyUserIdeaList(ViewBag.PageIndex, ViewBag.PageSize, UserToken);
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            param["pageIndex"] = ViewBag.PageIndex;
+            param["pageSize"] = ViewBag.PageSize;
+            param["UserId"] = UserToken;
+            ViewBag.UserIdea = await serviceProxyProvider.Invoke<EntityModel.CoreModel.UserIdeaInfo_QueryCollection>(param, "api/user/QueryMyUserIdeaList");
             return View();
         }
 
@@ -3776,7 +3806,7 @@ namespace app.lottery.site.Controllers
         /// 提款记录（全部状态）
         /// </summary>
         /// <returns></returns>
-        public ActionResult DrawingsRecordAll()
+        public async Task<ActionResult> DrawingsRecordAll()
         {
             try
             {
@@ -3784,13 +3814,22 @@ namespace app.lottery.site.Controllers
                 ViewBag.End = string.IsNullOrEmpty(Request.QueryString["end"]) ? DateTime.Today : DateTime.Parse(Request.QueryString["end"]);
                 ViewBag.pageNo = string.IsNullOrEmpty(Request.QueryString["pageNo"]) ? 0 : int.Parse(Request.QueryString["pageNo"]);
                 ViewBag.PageSize = string.IsNullOrEmpty(Request.QueryString["pageSize"]) ? 10 : int.Parse(Request.QueryString["pageSize"]);
-                ViewBag.Status = string.IsNullOrEmpty(Request.QueryString["status"]) ? null : (WithdrawStatus?)int.Parse(Request.QueryString["status"]);
+                ViewBag.Status = string.IsNullOrEmpty(Request.QueryString["status"]) ? null : (EntityModel.Enum.WithdrawStatus?)int.Parse(Request.QueryString["status"]);
                 ViewBag.CurrentUser = CurrentUser;
                 ViewBag.CurrentUserBalance = CurrentUserBalance;
                 var beginTime = ViewBag.Begin;
                 if (beginTime < DateTime.Now.AddMonths(-1))
                     ViewBag.Begin = DateTime.Now.AddMonths(-1);
-                ViewBag.WithdrawList = WCFClients.GameFundClient.QueryMyWithdrawList(ViewBag.Status, ViewBag.Begin, ViewBag.End.AddDays(1), ViewBag.pageNo, ViewBag.PageSize, UserToken);
+
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["status"] = ViewBag.Status;
+                param["startTime"] = ViewBag.Begin;
+                param["endTime"] = ViewBag.End.AddDays(1);
+                param["pageIndex"] = ViewBag.pageNo;
+                param["pageSize"] = ViewBag.PageSize;
+                param["UserId"] = UserToken;
+
+                ViewBag.WithdrawList = await serviceProxyProvider.Invoke<EntityModel.CoreModel.Withdraw_QueryInfoCollection>(param, "api/user/QueryMyWithdrawList");
             }
             catch (Exception)
             {

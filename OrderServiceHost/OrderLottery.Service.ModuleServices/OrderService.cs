@@ -54,8 +54,8 @@ namespace OrderLottery.Service.ModuleServices
         /// 查询我的资金明细
         /// </summary>
         /// <param name="Model"></param>
-        /// <returns></returns>
-        public Task<UserFundDetailCollection> QueryMyFundDetailList(QueryUserFundDetailParam Model)
+        public Task<UserFundDetailCollection> QueryMyFundDetailList(QueryUserFundDetailParam Model)        /// <returns></returns>
+
         {
             return Task.FromResult(_order.QueryMyFundDetailList(Model));
         }

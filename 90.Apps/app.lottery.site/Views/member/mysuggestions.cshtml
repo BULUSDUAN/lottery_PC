@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = "我的意见建议 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
     ViewBag.keywords = "我的意见建议, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
-    var UserIdea = ViewBag.UserIdea as UserIdeaInfo_QueryCollection;
+    var UserIdea = ViewBag.UserIdea as EntityModel.CoreModel.UserIdeaInfo_QueryCollection;
 }
 @section css{
     @UserHelper.css("mycenter.css")

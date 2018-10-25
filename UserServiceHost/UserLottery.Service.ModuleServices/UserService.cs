@@ -1466,6 +1466,28 @@ namespace UserLottery.Service.ModuleServices
             }
         }
 
+        /// <summary>
+        /// PC端账户提款
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="startTime"></param>
+        /// <param name="endTime"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="UserId"></param>
+        /// <returns></returns>
+        public Task<Withdraw_QueryInfoCollection> QueryMyWithdrawList(int status, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string UserId)
+        {
+
+            try
+            {
+                return Task.FromResult(new FundBusiness().QueryWithdrawList(UserId, null, status, -1, -1, startTime, endTime, -1, pageIndex, pageSize));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询我的提现记录列表 - " + ex.Message, ex);
+            }
+        }
 
         /// <summary>
         /// 查询银行卡
