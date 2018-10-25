@@ -148,15 +148,16 @@ namespace UserLottery.Service.ModuleServices
 
         }
 
-        public Task<string> LoginGiveRedEnvelopes(string UserId,string IPAddress)
+        public Task<bool> LoginGiveRedEnvelopes(string UserId,string IPAddress)
         {
             try
             {
+                LocalLoginBusiness login = new LocalLoginBusiness();
+                var boolRedEnvelopes= login.User_AfterLogin(UserId, "LOCAL", IPAddress, DateTime.Now);
                 BusinessHelper.ExecPlugin<IUser_AfterLogin>(new object[] { UserId, "LOCAL", IPAddress, DateTime.Now });
                 //刷新用户在Redis中的余额
                 BusinessHelper.RefreshRedisUserBalance(UserId);
-
-                return Task.FromResult("每天登录送红包");
+                return Task.FromResult(boolRedEnvelopes);
             }
             catch (Exception ex)
             {
