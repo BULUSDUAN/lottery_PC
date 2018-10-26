@@ -23,6 +23,6 @@ namespace EntityModel
         /// </summary>
         public string ParentPath { get; set; }
 
-        public bool IsSelect { get; set; }
+        public int SelectType { get; set; }
     }
 }

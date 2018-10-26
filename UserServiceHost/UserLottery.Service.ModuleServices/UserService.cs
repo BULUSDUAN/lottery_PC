@@ -1914,5 +1914,22 @@ namespace UserLottery.Service.ModuleServices
             var count = loginBiz.GetTodayRegisterCount(date, localIP);
             return Task.FromResult(count);
         }
+        public Task<bool> LoginGiveRedEnvelopes(string UserId, string IPAddress)
+        {
+            try
+            {
+                LocalLoginBusiness login = new LocalLoginBusiness();
+                var boolRedEnvelopes = login.User_AfterLogin(UserId, "LOCAL", IPAddress, DateTime.Now);
+                BusinessHelper.ExecPlugin<IUser_AfterLogin>(new object[] { UserId, "LOCAL", IPAddress, DateTime.Now });
+                //刷新用户在Redis中的余额
+                BusinessHelper.RefreshRedisUserBalance(UserId);
+                return Task.FromResult(boolRedEnvelopes);
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message, ex);
+            }
+        }
     }
 }

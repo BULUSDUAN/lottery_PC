@@ -1016,8 +1016,7 @@ namespace Lottery.AdminApi.Controllers
                     status.HasValue ? ((int)status.Value).ToString() : "",
                     schemeSource.HasValue ? ((int)schemeSource.Value).ToString() : "",
                     ViewBag.StartTime, ViewBag.EndTime,
-                    ViewBag.PageIndex, ViewBag.PageSize, ViewBag.OrderId,
-                    CurrentUser.UserToken);
+                    ViewBag.PageIndex, ViewBag.PageSize, ViewBag.OrderId);
                 return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Value = new { UserQueryInfo = info, FillDetail } });
             }
             catch (Exception ex)
@@ -1487,19 +1486,283 @@ namespace Lottery.AdminApi.Controllers
                 string[] arrs = orderIds.Split(',');
                 if (arrs.Length == 0)
                 {
-                    return Json(new { IsSuccess = false, Msg = "请勾选订单编号" });
+                    return Json(new LotteryServiceResponse(){ Code=AdminResponseCode.成功, Message = "请勾选订单编号" });
                 }
                 foreach (var item in arrs)
                 {
                     var result = _service.RefusedWithdraw(item, "第三方打款失败，请稍候再重新申请", CurrentUser.UserToken);
-
                 }
-                return Json(new { IsSuccess = true, Msg = "" });
+                return Json(new LotteryServiceResponse (){ Code=AdminResponseCode.成功, Message = "" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse (){ Code=AdminResponseCode.失败, Message = ex.Message });
+            }
+        }
+        /// <summary>
+        /// 发送站内信
+        /// </summary>
+        public ActionResult SiteMessage()
+        {
+            try
+            {
+                if (!CheckRights("U103"))
+                    throw new Exception("对不起，您的权限不足！");
+                var Role = _service.GetSystemRoleCollection(CurrentUser.UserToken);
+
+                return Json(new LotteryServiceResponse() {Code=AdminResponseCode.成功,Value=Role });
+            }
+            catch (Exception ex)
+            {
+                return JsonEx(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
+            }
+        }
+        /// <summary>
+        /// 发送站内信
+        /// </summary>
+        public JsonResult SendLetter(LotteryServiceRequest entity)
+        {
+            if (!CheckRights("FSXX100"))
+            {
+                throw new LogicException("对不起,您的权限不足!");
+            }
+            var p = JsonHelper.Decode(entity.Param);
+            InnerMailInfo_Send sendMail = new InnerMailInfo_Send();
+            try
+            {
+                sendMail.ActionTime = null;
+                sendMail.Content = PreconditionAssert.IsNotEmptyString((string)p.content, "内容不能为空！");
+                sendMail.Title = PreconditionAssert.IsNotEmptyString((string)p.title, "标题不能为空！");
+                string userid = (string)p.userid;
+                if (!string.IsNullOrEmpty(userid))
+                {
+                    #region 
+                    string userId = "";
+                    if (userid.Split(',').Length > 0)
+                    {
+                        for (int i = 0; i < userid.Split(',').Length; i++)
+                        {
+                            userId += userid.Split(',')[i] + "|";
+                        }
+                        sendMail.Receivers = userId.TrimEnd('|');
+                    }
+                    else
+                    {
+                        sendMail.Receivers = Request.Form["userid"];
+                    }
+                    var sendResult = _service.SendInnerMail(sendMail, CurrentUser.UserToken);
+                    return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Message = sendResult.Message });
+                    #endregion
+                }
+                else
+                {
+                    sendMail.Receivers = PreconditionAssert.IsNotEmptyString(Request.Form["receivers"], "发信对象不能为空！");
+                    var userIds = _service.QueryUserIdByRoleId(sendMail.Receivers);
+                    if (!string.IsNullOrEmpty(userIds))
+                    {
+                        var arrUserIds = userIds.Split('|');
+                        int count = arrUserIds.Length;
+                        if (arrUserIds.Length % 500 > 0) count++;
+                        for (int i = 0; i < count; i++)
+                        {
+                            var temp = arrUserIds.Skip(i * 500).Take(500);
+                            sendMail.Receivers = string.Join("|", temp);
+                            var sendResult = _service.SendInnerMail(sendMail, CurrentUser.UserToken);
+                        }
+                    }
+                    return Json(new LotteryServiceResponse(){ Code = AdminResponseCode.成功, Message = "发送站内信成功" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse{ Code = AdminResponseCode.失败, Message = ex.Message });
+            }
+        }
+        public ActionResult SiteNoticeManager()
+        {
+            if (!CheckRights("WZTZGL"))
+                throw new Exception("对不起，您的权限不足！");
+            var SiteMessageTags = _service.QuerySiteMessageTags();
+            var ConfigList = _service.QuerySiteNoticeConfig();
+            return View();
+        }
+        public JsonResult UpdateSiteNotice(LotteryServiceRequest entity)
+        {
+            try
+            {
+                if (!CheckRights("WZTZGL_XG"))
+                {
+                    throw new LogicException("对不起,您的权限不足!");
+                }
+                var p = JsonHelper.Decode(entity.Param);
+                var key = (string)p.key.ToString();
+                var category = (SiteMessageCategory)int.Parse((string)p.category);
+                var tempTitle = (string)p.tempTitle;
+                var tempContent = (string)p.tempContent;
+
+                var result = _service.UpdateSiteNotice(key, category, tempTitle, tempContent);
+
+                return Json(new LotteryServiceResponse(){ Code = result.IsSuccess?AdminResponseCode.成功:AdminResponseCode.失败, Message = result.Message });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse(){ Code = AdminResponseCode.失败, Message = ex.Message });
+            }
+        }
+        public ActionResult SMSSendRecordLog(LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                var UserId = (string)p.userId;
+                var MobileNumber = (string)p.mobileNumber;
+                var Status = (string)p.status;
+
+                var StartTime = string.IsNullOrEmpty((string)p.startTime) ? DateTime.Today : Convert.ToDateTime((string)p.startTime);
+                var EndTime = string.IsNullOrEmpty((string)p.endTime) ? DateTime.Today.AddDays(1) : Convert.ToDateTime((string)p.endTime);
+                var PageIndex = string.IsNullOrEmpty((string)p.pageIndex) ? base.PageIndex : int.Parse((string)p.pageIndex);
+                var PageSize = string.IsNullOrEmpty((string)p.pageSize) ? base.PageSize : int.Parse((string)p.pageSize);
+                var List = _service.QuerySMSSendRecordList(UserId, MobileNumber, StartTime, EndTime, Status, PageIndex, PageSize);
+                _service.AddSysOperationLog((string)p.userId, this.CurrentUser.UserId, "查询短信发送记录", string.Format("操作员【{0}】查询手机号【{1}】的查询短信发送记录", this.CurrentUser.UserId, (string)p.mobileNumber));
+                return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Value = List });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
+            }
+        }
+
+        public JsonResult RepeatSMS(LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                var userId = (string)p.userId;
+                var mobileNumber = (string)p.mobileNumber;
+                var content = (string)p.content;
+                var result = _service.SendSMS(mobileNumber, content, userId);
+                return Json(new LotteryServiceResponse(){ Code = result.IsSuccess?AdminResponseCode.成功:AdminResponseCode.失败, Message = result.Message });
             }
             catch (Exception ex)
             {
                 return Json(new { IsSuccess = false, Msg = ex.Message });
             }
+        }
+        /// <summary>
+        /// 用户手机校验码管理
+        /// </summary>
+        public ActionResult ValidateCode(LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                if (!string.IsNullOrWhiteSpace((string)p.mobile))
+                {
+                    var Mobile = (string)p.mobile;
+                    var ValidationMobile = _service.QueryValidationMobileByMobile(Mobile, CurrentUser.UserToken);
+                    _service.AddSysOperationLog((string)p.mobile, CurrentUser.UserId, "查询手机验证码", string.Format("操作员【{0}】查询手机号【{1}】的验证码", CurrentUser.UserId, (string)p.mobile));
+                    return Json(new LotteryServiceResponse() {Code=AdminResponseCode.成功,Value=ValidationMobile });
+                }
+                else
+                {
+                    if (!string.IsNullOrWhiteSpace((string)p.userKey))
+                    {
+                        var UserKey = string.IsNullOrWhiteSpace((string)p.userKey) ? "" : (string)p.userKey;
+                        var Mobile = (string)p.mobile;
+                        var ValidationMobile = _service.QueryValidationMobileByMobile(Mobile, CurrentUser.UserToken);
+                        return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Value = ValidationMobile });
+                    }
+                    else
+                    {
+                        return Json(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = "userKey为空" });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return JsonEx(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
+            }
+        }
+        public JsonResult DoSendSMS(LotteryServiceRequest entity)
+        {
+            try
+            {
+                if (!CheckRights("PLFSDX100"))
+                {
+                    throw new LogicException("对不起,您的权限不足!");
+                }
+                var p = JsonHelper.Decode(entity.Param);
+                var content = (string)p.Content;
+                var mobileString = (string)p.Mobile;
+                var mobileArray = mobileString.Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+                var errorList = new List<string>();
+                foreach (var item in mobileArray)
+                {
+                    try
+                    {
+                        var result = _service.SendSMS(item, content, "");
+                    }
+                    catch (Exception ex)
+                    {
+                        errorList.Add(item);
+                    }
+                }
+                return Json(new LotteryServiceResponse(){ Code=AdminResponseCode.成功, Message = string.Format("发送成功{0}条，失败{1}条，失败手机号为：{2}", mobileArray.Length - errorList.Count, errorList.Count, string.Join(",", errorList.ToArray())) });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse(){ Code = AdminResponseCode.成功, Message = ex.Message });
+            }
+        }
+        public JsonResult DoAgent(LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                var txt_userId = (string)p.txt_userId;
+                var txt_oCAgentCategory = (OCAgentCategory)Convert.ToInt32((string)p.txt_oCAgentCategory);
+                var txt_superiorUserId = string.Empty;
+                if (txt_oCAgentCategory != OCAgentCategory.Company)
+                {
+                    txt_superiorUserId = (string)p.txt_superiorUserId;
+                }
+                var result = _service.AddOCAgent(txt_oCAgentCategory, txt_superiorUserId, txt_userId, CPSMode.PayRebate, "");
+                return Json(new LotteryServiceResponse(){ Code = result.IsSuccess?AdminResponseCode.成功:AdminResponseCode.失败, Message = result.Message });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse(){ Code = AdminResponseCode.失败, Message = ex.Message });
+            }
+        }
+        public JsonResult DoTogetherHotUser(LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                var txt_userId = (string)p.txt_userId;
+                var result = _service.AddTogetherHotUser(txt_userId);
+                _service.AddSysOperationLog(txt_userId, CurrentUser.UserId, "添加红人", "操作员【" + CurrentUser.LoginName + "】添加红人,用户" + txt_userId + "被添加为红人,执行结果:" + result.Message);
+                return Json(new LotteryServiceResponse(){ Code = result.IsSuccess?AdminResponseCode.成功:AdminResponseCode.失败, Message = result.Message });
+            }
+            catch (Exception ex)
+            {
+                return JsonEx(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
+            }
+        }
+        public JsonResult DeleteTogetherHotUser(LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                string txt_userId = Convert.ToString(PreconditionAssert.IsNotEmptyString((string)p.userId, "处理用户ID异常"));
+                var result = _service.DeleteTogetherHotUser(txt_userId);
+                return Json(new LotteryServiceResponse() { Code = result.IsSuccess ? AdminResponseCode.成功 : AdminResponseCode.失败, Message = result.Message });
+            }
+            catch (Exception ex)
+            {
+                return JsonEx(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
+            }
+
         }
     }
 }

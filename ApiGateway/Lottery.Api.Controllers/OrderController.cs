@@ -795,7 +795,7 @@ namespace Lottery.Api.Controllers
                             StrOrderStateName = ConvertHelper.GetOrderStatusName(item.SchemeType, item.ProgressStatus, item.TicketStatus, item.BonusStatus, true, true, false),
                             TotalMoney = item.TotalMoney,
                             CreateTime = item.CreateTime,
-                            JoinMoney=item.JoinMoney
+                            JoinMoney = item.JoinMoney
                         });
                     }
                 }
@@ -828,7 +828,7 @@ namespace Lottery.Api.Controllers
                             StrOrderStateName = ConvertHelper.GetOrderStatusName(item.SchemeType, item.ProgressStatus, item.TicketStatus, item.BonusStatus, true, true, false),
                             TotalMoney = item.TotalMoney,
                             CreateTime = item.CreateTime,
-                            JoinMoney=item.JoinMoney
+                            JoinMoney = item.JoinMoney
                         });
                     }
                 }
@@ -1238,7 +1238,7 @@ namespace Lottery.Api.Controllers
                 {"schemeId",schemeId }
             };
                 var schemeInfo = await _serviceProxyProvider.Invoke<Sports_TogetherSchemeQueryInfo>(param, "api/Order/QuerySportsTogetherDetail");
-                
+
                 string userid = string.Empty;
                 //var userInfo = new LoginInfo();
                 var flag = false;
@@ -1264,7 +1264,15 @@ namespace Lottery.Api.Controllers
                     codeList = await GetCodeList_GSAPP(_serviceProxyProvider, anteCodeList, schemeInfo.GameCode, schemeInfo.Amount);
 
                 }
-
+                var userDisplayName = "";
+                if (userid == schemeInfo.CreateUserId)
+                {
+                    userDisplayName = schemeInfo.CreaterDisplayName;
+                }
+                else
+                {
+                    userDisplayName = ConvertHelper.HideByCount(schemeInfo.CreaterDisplayName, schemeInfo.CreaterHideDisplayNameCount);
+                }
                 var result = new
                 {
                     SchemeId = schemeInfo.SchemeId,
@@ -1273,7 +1281,7 @@ namespace Lottery.Api.Controllers
                     GameType = schemeInfo.GameType,
                     GameTypeDisplayName = BettingHelper.GetGameTypeDisplayName(schemeInfo.GameTypeDisplayName),
                     UserId = schemeInfo.CreateUserId,
-                    UserDisplayName = schemeInfo.CreaterDisplayName,
+                    UserDisplayName = userDisplayName,
                     HideDisplayNameCount = schemeInfo.CreaterHideDisplayNameCount,
                     MatchCount = schemeInfo.TotalMatchCount,
                     PlayType = schemeInfo.PlayType,
@@ -1398,7 +1406,7 @@ namespace Lottery.Api.Controllers
                 //{
 
                 //}
-             
+
                 var result = new
                 {
                     SchemeId = schemeInfo.SchemeId,
@@ -2795,7 +2803,7 @@ namespace Lottery.Api.Controllers
             //var list = new List<KaiJiang>();
             //string redisKey = EntityModel.Redis.RedisKeys.KaiJiang_Key;
             //var list = RedisHelperEx.DB_Match.GetObjs<KaiJiang>(redisKey);
-            var list = await _serviceProxyProvider.Invoke<List<KaiJiang>>(new Dictionary<string,object>(), "api/Data/GetKaiJiangList_ByRedis");
+            var list = await _serviceProxyProvider.Invoke<List<KaiJiang>>(new Dictionary<string, object>(), "api/Data/GetKaiJiangList_ByRedis");
             if (list != null && list.Count > 0)
             {
                 return list;

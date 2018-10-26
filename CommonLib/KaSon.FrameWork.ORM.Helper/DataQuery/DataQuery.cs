@@ -8,11 +8,9 @@ using EntityModel.Enum;
 using EntityModel.CoreModel;
 using System.Linq;
 using KaSon.FrameWork.ORM.Provider;
-using KaSon.FrameWork.Common.Sport;
 using EntityModel.Communication;
 using KaSon.FrameWork.Common.Sport;
 using EntityModel.ExceptionExtend;
-
 
 namespace KaSon.FrameWork.ORM.Helper
 {
@@ -51,8 +49,8 @@ namespace KaSon.FrameWork.ORM.Helper
                   p.GameType == gameType
                 ).OrderBy(p => p.LocalStopTime);
             }
-            var info= query.FirstOrDefault();
-            Issuse_QueryInfo returninfo=null;
+            var info = query.FirstOrDefault();
+            Issuse_QueryInfo returninfo = null;
             if (info != null)
             {
                 returninfo = new Issuse_QueryInfo()
@@ -227,10 +225,10 @@ namespace KaSon.FrameWork.ORM.Helper
         /// </summary>
         public ActivityListInfoCollection QueryActivInfoList(int pageIndex, int pageSize)
         {
-            var query = DB.CreateQuery<E_ActivityList>().Where(p=>p.IsShow==true);
+            var query = DB.CreateQuery<E_ActivityList>().Where(p => p.IsShow == true);
             var totalCount = DB.CreateQuery<E_ActivityList>().Count();
-            
-            var list = query.OrderByDescending(p => p.CreateTime).Skip(pageIndex * pageSize).Take(pageSize).ToList().Select(a=> new ActivityListInfo
+
+            var list = query.OrderByDescending(p => p.CreateTime).Skip(pageIndex * pageSize).Take(pageSize).ToList().Select(a => new ActivityListInfo
             {
                 ActivityIndex = a.ActivityIndex,
                 ImageUrl = a.ImageUrl,
@@ -333,7 +331,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         };
 
             var model = query.FirstOrDefault();
-                
+
             //    .Select(t => new BulletinInfo_Query
             //{
             //    Id = t.b.Id,
@@ -472,7 +470,7 @@ namespace KaSon.FrameWork.ORM.Helper
         }
 
 
-        public InnerMailInfo_Query QueryInnerMailDetailByIdAndRead(string innerMailId,string userId)
+        public InnerMailInfo_Query QueryInnerMailDetailByIdAndRead(string innerMailId, string userId)
         {
             //1.增加阅读数
             ReadInnerMail(innerMailId, userId);
@@ -520,7 +518,7 @@ namespace KaSon.FrameWork.ORM.Helper
         #region 红包可使用比率
         public string QueryRedBagUseConfig()
         {
-            var list= DB.CreateQuery<E_A20150919_红包使用配置>().ToList();
+            var list = DB.CreateQuery<E_A20150919_红包使用配置>().ToList();
             var query = from l in list
                         select string.Format("{0}_{1}_{2}", l.Id, l.GameCode, l.UsePercent.ToString("N2"));
             return string.Join("|", query.ToArray());
@@ -528,7 +526,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public List<C_Bank_Info> GetBankList()
         {
-            return DB.CreateQuery<C_Bank_Info>().Where(p=>p.Disabled==false).ToList();
+            return DB.CreateQuery<C_Bank_Info>().Where(p => p.Disabled == false).ToList();
         }
         #endregion
 
@@ -543,7 +541,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         select a;
 
             collection.TotalCount = query.Count();
-            collection.ArticleList = query.OrderByDescending(p=>p.CreateTime).Skip(pageIndex * pageSize).Take(pageSize).ToList().Select(a=> new ArticleInfo_Query
+            collection.ArticleList = query.OrderByDescending(p => p.CreateTime).Skip(pageIndex * pageSize).Take(pageSize).ToList().Select(a => new ArticleInfo_Query
             {
                 Category = a.Category.Trim(),
                 CreateTime = a.CreateTime,
@@ -578,7 +576,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
         #region 根据GameCode与期号获取当年/当天最大期号
 
-        public List<string> GetMaxIssueByGameCode(string gameCode, string currIssuseNumber,int issueCount)
+        public List<string> GetMaxIssueByGameCode(string gameCode, string currIssuseNumber, int issueCount)
         {
             //var DayGame = new List<string>() {"SSQ","DLT","FC3D","PL3"};
             //var MinGame = new List<string>() {"CQSSC","GD11X5","SD11X5","JX11X5"};
@@ -602,11 +600,11 @@ namespace KaSon.FrameWork.ORM.Helper
                 //    var lastIssuse = DB.CreateQuery<C_Game_Issuse>().Where(p => p.LocalStopTime > today && p.LocalStopTime < tomorrow &&p.GameCode== theGameCode).OrderBy(p => p.OfficialStopTime).FirstOrDefault();
                 //    MaxIssue= lastIssuse.IssuseNumber;
                 //}
-               // DbProvider.IsShowOneSQL = true;
-                IssuseList = DB.CreateQuery<C_Game_Issuse>().Where(p => p.OfficialStopTime >= model.OfficialStopTime && p.GameCode == theGameCode).OrderBy(p => p.OfficialStopTime).Take(issueCount).Select(p=>p.IssuseNumber).ToList();
+                // DbProvider.IsShowOneSQL = true;
+                IssuseList = DB.CreateQuery<C_Game_Issuse>().Where(p => p.OfficialStopTime >= model.OfficialStopTime && p.GameCode == theGameCode).OrderBy(p => p.OfficialStopTime).Take(issueCount).Select(p => p.IssuseNumber).ToList();
             }
             return IssuseList;
-        } 
+        }
         #endregion
 
         /// <summary>
@@ -615,14 +613,14 @@ namespace KaSon.FrameWork.ORM.Helper
         public List<Blog_UserShareSpread> QueryBlog_UserShareSpreadList(string userId, int pageIndex, int pageSize, DateTime begin, DateTime end, out int userTotalCount, out decimal RedBagMoneyTotal)
         {
             var query = (from r in DB.CreateQuery<E_Blog_UserShareSpread>()
-                        join u in DB.CreateQuery<C_User_Register>() on r.UserId equals u.UserId
-                        where (r.AgentId == userId)
-                        select new { r,u}).ToList();
+                         join u in DB.CreateQuery<C_User_Register>() on r.UserId equals u.UserId
+                         where (r.AgentId == userId)
+                         select new { r, u }).ToList();
             if (query != null && query.Count() > 0)
             {
                 userTotalCount = query.Count();//总人数
                 RedBagMoneyTotal = query.Sum(g => g.r.giveRedBagMoney);//总红包金额
-                return query.OrderByDescending(p => p.r.UpdateTime).Skip(pageIndex * pageSize).Take(pageSize).ToList().Select(p=> new Blog_UserShareSpread
+                return query.OrderByDescending(p => p.r.UpdateTime).Skip(pageIndex * pageSize).Take(pageSize).ToList().Select(p => new Blog_UserShareSpread
                 {
                     Id = p.r.Id,
                     UserId = p.r.UserId,
@@ -639,7 +637,6 @@ namespace KaSon.FrameWork.ORM.Helper
             RedBagMoneyTotal = 0;
             return new List<Blog_UserShareSpread>();
         }
-
 
         /// <summary>
         /// 冻结需要充值的金额，并生成一条游戏充值数据存入游戏交易表中，返回订单号
@@ -757,7 +754,56 @@ namespace KaSon.FrameWork.ORM.Helper
             return new CommonActionResult() { IsSuccess = true, ReturnValue = orderId };
         }
 
-        public CommonActionResult EndAddGameWithdraw(string OrderId, bool IsSuccess)
+        public CommonActionResult AddGameWithdraw_Step1(string userId, decimal money, string userDisplayName)
+        {
+            //var orderId = BettingHelper.GetGameTransferId();
+            var orderId = BettingHelper.GetGameTransferId();
+            DB.GetDal<C_Game_Transfer>().Add(new C_Game_Transfer()
+            {
+                OrderId = orderId,
+                RequestMoney = money,
+                RequestTime = DateTime.Now,
+                Status = (int)FillMoneyStatus.Requesting,
+                UserId = userId,
+                TransferType = (int)GameTransferType.Withdraw,
+                UserDisplayName = userDisplayName
+            });
+            return new CommonActionResult() { IsSuccess = true, ReturnValue = orderId };
+        }
+
+        //public CommonActionResult AddGameWithdraw_Step2(string orderId, string providerSerialNo)
+        //{
+        //    ////var orderId = BettingHelper.GetGameTransferId();
+        //    //var oldmodel = DB.CreateQuery<C_Game_Transfer>().Where(p => p.OrderId == orderId).FirstOrDefault();
+        //    //if (oldmodel == null) throw new LogicException("发生错误，找不到相关订单");
+        //    //oldmodel.ProviderSerialNo = providerSerialNo;
+        //    //oldmodel.UpdateTime = DateTime.Now;
+        //    //DB.GetDal<C_Game_Transfer>().Update(oldmodel);
+        //    //return new CommonActionResult() { IsSuccess = true, ReturnValue = orderId };
+
+        //    var oldModel = DB.CreateQuery<C_Game_Transfer>().Where(p => p.OrderId == orderId).FirstOrDefault();
+        //    if (oldModel == null) throw new LogicException("发生错误，找不到相关订单");
+        //    if (oldModel.Status != (int)FillMoneyStatus.Requesting) throw new LogicException("相关订单已被处理，无需重复操作");
+        //    DB.Begin();
+        //    try
+        //    {
+        //        oldModel.Status = (int)FillMoneyStatus.Success;
+        //        oldModel.UpdateTime = DateTime.Now;
+        //        oldModel.ProviderSerialNo = providerSerialNo;
+        //        DB.GetDal<C_Game_Transfer>().Update(oldModel);
+        //        BusinessHelper.Payin_To_Balance(AccountType.FillMoney, BusinessHelper.FundCategory_GameWithdraw, oldModel.UserId, oldModel.OrderId, oldModel.RequestMoney,
+        //        string.Format("游戏提款成功，金额：{0:N2}元存入账号", oldModel.RequestMoney));
+        //        DB.Commit();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        DB.Rollback();
+        //        throw ex;
+        //    }
+        //    return new CommonActionResult() { IsSuccess = true, ReturnValue = orderId };
+        //}
+
+        public CommonActionResult EndAddGameWithdraw(string OrderId, bool IsSuccess, string providerSerialNo)
         {
             var oldModel = DB.CreateQuery<C_Game_Transfer>().Where(p => p.OrderId == OrderId).FirstOrDefault();
             if (oldModel == null) throw new LogicException("发生错误，找不到相关订单");
@@ -769,14 +815,16 @@ namespace KaSon.FrameWork.ORM.Helper
                 {
                     oldModel.Status = (int)FillMoneyStatus.Success;
                     oldModel.UpdateTime = DateTime.Now;
+                    oldModel.ProviderSerialNo = providerSerialNo;
                     DB.GetDal<C_Game_Transfer>().Update(oldModel);
-                    BusinessHelper.Payin_To_Balance(AccountType.FillMoney, BusinessHelper.FundCategory_ManualFillMoney, oldModel.UserId, oldModel.OrderId, oldModel.RequestMoney,
+                    BusinessHelper.Payin_To_Balance(AccountType.FillMoney, BusinessHelper.FundCategory_GameWithdraw, oldModel.UserId, oldModel.OrderId, oldModel.RequestMoney,
                     string.Format("游戏提款成功，金额：{0:N2}元存入账号", oldModel.RequestMoney));
                 }
                 else
                 {
                     oldModel.Status = (int)FillMoneyStatus.Failed;
                     oldModel.UpdateTime = DateTime.Now;
+                    oldModel.ProviderSerialNo = providerSerialNo;
                     DB.GetDal<C_Game_Transfer>().Update(oldModel);
                 }
                 DB.Commit();
@@ -792,8 +840,45 @@ namespace KaSon.FrameWork.ORM.Helper
         public List<C_Game_Transfer> QueryNotFinishGame(int minutes)
         {
             var now = DateTime.Now;
-            return DB.CreateQuery<C_Game_Transfer>().Where(p => p.RequestTime < now.AddMinutes(-minutes) && p.Status == (int)FillMoneyStatus.Requesting).ToList();
+            var date = now.AddMinutes(-minutes);
+            return DB.CreateQuery<C_Game_Transfer>().Where(p => p.RequestTime < date && p.Status == 0).ToList();
         }
+
+        ///// <summary>
+        ///// 第二步把外部订单号存入数据库
+        ///// </summary>
+        ///// <param name="orderId"></param>
+        ///// <param name="userId"></param>
+        ///// <param name="providerSerialNo"></param>
+        ///// <returns></returns>
+        //public CommonActionResult GameRecharge_Step2(string orderId, string providerSerialNo)
+        //{
+        //    //var oldModel = DB.CreateQuery<C_Game_Transfer>().Where(p => p.OrderId == orderId && p.UserId == userId).FirstOrDefault();
+        //    //if (oldModel == null) throw new LogicException("发生错误，找不到相关订单");
+        //    //oldModel.ProviderSerialNo = providerSerialNo;
+        //    //oldModel.UpdateTime = DateTime.Now;
+        //    //DB.GetDal<C_Game_Transfer>().Update(oldModel);
+        //    //return new CommonActionResult() { IsSuccess = true, ReturnValue = orderId };
+        //    var oldModel = DB.CreateQuery<C_Game_Transfer>().Where(p => p.OrderId == orderId).FirstOrDefault();
+        //    if (oldModel == null) throw new LogicException("发生错误，找不到相关订单");
+        //    if (oldModel.Status != (int)FillMoneyStatus.Requesting) throw new LogicException("相关订单已被处理，无需重复操作");
+        //    DB.Begin();
+        //    try
+        //    {
+        //        oldModel.Status = (int)FillMoneyStatus.Success;
+        //        oldModel.UpdateTime = DateTime.Now;
+        //        oldModel.ProviderSerialNo = providerSerialNo;
+        //        DB.GetDal<C_Game_Transfer>().Update(oldModel);
+        //        BusinessHelper.Payout_Frozen_To_End(BusinessHelper.FundCategory_GameRecharge, oldModel.UserId, orderId, string.Format("游戏充值成功，扣除冻结{1:N2}元", orderId, oldModel.RequestMoney), oldModel.RequestMoney);
+        //        DB.Commit();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        DB.Rollback();
+        //        throw ex;
+        //    }
+        //    return new CommonActionResult() { IsSuccess = true, ReturnValue = orderId };
+        //}
         #region PC端接口
         /// <summary>
         /// 大奖排行榜
@@ -812,7 +897,7 @@ namespace KaSon.FrameWork.ORM.Helper
               .SetString("@gameType", QueryBase.gameType)
               .SetInt("@pageIndex", QueryBase.pageIndex)
               .SetInt("@pagePage", QueryBase.pageSize).List<RankInfo_BettingProfit_Sport>().ToList();
-            
+
             string BonusSport_Total_sql = SqlModule.DataModule.FirstOrDefault(x => x.Key == "Data_QueryRankReportBigBonusSport_Total").SQL;
             var total = DB.CreateSQLQuery(BonusSport_Total_sql)
              .SetString("@fromDate", QueryBase.fromDate.ToString("yyyy-MM-dd"))
@@ -900,7 +985,7 @@ namespace KaSon.FrameWork.ORM.Helper
               .SetString("@toDate", QueryBase.toDate.ToString("yyyy-MM-dd"))
               .SetString("@gameCode", QueryBase.gameCode).List<RankInfo_HotTogether>().ToList();
             result.RankInfoList = collection;
-            result.TotalCount = collection==null ? 0 : collection.Count;
+            result.TotalCount = collection == null ? 0 : collection.Count;
             return result;
         }
 
@@ -989,7 +1074,7 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             var query = from g in DB.CreateQuery<C_Game_Issuse>()
                         where g.GameCode == gameCode
-                        && (gameType == ""|| gameType==null || gameType == g.GameType)
+                        && (gameType == "" || gameType == null || gameType == g.GameType)
                         && g.Status == (int)IssuseStatus.Stopped
                         orderby g.IssuseNumber descending
                         select g.IssuseNumber;

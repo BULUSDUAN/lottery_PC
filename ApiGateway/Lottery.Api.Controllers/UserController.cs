@@ -115,8 +115,6 @@ namespace Lottery.Api.Controllers
                         #endregion
                     },
                 });
-
-
             }
             catch (ArgumentException ex)
             {
@@ -389,7 +387,6 @@ namespace Lottery.Api.Controllers
                 //string cfrom = "";
                 string pid = p.pid;
                 string fxid = p.fxid;
-                string yqid = p.yqid;
                 string schemeId = p.schemeId;
                 SchemeSource schemeSource = entity.SourceCode;
                 //if (!string.IsNullOrEmpty(cfrom) && cfrom == "ios")
@@ -428,8 +425,7 @@ namespace Lottery.Api.Controllers
                 {
                     userInfo.AgentId = pid;
                 }
-                param["fxid"] = string.IsNullOrEmpty(fxid) ? "" : fxid;
-                param["yqid"] = string.IsNullOrEmpty(yqid) ? "" : yqid;
+                param["fxid"] = string.IsNullOrEmpty(fxid) ? "0" : fxid;
                 var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/User/RegisterResponseMobile");
                 param.Clear();
                 if (result.Message.Contains("手机认证成功") || result.Message.Contains("恭喜您注册成功"))
@@ -1256,7 +1252,7 @@ namespace Lottery.Api.Controllers
                 {
                     BankCode = bankCode,
                     BankName = resultbankCode.BankName,
-                    BankSubName = subBankName,
+                    BankSubName = string.IsNullOrEmpty(subBankName) ? resultbankCode.BankName : subBankName,
                     BankCardNumber = cardnumber,
                     ProvinceName = province,
                     CityName = city,
@@ -1498,6 +1494,11 @@ namespace Lottery.Api.Controllers
         {
             try
             {
+                if ((DateTime.Now.Hour < 8 || (DateTime.Now.Hour == 8 && DateTime.Now.Minute < 50))
+                   && (DateTime.Now.Hour > 1 || (DateTime.Now.Hour == 1 && DateTime.Now.Minute > 10)))
+                {
+                    throw new LogicException("提现时间早上9点到凌晨1点，请您明天9点再来，感谢配合");
+                }
                 //读取json数据
                 var p = WebHelper.Decode(entity.Param);
                 string userToken = p.token;
@@ -1505,11 +1506,7 @@ namespace Lottery.Api.Controllers
                 if (string.IsNullOrEmpty(userToken))
                     throw new LogicException("token不能为空");
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
-                if ((DateTime.Now.Hour < 8 || (DateTime.Now.Hour == 8 && DateTime.Now.Minute < 50))
-                    && (DateTime.Now.Hour > 1 || (DateTime.Now.Hour == 1 && DateTime.Now.Minute > 10)))
-                {
-                    throw new LogicException("提现时间早上9点到凌晨1点，请您明天9点再来，感谢配合");
-                }
+
                 //Dictionary<string, object> param = new Dictionary<string, object>();
                 //param["userToken"] = token;
                 //var userinfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/LoginByUserToken");
@@ -1562,6 +1559,11 @@ namespace Lottery.Api.Controllers
             try
             {
                 //读取json数据
+                if ((DateTime.Now.Hour < 8 || (DateTime.Now.Hour == 8 && DateTime.Now.Minute < 50))
+                 && (DateTime.Now.Hour > 1 || (DateTime.Now.Hour == 1 && DateTime.Now.Minute > 10)))
+                {
+                    throw new LogicException("提现时间早上9点到凌晨1点，请您明天9点再来，感谢配合");
+                }
                 var p = WebHelper.Decode(entity.Param);
                 string userToken = p.token;
                 string client = p.client;
@@ -1641,6 +1643,12 @@ namespace Lottery.Api.Controllers
         {
             try
             {
+                //读取json数据
+                if ((DateTime.Now.Hour < 8 || (DateTime.Now.Hour == 8 && DateTime.Now.Minute < 50))
+                 && (DateTime.Now.Hour > 1 || (DateTime.Now.Hour == 1 && DateTime.Now.Minute > 10)))
+                {
+                    throw new LogicException("提现时间早上9点到凌晨1点，请您明天9点再来，感谢配合");
+                }
                 //读取json数据
                 var p = WebHelper.Decode(entity.Param);
                 string userToken = p.token;
@@ -1756,35 +1764,24 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
-                string userToken = p.UserToken;
-                if (!string.IsNullOrEmpty(userToken))
+                string fillMoney_Enable_GateWay = ConfigHelper.AllConfigInfo["FillMoney_Enable_GateWay"] != null ? ConfigHelper.AllConfigInfo["FillMoney_Enable_GateWay"].ToString() : "";
+                //var p = WebHelper.Decode(entity.Param);//FillMoney_Enable_GateWay
+                //string userToken = p.UserToken;
+                Dictionary<string, object> param2 = new Dictionary<string, object>();
+                param2.Add("key", "FillMoney_Enable_GateWay");
+                var FillMoney_Enable_GateWay = await _serviceProxyProvider.Invoke<C_Core_Config>(param2, "api/Data/QueryCoreConfigByKey");
+                if (FillMoney_Enable_GateWay != null)
                 {
-                    userToken = userToken.Replace("%2B", "+").Replace("%26", "&");
-                    string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
-                    Dictionary<string, object> param2 = new Dictionary<string, object>();
-                    param2.Add("key", "FillMoney_Enable_GateWay");
-                    var FillMoney_Enable_GateWay = await _serviceProxyProvider.Invoke<C_Core_Config>(param2, "api/user/QueryCoreConfigByKey");
-                    string[] gateWayArray = FillMoney_Enable_GateWay.ConfigValue.ToLower().Split('|');
-                    return JsonEx(new LotteryServiceResponse
-                    {
-                        Code = ResponseCode.成功,
-                        Message = "获取成功",
-                        MsgId = entity.MsgId,
-                        Value = LoadPayConfig("ios", gateWayArray),
-                    });
+                    fillMoney_Enable_GateWay = FillMoney_Enable_GateWay.ConfigValue;
                 }
-                else
+                string[] gateWayArray = fillMoney_Enable_GateWay.ToLower().Split('|');
+                return JsonEx(new LotteryServiceResponse
                 {
-                    return JsonEx(new LotteryServiceResponse
-                    {
-                        Code = ResponseCode.失败,
-                        Message = "验证用户失败，传入参数有误",
-                        MsgId = entity.MsgId,
-                        Value = "验证用户失败",
-                    });
-                }
-
+                    Code = ResponseCode.成功,
+                    Message = "获取成功",
+                    MsgId = entity.MsgId,
+                    Value = LoadPayConfig("ios", gateWayArray),
+                });
             }
             catch (Exception ex)
             {
@@ -1796,6 +1793,39 @@ namespace Lottery.Api.Controllers
                     Value = ex.ToGetMessage(),
                 });
             }
+        }
+
+
+        public async Task<IActionResult> TestConfig([FromServices]IServiceProxyProvider _serviceProxyProvider)
+        {
+            try
+            {
+                Dictionary<string, object> param2 = new Dictionary<string, object>();
+                param2.Add("key", "FillMoney_Enable_GateWay");
+                var FillMoney_Enable_GateWay = await _serviceProxyProvider.Invoke<C_Core_Config>(param2, "api/user/QueryCoreConfigByKey");
+                if (FillMoney_Enable_GateWay == null)
+                    throw new Exception("未获取到FillMoney_Enable_GateWay配置");
+                string[] gateWayArray = FillMoney_Enable_GateWay.ConfigValue.ToLower().Split('|');
+                return JsonEx(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "获取成功",
+                    MsgId = "",
+                    Value = LoadPayConfig("ios", gateWayArray),
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return JsonEx(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = "",
+                    Value = ex.ToGetMessage(),
+                });
+            }
+
         }
 
 
@@ -2026,7 +2056,51 @@ namespace Lottery.Api.Controllers
             }.ToJson();
             //var postParam = ConvertHelper.ReplaceFirst(strParam, "theparams", "params");
             //var result = PostManager.HttpPost(DataController.GameUrl, strParam, "utf-8");
-            var result = PostManager.Post(DataController.GameUrl, strParam, Encoding.UTF8, 45, null, "application/json");
+            var result = PostManager.Post(DataController.GameUrl, strParam, Encoding.UTF8, 30, null, "application/json");
+        }
+
+        public async Task<IActionResult> LoginGiveRedEnvelopes([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                var p = WebHelper.Decode(entity.Param);
+                string userToken = p.UserToken;
+                string UserId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+                param["UserId"] = UserId;
+                param["IPAddress"] = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
+                var GiveRedEnvelopes = await _serviceProxyProvider.Invoke<bool>(param, "api/user/LoginGiveRedEnvelopes");
+                if (GiveRedEnvelopes)
+                {
+                    return Json(new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.成功,
+                        Message = "恭喜获取登录红包，请在资金明细，查收",
+                        MsgId = entity.MsgId,
+                        Value = "恭喜获取登录红包，请在资金明细，查收"
+                    });
+                }
+                else
+                {
+                    return Json(new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.成功,
+                        Message = "",
+                        MsgId = entity.MsgId,
+                        Value = ""
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage(),
+                });
+            }
         }
     }
 }

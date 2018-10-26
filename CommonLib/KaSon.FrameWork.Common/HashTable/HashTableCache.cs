@@ -6,6 +6,7 @@ using EntityModel.CoreModel;
 
 using Newtonsoft.Json;
 using KaSon.FrameWork.Common.Redis;
+using System.Linq;
 
 namespace KaSon.FrameWork.Common
 {
@@ -20,7 +21,7 @@ namespace KaSon.FrameWork.Common
         //public static System.Collections.Hashtable _JCLQHt = System.Collections.Hashtable.Synchronized(new Hashtable());
 
         public static string[] _CTZQType = { "T14C", "T4CJQ", "TR9", "T6BQC" };
-        public static string[] _JCZQType = { "SPF", "BRQSPF", "ZJQ", "BF", "BQC", "HHDG","HH" };
+        public static string[] _JCZQType = { "SPF", "BRQSPF", "ZJQ", "BF", "BQC", "HHDG", "HH" };
         public static string[] _JCLQType = { "SF", "RFSF", "DXF", "SFC", "HHDG", "HH" };
         public static string[] _BJDCType = { "SPF" };
 
@@ -53,7 +54,7 @@ namespace KaSon.FrameWork.Common
                 var type = item.GameCode_IssuseNumber.Split('|')[1];
                 string reidskey = $"{key}_{type}_{item.IssuseNumber}";
                 var result = Json_CTZQ.MatchList_WEB(item.IssuseNumber, type);
-               RedisHelperEx.DB_Match.SetObj(reidskey, result, TimeSpan.FromMinutes(30));
+                RedisHelperEx.DB_Match.SetObj(reidskey, result, TimeSpan.FromMinutes(30));
             }
 
         }
@@ -103,6 +104,21 @@ namespace KaSon.FrameWork.Common
                 else
                 {
                     var result = Json_JCZQ.MatchList_WEB(item, newVerType);
+                    #region 新逻辑20181022
+                    //如果gametype为让分胜负与大小分，则需要拼装他们的state_hhdg
+                    if (item.ToLower() == "brqspf")
+                    {
+                        var oddlist_jczq_hhdg = Json_JCZQ.GetJCZQHHDGList();
+                        if (result != null && oddlist_jczq_hhdg != null)
+                        {
+                            foreach (var brqitem in result)
+                            {
+                                var hhdgitem = oddlist_jczq_hhdg.FirstOrDefault(c => c.MatchId == brqitem.MatchId);
+                                if (hhdgitem != null) brqitem.State_HHDG = hhdgitem.State_HHDG;
+                            }
+                        }
+                    }
+                    #endregion
                     RedisHelperEx.DB_Match.SetObj(reidskey, result, TimeSpan.FromMinutes(30));
                 }
             }
@@ -127,12 +143,28 @@ namespace KaSon.FrameWork.Common
                 else
                 {
                     var result = Json_JCLQ.MatchList_WEB(item);
+                    #region 新逻辑20181022
+                    //新逻辑20181022
+                    //如果gametype为让分胜负与大小分，则需要拼装他们的state_hhdg
+                    if (item.ToLower() == "rfsf" || item.ToLower() == "dxf")
+                    {
+                        var oddlist_jclq_hhdg = Json_JCLQ.GetJCLQHHDGList();
+                        if (result != null && oddlist_jclq_hhdg != null)
+                        {
+                            foreach (var typeitem in result)
+                            {
+                                var hhdgitem = oddlist_jclq_hhdg.FirstOrDefault(c => c.MatchId == typeitem.MatchId);
+                                if (hhdgitem != null) typeitem.State_HHDG = hhdgitem.State_HHDG;
+                            }
+                        }
+                    }
+                    #endregion
                     RedisHelperEx.DB_Match.SetObj(reidskey, result, TimeSpan.FromMinutes(30));
                 }
             }
 
         }
 
-       
+
     }
 }

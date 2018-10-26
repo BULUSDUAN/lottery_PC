@@ -4,6 +4,7 @@ using EntityModel.CoreModel;
 
 using EntityModel.Enum;
 using EntityModel.ExceptionExtend;
+using KaSon.FrameWork.Common.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -98,68 +99,63 @@ namespace KaSon.FrameWork.ORM.Helper
         //}
         //public void AddUserRoles(string userId, string[] roleIds)
         //{
-
-        //    DB.Begin();
-        //    try
+        //    var userManager = new UserManager();
+        //    var user = userManager.LoadUser(userId);
+        //    if (user == null)
         //    {
-        //        var userManager = new UserManager();
-
-        //        var user = userManager.LoadUser(userId);
-        //        if (user == null)
-        //        {
-        //            throw new ArgumentException("指定的用户不存在。");
-        //        }
-
-        //        var roleList = userManager.GetRoleListByIds(roleIds);
-        //        foreach (var role in roleList)
-        //        {
-        //            //user.AgentId.Add(role);
-        //        }
-        //        userManager.UpdateSystemUser(user);
-
-        //        DB.Commit();
+        //        throw new LogicException("指定的用户不存在。");
         //    }
-        //    catch (Exception EX)
+        //    var roleList = userManager.GetRoleListByIds(roleIds);
+        //    var addList = new List<C_Auth_UserRole>();
+        //    foreach (var role in roleList)
         //    {
-        //        DB.Rollback();
-        //        throw EX;
+        //        addList.Add(new C_Auth_UserRole()
+        //        {
+        //            RoleId = role.RoleId,
+        //            UserId = userId
+        //        });
         //    }
-
+        //    if (addList.Count > 0)
+        //    {
+        //        DB.GetDal<C_Auth_UserRole>().BulkAdd(addList);
+        //    }
 
         //}
-        //public void RemoveUserRoles(string userId, string[] roleIds)
-        //{
-        //    using (var biz = new GameBizAuthBusinessManagement())
-        //    {
-        //        biz.BeginTran();
-        //        using (var userManager = new UserManager())
-        //        {
-        //            var user = userManager.GetUserById(userId);
-        //            if (user == null)
-        //            {
-        //                throw new ArgumentException("指定的用户不存在。");
-        //            }
-        //            NHibernate.NHibernateUtil.Initialize(user.RoleList);
-        //            foreach (var id in roleIds)
-        //            {
-        //                foreach (var role in user.RoleList)
-        //                {
-        //                    if (role.RoleId == id)
-        //                    {
-        //                        user.RoleList.Remove(role);
-        //                        break;
-        //                    }
-        //                }
-        //            }
-        //            if (user.RoleList.Count == 0)
-        //            {
-        //                throw new AuthException("用户必须指定至少一个角色");
-        //            }
-        //            userManager.UpdateSystemUser(user);
-        //        }
-        //        biz.CommitTran();
-        //    }
-        //}
+        public void RemoveUserRoles(string userId, string[] roleIds)
+        {
+            var userManager = new UserManager();
+            var user = userManager.LoadUser(userId);
+            if (user == null)
+            {
+                throw new LogicException("指定的用户不存在。");
+            }
+            var list = userManager.QueryAuthUserRoleByUserId(userId);
+            if (list == null || list.Count == 0)
+            {
+                return;
+            }
+            var flag = false;
+            foreach (var item in list)
+            {
+                var temp = roleIds.FirstOrDefault(p => p == item.RoleId);
+                if (temp == null)
+                {
+                    flag = true;
+                }
+            }
+            if (!flag)
+            {
+                throw new AuthException("用户必须指定至少一个角色");
+            }
+            foreach (var item in list)
+            {
+                var temp = roleIds.FirstOrDefault(p => p == item.RoleId);
+                if (temp != null)
+                {
+                    DB.GetDal<C_Auth_UserRole>().Delete(item);
+                }
+            }
+        }
         public CommonActionResult AddSystemRole(RoleInfo_Add roleInfo)
         {
             //新增逻辑，超级管理员角色只能有一个，如果再新增超级管理员则失败
@@ -242,58 +238,58 @@ namespace KaSon.FrameWork.ORM.Helper
             DB.Begin();
             try
             {
-                    var role = roleManager.GetRoleById(roleInfo.RoleId);
-                    if (role == null)
-                    {
-                        throw new ArgumentException("指定编号的角色不存在 - " + roleInfo.RoleId);
-                    }
-                    role.RoleId = roleInfo.RoleId;
-                    role.RoleName = roleInfo.RoleName;
-                    roleManager.UpdateRole(role);
+                var role = roleManager.GetRoleById(roleInfo.RoleId);
+                if (role == null)
+                {
+                    throw new ArgumentException("指定编号的角色不存在 - " + roleInfo.RoleId);
+                }
+                role.RoleId = roleInfo.RoleId;
+                role.RoleName = roleInfo.RoleName;
+                roleManager.UpdateRole(role);
                 if (roleInfo.AddFunctionList == null) roleInfo.AddFunctionList = new List<RoleFunctionInfo>();
                 //if (roleInfo.ModifyFunctionList == null) roleInfo.ModifyFunctionList = new List<RoleFunctionInfo>();
                 if (roleInfo.RemoveFunctionList == null) roleInfo.RemoveFunctionList = new List<RoleFunctionInfo>();
-                    foreach (var item in roleInfo.AddFunctionList)
+                foreach (var item in roleInfo.AddFunctionList)
+                {
+                    var roleFunction = roleManager.GetRoleFunction(roleInfo.RoleId, item.FunctionId);
+                    if (roleFunction != null)
                     {
-                        var roleFunction = roleManager.GetRoleFunction(roleInfo.RoleId, item.FunctionId);
-                        if (roleFunction != null)
-                        {
-                            throw new ArgumentException("添加权限到角色错误 - 已经包含权限\"" + roleFunction.FunctionId + " - " + roleFunction.Function.DisplayName + "\"");
-                        }
-                        var addFunction = new C_Auth_RoleFunction
-                        {
-                            
-                            FunctionId = item.FunctionId,
-                            RoleId= roleInfo.RoleId,
-                            Status = (int)EnableStatus.Enable,
-                            Mode = item.Mode,
-                        };
-                        roleManager.AddRoleFunction(addFunction);
+                        throw new ArgumentException("添加权限到角色错误 - 已经包含权限\"" + roleFunction.FunctionId + " - " + roleFunction.Function.DisplayName + "\"");
                     }
-                    //foreach (var item in roleInfo.ModifyFunctionList)
-                    //{
-                    //    var roleFunction = roleManager.GetRoleFunction(role, item.FunctionId);
-                    //    if (roleFunction == null)
-                    //    {
-                    //        throw new ArgumentException("修改权限错误 - 此角色尚未包含权限\"" + roleFunction.Function.FunctionId + " - " + roleFunction.Function.DisplayName + "\"");
-                    //    }
-                    //    roleFunction.Mode = item.Mode;
-                    //    roleManager.UpdateRoleFunction(roleFunction);
-                    //}
-                    foreach (var item in roleInfo.RemoveFunctionList)
+                    var addFunction = new C_Auth_RoleFunction
                     {
-                        var roleFunction = roleManager.GetRoleFunction(roleInfo.RoleId, item.FunctionId);
-                        if (roleFunction == null)
-                        {
-                            throw new ArgumentException("移除权限错误 - 此角色尚未包含权限\"" + roleFunction.Function.FunctionId + " - " + roleFunction.Function.DisplayName + "\"");
-                        }
+
+                        FunctionId = item.FunctionId,
+                        RoleId = roleInfo.RoleId,
+                        Status = (int)EnableStatus.Enable,
+                        Mode = item.Mode,
+                    };
+                    roleManager.AddRoleFunction(addFunction);
+                }
+                //foreach (var item in roleInfo.ModifyFunctionList)
+                //{
+                //    var roleFunction = roleManager.GetRoleFunction(role, item.FunctionId);
+                //    if (roleFunction == null)
+                //    {
+                //        throw new ArgumentException("修改权限错误 - 此角色尚未包含权限\"" + roleFunction.Function.FunctionId + " - " + roleFunction.Function.DisplayName + "\"");
+                //    }
+                //    roleFunction.Mode = item.Mode;
+                //    roleManager.UpdateRoleFunction(roleFunction);
+                //}
+                foreach (var item in roleInfo.RemoveFunctionList)
+                {
+                    var roleFunction = roleManager.GetRoleFunction(roleInfo.RoleId, item.FunctionId);
+                    if (roleFunction == null)
+                    {
+                        throw new ArgumentException("移除权限错误 - 此角色尚未包含权限\"" + roleFunction.Function.FunctionId + " - " + roleFunction.Function.DisplayName + "\"");
+                    }
                     roleManager.DeleteRoleFunction(new C_Auth_RoleFunction()
                     {
                         FunctionId = roleFunction.FunctionId,
                         RoleId = role.RoleId,
                         IId = roleFunction.IId
                     });
-                    }
+                }
                 DB.Commit();
             }
             catch (Exception ex)
@@ -639,28 +635,24 @@ namespace KaSon.FrameWork.ORM.Helper
         //#region 后台系统管理
 
 
-        //public SysOpratorInfo_Collection GetOpratorCollection(int pageIndex, int pageSize)
-        //{
-        //    using (var manage = new UserManager())
-        //    {
-        //        return manage.GetOpratorCollection(pageIndex, pageSize);
-        //    }
-        //}
+        public SysOpratorInfo_Collection GetOpratorCollection(int pageIndex, int pageSize)
+        {
+            var manage = new UserManager();
+            return manage.GetOpratorCollection(pageIndex, pageSize);
+        }
 
-        //public RoleInfo_QueryCollection QueryRoleCollection()
-        //{
-        //    using (var manage = new UserManager())
-        //    {
-        //        return manage.QueryRoleCollection();
-        //    }
-        //}
-        //public string QueryUserRoleIdsByUserId(string userId)
-        //{
-        //    using (var manage = new UserManager())
-        //    {
-        //        return manage.QueryUserRoleIdsByUserId(userId);
-        //    }
-        //}
+        public List<C_Auth_Roles> QueryRoleCollection()
+        {
+            var manage = new UserManager();
+            return manage.QueryRoleCollection();
+        }
+
+        public string QueryUserRoleIdsByUserId(string userId)
+        {
+            var manage = new UserManager();
+            return manage.QueryUserRoleIdsByUserId(userId);
+
+        }
 
         //#endregion
 
@@ -719,6 +711,42 @@ namespace KaSon.FrameWork.ORM.Helper
                 info.FunctionList = functionlist;
             }
             return info;
+        }
+        public RoleInfo_QueryCollection GetSystemRoleCollection()
+        {
+                var list = new RoleManager().QueryRoleList();
+
+                var collection = new RoleInfo_QueryCollection();
+                ObjectConvert.ConvertEntityListToInfoList<IList<C_Auth_Roles>, C_Auth_Roles, RoleInfo_QueryCollection, RoleInfo_Query>(list, ref collection, () => new RoleInfo_Query());
+                return collection;
+        }
+        public void AddUserRoles(string userId, string[] roleIds)
+        {
+            DB.Begin();
+            var userManager = new UserManager();
+            var user = userManager.LoadUser(userId);
+            if (user == null)
+            {
+                throw new ArgumentException("指定的用户不存在。");
+            }
+            var roleList = userManager.GetRolesByIDs(roleIds);
+            List<C_Auth_UserRole> entitylist = null;
+            foreach (var item in roleList)
+            {
+                entitylist.Add(new C_Auth_UserRole() {
+                    UserId=user.UserId,
+                    RoleId=item.RoleId
+                });
+            }
+            userManager.AddUserRole(entitylist);
+            DB.Commit();
+        }
+
+        public List<C_Auth_Roles> GetSystemRole()
+        {
+            var roleManager = new RoleManager();
+            var list = roleManager.QueryRoleList().ToList();
+            return list;
         }
     }
 }
