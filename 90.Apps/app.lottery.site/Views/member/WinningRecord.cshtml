@@ -2,10 +2,10 @@
 @{
     ViewBag.Title = "奖金派送 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
     ViewBag.keywords = "奖金派送, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
-    UserFundDetailCollection bonus = ViewBag.BonusDetails;
+    EntityModel.CoreModel.UserFundDetailCollection bonus = ViewBag.BonusDetails;
     if (bonus == null)
     {
-        bonus = new UserFundDetailCollection();
+        bonus = new EntityModel.CoreModel.UserFundDetailCollection();
     }
 }
 @section css{

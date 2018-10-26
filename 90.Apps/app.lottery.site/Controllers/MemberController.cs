@@ -521,7 +521,7 @@ namespace app.lottery.site.Controllers
                 ViewBag.Begin = DateTime.Now.AddMonths(-1);
 
             Dictionary<string, object> param = new Dictionary<string, object>();
-            var Model = new EntityModel.RequestModel.QueryUserFundDetailParam() { viewtype = "", userid = UserToken, fromDate = ViewBag.Begin, toDate = ViewBag.End, pageIndex = ViewBag.pageNo, pageSize = ViewBag.PageSize, accountTypeList = "70" };
+            var Model = new EntityModel.RequestModel.QueryUserFundDetailParam() { categoryList = "", userid = UserToken, fromDate = ViewBag.Begin, toDate = ViewBag.End, pageIndex = ViewBag.pageNo, pageSize = ViewBag.PageSize, accountTypeList = "70" };
             param["Model"] = Model;
             ViewBag.RedBag = await serviceProxyProvider.Invoke<EntityModel.CoreModel.UserFundDetailCollection>(param, "api/order/QueryMyFundDetailList");
             return View();
@@ -628,14 +628,14 @@ namespace app.lottery.site.Controllers
             return View();
         }
         //提款记录
-        public ActionResult DrawingsRecord()
+        public async Task<ActionResult> DrawingsRecord()
         {
             try
             {
                 //ViewBag.Balance = string.IsNullOrEmpty(this.CurrentUser.UserBalance.ActivityBalance.ToString()) ? null : this.CurrentUser.UserBalance.ActivityBalance.ToString();
                 //ViewBag.Begin = string.IsNullOrEmpty(Request.QueryString["begin"]) ? DateTime.Today.AddMonths(-1) : DateTime.Parse(Request.QueryString["begin"]);
                 //ViewBag.End = string.IsNullOrEmpty(Request.QueryString["end"]) ? DateTime.Today : DateTime.Parse(Request.QueryString["end"]);
-                //ViewBag.pageNo = string.IsNullOrEmpty(Request.QueryString["pageNo"]) ? 0 : int.Parse(Request.QueryString["pageNo"]);
+                //ViewBag.pageNo = stri ng.IsNullOrEmpty(Request.QueryString["pageNo"]) ? 0 : int.Parse(Request.QueryString["pageNo"]);
                 //ViewBag.PageSize = string.IsNullOrEmpty(Request.QueryString["pageSize"]) ? 10 : int.Parse(Request.QueryString["pageSize"]);
                 //ViewBag.Status = string.IsNullOrEmpty(Request.QueryString["status"]) ? null : (WithdrawStatus?)int.Parse(Request.QueryString["status"]);
                 //if (ViewBag.Begin < DateTime.Now.AddMonths(-1))
@@ -648,13 +648,25 @@ namespace app.lottery.site.Controllers
                 ViewBag.End = string.IsNullOrEmpty(Request.QueryString["end"]) ? DateTime.Today : DateTime.Parse(Request.QueryString["end"]);
                 ViewBag.pageNo = string.IsNullOrEmpty(Request.QueryString["pageNo"]) ? 0 : int.Parse(Request.QueryString["pageNo"]);
                 ViewBag.PageSize = string.IsNullOrEmpty(Request.QueryString["pageSize"]) ? 10 : int.Parse(Request.QueryString["pageSize"]);
-                ViewBag.Status = string.IsNullOrEmpty(Request.QueryString["status"]) ? null : (WithdrawStatus?)int.Parse(Request.QueryString["status"]);
+                ViewBag.Status = string.IsNullOrEmpty(Request.QueryString["status"]) ? null : (EntityModel.Enum.WithdrawStatus?)int.Parse(Request.QueryString["status"]);
                 ViewBag.CurrentUser = CurrentUser;
                 ViewBag.CurrentUserBalance = CurrentUserBalance;
                 var beginTime = ViewBag.Begin;
                 if (beginTime < DateTime.Now.AddMonths(-1))
                     ViewBag.Begin = DateTime.Now.AddMonths(-1);
-                ViewBag.WithdrawList = WCFClients.GameFundClient.QueryMyWithdrawList(ViewBag.Status, ViewBag.Begin, ViewBag.End.AddDays(1), ViewBag.pageNo, ViewBag.PageSize, UserToken);
+
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["status"] = ViewBag.Status;
+                param["startTime"] = ViewBag.Begin;
+                param["endTime"] = ViewBag.End.AddDays(1);
+                param["pageIndex"] = ViewBag.pageNo;
+                param["pageSize"] = ViewBag.PageSize;
+                param["UserId"] = UserToken;
+
+
+                ViewBag.WithdrawList = await serviceProxyProvider.Invoke<EntityModel.CoreModel.Withdraw_QueryInfoCollection>(param, "api/user/QueryMyWithdrawList");
+
+                //ViewBag.WithdrawList = WCFClients.GameFundClient.QueryMyWithdrawList(ViewBag.Status, ViewBag.Begin, ViewBag.End.AddDays(1), ViewBag.pageNo, ViewBag.PageSize, UserToken);
                 ViewBag.CurrentUser = CurrentUser;
             }
             catch (Exception)
@@ -2225,7 +2237,7 @@ namespace app.lottery.site.Controllers
             if (ViewBag.Begin < DateTime.Now.AddMonths(-1))
                 ViewBag.Begin = DateTime.Now.AddMonths(-1);
             Dictionary<string, object> param = new Dictionary<string, object>();
-            var Model = new EntityModel.RequestModel.QueryUserFundDetailParam() { viewtype = "", userid = UserToken, fromDate = ViewBag.Begin, toDate = ViewBag.End, pageIndex = ViewBag.pageNo, pageSize = ViewBag.PageSize, accountTypeList = accountType };
+            var Model = new EntityModel.RequestModel.QueryUserFundDetailParam() { categoryList = "", userid = UserToken, fromDate = ViewBag.Begin, toDate = ViewBag.End, pageIndex = ViewBag.pageNo, pageSize = ViewBag.PageSize, accountTypeList = accountType };
             param["Model"] = Model;
             ViewBag.FundDetails = await serviceProxyProvider.Invoke<EntityModel.CoreModel.UserFundDetailCollection>(param, "api/order/QueryMyFundDetailList");
             return View();
@@ -2242,7 +2254,7 @@ namespace app.lottery.site.Controllers
             ViewBag.PageSize = string.IsNullOrEmpty(Request.QueryString["pageSize"]) ? 10 : int.Parse(Request.QueryString["pageSize"]);
 
             Dictionary<string, object> param = new Dictionary<string, object>();
-            var Model = new EntityModel.RequestModel.QueryUserFundDetailParam() { viewtype = "", userid = UserToken, fromDate = ViewBag.Begin, toDate = ViewBag.End, pageIndex = ViewBag.pageNo, pageSize = ViewBag.PageSize, accountTypeList = accountType };
+            var Model = new EntityModel.RequestModel.QueryUserFundDetailParam() { categoryList = "", userid = UserToken, fromDate = ViewBag.Begin, toDate = ViewBag.End, pageIndex = ViewBag.pageNo, pageSize = ViewBag.PageSize, accountTypeList = accountType };
             param["Model"] = Model;
             ViewBag.FundDetails = await serviceProxyProvider.Invoke<EntityModel.CoreModel.UserFundDetailCollection>(param, "api/order/QueryMyFundDetailList");
 
@@ -2357,9 +2369,10 @@ namespace app.lottery.site.Controllers
 
         #region 名家
         //中奖记录
-        public ActionResult WinningRecord()
+        public async Task<ActionResult> WinningRecord()
         {
-
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            param["category"] =
             ViewBag.GameCode = string.IsNullOrEmpty(Request.QueryString["gameCode"]) ? string.Empty : Request.QueryString["gameCode"].ToString();
             ViewBag.Begin = string.IsNullOrEmpty(Request.QueryString["begin"]) ? DateTime.Today.AddMonths(-1) : DateTime.Parse(Request.QueryString["begin"]);
             ViewBag.End = string.IsNullOrEmpty(Request.QueryString["end"]) ? DateTime.Today : DateTime.Parse(Request.QueryString["end"]);
@@ -2367,8 +2380,11 @@ namespace app.lottery.site.Controllers
             ViewBag.PageSize = string.IsNullOrEmpty(Request.QueryString["pageSize"]) ? 10 : int.Parse(Request.QueryString["pageSize"]);
             if (ViewBag.Begin < DateTime.Now.AddMonths(-1))
                 ViewBag.Begin = DateTime.Now.AddMonths(-1);
+            var Model = new EntityModel.RequestModel.QueryUserFundDetailParam() { categoryList = "奖金", userid = UserToken, fromDate = ViewBag.Begin, toDate = Convert.ToDateTime(ViewBag.End).AddDays(1), pageIndex = ViewBag.pageNo, pageSize = ViewBag.PageSize, accountTypeList = "10" };
+            param["Model"] = Model;
+            ViewBag.BonusDetails = await serviceProxyProvider.Invoke<EntityModel.CoreModel.UserFundDetailCollection>(param, "api/order/QueryMyFundDetailList");
 
-            ViewBag.BonusDetails = WCFClients.GameQueryClient.QueryMyFundDetailList(ViewBag.Begin, Convert.ToDateTime(ViewBag.End).AddDays(1), "10", "奖金", ViewBag.pageNo, ViewBag.PageSize, UserToken);
+            //ViewBag.BonusDetails = WCFClients.GameQueryClient.QueryMyFundDetailList(ViewBag.Begin, Convert.ToDateTime(ViewBag.End).AddDays(1), "10", "奖金", ViewBag.pageNo, ViewBag.PageSize, UserToken);
             return View();
         }
         //提款记录

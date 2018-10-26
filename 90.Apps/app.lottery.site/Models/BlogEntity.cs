@@ -1,9 +1,10 @@
-﻿using System;
+﻿using EntityModel;
+using EntityModel.CoreModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using GameBiz.Core;
 
 namespace app.lottery.site.cbbao.Models
 {

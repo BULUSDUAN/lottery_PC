@@ -1,16 +1,17 @@
 ﻿@{
     Layout = "~/Views/Shared/_LayoutBlog.cshtml";
 }
-@using GameBiz.Core;
+@using EntityModel.Enum;
+@using EntityModel.CoreModel;
 @using app.lottery.site.Models;
 @{
-    var prouser = ViewBag.UserInfo as ProfileUserInfo;
+    var prouser = ViewBag.UserInfo as EntityModel.ProfileUserInfo;
     var code = Request["gameCode"];//
     var type = Request["gameType"];
     var gameName = SiteConvert.GameName(code);
 
-     string gameCode = ViewBag.GameCode;//
-      string gameType = ViewBag.GameType;
+    string gameCode = ViewBag.GameCode;//
+    string gameType = ViewBag.GameType;
     //详情
     var bonusList = ViewBag.BonusList as BonusOrderInfoCollection;
     //合买
@@ -32,17 +33,25 @@
         <div class="standings_caizhong">
             <ul class="B_H">
                 <li class="@(gameCode == "SZC"? "standings_caizhong_li" : string.Empty) custombill_center_history_li">
-                    <a href="/blog/standings/@ViewBag.UserId?gameCode=SZC&gameType=SSQ">数字彩</a></li>
+                    <a href="/blog/standings/@ViewBag.UserId?gameCode=SZC&gameType=SSQ">数字彩</a>
+                </li>
                 <li class="@(gameCode == "CTZQ" ? "standings_caizhong_li" : string.Empty) custombill_center_history_li">
-                    <a href="/blog/standings/@ViewBag.UserId?gameCode=CTZQ&gameType=T14C">足彩</a></li>
+                    <a href="/blog/standings/@ViewBag.UserId?gameCode=CTZQ&gameType=T14C">足彩</a>
+                </li>
                 <li class="@(gameCode == "BJDC" ? "standings_caizhong_li" : string.Empty) custombill_center_history_li">
-                    <a href="/blog/standings/@ViewBag.UserId?gameCode=BJDC&gameType=SPF">北京单场</a></li>
+                    <a href="/blog/standings/@ViewBag.UserId?gameCode=BJDC&gameType=SPF">北京单场</a>
+                </li>
                 <li class="@(gameCode == "JCZQ" ? "standings_caizhong_li" : string.Empty) custombill_center_history_li">
-                    <a href="/blog/standings/@ViewBag.UserId?gameCode=JCZQ&gameType=BRQSPF">竞彩足球</a></li>
+                    <a href="/blog/standings/@ViewBag.UserId?gameCode=JCZQ&gameType=BRQSPF">竞彩足球</a>
+                </li>
                 <li class="@(gameCode == "JCLQ" ? "standings_caizhong_li" : string.Empty) custombill_center_history_li">
-                    <a href="/blog/standings/@ViewBag.UserId?gameCode=JCLQ&gameType=SF">竞彩篮球</a></li>
-                <li class="custombill_center_history_li" id="dzgd"><a href="/blog/custombill/@ViewBag.UserId">
-                    定制跟单</a></li>
+                    <a href="/blog/standings/@ViewBag.UserId?gameCode=JCLQ&gameType=SF">竞彩篮球</a>
+                </li>
+                <li class="custombill_center_history_li" id="dzgd">
+                    <a href="/blog/custombill/@ViewBag.UserId">
+                        定制跟单
+                    </a>
+                </li>
             </ul>
         </div>
         <div class="zjui">
@@ -51,63 +60,159 @@
                     switch (gameCode)
                     {
                         case "SZC":
-                    <li><a href="/blog/standings/@ViewBag.UserId?gameCode=SZC&gameType=SSQ"><span class="xz_input @(gameType == "SSQ" ? "xz_input_yes" : "xz_input_no")">
-                    </span>双色球</a></li>
-                    <li><a href="/blog/standings/@ViewBag.UserId?gameCode=SZC&gameType=DLT"><span class="xz_input @(gameType == "DLT" ? "xz_input_yes" : "xz_input_no")">
-                    </span>大乐透</a></li>
-                    <li><a href="/blog/standings/@ViewBag.UserId?gameCode=SZC&gameType=FC3D"><span class="xz_input @(gameType == "FC3D" ? "xz_input_yes" : "xz_input_no")">
-                    </span>福彩3D</a></li>
-                    <li><a href="/blog/standings/@ViewBag.UserId?gameCode=SZC&gameType=PL3"><span class="xz_input @(gameType == "PL3" ? "xz_input_yes" : "xz_input_no")">
-                    </span>排列三</a></li>
-                                                                                                 break;
+                            <li>
+                                <a href="/blog/standings/@ViewBag.UserId?gameCode=SZC&gameType=SSQ">
+                                    <span class="xz_input @(gameType == "SSQ" ? "xz_input_yes" : "xz_input_no")">
+                                    </span>双色球
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/blog/standings/@ViewBag.UserId?gameCode=SZC&gameType=DLT">
+                                    <span class="xz_input @(gameType == "DLT" ? "xz_input_yes" : "xz_input_no")">
+                                    </span>大乐透
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/blog/standings/@ViewBag.UserId?gameCode=SZC&gameType=FC3D">
+                                    <span class="xz_input @(gameType == "FC3D" ? "xz_input_yes" : "xz_input_no")">
+                                    </span>福彩3D
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/blog/standings/@ViewBag.UserId?gameCode=SZC&gameType=PL3">
+                                    <span class="xz_input @(gameType == "PL3" ? "xz_input_yes" : "xz_input_no")">
+                                    </span>排列三
+                                </a>
+                            </li>
+                            break;
                         case "CTZQ":
-                    <li><a href="/blog/standings/@ViewBag.UserId?gameCode=CTZQ&gameType=T14C"><span class="xz_input @(gameType == "T14C" ? "xz_input_yes" : "xz_input_no")">
-                    </span>十四场胜负</a></li>
-                    <li><a href="/blog/standings/@ViewBag.UserId?gameCode=CTZQ&gameType=TR9"><span class="xz_input @(gameType == "TR9" ? "xz_input_yes" : "xz_input_no")">
-                    </span>任九场</a></li>
-                    <li><a href="/blog/standings/@ViewBag.UserId?gameCode=CTZQ&gameType=T6BQC"><span class="xz_input @(gameType == "T6BQC" ? "xz_input_yes" : "xz_input_no")">
-                    </span>6场半全场</a></li>
-                    <li><a href="/blog/standings/@ViewBag.UserId?gameCode=CTZQ&gameType=T4CJQ"><span class="xz_input @(gameType == "T4CJQ" ? "xz_input_yes" : "xz_input_no")">
-                    </span>4场进球</a></li>
-                                                                                                                 break;
+                            <li>
+                                <a href="/blog/standings/@ViewBag.UserId?gameCode=CTZQ&gameType=T14C">
+                                    <span class="xz_input @(gameType == "T14C" ? "xz_input_yes" : "xz_input_no")">
+                                    </span>十四场胜负
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/blog/standings/@ViewBag.UserId?gameCode=CTZQ&gameType=TR9">
+                                    <span class="xz_input @(gameType == "TR9" ? "xz_input_yes" : "xz_input_no")">
+                                    </span>任九场
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/blog/standings/@ViewBag.UserId?gameCode=CTZQ&gameType=T6BQC">
+                                    <span class="xz_input @(gameType == "T6BQC" ? "xz_input_yes" : "xz_input_no")">
+                                    </span>6场半全场
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/blog/standings/@ViewBag.UserId?gameCode=CTZQ&gameType=T4CJQ">
+                                    <span class="xz_input @(gameType == "T4CJQ" ? "xz_input_yes" : "xz_input_no")">
+                                    </span>4场进球
+                                </a>
+                            </li>
+                            break;
                         case "JCZQ":
-                    <li><a href="/blog/standings/@ViewBag.UserId?gameCode=JCZQ&gameType=BRQSPF"><span class="xz_input @(gameType == "BRQSPF" ? "xz_input_yes" : "xz_input_no")">
-                    </span>胜平负</a></li>
-                    <li><a href="/blog/standings/@ViewBag.UserId?gameCode=JCZQ&gameType=SPF"><span class="xz_input @(gameType == "SPF" ? "xz_input_yes" : "xz_input_no")">
-                    </span>让球胜平负</a></li>
-                    <li><a href="/blog/standings/@ViewBag.UserId?gameCode=JCZQ&gameType=BF"><span class="xz_input @(gameType == "BF" ? "xz_input_yes" : "xz_input_no")">
-                    </span>比分</a></li>
-                    <li><a href="/blog/standings/@ViewBag.UserId?gameCode=JCZQ&gameType=ZJQ"><span class="xz_input @(gameType == "ZJQ" ? "xz_input_yes" : "xz_input_no")">
-                    </span>进球数</a></li>
-                    <li><a href="/blog/standings/@ViewBag.UserId?gameCode=JCZQ&gameType=BQC"><span class="xz_input @(gameType == "BQC" ? "xz_input_yes" : "xz_input_no")">
-                    </span>半全场</a></li>
-                    <li><a href="/blog/standings/@ViewBag.UserId?gameCode=JCZQ&gameType=HH"><span class="xz_input @(gameType == "HH" ? "xz_input_yes" : "xz_input_no")">
-                    </span>混合过关</a></li>
-                                                                                                              break;
+                            <li>
+                                <a href="/blog/standings/@ViewBag.UserId?gameCode=JCZQ&gameType=BRQSPF">
+                                    <span class="xz_input @(gameType == "BRQSPF" ? "xz_input_yes" : "xz_input_no")">
+                                    </span>胜平负
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/blog/standings/@ViewBag.UserId?gameCode=JCZQ&gameType=SPF">
+                                    <span class="xz_input @(gameType == "SPF" ? "xz_input_yes" : "xz_input_no")">
+                                    </span>让球胜平负
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/blog/standings/@ViewBag.UserId?gameCode=JCZQ&gameType=BF">
+                                    <span class="xz_input @(gameType == "BF" ? "xz_input_yes" : "xz_input_no")">
+                                    </span>比分
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/blog/standings/@ViewBag.UserId?gameCode=JCZQ&gameType=ZJQ">
+                                    <span class="xz_input @(gameType == "ZJQ" ? "xz_input_yes" : "xz_input_no")">
+                                    </span>进球数
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/blog/standings/@ViewBag.UserId?gameCode=JCZQ&gameType=BQC">
+                                    <span class="xz_input @(gameType == "BQC" ? "xz_input_yes" : "xz_input_no")">
+                                    </span>半全场
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/blog/standings/@ViewBag.UserId?gameCode=JCZQ&gameType=HH">
+                                    <span class="xz_input @(gameType == "HH" ? "xz_input_yes" : "xz_input_no")">
+                                    </span>混合过关
+                                </a>
+                            </li>
+                            break;
                         case "JCLQ":
-                    <li><a href="/blog/standings/@ViewBag.UserId?gameCode=JCLQ&gameType=SF"><span class="xz_input @(gameType == "SF" ? "xz_input_yes" : "xz_input_no")">
-                    </span>胜负</a></li>
-                    <li><a href="/blog/standings/@ViewBag.UserId?gameCode=JCLQ&gameType=RFSF"><span class="xz_input @(gameType == "RFSF" ? "xz_input_yes" : "xz_input_no")">
-                    </span>让分胜负</a></li>
-                    <li><a href="/blog/standings/@ViewBag.UserId?gameCode=JCLQ&gameType=SFC"><span class="xz_input @(gameType == "SFC" ? "xz_input_yes" : "xz_input_no")">
-                    </span>胜分差</a></li>
-                    <li><a href="/blog/standings/@ViewBag.UserId?gameCode=JCLQ&gameType=DXF"><span class="xz_input @(gameType == "DXF" ? "xz_input_yes" : "xz_input_no")">
-                    </span>大小分</a></li>
-                    <li><a href="/blog/standings/@ViewBag.UserId?gameCode=JCLQ&gameType=HH"><span class="xz_input @(gameType == "HH" ? "xz_input_yes" : "xz_input_no")">
-                    </span>混合过关</a></li>
-                                                                                                              break;
+                            <li>
+                                <a href="/blog/standings/@ViewBag.UserId?gameCode=JCLQ&gameType=SF">
+                                    <span class="xz_input @(gameType == "SF" ? "xz_input_yes" : "xz_input_no")">
+                                    </span>胜负
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/blog/standings/@ViewBag.UserId?gameCode=JCLQ&gameType=RFSF">
+                                    <span class="xz_input @(gameType == "RFSF" ? "xz_input_yes" : "xz_input_no")">
+                                    </span>让分胜负
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/blog/standings/@ViewBag.UserId?gameCode=JCLQ&gameType=SFC">
+                                    <span class="xz_input @(gameType == "SFC" ? "xz_input_yes" : "xz_input_no")">
+                                    </span>胜分差
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/blog/standings/@ViewBag.UserId?gameCode=JCLQ&gameType=DXF">
+                                    <span class="xz_input @(gameType == "DXF" ? "xz_input_yes" : "xz_input_no")">
+                                    </span>大小分
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/blog/standings/@ViewBag.UserId?gameCode=JCLQ&gameType=HH">
+                                    <span class="xz_input @(gameType == "HH" ? "xz_input_yes" : "xz_input_no")">
+                                    </span>混合过关
+                                </a>
+                            </li>
+                            break;
                         case "BJDC":
-                    <li><a href="/blog/standings/@ViewBag.UserId?gameCode=BJDC&gameType=SPF"><span class="xz_input @(gameType == "SPF" ? "xz_input_yes" : "xz_input_no")">
-                    </span>胜平负</a></li>
-                    <li><a href="/blog/standings/@ViewBag.UserId?gameCode=BJDC&gameType=ZJQ"><span class="xz_input @(gameType == "ZJQ" ? "xz_input_yes" : "xz_input_no")">
-                    </span>进球数</a></li>
-                    <li><a href="/blog/standings/@ViewBag.UserId?gameCode=BJDC&gameType=BF"><span class="xz_input @(gameType == "BF" ? "xz_input_yes" : "xz_input_no")">
-                    </span>比分</a></li>
-                    <li><a href="/blog/standings/@ViewBag.UserId?gameCode=BJDC&gameType=BQC"><span class="xz_input @(gameType == "BQC" ? "xz_input_yes" : "xz_input_no")">
-                    </span>半全场</a></li>
-                    <li><a href="/blog/standings/@ViewBag.UserId?gameCode=BJDC&gameType=SXDS"><span class="xz_input @(gameType == "SXDS" ? "xz_input_yes" : "xz_input_no")">
-                    </span>上下单双</a></li>
-                                                                                                                break;
+                            <li>
+                                <a href="/blog/standings/@ViewBag.UserId?gameCode=BJDC&gameType=SPF">
+                                    <span class="xz_input @(gameType == "SPF" ? "xz_input_yes" : "xz_input_no")">
+                                    </span>胜平负
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/blog/standings/@ViewBag.UserId?gameCode=BJDC&gameType=ZJQ">
+                                    <span class="xz_input @(gameType == "ZJQ" ? "xz_input_yes" : "xz_input_no")">
+                                    </span>进球数
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/blog/standings/@ViewBag.UserId?gameCode=BJDC&gameType=BF">
+                                    <span class="xz_input @(gameType == "BF" ? "xz_input_yes" : "xz_input_no")">
+                                    </span>比分
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/blog/standings/@ViewBag.UserId?gameCode=BJDC&gameType=BQC">
+                                    <span class="xz_input @(gameType == "BQC" ? "xz_input_yes" : "xz_input_no")">
+                                    </span>半全场
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/blog/standings/@ViewBag.UserId?gameCode=BJDC&gameType=SXDS">
+                                    <span class="xz_input @(gameType == "SXDS" ? "xz_input_yes" : "xz_input_no")">
+                                    </span>上下单双
+                                </a>
+                            </li>
+                            break;
 
 
                     }
@@ -115,7 +220,8 @@
             </ul>
         </div>
         <div class="standings_caizhong_hostoryzg" style="line-height: 38px; padding-left: 10px;">
-            历史战绩详情</div>
+            历史战绩详情
+        </div>
         <table width="100%" class="custombill_table">
             <tr class="fqbuy">
                 <td width="10%" class="custombill_table_td" style="border-left: 1px solid #E5E5E5;">
@@ -151,125 +257,136 @@
                         for (var item = 0; item < bonusList.BonusOrderList.Count; item++)
                         {
                             var bonusL = bonusList.BonusOrderList[item];
-                <tr class="@(item % 2 == 0 ? "ni" : "ni2")" style=" height:30px; ">
-                    <td style="border-top: 1px solid #dadada; border-left: 1px solid #E5E5E5; color: #686868">@(item)
+                            <tr class="@(item % 2 == 0 ? "ni" : "ni2")" style=" height:30px; ">
+                                <td style="border-top: 1px solid #dadada; border-left: 1px solid #E5E5E5; color: #686868">
+                                    @(item)
+                            </td>
+                            <td style="border-top: 1px solid #dadada; color: #686868">
+                                @bonusL.IssuseNumber
+                            </td>
+                            <td style="border-top: 1px solid #dadada; color: #686868">
+                                @(SiteConvert.GameName(bonusL.GameCode, bonusL.GameType))
+                            </td>
+                            <td style="border-top: 1px solid #dadada;">
+                                @bonusL.TotalMoney.ToString("f")元
+                        </td>
+                        <td style="border-top: 1px solid #dadada; color: #26508c">
+                            <a target="_blank" href="/user/scheme/@bonusL.SchemeId" class="under">@(bonusL.IsPrizeMoney ? "是" : "否")</a>
+                        </td>
+                        <td style="border-top: 1px solid #dadada; color: #ff4910 !important; font-weight: normal !important;">
+                            @bonusL.AfterTaxBonusMoney.ToString("f")元
                     </td>
-                    <td style="border-top: 1px solid #dadada; color: #686868">
-                        @bonusL.IssuseNumber
-                    </td>
-                    <td style="border-top: 1px solid #dadada; color: #686868">
-                        @(SiteConvert.GameName(bonusL.GameCode, bonusL.GameType))
-                    </td>
-                    <td style="border-top: 1px solid #dadada;">@bonusL.TotalMoney.ToString("f")元
-                    </td>
-                    <td style="border-top: 1px solid #dadada; color: #26508c">
-                        <a target="_blank" href="/user/scheme/@bonusL.SchemeId" class="under">@(bonusL.IsPrizeMoney ? "是" : "否")</a>
-                    </td>
-                    <td style="border-top: 1px solid #dadada; color: #ff4910 !important; font-weight: normal !important;">@bonusL.AfterTaxBonusMoney.ToString("f")元
-                    </td>
-                    <td style="border-top: 1px solid #dadada; font-weight: normal !important;">@((bonusL.AfterTaxBonusMoney - bonusL.TotalMoney).ToString("f"))元
-                    </td>
-                    <td style="border-top: 1px solid #dadada; border-right: 1px solid #E5E5E5 !important;
+                    <td style="border-top: 1px solid #dadada; font-weight: normal !important;">
+                        @((bonusL.AfterTaxBonusMoney - bonusL.TotalMoney).ToString("f"))元
+                </td>
+                <td style="border-top: 1px solid #dadada; border-right: 1px solid #E5E5E5 !important;
                         color: #686868">
-                        <a target="_blank" href="/user/scheme/@bonusL.SchemeId" class="under" style=" color:#686868 !important">@(bonusL.IsPrizeMoney ? "已返奖" : "已开奖")</a>
-                    </td>
-                </tr>  
-                        }
-                    }
-                    else
-                    {
-                <tr>
-                    <td colspan="10" class="custombill_table_td_data">
-                        暂无数据
-                    </td>
-                </tr>
-                    }
-                }
-                else
-                { 
-                <tr>
-                    <td colspan="10" class="custombill_table_td_data">
-                        暂无数据
-                    </td>
-                </tr>
-                }
+                    <a target="_blank" href="/user/scheme/@bonusL.SchemeId" class="under" style=" color:#686868 !important">@(bonusL.IsPrizeMoney ? "已返奖" : "已开奖")</a>
+                </td>
+            </tr>
+        }
+    }
+    else
+    {
+        <tr>
+            <td colspan="10" class="custombill_table_td_data">
+                暂无数据
+            </td>
+        </tr>
+    }
+}
+else
+{
+    <tr>
+        <td colspan="10" class="custombill_table_td_data">
+            暂无数据
+        </td>
+    </tr>
+}
             }
         </table>
     </div>
     <div class="custombill_center">
-        <div class="standings_caizhong_hostoryzg" style="line-height: 38px; padding-left: 10px;">@(prouser == null ? string.Empty : SiteString.HideUserName(prouser.UserDisplayName, prouser.HideNameCount))
-            发起的合买</div>
-        <table width="100%" class="custombill_table">
-            <tr class="fqbuy">
-                <td width="20%" class="custombill_table_td" style="border-left: 1px solid #E5E5E5;">
-                    订单编号
-                </td>
-                <td width="13%" class="custombill_table_td">
-                    发起人
-                </td>
-                <td width="19%" class="custombill_table_td">
-                    彩种
-                </td>
-                <td width="12%" class="custombill_table_td">
-                    期号
-                </td>
-                <td width="13%" class="custombill_table_td">
-                    类型
-                </td>
-                <td width="10%" class="custombill_table_td">
-                    方案金额
-                </td>
-                <td width="10%" class="custombill_table_td" style="border-right: 1px solid #E5E5E5;">
-                    进度
-                </td>
-            </tr>
-            @{
-                       
-                if (orders != null)
-                {
-                    if (orders.List.Count > 0)
-                    {
-                        for (var item = 0; item < orders.List.Count; item++)
-                        {
-                            var orderL = orders.List[item];
-                <tr class="@(item % 2 == 0 ? "ni" : "ni2")" style=" height:30px; ">
-                    <td style="border-left: 1px solid #E5E5E5; color: #26508c">
-                        <a target="_blank" href="/user/scheme/@orderL.SchemeId" class="under">@orderL.SchemeId</a>
-                    </td>
-                    <td>
-                        <a style="color:#686868 !important" class="under" href="/blog/standings/@orderL.UserId">@SiteString.HideUserName(orderL.UserDisplayName, orderL.HideDisplayNameCount)</a>
-                    </td>
-                    <td style="color: #686868">@SiteConvert.GameName(orderL.GameCodeName, orderL.GameTypeName)
-                    </td>
-                    <td style="color: #686868">@orderL.IssuseNumber
-                    </td>
-                    <td style="color: #686868">@OrderManager.SchemeTypeName(orderL.SchemeType)
-                    </td>
-                    <td style="color: #ff4910">@orderL.TotalMoney.ToString("0")元
-                    </td>
-                    <td style="border-right: 1px solid #E5E5E5; color: #686868">@((orderL.Progress * 100).ToString("f"))%
-                    </td>
-                </tr> 
-                        }
-                    }
-                    else
-                    { 
-                <tr>
-                    <td colspan="12" class="custombill_table_td_data">
-                        暂无数据
-                    </td>
-                </tr>
-                    }
-                }
-                else
-                { 
-                <tr>
-                    <td colspan="12" class="custombill_table_td_data">
-                        暂无数据
-                    </td>
-                </tr>
-                }
-            }
-        </table>
+        <div class="standings_caizhong_hostoryzg" style="line-height: 38px; padding-left: 10px;">
+            @(prouser == null ? string.Empty : SiteString.HideUserName(prouser.UserDisplayName, prouser.HideNameCount))
+        发起的合买
     </div>
+    <table width="100%" class="custombill_table">
+        <tr class="fqbuy">
+            <td width="20%" class="custombill_table_td" style="border-left: 1px solid #E5E5E5;">
+                订单编号
+            </td>
+            <td width="13%" class="custombill_table_td">
+                发起人
+            </td>
+            <td width="19%" class="custombill_table_td">
+                彩种
+            </td>
+            <td width="12%" class="custombill_table_td">
+                期号
+            </td>
+            <td width="13%" class="custombill_table_td">
+                类型
+            </td>
+            <td width="10%" class="custombill_table_td">
+                方案金额
+            </td>
+            <td width="10%" class="custombill_table_td" style="border-right: 1px solid #E5E5E5;">
+                进度
+            </td>
+        </tr>
+        @{
+
+            if (orders != null)
+            {
+                if (orders.List.Count > 0)
+                {
+                    for (var item = 0; item < orders.List.Count; item++)
+                    {
+                        var orderL = orders.List[item];
+                        <tr class="@(item % 2 == 0 ? "ni" : "ni2")" style=" height:30px; ">
+                            <td style="border-left: 1px solid #E5E5E5; color: #26508c">
+                                <a target="_blank" href="/user/scheme/@orderL.SchemeId" class="under">@orderL.SchemeId</a>
+                            </td>
+                            <td>
+                                <a style="color:#686868 !important" class="under" href="/blog/standings/@orderL.UserId">@SiteString.HideUserName(orderL.UserDisplayName, orderL.HideDisplayNameCount)</a>
+                            </td>
+                            <td style="color: #686868">
+                                @SiteConvert.GameName(orderL.GameCodeName, orderL.GameTypeName)
+                        </td>
+                        <td style="color: #686868">
+                            @orderL.IssuseNumber
+                    </td>
+                    <td style="color: #686868">
+                        @OrderManager.SchemeTypeName(orderL.SchemeType)
+                </td>
+                <td style="color: #ff4910">
+                    @orderL.TotalMoney.ToString("0")元
+            </td>
+            <td style="border-right: 1px solid #E5E5E5; color: #686868">
+                @((orderL.Progress * 100).ToString("f"))%
+        </td>
+    </tr>
+}
+}
+else
+{
+<tr>
+    <td colspan="12" class="custombill_table_td_data">
+        暂无数据
+    </td>
+</tr>
+}
+}
+else
+{
+<tr>
+    <td colspan="12" class="custombill_table_td_data">
+        暂无数据
+    </td>
+</tr>
+}
+        }
+    </table>
+</div>
 </div>
