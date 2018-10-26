@@ -493,11 +493,11 @@ namespace UserLottery.Service.ModuleServices
         /// <summary>
         /// 删除站内信
         /// </summary>
-        public Task<CommonActionResult> DeleteInnerMail(string innerMailId, string userId)
+        public Task<CommonActionResult> DeleteInnerMail(string innerMailId, string UserId)
         {
 
             var siteBiz = new SiteMessageControllBusiness();
-            siteBiz.DeleteInnerMail(innerMailId,userId);
+            siteBiz.DeleteInnerMail(innerMailId, UserId);
 
             return Task.FromResult(new CommonActionResult(true, "删除站内信完成。"));
         }
@@ -1913,6 +1913,23 @@ namespace UserLottery.Service.ModuleServices
             var loginBiz = new LocalLoginBusiness();
             var count = loginBiz.GetTodayRegisterCount(date, localIP);
             return Task.FromResult(count);
+        }
+        public Task<bool> LoginGiveRedEnvelopes(string UserId, string IPAddress)
+        {
+            try
+            {
+                LocalLoginBusiness login = new LocalLoginBusiness();
+                var boolRedEnvelopes = login.User_AfterLogin(UserId, "LOCAL", IPAddress, DateTime.Now);
+                BusinessHelper.ExecPlugin<IUser_AfterLogin>(new object[] { UserId, "LOCAL", IPAddress, DateTime.Now });
+                //刷新用户在Redis中的余额
+                BusinessHelper.RefreshRedisUserBalance(UserId);
+                return Task.FromResult(boolRedEnvelopes);
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message, ex);
+            }
         }
     }
 }

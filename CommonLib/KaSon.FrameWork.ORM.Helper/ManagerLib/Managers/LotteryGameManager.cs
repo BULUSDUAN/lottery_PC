@@ -252,17 +252,18 @@ namespace KaSon.FrameWork.ORM.Helper
                         select g.IssuseNumber;
             return string.Join(",", query.Take(length).ToList());
         }
+
         public IList<GameInfo> QueryEnableGame()
         {
             return (from g in DB.CreateQuery<C_Lottery_Game>()
-                    where g.EnableStatus ==(int)EnableStatus.Enable
+                    where g.EnableStatus == (int)EnableStatus.Enable
                     orderby g.GameCode
                     select new GameInfo
                     {
                         GameCode = g.GameCode,
                         DisplayName = g.DisplayName
                     }
-             ).ToList<GameInfo>();
+             ).ToList();
         }
     }
 }

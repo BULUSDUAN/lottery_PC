@@ -58,12 +58,12 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             return User;
         }
-        public IList<C_Auth_Users> GetRoleListByIds(string[] roleIds)
+        public IList<C_Auth_Roles> GetRoleListByIds(string[] roleIds)
         {
-            var list = new List<C_Auth_Users>();
+            var list = new List<C_Auth_Roles>();
             foreach (var roleId in roleIds)
             {
-                list.Add(LoadUser(roleId));
+                list.Add(LoadRole(roleId));
             }
             return list;
         }
@@ -80,6 +80,11 @@ namespace KaSon.FrameWork.ORM.Helper
         public void AddUserRole(List<C_Auth_UserRole> entity)
         {
             DB.GetDal<C_Auth_UserRole>().BulkAdd(entity);
+        }
+
+        public C_Auth_Roles LoadRole(string roleId)
+        {
+            return DB.CreateQuery<C_Auth_Roles>().Where(p => p.RoleId == roleId).FirstOrDefault();
         }
 
         public void UpdateSystemUser(C_Auth_Users user)
@@ -109,6 +114,34 @@ namespace KaSon.FrameWork.ORM.Helper
         public List<MethodFunction> LoadAllMethodFunction()
         {
             return DB.CreateQuery<MethodFunction>().ToList();
+        }
+
+        public SysOpratorInfo_Collection GetOpratorCollection(int pageIndex, int pageSize)
+        {
+            pageIndex = pageIndex < 0 ? 0 : pageIndex;
+            string sql = SqlModule.AdminModule.FirstOrDefault(x => x.Key == "Admin_GetOpratorCollection").SQL;
+            List<SysOpratorInfo> list= DB.CreateSQLQuery(sql)
+                .SetInt("PageIndex", pageIndex)
+                .SetInt("PageSize", pageSize)
+                .List<SysOpratorInfo>().ToList();
+            var result = new SysOpratorInfo_Collection();
+            result.OpratorListInfo = list;
+            var count = DB.CreateQuery<C_Auth_Users>().Where(p => p.RegFrom == "INNER").Count();
+            result.TotalCount = count;
+            return result;
+        }
+
+        public List<C_Auth_Roles> QueryRoleCollection()
+        {
+            var result = DB.CreateQuery<C_Auth_Roles>().ToList();
+            return result;
+        }
+
+
+        public List<C_Auth_UserRole> QueryAuthUserRoleByUserId(string UserId)
+        {
+            var result = DB.CreateQuery<C_Auth_UserRole>().Where(p => p.UserId == UserId).ToList();
+            return result;
         }
     }
 }

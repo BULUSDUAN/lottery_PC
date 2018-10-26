@@ -33,38 +33,41 @@
 
   //必须配置 服务发现配置
   "ConsulSettings": {
-    "IpAddrs": "10.0.3.27:8501", 
+    "IpAddrs": "10.0.3.27:8501",
 
-  "SelfDomain": "http://localhost:729",
-  "MobileDomain": "http://localhost:729",
-  "ResSiteUrl": "http://10.0.3.6:888",
-  "Max_BetListCount": 6, //投注队列最大个数
-  "Max_PrizeListCount": 11, //派奖队列最大个数
-  "WaitingOrderListCount": 10, //早上自动拆票最大队列
+    "SelfDomain": "http://localhost:729",
+    "MobileDomain": "http://localhost:729",
+    "ResSiteUrl": "http://10.0.3.6:888",
+    "Max_BetListCount": 6, //投注队列最大个数
+    "Max_PrizeListCount": 11, //派奖队列最大个数
+    "WaitingOrderListCount": 10, //早上自动拆票最大队列
 
-  "QueryUserFundDetailFromCache": false,
-  //缓存配置文件，暂时没用到默认
+    "QueryUserFundDetailFromCache": false,
+    //缓存配置文件，暂时没用到默认
 
-  //必须配置
-  "HostSettings": {
-    "Ip": "127.0.0.1", //服务启动IP
-    "WatchInterval": 30,
-    "Port": 10108, //服务启动端口
-    "Token": "true",
-    "RequestCacheEnabled": false
-  },
-  //必须配置  RebbitMq 启动地址
-  "RebbitMqSettings": {
-    "EventBusConnection": "127.0.0.1",
-    "EventBusUserName": "guest",
-    "EventBusPassword": "guest",
-    "VirtualHost": "/",
-    "BrokerName": "Kason.Sg",
-    "Port": "5672"
-  }, //必须配置 服务发现配置
-    "ConsulSettings": {
-      "IpAddrs": "10.0.3.27:8501", //服务启动IP 10.0.3.27:8501
-      "Token": "16c5413b-276c-45ab-9b0e-9664126f1163"
+    //必须配置
+    "HostSettings": {
+      "Ip": "127.0.0.1", //服务启动IP
+      "WatchInterval": 30,
+      "Port": 10108, //服务启动端口
+      "Token": "true",
+      "RequestCacheEnabled": false
+    },
+    //必须配置  RebbitMq 启动地址
+    "RebbitMqSettings": {
+      "EventBusConnection": "127.0.0.1",
+      "EventBusUserName": "guest",
+      "EventBusPassword": "guest",
+      "VirtualHost": "/",
+      "BrokerName": "Kason.Sg",
+      "Port": "5672"
+    }, //服务启动IP 10.0.3.27:8501
+    "Token": "16c5413b-276c-45ab-9b0e-9664126f1163",
+    "GameApi": {
+      "OperatorCode": "3D6A71F4AFB44EB0AAC28832666197CA",
+      "SecretKey": "5A25DDBC66964BD7BFFB59A30635C2F3",
+      "PreName": "DJW",
+      "URL": "http://api.mtechgame.com/generic"
     }
 
   }

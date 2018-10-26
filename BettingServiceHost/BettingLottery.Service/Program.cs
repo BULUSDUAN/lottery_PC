@@ -52,7 +52,7 @@ namespace BettingLottery.Service.Host
             //JToken ORMSettings = ConfigHelper.AllConfigInfo["ORMSettings"];
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             var host = new ServiceHostBuilder()
-               // .CaptureStartupErrors(true),
+                // .CaptureStartupErrors(true),
                 .RegisterServices(builder =>
                 {
                     builder.AddMicroService(option =>
@@ -63,10 +63,10 @@ namespace BettingLottery.Service.Host
                         //option.UseZooKeeperManager(new ConfigInfo("127.0.0.1:2181"));
                         .UseConsulManager(config)
                         .UseDotNettyTransport()
-                       // .UseRabbitMQTransport()
+                        //.UseRabbitMQTransport()
                         //.AddRabbitMQAdapt()
 
-                       // .AddCache()
+                        // .AddCache()
                         //.UseKafkaMQTransport(kafkaOption =>
                         //{
                         //    kafkaOption.Servers = "127.0.0.1";
@@ -81,26 +81,22 @@ namespace BettingLottery.Service.Host
                         builder.Register(p => new CPlatformContainer(ServiceLocator.Current));
                     });
                 })
-                //.SubscribeAt()
+               //.SubscribeAt()
                // .UseLog4net(LogLevel.Error, "Config/log4net.config")
                // .UseNLog(LogLevel.Error, "Config/NLog.config")
                .UseLog4net("Config/log4net.config")
-                //.UseServer("127.0.0.1", 98)
-                //.UseServer("127.0.0.1", 98，“true”) //自动生成Token
-                //.UseServer("127.0.0.1", 98，“123456789”) //固定密码Token
+
                 .UseServer(options =>
                 {
-                    //  options.IpEndpoint = new IPEndPoint(IPAddress.Any, 98);  
-                    // options.Port = 10098;
-                    // options.Ip = "127.0.0.1";
+
                     options.Token = "True";
                     options.ExecutionTimeoutInMilliseconds = 30000;
 
                     options.MaxConcurrentRequests = 2000;
                 })
                 // .UseServiceCache()
-                .Configure(build =>
-                build.AddEventBusJson(RebbitMqSettings))
+                //.Configure(build =>
+                //build.AddEventBusJson(RebbitMqSettings))
                 .Configure(build =>
                 //build.AddCacheFile("cacheSettings.json", optional: false, reloadOnChange: true))
                 //  .Configure(build =>
@@ -113,21 +109,16 @@ namespace BettingLottery.Service.Host
 
             //var list = JsonHelper.Deserialize<List<KaSon.FrameWork.ORM.OrmConfigInfo>>(ORMSettings.ToString());
             //DbProvider.InitConfigJson(list);
-          
-            // InitConfigInfo.logFactory = ServiceLocator.GetService<ILoggerProvider>();
-          
 
-            //Log4Log.Info("测试测试测试");
-            //Log4Log.Info("测试测试测试");
-            //Log4Log.Info("测试测试测试");
-            //Log4Log.Info("测试测试测试");
-            //Log4Log.Info("测试测试测试");
+            // InitConfigInfo.logFactory = ServiceLocator.GetService<ILoggerProvider>();
+
+
 
             using (host.Run())
             {
                 #region 初始化配置
-                InitConfigInfo.logFactory  = ServiceLocator.GetService<ILoggerFactory>();
-               
+                InitConfigInfo.logFactory = ServiceLocator.GetService<ILoggerFactory>();
+
                 #endregion
 
                 Console.WriteLine($"服务端启动成功，{DateTime.Now}。");
@@ -139,9 +130,12 @@ namespace BettingLottery.Service.Host
 
             //清空打印
 
-          //  ConsoleHelper.Clear();
+            ConsoleHelper.Clear();
 
+            //这个要保留，认主线程一直运行
             Console.ReadLine();
+
+
         }
     }
 

@@ -1,5 +1,5 @@
 ﻿@{
-    var mail = ViewBag.InnerMail as GameBiz.Core.InnerMailInfo_Query;
+    var mail = ViewBag.InnerMail as EntityModel.CoreModel.InnerMailInfo_Query;
     ViewBag.Title = mail.Title + " - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
     ViewBag.keywords = mail.Title + ", 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
 }

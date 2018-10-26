@@ -1626,4 +1626,19 @@ namespace EntityModel.Enum
         /// </summary>
         Agent_Menu = 20,
     }
+    public enum AdminSelectType
+    {
+        /// <summary>
+        /// 未选中
+        /// </summary>
+        NotSelect=0,
+        /// <summary>
+        /// 已选中
+        /// </summary>
+        Selecct=1,
+        /// <summary>
+        /// 必须选中
+        /// </summary>
+        MustSelect=2
+    }
 }

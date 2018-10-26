@@ -515,5 +515,13 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             return DB.CreateQuery<C_User_Register>().Count();
         }
+
+        public void UpdateDisplayName(string userId, string newDisplayName)
+        {
+            var manager = new UserBalanceManager();
+            var user = manager.GetUserRegister(userId);
+            user.DisplayName = newDisplayName;
+            manager.UpdateUserRegister(user);
+        }
     }
 }

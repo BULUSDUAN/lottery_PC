@@ -11,7 +11,15 @@ namespace KaSon.FrameWork.ORM.Helper
 {
     public class GameBusiness
     {
-
+        //private static GameInfoCollection _gameList = null;
+        ///// <summary>
+        ///// 所有彩种信息
+        ///// </summary>
+        public static GameInfoCollection GameList()
+        {
+            var _gameList = new GameBusiness().QueryGameInfoCollection();
+            return _gameList;
+        }
         ///// <summary>
         ///// 所有彩种状态
         ///// </summary>
@@ -141,7 +149,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public IList<C_BJDC_Issuse> QueryCurrentBJDCIssuseInfo()
         {
             return new DataQuery().CurrentBJDCIssuseInfo();
-          //  return entity;
+            //  return entity;
         }
         public Issuse_QueryInfo QueryCurrentNewIssuseInfo(string gameCode, string gameType)
         {

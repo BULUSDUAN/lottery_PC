@@ -287,28 +287,39 @@ namespace app.lottery.site.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public ActionResult Autofollow(string id)
+        public async Task<ActionResult> Autofollow(string id)
         {
             ViewBag.GameCode = string.IsNullOrEmpty(id) ? "" : id.ToLower();
             ViewBag.GameType = string.IsNullOrEmpty(Request["gametype"]) ? "" : Request["gametype"];
             ViewBag.pageIndex = string.IsNullOrEmpty(Request["pageIndex"]) ? 0 : int.Parse(Request["pageIndex"]);
             ViewBag.PageSize = string.IsNullOrEmpty(Request["pageSize"]) ? 10 : int.Parse(Request["pageSize"]);
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            param["gameCode"] = ViewBag.GameCode;
+            param["gameType"] = ViewBag.GameType;
+            param["pageIndex"] = ViewBag.pageIndex;
+            param["pageSize"] = ViewBag.PageSize;
+            param["UserId"] = UserToken;
+            ViewBag.FollowList = await serviceProxyProvider.Invoke<EntityModel.CoreModel.TogetherFollowerRuleQueryInfoCollection>(param, "api/Order/QueryUserFollowRule");
 
-
-            ViewBag.FollowList = WCFClients.GameClient.QueryUserFollowRuleByCreater(ViewBag.GameCode, ViewBag.GameType, ViewBag.pageIndex, ViewBag.PageSize, UserToken);
-            return View();
+             return View();
         }
         /// <summary>
         /// 成功定制记录
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public ActionResult Followrecord(string id)
+        public async Task<ActionResult> Followrecord(string id)
         {
             ViewBag.GameCode = string.IsNullOrEmpty(id) ? "" : id;
             ViewBag.pageIndex = string.IsNullOrEmpty(Request["pageIndex"]) ? 0 : int.Parse(Request["pageIndex"]);
             ViewBag.PageSize = string.IsNullOrEmpty(Request["pageSize"]) ? 10 : int.Parse(Request["pageSize"]);
-            ViewBag.FollowRecord = WCFClients.GameClient.QuerySucessFolloweRecord(ViewBag.GameCode, -1, ViewBag.pageIndex, ViewBag.PageSize, UserToken);
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            param["gameCode"] = ViewBag.GameCode;
+            param["ruleId"] = ViewBag.GameType;
+            param["pageIndex"] = ViewBag.pageIndex;
+            param["pageSize"] = ViewBag.PageSize;
+            param["UserId"] = UserToken;
+            ViewBag.FollowRecord = await serviceProxyProvider.Invoke<EntityModel.CoreModel.TogetherFollowRecordInfoCollection>(param, "api/Order/QuerySucessFolloweRecord");
             return View();
         }
         /// <summary>
@@ -316,13 +327,19 @@ namespace app.lottery.site.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public ActionResult Followme()
+        public async Task<ActionResult> Followme()
         {
             ViewBag.GameCode = string.IsNullOrEmpty(Request["gamecode"]) ? "" : Request["gamecode"].ToLower();
             ViewBag.GameType = string.IsNullOrEmpty(Request["gametype"]) ? "" : Request["gametype"].ToLower();
             ViewBag.pageIndex = string.IsNullOrEmpty(Request["pageIndex"]) ? 0 : int.Parse(Request["pageIndex"]);
             ViewBag.PageSize = string.IsNullOrEmpty(Request["pageSize"]) ? 10 : int.Parse(Request["pageSize"]);
-            ViewBag.FollowMeList = WCFClients.GameClient.QueryUserFollowRule(ViewBag.GameCode, ViewBag.GameType, ViewBag.pageIndex, ViewBag.PageSize, UserToken);
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            param["gameCode"] = ViewBag.GameCode;
+            param["ruleId"] = ViewBag.GameType;
+            param["pageIndex"] = ViewBag.pageIndex;
+            param["pageSize"] = ViewBag.PageSize;
+            param["UserId"] = UserToken;
+            ViewBag.FollowMeList = await serviceProxyProvider.Invoke<EntityModel.CoreModel.TogetherFollowRecordInfoCollection>(param, "api/Order/QueryUserFollowMeRule");
             return View();
         }
         /// <summary>
@@ -524,7 +541,7 @@ namespace app.lottery.site.Controllers
                 ViewBag.End = string.IsNullOrEmpty(Request.QueryString["end"]) ? DateTime.Today : DateTime.Parse(Request.QueryString["end"]);
                 ViewBag.pageNo = string.IsNullOrEmpty(Request.QueryString["pageNo"]) ? 0 : int.Parse(Request.QueryString["pageNo"]);
                 ViewBag.PageSize = string.IsNullOrEmpty(Request.QueryString["pageSize"]) ? 10 : int.Parse(Request.QueryString["pageSize"]);
-                FillMoneyStatus? status = string.IsNullOrEmpty(Request.QueryString["status"]) ? null : ((FillMoneyStatus?)int.Parse(Request.QueryString["status"]));
+                EntityModel.Enum.FillMoneyStatus? status = string.IsNullOrEmpty(Request.QueryString["status"]) ? null : ((EntityModel.Enum.FillMoneyStatus?)int.Parse(Request.QueryString["status"]));
                 ViewBag.Status = status;
                 var beginTime = ViewBag.Begin;
                 if (beginTime < DateTime.Now.AddMonths(-1))
@@ -563,7 +580,7 @@ namespace app.lottery.site.Controllers
                 endDate = DateTime.Today;
             }
             ViewBag.GameCode = string.IsNullOrEmpty(Request["gameCode"]) ? string.Empty : Request["gameCode"];
-            ViewBag.BonusStatus = string.IsNullOrEmpty(Request["bonusStatus"]) ? null : (BonusStatus?)int.Parse(Request["bonusStatus"]);
+            ViewBag.BonusStatus = string.IsNullOrEmpty(Request["bonusStatus"]) ? null : (EntityModel.Enum.BonusStatus?)int.Parse(Request["bonusStatus"]);
             ViewBag.pageNo = string.IsNullOrEmpty(Request["pageNo"]) ? 0 : int.Parse(Request["pageNo"]);
             ViewBag.PageSize = string.IsNullOrEmpty(Request["pageSize"]) ? 10 : int.Parse(Request["pageSize"]);
             ViewBag.CurrentUser = CurrentUser;
@@ -1201,7 +1218,7 @@ namespace app.lottery.site.Controllers
             ViewBag.User = CurrentUser;
             return View();
         }
-        public JsonResult Submitsuggestion()
+        public async Task<JsonResult> Submitsuggestion()
         {
             try
             {
@@ -1214,7 +1231,7 @@ namespace app.lottery.site.Controllers
                 string category = PreconditionAssert.IsNotEmptyString(Request.Form["category"], "请选择问题分类，以便我们更好的处理问题。");
                 string suggestion = PreconditionAssert.IsNotEmptyString(Request.Form["suggestion"], "请输入您的投诉内容。");
                 PreconditionAssert.IsFalse(SensitiveAnalyzer.IsHaveSensitive(suggestion), "投诉内容不允许包含敏感词，如有疑问请联系客服。");
-                UserIdeaInfo_Add ideaInfo = new UserIdeaInfo_Add()
+                EntityModel.CoreModel.UserIdeaInfo_Add ideaInfo = new EntityModel.CoreModel.UserIdeaInfo_Add()
                 {
                     Description = suggestion,
                     Category = category,
@@ -1229,7 +1246,10 @@ namespace app.lottery.site.Controllers
                     ContentConveyDistinct = decimal.Parse(ContentConveyDistinct),
 
                 };
-                var result = WCFClients.ExternalClient.SubmitUserIdea(ideaInfo);
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["userIdea"] = ideaInfo;
+
+                var result = await serviceProxyProvider.Invoke<EntityModel.Communication.CommonActionResult>(param, "api/data/SubmitUserIdea");
                 return Json(result);
             }
             catch (Exception ex)
@@ -1246,24 +1266,35 @@ namespace app.lottery.site.Controllers
         /// 站内信
         /// </summary>
         /// <returns></returns>
-        public ActionResult Innermail()
+        public async Task<ActionResult> Innermail()
         {
             ViewBag.pageNo = string.IsNullOrEmpty(Request.QueryString["pageNo"]) ? 0 : int.Parse(Request.QueryString["pageNo"]);
             ViewBag.PageSize = string.IsNullOrEmpty(Request.QueryString["pageSize"]) ? 10 : int.Parse(Request.QueryString["pageSize"]);
-
-            ViewBag.UnReadMail = WCFClients.GameQueryClient.GetMyUnreadInnerMailCount(UserToken);
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            param["userId"] = UserToken;
+            ViewBag.UnReadMail = await serviceProxyProvider.Invoke<int>(param, "api/user/GetMyUnreadInnerMailCount");
             var innerstatus = string.IsNullOrEmpty(Request["status"]) ? 3 : int.Parse(Request["status"]);
-            //ViewBag.TotalList = WCFClients.GameQueryClient.QueryMyInnerMailList(ViewBag.pageNo, ViewBag.PageSize, UserToken);//
-            ViewBag.TotalCount = WCFClients.GameQueryClient.GetUserInnerMailCount(CurrentUser.LoginInfo.UserId);
+            param.Clear();
+            param["UserId"] = CurrentUser.LoginInfo.UserId;
+            ViewBag.TotalCount = await serviceProxyProvider.Invoke<int>(param, "api/user/GetUserInnerMailCount");
 
             if (innerstatus == 3)
             {
-                ViewBag.InnerMailList = WCFClients.GameQueryClient.QueryMyInnerMailList(ViewBag.pageNo, ViewBag.PageSize, UserToken);
+                param.Clear();
+                param["pageIndex"] = ViewBag.pageNo;
+                param["pageSize"] = ViewBag.PageSize;
+                param["UserId"] = UserToken;
+                ViewBag.InnerMailList = await serviceProxyProvider.Invoke<EntityModel.CoreModel.SiteMessageInnerMailListNew_Collection>(param, "api/user/QueryMyInnerMailList");
             }
             else
             {
                 var type = (InnerMailHandleType)(innerstatus);
-                ViewBag.InnerMailList = WCFClients.GameQueryClient.QueryUnReadInnerMailListByReceiver(CurrentUser.LoginInfo.UserId, ViewBag.pageNo, ViewBag.PageSize, type);
+                param.Clear();
+                param["userId"] = CurrentUser.LoginInfo.UserId;
+                param["pageIndex"] = ViewBag.pageNo;
+                param["pageSize"] = ViewBag.PageSize;
+                param["handleType"] = type;
+                ViewBag.InnerMailList = await serviceProxyProvider.Invoke<EntityModel.CoreModel.SiteMessageInnerMailListNew_Collection>(param, "api/user/QueryUnReadInnerMailListByReceiver");
             }
             return View();
         }
@@ -1271,12 +1302,15 @@ namespace app.lottery.site.Controllers
         /// 站内信内容
         /// </summary>
         /// <returns></returns>
-        public ActionResult Innermailcontent()
+        public async Task<ActionResult> Innermailcontent()
         {
             try
             {
                 string mailId = Request.QueryString["MailId"];
-                var mailContent = WCFClients.GameQueryClient.ReadInnerMail(mailId, UserToken);
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["innerMailId"] = mailId;
+                param["UserId"] = UserToken;
+                var mailContent = await serviceProxyProvider.Invoke<EntityModel.CoreModel.InnerMailInfo_Query>(param, "api/user/ReadInnerMail");
                 ViewBag.InnerMail = mailContent;
             }
             catch (Exception ex)
@@ -1292,7 +1326,7 @@ namespace app.lottery.site.Controllers
         /// <param name="postForm"></param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult Deleteinnermail(FormCollection postForm)
+        public async Task<JsonResult> Deleteinnermail(FormCollection postForm)
         {
             try
             {
@@ -1300,7 +1334,10 @@ namespace app.lottery.site.Controllers
                 var mailid_ = mailid.Split(',');
                 for (int i = 0; i < mailid_.Length; i++)
                 {
-                    WCFClients.GameQueryClient.DeleteInnerMail(mailid_[i], CurrentUser.LoginInfo.UserId);
+                    Dictionary<string, object> param = new Dictionary<string, object>();
+                    param["innerMailId"] = mailid_[i];
+                    param["UserId"] = CurrentUser.LoginInfo.UserId;
+                    await serviceProxyProvider.Invoke<EntityModel.Communication.CommonActionResult>(param, "api/user/DeleteInnerMail");
                 }
                 return Json(new { IsSuccess = true, Message = "删除站内信完成" });
             }
@@ -2145,7 +2182,7 @@ namespace app.lottery.site.Controllers
         }
 
         //购彩记录
-        public ActionResult GcRecord()
+        public async Task<ActionResult> GcRecord()
         {
             try
             {
@@ -2158,7 +2195,13 @@ namespace app.lottery.site.Controllers
                 ViewBag.CurrentUser = CurrentUser;
                 if (ViewBag.Begin < DateTime.Now.AddMonths(-1))
                     ViewBag.Begin = DateTime.Now.AddMonths(-1);
-                ViewBag.BettingOrder = WCFClients.GameQueryClient.QueryMyBettingOrderList(ViewBag.BonusStatus, "", ViewBag.begin, ViewBag.end, ViewBag.pageNo, ViewBag.PageSize, UserToken);
+                Dictionary<string, object> param = new Dictionary<string, object>();
+
+                var Model = new QueryMyBettingOrderParam() { UserID = UserToken, startTime = ViewBag.begin, endTime = ViewBag.end, pageIndex = ViewBag.pageNo, pageSize = ViewBag.PageSize, bonusStatus = ViewBag.BonusStatus, gameCode = "" };
+                param["Model"] = Model;
+                ViewBag.BettingOrder = await serviceProxyProvider.Invoke<EntityModel.CoreModel.MyBettingOrderInfoCollection>(param, "api/Order/QueryMyBettingOrderList");
+
+               // ViewBag.BettingOrder = WCFClients.GameQueryClient.QueryMyBettingOrderList(ViewBag.BonusStatus, "", ViewBag.begin, ViewBag.end, ViewBag.pageNo, ViewBag.PageSize, UserToken);
             }
             catch (Exception)
             {
@@ -2189,7 +2232,7 @@ namespace app.lottery.site.Controllers
         }
 
         //充值记录
-        public ActionResult RechargeRecord()
+        public async Task<ActionResult> RechargeRecord()
         {
             string accountType = string.IsNullOrEmpty(Request["accountType"]) ? "" : Request["accountType"];
             ViewBag.AccountType = accountType;
@@ -2197,11 +2240,24 @@ namespace app.lottery.site.Controllers
             ViewBag.End = string.IsNullOrEmpty(Request.QueryString["end"]) ? DateTime.Today : DateTime.Parse(Request.QueryString["end"]);
             ViewBag.pageNo = string.IsNullOrEmpty(Request.QueryString["pageNo"]) ? 0 : int.Parse(Request.QueryString["pageNo"]);
             ViewBag.PageSize = string.IsNullOrEmpty(Request.QueryString["pageSize"]) ? 10 : int.Parse(Request.QueryString["pageSize"]);
-            ViewBag.FundDetails = WCFClients.GameQueryClient.QueryMyFundDetailList(ViewBag.Begin, ViewBag.End, accountType, "", ViewBag.pageNo, ViewBag.PageSize, UserToken);
+
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            var Model = new EntityModel.RequestModel.QueryUserFundDetailParam() { viewtype = "", userid = UserToken, fromDate = ViewBag.Begin, toDate = ViewBag.End, pageIndex = ViewBag.pageNo, pageSize = ViewBag.PageSize, accountTypeList = accountType };
+            param["Model"] = Model;
+            ViewBag.FundDetails = await serviceProxyProvider.Invoke<EntityModel.CoreModel.UserFundDetailCollection>(param, "api/order/QueryMyFundDetailList");
+
+            //ViewBag.FundDetails = WCFClients.GameQueryClient.QueryMyFundDetailList(ViewBag.Begin, ViewBag.End, accountType, "", ViewBag.pageNo, ViewBag.PageSize, UserToken);
             ViewBag.CurrentUser = CurrentUser;
             if (ViewBag.Begin < DateTime.Now.AddMonths(-1))
                 ViewBag.Begin = DateTime.Now.AddMonths(-1);
-            ViewBag.FillMoneyCollection = WCFClients.GameQueryClient.QueryMyFillMoneyList("1", ViewBag.Begin, ViewBag.End.AddDays(1), ViewBag.pageNo, ViewBag.PageSize, UserToken);
+
+            param.Clear();
+            var MoneyModel = new QueryFillMoneyListParam() { userid = UserToken, startTime = ViewBag.Begin, endTime = ViewBag.End.AddDays(1), pageIndex = ViewBag.pageNo, pageSize = ViewBag.PageSize, statusList = "1" };
+            param["Model"] = MoneyModel;
+            ViewBag.FillMoneyCollection = await serviceProxyProvider.Invoke<EntityModel.CoreModel.FillMoneyQueryInfoCollection>(param, "api/Order/QueryMyFillMoneyList");
+
+
+            //ViewBag.FillMoneyCollection = WCFClients.GameQueryClient.QueryMyFillMoneyList("1", ViewBag.Begin, ViewBag.End.AddDays(1), ViewBag.pageNo, ViewBag.PageSize, UserToken);
             return View();
         }
 
@@ -4791,10 +4847,11 @@ namespace app.lottery.site.Controllers
             ViewBag.CurrentUserBalance = CurrentUserBalance;
             ViewBag.Url_1 = ConfigurationManager.AppSettings["TGDomain_1"] + "?yqid=" + CurrentUser.LoginInfo.UserId;
             ViewBag.Url_2 = ConfigurationManager.AppSettings["TGDomain_2"] + "?yqid=" + CurrentUser.LoginInfo.UserId;
+
             return View();
         }
 
-        public ActionResult SporeadUsers()
+        public async Task<ActionResult> SporeadUsers()
         {
             var beginDate = string.IsNullOrEmpty(Request["begin"]) ? DateTime.Today.AddMonths(-1) : DateTime.Parse(Request["begin"]);
             var endDate = string.IsNullOrEmpty(Request["end"]) ? Convert.ToDateTime(string.Format("{0} 23:59:59", DateTime.Now.ToString("yyyy-MM-dd"))) : Convert.ToDateTime(string.Format("{0} 23:59:59", DateTime.Parse(Request["end"]).ToString("yyyy-MM-dd")));
@@ -4808,7 +4865,13 @@ namespace app.lottery.site.Controllers
             ViewBag.CurrentUser = CurrentUser;
             ViewBag.Begin = beginDate;
             ViewBag.End = endDate;
-            ViewBag.Sporeds = WCFClients.ExternalClient.QuerySporeadUsers(CurrentUser.LoginInfo.UserId, ViewBag.Begin, ViewBag.End, ViewBag.pageNo, ViewBag.PageSize);
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            param["agentId"] = CurrentUser.LoginInfo.UserId;
+            param["startTime"] = ViewBag.Begin;
+            param["endTime"] = ViewBag.End;
+            param["pageIndex"] = ViewBag.pageNo;
+            param["pageSize"] = ViewBag.PageSize;
+            ViewBag.Sporeds = await serviceProxyProvider.Invoke<EntityModel.CoreModel.SporeadUsersCollection>(param, "api/Order/QuerySporeadUsers");
             return View();
         }
         #endregion

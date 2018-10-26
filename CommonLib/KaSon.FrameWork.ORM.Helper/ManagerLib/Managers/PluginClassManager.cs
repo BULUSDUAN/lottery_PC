@@ -35,6 +35,36 @@ namespace KaSon.FrameWork.ORM.Helper
             var query = from a in DB.CreateQuery<C_Activity_PluginClass>()
                         where (a.InterfaceName == interfaceName)
                         select a;
+            totalCount = query.Count();
+            return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+        }
+
+        public void AddPluginClass(C_Activity_PluginClass pluginClass)
+        {
+            DB.GetDal<C_Activity_PluginClass>().Add(pluginClass);
+        }
+
+        public C_Activity_PluginClass QueryPluginClassById(int id)
+        {
+            return DB.CreateQuery<C_Activity_PluginClass>().Where(p => p.Id == id).FirstOrDefault();
+        }
+
+        public void UpdatePluginClass(C_Activity_PluginClass pluginClass)
+        {
+            DB.GetDal<C_Activity_PluginClass>().Update(pluginClass);
+        }
+
+        public void DeletePluginClass(C_Activity_PluginClass pluginClass)
+        {
+            DB.GetDal<C_Activity_PluginClass>().Delete(pluginClass);
+        }
+
+        /// <summary>
+        /// 查询插件列表
+        /// </summary>
+        public List<C_Activity_PluginClass> QueryPluginClassList(int pageIndex, int pageSize, out int totalCount)
+        {
+            var query = DB.CreateQuery<C_Activity_PluginClass>();
             totalCount = query.ToList().Count;
             return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
         }

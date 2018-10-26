@@ -1,7 +1,7 @@
 ﻿@{
     ViewBag.Title = "红包明细 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
     ViewBag.keywords = "红包明细, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
-    var redbag = ViewBag.RedBag as GameBiz.Core.UserFundDetailCollection;
+    var redbag = ViewBag.RedBag as EntityModel.CoreModel.UserFundDetailCollection;
 }
 @section css{
     @UserHelper.css("mycenter.css")
@@ -69,7 +69,7 @@
                         <tr >
                             <td>@(redbag.FundDetailList.IndexOf(item) + 1)
                             </td>
-                            <td class="@(item.PayType == Common.PayType.Payout?"zc":"ye") fszie">@(item.PayType == Common.PayType.Payout ? "支出" : "收入")
+                            <td class="@(item.PayType == (int)EntityModel.Enum.PayType.Payout?"zc":"ye") fszie">@(item.PayType == (int)EntityModel.Enum.PayType.Payout ? "支出" : "收入")
                             </td>
                             <td class="zc fszie">@item.Category
                             </td>
