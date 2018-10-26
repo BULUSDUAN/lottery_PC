@@ -4,6 +4,7 @@ using EntityModel.CoreModel;
 
 using EntityModel.Enum;
 using EntityModel.ExceptionExtend;
+using KaSon.FrameWork.Common.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -104,16 +105,16 @@ namespace KaSon.FrameWork.ORM.Helper
         //    {
         //        var userManager = new UserManager();
 
-        //        var user = userManager.LoadUser(userId);
+        //        var user = userManager.LoadSystemUser(userId);
         //        if (user == null)
         //        {
         //            throw new ArgumentException("指定的用户不存在。");
         //        }
 
-        //        var roleList = userManager.GetRoleListByIds(roleIds);
+        //        var roleList = userManager.GetRolesByIDs(roleIds);
         //        foreach (var role in roleList)
         //        {
-        //            //user.AgentId.Add(role);
+        //            user.AgentId.Add(role);
         //        }
         //        userManager.UpdateSystemUser(user);
 
@@ -719,6 +720,35 @@ namespace KaSon.FrameWork.ORM.Helper
                 info.FunctionList = functionlist;
             }
             return info;
+        }
+        public RoleInfo_QueryCollection GetSystemRoleCollection()
+        {
+                var list = new RoleManager().QueryRoleList();
+
+                var collection = new RoleInfo_QueryCollection();
+                ObjectConvert.ConvertEntityListToInfoList<IList<C_Auth_Roles>, C_Auth_Roles, RoleInfo_QueryCollection, RoleInfo_Query>(list, ref collection, () => new RoleInfo_Query());
+                return collection;
+        }
+        public void AddUserRoles(string userId, string[] roleIds)
+        {
+            DB.Begin();
+            var userManager = new UserManager();
+            var user = userManager.LoadUser(userId);
+            if (user == null)
+            {
+                throw new ArgumentException("指定的用户不存在。");
+            }
+            var roleList = userManager.GetRolesByIDs(roleIds);
+            List<C_Auth_UserRole> entitylist = null;
+            foreach (var item in roleList)
+            {
+                entitylist.Add(new C_Auth_UserRole() {
+                    UserId=user.UserId,
+                    RoleId=item.RoleId
+                });
+            }
+            userManager.AddUserRole(entitylist);
+            DB.Commit();
         }
     }
 }

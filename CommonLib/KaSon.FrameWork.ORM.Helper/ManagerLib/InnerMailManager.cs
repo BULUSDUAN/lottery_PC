@@ -1,12 +1,14 @@
-﻿using EntityModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+
+using EntityModel;
+using EntityModel.CoreModel;
+using EntityModel.Enum;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
-   public class InnerMailManager:DBbase
+    public class InnerMailManager:DBbase
     {
         public string QueryMobileByUserId(string userId)
         {
@@ -18,12 +20,8 @@ namespace KaSon.FrameWork.ORM.Helper
         public E_SiteMessage_SiteMessageScene QuerySiteMessageScene(string key)
         {
            
-            var result = DB.CreateQuery<E_SiteMessage_SiteMessageScene>().Where(s => s.SceneKey == key).ToList();
-            if (result != null && result.Count > 0)
-            {
-                return result[0];
-            }
-            return null;
+            var result = DB.CreateQuery<E_SiteMessage_SiteMessageScene>().Where(s => s.SceneKey == key).FirstOrDefault();
+            return result;
         }
 
         public void AddMoibleSMSSendRecord(E_SiteMessage_MoibleSMSSendRecord entity)
@@ -56,8 +54,74 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public E_SiteMessage_InnerMail_List_new QuerySiteMessageInnerMailListNewByMailId(string mailId)
         {
-
             return DB.CreateQuery<E_SiteMessage_InnerMail_List_new>().Where(s => s.MailId == mailId).FirstOrDefault();
+        }
+        public string QueryUserIdByRoleId(string roleId)
+        {
+            string strUserIds = string.Empty;
+            var sql = "select userId from C_Auth_UserRole where RoleId=@roleId";
+            var result = DB.CreateSQLQuery(sql)
+                              .SetString("roleId", roleId).List<C_Auth_UserRole>();
+            if (result != null)
+            {
+                foreach (var item in result)
+                {
+                    if (item == null || string.IsNullOrEmpty(item.ToString()))
+                        continue;
+                    strUserIds += item.ToString() + "|";
+                }
+            }
+            if (!string.IsNullOrEmpty(strUserIds))
+                strUserIds.TrimEnd('|');
+            return strUserIds;
+        }
+        public string QuerySiteMessageTags()
+        {
+            var query = from t in DB.CreateQuery<E_SiteMessage_SiteMessageTags>()
+                        orderby t.CreateTime ascending
+                        select string.Format("{0}={1}", t.TagKey, t.TagName);
+            return string.Join("^", query.ToArray());
+        }
+        public List<SiteMessageSceneInfo> QuerySiteNoticeConfig()
+        {
+            var query = from s in DB.CreateQuery<E_SiteMessage_SiteMessageScene>()
+                        orderby s.Id ascending
+                        select new SiteMessageSceneInfo
+                        {
+                            CreateTime = s.CreateTime,
+                            Id = s.Id,
+                            MsgCategory = (SiteMessageCategory)s.MsgCategory,
+                            MsgTemplateContent = s.MsgTemplateContent,
+                            MsgTemplateParams = s.MsgTemplateParams,
+                            MsgTemplateTitle = s.MsgTemplateTitle,
+                            SceneKey = s.SceneKey,
+                            SceneName = s.SceneName,
+                        };
+            return query.ToList();
+        }
+        public void UpdateSiteMessageScene(E_SiteMessage_SiteMessageScene entity)
+        {
+            DB.GetDal<E_SiteMessage_SiteMessageScene>().Update(entity);
+        }
+        public List<MoibleSMSSendRecordInfo> QuerySMSSendRecordList(string userId, string mobileNumber, DateTime startTime, DateTime endTime, string status, int pageIndex, int pageSize, out int totalCount)
+        {
+            var query = from l in DB.CreateQuery<E_SiteMessage_MoibleSMSSendRecord>()
+                        where (string.IsNullOrEmpty(userId) || l.UserId == userId)
+                        && (string.IsNullOrEmpty(mobileNumber) || l.Mobile == mobileNumber)
+                        && (string.IsNullOrEmpty(status) || l.SendStatus == status)
+                        && (l.CreateTime >= startTime && l.CreateTime <= endTime)
+                        orderby l.CreateTime descending
+                        select new MoibleSMSSendRecordInfo
+                        {
+                            CreateTime = l.CreateTime,
+                            Id = l.Id,
+                            Mobile = l.Mobile,
+                            SendStatus = l.SendStatus,
+                            SMSContent = l.SMSContent,
+                            UserId = l.UserId,
+                        };
+            totalCount = query.Count();
+            return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
         }
     }
 }

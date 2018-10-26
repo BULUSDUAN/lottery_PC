@@ -7596,5 +7596,39 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             return new CacheDataBusiness().QueryCoreConfigByKey(key);
         }
+        /// <summary>
+        /// 添加红人
+        /// </summary>
+        public void AddTogetherHotUser(string userId)
+        {
+            var manager = new TogetherHotUserManager();
+            var existCount = manager.QueryTogether(userId);
+            if (existCount >= 1)
+                throw new LogicException("该用户已经是红人！");
+            var userManager = new UserBalanceManager();
+            var user = userManager.QueryUserRegister(userId);
+            if (user == null)
+                throw new LogicException(string.Format("不存在的用户:{0}", userId));
+
+            var entity = new C_TogetherHotUser()
+            {
+                UserId = userId,
+                WeeksWinMoney = 0,
+                CreateTime = DateTime.Now,
+            };
+            manager.AddTogetherHotUser(entity);
+        }
+        public void DeleteTogetherHotUser(string userId)
+        {
+            var manager = new TogetherHotUserManager();
+            if (string.IsNullOrEmpty(userId))
+            {
+                throw new LogicException("用户编号不能为空！");
+            }
+            var entity = manager.TogetherHotUserById(userId);
+            if (entity == null || string.IsNullOrEmpty(entity.UserId))
+                throw new LogicException("未查询到当前用户信息！");
+            manager.DeleteTogetherHotUser(entity);
+        }
     }
 }

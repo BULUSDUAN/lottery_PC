@@ -12,9 +12,6 @@ namespace KaSon.FrameWork.ORM.Helper
     {
         public string SendValidationCode(string mobile, string category, string validateCode, int delaySeconds, int maxTimesEachDay)
         {
-          //  try
-          //  {
-              //  DB.Begin();
                 var validation = DB.CreateQuery<E_Validation_Mobile>().Where(p => p.Mobile == mobile && p.Category == category).FirstOrDefault();
                 if (validation != null)
                 {
@@ -115,6 +112,14 @@ namespace KaSon.FrameWork.ORM.Helper
             }
 
             return isSuccess;
+        }
+        public IList<E_Validation_Mobile> QueryValidationMobileByMobile(string mobile)
+        {
+            if (string.IsNullOrWhiteSpace(mobile))
+            {
+                throw new Exception("手机号码不能为空");
+            }
+            return new MobileValidationManager().QueryMobileValidationList(mobile);
         }
     }
 }

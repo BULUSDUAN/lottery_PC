@@ -1,20 +1,19 @@
-﻿using EntityModel.Enum;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
+using System.Linq;
 
 using EntityModel;
-using EntityModel.CoreModel;
-using KaSon.FrameWork.Common.SMS;
-using System.Linq;
 using EntityModel.Communication;
+using EntityModel.CoreModel;
+using EntityModel.Enum;
+
+using KaSon.FrameWork.Common.SMS;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
     /// <summary>
     /// 消息、短信控制器
     /// </summary>
-   public class SiteMessageControllBusiness:DBbase
+    public class SiteMessageControllBusiness:DBbase
     {
         /// <summary>
         /// 发送短信
@@ -260,6 +259,55 @@ namespace KaSon.FrameWork.ORM.Helper
                     mail.ReadTime = DateTime.Now;
                 manager.UpdateSiteMessageInnerMailListNew(mail);
             }
+        }
+        public string QueryUserIdByRoleId(string roleId)
+        {
+
+            return new InnerMailManager().QueryUserIdByRoleId(roleId);
+        }
+        /// <summary>
+        /// 查询站点信息参数
+        /// </summary>
+        public string QuerySiteMessageTags()
+        {
+            var manager = new InnerMailManager();
+            return manager.QuerySiteMessageTags();
+        }
+        /// <summary>
+        /// 查询网站通知配置
+        /// </summary>
+        public SiteMessageSceneInfoCollection QuerySiteNoticeConfig()
+        {
+            var r = new SiteMessageSceneInfoCollection();
+            r.AddRange(new InnerMailManager().QuerySiteNoticeConfig());
+            return r;
+        }
+        /// <summary>
+        /// 修改网站通知配置
+        /// </summary>
+        public void UpdateSiteNotice(string key, SiteMessageCategory category, string title, string content)
+        {
+            var manager = new InnerMailManager();
+            var notice = manager.QuerySiteMessageScene(key);
+            if (notice == null)
+                return;
+
+            notice.MsgCategory = (int)category;
+            notice.MsgTemplateTitle = title;
+            notice.MsgTemplateContent = content;
+            manager.UpdateSiteMessageScene(notice);
+        }
+        /// <summary>
+        /// 查询短信发送记录
+        /// </summary>
+        public MoibleSMSSendRecordInfoCollection QuerySMSSendRecordList(string userId, string mobileNumber, DateTime startTime, DateTime endTime, string status, int pageIndex, int pageSize)
+        {
+            var r = new MoibleSMSSendRecordInfoCollection();
+            var totalCount = 0;
+            var list = new InnerMailManager().QuerySMSSendRecordList(userId, mobileNumber, startTime, endTime, status, pageIndex, pageSize, out totalCount);
+            r.TotalCount = totalCount;
+            r.RecordList = list;
+            return r;
         }
     }
 }
