@@ -1016,8 +1016,7 @@ namespace Lottery.AdminApi.Controllers
                     status.HasValue ? ((int)status.Value).ToString() : "",
                     schemeSource.HasValue ? ((int)schemeSource.Value).ToString() : "",
                     ViewBag.StartTime, ViewBag.EndTime,
-                    ViewBag.PageIndex, ViewBag.PageSize, ViewBag.OrderId,
-                    CurrentUser.UserToken);
+                    ViewBag.PageIndex, ViewBag.PageSize, ViewBag.OrderId);
                 return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Value = new { UserQueryInfo = info, FillDetail } });
             }
             catch (Exception ex)

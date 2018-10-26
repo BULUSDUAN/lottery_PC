@@ -1085,11 +1085,10 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <summary>
         /// 查询充值记录
         /// </summary>
-        public FillMoneyQueryInfoCollection QueryFillMoneyList(string userKey, string agentTypeList, string statusList, string sourceList, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string orderId, string userToken)
+        public FillMoneyQueryInfoCollection QueryFillMoneyList(string userKey, string agentTypeList, string statusList, string sourceList, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string orderId)
         {
-            // 验证用户身份及权限
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
-
+            //// 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 return new SqlQueryBusiness().QueryFillMoneyList(userKey, agentTypeList, statusList, sourceList, startTime, endTime, pageIndex, pageSize, orderId);
