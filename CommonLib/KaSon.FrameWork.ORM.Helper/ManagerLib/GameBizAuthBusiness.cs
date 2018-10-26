@@ -97,30 +97,30 @@ namespace KaSon.FrameWork.ORM.Helper
         //        biz.CommitTran();
         //    }
         //}
-        public void AddUserRoles(string userId, string[] roleIds)
-        {
-            var userManager = new UserManager();
-            var user = userManager.LoadUser(userId);
-            if (user == null)
-            {
-                throw new LogicException("指定的用户不存在。");
-            }
-            var roleList = userManager.GetRoleListByIds(roleIds);
-            var addList = new List<C_Auth_UserRole>();
-            foreach (var role in roleList)
-            {
-                addList.Add(new C_Auth_UserRole()
-                {
-                    RoleId = role.RoleId,
-                    UserId = userId
-                });
-            }
-            if (addList.Count > 0)
-            {
-                DB.GetDal<C_Auth_UserRole>().BulkAdd(addList);
-            }
+        //public void AddUserRoles(string userId, string[] roleIds)
+        //{
+        //    var userManager = new UserManager();
+        //    var user = userManager.LoadUser(userId);
+        //    if (user == null)
+        //    {
+        //        throw new LogicException("指定的用户不存在。");
+        //    }
+        //    var roleList = userManager.GetRoleListByIds(roleIds);
+        //    var addList = new List<C_Auth_UserRole>();
+        //    foreach (var role in roleList)
+        //    {
+        //        addList.Add(new C_Auth_UserRole()
+        //        {
+        //            RoleId = role.RoleId,
+        //            UserId = userId
+        //        });
+        //    }
+        //    if (addList.Count > 0)
+        //    {
+        //        DB.GetDal<C_Auth_UserRole>().BulkAdd(addList);
+        //    }
 
-        }
+        //}
         public void RemoveUserRoles(string userId, string[] roleIds)
         {
             var userManager = new UserManager();
@@ -742,10 +742,10 @@ namespace KaSon.FrameWork.ORM.Helper
             DB.Commit();
         }
 
-        public List<C_Auth_Roles> GetSystemRoleCollection()
+        public List<C_Auth_Roles> GetSystemRole()
         {
             var roleManager = new RoleManager();
-            var list = roleManager.QueryRoleList();
+            var list = roleManager.QueryRoleList().ToList();
             return list;
         }
     }
