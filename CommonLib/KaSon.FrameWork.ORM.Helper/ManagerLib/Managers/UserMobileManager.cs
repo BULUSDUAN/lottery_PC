@@ -1,4 +1,5 @@
 ﻿using EntityModel;
+using EntityModel.CoreModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,6 +46,10 @@ namespace KaSon.FrameWork.ORM.Helper
                 }
             }
             return null;
+        }
+        public void DeleteUserMobile(E_Authentication_Mobile entity)
+        {
+            DB.GetDal<E_Authentication_Mobile>().Delete(entity);
         }
     }
 }

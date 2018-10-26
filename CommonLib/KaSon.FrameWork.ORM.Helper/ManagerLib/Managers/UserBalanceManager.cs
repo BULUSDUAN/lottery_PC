@@ -156,5 +156,9 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             return DB.CreateQuery<C_User_Register>().Where(u => u.UserId == userId).FirstOrDefault();
         }
+        public E_SendMsg_HistoryRecord QueryMsgHistoryRecordByMsgId(long msgId)
+        {
+            return DB.CreateQuery<E_SendMsg_HistoryRecord>().Where(x=>x.MsgId==msgId).FirstOrDefault();
+        }
     }
 }

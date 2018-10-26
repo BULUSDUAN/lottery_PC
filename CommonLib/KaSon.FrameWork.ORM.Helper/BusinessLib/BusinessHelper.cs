@@ -17,12 +17,13 @@ using KaSon.FrameWork.Analyzer.AnalyzerFactory;
 using EntityModel.CoreModel;
 using System.Threading.Tasks;
 using EntityModel.Redis;
+using KaSon.FrameWork.Common.SMS;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
-   
 
-    public class BusinessHelper:DBbase
+
+    public class BusinessHelper : DBbase
     {
 
         private const string _gbKey = "Q56GtyNkop97H334TtyturfgErvvv98a";
@@ -33,7 +34,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <summary>
         ///  用户支出，申请提现
         /// </summary>
-        public  WithdrawCategory Payout_To_Frozen_Withdraw(FundManager fundManager, UserBalanceManager balanceManager, C_User_Balance userBalance, string category, string userId, string orderId, decimal payoutMoney,
+        public WithdrawCategory Payout_To_Frozen_Withdraw(FundManager fundManager, UserBalanceManager balanceManager, C_User_Balance userBalance, string category, string userId, string orderId, decimal payoutMoney,
             string summary, string place, string balancepwd, out decimal responseMoney)
         {
             var requestMoney = payoutMoney;
@@ -296,7 +297,7 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             try
             {
-               
+
 
                 var db = RedisHelperEx.DB_UserBalance;
                 string key = string.Format("UserBalance_{0}", userId);
@@ -307,20 +308,21 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             catch (Exception ex)
             {
-               
+
                 Log4Log.Error("BusinessHelper-RefreshRedisUserBalance", ex);
             }
         }
         //待测试
         //kason
-         public static void ExecPlugin<T>(object inputParam)
-                  where T : class, IPlugin
+        public static void ExecPlugin<T>(object inputParam)
+                 where T : class, IPlugin
         {
             if (_enablePluginClass == null || _enablePluginClass.Count == 0)
                 _enablePluginClass = new PluginClassManager().QueryPluginClass(true);
 
             //启动线程
-            Task.Factory.StartNew(()=>{
+            Task.Factory.StartNew(() =>
+            {
 
                 foreach (var plugin in _enablePluginClass)
                 {
@@ -373,7 +375,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         catch (Exception ex)
                         {
                             // var writer = Common.Log.LogWriterGetter.GetLogWriter();
-                            Log4Log.Error("ERROR_ExecPlugin-_ExecPlugin-执行插件{0}出错"+ plugin.ClassName, ex);
+                            Log4Log.Error("ERROR_ExecPlugin-_ExecPlugin-执行插件{0}出错" + plugin.ClassName, ex);
                         }
                         //}).Start();
                     }
@@ -385,13 +387,13 @@ namespace KaSon.FrameWork.ORM.Helper
                     {
                         Log4Log.Error("ERROR_ExecPlugin-_ExecPlugin-执行插件{0}出错" + plugin.ClassName, ex);
                         //  var writer = Common.Log.LogWriterGetter.GetLogWriter();
-                      //  writerLog.WriteLog("ERROR_ExecPlugin", "_ExecPlugin", (int)LogType.Error, string.Format("执行插件{0}出错", plugin.ClassName), ex.ToString());
+                        //  writerLog.WriteLog("ERROR_ExecPlugin", "_ExecPlugin", (int)LogType.Error, string.Format("执行插件{0}出错", plugin.ClassName), ex.ToString());
                     }
                 }
 
             });
 
-       
+
 
         }
 
@@ -507,7 +509,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 {
                     AccountType = AccountType.Bonus,
                     PayMoney = currentPayout,
-                    PayType =EntityModel.Enum.PayType.Payout
+                    PayType = EntityModel.Enum.PayType.Payout
                 });
                 fundManager.AddFundDetail(new C_Fund_Detail
                 {
@@ -515,7 +517,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     CreateTime = DateTime.Now,
                     KeyLine = orderId,
                     OrderId = orderId,
-                    AccountType =(int) AccountType.Bonus,
+                    AccountType = (int)AccountType.Bonus,
                     PayMoney = currentPayout,
                     PayType = (int)EntityModel.Enum.PayType.Payout,
                     Summary = summary,
@@ -862,10 +864,10 @@ namespace KaSon.FrameWork.ORM.Helper
             //balanceManager.UpdateUserBalance(userBalance);
             balanceManager.PayToUserBalance(userId, payDetailList.ToArray());
         }
-      
-    
-       
-     
+
+
+
+
 
         #region 普通投注
 
@@ -994,7 +996,7 @@ namespace KaSon.FrameWork.ORM.Helper
             return totalCount;
         }
 
-    
+
 
         /// <summary>
         /// 检查彩种是否开启
@@ -1272,16 +1274,16 @@ namespace KaSon.FrameWork.ORM.Helper
         private static List<C_Activity_PluginClass> _enablePluginClass = new List<C_Activity_PluginClass>();
 
 
-     
-    
+
+
 
         public List<C_Activity_PluginClass> QueryPluginClass(bool isEnable)
         {
-            
+
             return DB.CreateQuery<C_Activity_PluginClass>().Where(p => p.IsEnable == isEnable).OrderBy(p => p.OrderIndex).ToList();
         }
 
-       
+
 
         #region 成长值 和 澳彩豆豆
 
@@ -1467,7 +1469,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var balanceManager = new LocalLoginBusiness();
             var fundManager = new FundManager();
             //查询帐户余额
-          
+
             var userBalance = balanceManager.QueryUserBalanceInfo(userId);
             if (userBalance == null) { throw new LogicException("用户帐户不存在 - " + userId); }
 
@@ -1506,7 +1508,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     before = userBalance.RedBagBalance;
                     after = userBalance.RedBagBalance + payMoney;
                     //userBalance.RedBagBalance = after;
-                    var RedBagDetail=new C_Fund_RedBagDetail
+                    var RedBagDetail = new C_Fund_RedBagDetail
                     {
                         CreateTime = DateTime.Now,
                         OrderId = orderId,
@@ -1529,7 +1531,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 default:
                     throw new LogicException("不支持的账户类型 - " + accountType);
             }
-            var FundDetail=new C_Fund_Detail
+            var FundDetail = new C_Fund_Detail
             {
                 Category = category,
                 CreateTime = DateTime.Now,
@@ -2288,7 +2290,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             catch
             {
-                
+
             }
             return false;
         }
@@ -2516,5 +2518,182 @@ namespace KaSon.FrameWork.ORM.Helper
             string prefix = "MFM";
             return prefix + UsefullHelper.UUID();
         }
+        #region 发送短信
+
+        public static bool SendMsg(string mobile, string content, string ip, int msgType, string userId, string schemeId, int msgId = 0)
+        {
+            string status = string.Empty;
+            string errorMsg = string.Empty;
+            SendMsgHistoryRecordInfo info = new SendMsgHistoryRecordInfo();
+            try
+            {
+                var agentName = new CacheDataBusiness().QueryCoreConfigFromRedis("SMSAgent.Name");
+                var attach = new CacheDataBusiness().QueryCoreConfigFromRedis("SMSAgent.Attach");
+                var password = new CacheDataBusiness().QueryCoreConfigFromRedis("SMSAgent.Password");
+                var userName = new CacheDataBusiness().QueryCoreConfigFromRedis("SMSAgent.UserId");
+                var result = SMSSenderFactory.GetSMSSenderInstance(new SMSConfigInfo
+                {
+                    AgentName = agentName,
+                    Attach = attach,
+                    Password = password,
+                    UserName = userName
+                }).SendSMS(mobile, content, attach);
+
+                var resultInfo = AnalyticalResult(result);
+                if (resultInfo != null)
+                {
+                    info.SMSId = resultInfo.smsid;
+                    status = resultInfo.code;
+                }
+                if (status == "2")
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                status = "-1";
+                errorMsg = ex.Message;
+                return false;
+            }
+            finally
+            {
+                string statusName = GetVeeSingStatusName(status);
+                info.IP = ip;
+                info.MsgContent = content;
+                info.PhoneNumber = mobile;
+                info.MsgType = msgType;
+                info.MsgId = msgId;
+                info.MsgResultStatus = status;
+                info.MsgContent = content;
+                info.UserId = userId;
+                info.SchemeId = schemeId;
+                if (status == "-1")
+                    info.MsgStatusDesc = errorMsg;
+                else
+                    info.MsgStatusDesc = statusName;
+                //SaveSMSHistoryRecord(info);
+            }
+        }
+        //public static void SaveSMSHistoryRecord(SendMsgHistoryRecordInfo info)
+        //{
+        //    var manager = new UserBalanceManager();
+        //    if (info != null)
+        //    {
+        //        if (info.MsgId > 0)//后台列表手工发送时修改回执状态即可
+        //        {
+        //            var entity = manager.QueryMsgHistoryRecordByMsgId(info.MsgId);
+        //            if (entity != null)
+        //            {
+        //                entity.SendTime = DateTime.Now;
+        //                entity.MsgStatusDesc = info.MsgStatusDesc;
+        //                entity.MsgResultStatus = info.MsgResultStatus;
+        //                entity.SMSId = info.SMSId;
+        //                entity.SendNumber += 1;
+        //                manager.UpdateMsgHistoryRecord(entity);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            info.CreateTime = DateTime.Now;
+        //            info.SendTime = DateTime.Now;
+        //            info.SendNumber = 0;
+        //            SendMsgHistoryRecord entity = new SendMsgHistoryRecord();
+        //            ObjectConvert.ConverInfoToEntity(info, ref entity);
+        //            manager.AddSendMsgHistoryRecord(entity);
+        //        }
+        //    }
+        //}
+        public static ResultVeeSingInfo AnalyticalResult(string result)
+        {
+            ResultVeeSingInfo info = new ResultVeeSingInfo();
+            if (!string.IsNullOrEmpty(result))
+            {
+                System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
+                doc.LoadXml(result);
+                var node = doc.ChildNodes;
+                if (node != null && node.Count >= 2)
+                {
+                    for (int i = 0; i < node[1].ChildNodes.Count; i++)
+                    {
+                        if (node[1].ChildNodes[i].Name.ToLower() == "code")
+                            info.code = node[1].ChildNodes[i].InnerText;
+                        else if (node[1].ChildNodes[i].Name.ToLower() == "msg")
+                            info.msg = node[1].ChildNodes[i].InnerText;
+                        else if (node[1].ChildNodes[i].Name.ToLower() == "smsid")
+                            info.smsid = node[1].ChildNodes[i].InnerText;
+                        else if (node[1].ChildNodes[i].Name.ToLower() == "num")
+                            info.num = node[1].ChildNodes[i].InnerText;
+                    }
+                }
+            }
+            return info;
+        }
+        public static string GetVeeSingStatusName(string status)
+        {
+            switch (status)
+            {
+                case "-1"://自定义状态，接口异常情况
+                    return "发送信息接口异常";
+                case "0":
+                    return "提交失败";
+                case "2":
+                    return "提交成功";
+                case "400":
+                    return "非法ip访问";
+                case "401":
+                    return "帐号不能为空";
+                case "4010":
+                    return "通道限制：每个号码1分钟内只能发1条";
+                case "402":
+                    return "密码不能为空";
+                case "403":
+                    return "手机号码不能为空";
+                case "4030":
+                    return "手机号码已被列入黑名单";
+                case "404":
+                    return "短信内容不能为空";
+                case "405":
+                    return "用户名或密码不正确";
+                case "4050":
+                    return "账号被冻结";
+                case "4051":
+                    return "剩余条数不足";
+                case "4052":
+                    return "访问ip与备案ip不符";
+                case "406":
+                    return "手机格式不正确";
+                case "407":
+                    return "短信内容含有敏感字符";
+                case "4070":
+                    return "签名格式不正确";
+                case "4071":
+                    return "没有提交备案模板";
+                case "4072":
+                    return "短信内容与模板不匹配";
+                case "4073":
+                    return "短信内容超出长度限制";
+                case "408":
+                    return "同一手机号码一分钟之内发送频率超过10条，系统将冻结你的帐号";
+                case "4080":
+                    return "同一手机号码同一秒钟不能超过2条";
+                case "4081":
+                    return "同一手机号码一分钟之内发送频率超不能超过1条";
+                case "4082":
+                    return "同一手机号码一天之内发送频率超不能超过5条";
+                case "4083":
+                    return "同内容每分钟限制：1条";
+                case "4084":
+                    return "同内容每日限制：5条";
+                case "4085":
+                    return "同一手机号码验证码短信发送量超出5条";
+                case "4086":
+                    return "提交失败，同一个手机号码发送频率太频繁";
+                default:
+                    return "发送信息接口异常";
+            }
+        }
+        #endregion
     }
 }

@@ -109,5 +109,29 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             DB.GetDal<C_FillMoney>().Add(entity);
         }
+        public bool UpdateUserCreditType(string userId, int updateUserCreditType)
+        {
+            string strSql = "Update C_User_Register set UserCreditType=@userCreditType Where userId=@userId";
+            var flag = DB.CreateSQLQuery(strSql)
+                             .SetString("@userId", userId)
+                             .SetInt("@userCreditType", updateUserCreditType);
+            return true;
+        }
+        public void UpdateFillMoney(C_FillMoney entity)
+        {
+            DB.GetDal<C_FillMoney>().Update(entity);
+        }
+        public C_FillMoney QueryFillMoney(string orderId)
+        {
+            return DB.CreateQuery<C_FillMoney>().Where(f => f.OrderId == orderId).FirstOrDefault();
+        }
+        public C_Withdraw QueryWithdraw(string orderId)
+        {
+            return DB.CreateQuery<C_Withdraw>().Where(d => d.OrderId == orderId).FirstOrDefault();
+        }
+        public void UpdateWithdraw(C_Withdraw entity)
+        {
+            DB.GetDal<C_Withdraw>().Update(entity);
+        }
     }
 }

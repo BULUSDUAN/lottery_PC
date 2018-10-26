@@ -11,19 +11,7 @@ namespace KaSon.FrameWork.ORM.Helper
 {
     public class GameBusiness
     {
-        //private static GameInfoCollection _gameList = null;
-        ///// <summary>
-        ///// 所有彩种信息
-        ///// </summary>
-        //public static GameInfoCollection GameList
-        //{
-        //    get
-        //    {
-        //        if (_gameList == null)
-        //            _gameList = new GameBusiness().QueryGameInfoCollection();
-        //        return _gameList;
-        //    }
-        //}
+
         ///// <summary>
         ///// 所有彩种状态
         ///// </summary>
@@ -113,12 +101,12 @@ namespace KaSon.FrameWork.ORM.Helper
         //    return result;
         //}
 
-        //public GameInfoCollection QueryGameInfoCollection()
-        //{
-        //    var result = new GameInfoCollection();
-        //    result.AddRange(new LotteryGameManager().QueryEnableGame());
-        //    return result;
-        //}
+        public GameInfoCollection QueryGameInfoCollection()
+        {
+            var result = new GameInfoCollection();
+            result.AddRange(new LotteryGameManager().QueryEnableGame());
+            return result;
+        }
 
         //public Issuse_QueryInfo QueryIssuseInfo(string gameCode, string gameType, string issuseNumber)
         //{

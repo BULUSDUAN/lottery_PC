@@ -7592,5 +7592,9 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             DB.GetDal<C_Index_Match>().Update(entity);
         }
+        public C_Core_Config QueryConfigByKey(string key)
+        {
+            return new CacheDataBusiness().QueryCoreConfigByKey(key);
+        }
     }
 }

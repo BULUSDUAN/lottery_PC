@@ -1,6 +1,7 @@
 ﻿
 using EntityModel.CoreModel;
 using EntityModel.Enum;
+using EntityModel.RequestModel;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -296,6 +297,39 @@ namespace KaSon.FrameWork.ORM.Helper
                 }
             }
             return result;
+        }
+        public UserFundDetailCollection QueryUserFundDetail(string userId, string keyLine, DateTime fromDate, DateTime toDate, string accountTypeList, string categoryList, int pageIndex, int pageSize)
+        {
+            QueryUserFundDetailParam param = new QueryUserFundDetailParam()
+            {
+                fromDate=fromDate,
+                userid=userId,
+                keyLine=keyLine,
+                toDate=toDate,
+                accountTypeList = accountTypeList,
+                categoryList=categoryList,
+                pageIndex=pageIndex,
+                pageSize=pageSize
+            };
+            return new OrderQuery().QueryUserFundDetail(param, userId);
+        }
+        public BettingOrderInfoCollection QueryBettingOrderList(string userIdOrName, SchemeType? schemeType, ProgressStatus? progressStatus, BonusStatus? bonusStatus, SchemeBettingCategory? betCategory, bool? isVirtual, string gameCode
+           , DateTime startTime, DateTime endTime, int sortType, string agentId, int pageIndex, int pageSize, string fieldName, TicketStatus? ticketStatus = null, SchemeSource? schemeSource = null)
+        {
+
+            var collection = new BettingOrderInfoCollection();
+
+            collection = new OrderQuery().QueryBettingOrderList(userIdOrName, schemeType, progressStatus, bonusStatus, betCategory, isVirtual, gameCode, startTime, endTime, sortType, agentId, pageIndex, pageSize , schemeSource);
+
+            return collection;
+        }
+        public FillMoneyQueryInfoCollection QueryFillMoneyList(string userId, string agentTypeList, string statusList, string sourceList, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string orderId = "")
+        {
+            var collection = new FillMoneyQueryInfoCollection();
+            
+            collection = new OrderQuery().QueryFillMoneyList(userId, agentTypeList, statusList, sourceList, startTime, endTime
+            , pageIndex, pageSize, orderId);
+            return collection;
         }
     }
 }
