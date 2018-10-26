@@ -1476,6 +1476,148 @@ namespace KaSon.FrameWork.ORM.Helper
                 throw new Exception("拒绝提现出错 - " + ex.Message, ex);
             }
         }
+        /// <summary>
+        /// 获取系统角色
+        /// todo:后台权限
+        /// </summary>
+        public RoleInfo_QueryCollection GetSystemRoleCollection(string userToken)
+        {
+            var authBiz = new GameBizAuthBusiness();
+            return authBiz.GetSystemRoleCollection();
+        }
+        /// <summary>
+        /// 发送站内信
+        /// todo:后台权限
+        /// </summary>
+        public CommonActionResult SendInnerMail(InnerMailInfo_Send innerMail, string userId)
+        {
+            var siteBiz = new SiteMessageControllBusiness();
+            siteBiz.SendInnerMail(innerMail, userId);
+
+            return new CommonActionResult { IsSuccess = true, Message = "发送站内信成功", };
+        }
+        /// <summary>
+        /// 根据角色编号查询用户编号
+        /// </summary>
+        public string QueryUserIdByRoleId(string roleId)
+        {
+            try
+            {
+                return new SiteMessageControllBusiness().QueryUserIdByRoleId(roleId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 查询站点信息参数
+        /// </summary>
+        public string QuerySiteMessageTags()
+        {
+            return new SiteMessageControllBusiness().QuerySiteMessageTags();
+        }
+        /// <summary>
+        /// 查询网站通知配置
+        /// </summary>
+        public SiteMessageSceneInfoCollection QuerySiteNoticeConfig()
+        {
+            return new SiteMessageControllBusiness().QuerySiteNoticeConfig();
+        }
+        public CommonActionResult UpdateSiteNotice(string key, SiteMessageCategory category, string title, string content)
+        {
+            try
+            {
+                new SiteMessageControllBusiness().UpdateSiteNotice(key, category, title, content);
+                return new CommonActionResult(true, "更新完成");
+            }
+            catch (Exception ex)
+            {
+                return new CommonActionResult(false, ex.Message);
+            }
+        }
+        /// <summary>
+        /// 查询发送短信记录
+        /// </summary>
+        public MoibleSMSSendRecordInfoCollection QuerySMSSendRecordList(string userId, string mobileNumber, DateTime startTime, DateTime endTime, string status, int pageIndex, int pageSize)
+        {
+            return new SiteMessageControllBusiness().QuerySMSSendRecordList(userId, mobileNumber, startTime, endTime, status, pageIndex, pageSize);
+        }
+        /// <summary>
+        /// 发送短信
+        /// </summary>
+        public CommonActionResult SendSMS(string mobile, string content, string userId)
+        {
+            try
+            {
+                new SiteMessageControllBusiness().SendSMS(mobile, content, userId);
+                return new CommonActionResult(true, "发送完成");
+            }
+            catch (Exception ex)
+            {
+                return new CommonActionResult(false, ex.Message);
+            }
+        }
+        /// <summary>
+        /// 根据手机号码查询手机验证信息
+        /// todo:后台权限
+        /// </summary>
+        public ValidationMobileInfoCollection QueryValidationMobileByMobile(string mobile, string userToken)
+        {
+            // 验证用户身份及权限
+            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            var validationMobile = new ValidationMobileInfoCollection();
+            var siteBiz = new ValidationMobileBusiness();
+            var list = siteBiz.QueryValidationMobileByMobile(mobile);
+            ObjectConvert.ConvertEntityListToInfoList<IList<E_Validation_Mobile>, E_Validation_Mobile, ValidationMobileInfoCollection, ValidationMobileInfo>(
+                list, ref validationMobile, () => new ValidationMobileInfo());
+            return validationMobile;
+        }
+        public CommonActionResult AddOCAgent(OCAgentCategory category, string parentUserId, string userId, CPSMode cpsmode, string channelName)
+        {
+            try
+            {
+                new OCAgentBusiness().AddOCAgent(category, parentUserId, userId, cpsmode);
+                return new CommonActionResult(true, "添加下级成功");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// 添加红人
+        /// </summary>
+        public CommonActionResult AddTogetherHotUser(string userId)
+        {
+            try
+            {
+                new Sports_Business().AddTogetherHotUser(userId);
+                return new CommonActionResult(true, "添加成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 删除合买红人
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public CommonActionResult DeleteTogetherHotUser(string userId)
+        {
+            try
+            {
+                new Sports_Business().DeleteTogetherHotUser(userId);
+                return new CommonActionResult(true, "删除合买红人成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
         #endregion
     }
 }

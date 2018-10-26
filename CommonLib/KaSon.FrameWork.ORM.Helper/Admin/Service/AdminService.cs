@@ -226,7 +226,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public List<C_Auth_Roles> GetSystemRoleCollection()
         {
             var authBiz = new GameBizAuthBusiness();
-            return authBiz.GetSystemRoleCollection();
+            return authBiz.GetSystemRole();
         }
         #endregion
 

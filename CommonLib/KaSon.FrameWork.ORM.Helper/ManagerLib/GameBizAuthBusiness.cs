@@ -4,6 +4,7 @@ using EntityModel.CoreModel;
 
 using EntityModel.Enum;
 using EntityModel.ExceptionExtend;
+using KaSon.FrameWork.Common.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -96,30 +97,30 @@ namespace KaSon.FrameWork.ORM.Helper
         //        biz.CommitTran();
         //    }
         //}
-        public void AddUserRoles(string userId, string[] roleIds)
-        {
-            var userManager = new UserManager();
-            var user = userManager.LoadUser(userId);
-            if (user == null)
-            {
-                throw new LogicException("指定的用户不存在。");
-            }
-            var roleList = userManager.GetRoleListByIds(roleIds);
-            var addList = new List<C_Auth_UserRole>();
-            foreach (var role in roleList)
-            {
-                addList.Add(new C_Auth_UserRole()
-                {
-                    RoleId = role.RoleId,
-                    UserId = userId
-                });
-            }
-            if (addList.Count > 0)
-            {
-                DB.GetDal<C_Auth_UserRole>().BulkAdd(addList);
-            }
+        //public void AddUserRoles(string userId, string[] roleIds)
+        //{
+        //    var userManager = new UserManager();
+        //    var user = userManager.LoadUser(userId);
+        //    if (user == null)
+        //    {
+        //        throw new LogicException("指定的用户不存在。");
+        //    }
+        //    var roleList = userManager.GetRoleListByIds(roleIds);
+        //    var addList = new List<C_Auth_UserRole>();
+        //    foreach (var role in roleList)
+        //    {
+        //        addList.Add(new C_Auth_UserRole()
+        //        {
+        //            RoleId = role.RoleId,
+        //            UserId = userId
+        //        });
+        //    }
+        //    if (addList.Count > 0)
+        //    {
+        //        DB.GetDal<C_Auth_UserRole>().BulkAdd(addList);
+        //    }
 
-        }
+        //}
         public void RemoveUserRoles(string userId, string[] roleIds)
         {
             var userManager = new UserManager();
@@ -711,11 +712,40 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             return info;
         }
+        public RoleInfo_QueryCollection GetSystemRoleCollection()
+        {
+                var list = new RoleManager().QueryRoleList();
 
-        public List<C_Auth_Roles> GetSystemRoleCollection()
+                var collection = new RoleInfo_QueryCollection();
+                ObjectConvert.ConvertEntityListToInfoList<IList<C_Auth_Roles>, C_Auth_Roles, RoleInfo_QueryCollection, RoleInfo_Query>(list, ref collection, () => new RoleInfo_Query());
+                return collection;
+        }
+        public void AddUserRoles(string userId, string[] roleIds)
+        {
+            DB.Begin();
+            var userManager = new UserManager();
+            var user = userManager.LoadUser(userId);
+            if (user == null)
+            {
+                throw new ArgumentException("指定的用户不存在。");
+            }
+            var roleList = userManager.GetRolesByIDs(roleIds);
+            List<C_Auth_UserRole> entitylist = null;
+            foreach (var item in roleList)
+            {
+                entitylist.Add(new C_Auth_UserRole() {
+                    UserId=user.UserId,
+                    RoleId=item.RoleId
+                });
+            }
+            userManager.AddUserRole(entitylist);
+            DB.Commit();
+        }
+
+        public List<C_Auth_Roles> GetSystemRole()
         {
             var roleManager = new RoleManager();
-            var list = roleManager.QueryRoleList();
+            var list = roleManager.QueryRoleList().ToList();
             return list;
         }
     }

@@ -67,6 +67,20 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             return list;
         }
+        public IList<C_Auth_Roles> GetRolesByIDs(string[] roleIds)
+        {
+            var list = new List<C_Auth_Roles>();
+            foreach (var roleId in roleIds)
+            {
+                var a=DB.CreateQuery<C_Auth_Roles>().Where(x => x.RoleId == roleId).ToList();
+                list.AddRange(a);
+            }
+            return list;
+        }
+        public void AddUserRole(List<C_Auth_UserRole> entity)
+        {
+            DB.GetDal<C_Auth_UserRole>().BulkAdd(entity);
+        }
 
         public C_Auth_Roles LoadRole(string roleId)
         {
@@ -75,15 +89,15 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public void UpdateSystemUser(C_Auth_Users user)
         {
-          
+
             DB.GetDal<C_Auth_Users>().Update(user);
         }
         public string QueryUserRoleIdsByUserId(string userId)
         {
            
-            string strSql = "select RoleId from C_Auth_UserRole where UserId=:UserId";
+            string strSql = "select RoleId from C_Auth_UserRole where UserId=@UserId";
             var result = DB.CreateSQLQuery(strSql)
-                         .SetString("UserId", userId)
+                         .SetString("@UserId", userId)
                          .List<C_Auth_UserRole>();
             StringBuilder strBud = new StringBuilder();
             if (result != null && result.Count > 0)

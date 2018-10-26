@@ -56,5 +56,24 @@ namespace KaSon.FrameWork.ORM.Helper
                         };
             return query.ToList();
         }
+        public void AddTogetherHotUser(C_TogetherHotUser entity)
+        {
+           DB.GetDal<C_TogetherHotUser>().Add(entity);
+        }
+        /// <summary>
+        /// 查询是否有该红人
+        /// </summary>
+        public int QueryTogether(string userId)
+        {
+            return DB.CreateQuery<C_TogetherHotUser>().Where(p => p.UserId == userId).Count();
+        }
+        public C_TogetherHotUser TogetherHotUserById(string userId)
+        {
+            return DB.CreateQuery<C_TogetherHotUser>().Where(p => p.UserId == userId).FirstOrDefault();
+        }
+        public void DeleteTogetherHotUser(C_TogetherHotUser entity)
+        {
+            DB.GetDal<C_TogetherHotUser>().Delete(entity);
+        }
     }
 }
