@@ -54,8 +54,8 @@ namespace OrderLottery.Service.ModuleServices
         /// 查询我的资金明细
         /// </summary>
         /// <param name="Model"></param>
-        /// <returns></returns>
-        public Task<UserFundDetailCollection> QueryMyFundDetailList(QueryUserFundDetailParam Model)
+        public Task<UserFundDetailCollection> QueryMyFundDetailList(QueryUserFundDetailParam Model)        /// <returns></returns>
+
         {
             return Task.FromResult(_order.QueryMyFundDetailList(Model));
         }
@@ -431,7 +431,7 @@ namespace OrderLottery.Service.ModuleServices
         }
 
         /// <summary>
-        /// 查询 定制我的 跟单规则
+        /// 查询 我的定制 跟单规则
         /// </summary>
         public Task<TogetherFollowerRuleQueryInfoCollection> QueryUserFollowRule(string gameCode, string gameType, int pageIndex, int pageSize, string UserId)
         {
@@ -446,6 +446,23 @@ namespace OrderLottery.Service.ModuleServices
                 throw new Exception(ex.Message, ex);
             }
         }
+        /// <summary>
+        /// 查询 定制我的 跟单规则
+        /// </summary>
+        public Task<TogetherFollowerRuleQueryInfoCollection> QueryUserFollowMeRule(string gameCode, string gameType, int pageIndex, int pageSize, string UserId)
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                return Task.FromResult(new Sports_Business().QueryUserFollowRule(true, UserId, gameCode, gameType, pageIndex, pageSize));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
 
         public Task<TogetherFollowRecordInfoCollection> QuerySucessFolloweRecord(string gameCode, long ruleId, int pageIndex, int pageSize, string UserId)
         {
@@ -600,11 +617,11 @@ namespace OrderLottery.Service.ModuleServices
         /// <summary>
         /// 查询过关统计
         /// </summary>
-        public SportsOrder_GuoGuanInfoCollection QueryReportInfoList_GuoGuan(bool isVirtualOrder, SchemeBettingCategory? category, string key, string gameCode, string gameType, string issuseNumber, DateTime startTime, DateTime endTime, int pageIndex, int pageSize)
+        public Task<SportsOrder_GuoGuanInfoCollection> QueryReportInfoList_GuoGuan(bool isVirtualOrder, SchemeBettingCategory? category, string key, string gameCode, string gameType, string issuseNumber, DateTime startTime, DateTime endTime, int pageIndex, int pageSize)
         {
             try
             {
-                return new SqlQueryBusiness().QueryReportInfoList_GuoGuan(isVirtualOrder, category, key, gameCode, gameType, issuseNumber, startTime, endTime, pageIndex, pageSize);
+                return Task.FromResult(new SqlQueryBusiness().QueryReportInfoList_GuoGuan(isVirtualOrder, category, key, gameCode, gameType, issuseNumber, startTime, endTime, pageIndex, pageSize));
             }
             catch (Exception ex)
             {
@@ -613,5 +630,22 @@ namespace OrderLottery.Service.ModuleServices
         }
 
         #endregion
+
+        /// <summary>
+        /// 查询单式上传方案详情
+        /// </summary>
+        /// <param name="schemeId"></param>
+        /// <returns></returns>
+        public Task<OrderSingleSchemeCollection> QuerySingSchemeDetail(string schemeId)
+        {
+            try
+            {
+                return Task.FromResult(new SqlQueryBusiness().QuerySingSchemeDetail(schemeId));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
     }
 }

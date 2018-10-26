@@ -489,5 +489,168 @@ namespace KaSon.FrameWork.ORM.Helper
 
           return DB.CreateQuery<C_Bank_Info>().Where(p => p.BankCode == bankCode && p.Disabled==false).FirstOrDefault();
         }
+        public UserBalanceFreezeCollection QueryUserBalanceFreezeListByUser(string userId, int pageIndex, int pageSize)
+        {
+            var balanceManager = new UserBalanceManager();
+
+            int totalCount;
+            decimal totalMoney;
+            var list = balanceManager.QueryUserBalanceFreezeListByUser(userId, pageIndex, pageSize, out totalCount, out totalMoney);
+            var result = new UserBalanceFreezeCollection
+            {
+                TotalCount = totalCount,
+                TotalMoney = totalMoney,
+                FreezeList = list,
+            };
+            return result;
+        }
+        public string ManualFillMoney(UserFillMoneyAddInfo info, string userId, string requestBy, out int vipLevel)
+        {
+            var orderId = string.Empty;
+            //开启事务
+                DB.Begin();
+                if (info.RequestMoney <= 0) throw new Exception("充值金额必须大于0");
+                var user = new UserBalanceManager().QueryUserRegister(userId);
+                if (user == null) throw new Exception(string.Format("用户账户{0}不存在", userId));
+                #region 判断充值金额是否在财务员执行范围
+                var manage = new FundManager();
+                C_FinanceSettings FinanceInfo = manage.GetFinanceSettingsInfo(requestBy, "20");
+                if (FinanceInfo == null || FinanceInfo.FinanceId <= 0)
+                {
+                    throw new Exception("您还未设置财务员充值金额范围！");
+                }
+                if (info.RequestMoney < FinanceInfo.MinMoney || info.RequestMoney > FinanceInfo.MaxMoney)
+                {
+                    throw new Exception("当前充值金额必须在" + FinanceInfo.MinMoney.ToString("N2") + "--" + FinanceInfo.MaxMoney.ToString("N2") + "之间");
+                }
+                #endregion
+                vipLevel = user.VipLevel;
+                orderId = BusinessHelper.GetManualFillMoneyId();
+                new FundManager().AddFillMoney(new C_FillMoney
+                {
+                    FillMoneyAgent = (int)info.FillMoneyAgent,
+                    GoodsDescription = info.GoodsDescription,
+                    GoodsName = info.GoodsName,
+                    GoodsType = info.GoodsType,
+                    IsNeedDelivery = info.IsNeedDelivery,
+                    NotifyUrl = info.NotifyUrl,
+                    OrderId = orderId,
+                    RequestBy = requestBy,
+                    RequestMoney = info.RequestMoney,
+                    RequestTime = DateTime.Now,
+                    ReturnUrl = info.ReturnUrl,
+                    ShowUrl = info.ShowUrl,
+                    Status = (int)FillMoneyStatus.Success,
+                    UserId = user.UserId,
+                    PayMoney = info.PayMoney,
+                    SchemeSource = (int)info.SchemeSource,
+                    ResponseBy = requestBy,
+                    ResponseMessage = "手工充值完成",
+                    ResponseMoney = info.RequestMoney,
+                    ResponseTime = DateTime.Now,
+                    ResponseCode = "ManualFillMoney",
+                });
+
+                BusinessHelper.Payin_To_Balance(AccountType.FillMoney, BusinessHelper.FundCategory_ManualFillMoney, user.UserId, orderId, info.RequestMoney,
+                    string.Format("手工充值，发生额：{0:N2}元，{1}", info.RequestMoney, info.GoodsDescription), operatorId: requestBy);
+            DB.Commit();
+            return orderId;
+        }
+        public void ManualHandleMoney(string keyLine, string orderId, decimal actionMoney, AccountType accountType, PayType payType, string userId, string description, string financeId = "")
+        {
+            //开启事务
+            DB.Begin();
+            if (actionMoney <= 0) throw new Exception("手工处理金额必须大于0");
+            #region 判断充值金额是否在财务员执行范围
+            var manage = new FundManager();
+            C_FinanceSettings FinanceInfo = manage.GetFinanceSettingsInfo(financeId, "20");
+            if (FinanceInfo == null || FinanceInfo.FinanceId <= 0)
+            {
+                throw new Exception("您还未设置财务员充值金额范围！");
+            }
+            if (actionMoney < FinanceInfo.MinMoney || actionMoney > FinanceInfo.MaxMoney)
+            {
+                throw new Exception("当前充值金额必须在" + FinanceInfo.MinMoney.ToString("N2") + "--" + FinanceInfo.MaxMoney.ToString("N2") + "之间");
+            }
+            #endregion
+            if (payType == PayType.Payin)
+            {
+                BusinessHelper.Payin_To_Balance(accountType, BusinessHelper.FundCategory_ManualRemitMoney, userId, orderId, actionMoney,
+                    string.Format("手工打款，发生额：{0:N2}元。{1}", actionMoney, description), operatorId: financeId);
+            }
+            else
+            {
+                BusinessHelper.Payout_To_End(accountType, BusinessHelper.FundCategory_ManualDeductMoney, userId, orderId, actionMoney,
+                    string.Format("手工扣款，发生额：{0:N2}元。{1}", actionMoney, description), operatorId: financeId);
+            }
+            DB.Commit();
+        }
+        public bool UpdateUserCreditType(string userId, int updateUserCreditType)
+        {
+            return new FundManager().UpdateUserCreditType(userId, updateUserCreditType);
+        }
+        public string ManualCompleteFillMoneyOrder(string orderId, FillMoneyStatus status, out FillMoneyAgentType agentType, out decimal money, out int vipLevel, string financeId = "")
+        {
+            var userId = string.Empty;
+            //开启事务
+                DB.Begin();
+                vipLevel = 0;
+                var fundManager = new FundManager();
+                var entity = fundManager.QueryFillMoney(orderId);
+                if (entity == null)
+                    throw new Exception("订单号错误");
+
+                #region 判断充值金额是否在财务员执行范围
+
+                var manage = new FundManager();
+                C_FinanceSettings FinanceInfo = fundManager.GetFinanceSettingsInfo(financeId, "20");
+                if (FinanceInfo == null || FinanceInfo.FinanceId <= 0)
+                {
+                    throw new Exception("您还未设置财务员充值金额范围！");
+                }
+                if (entity.RequestMoney < FinanceInfo.MinMoney || entity.RequestMoney > FinanceInfo.MaxMoney)
+                {
+                    throw new Exception("当前充值金额必须在" + FinanceInfo.MinMoney.ToString("N2") + "--" + FinanceInfo.MaxMoney.ToString("N2") + "之间");
+                }
+                #endregion
+                agentType = (FillMoneyAgentType)entity.FillMoneyAgent;
+                money = entity.RequestMoney;
+                if (entity.Status != (int)FillMoneyStatus.Requesting)
+                    throw new LogicException("充值订单的状态不是请求中 - " + entity.Status);
+                entity.Status = (int)status;
+                entity.ResponseMoney = entity.RequestMoney;
+                entity.ResponseTime = DateTime.Now;
+                entity.ResponseMessage = "手工完成充值";
+                entity.ResponseCode = status.ToString();
+                fundManager.UpdateFillMoney(entity);
+
+                if (status == FillMoneyStatus.Success)
+                {
+                    var userManager = new UserBalanceManager();
+                    var user = userManager.GetUserRegister(entity.UserId);
+                    user.IsFillMoney = true;
+                    vipLevel = user.VipLevel;
+                    userManager.UpdateUserRegister(user);
+                    BusinessHelper.Payin_To_Balance(AccountType.FillMoney, BusinessHelper.FundCategory_ManualFillMoney, user.UserId, orderId, money, string.Format("用户充值{0:N2}元", money));
+                    if (money >= 5000)
+                    {
+                        try
+                        {
+                            var _mobile_financial = new CacheDataBusiness().QueryCoreConfigFromRedis("Site.Financial.Mobile");
+                            foreach (var item in _mobile_financial.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries))
+                            {
+                                BusinessHelper.SendMsg(item, string.Format("财务人员请注意：用户{0}的充值订单{1}已成功充值{2:N}元，请注意出票平台账户余额。", userId, orderId, money), string.Empty, 4, entity.UserId, orderId);
+                            }
+                        }
+                        catch
+                        {
+                        }
+                    }
+                userId = entity.UserId;
+                DB.Commit();
+            }
+            return userId;
+
+        }
     }
 }

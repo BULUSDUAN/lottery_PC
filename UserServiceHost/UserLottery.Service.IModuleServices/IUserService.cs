@@ -138,7 +138,7 @@ namespace UserLottery.Service.IModuleServices
         [Service(Date = "2018-9-20", Director = "renjun", Name = "检查用户是否设置手机号码")]
         Task<bool> CheckIsAuthenticatedUserMobile(string userId);
         [Service(Date = "2018-9-20", Director = "renjun", Name = "获取用户手机认证信息")]
-        Task<UserMobileInfo> GetUserMobileInfo(string userId, string userToken);
+        Task<UserMobileInfo> GetUserMobileInfo(string userId);
         [Service(Date = "2018-9-21", Director = "renjun", Name = "关注用户")]
         Task<CommonActionResult> AttentionUser(string beAttentionUserId, string userToken);
         [Service(Date = "2018-9-21", Director = "renjun", Name = "取消关注用户")]
@@ -153,6 +153,9 @@ namespace UserLottery.Service.IModuleServices
         Task<SiteMessageInnerMailListNew_Collection> QueryMyInnerMailList(int pageIndex, int pageSize, string UserId);
         [Service(Date = "2018-9-25", Director = "renjun", Name = "阅读站内信")]
         Task<InnerMailInfo_Query> ReadInnerMail(string innerMailId, string UserId);
+        [Service(Date = "2018-10-25", Director = "renjun", Name = "删除站内信")]
+        Task<CommonActionResult> DeleteInnerMail(string innerMailId, string UserId);
+
         [Service(Date = "2018-9-26", Director = "renjun", Name = "查询我的用户意见列表")]
         Task<UserIdeaInfo_QueryCollection> QueryMyUserIdeaList(int pageIndex, int pageSize, string UserId);
         [Service(Date = "2018-9-27", Director = "renjun", Name = "查询普通用户下所有销量")]
@@ -176,6 +179,11 @@ namespace UserLottery.Service.IModuleServices
         Task<UserCurrentOrderInfoCollection> QueryUserCurrentOrderList(string UserId, string gameCode, string userToken, int pageIndex, int pageSize);
         [Service(Date = "2018-10-17", Director = "renjun", Name = "查询红人的合买订单")]
         Task<TogetherHotUserInfoCollection> QueryHotUserTogetherOrderList(string UserId);
+
+        [Service(Date = "2018-10-19", Director = "renjun", Name = "同一IP，一定时间内的注册次数")]
+        Task<int> GetTodayRegisterCount(DateTime date, string localIP);
+        [Service(Date = "2018-10-24", Director = "renjun", Name = "PC端账户提款")]
+        Task<Withdraw_QueryInfoCollection> QueryMyWithdrawList(int status, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string UserId);
 
         [Service(Date = "2018-10-24", Director = "renjun", Name = "每天登录送红包")]
         Task<bool> LoginGiveRedEnvelopes(string UserId, string IPAddress);

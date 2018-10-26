@@ -3,7 +3,7 @@
     ViewBag.Title = "推广管理 - 推广链接 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
     ViewBag.keywords = "推广管理, 推广链接, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
     CurrentUserInfo user = ViewBag.CurrentUser;
-    var balance = ViewBag.CurrentUserBalance as GameBiz.Core.UserBalanceInfo;
+    var balance = ViewBag.CurrentUserBalance as EntityModel.CoreModel.UserBalanceInfo;
 
     var level = 0;
     if (balance.IsSetPwd) { level++; }

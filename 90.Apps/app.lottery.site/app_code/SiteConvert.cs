@@ -4,10 +4,10 @@ using System.Linq;
 using System.Web;
 using System.Text;
 using External.Core;
-using GameBiz.Core;
 using MatchBiz.Core;
 using Common.Lottery;
 using Common.Algorithms;
+using EntityModel.Enum;
 
 public static class SiteConvert
 {
@@ -494,36 +494,36 @@ public static class SiteConvert
             case FillMoneyAgentType.shenfu_upay:
                 agent = "**银联";
                 break;
-            case FillMoneyAgentType.hfb_alipay:
-                 agent = "**支付宝";
-                break;
-            case FillMoneyAgentType.ylt_express:
-                agent = "**快捷";
-                break;
-            case FillMoneyAgentType.lyf_alipay:
-                agent = "**支付宝";
-                break;
-            case FillMoneyAgentType.xinpay_bank:
-                agent = "**网关";
-                break;
-            case FillMoneyAgentType.xinpay_express:
-                agent = "**快捷";
-                break;
-            case FillMoneyAgentType.ysd_alipay:
-                agent = "**支付宝";
-                break;
-            case FillMoneyAgentType.shayu_alipay:
-                agent = "**支付宝";
-                break;
-            case FillMoneyAgentType.jht_alipay:
-                agent = "**支付宝";
-                break;
-            case FillMoneyAgentType.jhz_upay:
-                agent = "***银联";
-                break;
-            case FillMoneyAgentType.lagoufu_alipay:
-                agent = "**支付宝";
-                break;
+            //case FillMoneyAgentType.hfb_alipay:
+            //     agent = "**支付宝";
+            //    break;
+            //case FillMoneyAgentType.ylt_express:
+            //    agent = "**快捷";
+            //    break;
+            //case FillMoneyAgentType.lyf_alipay:
+            //    agent = "**支付宝";
+            //    break;
+            //case FillMoneyAgentType.xinpay_bank:
+            //    agent = "**网关";
+            //    break;
+            //case FillMoneyAgentType.xinpay_express:
+            //    agent = "**快捷";
+            //    break;
+            //case FillMoneyAgentType.ysd_alipay:
+            //    agent = "**支付宝";
+            //    break;
+            //case FillMoneyAgentType.shayu_alipay:
+            //    agent = "**支付宝";
+            //    break;
+            //case FillMoneyAgentType.jht_alipay:
+            //    agent = "**支付宝";
+            //    break;
+            //case FillMoneyAgentType.jhz_upay:
+            //    agent = "***银联";
+            //    break;
+            //case FillMoneyAgentType.lagoufu_alipay:
+            //    agent = "**支付宝";
+            //    break;
             default:
                 agent = fillAgent.ToString();
                 break;
@@ -715,17 +715,17 @@ public static class SiteConvert
     /// </summary>
     /// <param name="withdrawCategory">投注方式类型</param>
     /// <returns>投注方式名称</returns>
-    public static string WithdrawCategoryName(WithdrawCategory withdrawCategory)
+    public static string WithdrawCategoryName(EntityModel.Enum.WithdrawCategory withdrawCategory)
     {
         switch (withdrawCategory)
         {
-            case WithdrawCategory.General:
+            case EntityModel.Enum.WithdrawCategory.General:
                 return "普通提现";
-            case WithdrawCategory.Acceptable:
+            case EntityModel.Enum.WithdrawCategory.Acceptable:
                 return "可接受的提现";
-            case WithdrawCategory.Compulsory:
+            case EntityModel.Enum.WithdrawCategory.Compulsory:
                 return "异常提款";
-            case WithdrawCategory.Error:
+            case EntityModel.Enum.WithdrawCategory.Error:
                 return "错误的提现";
             default:
                 return withdrawCategory.ToString();

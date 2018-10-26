@@ -189,16 +189,16 @@ namespace EntityModel.CoreModel
     {
         void CompleteFillMoney_AfterTranCommit(string orderId, FillMoneyStatus status, FillMoneyAgentType agentType, decimal fillMoney, string userId, int vipLevel);
     }
-    //public interface ICompleteFillMoney_OnError : IPlugin
-    //{
-    //    void CompleteFillMoney_OnError(string orderId, FillMoneyStatus status, string userId, Exception ex);
-    //}
+    public interface ICompleteFillMoney_OnError : IPlugin
+    {
+        void CompleteFillMoney_OnError(string orderId, FillMoneyStatus status, string userId, Exception ex);
+    }
 
     //#endregion
 
     //#region 请求
 
-   //接口
+    //接口
 
     //public interface IRequestWithdraw_BeforeTranBegin : IPlugin
     //{

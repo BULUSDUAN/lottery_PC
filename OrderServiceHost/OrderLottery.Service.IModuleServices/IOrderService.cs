@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using static EntityModel.CoreModel.ReportInfo;
 
 namespace OrderLottery.Service.IModuleServices
 {
@@ -120,8 +121,10 @@ namespace OrderLottery.Service.IModuleServices
         Task<SingleScheme_AnteCodeQueryInfo> QuerySingleSchemeFullFileName(string schemeId);
         [Service(Date = "2018-9-21", Director = "renjun", Name = "查询宝单奖金提成信息")]
         Task<BDFXCommisionInfo> QueryBDFXCommision(string schemeId);
-        [Service(Date = "2018-9-25", Director = "renjun", Name = "查询定制我的跟单规则")]
+        [Service(Date = "2018-9-25", Director = "renjun", Name = "查询我的定制跟单规则")]
         Task<TogetherFollowerRuleQueryInfoCollection> QueryUserFollowRule(string gameCode, string gameType, int pageIndex, int pageSize, string UserId);
+        [Service(Date = "2018-10-25", Director = "renjun", Name = "查询定制我的跟单规则")]
+        Task<TogetherFollowerRuleQueryInfoCollection> QueryUserFollowMeRule(string gameCode, string gameType, int pageIndex, int pageSize, string UserId);
         [Service(Date = "2018-9-26", Director = "renjun", Name = "成功定制跟单记录")]
         Task<TogetherFollowRecordInfoCollection> QuerySucessFolloweRecord(string gameCode, long ruleId, int pageIndex, int pageSize, string UserId);
         [Service(Date = "2018-9-27", Director = "renjun", Name = "查询已停止的期号信息")]
@@ -139,5 +142,10 @@ namespace OrderLottery.Service.IModuleServices
         Task<ArticleInfo_QueryCollection> QueryNoStaticPathArticleList(int pageIndex, int pageSize);
         [Service(Date = "2018-9-29", Director = "renjun", Name = "文章资讯")]
         Task<CommonActionResult> UpdateArticleStaticPath(string articleId, string staticPath, string preId, string nextId);
+        [Service(Date = "2018-10-19", Director = "renjun", Name = "过关统计")]
+        Task<SportsOrder_GuoGuanInfoCollection> QueryReportInfoList_GuoGuan(bool isVirtualOrder, SchemeBettingCategory? category, string key, string gameCode, string gameType, string issuseNumber, DateTime startTime, DateTime endTime, int pageIndex, int pageSize);
+
+        [Service(Date = "2018-10-22", Director = "renjun", Name = "查询单式上传方案详情")]
+        Task<OrderSingleSchemeCollection> QuerySingSchemeDetail(string schemeId);
     }
 }

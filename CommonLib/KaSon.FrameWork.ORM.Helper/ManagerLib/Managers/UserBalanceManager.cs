@@ -1,4 +1,5 @@
 ﻿using EntityModel;
+using EntityModel.CoreModel;
 using EntityModel.Enum;
 using EntityModel.PayModel;
 using System;
@@ -83,7 +84,6 @@ namespace KaSon.FrameWork.ORM.Helper
         public C_User_Register LoadUserRegister(string userId)
         {
             return DB.CreateQuery<C_User_Register>().Where(p => p.UserId == userId).FirstOrDefault();
-            //return this.LoadByKey<C_User_Register>(userId);
         }
         public void UpdateUserBalance(C_User_Balance entity)
         {
@@ -120,10 +120,45 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             DB.GetDal<C_User_Register>().Update(user);
         }
+        public IList<UserBalanceFreezeInfo> QueryUserBalanceFreezeListByUser(string userId, int pageIndex, int pageSize, out int totalCount, out decimal totalMoney)
+        {
+            pageIndex = pageIndex < 0 ? 0 : pageIndex;
+            pageSize = pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : pageSize;
+            var query = from t in DB.CreateQuery<C_User_Balance_FreezeList>()
+                        where t.UserId == userId
+                        select new UserBalanceFreezeInfo
+                        {
+                            Id = t.Id,
+                            UserId = t.UserId,
+                            OrderId = t.OrderId,
+                            FreezeMoney = t.FreezeMoney,
+                            Category =(FrozenCategory)Convert.ToInt32(t.Category),
+                            Description = t.Description,
+                            CreateTime = t.CreateTime,
+                        };
 
+            totalCount = query.Count();
+            if (totalCount > 0)
+            {
+                totalMoney = query.Sum(u => u.FreezeMoney);
+            }
+            else
+            {
+                totalMoney = 0M;
+            }
+            return query
+                .OrderByDescending(u => u.CreateTime)
+                .Skip(pageIndex * pageSize)
+                .Take(pageSize)
+                .ToList();
+        }
         public C_User_Register GetUserRegister(string userId)
         {
             return DB.CreateQuery<C_User_Register>().Where(u => u.UserId == userId).FirstOrDefault();
+        }
+        public E_SendMsg_HistoryRecord QueryMsgHistoryRecordByMsgId(long msgId)
+        {
+            return DB.CreateQuery<E_SendMsg_HistoryRecord>().Where(x=>x.MsgId==msgId).FirstOrDefault();
         }
     }
 }

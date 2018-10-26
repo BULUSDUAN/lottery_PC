@@ -183,8 +183,8 @@ namespace KaSon.FrameWork.ORM.Helper
                         Model.fromDate = Model.fromDate.AddDays(1);
                     }
 
-                    var payInList = list.Where(p => p.PayType == (int)EntityModel.Enum.PayType.Payin).ToList();
-                    var payOutList = list.Where(p => p.PayType == (int)EntityModel.Enum.PayType.Payout).ToList();
+                    var payInList = list.Where(p => p.PayType == (int)PayType.Payin).ToList();
+                    var payOutList = list.Where(p => p.PayType == (int)PayType.Payout).ToList();
                     collection.TotalPayinCount = payInList.Count();
                     collection.TotalPayinMoney = payInList.Count() <= 0 ? 0 : payInList.Sum(p => p.PayMoney);
                     collection.TotalPayoutCount = payOutList.Count();
@@ -207,7 +207,6 @@ namespace KaSon.FrameWork.ORM.Helper
             Model.keyLine = string.IsNullOrEmpty(Model.keyLine) ? string.Empty : Model.keyLine;
             Model.accountTypeList = string.IsNullOrEmpty(Model.accountTypeList) ? string.Empty : Model.accountTypeList;
             Model.categoryList = string.IsNullOrEmpty(Model.categoryList) ? string.Empty : Model.categoryList;
-            //Model.toDate = Model.toDate.AddDays(1).Date;
             Model.pageIndex = Model.pageIndex < 0 ? 0 : Model.pageIndex;
             if (Model.pageSize < 10000)
                 Model.pageSize = Model.pageSize > Model.MaxPageSize ? Model.MaxPageSize : Model.pageSize;
@@ -2634,11 +2633,6 @@ namespace KaSon.FrameWork.ORM.Helper
                     MinMatchStartTime = queryResult.MinMatchStartTime.ToString("yyyy-MM-dd HH:mm:ss"),
                 };
             }
-            //var queryResult = query.ToList().Select(z => new BJDCIssuseInfo
-            //{
-
-            //});
-            //queryResult.FirstOrDefault()
             return info;
         }
         public CTZQMatchInfo_Collection QueryCTZQMatchListByIssuseNumber(string gameType, string issuseNumber)
@@ -2674,12 +2668,154 @@ namespace KaSon.FrameWork.ORM.Helper
             }).ToList();
             return collection;
         }
+        public BettingOrderInfoCollection QueryBettingOrderList(string userIdOrName, SchemeType? schemeType, ProgressStatus? progressStatus, BonusStatus? bonusStatus, SchemeBettingCategory? betCategory, bool? isVirtual, string gameCode
+                    , DateTime startTime, DateTime endTime, int sortType, string agentId, int pageIndex, int pageSize, SchemeSource? schemeSource = null)
+        {
+            var result = new BettingOrderInfoCollection();
+            pageIndex = pageIndex < 0 ? 0 : pageIndex;
+            pageSize = pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : pageSize;
+            if (string.IsNullOrWhiteSpace(userIdOrName))
+            {
+                string TotalSQl = SqlModule.AdminModule.First(x => x.Key == "Debug_QueryBettingOrderNoUserIDCount").SQL;
+                result = DB.CreateSQLQuery(TotalSQl)
+                    .SetString("@UserId", userIdOrName)
+                    .SetInt("@schemeType", schemeType.HasValue ? (int)schemeType.Value : -1)
+                    .SetInt("progressStatus", progressStatus.HasValue ? (int)progressStatus.Value : -1)
+                    .SetInt("@betCategory", betCategory.HasValue ? (int)betCategory.Value : -1)
+                    .SetInt("@bonusStatus", bonusStatus.HasValue ? (int)bonusStatus.Value : -1)
+                    .SetInt("@isVirtual", isVirtual.HasValue ? (isVirtual.Value ? 1 : 0) : -1)
+                    .SetInt("@schemeSource", schemeSource.HasValue ? (int)schemeSource.Value : -1)
+                    .SetString("@gameCode", gameCode)
+                    .SetString("@fromDate", startTime.Date.ToString("yyyy-MM-dd HH:mm:ss"))
+                    .SetString("@toDate", endTime.Date.ToString("yyyy-MM-dd HH:mm:ss"))
+                    .SetInt("@sortType", sortType)
+                    .SetString("@agentId", agentId)
+                    .First<BettingOrderInfoCollection>();
+                string AllUserCountSQL = SqlModule.AdminModule.First(x => x.Key == "Debug_QueryAllUserCount").SQL;
+                result = DB.CreateSQLQuery(AllUserCountSQL)
+                    .SetString("@UserId", userIdOrName)
+                    .SetInt("@schemeType", schemeType.HasValue ? (int)schemeType.Value : -1)
+                    .SetInt("progressStatus", progressStatus.HasValue ? (int)progressStatus.Value : -1)
+                    .SetInt("@betCategory", betCategory.HasValue ? (int)betCategory.Value : -1)
+                    .SetInt("@bonusStatus", bonusStatus.HasValue ? (int)bonusStatus.Value : -1)
+                    .SetInt("@isVirtual", isVirtual.HasValue ? (isVirtual.Value ? 1 : 0) : -1)
+                    .SetInt("@schemeSource", schemeSource.HasValue ? (int)schemeSource.Value : -1)
+                    .SetString("@gameCode", gameCode)
+                    .SetString("@fromDate", startTime.Date.ToString("yyyy-MM-dd HH:mm:ss"))
+                    .SetString("@toDate", endTime.Date.ToString("yyyy-MM-dd HH:mm:ss"))
+                    .SetInt("@sortType", sortType)
+                    .SetString("@agentId", agentId)
+                    .First<BettingOrderInfoCollection>();
+                string pageListSql = SqlModule.AdminModule.First(x => x.Key == "Debug_QueryBettingOrderNoUserIDPageList").SQL;
+                result.OrderList = DB.CreateSQLQuery(pageListSql)
+                    .SetInt("@schemeType", schemeType.HasValue ? (int)schemeType.Value : -1)
+                    .SetInt("progressStatus", progressStatus.HasValue ? (int)progressStatus.Value : -1)
+                    .SetInt("@betCategory", betCategory.HasValue ? (int)betCategory.Value : -1)
+                    .SetInt("@bonusStatus", bonusStatus.HasValue ? (int)bonusStatus.Value : -1)
+                    .SetInt("@isVirtual", isVirtual.HasValue ? (isVirtual.Value ? 1 : 0) : -1)
+                    .SetInt("@schemeSource", schemeSource.HasValue ? (int)schemeSource.Value : -1)
+                    .SetString("@gameCode", gameCode)
+                    .SetString("@fromDate", startTime.Date.ToString("yyyy-MM-dd HH:mm:ss"))
+                    .SetString("@toDate", endTime.Date.ToString("yyyy-MM-dd HH:mm:ss"))
+                    .SetInt("@sortType", sortType)
+                    .SetString("@agentId", agentId)
+                    .SetInt("@pageIndex", pageIndex)
+                    .SetInt("@pageSize", pageSize)
+                    .List<BettingOrderInfo>();
+            }
+            else
+            {
+                string TotalSQl = SqlModule.AdminModule.First(x => x.Key == "Debug_QueryBettingOrderHaveUserIDCount").SQL;
+                result = DB.CreateSQLQuery(TotalSQl)
+                     .SetString("@UserId", userIdOrName)
+                    .SetInt("@schemeType", schemeType.HasValue ? (int)schemeType.Value : -1)
+                    .SetInt("progressStatus", progressStatus.HasValue ? (int)progressStatus.Value : -1)
+                    .SetInt("@betCategory", betCategory.HasValue ? (int)betCategory.Value : -1)
+                    .SetInt("@bonusStatus", bonusStatus.HasValue ? (int)bonusStatus.Value : -1)
+                    .SetInt("@isVirtual", isVirtual.HasValue ? (isVirtual.Value ? 1 : 0) : -1)
+                    .SetInt("@schemeSource", schemeSource.HasValue ? (int)schemeSource.Value : -1)
+                    .SetString("@gameCode", gameCode)
+                    .SetString("@fromDate", startTime.Date.ToString("yyyy-MM-dd HH:mm:ss"))
+                    .SetString("@toDate", endTime.Date.ToString("yyyy-MM-dd HH:mm:ss"))
+                    .SetInt("@sortType", sortType)
+                    .SetString("@agentId", agentId)
+                    .SetInt("@pageIndex", pageIndex)
+                    .SetInt("@pageSize", pageSize).First<BettingOrderInfoCollection>();
+                result.TotalUserCount = 1;
+                string pagelistsql = SqlModule.AdminModule.First(x => x.Key == "Debug_QueryBettingOrderHasUserIDPageList").SQL;
+                result.OrderList=DB.CreateSQLQuery(pagelistsql)
+                     .SetString("@UserId", userIdOrName)
+                    .SetInt("@schemeType", schemeType.HasValue ? (int)schemeType.Value : -1)
+                    .SetInt("progressStatus", progressStatus.HasValue ? (int)progressStatus.Value : -1)
+                    .SetInt("@betCategory", betCategory.HasValue ? (int)betCategory.Value : -1)
+                    .SetInt("@bonusStatus", bonusStatus.HasValue ? (int)bonusStatus.Value : -1)
+                    .SetInt("@isVirtual", isVirtual.HasValue ? (isVirtual.Value ? 1 : 0) : -1)
+                    .SetInt("@schemeSource", schemeSource.HasValue ? (int)schemeSource.Value : -1)
+                    .SetString("@gameCode", gameCode)
+                    .SetString("@fromDate", startTime.Date.ToString("yyyy-MM-dd HH:mm:ss"))
+                    .SetString("@toDate", endTime.Date.ToString("yyyy-MM-dd HH:mm:ss"))
+                    .SetInt("@sortType", sortType)
+                    .SetString("@agentId", agentId)
+                    .SetInt("@pageIndex", pageIndex)
+                    .SetInt("@pageSize", pageSize).List<BettingOrderInfo>();
+            }
+            return result;
+        }
+        public FillMoneyQueryInfoCollection QueryFillMoneyList(string userId, string agentTypeList, string statusList, string sourceList, DateTime startTime, DateTime endTime
+            , int pageIndex, int pageSize, string orderId)
+        {
+            pageIndex = pageIndex < 0 ? 0 : pageIndex;
+            if (pageSize == -1)
+                pageSize = int.MaxValue;
+            else
+                pageSize = pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : pageSize;
+            var result = new FillMoneyQueryInfoCollection();
 
+            var _agentTypeList = agentTypeList.Split('|', StringSplitOptions.RemoveEmptyEntries).ToList();
+            var str_agentTypeList = string.Join(',', string.Format("'{0}'", _agentTypeList.Select(exp => exp))).ToString();
 
-        //public List<C_Sports_Order_Running> QueryRunningSportsOrderList()
-        //{
-        //    var sql = "SELECT * FROM C_Sports_Order_Running WHERE StopTime<=getdate() ORDER BY CreateTime desc";
-        //    return DB.CreateSQLQuery(sql).List<C_Sports_Order_Running>().ToList();
-        //}
+            var _statusList = statusList.Split('|', StringSplitOptions.RemoveEmptyEntries).ToList();
+            var str_statusList = string.Join(',', string.Format("'{0}'", _statusList.Select(exp => exp))).ToString();
+
+            var _sourceList = sourceList.Split('|', StringSplitOptions.RemoveEmptyEntries).ToList();
+            var str_sourceList = string.Join(',', string.Format("'{0}'", _sourceList.Select(exp => exp))).ToString();
+
+            string countSql_1 = SqlModule.AdminModule.First(x => x.Key == "Debug_QueryFillMoneyListCount_01").SQL;
+            result = DB.CreateSQLQuery(countSql_1)
+                .SetString("UserId", userId)
+                .SetString("AgentList", str_agentTypeList)
+                .SetString("StatusList", str_statusList)
+                .SetString("SourceList", str_sourceList)
+                .SetString("StartTime", startTime.ToString("yyyy-MM-dd"))
+                .SetString("EndTime", endTime.AddDays(1).ToString("yyyy-MM-dd"))
+                .SetInt("PageIndex", pageIndex)
+                .SetInt("pageSize", pageSize)
+                .SetString("OrderId", orderId)
+                .First<FillMoneyQueryInfoCollection>();
+
+            string countSql_2 = SqlModule.AdminModule.First(x => x.Key == "Debug_QueryFillMoneyListCount_02").SQL;
+            result = DB.CreateSQLQuery(countSql_2)
+                .SetString("UserId", userId)
+                .SetString("AgentList", str_agentTypeList)
+                .SetString("SourceList", str_sourceList)
+                .SetString("StartTime", startTime.ToString("yyyy-MM-dd"))
+                .SetString("EndTime", endTime.AddDays(1).ToString("yyyy-MM-dd"))
+                .SetInt("PageIndex", pageIndex)
+                .SetInt("pageSize", pageSize)
+                .SetString("OrderId", orderId)
+                .First<FillMoneyQueryInfoCollection>();
+            string pageSQl = SqlModule.AdminModule.First(x => x.Key == "Debug_QueryFillMoneyList").SQL;
+            result.FillMoneyList = DB.CreateSQLQuery(pageSQl)
+                 .SetString("UserId", userId)
+                .SetString("AgentList", str_agentTypeList)
+                .SetString("StatusList", str_statusList)
+                .SetString("SourceList", str_sourceList)
+                .SetString("StartTime", startTime.ToString("yyyy-MM-dd"))
+                .SetString("EndTime", endTime.AddDays(1).ToString("yyyy-MM-dd"))
+                .SetInt("PageIndex", pageIndex)
+                .SetInt("pageSize", pageSize)
+                .SetString("OrderId", orderId).List<FillMoneyQueryInfo>();
+            return result;
+        }
     }
 }

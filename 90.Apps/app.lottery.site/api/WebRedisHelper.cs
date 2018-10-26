@@ -10,6 +10,10 @@ using Common.Lottery.Redis;
 using app.lottery.site.Controllers;
 using Common.Utilities;
 using Common.Cryptography;
+using System.Threading.Tasks;
+using log4net;
+using Kason.Sg.Core.ProxyGenerator;
+using Kason.Sg.Core.CPlatform.Runtime.Client.Address.Resolvers;
 
 namespace app.lottery.site.iqucai
 {
@@ -18,6 +22,19 @@ namespace app.lottery.site.iqucai
     /// </summary>
     public class WebRedisHelper
     {
+        #region 调用服务使用示例
+        private readonly ILog logger = null;
+        private static  IServiceProxyProvider serviceProxyProvider;
+        public IAddressResolver addrre;
+        public WebRedisHelper(IServiceProxyProvider _serviceProxyProvider, ILog log, IAddressResolver _addrre)
+        {
+            serviceProxyProvider = _serviceProxyProvider;
+            logger = log;
+            addrre = _addrre;
+
+        }
+        #endregion
+
         private static string _cacheRedisHost = string.Empty;
         /// <summary>
         /// 缓存Redis的ip
@@ -769,19 +786,21 @@ namespace app.lottery.site.iqucai
 
         #region 用户订单详细
 
-        public static Sports_SchemeQueryInfo QuerySportsSchemeInfo(string schemeId)
+        public static async Task<EntityModel.CoreModel.Sports_SchemeQueryInfo> QuerySportsSchemeInfo(string schemeId)
         {
             var info = LoadSportsSchemeInfoFromRedis(schemeId);
             if (info == null)
             {
-                info = WCFClients.GameClient.QuerySportsSchemeInfo(schemeId);
-                if (info != null && info.ProgressStatus == ProgressStatus.Complate && (info.BonusStatus == BonusStatus.Lose || info.BonusStatus == BonusStatus.Win))
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["schemeId"] = schemeId;
+                info = await serviceProxyProvider.Invoke<EntityModel.CoreModel.Sports_SchemeQueryInfo>(param, "api/order/QuerySportsSchemeInfo");
+                if (info != null && info.ProgressStatus ==EntityModel.Enum.ProgressStatus.Complate && (info.BonusStatus == EntityModel.Enum.BonusStatus.Lose || info.BonusStatus == EntityModel.Enum.BonusStatus.Win))
                     SaveSportsSchemeInfoToRedis(info);
             }
 
             return info;
         }
-        private static Sports_SchemeQueryInfo LoadSportsSchemeInfoFromRedis(string schemeId)
+        private static EntityModel.CoreModel.Sports_SchemeQueryInfo LoadSportsSchemeInfoFromRedis(string schemeId)
         {
             var db = RedisHelper.GetInstance(CacheRedisHost, CacheRedisPost, CacheRedisPassword).GetDatabase(11);//.DB_SchemeDetail;
             var key = string.Format("{0}_SportsSchemeInfo", schemeId);
@@ -790,14 +809,14 @@ namespace app.lottery.site.iqucai
                 return null;
             try
             {
-                return JsonSerializer.Deserialize<Sports_SchemeQueryInfo>(v.ToString());
+                return JsonSerializer.Deserialize<EntityModel.CoreModel.Sports_SchemeQueryInfo>(v.ToString());
             }
             catch (Exception)
             {
                 return null;
             }
         }
-        private static void SaveSportsSchemeInfoToRedis(Sports_SchemeQueryInfo info)
+        private static void SaveSportsSchemeInfoToRedis(EntityModel.CoreModel.Sports_SchemeQueryInfo info)
         {
             try
             {
@@ -813,19 +832,21 @@ namespace app.lottery.site.iqucai
         }
 
 
-        public static BettingOrderInfo QueryOrderDetailBySchemeId(string schemeId)
+        public static async Task<EntityModel.CoreModel.BettingOrderInfo> QueryOrderDetailBySchemeId(string schemeId)
         {
             var info = LoadOrderDetailFromRedis(schemeId);
             if (info == null)
             {
-                info = WCFClients.GameQueryClient.QueryOrderDetailBySchemeId(schemeId);
-                if (info != null && info.ProgressStatus == ProgressStatus.Complate && (info.BonusStatus == BonusStatus.Lose || info.BonusStatus == BonusStatus.Win))
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["schemeId"] = schemeId;
+                info = await serviceProxyProvider.Invoke<EntityModel.CoreModel.BettingOrderInfo>(param, "api/order/QueryOrderDetailBySchemeId");
+                if (info != null && info.ProgressStatus == EntityModel.Enum.ProgressStatus.Complate && (info.BonusStatus == EntityModel.Enum.BonusStatus.Lose || info.BonusStatus == EntityModel.Enum.BonusStatus.Win))
                     SaveOrderDetailToRedis(info);
             }
 
             return info;
         }
-        private static BettingOrderInfo LoadOrderDetailFromRedis(string schemeId)
+        private static EntityModel.CoreModel.BettingOrderInfo LoadOrderDetailFromRedis(string schemeId)
         {
             var db = RedisHelper.GetInstance(CacheRedisHost, CacheRedisPost, CacheRedisPassword).GetDatabase(11);//.DB_SchemeDetail;
             var key = string.Format("{0}_OrderDetail", schemeId);
@@ -834,14 +855,14 @@ namespace app.lottery.site.iqucai
                 return null;
             try
             {
-                return JsonSerializer.Deserialize<BettingOrderInfo>(v.ToString());
+                return JsonSerializer.Deserialize<EntityModel.CoreModel.BettingOrderInfo>(v.ToString());
             }
             catch (Exception)
             {
                 return null;
             }
         }
-        private static void SaveOrderDetailToRedis(BettingOrderInfo info)
+        private static void SaveOrderDetailToRedis(EntityModel.CoreModel.BettingOrderInfo info)
         {
             try
             {
@@ -855,12 +876,15 @@ namespace app.lottery.site.iqucai
             }
         }
 
-        public static int QueryProfileFollowedCount(string userId, string gameCode, string gameType)
+        public static async Task<int> QueryProfileFollowedCount(string userId, string gameCode, string gameType)
         {
             var count = LoadOProfileFollowedCountFromRedis(userId, gameCode, gameType);
             if (count == -1)
             {
-                count = WCFClients.GameClient.QueryProfileFollowedCount(userId, gameCode, gameType);
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["userId"] = userId; param["gameCode"] = gameCode; param["gameType"] = gameType;
+              
+                count = await serviceProxyProvider.Invoke<int>(param, "api/order/QueryProfileFollowedCount");
                 SaveProfileFollowedCountToRedis(userId, gameCode, gameType, count);
             }
 
@@ -895,20 +919,24 @@ namespace app.lottery.site.iqucai
             }
         }
 
-        public static Sports_TicketQueryInfoCollection QuerySportsTicketList(string schemeId, int pageIndex, int pageSize)
+        public static async Task<EntityModel.CoreModel.Sports_TicketQueryInfoCollection> QuerySportsTicketList(string schemeId, int pageIndex, int pageSize)
         {
             var info = LoadSportsTicketListFromRedis(schemeId, pageIndex, pageSize);
             if (info == null)
             {
-                info = WCFClients.GameClient.QuerySportsTicketList(schemeId, pageIndex, pageSize, string.Empty);
-                var noPrizeCount = info.TicketList.Where(p => p.BonusStatus == BonusStatus.Waitting).Count();
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["schemeId"] = schemeId;
+                param["pageIndex"] = pageIndex;
+                param["pageSize"] = pageSize;
+                info = await serviceProxyProvider.Invoke<EntityModel.CoreModel.Sports_TicketQueryInfoCollection>(param, "api/order/QuerySportsTicketList");
+                var noPrizeCount = info.TicketList.Where(p => p.BonusStatus ==EntityModel.Enum.BonusStatus.Waitting).Count();
                 if (info.TicketList.Count > 0 && noPrizeCount <= 0)
                     SaveSportsTicketListToRedis(schemeId, pageIndex, pageSize, info);
             }
 
             return info;
         }
-        private static Sports_TicketQueryInfoCollection LoadSportsTicketListFromRedis(string schemeId, int pageIndex, int pageSize)
+        private static EntityModel.CoreModel.Sports_TicketQueryInfoCollection LoadSportsTicketListFromRedis(string schemeId, int pageIndex, int pageSize)
         {
             var db = RedisHelper.GetInstance(CacheRedisHost, CacheRedisPost, CacheRedisPassword).GetDatabase(11);//.DB_SchemeDetail;
             var key = string.Format("{0}_{1}_{2}_SportsTicketList", schemeId, pageIndex, pageSize);
@@ -917,14 +945,14 @@ namespace app.lottery.site.iqucai
                 return null;
             try
             {
-                return JsonSerializer.Deserialize<Sports_TicketQueryInfoCollection>(v.ToString());
+                return JsonSerializer.Deserialize<EntityModel.CoreModel.Sports_TicketQueryInfoCollection>(v.ToString());
             }
             catch (Exception)
             {
                 return null;
             }
         }
-        private static void SaveSportsTicketListToRedis(string schemeId, int pageIndex, int pageSize, Sports_TicketQueryInfoCollection info)
+        private static void SaveSportsTicketListToRedis(string schemeId, int pageIndex, int pageSize, EntityModel.CoreModel.Sports_TicketQueryInfoCollection info)
         {
             try
             {
@@ -938,19 +966,21 @@ namespace app.lottery.site.iqucai
             }
         }
 
-        public static BDFXCommisionInfo QueryBDFXCommision(string schemeId, BonusStatus bonusStatus)
+        public static async Task<EntityModel.CoreModel.BDFXCommisionInfo> QueryBDFXCommision(string schemeId, EntityModel.Enum.BonusStatus bonusStatus)
         {
             var info = LoadBDFXCommisionFromRedis(schemeId);
             if (info == null)
             {
-                info = WCFClients.ExternalClient.QueryBDFXCommision(schemeId);
-                if (info != null && (bonusStatus == BonusStatus.Lose || bonusStatus == BonusStatus.Win))
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["category"] = "Lottery_Hot";
+                info = await serviceProxyProvider.Invoke<EntityModel.CoreModel.BDFXCommisionInfo>(param, "api/data/QueryBDFXCommision");
+                if (info != null && (bonusStatus == EntityModel.Enum.BonusStatus.Lose || bonusStatus == EntityModel.Enum.BonusStatus.Win))
                     SaveBDFXCommisionToRedis(info, schemeId);
             }
 
             return info;
         }
-        private static BDFXCommisionInfo LoadBDFXCommisionFromRedis(string schemeId)
+        private static EntityModel.CoreModel.BDFXCommisionInfo LoadBDFXCommisionFromRedis(string schemeId)
         {
             var db = RedisHelper.GetInstance(CacheRedisHost, CacheRedisPost, CacheRedisPassword).GetDatabase(11);//.DB_SchemeDetail;
             var key = string.Format("{0}_BDFXCommision", schemeId);
@@ -959,14 +989,14 @@ namespace app.lottery.site.iqucai
                 return null;
             try
             {
-                return JsonSerializer.Deserialize<BDFXCommisionInfo>(v.ToString());
+                return JsonSerializer.Deserialize<EntityModel.CoreModel.BDFXCommisionInfo>(v.ToString());
             }
             catch (Exception)
             {
                 return null;
             }
         }
-        private static void SaveBDFXCommisionToRedis(BDFXCommisionInfo info, string schemeId)
+        private static void SaveBDFXCommisionToRedis(EntityModel.CoreModel.BDFXCommisionInfo info, string schemeId)
         {
             try
             {
@@ -980,20 +1010,22 @@ namespace app.lottery.site.iqucai
             }
         }
 
-        public static Sports_AnteCodeQueryInfoCollection QuerySportsOrderAnteCodeList(string schemeId, BonusStatus bonusStatus)
+        public static async Task<EntityModel.CoreModel.Sports_AnteCodeQueryInfoCollection> QuerySportsOrderAnteCodeList(string schemeId,EntityModel.Enum.BonusStatus bonusStatus)
         {
             var info = LoadSportsOrderAnteCodeFromRedis(schemeId);
             if (info == null)
             {
-                info = WCFClients.GameClient.QuerySportsOrderAnteCodeList(schemeId, string.Empty);
-                if (info != null && info.Count > 0 && (bonusStatus == BonusStatus.Lose || bonusStatus == BonusStatus.Win))
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["schemeId"] = schemeId;
+                info = await serviceProxyProvider.Invoke<EntityModel.CoreModel.Sports_AnteCodeQueryInfoCollection>(param, "api/order/QuerySportsOrderAnteCodeList");
+                if (info != null && info.Count > 0 && (bonusStatus == EntityModel.Enum.BonusStatus.Lose || bonusStatus == EntityModel.Enum.BonusStatus.Win))
                     SaveSportsOrderAnteCodeToRedis(info, schemeId);
             }
 
             return info;
 
         }
-        private static Sports_AnteCodeQueryInfoCollection LoadSportsOrderAnteCodeFromRedis(string schemeId)
+        private static EntityModel.CoreModel.Sports_AnteCodeQueryInfoCollection LoadSportsOrderAnteCodeFromRedis(string schemeId)
         {
             var db = RedisHelper.GetInstance(CacheRedisHost, CacheRedisPost, CacheRedisPassword).GetDatabase(11);//.DB_SchemeDetail;
             var key = string.Format("{0}_SportsOrderAnteCode", schemeId);
@@ -1002,14 +1034,14 @@ namespace app.lottery.site.iqucai
                 return null;
             try
             {
-                return JsonSerializer.Deserialize<Sports_AnteCodeQueryInfoCollection>(v.ToString());
+                return JsonSerializer.Deserialize<EntityModel.CoreModel.Sports_AnteCodeQueryInfoCollection>(v.ToString());
             }
             catch (Exception)
             {
                 return null;
             }
         }
-        private static void SaveSportsOrderAnteCodeToRedis(Sports_AnteCodeQueryInfoCollection info, string schemeId)
+        private static void SaveSportsOrderAnteCodeToRedis(EntityModel.CoreModel.Sports_AnteCodeQueryInfoCollection info, string schemeId)
         {
             try
             {
@@ -1023,19 +1055,22 @@ namespace app.lottery.site.iqucai
             }
         }
 
-        public static SingleScheme_AnteCodeQueryInfo QuerySingleSchemeFullFileName(string schemeId, BonusStatus bonusStatus)
+        public static async Task<EntityModel.CoreModel.SingleScheme_AnteCodeQueryInfo> QuerySingleSchemeFullFileName(string schemeId, EntityModel.Enum.BonusStatus bonusStatus)
         {
             var info = LoadSingleSchemeFromRedis(schemeId);
             if (info == null)
             {
-                info = WCFClients.GameClient.QuerySingleSchemeFullFileName(schemeId, string.Empty);
-                if (info != null && (bonusStatus == BonusStatus.Lose || bonusStatus == BonusStatus.Win))
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["schemeId"] = schemeId;
+                info = await serviceProxyProvider.Invoke<EntityModel.CoreModel.SingleScheme_AnteCodeQueryInfo>(param, "api/order/QuerySingleSchemeFullFileName");
+             
+                if (info != null && (bonusStatus == EntityModel.Enum.BonusStatus.Lose || bonusStatus == EntityModel.Enum.BonusStatus.Win))
                     SaveSingleSchemeToRedis(info, schemeId);
             }
 
             return info;
         }
-        private static SingleScheme_AnteCodeQueryInfo LoadSingleSchemeFromRedis(string schemeId)
+        private static EntityModel.CoreModel.SingleScheme_AnteCodeQueryInfo LoadSingleSchemeFromRedis(string schemeId)
         {
             var db = RedisHelper.GetInstance(CacheRedisHost, CacheRedisPost, CacheRedisPassword).GetDatabase(11);//.DB_SchemeDetail;
             var key = string.Format("{0}_SingleScheme", schemeId);
@@ -1044,14 +1079,14 @@ namespace app.lottery.site.iqucai
                 return null;
             try
             {
-                return JsonSerializer.Deserialize<SingleScheme_AnteCodeQueryInfo>(v.ToString());
+                return JsonSerializer.Deserialize<EntityModel.CoreModel.SingleScheme_AnteCodeQueryInfo>(v.ToString());
             }
             catch (Exception)
             {
                 return null;
             }
         }
-        private static void SaveSingleSchemeToRedis(SingleScheme_AnteCodeQueryInfo info, string schemeId)
+        private static void SaveSingleSchemeToRedis(EntityModel.CoreModel.SingleScheme_AnteCodeQueryInfo info, string schemeId)
         {
             try
             {
@@ -1065,12 +1100,15 @@ namespace app.lottery.site.iqucai
             }
         }
 
-        public static BettingOrderInfoCollection QueryBettingOrderListByChaseKeyLine(string schemeId)
+        public static async Task<EntityModel.CoreModel.BettingOrderInfoCollection> QueryBettingOrderListByChaseKeyLine(string schemeId)
         {
             var info = LoadBettingOrderListByChaseKeyLineFromRedis(schemeId);
             if (info == null)
             {
-                info = WCFClients.GameQueryClient.QueryBettingOrderListByChaseKeyLine(schemeId, string.Empty);
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["schemeId"] = schemeId;
+
+                info = await serviceProxyProvider.Invoke<EntityModel.CoreModel.BettingOrderInfoCollection>(param, "api/order/QueryBettingOrderListByChaseKeyLine");
                 var isComplate = true;
                 while (true)
                 {
@@ -1081,7 +1119,7 @@ namespace app.lottery.site.iqucai
                     }
                     foreach (var issuse in info.OrderList)
                     {
-                        if (issuse.ProgressStatus != ProgressStatus.Complate)
+                        if (issuse.ProgressStatus !=EntityModel.Enum.ProgressStatus.Complate)
                         {
                             isComplate = false;
                             break;
@@ -1095,7 +1133,7 @@ namespace app.lottery.site.iqucai
 
             return info;
         }
-        private static BettingOrderInfoCollection LoadBettingOrderListByChaseKeyLineFromRedis(string schemeId)
+        private static EntityModel.CoreModel.BettingOrderInfoCollection LoadBettingOrderListByChaseKeyLineFromRedis(string schemeId)
         {
             var db = RedisHelper.GetInstance(CacheRedisHost, CacheRedisPost, CacheRedisPassword).GetDatabase(11);//.DB_SchemeDetail;
             var key = string.Format("{0}_BettingOrderListByChaseKeyLine", schemeId);
@@ -1104,14 +1142,14 @@ namespace app.lottery.site.iqucai
                 return null;
             try
             {
-                return JsonSerializer.Deserialize<BettingOrderInfoCollection>(v.ToString());
+                return JsonSerializer.Deserialize<EntityModel.CoreModel.BettingOrderInfoCollection>(v.ToString());
             }
             catch (Exception)
             {
                 return null;
             }
         }
-        private static void SaveBettingOrderListByChaseKeyLineToRedis(BettingOrderInfoCollection info, string schemeId)
+        private static void SaveBettingOrderListByChaseKeyLineToRedis(EntityModel.CoreModel.BettingOrderInfoCollection info, string schemeId)
         {
             try
             {
@@ -1125,19 +1163,21 @@ namespace app.lottery.site.iqucai
             }
         }
 
-        public static BettingAnteCodeInfoCollection QueryAnteCodeListBySchemeId(string schemeId, BonusStatus bonusStatus)
+        public static async Task<EntityModel.CoreModel.BettingAnteCodeInfoCollection> QueryAnteCodeListBySchemeId(string schemeId, EntityModel.Enum.BonusStatus bonusStatus)
         {
             var info = LoadAnteCodeListBySchemeIdFromRedis(schemeId);
             if (info == null)
             {
-                info = WCFClients.GameQueryClient.QueryAnteCodeListBySchemeId(schemeId, string.Empty);
-                if (info != null && (bonusStatus == BonusStatus.Lose || bonusStatus == BonusStatus.Win))
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["schemeId"] = schemeId;
+                info = await serviceProxyProvider.Invoke<EntityModel.CoreModel.BettingAnteCodeInfoCollection>(param, "api/order/QueryAnteCodeListBySchemeId");
+                if (info != null && (bonusStatus == EntityModel.Enum.BonusStatus.Lose || bonusStatus == EntityModel.Enum.BonusStatus.Win))
                     SaveAnteCodeListBySchemeIdToRedis(info, schemeId);
             }
 
             return info;
         }
-        private static BettingAnteCodeInfoCollection LoadAnteCodeListBySchemeIdFromRedis(string schemeId)
+        private static EntityModel.CoreModel.BettingAnteCodeInfoCollection LoadAnteCodeListBySchemeIdFromRedis(string schemeId)
         {
             var db = RedisHelper.GetInstance(CacheRedisHost, CacheRedisPost, CacheRedisPassword).GetDatabase(11);//.DB_SchemeDetail;
             var key = string.Format("{0}_AnteCodeListBySchemeId", schemeId);
@@ -1146,14 +1186,14 @@ namespace app.lottery.site.iqucai
                 return null;
             try
             {
-                return JsonSerializer.Deserialize<BettingAnteCodeInfoCollection>(v.ToString());
+                return JsonSerializer.Deserialize<EntityModel.CoreModel.BettingAnteCodeInfoCollection>(v.ToString());
             }
             catch (Exception)
             {
                 return null;
             }
         }
-        private static void SaveAnteCodeListBySchemeIdToRedis(BettingAnteCodeInfoCollection info, string schemeId)
+        private static void SaveAnteCodeListBySchemeIdToRedis(EntityModel.CoreModel.BettingAnteCodeInfoCollection info, string schemeId)
         {
             try
             {
@@ -1167,19 +1207,22 @@ namespace app.lottery.site.iqucai
             }
         }
 
-        public static Sports_TogetherJoinInfoCollection QuerySportsTogetherJoinList(string schemeId, BonusStatus bonusStatus)
+        public static async Task<EntityModel.CoreModel.Sports_TogetherJoinInfoCollection> QuerySportsTogetherJoinList(string schemeId, EntityModel.Enum.BonusStatus bonusStatus)
         {
             var info = LoadSportsTogetherJoinListFromRedis(schemeId);
             if (info == null)
             {
-                info = WCFClients.GameClient.QuerySportsTogetherJoinList(schemeId, -1, -1, string.Empty);
-                if (info != null && info.TotalCount > 0 && (bonusStatus == BonusStatus.Lose || bonusStatus == BonusStatus.Win))
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["schemeId"] = schemeId;
+                param["pageIndex"] = -1; param["pageSize"] = -1; param["userId"] = string.Empty;
+                info = await serviceProxyProvider.Invoke<EntityModel.CoreModel.Sports_TogetherJoinInfoCollection>(param, "api/order/QuerySportsTogetherJoinList");
+                if (info != null && info.TotalCount > 0 && (bonusStatus == EntityModel.Enum.BonusStatus.Lose || bonusStatus == EntityModel.Enum.BonusStatus.Win))
                     SaveSportsTogetherJoinListToRedis(info, schemeId);
             }
 
             return info;
         }
-        private static Sports_TogetherJoinInfoCollection LoadSportsTogetherJoinListFromRedis(string schemeId)
+        private static EntityModel.CoreModel.Sports_TogetherJoinInfoCollection LoadSportsTogetherJoinListFromRedis(string schemeId)
         {
             var db = RedisHelper.GetInstance(CacheRedisHost, CacheRedisPost, CacheRedisPassword).GetDatabase(11);//.DB_SchemeDetail;
             var key = string.Format("{0}_SportsTogetherJoinList", schemeId);
@@ -1188,14 +1231,14 @@ namespace app.lottery.site.iqucai
                 return null;
             try
             {
-                return JsonSerializer.Deserialize<Sports_TogetherJoinInfoCollection>(v.ToString());
+                return JsonSerializer.Deserialize<EntityModel.CoreModel.Sports_TogetherJoinInfoCollection>(v.ToString());
             }
             catch (Exception)
             {
                 return null;
             }
         }
-        private static void SaveSportsTogetherJoinListToRedis(Sports_TogetherJoinInfoCollection info, string schemeId)
+        private static void SaveSportsTogetherJoinListToRedis(EntityModel.CoreModel.Sports_TogetherJoinInfoCollection info, string schemeId)
         {
             try
             {
@@ -1209,19 +1252,22 @@ namespace app.lottery.site.iqucai
             }
         }
 
-        public static Sports_TogetherSchemeQueryInfo QuerySportsTogetherDetail(string schemeId)
+        public  static async Task<EntityModel.CoreModel.Sports_TogetherSchemeQueryInfo> QuerySportsTogetherDetail(string schemeId)
         {
             var info = LoadSportsTogetherDetailFromRedis(schemeId);
             if (info == null)
             {
-                info = WCFClients.GameClient.QuerySportsTogetherDetail(schemeId);
-                if (info != null && (info.BonusStatus == BonusStatus.Lose || info.BonusStatus == BonusStatus.Win))
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["schemeId"] = schemeId;
+                info = await serviceProxyProvider.Invoke<EntityModel.CoreModel.Sports_TogetherSchemeQueryInfo>(param, "api/order/QuerySportsTogetherDetail");
+           
+                if (info != null && (info.BonusStatus == EntityModel.Enum.BonusStatus.Lose || info.BonusStatus == EntityModel.Enum.BonusStatus.Win))
                     SaveSportsTogetherDetailToRedis(info, schemeId);
             }
 
             return info;
         }
-        private static Sports_TogetherSchemeQueryInfo LoadSportsTogetherDetailFromRedis(string schemeId)
+        private static EntityModel.CoreModel.Sports_TogetherSchemeQueryInfo LoadSportsTogetherDetailFromRedis(string schemeId)
         {
             var db = RedisHelper.GetInstance(CacheRedisHost, CacheRedisPost, CacheRedisPassword).GetDatabase(11);//.DB_SchemeDetail;
             var key = string.Format("{0}_SportsTogetherDetail", schemeId);
@@ -1230,14 +1276,14 @@ namespace app.lottery.site.iqucai
                 return null;
             try
             {
-                return JsonSerializer.Deserialize<Sports_TogetherSchemeQueryInfo>(v.ToString());
+                return JsonSerializer.Deserialize<EntityModel.CoreModel.Sports_TogetherSchemeQueryInfo>(v.ToString());
             }
             catch (Exception)
             {
                 return null;
             }
         }
-        private static void SaveSportsTogetherDetailToRedis(Sports_TogetherSchemeQueryInfo info, string schemeId)
+        private static void SaveSportsTogetherDetailToRedis(EntityModel.CoreModel.Sports_TogetherSchemeQueryInfo info, string schemeId)
         {
             try
             {
@@ -1251,19 +1297,21 @@ namespace app.lottery.site.iqucai
             }
         }
 
-        public static OrderSingleSchemeCollection QueryOrderSingleScheme(string schemeId, BonusStatus bonusStatus)
+        public static async Task<EntityModel.CoreModel.OrderSingleSchemeCollection> QueryOrderSingleScheme(string schemeId, EntityModel.Enum.BonusStatus bonusStatus)
         {
             var info = LoadOrderSingleSchemeFromRedis(schemeId);
             if (info == null)
             {
-                info = WCFClients.GameQueryClient.QuerySingSchemeDetail(schemeId);
-                if (info != null && (bonusStatus == BonusStatus.Lose || bonusStatus == BonusStatus.Win))
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["schemeId"] = schemeId;
+                info = await serviceProxyProvider.Invoke<EntityModel.CoreModel.OrderSingleSchemeCollection>(param, "api/data/QuerySingSchemeDetail");
+                if (info != null && (bonusStatus == EntityModel.Enum.BonusStatus.Lose || bonusStatus == EntityModel.Enum.BonusStatus.Win))
                     SaveOrderSingleSchemeToRedis(info, schemeId);
             }
 
             return info;
         }
-        private static OrderSingleSchemeCollection LoadOrderSingleSchemeFromRedis(string schemeId)
+        private static EntityModel.CoreModel.OrderSingleSchemeCollection LoadOrderSingleSchemeFromRedis(string schemeId)
         {
             var db = RedisHelper.GetInstance(CacheRedisHost, CacheRedisPost, CacheRedisPassword).GetDatabase(11);//.DB_SchemeDetail;
             var key = string.Format("{0}_OrderSingleScheme", schemeId);
@@ -1272,14 +1320,14 @@ namespace app.lottery.site.iqucai
                 return null;
             try
             {
-                return JsonSerializer.Deserialize<OrderSingleSchemeCollection>(v.ToString());
+                return JsonSerializer.Deserialize<EntityModel.CoreModel.OrderSingleSchemeCollection>(v.ToString());
             }
             catch (Exception)
             {
                 return null;
             }
         }
-        private static void SaveOrderSingleSchemeToRedis(OrderSingleSchemeCollection info, string schemeId)
+        private static void SaveOrderSingleSchemeToRedis(EntityModel.CoreModel.OrderSingleSchemeCollection info, string schemeId)
         {
             try
             {
@@ -1347,29 +1395,32 @@ namespace app.lottery.site.iqucai
         /// <summary>
         /// 查询用户余额
         /// </summary>
-        public static UserBalanceInfo QueryUserBalance(string userId)
+        public static async Task<EntityModel.CoreModel.UserBalanceInfo> QueryUserBalanceAsync(string userId)
         {
             try
             {
                 var db = RedisHelper.DB_UserBalance;
                 string key = string.Format("UserBalance_{0}", userId);
-                UserBalanceInfo userBalance = null;
+                EntityModel.CoreModel.UserBalanceInfo userBalance = null;
                 var v = db.StringGetAsync(key).Result;
                 if (!v.HasValue)
                 {
-                    userBalance = WCFClients.GameFundClient.QueryUserBalance(userId);
+                    Dictionary<string, object> balanceParam = new Dictionary<string, object>();
+                    balanceParam["userId"] = userId;
+                    userBalance = await serviceProxyProvider.Invoke<EntityModel.CoreModel.UserBalanceInfo>(balanceParam, "api/user/QueryMyBalance");
+                    
                     var json = JsonSerializer.Serialize(userBalance);
-                    db.StringSetAsync(key, json, TimeSpan.FromSeconds(60 * 2));
+                    await db.StringSetAsync(key, json, TimeSpan.FromSeconds(60 * 2));
                 }
                 else
                 {
-                    userBalance = JsonSerializer.Deserialize<UserBalanceInfo>(v.ToString());
+                    userBalance = JsonSerializer.Deserialize<EntityModel.CoreModel.UserBalanceInfo>(v.ToString());
                 }
                 return userBalance;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new UserBalanceInfo();
+                return new EntityModel.CoreModel.UserBalanceInfo();
             }
         }
 
@@ -1459,7 +1510,7 @@ namespace app.lottery.site.iqucai
         /// <summary>
         /// 检查投注时的资金密是否正确
         /// </summary>
-        public static void CheckBalancePwd(UserBalanceInfo info, string pwd)
+        public static void CheckBalancePwd(EntityModel.CoreModel.UserBalanceInfo info, string pwd)
         {
             if (!info.CheckIsNeedPassword("Bet"))
                 return;

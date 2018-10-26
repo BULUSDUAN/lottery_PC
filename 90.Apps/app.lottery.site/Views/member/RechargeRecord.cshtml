@@ -1,10 +1,10 @@
-﻿@using GameBiz.Core
+﻿@using EntityModel.Enum
 @{
     ViewBag.Title = "充值记录";
     var fund = ViewBag.FundDetails as GameBiz.Core.UserFundDetailCollection;
     var user = ViewBag.CurrentUser as app.lottery.site.Models.CurrentUserInfo;
 
-    GameBiz.Core.FillMoneyQueryInfoCollection FillMoneyCollection = ViewBag.FillMoneyCollection;
+    EntityModel.CoreModel.FillMoneyQueryInfoCollection FillMoneyCollection = ViewBag.FillMoneyCollection;
 
     var count = 0;
     var Money = 0;
@@ -94,7 +94,7 @@
                                     @item.RequestMoney.ToString("N") 元
                                 </td>
                             </tr>
-                            if (SiteConvert.FillMoneyStatusName(item.Status) == "已成功")
+                            if (SiteConvert.FillMoneyStatusName(item.Status) == "已成功")  
                             {
                                 count++;
                                 Money = Money + Convert.ToInt32(item.RequestMoney);

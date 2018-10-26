@@ -29,6 +29,9 @@ using Common.JSON;
 using System.Globalization;
 using app.lottery.site.iqucai;
 using Common.Lottery.Redis;
+using log4net;
+using Kason.Sg.Core.ProxyGenerator;
+using Kason.Sg.Core.CPlatform.Runtime.Client.Address.Resolvers;
 
 namespace app.lottery.site.Controllers
 {
@@ -36,7 +39,7 @@ namespace app.lottery.site.Controllers
     [ErrorHandle]
     public class BaseController : Controller
     {
-
+      
         #region Action执行前判断
         /// <summary>
         /// Action执行前判断
@@ -52,7 +55,7 @@ namespace app.lottery.site.Controllers
         //    contextActionName = filterContext.ActionDescriptor.ActionName;
 
         //    StartProcessRequest(filterContext);
-           
+
         //    base.OnActionExecuting(filterContext);
         //}
 
@@ -216,7 +219,7 @@ namespace app.lottery.site.Controllers
                     }
                     return _guestToken;
                 }
-                return (Session["CurrentUser"] as LoginInfo).UserToken;
+                return (Session["CurrentUser"] as LoginInfo).UserId;
             }
         }
 
@@ -228,7 +231,7 @@ namespace app.lottery.site.Controllers
                 {
                     return string.Empty;
                 }
-                return (Session["CurrentUser"] as LoginInfo).UserId;
+                return (Session["CurrentUser"] as EntityModel.CoreModel.LoginInfo).UserId;
             }
         }
 
@@ -338,27 +341,27 @@ namespace app.lottery.site.Controllers
             if (user == null) return;
 
             LoginInfo loginInfo = WCFClients.ExternalClient.LoginByUserId(CurrentUser.LoginInfo.UserId);
-            user.LoginInfo = loginInfo;
+            //user.LoginInfo = loginInfo;
 
-            switch (flag)
-            {
-                case "mobile":
-                    user.MobileInfo = MobileInfo;
-                    user.IsAuthenticationMobile = user.MobileInfo != null;
-                    break;
-                case "email":
-                    user.EmailInfo = EmailInfo;
-                    user.IsAuthenticationEmail = user.EmailInfo != null;
-                    break;
-                case "bankcard":
-                    user.BankCardInfo = BankCardInfo;
-                    user.IsBindBank = user.BankCardInfo != null;
-                    break;
-                case "realname":
-                    user.RealNameInfo = RealNameInfo;
-                    user.IsAuthenticationRealName = user.RealNameInfo != null;
-                    break;
-            }
+            //switch (flag)
+            //{
+            //    case "mobile":
+            //        user.MobileInfo = MobileInfo;
+            //        user.IsAuthenticationMobile = user.MobileInfo != null;
+            //        break;
+            //    case "email":
+            //        user.EmailInfo = EmailInfo;
+            //        user.IsAuthenticationEmail = user.EmailInfo != null;
+            //        break;
+            //    case "bankcard":
+            //        user.BankCardInfo = BankCardInfo;
+            //        user.IsBindBank = user.BankCardInfo != null;
+            //        break;
+            //    case "realname":
+            //        user.RealNameInfo = RealNameInfo;
+            //        user.IsAuthenticationRealName = user.RealNameInfo != null;
+            //        break;
+            //}
             Session["CurrentUserInfo"] = user;
         }
         /// <summary>
@@ -380,40 +383,40 @@ namespace app.lottery.site.Controllers
             {
                 var cuser = CurrentUser;
                 var info = WCFClients.ExternalClient.QueryUserBindInfos(CurrentUser.LoginInfo.UserId);
-                if (info != null && cuser != null)
-                {
-                    cuser.LoginInfo.MaxLevelName = info.MaxLevelName;
-                    cuser.LoginInfo.IsRebate = info.RebateCount > 0;
-                    cuser.LoginInfo.IsAgent = info.IsAgent;
-                    cuser.LoginInfo.IsUserType = info.IsUserType == 1 ? true : false;
-                    cuser.RealNameInfo = new UserRealNameInfo { RealName = info.RealName, CardType = info.CardType, IdCardNumber = info.IdCardNumber };
-                    cuser.MobileInfo = new UserMobileInfo { Mobile = info.Mobile };
-                    cuser.EmailInfo = new UserEmailInfo { Email = info.Email };
-                    cuser.BankCardInfo = new BankCardInfo
-                    {
-                        RealName = info.BankCardRealName,
-                        ProvinceName = info.ProvinceName,
-                        CityName = info.CityName,
-                        BankName = info.BankName,
-                        BankSubName = info.BankSubName,
-                        BankCardNumber = info.BankCardNumber
-                    };
-                    cuser.IsAuthenticationRealName = !string.IsNullOrEmpty(info.RealName);
-                    cuser.IsAuthenticationMobile = !string.IsNullOrEmpty(info.Mobile) && info.IsSettedMobile;
-                    cuser.IsAuthenticationEmail = !string.IsNullOrEmpty(info.Email);
-                    cuser.IsBindBank = !string.IsNullOrEmpty(info.BankCardNumber);
-                    cuser.QQNumber = info.QQ;
-                    cuser.AlipayInfo = info.AlipayAccount;
-                    cuser.LastLoginInfo = new UserLoginHistoryInfo
-                    {
-                        //LoginFrom = info.LastLoginFrom,
-                        //LoginIp = info.LastLoginIp,
-                        //LoginTime = Convert.ToDateTime(info.LastLoginTime)
-                    };
+                //if (info != null && cuser != null)
+                //{
+                //    cuser.LoginInfo.MaxLevelName = info.MaxLevelName;
+                //    cuser.LoginInfo.IsRebate = info.RebateCount > 0;
+                //    cuser.LoginInfo.IsAgent = info.IsAgent;
+                //    cuser.LoginInfo.IsUserType = info.IsUserType == 1 ? true : false;
+                //    cuser.RealNameInfo = new UserRealNameInfo { RealName = info.RealName, CardType = info.CardType, IdCardNumber = info.IdCardNumber };
+                //    cuser.MobileInfo = new UserMobileInfo { Mobile = info.Mobile };
+                //    cuser.EmailInfo = new UserEmailInfo { Email = info.Email };
+                //    cuser.BankCardInfo = new BankCardInfo
+                //    {
+                //        RealName = info.BankCardRealName,
+                //        ProvinceName = info.ProvinceName,
+                //        CityName = info.CityName,
+                //        BankName = info.BankName,
+                //        BankSubName = info.BankSubName,
+                //        BankCardNumber = info.BankCardNumber
+                //    };
+                //    cuser.IsAuthenticationRealName = !string.IsNullOrEmpty(info.RealName);
+                //    cuser.IsAuthenticationMobile = !string.IsNullOrEmpty(info.Mobile) && info.IsSettedMobile;
+                //    cuser.IsAuthenticationEmail = !string.IsNullOrEmpty(info.Email);
+                //    cuser.IsBindBank = !string.IsNullOrEmpty(info.BankCardNumber);
+                //    cuser.QQNumber = info.QQ;
+                //    cuser.AlipayInfo = info.AlipayAccount;
+                //    cuser.LastLoginInfo = new UserLoginHistoryInfo
+                //    {
+                //        //LoginFrom = info.LastLoginFrom,
+                //        //LoginIp = info.LastLoginIp,
+                //        //LoginTime = Convert.ToDateTime(info.LastLoginTime)
+                //    };
 
-                    Session["CurrentUserInfo"] = cuser;
-                    Session["MemeberInfo"] = 1;
-                }
+                //    Session["CurrentUserInfo"] = cuser;
+                //    Session["MemeberInfo"] = 1;
+                //}
             }
         }
 
@@ -678,13 +681,14 @@ namespace app.lottery.site.Controllers
         /// 用户余额
         /// </summary>
         //private UserBalanceInfo _userBalance;
-        protected UserBalanceInfo CurrentUserBalance
+        protected EntityModel.CoreModel.UserBalanceInfo CurrentUserBalance
         {
             get
             {
                 try
                 {
-                    return WebRedisHelper.QueryUserBalance(CurrentUserId);
+                   
+                    return  WebRedisHelper.QueryUserBalanceAsync(CurrentUserId).Result;
                     //if (IsBetOrderToRedisList)
                     //{
                     //    return WebRedisHelper.QueryUserBalance(CurrentUserId);
@@ -697,7 +701,7 @@ namespace app.lottery.site.Controllers
                 catch (Exception)
                 {
                     //_userBalance = new UserBalanceInfo();
-                    return new UserBalanceInfo(); ;
+                    return new EntityModel.CoreModel.UserBalanceInfo(); ;
                 }
                 //return _userBalance;
             }
@@ -4441,6 +4445,9 @@ namespace app.lottery.site.Controllers
         }
         private static SportsOrder_GuoGuanInfoCollection _cache_ggtj = new SportsOrder_GuoGuanInfoCollection();
         private static object _ggtjdLock = new object();
+        private IServiceProxyProvider _serviceProxyProvider;
+        private ILog log;
+
         /// <summary>
         /// 过关统计查询
         /// </summary>
@@ -4773,7 +4780,7 @@ namespace app.lottery.site.Controllers
                 //查数据
                 var schemeInfo = WCFClients.ExternalClient.QueryBDFXCommision(schemeId);
                 //写文件
-                var isBuildCache = bool.Parse(ConfigurationManager.AppSettings["IsBuildCache"].ToString());
+                var  isBuildCache = bool.Parse(ConfigurationManager.AppSettings["IsBuildCache"].ToString());
                 if (isBuildCache && schemeInfo != null && (bonusStatus == BonusStatus.Lose || bonusStatus == BonusStatus.Win))
                 {
                     var content = JsonSerializer.Serialize<BDFXCommisionInfo>(schemeInfo);

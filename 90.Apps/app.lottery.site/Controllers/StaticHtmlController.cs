@@ -15,11 +15,28 @@ using app.lottery.site.cbbao.Models;
 using app.lottery.site.iqucai.api;
 using app.lottery.site.iqucai;
 using System.Threading.Tasks;
+using log4net;
+using Kason.Sg.Core.ProxyGenerator;
+using Kason.Sg.Core.CPlatform.Runtime.Client.Address.Resolvers;
 
 namespace app.lottery.site.Controllers
 {
     public class StaticHtmlController : BaseController
     {
+        #region 调用服务使用示例
+        private readonly ILog logger = null;
+        private readonly IServiceProxyProvider serviceProxyProvider;
+        public IAddressResolver addrre;
+        public StaticHtmlController(IServiceProxyProvider _serviceProxyProvider, ILog log, IAddressResolver _addrre)
+        {
+            serviceProxyProvider = _serviceProxyProvider;
+            logger = log;
+            addrre = _addrre;
+
+        }
+        #endregion
+
+
         public ContentResult BuildStaticPageEvent()
         {
             try
@@ -416,14 +433,24 @@ namespace app.lottery.site.Controllers
         /// <summary>
         /// 生成首页
         /// </summary>
-        private void BuildIndex()
+        private async Task BuildIndex()
         {
+
             var tempFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tempIndex.html");
+
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            param["category"] = "Lottery_Hot"; param["gameCode"] = ""; param["pageIndex"] = 0; param["pageSize"] = 3;
             //咨询优化
-            ViewBag.Cphot = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_Hot", "", 0, 3);
-            ViewBag.Gpc = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_GameCode", "JX11X5|CQSSC|SD11X5|GD11X5|GDKLSF|JSKS|SDKLPK3", 0, 3);
-            ViewBag.Scz = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_GameCode", "SSQ|DLT|PL3|FC3D", 0, 4);
-            ViewBag.Jjc = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_GameCode", "JCZQ|JCLQ|BJDC", 0, 4);
+            ViewBag.Cphot = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
+            param.Clear();
+            param["category"] = "Lottery_GameCode"; param["gameCode"] = "JX11X5|CQSSC|SD11X5|GD11X5|GDKLSF|JSKS|SDKLPK3"; param["pageIndex"] = 0; param["pageSize"] = 3;
+            ViewBag.Gpc = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
+            param.Clear();
+            param["category"] = "Lottery_GameCode"; param["gameCode"] = "SSQ|DLT|PL3|FC3D"; param["pageIndex"] = 0; param["pageSize"] = 4;
+            ViewBag.Scz = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
+            param.Clear();
+            param["category"] = "Lottery_GameCode"; param["gameCode"] = "JCZQ|JCLQ|BJDC"; param["pageIndex"] = 0; param["pageSize"] = 4;
+            ViewBag.Jjc = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
             ViewBag.CurrentUser = CurrentUser;
             //神单排行
             var now = DateTime.Now;

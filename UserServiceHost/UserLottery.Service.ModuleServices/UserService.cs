@@ -493,11 +493,11 @@ namespace UserLottery.Service.ModuleServices
         /// <summary>
         /// 删除站内信
         /// </summary>
-        public Task<CommonActionResult> DeleteInnerMail(string innerMailId, string userId)
+        public Task<CommonActionResult> DeleteInnerMail(string innerMailId, string UserId)
         {
 
             var siteBiz = new SiteMessageControllBusiness();
-            siteBiz.DeleteInnerMail(innerMailId,userId);
+            siteBiz.DeleteInnerMail(innerMailId, UserId);
 
             return Task.FromResult(new CommonActionResult(true, "删除站内信完成。"));
         }
@@ -1466,6 +1466,28 @@ namespace UserLottery.Service.ModuleServices
             }
         }
 
+        /// <summary>
+        /// PC端账户提款
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="startTime"></param>
+        /// <param name="endTime"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="UserId"></param>
+        /// <returns></returns>
+        public Task<Withdraw_QueryInfoCollection> QueryMyWithdrawList(int status, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string UserId)
+        {
+
+            try
+            {
+                return Task.FromResult(new FundBusiness().QueryWithdrawList(UserId, null, status, -1, -1, startTime, endTime, -1, pageIndex, pageSize));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询我的提现记录列表 - " + ex.Message, ex);
+            }
+        }
 
         /// <summary>
         /// 查询银行卡
@@ -1605,7 +1627,7 @@ namespace UserLottery.Service.ModuleServices
         /// 获取用户手机认证信息
         /// todo:后台权限
         /// </summary>
-        public Task<UserMobileInfo> GetUserMobileInfo(string userId, string userToken)
+        public Task<UserMobileInfo> GetUserMobileInfo(string userId)
         {
             var authenticationBiz = new MobileAuthenticationBusiness();
             var mobileEntity = authenticationBiz.GetAuthenticatedMobile(userId);
@@ -1878,6 +1900,19 @@ namespace UserLottery.Service.ModuleServices
             //if (string.IsNullOrEmpty(userId) || !BusinessHelper.CheckIsShowHM(userId))//检查是否在白名单
             //    return new TogetherHotUserInfoCollection();
             return Task.FromResult(new Sports_Business().QueryHotUserTogetherOrderList());
+        }
+
+        /// <summary>
+        /// 同一IP，一定时间内的注册次数
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="ip"></param>
+        /// <returns></returns>
+        public Task<int> GetTodayRegisterCount(DateTime date, string localIP)
+        {
+            var loginBiz = new LocalLoginBusiness();
+            var count = loginBiz.GetTodayRegisterCount(date, localIP);
+            return Task.FromResult(count);
         }
         public Task<bool> LoginGiveRedEnvelopes(string UserId, string IPAddress)
         {

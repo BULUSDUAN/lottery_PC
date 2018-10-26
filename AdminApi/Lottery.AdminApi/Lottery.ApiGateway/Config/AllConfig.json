@@ -19,7 +19,11 @@
   "ResourceSiteUrl_res": "http://10.0.3.6:788/test.touch",
   "ISConsoleLog": true,
   "Host": "http://*:729",
-
+  "DataSiteUrl": "http://10.0.3.6:888/MatchData",
+  "ResourceSiteUrl": "http://localhost:788/test",
+  "ResourceSitePostUrl": "http://localhost:788/test",
+  "UpLoadPostPath": "/UpLoad/upload_json.aspx",
+  "WebSiteEName": "iqucai",
   //必须配置 服务发现配置
   "ConsulSettings": {
     "IpAddrs": "127.0.0.1:8500", //服务启动IP 10.0.3.27:8501

@@ -252,21 +252,32 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public List<UserGameCodeNotAddMoneyInfo> QueryUserGameCodeNotAddMoneyList(string userId)
         {
-           
+
             var query = (from c in DB.CreateQuery<E_A20150919_列表用户不加奖>()
-                        join u in DB.CreateQuery<C_User_Register>() on c.UserId equals u.UserId
-                        where (string.IsNullOrEmpty(userId) || c.UserId == userId)
-                        select new UserGameCodeNotAddMoneyInfo
-                        {
-                            CreateTime = c.CreateTime,
-                            GameCode = c.GameCode,
-                            Id = c.Id,
-                            UserId = c.UserId,
-                            UserName = u.DisplayName,
-                            GameType = c.GameType,
-                            PlayType = c.PlayType,
-                        }).ToList();
+                         join u in DB.CreateQuery<C_User_Register>() on c.UserId equals u.UserId
+                         where (userId==string.Empty || c.UserId == userId)
+                         //select new { c, u }).ToList().Select(p => new UserGameCodeNotAddMoneyInfo()
+                         //{
+                         //    CreateTime = p.c.CreateTime,
+                         //    GameCode = p.c.GameCode,
+                         //    Id = p.c.Id,
+                         //    UserId = p.c.UserId,
+                         //    UserName = p.u.DisplayName,
+                         //    GameType = p.c.GameType,
+                         //    PlayType = p.c.PlayType,
+                         //}).ToList();
+                         select new UserGameCodeNotAddMoneyInfo
+                         {
+                             CreateTime = c.CreateTime,
+                             GameCode = c.GameCode,
+                             Id = c.Id,
+                             UserId = c.UserId,
+                             UserName = u.DisplayName,
+                             GameType = c.GameType,
+                             PlayType = c.PlayType,
+                         }).ToList();
             return query;
+                
         }
 
     }

@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityModel", "EntityModel\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kason.Net.Common", "Kason.Net.Common\Kason.Net.Common.csproj", "{019B230F-1778-4680-BA6B-F727FB5E93B1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Lottery.Redis", "..\..\..\..\gongcheng\old_caipiao\10.Common\Common.Lottery.Redis\Common.Lottery.Redis.csproj", "{4EC4118B-FE8A-4569-A0E2-69CBCCED9ECD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,24 @@ Global
 		{019B230F-1778-4680-BA6B-F727FB5E93B1}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{019B230F-1778-4680-BA6B-F727FB5E93B1}.Release|x86.ActiveCfg = Release|Any CPU
 		{019B230F-1778-4680-BA6B-F727FB5E93B1}.Release|x86.Build.0 = Release|Any CPU
+		{4EC4118B-FE8A-4569-A0E2-69CBCCED9ECD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EC4118B-FE8A-4569-A0E2-69CBCCED9ECD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EC4118B-FE8A-4569-A0E2-69CBCCED9ECD}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{4EC4118B-FE8A-4569-A0E2-69CBCCED9ECD}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{4EC4118B-FE8A-4569-A0E2-69CBCCED9ECD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4EC4118B-FE8A-4569-A0E2-69CBCCED9ECD}.Debug|x86.Build.0 = Debug|Any CPU
+		{4EC4118B-FE8A-4569-A0E2-69CBCCED9ECD}.Publish|Any CPU.ActiveCfg = Release|Any CPU
+		{4EC4118B-FE8A-4569-A0E2-69CBCCED9ECD}.Publish|Any CPU.Build.0 = Release|Any CPU
+		{4EC4118B-FE8A-4569-A0E2-69CBCCED9ECD}.Publish|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{4EC4118B-FE8A-4569-A0E2-69CBCCED9ECD}.Publish|Mixed Platforms.Build.0 = Release|Any CPU
+		{4EC4118B-FE8A-4569-A0E2-69CBCCED9ECD}.Publish|x86.ActiveCfg = Release|Any CPU
+		{4EC4118B-FE8A-4569-A0E2-69CBCCED9ECD}.Publish|x86.Build.0 = Release|Any CPU
+		{4EC4118B-FE8A-4569-A0E2-69CBCCED9ECD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EC4118B-FE8A-4569-A0E2-69CBCCED9ECD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4EC4118B-FE8A-4569-A0E2-69CBCCED9ECD}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{4EC4118B-FE8A-4569-A0E2-69CBCCED9ECD}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{4EC4118B-FE8A-4569-A0E2-69CBCCED9ECD}.Release|x86.ActiveCfg = Release|Any CPU
+		{4EC4118B-FE8A-4569-A0E2-69CBCCED9ECD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

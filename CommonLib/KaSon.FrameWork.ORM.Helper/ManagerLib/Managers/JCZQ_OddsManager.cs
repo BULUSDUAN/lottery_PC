@@ -12,9 +12,13 @@ namespace KaSon.FrameWork.ORM.Helper
     /// </summary>
    public class JCZQ_OddsManager : DBbase
     {
-        public void AddOdds(T_JCZQ_Odds_SPF odds)
+        public JCZQ_OddsManager():base()
         {
-            DB.GetDal<T_JCZQ_Odds_SPF>().Add(odds);
+            
+        }
+        public void AddOdds(List<T_JCZQ_Odds_SPF> odds)
+        {
+            DB.GetDal<T_JCZQ_Odds_SPF>().BulkAdd(odds);
         }
         public void AddOdds(T_JCZQ_Odds_BRQSPF odds)
         {

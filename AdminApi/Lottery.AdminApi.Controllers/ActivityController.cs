@@ -221,12 +221,12 @@ namespace Lottery.AdminApi.Controllers
                     throw new LogicException("对不起，您的权限不足！");
                 }
                 var p = JsonHelper.Decode(entity.Param);
-                int orderIndex = int.Parse(p.orderIndex);
+                int orderIndex = int.Parse((string)p.orderIndex);
                 string gameCode = p.gameCode;
                 string gameType = p.gameType;
                 string playType = p.playType;
-                decimal percent = decimal.Parse(p.percent);
-                decimal maxMoney = decimal.Parse(p.maxMoney);
+                decimal percent = decimal.Parse((string)p.percent);
+                decimal maxMoney = decimal.Parse((string)p.maxMoney);
                 string addMoneyWay = p.addMoneyWay;
                 var r = _service.AddAddBonusMoneyConfig(gameCode, gameType, playType, percent, maxMoney, orderIndex, addMoneyWay);
                 return Json(new LotteryServiceResponse { Code =AdminResponseCode.成功, Message = r.Message });
@@ -246,7 +246,7 @@ namespace Lottery.AdminApi.Controllers
                     throw new LogicException("对不起，您的权限不足！");
                 }
                 var p = JsonHelper.Decode(entity.Param);
-                int id = int.Parse(p.id);
+                int id = int.Parse((string)p.id);
                 var r = _service.DeleteAddBonusMoneyConfig(id);
                 return Json(new LotteryServiceResponse{ Code = AdminResponseCode.成功, Message = r.Message });
             }
@@ -264,8 +264,8 @@ namespace Lottery.AdminApi.Controllers
             try
             {
                 var p = JsonHelper.Decode(entity.Param);
-                string UserId = string.IsNullOrWhiteSpace(p.userId) ? string.Empty : p.userId.ToString();
-                var UserGameCodeNotAddMoneyList = _service.QueryUserGameCodeNotAddMoneyList(ViewBag.UserId);
+                string UserId = string.IsNullOrWhiteSpace((string)p.userId) ? string.Empty : ((string)p.userId).ToString();
+                var UserGameCodeNotAddMoneyList = _service.QueryUserGameCodeNotAddMoneyList(UserId);
                 return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Value = UserGameCodeNotAddMoneyList });
             }
             catch (Exception ex)
@@ -315,7 +315,7 @@ namespace Lottery.AdminApi.Controllers
             try
             {
                 var p = JsonHelper.Decode(entity.Param);
-                int id = int.Parse(p.id);
+                int id = int.Parse((string)p.id);
                 var r =_service.DeleteUserGameCodeNotAddMoney(id);
                 return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Message = r.Message });
             }

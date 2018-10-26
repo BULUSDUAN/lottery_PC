@@ -517,6 +517,70 @@
       "Director": "lili",
       "SQL": "SELECT Id,Title,Status,Priority,IsPutTop,EffectiveFrom,EffectiveTo,CreateTime FROM ( SELECT ROW_NUMBER() OVER(ORDER BY IsPutTop DESC,Priority,CreateTime DESC) AS RowNumber,Id,Title,Status,Priority,IsPutTop,EffectiveFrom,EffectiveTo,CreateTime FROM E_SiteMessage_Bulletin_List WHERE (@Key = '' OR Title LIKE @Key) AND (@Status = 9 OR Status = @Status) AND (@Priority = -1 OR Priority = @Priority) AND (@IsPutTop = -1 OR IsPutTop = @IsPutTop) ) AS T WHERE RowNumber > @PageIndex * @PageSize AND RowNumber <= (@PageIndex + 1) * @PageSize",
       "Remark": ""
+    },
+    {
+      "key": "Debug_QueryBettingOrderNoUserIDCount",
+      "Desc": "查询订单列表统计(没有用户编号)",
+      "ParamDesc": "@UserId:UserId,@SchemeType:SchemeType,@ProgressStatus:ProgressStatus,@BetCategory:BetCategory,@BonusStatus:BonusStatus,@SchemeSource:SchemeSource,@GameCode:GameCode",
+      "Director": "Debug",
+      "SQL": "select TotalCount= COUNT(o.SchemeId),TotalBetMoney=SUM(o.CurrentBettingMoney),TotalRealPayRebateMoney=SUM(o.RealPayRebateMoney), TotalPreTaxBonusMoney=SUM(o.PreTaxBonusMoney),TotalAfterTaxBonusMoney=SUM(o.AfterTaxBonusMoney), TotalAddMoney=SUM(o.AddMoney),TotalRedbagMoney=SUM(o.RedBagMoney), TotalBonusAwardsMoney=SUM(o.BonusAwardsMoney),TotalRedBagAwardsMoney=SUM(RedBagAwardsMoney) from C_OrderDetail o inner join C_User_Register u on o.UserId=u.UserId where (o.BetTime>=@FromDate and o.BetTime<@ToDate) and (@UserId='' or o.UserId=@UserId) and (@SchemeType=-1 or o.SchemeType=@SchemeType) and (@ProgressStatus=-1 or o.ProgressStatus=@ProgressStatus) and (@BetCategory=-1 or o.SchemeBettingCategory=@BetCategory) and (@BonusStatus=-1 or o.BonusStatus=@BonusStatus) and (@SchemeSource=-1 or o.SchemeSource=@SchemeSource) and (@GameCode='' or o.GameCode=@GameCode) and (u.UserType=0)",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_QueryAllUserCount",
+      "Desc": "查询总用户数",
+      "ParamDesc": "@UserId:UserId,@SchemeType:SchemeType,@ProgressStatus:ProgressStatus,@BetCategory:BetCategory,@BonusStatus:BonusStatus,@SchemeSource:SchemeSource,@GameCode:GameCode",
+      "Director": "Debug",
+      "SQL": "SELECT TotalUserCount=COUNT(t.UserId) FROM   (SELECT o.userid FROM C_OrderDetail o INNER JOIN C_User_Register u ON o.UserId=u.UserId WHERE (o.BetTime>=@FromDate AND o.BetTime<@ToDate) AND (@UserId='' OR o.UserId=@UserId) AND (@SchemeType=-1 OR o.SchemeType=@SchemeType) AND (@ProgressStatus=-1 OR o.ProgressStatus=@ProgressStatus) AND (@BetCategory=-1 OR o.SchemeBettingCategory=@BetCategory) AND (@BonusStatus=-1 OR o.BonusStatus=@BonusStatus)\t AND (@SchemeSource=-1 OR o.SchemeSource=@SchemeSource) AND (@GameCode='' OR o.GameCode=@GameCode) AND (@UserId='' OR u.UserType=0) GROUP BY o.UserId )  AS t",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_QueryBettingOrderHaveUserIDCount",
+      "Desc": "查询订单列表统计（有用户编号）",
+      "ParamDesc": "@UserId:UserId,@SchemeType:SchemeType,@ProgressStatus:ProgressStatus,@BetCategory:BetCategory,@BonusStatus:BonusStatus,@SchemeSource:SchemeSource,@GameCode:GameCode",
+      "Director": "Debug",
+      "SQL": "select TotalCount= COUNT(o.SchemeId),TotalBetMoney=SUM(o.CurrentBettingMoney),TotalRealPayRebateMoney=SUM(o.RealPayRebateMoney), TotalPreTaxBonusMoney=SUM(o.PreTaxBonusMoney),TotalAfterTaxBonusMoney=SUM(o.AfterTaxBonusMoney), TotalAddMoney=SUM(o.AddMoney),TotalRedbagMoney=SUM(o.RedBagMoney), TotalBonusAwardsMoney=SUM(o.BonusAwardsMoney),TotalRedBagAwardsMoney=SUM(RedBagAwardsMoney) from C_OrderDetail o where (o.BetTime>=@FromDate and o.BetTime<@ToDate) and (o.UserId=@UserId) and (@SchemeType=-1 or o.SchemeType=@SchemeType) and (@ProgressStatus=-1 or o.ProgressStatus=@ProgressStatus) and (@BetCategory=-1 or o.SchemeBettingCategory=@BetCategory) and (@BonusStatus=-1 or o.BonusStatus=@BonusStatus) and (@SchemeSource=-1 or o.SchemeSource=@SchemeSource) and (@GameCode='' or o.GameCode=@GameCode)",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_QueryBettingOrderNoUserIDPageList",
+      "Desc": "查询订单列表（没有用户编号）",
+      "ParamDesc": "@SchemeType:SchemeType,@ProgressStatus:ProgressStatus,@BetCategory:BetCategory,@BonusStatus:BonusStatus,@SchemeSource:SchemeSource,@GameCode:GameCode,@PageIndex:PageIndex,@PageSize:PageSize,@@SortType:SortType",
+      "Director": "Debug",
+      "SQL": "SELECT T.* FROM ( SELECT ROW_NUMBER() OVER(ORDER BY  CASE @SortType WHEN 0 THEN  o.CurrentBettingMoney END ASC, CASE @SortType WHEN 1 THEN  o.CurrentBettingMoney END DESC, CASE @SortType WHEN -1 THEN  o.[CreateTime] END DESC  ) AS [RowNumber], o.SchemeId,o.UserId,u.VipLevel,u.DisplayName AS CreatorDisplayName,u.HideDisplayNameCount, o.GameCode, g.DisplayName AS GameName,o.GameTypeName,o.PlayType ,o.Amount,o.SchemeType,o.SchemeSource,o.SchemeBettingCategory,1 [Security],o.CurrentBettingMoney,o.TotalMoney,'' WinNumber ,o.ProgressStatus,o.TicketStatus,o.TotalIssuseCount,o.CurrentIssuseNumber,o.BonusStatus,o.StopAfterBonus, o.PreTaxBonusMoney,o.AfterTaxBonusMoney,o.AddMoney,o.CreateTime,o.AgentId,o.IsVirtualOrder,o.BetTime, o.RedBagAwardsMoney,o.BonusAwardsMoney,o.RealPayRebateMoney,o.RedBagMoney FROM C_OrderDetail o LEFT JOIN C_User_Register u ON o.UserId=u.UserId LEFT JOIN C_Lottery_Game g ON o.GameCode=g.GameCode WHERE (o.BetTime>=@FromDate AND o.BetTime<@ToDate) AND (@SchemeType=-1 OR o.SchemeType=@SchemeType) AND (@ProgressStatus=-1 OR o.ProgressStatus=@ProgressStatus) AND (@BetCategory=-1 OR o.SchemeBettingCategory=@BetCategory) AND (@BonusStatus=-1 OR o.BonusStatus=@BonusStatus)\t AND (@SchemeSource=-1 OR o.SchemeSource=@SchemeSource) AND (@GameCode='' OR o.GameCode=@GameCode) AND (u.UserType=0) ) AS T WHERE T.[RowNumber] > @PageIndex * @PageSize AND T.[RowNumber] <= (@PageIndex + 1) * @PageSize",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_QueryBettingOrderHasUserIDPageList",
+      "Desc": "查询订单列表（有用户编号）",
+      "ParamDesc": "@UserId:UserId,@SchemeType:SchemeType,@ProgressStatus:ProgressStatus,@BetCategory:BetCategory,@BonusStatus:BonusStatus,@SchemeSource:SchemeSource,@GameCode:GameCode,@PageIndex:PageIndex,@PageSize:PageSize,@@SortType:SortType",
+      "Director": "Debug",
+      "SQL": "SELECT T.* FROM ( SELECT ROW_NUMBER() OVER(ORDER BY  CASE @SortType WHEN 0 THEN  o.CurrentBettingMoney END ASC, CASE @SortType WHEN 1 THEN  o.CurrentBettingMoney END DESC, CASE @SortType WHEN -1 THEN  o.[CreateTime] END DESC  ) AS [RowNumber], o.SchemeId,o.UserId,u.VipLevel,u.DisplayName AS CreatorDisplayName,u.HideDisplayNameCount, o.GameCode, g.DisplayName AS GameName,o.GameTypeName,o.PlayType ,o.Amount,o.SchemeType,o.SchemeSource,o.SchemeBettingCategory,1 [Security],o.CurrentBettingMoney,o.TotalMoney,'' WinNumber ,o.ProgressStatus,o.TicketStatus,o.TotalIssuseCount,o.CurrentIssuseNumber,o.BonusStatus,o.StopAfterBonus, o.PreTaxBonusMoney,o.AfterTaxBonusMoney,o.AddMoney,o.CreateTime,o.AgentId,o.IsVirtualOrder,o.BetTime, o.RedBagAwardsMoney,o.BonusAwardsMoney,o.RealPayRebateMoney,o.RedBagMoney FROM C_OrderDetail o LEFT JOIN C_User_Register u ON o.UserId=u.UserId LEFT JOIN C_Lottery_Game g ON o.GameCode=g.GameCode WHERE (o.BetTime>=@FromDate AND o.BetTime<@ToDate) AND (o.UserId=@UserId) AND (@SchemeType=-1 OR o.SchemeType=@SchemeType) AND (@ProgressStatus=-1 OR o.ProgressStatus=@ProgressStatus) AND (@BetCategory=-1 OR o.SchemeBettingCategory=@BetCategory) AND (@BonusStatus=-1 OR o.BonusStatus=@BonusStatus) AND (@SchemeSource=-1 OR o.SchemeSource=@SchemeSource) AND (@GameCode='' OR o.GameCode=@GameCode) ) AS T WHERE T.[RowNumber] > @PageIndex * @PageSize AND T.[RowNumber] <= (@PageIndex + 1) * @PageSize",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_QueryFillMoneyListCount_01",
+      "Desc": "查询充值金额列表统计",
+      "ParamDesc": "@UserId:UserId,@AgentList:agentList,@StatusList:statusList,@SourceList:sourceList,@StartTime:startTime,@EndTime:endTime,@OrderId:OrderId",
+      "Director": "Debug",
+      "SQL": "SELECT TotalCount=COUNT(1),TotalRequestMoney=SUM(RequestMoney) FROM C_FillMoney WHERE (@UserId=N'' OR UserId=@UserId) AND (@AgentList=N'' OR FillMoneyAgent IN (@AgentList)) AND (@StatusList=N'' OR [Status] IN (@StatusList)) AND (@SourceList=N'' OR SchemeSource IN (@SourceList)) AND (RequestTime>=@StartTime AND RequestTime < @EndTime) AND (@OrderId='' OR (OrderId=@OrderId OR OuterFlowId=@OrderId))",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_QueryFillMoneyListCount_02",
+      "Desc": "查询充值金额列表统计",
+      "ParamDesc": "@UserId:UserId,@AgentList:agentList,@StatusList:statusList,@StartTime:startTime,@EndTime:endTime,@OrderId:OrderId",
+      "Director": "Debug",
+      "SQL": "SELECT TotalResponseMoney=SUM(ResponseMoney) FROM C_FillMoney WHERE (@UserId=N'' OR UserId=@UserId) AND (@AgentList=N'' OR FillMoneyAgent IN (@AgentList)) AND [Status]=1 AND (@SourceList=N'' OR SchemeSource IN (@SourceList)) AND (RequestTime>=@StartTime AND RequestTime < @EndTime) AND (@OrderId='' OR (OrderId=@OrderId OR OuterFlowId=@OrderId))",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_QueryFillMoneyList",
+      "Desc": "查询充值金额列表",
+      "ParamDesc": "@PageIndex:PageIndex,@PageSize:PageSize,@UserId:UserId,@AgentList:agentList,@StatusList:statusList,@SourceList:sourceList,@StartTime:startTime,@EndTime:endTime,@OrderId:OrderId",
+      "Director": "Debug",
+      "SQL": "SELECT * FROM( SELECT ROW_NUMBER()OVER(ORDER BY RequestTime DESC) RowIndex,T.*,R.ComeFrom,R.VipLevel,DisplayName,R.HideDisplayNameCount FROM C_FillMoney T LEFT OUTER JOIN C_User_Register R ON T.UserId=R.UserId WHERE (@UserId=N'' OR T.UserId=@UserId) AND (@AgentList=N'' OR FillMoneyAgent IN (@AgentList)) AND (@StatusList=N'' OR [Status] IN (@StatusList)) AND (@SourceList=N'' OR SchemeSource IN (@SourceList)) AND (RequestTime>=@StartTime AND RequestTime < @EndTime)  AND (@OrderId='' OR (OrderId=@OrderId OR OuterFlowId=@OrderId)) ) T WHERE RowIndex > @PageIndex * @PageSize AND RowIndex <= (@PageIndex + 1) * @PageSize",
+      "Remark": ""
     }
   ]
 }

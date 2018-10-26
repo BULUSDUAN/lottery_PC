@@ -1,7 +1,7 @@
 ﻿@{
     ViewBag.Title = "自动跟单管理 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
     ViewBag.keywords = "自动跟单管理, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
-    var followlist = ViewBag.FollowList as GameBiz.Core.TogetherFollowerRuleQueryInfoCollection;
+    var followlist = ViewBag.FollowList as EntityModel.CoreModel.TogetherFollowerRuleQueryInfoCollection;
 }
 @section css{
     @UserHelper.css("mycenter.css")

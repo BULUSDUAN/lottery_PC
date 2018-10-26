@@ -13,7 +13,7 @@ namespace KaSon.FrameWork.ORM.Helper
     public class IssuseBusiness:DBbase
     {
         private static string _baseDir;
-        public static void SetMatchConfigBaseDir(string dir)
+        public void SetMatchConfigBaseDir(string dir)
         {
             _baseDir = dir;
         }
@@ -117,7 +117,6 @@ namespace KaSon.FrameWork.ORM.Helper
             var matchInfoList = LoadBJDCMatchList(issuseNumber);
             var matchIdArray = matchInfoList.Select(p => p.MatchOrderId.ToString()).ToArray();
             UpdateBJDCMatch(issuseNumber, matchIdArray, matchInfoList);
-
             //重新加载比赛到缓存
             RedisMatchBusiness.ReloadCurrentBJDCMatch();
         }
@@ -125,14 +124,16 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             var matchResultList = LoadBJDCMatchResultList(issuseNumber);
             var matchIdArray = matchResultList.Select(p => p.MatchOrderId.ToString()).ToArray();
-            Update_BJDC_MatchResultList(issuseNumber, matchIdArray);
+             Update_BJDC_MatchResultList(issuseNumber, matchIdArray);
         }
         public void ManualUpdate_JCZQ_MatchList()
         {
             var matchInfoList = LoadJCZQMatchList();
             var matchIdArray = matchInfoList.Select(p => p.MatchId).ToArray();
-            UpdateJCZQMatch(matchIdArray, matchInfoList);
-
+            if (matchIdArray != null && matchIdArray.Count() > 0)
+            {
+                UpdateJCZQMatch(matchIdArray, matchInfoList);
+            }
             //重新加载比赛到缓存
             RedisMatchBusiness.ReloadCurrentJCZQMatch();
         }
@@ -140,8 +141,10 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             var matchInfoList = LoadJCLQMatchList();
             var matchIdArray = matchInfoList.Select(p => p.MatchId).ToArray();
-            UpdateJCLQMatch(matchIdArray, matchInfoList);
-
+            if (matchIdArray != null && matchIdArray.Count() > 0)
+            {
+                UpdateJCLQMatch(matchIdArray, matchInfoList);
+            }
             //重新加载比赛到缓存
             RedisMatchBusiness.ReloadCurrentJCLQMatch();
         }
@@ -149,7 +152,10 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             var list = LoadCTZQMatchList(issuseNumber, gameCode);
             var matchIdArray = list.Select(p => p.Id).ToArray();
-            UpdateCTZQMatchList(matchIdArray, list);
+            if (matchIdArray != null && matchIdArray.Count() > 0)
+            {
+                UpdateCTZQMatchList(matchIdArray, list);
+            }
         }
         #region 私有方法
         private List<BJDC_MatchInfo> LoadBJDCMatchList(string issuseNumber)

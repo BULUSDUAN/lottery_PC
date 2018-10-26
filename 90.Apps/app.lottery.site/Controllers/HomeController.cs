@@ -18,6 +18,10 @@ using Common.JSON;
 using System.Text.RegularExpressions;
 using External.Core.SiteMessage;
 using Common.Communication;
+using log4net;
+using Kason.Sg.Core.ProxyGenerator;
+using Kason.Sg.Core.CPlatform.Runtime.Client.Address.Resolvers;
+using System.Threading.Tasks;
 
 namespace app.lottery.site.Controllers
 {
@@ -25,6 +29,24 @@ namespace app.lottery.site.Controllers
     [CheckBrowser]
     public class HomeController : BaseController
     {
+        #region 调用服务使用示例
+        private readonly ILog logger = null;
+        private readonly IServiceProxyProvider serviceProxyProvider;
+        public IAddressResolver addrre;
+        public HomeController(IServiceProxyProvider _serviceProxyProvider, ILog log, IAddressResolver _addrre)
+        {
+            serviceProxyProvider = _serviceProxyProvider;
+            logger = log;
+            addrre = _addrre;
+
+        }
+        #endregion
+        public HomeController()
+        {
+        }
+       
+
+      
         //[UnionFilter]
         //public ActionResult Default()
         //{
@@ -62,9 +84,14 @@ namespace app.lottery.site.Controllers
 
 
         //首页幻灯
-        public PartialViewResult SlideBox()
+        public async Task<PartialViewResult> SlideBoxAsync()
         {
-            ViewBag.Ads = WCFClients.ExternalClient.QuerySitemessageBanngerList_Web(BannerType.Index);
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            param["bannerType"] = BannerType.Index;
+            param["returnRecord"] = 10;
+
+            ViewBag.Ads = await serviceProxyProvider.Invoke<EntityModel.CoreModel.SiteMessageBannerInfo_Collection>(param, "api/data/QuerySitemessageBanngerList_Web");
+            
             return PartialView();
         }
 
@@ -79,6 +106,7 @@ namespace app.lottery.site.Controllers
                 ViewBag.pageNo = string.IsNullOrEmpty(Request.QueryString["pageNo"]) ? 0 : int.Parse(Request.QueryString["pageNo"]);
                 ViewBag.PageSize = string.IsNullOrEmpty(Request.QueryString["pageSize"]) ? 11 : int.Parse(Request.QueryString["pageSize"]);
                 var code = string.IsNullOrEmpty(Request["GameCode"]) ? "" : Request["GameCode"];
+
                 ViewBag.DataSource = WCFClients.ExternalClient.QueryArticleList("", code, "INFO", ViewBag.pageNo, ViewBag.PageSize, UserToken);
                 return Json(new { msg = ViewBag.DataSource, Issucess = true });
             }
@@ -410,7 +438,7 @@ namespace app.lottery.site.Controllers
                     var loginInfo = WCFClients.ExternalClient.LoginLocal(userName, passWord, IpManager.IPAddress);
                     if (loginInfo.IsSuccess)
                     {
-                        CurrentUser = new CurrentUserInfo() { LoginInfo = loginInfo };
+                        //CurrentUser = new CurrentUserInfo() { LoginInfo = loginInfo };
                     }
                 }
                 return Json(new { IsSucess = true, Message = "注册成功！" });

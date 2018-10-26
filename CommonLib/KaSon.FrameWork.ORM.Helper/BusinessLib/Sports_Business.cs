@@ -7557,7 +7557,7 @@ namespace KaSon.FrameWork.ORM.Helper
             if (query != null && query.Count() > 0)
             {
                 collection.TotalCount = query.Count();
-                collection.IndexMatchList = query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+                collection.IndexMatchList = query.ToList().Skip(pageIndex * pageSize).Take(pageSize).ToList();
             }
             return collection;
         }
@@ -7591,6 +7591,10 @@ namespace KaSon.FrameWork.ORM.Helper
         public void UpdateIndexMatch(C_Index_Match entity)
         {
             DB.GetDal<C_Index_Match>().Update(entity);
+        }
+        public C_Core_Config QueryConfigByKey(string key)
+        {
+            return new CacheDataBusiness().QueryCoreConfigByKey(key);
         }
     }
 }
