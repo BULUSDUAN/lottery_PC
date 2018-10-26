@@ -493,6 +493,30 @@
       "Director": "lili",
       "SQL": "SELECT * FROM [E_Menu_List] WHERE [FunctionId] IS NULL OR [FunctionId] IN ( SELECT [FunctionId] FROM [C_Auth_RoleFunction] WHERE [RoleId] IN ( SELECT [RoleId] FROM [C_Auth_UserRole] WHERE [UserId] = @UserId ) AND [Status] = 0 ) and MenuType in (10,1) and IsEnable=1 ORDER BY [MenuId]",
       "Remark": ""
+    },
+    {
+      "key": "Admin_GetOpratorCollection",
+      "Desc": "后台人员列表",
+      "ParamDesc": "@PageIndex:PageIndex,@PageSize:PageSize",
+      "Director": "lili",
+      "SQL": "if object_id('tempdb..#temp') is not null Begin drop table #temp End create table #temp ( LoginName nvarchar(200),UserId nvarchar(200),RoleName nvarchar(200),RoleId nvarchar(200),RegFrom nvarchar(200) ) insert into  #temp  SELECT   LoginName,C_Auth_Users.UserId,RoleName,C_Auth_Roles.RoleId,C_Auth_Users.RegFrom FROM         C_Auth_Roles left JOIN C_Auth_UserRole ON C_Auth_Roles.RoleId = C_Auth_UserRole.RoleId right JOIN C_Auth_Users ON C_Auth_UserRole.UserId = C_Auth_Users.UserId left JOIN E_Login_Local ON C_Auth_Users.UserId = E_Login_Local.UserId where C_Auth_Users.RegFrom='INNER'   select LoginName,a.RoleName,loc.UserId,RowNumber from E_Login_Local loc inner join (select  userid,ROW_NUMBER() OVER(ORDER BY userid DESC) AS RowNumber,roleName from (select  UserId, RoleName= (     select RoleName as [data()] from    #temp      b where  a.UserId= b.UserId for xml path ('') ) from #temp a  group by UserId,RoleId)as n group by UserId,RoleName) as a on a.UserId=loc.UserId  WHERE [RowNumber] > @PageIndex * @PageSize AND [RowNumber] <= (@PageIndex + 1) * @PageSize",
+      "Remark": ""
+    },
+    {
+      "key": "Admin_QueryAdminBulletinList_Count",
+      "Desc": "后台人员列表_总数",
+      "ParamDesc": "@Key:Key,@Status:Status,@Priority:Priority,@IsPutTop:IsPutTop",
+      "Director": "lili",
+      "SQL": "SELECT COUNT(1) FROM E_SiteMessage_Bulletin_List WHERE (@Key = '' OR Title LIKE @Key) AND (@Status = 9 OR Status = @Status) AND (@Priority = -1 OR Priority = @Priority) AND (@IsPutTop = -1 OR IsPutTop = @IsPutTop)",
+      "Remark": ""
+    },
+    {
+      "key": "Admin_QueryAdminBulletinList",
+      "Desc": "后台人员列表_分页",
+      "ParamDesc": "@Key:Key,@Status:Status,@Priority:Priority,@IsPutTop:IsPutTop,@PageIndex:PageIndex,@PageSize:PageSize",
+      "Director": "lili",
+      "SQL": "SELECT Id,Title,Status,Priority,IsPutTop,EffectiveFrom,EffectiveTo,CreateTime FROM ( SELECT ROW_NUMBER() OVER(ORDER BY IsPutTop DESC,Priority,CreateTime DESC) AS RowNumber,Id,Title,Status,Priority,IsPutTop,EffectiveFrom,EffectiveTo,CreateTime FROM E_SiteMessage_Bulletin_List WHERE (@Key = '' OR Title LIKE @Key) AND (@Status = 9 OR Status = @Status) AND (@Priority = -1 OR Priority = @Priority) AND (@IsPutTop = -1 OR IsPutTop = @IsPutTop) ) AS T WHERE RowNumber > @PageIndex * @PageSize AND RowNumber <= (@PageIndex + 1) * @PageSize",
+      "Remark": ""
     }
   ]
 }

@@ -176,5 +176,9 @@ namespace UserLottery.Service.IModuleServices
         Task<UserCurrentOrderInfoCollection> QueryUserCurrentOrderList(string UserId, string gameCode, string userToken, int pageIndex, int pageSize);
         [Service(Date = "2018-10-17", Director = "renjun", Name = "查询红人的合买订单")]
         Task<TogetherHotUserInfoCollection> QueryHotUserTogetherOrderList(string UserId);
+
+        [Service(Date = "2018-10-24", Director = "renjun", Name = "每天登录送红包")]
+        Task<bool> LoginGiveRedEnvelopes(string UserId, string IPAddress);
+
     }
 }

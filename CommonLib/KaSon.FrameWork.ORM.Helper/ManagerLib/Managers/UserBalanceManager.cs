@@ -120,7 +120,10 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             DB.GetDal<C_User_Register>().Update(user);
         }
-        
 
+        public C_User_Register GetUserRegister(string userId)
+        {
+            return DB.CreateQuery<C_User_Register>().Where(u => u.UserId == userId).FirstOrDefault();
+        }
     }
 }

@@ -416,7 +416,7 @@ namespace Lottery.Api.Controllers
                 Code = ResponseCode.成功,
                 Message = "银行卡号格式正确",
                 MsgId = entity.MsgId,
-                Value =true
+                Value = true
             };
             var p = JsonHelper.Decode(entity.Param);
             string CardNum = p.CardNum;
@@ -426,35 +426,37 @@ namespace Lottery.Api.Controllers
                 result.Code = ResponseCode.失败;
                 result.Value = false;
             }
-            else {
-               var bol= KaSon.FrameWork.Common.Utilities.CheckBlankCard.MatchLuhn(CardNum);
+            else
+            {
+                var bol = KaSon.FrameWork.Common.Utilities.CheckBlankCard.MatchLuhn(CardNum);
                 if (!bol)
                 {
                     result.Message = "银行卡号格式不正确";
                     result.Code = ResponseCode.失败;
                     result.Value = false;
-                
+
                 }
-                else {
+                else
+                {
                     result.Message = "银行卡号格式正确";
                     result.Code = ResponseCode.成功;
                     result.Value = true;
 
                 }
             }
-            
-                  return Json(result);
+
+            return Json(result);
         }
 
-            /// <summary>
-            /// PlamtType=1 默认度api 日志,2读服务日志,
-            /// </summary>
-            /// <param name="_serviceProxyProvider"></param>
-            /// <param name="PlamtType"></param>
-            /// <param name="SerName"></param>
-            /// <param name="FileName"></param>
-            /// <returns></returns>
-            public async Task<IActionResult> GetLogInfo([FromServices]IServiceProxyProvider _serviceProxyProvider,int PlamtType=1, int DicType = 1, string SerName="Order", string FileName = "")
+        /// <summary>
+        /// PlamtType=1 默认度api 日志,2读服务日志,
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="PlamtType"></param>
+        /// <param name="SerName"></param>
+        /// <param name="FileName"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> GetLogInfo([FromServices]IServiceProxyProvider _serviceProxyProvider, int PlamtType = 1, int DicType = 1, string SerName = "Order", string FileName = "")
         {
             string config = "";
             string DicTypeName = "APILogError";
@@ -462,12 +464,12 @@ namespace Lottery.Api.Controllers
             switch (DicType)
             {
                 case 1:
-                 //   config = KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\APILogError", "");
+                    //   config = KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\APILogError", "");
                     DicTypeName = "APILogError";
                     ApiDicTypeName = "Error";
                     break;
                 case 2:
-                   // config = KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\APITimeInfo", "");
+                    // config = KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\APITimeInfo", "");
                     DicTypeName = "APITimeInfo";
                     ApiDicTypeName = "Info";
                     break;
@@ -483,7 +485,7 @@ namespace Lottery.Api.Controllers
                     break;
                 case 5:
                     DicTypeName = "RedisTimeInfoLog";
-                   // config = KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\RedisTimeInfoLog", "");
+                    // config = KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\RedisTimeInfoLog", "");
                     break;
                 case 6:
                     DicTypeName = "SQLInfo";
@@ -498,7 +500,7 @@ namespace Lottery.Api.Controllers
 
             if (PlamtType == 1)
             {
-                sb.Append( KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\"+ DicTypeName, ""));
+                sb.Append(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\" + DicTypeName, ""));
                 sb.Append("新的日志******************\r\n");
                 sb.Append("新的日志******************\r\n");
                 sb.Append("新的日志******************\r\n");
@@ -511,8 +513,10 @@ namespace Lottery.Api.Controllers
                 {
                     sb.Append(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\" + ApiDicTypeName, ""));
                 }
+
             }
-            else {
+            else
+            {
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param["DicName"] = DicTypeName;
                 param["ApiDicTypeName"] = ApiDicTypeName;
@@ -533,6 +537,41 @@ namespace Lottery.Api.Controllers
             //  Response.ContentType =;
             // "text/html; charset=UTF-8"
             return Content(sb.ToString());
+        }
+        public async Task<IActionResult> GetAllConfigValue([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            var p = JsonHelper.Decode(entity.Param);
+            var userName = p.userName;
+            try
+            {
+                if (userName != "xgadmin")
+                {
+                    return Json(new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.失败,
+                        Message = "不存在此接口",
+                        MsgId = entity.MsgId
+                    });
+                }
+                var str = await _serviceProxyProvider.Invoke<string>(new Dictionary<string, object>(), "api/betting/GetAllConfigValue");
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查找成功",
+                    MsgId = entity.MsgId,
+                    Value = str
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "查询配置失败" + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage()
+                });
+            }
         }
     }
 }

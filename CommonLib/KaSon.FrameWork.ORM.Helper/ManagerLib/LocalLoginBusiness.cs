@@ -916,5 +916,64 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             
         }
+
+        public bool User_AfterLogin(string userId, string loginFrom, string loginIp, DateTime loginTime)
+        {
+            if (string.IsNullOrEmpty(userId)) return false;
+            var date = DateTime.Today.ToString("yyyyMMdd");
+            //注册当前登录不送红包
+            var user = new UserBalanceManager().QueryUserRegister(userId);
+            if (user.CreateTime.ToString("yyyyMMdd") == date)
+                return false;
+
+
+            var bizRealName = new RealNameAuthenticationBusiness();
+            var realName = bizRealName.GetAuthenticatedRealName(userId);
+            if (realName == null)
+                return false;
+            var bizMoible = new MobileAuthenticationBusiness();
+            var mobile = bizMoible.GetAuthenticatedMobile(userId);
+            if (mobile == null || !mobile.IsSettedMobile)
+                return false;
+
+            var manager = new A20150919Manager();
+            var record = manager.QueryA20150919_已绑定身份和手机的用户登录送红包(userId, date);
+            if (record != null) return false;
+
+            //var old = manager.QueryByUserId(userId);
+            //if (old == null) return;
+            //if (!old.IsBindRealName) return;
+            //if (!old.IsBindMobile) return;
+
+            decimal giveMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.BindedUserLoginGiveRedBag"));
+            if (user.VipLevel >= 0)
+            {
+                var config = ActivityCache.QueryActivityConfig(string.Format("ActivityConfig.BindedUserLoginGiveRedBagV{0}", user.VipLevel));
+                if (config != null)
+                {
+                    try
+                    {
+                        giveMoney = decimal.Parse(config);
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+            }
+            if (giveMoney > 0)
+            {
+                BusinessHelper.Payin_To_Balance(AccountType.RedBag, BusinessHelper.FundCategory_Activity, userId, Guid.NewGuid().ToString("N"), giveMoney
+                  , string.Format("绑定身份和手机后，VIP{1} 每天登录赠送红包{0}元", giveMoney, user.VipLevel), RedBagCategory.Activity);
+                manager.AddA20150919_已绑定身份和手机的用户登录送红包(new E_A20150919_已绑定身份和手机的用户登录送红包
+                {
+                    CreateTime = DateTime.Now,
+                    UserId = userId,
+                    LoginDate = date,
+                    GiveRedBagMoney = giveMoney,
+                });
+                return true;
+            }
+            return false;
+        }
     }
 }

@@ -18,6 +18,7 @@ using EntityModel.ExceptionExtend;
 using UserLottery.Service.ModuleServices;
 using KaSon.FrameWork.Common.Redis;
 using EntityModel.Redis;
+using KaSon.FrameWork.Common.FileOperate;
 
 namespace BettingLottery.Service.ModuleServices
 {
@@ -1283,6 +1284,22 @@ namespace BettingLottery.Service.ModuleServices
             }
         }
 
+        public Task<string> ReadSqlTimeLog(string FileName)
+        {
+            return Task.FromResult(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\SQLInfo", "LogTime_"));
+        }
+        public Task<string> ReadLog(string DicName = "SQLInfo", string ApiDicTypeName = "Fatal")
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\" + DicName, "LogTime_"));
+
+            sb.Append("新的日志************************* \r\n");
+            sb.Append("新的日志************************* \r\n");
+            sb.Append("新的日志************************* \r\n");
+            sb.Append(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\" + ApiDicTypeName, "LogTime_"));
+
+            return Task.FromResult(sb.ToString());
+        }
         #region 获取首页合买大厅数据 PC
         /// <summary>
         /// 获取首页合买大厅数据 PC
@@ -1544,5 +1561,33 @@ namespace BettingLottery.Service.ModuleServices
             }
         }
         #endregion
+        //   Task<string> ReadLog(string DicName);
+        public Task<string> GetAllConfigValue()
+        {
+            //1.判断redis是否连接
+            //2.获取allconfig数据
+            //3.获取未返冻结金额还用户数据
+            var sb = new StringBuilder();
+            if (RedisHelperEx.DB_Match == null)
+            {
+                sb.Append("redis连接失败");
+            }
+            else
+            {
+                sb.Append("redis连接成功");
+            }
+            string path = Path.Combine(Directory.GetCurrentDirectory(), @"Config\AllConfig.json");
+            string jsonText = FileHelper.txtReader(path);
+            sb.Append("AllConfig:" + jsonText);
+            var query = new DataQuery();
+            var list = query.QueryNotFinishGame(10);
+            var liststr = "";
+            if (list != null && list.Count > 0)
+            {
+                liststr = JsonHelper.Serialize(list);
+            }
+            sb.Append("仍在冻结的用户包括:" + liststr);
+            return Task.FromResult(sb.ToString());
+        }
     }
 }

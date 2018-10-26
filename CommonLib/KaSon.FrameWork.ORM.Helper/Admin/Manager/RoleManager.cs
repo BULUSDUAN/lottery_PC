@@ -114,5 +114,10 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             DB.GetDal<C_Auth_RoleFunction>().Delete(roleFunction);
         }
+
+        public List<C_Auth_Roles> QueryRoleList()
+        {
+            return DB.CreateQuery<C_Auth_Roles>().OrderBy(p=>p.IsInner).ThenBy(p=>p.IsAdmin).ToList();
+        }
     }
 }

@@ -66,7 +66,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
         }
 
-        private List<C_Core_Config> QueryAllCoreConfig()
+        public List<C_Core_Config> QueryAllCoreConfig()
         {
             return DB.CreateQuery<C_Core_Config>().ToList();
         }

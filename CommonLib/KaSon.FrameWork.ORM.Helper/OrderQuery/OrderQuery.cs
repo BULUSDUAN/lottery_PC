@@ -215,7 +215,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //查询资金明细
             var sqlKey = string.IsNullOrEmpty(userId) ? "Debug_AccountDetailNoUserID" : "Debug_AccountDetailHasUserID";
             string AccountDetail_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == sqlKey).SQL;
-            var AccountDetail_query = DB.CreateSQLQuery(AccountDetail_sql).SetString("@UserId",string.IsNullOrEmpty(userId)?"":userId)//添加共同参数
+            var AccountDetail_query = DB.CreateSQLQuery(AccountDetail_sql).SetString("@UserId", string.IsNullOrEmpty(userId) ? "" : userId)//添加共同参数
                 .SetString("@StartTime", Model.fromDate.ToString())
                 .SetString("@EndTime", Model.toDate.ToString())
                 .SetInt("@PageIndex", Model.pageIndex)
@@ -224,7 +224,7 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                 AccountDetail_query.SetString("@AccountList", Model.accountTypeList);
             }
-            var result=AccountDetail_query.List<C_Fund_Detail>();//执行查询
+            var result = AccountDetail_query.List<C_Fund_Detail>();//执行查询
             //收入条数和金额
             string IncomeAndMoney_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_IncomeAndMoney").SQL;
             var IncomeAndMoney_query = DB.CreateSQLQuery(IncomeAndMoney_sql)
@@ -265,9 +265,9 @@ namespace KaSon.FrameWork.ORM.Helper
             else
                 Model.pageSize = Model.pageSize > Model.MaxPageSize ? Model.MaxPageSize : Model.pageSize;
 
-            var agentTypeList = string.Format("{0}", string.Join(',', (Model.agentTypeList ?? "").Split('|', StringSplitOptions.RemoveEmptyEntries))).ToString();
-            var statusList = string.Format("{0}", string.Join(',', (Model.statusList ?? "").Split('|', StringSplitOptions.RemoveEmptyEntries))).ToString();
-            var sourceList = string.Format("{0}", string.Join(',', (Model.sourceList ?? "").Split('|', StringSplitOptions.RemoveEmptyEntries))).ToString();
+            var agentTypeList = string.Format("{0}", string.Join(",", (Model.agentTypeList ?? "").Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries))).ToString();
+            var statusList = string.Format("{0}", string.Join(",", (Model.statusList ?? "").Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries))).ToString();
+            var sourceList = string.Format("{0}", string.Join(",", (Model.sourceList ?? "").Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries))).ToString();
             //string sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_TotalRequestMoney").SQL;
             //sql = string.Format(sql, agentTypeList, statusList, sourceList);
             //Collection = DB.CreateSQLQuery(sql)
@@ -325,7 +325,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 .SetString("@userId", userId)
                 .SetInt("@BonusStatus", state)
                 .SetString("@GameCode", Model.gameCode)
-                .SetString("@FromDate", Model.startTime.HasValue ? Model.startTime.Value.ToString("yyyy-MM-dd"):"")
+                .SetString("@FromDate", Model.startTime.HasValue ? Model.startTime.Value.ToString("yyyy-MM-dd") : "")
                 .SetString("@ToDate", Model.endTime.HasValue ? Model.endTime.Value.ToString("yyyy-MM-dd") : "").First<MyBettingOrderInfoCollection>();
 
             string MyBettingOrdePage_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_MyBettingOrderPage").SQL;
@@ -333,7 +333,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 .SetString("@userId", userId)
                 .SetInt("@BonusStatus", state)
                 .SetString("@GameCode", Model.gameCode)
-                .SetString("@FromDate", Model.startTime.HasValue ? Model.startTime.Value.ToString("yyyy-MM-dd"):"")
+                .SetString("@FromDate", Model.startTime.HasValue ? Model.startTime.Value.ToString("yyyy-MM-dd") : "")
                 .SetString("@ToDate", Model.endTime.HasValue ? Model.endTime.Value.ToString("yyyy-MM-dd") : "")
                 .SetInt("@PageIndex", Model.pageIndex)
                 .SetInt("@PageSize", Model.pageSize).List<MyBettingOrderInfo>();
@@ -479,7 +479,7 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             var redisKey_TogetherList = RedisKeys.Key_Core_Togegher_OrderList;
             //生成列表
-           // var list = new List<Sports_TogetherSchemeQueryInfo>();
+            // var list = new List<Sports_TogetherSchemeQueryInfo>();
             //var redisList = new List<StackExchange.Redis.RedisValue>(); //RedisHelperEx.QuerySportsTogetherListFromRedis(redisKey_TogetherList).Result;
             var list = RedisHelperEx.DB_Other.GetRange<Sports_TogetherSchemeQueryInfo>(redisKey_TogetherList);
             //foreach (var item in redisList)
@@ -563,7 +563,7 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             string sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_QueryAnteCodeListBySchemeId").SQL;
             var collection = new BettingAnteCodeInfoCollection();
-            collection.AnteCodeList = DB.CreateSQLQuery(sql).SetString("@@SchemeId",schemeId).List<BettingAnteCodeInfo>();
+            collection.AnteCodeList = DB.CreateSQLQuery(sql).SetString("@@SchemeId", schemeId).List<BettingAnteCodeInfo>();
             return collection;
         }
         /// <summary>
@@ -816,7 +816,7 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             var query = (from j in DB.CreateQuery<C_Sports_TogetherJoin>()
                          join u in DB.CreateQuery<C_User_Register>() on j.JoinUserId equals u.UserId
-                         where j.SchemeId == schemeId && j.JoinSucess == true && j.JoinUserId==UserId
+                         where j.SchemeId == schemeId && j.JoinSucess == true && j.JoinUserId == UserId
                          orderby j.JoinType ascending
                          select new { j, u });
             var queryResult = query.ToList().Select(b => new Sports_TogetherJoinInfo
@@ -841,7 +841,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public bool IsUserJoinSportsTogether(string schemeId, string userId)
         {
             UserAuthentication Auth = new UserAuthentication();
-            int flag = DB.CreateQuery<C_Sports_TogetherJoin>().Where(p => p.SchemeId == schemeId && p.JoinUserId == userId && p.JoinSucess==true).Count();
+            int flag = DB.CreateQuery<C_Sports_TogetherJoin>().Where(p => p.SchemeId == schemeId && p.JoinUserId == userId && p.JoinSucess == true).Count();
             return flag > 0;
         }
         public Sports_AnteCodeQueryInfoCollection QuerySportsOrderAnteCodeList(string schemeId)
@@ -1007,7 +1007,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     if (matchResult != null)
                     {
                         //halfResult = string.Format("{0}:{1}", matchResult.HomeScore, matchResult.GuestHalf_Result);
-                        fullResult = string.Format("{0}:{1}", matchResult.HomeScore, matchResult.GuestScore);
+                        fullResult = string.Format("{0}:{1}", matchResult.GuestScore, matchResult.HomeScore);
                         matchState = matchResult.MatchState;
                         switch (item.GameType.ToUpper())
                         {
@@ -1504,7 +1504,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //                             HideDisplayNameCount = u.HideDisplayNameCount,
             //                         });
             #endregion
-            
+
         }
         /// <summary>
         ///  查询跟单信息
@@ -1590,13 +1590,13 @@ namespace KaSon.FrameWork.ORM.Helper
                 string tempTable_sql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_TempOrderRunning_Complate_table").SQL;
                 if (Model.isMyBD == "1")
                 {
-                  
+
                     string CountSql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_MyBDCount").SQL;
                     CountSql = tempTable_sql + CountSql;
-                  collection = DB.CreateSQLQuery(CountSql)
-                        .SetString("@GameCode", Model.gameCode)
-                        .SetString("@UserName", Model.userName)
-                        .SetString("@UserId", Model.userId).First<TotalSingleTreasure_Collection>();
+                    collection = DB.CreateSQLQuery(CountSql)
+                          .SetString("@GameCode", Model.gameCode)
+                          .SetString("@UserName", Model.userName)
+                          .SetString("@UserId", Model.userId).First<TotalSingleTreasure_Collection>();
                     string pageSql = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "Debug_MyBDPage").SQL;
                     pageSql = tempTable_sql + pageSql;
                     collection.TotalSingleTreasureList = DB.CreateSQLQuery(pageSql)
@@ -2096,7 +2096,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 {
                     return null;
                 }
-                  
+
             }
             else
             {
@@ -2261,7 +2261,7 @@ namespace KaSon.FrameWork.ORM.Helper
             if (ProgressStatusType == 1) { ProgressStatusList = NotFinishProgressStatus; }
             if (ProgressStatusType == 2) { ProgressStatusList = FinishProgressStatus; }
             Countsql = string.Format(Countsql, ProgressStatusList);
-            
+
             collection.TotalCount = DB.CreateSQLQuery(Countsql)
                 .SetString("@GameCode", gameCode)
                 .SetString("@UserId", userId)
@@ -2294,7 +2294,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         && (Model.bonusStatus == null || d.BonusStatus == (int)Model.bonusStatus)
                         && (Model.schemeType == null || d.SchemeType == (int)Model.schemeType)
                         && (d.CreateTime >= Model.startTime && d.CreateTime < Model.endTime)
-                        select  d ;
+                        select d;
             //var queryResult = query.ToList().Select(b => new MyOrderListInfo
             //{
             //    AddMoney = b.AddMoney,
@@ -2347,7 +2347,7 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             var query = from d in DB.CreateQuery<C_OrderDetail>()
                         where d.SchemeId == schemeId
-                        select  d;
+                        select d;
             var queryResult = query.ToList().Select(b => new MyOrderListInfo
             {
                 AddMoney = b.AddMoney,
@@ -2588,7 +2588,12 @@ namespace KaSon.FrameWork.ORM.Helper
             return collection;
         }
 
-      
+        public GameWinNumber_Info QueryNewWinNumber(string gameCode)
+        {
+            var list = QueryGameWinNumber(gameCode, 0, 1);
+            if (list.List.Count == 0) return new GameWinNumber_Info();
+            return list.List[0];
+        }
         public KJGameIssuse QueryKJGameIssuse(string gameCode, string issuseNumber)
         {
             return DB.CreateQuery<KJGameIssuse>().Where(p => p.GameCode == gameCode && p.IssuseNumber == issuseNumber).FirstOrDefault();
@@ -2617,7 +2622,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var query = from b in DB.CreateQuery<C_BJDC_Issuse>()
                         where b.MinLocalStopTime >= DateTime.Now
                         orderby b.MinLocalStopTime ascending
-                        select  b ;
+                        select b;
             BJDCIssuseInfo info = null;
             var queryResult = query.FirstOrDefault();
             if (queryResult != null)

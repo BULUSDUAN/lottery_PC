@@ -199,6 +199,20 @@ namespace Lottery.Service.IModuleServices
         [Service(Date = "2018-9-27", Director = "lidi", Name = "游戏提现前存入交易表")]
         Task<CommonActionResult> AddGameWithdraw(string userId, decimal money, string userDisplayName, string orderId, string providerSerialNo);
 
+        //[Service(Date = "2018-9-27", Director = "lidi", Name = "提款完成，修改交易表")]
+        //Task<CommonActionResult> EndAddGameWithdraw(string OrderId, bool IsSuccess);
+        [Service(Date = "2018-10-25", Director = "lidi", Name = "提款步骤1")]
+        Task<CommonActionResult> AddGameWithdraw_Step1(string userId, decimal money, string userDisplayName);
+
+        //[Service(Date = "2018-10-25", Director = "lidi", Name = "提款步骤2")]
+        //Task<CommonActionResult> AddGameWithdraw_Step2(string userId, string orderId, string providerSerialNo);
+
+        [Service(Date = "2018-10-25", Director = "lidi", Name = "提款步骤3")]
+        Task<CommonActionResult> EndAddGameWithdraw(string OrderId, bool IsSuccess, string providerSerialNo);
+
+        //[Service(Date = "2018-10-25", Director = "lidi", Name = "提款步骤3")]
+        //Task<CommonActionResult> GameRecharge_Step2(string orderId, string providerSerialNo);
+
         [Service(Date = "2018-9-29", Director = "renjun", Name = "查询开奖号码")]
         Task<GameWinNumber_Info> QueryNewWinNumber(string gameCode);
 
@@ -377,6 +391,7 @@ namespace Lottery.Service.IModuleServices
         [Service(Date = "2018-10-10", Director = "renjun", Name = "重庆5星基本走势")]
         Task<CQSSC_5X_JBZS_InfoCollection> QueryCache_CQSSC_5X_JBZS_Info(int index);
         #endregion
+
         #region  江西11选5
         [Service(Date = "2018-10-10", Director = "renjun", Name = "查询基本走势")]
         Task<JX11X5_RXJBZS_InfoCollection> QueryJX11X5_RXJBZS_Info(int length);

@@ -85,13 +85,7 @@ namespace BettingLottery.Service.IModuleServices
         [Service(Date = "2018-9-7", Director = "lidi", Name = "查询合买大厅")]
         Task<List<Sports_TogetherSchemeQueryInfo>> QueryTogetherHall();
 
-        [Service(Date = "2018-9-18", Director = "renjun", Name = "查询合买大厅首页PC")]
-        Task<List<TogetherHotUserInfo>> QueryTogetherHallLoad();
-
-        [Service(Date = "2018-9-25", Director = "renjun", Name = "欧洲杯投注")]
-        Task<CommonActionResult> BetOZB(LotteryBettingInfo info, string balancePassword, decimal redBagMoney, string userId);
-
-        [Service(Date = "2018-9-25", Director = "renjun", Name = "购买用户保存订单")]
-        Task<CommonActionResult> BettingUserSavedOrder(string schemeId, string balancePassword, decimal redBagMoney, string userId);
+        [Service(Date = "2018-10-24", Director = "lidi", Name = "查询必要数据")]
+        Task<string> GetAllConfigValue();
     }
 }
