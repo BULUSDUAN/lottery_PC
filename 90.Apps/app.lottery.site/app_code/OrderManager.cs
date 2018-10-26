@@ -4,9 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Web;
 using System.Text;
-using GameBiz.Core;
 using MatchBiz.Core;
-
+using EntityModel.Enum;
 
 /// <summary>
 /// 订单管理类
@@ -357,7 +356,7 @@ public static class OrderManager
     /// </summary>
     /// <param name="togInfo">合买订单信息</param>
     /// <returns>是否可以参与</returns>
-    public static bool IsCanBuy(Sports_TogetherSchemeQueryInfo togInfo)
+    public static bool IsCanBuy(EntityModel.CoreModel.Sports_TogetherSchemeQueryInfo togInfo)
     {
         return (togInfo.ProgressStatus == TogetherSchemeProgress.SalesIn || togInfo.ProgressStatus == TogetherSchemeProgress.Standard)
             && (togInfo.TotalMoney > togInfo.SoldCount)
@@ -762,7 +761,7 @@ public static class OrderManager
     /// </summary>
     /// <param name="anteList">投注号码列表</param>
     /// <returns>命中场次</returns>
-    public static int CalHitCount(Sports_AnteCodeQueryInfoCollection anteList)
+    public static int CalHitCount(EntityModel.CoreModel.Sports_AnteCodeQueryInfoCollection anteList)
     {
         try
         {

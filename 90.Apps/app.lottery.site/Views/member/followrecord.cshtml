@@ -1,4 +1,4 @@
-﻿@using GameBiz.Core;
+﻿@using EntityModel.CoreModel;
 @{
     ViewBag.Title = "自动跟单管理 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
     ViewBag.keywords = "自动跟单管理, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
@@ -86,7 +86,7 @@
                                 <td class="ye blod fszie">@item.FollowMoney.ToString("f")</td>
                                 <td class="@(item.FollowBonusMoney > 0 ? "red" : string.Empty)">@(item.FollowBonusMoney > 0 ? item.FollowBonusMoney.ToString("f") : string.Empty)</td>
                                 <td> @item.CreateTime.ToShortDateString() @item.CreateTime.ToShortTimeString()</td>
-                                <td>@OrderManager.OrderStatusName(SchemeType.TogetherBetting, item.ProgressStatus)</td>
+                                <td>@OrderManager.OrderStatusName(EntityModel.Enum.SchemeType.TogetherBetting, item.ProgressStatus)</td>
                             </tr>
                         }
                     }

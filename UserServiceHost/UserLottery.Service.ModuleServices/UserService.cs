@@ -493,11 +493,11 @@ namespace UserLottery.Service.ModuleServices
         /// <summary>
         /// 删除站内信
         /// </summary>
-        public Task<CommonActionResult> DeleteInnerMail(string innerMailId, string userId)
+        public Task<CommonActionResult> DeleteInnerMail(string innerMailId, string UserId)
         {
 
             var siteBiz = new SiteMessageControllBusiness();
-            siteBiz.DeleteInnerMail(innerMailId,userId);
+            siteBiz.DeleteInnerMail(innerMailId, UserId);
 
             return Task.FromResult(new CommonActionResult(true, "删除站内信完成。"));
         }

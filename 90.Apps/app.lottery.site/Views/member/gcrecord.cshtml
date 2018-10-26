@@ -1,10 +1,10 @@
 ﻿@using app.lottery.site.Models;
-@using GameBiz.Core;
+@using EntityModel.Enum;
 @{
     ViewBag.Title = "账户明细 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
     ViewBag.keywords = "账户明细, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
 
-    var fund = ViewBag.BettingOrder as GameBiz.Core.MyBettingOrderInfoCollection;
+    var fund = ViewBag.BettingOrder as EntityModel.CoreModel.MyBettingOrderInfoCollection;
     var user = ViewBag.CurrentUser as app.lottery.site.Models.CurrentUserInfo;
     //自定义参数
     var shouruCount = 0;

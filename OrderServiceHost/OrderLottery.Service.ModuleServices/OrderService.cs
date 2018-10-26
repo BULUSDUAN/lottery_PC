@@ -431,7 +431,7 @@ namespace OrderLottery.Service.ModuleServices
         }
 
         /// <summary>
-        /// 查询 定制我的 跟单规则
+        /// 查询 我的定制 跟单规则
         /// </summary>
         public Task<TogetherFollowerRuleQueryInfoCollection> QueryUserFollowRule(string gameCode, string gameType, int pageIndex, int pageSize, string UserId)
         {
@@ -446,6 +446,23 @@ namespace OrderLottery.Service.ModuleServices
                 throw new Exception(ex.Message, ex);
             }
         }
+        /// <summary>
+        /// 查询 定制我的 跟单规则
+        /// </summary>
+        public Task<TogetherFollowerRuleQueryInfoCollection> QueryUserFollowMeRule(string gameCode, string gameType, int pageIndex, int pageSize, string UserId)
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                return Task.FromResult(new Sports_Business().QueryUserFollowRule(true, UserId, gameCode, gameType, pageIndex, pageSize));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
 
         public Task<TogetherFollowRecordInfoCollection> QuerySucessFolloweRecord(string gameCode, long ruleId, int pageIndex, int pageSize, string UserId)
         {

@@ -7,10 +7,10 @@
 
     var totalcount = ViewBag.TotalCount;
 
-    var mailList = ViewBag.InnerMailList as GameBiz.Core.SiteMessageInnerMailListNew_Collection;//根据条件查
+    var mailList = ViewBag.InnerMailList as EntityModel.CoreModel.SiteMessageInnerMailListNew_Collection;//根据条件查
 
-    var unreday = mailList.MailList.Where(p => p.HandleType == GameBiz.Core.InnerMailHandleType.UnRead).OrderByDescending(p => p.SendTime);
-    var reday = mailList.MailList.Where(p => p.HandleType != GameBiz.Core.InnerMailHandleType.UnRead).OrderByDescending(p => p.SendTime);
+    var unreday = mailList.MailList.Where(p => p.HandleType == EntityModel.Enum.InnerMailHandleType.UnRead).OrderByDescending(p => p.SendTime);
+    var reday = mailList.MailList.Where(p => p.HandleType != EntityModel.Enum.InnerMailHandleType.UnRead).OrderByDescending(p => p.SendTime);
     var status = string.IsNullOrEmpty(Request["status"]) ? 3 : int.Parse(Request["status"]);
 }
 @section css{
