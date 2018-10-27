@@ -1,11 +1,11 @@
 ﻿@using app.lottery.site.Models;
-@using GameBiz.Core;
+@using EntityModel.Enum;
 @{
     ViewBag.Title = "提款记录 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
     ViewBag.keywords = "提款记录, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
-    Withdraw_QueryInfoCollection WithdrawCollection = ViewBag.WithdrawList;
+    EntityModel.CoreModel.Withdraw_QueryInfoCollection WithdrawCollection = ViewBag.WithdrawList;
     var user = ViewBag.CurrentUser as app.lottery.site.Models.CurrentUserInfo;
-    var balance = ViewBag.CurrentUserBalance as GameBiz.Core.UserBalanceInfo;
+    var balance = ViewBag.CurrentUserBalance as EntityModel.CoreModel.UserBalanceInfo;
 }
 @section css{
     @UserHelper.css("mycenter.css")
@@ -80,7 +80,7 @@
                                     @(ViewBag.pageNo*ViewBag.PageSize + (WithdrawCollection.WithdrawList.IndexOf(item) + 1))
                                 </td>
                                 <td>
-                                    @item.RequestTime.ToString("yyyy-MM-dd HH:mm")
+                                    @item.RequestTime
                                 </td>
                                 <td class="ye blod fszie">
                                     @item.RequestMoney.ToString("N")
@@ -89,10 +89,10 @@
                                     @balance.BonusBalance.ToString("N2")
                                 </td>
                                 <td class="zc fszie">
-                                    @SiteConvert.WithdrawAgentTypeName(item.WithdrawAgent)
+                                    @SiteConvert.WithdrawAgentTypeName((EntityModel.Enum.WithdrawAgentType)item.WithdrawAgent)
                                 </td>
                                 <td class="zc fszie">
-                                    @SiteConvert.WithdrawStatusName(item.Status)
+                                    @SiteConvert.WithdrawStatusName((EntityModel.Enum.WithdrawStatus)item.Status)
                                 </td>
                                 <td class="orderId">
                                     @item.OrderId

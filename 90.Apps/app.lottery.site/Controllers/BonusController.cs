@@ -6,11 +6,28 @@ using System.Web.Mvc;
 using System.Configuration;
 using GameBiz.Core;
 using Common.Utilities;
+using System.Threading.Tasks;
+using EntityModel;
+using log4net;
+using Kason.Sg.Core.ProxyGenerator;
+using Kason.Sg.Core.CPlatform.Runtime.Client.Address.Resolvers;
 
 namespace app.lottery.site.Controllers
 {
     public class BonusController : BaseController
     {
+        #region 调用服务使用示例
+        private readonly ILog logger = null;
+        private readonly IServiceProxyProvider serviceProxyProvider;
+        public IAddressResolver addrre;
+        public BonusController(IServiceProxyProvider _serviceProxyProvider, ILog log, IAddressResolver _addrre)
+        {
+            serviceProxyProvider = _serviceProxyProvider;
+            logger = log;
+            addrre = _addrre;
+
+        }
+        #endregion
         /// <summary>
         /// 中奖排行榜
         /// </summary>
@@ -21,7 +38,7 @@ namespace app.lottery.site.Controllers
             ViewBag.User = CurrentUser;
             return View();
         }
-        public PartialViewResult Detail(string id)
+        public async Task<PartialViewResult> Detail(string id)
         {
             id = string.IsNullOrEmpty(id) ? "ljzj" : id;
             ViewBag.Type = id;
@@ -37,7 +54,10 @@ namespace app.lottery.site.Controllers
             switch (id)
             {
                 case "djph":
-                    ViewBag.FDList = WCFClients.GameQueryClient.QueryRankReport_BigBonus_Sport(ViewBag.BeginTime, ViewBag.EndTime, ViewBag.Game, ViewBag.GameType, ViewBag.PageIndex, ViewBag.PageSize);
+
+                    Dictionary<string, object> param = new Dictionary<string, object>();
+                    var Model = new QueryBonusBase() {  fromDate= ViewBag.BeginTime, toDate = ViewBag.EndTime, gameCode= ViewBag.Game , gameType= ViewBag.GameType , pageIndex= ViewBag.PageIndex , pageSize= ViewBag.PageSize };
+                    ViewBag.FDList = await serviceProxyProvider.Invoke<EntityModel.RankReportCollection_BettingProfit_Sport>(param, "api/data/QueryRankReport_BigBonus_Sport");
                     break;
                 case "fdyl":
                     ViewBag.FDList = WCFClients.GameQueryClient.QueryRankReport_BettingProfit_Sport(ViewBag.BeginTime, ViewBag.EndTime, ViewBag.Game, ViewBag.GameType, ViewBag.PageIndex, ViewBag.PageSize);

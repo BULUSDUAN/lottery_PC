@@ -167,12 +167,12 @@ namespace app.lottery.site.iqucai.Controllers
             try
             {
                 var blog = new BlogEntity();
-                blog.ProfileUserInfo = WebRedisHelper.QueryProfileUserInfo(userId); //  WCFClients.GameClient.QueryProfileUserInfo(userId);
-                blog.ProfileBonusLevel = WebRedisHelper.QueryProfileBonusLevelInfo(userId); // WCFClients.GameClient.QueryProfileBonusLevelInfo(userId);
-                blog.ProfileLastBonus = WebRedisHelper.QueryProfileLastBonusCollection(userId);// WCFClients.GameClient.QueryProfileLastBonusCollection(userId);
-                blog.ProfileDataReport = WebRedisHelper.QueryProfileDataReport(userId);// WCFClients.GameClient.QueryProfileDataReport(userId);
-                blog.FollowerCount = WebRedisHelper.QueryTogetherFollowerCount(userId);// WCFClients.GameQueryClient.QueryTogetherFollowerCount(userId);
-                blog.UserBeedingListInfo = WebRedisHelper.QueryUserBeedingListInfoCollection(userId);// WCFClients.GameClient.QueryUserBeedingList("", "", userId, string.Empty, 0, 100, QueryUserBeedingListOrderByProperty.TotalBonusMoney, OrderByCategory.DESC, UserToken);
+                blog.ProfileUserInfo = WebRedisHelper.QueryProfileUserInfo(userId).Result; //  WCFClients.GameClient.QueryProfileUserInfo(userId);
+                blog.ProfileBonusLevel = WebRedisHelper.QueryProfileBonusLevelInfo(userId).Result; // WCFClients.GameClient.QueryProfileBonusLevelInfo(userId);
+                blog.ProfileLastBonus = WebRedisHelper.QueryProfileLastBonusCollection(userId).Result;// WCFClients.GameClient.QueryProfileLastBonusCollection(userId);
+                blog.ProfileDataReport = WebRedisHelper.QueryProfileDataReport(userId).Result;// WCFClients.GameClient.QueryProfileDataReport(userId);
+                blog.FollowerCount = WebRedisHelper.QueryTogetherFollowerCount(userId).Result;// WCFClients.GameQueryClient.QueryTogetherFollowerCount(userId);
+                blog.UserBeedingListInfo = WebRedisHelper.QueryUserBeedingListInfoCollection(userId).Result;// WCFClients.GameClient.QueryUserBeedingList("", "", userId, string.Empty, 0, 100, QueryUserBeedingListOrderByProperty.TotalBonusMoney, OrderByCategory.DESC, UserToken);
                 blog.CreateTime = DateTime.Now;
                 return blog;
             }
@@ -342,13 +342,13 @@ namespace app.lottery.site.iqucai.Controllers
             try
             {
                 var blog = new BlogEntity();
-                blog.ProfileUserInfo = WebRedisHelper.QueryProfileUserInfo(userId); // WCFClients.GameClient.QueryProfileUserInfo(userId);
-                blog.ProfileBonusLevel = WebRedisHelper.QueryProfileBonusLevelInfo(userId); // WCFClients.GameClient.QueryProfileBonusLevelInfo(userId);
-                blog.ProfileLastBonus = WebRedisHelper.QueryProfileLastBonusCollection(userId);// WCFClients.GameClient.QueryProfileLastBonusCollection(userId);
-                blog.ProfileDataReport = WebRedisHelper.QueryProfileDataReport(userId);// WCFClients.GameClient.QueryProfileDataReport(userId);
-                blog.FollowerCount = WebRedisHelper.QueryTogetherFollowerCount(userId);// WCFClients.GameQueryClient.QueryTogetherFollowerCount(userId);
-                blog.UserCurrentOrderInfo = WebRedisHelper.QueryUserCurrentOrderInfoCollection(userId, (gameCode == "SZC" ? gameType : gameCode));// WCFClients.GameClient.QueryUserCurrentOrderList(userId, (gameCode == "SZC" ? gameType : gameCode), UserToken, pageIndex, pageSize);
-                blog.BonusOrderInfo = WebRedisHelper.QueryBonusOrderInfoCollection(userId, gameCode, gameType);// WCFClients.GameQueryClient.QueryBonusInfoList(userId, (gameCode == "SZC" ? gameType : gameCode), (gameCode == "SZC" ? "" : gameType), "", "", "", pageIndex, pageSize, UserToken);
+                blog.ProfileUserInfo = WebRedisHelper.QueryProfileUserInfo(userId).Result; // WCFClients.GameClient.QueryProfileUserInfo(userId);
+                blog.ProfileBonusLevel = WebRedisHelper.QueryProfileBonusLevelInfo(userId).Result; // WCFClients.GameClient.QueryProfileBonusLevelInfo(userId);
+                blog.ProfileLastBonus = WebRedisHelper.QueryProfileLastBonusCollection(userId).Result;// WCFClients.GameClient.QueryProfileLastBonusCollection(userId);
+                blog.ProfileDataReport = WebRedisHelper.QueryProfileDataReport(userId).Result;// WCFClients.GameClient.QueryProfileDataReport(userId);
+                blog.FollowerCount = WebRedisHelper.QueryTogetherFollowerCount(userId).Result;// WCFClients.GameQueryClient.QueryTogetherFollowerCount(userId);
+                blog.UserCurrentOrderInfo = WebRedisHelper.QueryUserCurrentOrderInfoCollection(userId, (gameCode == "SZC" ? gameType : gameCode)).Result;// WCFClients.GameClient.QueryUserCurrentOrderList(userId, (gameCode == "SZC" ? gameType : gameCode), UserToken, pageIndex, pageSize);
+                blog.BonusOrderInfo = WebRedisHelper.QueryBonusOrderInfoCollection(userId, gameCode, gameType).Result;// WCFClients.GameQueryClient.QueryBonusInfoList(userId, (gameCode == "SZC" ? gameType : gameCode), (gameCode == "SZC" ? "" : gameType), "", "", "", pageIndex, pageSize, UserToken);
                 blog.CreateTime = DateTime.Now;
                 return blog;
             }

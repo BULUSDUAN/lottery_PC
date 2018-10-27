@@ -383,6 +383,8 @@ namespace Lottery.AdminApi.Controllers
         {
             try
             {
+                if (!CheckRights("FBWZ100"))
+                    throw new Exception("对不起，您的权限不足！");
                 //var article = new ArticleInfo_Add();
                 var article = new E_SiteMessage_Article_List();
                 var p = JsonHelper.Decode(entity.Param);
@@ -473,6 +475,8 @@ namespace Lottery.AdminApi.Controllers
         {
             try
             {
+                if (!CheckRights("SCWZ120"))
+                    throw new Exception("对不起，您的权限不足！");
                 var p = JsonHelper.Decode(entity.Param);
                 string articleId = p.articleId;
                 string gameCode = p.gameCode;
@@ -510,6 +514,8 @@ namespace Lottery.AdminApi.Controllers
         {
             try
             {
+                if (!CheckRights("GXXLH130"))
+                    throw new Exception("对不起，您的权限不足！");
                 //     序号描述。ID1,1|ID2,2
                 var p = JsonHelper.Decode(entity.Param);
                 string indexDescription= p.indexDescription;

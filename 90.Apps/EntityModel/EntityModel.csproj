@@ -298,6 +298,7 @@
     <Compile Include="CoreModel\AuthEntities\SystemUser.cs" />
     <Compile Include="CoreModel\AuthEntities\TotalSingleTreasureInfo.cs" />
     <Compile Include="CoreModel\AuthEntities\UserBalance.cs" />
+    <Compile Include="CoreModel\AuthEntities\UserBeedingInfo.cs" />
     <Compile Include="CoreModel\AuthEntities\UserEmailInfo.cs" />
     <Compile Include="CoreModel\AuthEntities\UserFunction.cs" />
     <Compile Include="CoreModel\AuthEntities\UserMobile.cs" />
