@@ -314,6 +314,70 @@ namespace KaSon.FrameWork.ORM.Helper
             totalCount = query.Count();
             return query.OrderByDescending(p => p.CreateTime).Skip(pageIndex * pageSize).Take(pageSize).ToList();
         }
+        public OCAagentDetailInfoCollection QueryAgentDetail(string agentId, string gameCode, DateTime starTime, DateTime endTime, int pageIndex, int pageSize, bool isRecharge)
+        {
+            var result = new OCAagentDetailInfoCollection();
+            starTime = starTime.Date;
+            endTime = endTime.AddDays(1).Date;
+            string createTableSql = "create table #temptb1( userid NVARCHAR(50), displayname NVARCHAR(50), isagent BIT, isenable BIT, agentid NVARCHAR(50), lvl int); WITH temptb AS ( SELECT userid,displayname,isagent,isenable,agentid,0 AS lvl  FROM C_User_Register WHERE  IsEnable=1 AND userid=@agentId UNION ALL SELECT b.userid,b.displayname,b.isagent,b.isenable,b.agentid,lvl+1 AS lvl FROM temptb a INNER JOIN C_User_Register b ON a.userid=b.AgentId WHERE b.IsEnable=1 ) select * into #temptb2 FROM temptb;";
+            DB.CreateSQLQuery(createTableSql).SetString("@agentId",agentId);
+            string tempTable1Sql = "INSERT INTO #temptb1 ";
+            if (isRecharge)
+            {
+                tempTable1Sql = tempTable1Sql + @" SELECT distinct a.* 
+			FROM #temptb2 a LEFT JOIN C_FillMoney b ON a.UserId=b.UserId  
+			WHERE b.Status=1;DROP TABLE #temptb2;";
+            }
+            else
+            {
+                tempTable1Sql = tempTable1Sql + @" select * FROM #temptb2;DROP TABLE #temptb2;";
+            }
+            DB.CreateSQLQuery(tempTable1Sql);
+            string TotalFillMoneySQL = @"SELECT SUM(ResponseMoney) AS TotalFillMoney FROM C_FillMoney WHERE 
+	 UserId IN (SELECT userid FROM #temptb1) AND  (ResponseTime>=@starTime AND ResponseTime < @endTime) AND Status=1";
+            result = DB.CreateSQLQuery(TotalFillMoneySQL)
+                .SetString("@starTime", starTime.ToString())
+                .SetString("@endTime", endTime.ToString())
+                .First<OCAagentDetailInfoCollection>();
+            string TotalFillMoneyUserSql = @" SELECT COUNT(DISTINCT a.UserId) AS TotalFillMoneyUser FROM #temptb1 a LEFT JOIN C_FillMoney b ON a.userid=b.userid  WHERE 
+	 (ResponseTime>=@starTime AND ResponseTime < @endTime) AND Status=1";
+            result = DB.CreateSQLQuery(TotalFillMoneyUserSql)
+                .SetString("@starTime", starTime.ToString())
+                .SetString("@endTime", endTime.ToString()).First<OCAagentDetailInfoCollection>();
+            string otherTotalSql = @"SELECT SUM(o.CurrentBettingMoney) AS TotalBuyMoney,SUM(o.AfterTaxBonusMoney) AS TotalBounsMoney,
+	 SUM(o.BonusAwardsMoney)  AS TotalBonusAwardsMoney,SUM(RedBagAwardsMoney) AS TotalRedBagAwardsMoney 
+	 FROM C_OrderDetail o 
+	 WHERE (o.BetTime>=@starTime AND o.BetTime<@endTime)
+		 AND o.ProgressStatus=90
+		 AND o.BonusStatus=20
+		 AND (@gameCode=N'' OR o.GameCode=@gameCode)
+		 AND  o.UserId IN (SELECT userid FROM #temptb1)";
+            result = DB.CreateSQLQuery(otherTotalSql)
+                 .SetString("@starTime", starTime.ToString())
+                .SetString("@endTime", endTime.ToString())
+                .SetString("@gameCode", gameCode).First<OCAagentDetailInfoCollection>();
+            string totalCountSql = @"SELECT COUNT(UserId) AS TotalCount FROM C_User_Register 
+	WHERE UserId IN (SELECT userid FROM #temptb1) AND  (CreateTime>=@starTime AND CreateTime < @endTime) ";
+            result = DB.CreateSQLQuery(totalCountSql)
+                 .SetString("@starTime", starTime.ToString())
+                .SetString("@endTime", endTime.ToString())
+                .First<OCAagentDetailInfoCollection>();
+            string PageListSql = @"SELECT * FROM(
+		SELECT ROW_NUMBER()OVER(ORDER BY c.CreateTime DESC) RowIndex,c.UserId,c.DisplayName,
+		c.IsEnable,e.RealName,e.IsSettedRealName,m.Mobile,m.IsSettedMobile,
+		c.CreateTime,c.AgentId,c.IsAgent,p.CPSMode,c.IsFillMoney FROM C_User_Register c 
+													LEFT JOIN E_Authentication_RealName e ON c.UserId = e.UserId 
+													LEFT JOIN E_Authentication_Mobile m ON c.UserId=m.UserId
+													LEFT JOIN P_OCAgent p ON p.UserId=c.UserId 
+													WHERE c.UserId IN (SELECT userid FROM #temptb1)) T
+	WHERE RowIndex > @pageIndex * @pageSize AND RowIndex <= (@pageIndex + 1) * @pageSize";
+            result.List = DB.CreateSQLQuery(PageListSql)
+                .SetInt("@pageIndex", pageIndex)
+                .SetInt("@pageSize", pageSize)
+                .List<OCAagentDetailInfo>().ToList();
+            return result;
+
+        }
         //public List<AgentLottoTopInfo> QueryLowerAgentSaleListByUserId(string agentId, DateTime startTime, DateTime endTime)
         //{
         //    Session.Clear();

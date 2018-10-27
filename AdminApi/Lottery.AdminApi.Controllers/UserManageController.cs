@@ -1549,7 +1549,7 @@ namespace Lottery.AdminApi.Controllers
                     }
                     else
                     {
-                        sendMail.Receivers = Request.Form["userid"];
+                        sendMail.Receivers = (string)p.userid;
                     }
                     var sendResult = _service.SendInnerMail(sendMail, CurrentUser.UserToken);
                     return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Message = sendResult.Message });
@@ -1557,7 +1557,7 @@ namespace Lottery.AdminApi.Controllers
                 }
                 else
                 {
-                    sendMail.Receivers = PreconditionAssert.IsNotEmptyString(Request.Form["receivers"], "发信对象不能为空！");
+                    sendMail.Receivers = PreconditionAssert.IsNotEmptyString((string)p.receivers, "发信对象不能为空！");
                     var userIds = _service.QueryUserIdByRoleId(sendMail.Receivers);
                     if (!string.IsNullOrEmpty(userIds))
                     {
@@ -1764,6 +1764,88 @@ namespace Lottery.AdminApi.Controllers
                 return JsonEx(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
             }
 
+        }
+        public JsonResult AddUserSchemeShareExpert(LotteryServiceRequest entity)
+        {
+            try
+            {
+                if (!CheckRights("U110"))
+                    throw new Exception("对不起，您的权限不足！");
+                var p = JsonHelper.Decode(entity.Param);
+                var userId = PreconditionAssert.IsNotEmptyString((string)p.UserId, "用户编号不能为空");
+                var shortIndex = (string)p.ShortIndex == null ? 0 : Convert.ToInt32((string)p.ShortIndex);
+                var source = Convert.ToInt32((string)p.Source);
+                if (source <= 0)
+                    throw new Exception("请选择类型");
+                var result = _service.AddUserSchemeShareExpert(userId, shortIndex, (CopyOrderSource)source);
+                return Json(new LotteryServiceResponse(){ Code = result.IsSuccess?AdminResponseCode.成功:AdminResponseCode.失败, Message = result.Message });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse(){ Code = AdminResponseCode.失败, Message = ex.Message });
+            }
+        }
+        public JsonResult DeleteUserSchemeShareExpert(LotteryServiceRequest entity)
+        {
+            try
+            {
+                if (!CheckRights("U110"))
+                {
+                    throw new LogicException("对不起,您的权限不足!");
+                }
+                var p = JsonHelper.Decode(entity.Param);
+                var userId = PreconditionAssert.IsNotEmptyString((string)p.Id, "主键编号不能为空");
+                var result = _service.DeleteUserSchemeShareExpert(userId);
+                return Json(new LotteryServiceResponse() { Code = result.IsSuccess ? AdminResponseCode.成功 : AdminResponseCode.失败, Message = result.Message });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
+            }
+        }
+        public ActionResult QueryUserSchemeShareExpertList(LotteryServiceRequest entity)
+        {
+            try
+            {
+                if (!CheckRights("U110"))
+                    throw new Exception("对不起，您的权限不足！");
+                var p = JsonHelper.Decode(entity.Param);
+                var UserKey = (string)p.UserKey == null ? string.Empty : (string)p.UserKey.ToString();
+                var Source = string.IsNullOrEmpty((string)p.Source) ? -1 : Convert.ToInt32((string)p.Source);
+                var PageIndex = (string)p.PageIndex == null ? base.PageIndex : Convert.ToInt32((string)p.PageIndex);
+                var PageSize = (string)p.PageSize == null ? base.PageSize : Convert.ToInt32((string)p.PageSize);
+                var SchemeShareList = _service.QueryUserSchemeShareExpertList(ViewBag.UserKey, ViewBag.Source, ViewBag.PageIndex, ViewBag.PageSize);
+                return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Value = SchemeShareList });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
+            }
+        }
+        /// <summary>
+        /// 代理统计数据
+        /// </summary>
+        public ActionResult AgentDetail(LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                var AgentId = string.IsNullOrWhiteSpace((string)p.agentId) ? string.Empty : (string)p.agentId;
+                var GameCode = string.IsNullOrWhiteSpace((string)p.gameCode) ? string.Empty : (string)p.gameCode;
+                var StartTime = string.IsNullOrWhiteSpace((string)p.startTime) ? DateTime.Now : Convert.ToDateTime((string)p.startTime);
+                var EndTime = string.IsNullOrWhiteSpace((string)p.endTime) ? DateTime.Now : Convert.ToDateTime((string)p.endTime);
+                var PageIndex = string.IsNullOrWhiteSpace((string)p.pageIndex) ? base.PageIndex : int.Parse((string)p.pageIndex);
+                var PageSize = string.IsNullOrWhiteSpace((string)p.pageSize) ? base.PageSize : int.Parse((string)p.pageSize);
+                bool? isFillMoney = null;
+                if (!string.IsNullOrWhiteSpace((string)p.isFillMoney)) { isFillMoney = bool.Parse((string)p.isFillMoney); }
+                var IsFillMoney = isFillMoney;
+                var AgentDetailList = _service.QueryAgentDetail(AgentId, GameCode, StartTime, EndTime, PageIndex, PageSize, (isFillMoney!=null&&isFillMoney.HasValue ? isFillMoney.Value : false));
+                return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Value = AgentDetailList });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
+            }
         }
     }
 }

@@ -1619,6 +1619,64 @@ namespace KaSon.FrameWork.ORM.Helper
                 throw new Exception(ex.Message);
             }
         }
+        /// <summary>
+        /// 新增宝单或大单推荐专家
+        /// </summary>
+        public CommonActionResult AddUserSchemeShareExpert(string userId, int shortIndex, CopyOrderSource source)
+        {
+            try
+            {
+                new BDFXOrderBusiness().AddUserSchemeShareExpert(userId, shortIndex, source);
+                return new CommonActionResult(true, "保存数据成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 删除宝单或大单推荐专家
+        /// </summary>
+        public CommonActionResult DeleteUserSchemeShareExpert(string id)
+        {
+            try
+            {
+                new BDFXOrderBusiness().DeleteUserSchemeShareExpert(id);
+                return new CommonActionResult(true, "删除数据成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 查询宝单、大单推荐专家
+        /// </summary>
+        public UserSchemeShareExpert_Collection QueryUserSchemeShareExpertList(string userKey, int source, int pageIndex, int pageSize)
+        {
+            try
+            {
+                return new BDFXOrderBusiness().QueryUserSchemeShareExpertList(userKey, source, pageIndex, pageSize);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 查询代理销售充值注册量明细汇总
+        /// </summary>
+        public OCAagentDetailInfoCollection QueryAgentDetail(string agentId, string gameCode, DateTime starTime, DateTime endTime, int pageIndex, int pageSize, bool isRecharge)
+        {
+            try
+            {
+                return new OCAgentBusiness().QueryAgentDetail(agentId, gameCode, starTime, endTime, pageIndex, pageSize, isRecharge);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         #endregion
     }
 }

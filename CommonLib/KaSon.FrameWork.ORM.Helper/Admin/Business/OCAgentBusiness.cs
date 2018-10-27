@@ -226,5 +226,14 @@ namespace KaSon.FrameWork.ORM.Helper
                 }
                 DB.Commit();
         }
+        /// <summary>
+        /// 查询代理销售充值注册量明细汇总
+        /// </summary>
+        public OCAagentDetailInfoCollection QueryAgentDetail(string agentId, string gameCode, DateTime starTime, DateTime endTime, int pageIndex, int pageSize, bool isRecharge)
+        {
+            var collection = new OCAagentDetailInfoCollection();
+            collection = new OCAgentManager().QueryAgentDetail(agentId, gameCode, starTime, endTime, pageIndex, pageSize, isRecharge);
+            return collection;
+        }
     }
 }
