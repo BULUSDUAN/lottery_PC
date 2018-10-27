@@ -1336,7 +1336,7 @@ namespace Lottery.AdminApi.Controllers
         /// <summary>
         /// 手工完成充值
         /// </summary>
-        public ActionResult CompleteFillMoney(LotteryServiceRequest entity)
+        public IActionResult CompleteFillMoney(LotteryServiceRequest entity)
         {
             try
             {
@@ -1439,7 +1439,7 @@ namespace Lottery.AdminApi.Controllers
             ms.Seek(0, SeekOrigin.Begin);
             return File(ms, "application/vnd.ms-excel", string.Format("{0}.xls", DateTime.Now.ToString("yyyy-MM-dd")));
         }
-        public JsonResult CompleteWithdrawALL(LotteryServiceRequest entity)
+        public IActionResult CompleteWithdrawALL(LotteryServiceRequest entity)
         {
             try
             {
@@ -1477,7 +1477,7 @@ namespace Lottery.AdminApi.Controllers
                 return Json(new LotteryServiceResponse(){ Code = AdminResponseCode.成功, Message = ex.Message });
             }
         }
-        public JsonResult RefusedWithdrawALL(LotteryServiceRequest entity)
+        public IActionResult RefusedWithdrawALL(LotteryServiceRequest entity)
         {
             try
             {
@@ -1502,7 +1502,7 @@ namespace Lottery.AdminApi.Controllers
         /// <summary>
         /// 发送站内信
         /// </summary>
-        public ActionResult SiteMessage()
+        public IActionResult SiteMessage()
         {
             try
             {
@@ -1520,7 +1520,7 @@ namespace Lottery.AdminApi.Controllers
         /// <summary>
         /// 发送站内信
         /// </summary>
-        public JsonResult SendLetter(LotteryServiceRequest entity)
+        public IActionResult SendLetter(LotteryServiceRequest entity)
         {
             if (!CheckRights("FSXX100"))
             {
@@ -1578,7 +1578,7 @@ namespace Lottery.AdminApi.Controllers
                 return Json(new LotteryServiceResponse{ Code = AdminResponseCode.失败, Message = ex.Message });
             }
         }
-        public ActionResult SiteNoticeManager()
+        public IActionResult SiteNoticeManager()
         {
             if (!CheckRights("WZTZGL"))
                 throw new Exception("对不起，您的权限不足！");
@@ -1586,7 +1586,7 @@ namespace Lottery.AdminApi.Controllers
             var ConfigList = _service.QuerySiteNoticeConfig();
             return View();
         }
-        public JsonResult UpdateSiteNotice(LotteryServiceRequest entity)
+        public IActionResult UpdateSiteNotice(LotteryServiceRequest entity)
         {
             try
             {
@@ -1609,7 +1609,7 @@ namespace Lottery.AdminApi.Controllers
                 return Json(new LotteryServiceResponse(){ Code = AdminResponseCode.失败, Message = ex.Message });
             }
         }
-        public ActionResult SMSSendRecordLog(LotteryServiceRequest entity)
+        public IActionResult SMSSendRecordLog(LotteryServiceRequest entity)
         {
             try
             {
@@ -1632,7 +1632,7 @@ namespace Lottery.AdminApi.Controllers
             }
         }
 
-        public JsonResult RepeatSMS(LotteryServiceRequest entity)
+        public IActionResult RepeatSMS(LotteryServiceRequest entity)
         {
             try
             {
@@ -1651,7 +1651,7 @@ namespace Lottery.AdminApi.Controllers
         /// <summary>
         /// 用户手机校验码管理
         /// </summary>
-        public ActionResult ValidateCode(LotteryServiceRequest entity)
+        public IActionResult ValidateCode(LotteryServiceRequest entity)
         {
             try
             {
@@ -1683,7 +1683,7 @@ namespace Lottery.AdminApi.Controllers
                 return JsonEx(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
             }
         }
-        public JsonResult DoSendSMS(LotteryServiceRequest entity)
+        public IActionResult DoSendSMS(LotteryServiceRequest entity)
         {
             try
             {
@@ -1714,7 +1714,7 @@ namespace Lottery.AdminApi.Controllers
                 return Json(new LotteryServiceResponse(){ Code = AdminResponseCode.成功, Message = ex.Message });
             }
         }
-        public JsonResult DoAgent(LotteryServiceRequest entity)
+        public IActionResult DoAgent(LotteryServiceRequest entity)
         {
             try
             {
@@ -1734,7 +1734,7 @@ namespace Lottery.AdminApi.Controllers
                 return Json(new LotteryServiceResponse(){ Code = AdminResponseCode.失败, Message = ex.Message });
             }
         }
-        public JsonResult DoTogetherHotUser(LotteryServiceRequest entity)
+        public IActionResult DoTogetherHotUser(LotteryServiceRequest entity)
         {
             try
             {
@@ -1749,7 +1749,7 @@ namespace Lottery.AdminApi.Controllers
                 return JsonEx(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
             }
         }
-        public JsonResult DeleteTogetherHotUser(LotteryServiceRequest entity)
+        public IActionResult DeleteTogetherHotUser(LotteryServiceRequest entity)
         {
             try
             {
@@ -1764,7 +1764,7 @@ namespace Lottery.AdminApi.Controllers
             }
 
         }
-        public JsonResult AddUserSchemeShareExpert(LotteryServiceRequest entity)
+        public IActionResult AddUserSchemeShareExpert(LotteryServiceRequest entity)
         {
             try
             {
@@ -1784,7 +1784,7 @@ namespace Lottery.AdminApi.Controllers
                 return Json(new LotteryServiceResponse(){ Code = AdminResponseCode.失败, Message = ex.Message });
             }
         }
-        public JsonResult DeleteUserSchemeShareExpert(LotteryServiceRequest entity)
+        public IActionResult DeleteUserSchemeShareExpert(LotteryServiceRequest entity)
         {
             try
             {
@@ -1802,7 +1802,7 @@ namespace Lottery.AdminApi.Controllers
                 return Json(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
             }
         }
-        public ActionResult QueryUserSchemeShareExpertList(LotteryServiceRequest entity)
+        public IActionResult QueryUserSchemeShareExpertList(LotteryServiceRequest entity)
         {
             try
             {
@@ -1824,7 +1824,7 @@ namespace Lottery.AdminApi.Controllers
         /// <summary>
         /// 代理统计数据
         /// </summary>
-        public ActionResult AgentDetail(LotteryServiceRequest entity)
+        public IActionResult AgentDetail(LotteryServiceRequest entity)
         {
             try
             {
