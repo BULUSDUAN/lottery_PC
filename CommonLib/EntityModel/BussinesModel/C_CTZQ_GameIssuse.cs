@@ -60,5 +60,9 @@ namespace EntityModel
             [ProtoMember(7)]
             [Field("CreateTime")]
             public DateTime CreateTime{ get; set; }
+
+        public string DSStopBettingTime { get; set; }
+        public string StartTime { get; set; }
+        public string OfficialStopTime { get; set; }
     }
 }

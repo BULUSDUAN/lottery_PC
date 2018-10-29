@@ -26,6 +26,7 @@ using KaSon.FrameWork.Analyzer;
 using GameBiz.Domain.Entities;
 using System.Threading.Tasks;
 using MongoDB.Driver;
+using EntityModel.Domain.Entities;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
@@ -43,6 +44,49 @@ namespace KaSon.FrameWork.ORM.Helper
         public Sports_Business()
         {
 
+        }
+
+        public IndexMatch_Collection AddIndexMatch(string indexMatchList)
+        {
+            var collection = new IndexMatch_Collection();
+
+            var matchIdList = JsonHelper.Deserialize<List<IndexMatchInfo>>(indexMatchList);
+            if (matchIdList.Count == 0 || matchIdList == null)
+                return collection;
+
+            using (var manager = new Sports_Manager())
+            {
+                try
+                {
+                    foreach (var item in matchIdList)
+                    {
+                        var entity = manager.QueryIndexMatchByMatchId(item.MatchId);
+                        if (entity == null)
+                        {
+                            //entity = new IndexMatch();
+                            //ObjectConvert.ConverInfoToEntity(item, ref entity);
+                            manager.AddIndexMatch(new IndexMatch
+                            {
+                                CreateTime = item.CreateTime,
+                                ImgPath = item.ImgPath,
+                                MatchId = item.MatchId,
+                                MatchName = item.MatchName
+                            });
+                            continue;
+                        }
+                        collection.IndexMatchList.Add(new IndexMatchInfo
+                        {
+                            MatchId = entity.MatchId,
+                            ImgPath = entity.ImgPath,
+                        });
+                    }
+                }
+                catch
+                {
+                    return collection;
+                }
+            }
+            return collection;
         }
         /// <summary>
         ///  比赛数据添加、更新
@@ -118,13 +162,13 @@ namespace KaSon.FrameWork.ORM.Helper
                 #region 竞彩足球
                 case NoticeType.JCZQ_Match:
                     var jczq_array = text.Split(new string[] { "_" }, StringSplitOptions.RemoveEmptyEntries);
-                    new IssuseBusiness(mDB).Update_JCZQ_MatchList(jczq_array);
+                    new IssuseBusiness(mDB).Update_JCZQ_MatchList("JCZQ_Match_List", jczq_array);
                     break;
                 case NoticeType.JCZQ_MatchResult:
                     var jczq_match_result_array = text.Split(new string[] { "#" }, StringSplitOptions.RemoveEmptyEntries);
                     var str_Array = from s in jczq_match_result_array select s.Split('_')[0];
-                    var jczq_biz = new IssuseBusiness();
-                    jczq_biz.Update_JCZQ_MatchResultList(str_Array.ToArray());
+                    var jczq_biz = new IssuseBusiness(mDB);
+                    jczq_biz.Update_JCZQ_MatchResultList("JCZQ_Match_Result_List", str_Array.ToArray());
                     new Thread(() =>
                     {
                         Common.Utilities.UsefullHelper.TryDoAction(() =>
@@ -135,25 +179,25 @@ namespace KaSon.FrameWork.ORM.Helper
                     break;
                 //过关
                 case NoticeType.JCZQ_SPF_SP:
-                    new TicketGatewayAdmin().UpdateOddsList_JCZQ_SPF("JCZQ", "SPF", text.Split('_'), false);
+                    new TicketGatewayAdmin().UpdateOddsList_JCZQ_SPF("JCZQ_SPF_SP", "JCZQ", "SPF", text.Split('_'), false);
                   //  new TicketGatewayAdmin().UpdateOddsList_JCZQ<JCZQ_SPF_SPInfo, JCZQ_Odds_SPF>("JCZQ", "SPF", text.Split('_'), false);
                     break;
                 case NoticeType.JCZQ_BRQSPF_SP:
                     //UpdateOddsList_JCLQ_RFSFF
                     // new TicketGatewayAdmin().UpdateOddsList_JCLQ_RFSFF<JCZQ_BRQSPF_SPInfo, JCZQ_Odds_BRQSPF>("JCZQ", "BRQSPF", text.Split('_'), false);
-                    new TicketGatewayAdmin().UpdateOddsList_JCZQ_BRQSPF("JCZQ", "BRQSPF", text.Split('_'), false);
+                    new TicketGatewayAdmin().UpdateOddsList_JCZQ_BRQSPF("JCZQ_BRQSPF_SP", "JCZQ", "BRQSPF", text.Split('_'), false);
                     break;
                 case NoticeType.JCZQ_ZJQ_SP:
-                    new TicketGatewayAdmin().UpdateOddsList_JCZQ_ZJQ("JCZQ", "ZJQ", text.Split('_'), false);
+                    new TicketGatewayAdmin().UpdateOddsList_JCZQ_ZJQ("JCZQ_ZJQ_SP", "JCZQ", "ZJQ", text.Split('_'), false);
                    // new TicketGatewayAdmin().UpdateOddsList_JCZQ<JCZQ_ZJQ_SPInfo, JCZQ_Odds_ZJQ>("JCZQ", "ZJQ", text.Split('_'), false);
 
 
                     break;
                 case NoticeType.JCZQ_BQC_SP:
-                    new TicketGatewayAdmin().UpdateOddsList_JCZQ_BQC("JCZQ", "BQC", text.Split('_'), false);
+                    new TicketGatewayAdmin().UpdateOddsList_JCZQ_BQC("JCZQ_BQC_SP", "JCZQ", "BQC", text.Split('_'), false);
                     break;
                 case NoticeType.JCZQ_BF_SP:
-                    new TicketGatewayAdmin().UpdateOddsList_JCZQ_BF("JCZQ", "BF", text.Split('_'), false);
+                    new TicketGatewayAdmin().UpdateOddsList_JCZQ_BF("JCZQ_BF_SP", "JCZQ", "BF", text.Split('_'), false);
                     break;
                 #endregion
 

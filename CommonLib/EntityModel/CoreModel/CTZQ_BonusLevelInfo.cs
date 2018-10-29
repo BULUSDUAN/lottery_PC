@@ -20,5 +20,16 @@ namespace EntityModel.CoreModel
         public decimal BonusBalance { get; set; }
         public decimal TotalSaleMoney { get; set; }
         public string CreateTime { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            var t = obj as CTZQ_BonusLevelInfo;
+            if (t.Id != this.Id
+                || t.BonusCount != this.BonusCount
+                || t.BonusMoney != this.BonusMoney
+                || t.MatchResult != this.MatchResult)
+                return false;
+            return true;
+        }
     }
 }

@@ -9,6 +9,7 @@ using EntityModel.Enum;
 using EntityModel.LotteryJsonInfo;
 using KaSon.FrameWork.Analyzer.AnalyzerFactory;
 using KaSon.FrameWork.Common.Algorithms;
+using System.Collections.Generic;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
@@ -1185,7 +1186,7 @@ namespace KaSon.FrameWork.ORM.Helper
             // DateTime startTime = DateTime.Now.AddMonths(1);
             DateTime startTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 1, 1, 12, 0, 0, DateTimeKind.Utc);
 
-            var filter = builder.Eq("GameCode", gameCode) & builder.Eq("GameCode", gameType) & builder.Eq("IssuseNumber", issuseNumber);
+            var filter = builder.Eq("GameCode", gameCode) & builder.Eq("GameType", gameType) & builder.Eq("IssuseNumber", issuseNumber);
             var documents = coll.Find<CTZQ_BonusPoolInfo>(filter).ToList();
 
             return documents;
@@ -1404,6 +1405,7 @@ namespace KaSon.FrameWork.ORM.Helper
             UpdateCTZQMatchList(array, list);
         }
 
+        static List<C_CTZQ_Match> CTZQCacheDB = new List<C_CTZQ_Match>();
         private  void UpdateCTZQMatchList(string[] array, List<CTZQ_MatchInfo> list)
         {
             //开启事务
@@ -1412,77 +1414,263 @@ namespace KaSon.FrameWork.ORM.Helper
                 //  biz.BeginTran();
 
                 // var manager = new CTZQMatchManager();
-                var oldList = DB.CreateQuery<C_CTZQ_Match>().Where(p => array.Contains(p.Id)).ToList();
-                //  var oldList = manager.QueryCTZQMatchListById(array);
-                try
-                {
+               // List<C_CTZQ_Match> oldList = new List<C_CTZQ_Match>();
+                List<C_CTZQ_Match> add_oldList = new List<C_CTZQ_Match>();
+                List<C_CTZQ_Match> update_oldList = new List<C_CTZQ_Match>();
 
-                DB.Begin();
-                foreach (var item in array)
+                if (CTZQCacheDB.Count()>2000)
                 {
-                    var old = oldList.FirstOrDefault(p => p.Id == item);
-                    var current = list.FirstOrDefault(p => p.Id == item);
-                    if (current == null)
-                        continue;
-                    if (old == null)
+                    CTZQCacheDB.Clear();
+                }
+
+                if (CTZQCacheDB.Count <= 0)
+                {
+                  var  oldList = DB.CreateQuery<C_CTZQ_Match>().Where(p => array.Contains(p.Id)).ToList();
+                    // var r= CTZQCacheDB.Concat<C_CTZQ_Match>(oldList);
+                    //  var issuseNumberList = new List<string>();
+                    CTZQCacheDB = oldList;
+                }
+                else {
+                  var tlist=  CTZQCacheDB.Where(p => array.Contains(p.Id)).ToList();
+                    if (tlist.Count<=0)
                     {
-                        //重新添加
-                        //var entity = new CTZQ_Match();
-                        //ObjectConvert.ConverInfoToEntity<MatchBiz.Core.CTZQ_MatchInfo, CTZQ_Match>(current, ref entity);
-                        DB.GetDal<C_CTZQ_Match>().Add(new C_CTZQ_Match
-                        {
-                            Color = current.Color,
-                            GuestTeamHalfScore = current.GuestTeamHalfScore,
-                            GuestTeamScore = current.GuestTeamScore,
-                            GuestTeamStanding = int.Parse(current.GuestTeamStanding),
-                            GuestTeamId = current.GuestTeamId,
-                            GuestTeamName = current.GuestTeamName,
-                            HomeTeamHalfScore = current.HomeTeamHalfScore,
-                            HomeTeamId = current.HomeTeamId,
-                            HomeTeamName = current.HomeTeamName,
-                            HomeTeamScore = current.HomeTeamScore,
-                            HomeTeamStanding =int.Parse( current.HomeTeamStanding),
-                            MatchResult = current.MatchResult,
-                            MatchStartTime = DateTime.Parse(current.MatchStartTime),
-                            MatchState =(int) current.MatchState,
-                            UpdateTime = DateTime.Parse(current.UpdateTime),
-                            GameCode = current.GameCode,
-                            GameType = current.GameType,
-                            Id = current.Id,
-                            IssuseNumber = current.IssuseNumber,
-                            MatchId = current.MatchId,
-                            MatchName = current.MatchName,
-                            Mid = current.Mid,
-                            OrderNumber = current.OrderNumber,
-                        });
-                        continue;
+                       var oldList = DB.CreateQuery<C_CTZQ_Match>().Where(p => array.Contains(p.Id)).ToList();
+                      var r=  CTZQCacheDB.Concat(oldList);
+                        CTZQCacheDB = r.ToList();
                     }
-                    old.Color = current.Color;
-                    old.GuestTeamHalfScore = current.GuestTeamHalfScore;
-                    old.GuestTeamScore = current.GuestTeamScore;
-                    old.GuestTeamStanding = int.Parse(current.GuestTeamStanding);
-                    old.GuestTeamId = current.GuestTeamId;
-                    old.GuestTeamName = current.GuestTeamName;
-                    old.HomeTeamHalfScore = current.HomeTeamHalfScore;
-                    old.HomeTeamId = current.HomeTeamId;
-                    old.HomeTeamName = current.HomeTeamName;
-                    old.HomeTeamScore = current.HomeTeamScore;
-                    old.HomeTeamStanding = int.Parse(current.HomeTeamStanding);
-                    old.MatchResult = current.MatchResult;
-                    old.MatchStartTime = DateTime.Parse(current.MatchStartTime);
-                    old.MatchState = (int)current.MatchState;
-                    old.UpdateTime = DateTime.Parse(current.UpdateTime);
-                    DB.GetDal<C_CTZQ_Match>().Update(old);
                 }
+               
+                    //分类 更新或者添加数据源
+                    foreach (var item in array)
+                    {
+                        var old = CTZQCacheDB.FirstOrDefault(p => p.Id == item);
+                        var current = list.FirstOrDefault(p => p.Id == item);
+                    if (current==null)
+                    {
+                        continue ;
+                    }
+                    string stime = current.MatchStartTime;
+                   
+                        var nADD = new C_CTZQ_Match
+                    {
+                        Color = current.Color,
+                        GuestTeamHalfScore = current.GuestTeamHalfScore,
+                        GuestTeamScore = current.GuestTeamScore,
+                        GuestTeamStanding = int.Parse(current.GuestTeamStanding),
+                        GuestTeamId = current.GuestTeamId,
+                        GuestTeamName = current.GuestTeamName,
+                        HomeTeamHalfScore = current.HomeTeamHalfScore,
+                        HomeTeamId = current.HomeTeamId,
+                        HomeTeamName = current.HomeTeamName,
+                        HomeTeamScore = current.HomeTeamScore,
+                        HomeTeamStanding = int.Parse(current.HomeTeamStanding),
+                        MatchResult = current.MatchResult,
+                        MatchStartTime = DateTime.Parse(current.MatchStartTime),
+                        MatchState = (int)current.MatchState,
+                        UpdateTime = DateTime.Parse(current.UpdateTime),
+                        GameCode = current.GameCode,
+                        GameType = current.GameType,
+                        Id = current.Id,
+                        IssuseNumber = current.IssuseNumber,
+                        MatchId = current.MatchId,
+                        MatchName = current.MatchName,
+                        Mid = current.Mid,
+                        OrderNumber = current.OrderNumber,
+                    };
 
-                DB.Commit();
+                    if (old == null )
+                        {
+                        add_oldList.Add(nADD);
+                        }
+                        else {
+                            if (old.Color == current.Color &&
+                            old.GuestTeamHalfScore == current.GuestTeamHalfScore &&
+                            old.GuestTeamScore == current.GuestTeamScore &&
+                            old.GuestTeamStanding == int.Parse(current.GuestTeamStanding) &&
+                            old.GuestTeamId == current.GuestTeamId &&
+                            old.GuestTeamName == current.GuestTeamName &&
+                            old.HomeTeamHalfScore == current.HomeTeamHalfScore &&
+                            old.HomeTeamId == current.HomeTeamId &&
+                            old.HomeTeamName == current.HomeTeamName &&
+                            old.HomeTeamScore == current.HomeTeamScore &&
+                            old.HomeTeamStanding == int.Parse(current.HomeTeamStanding) &&
+                            old.MatchResult == current.MatchResult &&
+                            old.MatchStartTime == DateTime.Parse(current.MatchStartTime) &&
+                            old.MatchState == (int)current.MatchState// &&
+                           // old.UpdateTime == DateTime.Parse(current.UpdateTime)
+                                )
+                            {
+                                //数据没有改变，不用处理
+                            }
+                            else {
+                            var nupdate= new C_CTZQ_Match
+                            {
+                                Color = current.Color,
+                                GuestTeamHalfScore = current.GuestTeamHalfScore,
+                                GuestTeamScore = current.GuestTeamScore,
+                                GuestTeamStanding = int.Parse(current.GuestTeamStanding),
+                                GuestTeamId = current.GuestTeamId,
+                                GuestTeamName = current.GuestTeamName,
+                                HomeTeamHalfScore = current.HomeTeamHalfScore,
+                                HomeTeamId = current.HomeTeamId,
+                                HomeTeamName = current.HomeTeamName,
+                                HomeTeamScore = current.HomeTeamScore,
+                                HomeTeamStanding = int.Parse(current.HomeTeamStanding),
+                                MatchResult = current.MatchResult,
+                                MatchStartTime = DateTime.Parse(current.MatchStartTime),
+                                MatchState = (int)current.MatchState,
+                                UpdateTime = DateTime.Parse(current.UpdateTime),
+                                GameCode = current.GameCode,
+                                GameType = current.GameType,
+                                Id = current.Id,
+                                IssuseNumber = current.IssuseNumber,
+                                MatchId = current.MatchId,
+                                MatchName = current.MatchName,
+                                Mid = current.Mid,
+                                OrderNumber = current.OrderNumber,
+                            };
+                            update_oldList.Add(nupdate);
+                            }
 
-                }
-                catch (Exception)
-                {
-                    DB.Rollback();
-                    throw;
-                }
+                        }
+                    }
+
+                    if (add_oldList.Count>0)
+                    {
+                        DB.GetDal<C_CTZQ_Match>().BulkAdd(add_oldList);
+                        CTZQCacheDB.Concat(add_oldList);
+                    }
+                    if (update_oldList.Count>0)
+                    {
+                        DB.Begin();
+                        try
+                        {
+                            foreach (var item in update_oldList)
+                            {
+                                DB.GetDal<C_CTZQ_Match>().Update(b => new C_CTZQ_Match
+                                {
+
+                                    Color = item.Color,
+                                    GuestTeamHalfScore = item.GuestTeamHalfScore,
+                                    GuestTeamScore = item.GuestTeamScore,
+                                    GuestTeamStanding = item.GuestTeamStanding,
+                                    GuestTeamId = item.GuestTeamId,
+                                    GuestTeamName = item.GuestTeamName,
+                                    HomeTeamHalfScore = item.HomeTeamHalfScore,
+                                    HomeTeamId = item.HomeTeamId,
+                                    HomeTeamName = item.HomeTeamName,
+                                    HomeTeamScore = item.HomeTeamScore,
+                                    HomeTeamStanding = item.HomeTeamStanding,
+                                    MatchResult = item.MatchResult,
+                                    MatchStartTime = item.MatchStartTime,
+                                    MatchState = item.MatchState,
+                                    UpdateTime = item.UpdateTime,
+                                }, b => b.Id == item.Id);
+                            }
+
+                            DB.Commit();
+                            //更新内存数据库
+                            foreach (var current in update_oldList)
+                            {
+                                var old = CTZQCacheDB.FirstOrDefault(p => p.Id == current.Id);
+                                old.Color = current.Color;
+                                old.GuestTeamHalfScore = current.GuestTeamHalfScore;
+                                old.GuestTeamScore = current.GuestTeamScore;
+                                old.GuestTeamStanding = current.GuestTeamStanding;
+                                old.GuestTeamId = current.GuestTeamId;
+                                old.GuestTeamName = current.GuestTeamName;
+                                old.HomeTeamHalfScore = current.HomeTeamHalfScore;
+                                old.HomeTeamId = current.HomeTeamId;
+                                old.HomeTeamName = current.HomeTeamName;
+                                old.HomeTeamScore = current.HomeTeamScore;
+                                old.HomeTeamStanding = current.HomeTeamStanding;
+                                old.MatchResult = current.MatchResult;
+                                old.MatchStartTime = current.MatchStartTime;
+                                old.MatchState = current.MatchState;
+                                old.UpdateTime = current.UpdateTime;
+                            }
+
+                        }
+                        catch (Exception)
+                        {
+                            DB.Rollback();
+                            throw;
+                        }
+
+                    }
+                
+
+                
+                //  var oldList = manager.QueryCTZQMatchListById(array);
+                //try
+                //{
+
+                //DB.Begin();
+                //foreach (var item in array)
+                //{
+                //    var old = oldList.FirstOrDefault(p => p.Id == item);
+                //    var current = list.FirstOrDefault(p => p.Id == item);
+                //    if (current == null)
+                //        continue;
+                //    if (old == null)
+                //    {
+                //        //重新添加
+                //        //var entity = new CTZQ_Match();
+                //        //ObjectConvert.ConverInfoToEntity<MatchBiz.Core.CTZQ_MatchInfo, CTZQ_Match>(current, ref entity);
+                //        DB.GetDal<C_CTZQ_Match>().Add(new C_CTZQ_Match
+                //        {
+                //            Color = current.Color,
+                //            GuestTeamHalfScore = current.GuestTeamHalfScore,
+                //            GuestTeamScore = current.GuestTeamScore,
+                //            GuestTeamStanding = int.Parse(current.GuestTeamStanding),
+                //            GuestTeamId = current.GuestTeamId,
+                //            GuestTeamName = current.GuestTeamName,
+                //            HomeTeamHalfScore = current.HomeTeamHalfScore,
+                //            HomeTeamId = current.HomeTeamId,
+                //            HomeTeamName = current.HomeTeamName,
+                //            HomeTeamScore = current.HomeTeamScore,
+                //            HomeTeamStanding =int.Parse( current.HomeTeamStanding),
+                //            MatchResult = current.MatchResult,
+                //            MatchStartTime = DateTime.Parse(current.MatchStartTime),
+                //            MatchState =(int) current.MatchState,
+                //            UpdateTime = DateTime.Parse(current.UpdateTime),
+                //            GameCode = current.GameCode,
+                //            GameType = current.GameType,
+                //            Id = current.Id,
+                //            IssuseNumber = current.IssuseNumber,
+                //            MatchId = current.MatchId,
+                //            MatchName = current.MatchName,
+                //            Mid = current.Mid,
+                //            OrderNumber = current.OrderNumber,
+                //        });
+                //        continue;
+                //    }
+                //    old.Color = current.Color;
+                //    old.GuestTeamHalfScore = current.GuestTeamHalfScore;
+                //    old.GuestTeamScore = current.GuestTeamScore;
+                //    old.GuestTeamStanding = int.Parse(current.GuestTeamStanding);
+                //    old.GuestTeamId = current.GuestTeamId;
+                //    old.GuestTeamName = current.GuestTeamName;
+                //    old.HomeTeamHalfScore = current.HomeTeamHalfScore;
+                //    old.HomeTeamId = current.HomeTeamId;
+                //    old.HomeTeamName = current.HomeTeamName;
+                //    old.HomeTeamScore = current.HomeTeamScore;
+                //    old.HomeTeamStanding = int.Parse(current.HomeTeamStanding);
+                //    old.MatchResult = current.MatchResult;
+                //    old.MatchStartTime = DateTime.Parse(current.MatchStartTime);
+                //    old.MatchState = (int)current.MatchState;
+                //    old.UpdateTime = DateTime.Parse(current.UpdateTime);
+                //    DB.GetDal<C_CTZQ_Match>().Update(old);
+                //}
+
+                //DB.Commit();
+
+                //}
+                //catch (Exception)
+                //{
+                //    DB.Rollback();
+                //    throw;
+                //}
             }
         }
 
@@ -2029,7 +2217,29 @@ namespace KaSon.FrameWork.ORM.Helper
 
             return documents;
         }
+        private List<T> LoadJCZQMatchListEx<T>(string tableName)
+        {
+            //var fileName = Path.Combine(_baseDir, string.Format(@"{0}\Match_List.json", "JCZQ"));
+            //var fileName = string.Format(@"{1}\{0}\Match_List_FB.json", "JCZQ", _baseDir);
+            ////if (!File.Exists(fileName))
+            ////    throw new ArgumentException("未找到数据文件" + fileName);
 
+            //var json = ReadFileString(fileName);
+            //if (string.IsNullOrEmpty(json))
+            //    return new List<JCZQ_MatchInfo>();
+            //return JsonSerializer.Deserialize<List<JCZQ_MatchInfo>>(json);
+
+
+            var coll = mDB.GetCollection<T>(tableName);
+            var builder = Builders<T>.Filter;
+            // DateTime startTime = DateTime.Now.AddMonths(1);
+            //  DateTime startTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 1, 1, 12, 0, 0, DateTimeKind.Utc);
+
+            //var filter = builder.Ne("IssuseNumber", ""); //& builder.Lte("GameCode", gameType) & builder.Lte("IssuseNumber", issuseNumber);
+            var documents = coll.Find<T>(null).ToList();
+
+            return documents;
+        }
         private List<JCZQ_SJBMatchInfo> LoadJCZQ_SJB_GJ_MatchList()
         {
             //var fileName = string.Format(@"{1}\{0}\SJB_GJ.json", "SJB", _baseDir);
@@ -2076,9 +2286,9 @@ namespace KaSon.FrameWork.ORM.Helper
             var documents = coll.Find<JCZQ_OZBMatchInfo>(null).ToList();
             return documents;
         }
-        public void Update_JCZQ_MatchList(string[] matchIdArray)
+        public void Update_JCZQ_MatchList(string tablename,string[] matchIdArray)
         {
-            var matchInfoList = LoadJCZQMatchList();
+            var matchInfoList = LoadJCZQMatchListEx<JCZQ_MatchInfo>(tablename);
             UpdateJCZQMatch(matchIdArray, matchInfoList);
             //try
             //{
@@ -2217,9 +2427,10 @@ namespace KaSon.FrameWork.ORM.Helper
             RedisMatchBusiness.ReloadCurrentJCZQMatch();
         }
 
-        public void Update_JCZQ_MatchResultList(string[] matchIdArray)
+        public void Update_JCZQ_MatchResultList(string tablename,string[] matchIdArray)
         {
-            var matchResultList = LoadJCZQMatchResultList();
+            var matchResultList = LoadJCZQMatchListEx<JCZQ_MatchResultInfo>(tablename);
+          //  var matchResultList = LoadJCZQMatchResultList();
             //开启事务
             var manager = new JCZQMatchManager();
             using (manager.DB)

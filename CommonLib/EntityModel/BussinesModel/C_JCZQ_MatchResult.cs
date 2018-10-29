@@ -13,7 +13,7 @@ namespace EntityModel
     ///</summary>
     [ProtoContract]
     [Entity("C_JCZQ_MatchResult",Type = EntityType.Table)]
-    public class C_JCZQ_MatchResult: ISportResult
+    public class C_JCZQ_MatchResult: ISportResult, IBallBaseInfo
     { 
         public C_JCZQ_MatchResult()
         {
@@ -160,6 +160,29 @@ namespace EntityModel
                     return BQC_Result;
             }
             return string.Empty;
+        }
+        public override bool Equals(object obj)
+        {
+            var t = obj as C_JCZQ_MatchResult;
+            if (t.HalfHomeTeamScore != this.HalfHomeTeamScore
+                || t.HalfGuestTeamScore != this.HalfGuestTeamScore
+                || t.FullHomeTeamScore != this.FullHomeTeamScore
+                || t.FullGuestTeamScore != this.FullGuestTeamScore
+                || t.SPF_Result != this.SPF_Result
+                || t.SPF_SP != this.SPF_SP
+                || t.ZJQ_Result != this.ZJQ_Result
+                || t.ZJQ_SP != this.ZJQ_SP
+                || t.BF_Result != this.BF_Result
+                || t.BF_SP != this.BF_SP
+                || t.BQC_Result != this.BQC_Result
+                || t.BQC_SP != this.BQC_SP
+                || t.MatchId != this.MatchId
+                || t.MatchData != this.MatchData
+                || t.MatchNumber != this.MatchNumber
+                || t.MatchState != this.MatchState
+                )
+                return false;
+            return true;
         }
     }
 }

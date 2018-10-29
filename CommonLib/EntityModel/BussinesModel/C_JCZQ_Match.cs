@@ -150,5 +150,54 @@ namespace EntityModel
             [ProtoMember(22)]
             [Field("MatchStopDesc")]
             public string MatchStopDesc{ get; set; }
+
+        /// <summary>
+        /// 限玩法列表
+        /// </summary>
+        // public string PrivilegesType { get; set; }
+        public string State { get; set; }
+        public int FXId { get; set; }
+        public string BRQSPF { get; set; }
+        public string SPF { get; set; }
+        public string BF { get; set; }
+        public string BQC { get; set; }
+        public string ZJQ { get; set; }
+
+        public string Hi { get; set; }
+        public string Gi { get; set; }
+
+        public string HRank { get; set; }
+        public string GRank { get; set; }
+
+        public string HLg { get; set; }
+        public string GLg { get; set; }
+
+        //public string MatchStopDesc { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            var t = obj as C_JCZQ_Match;
+            if (t.StartDateTime != this.StartDateTime
+                || t.DSStopBettingTime != this.DSStopBettingTime
+                || t.FSStopBettingTime != this.FSStopBettingTime
+                || t.LeagueColor != this.LeagueColor
+                || t.Mid != this.Mid
+                || t.State != this.State
+                || t.LeagueId != this.LeagueId
+                || t.HomeTeamId != this.HomeTeamId
+                || t.HomeTeamName != this.HomeTeamName
+                || t.GuestTeamId != this.GuestTeamId
+                || t.GuestTeamName != this.GuestTeamName
+                || t.WinOdds != this.WinOdds
+                || t.FlatOdds != this.FlatOdds
+                || t.LoseOdds != this.LoseOdds
+                || t.MatchId != this.MatchId
+                || t.MatchData != this.MatchData
+                || t.MatchNumber != this.MatchNumber
+                || t.PrivilegesType != this.PrivilegesType
+                )
+                return false;
+            return true;
+        }
     }
 }

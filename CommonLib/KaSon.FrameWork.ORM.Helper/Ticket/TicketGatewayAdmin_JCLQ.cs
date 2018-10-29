@@ -721,9 +721,9 @@ namespace KaSon.FrameWork.ORM.Helper
                 }
             }
         }
-        public void UpdateOddsList_JCZQ_SPF(string gameCode, string gameType, string[] matchIdList, bool isDS)
+        public void UpdateOddsList_JCZQ_SPF(string tabname,string gameCode, string gameType, string[] matchIdList, bool isDS)
         {
-            var oddsList = GetOddsList_JingCai<JCLQ_SF_SPInfo>(gameCode, gameType, isDS ? "_DS" : string.Empty);
+            var oddsList = GetOddsList_JingCaiZQ<JCLQ_SF_SPInfo>(tabname, gameCode, gameType, isDS ? "_DS" : string.Empty);
             var oddsManager = new JCLQ_OddsManager();
             using (oddsManager.DB)
             {
@@ -800,9 +800,9 @@ namespace KaSon.FrameWork.ORM.Helper
             }
         }
 
-        public void UpdateOddsList_JCZQ_BRQSPF(string gameCode, string gameType, string[] matchIdList, bool isDS)
+        public void UpdateOddsList_JCZQ_BRQSPF(string tbname, string gameCode, string gameType, string[] matchIdList, bool isDS)
         {
-            var oddsList = GetOddsList_JingCai<JCZQ_BRQSPF_SPInfo>(gameCode, gameType, isDS ? "_DS" : string.Empty);
+            var oddsList = GetOddsList_JingCaiZQ<JCZQ_BRQSPF_SPInfo>(tbname, gameCode, gameType, isDS ? "_DS" : string.Empty);
             var oddsManager = new JCLQ_OddsManager();
             using (oddsManager.DB)
             {
@@ -879,9 +879,9 @@ namespace KaSon.FrameWork.ORM.Helper
             }
         }
 
-        public void UpdateOddsList_JCZQ_ZJQ(string gameCode, string gameType, string[] matchIdList, bool isDS)
+        public void UpdateOddsList_JCZQ_ZJQ(string tbname, string gameCode, string gameType, string[] matchIdList, bool isDS)
         {
-            var oddsList = GetOddsList_JingCai<JCZQ_ZJQ_SPInfo>(gameCode, gameType, isDS ? "_DS" : string.Empty);
+            var oddsList = GetOddsList_JingCaiZQ<JCZQ_ZJQ_SPInfo>(tbname, gameCode, gameType, isDS ? "_DS" : string.Empty);
             var oddsManager = new JCLQ_OddsManager();
             using (oddsManager.DB)
             {
@@ -958,9 +958,9 @@ namespace KaSon.FrameWork.ORM.Helper
             }
         }
 
-        public void UpdateOddsList_JCZQ_BQC(string gameCode, string gameType, string[] matchIdList, bool isDS)
+        public void UpdateOddsList_JCZQ_BQC(string tbname, string gameCode, string gameType, string[] matchIdList, bool isDS)
         {
-            var oddsList = GetOddsList_JingCai<JCZQ_BQC_SPInfo>(gameCode, gameType, isDS ? "_DS" : string.Empty);
+            var oddsList = GetOddsList_JingCaiZQ<JCZQ_BQC_SPInfo>(tbname, gameCode, gameType, isDS ? "_DS" : string.Empty);
             var oddsManager = new JCLQ_OddsManager();
             using (oddsManager.DB)
             {
@@ -1037,9 +1037,9 @@ namespace KaSon.FrameWork.ORM.Helper
             }
         }
 
-        public void UpdateOddsList_JCZQ_BF(string gameCode, string gameType, string[] matchIdList, bool isDS)
+        public void UpdateOddsList_JCZQ_BF(string tbname, string gameCode, string gameType, string[] matchIdList, bool isDS)
         {
-            var oddsList = GetOddsList_JingCai<JCZQ_BF_SPInfo>(gameCode, gameType, isDS ? "_DS" : string.Empty);
+            var oddsList = GetOddsList_JingCaiZQ<JCZQ_BF_SPInfo>(tbname,gameCode, gameType, isDS ? "_DS" : string.Empty);
             var oddsManager = new JCLQ_OddsManager();
             using (oddsManager.DB)
             {
@@ -1443,6 +1443,14 @@ namespace KaSon.FrameWork.ORM.Helper
          //T_JCLQ_Odds_RFSF
             string name = typeof(T).Name;
             var coll = MonDB.GetCollection<T>(name);
+            var documents = coll.Find<T>(null).ToList();
+            return documents;
+        }
+        private IList<T> GetOddsList_JingCaiZQ<T>(string tbName,string gameCode, string gameType, string flag)
+        {//T_JCLQ_Odds_SF
+         //T_JCLQ_Odds_RFSF
+          //  string name = typeof(T).Name;
+            var coll = MonDB.GetCollection<T>(tbName);
             var documents = coll.Find<T>(null).ToList();
             return documents;
         }

@@ -16,6 +16,11 @@ using KaSon.FrameWork.Common.Cryptography;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using KaSon.FrameWork.ORM.Helper;
+using System.Threading.Tasks;
+using EntityModel.ExceptionExtend;
+using System.Threading;
+using EntityModel.LotteryJsonInfo;
+using EntityModel.CoreModel;
 
 namespace Lottery.CrawGetters.MatchBizGetter
 {
@@ -26,7 +31,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
     // <summary>
     /// 采集传统足球赛事数据
     /// </summary>
-    public class CTZQMatch //: IWindowsService
+    public class CTZQMatch_AutoCollect : IBallAutoCollect
     {
       //  private ILogWriter _logWriter = null;
         private const string logCategory = "Services.Info";
@@ -34,25 +39,71 @@ namespace Lottery.CrawGetters.MatchBizGetter
         private const string logErrorCategory = "Services.Error";
         private const string logErrorSource = "Auto_Collect_CTZQMatch_Error";
 
-        private bool BeStop = true;
+        private long BeStop = 0;
         private System.Timers.Timer timer = null;
         private int CTZQ_advanceMinutes = 0;
         private string SavePath = string.Empty;
-        private ILogger<CTZQMatch> _logWriter = null;
+        private ILogger<CTZQMatch_AutoCollect> _logWriter = null;
         //private MatchManager manager = new MatchManager(DbAccess_Match_Helper.DbAccess);
-      //  private static readonly ILog logger = LogManager.GetLogger(CTZQMatch);
-        public void Start( string gameCode)
+        //  private static readonly ILog logger = LogManager.GetLogger(CTZQMatch);
+        //public void Start( string gameCode)
+        //{
+        //    gameCode = gameCode.ToUpper();
+        //    logInfoSource += gameCode;
+        //  //  _logWriter = logWriter;
+
+        //    BeStop = false;
+        ////    CTZQ_advanceMinutes = ServiceHelper.Get_CTZQ_AdvanceMinutes();
+        // //   CollectMatchs(gameCode);
+        //}
+        public string Category { get; set; }
+        public string Key { get; set; }
+        private Task thread = null;
+        public void Start(string gameCode)
         {
             gameCode = gameCode.ToUpper();
             logInfoSource += gameCode;
-          //  _logWriter = logWriter;
+            //  _logWriter = logWriter;
 
-            BeStop = false;
-        //    CTZQ_advanceMinutes = ServiceHelper.Get_CTZQ_AdvanceMinutes();
-         //   CollectMatchs(gameCode);
+            BeStop = 0;
+            if (thread != null)
+            {
+                throw new LogicException("已经运行");
+            }
+           // gameCode = gameCode.ToUpper();
+            BeStop = 0;
+            // fn("",null);
+            thread = Task.Factory.StartNew(() =>
+            {
+               // ConcurrentDictionary<string, string> all = new ConcurrentDictionary<string, string>();
+                Dictionary<string, string> dic = null;
+                while (Interlocked.Read(ref BeStop) == 0)
+                {
+                    ////TODO：销售期间，暂停采集
+                    try
+                    {
+
+
+                        CollectCTZQMatchCore(gameCode);
+
+                    }
+                    catch 
+                    {
+                        Thread.Sleep(10000);
+                    }
+                    finally
+                    {
+                        Thread.Sleep(10000);
+                    }
+                }
+            });
+            //  thread.Start();
+
+
         }
+
         private IMongoDatabase mDB;
-        public CTZQMatch(IMongoDatabase _mDB)
+        public CTZQMatch_AutoCollect(IMongoDatabase _mDB)
         {
             mDB = _mDB;
         }
@@ -154,14 +205,14 @@ namespace Lottery.CrawGetters.MatchBizGetter
                     throw new Exception("查询奖期列表数据失败 - " + ex.Message, ex);
                 }
                 var source = ServiceHelper.GetSystemConfig("CTZQ_Match_Source");
-                var gameIssuseList = new List<C_CTZQ_GameIssuse>();
+                var gameIssuseList = new List<CTZQ_IssuseInfo>();
                 foreach (var issuseNumber in issuseNumberList.Distinct())
                 {
                     var stopTime = DateTime.Now;
                     var ds_stopTime = DateTime.Now;
                     var officialStopTime = DateTime.Now;
                     var oddList = new List<C_CTZQ_Odds>();
-                    var matchCollection = new List<C_CTZQ_Match>();
+                    var matchCollection = new List<CTZQ_MatchInfo>();
                     if (source == "ok" && (gameCode == "T14C" || gameCode == "TR9"))
                     {
                         var url = GetTeamInfoUrl_Okooo(gameCode, issuseNumber);
@@ -192,8 +243,8 @@ namespace Lottery.CrawGetters.MatchBizGetter
                         #region 写入队伍信息
 
                         var matchList = BuildNewCTZQMatchList(matchCollection, gameCode, issuseNumber);
-                        var addList = new List<C_CTZQ_Match>();
-                        var updateList = new List<C_CTZQ_Match>();
+                        var addList = new List<CTZQ_MatchInfo>();
+                        var updateList = new List<CTZQ_MatchInfo>();
                         //var p = new ObjectPersistence(DbAccess_Match_Helper.DbAccess);
                         foreach (var item in matchList)
                         {
@@ -213,7 +264,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
 
                             //发送 传统足球队伍 添加 通知
                             var innerKey = string.Format("{0}_{1}", "CTZQ_Match", "Add");
-                            new Sports_Business().UpdateLocalData(param, paramT,  NoticeType.CTZQ_Match, innerKey);
+                            new Sports_Business(this.mDB).UpdateLocalData(param, paramT,  NoticeType.CTZQ_Match, innerKey);
                           //  ServiceHelper.AddAndSendNotification(param, paramT, innerKey, NoticeType.CTZQ_Match);
                         }
                         if (updateList.Count > 0)
@@ -227,7 +278,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
 
                             //发送 传统足球队伍 修改 通知
                             var innerKey = string.Format("{0}_{1}", "CTZQ_Match", "Update");
-                            new Sports_Business().UpdateLocalData(param, paramT, NoticeType.CTZQ_Match, innerKey);
+                            new Sports_Business(this.mDB).UpdateLocalData(param, paramT, NoticeType.CTZQ_Match, innerKey);
                         }
 
                         #endregion
@@ -266,7 +317,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
                             //发送 队伍赔率 添加 通知
                             var innerKey = string.Format("{0}_{1}", "CTZQ_Odds", "Add");
                             if (!string.IsNullOrEmpty(param))
-                                new Sports_Business().UpdateLocalData(param, "", NoticeType.CTZQ_Odds, innerKey);
+                                new Sports_Business(this.mDB).UpdateLocalData(param, "", NoticeType.CTZQ_Odds, innerKey);
                           //  ServiceHelper.AddAndSendNotification(param, "", innerKey, NoticeType.CTZQ_Odds);
 
                         }
@@ -282,7 +333,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
                             //发送 队伍赔率 修改 通知
                             var innerKey = string.Format("{0}_{1}", "CTZQ_Odds", "Update");
                             if (!string.IsNullOrEmpty(param))
-                                new Sports_Business().UpdateLocalData(param, "", NoticeType.CTZQ_Odds, innerKey);
+                                new Sports_Business(this.mDB).UpdateLocalData(param, "", NoticeType.CTZQ_Odds, innerKey);
                            // ServiceHelper.AddAndSendNotification(param, "", innerKey, NoticeType.CTZQ_Odds);
                         }
 
@@ -317,7 +368,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
                         matchXmlToZGJC = matchXmlToZGJC.Replace(");", "");
                         var param = KaSon.FrameWork.Common.JSON.JsonHelper.Decode(matchXmlToZGJC);
                         IssuseStartTime = param.result.start;
-                        var IssuseStopTime = param.result.end;
+                        string IssuseStopTime = param.result.end;
                         stopTime = DateTime.Parse(IssuseStopTime);
                         #region old
                         //var startTime = matchXmlToZGJC.IndexOf("开售时间:");
@@ -335,19 +386,19 @@ namespace Lottery.CrawGetters.MatchBizGetter
                     }
                     finally
                     {
-                        //gameIssuseList.Add(new C_CTZQ_GameIssuse
-                        //{
-                        //    GameCode = "CTZQ",
-                        //    GameType = gameCode,
-                        //    IssuseNumber = issuseNumber,
-                        //    Id = string.Format("{0}|{1}|{2}", "CTZQ", gameCode, issuseNumber),
-                        //    CreateTime = DateTime.Now,
-                        //    WinNumber = string.Empty,
-                        //    DSStopBettingTime = stopTime.AddMinutes(CTZQ_advanceMinutes).AddMinutes(-10),//.ToString("yyyy-MM-dd HH:mm:ss"),
-                        //    StopBettingTime = stopTime.AddMinutes(CTZQ_advanceMinutes).ToString("yyyy-MM-dd HH:mm:ss"),
-                        //    StartTime = string.IsNullOrEmpty(IssuseStartTime) ? DateTime.Now.ToString("yyyy-MM-dd HH:mm:sss") : DateTime.Parse(IssuseStartTime).ToString("yyyy-MM-dd HH:mm:sss"),
-                        //    OfficialStopTime = stopTime.ToString("yyyy-MM-dd HH:mm:ss")
-                        //});
+                        gameIssuseList.Add(new CTZQ_IssuseInfo
+                        {
+                            GameCode = "CTZQ",
+                            GameType = gameCode,
+                            IssuseNumber = issuseNumber,
+                            Id = string.Format("{0}|{1}|{2}", "CTZQ", gameCode, issuseNumber),
+                            CreateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                            WinNumber = string.Empty,
+                            StopBettingTime = stopTime.AddMinutes(CTZQ_advanceMinutes).AddMinutes(-10).ToString("yyyy-MM-dd HH:mm:ss"),
+                            DSStopBettingTime = stopTime.AddMinutes(CTZQ_advanceMinutes).ToString("yyyy-MM-dd HH:mm:ss"),
+                            StartTime = string.IsNullOrEmpty(IssuseStartTime) ? DateTime.Now.ToString("yyyy-MM-dd HH:mm:sss") : DateTime.Parse(IssuseStartTime).ToString("yyyy-MM-dd HH:mm:sss"),
+                            OfficialStopTime = stopTime.ToString("yyyy-MM-dd HH:mm:ss")
+                        });
                     }
 
                     #endregion
@@ -362,8 +413,8 @@ namespace Lottery.CrawGetters.MatchBizGetter
                     // 要测试，如果是追加的情况
                     var issuseNewList = BuildNewGameIssuse(gameIssuseList, gameCode);
 
-                    var addList = new List<C_CTZQ_GameIssuse>();
-                    var updateList = new List<C_CTZQ_GameIssuse>();
+                    var addList = new List<CTZQ_IssuseInfo>();
+                    var updateList = new List<CTZQ_IssuseInfo>();
                     foreach (var item in issuseNewList)
                     {
                         if (item.Key == DBChangeState.Add)
@@ -383,7 +434,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
                         //发送 奖期数据 添加 通知
                         var innerKey = string.Format("{0}_{1}", "CTZQ_Issuse", "Add");
                         if (!string.IsNullOrEmpty(param))
-                            new Sports_Business().UpdateLocalData(param, paramT, NoticeType.CTZQ_Issuse, innerKey);
+                            new Sports_Business(this.mDB).UpdateLocalData(param, paramT, NoticeType.CTZQ_Issuse, innerKey);
                         //ServiceHelper.AddAndSendNotification(param, paramT, innerKey, NoticeType.CTZQ_Issuse);
                     }
                     if (updateList.Count > 0)
@@ -398,7 +449,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
                         //发送 奖期数据 修改 通知
                         var innerKey = string.Format("{0}_{1}", "CTZQ_Issuse", "Update");
                         if (!string.IsNullOrEmpty(param))
-                            new Sports_Business().UpdateLocalData(param, paramT, NoticeType.CTZQ_Issuse, innerKey);
+                            new Sports_Business(this.mDB).UpdateLocalData(param, paramT, NoticeType.CTZQ_Issuse, innerKey);
                         //ServiceHelper.AddAndSendNotification(param, paramT, innerKey, NoticeType.CTZQ_Issuse);
                     }
 
@@ -419,7 +470,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
 
         public void Stop()
         {
-            BeStop = true;
+            BeStop = 1;
             if (timer != null)
                 timer.Stop();
         }
@@ -438,20 +489,38 @@ namespace Lottery.CrawGetters.MatchBizGetter
 
         #region 处理奖期数据
 
-        private List<KeyValuePair<DBChangeState, C_CTZQ_GameIssuse>> BuildNewGameIssuse(List<C_CTZQ_GameIssuse> currentList, string gameCode)
+        private List<KeyValuePair<DBChangeState, CTZQ_IssuseInfo>> BuildNewGameIssuse(List<CTZQ_IssuseInfo> currentList, string GameType)
         {
-            var result = new List<KeyValuePair<DBChangeState, C_CTZQ_GameIssuse>>();
+            var result = new List<KeyValuePair<DBChangeState, CTZQ_IssuseInfo>>();
             if (currentList.Count == 0) return result;
             //var issuseFileFullName = BuildFileFullName(string.Format("Match_{0}_List.json", gameCode), issuseNumber);
             //var customerSavePath = new string[] { "CTZQ", issuseNumber };
 
-            string currentListStr = JSONHelper.Serialize(currentList);
+            string currentListStr =KaSon.FrameWork.Common.JSON. JsonHelper.Serialize(currentList);
 
         //    string tablename = Lottery.CrawGetters.InitConfigInfo.MongoTableSettings["CTZQMatch"].ToString();
-            var mFilter = MongoDB.Driver.Builders<C_CTZQ_GameIssuse>.Filter.Eq("GameCode", gameCode);// & Builders<BsonDocument>.Filter.Eq("IssuseNumber", issuseNumber);
+            var mFilter = MongoDB.Driver.Builders<CTZQ_IssuseInfo>.Filter.Eq(b=>b.GameType, GameType) & Builders<CTZQ_IssuseInfo>.Filter.In(b=>b.IssuseNumber, currentList.Select(b=>b.IssuseNumber));
             try
             {
-                var coll = mDB.GetCollection<C_CTZQ_GameIssuse>("C_CTZQ_GameIssuse");
+                var coll = mDB.GetCollection<CTZQ_IssuseInfo>("CTZQ_IssuseInfo");
+                var GameTypekeys = Builders<CTZQ_IssuseInfo>.IndexKeys.Ascending(b=>b.GameType);
+                var IssuseNumberkeys = Builders<CTZQ_IssuseInfo>.IndexKeys.Ascending(b => b.IssuseNumber);
+
+               // var keys= Builders<C_CTZQ_GameIssuse>.IndexKeys.Combine(GameTypekeys, IssuseNumberkeys);
+              //  IList<IndexKeysDefinition<C_CTZQ_GameIssuse>> LIST = new List<IndexKeysDefinition<C_CTZQ_GameIssuse>>();
+                //  var options = new CreateOneIndexOptions() { Unique = true };
+                //  Builders<C_CTZQ_GameIssuse> .IndexOptions.SetUnique(true);
+                // var indexModel = new CreateIndexModel<C_CTZQ_GameIssuse>(nameof(C_CTZQ_GameIssuse go));
+                //coll.Indexes.CreateOne(keys, options);
+                //coll.i
+ //coll.Indexes.CreateOne(Builders<C_CTZQ_GameIssuse>.IndexKeys.Combine(
+ //      Builders<C_CTZQ_GameIssuse>.IndexKeys.Ascending(b=>b.GameType),
+ //      Builders<C_CTZQ_GameIssuse>.IndexKeys.Ascending(b => b.IssuseNumber)), new CreateIndexOptions()
+ //      {     Name= "GameIssuse",
+ //          Unique = true,
+ //          Sparse = true
+ //      });
+                //coll.c
                 // var count = coll.Find(mFilter).CountDocuments();
                 var document = coll.Find(mFilter).ToList();
                 // BsonDocument one = coll.fincou;
@@ -468,7 +537,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
                     //    //成功修改一行以上
                     //}
                     coll.DeleteMany(mFilter);
-                    coll.InsertMany(currentList);
+                   // coll.InsertMany(currentList);
 
                     foreach (var item in newList)
                     {
@@ -476,12 +545,12 @@ namespace Lottery.CrawGetters.MatchBizGetter
                         if (old != null)
                         {
                             oldList.Remove(old);
-                            result.Add(new KeyValuePair<DBChangeState, C_CTZQ_GameIssuse>(DBChangeState.Update, item));
+                            result.Add(new KeyValuePair<DBChangeState, CTZQ_IssuseInfo>(DBChangeState.Update, item));
                         }
                         else
                         {
                             oldList.RemoveAt(0);
-                            result.Add(new KeyValuePair<DBChangeState, C_CTZQ_GameIssuse>(DBChangeState.Add, item));
+                            result.Add(new KeyValuePair<DBChangeState, CTZQ_IssuseInfo>(DBChangeState.Add, item));
                         }
                         oldList.Add(item);
                     }
@@ -491,11 +560,11 @@ namespace Lottery.CrawGetters.MatchBizGetter
                 {
                     foreach (var item in currentList)
                     {
-                        result.Add(new KeyValuePair<DBChangeState, C_CTZQ_GameIssuse>(DBChangeState.Add, item));
+                        result.Add(new KeyValuePair<DBChangeState, CTZQ_IssuseInfo>(DBChangeState.Add, item));
                     }
-                    coll.InsertMany(currentList);
+                  
                 }
-
+                coll.InsertMany(currentList);
             }
             catch (Exception)
             {
@@ -507,9 +576,9 @@ namespace Lottery.CrawGetters.MatchBizGetter
             return result;
         }
 
-        private List<C_CTZQ_GameIssuse> GetNewGameIssuse(List<C_CTZQ_GameIssuse> oldList, List<C_CTZQ_GameIssuse> newList)
+        private List<CTZQ_IssuseInfo> GetNewGameIssuse(List<CTZQ_IssuseInfo> oldList, List<CTZQ_IssuseInfo> newList)
         {
-            var list = new List<C_CTZQ_GameIssuse>();
+            var list = new List<CTZQ_IssuseInfo>();
             foreach (var item in newList)
             {
                 var old = oldList.FirstOrDefault(p => p.Id == item.Id && p.CreateTime == item.CreateTime);
@@ -680,11 +749,11 @@ namespace Lottery.CrawGetters.MatchBizGetter
             return list;
         }
 
-        public List<C_CTZQ_Match> GetCTZQ_MatchList_500W(string gameCode, string issuseNumber, string xmlContent, out DateTime stopTime, out List<C_CTZQ_Odds> oddList)
+        public List<CTZQ_MatchInfo> GetCTZQ_MatchList_500W(string gameCode, string issuseNumber, string xmlContent, out DateTime stopTime, out List<C_CTZQ_Odds> oddList)
         {
             stopTime = DateTime.Now;
             oddList = new List<C_CTZQ_Odds>();
-            var list = new List<C_CTZQ_Match>();
+            var list = new List<CTZQ_MatchInfo>();
             var t14cFXDic = new Dictionary<string, string>();
             var t6bqcFXDic = new Dictionary<string, string>();
             var t4cjqFXDic = new Dictionary<string, string>();
@@ -732,20 +801,14 @@ namespace Lottery.CrawGetters.MatchBizGetter
                                 fxId = int.Parse(strL[1]);
                             }
                         }
-                        int homestanding = item.Attributes["homestanding"].Value == "" ? 0 : int.Parse(item.Attributes["homestanding"].Value);
-
-                        int gueststanding = item.Attributes["gueststanding"].Value == "" ? 0 : int.Parse(item.Attributes["gueststanding"].Value);
-
-                        int hhomescore = item.Attributes["homestanding"]==null ? -1 : int.Parse(item.Attributes["homestanding"].Value);
-                     //   int homestanding = item.Attributes["homestanding"] == null ? -1 : int.Parse(item.Attributes["homestanding"].Value);
-
-                        list.Add(new C_CTZQ_Match
+                       
+                        list.Add(new CTZQ_MatchInfo
                         {
                             GameCode = "CTZQ",
                             IssuseNumber = issuseNumber,
                             OrderNumber = orderNumber,
                             Id = id,
-                            MatchStartTime = GetMatchStartTime(item.Attributes["resultscore"].Value),//ToString("yyyy-MM-dd HH:mm:ss"),
+                            MatchStartTime = GetMatchStartTime(item.Attributes["resultscore"].Value).ToString("yyyy-MM-dd HH:mm:ss"),
                             Color = zsMatch != null ? zsMatch.Color : backColor,
                             MatchId = zsMatch != null ? zsMatch.MatchId : matchId,
                             MatchName = matchName,
@@ -754,14 +817,14 @@ namespace Lottery.CrawGetters.MatchBizGetter
                             GuestTeamId = zsMatch != null ? zsMatch.GuestTeamId : string.Empty,
                             GuestTeamName = guestTeamName,
                             MatchState = (int)CTZQMatchState.Waiting,
-                            HomeTeamStanding = homestanding,
-                            GuestTeamStanding = gueststanding,
-                            HomeTeamHalfScore = hhomescore,// item.Attributes["hhomescore"] == null ? -1 : item.Attributes["hhomescore"].Value.GetInt32(),
+                            HomeTeamStanding = item.Attributes["homestanding"].Value,
+                            GuestTeamStanding =item.Attributes["gueststanding"].Value,
+                            HomeTeamHalfScore = item.Attributes["hhomescore"] == null ? -1 : item.Attributes["hhomescore"].Value.GetInt32(),
                             HomeTeamScore = item.Attributes["homescore"].Value.GetInt32(),
                             GuestTeamHalfScore = item.Attributes["hguestscore"] == null ? -1 : item.Attributes["hguestscore"].Value.GetInt32(),
                             GuestTeamScore = item.Attributes["guestscore"].Value.GetInt32(),
                             MatchResult = (item.Attributes["result"] == null) ? string.Empty : item.Attributes["result"].Value,
-                            UpdateTime = DateTime.Now,//.ToString("yyyy-MM-dd HH:mm:ss"),
+                            UpdateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                             GameType = gameCode,
                             Mid = zsMatch != null ? zsMatch.Mid : 0,
                             FXId = zsMatch != null ? zsMatch.FXId : fxId,
@@ -1024,53 +1087,57 @@ namespace Lottery.CrawGetters.MatchBizGetter
                 return dt;
             }
         }
-        private List<KeyValuePair<DBChangeState, C_CTZQ_Match>> BuildNewCTZQMatchList(List<C_CTZQ_Match> currentList, string gameCode, string issuseNumber)
+        private List<KeyValuePair<DBChangeState, CTZQ_MatchInfo>> BuildNewCTZQMatchList(List<CTZQ_MatchInfo> currentList, string GameType, string issuseNumber)
         {
-            var result = new List<KeyValuePair<DBChangeState, C_CTZQ_Match>>();
+            var result = new List<KeyValuePair<DBChangeState, CTZQ_MatchInfo>>();
             if (currentList.Count == 0) return result;
-            var issuseFileFullName = BuildFileFullName(string.Format("Match_{0}_List.json", gameCode), issuseNumber);
+          //  var issuseFileFullName = BuildFileFullName(string.Format("Match_{0}_List.json", gameCode), issuseNumber);
             var customerSavePath = new string[] { "CTZQ", issuseNumber };
 
-            string currentListStr = JSONHelper.Serialize(currentList);
-
-            string tablename = Lottery.CrawGetters.InitConfigInfo.MongoTableSettings["CTZQMatch"].ToString();
-            var mFilter = MongoDB.Driver.Builders<MongoDB.Bson.BsonDocument>.Filter.Eq("GameCode", gameCode) & Builders<BsonDocument>.Filter.Eq("IssuseNumber", issuseNumber);
-            try
+                  try
             {
-                var coll = mDB.GetCollection<BsonDocument>(tablename);
+                string currentListStr = KaSon.FrameWork.Common.JSON.JsonHelper.Serialize(currentList);
+
+                // string tablename = Lottery.CrawGetters.InitConfigInfo.MongoTableSettings["CTZQMatch"].ToString();IssuseNumber  IssuseNumber
+                var mFilter = MongoDB.Driver.Builders<CTZQ_MatchInfo>.Filter.Eq(b=>b.GameType, GameType) & Builders<CTZQ_MatchInfo>.Filter.Eq(b => b.IssuseNumber, issuseNumber);
+
+                var coll = mDB.GetCollection<CTZQ_MatchInfo>("CTZQ_MatchInfo");
                // var count = coll.Find(mFilter).CountDocuments();
-                var document = coll.Find(mFilter).FirstOrDefault();
+                var document = coll.Find(mFilter).ToList<CTZQ_MatchInfo>();
                 // BsonDocument one = coll.fincou;
-                var updated = Builders<BsonDocument>.Update.Set("Content", currentListStr);
-                if (document !=null)
+               // var updated = Builders<BsonDocument>.Update.Set("Content", currentListStr);
+                if (document.Count>0)
                 {//更新
                  //Thread.Sleep(2000);
-                    var text = document["Content"].ToString().Trim();//.Replace("var data=", "").Replace("];", "]");
-                   var oldList = string.IsNullOrEmpty(text) ? new List<C_CTZQ_Match>() : JSONHelper.Deserialize<List<C_CTZQ_Match>>(text);
-                    var newList = GetNewMatch(oldList, currentList);
-                    UpdateResult uresult = coll.UpdateOne(mFilter, updated);
-                    if (uresult.ModifiedCount > 0)
-                    {
-                        //成功修改一行以上
-                    }
+                  //  var text = document["Content"].ToString().Trim();//.Replace("var data=", "").Replace("];", "]");
+                 //  var oldList = string.IsNullOrEmpty(text) ? new List<CTZQ_MatchInfo>() : KaSon.FrameWork.Common.JSON.JsonHelper.Deserialize<List<CTZQ_MatchInfo>>(text);
+                    var newList = GetNewMatch(document, currentList);
+
+                    coll.DeleteMany(mFilter);
+
+                    //UpdateResult uresult = coll.UpdateOne(mFilter, updated);
+                    //if (uresult.ModifiedCount > 0)
+                    //{
+                    //    //成功修改一行以上
+                    //}
                     foreach (var item in newList)
                     {
-                        result.Add(new KeyValuePair<DBChangeState, C_CTZQ_Match>(DBChangeState.Update, item));
+                        result.Add(new KeyValuePair<DBChangeState, CTZQ_MatchInfo>(DBChangeState.Update, item));
                     }
                    
                 }
                 else {
                     foreach (var item in currentList)
                     {
-                        result.Add(new KeyValuePair<DBChangeState, C_CTZQ_Match>(DBChangeState.Add, item));
+                        result.Add(new KeyValuePair<DBChangeState, CTZQ_MatchInfo>(DBChangeState.Add, item));
                     }
-                    BsonDocument bson = new BsonDocument();
-                    bson.Add("GameCode", gameCode);
-                    bson.Add("IssuseNumber", issuseNumber);
-                    bson.Add("Content", currentListStr);
-                    coll.InsertOne(bson);
+                    //BsonDocument bson = new BsonDocument();
+                    //bson.Add("GameCode", gameCode);
+                    //bson.Add("IssuseNumber", issuseNumber);
+                    //bson.Add("Content", currentListStr);
+                   
                 }
-              
+                coll.InsertMany(currentList);
             }
             catch (Exception)
             {
@@ -1145,9 +1212,9 @@ namespace Lottery.CrawGetters.MatchBizGetter
             return result;
         }
 
-        private List<C_CTZQ_Match> GetNewMatch(List<C_CTZQ_Match> oldList, List<C_CTZQ_Match> newList)
+        private List<CTZQ_MatchInfo> GetNewMatch(List<CTZQ_MatchInfo> oldList, List<CTZQ_MatchInfo> newList)
         {
-            var list = new List<C_CTZQ_Match>();
+            var list = new List<CTZQ_MatchInfo>();
             foreach (var item in newList)
             {
                 var old = oldList.FirstOrDefault(p => p.Id == item.Id);
@@ -1168,19 +1235,19 @@ namespace Lottery.CrawGetters.MatchBizGetter
 
         #region 处理赔率数据
 
-        private List<KeyValuePair<DBChangeState, C_CTZQ_Odds>> BuildNewCTZQMatchOddsList(List<C_CTZQ_Odds> currentList, string gameCode, string issuseNumber)
+        private List<KeyValuePair<DBChangeState, C_CTZQ_Odds>> BuildNewCTZQMatchOddsList(List<C_CTZQ_Odds> currentList, string gameType, string issuseNumber)
         {
             var result = new List<KeyValuePair<DBChangeState, C_CTZQ_Odds>>();
             if (currentList.Count == 0) return result;
-            var issuseFileFullName = BuildFileFullName(string.Format("Match_{0}_Odds_List.json", gameCode), issuseNumber);
+         //   var issuseFileFullName = BuildFileFullName(string.Format("Match_{0}_Odds_List.json", gameCode), issuseNumber);
 
 
             var customerSavePath = new string[] { "CTZQ", issuseNumber };
 
-            string currentListStr = JSONHelper.Serialize(currentList);
+            string currentListStr = KaSon.FrameWork.Common.JSON.JsonHelper.Serialize(currentList);
 
           //  string tablename = Lottery.CrawGetters.InitConfigInfo.MongoTableSettings["CTZQMatch"].ToString();
-            var mFilter = MongoDB.Driver.Builders<MongoDB.Bson.BsonDocument>.Filter.Eq("GameCode", gameCode) & Builders<BsonDocument>.Filter.Eq("IssuseNumber", issuseNumber);
+            var mFilter = MongoDB.Driver.Builders<MongoDB.Bson.BsonDocument>.Filter.Eq("GameType", gameType) & Builders<BsonDocument>.Filter.Eq("IssuseNumber", issuseNumber);
 
             try
             {
@@ -1193,10 +1260,10 @@ namespace Lottery.CrawGetters.MatchBizGetter
                 {//更新
                  //Thread.Sleep(2000);
                     var text = document["Content"].ToString().Trim();//.Replace("var data=", "").Replace("];", "]");
-                    var oldList = string.IsNullOrEmpty(text) ? new List<C_CTZQ_Odds>() : JSONHelper.Deserialize<List<C_CTZQ_Odds>>(text);
+                    var oldList = string.IsNullOrEmpty(text) ? new List<C_CTZQ_Odds>() : KaSon.FrameWork.Common.JSON.JsonHelper.Deserialize<List<C_CTZQ_Odds>>(text);
                     var newList = GetNewMatchOdds(oldList, currentList);
-                    UpdateResult uresult = coll.UpdateOne(mFilter, updated);
-                    if (uresult.ModifiedCount > 0)
+                    DeleteResult uresult = coll.DeleteMany(mFilter);
+                    if (uresult.DeletedCount > 0)
                     {
                         //成功修改一行以上
                     }
@@ -1212,12 +1279,13 @@ namespace Lottery.CrawGetters.MatchBizGetter
                     {
                         result.Add(new KeyValuePair<DBChangeState, C_CTZQ_Odds>(DBChangeState.Add, item));
                     }
-                    BsonDocument bson = new BsonDocument();
-                    bson.Add("GameCode", gameCode);
-                    bson.Add("IssuseNumber", issuseNumber);
-                    bson.Add("Content", currentListStr);
-                    coll.InsertOne(bson);
+                   
                 }
+                BsonDocument bson = new BsonDocument();
+                bson.Add("GameType", gameType);
+                bson.Add("IssuseNumber", issuseNumber);
+                bson.Add("Content", currentListStr);
+                coll.InsertOne(bson);
             }
             catch (Exception)
             {

@@ -1,5 +1,6 @@
 ﻿using EntityModel;
 using EntityModel.CoreModel;
+using EntityModel.Domain.Entities;
 using EntityModel.Enum;
 using KaSon.FrameWork.Common.Utilities;
 using System;
@@ -17,7 +18,15 @@ namespace KaSon.FrameWork.ORM.Helper
             //  Session.Clear();
             return this.DB.CreateQuery<T_SingleScheme_Order>().Where(p => p.OrderId == schemeId).FirstOrDefault();
         }
-
+        public IndexMatch QueryIndexMatchByMatchId(string matchId)
+        {
+          
+            return this.DB.CreateQuery<IndexMatch>().FirstOrDefault(s => s.MatchId == matchId);
+        }
+        public void AddIndexMatch(IndexMatch entity)
+        {
+            DB.GetDal<IndexMatch>().Add(entity);
+        }
         public int QueryTicketCount(string schemeId)
         {
             //Session.Clear();

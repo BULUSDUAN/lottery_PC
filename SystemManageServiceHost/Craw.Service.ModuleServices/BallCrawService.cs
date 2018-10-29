@@ -18,6 +18,7 @@ using EntityModel.ExceptionExtend;
 using System.Threading;
 using System.Collections.Concurrent;
 using Lottery.CrawGetters.Auto;
+using Lottery.CrawGetters.MatchBizGetter;
 
 namespace Craw.Service.ModuleServices
 {
@@ -34,7 +35,10 @@ namespace Craw.Service.ModuleServices
         //    log = new Log4Log();
         //}
         ILogger<NumCrawService> _Log;
-        private static IList<Service_AutoCollectWinNumber> aotoCollectList = new List<Service_AutoCollectWinNumber>();
+        private static IList<CTZQMatch_AutoCollect> aotoCollectList = new List<CTZQMatch_AutoCollect>();
+
+        private static IList<IBallAutoCollect> BallAutoCollectList = new List<IBallAutoCollect>();
+
         private static IList<Service_AutoCollectBonusPool> aotoPoolCollectList = new List<Service_AutoCollectBonusPool>();
         private readonly CrawRepository rep;
         public BallCrawService( ILogger<NumCrawService> log, CrawRepository _rep)
@@ -42,49 +46,59 @@ namespace Craw.Service.ModuleServices
             _Log = log;
            this.rep = _rep;
         }
-       
         /// <summary>
         /// 数字彩采集开奖号-开始服务
         /// </summary>
+        /// <param name="Type"></param>
         /// <param name="gameName"></param>
         /// <returns></returns>
-        public Task<string> NumLettory_WinNumber_Start(string gameName)
+        public Task<string> CTZQMatchAndPool_Start(string Type,string gameName)
         {
-           
-            lock (aotoCollectList) {
+            lock (aotoCollectList)
+            {
+
                 bool bol = false;
                 switch (gameName)
                 {
                     //重庆时时彩
-                    case "CQSSC": //重庆时时彩
-                    case "JX11X5"://江西11选5
-                    case "SD11X5"://11选5
-                    case "GD11X5":
-                    case "GDKLSF":
-                    case "JSKS":
-                    case "SDKLPK3":
-                    case "FC3D":
-                    case "PL3":
-                    case "SSQ":
-                    case "DLT":
-                        bol = true;
-                       
+                    case "T14C": //14场胜负
+                    case "TR9"://胜负任9
+                    case "T6BQC"://6场半全
+                    case "T4CJQ": //4场进球
+
+                         bol = true;
                         break;
                     default:
                         break;
                 }
+
                 if (bol)
                 {
-                    var p = aotoCollectList.Where(b => b.Key == gameName).FirstOrDefault();
+                    IBallAutoCollect p = BallAutoCollectList.Where(b => b.Key == gameName && b.Category== Type).FirstOrDefault();
                     if (p == null)
                     {
-                        //执行任务
-                        Service_AutoCollectWinNumber auto = new Service_AutoCollectWinNumber(TimeSpan.FromSeconds(20));
-                        auto.Start(gameName, new CrawORMService(rep.MDB).Start);
-                        aotoCollectList.Add(auto);
+
+                        if (Type == "Match")//赛事
+                        {
+                            //执行任务
+                            p  = new CTZQMatch_AutoCollect(rep.MDB);
+                            p.Start(gameName);
+                            p.Key = gameName;
+                            BallAutoCollectList.Add(p);
+                        }
+                        else if (Type == "Pool")
+                        {
+                            p = new CTZQPool_AutoCollect(rep.MDB);
+                            p.Start(gameName);
+                            p.Key = gameName;
+                            BallAutoCollectList.Add(p);
+                        }
+
+                       
                     }
                 }
             }
+        
 
 
             return Task.FromResult( "数字彩采集开奖号-开始服务");
@@ -94,25 +108,17 @@ namespace Craw.Service.ModuleServices
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public Task<string> NumLettory_WinNumber_Stop(string name)
+        public Task<string> CTZQMatchAndPool_Stop(string Type, string name)
         {
             lock (aotoCollectList)
             {
                 switch (name)
                 {
-                    //重庆时时彩
-                    case "CQSSC": //重庆时时彩
-                    case "JX11X5"://江西11选5
-                    case "SD11X5"://11选5
-                    case "GD11X5":
-                    case "GDKLSF":
-                    case "JSKS":
-                    case "SDKLPK3":
-                    case "FC3D":
-                    case "PL3":
-                    case "SSQ":
-                    case "DLT":
-                        var p = aotoCollectList.Where(b => b.Key == name).FirstOrDefault();
+                    case "T14C": //14场胜负
+                    case "TR9"://胜负任9
+                    case "T6BQC"://6场半全
+                    case "T4CJQ": //4场进球
+                        IBallAutoCollect p = BallAutoCollectList.Where(b => b.Key == name && b.Category==Type).FirstOrDefault();
                         if (p != null)
                         {
                             p.Stop();
@@ -120,7 +126,7 @@ namespace Craw.Service.ModuleServices
                             //Service_AutoCollectWinNumber auto = new Service_AutoCollectWinNumber(TimeSpan.FromSeconds(20));
                             //auto.Start(name);
                             //aotoCollectList.Add(auto);
-
+                            BallAutoCollectList.Remove(p);
                         }
                         break;
                     default:
@@ -129,7 +135,7 @@ namespace Craw.Service.ModuleServices
             }
 
 
-            throw new NotImplementedException();
+            return Task.FromResult("数字彩采集开奖号-开始服务");
         }
 
         /// <summary>

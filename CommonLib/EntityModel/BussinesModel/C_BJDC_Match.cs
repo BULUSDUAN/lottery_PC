@@ -150,5 +150,8 @@ namespace EntityModel
             [ProtoMember(22)]
             [Field("PrivilegesType")]
             public string PrivilegesType{ get; set; }
+        public int FXId { get; set; }
+        public string Hi { get; set; }
+        public string Gi { get; set; }
     }
 }

@@ -20,16 +20,7 @@
   ],
   "PageRegisterDefaultRole": "User",
   "Sports_SchemeJobSeconds": 20, //追号作业时间间隔，秒单位
-  //  //彩种不出票时间段 从星期天 到 星期六
-  "CTZQ_StopTicketing": "01:00-09:00|01:00-09:00|00:00-09:00|00:00-09:00|00:00-09:00|00:00-09:00|00:00-09:00",
-  "BJDC_StopTicketing": "05:50-09:00|05:50-09:00|05:50-09:00|05:50-09:00|05:50-09:00|05:50-09:00|05:50-09:00",
-  "JCZQ_StopTicketing": "01:00-09:00|01:00-09:00|00:00-09:00|00:00-09:00|00:00-09:00|00:00-09:00|00:00-09:00",
-  "JCLQ_StopTicketing": "01:00-09:00|01:00-09:00|00:00-09:00|00:00-07:30|00:00-07:30|00:00-09:00|00:00-09:00",
-  "SSQ_StopTicketing": "19:40-21:00",
-  "DLT_StopTicketing": "19:40-21:00",
-  "FC3D_StopTicketing": "19:40-21:00",
-  "PL3_StopTicketing": "19:40-21:00",
-  "JCGJ_StopTicketing": "19:40-21:00",
+
 
 
   "SelfDomain": "http://localhost:729",
@@ -67,8 +58,18 @@
       "CollectBonusPool_InterfaceType_DLT": "aicaipiao,cailele"
     },
     "MatchSettings": {
-
-
+      "CTZQ_UseProxy": false, //传统足球采集是否使用代理
+      "JCZQ_UseProxy": false,
+      "JCLQ_UseProxy": false,
+      "BJDC_UseProxy": false,
+      "ProxyUrl": "",
+      "CTZQ_Result_Source": "310win", //采集结果来源:可配置"310win","cpdyj","aicai" 奖池采集
+      "JCZQ_Result_Source": "500wan", //采集结果来源:可配置"310win","cpdyj","aicai" 奖池采集
+      "JCZQ_AdvanceMinutes": -60, //-本地结束时间提前量
+      "FXId_Source": "okooo", //分析Id来源，310win,okooo
+      "JCZQ_Result_Interval": 60000, //采集结果频率
+      "JCZQ_Result_BuildStaticHtml_Times": "",
+      "JCLQ_AdvanceMinutes": -75
     },
     //数字彩 彩种采集停留时间间隔 单位秒
     "NumLettory_SleepTimeSpanSettings": {
@@ -82,7 +83,7 @@
       "PL3": 20,
       "SSQ": 20,
       "DLT": 20
-     
+
 
     }
   },

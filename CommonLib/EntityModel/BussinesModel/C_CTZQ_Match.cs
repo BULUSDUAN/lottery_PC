@@ -156,7 +156,8 @@ namespace EntityModel
             [ProtoMember(23)]
             [Field("UpdateTime")]
             public DateTime UpdateTime{ get; set; }
-        [Field("FXId")]
+
+       // [Field("FXId")]
         public int FXId { get; set; }
     }
 }

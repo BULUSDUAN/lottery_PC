@@ -1,4 +1,5 @@
 ﻿using EntityModel;
+using EntityModel.CoreModel;
 using EntityModel.Ticket;
 using KaSon.FrameWork.Analyzer.AnalyzerFactory;
 using System;
@@ -524,6 +525,32 @@ namespace KaSon.FrameWork.ORM.Helper
 
             return codeList;
         }
+        /// <summary>
+        /// 查询禁赛列表
+        /// </summary>
+        /// <returns></returns>
+        public DisableMatchConfigInfoCollection QueryDisableMatchConfigList(string gameCode)
+        {
+            var collection = new DisableMatchConfigInfoCollection();
+            switch (gameCode.ToUpper())
+            {
+                case "BJDC":
+                    var manager_BJDC = new BJDCMatchManager();
+                    collection.AddRange(manager_BJDC.QueryBJDC_DisableMatchConfigList());
+                    break;
+                case "JCZQ":
+                    var manager_JCZQ = new JCZQMatchManager();
+                    collection.AddRange(manager_JCZQ.QueryJCZQ_DisableMatchConfigList());
+                    break;
+                case "JCLQ":
+                    var manager_JCLQ = new JCLQMatchManager();
+                    collection.AddRange(manager_JCLQ.QueryJCLQ_DisableMatchConfigList());
+                    break;
+                default:
+                    break;
+            }
 
+            return collection;
+        }
     }
 }
