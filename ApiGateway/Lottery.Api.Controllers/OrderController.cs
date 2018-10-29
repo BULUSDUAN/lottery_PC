@@ -1263,8 +1263,16 @@ namespace Lottery.Api.Controllers
                     codeList = await GetCodeList_GSAPP(_serviceProxyProvider, anteCodeList, schemeInfo.GameCode, schemeInfo.Amount);
 
                 }
-
-                var result = new
+                var userDisplayName = "";
+                if (userid == schemeInfo.CreateUserId)
+                {
+                    userDisplayName = schemeInfo.CreaterDisplayName;
+                }
+                else
+                {
+                    userDisplayName = ConvertHelper.HideByCount(schemeInfo.CreaterDisplayName, schemeInfo.CreaterHideDisplayNameCount);
+                }
+                  var result = new
                 {
                     SchemeId = schemeInfo.SchemeId,
                     GameCode = schemeInfo.GameCode,
@@ -1272,7 +1280,7 @@ namespace Lottery.Api.Controllers
                     GameType = schemeInfo.GameType,
                     GameTypeDisplayName = BettingHelper.GetGameTypeDisplayName(schemeInfo.GameTypeDisplayName),
                     UserId = schemeInfo.CreateUserId,
-                    UserDisplayName = schemeInfo.CreaterDisplayName,
+                    UserDisplayName = userDisplayName,
                     HideDisplayNameCount = schemeInfo.CreaterHideDisplayNameCount,
                     MatchCount = schemeInfo.TotalMatchCount,
                     PlayType = schemeInfo.PlayType,

@@ -139,6 +139,50 @@ namespace Lottery.Api.Controllers
 
         }
 
+        public async Task<IActionResult> LoginGiveRedEnvelopes([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                var p = WebHelper.Decode(entity.Param);
+                string userToken = p.UserToken;
+                string UserId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+                param["UserId"] = UserId;
+                param["IPAddress"] = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
+                var GiveRedEnvelopes = await _serviceProxyProvider.Invoke<bool>(param, "api/user/LoginGiveRedEnvelopes");
+                if (GiveRedEnvelopes)
+                {
+                    return Json(new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.成功,
+                        Message = "恭喜获取登录红包，请在资金明细，查收",
+                        MsgId = entity.MsgId,
+                        Value = "恭喜获取登录红包，请在资金明细，查收"
+                    });
+                }
+                else
+                {
+                    return Json(new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.成功,
+                        Message = "",
+                        MsgId = entity.MsgId,
+                        Value = ""
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage(),
+                });
+            }
+        }
+
         #region 还需要的成长值
 
         private decimal GrowthStatus(decimal UserGrowth)
@@ -1252,7 +1296,7 @@ namespace Lottery.Api.Controllers
                 {
                     BankCode = bankCode,
                     BankName = resultbankCode.BankName,
-                    BankSubName = string.IsNullOrEmpty(subBankName)? resultbankCode.BankName : subBankName,
+                    BankSubName = string.IsNullOrEmpty(subBankName) ? resultbankCode.BankName : subBankName,
                     BankCardNumber = cardnumber,
                     ProvinceName = province,
                     CityName = city,
@@ -1494,6 +1538,11 @@ namespace Lottery.Api.Controllers
         {
             try
             {
+                if ((DateTime.Now.Hour < 8 || (DateTime.Now.Hour == 8 && DateTime.Now.Minute < 50))
+                && (DateTime.Now.Hour > 1 || (DateTime.Now.Hour == 1 && DateTime.Now.Minute > 10)))
+                {
+                    throw new Exception("提现时间早上9点到凌晨1点，请您明天9点再来，感谢配合");
+                }
                 //读取json数据
                 var p = WebHelper.Decode(entity.Param);
                 string userToken = p.token;
@@ -1558,6 +1607,11 @@ namespace Lottery.Api.Controllers
             try
             {
                 //读取json数据
+                if ((DateTime.Now.Hour < 8 || (DateTime.Now.Hour == 8 && DateTime.Now.Minute < 50))
+                 && (DateTime.Now.Hour > 1 || (DateTime.Now.Hour == 1 && DateTime.Now.Minute > 10)))
+                {
+                    throw new Exception("提现时间早上9点到凌晨1点，请您明天9点再来，感谢配合");
+                }
                 var p = WebHelper.Decode(entity.Param);
                 string userToken = p.token;
                 string client = p.client;

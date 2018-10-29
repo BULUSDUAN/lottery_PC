@@ -1273,7 +1273,7 @@ namespace BettingLottery.Service.ModuleServices
                 var redisKey_TogetherList = RedisKeys.Key_Core_Togegher_OrderList;
                 //生成列表
                 //var list = new List<Sports_TogetherSchemeQueryInfo>();
-                var list = db.GetRange<Sports_TogetherSchemeQueryInfo>(redisKey_TogetherList);
+                var list = db.LRange<Sports_TogetherSchemeQueryInfo>(redisKey_TogetherList,0,-1).ToList();
                 if (list == null) list = new List<Sports_TogetherSchemeQueryInfo>();
                 return Task.FromResult(list);
             }
@@ -1300,5 +1300,32 @@ namespace BettingLottery.Service.ModuleServices
             return Task.FromResult(sb.ToString());
         }
         //   Task<string> ReadLog(string DicName);
+
+        public Task<string> GetAllConfigValue()
+        {
+            //1.判断redis是否连接
+            //2.获取allconfig数据
+            //3.获取未返冻结金额还用户数据
+            var sb = new StringBuilder();
+            if (RedisHelperEx.DB_Match == null)
+            {
+                sb.Append("redis连接失败");
+            }
+            else
+            {
+                sb.Append("redis连接成功");
+            }
+            var allConfigStr = ConfigHelper.AllConfigInfo == null ? "" : JsonHelper.Serialize(ConfigHelper.AllConfigInfo);
+            sb.Append("AllConfig:" + allConfigStr);
+            var query = new DataQuery();
+            var list= query.QueryNotFinishGame(10);
+            var liststr = "";
+            if (list != null && list.Count > 0)
+            {
+                liststr = JsonHelper.Serialize(list);
+            }
+            sb.Append("仍在冻结的用户包括:" + liststr);
+            return Task.FromResult(sb.ToString());
+        }
     }
 }

@@ -20,7 +20,7 @@ namespace KaSon.FrameWork.ORM.Helper
     /// </summary>
     public static class RedisMatchBusiness
     {
-        private static Log4Log writerLog =  new Log4Log();
+        private static Log4Log writerLog = new Log4Log();
 
         #region 检查订单是否可投注
 
@@ -64,7 +64,7 @@ namespace KaSon.FrameWork.ORM.Helper
             throw new LogicException(string.Format("错误的彩种编码：{0}", gameCode));
         }
 
-     
+
         #endregion
 
 
@@ -252,8 +252,8 @@ namespace KaSon.FrameWork.ORM.Helper
         public static void LoadJCLQMatchResult()
         {
             //查询sql中近三天的比赛结果
-            var manager = new JCLQMatchManager(); 
-             var resultList = manager.QueryJCLQMatchResultByDay(-5);
+            var manager = new JCLQMatchManager();
+            var resultList = manager.QueryJCLQMatchResultByDay(-5);
             //写入redis库
             var json = JsonHelper.Serialize<List<EntityModel.C_JCLQ_MatchResult>>(resultList);
             var db = RedisHelperEx.DB_Match;
@@ -277,7 +277,7 @@ namespace KaSon.FrameWork.ORM.Helper
             catch (Exception ex)
             {
                 Log4Log.Error("RedisMatchBusiness-QueryJCLQMatchResult", ex);
-              //  writer.Write("RedisMatchBusiness", "QueryJCLQMatchResult", ex);
+                //  writer.Write("RedisMatchBusiness", "QueryJCLQMatchResult", ex);
                 return new List<EntityModel.C_JCLQ_MatchResult>();
             }
         }
@@ -317,7 +317,7 @@ namespace KaSon.FrameWork.ORM.Helper
             catch (Exception ex)
             {
                 Log4Log.Error("RedisMatchBusiness-QueryBJDCMatchResult", ex);
-               // writer.Write("RedisMatchBusiness", "QueryBJDCMatchResult", ex);
+                // writer.Write("RedisMatchBusiness", "QueryBJDCMatchResult", ex);
                 return new List<EntityModel.C_BJDC_MatchResult_Prize>();
             }
         }
@@ -361,7 +361,7 @@ namespace KaSon.FrameWork.ORM.Helper
             catch (Exception ex)
             {
                 Log4Log.Error("RedisMatchBusiness-QuseryCTZQBonusPool_", ex);
-              //  writer.Write("RedisMatchBusiness", "QuseryCTZQBonusPool_" + gameType, ex);
+                //  writer.Write("RedisMatchBusiness", "QuseryCTZQBonusPool_" + gameType, ex);
                 return new List<EntityModel.T_Ticket_BonusPool>();
             }
         }
@@ -409,7 +409,7 @@ namespace KaSon.FrameWork.ORM.Helper
             catch (Exception ex)
             {
                 Log4Log.Error("RedisMatchBusiness-QuserySZCBonusPool_", ex);
-               // writer.Write("RedisMatchBusiness", "QuserySZCBonusPool_" + gameCode, ex);
+                // writer.Write("RedisMatchBusiness", "QuserySZCBonusPool_" + gameCode, ex);
                 return new List<T_Ticket_BonusPool>();
             }
         }
@@ -497,7 +497,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 //写入redis库
                 //格式：期号^开奖号
                 var array = lastOpenIssuse.Select(p => (RedisValue)string.Format("{0}^{1}", p.IssuseNumber, p.WinNumber)).ToArray();
-                db.SetRPush(fullKey, array);
+                db.RPush(fullKey, array);
             }
         }
 
@@ -510,8 +510,8 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                 var db = RedisHelperEx.DB_Match;
                 var fullKey = string.Format("{0}_{1}", gameCode, RedisKeys.Key_MatchResult_List);
-               // var array = db.LRang(fullKey,0,db.LLen(fullKey));
-                var array = db.GetRangeArr(fullKey);//
+                // var array = db.LRang(fullKey,0,db.LLen(fullKey));
+                var array = db.LRange(fullKey, 0, -1);//
                 var dic = new Dictionary<string, string>();
                 foreach (var item in array)
                 {
@@ -526,8 +526,8 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             catch (Exception ex)
             {
-                Log4Log.Error("RedisMatchBusiness-QuerySZCWinNumber_"+ gameCode, ex);
-              //  writer.Write("RedisMatchBusiness", "QuerySZCWinNumber_" + gameCode, ex);
+                Log4Log.Error("RedisMatchBusiness-QuerySZCWinNumber_" + gameCode, ex);
+                //  writer.Write("RedisMatchBusiness", "QuerySZCWinNumber_" + gameCode, ex);
                 return new Dictionary<string, string>();
             }
         }
@@ -551,12 +551,12 @@ namespace KaSon.FrameWork.ORM.Helper
             if (gjIssuse != null && !string.IsNullOrEmpty(gjIssuse.WinNumber))
             {
                 var v = string.Format("{0}^{1}", "GJ", gjIssuse.WinNumber);
-                db.SetRPush(fullKey, v);
+                db.RPush(fullKey, v);
             }
             if (gyjIssuse != null && !string.IsNullOrEmpty(gyjIssuse.WinNumber))
             {
                 var v = string.Format("{0}^{1}", "GYJ", gyjIssuse.WinNumber);
-                db.SetRPush(fullKey, v);
+                db.RPush(fullKey, v);
             }
         }
 
@@ -566,7 +566,7 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                 var db = RedisHelperEx.DB_Match;
                 var fullKey = string.Format("{0}_{1}", "OZB", RedisKeys.Key_MatchResult_List);
-                var array = db.GetRangeArr(fullKey);
+                var array = db.LRange(fullKey, 0, -1);
                 var dic = new Dictionary<string, string>();
                 foreach (var item in array)
                 {
@@ -581,8 +581,8 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             catch (Exception ex)
             {
-                Log4Log.Error("RedisMatchBusiness-QueryOZBWinNumber" , ex);
-             //   writer.Write("RedisMatchBusiness", "QueryOZBWinNumber", ex);
+                Log4Log.Error("RedisMatchBusiness-QueryOZBWinNumber", ex);
+                //   writer.Write("RedisMatchBusiness", "QueryOZBWinNumber", ex);
                 return new Dictionary<string, string>();
             }
         }
@@ -606,12 +606,12 @@ namespace KaSon.FrameWork.ORM.Helper
             if (gjIssuse != null && !string.IsNullOrEmpty(gjIssuse.WinNumber))
             {
                 var v = string.Format("{0}^{1}", "GJ", gjIssuse.WinNumber);
-                db.SetRPush(fullKey, v);
+                db.RPush(fullKey, v);
             }
             if (gyjIssuse != null && !string.IsNullOrEmpty(gyjIssuse.WinNumber))
             {
                 var v = string.Format("{0}^{1}", "GYJ", gyjIssuse.WinNumber);
-                db.SetRPush(fullKey, v);
+                db.RPush(fullKey, v);
             }
         }
 
@@ -621,7 +621,7 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                 var db = RedisHelperEx.DB_Match;
                 var fullKey = string.Format("{0}_{1}", "SJB", RedisKeys.Key_MatchResult_List);
-                var array = db.LRang(fullKey,0,db.LLen(fullKey));
+                var array = db.LRange(fullKey, 0, -1);
                 var dic = new Dictionary<string, string>();
                 foreach (var item in array)
                 {
@@ -728,7 +728,7 @@ namespace KaSon.FrameWork.ORM.Helper
             foreach (var item in issuseList)
             {
                 var json = JsonHelper.Serialize(item);
-                db.SetRPush(key, json);
+                db.RPush(key, json);
             }
         }
 
@@ -746,7 +746,7 @@ namespace KaSon.FrameWork.ORM.Helper
             foreach (var item in issuseList)
             {
                 var json = JsonHelper.Serialize(item);
-                db.SetRPush(key, json);
+                db.RPush(key, json);
             }
         }
 

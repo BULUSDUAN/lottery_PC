@@ -21,7 +21,7 @@ namespace KaSon.FrameWork.Common
         //public static System.Collections.Hashtable _JCLQHt = System.Collections.Hashtable.Synchronized(new Hashtable());
 
         public static string[] _CTZQType = { "T14C", "T4CJQ", "TR9", "T6BQC" };
-        public static string[] _JCZQType = { "SPF", "BRQSPF", "ZJQ", "BF", "BQC", "HHDG","HH" };
+        public static string[] _JCZQType = { "SPF", "BRQSPF", "ZJQ", "BF", "BQC", "HHDG", "HH" };
         public static string[] _JCLQType = { "SF", "RFSF", "DXF", "SFC", "HHDG", "HH" };
         public static string[] _BJDCType = { "SPF" };
 
@@ -54,7 +54,7 @@ namespace KaSon.FrameWork.Common
                 var type = item.GameCode_IssuseNumber.Split('|')[1];
                 string reidskey = $"{key}_{type}_{item.IssuseNumber}";
                 var result = Json_CTZQ.MatchList_WEB(item.IssuseNumber, type);
-               RedisHelperEx.DB_Match.SetObj(reidskey, result, TimeSpan.FromMinutes(30));
+                RedisHelperEx.DB_Match.Set(reidskey, result, 30 * 60);
             }
 
         }
@@ -67,7 +67,7 @@ namespace KaSon.FrameWork.Common
             {
                 string reidskey = $"{key}_{item}";
                 var result = Json_CTZQ.IssuseList(item);
-                RedisHelperEx.DB_Match.SetObj(reidskey, result, TimeSpan.FromMinutes(30));
+                RedisHelperEx.DB_Match.Set(reidskey, result, 30 * 60);
             }
 
         }
@@ -82,7 +82,7 @@ namespace KaSon.FrameWork.Common
             {
                 string reidskey = $"{key}_{item}_{issuseNumber}";//SF+期号
                 var result = Json_BJDC.MatchList_WEB(issuseNumber, item);
-                RedisHelperEx.DB_Match.SetObj(reidskey, result, TimeSpan.FromMinutes(30));
+                RedisHelperEx.DB_Match.Set(reidskey, result, 30 * 60);
             }
 
         }
@@ -99,7 +99,7 @@ namespace KaSon.FrameWork.Common
                 if (item.ToLower() == "hhdg")
                 {
                     var result = Json_JCZQ.GetJCZQHHDGList();
-                    RedisHelperEx.DB_Match.SetObj(reidskey, result, TimeSpan.FromMinutes(30));
+                    RedisHelperEx.DB_Match.Set(reidskey, result, 30 * 60);
                 }
                 else
                 {
@@ -119,7 +119,7 @@ namespace KaSon.FrameWork.Common
                         }
                     }
                     #endregion
-                    RedisHelperEx.DB_Match.SetObj(reidskey, result, TimeSpan.FromMinutes(30));
+                    RedisHelperEx.DB_Match.Set(reidskey, result, 30 * 60);
                 }
             }
 
@@ -138,7 +138,7 @@ namespace KaSon.FrameWork.Common
                 if (item.ToLower() == "hhdg")
                 {
                     var result = Json_JCLQ.GetJCLQHHDGList();
-                    RedisHelperEx.DB_Match.SetObj(reidskey, result, TimeSpan.FromMinutes(30));
+                    RedisHelperEx.DB_Match.Set(reidskey, result, 30*60);
                 }
                 else
                 {
@@ -159,12 +159,12 @@ namespace KaSon.FrameWork.Common
                         }
                     }
                     #endregion
-                    RedisHelperEx.DB_Match.SetObj(reidskey, result, TimeSpan.FromMinutes(30));
+                    RedisHelperEx.DB_Match.Set(reidskey, result, 30 * 60);
                 }
             }
 
         }
 
-       
+
     }
 }

@@ -33,8 +33,8 @@ namespace KaSon.FrameWork.ORM.Helper
         private static List<LotteryIssuse_QueryInfo> QueryNextIssuseListByKey(string key)
         {
             var db = RedisHelperEx.DB_CoreCacheData;
-            var list = db.GetRange<LotteryIssuse_QueryInfo>(key);
-            return list;
+            var list = db.LRange<LotteryIssuse_QueryInfo>(key, 0, -1);
+            return list.ToList();
         }
 
         //        /// <summary>
@@ -60,56 +60,56 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <summary>
         /// 从Redis查询出合买订单数据
         /// </summary>
-   //     public static Sports_TogetherSchemeQueryInfoCollection QuerySportsTogetherListFromRedis(string key, string issuseNumber, string gameCode, string gameType,
-   //TogetherSchemeSecurity? security, SchemeBettingCategory? betCategory, TogetherSchemeProgress? progressState,
-   //decimal minMoney, decimal maxMoney, decimal minProgress, decimal maxProgress, string orderBy, int pageIndex, int pageSize)
-   //     {
-   //         //var db = RedisHelperEx.DB_CoreCacheData;
-            //var redisKey_TogetherList = RedisKeys.Key_Core_Togegher_OrderList;
-            ////生成列表
-            //var list = new List<Sports_TogetherSchemeQueryInfo>();
-            //var redisList = db.ListRangeAsync(redisKey_TogetherList).Result;
-            //foreach (var item in redisList)
-            //{
-            //    try
-            //    {
-            //        if (!item.HasValue) continue;
-            //        var t = JsonSerializer.Deserialize<Sports_TogetherSchemeQueryInfo>(item.ToString());
-            //        list.Add(t);
-            //    }
-            //    catch (Exception)
-            //    {
-            //    }
-            //}
+        //     public static Sports_TogetherSchemeQueryInfoCollection QuerySportsTogetherListFromRedis(string key, string issuseNumber, string gameCode, string gameType,
+        //TogetherSchemeSecurity? security, SchemeBettingCategory? betCategory, TogetherSchemeProgress? progressState,
+        //decimal minMoney, decimal maxMoney, decimal minProgress, decimal maxProgress, string orderBy, int pageIndex, int pageSize)
+        //     {
+        //         //var db = RedisHelperEx.DB_CoreCacheData;
+        //var redisKey_TogetherList = RedisKeys.Key_Core_Togegher_OrderList;
+        ////生成列表
+        //var list = new List<Sports_TogetherSchemeQueryInfo>();
+        //var redisList = db.ListRangeAsync(redisKey_TogetherList).Result;
+        //foreach (var item in redisList)
+        //{
+        //    try
+        //    {
+        //        if (!item.HasValue) continue;
+        //        var t = JsonSerializer.Deserialize<Sports_TogetherSchemeQueryInfo>(item.ToString());
+        //        list.Add(t);
+        //    }
+        //    catch (Exception)
+        //    {
+        //    }
+        //}
 
-            ////查询列表
-            //var seC = !security.HasValue ? -1 : (int)security.Value;
-            //var betC = !betCategory.HasValue ? -1 : (int)betCategory.Value;
-            //var strPro = !progressState.HasValue ? "10|20|30" : ((int)progressState.Value).ToString();
-            //var arrProg = strPro.Split('|');
-            //if (!string.IsNullOrEmpty(gameCode))
-            //    gameCode = gameCode.ToUpper();
-            //if (!string.IsNullOrEmpty(gameType))
-            //    gameType = gameType.ToUpper();
-           // var cache = new Sports_TogetherSchemeQueryInfoCollection();
-            //var query = from s in list
-            //            where arrProg.Contains(Convert.ToInt32(s.ProgressStatus).ToString())
-            //              && (betC == -1 || Convert.ToInt32(s.SchemeBettingCategory) == betC)
-            //              && (issuseNumber == string.Empty || s.IssuseNumber == issuseNumber)
-            //              && (s.StopTime >= DateTime.Now)
-            //              && (gameCode == string.Empty || s.GameCode == gameCode)
-            //              && (gameType == string.Empty || s.GameType == gameType)
-            //              && (minMoney == -1 || s.TotalMoney >= minMoney)
-            //              && (maxMoney == -1 || s.TotalMoney <= maxMoney)
-            //              && (minProgress == -1 || s.Progress >= minProgress)
-            //              && (maxProgress == -1 || s.Progress <= maxProgress)
-            //              && (seC == -1 || Convert.ToInt32(s.Security) == seC)
-            //              && (key == string.Empty || s.CreateUserId == key || s.SchemeId == key || s.CreaterDisplayName == key)
-            //            select s;
-            //cache.TotalCount = query.Count();
-            //cache.List = query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
-           // return cache;
-       // }
+        ////查询列表
+        //var seC = !security.HasValue ? -1 : (int)security.Value;
+        //var betC = !betCategory.HasValue ? -1 : (int)betCategory.Value;
+        //var strPro = !progressState.HasValue ? "10|20|30" : ((int)progressState.Value).ToString();
+        //var arrProg = strPro.Split('|');
+        //if (!string.IsNullOrEmpty(gameCode))
+        //    gameCode = gameCode.ToUpper();
+        //if (!string.IsNullOrEmpty(gameType))
+        //    gameType = gameType.ToUpper();
+        // var cache = new Sports_TogetherSchemeQueryInfoCollection();
+        //var query = from s in list
+        //            where arrProg.Contains(Convert.ToInt32(s.ProgressStatus).ToString())
+        //              && (betC == -1 || Convert.ToInt32(s.SchemeBettingCategory) == betC)
+        //              && (issuseNumber == string.Empty || s.IssuseNumber == issuseNumber)
+        //              && (s.StopTime >= DateTime.Now)
+        //              && (gameCode == string.Empty || s.GameCode == gameCode)
+        //              && (gameType == string.Empty || s.GameType == gameType)
+        //              && (minMoney == -1 || s.TotalMoney >= minMoney)
+        //              && (maxMoney == -1 || s.TotalMoney <= maxMoney)
+        //              && (minProgress == -1 || s.Progress >= minProgress)
+        //              && (maxProgress == -1 || s.Progress <= maxProgress)
+        //              && (seC == -1 || Convert.ToInt32(s.Security) == seC)
+        //              && (key == string.Empty || s.CreateUserId == key || s.SchemeId == key || s.CreaterDisplayName == key)
+        //            select s;
+        //cache.TotalCount = query.Count();
+        //cache.List = query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+        // return cache;
+        // }
 
 
 

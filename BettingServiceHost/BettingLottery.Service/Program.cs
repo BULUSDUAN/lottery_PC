@@ -127,11 +127,8 @@ namespace BettingLottery.Service.Host
             //初始化内存期号 k_todo，可用彩种类型,执行一次
             LotteryGameManager lotGm = new LotteryGameManager();
             lotGm.StartInitData();
-
             //清空打印
-
             ConsoleHelper.Clear();
-
             //这个要保留，认主线程一直运行
             Console.ReadLine();
 

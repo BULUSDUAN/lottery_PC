@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections;
 using KaSon.FrameWork.Common.FileOperate;
+using CSRedis;
 
 namespace KaSon.FrameWork.Common.Redis
 {
@@ -40,29 +41,38 @@ namespace KaSon.FrameWork.Common.Redis
                 string jsonText = FileHelper.txtReader(path);
                 var alljson = (JObject)JsonConvert.DeserializeObject(jsonText);
                 RdConfigInfo = (JObject)JsonConvert.DeserializeObject(alljson["RedisConfig"].ToString());
-                List<CSRedis.CSRedisConfig> list = new List<CSRedis.CSRedisConfig>(){
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=0,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=1,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=2,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=3,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=4,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=5,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=6,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=7,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=8,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=9,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=10,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=11,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=12,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=13,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=14,C_PoolSize=50,c_Writebuffer=10240 },
-                     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=15,C_PoolSize=50,c_Writebuffer=10240 }
-                };
-                foreach (var item in list)
+                var connectionString = $"{ServerHost}:{ServerPort},password={ServerPassword},poolsize=50,ssl=false,writeBuffer=10240";
+                var redis = new CSRedisClient[14]; //定义成单例
+                for (var a = 0; a < redis.Length; a++)
                 {
-                    string key = $"{item.C_IP}:{item.C_Post}/{item.C_Defaultdatabase}";
-                    RedisHas[key] = new CSRedis.CSRedisClient(item);
+                    var key = $"{ServerHost}:{ServerPort}/{a}";
+                    RedisHas[key] = new CSRedisClient(connectionString + "; defualtDatabase=" + a);
                 }
+                #region old
+                //List<CSRedis.CSRedisConfig> list = new List<CSRedis.CSRedisConfig>(){
+                //     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=0,C_PoolSize=50,c_Writebuffer=10240 },
+                //     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=1,C_PoolSize=50,c_Writebuffer=10240 },
+                //     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=2,C_PoolSize=50,c_Writebuffer=10240 },
+                //     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=3,C_PoolSize=50,c_Writebuffer=10240 },
+                //     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=4,C_PoolSize=50,c_Writebuffer=10240 },
+                //     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=5,C_PoolSize=50,c_Writebuffer=10240 },
+                //     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=6,C_PoolSize=50,c_Writebuffer=10240 },
+                //     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=7,C_PoolSize=50,c_Writebuffer=10240 },
+                //     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=8,C_PoolSize=50,c_Writebuffer=10240 },
+                //     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=9,C_PoolSize=50,c_Writebuffer=10240 },
+                //     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=10,C_PoolSize=50,c_Writebuffer=10240 },
+                //     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=11,C_PoolSize=50,c_Writebuffer=10240 },
+                //     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=12,C_PoolSize=50,c_Writebuffer=10240 },
+                //     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=13,C_PoolSize=50,c_Writebuffer=10240 },
+                //     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=14,C_PoolSize=50,c_Writebuffer=10240 },
+                //     new CSRedis.CSRedisConfig(){ C_IP=ServerHost,C_Post=ServerPort,C_Password=ServerPassword,C_Defaultdatabase=15,C_PoolSize=50,c_Writebuffer=10240 }
+                //};
+                //foreach (var item in list)
+                //{
+                //    string key = $"{item.C_IP}:{item.C_Post}/{item.C_Defaultdatabase}";
+                //    RedisHas[key] = new CSRedis.CSRedisClient(item);
+                //} 
+                #endregion
             }
 
         }
@@ -351,106 +361,106 @@ namespace KaSon.FrameWork.Common.Redis
     public static class SampleStackExchangeRedisExtensions
     {
 
-        public static T GetObj<T>(this CSRedis.CSRedisClient cache, string key)
-        {
-            return Deserialize<T>(cache.GetBytes(key));
-        }
+        //public static T GetObj<T>(this CSRedis.CSRedisClient cache, string key)
+        //{
+        //    return Deserialize<T>(cache.GetBytes(key));
+        //}
 
-        public static List<T> GetObjs<T>(this CSRedis.CSRedisClient cache, string key)
-        {
-            return Deserializes<T>(cache.GetBytes(key));
-        }
+        //public static List<T> GetObjs<T>(this CSRedis.CSRedisClient cache, string key)
+        //{
+        //    return Deserializes<T>(cache.GetBytes(key));
+        //}
 
-        public static object GetObj(this CSRedis.CSRedisClient cache, string key)
-        {
-            return Deserialize<object>(cache.GetBytes(key));
-        }
+        //public static object GetObj(this CSRedis.CSRedisClient cache, string key)
+        //{
+        //    return Deserialize<object>(cache.GetBytes(key));
+        //}
 
-        public static string GetString(this CSRedis.CSRedisClient cache, string key)
-        {
-            return cache.Get(key);
-        }
+        //public static string GetString(this CSRedis.CSRedisClient cache, string key)
+        //{
+        //    return cache.Get(key);
+        //}
 
-        public static void SetString(this CSRedis.CSRedisClient cache, string key, string value)
-        {
-            cache.Set(key, value);
-            //var result = cache.Set(key, value);
-            //if (!result)
-            //    Log4Log.Info($"{key}插入失败,value={value}");
-        }
+        //public static void SetString(this CSRedis.CSRedisClient cache, string key, string value)
+        //{
+        //    cache.Set(key, value);
+        //    //var result = cache.Set(key, value);
+        //    //if (!result)
+        //    //    Log4Log.Info($"{key}插入失败,value={value}");
+        //}
 
-        public static void SetString(this CSRedis.CSRedisClient cache, string key, string value, TimeSpan timeSpan)
-        {
-            cache.Set(key, value, (int)timeSpan.TotalSeconds);
-        }
+        //public static void SetString(this CSRedis.CSRedisClient cache, string key, string value, TimeSpan timeSpan)
+        //{
+        //    cache.Set(key, value, (int)timeSpan.TotalSeconds);
+        //}
 
-        public static void SetObj(this CSRedis.CSRedisClient cache, string key, object value)
-        {
-            cache.SetBytes(key, Serialize(value));
-        }
+        //public static void SetObj(this CSRedis.CSRedisClient cache, string key, object value)
+        //{
+        //    cache.SetBytes(key, Serialize(value));
+        //}
 
-        public static void SetObj(this CSRedis.CSRedisClient cache, string key, object value, TimeSpan timeSpan)
-        {
-            cache.SetBytes(key, Serialize(value), (int)timeSpan.TotalSeconds);
-        }
-        public static void Del(this CSRedis.CSRedisClient cache, params string[] key)
-        {
-            cache.Remove(key);
-        }
-        public static List<T> GetRange<T>(this CSRedis.CSRedisClient cache, string key)
-        {
-            var index = cache.LLen(key);
-            if (index == 0)
-                return null;
-            var array = cache.LRang(key, 0, index);
-            List<T> list = new List<T>();
-            foreach (var item in array)
-            {
-                list.Add(JsonHelper.Deserialize<T>(item.ToString()));
-            }
-            return list;
-        }
+        //public static void SetObj(this CSRedis.CSRedisClient cache, string key, object value, TimeSpan timeSpan)
+        //{
+        //    cache.SetBytes(key, Serialize(value), (int)timeSpan.TotalSeconds);
+        //}
+        //public static void Del(this CSRedis.CSRedisClient cache, params string[] key)
+        //{
+        //    cache.Remove(key);
+        //}
+        //public static List<T> GetRange<T>(this CSRedis.CSRedisClient cache, string key)
+        //{
+        //    var index = cache.LLen(key);
+        //    if (index == 0)
+        //        return null;
+        //    var array = cache.LRang(key, 0, index);
+        //    List<T> list = new List<T>();
+        //    foreach (var item in array)
+        //    {
+        //        list.Add(JsonHelper.Deserialize<T>(item.ToString()));
+        //    }
+        //    return list;
+        //}
 
-        public static List<T> GetRange<T>(this CSRedis.CSRedisClient cache, string key, int start, int end)
-        {
-            var array = cache.LRang(key, start, end);
-            List<T> list = new List<T>();
-            foreach (var item in array)
-            {
-                list.Add(JsonHelper.Deserialize<T>(item.ToString()));
-            }
-            return list;
-        }
+        //public static List<T> GetRange<T>(this CSRedis.CSRedisClient cache, string key, int start, int end)
+        //{
+        //    var array = cache.LRang(key, start, end);
+        //    List<T> list = new List<T>();
+        //    foreach (var item in array)
+        //    {
+        //        list.Add(JsonHelper.Deserialize<T>(item.ToString()));
+        //    }
+        //    return list;
+        //}
 
-        public static string[] GetRangeArr(this CSRedis.CSRedisClient cache, string key)
-        {
-            var index = cache.LLen(key);
-            if (index == 0)
-                return null;
-            var array = cache.LRang(key, 0, index);
+        //public static string[] GetRangeArr(this CSRedis.CSRedisClient cache, string key)
+        //{
+        //    var index = cache.LLen(key);
+        //    if (index == 0)
+        //        return null;
+        //    var array = cache.LRang(key, 0, index);
 
-            return array;
-        }
+        //    return array;
+        //}
         /// <summary>
         /// 插入到集合最后一条
         /// </summary>
         /// <param name="cache"></param>
         /// <param name="key"></param>
         /// <param name="obj"></param>
-        public static void SetRPush(this CSRedis.CSRedisClient cache, string key, object obj)
-        {
-            cache.RPush(key, obj);
-        }
+        //public static void SetRPush(this CSRedis.CSRedisClient cache, string key, object obj)
+        //{           
+        //    cache.RPush(key, obj);
+        //}
         /// <summary>
         /// 插入到集合第一条
         /// </summary>
         /// <param name="cache"></param>
         /// <param name="key"></param>
         /// <param name="obj"></param>
-        public static void SetLPush(this CSRedis.CSRedisClient cache, string key, object obj)
-        {
-            cache.RPush(key, obj);
-        }
+        //public static void SetLPush(this CSRedis.CSRedisClient cache, string key, object obj)
+        //{
+        //    cache.RPush(key, obj);
+        //}
 
 
 

@@ -132,5 +132,7 @@ namespace UserLottery.Service.IModuleServices
 
         [Service(Date = "2018-9-7", Director = "lidi", Name = "设置RedisKey")]
         Task<bool> SetRedisOtherDbKey(string Key, string RValue, int TotalSeconds);
+        [Service(Date = "2018-10-24", Director = "renjun", Name = "每天登录送红包")]
+        Task<bool> LoginGiveRedEnvelopes(string UserId, string IPAddress);
     }
 }

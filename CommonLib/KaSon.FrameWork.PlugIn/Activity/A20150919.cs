@@ -15,7 +15,7 @@ namespace KaSon.FrameWork.PlugIn.Activity
     /// <summary>
     /// 注册后，绑定银行卡、身份证、手机号 后赠送红包
     /// </summary>
-    public class A20150919 : DBbase,IAddBankCard, IResponseAuthentication_AfterTranCommit
+    public class A20150919 : DBbase, IAddBankCard, IResponseAuthentication_AfterTranCommit
     {
         /// <summary>
         /// 添加银行卡绑定 赠送1.5元彩金
@@ -90,7 +90,7 @@ namespace KaSon.FrameWork.PlugIn.Activity
                 DB.Rollback();
                 throw ex;
             }
-            
+
 
 
         }
@@ -508,7 +508,7 @@ namespace KaSon.FrameWork.PlugIn.Activity
     /// <summary>
     /// 充值赠送红包
     /// </summary>
-    public class A20150919_FillMoneyGive :DBbase, ICompleteFillMoney_AfterTranCommit
+    public class A20150919_FillMoneyGive : DBbase, ICompleteFillMoney_AfterTranCommit
     {
         public void CompleteFillMoney_AfterTranCommit(string orderId, FillMoneyStatus status, FillMoneyAgentType agentType, decimal fillMoney, string userId, int vipLevel)
         {
@@ -624,7 +624,7 @@ namespace KaSon.FrameWork.PlugIn.Activity
                 DB.Rollback();
                 throw ex;
             }
-            
+
             #region 给分享用户送红包逻辑
             FirstRechargeGiveRedBag(userId, fillMoney);
             #endregion
@@ -715,34 +715,34 @@ namespace KaSon.FrameWork.PlugIn.Activity
         /// <param name="userId"></param>
         public void FirstRechargeGiveRedBag(string userId, decimal totalMoney)
         {
-            
-                DB.Commit();
-                //分享推广 首充 送红包
-                //首充超过一定金额了 且是通过分享注册的用户 没有送红包 就执行分享推广活动
-                var fundManager = new FundManager();
-                var count = fundManager.QueryFillMoneyCount(userId);
-                if (count == 1)
-                {
-                    var entityShareSpread = new BlogManager().QueryBlog_UserShareSpread(userId);
-                    var satisfyFillMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.SatisfyRechargeGiveRedBagTofxid"));
-                    if (entityShareSpread != null && !entityShareSpread.isGiveRechargeRedBag && totalMoney >= satisfyFillMoney)
-                    {
-                        //购彩了 没有给分享者送活动红包 就执行送红包 只送一次
-                        var giveFillMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.FirstRechargeGiveRedBagTofxid"));
-                        if (giveFillMoney > 0)
-                        {
-                            BusinessHelper.Payin_To_Balance(AccountType.RedBag, BusinessHelper.FundCategory_Activity, entityShareSpread.AgentId, Guid.NewGuid().ToString("N"), giveFillMoney
-                                              , string.Format("{1}用户首次充值超过{2}元，赠送红包给分享推广用户{0}元", giveFillMoney, userId, satisfyFillMoney), RedBagCategory.FxidRegister);
 
-                            entityShareSpread.isGiveRechargeRedBag = true;
-                            entityShareSpread.UpdateTime = DateTime.Now;
-                            entityShareSpread.giveRedBagMoney = entityShareSpread.giveRedBagMoney + giveFillMoney;
-                            new BlogManager().UpdateBlog_UserShareSpread(entityShareSpread);
-                        }
+            DB.Commit();
+            //分享推广 首充 送红包
+            //首充超过一定金额了 且是通过分享注册的用户 没有送红包 就执行分享推广活动
+            var fundManager = new FundManager();
+            var count = fundManager.QueryFillMoneyCount(userId);
+            if (count == 1)
+            {
+                var entityShareSpread = new BlogManager().QueryBlog_UserShareSpread(userId);
+                var satisfyFillMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.SatisfyRechargeGiveRedBagTofxid"));
+                if (entityShareSpread != null && !entityShareSpread.isGiveRechargeRedBag && totalMoney >= satisfyFillMoney)
+                {
+                    //购彩了 没有给分享者送活动红包 就执行送红包 只送一次
+                    var giveFillMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.FirstRechargeGiveRedBagTofxid"));
+                    if (giveFillMoney > 0)
+                    {
+                        BusinessHelper.Payin_To_Balance(AccountType.RedBag, BusinessHelper.FundCategory_Activity, entityShareSpread.AgentId, Guid.NewGuid().ToString("N"), giveFillMoney
+                                          , string.Format("{1}用户首次充值超过{2}元，赠送红包给分享推广用户{0}元", giveFillMoney, userId, satisfyFillMoney), RedBagCategory.FxidRegister);
+
+                        entityShareSpread.isGiveRechargeRedBag = true;
+                        entityShareSpread.UpdateTime = DateTime.Now;
+                        entityShareSpread.giveRedBagMoney = entityShareSpread.giveRedBagMoney + giveFillMoney;
+                        new BlogManager().UpdateBlog_UserShareSpread(entityShareSpread);
                     }
                 }
-                DB.Commit();
-            
+            }
+            DB.Commit();
+
         }
         #endregion
     }
@@ -750,7 +750,7 @@ namespace KaSon.FrameWork.PlugIn.Activity
     /// <summary>
     /// 彩种加奖相关
     /// </summary>
-    public class A20150919_AddBonusMoney :DBbase, IOrderPrize_AfterTranCommit
+    public class A20150919_AddBonusMoney : DBbase, IOrderPrize_AfterTranCommit
     {
         public void OrderPrize_AfterTranCommit(string userId, string schemeId, string gameCode, string gameType, string issuseNumber, decimal orderMoney, bool isBonus, decimal preTaxBonusMoney, decimal afterTaxBonusMoney, bool isVirtualOrder, DateTime prizeTime)
         {
@@ -920,7 +920,7 @@ namespace KaSon.FrameWork.PlugIn.Activity
                 DB.Rollback();
                 throw ex;
             }
-            
+
         }
 
         /// <summary>
@@ -1291,7 +1291,7 @@ namespace KaSon.FrameWork.PlugIn.Activity
             foreach (var item in list)
             {
                 var v = string.Format("{0}_{1}", item.GameCode, item.UsePercent.ToString("N2"));
-                db.SetRPush(key, v);
+                db.RPush(key, v);
             }
         }
 
@@ -1302,7 +1302,7 @@ namespace KaSon.FrameWork.PlugIn.Activity
         {
             var db = RedisHelperEx.DB_CoreCacheData;
             var key = RedisKeys.Key_RedBagUseConfig;
-            var result = db.GetRange<string>(key);
+            var result = db.LRange<string>(key, 0, -1);
             foreach (var item in result)
             {
                 var array = item.Split('_');
