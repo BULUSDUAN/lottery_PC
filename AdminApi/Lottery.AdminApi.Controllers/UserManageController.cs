@@ -1336,7 +1336,7 @@ namespace Lottery.AdminApi.Controllers
         /// <summary>
         /// 手工完成充值
         /// </summary>
-        public ActionResult CompleteFillMoney(LotteryServiceRequest entity)
+        public IActionResult CompleteFillMoney(LotteryServiceRequest entity)
         {
             try
             {
@@ -1439,7 +1439,7 @@ namespace Lottery.AdminApi.Controllers
             ms.Seek(0, SeekOrigin.Begin);
             return File(ms, "application/vnd.ms-excel", string.Format("{0}.xls", DateTime.Now.ToString("yyyy-MM-dd")));
         }
-        public JsonResult CompleteWithdrawALL(LotteryServiceRequest entity)
+        public IActionResult CompleteWithdrawALL(LotteryServiceRequest entity)
         {
             try
             {
@@ -1477,7 +1477,7 @@ namespace Lottery.AdminApi.Controllers
                 return Json(new LotteryServiceResponse(){ Code = AdminResponseCode.成功, Message = ex.Message });
             }
         }
-        public JsonResult RefusedWithdrawALL(LotteryServiceRequest entity)
+        public IActionResult RefusedWithdrawALL(LotteryServiceRequest entity)
         {
             try
             {
@@ -1502,7 +1502,7 @@ namespace Lottery.AdminApi.Controllers
         /// <summary>
         /// 发送站内信
         /// </summary>
-        public ActionResult SiteMessage()
+        public IActionResult SiteMessage()
         {
             try
             {
@@ -1520,7 +1520,7 @@ namespace Lottery.AdminApi.Controllers
         /// <summary>
         /// 发送站内信
         /// </summary>
-        public JsonResult SendLetter(LotteryServiceRequest entity)
+        public IActionResult SendLetter(LotteryServiceRequest entity)
         {
             if (!CheckRights("FSXX100"))
             {
@@ -1548,7 +1548,7 @@ namespace Lottery.AdminApi.Controllers
                     }
                     else
                     {
-                        sendMail.Receivers = Request.Form["userid"];
+                        sendMail.Receivers = (string)p.userid;
                     }
                     var sendResult = _service.SendInnerMail(sendMail, CurrentUser.UserToken);
                     return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Message = sendResult.Message });
@@ -1556,7 +1556,7 @@ namespace Lottery.AdminApi.Controllers
                 }
                 else
                 {
-                    sendMail.Receivers = PreconditionAssert.IsNotEmptyString(Request.Form["receivers"], "发信对象不能为空！");
+                    sendMail.Receivers = PreconditionAssert.IsNotEmptyString((string)p.receivers, "发信对象不能为空！");
                     var userIds = _service.QueryUserIdByRoleId(sendMail.Receivers);
                     if (!string.IsNullOrEmpty(userIds))
                     {
@@ -1578,7 +1578,7 @@ namespace Lottery.AdminApi.Controllers
                 return Json(new LotteryServiceResponse{ Code = AdminResponseCode.失败, Message = ex.Message });
             }
         }
-        public ActionResult SiteNoticeManager()
+        public IActionResult SiteNoticeManager()
         {
             if (!CheckRights("WZTZGL"))
                 throw new Exception("对不起，您的权限不足！");
@@ -1586,7 +1586,7 @@ namespace Lottery.AdminApi.Controllers
             var ConfigList = _service.QuerySiteNoticeConfig();
             return View();
         }
-        public JsonResult UpdateSiteNotice(LotteryServiceRequest entity)
+        public IActionResult UpdateSiteNotice(LotteryServiceRequest entity)
         {
             try
             {
@@ -1609,7 +1609,7 @@ namespace Lottery.AdminApi.Controllers
                 return Json(new LotteryServiceResponse(){ Code = AdminResponseCode.失败, Message = ex.Message });
             }
         }
-        public ActionResult SMSSendRecordLog(LotteryServiceRequest entity)
+        public IActionResult SMSSendRecordLog(LotteryServiceRequest entity)
         {
             try
             {
@@ -1632,7 +1632,7 @@ namespace Lottery.AdminApi.Controllers
             }
         }
 
-        public JsonResult RepeatSMS(LotteryServiceRequest entity)
+        public IActionResult RepeatSMS(LotteryServiceRequest entity)
         {
             try
             {
@@ -1651,7 +1651,7 @@ namespace Lottery.AdminApi.Controllers
         /// <summary>
         /// 用户手机校验码管理
         /// </summary>
-        public ActionResult ValidateCode(LotteryServiceRequest entity)
+        public IActionResult ValidateCode(LotteryServiceRequest entity)
         {
             try
             {
@@ -1683,7 +1683,7 @@ namespace Lottery.AdminApi.Controllers
                 return JsonEx(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
             }
         }
-        public JsonResult DoSendSMS(LotteryServiceRequest entity)
+        public IActionResult DoSendSMS(LotteryServiceRequest entity)
         {
             try
             {
@@ -1714,7 +1714,7 @@ namespace Lottery.AdminApi.Controllers
                 return Json(new LotteryServiceResponse(){ Code = AdminResponseCode.成功, Message = ex.Message });
             }
         }
-        public JsonResult DoAgent(LotteryServiceRequest entity)
+        public IActionResult DoAgent(LotteryServiceRequest entity)
         {
             try
             {
@@ -1734,7 +1734,7 @@ namespace Lottery.AdminApi.Controllers
                 return Json(new LotteryServiceResponse(){ Code = AdminResponseCode.失败, Message = ex.Message });
             }
         }
-        public JsonResult DoTogetherHotUser(LotteryServiceRequest entity)
+        public IActionResult DoTogetherHotUser(LotteryServiceRequest entity)
         {
             try
             {
@@ -1749,7 +1749,7 @@ namespace Lottery.AdminApi.Controllers
                 return JsonEx(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
             }
         }
-        public JsonResult DeleteTogetherHotUser(LotteryServiceRequest entity)
+        public IActionResult DeleteTogetherHotUser(LotteryServiceRequest entity)
         {
             try
             {
@@ -1763,6 +1763,88 @@ namespace Lottery.AdminApi.Controllers
                 return JsonEx(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
             }
 
+        }
+        public IActionResult AddUserSchemeShareExpert(LotteryServiceRequest entity)
+        {
+            try
+            {
+                if (!CheckRights("U110"))
+                    throw new Exception("对不起，您的权限不足！");
+                var p = JsonHelper.Decode(entity.Param);
+                var userId = PreconditionAssert.IsNotEmptyString((string)p.UserId, "用户编号不能为空");
+                var shortIndex = (string)p.ShortIndex == null ? 0 : Convert.ToInt32((string)p.ShortIndex);
+                var source = Convert.ToInt32((string)p.Source);
+                if (source <= 0)
+                    throw new Exception("请选择类型");
+                var result = _service.AddUserSchemeShareExpert(userId, shortIndex, (CopyOrderSource)source);
+                return Json(new LotteryServiceResponse(){ Code = result.IsSuccess?AdminResponseCode.成功:AdminResponseCode.失败, Message = result.Message });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse(){ Code = AdminResponseCode.失败, Message = ex.Message });
+            }
+        }
+        public IActionResult DeleteUserSchemeShareExpert(LotteryServiceRequest entity)
+        {
+            try
+            {
+                if (!CheckRights("U110"))
+                {
+                    throw new LogicException("对不起,您的权限不足!");
+                }
+                var p = JsonHelper.Decode(entity.Param);
+                var userId = PreconditionAssert.IsNotEmptyString((string)p.Id, "主键编号不能为空");
+                var result = _service.DeleteUserSchemeShareExpert(userId);
+                return Json(new LotteryServiceResponse() { Code = result.IsSuccess ? AdminResponseCode.成功 : AdminResponseCode.失败, Message = result.Message });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
+            }
+        }
+        public IActionResult QueryUserSchemeShareExpertList(LotteryServiceRequest entity)
+        {
+            try
+            {
+                if (!CheckRights("U110"))
+                    throw new Exception("对不起，您的权限不足！");
+                var p = JsonHelper.Decode(entity.Param);
+                var UserKey = (string)p.UserKey == null ? string.Empty : (string)p.UserKey.ToString();
+                var Source = string.IsNullOrEmpty((string)p.Source) ? -1 : Convert.ToInt32((string)p.Source);
+                var PageIndex = (string)p.PageIndex == null ? base.PageIndex : Convert.ToInt32((string)p.PageIndex);
+                var PageSize = (string)p.PageSize == null ? base.PageSize : Convert.ToInt32((string)p.PageSize);
+                var SchemeShareList = _service.QueryUserSchemeShareExpertList(ViewBag.UserKey, ViewBag.Source, ViewBag.PageIndex, ViewBag.PageSize);
+                return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Value = SchemeShareList });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
+            }
+        }
+        /// <summary>
+        /// 代理统计数据
+        /// </summary>
+        public IActionResult AgentDetail(LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                var AgentId = string.IsNullOrWhiteSpace((string)p.agentId) ? string.Empty : (string)p.agentId;
+                var GameCode = string.IsNullOrWhiteSpace((string)p.gameCode) ? string.Empty : (string)p.gameCode;
+                var StartTime = string.IsNullOrWhiteSpace((string)p.startTime) ? DateTime.Now : Convert.ToDateTime((string)p.startTime);
+                var EndTime = string.IsNullOrWhiteSpace((string)p.endTime) ? DateTime.Now : Convert.ToDateTime((string)p.endTime);
+                var PageIndex = string.IsNullOrWhiteSpace((string)p.pageIndex) ? base.PageIndex : int.Parse((string)p.pageIndex);
+                var PageSize = string.IsNullOrWhiteSpace((string)p.pageSize) ? base.PageSize : int.Parse((string)p.pageSize);
+                bool? isFillMoney = null;
+                if (!string.IsNullOrWhiteSpace((string)p.isFillMoney)) { isFillMoney = bool.Parse((string)p.isFillMoney); }
+                var IsFillMoney = isFillMoney;
+                var AgentDetailList = _service.QueryAgentDetail(AgentId, GameCode, StartTime, EndTime, PageIndex, PageSize, (isFillMoney!=null&&isFillMoney.HasValue ? isFillMoney.Value : false));
+                return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Value = AgentDetailList });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
+            }
         }
     }
 }

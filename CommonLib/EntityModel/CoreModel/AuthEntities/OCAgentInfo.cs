@@ -363,42 +363,39 @@ namespace EntityModel.CoreModel
             public CPSMode CPSMode { get; set; }
         }
 
-     
-        public class OCAagentDetailInfoCollection
+
+    public class OCAagentDetailInfoCollection : Page
+    {
+        public OCAagentDetailInfoCollection()
         {
-            public OCAagentDetailInfoCollection()
-            {
-                List = new List<OCAagentDetailInfo>();
-            }
-            /// <summary>
-            /// 用户总条数
-            /// </summary>
-            public int TotalCount { get; set; }
-            /// <summary>
-            /// 总销量
-            /// </summary>
-            public decimal TotalBuyMoney { get; set; }
-            /// <summary>
-            /// 总中奖金额
-            /// </summary>
-            public decimal TotalBounsMoney { get; set; }
-            /// <summary>
-            /// 总加奖分红金额
-            /// </summary>
-            public decimal TotalRedBagAwardsMoney { get; set; }
-            /// <summary>
-            /// 总加奖现金金额
-            /// </summary>
-            public decimal TotalBonusAwardsMoney { get; set; }
-            /// <summary>
-            /// 总提现金额
-            /// </summary>
-            public decimal TotalWithdrawalsMoney { get; set; }
-            /// <summary>
-            /// 总充值
-            /// </summary>
-            public decimal TotalFillMoney { get; set; }
-            public List<OCAagentDetailInfo> List { get; set; }
+            List = new List<OCAagentDetailInfo>();
         }
+        /// <summary>
+        /// 总销量
+        /// </summary>
+        public decimal TotalBuyMoney { get; set; }
+        /// <summary>
+        /// 总中奖金额
+        /// </summary>
+        public decimal TotalBounsMoney { get; set; }
+        /// <summary>
+        /// 总加奖分红金额
+        /// </summary>
+        public decimal TotalRedBagAwardsMoney { get; set; }
+        /// <summary>
+        /// 总加奖现金金额
+        /// </summary>
+        public decimal TotalBonusAwardsMoney { get; set; }
+        /// <summary>
+        /// 总提现金额
+        /// </summary>
+        public decimal TotalWithdrawalsMoney { get; set; }
+        /// <summary>
+        /// 总充值
+        /// </summary>
+        public decimal TotalFillMoney { get; set; }
+        public decimal TotalFillMoneyUser { get; set; }
+        public List<OCAagentDetailInfo> List { get; set; }
+    }
     
 }
