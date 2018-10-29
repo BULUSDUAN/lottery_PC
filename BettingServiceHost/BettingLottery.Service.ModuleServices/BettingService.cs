@@ -1323,23 +1323,7 @@ namespace BettingLottery.Service.ModuleServices
             }
         }
         #endregion
-        public Task<string> ReadSqlTimeLog(string FileName)
-        {
-            return Task.FromResult(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\SQLInfo", "LogTime_"));
-        }
-        public Task<string> ReadLog(string DicName = "SQLInfo", string ApiDicTypeName = "Fatal")
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\" + DicName, "LogTime_"));
-
-            sb.Append("新的日志************************* \r\n");
-            sb.Append("新的日志************************* \r\n");
-            sb.Append("新的日志************************* \r\n");
-            sb.Append(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\" + ApiDicTypeName, "LogTime_"));
-
-            return Task.FromResult(sb.ToString());
-        }
-        //   Task<string> ReadLog(string DicName);
+      
 
         public Task<string> QueryCurrentUserInfo(string userToken)
         {
@@ -1588,6 +1572,22 @@ namespace BettingLottery.Service.ModuleServices
             }
             sb.Append("仍在冻结的用户包括:" + liststr);
             return Task.FromResult(sb.ToString());
+        }
+
+        /// <summary>
+        /// 查询用户保存的订单信息
+        /// </summary>
+        public Task<SaveOrder_LotteryBettingInfoCollection> QuerySaveOrder_Lottery(string UserId)
+        {
+
+            try
+            {
+                return Task.FromResult(new Sports_Business().QuerySaveOrderLottery(UserId));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
         }
     }
 }

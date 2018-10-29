@@ -26,11 +26,27 @@ using app.lottery.site.Models;
 using Common.Snapshot;
 using OrderLogWriter = app.lottery.site.Models.OrderLogWriter;
 using app.lottery.site.iqucai;
+using System.Threading.Tasks;
+using log4net;
+using Kason.Sg.Core.ProxyGenerator;
+using Kason.Sg.Core.CPlatform.Runtime.Client.Address.Resolvers;
 
 namespace app.lottery.site.Controllers
 {
     public class BuyController : BaseController
     {
+        #region 调用服务使用示例
+        private readonly ILog logger = null;
+        private readonly IServiceProxyProvider serviceProxyProvider;
+        public IAddressResolver addrre;
+        public BuyController(IServiceProxyProvider _serviceProxyProvider, ILog log, IAddressResolver _addrre)
+        {
+            serviceProxyProvider = _serviceProxyProvider;
+            logger = log;
+            addrre = _addrre;
+
+        }
+        #endregion
         #region 数字彩
 
         public ActionResult Szc(string id)
@@ -838,7 +854,7 @@ namespace app.lottery.site.Controllers
         /// 数字彩、传统足球普通投注
         /// </summary>
         [HttpPost]
-        public JsonResult Order()
+        public async Task<JsonResult> Order()
         {
             try
             {
@@ -853,8 +869,8 @@ namespace app.lottery.site.Controllers
                 var isHemai = string.IsNullOrEmpty(Request["isHemai"]) ? false : bool.Parse(Request["isHemai"]);
                 bool isStopAfterBonus = string.IsNullOrEmpty(Request["IsStopAfterBonus"]) ? false : bool.Parse(Request["IsStopAfterBonus"]);
                 var amount = string.IsNullOrEmpty(Request["amount"]) ? 0 : int.Parse(Request["amount"]);
-                var sercu = (TogetherSchemeSecurity)(string.IsNullOrEmpty(Request["sercurity"]) ? 4 : int.Parse(Request["sercurity"])); //方案保密性
-                var schemeCategory = isFilter ? SchemeBettingCategory.FilterBetting : SchemeBettingCategory.GeneralBetting;
+                var sercu = (EntityModel.Enum.TogetherSchemeSecurity)(string.IsNullOrEmpty(Request["sercurity"]) ? 4 : int.Parse(Request["sercurity"])); //方案保密性
+                var schemeCategory = isFilter ? EntityModel.Enum.SchemeBettingCategory.FilterBetting : EntityModel.Enum.SchemeBettingCategory.GeneralBetting;
                 var kind = string.IsNullOrEmpty(Request["kind"]) ? 2 : int.Parse(Request["kind"]); //方案投注类型
                 var IsAppend = string.IsNullOrEmpty(Request["IsAppend"]) ? false : Boolean.Parse(Request["IsAppend"]);
                 var activityType = 2;
@@ -866,11 +882,11 @@ namespace app.lottery.site.Controllers
                 #endregion
 
                 #region 投注号码
-                LotteryAnteCodeInfoCollection codeList = new LotteryAnteCodeInfoCollection();
+                EntityModel.CoreModel.LotteryAnteCodeInfoCollection codeList = new EntityModel.CoreModel.LotteryAnteCodeInfoCollection();
                 foreach (var item in number.Split('#'))
                 {
                     var codeArray = item.Split('.');
-                    codeList.Add(new LotteryAnteCodeInfo
+                    codeList.Add(new EntityModel.CoreModel.LotteryAnteCodeInfo
                     {
                         GameType = codeArray[0],
                         AnteCode = codeArray[1],
@@ -878,11 +894,11 @@ namespace app.lottery.site.Controllers
                 }
 
                 //合买投注号码对象
-                var togAnteList = new Sports_AnteCodeInfoCollection();
+                var togAnteList = new EntityModel.CoreModel.Sports_AnteCodeInfoCollection();
                 foreach (var item in number.Split('#'))
                 {
                     var codeArray = item.Split('.');
-                    var code = new Sports_AnteCodeInfo()
+                    var code = new EntityModel.CoreModel.Sports_AnteCodeInfo()
                     {
                         GameType = codeArray[0],
                         AnteCode = codeArray[1]
@@ -897,11 +913,11 @@ namespace app.lottery.site.Controllers
                 {
                     throw new Exception("投注没有包含期号信息。");
                 }
-                LotteryBettingIssuseInfoCollection issuseList = new LotteryBettingIssuseInfoCollection();
+                EntityModel.CoreModel.LotteryBettingIssuseInfoCollection issuseList = new EntityModel.CoreModel.LotteryBettingIssuseInfoCollection();
                 foreach (var item in issuseNumberArray)
                 {
                     var issuseArray = item.Split('|');
-                    issuseList.Add(new LotteryBettingIssuseInfo()
+                    issuseList.Add(new EntityModel.CoreModel.LotteryBettingIssuseInfo()
                     {
                         IssuseNumber = issuseArray[0],
                         Amount = int.Parse(issuseArray[1]),
@@ -909,7 +925,7 @@ namespace app.lottery.site.Controllers
                     });
                 }
                 #endregion
-
+                var param = new Dictionary<string, object>();
                 #region 合买投注
                 if (isHemai)
                 {
@@ -926,7 +942,7 @@ namespace app.lottery.site.Controllers
                     var subscription = string.IsNullOrEmpty(Request["subscription"]) ? 0 : int.Parse(Request["subscription"]); //我要认购金额(原来为认购份数)
                     var bonusdeduct = string.IsNullOrEmpty(Request["bonusdeduct"]) ? 0 : int.Parse(Request["bonusdeduct"]); //提成比例
 
-                    var togInfo = new Sports_TogetherSchemeInfo
+                    var togInfo = new EntityModel.CoreModel.Sports_TogetherSchemeInfo
                     {
                         GameCode = gameCode,
                         GameType = codeList.FirstOrDefault().GameType,
@@ -934,7 +950,7 @@ namespace app.lottery.site.Controllers
                         Amount = amount,
                         AnteCodeList = togAnteList,
                         PlayType = "",
-                        SchemeSource = SchemeSource.Web,
+                        SchemeSource = EntityModel.Enum.SchemeSource.Web,
                         TotalMoney = totalMoney,
                         TotalMatchCount = 14,
                         Title = title,
@@ -947,10 +963,14 @@ namespace app.lottery.site.Controllers
                         JoinPwd = joinpwd,
                         Subscription = subscription,
                         BettingCategory = schemeCategory,
-                        ActivityType = (ActivityType)activityType,
+                        ActivityType = (EntityModel.Enum.ActivityType)activityType,
                         IsAppend = IsAppend
                     };
-                    var hmResult = WCFClients.GameClient.CreateSportsTogether(togInfo, balancepwd, UserToken);
+                    
+                    param.Add("info", togInfo);
+                    param.Add("balancePassword", balancepwd);
+                    param.Add("userid", UserToken);
+                    var hmResult = await serviceProxyProvider.Invoke<EntityModel.Communication.CommonActionResult>(param, "api/Betting/CreateSportsTogether");
 
                     //清除当前用户过滤信息
                     //OrderLogWriter _logWriter = new OrderLogWriter(Server);
@@ -961,22 +981,29 @@ namespace app.lottery.site.Controllers
 
                 #region 普通投注
                 //投注信息
-                LotteryBettingInfo info = new LotteryBettingInfo()
+                EntityModel.CoreModel.LotteryBettingInfo info = new EntityModel.CoreModel.LotteryBettingInfo()
                 {
                     GameCode = gameCode,
                     AnteCodeList = codeList,
                     IssuseNumberList = issuseList,
-                    SchemeSource = SchemeSource.Web,
+                    SchemeSource = EntityModel.Enum.SchemeSource.Web,
                     StopAfterBonus = isStopAfterBonus,
                     TotalMoney = totalMoney,
                     Security = sercu,
                     BettingCategory = schemeCategory,
-                    ActivityType = (ActivityType)activityType,
+                    ActivityType = (EntityModel.Enum.ActivityType)activityType,
                     IsAppend = IsAppend
                 };
-
+                param.Clear();
+                param.Add("info", info);
+                param.Add("balancePassword", balancepwd);
+                param.Add("redBagMoney", 0M);
+                param.Add("userid", UserToken);
+                var saveparam = new Dictionary<string, object>();
+                saveparam.Add("info", info);
+                saveparam.Add("userid", UserToken);
                 //如果是0表示免费保存订单
-                var result = kind == 0 ? WCFClients.GameClient.SaveOrderLotteryBetting(info, UserToken) : WCFClients.GameClient.LotteryBetting(info, balancepwd, 0M, UserToken);
+                var result = kind == 0 ? await serviceProxyProvider.Invoke<EntityModel.Communication.CommonActionResult>(saveparam, "api/Betting/SaveOrderLotteryBetting") : await serviceProxyProvider.Invoke<EntityModel.Communication.CommonActionResult>(param, "api/Betting/LotteryBetting");
                 if (kind != 0 && result.IsSuccess && !isHemai)//发送快照
                 {
                     string schemeType = string.Empty;
@@ -1029,7 +1056,7 @@ namespace app.lottery.site.Controllers
         }
         //北单、竞彩足球、竞彩篮球-投注函数
         [HttpPost]
-        public JsonResult bet_sports()
+        public async Task<JsonResult> bet_sports()
         {
             try
             {
@@ -1043,7 +1070,7 @@ namespace app.lottery.site.Controllers
                 var totalMoney = decimal.Parse(PreconditionAssert.IsNotEmptyString(Request["totalMoney"], "投注金额不能为空。"));
                 var matchcount = int.Parse(PreconditionAssert.IsNotEmptyString(Request["matchcount"], "投注场数不能为空。"));
                 var balancepwd = string.IsNullOrEmpty(Request["balancepwd"]) ? "" : Request["balancepwd"];
-                var sercu = (TogetherSchemeSecurity)(string.IsNullOrEmpty(Request["sercurity"]) ? 4 : int.Parse(Request["sercurity"])); //方案保密性
+                var sercu = (EntityModel.Enum.TogetherSchemeSecurity)(string.IsNullOrEmpty(Request["sercurity"]) ? 4 : int.Parse(Request["sercurity"])); //方案保密性
                 var kind = string.IsNullOrEmpty(Request["kind"]) ? 2 : int.Parse(Request["kind"]); //方案投注类型
                 var activityType = 2;
                 var isexy = string.IsNullOrEmpty(Request["isExy"]) ? false : Boolean.Parse(Request["isExy"]);
@@ -1057,12 +1084,12 @@ namespace app.lottery.site.Controllers
 
                 #region 投注号码
                 //投注号码对象
-                var anteCodeList = new Sports_AnteCodeInfoCollection();
+                var anteCodeList = new EntityModel.CoreModel.Sports_AnteCodeInfoCollection();
                 var codeArray = antecode.Split('#');
                 foreach (var item in codeArray)
                 {
                     var cods = item.Split('|');
-                    var code = new Sports_AnteCodeInfo()
+                    var code = new EntityModel.CoreModel.Sports_AnteCodeInfo()
                     {
                         IsDan = bool.Parse(cods[0]),
                         MatchId = cods[1],
@@ -1082,7 +1109,7 @@ namespace app.lottery.site.Controllers
                 //投注过关方式
                 playType = playType.Replace("P0_1", "").Replace("P", "").Replace(",", "|");
                 #endregion
-
+                var param = new Dictionary<string, object>();
                 #region 合买投注
                 if (isHemai)
                 {
@@ -1096,7 +1123,7 @@ namespace app.lottery.site.Controllers
                     var subscription = string.IsNullOrEmpty(Request["subscription"]) ? 0 : int.Parse(Request["subscription"]); //我要认购份数
                     var bonusdeduct = string.IsNullOrEmpty(Request["bonusdeduct"]) ? 0 : int.Parse(Request["bonusdeduct"]); //提成比例
 
-                    Sports_TogetherSchemeInfo togInfo = new Sports_TogetherSchemeInfo()
+                    EntityModel.CoreModel.Sports_TogetherSchemeInfo togInfo = new EntityModel.CoreModel.Sports_TogetherSchemeInfo()
                     {
                         GameCode = gameCode,
                         GameType = gameType,
@@ -1104,7 +1131,7 @@ namespace app.lottery.site.Controllers
                         Amount = amount,
                         AnteCodeList = anteCodeList,
                         PlayType = playType,
-                        SchemeSource = SchemeSource.Web,
+                        SchemeSource = EntityModel.Enum.SchemeSource.Web,
                         TotalMoney = totalMoney,
                         TotalMatchCount = matchcount,
                         Title = title,
@@ -1116,11 +1143,16 @@ namespace app.lottery.site.Controllers
                         Guarantees = guarantees,
                         JoinPwd = joinpwd,
                         Subscription = subscription,
-                        ActivityType = (ActivityType)activityType,
-                        BettingCategory = isexy ? SchemeBettingCategory.ErXuanYi : SchemeBettingCategory.GeneralBetting
+                        ActivityType = (EntityModel.Enum.ActivityType)activityType,
+                        BettingCategory = isexy ? EntityModel.Enum.SchemeBettingCategory.ErXuanYi : EntityModel.Enum.SchemeBettingCategory.GeneralBetting
 
                     };
-                    var hmResult = WCFClients.GameClient.CreateSportsTogether(togInfo, balancepwd, UserToken);
+
+                   
+                    param.Add("info", togInfo);
+                    param.Add("balancePassword", balancepwd);
+                    param.Add("userid", UserToken);
+                    var hmResult = await serviceProxyProvider.Invoke<EntityModel.Communication.CommonActionResult>(param, "api/Betting/CreateSportsTogether");
                     return Json(hmResult);
                 }
                 #endregion
@@ -1128,9 +1160,9 @@ namespace app.lottery.site.Controllers
                 #region 普通投注
 
                 //投注对象
-                Sports_BetingInfo info = new Sports_BetingInfo()
+                EntityModel.CoreModel.Sports_BetingInfo info = new EntityModel.CoreModel.Sports_BetingInfo()
                 {
-                    SchemeSource = SchemeSource.Web,
+                    SchemeSource = EntityModel.Enum.SchemeSource.Web,
                     PlayType = playType,
                     GameType = gameType,
                     IssuseNumber = issuseNumber,
@@ -1142,9 +1174,9 @@ namespace app.lottery.site.Controllers
                     Security = sercu,
 
                     SoldCount = (int)totalMoney,
-                    ActivityType = (ActivityType)activityType,
-                    BettingCategory = isexy ? SchemeBettingCategory.ErXuanYi : SchemeBettingCategory.GeneralBetting,
-                    SchemeProgress = TogetherSchemeProgress.Finish
+                    ActivityType = (EntityModel.Enum.ActivityType)activityType,
+                    BettingCategory = isexy ? EntityModel.Enum.SchemeBettingCategory.ErXuanYi : EntityModel.Enum.SchemeBettingCategory.GeneralBetting,
+                    SchemeProgress = EntityModel.Enum.TogetherSchemeProgress.Finish
                 };
 
                 //竞彩足球单场  人气统计
@@ -1161,9 +1193,18 @@ namespace app.lottery.site.Controllers
                 //}
 
                 //如果是0表示免费保存订单
-
+                param.Clear();
+                param.Add("info", info);
+                param.Add("balancePassword", balancepwd);
+                param.Add("redBagMoney", 0M);
+                param.Add("userid", UserToken);
+                var saveparam = new Dictionary<string, object>();
+                saveparam.Add("info", info);
+                saveparam.Add("userid", UserToken);
+                //如果是0表示免费保存订单
+                
                 //  var result = kind == 0 ? WCFClients.GameClient.SaveOrderSportsBetting(info, UserToken) : WCFClients.GameClient.Sports_Betting(info, balancepwd, UserToken);
-                var result = kind == 0 ? WCFClients.GameClient.SaveOrderSportsBetting(info, UserToken) : WCFClients.GameClient.Sports_Betting(info, balancepwd, 0M, UserToken);
+                var result = kind == 0 ? await serviceProxyProvider.Invoke<EntityModel.Communication.CommonActionResult>(saveparam, "api/Betting/SaveOrderSportsBetting") : await serviceProxyProvider.Invoke<EntityModel.Communication.CommonActionResult>(param, "api/Betting/Sports_Betting");
                 if (kind != 0 && result.IsSuccess)//发送快照
                 {
                     if (!isHemai)
@@ -1213,13 +1254,18 @@ namespace app.lottery.site.Controllers
         /// 保存订单购买
         /// </summary>
         /// <returns></returns>
-        public JsonResult save_spotts()
+        public async Task<JsonResult> save_spotts()
         {
             try
             {
                 var schemeId = PreconditionAssert.IsNotEmptyString(Request["schemeId"], "订单编号不能为空");
                 var balancePassword = string.IsNullOrEmpty(Request["bpwd"]) ? "" : Request["bpwd"];
-                var result = WCFClients.GameClient.BettingUserSavedOrder(schemeId, balancePassword, 0M, base.UserToken);
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["schemeId"] = schemeId;
+                param["balancePassword"] = balancePassword;
+                param["redBagMoney"] = 0M;
+                param["userId"] = UserToken;
+                var result = await serviceProxyProvider.Invoke<EntityModel.Communication.CommonActionResult>(param, "api/Betting/BettingUserSavedOrder");
                 return Json(result);
             }
             catch (Exception ex)
@@ -1229,7 +1275,7 @@ namespace app.lottery.site.Controllers
             }
         }
         //单式上传
-        public JsonResult sing_sports()
+        public async Task<JsonResult> sing_sports()
         {
             try
             {
@@ -1244,18 +1290,18 @@ namespace app.lottery.site.Controllers
                 var allowCodes = PreconditionAssert.IsNotEmptyString(Request["allowCodes"], "允许投注的号码不能为空");
                 var balancepwd = string.IsNullOrEmpty(Request["balancepwd"]) ? "" : Request["balancepwd"];//资金密码
 
-                var ser = (TogetherSchemeSecurity)(string.IsNullOrEmpty(Request["sercurity"]) ? 4 : int.Parse(Request["sercurity"])); //方案保密性;//方案保密性
+                var ser = (EntityModel.Enum.TogetherSchemeSecurity)(string.IsNullOrEmpty(Request["sercurity"]) ? 4 : int.Parse(Request["sercurity"])); //方案保密性;//方案保密性
                 var antecode = "";//投注号码
                 var amount = PreconditionAssert.IsNotEmptyString(Request["amount"], "投注倍数不能为空");
                 var totalMoney = PreconditionAssert.IsNotEmptyString(Request["totalMoney"], "投注金额不能为空");
                 var fileBuffer = Encoding.UTF8.GetBytes(Session["fileStream"].ToString());
-                var activityType = (ActivityType)(string.IsNullOrEmpty(Request["activityType"]) ? 2 : int.Parse(Request["activityType"]));
+                var activityType = (EntityModel.Enum.ActivityType)(string.IsNullOrEmpty(Request["activityType"]) ? 2 : int.Parse(Request["activityType"]));
                 var isHemai = string.IsNullOrEmpty(Request["isHemai"]) ? false : bool.Parse(Request["isHemai"]);
                 List<string> matchIdList = new List<string>();
                 var checkresult = AnalyzerFactory.CheckSingleSchemeAnteCode(Session["fileStream"].ToString(), playType, containsMatchId, selectMatchId.Split(','), allowCodes.Split(','), out matchIdList);
                 var codeArray = checkresult;
                 //投注号码对象
-                var anteCodeList = new Sports_AnteCodeInfoCollection();
+                var anteCodeList = new EntityModel.CoreModel.Sports_AnteCodeInfoCollection();
                 foreach (var item in codeArray)
                 {
                     var cods = item.Split('#');
@@ -1263,7 +1309,7 @@ namespace app.lottery.site.Controllers
                     foreach (var c in cods)
                     {
                         var cod = c.Split('|');
-                        var code = new Sports_AnteCodeInfo()
+                        var code = new EntityModel.CoreModel.Sports_AnteCodeInfo()
                         {
                             IsDan = false,
                             MatchId = cod[0],
@@ -1275,7 +1321,7 @@ namespace app.lottery.site.Controllers
                         anteCodeList.Add(code);
                     }
                 }
-                SingleSchemeInfo info = new SingleSchemeInfo
+                EntityModel.CoreModel.SingleSchemeInfo info = new EntityModel.CoreModel.SingleSchemeInfo
                 {
                     GameCode = gameCode,
                     GameType = gameType,
@@ -1284,9 +1330,9 @@ namespace app.lottery.site.Controllers
                     SelectMatchId = selectMatchId,
                     AllowCodes = allowCodes,
                     ContainsMatchId = containsMatchId,
-                    SchemeSource = SchemeSource.Web,
+                    SchemeSource = EntityModel.Enum.SchemeSource.Web,
                     Security = ser,
-                    BettingCategory = SchemeBettingCategory.SingleBetting,
+                    BettingCategory = EntityModel.Enum.SchemeBettingCategory.SingleBetting,
                     AnteCodeList = anteCodeList,
                     Amount = int.Parse(amount),
                     TotalMoney = decimal.Parse(totalMoney),
@@ -1294,6 +1340,7 @@ namespace app.lottery.site.Controllers
                     ActivityType = activityType,
 
                 };
+                Dictionary<string, object> param = new Dictionary<string, object>();
                 #region 合买
                 if (isHemai)
                 {
@@ -1307,7 +1354,7 @@ namespace app.lottery.site.Controllers
                     var subscription = string.IsNullOrEmpty(Request["subscription"]) ? 0 : int.Parse(Request["subscription"]); //我要认购份数
                     var bonusdeduct = string.IsNullOrEmpty(Request["bonusdeduct"]) ? 0 : int.Parse(Request["bonusdeduct"]); //提成比例
                     //合买
-                    SingleScheme_TogetherSchemeInfo togetherinfo = new SingleScheme_TogetherSchemeInfo
+                    EntityModel.CoreModel.SingleScheme_TogetherSchemeInfo togetherinfo = new EntityModel.CoreModel.SingleScheme_TogetherSchemeInfo
                     {
                         BettingInfo = info,
                         Title = title,
@@ -1320,13 +1367,18 @@ namespace app.lottery.site.Controllers
                         JoinPwd = joinpwd,
                         Subscription = subscription
                     };
-                    var hmresult = WCFClients.GameClient.CreateSingleSchemeTogether(togetherinfo, balancepwd, UserToken);
+
+                  
+                    param["info"] = togetherinfo;
+                    param["balancePassword"] = balancepwd;
+                    param["userId"] = UserToken;
+                    var hmresult = await serviceProxyProvider.Invoke<EntityModel.Communication.CommonActionResult>(param, "api/Betting/CreateSingleSchemeTogether");
                     return Json(hmresult);
                 }
                 #endregion
 
                 #region 普通投注
-                var result = WCFClients.GameClient.SingleSchemeBettingAndChase(info, balancepwd, 0M, UserToken);
+                var result = await serviceProxyProvider.Invoke<EntityModel.Communication.CommonActionResult>(param, "api/Betting/SingleSchemeBettingAndChase");
                 return Json(result);
                 #endregion
 

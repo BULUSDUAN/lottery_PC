@@ -1,9 +1,9 @@
-﻿@using GameBiz.Core;
+﻿@using EntityModel.CoreModel;
 @using app.lottery.site.Models;
 @{
     ViewBag.Title = "发起的合买 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
     ViewBag.keywords = "发起的合买, 用户中心, 体育彩票, 福利彩票, 中国体育彩票, " + SiteString.getHZSiteName(Request);
-    var orders = ViewBag.CreateTogegher as GameBiz.Core.TogetherOrderInfoCollection;
+    var orders = ViewBag.CreateTogegher as EntityModel.CoreModel.TogetherOrderInfoCollection;
     var user = ViewBag.CurrentUser as CurrentUserInfo;
     var count = 0;
     var buy = 0;
@@ -79,15 +79,15 @@
                         <tr>
                             <td>
                                 @{
-                                if (item.UserId == user.LoginInfo.UserId && item.SchemeType == SchemeType.TogetherBetting)
+                                if (item.UserId == user.LoginInfo.UserId && item.SchemeType == EntityModel.Enum.SchemeType.TogetherBetting)
                                 {
                                     <i class="st" title="由本人发起的合买方案">合买</i>
                                 }
-                                else if (item.SchemeType == SchemeType.TogetherBetting)
+                                else if (item.SchemeType == EntityModel.Enum.SchemeType.TogetherBetting)
                                 {
                                     <i class="cy" title="参与合买">参与</i>
                                 }
-                                else if (item.SchemeType == SchemeType.SingleCopy)
+                                else if (item.SchemeType == EntityModel.Enum.SchemeType.SingleCopy)
                                 {
                                     <i class="cy" title="抄单">抄单</i>
                                 }

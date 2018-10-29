@@ -147,5 +147,8 @@ namespace OrderLottery.Service.IModuleServices
 
         [Service(Date = "2018-10-22", Director = "renjun", Name = "查询单式上传方案详情")]
         Task<OrderSingleSchemeCollection> QuerySingSchemeDetail(string schemeId);
+
+        [Service(Date = "2018-10-29", Director = "renjun", Name = "查询用户保存的订单信息")]
+        Task<SaveOrder_LotteryBettingInfoCollection> QuerySaveOrder_Lottery(string UserId);
     }
 }

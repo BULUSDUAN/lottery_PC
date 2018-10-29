@@ -483,9 +483,11 @@ namespace app.lottery.site.Controllers
         #endregion
 
         #region 保存方案
-        public ActionResult saveProgram()
+        public async Task<ActionResult> saveProgram()
         {
-            ViewBag.Orders = WCFClients.GameClient.QuerySaveOrder_Lottery(UserToken);
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            param["UserId"] = UserToken;
+            ViewBag.Orders = await serviceProxyProvider.Invoke<EntityModel.CoreModel.SaveOrder_LotteryBettingInfoCollection>(param, "api/Order/QuerySaveOrder_Lottery");
             return View();
         }
         #endregion
