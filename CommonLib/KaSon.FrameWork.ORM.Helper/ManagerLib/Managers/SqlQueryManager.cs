@@ -246,7 +246,6 @@ namespace KaSon.FrameWork.ORM.Helper
                 return result.Count();
             return 0;
         }
-
         #region 过关统计
 
         /// <summary>

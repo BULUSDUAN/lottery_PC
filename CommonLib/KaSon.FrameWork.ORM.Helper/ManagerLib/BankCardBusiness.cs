@@ -14,9 +14,7 @@ namespace KaSon.FrameWork.ORM.Helper
         }
         public void AddBankCard(C_BankCard bankCard)
         {
-
-            var manager = new BankCardManager();
-            var entity = new C_BankCard()
+            new BankCardManager().AddBankCard(new C_BankCard()
             {
                 UserId = bankCard.UserId,
                 BankCardNumber = bankCard.BankCardNumber,
@@ -26,10 +24,8 @@ namespace KaSon.FrameWork.ORM.Helper
                 CityName = bankCard.CityName,
                 CreateTime = DateTime.Now,
                 ProvinceName = bankCard.ProvinceName,
-                RealName = bankCard.RealName,
-                UpdateTime = DateTime.Now
-            };
-            manager.AddBankCard(entity);
+                RealName = bankCard.RealName
+            });
         }
         public void UpdateBankCard(C_BankCard bankCard, string userId)
         {
@@ -37,7 +33,6 @@ namespace KaSon.FrameWork.ORM.Helper
             var entity = manager.BankCardById(userId);
             if (entity == null)
             {
-                //DB.Rollback();
                 throw new Exception("修改信息未被查询到");
             }
             entity.BankCardNumber = bankCard.BankCardNumber;
@@ -57,7 +52,6 @@ namespace KaSon.FrameWork.ORM.Helper
             var entity = manager.BankCardById(userId);
             if (entity == null)
             {
-                DB.Rollback();
                 throw new Exception("未查到信息");
             }
             manager.DeleteBankCard(entity);

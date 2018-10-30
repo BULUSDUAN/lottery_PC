@@ -19,25 +19,20 @@ namespace KaSon.FrameWork.ORM.Helper
         public void AddAuthenticationRealName(string authFrom, string userId, string realName, string cardType, string idCardNumber, string createBy, bool checkRepet)
         {
             var manager = new UserRealNameManager();
-
             if (checkRepet)
             {
                 var other = manager.QueryUserRealName(idCardNumber);
                 if (other != null)
                     throw new LogicException(string.Format("此证件号【{0}】已被其他用户认证。", idCardNumber));
-                //var other2 = manager.QueryUserRealNameByName(realName);
-                //if (other2 != null)
-                //    throw new ArgumentException("对不起，由于系统检测到您的姓名已被绑定，请联系在线客服为您人工绑定，给您带来的不便敬请谅解，此绑定不影响您的正常购彩和提现。");
             }
-
             var entity = GetAuthenticatedRealName(userId);
             if (entity != null)
             {
                 entity.RealName = realName;
                 entity.IdCardNumber = idCardNumber;
                 entity.IsSettedRealName = true;
+                entity.UpdateTime = DateTime.Now;
                 manager.UpdateUserRealName(entity);
-                //throw new ArgumentException(string.Format("此用户已于【{0:yyyy-MM-dd HH:mm:ss}】进行过实名认证", entity.CreateTime));
             }
             else
             {
@@ -53,13 +48,13 @@ namespace KaSon.FrameWork.ORM.Helper
                         IsSettedRealName = true,
                         CreateBy = createBy,
                         UpdateBy = createBy,
+                        CreateTime=DateTime.Now
                     };
                     manager.AddUserRealName(entity);
                 }
                 else
                     throw new LogicException(string.Format("此用户已于【{0:yyyy-MM-dd HH:mm:ss}】进行过实名认证", entity.CreateTime));
             }
-
             //修改vip等级
             var balanceManager = new UserBalanceManager();
             var user = balanceManager.QueryUserRegister(userId);
@@ -98,7 +93,6 @@ namespace KaSon.FrameWork.ORM.Helper
                     CreateTime = DateTime.Now,
                 };
                 gv.AddTaskList(addTaskList);
-              
             }
         }
         public void UpdateAuthenticationRealName(string authFrom, string userId, string realName, string cardType, string idCardNumber, string updateBy)

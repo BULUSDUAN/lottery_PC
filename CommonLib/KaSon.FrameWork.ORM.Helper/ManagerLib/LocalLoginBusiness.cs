@@ -926,35 +926,12 @@ namespace KaSon.FrameWork.ORM.Helper
                 .SetString("Ip", ip).Excute();
             return (int)result;
         }
-        public UserQueryInfoCollection QueryUserList(DateTime regFrom, DateTime regTo, string keyType, string keyValue, bool? isEnable, bool? isFillMoney, bool? IsUserType, bool? isAgent
+        public UserSysDataCollection QueryUserList(DateTime regFrom, DateTime regTo, string keyType, string keyValue, bool? isEnable, bool? isFillMoney, bool? IsUserType, bool? isAgent
             , string commonBlance, string bonusBlance, string freezeBlance, string vipRange, string comeFrom, string agentId, int pageIndex, int pageSize, string strOrderBy, int UserCreditType = -1)
         {
             var manager = new LoginLocalManager();
-                int totalCount;
-                decimal totalFillMoneyBalance;
-                decimal totalBonusBalance;
-                decimal totalCommissionBalance;
-                decimal totalExpertsBalance;
-                decimal totalFreezeBalance;
-                decimal totalRedBagBalance;
-                decimal totalCPSBalance;
-                int totalDouDou;
-                var list = manager.QueryUserList(regFrom, regTo, keyType, keyValue, isEnable, isFillMoney, IsUserType, isAgent, commonBlance, bonusBlance, freezeBlance, vipRange, comeFrom, agentId, pageIndex, pageSize,
-                    out totalCount, out totalFillMoneyBalance, out totalBonusBalance, out totalCommissionBalance, out totalExpertsBalance, out totalFreezeBalance, out totalRedBagBalance, out totalDouDou, out totalCPSBalance, strOrderBy, UserCreditType);
-                var collection = new UserQueryInfoCollection
-                {
-                    TotalCount = totalCount,
-                    TotalFillMoneyBalance = totalFillMoneyBalance,
-                    TotalBonusBalance = totalBonusBalance,
-                    TotalCommissionBalance = totalCommissionBalance,
-                    TotalExpertsBalance = totalExpertsBalance,
-                    TotalFreezeBalance = totalFreezeBalance,
-                    TotalRedBagBalance = totalRedBagBalance,
-                    TotalDouDou = totalDouDou,
-                    TotalCPSBalance = totalCPSBalance
-                };
-                collection.LoadList(list);
-                return collection;
+                var list = manager.QueryUserList(regFrom, regTo, keyType, keyValue, isEnable, isFillMoney, IsUserType, isAgent, commonBlance, bonusBlance, freezeBlance, vipRange, comeFrom, agentId, pageIndex, pageSize,strOrderBy, UserCreditType);
+                return list;
             
         }
         /// <summary>
@@ -963,14 +940,12 @@ namespace KaSon.FrameWork.ORM.Helper
         public void DisableUser(string userId)
         {
             //开启事务
-            DB.Begin();
             var manager = new UserBalanceManager();
             var register = manager.LoadUserRegister(userId);
             if (register == null)
                 throw new Exception("用户不存在");
             register.IsEnable = false;
             manager.UpdateUserRegister(register);
-            DB.Commit();
         }
         /// <summary>
         /// 启用用户

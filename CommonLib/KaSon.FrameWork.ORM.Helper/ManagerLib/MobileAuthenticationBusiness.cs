@@ -36,7 +36,7 @@ namespace KaSon.FrameWork.ORM.Helper
                          {
                              AuthFrom = p.AuthFrom,
                              CreateBy = p.CreateBy,
-                             CreateTime = p.CreateTime,
+                             CreateTime = p.CreateTime.Value,
                              IsSettedMobile = p.IsSettedMobile,
                              Mobile = p.Mobile
 
@@ -110,7 +110,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 {
                     throw new LogicException(string.Format("已于【{0:yyyy-MM-dd HH:mm:ss}】进行过手机认证。", entity.UpdateTime));
                 }
-                var span = DateTime.Now - entity.UpdateTime.AddSeconds(delaySeconds);
+                var span = DateTime.Now - entity.UpdateTime.Value.AddSeconds(delaySeconds);
                 if (span.TotalSeconds > 0)
                 {
                     throw new LogicException(string.Format("提交认证手机必须在请求认证后【{0}】内完成。", delayDescription));
@@ -148,7 +148,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 {
                     if (entity.IsSettedMobile)
                         throw new LogicException(string.Format("已于【{0:yyyy-MM-dd HH:mm:ss}】进行过手机认证。", entity.UpdateTime));
-                    var span = DateTime.Now - entity.UpdateTime.AddSeconds(delaySeconds);
+                    var span = DateTime.Now - entity.UpdateTime.Value.AddSeconds(delaySeconds);
                     if (span.TotalSeconds > 0)
                         throw new LogicException(string.Format("提交认证手机必须在请求认证后【{0}】内完成。", delayDescription));
                     entity.IsSettedMobile = true;
@@ -312,7 +312,6 @@ namespace KaSon.FrameWork.ORM.Helper
                     throw new ArgumentException(string.Format("此手机号【{0}】已被其他用户认证。", mobile));
                 if (mobileInfo != null && !string.IsNullOrEmpty(mobileInfo.Mobile) && !mobileInfo.IsSettedMobile)
                 {
-                    //mobileInfo.UserId = userId;
                     mobileInfo.UpdateBy = userId;
                     mobileInfo.UpdateTime = DateTime.Now;
                     mobileInfo.Mobile = mobile;
@@ -326,12 +325,12 @@ namespace KaSon.FrameWork.ORM.Helper
                         mobileInfo = new E_Authentication_Mobile
                         {
                             UserId = userId,
-                            //User = manager.LoadUser(userId),
                             AuthFrom = authFrom,
                             Mobile = mobile,
                             IsSettedMobile = true,
                             CreateBy = createBy,
                             UpdateBy = createBy,
+                            CreateTime=DateTime.Now
                         };
                         manager.AddUserMobile(mobileInfo);
                     }
@@ -339,6 +338,5 @@ namespace KaSon.FrameWork.ORM.Helper
                         throw new ArgumentException(string.Format("此用户已于【{0:yyyy-MM-dd HH:mm:ss}】进行过手机认证", mobileInfo.CreateTime));
                 }
         }
-       
     }
 }

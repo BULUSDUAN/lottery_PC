@@ -47,7 +47,7 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(5)]
             [Field("CreateTime")]
-            public DateTime CreateTime{ get; set; }
+            public DateTime? CreateTime{ get; set; }
             /// <summary>
             // 创建自
             ///</summary>
@@ -59,7 +59,7 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(7)]
             [Field("UpdateTime")]
-            public DateTime UpdateTime{ get; set; }
+            public DateTime? UpdateTime{ get; set; }
             /// <summary>
             // 更新自
             ///</summary>

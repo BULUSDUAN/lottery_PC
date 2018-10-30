@@ -563,7 +563,7 @@ namespace KaSon.FrameWork.ORM.Helper
         #endregion
 
         #region 会员管理模块
-        public UserQueryInfoCollection QueryUserList(DateTime regFrom, DateTime regTo, string keyType, string keyValue, bool? isEnable, bool? isFillMoney, bool? IsUserType, bool? isAgent
+        public UserSysDataCollection QueryUserList(DateTime regFrom, DateTime regTo, string keyType, string keyValue, bool? isEnable, bool? isFillMoney, bool? IsUserType, bool? isAgent
             , string commonBlance, string bonusBlance, string freezeBlance, string vipRange, string comeFrom, string agentId, int pageIndex, int pageSize, string userToken, string strOrderBy, int UserCreditType = -1)
         {
             var siteBiz = new LocalLoginBusiness();
@@ -1186,13 +1186,20 @@ namespace KaSon.FrameWork.ORM.Helper
         }
         public CommonActionResult AuthenticateUserRealName_BackSite(string userId, string realName, string idCard, string userToken)
         {
-            // 验证用户身份及权限
-            var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
-            var biz = new RealNameAuthenticationBusiness();
-            biz.AddAuthenticationRealName("LOCAL", userId, realName, "0", idCard, myId, false);
-            //! 执行扩展功能代码 - 提交事务后
-            BusinessHelper.ExecPlugin<IResponseAuthentication_AfterTranCommit>(new object[] { userId, "RealName", realName + "|0|" + idCard, SchemeSource.Web });
-            return new CommonActionResult(true, "实名认证成功。");
+            try
+            {
+                // 验证用户身份及权限
+                var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+                var biz = new RealNameAuthenticationBusiness();
+                biz.AddAuthenticationRealName("LOCAL", userId, realName, "0", idCard, myId, false);
+                //! 执行扩展功能代码 - 提交事务后
+                BusinessHelper.ExecPlugin<IResponseAuthentication_AfterTranCommit>(new object[] { userId, "RealName", realName + "|0|" + idCard, SchemeSource.Web });
+                return new CommonActionResult(true, "实名认证成功。");
+            }
+            catch (Exception ex)
+            {
+                return new CommonActionResult(true, "实名认证失败。"+ ex.Message);
+            }
         }
         /// <summary>
         /// 用户手机认证

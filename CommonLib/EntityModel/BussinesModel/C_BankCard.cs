@@ -77,12 +77,12 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(10)]
             [Field("CreateTime")]
-            public DateTime CreateTime{ get; set; }
+            public DateTime? CreateTime{ get; set; }
             /// <summary>
             // 创建时间
             ///</summary>
             [ProtoMember(11)]
             [Field("UpdateTime")]
-            public DateTime UpdateTime{ get; set; }
+            public DateTime? UpdateTime{ get; set; }
     }
 }
