@@ -1378,6 +1378,11 @@ namespace app.lottery.site.Controllers
                 #endregion
 
                 #region 普通投注
+                param.Clear();
+                param["info"] = info;
+                param["password"] = balancepwd;
+                param["redBagMoney"] = 0M;
+                param["userId"] = UserToken;
                 var result = await serviceProxyProvider.Invoke<EntityModel.Communication.CommonActionResult>(param, "api/Betting/SingleSchemeBettingAndChase");
                 return Json(result);
                 #endregion

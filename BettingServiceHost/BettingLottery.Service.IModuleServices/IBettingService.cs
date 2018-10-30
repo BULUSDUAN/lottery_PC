@@ -92,5 +92,7 @@ namespace BettingLottery.Service.IModuleServices
         Task<CommonActionResult> BettingUserSavedOrder(string schemeId, string balancePassword, decimal redBagMoney, string userId);
         [Service(Date = "2018-10-29", Director = "renjun", Name = "发起单式合买")]
         Task<CommonActionResult> CreateSingleSchemeTogether(SingleScheme_TogetherSchemeInfo info, string balancePassword, string userId);
+        [Service(Date = "2018-10-30", Director = "renjun", Name = "单式投注和追号")]
+        Task<CommonActionResult> SingleSchemeBettingAndChase(SingleSchemeInfo info, string password, decimal redBagMoney, string userId);
     }
 }

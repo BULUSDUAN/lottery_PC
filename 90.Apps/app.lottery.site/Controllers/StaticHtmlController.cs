@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using log4net;
 using Kason.Sg.Core.ProxyGenerator;
 using Kason.Sg.Core.CPlatform.Runtime.Client.Address.Resolvers;
+using EntityModel;
 
 namespace app.lottery.site.Controllers
 {
@@ -222,7 +223,7 @@ namespace app.lottery.site.Controllers
         /// <summary>
         /// 生成指定的页面
         /// </summary>
-        public ContentResult BuildSpecificPage()
+        public async Task<ContentResult> BuildSpecificPage()
         {
             try
             {
@@ -241,7 +242,7 @@ namespace app.lottery.site.Controllers
                         //{
 
                         //});
-                        BuildIndex();
+                        await BuildIndex();
                         break;
                     case "11":
                         //中间页面
@@ -454,24 +455,37 @@ namespace app.lottery.site.Controllers
             ViewBag.CurrentUser = CurrentUser;
             //神单排行
             var now = DateTime.Now;
-            ViewBag.RankList = WCFClients.ExternalClient.QueryGSRankList(now.ToString("MM.dd"), now.ToString("MM.dd"), "", "");
+            param.Clear();
+            param["startTime"] = now.ToString("MM.dd"); param["endTime"] = now.ToString("MM.dd"); param["currUserId"] = ""; param["isMyGZ"] = "";
+            ViewBag.RankList = await serviceProxyProvider.Invoke<EntityModel.CoreModel.BDFXGSRank_Collection>(param, "api/order/QueryGSRankList");
             //焦点新闻想     
-            ViewBag.FocusCMS = WCFClients.ExternalClient.QueryArticleList_YouHua("FocusCMS", "", 0, 10);
+            param.Clear();
+            param["category"] = "FocusCMS"; param["gameCode"] = ""; param["pageIndex"] =0; param["pageSize"] = 10;
+            ViewBag.FocusCMS = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
             //中奖新闻
-            ViewBag.BonusCMS = WCFClients.ExternalClient.QueryArticleList_YouHua("BonusCMS", "", 0, 10);
+            param.Clear();
+            param["category"] = "BonusCMS"; param["gameCode"] = ""; param["pageIndex"] = 0; param["pageSize"] = 10;
+            ViewBag.BonusCMS = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
             //总注册人数
-            ViewBag.TotalUserCount = WCFClients.ExternalClient.QueryUserRegisterCount();
+            param.Clear();
+            ViewBag.TotalUserCount = await serviceProxyProvider.Invoke<int>(param, "api/user/QueryUserRegisterCount");
             //神单红人月/总排行
             var MonthBeginTime = DateTime.Now.AddDays(-30);
             var TotalBeginTime = DateTime.Now.AddDays(-90);
             var endTime = DateTime.Now.AddDays(1);
-            ViewBag.mRankList = WCFClients.GameQueryClient.QueryRankReport_BettingProfit_Sport(MonthBeginTime, endTime, "", "", 0, 10);
-            ViewBag.tRankList = WCFClients.GameQueryClient.QueryRankReport_BettingProfit_Sport(TotalBeginTime, endTime, "", "", 0, 10);
-            ViewBag.LotteryBonus = WCFClients.ExternalClient.QueryLotteryNewBonusInfoList(15);
+
+            param["Model"] = new QueryBonusBase() { fromDate = MonthBeginTime, toDate = endTime,gameCode="", gameType = "", pageIndex = 0, pageSize = 10 };
+            ViewBag.mRankList = await serviceProxyProvider.Invoke<EntityModel.RankReportCollection_BettingProfit_Sport>(param, "api/data/QueryRankReport_BettingProfit_Sport");
+            param.Clear();
+            param["Model"] = new QueryBonusBase() { fromDate = TotalBeginTime, toDate = endTime, gameCode = "", gameType = "", pageIndex = 0, pageSize = 10 };
+            ViewBag.tRankList = await serviceProxyProvider.Invoke<EntityModel.RankReportCollection_BettingProfit_Sport>(param, "api/data/QueryRankReport_BettingProfit_Sport");
+            param.Clear();
+            param["count"] = 15;
+            ViewBag.LotteryBonus = await serviceProxyProvider.Invoke<List<EntityModel.CoreModel.LotteryNewBonusInfo>> (param, "api/data/QueryLotteryNewBonusInfoList");
             BuildViewHtml("Default", tempFilePath);
 
             var realPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "index.html");
-            System.IO.File.Copy(tempFilePath, realPath, true);
+            System.IO.File.Copy(tempFilePath, realPath, true);  
 
         }
 
@@ -487,7 +501,7 @@ namespace app.lottery.site.Controllers
         /// <summary>
         /// 生成中奖排行
         /// </summary>
-        private void BuildBonusDetail()
+        private async void BuildBonusDetail()
         {
             //中奖排行主页
             var indexPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "statichtml", "bonus");
@@ -520,28 +534,49 @@ namespace app.lottery.site.Controllers
 
                         var pageIndex = 0;
                         var pageSize = 30;
+                        Dictionary<string, object> param = new Dictionary<string, object>();
                         switch (type)
                         {
                             case "djph":
-                                ViewBag.FDList = WCFClients.GameQueryClient.QueryRankReport_BigBonus_Sport(beginTime, endTime, _gameCode, gameType, pageIndex, pageSize);
+                                param["Model"] = new QueryBonusBase() { fromDate = beginTime, toDate = endTime, gameCode = _gameCode, gameType = gameType, pageIndex = pageIndex, pageSize = pageSize };
+
+                                ViewBag.FDList = await serviceProxyProvider.Invoke<EntityModel.RankReportCollection_BettingProfit_Sport>(param, "api/data/QueryRankReport_BigBonus_Sport");
                                 break;
                             case "fdyl":
-                                ViewBag.FDList = WCFClients.GameQueryClient.QueryRankReport_BettingProfit_Sport(beginTime, endTime, _gameCode, gameType, pageIndex, pageSize);
+                                param.Clear();
+                                param["Model"] = new QueryBonusBase() { fromDate = beginTime, toDate = endTime, gameCode = _gameCode, gameType = gameType, pageIndex = pageIndex, pageSize = pageSize };
+
+                                ViewBag.FDList = await serviceProxyProvider.Invoke<EntityModel.RankReportCollection_BettingProfit_Sport>(param, "api/data/QueryRankReport_BettingProfit_Sport");
                                 break;
                             case "gdyl":
-                                ViewBag.FDList = WCFClients.GameQueryClient.QueryRankReport_JoinProfit_Sport(beginTime, endTime, _gameCode, gameType, pageIndex, pageSize);
+                                param.Clear();
+                                param["Model"] = new QueryBonusBase() { fromDate = beginTime, toDate = endTime, gameCode = _gameCode, gameType = gameType, pageIndex = pageIndex, pageSize = pageSize };
+
+                                ViewBag.FDList = await serviceProxyProvider.Invoke<EntityModel.RankReportCollection_BettingProfit_Sport>(param, "api/data/QueryRankReport_BettingProfit_Sport");
                                 break;
                             case "hmrq":
-                                ViewBag.FDList = WCFClients.GameQueryClient.QueryRankInfoList_HotTogether(beginTime, endTime, _gameCode, gameType, pageIndex, pageSize);
+                                param.Clear();
+                                param["Model"] = new QueryBonusBase() { fromDate = beginTime, toDate = endTime, gameCode = _gameCode, gameType = gameType, pageIndex = pageIndex, pageSize = pageSize };
+
+                                ViewBag.FDList = await serviceProxyProvider.Invoke<EntityModel.RankReportCollection_RankInfo_HotTogether>(param, "api/data/QueryRankInfoList_HotTogether");
                                 break;
                             case "cgzj":
-                                ViewBag.FDList = WCFClients.GameQueryClient.QueryRankInfoList_SuccessOrder_Sport(beginTime, endTime, _gameCode, gameType, pageIndex, pageSize);
+                                param.Clear();
+                                param["Model"] = new QueryBonusBase() { fromDate = beginTime, toDate = endTime, gameCode = _gameCode, gameType = gameType, pageIndex = pageIndex, pageSize = pageSize };
+
+                                ViewBag.FDList = await serviceProxyProvider.Invoke<EntityModel.RankReportCollection_BettingProfit_Sport>(param, "api/data/QueryRankInfoList_SuccessOrder_Sport");
                                 break;
                             case "zdgd":
-                                ViewBag.FDList = WCFClients.GameQueryClient.QueryRankInfoList_BeFollowerCount(beginTime, endTime, _gameCode, gameType, pageIndex, pageSize);
+                                param.Clear();
+                                param["Model"] = new QueryBonusBase() { fromDate = beginTime, toDate = endTime, gameCode = _gameCode, gameType = gameType, pageIndex = pageIndex, pageSize = pageSize };
+
+                                ViewBag.FDList = await serviceProxyProvider.Invoke<EntityModel.RankReportCollection_RankInfo_BeFollower>(param, "api/data/QueryRankInfoList_BeFollowerCount");
                                 break;
                             case "ljzj":
-                                ViewBag.FDList = WCFClients.GameQueryClient.QueryRankReport_TotalBonus_Sport(beginTime, endTime, _gameCode, gameType, pageIndex, pageSize);
+                                param.Clear();
+                                param["Model"] = new QueryBonusBase() { fromDate = beginTime, toDate = endTime, gameCode = _gameCode, gameType = gameType, pageIndex = pageIndex, pageSize = pageSize };
+
+                                ViewBag.FDList = await serviceProxyProvider.Invoke<EntityModel.RankReportCollection_TotalBonus_Sport>(param, "api/data/QueryRankReport_TotalBonus_Sport");
                                 break;
                         }
 
@@ -568,7 +603,7 @@ namespace app.lottery.site.Controllers
         /// <summary>
         /// 生成指定彩种的开奖历史
         /// </summary>
-        private void BuildOpenResultHistory_ByGameCode(string gameCode)
+        private async void BuildOpenResultHistory_ByGameCode(string gameCode)
         {
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "statichtml", "lottery");
             if (!Directory.Exists(path))
@@ -579,6 +614,7 @@ namespace app.lottery.site.Controllers
             var historyFullName = "";
             var startTime = DateTime.Today;
             var endTime = startTime.AddDays(1);
+            Dictionary<string, object> param = new Dictionary<string, object>();
             if (gameCode.ToUpper() == "CTZQ")
             {
                 foreach (var gameType in new string[] { "t14c", "tr9", "t6bqc", "t4cjq" })
@@ -586,8 +622,12 @@ namespace app.lottery.site.Controllers
                     ViewBag.GameType = gameType;
                     historyFullName = Path.Combine(path, string.Format("history_{0}_{1}.html", gameCode, gameType));
                     startTime = startTime.AddMonths(-1);
-
-                    ViewBag.NumberHistoryList = WCFClients.ChartClient.QueryGameWinNumberByDate(startTime, endTime, string.Format("{0}_{1}", gameCode, gameType), 0, MaxIssuseCount(ViewBag.GameCode));
+                    param["startTime"] = startTime;
+                    param["endTime"] = endTime;
+                    param["gameCode"] = string.Format("{0}_{1}", gameCode, gameType);
+                    param["pageIndex"] = 0;
+                    param["pageSize"] = MaxIssuseCount(ViewBag.GameCode);
+                    ViewBag.NumberHistoryList = await serviceProxyProvider.Invoke<EntityModel.CoreModel.GameWinNumber_InfoCollection>(param, "api/order/QueryGameWinNumberByDate");
                     BuildViewHtml("lottery/history", historyFullName);
                 }
 
@@ -599,7 +639,12 @@ namespace app.lottery.site.Controllers
                 {
                     startTime = startTime.AddMonths(-1);
                 }
-                ViewBag.NumberHistoryList = WCFClients.ChartClient.QueryGameWinNumberByDate(startTime, endTime, ViewBag.GameCode, 0, MaxIssuseCount(ViewBag.GameCode));
+                param["startTime"] = startTime;
+                param["endTime"] = endTime;
+                param["gameCode"] = ViewBag.GameCode;
+                param["pageIndex"] = 0;
+                param["pageSize"] = MaxIssuseCount(ViewBag.GameCode);
+                ViewBag.NumberHistoryList = await serviceProxyProvider.Invoke<EntityModel.CoreModel.GameWinNumber_InfoCollection>(param, "api/order/QueryGameWinNumberByDate");
                 BuildViewHtml("lottery/history", historyFullName);
             }
         }
@@ -607,7 +652,7 @@ namespace app.lottery.site.Controllers
         /// <summary>
         /// 生成开奖详细
         /// </summary>
-        private void BuildOpenResultDetail_ByGameCode(string currentGameCode)
+        private async void BuildOpenResultDetail_ByGameCode(string currentGameCode)
         {
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "statichtml", "lottery");
             if (!Directory.Exists(path))
@@ -615,10 +660,14 @@ namespace app.lottery.site.Controllers
 
             //数字彩
             var sscArray = new string[] { "ssq", "dlt", "pl3", "fc3d" };
+            Dictionary<string, object> param = new Dictionary<string, object>();
             if (sscArray.Contains(currentGameCode.ToLower()))
             {
-                var sscIssuseArray = WCFClients.GameClient.QueryPrizedIssuseList(currentGameCode, "", 10, UserToken).Split(',');
-                for (int i = 0; i < sscIssuseArray.Length; i++)
+                param["gameCode"] = currentGameCode;
+                param["gameType"] = "";
+                param["length"] = ViewBag.GameCode;
+                var sscIssuseArray = await serviceProxyProvider.Invoke<string>(param, "api/data/QueryPrizedIssuseList");
+                for (int i = 0; i < sscIssuseArray.Split(',').Length; i++)
                 {
                     //最后一期
                     var currentIssuseNumber = sscIssuseArray[i];
@@ -640,7 +689,11 @@ namespace app.lottery.site.Controllers
             var ctzqArray = new string[] { "t14c", "tr9", "t6bqc", "t4cjq" };
             if (ctzqArray.Contains(currentGameCode.ToLower()))
             {
-                var ctzqIssuseArray = WCFClients.GameClient.QueryStopIssuseList("CTZQ", currentGameCode, 5, UserToken).Split(',');
+                param.Clear();
+                param["gameCode"] = "CTZQ";
+                param["gameType"] = currentGameCode;
+                param["length"] = 5;
+                var ctzqIssuseArray = await serviceProxyProvider.Invoke<string>(param, "api/data/QueryStopIssuseList");
                 for (int i = 0; i < ctzqIssuseArray.Length; i++)
                 {
                     var ctzqIssuse = ctzqIssuseArray[i];
