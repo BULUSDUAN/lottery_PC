@@ -93,17 +93,17 @@ namespace KaSon.FrameWork.ORM.Helper
         public IList<DisableMatchConfigInfo> QueryJCZQ_DisableMatchConfigList()
         {
          
-            var query = from c in DB.CreateQuery<C_JCZQ_Match>()
+            var query =( from c in DB.CreateQuery<C_JCZQ_Match>()
                         where c.StartDateTime > DateTime.Now
                         && c.PrivilegesType != null && c.PrivilegesType != ""
-                        select new DisableMatchConfigInfo
+                        select c).ToList().Select(c=>new DisableMatchConfigInfo
                         {
-                            MatchId = c.MatchId.ToString(),
+                            MatchId = c.MatchId,
                             GameCode = "JCZQ",
                             MatchStartTime = c.StartDateTime,
                             PrivilegesType = c.PrivilegesType,
                             IssuseNumber = ""
-                        };
+                        });
             return query.ToList();
         }
 

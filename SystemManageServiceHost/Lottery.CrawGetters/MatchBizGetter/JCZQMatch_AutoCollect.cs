@@ -33,7 +33,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
     // <summary>
     /// 采集竞猜足球赛事数据
     /// </summary>
-    public class JCZQMatch_AutoCollect //: IWindowsService
+    public class JCZQMatch_AutoCollect : IBallAutoCollect
     {
         //  private ILogWriter _logWriter = null;
         private const string logCategory = "Services.Info";
@@ -104,11 +104,11 @@ namespace Lottery.CrawGetters.MatchBizGetter
                     }
                     catch 
                     {
-                        Thread.Sleep(10000);
+                        Thread.Sleep(2000);
                     }
                     finally
                     {
-                        Thread.Sleep(10000);
+                        Thread.Sleep(2000);
                     }
                 }
             });
@@ -215,11 +215,25 @@ namespace Lottery.CrawGetters.MatchBizGetter
                 OkNumber++;
                 if (matchFun == "new")
                 {
-                    tempMatchList = GetMatchList_ZGJCW_SPF(out ozSPList); //1
-                    tempMatchList_FB = GetMatchList_ZGJCW_SPF_FB();
-                    tempMatchList_BF = GetMatchList_ZGJCW_BF();
-                    tempMatchList_ZJQ = GetMatchList_ZGJCW_ZJQ();
-                    tempMatchList_BQC = GetMatchList_ZGJCW_BQC();
+                    try
+                    {
+                        //Thread.Sleep(500);
+                        tempMatchList = GetMatchList_ZGJCW_SPF(out ozSPList); //1
+                        //Thread.Sleep(500);
+                        tempMatchList_FB = GetMatchList_ZGJCW_SPF_FB();
+                       // Thread.Sleep(500);
+                        tempMatchList_BF = GetMatchList_ZGJCW_BF();
+                       // Thread.Sleep(500);
+                        tempMatchList_ZJQ = GetMatchList_ZGJCW_ZJQ();
+                       // Thread.Sleep(500);
+                        tempMatchList_BQC = GetMatchList_ZGJCW_BQC();
+                    }
+                    catch (Exception ex)
+                    {
+
+                        throw;
+                    }
+                  
                 }
 
                 if (matchFun == "ok")
@@ -273,7 +287,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
                         Hi = item.Hi,
                         HomeTeamId = item.HomeTeamId,
                         HomeTeamName = item.HomeTeamName,
-                        Id = item.Id,
+                        mId = item.mId,
                         LeagueColor = item.LeagueColor,
                         LeagueId = item.LeagueId,
                         LeagueName = item.LeagueName,
@@ -313,7 +327,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
                         Hi = item.Hi,
                         HomeTeamId = item.HomeTeamId,
                         HomeTeamName = item.HomeTeamName,
-                        Id = item.Id,
+                        mId = item.mId,
                         LeagueColor = item.LeagueColor,
                         LeagueId = item.LeagueId,
                         LeagueName = item.LeagueName,
@@ -443,10 +457,13 @@ namespace Lottery.CrawGetters.MatchBizGetter
                     //matchList_bf = AddZHMPrivilegesType(tempMatchList_BF);
                     //matchList_zjq = AddZHMPrivilegesType(tempMatchList_ZJQ);
                     //matchList_bqc = AddZHMPrivilegesType(tempMatchList_BQC);
-
+                  //  Thread.Sleep(500);
                     spfList = Get_SPF_SP_ZZJCW(out brqspfList);
+                  //  Thread.Sleep(500);
                     bfList = Get_BF_SP_ZZJCW();
+                  //  Thread.Sleep(500);
                     zjqList = Get_ZJQ_SP_ZZJCW();
+                  //  Thread.Sleep(500);
                     bqcList = Get_BQC_SP_ZZJCW();
 
                     if (spfList.Count < tempMatchList.Count || brqspfList.Count < tempMatchList.Count || bfList.Count < tempMatchList_BF.Count || zjqList.Count < tempMatchList_ZJQ.Count || bqcList.Count < tempMatchList_BQC.Count)
@@ -683,7 +700,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
 
                 #region 采集其它赔率数据
 
-                GetNewJCZQList<JCZQ_SPF_OZ_SPInfo>(ozSPList, "oz_SP");
+                GetNewJCZQList<JCZQ_SPF_OZ_SPInfo>(ozSPList, "JCZQ_oz_SP");
 
                 #endregion
 
@@ -700,6 +717,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
                 //GetNewJCZQList<JCZQ_MatchInfo>(matchList_bf, "Match_List_BF.json");
                 //GetNewJCZQList<JCZQ_MatchInfo>(matchList_zjq, "Match_List_ZJQ.json");
                 //GetNewJCZQList<JCZQ_MatchInfo>(matchList_bqc, "Match_List_BQC.json");
+                //mDB.DropCollection("JCZQ_Match_List");
                 var newMatch_List = ServiceHelper.BuildNewMatchList<JCZQ_MatchInfo>(mDB, "JCZQ_Match_List", tempMatchList, null, CompareNewJCZQList);
 
 
@@ -1223,18 +1241,15 @@ namespace Lottery.CrawGetters.MatchBizGetter
             foreach (var item in currentList.GroupBy(p => p.MatchData))
             {
                 var issuseNumber = item.Key;
-                var path = Path.Combine(SavePath, issuseNumber);
+             
               //  var customerSavePath = new string[] { "JCZQ", issuseNumber };
                 try
                 {
-                    var coll = mDB.GetCollection<BsonDocument>(tablename);
-                    var mFilter = MongoDB.Driver.Builders<MongoDB.Bson.BsonDocument>.Filter.Eq("IssuseNumber", issuseNumber);// & Builders<BsonDocument>.Filter.Eq("IssuseNumber", issuseNumber);
+                    var coll = mDB.GetCollection<T>(tablename);
+                    var mFilter = MongoDB.Driver.Builders<T>.Filter.Eq(b=>b.MatchData, issuseNumber);// & Builders<BsonDocument>.Filter.Eq("IssuseNumber", issuseNumber);
                     coll.DeleteMany(mFilter);
-                    BsonDocument bd = new BsonDocument();
-                    bd.Add("IssuseNumber", issuseNumber);
-                    bd.Add("GameCode", "JCZQ");
-                    bd.Add("Content", JsonSerializer.Serialize(currentList.Where(p => p.MatchData == issuseNumber).ToList()));
-                    coll.InsertOne(bd);
+                
+                    coll.InsertMany(item.ToList());
                     //if (!Directory.Exists(path))
                     //    Directory.CreateDirectory(path);
                     //var fullFileName = Path.Combine(path, fileName);
@@ -1297,7 +1312,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
 
 
         /// <summary>
-        /// 通用的
+        /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="currentList"></param>
@@ -1310,38 +1325,12 @@ namespace Lottery.CrawGetters.MatchBizGetter
             if (currentList.Count == 0)
                 return result;
 
-            foreach (var item in currentList.GroupBy(p => p.MatchData))
-            {
-                var issuseNumber = item.Key;
-                var path = Path.Combine(SavePath, issuseNumber);
-                //  var customerSavePath = new string[] { "JCZQ", issuseNumber };
-                try
-                {
-                    var coll = mDB.GetCollection<T>(typeof(T).Name);
-                 //   var mFilter = MongoDB.Driver.Builders<MongoDB.Bson.BsonDocument>.Filter.Eq("IssuseNumber", issuseNumber);// & Builders<BsonDocument>.Filter.Eq("IssuseNumber", issuseNumber);
-                    coll.DeleteMany(null);
-                 
-                    coll.InsertMany(currentList);
-                    //if (!Directory.Exists(path))
-                    //    Directory.CreateDirectory(path);
-                    //var fullFileName = Path.Combine(path, fileName);
-                    //ServiceHelper.CreateOrAppend_JSONFile(fullFileName, JsonSerializer.Serialize(currentList.Where(p => p.MatchData == issuseNumber).ToList()), (log) =>
-                    //{
-                    //    this.WriteLog(log);
-                    //});
-
-                    ////上传文件
-                    //ServiceHelper.PostFileToServer(fullFileName, customerSavePath, (log) =>
-                    //{
-                    //    this.WriteLog(log);
-                    //});
-                }
-                catch (Exception ex)
-                {
-                    this.WriteLog("保存历史数据失败：" + ex.ToString());
-                }
-            }
-
+           
+         //   mDB.DropCollection(tablename);
+            var coll = mDB.GetCollection<T>(tablename);
+            coll.DeleteMany(Builders<T>.Filter.Empty);// mFilter = Builders<T>.Filter.Empty;
+            coll.InsertMany(currentList);
+        
             
             return result;
         }
@@ -1555,34 +1544,60 @@ namespace Lottery.CrawGetters.MatchBizGetter
             {
                 foreach (var item in array)
                 {
-                    if (item.Key != "data")
-                        continue;
+                    //if (item.Key != "data")
+                    //    continue;
                     var matchlist = item.Value;
                     foreach (var match in matchlist)
                     {
                         var match_D = match.Value;
-                        string matchId = match_D.b_date.Substring(2).Replace("-", "") + match_D.num.Substring(2);
-                        var color = string.Format("#{0}", match_D.l_background_color);
+                        string b_date = "";
+                        try
+                        {
+                             b_date = match_D.b_date;
+                            if (string.IsNullOrEmpty(b_date))
+                            {
+                                continue;
+                            }
+                        }
+                        catch (Exception)
+                        {
+
+                            continue;
+                        }
+                          string num = match_D.num;
+                        string id = match_D.id;
+                        object crs = match_D.crs;
+
+                        string time = match_D.time;
+                        string date = match_D.date;
+                        string l_background_color = match_D.l_background_color;
+
+                        string matchId = b_date.Substring(2).Replace("-", "") + num.Substring(2);
+                        var color = string.Format("#{0}", l_background_color);
                         var matchData = matchId.Substring(0, 6);
                         var zsMatch = zsMathList.FirstOrDefault(p => p.MatchId == matchId);
                         var matchNumber = matchId.Substring(6);
                         var matchConfig = DisableMatchConfigList.FirstOrDefault(p => p.MatchId.Trim() == matchId);
                         var state = "0";
                         var matchStopDesc = string.Empty;
-                        if (!(match_D.hhad == null))
+                        object hhad = match_D.hhad;
+                        object had = match_D.had;
+                        if (!(hhad == null))
                         {
-                            if (int.Parse(match_D.hhad.single) == 1)
+                            int single = match_D.hhad.single;
+                            if (single == 1)
                                 state = "R";
                         }
-                        if (!(match_D.had == null))
+                        if (!(had == null))
                         {
-                            if (int.Parse(match_D.had.single) == 1)
+                            int single = match_D.had.single;
+                            if (single == 1)
                                 state = "NR";
                         }
-                        var op = string.IsNullOrEmpty(_OPList.FirstOrDefault(p => p.Key == match_D.id).Value) ? new string[] { } : _OPList.FirstOrDefault(p => p.Key == match_D.id).Value.Split('|');
+                        var op = string.IsNullOrEmpty(_OPList.FirstOrDefault(p => p.Key == id).Value) ? new string[] { } : _OPList.FirstOrDefault(p => p.Key == id).Value.Split('|');
 
                         var fsStopBettingTime = DateTime.Now;
-                        var dateTime = string.Format("{0}|{1} {2}", match_D.b_date, match_D.date, match_D.time).Split('|');
+                        var dateTime = string.Format("{0}|{1} {2}", b_date, date, time).Split('|');
                         var hh = Convert.ToDateTime(dateTime[1]).Hour;
                         var hhm = string.Format("{0}.{1}", Convert.ToDateTime(dateTime[1]).Hour, Convert.ToDateTime(dateTime[1]).Minute);
                         var st = Convert.ToDateTime(dateTime[0]);
@@ -1602,21 +1617,21 @@ namespace Lottery.CrawGetters.MatchBizGetter
                         var isTrue = false;
                         if (leagueName == "欧洲杯")
                         {
-                            if (!_ozbList.Contains(match_D.b_date.Substring(2).Replace("-", "")))
-                                _ozbList.Add(match_D.b_date.Substring(2).Replace("-", ""));
+                            if (!_ozbList.Contains(b_date.Substring(2).Replace("-", "")))
+                                _ozbList.Add(b_date.Substring(2).Replace("-", ""));
                         }
 
                         var isOzb = false;
-                        if (_ozbList.Contains(match_D.b_date.Substring(2).Replace("-", "")))
+                        if (_ozbList.Contains(b_date.Substring(2).Replace("-", "")))
                             isOzb = true;
 
                         if (leagueName == "世界杯")
                         {
-                            if (!_sjbList.Contains(match_D.b_date.Substring(2).Replace("-", "")))
-                                _sjbList.Add(match_D.b_date.Substring(2).Replace("-", ""));
+                            if (!_sjbList.Contains(b_date.Substring(2).Replace("-", "")))
+                                _sjbList.Add(b_date.Substring(2).Replace("-", ""));
                         }
                         var isSjb = false;
-                        if (_sjbList.Contains(match_D.b_date.Substring(2).Replace("-", "")))
+                        if (_sjbList.Contains(b_date.Substring(2).Replace("-", "")))
                             isSjb = true;
 
 
@@ -1701,7 +1716,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
                             GuestTeamId = guestTeamId,// team == null ? 0 : team.Attributes["gtid"].Value.GetInt32(),
                             GuestTeamName = guestTeamName,
                             ShortGuestTeamName = match_D.a_cn_abbr,
-                            LetBall = int.Parse(match_D.hhad.fixedodds),
+                            LetBall = match_D.hhad.fixedodds,
                             WinOdds = op.Length >= 1 ? op[0].GetDecimal() : 0M,
                             FlatOdds = op.Length >= 1 ? op[1].GetDecimal() : 0M,
                             LoseOdds = op.Length >= 1 ? op[2].GetDecimal() : 0M,
@@ -1759,23 +1774,46 @@ namespace Lottery.CrawGetters.MatchBizGetter
             {
                 foreach (var item in array)
                 {
-                    if (item.Key != "data")
-                        continue;
+                    //if (item.Key != "data")
+                    //    continue;
                     var matchlist = item.Value;
                     foreach (var match in matchlist)
                     {
                         var match_D = match.Value;
-                        string matchId = match_D.b_date.Substring(2).Replace("-", "") + match_D.num.Substring(2);
-                        var color = string.Format("#{0}", match_D.l_background_color);
+                        string b_date = "";
+                        try
+                        {
+                            b_date = match_D.b_date;
+                            if (string.IsNullOrEmpty(b_date))
+                            {
+                                continue;
+                            }
+                        }
+                        catch (Exception)
+                        {
+
+                            continue;
+                        }
+                        string date = match_D.date;
+                        string id = match_D.id;
+                        string time = match_D.time;
+                        string num = match_D.num;
+                        string l_background_color = match_D.l_background_color;
+
+                        string matchId = b_date.Substring(2).Replace("-", "") + num.Substring(2);
+
+                        var color = string.Format("#{0}", l_background_color);
                         var matchData = matchId.Substring(0, 6);
                         var zsMatch = zsMathList.FirstOrDefault(p => p.MatchId == matchId);
                         var matchNumber = matchId.Substring(6);
                         var matchConfig = DisableMatchConfigList.FirstOrDefault(p => p.MatchId.Trim() == matchId);
                         var state = "0";
-                        var matchStopDesc = string.Empty;
+                        string matchStopDesc = string.Empty;
+                         
                         if (!(match_D.hhad == null))
                         {
-                            if (int.Parse(match_D.hhad.single) == 1)
+                            int single = match_D.hhad.single;
+                            if (single == 1)
                             {
                                 state += "R";
                                 state = state.Replace("0", "");
@@ -1790,12 +1828,14 @@ namespace Lottery.CrawGetters.MatchBizGetter
                                     _MatchStatus.Add(matchId, "1");
                                 }
                             }
-                            if (!string.IsNullOrEmpty(match_D.hhad.cbt))
-                                matchStopDesc = match_D.hhad.cbt;
+                            matchStopDesc = match_D.hhad.cbt;
+                            //if (!string.IsNullOrEmpty(match_D.hhad.cbt))
+                            //    matchStopDesc = match_D.hhad.cbt;
                         }
                         if (!(match_D.had == null))
                         {
-                            if (int.Parse(match_D.had.single) == 1)
+                            int single = match_D.had.single;
+                            if (single == 1)
                             {
                                 state += "NR";
                                 state = state.Replace("0", "");
@@ -1811,10 +1851,10 @@ namespace Lottery.CrawGetters.MatchBizGetter
                                 }
                             }
                         }
-                        var op = string.IsNullOrEmpty(_OPList.FirstOrDefault(p => p.Key == match_D.id).Value) ? new string[] { } : _OPList.FirstOrDefault(p => p.Key == match_D.id).Value.Split('|');
+                        var op = string.IsNullOrEmpty(_OPList.FirstOrDefault(p => p.Key == id).Value) ? new string[] { } : _OPList.FirstOrDefault(p => p.Key ==id).Value.Split('|');
 
                         var fsStopBettingTime = DateTime.Now;
-                        var dateTime = string.Format("{0}|{1} {2}", match_D.b_date, match_D.date, match_D.time).Split('|');
+                        var dateTime = string.Format("{0}|{1} {2}", b_date , date, time).Split('|');
                         var hh = Convert.ToDateTime(dateTime[1]).Hour;
                         var hhm = string.Format("{0}.{1}", Convert.ToDateTime(dateTime[1]).Hour, Convert.ToDateTime(dateTime[1]).Minute);
                         var st = Convert.ToDateTime(dateTime[0]);
@@ -1827,27 +1867,27 @@ namespace Lottery.CrawGetters.MatchBizGetter
                         var dateWeek = Convert.ToDateTime(dateTime[0]);
                         var week = CaculateWeekDay(dateWeek.Year, dateWeek.Month, dateWeek.Day);
 
-                        var homeTeamName = match_D.h_cn;
-                        var guestTeamName = match_D.a_cn;
+                        string homeTeamName = match_D.h_cn;
+                        string guestTeamName = match_D.a_cn;
                         string leagueName = match_D.l_cn;
 
                         var isTrue = false;
                         if (leagueName == "欧洲杯")
                         {
-                            if (!_ozbList.Contains(match_D.b_date.Substring(2).Replace("-", "")))
-                                _ozbList.Add(match_D.b_date.Substring(2).Replace("-", ""));
+                            if (!_ozbList.Contains(b_date.Substring(2).Replace("-", "")))
+                                _ozbList.Add(b_date.Substring(2).Replace("-", ""));
                         }
                         var isOzb = false;
-                        if (_ozbList.Contains(match_D.b_date.Substring(2).Replace("-", "")))
+                        if (_ozbList.Contains(b_date.Substring(2).Replace("-", "")))
                             isOzb = true;
 
                         if (leagueName == "世界杯")
                         {
-                            if (!_sjbList.Contains(match_D.b_date.Substring(2).Replace("-", "")))
-                                _sjbList.Add(match_D.b_date.Substring(2).Replace("-", ""));
+                            if (!_sjbList.Contains(b_date.Substring(2).Replace("-", "")))
+                                _sjbList.Add(b_date.Substring(2).Replace("-", ""));
                         }
                         var isSjb = false;
-                        if (_sjbList.Contains(match_D.b_date.Substring(2).Replace("-", "")))
+                        if (_sjbList.Contains(b_date.Substring(2).Replace("-", "")))
                             isSjb = true;
 
                         while (true)
@@ -1892,6 +1932,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
                         var homeTeamId = zsMatch != null ? zsMatch.HomeTeamId : 0;
                         var guestTeamId = zsMatch != null ? zsMatch.GuestTeamId : 0;
 
+                         
 
                         matchList.Add(new JCZQ_MatchInfo
                         {
@@ -1910,11 +1951,11 @@ namespace Lottery.CrawGetters.MatchBizGetter
                             GuestTeamId = guestTeamId,// team == null ? 0 : team.Attributes["gtid"].Value.GetInt32(),
                             GuestTeamName = guestTeamName,
                             ShortGuestTeamName = match_D.a_cn_abbr,
-                            LetBall = int.Parse(match_D.hhad.fixedodds),
+                            LetBall = match_D.hhad.fixedodds,
                             WinOdds = op.Length >= 1 ? op[0].GetDecimal() : 0M,
                             FlatOdds = op.Length >= 1 ? op[1].GetDecimal() : 0M,
                             LoseOdds = op.Length >= 1 ? op[2].GetDecimal() : 0M,
-                            StartDateTime = DateTime.Parse(string.Format("{0} {1}", match_D.date, match_D.time)).ToString("yyyy-MM-dd HH:mm:ss"),
+                            StartDateTime = DateTime.Parse(string.Format("{0} {1}",date,time)).ToString("yyyy-MM-dd HH:mm:ss"),
                             DSStopBettingTime = fsStopBettingTime.AddMinutes(-5).ToString("yyyy-MM-dd HH:mm:ss"),
                             FSStopBettingTime = fsStopBettingTime.ToString("yyyy-MM-dd HH:mm:ss"),
                             Mid = zsMatch != null ? zsMatch.Mid : 0,
@@ -1956,23 +1997,50 @@ namespace Lottery.CrawGetters.MatchBizGetter
             {
                 foreach (var item in array)
                 {
-                    if (item.Key != "data")
-                        continue;
+                    //if (item.Key != "data")
+                    //    continue;
                     var matchlist = item.Value;
                     foreach (var match in matchlist)
                     {
                         var match_D = match.Value;
-                        string matchId = match_D.b_date.Substring(2).Replace("-", "") + match_D.num.Substring(2);
-                        var color = string.Format("#{0}", match_D.l_background_color);
+                        string b_date = "";
+                        try
+                        {
+                            b_date = match_D.b_date;
+                            if (string.IsNullOrEmpty(b_date))
+                            {
+                                continue;
+                            }
+                        }
+                        catch (Exception)
+                        {
+
+                            continue;
+                        }
+                        string num = match_D.num;
+                        string id = match_D.id;
+                        object crs = match_D.crs;
+
+                        string time = match_D.time;
+                        string date = match_D.date;
+
+                        string l_background_color = match_D.l_background_color;
+                        string matchId =b_date.Substring(2).Replace("-", "") + num.Substring(2);
+                        var color = string.Format("#{0}", l_background_color);
                         var matchData = matchId.Substring(0, 6);
                         var zsMatch = zsMathList.FirstOrDefault(p => p.MatchId == matchId);
                         var matchNumber = matchId.Substring(6);
                         var matchConfig = DisableMatchConfigList.FirstOrDefault(p => p.MatchId.Trim() == matchId);
                         var state = "0";
                         var matchStopDesc = string.Empty;
-                        if (!(match_D.crs == null))
+
+                      
+
+                        if (!(crs == null))
                         {
-                            if (int.Parse(match_D.crs.single) == 1)
+                            int single = match_D.crs.single;
+
+                            if (single == 1)
                                 state = "1";
                             var ms = _MatchStatus.Where(p => p.Key == matchId).FirstOrDefault();
                             if (ms.Key != null)
@@ -1984,13 +2052,13 @@ namespace Lottery.CrawGetters.MatchBizGetter
                             {
                                 _MatchStatus.Add(matchId, "3");
                             }
-                            if (!string.IsNullOrEmpty(match_D.crs.cbt))
+                          //  if (!string.IsNullOrEmpty(match_D.crs.cbt))
                                 matchStopDesc = match_D.crs.cbt;
                         }
                         //var op = _OPList.FirstOrDefault(p => p.Key == match_D.id).Value.Split('|');
-                        var op = string.IsNullOrEmpty(_OPList.FirstOrDefault(p => p.Key == match_D.id).Value) ? new string[] { } : _OPList.FirstOrDefault(p => p.Key == match_D.id).Value.Split('|');
+                        var op = string.IsNullOrEmpty(_OPList.FirstOrDefault(p => p.Key == id).Value) ? new string[] { } : _OPList.FirstOrDefault(p => p.Key == id).Value.Split('|');
                         var fsStopBettingTime = DateTime.Now;
-                        var dateTime = string.Format("{0}|{1} {2}", match_D.b_date, match_D.date, match_D.time).Split('|');
+                        var dateTime = string.Format("{0}|{1} {2}", b_date, date,time).Split('|');
                         var hh = Convert.ToDateTime(dateTime[1]).Hour;
                         var hhm = string.Format("{0}.{1}", Convert.ToDateTime(dateTime[1]).Hour, Convert.ToDateTime(dateTime[1]).Minute);
                         var st = Convert.ToDateTime(dateTime[0]);
@@ -2002,27 +2070,27 @@ namespace Lottery.CrawGetters.MatchBizGetter
                         }
                         var dateWeek = Convert.ToDateTime(dateTime[0]);
                         var week = CaculateWeekDay(dateWeek.Year, dateWeek.Month, dateWeek.Day);
-                        var homeTeamName = match_D.h_cn;
-                        var guestTeamName = match_D.a_cn;
+                        string homeTeamName = match_D.h_cn;
+                        string guestTeamName = match_D.a_cn;
                         string leagueName = match_D.l_cn;
 
                         var isTrue = false;
                         if (leagueName == "欧洲杯")
                         {
-                            if (!_ozbList.Contains(match_D.b_date.Substring(2).Replace("-", "")))
-                                _ozbList.Add(match_D.b_date.Substring(2).Replace("-", ""));
+                            if (!_ozbList.Contains(b_date.Substring(2).Replace("-", "")))
+                                _ozbList.Add(b_date.Substring(2).Replace("-", ""));
                         }
                         var isOzb = false;
-                        if (_ozbList.Contains(match_D.b_date.Substring(2).Replace("-", "")))
+                        if (_ozbList.Contains(b_date.Substring(2).Replace("-", "")))
                             isOzb = true;
 
                         if (leagueName == "世界杯")
                         {
-                            if (!_sjbList.Contains(match_D.b_date.Substring(2).Replace("-", "")))
-                                _sjbList.Add(match_D.b_date.Substring(2).Replace("-", ""));
+                            if (!_sjbList.Contains(b_date.Substring(2).Replace("-", "")))
+                                _sjbList.Add(b_date.Substring(2).Replace("-", ""));
                         }
                         var isSjb = false;
-                        if (_sjbList.Contains(match_D.b_date.Substring(2).Replace("-", "")))
+                        if (_sjbList.Contains(b_date.Substring(2).Replace("-", "")))
                             isSjb = true;
 
                         while (true)
@@ -2087,7 +2155,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
                             WinOdds = op.Length >= 1 ? op[0].GetDecimal() : 0M,
                             FlatOdds = op.Length >= 1 ? op[1].GetDecimal() : 0M,
                             LoseOdds = op.Length >= 1 ? op[2].GetDecimal() : 0M,
-                            StartDateTime = DateTime.Parse(string.Format("{0} {1}", match_D.date, match_D.time)).ToString("yyyy-MM-dd HH:mm:ss"),
+                            StartDateTime = DateTime.Parse(string.Format("{0} {1}",date, time)).ToString("yyyy-MM-dd HH:mm:ss"),
                             DSStopBettingTime = fsStopBettingTime.AddMinutes(-5).ToString("yyyy-MM-dd HH:mm:ss"),
                             FSStopBettingTime = fsStopBettingTime.ToString("yyyy-MM-dd HH:mm:ss"),
                             Mid = zsMatch != null ? zsMatch.Mid : 0,
@@ -2128,23 +2196,48 @@ namespace Lottery.CrawGetters.MatchBizGetter
             {
                 foreach (var item in array)
                 {
-                    if (item.Key != "data")
-                        continue;
+                    //if (item.Key != "data")
+                    //    continue;
                     var matchlist = item.Value;
                     foreach (var match in matchlist)
                     {
                         var match_D = match.Value;
-                        string matchId = match_D.b_date.Substring(2).Replace("-", "") + match_D.num.Substring(2);
-                        var color = string.Format("#{0}", match_D.l_background_color);
+                        string b_date = "";
+                        try
+                        {
+                            b_date = match_D.b_date;
+                            if (string.IsNullOrEmpty(b_date))
+                            {
+                                continue;
+                            }
+                        }
+                        catch (Exception)
+                        {
+
+                            continue;
+                        }
+                        string num = match_D.num;
+                        string id = match_D.id;
+                        object crs = match_D.crs;
+
+                        string time = match_D.time;
+                        string date = match_D.date;
+                        string l_background_color = match_D.l_background_color;
+
+                        string matchId =b_date.Substring(2).Replace("-", "") +num.Substring(2);
+                        var color = string.Format("#{0}", l_background_color);
                         var matchData = matchId.Substring(0, 6);
                         var zsMatch = zsMathList.FirstOrDefault(p => p.MatchId == matchId);
                         var matchNumber = matchId.Substring(6);
                         var matchConfig = DisableMatchConfigList.FirstOrDefault(p => p.MatchId.Trim() == matchId);
                         var state = "0";
                         var matchStopDesc = string.Empty;
-                        if (!(match_D.ttg == null))
+                        object ttg=match_D.ttg;
+                        if (!(ttg == null))
                         {
-                            if (int.Parse(match_D.ttg.single) == 1)
+
+                            int single = match_D.ttg.single;
+                            if (single == 1)
                                 state = "1";
                             var ms = _MatchStatus.Where(p => p.Key == matchId).FirstOrDefault();
                             if (ms.Key != null)
@@ -2156,13 +2249,13 @@ namespace Lottery.CrawGetters.MatchBizGetter
                             {
                                 _MatchStatus.Add(matchId, "5");
                             }
-                            if (!string.IsNullOrEmpty(match_D.ttg.cbt))
+                           // if (!string.IsNullOrEmpty(match_D.ttg.cbt))
                                 matchStopDesc = match_D.ttg.cbt;
                         }
                         //var op = _OPList.FirstOrDefault(p => p.Key == match_D.id).Value.Split('|');
-                        var op = string.IsNullOrEmpty(_OPList.FirstOrDefault(p => p.Key == match_D.id).Value) ? new string[] { } : _OPList.FirstOrDefault(p => p.Key == match_D.id).Value.Split('|');
+                        var op = string.IsNullOrEmpty(_OPList.FirstOrDefault(p => p.Key == id).Value) ? new string[] { } : _OPList.FirstOrDefault(p => p.Key ==id).Value.Split('|');
                         var fsStopBettingTime = DateTime.Now;
-                        var dateTime = string.Format("{0}|{1} {2}", match_D.b_date, match_D.date, match_D.time).Split('|');
+                        var dateTime = string.Format("{0}|{1} {2}",b_date,date, time).Split('|');
                         var hh = Convert.ToDateTime(dateTime[1]).Hour;
                         var hhm = string.Format("{0}.{1}", Convert.ToDateTime(dateTime[1]).Hour, Convert.ToDateTime(dateTime[1]).Minute);
                         var st = Convert.ToDateTime(dateTime[0]);
@@ -2181,20 +2274,20 @@ namespace Lottery.CrawGetters.MatchBizGetter
                         var isTrue = false;
                         if (leagueName == "欧洲杯")
                         {
-                            if (!_ozbList.Contains(match_D.b_date.Substring(2).Replace("-", "")))
-                                _ozbList.Add(match_D.b_date.Substring(2).Replace("-", ""));
+                            if (!_ozbList.Contains(b_date.Substring(2).Replace("-", "")))
+                                _ozbList.Add(b_date.Substring(2).Replace("-", ""));
                         }
                         var isOzb = false;
-                        if (_ozbList.Contains(match_D.b_date.Substring(2).Replace("-", "")))
+                        if (_ozbList.Contains(b_date.Substring(2).Replace("-", "")))
                             isOzb = true;
 
                         if (leagueName == "世界杯")
                         {
-                            if (!_sjbList.Contains(match_D.b_date.Substring(2).Replace("-", "")))
-                                _sjbList.Add(match_D.b_date.Substring(2).Replace("-", ""));
+                            if (!_sjbList.Contains(b_date.Substring(2).Replace("-", "")))
+                                _sjbList.Add(b_date.Substring(2).Replace("-", ""));
                         }
                         var isSjb = false;
-                        if (_sjbList.Contains(match_D.b_date.Substring(2).Replace("-", "")))
+                        if (_sjbList.Contains(b_date.Substring(2).Replace("-", "")))
                             isSjb = true;
 
                         while (true)
@@ -2300,23 +2393,49 @@ namespace Lottery.CrawGetters.MatchBizGetter
             {
                 foreach (var item in array)
                 {
-                    if (item.Key != "data")
-                        continue;
+                    //if (item.Key != "data")
+                    //    continue;
                     var matchlist = item.Value;
                     foreach (var match in matchlist)
                     {
+                      //  var match_D = match.Value;
+
                         var match_D = match.Value;
-                        string matchId = match_D.b_date.Substring(2).Replace("-", "") + match_D.num.Substring(2);
-                        var color = string.Format("#{0}", match_D.l_background_color);
+                        string b_date = "";
+                        try
+                        {
+                            b_date = match_D.b_date;
+                            if (string.IsNullOrEmpty(b_date))
+                            {
+                                continue;
+                            }
+                        }
+                        catch (Exception)
+                        {
+
+                            continue;
+                        }
+                        string num = match_D.num;
+                        string id = match_D.id;
+                        object crs = match_D.crs;
+
+                        string time = match_D.time;
+                        string date = match_D.date;
+                        string l_background_color = match_D.l_background_color;
+
+
+                        string matchId =b_date.Substring(2).Replace("-", "") +num.Substring(2);
+                        var color = string.Format("#{0}", l_background_color);
                         var matchData = matchId.Substring(0, 6);
                         var zsMatch = zsMathList.FirstOrDefault(p => p.MatchId == matchId);
                         var matchNumber = matchId.Substring(6);
                         var matchConfig = DisableMatchConfigList.FirstOrDefault(p => p.MatchId.Trim() == matchId);
                         var state = "0";
                         var matchStopDesc = string.Empty;
-                        if (!(match_D.hafu == null))
-                        {
-                            if (int.Parse(match_D.hafu.single) == 1)
+                        object hafu= match_D.hafu;
+                        if (!(hafu == null))
+                        {   int single= match_D.hafu.single;
+                            if (single == 1)
                                 state = "1";
                             var ms = _MatchStatus.Where(p => p.Key == matchId).FirstOrDefault();
                             if (ms.Key != null)
@@ -2328,11 +2447,11 @@ namespace Lottery.CrawGetters.MatchBizGetter
                             {
                                 _MatchStatus.Add(matchId, "4");
                             }
-                            if (!string.IsNullOrEmpty(match_D.hafu.cbt))
+                         //   if (!string.IsNullOrEmpty(match_D.hafu.cbt))
                                 matchStopDesc = match_D.hafu.cbt;
                         }
                         //var op = _OPList.FirstOrDefault(p => p.Key == match_D.id).Value.Split('|');
-                        var op = string.IsNullOrEmpty(_OPList.FirstOrDefault(p => p.Key == match_D.id).Value) ? new string[] { } : _OPList.FirstOrDefault(p => p.Key == match_D.id).Value.Split('|');
+                        var op = string.IsNullOrEmpty(_OPList.FirstOrDefault(p => p.Key == id).Value) ? new string[] { } : _OPList.FirstOrDefault(p => p.Key == id).Value.Split('|');
                         var fsStopBettingTime = DateTime.Now;
                         var dateTime = string.Format("{0}|{1} {2}", match_D.b_date, match_D.date, match_D.time).Split('|');
                         var hh = Convert.ToDateTime(dateTime[1]).Hour;
@@ -2346,27 +2465,27 @@ namespace Lottery.CrawGetters.MatchBizGetter
                         }
                         var dateWeek = Convert.ToDateTime(dateTime[0]);
                         var week = CaculateWeekDay(dateWeek.Year, dateWeek.Month, dateWeek.Day);
-                        var homeTeamName = match_D.h_cn;
-                        var guestTeamName = match_D.a_cn;
+                        string homeTeamName = match_D.h_cn;
+                        string guestTeamName = match_D.a_cn;
                         string leagueName = match_D.l_cn;
 
                         var isTrue = false;
                         if (leagueName == "欧洲杯")
                         {
-                            if (!_ozbList.Contains(match_D.b_date.Substring(2).Replace("-", "")))
-                                _ozbList.Add(match_D.b_date.Substring(2).Replace("-", ""));
+                            if (!_ozbList.Contains(b_date.Substring(2).Replace("-", "")))
+                                _ozbList.Add(b_date.Substring(2).Replace("-", ""));
                         }
                         var isOzb = false;
-                        if (_ozbList.Contains(match_D.b_date.Substring(2).Replace("-", "")))
+                        if (_ozbList.Contains(b_date.Substring(2).Replace("-", "")))
                             isOzb = true;
 
                         if (leagueName == "世界杯")
                         {
-                            if (!_sjbList.Contains(match_D.b_date.Substring(2).Replace("-", "")))
-                                _sjbList.Add(match_D.b_date.Substring(2).Replace("-", ""));
+                            if (!_sjbList.Contains(b_date.Substring(2).Replace("-", "")))
+                                _sjbList.Add(b_date.Substring(2).Replace("-", ""));
                         }
                         var isSjb = false;
-                        if (_sjbList.Contains(match_D.b_date.Substring(2).Replace("-", "")))
+                        if (_sjbList.Contains(b_date.Substring(2).Replace("-", "")))
                             isSjb = true;
 
                         while (true)
@@ -3717,13 +3836,28 @@ namespace Lottery.CrawGetters.MatchBizGetter
             {
                 foreach (var item in array)
                 {
-                    if (item.Key != "data")
-                        continue;
+                    //if (item.Key != "data")
+                    //    continue;
                     var matchlist = item.Value;
                     foreach (var match in matchlist)
                     {
                         var match_D = match.Value;
-                        string id = match_D.b_date.Substring(2).Replace("-", "") + match_D.num.Substring(2);
+                        string b_date = "";
+                        try
+                        {
+                            b_date = match_D.b_date;
+                            if (string.IsNullOrEmpty(b_date))
+                            {
+                                continue;
+                            }
+                        }
+                        catch (Exception)
+                        {
+
+                            continue;
+                        }
+                        string num = match_D.num;
+                        string id = b_date.Substring(2).Replace("-", "") +num.Substring(2);
                         _StopTimeList.Add(id, string.Format("{0}|{1} {2}", match_D.b_date, match_D.date, match_D.time));
                         if (!(match_D.hhad == null))
                         {
@@ -3775,13 +3909,15 @@ namespace Lottery.CrawGetters.MatchBizGetter
             {
                 foreach (var item in array)
                 {
-                    if (item.Key != "data")
-                        continue;
+                    //if (item.Key != "data")
+                    //    continue;
                     var matchlist = item.Value;
                     foreach (var match in matchlist)
                     {
                         var match_D = match.Value;
-                        _OPList.Add(match_D.sportteryid, string.Format("{0}|{1}|{2}", match_D.o1, match_D.o2, match_D.o3));
+                        string sportteryid= match_D.sportteryid;
+                        _OPList.Add(sportteryid, string.Format("{0}|{1}|{2}", match_D.o1, match_D.o2
+                           , match_D.o3));
                     }
                 }
             }
@@ -4226,7 +4362,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
             var json = GetSPJsonContent("SPF", isDS);
             var list = new List<C_JCZQ_SPF_SP>();
             brqSPF_SP = new List<C_JCZQ_SPF_SP>();
-            if (string.IsNullOrEmpty(json))
+            if (string.IsNullOrEmpty(json) || json == "404")
                 return list;
 
             var array =JsonHelper.Decode(json);
@@ -4322,7 +4458,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
         {
             var json = GetSPJsonContent("BF", isDS);
             var list = new List<C_JCZQ_BF_SP>();
-            if (string.IsNullOrEmpty(json))
+            if (string.IsNullOrEmpty(json) || json == "404")
                 return list;
 
             var array =JsonHelper.Decode(json);
@@ -4414,7 +4550,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
         {
             var json = GetSPJsonContent("ZJQ", isDS);
             var list = new List<C_JCZQ_ZJQ_SP>();
-            if (string.IsNullOrEmpty(json))
+            if (string.IsNullOrEmpty(json) || json == "404")
                 return list;
 
             var array =JsonHelper.Decode(json);
@@ -4482,7 +4618,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
         {
             var json = GetSPJsonContent("BQC", isDS);
             var list = new List<C_JCZQ_BQC_SP>();
-            if (string.IsNullOrEmpty(json))
+            if (string.IsNullOrEmpty(json) || json == "404")
                 return list;
 
             var array =JsonHelper.Decode(json);
@@ -4519,19 +4655,37 @@ namespace Lottery.CrawGetters.MatchBizGetter
             var json = GetSPJsonContent_ZZJCW("SPF");
             var list = new List<C_JCZQ_SPF_SP>();
             brqSPF_SP = new List<C_JCZQ_SPF_SP>();
-            if (string.IsNullOrEmpty(json))
+            if (string.IsNullOrEmpty(json) || json == "404")
                 return list;
 
             var array = JsonHelper.Decode(json);
             foreach (var item in array)
             {
-                if (item.Key != "data")
-                    continue;
+                //if (item.Key != "data")
+                //    continue;
                 var matchlist = item.Value;
                 foreach (var match in matchlist)
                 {
                     var match_D = match.Value;
-                    string matchId = match_D.b_date.Substring(2).Replace("-", "") + match_D.num.Substring(2);
+                    string b_date = "";
+                    try
+                    {
+                        b_date = match_D.b_date;
+                        if (string.IsNullOrEmpty(b_date))
+                        {
+                            continue;
+                        }
+                    }
+                    catch (Exception)
+                    {
+
+                        continue;
+                    }
+                    string num = match_D.num;
+                    //string b_date = match_D.b_date;
+                    //string b_date = match_D.b_date;
+
+                    string matchId =b_date.Substring(2).Replace("-", "") +num.Substring(2);
                     var matchData = matchId.Substring(0, 6);
                     var matchNumber = matchId.Substring(6);
                     var winOdds = 0M;
@@ -4539,18 +4693,25 @@ namespace Lottery.CrawGetters.MatchBizGetter
                     var loseOdds = 0M;
                     if (!(match_D.hhad == null))
                     {
-                        winOdds = decimal.Parse(match_D.hhad.h);
-                        flatOdds = decimal.Parse(match_D.hhad.d);
-                        loseOdds = decimal.Parse(match_D.hhad.a);
+                        string h = match_D.hhad.h;
+                        string d = match_D.hhad.d;
+                        string a = match_D.hhad.a;
+
+                        winOdds = decimal.Parse(h);
+                        flatOdds = decimal.Parse(d);
+                        loseOdds = decimal.Parse(a);
                     }
                     var winOdds_brq = 0M;
                     var flatOdds_brq = 0M;
                     var loseOdds_brq = 0M;
                     if (!(match_D.had == null))
                     {
-                        winOdds_brq = decimal.Parse(match_D.had.h);
-                        flatOdds_brq = decimal.Parse(match_D.had.d);
-                        loseOdds_brq = decimal.Parse(match_D.had.a);
+                        string h = match_D.had.h;
+                        string d = match_D.had.d;
+                        string a = match_D.had.a;
+                        winOdds_brq = decimal.Parse(h);
+                        flatOdds_brq = decimal.Parse(d);
+                        loseOdds_brq = decimal.Parse(a);
                     }
                     list.Add(new C_JCZQ_SPF_SP
                     {
@@ -4589,19 +4750,38 @@ namespace Lottery.CrawGetters.MatchBizGetter
                 .Replace("\"0000\"", "\"P_00\"").Replace("\"0101\"", "\"P_11\"").Replace("\"0202\"", "\"P_22\"").Replace("\"0303\"", "\"P_33\"").Replace("\"0001\"", "\"F_01\"").Replace("\"0002\"", "\"F_02\"").Replace("\"0003\"", "\"F_03\"").Replace("\"0004\"", "\"F_04\"")
                 .Replace("\"0005\"", "\"F_05\"").Replace("\"0102\"", "\"F_12\"").Replace("\"0103\"", "\"F_13\"").Replace("\"0104\"", "\"F_14\"").Replace("\"0105\"", "\"F_15\"").Replace("\"0203\"", "\"F_23\"").Replace("\"0204\"", "\"F_24\"").Replace("\"0205\"", "\"F_25\""); ;
             var list = new List<C_JCZQ_BF_SP>();
-            if (string.IsNullOrEmpty(json))
+            if (string.IsNullOrEmpty(json) || json == "404")
                 return list;
 
             var array =JsonHelper.Decode(json);
             foreach (var item in array)
             {
-                if (item.Key != "data")
-                    continue;
+                //if (item.Key != "data")
+                //    continue;
                 var matchlist = item.Value;
                 foreach (var match in matchlist)
                 {
                     var match_D = match.Value;
-                    string matchId = match_D.b_date.Substring(2).Replace("-", "") + match_D.num.Substring(2);
+
+                    string b_date = "";
+                    try
+                    {
+                        b_date = match_D.b_date;
+                        if (string.IsNullOrEmpty(b_date))
+                        {
+                            continue;
+                        }
+                    }
+                    catch (Exception)
+                    {
+
+                        continue;
+                    }
+
+
+                    string num = match_D.num;
+
+                    string matchId =b_date.Substring(2).Replace("-", "") +num.Substring(2);
                     var matchData = matchId.Substring(0, 6);
                     var matchNumber = matchId.Substring(6);
 
@@ -4611,40 +4791,40 @@ namespace Lottery.CrawGetters.MatchBizGetter
                         MatchData = matchData,
                         MatchNumber = matchNumber,
                         CreateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                        S_QT = string.IsNullOrEmpty(match_D.crs.S_QT) ? 0 : decimal.Parse(match_D.crs.S_QT),
-                        P_QT = string.IsNullOrEmpty(match_D.crs.P_QT) ? 0 : decimal.Parse(match_D.crs.P_QT),
-                        F_QT = string.IsNullOrEmpty(match_D.crs.F_QT) ? 0 : decimal.Parse(match_D.crs.F_QT),
-                        S_52 = string.IsNullOrEmpty(match_D.crs.S_52) ? 0 : decimal.Parse(match_D.crs.S_52),
-                        S_51 = string.IsNullOrEmpty(match_D.crs.S_51) ? 0 : decimal.Parse(match_D.crs.S_51),
-                        S_50 = string.IsNullOrEmpty(match_D.crs.S_50) ? 0 : decimal.Parse(match_D.crs.S_50),
-                        S_42 = string.IsNullOrEmpty(match_D.crs.S_42) ? 0 : decimal.Parse(match_D.crs.S_42),
-                        S_41 = string.IsNullOrEmpty(match_D.crs.S_41) ? 0 : decimal.Parse(match_D.crs.S_41),
-                        S_40 = string.IsNullOrEmpty(match_D.crs.S_40) ? 0 : decimal.Parse(match_D.crs.S_40),
-                        S_32 = string.IsNullOrEmpty(match_D.crs.S_32) ? 0 : decimal.Parse(match_D.crs.S_32),
-                        S_31 = string.IsNullOrEmpty(match_D.crs.S_31) ? 0 : decimal.Parse(match_D.crs.S_31),
-                        S_30 = string.IsNullOrEmpty(match_D.crs.S_30) ? 0 : decimal.Parse(match_D.crs.S_30),
-                        S_21 = string.IsNullOrEmpty(match_D.crs.S_21) ? 0 : decimal.Parse(match_D.crs.S_21),
-                        S_20 = string.IsNullOrEmpty(match_D.crs.S_20) ? 0 : decimal.Parse(match_D.crs.S_20),
-                        S_10 = string.IsNullOrEmpty(match_D.crs.S_10) ? 0 : decimal.Parse(match_D.crs.S_10),
-                        P_00 = string.IsNullOrEmpty(match_D.crs.P_00) ? 0 : decimal.Parse(match_D.crs.P_00),
-                        P_11 = string.IsNullOrEmpty(match_D.crs.P_11) ? 0 : decimal.Parse(match_D.crs.P_11),
-                        P_22 = string.IsNullOrEmpty(match_D.crs.P_22) ? 0 : decimal.Parse(match_D.crs.P_22),
-                        P_33 = string.IsNullOrEmpty(match_D.crs.P_33) ? 0 : decimal.Parse(match_D.crs.P_33),
-                        F_01 = string.IsNullOrEmpty(match_D.crs.F_01) ? 0 : decimal.Parse(match_D.crs.F_01),
-                        F_02 = string.IsNullOrEmpty(match_D.crs.F_02) ? 0 : decimal.Parse(match_D.crs.F_02),
-                        F_03 = string.IsNullOrEmpty(match_D.crs.F_03) ? 0 : decimal.Parse(match_D.crs.F_03),
-                        F_04 = string.IsNullOrEmpty(match_D.crs.F_04) ? 0 : decimal.Parse(match_D.crs.F_04),
-                        F_05 = string.IsNullOrEmpty(match_D.crs.F_05) ? 0 : decimal.Parse(match_D.crs.F_05),
-                        F_12 = string.IsNullOrEmpty(match_D.crs.F_12) ? 0 : decimal.Parse(match_D.crs.F_12),
-                        F_13 = string.IsNullOrEmpty(match_D.crs.F_13) ? 0 : decimal.Parse(match_D.crs.F_13),
-                        F_14 = string.IsNullOrEmpty(match_D.crs.F_14) ? 0 : decimal.Parse(match_D.crs.F_14),
-                        F_15 = string.IsNullOrEmpty(match_D.crs.F_15) ? 0 : decimal.Parse(match_D.crs.F_15),
-                        F_23 = string.IsNullOrEmpty(match_D.crs.F_23) ? 0 : decimal.Parse(match_D.crs.F_23),
-                        F_24 = string.IsNullOrEmpty(match_D.crs.F_24) ? 0 : decimal.Parse(match_D.crs.F_24),
-                        F_25 = string.IsNullOrEmpty(match_D.crs.F_25) ? 0 : decimal.Parse(match_D.crs.F_25),
-                    });
-                }
-            }
+                        S_QT = string.IsNullOrEmpty(match_D.crs.S_QT.Value) ? 0 : decimal.Parse(match_D.crs.S_QT.Value),
+                        P_QT = string.IsNullOrEmpty(match_D.crs.P_QT.Value) ? 0 : decimal.Parse(match_D.crs.P_QT.Value),
+                        F_QT = string.IsNullOrEmpty(match_D.crs.F_QT.Value) ? 0 : decimal.Parse(match_D.crs.F_QT.Value),
+                        S_52 = string.IsNullOrEmpty(match_D.crs.S_52.Value) ? 0 : decimal.Parse(match_D.crs.S_52.Value),
+                        S_51 = string.IsNullOrEmpty(match_D.crs.S_51.Value) ? 0 : decimal.Parse(match_D.crs.S_51.Value),
+                        S_50 = string.IsNullOrEmpty(match_D.crs.S_50.Value) ? 0 : decimal.Parse(match_D.crs.S_50.Value),
+                        S_42 = string.IsNullOrEmpty(match_D.crs.S_42.Value) ? 0 : decimal.Parse(match_D.crs.S_42.Value),
+                        S_41 = string.IsNullOrEmpty(match_D.crs.S_41.Value) ? 0 : decimal.Parse(match_D.crs.S_41.Value),
+                        S_40 = string.IsNullOrEmpty(match_D.crs.S_40.Value) ? 0 : decimal.Parse(match_D.crs.S_40.Value),
+                        S_32 = string.IsNullOrEmpty(match_D.crs.S_32.Value) ? 0 : decimal.Parse(match_D.crs.S_32.Value),
+                        S_31 = string.IsNullOrEmpty(match_D.crs.S_31.Value) ? 0 : decimal.Parse(match_D.crs.S_31.Value),
+                        S_30 = string.IsNullOrEmpty(match_D.crs.S_30.Value) ? 0 : decimal.Parse(match_D.crs.S_30.Value),
+                        S_21 = string.IsNullOrEmpty(match_D.crs.S_21.Value) ? 0 : decimal.Parse(match_D.crs.S_21.Value),
+                        S_20 = string.IsNullOrEmpty(match_D.crs.S_20.Value) ? 0 : decimal.Parse(match_D.crs.S_20.Value),
+                        S_10 = string.IsNullOrEmpty(match_D.crs.S_10.Value) ? 0 : decimal.Parse(match_D.crs.S_10.Value),
+                        P_00 = string.IsNullOrEmpty(match_D.crs.P_00.Value) ? 0 : decimal.Parse(match_D.crs.P_00.Value),
+                        P_11 = string.IsNullOrEmpty(match_D.crs.P_11.Value) ? 0 : decimal.Parse(match_D.crs.P_11.Value),
+                        P_22 = string.IsNullOrEmpty(match_D.crs.P_22.Value) ? 0 : decimal.Parse(match_D.crs.P_22.Value),
+                        P_33 = string.IsNullOrEmpty(match_D.crs.P_33.Value) ? 0 : decimal.Parse(match_D.crs.P_33.Value),
+                        F_01 = string.IsNullOrEmpty(match_D.crs.F_01.Value) ? 0 : decimal.Parse(match_D.crs.F_01.Value),
+                        F_02 = string.IsNullOrEmpty(match_D.crs.F_02.Value) ? 0 : decimal.Parse(match_D.crs.F_02.Value),
+                        F_03 = string.IsNullOrEmpty(match_D.crs.F_03.Value) ? 0 : decimal.Parse(match_D.crs.F_03.Value),
+                        F_04 = string.IsNullOrEmpty(match_D.crs.F_04.Value) ? 0 : decimal.Parse(match_D.crs.F_04.Value),
+                        F_05 = string.IsNullOrEmpty(match_D.crs.F_05.Value) ? 0 : decimal.Parse(match_D.crs.F_05.Value),
+                        F_12 = string.IsNullOrEmpty(match_D.crs.F_12.Value) ? 0 : decimal.Parse(match_D.crs.F_12.Value),
+                        F_13 = string.IsNullOrEmpty(match_D.crs.F_13.Value) ? 0 : decimal.Parse(match_D.crs.F_13.Value),
+                        F_14 = string.IsNullOrEmpty(match_D.crs.F_14.Value) ? 0 : decimal.Parse(match_D.crs.F_14.Value),
+                        F_15 = string.IsNullOrEmpty(match_D.crs.F_15.Value) ? 0 : decimal.Parse(match_D.crs.F_15.Value),
+                        F_23 = string.IsNullOrEmpty(match_D.crs.F_23.Value) ? 0 : decimal.Parse(match_D.crs.F_23.Value),
+                        F_24 = string.IsNullOrEmpty(match_D.crs.F_24.Value) ? 0 : decimal.Parse(match_D.crs.F_24.Value),
+                        F_25 = string.IsNullOrEmpty(match_D.crs.F_25.Value) ? 0 : decimal.Parse(match_D.crs.F_25.Value),
+                    });                                                                               
+                }                                                                                           
+            }                                                                                               
             return list;
         }
 
@@ -4652,19 +4832,34 @@ namespace Lottery.CrawGetters.MatchBizGetter
         {
             var json = GetSPJsonContent_ZZJCW("ZJQ");
             var list = new List<C_JCZQ_ZJQ_SP>();
-            if (string.IsNullOrEmpty(json))
+            if (string.IsNullOrEmpty(json) || json == "404")
                 return list;
 
             var array =JsonHelper.Decode(json);
             foreach (var item in array)
             {
-                if (item.Key != "data")
-                    continue;
+                //if (item.Key != "data")
+                //    continue;
                 var matchlist = item.Value;
                 foreach (var match in matchlist)
                 {
                     var match_D = match.Value;
-                    string matchId = match_D.b_date.Substring(2).Replace("-", "") + match_D.num.Substring(2);
+                    string b_date = "";
+                    try
+                    {
+                        b_date = match_D.b_date;
+                        if (string.IsNullOrEmpty(b_date))
+                        {
+                            continue;
+                        }
+                    }
+                    catch (Exception)
+                    {
+
+                        continue;
+                    }
+                    string num = match_D.num;
+                    string matchId = b_date.Substring(2).Replace("-", "") + num.Substring(2);
                     var matchData = matchId.Substring(0, 6);
                     var matchNumber = matchId.Substring(6);
                     list.Add(new C_JCZQ_ZJQ_SP
@@ -4673,14 +4868,14 @@ namespace Lottery.CrawGetters.MatchBizGetter
                         MatchData = matchData,
                         MatchNumber = matchNumber,
                         CreateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                        JinQiu_0_Odds = string.IsNullOrEmpty(match_D.ttg.s0) ? 0 : decimal.Parse(match_D.ttg.s0),
-                        JinQiu_1_Odds = string.IsNullOrEmpty(match_D.ttg.s1) ? 0 : decimal.Parse(match_D.ttg.s1),
-                        JinQiu_2_Odds = string.IsNullOrEmpty(match_D.ttg.s2) ? 0 : decimal.Parse(match_D.ttg.s2),
-                        JinQiu_3_Odds = string.IsNullOrEmpty(match_D.ttg.s3) ? 0 : decimal.Parse(match_D.ttg.s3),
-                        JinQiu_4_Odds = string.IsNullOrEmpty(match_D.ttg.s4) ? 0 : decimal.Parse(match_D.ttg.s4),
-                        JinQiu_5_Odds = string.IsNullOrEmpty(match_D.ttg.s5) ? 0 : decimal.Parse(match_D.ttg.s5),
-                        JinQiu_6_Odds = string.IsNullOrEmpty(match_D.ttg.s6) ? 0 : decimal.Parse(match_D.ttg.s6),
-                        JinQiu_7_Odds = string.IsNullOrEmpty(match_D.ttg.s7) ? 0 : decimal.Parse(match_D.ttg.s7),
+                        JinQiu_0_Odds = string.IsNullOrEmpty(match_D.ttg.s0.Value) ? 0 : decimal.Parse(match_D.ttg.s0.Value),
+                        JinQiu_1_Odds = string.IsNullOrEmpty(match_D.ttg.s1.Value) ? 0 : decimal.Parse(match_D.ttg.s1.Value),
+                        JinQiu_2_Odds = string.IsNullOrEmpty(match_D.ttg.s2.Value) ? 0 : decimal.Parse(match_D.ttg.s2.Value),
+                        JinQiu_3_Odds = string.IsNullOrEmpty(match_D.ttg.s3.Value) ? 0 : decimal.Parse(match_D.ttg.s3.Value),
+                        JinQiu_4_Odds = string.IsNullOrEmpty(match_D.ttg.s4.Value) ? 0 : decimal.Parse(match_D.ttg.s4.Value),
+                        JinQiu_5_Odds = string.IsNullOrEmpty(match_D.ttg.s5.Value) ? 0 : decimal.Parse(match_D.ttg.s5.Value),
+                        JinQiu_6_Odds = string.IsNullOrEmpty(match_D.ttg.s6.Value) ? 0 : decimal.Parse(match_D.ttg.s6.Value),
+                        JinQiu_7_Odds = string.IsNullOrEmpty(match_D.ttg.s7.Value) ? 0 : decimal.Parse(match_D.ttg.s7.Value),
                     });
                 }
             }
@@ -4691,19 +4886,34 @@ namespace Lottery.CrawGetters.MatchBizGetter
         {
             var json = GetSPJsonContent_ZZJCW("BQC");
             var list = new List<C_JCZQ_BQC_SP>();
-            if (string.IsNullOrEmpty(json))
+            if (string.IsNullOrEmpty(json) || json=="404")
                 return list;
 
             var array =JsonHelper.Decode(json);
             foreach (var item in array)
             {
-                if (item.Key != "data")
-                    continue;
+                //if (item.Key != "data")
+                //    continue;
                 var matchlist = item.Value;
                 foreach (var match in matchlist)
                 {
                     var match_D = match.Value;
-                    string matchId = match_D.b_date.Substring(2).Replace("-", "") + match_D.num.Substring(2);
+                    string b_date = "";
+                    try
+                    {
+                        b_date = match_D.b_date;
+                        if (string.IsNullOrEmpty(b_date))
+                        {
+                            continue;
+                        }
+                    }
+                    catch (Exception)
+                    {
+
+                        continue;
+                    }
+                    string num = match_D.num;
+                    string matchId = b_date.Substring(2).Replace("-", "") +num.Substring(2);
                     var matchData = matchId.Substring(0, 6);
                     var matchNumber = matchId.Substring(6);
                     list.Add(new C_JCZQ_BQC_SP
@@ -4712,15 +4922,15 @@ namespace Lottery.CrawGetters.MatchBizGetter
                         MatchData = matchData,
                         MatchNumber = matchNumber,
                         CreateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                        SH_SH_Odds = string.IsNullOrEmpty(match_D.hafu.hh) ? 0 : decimal.Parse(match_D.hafu.hh),
-                        SH_P_Odds = string.IsNullOrEmpty(match_D.hafu.hd) ? 0 : decimal.Parse(match_D.hafu.hd),
-                        SH_F_Odds = string.IsNullOrEmpty(match_D.hafu.ha) ? 0 : decimal.Parse(match_D.hafu.ha),
-                        P_SH_Odds = string.IsNullOrEmpty(match_D.hafu.dh) ? 0 : decimal.Parse(match_D.hafu.dh),
-                        P_P_Odds = string.IsNullOrEmpty(match_D.hafu.dd) ? 0 : decimal.Parse(match_D.hafu.dd),
-                        P_F_Odds = string.IsNullOrEmpty(match_D.hafu.da) ? 0 : decimal.Parse(match_D.hafu.da),
-                        F_SH_Odds = string.IsNullOrEmpty(match_D.hafu.ah) ? 0 : decimal.Parse(match_D.hafu.ah),
-                        F_P_Odds = string.IsNullOrEmpty(match_D.hafu.ad) ? 0 : decimal.Parse(match_D.hafu.ad),
-                        F_F_Odds = string.IsNullOrEmpty(match_D.hafu.aa) ? 0 : decimal.Parse(match_D.hafu.aa),
+                        SH_SH_Odds = string.IsNullOrEmpty(match_D.hafu.hh.Value) ? 0 : decimal.Parse(match_D.hafu.hh .Value),
+                        SH_P_Odds = string.IsNullOrEmpty(match_D.hafu.hd .Value) ? 0 : decimal.Parse(match_D.hafu.hd .Value),
+                        SH_F_Odds = string.IsNullOrEmpty(match_D.hafu.ha .Value) ? 0 : decimal.Parse(match_D.hafu.ha .Value),
+                        P_SH_Odds = string.IsNullOrEmpty(match_D.hafu.dh .Value) ? 0 : decimal.Parse(match_D.hafu.dh .Value),
+                        P_P_Odds = string.IsNullOrEmpty(match_D.hafu.dd .Value) ? 0 : decimal.Parse(match_D.hafu.dd .Value),
+                        P_F_Odds = string.IsNullOrEmpty(match_D.hafu.da .Value) ? 0 : decimal.Parse(match_D.hafu.da .Value),
+                        F_SH_Odds = string.IsNullOrEmpty(match_D.hafu.ah .Value) ? 0 : decimal.Parse(match_D.hafu.ah .Value),
+                        F_P_Odds = string.IsNullOrEmpty(match_D.hafu.ad .Value) ? 0 : decimal.Parse(match_D.hafu.ad .Value),
+                        F_F_Odds = string.IsNullOrEmpty(match_D.hafu.aa .Value) ? 0 : decimal.Parse(match_D.hafu.aa .Value),
                     });
                 }
             }
@@ -5024,12 +5234,14 @@ namespace Lottery.CrawGetters.MatchBizGetter
 
         public void WriteError(string log)
         {
+            Console.WriteLine(log);
             //if (_logWriter != null)
             //    _logWriter.Write(logErrorCategory, logErrorSource, LogType.Error, "自动采集竞彩足球队伍数据", log);
         }
 
         public void WriteLog(string log)
         {
+            Console.WriteLine(log);
             //if (_logWriter != null)
             //    _logWriter.Write(logCategory, logInfoSource, LogType.Information, "自动采集竞彩足球队伍数据", log);
         }

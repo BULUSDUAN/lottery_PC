@@ -18,7 +18,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
     /// <summary>
     /// 采集欧赔
     /// </summary>
-    public class JCZQ_OZSP_AutoCollect 
+    public class JCZQ_OZSP_AutoCollect : IBallAutoCollect
     {
       
         private const string logCategory = "Services.Info";
@@ -30,7 +30,8 @@ namespace Lottery.CrawGetters.MatchBizGetter
         private System.Timers.Timer timer = null;
         private string SavePath = string.Empty;
 
-
+        public string Key { get; set; }
+        public string Category { get; set; }
 
         private IMongoDatabase mDB;
         public JCZQ_OZSP_AutoCollect(IMongoDatabase _mDB)
@@ -38,7 +39,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
             mDB = _mDB;
         }
 
-        public string Key { get; set; }
+    
         private Task thread = null;
         public void Start(string gameCode)
         {

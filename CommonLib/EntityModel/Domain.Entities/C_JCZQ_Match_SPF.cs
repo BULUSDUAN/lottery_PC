@@ -2,6 +2,7 @@
 using EntityModel.Interface;
 using KaSon.FrameWork.Services.Attribute;
 using KaSon.FrameWork.Services.Enum;
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,6 +16,7 @@ namespace EntityModel.Domain.Entities
     [Entity("C_JCZQ_Match", Type = EntityType.Table)]
     public class C_JCZQ_Match_SPF: IBallBaseInfo
     {
+        public ObjectId _id { get; set; }
         /// <summary>
         /// 比赛Id : 120813001
         /// </summary>
@@ -32,7 +34,7 @@ namespace EntityModel.Domain.Entities
         public string MatchNumber { get; set; }
 
         [Field("Id", IsPrimaryKey =true)]
-        public long Id { get; set; }
+        public long mId { get; set; }
         /// <summary>
         /// 比赛编号名称
         /// </summary>

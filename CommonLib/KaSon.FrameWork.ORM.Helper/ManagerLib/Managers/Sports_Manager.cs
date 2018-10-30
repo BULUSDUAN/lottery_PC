@@ -642,7 +642,7 @@ namespace KaSon.FrameWork.ORM.Helper
                                         t.ticketId as TicketId,
                                        t.gamecode as GameCode,t.gametype as GameType,
                                        t.betcontent as BetContent,t.amount as Amount,t.isappend as IsAppend,
-                                        t.issusenumber as IssuseNumber,i.WinNumber,t.id as Id
+                                        t.issusenumber as IssuseNumber,p.WinNumber as WinNumber,t.id as Id
                                     from C_Sports_Ticket t
                                     left join [T_Ticket_BonusPool] p on t.gamecode=p.gamecode and t.gametype=p.gametype and t.issusenumber =p.issusenumber
                                     where t.gamecode='ctzq' and t.gametype='{1}' and t.bonusstatus=0 and t.TicketStatus=90 

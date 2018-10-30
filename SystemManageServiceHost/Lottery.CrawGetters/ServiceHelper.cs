@@ -56,11 +56,18 @@ namespace Lottery.CrawGetters
                 string currentListStr = KaSon.FrameWork.Common.JSON.JsonHelper.Serialize(currentList);
 
                 // string tablename = Lottery.CrawGetters.InitConfigInfo.MongoTableSettings["CTZQMatch"].ToString();IssuseNumber  IssuseNumber
-             //   var mFilter = MongoDB.Driver.Builders<CTZQ_MatchInfo>.Filter.Eq(b => b.GameType, GameType) & Builders<CTZQ_MatchInfo>.Filter.Eq(b => b.IssuseNumber, issuseNumber);
+                //   var mFilter = MongoDB.Driver.Builders<CTZQ_MatchInfo>.Filter.Eq(b => b.GameType, GameType) & Builders<CTZQ_MatchInfo>.Filter.Eq(b => b.IssuseNumber, issuseNumber);
+                List<T> rn = new List<T>();
+                if (mFilter==null)
+                {
+                    mFilter = Builders<T>.Filter.Empty;
+                }
 
                 var coll = mDB.GetCollection<T>(tablename);
                 // var count = coll.Find(mFilter).CountDocuments();
                 var document = coll.Find(mFilter).ToList<T>();
+                
+
                 // BsonDocument one = coll.fincou;
                 // var updated = Builders<BsonDocument>.Update.Set("Content", currentListStr);
                 if (document.Count > 0)
@@ -69,9 +76,7 @@ namespace Lottery.CrawGetters
                  //  var text = document["Content"].ToString().Trim();//.Replace("var data=", "").Replace("];", "]");
                  //  var oldList = string.IsNullOrEmpty(text) ? new List<CTZQ_MatchInfo>() : KaSon.FrameWork.Common.JSON.JsonHelper.Deserialize<List<CTZQ_MatchInfo>>(text);
                     var newList = action(document, currentList);
-
                     coll.DeleteMany(mFilter);
-
                     //UpdateResult uresult = coll.UpdateOne(mFilter, updated);
                     //if (uresult.ModifiedCount > 0)
                     //{
@@ -97,7 +102,7 @@ namespace Lottery.CrawGetters
                 }
                 coll.InsertMany(currentList);
             }
-            catch (Exception)
+            catch (Exception EX)
             {
 
                 throw;
@@ -219,40 +224,7 @@ namespace Lottery.CrawGetters
         
             return result;
         }
-        //通用的
-        public static bool BuildNewMatchList_GN<T>(IMongoDatabase mDB, string tablename, List<T> currentList, MongoDB.Driver.FilterDefinition<T> mFilter)
-          where T : new()
-        {
-            var result = new List<KeyValuePair<DBChangeState, T>>();
-            if (currentList.Count == 0) return false;
-            //  var issuseFileFullName = BuildFileFullName(string.Format("Match_{0}_List.json", gameCode), issuseNumber);
-            // var customerSavePath = new string[] { "CTZQ", issuseNumber };
-
-            try
-            {
-              //  string currentListStr = KaSon.FrameWork.Common.JSON.JsonHelper.Serialize(currentList);
-
-                // string tablename = Lottery.CrawGetters.InitConfigInfo.MongoTableSettings["CTZQMatch"].ToString();IssuseNumber  IssuseNumber
-                //   var mFilter = MongoDB.Driver.Builders<CTZQ_MatchInfo>.Filter.Eq(b => b.GameType, GameType) & Builders<CTZQ_MatchInfo>.Filter.Eq(b => b.IssuseNumber, issuseNumber);
-
-                var coll = mDB.GetCollection<T>(tablename);
-                // var count = coll.Find(mFilter).CountDocuments();
-                //var document = coll.Find(mFilter).ToList<T>();
-                // BsonDocument one = coll.fincou;
-                // var updated = Builders<BsonDocument>.Update.Set("Content", currentListStr);
-                coll.DeleteMany(mFilter);
-                coll.InsertMany(currentList);
-            }
-            catch (Exception)
-            {
-            
-                throw;
-            }
-
-       
-            return true;
-        }
-        public static void Write_Trend_JSON<T>(IMongoDatabase mDB, string tablename, List<T> collection, List<C_BJDC_Match> CurrentMatchList, MongoDB.Driver.FilterDefinition<T> mFilter=null)
+           public static void Write_Trend_JSON<T>(IMongoDatabase mDB, string tablename, List<T> collection, List<C_BJDC_Match> CurrentMatchList, MongoDB.Driver.FilterDefinition<T> mFilter=null)
             where T: IBJDCBallBaseInfo
         {
             var coll = mDB.GetCollection<T>(tablename);
@@ -287,48 +259,7 @@ namespace Lottery.CrawGetters
                 }
             }
         }
-        /// <summary>
-        /// 录入信息
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="mDB"></param>
-        /// <param name="tablename"></param>
-        /// <param name="currentList"></param>
-        /// <param name="mFilter"></param>
-        /// <returns></returns>
-        public static bool BuildList_BJDC<T>(IMongoDatabase mDB, string tablename, List<T> currentList, MongoDB.Driver.FilterDefinition<T> mFilter)
-       where T : new()
-        {
-            var result = new List<KeyValuePair<DBChangeState, T>>();
-            if (currentList.Count == 0) return false;
-            //  var issuseFileFullName = BuildFileFullName(string.Format("Match_{0}_List.json", gameCode), issuseNumber);
-            // var customerSavePath = new string[] { "CTZQ", issuseNumber };
-
-            try
-            {
-                //  string currentListStr = KaSon.FrameWork.Common.JSON.JsonHelper.Serialize(currentList);
-
-                // string tablename = Lottery.CrawGetters.InitConfigInfo.MongoTableSettings["CTZQMatch"].ToString();IssuseNumber  IssuseNumber
-                //   var mFilter = MongoDB.Driver.Builders<CTZQ_MatchInfo>.Filter.Eq(b => b.GameType, GameType) & Builders<CTZQ_MatchInfo>.Filter.Eq(b => b.IssuseNumber, issuseNumber);
-
-                var coll = mDB.GetCollection<T>(tablename);
-                // var count = coll.Find(mFilter).CountDocuments();
-               // var document = coll.Find(mFilter).ToList<T>();
-                // BsonDocument one = coll.fincou;
-                // var updated = Builders<BsonDocument>.Update.Set("Content", currentListStr);
-                coll.DeleteMany(mFilter);
-                coll.InsertMany(currentList);
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-
-
-            return true;
-        }
-
+     
         public static string getProperties<T>(T t, string[] propertyNames)
         {
             var list = new List<string>();

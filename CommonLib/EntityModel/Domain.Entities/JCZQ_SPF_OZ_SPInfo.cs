@@ -1,4 +1,5 @@
 ﻿using EntityModel.Interface;
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -96,19 +97,24 @@ namespace EntityModel.Domain.Entities
 
     public class JCZQ_2X1SP : JCZQBase
     {
+        public ObjectId _id { get; set; }
         public string BRQSPF { get; set; }
         public string SPF { get; set; }
     }
     public class JCZQ_Match_SPF_SP : JCZQBase
     {
+        public ObjectId _id { get; set; }
         public string BF { get; set; }
         public string BQC { get; set; }
         public string ZJQ { get; set; }
     }
     public class JCZQ_SPF_OZ_SPInfo: JCZQ_SPF_SPInfo
     {
+        public ObjectId _id { get; set; }
         public string OddsMid { get; set; }
         public string Flag { get; set; }
+
+       
     }
     public class JCZQ_SPF_SPInfo : JCZQBase
     {
@@ -131,6 +137,7 @@ namespace EntityModel.Domain.Entities
     }
     public class JCZQ_SP : JCZQBase
     {
+        public ObjectId _id { get; set; }
         public string BRQSPF { get; set; }
         public string SPF { get; set; }
         public string BF { get; set; }

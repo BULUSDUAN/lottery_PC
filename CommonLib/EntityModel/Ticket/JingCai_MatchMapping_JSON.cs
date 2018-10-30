@@ -1,4 +1,5 @@
 ﻿using EntityModel.CoreModel;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -538,6 +539,7 @@ namespace EntityModel.Ticket
     #endregion
 
     #region 竞彩篮球赔率信息
+    [BsonIgnoreExtraElements]
     public class JCLQ_SF_SPInfo : JingCaiMatchBase, I_JingCai_Odds
     {
         /// <summary>
@@ -571,6 +573,7 @@ namespace EntityModel.Ticket
             return true;
         }
     }
+    [BsonIgnoreExtraElements]
     public class JCLQ_RFSF_SPInfo : JingCaiMatchBase, I_JingCai_Odds
     {
         /// <summary>
@@ -613,6 +616,7 @@ namespace EntityModel.Ticket
             return true;
         }
     }
+    [BsonIgnoreExtraElements]
     public class JCLQ_SFC_SPInfo : JingCaiMatchBase, I_JingCai_Odds
     {
         /// <summary>
@@ -705,6 +709,7 @@ namespace EntityModel.Ticket
             return true;
         }
     }
+    [BsonIgnoreExtraElements]
     public class JCLQ_DXF_SPInfo : JingCaiMatchBase, I_JingCai_Odds
     {
         /// <summary>

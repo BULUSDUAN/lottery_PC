@@ -31,6 +31,13 @@ namespace Craw.Service.IModuleServices
 
         [Service(Date = "2018-9-3", Director = "kason", Name = "采集，开奖等登陆服务")]
         Task<string> CTZQMatchAndPool_Start(string Type,string gameName);
+        [Service(Date = "2018-9-3", Director = "kason", Name = "采集，开奖等登陆服务")]
+         Task<string> JCZQMatch_Result_OZSP_Start(string Type);
+
+        [Service(Date = "2018-9-3", Director = "kason", Name = "采集，开奖等登陆服务")]
+        Task<string> JCLQMatch_Start();
+        [Service(Date = "2018-9-3", Director = "kason", Name = "采集，开奖等登陆服务")]
+        Task<string> BJDCMatch_OZSP_Start(string Type);
 
         [Service(Date = "2018-9-3", Director = "kason", Name = "采集，开奖等登陆服务")]
         Task<string> CTZQMatchAndPool_Stop(string Type, string name);

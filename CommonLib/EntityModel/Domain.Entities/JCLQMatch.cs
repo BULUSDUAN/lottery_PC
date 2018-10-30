@@ -1,6 +1,8 @@
 ﻿using EntityModel.Interface;
 using KaSon.FrameWork.Services.Attribute;
 using KaSon.FrameWork.Services.Enum;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,6 +12,7 @@ namespace EntityModel.Domain.Entities
     [Entity("C_JCLQ_Match", Type = EntityType.Table)]
     public class JCLQ_Match_HH : IBallBaseInfo
     {
+        public ObjectId _id { get; set; }
 
         /// <summary>
         /// 比赛Id : 120813001
@@ -27,7 +30,7 @@ namespace EntityModel.Domain.Entities
         [Field("MatchNumber")]
         public string MatchNumber { get; set; }
         [Field("Id",    IsPrimaryKey =true, IsIdenty =true)]
-        public long Id { get; set; }
+        public long mId { get; set; }
         /// <summary>
         /// 比赛编号名称
         /// </summary>
@@ -146,8 +149,10 @@ namespace EntityModel.Domain.Entities
     }
 
     [Entity("C_JCLQ_Match", Type = EntityType.Table)]
+    [BsonIgnoreExtraElements]
     public class JCLQ_Match_HHDG : IBallBaseInfo
     {
+        public ObjectId _id { get; set; }
         /// <summary>
         /// 比赛Id : 120813001
         /// </summary>
@@ -164,7 +169,7 @@ namespace EntityModel.Domain.Entities
         [Field("MatchNumber")]
         public string MatchNumber { get; set; }
         [Field("Id",    IsPrimaryKey =true, IsIdenty =true)]
-        public long Id { get; set; }
+        public long mId { get; set; }
         /// <summary>
         /// 比赛编号名称
         /// </summary>
@@ -287,8 +292,10 @@ namespace EntityModel.Domain.Entities
     /// 竞彩篮球队伍
     /// </summary>
     [Entity("C_JCLQ_Match", Type = EntityType.Table)]
+    [BsonIgnoreExtraElements]
     public class JCLQ_Match_SF : IBallBaseInfo
     {
+        public ObjectId _id { get; set; }
         /// <summary>
         /// 比赛Id : 120813001
         /// </summary>
@@ -305,7 +312,7 @@ namespace EntityModel.Domain.Entities
         [Field("MatchNumber")]
         public string MatchNumber { get; set; }
         [Field("Id",    IsPrimaryKey =true, IsIdenty =true)]
-        public long Id { get; set; }
+        public long mId { get; set; }
         /// <summary>
         /// 比赛编号名称
         /// </summary>
@@ -424,8 +431,10 @@ namespace EntityModel.Domain.Entities
     /// 竞彩篮球队伍
     /// </summary>
     [Entity("C_JCLQ_Match", Type = EntityType.Table)]
+    [BsonIgnoreExtraElements]
     public class JCLQ_Match_RFSF : IBallBaseInfo
     {
+        public ObjectId _id { get; set; }
         /// <summary>
         /// 比赛Id : 120813001
         /// </summary>
@@ -442,7 +451,7 @@ namespace EntityModel.Domain.Entities
         [Field("MatchNumber")]
         public string MatchNumber { get; set; }
         [Field("Id",    IsPrimaryKey =true, IsIdenty =true)]
-        public long Id { get; set; }
+        public long mId { get; set; }
         /// <summary>
         /// 比赛编号名称
         /// </summary>
@@ -562,8 +571,10 @@ namespace EntityModel.Domain.Entities
     /// 竞彩篮球队伍
     /// </summary>
     [Entity("C_JCLQ_Match", Type = EntityType.Table)]
+    [BsonIgnoreExtraElements]
     public class JCLQ_Match_SFC : IBallBaseInfo
     {
+        public ObjectId _id { get; set; }
         /// <summary>
         /// 比赛Id : 120813001
         /// </summary>
@@ -580,7 +591,7 @@ namespace EntityModel.Domain.Entities
         [Field("MatchNumber")]
         public string MatchNumber { get; set; }
         [Field("Id",    IsPrimaryKey =true, IsIdenty =true)]
-        public long Id { get; set; }
+        public long mId { get; set; }
         /// <summary>
         /// 比赛编号名称
         /// </summary>
@@ -700,8 +711,10 @@ namespace EntityModel.Domain.Entities
     /// 竞彩篮球队伍
     /// </summary>
     [Entity("C_JCLQ_Match", Type = EntityType.Table)]
+    [BsonIgnoreExtraElements]
     public class JCLQ_Match_DXF : IBallBaseInfo
     {
+        public ObjectId _id { get; set; }
         /// <summary>
         /// 比赛Id : 120813001
         /// </summary>
@@ -718,7 +731,7 @@ namespace EntityModel.Domain.Entities
         [Field("MatchNumber")]
         public string MatchNumber { get; set; }
         [Field("Id",    IsPrimaryKey =true, IsIdenty =true)]
-        public long Id { get; set; }
+        public long mId { get; set; }
         /// <summary>
         /// 比赛编号名称
         /// </summary>
@@ -838,8 +851,10 @@ namespace EntityModel.Domain.Entities
     /// 竞彩篮球 胜负 SP
     /// </summary>
     [Entity("C_JCLQ_SF_SP", Type = EntityType.Table)]
+    [BsonIgnoreExtraElements]
     public class JCLQ_SF_SP : IBallBaseInfo
     {
+        public ObjectId _id { get; set; }
         /// <summary>
         /// 比赛Id : 120813001
         /// </summary>
@@ -856,7 +871,7 @@ namespace EntityModel.Domain.Entities
         [Field("MatchNumber")]
         public string MatchNumber { get; set; }
         [Field("Id",    IsPrimaryKey =true, IsIdenty =true)]
-        public long Id { get; set; }
+        public long mId { get; set; }
         [Field("WinSP")]
         public decimal WinSP { get; set; }
         [Field("LoseSP")]
@@ -887,6 +902,7 @@ namespace EntityModel.Domain.Entities
     [Entity("C_JCLQ_RFSF_SP", Type = EntityType.Table)]
     public class JCLQ_RFSF_SP : IBallBaseInfo
     {
+        public ObjectId _id { get; set; }
         /// <summary>
         /// 比赛Id : 120813001
         /// </summary>
@@ -903,7 +919,7 @@ namespace EntityModel.Domain.Entities
         [Field("MatchNumber")]
         public string MatchNumber { get; set; }
         [Field("Id",    IsPrimaryKey =true, IsIdenty =true)]
-        public long Id { get; set; }
+        public long mId { get; set; }
         [Field("WinSP")]
         public decimal WinSP { get; set; }
         [Field("LoseSP")]
@@ -940,6 +956,7 @@ namespace EntityModel.Domain.Entities
     [Entity("C_JCLQ_SFC_SP", Type = EntityType.Table)]
     public class JCLQ_SFC_SP : IBallBaseInfo
     {
+        public ObjectId _id { get; set; }
         /// <summary>
         /// 比赛Id : 120813001
         /// </summary>
@@ -956,7 +973,7 @@ namespace EntityModel.Domain.Entities
         [Field("MatchNumber")]
         public string MatchNumber { get; set; }
         [Field("Id",    IsPrimaryKey =true, IsIdenty =true)]
-        public long Id { get; set; }
+        public long mId { get; set; }
 
         [Field("HomeWin1_5")]
         public decimal HomeWin1_5 { get; set; }
@@ -1019,6 +1036,7 @@ namespace EntityModel.Domain.Entities
     [Entity("C_JCLQ_DXF_SP", Type = EntityType.Table)]
     public class JCLQ_DXF_SP : IBallBaseInfo
     {
+        public ObjectId _id { get; set; }
         /// <summary>
         /// 比赛Id : 120813001
         /// </summary>
@@ -1035,7 +1053,7 @@ namespace EntityModel.Domain.Entities
         [Field("MatchNumber")]
         public string MatchNumber { get; set; }
         [Field("Id",    IsPrimaryKey =true, IsIdenty =true)]
-        public long Id { get; set; }
+        public long mId { get; set; }
 
         /// <summary>
         /// 预设总分
@@ -1079,6 +1097,7 @@ namespace EntityModel.Domain.Entities
     [Entity("C_JCLQ_MatchResult", Type = EntityType.Table)]
     public class JCLQ_MatchResult : IBallBaseInfo
     {
+        public ObjectId _id { get; set; }
         /// <summary>
         /// 比赛Id : 120813001
         /// </summary>
@@ -1095,7 +1114,7 @@ namespace EntityModel.Domain.Entities
         [Field("MatchNumber")]
         public string MatchNumber { get; set; }
         [Field("Id",    IsPrimaryKey =true, IsIdenty =true)]
-        public long Id { get; set; }
+        public long mId { get; set; }
         /// <summary>
         /// 主队得分
         /// </summary>

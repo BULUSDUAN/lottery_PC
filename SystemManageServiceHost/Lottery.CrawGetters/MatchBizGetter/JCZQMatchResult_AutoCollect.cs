@@ -18,13 +18,13 @@ using System.Xml;
 
 namespace Lottery.CrawGetters.MatchBizGetter
 {
-    public class JCZQMatchResultCache
+    internal class JCZQMatchResultCache
     {
         public string Id { get; set; }
         public int CacheTimes { get; set; }
         public C_JCZQ_MatchResult MatchResult { get; set; }
     }
-    public class JCZQMatchResult_AutoCollect 
+    public class JCZQMatchResult_AutoCollect : IBallAutoCollect
     {
      //   private ILogWriter _logWriter = null;
         private const string logCategory = "Services.Info";
@@ -53,6 +53,8 @@ namespace Lottery.CrawGetters.MatchBizGetter
         //    currentGetResultTimes = 0;
         //    CollectMatchs(gameCode);
         //}
+        public string Key { get; set; }
+        public string Category { get; set; }
         private IMongoDatabase mDB;
         public JCZQMatchResult_AutoCollect(IMongoDatabase _mDB)
         {
@@ -89,13 +91,13 @@ namespace Lottery.CrawGetters.MatchBizGetter
                         DoWork(gameCode);
 
                     }
-                    catch
+                    catch(Exception exa)
                     {
-                        Thread.Sleep(10000);
+                        Thread.Sleep(2000);
                     }
                     finally
                     {
-                        Thread.Sleep(10000);
+                        Thread.Sleep(2000);
                     }
                 }
             });
@@ -1746,7 +1748,18 @@ namespace Lottery.CrawGetters.MatchBizGetter
             {
                 var date = DateTime.Now.AddDays(-i).ToString("yyyy-MM-dd");
                 var url = string.Format("http://zx.500.com/jczq/kaijiang.php?playid=0&d={0}", date);
-                var content = PostManager.Get(url, Encoding.Default, 0, (request) =>
+
+                var endf = Encoding.Default;
+                try
+                {
+                    endf = Encoding.GetEncoding("GB2312");
+                }
+                catch 
+                {
+                    endf = Encoding.Default;
+
+                }
+                var content = PostManager.Get(url, endf, 0, (request) =>
                 {
                     if (ServiceHelper.IsUseProxy("JCZQ"))
                     {

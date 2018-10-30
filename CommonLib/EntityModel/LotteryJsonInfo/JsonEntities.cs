@@ -1,6 +1,8 @@
 ﻿
 using EntityModel.Enum;
 using EntityModel.Interface;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -148,19 +150,24 @@ namespace EntityModel.LotteryJsonInfo
         public decimal SFC_SP { get; set; }
         public string PrivilegesType { get; set; }
     }
+    [BsonIgnoreExtraElements]
     public class JCLQ_SP_SFC : JCLQBase
     {
+        public ObjectId _id { get; set; }
         public string SFC { get; set; }
     }
     public class JCLQ_SP : JCLQBase
     {
+        public ObjectId _id { get; set; }
         public string RFSF { get; set; }
         public string SF { get; set; }
         public string SFC { get; set; }
         public string DXF { get; set; }
     }
+    [BsonIgnoreExtraElements]
     public class JCLQ_MatchInfo : JCLQBase
     {
+        public ObjectId _id { get; set; }
         /// <summary>
         /// 平均负sp
         /// </summary>
@@ -381,6 +388,7 @@ namespace EntityModel.LotteryJsonInfo
     }
     public class JCZQ_MatchResultInfo : JCZQBase
     {
+        public ObjectId _id { get; set; }
         /// <summary>
         /// 比分结果
         /// </summary>
@@ -432,8 +440,8 @@ namespace EntityModel.LotteryJsonInfo
 
     public class JCZQ_MatchInfo : JCZQBase
     {
-       
 
+        public ObjectId _id { get; set; }
         public string CreateTime { get; set; }
         /// <summary>
         /// 单式投注结束时间
@@ -519,7 +527,7 @@ namespace EntityModel.LotteryJsonInfo
         public string GRank { get; set; }
         public string HLg { get; set; }
         public string GLg { get; set; }
-        public long Id { get; set; }
+        public long mId { get; set; }
     }
 
     public class JCZQ_SJBMatchInfo

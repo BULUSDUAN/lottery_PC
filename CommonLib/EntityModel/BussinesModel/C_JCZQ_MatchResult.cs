@@ -1,6 +1,7 @@
 ﻿using EntityModel.Interface;
 using KaSon.FrameWork.Services.Attribute;
 using KaSon.FrameWork.Services.Enum;
+using MongoDB.Bson;
 using ProtoBuf;
 using System;
 using System.Collections.Generic;
@@ -19,10 +20,11 @@ namespace EntityModel
         {
         
         }
-            /// <summary>
-            // 比赛Id
-            ///</summary>
-            [ProtoMember(1)]
+        public ObjectId _id { get; set; }
+        /// <summary>
+        // 比赛Id
+        ///</summary>
+        [ProtoMember(1)]
             [Field("MatchId", IsIdenty = false, IsPrimaryKey = true)]
             public string MatchId{ get; set; }
             /// <summary>

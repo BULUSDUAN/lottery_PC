@@ -69,7 +69,11 @@
       "FXId_Source": "okooo", //分析Id来源，310win,okooo
       "JCZQ_Result_Interval": 60000, //采集结果频率
       "JCZQ_Result_BuildStaticHtml_Times": "",
-      "JCLQ_AdvanceMinutes": -75
+      "JCLQ_AdvanceMinutes": -75,
+      "JCZQ_Match_Fun": "new",
+      "JCLQ_Result_Source": "ok",
+      "JCLQ_Match_Fun": "zzjcw",
+      "JCLQ_Result_CacheTimes": 1
     },
     //数字彩 彩种采集停留时间间隔 单位秒
     "NumLettory_SleepTimeSpanSettings": {

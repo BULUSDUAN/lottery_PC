@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,5 +28,10 @@ namespace KaSon.FrameWork.Common.JSON
         {
             return JsonConvert.DeserializeObject<dynamic>(data);
         }
+        public static JObject DecodeJObject(string data)
+        {
+            return (JObject)JsonConvert.DeserializeObject(data);
+        }
+        // (JObject)JsonConvert.DeserializeObject(jsonText)
     }
 }

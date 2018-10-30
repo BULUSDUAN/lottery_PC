@@ -15,18 +15,22 @@ using KaSon.FrameWork.ORM.Helper;
 using MongoDB.Driver;
 using EntityModel.CoreModel;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using EntityModel.ExceptionExtend;
+using System.Threading;
+
 namespace Lottery.CrawGetters.MatchBizGetter
 {
   
 
-    public class BJDCMatch_AutoCollect 
+    public class BJDCMatch_AutoCollect : IBallAutoCollect
     {
        
         private const string logCategory = "Services.Info";
         private string logInfoSource = "Auto_Collect_BJDC_Info_";
         private const string logErrorCategory = "Services.Error";
         private const string logErrorSource = "Auto_Collect_BJDC_Error";
-        private bool BeStop = true;
+        private long BeStop = 0;
         private System.Timers.Timer timer = null;
         private string Sp_SavePath = string.Empty;
         private int LeagueAdvanceMinutes = 15;
@@ -41,7 +45,53 @@ namespace Lottery.CrawGetters.MatchBizGetter
             mDB = _mDB;
         }
 
+        public string Category { get; set; }
+        public string Key { get; set; }
 
+        private Task thread = null;
+        public void Start(string gameCode)
+        {
+            gameCode = gameCode.ToUpper();
+            logInfoSource += gameCode;
+            //  _logWriter = logWriter;
+
+            BeStop = 0;
+            if (thread != null)
+            {
+                throw new LogicException("已经运行");
+            }
+            // gameCode = gameCode.ToUpper();
+            BeStop = 0;
+            // fn("",null);
+            thread = Task.Factory.StartNew(() =>
+            {
+                // ConcurrentDictionary<string, string> all = new ConcurrentDictionary<string, string>();
+                Dictionary<string, string> dic = null;
+                while (Interlocked.Read(ref BeStop) == 0)
+                {
+                    ////TODO：销售期间，暂停采集
+                    try
+                    {
+
+
+                        DoWork(gameCode, true);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        WriteLog(ex.Message);
+                        Thread.Sleep(2000);
+                    }
+                    finally
+                    {
+                        Thread.Sleep(2000);
+                    }
+                }
+            });
+            //  thread.Start();
+
+
+        }
         public void DoWork(string gameCode, bool getResult)
         {
             this.WriteLog("进入DoWork  开始采集数据");
@@ -4331,7 +4381,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
 
         public void Stop()
         {
-            BeStop = true;
+            BeStop = 1;
 
             if (timer != null)
                 timer.Stop();

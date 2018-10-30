@@ -641,11 +641,11 @@ namespace KaSon.FrameWork.ORM.Helper
             }
         }
 
-        public void UpdateOddsList_JCLQ<TInfo, TEntity>(string gameCode, string gameType, string[] matchIdList, bool isDS)
+        public void UpdateOddsList_JCLQ<TInfo, TEntity>(string tableName,string gameCode, string gameType, string[] matchIdList, bool isDS)
             where TInfo : JingCaiMatchBase, I_JingCai_Odds
          where TEntity : EntityModel.CoreModel.JingCai_Odds, new()
         {
-            var oddsList = GetOddsList_JingCai<TInfo>(gameCode, gameType, isDS ? "_DS" : string.Empty);
+            var oddsList = GetOddsList_JingCaiZQ<TInfo>(tableName,gameCode, gameType, isDS ? "_DS" : string.Empty);
             var oddsManager = new JCLQ_OddsManager();
             using (oddsManager.DB)
             {
@@ -1443,7 +1443,7 @@ namespace KaSon.FrameWork.ORM.Helper
          //T_JCLQ_Odds_RFSF
             string name = typeof(T).Name;
             var coll = MonDB.GetCollection<T>(name);
-            var documents = coll.Find<T>(null).ToList();
+            var documents = coll.Find<T>(Builders<T>.Filter.Empty).ToList();
             return documents;
         }
         private IList<T> GetOddsList_JingCaiZQ<T>(string tbName,string gameCode, string gameType, string flag)
@@ -1451,7 +1451,7 @@ namespace KaSon.FrameWork.ORM.Helper
          //T_JCLQ_Odds_RFSF
           //  string name = typeof(T).Name;
             var coll = MonDB.GetCollection<T>(tbName);
-            var documents = coll.Find<T>(null).ToList();
+            var documents = coll.Find<T>(Builders<T>.Filter.Empty).ToList();
             return documents;
         }
         public void UpdateOddsList_JCLQ_Manual_SF(string gameCode, string gameType)

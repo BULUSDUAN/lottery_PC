@@ -10,6 +10,7 @@ using EntityModel.LotteryJsonInfo;
 using KaSon.FrameWork.Analyzer.AnalyzerFactory;
 using KaSon.FrameWork.Common.Algorithms;
 using System.Collections.Generic;
+using EntityModel.Domain.Entities;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
@@ -218,7 +219,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //return JsonSerializer.Deserialize<List<MatchBiz.Core.JCLQ_MatchInfo>>(json);
 
 
-            var coll = mDB.GetCollection<JCLQ_MatchInfo>("JCLQ_MatchInfo");
+            var coll = mDB.GetCollection<JCLQ_MatchInfo>("JCLQ_Match_List");
             var builder = Builders<JCLQ_MatchInfo>.Filter;
             // DateTime startTime = DateTime.Now.AddMonths(1);
             //  DateTime startTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 1, 1, 12, 0, 0, DateTimeKind.Utc);
@@ -228,19 +229,7 @@ namespace KaSon.FrameWork.ORM.Helper
             return documents;
         }
 
-        private List<JCLQ_MatchResultInfo> LoadJCLQMatchResultList()
-        {
-            //var fileName = Path.Combine(_baseDir, string.Format(@"{0}\Match_Result_List.json", "JCLQ"));
-
-            var coll = mDB.GetCollection<JCLQ_MatchResultInfo>("JCLQ_MatchResultInfo");
-            var builder = Builders<JCLQ_MatchResultInfo>.Filter;
-            // DateTime startTime = DateTime.Now.AddMonths(1);
-            //  DateTime startTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 1, 1, 12, 0, 0, DateTimeKind.Utc);
-
-            //var filter = builder.Eq("IssuseNumber", issuseNumber); //& builder.Lte("GameCode", gameType) & builder.Lte("IssuseNumber", issuseNumber);
-            var documents = coll.Find<JCLQ_MatchResultInfo>(null).ToList();
-            return documents;
-        }
+       
         private List<SJB_MatchInfo> LoadSJB_GJMatchList()
         {
             //var fileName = Path.Combine(_baseDir, string.Format(@"{0}\Match_List.json", "JCZQ"));
@@ -1170,7 +1159,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
             return documents;
         }
-        private IList<CTZQ_BonusPoolInfo> GetBonusPoolList_CTZQ(string gameCode, string gameType, string issuseNumber)
+        private IList<CTZQ_BonusLevelInfo> GetBonusPoolList_CTZQ(string gameCode, string gameType, string issuseNumber)
         {
             //var fileName = string.Format(@"{3}\{0}\{2}\{0}_{1}_BonusLevel.json", gameCode, gameType, issuseNumber, _baseDir);
             ////if (!File.Exists(fileName))
@@ -1181,13 +1170,15 @@ namespace KaSon.FrameWork.ORM.Helper
             //var resultList = JsonSerializer.Deserialize<List<CTZQ_BonusPoolInfo>>(json);
 
 
-            var coll = mDB.GetCollection<CTZQ_BonusPoolInfo>("CTZQ_BonusPoolInfo");
-            var builder = Builders<CTZQ_BonusPoolInfo>.Filter;
+            var coll = mDB.GetCollection<CTZQ_BonusLevelInfo>("CTZQ_BonusPoolInfo");
+            var builder = Builders<CTZQ_BonusLevelInfo>.Filter;
             // DateTime startTime = DateTime.Now.AddMonths(1);
             DateTime startTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 1, 1, 12, 0, 0, DateTimeKind.Utc);
 
-            var filter = builder.Eq("GameCode", gameCode) & builder.Eq("GameType", gameType) & builder.Eq("IssuseNumber", issuseNumber);
-            var documents = coll.Find<CTZQ_BonusPoolInfo>(filter).ToList();
+           // var filter = builder.Eq<CTZQ_BonusPoolInfo>(b=>b.GameCode, gameCode) & builder.Eq<CTZQ_BonusPoolInfo>(b => b.GameType, gameType) & builder.Eq("IssuseNumber", issuseNumber);
+            var mFilter = MongoDB.Driver.Builders<CTZQ_BonusLevelInfo>.Filter.Eq(b => b.GameType, gameType) & Builders<CTZQ_BonusLevelInfo>.Filter.Eq(b => b.IssuseNumber, issuseNumber);
+
+            var documents = coll.Find<CTZQ_BonusLevelInfo>(mFilter).ToList();
 
             return documents;
         }
@@ -1265,7 +1256,8 @@ namespace KaSon.FrameWork.ORM.Helper
                     //    throw new FormatException(errMsg);
                     //}
                     winNumber = info.MatchResult;
-                    var entity = DB.CreateQuery<T_Ticket_BonusPool>().Where(p => p.GameCode == gameCode && p.GameType == gameType && p.IssuseNumber == issuseNumber && p.BonusLevel == info.BonusLevel).FirstOrDefault();
+                        string BonusLevel = info.BonusLevel + "" ;
+                    var entity = DB.CreateQuery<T_Ticket_BonusPool>().Where(p => p.GameCode == gameCode && p.GameType == gameType && p.IssuseNumber == issuseNumber && p.BonusLevel == BonusLevel).FirstOrDefault();
                     //var entity = bonusManager.GetBonusPool(gameCode, gameType, issuseNumber, info.BonusLevel);
                     if (entity == null)
                     {
@@ -1275,7 +1267,7 @@ namespace KaSon.FrameWork.ORM.Helper
                             GameCode = gameCode,
                             GameType = gameType,
                             IssuseNumber = info.IssuseNumber,
-                            BonusLevel = info.BonusLevel,
+                            BonusLevel = info.BonusLevel.ToString(),
                             BonusCount = info.BonusCount,
                             BonusLevelDisplayName = info.BonusLevelDisplayName,
                             BonusMoney = info.BonusMoney,
@@ -2191,7 +2183,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //  DateTime startTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 1, 1, 12, 0, 0, DateTimeKind.Utc);
 
             var filter = builder.Ne("IssuseNumber", ""); //& builder.Lte("GameCode", gameType) & builder.Lte("IssuseNumber", issuseNumber);
-            var documents = coll.Find<JCZQ_MatchResultInfo>(null).ToList();
+            var documents = coll.Find<JCZQ_MatchResultInfo>(Builders<JCZQ_MatchResultInfo>.Filter.Empty).ToList();
             return documents;
         }
         private List<JCZQ_MatchInfo> LoadJCZQMatchList()
@@ -2213,30 +2205,25 @@ namespace KaSon.FrameWork.ORM.Helper
             //  DateTime startTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 1, 1, 12, 0, 0, DateTimeKind.Utc);
 
             var filter = builder.Ne("IssuseNumber", ""); //& builder.Lte("GameCode", gameType) & builder.Lte("IssuseNumber", issuseNumber);
-            var documents = coll.Find<JCZQ_MatchInfo>(null).ToList();
+            var documents = coll.Find<JCZQ_MatchInfo>(Builders<JCZQ_MatchInfo>.Filter.Empty).ToList();
 
             return documents;
         }
         private List<T> LoadJCZQMatchListEx<T>(string tableName)
         {
-            //var fileName = Path.Combine(_baseDir, string.Format(@"{0}\Match_List.json", "JCZQ"));
-            //var fileName = string.Format(@"{1}\{0}\Match_List_FB.json", "JCZQ", _baseDir);
-            ////if (!File.Exists(fileName))
-            ////    throw new ArgumentException("未找到数据文件" + fileName);
+          
 
-            //var json = ReadFileString(fileName);
-            //if (string.IsNullOrEmpty(json))
-            //    return new List<JCZQ_MatchInfo>();
-            //return JsonSerializer.Deserialize<List<JCZQ_MatchInfo>>(json);
+            var coll = mDB.GetCollection<T>(tableName);
+                 var documents = coll.Find<T>(Builders<T>.Filter.Empty).ToList();
+
+            return documents;
+        }
+        private List<T> LoadMatchListEx<T>(string tableName)
+        {
 
 
             var coll = mDB.GetCollection<T>(tableName);
-            var builder = Builders<T>.Filter;
-            // DateTime startTime = DateTime.Now.AddMonths(1);
-            //  DateTime startTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 1, 1, 12, 0, 0, DateTimeKind.Utc);
-
-            //var filter = builder.Ne("IssuseNumber", ""); //& builder.Lte("GameCode", gameType) & builder.Lte("IssuseNumber", issuseNumber);
-            var documents = coll.Find<T>(null).ToList();
+            var documents = coll.Find<T>(Builders<T>.Filter.Empty).ToList();
 
             return documents;
         }
@@ -2249,12 +2236,12 @@ namespace KaSon.FrameWork.ORM.Helper
             //return JsonSerializer.Deserialize<List<JCZQ_SJBMatchInfo>>(json);
 
             var coll = mDB.GetCollection<JCZQ_SJBMatchInfo>("JCZQ_SJBMatchInfo");
-            var builder = Builders<JCZQ_SJBMatchInfo>.Filter;
+          //  var builder = Builders<JCZQ_SJBMatchInfo>.Filter;
             // DateTime startTime = DateTime.Now.AddMonths(1);
             //  DateTime startTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 1, 1, 12, 0, 0, DateTimeKind.Utc);
 
            //var filter = builder.Ne("IssuseNumber", ""); //& builder.Lte("GameCode", gameType) & builder.Lte("IssuseNumber", issuseNumber);
-            var documents = coll.Find<JCZQ_SJBMatchInfo>(null).ToList();
+            var documents = coll.Find<JCZQ_SJBMatchInfo>(Builders<JCZQ_SJBMatchInfo>.Filter.Empty).ToList();
             return documents;
         }
         private List<JCZQ_SJBMatchInfo> LoadJCZQ_SJB_GYJ_MatchList()
@@ -2271,7 +2258,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //  DateTime startTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 1, 1, 12, 0, 0, DateTimeKind.Utc);
 
             //var filter = builder.Ne("IssuseNumber", ""); //& builder.Lte("GameCode", gameType) & builder.Lte("IssuseNumber", issuseNumber);
-            var documents = coll.Find<JCZQ_SJBMatchInfo>(null).ToList();
+            var documents = coll.Find<JCZQ_SJBMatchInfo>(Builders<JCZQ_SJBMatchInfo>.Filter.Empty).ToList();
             return documents;
         }
         private List<JCZQ_OZBMatchInfo> LoadJCZQ_OZB_GYJ_MatchList()
@@ -2283,7 +2270,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //  DateTime startTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 1, 1, 12, 0, 0, DateTimeKind.Utc);
 
             //var filter = builder.Ne("IssuseNumber", ""); //& builder.Lte("GameCode", gameType) & builder.Lte("IssuseNumber", issuseNumber);
-            var documents = coll.Find<JCZQ_OZBMatchInfo>(null).ToList();
+            var documents = coll.Find<JCZQ_OZBMatchInfo>(Builders<JCZQ_OZBMatchInfo>.Filter.Empty).ToList();
             return documents;
         }
         public void Update_JCZQ_MatchList(string tablename,string[] matchIdArray)
@@ -2429,7 +2416,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public void Update_JCZQ_MatchResultList(string tablename,string[] matchIdArray)
         {
-            var matchResultList = LoadJCZQMatchListEx<JCZQ_MatchResultInfo>(tablename);
+            var matchResultList = LoadJCZQMatchListEx<C_JCZQ_MatchResult>(tablename);
           //  var matchResultList = LoadJCZQMatchResultList();
             //开启事务
             var manager = new JCZQMatchManager();
@@ -3149,9 +3136,9 @@ namespace KaSon.FrameWork.ORM.Helper
 
         #region 竞彩篮球
 
-        public void Update_JCLQ_MatchList(string[] matchIdArray)
+        public void Update_JCLQ_MatchList(string tablename,string[] matchIdArray)
         {
-            var matchInfoList = LoadJCLQMatchList();
+            var matchInfoList =this.LoadMatchListEx<JCLQ_MatchInfo>(tablename);
             UpdateJCLQMatch(matchIdArray, matchInfoList);
 
             //重新加载比赛到缓存
@@ -3273,7 +3260,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public void Update_JCLQ_MatchResultList(string[] matchIdArray)
         {
-            var matchResultList = LoadJCLQMatchResultList();
+            var matchResultList = LoadMatchListEx<JCLQ_MatchResult>("JCLQ_Match_Result_List");
             var manager = new JCLQMatchManager();
             //开启事务
             using (manager.DB)

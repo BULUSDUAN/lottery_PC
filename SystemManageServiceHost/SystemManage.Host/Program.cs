@@ -152,10 +152,17 @@ namespace SystemManage.Host
             // LotteryGameManager lotGm = new LotteryGameManager();
             // lotGm.StartInitData();
 
+            Clear();
+
+
+
+        }
+
+        static void Clear() {
+
             Console.ReadKey(true);
-
-
-
+            Console.Clear();
+            Clear();
         }
     }
 

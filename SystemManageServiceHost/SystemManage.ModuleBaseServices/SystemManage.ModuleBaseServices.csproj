@@ -10,15 +10,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\CommonLib\KaSon.FrameWork.Common\KaSon.FrameWork.Common.csproj" />
+    <ProjectReference Include="..\KaSon.FrameWork.ORM\KaSon.FrameWork.ORM.csproj" />
+    <ProjectReference Include="..\KaSon.FrameWork.Services\KaSon.FrameWork.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="KaSon.FrameWork.ORM">
-      <HintPath>..\..\FramWorkDLL\KaSon.FrameWork.ORM.dll</HintPath>
-    </Reference>
-    <Reference Include="KaSon.FrameWork.Services">
-      <HintPath>..\..\FramWorkDLL\KaSon.FrameWork.Services.dll</HintPath>
-    </Reference>
     <Reference Include="Kason.Sg.Core.Caching">
       <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.Caching.dll</HintPath>
     </Reference>

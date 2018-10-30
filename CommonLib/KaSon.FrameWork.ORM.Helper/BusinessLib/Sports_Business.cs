@@ -169,13 +169,13 @@ namespace KaSon.FrameWork.ORM.Helper
                     var str_Array = from s in jczq_match_result_array select s.Split('_')[0];
                     var jczq_biz = new IssuseBusiness(mDB);
                     jczq_biz.Update_JCZQ_MatchResultList("JCZQ_Match_Result_List", str_Array.ToArray());
-                    new Thread(() =>
-                    {
-                        Common.Utilities.UsefullHelper.TryDoAction(() =>
-                        {
-                            jczq_biz.Update_JCZQ_HitCount(str_Array.ToArray());
-                        });
-                    }).Start();
+                    //new Thread(() =>
+                    //{
+                    //    Common.Utilities.UsefullHelper.TryDoAction(() =>
+                    //    {
+                    //        jczq_biz.Update_JCZQ_HitCount(str_Array.ToArray());
+                    //    });
+                    //}).Start();
                     break;
                 //过关
                 case NoticeType.JCZQ_SPF_SP:
@@ -204,7 +204,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 #region 竞彩篮球
                 case NoticeType.JCLQ_Match:
                     var jclq_array = text.Split(new string[] { "_" }, StringSplitOptions.RemoveEmptyEntries);
-                    new IssuseBusiness(mDB).Update_JCLQ_MatchList(jclq_array);
+                    new IssuseBusiness(mDB).Update_JCLQ_MatchList("JCLQ_Match_List", jclq_array);
                     break;
                 case NoticeType.JCLQ_MatchResult:
                     var jclq_match_result_array = text.Split(new string[] { "#" }, StringSplitOptions.RemoveEmptyEntries);
@@ -221,16 +221,16 @@ namespace KaSon.FrameWork.ORM.Helper
                     break;
                 //过关
                 case NoticeType.JCLQ_SF_SP:
-                    new TicketGatewayAdmin().UpdateOddsList_JCLQ<JCLQ_SF_SPInfo, T_JCLQ_Odds_SF>("JCLQ", "SF", text.Split('_'), false);
+                    new TicketGatewayAdmin() { MonDB=mDB}.UpdateOddsList_JCLQ<JCLQ_SF_SPInfo, T_JCLQ_Odds_SF>("JCLQ_DXF_SP", "JCLQ", "SF", text.Split('_'), false);
                     break;
                 case NoticeType.JCLQ_RFSF_SP:
-                    new TicketGatewayAdmin().UpdateOddsList_JCLQ<JCLQ_RFSF_SPInfo, T_JCLQ_Odds_RFSF>("JCLQ", "RFSF", text.Split('_'), false);
+                    new TicketGatewayAdmin() { MonDB = mDB }.UpdateOddsList_JCLQ<JCLQ_RFSF_SPInfo, T_JCLQ_Odds_RFSF>("JCLQ_RFSF_SP", "JCLQ", "RFSF", text.Split('_'), false);
                     break;
                 case NoticeType.JCLQ_SFC_SP:
-                    new TicketGatewayAdmin().UpdateOddsList_JCLQ<JCLQ_SFC_SPInfo, T_JCLQ_Odds_SFC>("JCLQ", "SFC", text.Split('_'), false);
+                    new TicketGatewayAdmin() { MonDB = mDB }.UpdateOddsList_JCLQ<JCLQ_SFC_SPInfo, T_JCLQ_Odds_SFC>("JCLQ_SFC_SP", "JCLQ", "SFC", text.Split('_'), false);
                     break;
                 case NoticeType.JCLQ_DXF_SP:
-                    new TicketGatewayAdmin().UpdateOddsList_JCLQ<JCLQ_DXF_SPInfo, T_JCLQ_Odds_DXF>("JCLQ", "DXF", text.Split('_'), false);
+                    new TicketGatewayAdmin() { MonDB = mDB }.UpdateOddsList_JCLQ<JCLQ_DXF_SPInfo, T_JCLQ_Odds_DXF>("JCLQ_DXF_SP","JCLQ", "DXF", text.Split('_'), false);
                     break;
                 #endregion
 

@@ -1,10 +1,34 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.IO;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace EntityModel.CoreModel
 {
+    public class StringOrInt32Serializer : IBsonSerializer
+    {
+        public Type ValueType { get; } = typeof(string);
+
+        public object Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
+        {
+            if (context.Reader.CurrentBsonType == BsonType.Int32) return 0;
+
+       
+
+            return context.Reader.ReadString();
+        }
+
+        public void Serialize(BsonSerializationContext context, BsonSerializationArgs args, object value)
+        {
+            context.Writer.WriteString(value as string);
+        }
+
+    
+    }
     /// <summary>
     /// 传统足球比赛信息
     /// </summary>
@@ -79,6 +103,7 @@ namespace EntityModel.CoreModel
         /// <summary>
         /// 中奖数
         /// </summary>
+      //  [BsonSerializer(typeof(StringOrInt32Serializer))]
         public int BonusCount { get; set; }
         /// <summary>
         /// 比赛结果
