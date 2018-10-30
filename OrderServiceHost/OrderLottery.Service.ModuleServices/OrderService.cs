@@ -647,5 +647,21 @@ namespace OrderLottery.Service.ModuleServices
                 throw new Exception(ex.Message, ex);
             }
         }
+
+        /// <summary>
+        /// 查询用户保存的订单信息
+        /// </summary>
+        public Task<SaveOrder_LotteryBettingInfoCollection> QuerySaveOrder_Lottery(string UserId)
+        {
+
+            try
+            {
+                return Task.FromResult(new Sports_Business().QuerySaveOrderLottery(UserId));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
     }
 }

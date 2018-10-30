@@ -678,6 +678,8 @@
     <Compile Include="ORM\QuerySearchModel.cs" />
     <Compile Include="ORM\QuerySearchModelExtend.cs" />
     <Compile Include="PayModel\PayDetail.cs" />
+    <Compile Include="PCModel\QueryBonusBase.cs" />
+    <Compile Include="PCModel\RankInfo.cs" />
     <Compile Include="Redis\RedisKeys.cs" />
     <Compile Include="Redis\RedisTicketInfo.cs" />
     <Compile Include="Redis\RedisWaitTicketOrder.cs" />

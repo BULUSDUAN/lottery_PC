@@ -987,5 +987,39 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             return DB.CreateQuery<C_Sports_AnteCode>().Where(s => s.SchemeId == schemeId && s.MatchId == macthId && s.GameType == gameType).FirstOrDefault();
         }
+
+        /// <summary>
+        /// 查询用户保存的订单
+        /// </summary>
+        public List<SaveOrder_LotteryBettingInfo> QuerySaveOrderLottery(string userId)
+        {
+
+            var query = from g in DB.CreateQuery<C_UserSaveOrder>()
+                        join i in DB.CreateQuery<C_User_Register>() on g.UserId equals i.UserId
+                        orderby g.CreateTime descending
+                        where g.UserId == userId
+                        && (g.CreateTime > DateTime.Today.AddDays(-30) && g.CreateTime <= DateTime.Today.AddDays(1))
+                        select new {g,i};
+            return query.ToList().Select(p=>new SaveOrder_LotteryBettingInfo
+            {
+                SchemeId = p.g.SchemeId,
+                DisplayName = p.i.DisplayName,
+                UserId = p.g.UserId,
+                GameCode = p.g.GameCode,
+                GameType = p.g.GameType,
+                StrStopTime = p.g.StrStopTime,
+                PlayType = p.g.PlayType,
+                SchemeType = (SchemeType)p.g.SchemeType,
+                SchemeSource = (SchemeSource)p.g.SchemeSource,
+                SchemeBettingCategory = (SchemeBettingCategory)p.g.SchemeBettingCategory,
+                ProgressStatus = (ProgressStatus)p.g.ProgressStatus,
+                IssuseNumber = p.g.IssuseNumber,
+                Amount = p.g.Amount,
+                BetCount = p.g.BetCount,
+                TotalMoney = p.g.TotalMoney,
+                StopTime = p.g.StopTime,
+                CreateTime = p.g.CreateTime,
+            }).ToList();
+        }
     }
 }

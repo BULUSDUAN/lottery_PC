@@ -1878,7 +1878,7 @@ namespace UserLottery.Service.ModuleServices
         /// <summary>
         /// 查询用户当前订单列表
         /// </summary>
-        public Task<UserCurrentOrderInfoCollection> QueryUserCurrentOrderList(string UserId, string gameCode, string userToken, int pageIndex, int pageSize)
+        public Task<UserCurrentOrderInfoCollection> QueryUserCurrentOrderList(string UserId, string gameCode, int pageIndex, int pageSize)
         {
             // 验证用户身份及权限
             //var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
@@ -1913,23 +1913,6 @@ namespace UserLottery.Service.ModuleServices
             var loginBiz = new LocalLoginBusiness();
             var count = loginBiz.GetTodayRegisterCount(date, localIP);
             return Task.FromResult(count);
-        }
-        public Task<bool> LoginGiveRedEnvelopes(string UserId, string IPAddress)
-        {
-            try
-            {
-                LocalLoginBusiness login = new LocalLoginBusiness();
-                var boolRedEnvelopes = login.User_AfterLogin(UserId, "LOCAL", IPAddress, DateTime.Now);
-                BusinessHelper.ExecPlugin<IUser_AfterLogin>(new object[] { UserId, "LOCAL", IPAddress, DateTime.Now });
-                //刷新用户在Redis中的余额
-                BusinessHelper.RefreshRedisUserBalance(UserId);
-                return Task.FromResult(boolRedEnvelopes);
-            }
-            catch (Exception ex)
-            {
-
-                throw new Exception(ex.Message, ex);
-            }
         }
     }
 }
