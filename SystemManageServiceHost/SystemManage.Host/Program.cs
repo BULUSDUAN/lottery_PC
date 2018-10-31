@@ -166,5 +166,16 @@ namespace SystemManage.Host
         }
     }
 
+    internal class Start_InitGameType {
+        /// <summary>
+        /// 玩法
+        /// </summary>
+        public string GameType { get; set; }
+
+        /// <summary>
+        /// 是否启动
+        /// </summary>
+        public bool IsStart { get; set; } 
+    }
 }
 

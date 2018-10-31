@@ -154,7 +154,7 @@ namespace Craw.Service.ModuleServices
                     if (p == null)
                     {
 
-                        if (Type == "Match")//赛事
+                        if (Type == "JCZQMatch")//赛事
                         {
                             //执行任务
                             p = new JCZQMatch_AutoCollect(rep.MDB);
@@ -162,14 +162,14 @@ namespace Craw.Service.ModuleServices
                             p.Key = Type;
                             BallAutoCollectList.Add(p);
                         }
-                    else if (Type == "Result")
+                    else if (Type == "JCZQResult")
                     {
                         p = new JCZQMatchResult_AutoCollect(rep.MDB);
                         p.Start("All");
                         p.Key = Type;
                         BallAutoCollectList.Add(p);
                     }
-                    else if (Type == "OZSP")
+                    else if (Type == "JCZQOZSP")
                     {
                         p = new JCZQ_OZSP_AutoCollect(rep.MDB);
                         p.Start("All");
@@ -186,17 +186,39 @@ namespace Craw.Service.ModuleServices
 
             return Task.FromResult("数字彩采集开奖号-开始服务");
         }
+
+        public Task<string> JCZQMatch_Result_OZSP_Stop(string Type)
+        {
+            lock (BallAutoCollectList)
+            {
+
+
+                IBallAutoCollect p = BallAutoCollectList.Where(b => b.Key == Type).FirstOrDefault();
+                if (p != null)
+                {
+
+                    p.Stop();
+                    BallAutoCollectList.Remove(p);
+
+                }
+
+            }
+
+
+
+            return Task.FromResult("数字彩采集开奖号-开始服务");
+        }
         public Task<string> JCLQMatch_Start() {
             lock (aotoCollectList)
             {
 
-                string Type = "LQ";
+                string Type = "JCLQ";
                 IBallAutoCollect p = BallAutoCollectList.Where(b => b.Key == Type).FirstOrDefault();
                 if (p == null)
                 {
                     p = new JCLQMatch_AutoCollect(rep.MDB);
                     p.Start("All");
-                    p.Key = "LQ";
+                    p.Key = "JCLQ";
                     BallAutoCollectList.Add(p);
 
 
@@ -205,7 +227,24 @@ namespace Craw.Service.ModuleServices
             }
             return Task.FromResult("数字彩采集开奖号-开始服务");
         }
+        public Task<string> JCLQMatch_Stop()
+        {
+            lock (BallAutoCollectList)
+            {
 
+                string Type = "JCLQ";
+                IBallAutoCollect p = BallAutoCollectList.Where(b => b.Key == Type).FirstOrDefault();
+                if (p != null)
+                {
+                    p.Stop();
+                    BallAutoCollectList.Remove(p);
+
+
+                }
+
+            }
+            return Task.FromResult("数字彩采集开奖号-开始服务");
+        }
         public Task<string> BJDCMatch_OZSP_Start(string Type)
         {
             lock (aotoCollectList)
@@ -216,7 +255,7 @@ namespace Craw.Service.ModuleServices
                 if (p == null)
                 {
 
-                    if (Type == "BJDCMatch")//赛事
+                    if (Type == "BJDCMatchResult")//赛事
                     {
                         //执行任务
                         p = new BJDCMatch_AutoCollect(rep.MDB);
@@ -239,32 +278,45 @@ namespace Craw.Service.ModuleServices
             }
             return Task.FromResult("数字彩采集开奖号-开始服务");
         }
-        /// <summary>
-        /// 数字彩采集开奖号-开始服务
-        /// </summary>
-        /// <param name="gameName"></param>
-        /// <returns></returns>
-        public Task<string> NumLettory_BonusPool_Start(string gameName)
+
+        public Task<string> BJDCMatch_OZSP_Stop(string Type)
         {
-
-            lock (aotoCollectList)
+            lock (BallAutoCollectList)
             {
-                //执行任务
-                Service_AutoCollectBonusPool auto = new Service_AutoCollectBonusPool();
-                        auto.Start(gameName, new CrawORMService(rep.MDB).BonusPoolStart);
-                aotoPoolCollectList.Add(auto);
-                
+
+
+                IBallAutoCollect p = BallAutoCollectList.Where(b => b.Key == Type).FirstOrDefault();
+                if (p != null)
+                {
+                    p.Stop();
+
+                    BallAutoCollectList.Remove(p);
+                    //if (Type == "BJDCMatchResult")//赛事
+                    //{
+                    //    //执行任务
+                    //    p = new BJDCMatch_AutoCollect(rep.MDB);
+                    //    p.Start("All");
+                    //    p.Key = Type;
+                    //    BallAutoCollectList.Add(p);
+                    //}
+                    //else if (Type == "BJDCOZSP")
+                    //{
+                    //    p = new BJDC_OZSP_AutoCollect(rep.MDB);
+                    //    p.Start("All");
+                    //    p.Key = Type;
+                    //    BallAutoCollectList.Add(p);
+                    //}
+
+
+
+                }
+
             }
-
-
             return Task.FromResult("数字彩采集开奖号-开始服务");
         }
+        
 
-        public Task<string> Login(string name)
-        {
-            throw new NotImplementedException();
-        }
-
+       
         //WinNumber
     }
 }

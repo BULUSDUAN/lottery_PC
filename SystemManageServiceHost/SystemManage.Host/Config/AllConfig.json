@@ -38,7 +38,7 @@
     "Token": "true",
     "RequestCacheEnabled": false
   },
- 
+
   //"采集配置配置"
   "CrawSettings": {
 
@@ -98,6 +98,97 @@
 
     }
   },
+  //采集启动配置
+  "Auto_CollectSettings": [
+    {
+      "Key": "CQSSC",
+      "IsStart": true
+    },
+    {
+      "Key": "JX11X5",
+      "IsStart": true
+    },
+    {
+      "Key": "SD11X5",
+      "IsStart": true
+    },
+    {
+      "Key": "GD11X5",
+      "IsStart": true
+    },
+    {
+      "Key": "GDKLSF",
+      "IsStart": true
+    },
+    {
+      "Key": "JSKS",
+      "IsStart": true
+    },
+    {
+      "Key": "SDKLPK3",
+      "IsStart": true
+    },
+    {
+      "Key": "FC3D",
+      "IsStart": true
+    },
+    {
+      "Key": "PL3",
+      "IsStart": true
+    },
+    {
+      "Key": "SSQ",
+      "IsStart": true
+    },
+    {
+      "Key": "DLT",
+      "IsStart": true
+    },
+    //传统足球
+    {
+      "Key": "T14C",
+      "IsStart": true
+    },
+    {
+      "Key": "TR9",
+      "IsStart": true
+    },
+    {
+      "Key": "T6BQC",
+      "IsStart": true
+    },
+    {
+      "Key": "T4CJQ",
+      "IsStart": true
+    },
+    //竞彩足球
+    {
+      "Key": "JCZQMatch", //赛事
+      "IsStart": true
+    },
+    {
+      "Key": "JCZQResult", //赛果
+      "IsStart": true
+    },
+    {
+      "Key": "JCZQOZSP", //OZ 赔率
+      "IsStart": true
+    },
+    //竞彩篮球
+    {
+      "Key": "JCLQ",
+      "IsStart": true
+    },
+    //北京单场
+    {
+      "Key": "BJDCMatchResult", //赛事 赛果
+      "IsStart": true
+    },
+    {
+      "Key": "BJDCOZSP",
+      "IsStart": true
+    }
+  ],
   //Mongo 数据库配置
   "MongoSettings": {
     "connectionString": "mongodb://10.0.3.6:27017",
@@ -105,10 +196,10 @@
     "dbName": "CrawDB",
     //mogodb 采集表命名
     "TableNamesSettings": {
-      "CreawPool": "NumLottery",//数字彩表名
-      "CTZQMatch": "CTZQMatch"   //传统足球表名
+      "CreawPool": "NumLottery", //数字彩表名
+      "CTZQMatch": "CTZQMatch" //传统足球表名
     }
-    
+
   },
   //必须配置 服务发现配置
   "ConsulSettings": {
