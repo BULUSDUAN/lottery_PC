@@ -261,16 +261,16 @@ namespace KaSon.FrameWork.ORM.Helper
         #region 北京单场
 
 
-        public void Update_BJDC_IssuseList()
+        public void Update_BJDC_IssuseList(string tablename)
         {
-            var existIssuseList = LoadBJDCIssuseLIst();
+            var existIssuseList = this.LoadMatchListEx<C_BJDC_Issuse>(tablename);
             Update_BJDC_IssuseList(existIssuseList);
 
             //重新加载比赛到缓存
             RedisMatchBusiness.ReloadCurrentBJDCMatch();
         }
 
-        private void Update_BJDC_IssuseList(List<BJDCIssuseInfo> issuseInfoList)
+        private void Update_BJDC_IssuseList(List<C_BJDC_Issuse> issuseInfoList)
         {
             //开启事务
             using (DB)
@@ -287,14 +287,14 @@ namespace KaSon.FrameWork.ORM.Helper
                             manager.AddBJDC_Issuse(new C_BJDC_Issuse
                             {
                                 IssuseNumber = item.IssuseNumber,
-                                MinLocalStopTime = DateTime.Parse(item.MinLocalStopTime),
-                                MinMatchStartTime = DateTime.Parse(item.MinMatchStartTime)
+                                MinLocalStopTime =item.MinLocalStopTime,
+                                MinMatchStartTime = item.MinMatchStartTime
                             });
                         }
                         else
                         {
-                            issuse.MinLocalStopTime = DateTime.Parse(item.MinLocalStopTime);
-                            issuse.MinMatchStartTime = DateTime.Parse(item.MinMatchStartTime);
+                            issuse.MinLocalStopTime = item.MinLocalStopTime;
+                            issuse.MinMatchStartTime = item.MinMatchStartTime;
                             manager.UpdateBJDC_Issuse(issuse);
                         }
                     }
@@ -312,16 +312,17 @@ namespace KaSon.FrameWork.ORM.Helper
             }
         }
 
-        public void Update_BJDC_MatchList(string issuseNumber, string[] matchIdList)
+        public void Update_BJDC_MatchList(string table,string issuseNumber, string[] matchIdList)
         {
-            var matchInfoList = LoadBJDCMatchList(issuseNumber);
+            var filter = Builders<C_BJDC_Match>.Filter.Eq(b => b.IssuseNumber, issuseNumber);
+            var matchInfoList = this.LoadMatchListEx<C_BJDC_Match>(table, filter);
             UpdateBJDCMatch(issuseNumber, matchIdList, matchInfoList);
 
             //重新加载比赛到缓存
             RedisMatchBusiness.ReloadCurrentBJDCMatch();
         }
 
-        private void UpdateBJDCMatch(string issuseNumber, string[] matchIdList, List<BJDC_MatchInfo> matchInfoList)
+        private void UpdateBJDCMatch(string issuseNumber, string[] matchIdList, List<C_BJDC_Match> matchInfoList)
         {
             //开启事务
             var manager = new BJDCMatchManager();
@@ -349,7 +350,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         {
                             manager.AddBJDC_Match(new C_BJDC_Match
                             {
-                                CreateTime = DateTime.Parse(current.CreateTime),
+                                CreateTime = current.CreateTime,
                                 FlatOdds = current.FlatOdds,
                                 GuestTeamName = current.GuestTeamName,
                                 GuestTeamSort = current.GuestTeamSort,
@@ -358,12 +359,12 @@ namespace KaSon.FrameWork.ORM.Helper
                                 Id = current.Id,
                                 IssuseNumber = current.IssuseNumber,
                                 LetBall = current.LetBall,
-                                LocalStopTime = DateTime.Parse(current.LocalStopTime),
+                                LocalStopTime = current.LocalStopTime,
                                 LoseOdds = current.LoseOdds,
                                 MatchColor = current.MatchColor,
                                 MatchName = current.MatchName,
                                 MatchOrderId = current.MatchOrderId,
-                                MatchStartTime = DateTime.Parse(current.MatchStartTime),
+                                MatchStartTime = (current.MatchStartTime),
                                 MatchState = (int)current.MatchState,
                                 WinOdds = current.WinOdds,
                                 MatchId = current.MatchId,
@@ -381,11 +382,11 @@ namespace KaSon.FrameWork.ORM.Helper
                             old.HomeTeamName = current.HomeTeamName;
                             old.HomeTeamSort = current.HomeTeamSort;
                             old.LetBall = current.LetBall;
-                            old.LocalStopTime = DateTime.Parse(current.LocalStopTime);
+                            old.LocalStopTime = (current.LocalStopTime);
                             old.LoseOdds = current.LoseOdds;
                             old.MatchColor = current.MatchColor;
                             old.MatchName = current.MatchName;
-                            old.MatchStartTime = DateTime.Parse(current.MatchStartTime);
+                            old.MatchStartTime =(current.MatchStartTime);
                             old.MatchState = (int)current.MatchState;
                             old.WinOdds = current.WinOdds;
                             manager.UpdateBJDC_Match(old);
@@ -395,7 +396,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         {
                             manager.AddBJDC_MatchResult_Prize(new C_BJDC_MatchResult_Prize
                             {
-                                CreateTime = DateTime.Parse(current.CreateTime),
+                                CreateTime =(current.CreateTime),
                                 Id = current.Id,
                                 IssuseNumber = current.IssuseNumber,
                                 MatchState = "0",
@@ -431,19 +432,10 @@ namespace KaSon.FrameWork.ORM.Helper
             }
         }
 
-        public void ManualUpdate_BJDC_MatchList(string issuseNumber)
+        public void Update_BJDC_MatchResultList(string table,string issuseNumber, string[] matchResultIdArray)
         {
-            var matchInfoList = LoadBJDCMatchList(issuseNumber);
-            var matchIdArray = matchInfoList.Select(p => p.MatchOrderId.ToString()).ToArray();
-            UpdateBJDCMatch(issuseNumber, matchIdArray, matchInfoList);
-
-            //重新加载比赛到缓存
-            RedisMatchBusiness.ReloadCurrentBJDCMatch();
-        }
-
-        public void Update_BJDC_MatchResultList(string issuseNumber, string[] matchResultIdArray)
-        {
-            var matchResultList = LoadBJDCMatchResultList(issuseNumber);
+            var filter = Builders<C_BJDC_MatchResult>.Filter.Eq(b => b.IssuseNumber, issuseNumber);
+            var matchResultList = this.LoadMatchListEx<C_BJDC_MatchResult>(table);
             var manager = new BJDCMatchManager();
             //开启事务
             using (manager.DB)
@@ -476,7 +468,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     {
                         manager.AddBJDC_MatchResult(new C_BJDC_MatchResult
                         {
-                            CreateTime = DateTime.Parse(current.CreateTime),
+                            CreateTime = (current.CreateTime),
                             Id = current.Id,
                             IssuseNumber = current.IssuseNumber,
                             BF_Result = current.BF_Result,
@@ -526,7 +518,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     {
                         manager.AddBJDC_MatchResult_Prize(new C_BJDC_MatchResult_Prize
                         {
-                            CreateTime = DateTime.Parse(current.CreateTime),
+                            CreateTime = (current.CreateTime),
                             Id = current.Id,
                             IssuseNumber = current.IssuseNumber,
                             BF_Result = current.BF_Result,
@@ -583,12 +575,12 @@ namespace KaSon.FrameWork.ORM.Helper
             }
         }
 
-        public void ManualUpdate_BJDC_MatchResultList(string issuseNumber)
-        {
-            var matchResultList = LoadBJDCMatchResultList(issuseNumber);
-            var matchIdArray = matchResultList.Select(p => p.MatchOrderId.ToString()).ToArray();
-            Update_BJDC_MatchResultList(issuseNumber, matchIdArray);
-        }
+        //public void ManualUpdate_BJDC_MatchResultList(string issuseNumber)
+        //{
+        //    var matchResultList = LoadBJDCMatchResultList(issuseNumber);
+        //    var matchIdArray = matchResultList.Select(p => p.MatchOrderId.ToString()).ToArray();
+        //    Update_BJDC_MatchResultList(issuseNumber, matchIdArray);
+        //}
 
         #region 胜负过关相关操作
         private List<T> LoadGameMatchList<T>(string gameCode, string issuseNumber, string fileName)
@@ -642,34 +634,17 @@ namespace KaSon.FrameWork.ORM.Helper
             }
         }
 
-        /// <summary>
-        /// 后台手工添加或更新胜负过关比赛数据
-        /// </summary>
-        public void ManualUpdate_SFGG_MatchList(string issuseNumber)
-        {
-            var matchResultList = LoadGameMatchList<SFGG_MatchInfo>("BJDC", issuseNumber, "Match_SFGG_List");
-            var matchIdArray = matchResultList.Select(p => p.MatchOrderId.ToString()).ToArray();
-            UpdateSFGGMatch(issuseNumber, matchIdArray, matchResultList);
-        }
-
-        /// <summary>
-        /// 后台手工添加或更新胜负过关比赛结果
-        /// </summary>
-        public void ManualUpdate_SFGG_MatchResultList(string issuseNumber)
-        {
-            var matchResultList = LoadGameMatchList<SFGG_MatchInfo>("BJDC", issuseNumber, "MatchResult_SFGG_List");
-            var matchIdArray = matchResultList.Select(p => p.MatchOrderId.ToString()).ToArray();
-            Update_SFGG_MatchResultList(issuseNumber, matchIdArray);
-        }
+       
         /// <summary>
         /// 添加或更新胜负过关比赛数据
         /// </summary>
-        public void Update_SFGG_MatchList(string issuseNumber, string[] matchIdList)
+        public void Update_SFGG_MatchList(string table,string issuseNumber, string[] matchIdList)
         {
-            var matchInfoList = LoadGameMatchList<SFGG_MatchInfo>("BJDC", issuseNumber, "Match_SFGG_List");
+            var filter = Builders<BJDC_Match_SFGG>.Filter.Eq(b => b.IssuseNumber, issuseNumber);
+            var matchInfoList = this.LoadMatchListEx<BJDC_Match_SFGG>( table, filter);
             UpdateSFGGMatch(issuseNumber, matchIdList, matchInfoList);
         }
-        private void UpdateSFGGMatch(string issuseNumber, string[] matchIdList, List<SFGG_MatchInfo> matchInfoList)
+        private void UpdateSFGGMatch(string issuseNumber, string[] matchIdList, List<BJDC_Match_SFGG> matchInfoList)
         {
             //开启事务
             var manager = new SFGGMatchManager();
@@ -703,7 +678,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         info.MatchName = current.MatchName;
                         info.HomeTeamName = current.HomeTeamName;
                         info.GuestTeamName = current.GuestTeamName;
-                        info.LetBall = current.LetBall;
+                        info.LetBall = current.LetBall+"";
                         info.LoseOdds = current.LoseOdds;
                         info.WinOdds = current.WinOdds;
                         if (current.MatchStartTime != null)
@@ -719,7 +694,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     old.MatchName = current.MatchName;
                     old.HomeTeamName = current.HomeTeamName;
                     old.GuestTeamName = current.GuestTeamName;
-                    old.LetBall = current.LetBall;
+                    old.LetBall = current.LetBall + "";
                     old.LoseOdds = current.LoseOdds;
                     old.WinOdds = current.WinOdds;
                     if (current.MatchStartTime != null)
@@ -737,9 +712,12 @@ namespace KaSon.FrameWork.ORM.Helper
                 }
             }
         }
-        public void Update_SFGG_MatchResultList(string issuseNumber, string[] matchResultIdArray)
+        public void Update_SFGG_MatchResultList(string table,string issuseNumber, string[] matchResultIdArray)
         {
-            var matchResultList = LoadGameMatchList<SFGG_MatchResultInfo>("BJDC", issuseNumber, "MatchResult_SFGG_List");
+            //没有表  C_SFGG_Match
+            return;
+            var filter = Builders<BJDC_Match_SFGGResult>.Filter.Eq(b => b.IssuseNumber, issuseNumber);
+            var matchResultList = this.LoadMatchListEx<BJDC_Match_SFGGResult>(table, filter);
             var manager = new SFGGMatchManager();
             //开启事务
             using (manager.DB)
@@ -2218,12 +2196,15 @@ namespace KaSon.FrameWork.ORM.Helper
 
             return documents;
         }
-        private List<T> LoadMatchListEx<T>(string tableName)
+        private List<T> LoadMatchListEx<T>(string tableName,FilterDefinition<T> filter= null)
         {
-
-
+            //filter
+            if (filter==null)
+            {
+                filter = Builders<T>.Filter.Empty;
+            }
             var coll = mDB.GetCollection<T>(tableName);
-            var documents = coll.Find<T>(Builders<T>.Filter.Empty).ToList();
+            var documents = coll.Find<T>(filter).ToList();
 
             return documents;
         }

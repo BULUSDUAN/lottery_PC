@@ -210,7 +210,7 @@ namespace Craw.Service.ModuleServices
         {
             lock (aotoCollectList)
             {
-
+                
 
                 IBallAutoCollect p = BallAutoCollectList.Where(b => b.Key == Type).FirstOrDefault();
                 if (p == null)

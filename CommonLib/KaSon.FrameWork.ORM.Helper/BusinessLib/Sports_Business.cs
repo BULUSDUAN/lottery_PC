@@ -45,7 +45,12 @@ namespace KaSon.FrameWork.ORM.Helper
         {
 
         }
-
+        public void Test() {
+            string sql = @"SELECT * FROM T_JCLQ_Odds_SF O INNER JOIN (SELECT MAX(Id) [MaxId] " +
+                "FROM T_JCLQ_Odds_SF WHERE [MatchId] ='181031301' ) T ON O.[Id]=T.[MaxId]";
+          var one=  DB.CreateSQLQuery(sql).First<T_JCLQ_Odds_SF>();
+            Console.WriteLine(one);
+        }
         public IndexMatch_Collection AddIndexMatch(string indexMatchList)
         {
             var collection = new IndexMatch_Collection();
@@ -97,17 +102,17 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                 #region 北京单场
                 case NoticeType.BJDC_Issuse:
-                    new IssuseBusiness(mDB).Update_BJDC_IssuseList();
+                    new IssuseBusiness(mDB).Update_BJDC_IssuseList("BJDC_Match_IssuseNumber_List");
                     break;
                 case NoticeType.BJDC_Match:
                     var matchParamArray = text.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
                     var matchIdArray = matchParamArray[1].Split(new string[] { "_" }, StringSplitOptions.RemoveEmptyEntries);
-                    new IssuseBusiness(mDB).Update_BJDC_MatchList(matchParamArray[0], matchIdArray);
+                    new IssuseBusiness(mDB).Update_BJDC_MatchList("BJDC_Match_List", matchParamArray[0], matchIdArray);
                     break;
                 case NoticeType.BJDC_Match_SFGG:
                     var SFGGParamArray = text.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
                     var SFGGdMatchIdArray = SFGGParamArray[1].Split(new string[] { "_" }, StringSplitOptions.RemoveEmptyEntries);
-                    new IssuseBusiness(mDB).Update_SFGG_MatchList(SFGGParamArray[0], SFGGdMatchIdArray);
+                    new IssuseBusiness(mDB).Update_SFGG_MatchList("BJDC_Match_SFGG_List",SFGGParamArray[0], SFGGdMatchIdArray);
                     break;
                 case NoticeType.BJDC_MatchResult:
                     var matchResultParamArray = text.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
@@ -115,7 +120,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     var bjdzBiz = new IssuseBusiness();
                     var str_array = from s in matchResultIdArray select s.Split('_')[0];
 
-                    bjdzBiz.Update_BJDC_MatchResultList(matchResultParamArray[0], str_array.ToArray());
+                    bjdzBiz.Update_BJDC_MatchResultList("BJDC_MatchResult_List", matchResultParamArray[0], str_array.ToArray());
                     new Thread(() =>
                     {
                         Common.Utilities.UsefullHelper.TryDoAction(() =>
@@ -130,7 +135,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     var SFGGbjdzBiz = new IssuseBusiness(mDB);
                     var SFGGstr_array = from s in SFGGmatchResultIdArray select s.Split('_')[0];
 
-                    SFGGbjdzBiz.Update_SFGG_MatchResultList(SFGGmatchResultParamArray[0], SFGGstr_array.ToArray());
+                    SFGGbjdzBiz.Update_SFGG_MatchResultList("BJDC_MatchResult_SFGG_List", SFGGmatchResultParamArray[0], SFGGstr_array.ToArray());
                     break;
                 #endregion
 

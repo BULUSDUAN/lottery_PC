@@ -509,12 +509,14 @@ namespace Lottery.CrawGetters.MatchBizGetter
 
         public void WriteError(string log)
         {
+            Console.WriteLine(log);
             //if (_logWriter != null)
             //    _logWriter.Write(logErrorCategory, logErrorSource, LogType.Error, "自动采集北京单场数据异常", log);
         }
 
         public void WriteLog(string log)
         {
+            Console.WriteLine(log);
             //if (_logWriter != null)
             //    _logWriter.Write(logCategory, logInfoSource, LogType.Information, "自动采集北京单场数据", log);
         }

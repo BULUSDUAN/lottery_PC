@@ -590,8 +590,13 @@ namespace EntityModel.LotteryJsonInfo
         //public string PrivilegesType { get; set; }
 
     }
+
+    [BsonIgnoreExtraElements]
+
     public class BJDC_BQC_SpInfo:IBJDCBallBaseInfo
     {
+        [BsonId]
+        public ObjectId _id { get; set; }
         public string CreateTime { get; set; }
         /// <summary>
         /// 负负sp
@@ -624,8 +629,12 @@ namespace EntityModel.LotteryJsonInfo
         public decimal SH_P_Odds { get; set; }
         public decimal SH_SH_Odds { get; set; }
     }
+    [BsonIgnoreExtraElements]
+
     public class BJDC_BF_SpInfo:IBJDCBallBaseInfo
     {
+        [BsonId]
+        public ObjectId _id { get; set; }
         public string CreateTime { get; set; }
         /// <summary>
         /// 负 0:1
@@ -681,8 +690,11 @@ namespace EntityModel.LotteryJsonInfo
         public decimal S_QT { get; set; }
 
     }
+    [BsonIgnoreExtraElements]
     public class BJDC_SXDS_SpInfo:IBJDCBallBaseInfo
     {
+        [BsonId]
+        public ObjectId _id { get; set; }
         public string CreateTime { get; set; }
         public string GameType { get; set; }
         /// <summary>
@@ -711,8 +723,11 @@ namespace EntityModel.LotteryJsonInfo
         public decimal X_S_Odds { get; set; }
 
     }
+    [BsonIgnoreExtraElements]
     public class BJDC_ZJQ_SpInfo:IBJDCBallBaseInfo
     {
+        [BsonId]
+        public ObjectId _id { get; set; }
         public string CreateTime { get; set; }
         public string GameType { get; set; }
         /// <summary>
@@ -739,8 +754,12 @@ namespace EntityModel.LotteryJsonInfo
         public decimal JinQiu_7_Odds { get; set; }
 
     }
+
+    [BsonIgnoreExtraElements]
     public class BJDC_SPF_SpInfo: IBJDCBallBaseInfo
     {
+        [BsonId]
+        public ObjectId _id { get; set; }
         public string CreateTime { get; set; }
         /// <summary>
         /// 平sp

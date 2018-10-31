@@ -151,7 +151,7 @@ namespace SystemManage.Host
             //初始化内存期号 k_todo，可用彩种类型,执行一次
             // LotteryGameManager lotGm = new LotteryGameManager();
             // lotGm.StartInitData();
-
+            //new Sports_Business().Test();
             Clear();
 
 

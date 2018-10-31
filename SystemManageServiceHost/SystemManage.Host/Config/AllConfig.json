@@ -69,11 +69,18 @@
       "FXId_Source": "okooo", //分析Id来源，310win,okooo
       "JCZQ_Result_Interval": 60000, //采集结果频率
       "JCZQ_Result_BuildStaticHtml_Times": "",
-      "JCLQ_AdvanceMinutes": -75,
-      "JCZQ_Match_Fun": "new",
-      "JCLQ_Result_Source": "ok",
-      "JCLQ_Match_Fun": "zzjcw",
-      "JCLQ_Result_CacheTimes": 1
+      "JCLQ_AdvanceMinutes": -75, //本地结束时间提前量
+      "JCZQ_Match_Fun": "new", //竞彩足球队伍数据采集（cpdyj）版本:可配置"old","new","zhm"
+      "JCLQ_Result_Source": "ok", //采集结果来源:可配置"310win","cpdyj","aicai"
+      "JCLQ_Match_Fun": "zzjcw", //竞彩蓝球队伍数据采集（cpdyj）版本:可配置"old","new"
+      "JCLQ_Result_CacheTimes": 1,
+      "JCLQ_Result_Day": 1, //采集结果的天数
+      "BJDC_Result_CacheTimes": 1,
+      "BJDC_Match_Source": "gaunwang", //采集比赛来源:可配置"GuanWang","9188","500wan"
+      "BJDC_AdvanceMinutes": 15, //本地结束时间提前量
+      "BJDC_Result_Source": 9188, //采集结果来源:可配置"310win","9188","aicai","okooo"
+      "Get_BJDC_TeamInfo": false
+
     },
     //数字彩 彩种采集停留时间间隔 单位秒
     "NumLettory_SleepTimeSpanSettings": {

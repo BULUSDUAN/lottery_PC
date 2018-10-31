@@ -1,5 +1,7 @@
 ﻿using KaSon.FrameWork.Services.Attribute;
 using KaSon.FrameWork.Services.Enum;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using ProtoBuf;
 using System;
 using System.Collections.Generic;
@@ -12,16 +14,20 @@ namespace EntityModel
     ///</summary>
     [ProtoContract]
     [Entity("C_BJDC_Match",Type = EntityType.Table)]
+    [BsonIgnoreExtraElements]
     public class C_BJDC_Match
     { 
         public C_BJDC_Match()
         {
         
         }
-            /// <summary>
-            // IssuseNumber|MatchOrderId
-            ///</summary>
-            [ProtoMember(1)]
+        [BsonId]
+        public ObjectId _id { get; set; }
+        /// <summary>
+        // IssuseNumber|MatchOrderId
+        ///</summary>
+       
+        [ProtoMember(1)]
             [Field("Id", IsIdenty = false, IsPrimaryKey = true)]
             public string Id{ get; set; }
             /// <summary>

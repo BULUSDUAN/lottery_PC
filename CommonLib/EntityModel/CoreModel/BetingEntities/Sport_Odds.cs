@@ -10,7 +10,7 @@ namespace EntityModel.CoreModel
         /// <summary>
         /// 自动编号
         /// </summary>
-        public virtual long Id { get; set; }
+        public virtual int Id { get; set; }
         /// <summary>
         /// 比赛Id : 120813001
         /// </summary>

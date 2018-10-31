@@ -1,5 +1,7 @@
 ﻿using KaSon.FrameWork.Services.Attribute;
 using KaSon.FrameWork.Services.Enum;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,8 +14,11 @@ namespace EntityModel.Domain.Entities
     /// </summary>
    // [EntityMappingTable("C_BJDC_Match_SFGG")]
     [Entity("C_BJDC_Match_SFGG", Type = EntityType.Table)]
+    [BsonIgnoreExtraElements]
     public class BJDC_Match_SFGG
     {
+        [BsonId]
+        public ObjectId _id { get; set; }
         /// <summary>
         /// IssuseNumber|MatchOrderId
         /// </summary>

@@ -18,6 +18,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using EntityModel.ExceptionExtend;
 using System.Threading;
+using MongoDB.Bson;
 
 namespace Lottery.CrawGetters.MatchBizGetter
 {
@@ -51,10 +52,12 @@ namespace Lottery.CrawGetters.MatchBizGetter
         private Task thread = null;
         public void Start(string gameCode)
         {
+
+            
             gameCode = gameCode.ToUpper();
             logInfoSource += gameCode;
             //  _logWriter = logWriter;
-
+         
             BeStop = 0;
             if (thread != null)
             {
@@ -72,7 +75,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
                     ////TODO：销售期间，暂停采集
                     try
                     {
-
+                        
 
                         DoWork(gameCode, true);
 
@@ -824,13 +827,20 @@ namespace Lottery.CrawGetters.MatchBizGetter
         private void WriteBJSingle_SP_Json(string gameType, string issuseNumber, string xmlContent)
         {
             var tableName = string.Format("SP_{0}", gameType);
-          //  var fileFullName = BuildFileFullName(fileName, issuseNumber);
+            //  var fileFullName = BuildFileFullName(fileName, issuseNumber);
+            if (xmlContent=="404")
+            {
+                throw new Exception(string.Format("{0}第{1}期,从xml中查询节点错误 404错误", gameType, issuseNumber));
 
+            }
             var doc = new XmlDocument();
             doc.LoadXml(xmlContent);
             var root = doc.SelectSingleNode("w");
-            if (root == null)
+            if (root == null) {
+                WriteLog(xmlContent);
                 throw new Exception(string.Format("{0}第{1}期,从xml中查询节点错误  - {2}", gameType, issuseNumber, xmlContent));
+            }
+                
 
 
            
@@ -994,7 +1004,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
             {
                 currentLeagueInfoList = GetBJDCMatchList_500wan(currentIssuseNumber);
             }
-            if (matchSource == "GuanWang")
+            if (matchSource == "gaunwang")
             {
                 currentLeagueInfoList = GetBJDCMatchList_GuanWang(currentIssuseNumber);
             }
@@ -1130,7 +1140,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
             #region 保存奖期数据
 
             customerSavePath = new string[] { "BJDC" };
-          var coll=  mDB.GetCollection<C_BJDC_Issuse>("Match_IssuseNumber_List");
+          var coll=  mDB.GetCollection<C_BJDC_Issuse>(issuseFileFullName);
             var mFilter = MongoDB.Driver.Builders<C_BJDC_Issuse>.Filter.Eq(b => b.IssuseNumber, currentIssuseNumber);//& Builders<C_BJDC_Issuse>.Filter.Eq(b => b.IssuseNumber, issuseNumber);
             var old1= coll.Find<C_BJDC_Issuse>(mFilter).FirstOrDefault();
             var nIssuse = new C_BJDC_Issuse
@@ -1145,7 +1155,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
             }
             else {
                 coll.DeleteMany(mFilter);
-                coll.InsertOne(nIssuse);
+             
                 if (first != null)
                 {
                     if (first.IssuseNumber == old1.IssuseNumber && first.LocalStopTime != old1.MinLocalStopTime)
@@ -1159,7 +1169,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
                     }
                 }
             }
-
+            coll.InsertOne(nIssuse);
             //if (File.Exists(issuseFileFullName))
             //{
             //    var text = File.ReadAllText(issuseFileFullName).Trim().Replace("var data=", "").Replace("];", "]");
@@ -1255,13 +1265,17 @@ namespace Lottery.CrawGetters.MatchBizGetter
 
             #endregion
 
+
+          //  Builders<BsonDocument>.Filter.Empty
             #region 保存比赛信息
 
             customerSavePath = new string[] { "BJDC", currentIssuseNumber };
             if (currentLeagueInfoList.Count != 0)
             {
+               var filter=  Builders<C_BJDC_Match>.Filter.Eq(b => b.IssuseNumber, currentIssuseNumber);
+
                 var coll_BJDC_Match = mDB.GetCollection<C_BJDC_Match>(leagueListFileFullName);
-               var mlist= coll_BJDC_Match.Find<C_BJDC_Match>(null).ToList();
+               var mlist= coll_BJDC_Match.Find<C_BJDC_Match>(filter).ToList();
                 if (mlist.Count > 0)
                 {
 
@@ -1269,7 +1283,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
                     {
                         result.Add(new KeyValuePair<DBChangeState, C_BJDC_Match>(DBChangeState.Update, item));
                     }
-                    coll_BJDC_Match.DeleteMany(null);
+                    coll_BJDC_Match.DeleteMany(filter);
                 }
                 else {
                     foreach (var item in GetNewLeagueInfoList(new List<C_BJDC_Match>(), currentLeagueInfoList))
@@ -1325,8 +1339,9 @@ namespace Lottery.CrawGetters.MatchBizGetter
             customerSavePath = new string[] { "BJDC", currentIssuseNumber };
             if (match_SFGGList.Count != 0)
             {
+                var filter = Builders<BJDC_Match_SFGG>.Filter.Eq(b => b.IssuseNumber, currentIssuseNumber);
                 var coll_BJDC_Match = mDB.GetCollection<BJDC_Match_SFGG>(sfgg_ListFileFullName);
-                var mlist = coll_BJDC_Match.Find<BJDC_Match_SFGG>(null).ToList();
+                var mlist = coll_BJDC_Match.Find<BJDC_Match_SFGG>(filter).ToList();
                 if (mlist.Count > 0)
                 {
 
@@ -1334,7 +1349,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
                     {
                         result_SFGG.Add(new KeyValuePair<DBChangeState, BJDC_Match_SFGG>(DBChangeState.Update, item));
                     }
-                    coll_BJDC_Match.DeleteMany(null);
+                    coll_BJDC_Match.DeleteMany(filter);
                 }
                 else
                 {
@@ -1391,8 +1406,9 @@ namespace Lottery.CrawGetters.MatchBizGetter
             customerSavePath = new string[] { "BJDC", currentIssuseNumber };
             if (currentLeagueResultList.Count != 0)
             {
+                var filter = Builders<C_BJDC_MatchResult>.Filter.Eq(b => b.IssuseNumber, currentIssuseNumber);
                 var coll_BJDC_Match = mDB.GetCollection<C_BJDC_MatchResult>(leagueResultListFileFullName);
-                var mlist = coll_BJDC_Match.Find<C_BJDC_MatchResult>(null).ToList();
+                var mlist = coll_BJDC_Match.Find<C_BJDC_MatchResult>(filter).ToList();
                 if (mlist.Count > 0)
                 {
 
@@ -1400,7 +1416,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
                     {
                         leagueResultList.Add(new KeyValuePair<DBChangeState, C_BJDC_MatchResult>(DBChangeState.Update, item));
                     }
-                    coll_BJDC_Match.DeleteMany(null);
+                    coll_BJDC_Match.DeleteMany(filter);
                 }
                 else
                 {
@@ -1464,9 +1480,9 @@ namespace Lottery.CrawGetters.MatchBizGetter
             customerSavePath = new string[] { "BJDC", currentIssuseNumber };
             if (currentLeagueResult_sfggList.Count != 0)
             {
-
+                var filter = Builders<BJDC_Match_SFGGResult>.Filter.Eq(b => b.IssuseNumber, currentIssuseNumber);
                 var coll_BJDC_Match = mDB.GetCollection<BJDC_Match_SFGGResult>(leagueResultListFileFullName);
-                var mlist = coll_BJDC_Match.Find<BJDC_Match_SFGGResult>(null).ToList();
+                var mlist = coll_BJDC_Match.Find<BJDC_Match_SFGGResult>(filter).ToList();
                 if (mlist.Count > 0)
                 {
 
@@ -1474,7 +1490,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
                     {
                         leagueResult_sfggList.Add(new KeyValuePair<DBChangeState, BJDC_Match_SFGGResult>(DBChangeState.Update, item));
                     }
-                    coll_BJDC_Match.DeleteMany(null);
+                    coll_BJDC_Match.DeleteMany(filter);
                 }
                 else
                 {
@@ -4389,12 +4405,14 @@ namespace Lottery.CrawGetters.MatchBizGetter
 
         public void WriteLog(string log)
         {
+            Console.WriteLine(log);
             //if (_logWriter != null)
             //    _logWriter.Write(logCategory, logInfoSource, LogType.Information, "自动采集北京单场数据", log);
         }
 
         public void WriteError(string log)
         {
+            Console.WriteLine(log);
             //if (_logWriter != null)
             //    _logWriter.Write(logErrorCategory, logErrorSource, LogType.Error, "自动采集北京单场数据异常", log);
         }
