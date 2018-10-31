@@ -1,12 +1,16 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace EntityModel.CoreModel
 {
+    [BsonIgnoreExtraElements]
     public class CTZQ_BonusLevelInfo
     {
-       
+        [BsonId]
+        public ObjectId _id { get; set; }
 
         public string Id { get; set; }
         public string GameCode { get; set; }

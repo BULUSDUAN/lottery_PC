@@ -931,9 +931,11 @@ namespace EntityModel.LotteryJsonInfo
         public string UpdateTime { get; set; }
         public string YPSW { get; set; }
     }
-
+    [BsonIgnoreExtraElements]
     public class CTZQ_MatchInfo
     {
+        [BsonId]
+        public ObjectId _id { get; set; }
         /// <summary>
         /// 颜色
         /// </summary>

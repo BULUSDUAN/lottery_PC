@@ -32,8 +32,11 @@ namespace EntityModel.CoreModel
     /// <summary>
     /// 传统足球比赛信息
     /// </summary>
+    [BsonIgnoreExtraElements]
     public class CTZQ_IssuseInfo
     {
+        [BsonId]
+        public ObjectId _id { get; set; }
         public string Id { get; set; }
         /// <summary>
         /// 彩种
