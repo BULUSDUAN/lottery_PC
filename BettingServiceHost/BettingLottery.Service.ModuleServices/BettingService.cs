@@ -503,7 +503,7 @@ namespace BettingLottery.Service.ModuleServices
                         if (item.GameType != null)
                         {
                             if (item.GameType.ToUpper() != info.GameType.ToUpper())
-                                throw new Exception("彩种玩法有误，应该是:" + BettingHelper.FormatGameType(info.GameCode, info.GameType) + ",但实际是:" + BusinessHelper.FormatGameType(info.GameCode, item.GameType));
+                                throw new Exception("彩种玩法有误，应该是:" + BettingHelper.FormatGameType(info.GameCode, info.GameType) + ",但实际是:" + BettingHelper.FormatGameType(info.GameCode, item.GameType));
                         }
                     }
                 }
@@ -1469,16 +1469,16 @@ namespace BettingLottery.Service.ModuleServices
         /// <summary>
         /// 单式投注和追号
         /// </summary>
-        public CommonActionResult SingleSchemeBettingAndChase(SingleSchemeInfo info, string password, decimal redBagMoney, string userToken)
+        public Task<CommonActionResult> SingleSchemeBettingAndChase(SingleSchemeInfo info, string password, decimal redBagMoney, string userId)
         {
             // 验证用户身份及权限
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(UserId);
             CheckSingleRepeatBetting(userId, info);
             try
             {
                 string schemeId;
                 var isSuceess = true;
-                var t = this.SingleScheme(info, password, redBagMoney, userToken);
+                var t = this.SingleScheme(info, password, redBagMoney, userId);
                 isSuceess = t.IsSuccess;
                 schemeId = t.ReturnValue;
                 //if (t.IsSuccess)
@@ -1487,10 +1487,10 @@ namespace BettingLottery.Service.ModuleServices
                 //    isSuceess = t.IsSuccess;
                 //}
 
-                return new CommonActionResult(isSuceess, isSuceess ? "单式方案提交成功" : "单式方案提交失败")
+                return Task.FromResult(new CommonActionResult(isSuceess, isSuceess ? "单式方案提交成功" : "单式方案提交失败")
                 {
                     ReturnValue = schemeId + "|" + info.TotalMoney,
-                };
+                });
             }
             catch (LogicException ex)
             {
@@ -1566,13 +1566,13 @@ namespace BettingLottery.Service.ModuleServices
         /// <summary>
         /// 单式上传
         /// </summary>
-        public CommonActionResult SingleScheme(SingleSchemeInfo info, string password, decimal redBagMoney, string userToken)
+        public CommonActionResult SingleScheme(SingleSchemeInfo info, string password, decimal redBagMoney, string userId)
         {
             //检查彩种是否暂停销售
             BusinessHelper.CheckGameEnable(info.GameCode.ToUpper());
             BusinessHelper.CheckGameCodeAndType(info.GameCode, info.GameType);
-            // 验证用户身份及权限
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            //// 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             CheckSingleRepeatBetting(userId, info);
             try
             {
