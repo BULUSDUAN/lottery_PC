@@ -12,7 +12,7 @@ namespace KaSon.FrameWork.ORM.Helper
         }
         public E_Authentication_Alipay GetUserAlipayByAccount(string alipay)
         {
-            return DB.CreateQuery<E_Authentication_Alipay>().FirstOrDefault(p => p.AlipayAccount == alipay);
+            return DB.CreateQuery<E_Authentication_Alipay>().Where(p => p.AlipayAccount == alipay).FirstOrDefault();
         }
         public void UpdateUserAlipay(E_Authentication_Alipay entity)
         {

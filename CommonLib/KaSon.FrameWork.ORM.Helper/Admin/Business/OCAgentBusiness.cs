@@ -124,7 +124,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// </summary>
         public void AddOCAgent(OCAgentCategory category, string parentUserId, string userId, CPSMode cpsmode)
         {
-                DB.Begin();
+                //DB.Begin();
                 if (parentUserId == userId)
                     throw new Exception("不能将自己添加为自己的上级代理");
                 var balanceManager = new UserBalanceManager();
@@ -224,7 +224,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         });
                     }
                 }
-                DB.Commit();
+               // DB.Commit();
         }
         /// <summary>
         /// 查询代理销售充值注册量明细汇总

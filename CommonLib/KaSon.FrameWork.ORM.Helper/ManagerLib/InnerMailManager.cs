@@ -77,10 +77,9 @@ namespace KaSon.FrameWork.ORM.Helper
         }
         public string QuerySiteMessageTags()
         {
-            var query = from t in DB.CreateQuery<E_SiteMessage_SiteMessageTags>()
-                        orderby t.CreateTime ascending
-                        select string.Format("{0}={1}", t.TagKey, t.TagName);
-            return string.Join("^", query.ToArray());
+            var query = (from t in DB.CreateQuery<E_SiteMessage_SiteMessageTags>()
+                         orderby t.CreateTime ascending select t).ToList();
+            return string.Join("^", query.Select(x => string.Format("{0}={1}", x.TagKey, x.TagName)).ToList());
         }
         public List<SiteMessageSceneInfo> QuerySiteNoticeConfig()
         {
@@ -106,9 +105,9 @@ namespace KaSon.FrameWork.ORM.Helper
         public List<MoibleSMSSendRecordInfo> QuerySMSSendRecordList(string userId, string mobileNumber, DateTime startTime, DateTime endTime, string status, int pageIndex, int pageSize, out int totalCount)
         {
             var query = from l in DB.CreateQuery<E_SiteMessage_MoibleSMSSendRecord>()
-                        where (string.IsNullOrEmpty(userId) || l.UserId == userId)
-                        && (string.IsNullOrEmpty(mobileNumber) || l.Mobile == mobileNumber)
-                        && (string.IsNullOrEmpty(status) || l.SendStatus == status)
+                        where (l.UserId==string.Empty || l.UserId == userId)
+                        && (l.Mobile==string.Empty || l.Mobile == mobileNumber)
+                        && (l.SendStatus==string.Empty || l.SendStatus == status)
                         && (l.CreateTime >= startTime && l.CreateTime <= endTime)
                         orderby l.CreateTime descending
                         select new MoibleSMSSendRecordInfo

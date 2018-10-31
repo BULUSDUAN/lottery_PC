@@ -20,12 +20,10 @@ namespace KaSon.FrameWork.ORM.Helper
                         where a.UserId == userId
                         select new SystemUser()
                         {
-                            UserId=a.UserId,
-                            RegFrom=a.RegFrom,
-                            CreateTime=a.CreateTime,
-                            AgentId=a.AgentId,
-                            RoleList=new List<SystemRole>(),
-                            FunctionList=new List<UserFunction>()
+                            UserId = a.UserId,
+                            RegFrom = a.RegFrom,
+                            CreateTime = a.CreateTime,
+                            AgentId = a.AgentId,
                         }).FirstOrDefault();
             if (User != null)
             {
@@ -41,20 +39,16 @@ namespace KaSon.FrameWork.ORM.Helper
                                      RoleName = d.RoleName,
                                      RoleType = (RoleType)d.RoleType
                                  }).ToList();
-                User.FunctionList= (from b in DB.CreateQuery<C_Auth_UserFunction>()
-                                    join d in DB.CreateQuery<C_Auth_UserRole>()
-
-                                    on b.UserId equals d.UserId
-                                    where d.UserId == userId
-                                    select new UserFunction()
-                                    {
-                                        FunctionId = b.FunctionId,
-                                        IId = b.IId,
-                                        Mode = b.Mode,
-
-
-                                    }).ToList();
-
+                User.FunctionList = (from b in DB.CreateQuery<C_Auth_UserFunction>()
+                                     join d in DB.CreateQuery<C_Auth_UserRole>()
+                                     on b.UserId equals d.UserId
+                                     where d.UserId == userId
+                                     select new UserFunction()
+                                     {
+                                         FunctionId = b.FunctionId,
+                                         IId = b.IId,
+                                         Mode = b.Mode,
+                                     }).ToList();
             }
             return User;
         }

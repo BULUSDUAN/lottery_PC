@@ -1064,7 +1064,7 @@ namespace Lottery.AdminApi.Controllers
                 string OrderId = string.IsNullOrEmpty((string)p.orderId) ? "" : (string)p.orderId.Trim();
                 UserQueryInfo info = null;
                 if (!string.IsNullOrEmpty(UserKey))
-                    info = _service.QueryUserByKey(ViewBag.UserKey, CurrentUser.UserToken);
+                    info = _service.QueryUserByKey(UserKey, CurrentUser.UserToken);
                 FillMoneyStatus? status = null;
                 SchemeSource? schemeSource = null;
                 FillMoneyAgentType? agentType = null;
@@ -1084,12 +1084,12 @@ namespace Lottery.AdminApi.Controllers
                 DateTime EndTime = string.IsNullOrWhiteSpace((string)p.endTime) ? DateTime.Now : DateTime.Parse((string)p.endTime);
                 int PageIndex = string.IsNullOrWhiteSpace((string)p.pageIndex) ? base.PageIndex : int.Parse((string)p.pageIndex);
                 int PageSize = string.IsNullOrWhiteSpace((string)p.pageSize) ? base.PageSize : int.Parse((string)p.pageSize);
-                var FillDetail = _service.QueryFillMoneyList(ViewBag.UserKey,
+                var FillDetail = _service.QueryFillMoneyList(UserKey,
                     agentType.HasValue ? ((int)agentType.Value).ToString() : "",
                     status.HasValue ? ((int)status.Value).ToString() : "",
                     schemeSource.HasValue ? ((int)schemeSource.Value).ToString() : "",
-                    ViewBag.StartTime, ViewBag.EndTime,
-                    ViewBag.PageIndex, ViewBag.PageSize, ViewBag.OrderId);
+                    StartTime, EndTime,
+                    PageIndex, PageSize, OrderId);
                 return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Value = new { UserQueryInfo = info, FillDetail } });
             }
             catch (Exception ex)
@@ -1177,6 +1177,177 @@ namespace Lottery.AdminApi.Controllers
                 throw ex;
             }
         }
+        /// <summary>
+        /// 手工完成充值
+        /// </summary>
+        public IActionResult CompleteFillMoney(LotteryServiceRequest entity)
+        {
+            try
+            {
+                if (!CheckRights("WCCZ100"))
+                {
+                    throw new LogicException("对不起,您的权限不足!");
+                }
+                var p = JsonHelper.Decode(entity.Param);
+                string orderId = PreconditionAssert.IsNotEmptyString((string)p.orderId, "订单ID不能为空");
+                if (!string.IsNullOrWhiteSpace((string)p.sta) && (string)p.sta == "Fail")
+                {
+                    var result = _service.ManualCompleteFillMoneyOrder(orderId, FillMoneyStatus.Failed, CurrentUser.UserId);
+                    _service.AddSysOperationLog("", this.CurrentUser.UserId, "充值手工置为失败", string.Format("操作员【{0}】充值手工置为失败【{1}】，订单号【{2}】", this.CurrentUser.UserId, result.IsSuccess ? "成功" : "失败", orderId));
+                    return Json(new LotteryServiceResponse()
+                    {
+                        Code = result.IsSuccess == true ? AdminResponseCode.成功 : AdminResponseCode.失败,
+                        Message = (result.IsSuccess ? "手工置为失败成功" : "手工置为失败失败")
+                    }
+                    );
+                }
+                else
+                {
+                    var result = _service.ManualCompleteFillMoneyOrder(orderId, FillMoneyStatus.Success, CurrentUser.UserId);
+                    _service.AddSysOperationLog("", this.CurrentUser.UserId, "充值手工置为成功", string.Format("操作员【{0}】充值手工置为成功【{1}】，订单号【{2}】", CurrentUser.UserId, result.IsSuccess ? "成功" : "失败", orderId));
+                    return Json(new LotteryServiceResponse() { Code = result.IsSuccess == true ? AdminResponseCode.成功 : AdminResponseCode.失败, Message = result.Message });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { IsSuccess = false, Msg = ex.Message });
+            }
+        }
+        /// <summary>
+        /// 批量导出Excel
+        /// </summary>
+        /// <returns></returns>
+        public FileResult ExportExcel(LotteryServiceRequest entity)
+        {
+            var p = JsonHelper.Decode(entity.Param);
+            var bankcode = string.IsNullOrWhiteSpace((string)p.bankcode) ? "" : (string)p.bankcode.Trim();
+            string MinMaxMoney = string.IsNullOrEmpty((string)p.MinMaxMoney) ? "" : (string)p.MinMaxMoney.ToString();
+            var PageIndex = string.IsNullOrWhiteSpace((string)p.pageIndex) ? 0 : Convert.ToInt32((string)p.pageIndex);
+            var PageSize = string.IsNullOrWhiteSpace((string)p.pageSize) ? 30 : Convert.ToInt32((string)p.pageSize);
+            var StartTime = string.IsNullOrWhiteSpace((string)p.StartTime) ? DateTime.Today : Convert.ToDateTime((string)p.StartTime);
+            var EndTime = string.IsNullOrWhiteSpace((string)p.EndTime) ? DateTime.Today : Convert.ToDateTime((string)p.EndTime);
+            var HasSuccess = string.IsNullOrWhiteSpace((string)p.HasSuccess) ? false : Convert.ToBoolean((string)p.HasSuccess);
+            var HasRefused = string.IsNullOrWhiteSpace((string)p.HasRefused) ? false : Convert.ToBoolean((string)p.HasRefused);
+            var minMaxMoney = string.IsNullOrEmpty((string)p.money) ? "-1_-1" : (string)p.money;
+            var minMoney = -1M;
+            var maxMoney = -1M;
+            var minMaxMoneyArray = minMaxMoney.Split('_');
+            if (minMaxMoneyArray.Length == 2)
+            {
+                minMoney = decimal.Parse(minMaxMoneyArray[0]);
+                maxMoney = decimal.Parse(minMaxMoneyArray[1]);
+            }
+            var sortType = -1;
+            WithdrawAgentType? agent = WithdrawAgentType.BankCard;
+            Withdraw_QueryInfoCollection withdraw_requesting = null;
+            if (HasSuccess)
+            {
+                withdraw_requesting = _service.QueryWithdrawList2(minMoney, maxMoney, StartTime, EndTime, WithdrawStatus.Success, CurrentUser.UserToken);
+            }
+            else if (HasRefused)
+            {
+                withdraw_requesting = _service.QueryWithdrawList2(minMoney, maxMoney, StartTime, EndTime, WithdrawStatus.Refused, CurrentUser.UserToken);
+            }
+            else
+            {
+                withdraw_requesting = _service.QueryWithdrawList(
+                                    "", agent, WithdrawStatus.Requesting, minMoney, maxMoney, StartTime, EndTime, sortType, "", PageIndex, PageSize, bankcode, CurrentUser.UserToken);
+            }
+
+            //创建Excel文件的对象
+            NPOI.XSSF.UserModel.XSSFWorkbook book = new NPOI.XSSF.UserModel.XSSFWorkbook();
+            //添加一个sheet
+            NPOI.SS.UserModel.ISheet sheet1 = book.CreateSheet("Sheet1");
+            //给sheet1添加第一行的头部标题
+            NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(0);
+            row1.CreateCell(0).SetCellValue("商户订单号");
+            row1.CreateCell(1).SetCellValue("银行卡号");
+            row1.CreateCell(2).SetCellValue("真实姓名");
+            row1.CreateCell(3).SetCellValue("到账金额");
+            row1.CreateCell(4).SetCellValue("转账说明");
+            //将数据逐步写入sheet1各个行
+            int i = 0;
+            foreach (var item in withdraw_requesting.WithdrawList)
+            {
+                i++;
+                NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(i);
+                rowtemp.CreateCell(0).SetCellValue(item.OrderId);
+                rowtemp.CreateCell(1).SetCellValue(item.BankCardNumber);
+                rowtemp.CreateCell(2).SetCellValue(item.RequesterRealName);
+                rowtemp.CreateCell(3).SetCellValue(item.ResponseMoney.HasValue ? item.ResponseMoney.Value.ToString("N2") : "");
+                rowtemp.CreateCell(4).SetCellValue("转账");
+            }
+
+            // 写入到客户端 
+            OverWriteNPOI ms = new OverWriteNPOI
+            {
+                AllowClose = false
+            };
+            book.Write(ms);
+            ms.Seek(0, SeekOrigin.Begin);
+            ms.AllowClose = true;
+            return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", string.Format("{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd")));
+        }
+        public IActionResult CompleteWithdrawALL(LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                string orderIds = PreconditionAssert.IsNotEmptyString((string)p.orderIds, "提现订单编号为空");
+                string[] arrs = orderIds.Split(',');
+                if (arrs.Length == 0)
+                {
+                    return Json(new { IsSuccess = false, Msg = "请勾选订单编号" });
+                }
+                string msg = string.Empty;
+                foreach (var item in arrs)
+                {
+                    var result = _service.CompleteWithdraw(item, "接受提现，已打款", CurrentUser.UserToken);
+                    //提款成功发送短信给用户
+                    if (result.IsSuccess)
+                    {
+                        try
+                        {
+                            var with = _service.GetWithdrawById(item);
+                            var mobile = with.RequesterMobile;
+                            var content = "尊敬的 " + with.RequesterRealName + " 您好，您申请【" + with.ResponseMoney.Value.ToString("f") + "元】已处理，请注意查收。";
+                            var returned = SendMessage(mobile, content);
+                        }
+                        catch
+                        {
+
+                        }
+                    }
+                }
+                return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功 });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Message = ex.Message });
+            }
+        }
+        public IActionResult RefusedWithdrawALL(LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                string orderIds = PreconditionAssert.IsNotEmptyString((string)p.orderIds, "提现订单编号为空");
+                string[] arrs = orderIds.Split(',');
+                if (arrs.Length == 0)
+                {
+                    return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Message = "请勾选订单编号" });
+                }
+                foreach (var item in arrs)
+                {
+                    var result = _service.RefusedWithdraw(item, "第三方打款失败，请稍候再重新申请", CurrentUser.UserToken);
+                }
+                return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Message = "" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
+            }
+        }
         #endregion
         public IActionResult ClearUserBindCache(LotteryServiceRequest entity)
         {
@@ -1214,17 +1385,19 @@ namespace Lottery.AdminApi.Controllers
         /// <param name="userId"></param>
         /// <param name="updateUserCreditType"></param>
         /// <returns></returns>
-        public IActionResult UpdateUserCreditType(string userId, int? updateUserCreditType)
+        public IActionResult UpdateUserCreditType(LotteryServiceRequest entity)
         {
             try
             {
+                var p = JsonHelper.Decode(entity.Param);
+                string userId = (string)p.userId;
+                int? updateUserCreditType = Convert.ToInt32((string)p.updateUserCreditType);
                 if (string.IsNullOrEmpty(userId) || !updateUserCreditType.HasValue)
                 {
-                    return Json(new { IsSuccess = false, Msg = "参数有误" });
+                    return Json(new LotteryServiceResponse(){ Code = AdminResponseCode.失败, Message = "参数有误" });
                 }
                 var flag = _service.UpdateUserCreditType(userId, updateUserCreditType.Value);
-                if (flag) return Json(new LotteryServiceResponse(){ Code =AdminResponseCode.成功, Message = "操作成功" });
-                else return Json(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = "操作失败" });
+                return Json(new LotteryServiceResponse() { Code = flag ? AdminResponseCode.成功 : AdminResponseCode.失败, Message = flag ? "操作成功" : "操作失败" });
             }
             catch (Exception ex)
             {
@@ -1281,10 +1454,13 @@ namespace Lottery.AdminApi.Controllers
         {
             try
             {
+                if (!CheckRights("HFDL280"))
+                {
+                    throw new LogicException("对不起,您的权限不足!");
+                }
                 var p = JsonHelper.Decode(entity.Param);
                 var userId = PreconditionAssert.IsNotEmptyString((string)p.userId, "用户编号不能为空");
                 var agentId = PreconditionAssert.IsNotEmptyString((string)p.agentId, "经销商编号不能为空");
-
                 var result = _service.UpdateUserAgentId(userId, agentId, CurrentUser.UserToken);
                 _service.AddSysOperationLog(userId, CurrentUser.UserId, "更新经销商", string.Format("操作员【{0}】更新用户【{1}】经销商为【{2}】", CurrentUser.UserId, userId, agentId));
                 return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Message = result.Message });
@@ -1366,172 +1542,6 @@ namespace Lottery.AdminApi.Controllers
             }
         }
         /// <summary>
-        /// 手工完成充值
-        /// </summary>
-        public IActionResult CompleteFillMoney(LotteryServiceRequest entity)
-        {
-            try
-            {
-                if (!CheckRights("WCCZ100"))
-                {
-                    throw new LogicException("对不起,您的权限不足!");
-                }
-                var p = JsonHelper.Decode(entity.Param);
-                string orderId = PreconditionAssert.IsNotEmptyString((string)p.orderId, "订单ID不能为空");
-                if (!string.IsNullOrWhiteSpace((string)p.sta) && (string)p.sta == "Fail")
-                {
-                    var result = _service.ManualCompleteFillMoneyOrder(orderId, FillMoneyStatus.Failed, CurrentUser.UserId);
-                    _service.AddSysOperationLog("", this.CurrentUser.UserId, "充值手工置为失败", string.Format("操作员【{0}】充值手工置为失败【{1}】，订单号【{2}】", this.CurrentUser.UserId, result.IsSuccess ? "成功" : "失败", orderId));
-                    return Json(new LotteryServiceResponse()
-                    {
-                        Code = result.IsSuccess==true?AdminResponseCode.成功:AdminResponseCode.失败,
-                        Message = (result.IsSuccess ? "手工置为失败成功" : "手工置为失败失败") }
-                    );
-                }
-                else
-                {
-                    var result = _service.ManualCompleteFillMoneyOrder(orderId, FillMoneyStatus.Success, CurrentUser.UserId);
-                    _service.AddSysOperationLog("", this.CurrentUser.UserId, "充值手工置为成功", string.Format("操作员【{0}】充值手工置为成功【{1}】，订单号【{2}】", CurrentUser.UserId, result.IsSuccess ? "成功" : "失败", orderId));
-                    return Json(new LotteryServiceResponse() { Code = result.IsSuccess == true ? AdminResponseCode.成功 : AdminResponseCode.失败, Message = result.Message });
-                }
-            }
-            catch (Exception ex)
-            {
-                return Json(new { IsSuccess = false, Msg = ex.Message });
-            }
-        }
-        /// <summary>
-        /// 批量导出Excel
-        /// </summary>
-        /// <returns></returns>
-        public FileResult ExportExcel(LotteryServiceRequest entity)
-        {
-            var p = JsonHelper.Decode(entity.Param);
-            var bankcode = string.IsNullOrWhiteSpace((string)p.bankcode) ? "" : (string)p.bankcode.Trim();
-            string MinMaxMoney = string.IsNullOrEmpty((string)p.MinMaxMoney) ? "" : (string)p.MinMaxMoney.ToString();
-            var PageIndex = string.IsNullOrWhiteSpace((string)p.pageIndex) ? 0 : Convert.ToInt32((string)p.pageIndex);
-            var PageSize = string.IsNullOrWhiteSpace((string)p.pageSize) ? 30 : Convert.ToInt32((string)p.pageSize);
-            var StartTime = string.IsNullOrWhiteSpace((string)p.StartTime) ? DateTime.Today : Convert.ToDateTime((string)p.StartTime);
-            var EndTime = string.IsNullOrWhiteSpace((string)p.EndTime) ? DateTime.Today : Convert.ToDateTime((string)p.EndTime);
-            var HasSuccess = string.IsNullOrWhiteSpace((string)p.HasSuccess) ? false : Convert.ToBoolean((string)p.HasSuccess);
-            var HasRefused = string.IsNullOrWhiteSpace((string)p.HasRefused) ? false : Convert.ToBoolean((string)p.HasRefused);
-            var minMaxMoney = string.IsNullOrEmpty((string)p.money) ? "-1_-1" : (string)p.money;
-            var minMoney = -1M;
-            var maxMoney = -1M;
-            var minMaxMoneyArray = minMaxMoney.Split('_');
-            if (minMaxMoneyArray.Length == 2)
-            {
-                minMoney = decimal.Parse(minMaxMoneyArray[0]);
-                maxMoney = decimal.Parse(minMaxMoneyArray[1]);
-            }
-            var sortType = -1;
-            WithdrawAgentType? agent = WithdrawAgentType.BankCard;
-            Withdraw_QueryInfoCollection withdraw_requesting = null;
-            if (HasSuccess)
-            {
-                withdraw_requesting = _service.QueryWithdrawList2(minMoney, maxMoney, StartTime, EndTime, WithdrawStatus.Success, CurrentUser.UserToken);
-            }
-            else if (HasRefused)
-            {
-                withdraw_requesting = _service.QueryWithdrawList2(minMoney, maxMoney, StartTime, EndTime, WithdrawStatus.Refused, CurrentUser.UserToken);
-            }
-            else
-            {
-                withdraw_requesting = _service.QueryWithdrawList(
-                                    "", agent, WithdrawStatus.Requesting, minMoney, maxMoney, StartTime, EndTime, sortType, "", PageIndex, PageSize, bankcode, CurrentUser.UserToken);
-            }
-
-            //创建Excel文件的对象
-            NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
-            //添加一个sheet
-            NPOI.SS.UserModel.ISheet sheet1 = book.CreateSheet("Sheet1");
-            //给sheet1添加第一行的头部标题
-            NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(0);
-            row1.CreateCell(0).SetCellValue("商户订单号");
-            row1.CreateCell(1).SetCellValue("银行卡号");
-            row1.CreateCell(2).SetCellValue("真实姓名");
-            row1.CreateCell(3).SetCellValue("到账金额");
-            row1.CreateCell(4).SetCellValue("转账说明");
-            //将数据逐步写入sheet1各个行
-            int i = 0;
-            foreach (var item in withdraw_requesting.WithdrawList)
-            {
-                i++;
-                NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(i);
-                rowtemp.CreateCell(0).SetCellValue(item.OrderId);
-                rowtemp.CreateCell(1).SetCellValue(item.BankCardNumber);
-                rowtemp.CreateCell(2).SetCellValue(item.RequesterRealName);
-                rowtemp.CreateCell(3).SetCellValue(item.ResponseMoney.HasValue ? item.ResponseMoney.Value.ToString("N2") : "");
-                rowtemp.CreateCell(4).SetCellValue("转账");
-            }
-
-            // 写入到客户端 
-            MemoryStream ms = new MemoryStream();
-            book.Write(ms);
-            ms.Seek(0, SeekOrigin.Begin);
-            return File(ms, "application/vnd.ms-excel", string.Format("{0}.xls", DateTime.Now.ToString("yyyy-MM-dd")));
-        }
-        public IActionResult CompleteWithdrawALL(LotteryServiceRequest entity)
-        {
-            try
-            {
-                var p = JsonHelper.Decode(entity.Param);
-                string orderIds = PreconditionAssert.IsNotEmptyString((string)p.orderIds, "提现订单编号为空");
-                string[] arrs = orderIds.Split(',');
-                if (arrs.Length == 0)
-                {
-                    return Json(new { IsSuccess = false, Msg = "请勾选订单编号" });
-                }
-                string msg = string.Empty;
-                foreach (var item in arrs)
-                {
-                    var result = _service.CompleteWithdraw(item, "接受提现，已打款", CurrentUser.UserToken);
-                    //提款成功发送短信给用户
-                    if (result.IsSuccess)
-                    {
-                        try
-                        {
-                            var with = _service.GetWithdrawById(item);
-                            var mobile = with.RequesterMobile;
-                            var content = "尊敬的 " + with.RequesterRealName + " 您好，您申请【" + with.ResponseMoney.Value.ToString("f") + "元】已处理，请注意查收。";
-                            var returned = SendMessage(mobile, content);
-                        }
-                        catch
-                        {
-
-                        }
-                    }
-                }
-                return Json(new LotteryServiceResponse(){ Code =AdminResponseCode.成功 });
-            }
-            catch (Exception ex)
-            {
-                return Json(new LotteryServiceResponse(){ Code = AdminResponseCode.成功, Message = ex.Message });
-            }
-        }
-        public IActionResult RefusedWithdrawALL(LotteryServiceRequest entity)
-        {
-            try
-            {
-                var p = JsonHelper.Decode(entity.Param);
-                string orderIds = PreconditionAssert.IsNotEmptyString((string)p.orderIds, "提现订单编号为空");
-                string[] arrs = orderIds.Split(',');
-                if (arrs.Length == 0)
-                {
-                    return Json(new LotteryServiceResponse(){ Code=AdminResponseCode.成功, Message = "请勾选订单编号" });
-                }
-                foreach (var item in arrs)
-                {
-                    var result = _service.RefusedWithdraw(item, "第三方打款失败，请稍候再重新申请", CurrentUser.UserToken);
-                }
-                return Json(new LotteryServiceResponse (){ Code=AdminResponseCode.成功, Message = "" });
-            }
-            catch (Exception ex)
-            {
-                return Json(new LotteryServiceResponse (){ Code=AdminResponseCode.失败, Message = ex.Message });
-            }
-        }
-        /// <summary>
         /// 发送站内信
         /// </summary>
         public IActionResult SiteMessage()
@@ -1542,16 +1552,13 @@ namespace Lottery.AdminApi.Controllers
                     throw new Exception("对不起，您的权限不足！");
                 var Role = _service.GetSystemRoleCollection(CurrentUser.UserToken);
 
-                return Json(new LotteryServiceResponse() {Code=AdminResponseCode.成功,Value=Role });
+                return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Value = Role });
             }
             catch (Exception ex)
             {
                 return JsonEx(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
             }
         }
-        /// <summary>
-        /// 发送站内信
-        /// </summary>
         public IActionResult SendLetter(LotteryServiceRequest entity)
         {
             if (!CheckRights("FSXX100"))
@@ -1607,7 +1614,7 @@ namespace Lottery.AdminApi.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new LotteryServiceResponse{ Code = AdminResponseCode.失败, Message = ex.Message });
+                return JsonEx(new LotteryServiceResponse{ Code = AdminResponseCode.失败, Message = ex.Message });
             }
         }
         public IActionResult SiteNoticeManager()
@@ -1616,7 +1623,7 @@ namespace Lottery.AdminApi.Controllers
                 throw new Exception("对不起，您的权限不足！");
             var SiteMessageTags = _service.QuerySiteMessageTags();
             var ConfigList = _service.QuerySiteNoticeConfig();
-            return View();
+            return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Value = new { ConfigList, SiteMessageTags } });
         }
         public IActionResult UpdateSiteNotice(LotteryServiceRequest entity)
         {
@@ -1638,7 +1645,7 @@ namespace Lottery.AdminApi.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new LotteryServiceResponse(){ Code = AdminResponseCode.失败, Message = ex.Message });
+                return JsonEx(new LotteryServiceResponse(){ Code = AdminResponseCode.失败, Message = ex.Message });
             }
         }
         public IActionResult SMSSendRecordLog(LotteryServiceRequest entity)
@@ -1649,21 +1656,19 @@ namespace Lottery.AdminApi.Controllers
                 var UserId = (string)p.userId;
                 var MobileNumber = (string)p.mobileNumber;
                 var Status = (string)p.status;
-
                 var StartTime = string.IsNullOrEmpty((string)p.startTime) ? DateTime.Today : Convert.ToDateTime((string)p.startTime);
                 var EndTime = string.IsNullOrEmpty((string)p.endTime) ? DateTime.Today.AddDays(1) : Convert.ToDateTime((string)p.endTime);
                 var PageIndex = string.IsNullOrEmpty((string)p.pageIndex) ? base.PageIndex : int.Parse((string)p.pageIndex);
                 var PageSize = string.IsNullOrEmpty((string)p.pageSize) ? base.PageSize : int.Parse((string)p.pageSize);
                 var List = _service.QuerySMSSendRecordList(UserId, MobileNumber, StartTime, EndTime, Status, PageIndex, PageSize);
-                _service.AddSysOperationLog((string)p.userId, this.CurrentUser.UserId, "查询短信发送记录", string.Format("操作员【{0}】查询手机号【{1}】的查询短信发送记录", this.CurrentUser.UserId, (string)p.mobileNumber));
+                _service.AddSysOperationLog(UserId, CurrentUser.UserId, "查询短信发送记录", string.Format("操作员【{0}】查询手机号【{1}】的查询短信发送记录", CurrentUser.UserId, MobileNumber));
                 return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Value = List });
             }
             catch (Exception ex)
             {
-                return Json(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
+                return JsonEx(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
             }
         }
-
         public IActionResult RepeatSMS(LotteryServiceRequest entity)
         {
             try
@@ -1677,7 +1682,7 @@ namespace Lottery.AdminApi.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new { IsSuccess = false, Msg = ex.Message });
+                return JsonEx(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
             }
         }
         /// <summary>
@@ -1743,7 +1748,7 @@ namespace Lottery.AdminApi.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new LotteryServiceResponse(){ Code = AdminResponseCode.成功, Message = ex.Message });
+                return JsonEx(new LotteryServiceResponse(){ Code = AdminResponseCode.成功, Message = ex.Message });
             }
         }
         public IActionResult DoAgent(LotteryServiceRequest entity)
@@ -1763,7 +1768,7 @@ namespace Lottery.AdminApi.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new LotteryServiceResponse(){ Code = AdminResponseCode.失败, Message = ex.Message });
+                return JsonEx(new LotteryServiceResponse(){ Code = AdminResponseCode.失败, Message = ex.Message });
             }
         }
         public IActionResult DoTogetherHotUser(LotteryServiceRequest entity)
@@ -1813,7 +1818,7 @@ namespace Lottery.AdminApi.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new LotteryServiceResponse(){ Code = AdminResponseCode.失败, Message = ex.Message });
+                return JsonEx(new LotteryServiceResponse(){ Code = AdminResponseCode.失败, Message = ex.Message });
             }
         }
         public IActionResult DeleteUserSchemeShareExpert(LotteryServiceRequest entity)
@@ -1831,7 +1836,7 @@ namespace Lottery.AdminApi.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
+                return JsonEx(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
             }
         }
         public IActionResult QueryUserSchemeShareExpertList(LotteryServiceRequest entity)
@@ -1845,12 +1850,12 @@ namespace Lottery.AdminApi.Controllers
                 var Source = string.IsNullOrEmpty((string)p.Source) ? -1 : Convert.ToInt32((string)p.Source);
                 var PageIndex = (string)p.PageIndex == null ? base.PageIndex : Convert.ToInt32((string)p.PageIndex);
                 var PageSize = (string)p.PageSize == null ? base.PageSize : Convert.ToInt32((string)p.PageSize);
-                var SchemeShareList = _service.QueryUserSchemeShareExpertList(ViewBag.UserKey, ViewBag.Source, ViewBag.PageIndex, ViewBag.PageSize);
+                var SchemeShareList = _service.QueryUserSchemeShareExpertList(UserKey,Source,PageIndex,PageSize);
                 return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Value = SchemeShareList });
             }
             catch (Exception ex)
             {
-                return Json(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
+                return JsonEx(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
             }
         }
         /// <summary>
@@ -1875,7 +1880,7 @@ namespace Lottery.AdminApi.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
+                return JsonEx(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
             }
         }
     }

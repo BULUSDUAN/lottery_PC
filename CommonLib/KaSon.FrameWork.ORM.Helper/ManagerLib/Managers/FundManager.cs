@@ -114,7 +114,8 @@ namespace KaSon.FrameWork.ORM.Helper
             string strSql = "Update C_User_Register set UserCreditType=@userCreditType Where userId=@userId";
             var flag = DB.CreateSQLQuery(strSql)
                              .SetString("@userId", userId)
-                             .SetInt("@userCreditType", updateUserCreditType);
+                             .SetInt("@userCreditType", updateUserCreditType)
+                             .Excute();
             return true;
         }
         public void UpdateFillMoney(C_FillMoney entity)
