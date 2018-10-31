@@ -58,7 +58,7 @@ namespace KaSon.FrameWork.ORM.Helper
         }
         public C_CTZQ_MatchPool QueryCTZQ_MatchPool(string issuseNumber, string gameType)
         {
-            return DB.CreateQuery<C_CTZQ_MatchPool>().FirstOrDefault(p => p.IssuseNumber == issuseNumber && p.GameType == gameType && p.BonusLevel == 1);
+            return DB.CreateQuery<C_CTZQ_MatchPool>().Where(p => p.IssuseNumber == issuseNumber && p.GameType == gameType && p.BonusLevel == 1).FirstOrDefault();
         }
         public List<CTZQMatchInfo> QueryCTZQMatchListByIssuseNumber(string gameType, string issuseNumber)
         {

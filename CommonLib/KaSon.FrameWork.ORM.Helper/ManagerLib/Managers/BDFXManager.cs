@@ -644,7 +644,7 @@ namespace KaSon.FrameWork.ORM.Helper
             UserSchemeShareExpert_Collection collection = new UserSchemeShareExpert_Collection();
             var query = from s in DB.CreateQuery<E_User_SchemeShareExpert>()
                         join u in DB.CreateQuery<C_User_Register>() on s.UserId equals u.UserId
-                        where (string.IsNullOrEmpty(userKey) || u.UserId == userKey || u.DisplayName == userKey)
+                        where (u.UserId==string.Empty || u.UserId == userKey || u.DisplayName == userKey)
                         && (source == -1 || s.ExpertType == source)
                         orderby s.CreateTime descending
                         select new UserSchemeShareExpertInfo
@@ -668,7 +668,7 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             var strSql = "delete from E_User_SchemeShareExpert where Id=@id";
             DB.CreateSQLQuery(strSql)
-                   .SetString("@id", id);
+                   .SetString("@id", id).Excute();
         }
 
         public BDFXCommisionInfo QueryBDFXCommision(string schemeId)
