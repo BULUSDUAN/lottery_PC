@@ -572,8 +572,6 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public CommonActionResult DisableUser(string userId, string userToken)
         {
-            //// 验证用户身份及权限
-            //var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 new LocalLoginBusiness().DisableUser(userId);
@@ -590,8 +588,6 @@ namespace KaSon.FrameWork.ORM.Helper
         /// </summary>
         public CommonActionResult EnableUser(string userId, string userToken)
         {
-            //// 验证用户身份及权限
-            //var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 new LocalLoginBusiness().EnableUser(userId);

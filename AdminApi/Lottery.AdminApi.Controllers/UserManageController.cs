@@ -23,6 +23,7 @@ namespace Lottery.AdminApi.Controllers
     /// </summary>
     [Area("api")]
     [ReusltFilter]
+    [CheckLogin]
     public class UserManageController :BaseController
     {
         private readonly static AdminService _service = new AdminService();
