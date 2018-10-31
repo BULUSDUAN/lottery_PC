@@ -7845,5 +7845,15 @@ namespace KaSon.FrameWork.ORM.Helper
 
             return schemeId;
         }
+
+        /// <summary>
+        /// 查询用户保存的订单信息
+        /// </summary>
+        public SaveOrder_LotteryBettingInfoCollection QuerySaveOrderLottery(string userId)
+        {
+            var result = new SaveOrder_LotteryBettingInfoCollection();
+            result.AddRange(new Sports_Manager().QuerySaveOrderLottery(userId));
+            return result;
+        }
     }
 }

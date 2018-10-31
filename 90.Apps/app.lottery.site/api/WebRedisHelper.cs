@@ -16,6 +16,7 @@ using Kason.Sg.Core.ProxyGenerator;
 using Kason.Sg.Core.CPlatform.Runtime.Client.Address.Resolvers;
 using EntityModel.RequestModel;
 
+
 namespace app.lottery.site.iqucai
 {
     /// <summary>
@@ -191,19 +192,21 @@ namespace app.lottery.site.iqucai
         /// <summary>
         /// 加载合买大厅数据到Redis
         /// </summary>
-        public static void LoadTogetherDataToRedis()
+        public static async void LoadTogetherDataToRedis()
         {
-            var superList = app.lottery.site.Controllers.WCFClients.GameClient.QueryHotUserTogetherOrderList("");
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            param["UserId"] = "";
+            var superList = await serviceProxyProvider.Invoke<EntityModel.CoreModel.TogetherHotUserInfoCollection>(param, "api/user/QueryHotUserTogetherOrderList");
             var db = RedisHelper.GetInstance(CacheRedisHost,CacheRedisPost,CacheRedisPassword).GetDatabase(8);//.DB_CoreCacheData;
             //加载合买红人
             var redisKey_SupperUser = RedisKeys.Key_Core_Togegher_SupperUser;
-            db.KeyDeleteAsync(redisKey_SupperUser);
+            await db.KeyDeleteAsync(redisKey_SupperUser);
             foreach (var item in superList)
             {
                 try
                 {
                     var json = JsonSerializer.Serialize(item);
-                    db.ListRightPushAsync(redisKey_SupperUser, json);
+                    await db.ListRightPushAsync(redisKey_SupperUser, json);
                 }
                 catch (Exception ex)
                 {
@@ -214,13 +217,13 @@ namespace app.lottery.site.iqucai
             var orderBy = "ManYuan desc,ISTOP DESC,TotalMoney desc, Progress DESC";
             var orderList = app.lottery.site.Controllers.WCFClients.GameClient.QuerySportsTogetherList("", "", "", "", null, null, null, -1, -1, -1, -1, orderBy, 0, 30000, "");
             var redisKey_TogetherList = RedisKeys.Key_Core_Togegher_OrderList;
-            db.KeyDeleteAsync(redisKey_TogetherList);
+            await db.KeyDeleteAsync(redisKey_TogetherList);
             foreach (var item in orderList.List)
             {
                 try
                 {
                     var json = JsonSerializer.Serialize(item);
-                    db.ListRightPushAsync(redisKey_TogetherList, json);
+                    await db.ListRightPushAsync(redisKey_TogetherList, json);
                 }
                 catch (Exception ex)
                 {

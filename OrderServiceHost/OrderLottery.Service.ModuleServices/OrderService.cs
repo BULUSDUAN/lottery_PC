@@ -663,5 +663,31 @@ namespace OrderLottery.Service.ModuleServices
                 throw new Exception(ex.Message, ex);
             }
         }
+
+        /// <summary>
+        /// 查询足彩合买列表
+        /// </summary>
+        //public Sports_TogetherSchemeQueryInfoCollection QuerySportsTogetherList(Sports_TogetherSchemeQueryInfoParam Model)
+        //{
+        //    try
+        //    {
+        //        //if (string.IsNullOrEmpty(userId) || !BusinessHelper.CheckIsShowHM(userId))//检查是否在白名单
+        //        //    return new Sports_TogetherSchemeQueryInfoCollection();
+
+        //        if (string.IsNullOrEmpty(Model.orderBy))
+        //        {
+        //            //orderBy = "ManYuan desc,ISTOP DESC, Progress desc,TotalMoney DESC,CreateTime desc";
+        //            //orderBy = "ManYuan desc,ISTOP DESC,ProgressStatus ASC,TotalMoney DESC,CreateTime desc, Progress asc";
+        //            Model.orderBy = "JieZhi desc,ManYuan desc,ISTOP DESC, sold_guaran_Progress desc,TotalMoney DESC,CreateTime desc";
+        //        }
+
+        //        //return new Sports_Business().QuerySportsTogetherList(key, issuseNumber, gameCode, gameType, security, betCategory, progressState, minMoney, maxMoney, minProgress, maxProgress, orderBy, pageIndex, pageSize);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception(ex.Message, ex);
+        //    }
+        //}
+
     }
 }
