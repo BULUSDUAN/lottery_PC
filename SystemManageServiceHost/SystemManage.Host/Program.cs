@@ -52,6 +52,7 @@ namespace SystemManage.Host
             JToken HostSettings = ConfigHelper.AllConfigInfo["HostSettings"];
             JToken MongoSettings = ConfigHelper.AllConfigInfo["MongoSettings"];
             JToken BonusPoolSetting = ConfigHelper.AllConfigInfo["BonusPoolSetting"];
+            JToken Auto_CollectSettings = ConfigHelper.AllConfigInfo["Auto_CollectSettings"];
 
             string Sports_SchemeJobSeconds = ConfigHelper.AllConfigInfo["Sports_SchemeJobSeconds"].ToString();
             var mongoConfig = new kason.Sg.Core.Mongo.ConfigInfo();
@@ -164,13 +165,22 @@ namespace SystemManage.Host
             Console.Clear();
             Clear();
         }
+        static void Start_ConfigGameType(JToken Auto_CollectSettings)
+        {
+            string strList = Auto_CollectSettings.ToString();
+
+            var list = JsonHelper.Deserialize<List<StartGameTypeModel>>(strList);
+
+
+
+        }
     }
 
-    internal class Start_InitGameType {
+    internal class StartGameTypeModel {
         /// <summary>
         /// 玩法
         /// </summary>
-        public string GameType { get; set; }
+        public string Key { get; set; }
 
         /// <summary>
         /// 是否启动
