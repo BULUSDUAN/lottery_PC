@@ -732,5 +732,39 @@ namespace KaSon.FrameWork.ORM.Helper
             entity.PrivilegesType = privilegesType;
             manager.UpdateBJDC_Match(entity);
         }
+
+
+        /// <summary>
+        /// 更新单个订单的过关统计
+        /// </summary>
+        public void Update_CTZQ_HitCountBySchemeId(string schemeId)
+        {
+            //暂停业务
+            return;
+
+            //var sportsManager = new Sports_Manager();
+            //var order = sportsManager.QuerySports_Order_Running(schemeId);
+            //if (order == null)
+            //    throw new Exception(string.Format("没有找到{0}的Order_Running数据", schemeId));
+
+            //var poolKey = string.Format("{0}|{1}|{2}|{3}", "CTZQ", order.GameType, order.IssuseNumber, "1");
+            //var pool = new CTZQMatchManager().QueryCTZQ_MatchPoolByKey(poolKey);
+            //if (pool == null)
+            //    throw new Exception(string.Format("没有找到Key为{0}的奖池数据", poolKey));
+            //if (string.IsNullOrEmpty(pool.MatchResult))
+            //    throw new Exception(string.Format("Key为{0}的开奖结果为空", poolKey));
+            //var bonusCodeArray = pool.MatchResult.Split(',');
+
+            ////普通投注
+            //if (order.SchemeBettingCategory == SchemeBettingCategory.GeneralBetting)
+            //{
+            //    var code = sportsManager.QueryOneSportsAnteCodeBySchemeId(schemeId);
+            //    Update_CTZQ_General_HitCount(order.GameType, order.SchemeId, code.AnteCode, bonusCodeArray);
+            //    return;
+            //}
+            ////单式上传 和 过滤投注
+            //var singleCode = sportsManager.QuerySingleScheme_AnteCode(schemeId);
+            //Update_CTZQ_Single_HitCount(singleCode, bonusCodeArray);
+        }
     }
 }

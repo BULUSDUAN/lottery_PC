@@ -331,5 +331,19 @@ namespace KaSon.FrameWork.ORM.Helper
             , pageIndex, pageSize, orderId);
             return collection;
         }
+
+        public BettingOrderInfoCollection QueryBettingOrderListByChaseKeyLine(string keyLine)
+        {
+            var result = new BettingOrderInfoCollection();
+            result.OrderList = new SqlQueryManager().QueryBettingOrderListByChaseKeyLine(keyLine);
+            return result;
+        }
+
+        public BettingAnteCodeInfoCollection QueryAnteCodeListBySchemeId(string schemeId)
+        {
+            var result = new BettingAnteCodeInfoCollection();
+            result.AnteCodeList = new SqlQueryManager().QueryAnteCodeListBySchemeId(schemeId);
+            return result;
+        }
     }
 }

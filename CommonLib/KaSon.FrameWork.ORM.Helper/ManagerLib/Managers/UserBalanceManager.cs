@@ -160,5 +160,11 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             return DB.CreateQuery<E_SendMsg_HistoryRecord>().Where(x=>x.MsgId==msgId).FirstOrDefault();
         }
+
+        //public P_OCAgent_ReportSales QueryOCAgentReportSales(string userId, string gameCode)
+        //{
+           
+        //    return Session.Query<P_OCAgent_ReportSales>().FirstOrDefault(s => s.UserId == userId && s.GameCode == gameCode && s.CreateTime.Date == DateTime.Now.Date);
+        //}
     }
 }

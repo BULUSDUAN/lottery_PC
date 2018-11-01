@@ -321,5 +321,24 @@ namespace KaSon.FrameWork.ORM.Helper
         }
 
         #endregion
+
+        public IList<BettingOrderInfo> QueryBettingOrderListByChaseKeyLine(string keyLine)
+        {
+
+            // 通过数据库存储过程进行查询
+            var query = SqlModule.AdminModule.FirstOrDefault(x => x.Key == "P_Order_QueryOrderListByChaseKeyLine").SQL;
+            var ListInfo=DB.CreateSQLQuery(query)
+                .SetString("keyLine", keyLine).List<BettingOrderInfo>().ToList(); ;
+            return ListInfo;
+        }
+        public IList<BettingAnteCodeInfo> QueryAnteCodeListBySchemeId(string schemeId)
+        {
+
+            // 通过数据库存储过程进行查询
+            var query = SqlModule.AdminModule.FirstOrDefault(x => x.Key == "P_Order_QueryAnteCodeListBySchemeId").SQL;
+            var ListInfo = DB.CreateSQLQuery(query)
+           .SetString("keyLine", keyLine).List<BettingAnteCodeInfo>().ToList(); 
+            return ListInfo;
+        }
     }
 }
