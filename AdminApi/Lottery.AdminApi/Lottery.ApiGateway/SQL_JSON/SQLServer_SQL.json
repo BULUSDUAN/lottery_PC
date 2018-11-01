@@ -561,25 +561,25 @@
     {
       "key": "Debug_QueryFillMoneyListCount_01",
       "Desc": "查询充值金额列表统计",
-      "ParamDesc": "@UserId:UserId,@AgentList:agentList,@StatusList:statusList,@SourceList:sourceList,@StartTime:startTime,@EndTime:endTime,@OrderId:OrderId",
+      "ParamDesc": "@UserId:UserId,@StartTime:startTime,@EndTime:endTime,@OrderId:OrderId",
       "Director": "Debug",
-      "SQL": "SELECT TotalCount=COUNT(1),TotalRequestMoney=SUM(RequestMoney) FROM C_FillMoney WHERE (@UserId=N'' OR UserId=@UserId) AND (@AgentList=N'' OR FillMoneyAgent IN (@AgentList)) AND (@StatusList=N'' OR [Status] IN (@StatusList)) AND (@SourceList=N'' OR SchemeSource IN (@SourceList)) AND (RequestTime>=@StartTime AND RequestTime < @EndTime) AND (@OrderId='' OR (OrderId=@OrderId OR OuterFlowId=@OrderId))",
+      "SQL": "SELECT TotalCount=COUNT(1),TotalRequestMoney=SUM(RequestMoney) FROM C_FillMoney WHERE (@UserId=N'' OR UserId=@UserId) AND ({0}='' OR FillMoneyAgent IN ({1})) AND ({2}=N'' OR [Status] IN ({3})) AND ({4}=N'' OR SchemeSource IN ({5})) AND (RequestTime>=@StartTime AND RequestTime < @EndTime) AND (@OrderId='' OR (OrderId=@OrderId OR OuterFlowId=@OrderId))",
       "Remark": ""
     },
     {
       "key": "Debug_QueryFillMoneyListCount_02",
       "Desc": "查询充值金额列表统计",
-      "ParamDesc": "@UserId:UserId,@AgentList:agentList,@StatusList:statusList,@StartTime:startTime,@EndTime:endTime,@OrderId:OrderId",
+      "ParamDesc": "@UserId:UserId,@StartTime:startTime,@EndTime:endTime,@OrderId:OrderId",
       "Director": "Debug",
-      "SQL": "SELECT TotalResponseMoney=SUM(ResponseMoney) FROM C_FillMoney WHERE (@UserId=N'' OR UserId=@UserId) AND (@AgentList=N'' OR FillMoneyAgent IN (@AgentList)) AND [Status]=1 AND (@SourceList=N'' OR SchemeSource IN (@SourceList)) AND (RequestTime>=@StartTime AND RequestTime < @EndTime) AND (@OrderId='' OR (OrderId=@OrderId OR OuterFlowId=@OrderId))",
+      "SQL": "SELECT TotalResponseMoney=SUM(ResponseMoney) FROM C_FillMoney WHERE (@UserId=N'' OR UserId=@UserId) AND ({0}=N'' OR FillMoneyAgent IN ({1})) AND [Status]=1 AND ({2}=N'' OR SchemeSource IN ({3})) AND (RequestTime>=@StartTime AND RequestTime < @EndTime) AND (@OrderId='' OR (OrderId=@OrderId OR OuterFlowId=@OrderId))",
       "Remark": ""
     },
     {
       "key": "Debug_QueryFillMoneyList",
       "Desc": "查询充值金额列表",
-      "ParamDesc": "@PageIndex:PageIndex,@PageSize:PageSize,@UserId:UserId,@AgentList:agentList,@StatusList:statusList,@SourceList:sourceList,@StartTime:startTime,@EndTime:endTime,@OrderId:OrderId",
+      "ParamDesc": "@PageIndex:PageIndex,@PageSize:PageSize,@UserId:UserId,@StartTime:startTime,@EndTime:endTime,@OrderId:OrderId",
       "Director": "Debug",
-      "SQL": "SELECT * FROM( SELECT ROW_NUMBER()OVER(ORDER BY RequestTime DESC) RowIndex,T.*,R.ComeFrom,R.VipLevel,DisplayName,R.HideDisplayNameCount FROM C_FillMoney T LEFT OUTER JOIN C_User_Register R ON T.UserId=R.UserId WHERE (@UserId=N'' OR T.UserId=@UserId) AND (@AgentList=N'' OR FillMoneyAgent IN (@AgentList)) AND (@StatusList=N'' OR [Status] IN (@StatusList)) AND (@SourceList=N'' OR SchemeSource IN (@SourceList)) AND (RequestTime>=@StartTime AND RequestTime < @EndTime)  AND (@OrderId='' OR (OrderId=@OrderId OR OuterFlowId=@OrderId)) ) T WHERE RowIndex > @PageIndex * @PageSize AND RowIndex <= (@PageIndex + 1) * @PageSize",
+      "SQL": "SELECT * FROM( SELECT ROW_NUMBER()OVER(ORDER BY RequestTime DESC) RowIndex,T.*,R.ComeFrom,R.VipLevel,DisplayName,R.HideDisplayNameCount FROM C_FillMoney T LEFT OUTER JOIN C_User_Register R ON T.UserId=R.UserId WHERE (@UserId=N'' OR T.UserId=@UserId) AND ({0}=N'' OR FillMoneyAgent IN ({1})) AND ({2}=N'' OR [Status] IN ({3})) AND ({4}=N'' OR SchemeSource IN ({5})) AND (RequestTime>=@StartTime AND RequestTime < @EndTime)  AND (@OrderId='' OR (OrderId=@OrderId OR OuterFlowId=@OrderId)) ) T WHERE RowIndex > @PageIndex * @PageSize AND RowIndex <= (@PageIndex + 1) * @PageSize",
       "Remark": ""
     }
   ]

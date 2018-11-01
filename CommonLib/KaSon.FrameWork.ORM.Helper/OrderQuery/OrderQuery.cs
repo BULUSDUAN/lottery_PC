@@ -2771,46 +2771,40 @@ namespace KaSon.FrameWork.ORM.Helper
                 pageSize = pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : pageSize;
             var result = new FillMoneyQueryInfoCollection();
 
-            var _agentTypeList = agentTypeList.Split('|', StringSplitOptions.RemoveEmptyEntries).ToList();
-            var str_agentTypeList = string.Join(',', string.Format("'{0}'", _agentTypeList.Select(exp => exp))).ToString();
+            var _agentTypeList = agentTypeList.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            var agentTypeList1 = string.Format("'{0}'", string.Join(",", _agentTypeList.Select(x => x)));
+            var str_agentTypeList = string.Format("'{0}'", string.Join("','", _agentTypeList.Select(x => x)));
 
-            var _statusList = statusList.Split('|', StringSplitOptions.RemoveEmptyEntries).ToList();
-            var str_statusList = string.Join(',', string.Format("'{0}'", _statusList.Select(exp => exp))).ToString();
+            var _statusList = statusList.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            var statusList1 = string.Format("'{0}'", string.Join(",", _statusList.Select(x => x))).ToString();
+            var str_statusList = string.Format("'{0}'", string.Join("','", _statusList.Select(x=>x))).ToString();
 
-            var _sourceList = sourceList.Split('|', StringSplitOptions.RemoveEmptyEntries).ToList();
-            var str_sourceList = string.Join(',', string.Format("'{0}'", _sourceList.Select(exp => exp))).ToString();
+            var _sourceList = sourceList.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            var sourceList1 = string.Format("'{0}'", string.Join(",", _sourceList.Select(x => x))).ToString();
+            var str_sourceList = string.Format("'{0}'", string.Join("','", _sourceList.Select(x=>x))).ToString();
 
             string countSql_1 = SqlModule.AdminModule.First(x => x.Key == "Debug_QueryFillMoneyListCount_01").SQL;
+            countSql_1 = string.Format(countSql_1, agentTypeList1, str_agentTypeList, statusList1, str_statusList, sourceList1, str_sourceList);
             result = DB.CreateSQLQuery(countSql_1)
                 .SetString("UserId", userId)
-                .SetString("AgentList", str_agentTypeList)
-                .SetString("StatusList", str_statusList)
-                .SetString("SourceList", str_sourceList)
                 .SetString("StartTime", startTime.ToString("yyyy-MM-dd"))
                 .SetString("EndTime", endTime.AddDays(1).ToString("yyyy-MM-dd"))
-                .SetInt("PageIndex", pageIndex)
-                .SetInt("pageSize", pageSize)
                 .SetString("OrderId", orderId)
                 .First<FillMoneyQueryInfoCollection>();
 
             string countSql_2 = SqlModule.AdminModule.First(x => x.Key == "Debug_QueryFillMoneyListCount_02").SQL;
-            result = DB.CreateSQLQuery(countSql_2)
+            countSql_2 = string.Format(countSql_2, agentTypeList1, str_agentTypeList, sourceList1, str_sourceList);
+            result.TotalResponseMoney = DB.CreateSQLQuery(countSql_2)
                 .SetString("UserId", userId)
-                .SetString("AgentList", str_agentTypeList)
-                .SetString("SourceList", str_sourceList)
                 .SetString("StartTime", startTime.ToString("yyyy-MM-dd"))
                 .SetString("EndTime", endTime.AddDays(1).ToString("yyyy-MM-dd"))
-                .SetInt("PageIndex", pageIndex)
-                .SetInt("pageSize", pageSize)
                 .SetString("OrderId", orderId)
-                .First<FillMoneyQueryInfoCollection>();
+                .First<decimal>();
             string pageSQl = SqlModule.AdminModule.First(x => x.Key == "Debug_QueryFillMoneyList").SQL;
+            pageSQl = string.Format(pageSQl, agentTypeList1, str_agentTypeList, statusList1, str_statusList, sourceList1, str_sourceList);
             result.FillMoneyList = DB.CreateSQLQuery(pageSQl)
                  .SetString("UserId", userId)
-                .SetString("AgentList", str_agentTypeList)
-                .SetString("StatusList", str_statusList)
-                .SetString("SourceList", str_sourceList)
-                .SetString("StartTime", startTime.ToString("yyyy-MM-dd"))
+                 .SetString("StartTime", startTime.ToString("yyyy-MM-dd"))
                 .SetString("EndTime", endTime.AddDays(1).ToString("yyyy-MM-dd"))
                 .SetInt("PageIndex", pageIndex)
                 .SetInt("pageSize", pageSize)
