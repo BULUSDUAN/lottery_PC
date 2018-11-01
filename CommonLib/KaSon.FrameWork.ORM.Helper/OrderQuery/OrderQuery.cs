@@ -2692,7 +2692,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     .SetString("@agentId", agentId)
                     .First<BettingOrderInfoCollection>();
                 string AllUserCountSQL = SqlModule.AdminModule.First(x => x.Key == "Debug_QueryAllUserCount").SQL;
-                result = DB.CreateSQLQuery(AllUserCountSQL)
+                result.TotalUserCount = DB.CreateSQLQuery(AllUserCountSQL)
                     .SetString("@UserId", userIdOrName)
                     .SetInt("@schemeType", schemeType.HasValue ? (int)schemeType.Value : -1)
                     .SetInt("progressStatus", progressStatus.HasValue ? (int)progressStatus.Value : -1)
@@ -2705,7 +2705,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     .SetString("@toDate", endTime.Date.ToString("yyyy-MM-dd HH:mm:ss"))
                     .SetInt("@sortType", sortType)
                     .SetString("@agentId", agentId)
-                    .First<BettingOrderInfoCollection>();
+                    .First<int>();
                 string pageListSql = SqlModule.AdminModule.First(x => x.Key == "Debug_QueryBettingOrderNoUserIDPageList").SQL;
                 result.OrderList = DB.CreateSQLQuery(pageListSql)
                     .SetInt("@schemeType", schemeType.HasValue ? (int)schemeType.Value : -1)
