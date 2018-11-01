@@ -1082,36 +1082,43 @@ namespace Lottery.AdminApi.Controllers
                     throw new Exception("对不起，您的权限不足！");
                 }
                 var p = JsonHelper.Decode(entity.Param);
-                string UserKey = string.IsNullOrWhiteSpace((string)p.userKey) ? "" : (string)p.userKey.Trim();
-                string OrderId = string.IsNullOrEmpty((string)p.orderId) ? "" : (string)p.orderId.Trim();
+                string UserKey = string.IsNullOrWhiteSpace((string)p.userKey) ? "" : ((string)p.userKey).Trim();
+                string OrderId = string.IsNullOrEmpty((string)p.orderId) ? "" : ((string)p.orderId).Trim();
                 UserQueryInfo info = null;
                 if (!string.IsNullOrEmpty(UserKey))
                     info = _service.QueryUserByKey(UserKey, CurrentUser.UserToken);
                 FillMoneyStatus? status = null;
                 SchemeSource? schemeSource = null;
                 FillMoneyAgentType? agentType = null;
-                if (!string.IsNullOrWhiteSpace((string)p.status))
+                string a = (string)p.status;
+                if (!a.Contains("|"))
                 {
-                    status = (FillMoneyStatus)Convert.ToInt32((string)p.status);
+                    if (!string.IsNullOrWhiteSpace((string)p.status))
+                    {
+                        status = (FillMoneyStatus)Convert.ToInt32((string)p.status);
+                    }
                 }
-                if (!string.IsNullOrWhiteSpace((string)p.SchemeSource))
+                string b = (string)p.SchemeSource;
+                if (!b.Contains("|"))
                 {
-                    schemeSource = (SchemeSource)Convert.ToInt32((string)p.SchemeSource);
+                    if (!string.IsNullOrWhiteSpace((string)p.SchemeSource))
+                    {
+                        schemeSource = (SchemeSource)Convert.ToInt32((string)p.SchemeSource);
+                    }
                 }
-                if (!string.IsNullOrWhiteSpace((string)p.AgentType))
+                string c = (string)p.AgentType;
+                if (!c.Contains("|"))
                 {
-                    agentType = (FillMoneyAgentType)Convert.ToInt32((string)p.AgentType);
+                    if (!string.IsNullOrWhiteSpace((string)p.AgentType))
+                    {
+                        agentType = (FillMoneyAgentType)Convert.ToInt32((string)p.AgentType);
+                    }
                 }
                 DateTime StartTime = string.IsNullOrWhiteSpace((string)p.startTime) ? DateTime.Now : DateTime.Parse((string)p.startTime);
                 DateTime EndTime = string.IsNullOrWhiteSpace((string)p.endTime) ? DateTime.Now : DateTime.Parse((string)p.endTime);
                 int PageIndex = string.IsNullOrWhiteSpace((string)p.pageIndex) ? base.PageIndex : int.Parse((string)p.pageIndex);
                 int PageSize = string.IsNullOrWhiteSpace((string)p.pageSize) ? base.PageSize : int.Parse((string)p.pageSize);
-                var FillDetail = _service.QueryFillMoneyList(UserKey,
-                    agentType.HasValue ? ((int)agentType.Value).ToString() : "",
-                    status.HasValue ? ((int)status.Value).ToString() : "",
-                    schemeSource.HasValue ? ((int)schemeSource.Value).ToString() : "",
-                    StartTime, EndTime,
-                    PageIndex, PageSize, OrderId);
+                var FillDetail = _service.QueryFillMoneyList(UserKey, agentType!=null&&agentType.HasValue ? ((int)agentType.Value).ToString() : c, status!=null&&status.HasValue ? ((int)status.Value).ToString() : a, schemeSource!=null&&schemeSource.HasValue ? ((int)schemeSource.Value).ToString() : b,StartTime, EndTime,PageIndex, PageSize, OrderId);
                 return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Value = new { UserQueryInfo = info, FillDetail } });
             }
             catch (Exception ex)

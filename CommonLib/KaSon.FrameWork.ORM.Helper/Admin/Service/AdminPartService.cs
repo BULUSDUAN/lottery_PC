@@ -970,8 +970,6 @@ namespace KaSon.FrameWork.ORM.Helper
         /// </summary>
         public CommonActionResult UpdateMobileAuthen(string userId, string mobile, string userToken)
         {
-            // 验证用户身份及权限
-            var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 new MobileAuthenticationBusiness().UpdateMobileAuthen(userId, mobile, myId);
@@ -988,8 +986,6 @@ namespace KaSon.FrameWork.ORM.Helper
         /// </summary>
         public CommonActionResult LogOffMobileAuthen(string userId, string userToken)
         {
-            // 验证用户身份及权限
-            //var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 new MobileAuthenticationBusiness().LogOffMobileAuthen(userId);
@@ -1005,8 +1001,6 @@ namespace KaSon.FrameWork.ORM.Helper
         /// </summary>
         public CommonActionResult UpdateBankCard(C_BankCard bankCard, string userToken)
         {
-            // 验证用户身份及权限
-            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 new BankCardBusiness().UpdateBankCard(bankCard, bankCard.UserId);
@@ -1052,8 +1046,6 @@ namespace KaSon.FrameWork.ORM.Helper
         /// </summary>
         public GameInfoCollection QueryGameList(string userToken)
         {
-            // 验证用户身份及权限
-            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 return new GameBusiness().QueryGameInfoCollection();
@@ -1066,8 +1058,6 @@ namespace KaSon.FrameWork.ORM.Helper
         public BettingOrderInfoCollection QueryBettingOrderList(string userIdOrName, SchemeType? schemeType, ProgressStatus? progressStatus, BonusStatus? bonusStatus, SchemeBettingCategory? betCategory, bool? isVirtual, string gameCode
             , DateTime startTime, DateTime endTime, int sortType, int pageIndex, int pageSize, string userToken, string fieldName, TicketStatus? ticketStatus = null, SchemeSource? schemeSource = null)
         {
-            // 验证用户身份及权限
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 var agentId = "";
@@ -1083,8 +1073,6 @@ namespace KaSon.FrameWork.ORM.Helper
         /// </summary>
         public FillMoneyQueryInfoCollection QueryFillMoneyList(string userKey, string agentTypeList, string statusList, string sourceList, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string orderId)
         {
-            //// 验证用户身份及权限
-            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 return new SqlQueryBusiness().QueryFillMoneyList(userKey, agentTypeList, statusList, sourceList, startTime, endTime, pageIndex, pageSize, orderId);
