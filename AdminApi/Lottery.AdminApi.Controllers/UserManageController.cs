@@ -41,9 +41,6 @@ namespace Lottery.AdminApi.Controllers
                 {
                     throw new LogicException("对不起，您的权限不足！");
                 }
-                   
-                //if (CheckRights("HYGLCKYHXQ110"))//查看会员详情
-                
                 var p = JsonHelper.Decode(entity.Param);
                 var KeyType = (string)p.keyType ;
                 var KeyValue = (string)p.keyValue ;
@@ -418,7 +415,8 @@ namespace Lottery.AdminApi.Controllers
         {
             try
             {
-                if (!CheckRights("U102"))
+                //if (!CheckRights("U102"))
+                if (CheckRights("HYGLCKYHXQ110"))//查看会员详情
                     throw new Exception("对不起，您的权限不足！");
                 var p = JsonHelper.Decode(entity.Param);
                 UserViewEntity ViewModel = new UserViewEntity();
@@ -509,7 +507,7 @@ namespace Lottery.AdminApi.Controllers
                 var p = JsonHelper.Decode(entity.Param);
                 var userId = PreconditionAssert.IsNotEmptyString((string)p.userId, "操作ID不正确");
                 var result = _service.ResetUserPassword(userId, CurrentUser.UserToken);
-                _service.AddSysOperationLog(userId, CurrentUser.UserId, "重置密码", string.Format("操作员【{0}】重置用户【{1}】的登录密码", this.CurrentUser.UserId, userId));
+                _service.AddSysOperationLog(userId, CurrentUser.UserId, "重置密码", string.Format("操作员【{0}】重置用户【{1}】的登录密码", CurrentUser.UserId, userId));
 
                 return Json(new LotteryServiceResponse(){ Code = AdminResponseCode.成功, Message = result.Message });
             }
@@ -610,7 +608,7 @@ namespace Lottery.AdminApi.Controllers
 
                 var fillResult = _service.ManualFillMoney(info, userKey, CurrentUser.UserToken);
 
-                _service.AddSysOperationLog(userKey, this.CurrentUser.UserId, "手工充值", string.Format("操作员【{0}】给用户【{1}】手工充值【{2}】元", this.CurrentUser.UserId, userKey, (string)p.requestMoney));
+                _service.AddSysOperationLog(userKey, CurrentUser.UserId, "手工充值", string.Format("操作员【{0}】给用户【{1}】手工充值【{2}】元", this.CurrentUser.UserId, userKey, (string)p.requestMoney));
 
                 return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功, Message = fillResult.Message });
             }
@@ -665,7 +663,7 @@ namespace Lottery.AdminApi.Controllers
                 decimal money = Convert.ToDecimal(PreconditionAssert.IsNotEmptyString((string)p.requestMoney, "扣款金额不能为空"));
                 string remark = PreconditionAssert.IsNotEmptyString((string)p.remark, "描述不能为空");
                 var result = _service.ManualDeductMoney("", money, accountType, userKey, remark, CurrentUser.UserToken);
-                _service.AddSysOperationLog(userKey, this.CurrentUser.UserId, "手工扣款", string.Format("操作员【{0}】对用户【{1}】扣款【{2}】元", this.CurrentUser.UserId, userKey, money));
+                _service.AddSysOperationLog(userKey, CurrentUser.UserId, "手工扣款", string.Format("操作员【{0}】对用户【{1}】扣款【{2}】元", CurrentUser.UserId, userKey, money));
                 return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功, Message = result.Message });
             }
             catch (Exception ex)
@@ -692,7 +690,7 @@ namespace Lottery.AdminApi.Controllers
                 PreconditionAssert.IsTrue(ValidateHelper.CheckIdCard(realID), "请输入正确的身份证号码。");
                 PreconditionAssert.IsFalse(SensitiveAnalyzer.IsHaveSensitive(userName), "真实姓名不允许包含敏感词，如有疑问请联系客服。");
                 var result = _service.UpdateRealNameAuthentication(userId, userName, realID, CurrentUser.UserToken);
-                _service.AddSysOperationLog(userId, this.CurrentUser.UserId, "更新实名认证", string.Format("操作员【{0}】更新用户【{1}】实名认证，真实姓名【{2}】，身份证号【{3}】", this.CurrentUser.UserId, userId, userName, realID));
+                _service.AddSysOperationLog(userId, CurrentUser.UserId, "更新实名认证", string.Format("操作员【{0}】更新用户【{1}】实名认证，真实姓名【{2}】，身份证号【{3}】", CurrentUser.UserId, userId, userName, realID));
                 return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功, Message = result.Message });
             }
             catch (Exception ex)
@@ -842,7 +840,7 @@ namespace Lottery.AdminApi.Controllers
                     RealName = userTrueName
                 };
                 var result = _service.UpdateBankCard(b, CurrentUser.UserToken);
-                _service.AddSysOperationLog(userId, this.CurrentUser.UserId, "更新银行卡", string.Format("操作员【{0}】给用户【{1}】更新银行卡，卡号【{2}】 ", this.CurrentUser.UserId, userId, userBankCardNumber));
+                _service.AddSysOperationLog(userId, CurrentUser.UserId, "更新银行卡", string.Format("操作员【{0}】给用户【{1}】更新银行卡，卡号【{2}】 ", CurrentUser.UserId, userId, userBankCardNumber));
                 return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功, Message = result.Message });
             }
             catch (Exception ex)
@@ -1439,7 +1437,7 @@ namespace Lottery.AdminApi.Controllers
                 var p = JsonHelper.Decode(entity.Param);
                 var userId = PreconditionAssert.IsNotEmptyString((string)p.userId, "用户编号不能为空");
                 var result = _service.CancelUserQQ(userId);
-                _service.AddSysOperationLog(userId, this.CurrentUser.UserId, "取消绑定QQ", string.Format("操作员【{0}】给用户【{1}】取消绑定QQ ", this.CurrentUser.UserId, userId));
+                _service.AddSysOperationLog(userId, this.CurrentUser.UserId, "取消绑定QQ", string.Format("操作员【{0}】给用户【{1}】取消绑定QQ ", CurrentUser.UserId, userId));
                 return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Message = "操作成功" });
             }
             catch (Exception ex)
